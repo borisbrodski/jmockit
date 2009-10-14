@@ -1,0 +1,376 @@
+<project name="jmockit" basedir="." default="fullRebuildWithTests">
+   <property file="build.properties"/>
+   <property name="ASM_CLASSES" value="asm2/classes"/>
+   <loadfile property="version" srcFile="version.txt"/>
+
+   <path id="common.classpath">
+      <pathelement location="main/lib/commons-logging-1.1.1.jar"/>
+      <pathelement location="main/lib/log4j-1.2.15.jar"/>
+      <pathelement location="main/lib/slf4j-api-1.5.8.jar"/>
+      <fileset file="${TOOLS_JAR}"/>
+      <fileset file="${JUNIT_JAR}"/>
+      <fileset file="${TESTNG_JAR}"/>
+      <fileset file="${JAVAEE_JAR}" erroronmissingdir="false"/>
+   </path>
+
+   <target name="fullRebuildWithTests" depends="buildAll, createjars, tests, sampleTests"/>
+
+   <!-- Targets for building/compiling the several JMockit components (modules) -->
+
+   <macrodef name="build">
+      <attribute name="module"/>
+      <attribute name="jdkVersion" default="1.5"/>
+      <attribute name="srcdir" default="src"/>
+      <attribute name="outdir" default="classes"/>
+      <attribute name="extraClasspath" default=""/>
+      <sequential>
+         <delete dir="@{module}/@{outdir}" includes="**/*"/>
+         <mkdir dir="@{module}/@{outdir}"/>
+
+         <javac
+            srcdir="@{module}/@{srcdir}" destdir="@{module}/@{outdir}"
+            debug="true" source="@{jdkVersion}" target="@{jdkVersion}" nowarn="true">
+            <classpath refid="common.classpath"/>
+            <classpath location="${ASM_CLASSES}"/>
+            <classpath location="main/hamcrest-classes"/>
+            <classpath location="main/classes"/>
+            <classpath location="@{module}/classes"/>
+            <classpath location="@{module}/@{outdir}"/>
+            <classpath location="@{extraClasspath}"/>
+            <classpath>
+               <fileset dir="@{module}/lib" includes="*.jar" erroronmissingdir="false"/>
+            </classpath>
+            <classpath>
+               <fileset dir="@{module}/../lib" includes="*.jar" erroronmissingdir="false"/>
+            </classpath>
+         </javac>
+
+         <copy todir="@{module}/@{outdir}">
+            <fileset dir="@{module}/@{srcdir}" includes="**/*.properties, **/*.css"/>
+         </copy>
+      </sequential>
+   </macrodef>
+   <macrodef name="buildTests">
+      <attribute name="module"/>
+      <attribute name="jdkVersion" default="1.5"/>
+      <attribute name="extraClasspath" default=""/>
+      <sequential>
+         <build
+            module="@{module}" jdkversion="@{jdkVersion}" srcdir="test" outdir="test-classes"
+            extraclasspath="@{extraClasspath}"/>
+      </sequential>
+   </macrodef>
+
+   <target name="buildASM"><build module="asm2"/></target>
+   <target name="buildMain" depends="buildASM">
+      <build module="main"/>
+      <buildTests module="main"/>
+   </target>
+   <target name="buildCoverage"><build module="coverage"/></target>
+   <target name="buildIncremental">
+      <build module="incremental" extraclasspath="coverage/classes"/>
+   </target>
+   <target name="buildHibernateEmulation">
+      <build module="hibernate3emul"/><buildTests module="hibernate3emul"/>
+   </target>
+   <target name="buildAOP"><build module="aop"/><buildTests module="aop"/></target>
+   <target name="buildSamples">
+      <build module="samples/easymock"/>
+      <buildTests module="samples/easymock"/>
+
+      <build module="samples/easymockclassextension"/>
+      <buildTests module="samples/easymockclassextension"/>
+
+      <build module="samples/jmock"/>
+      <buildTests module="samples/jmock"/>
+
+      <build module="samples/powermock"/>
+      <buildTests module="samples/powermock"/>
+
+      <build module="samples/mockito"/>
+      <buildTests module="samples/mockito"/>
+
+      <build module="samples/unitils"/>
+	  <buildTests module="samples/unitils"/>
+
+      <build module="samples/jbossaop"/>
+      <buildTests module="samples/jbossaop"/>
+
+      <build
+         module="samples/orderMngmntWebapp" outdir="WEB-INF/classes"
+         extraclasspath="hibernate3emul/lib/hibernate3.jar"/>
+      <buildTests
+         module="samples/orderMngmntWebapp"
+         extraclasspath="samples/orderMngmntWebapp/WEB-INF/classes"/>
+
+      <build module="samples/tutorial"/>
+      <buildTests module="samples/tutorial"/>
+
+      <build module="samples/TimingFramework"/>
+      <buildTests module="samples/TimingFramework"/>
+
+      <build
+         module="samples/AnimatedTransitions" extraclasspath="samples/TimingFramework/classes"/>
+      <buildTests
+         module="samples/AnimatedTransitions" extraclasspath="samples/TimingFramework/classes"/>
+
+      <build module="samples/LoginService"/>
+      <buildTests module="samples/LoginService"/>
+   </target>
+   <target
+      name="buildAll"
+      depends="buildMain, buildCoverage, buildIncremental, buildHibernateEmulation, buildSamples"/>
+
+   <!-- Target for generating the Javadoc HTML documentation -->
+
+   <target name="createjavadocs">
+      <delete dir="www/javadoc" includes="**/*.html"/>
+      <javadoc
+         destdir="www/javadoc" overview="www/overview.html" stylesheetfile="www/documentation.css"
+         nodeprecated="true" noindex="true" notree="true" nohelp="true"
+         breakiterator="true" source="1.5" windowtitle="JMockit Toolkit API Documentation"
+         encoding="UTF-8" charset="UTF-8" docencoding="UTF-8" classpathref="common.classpath">
+         <fileset dir="${basedir}/main/src">
+            <include name="mockit/*.java"/>
+            <include name="mockit/integration/**/*.java"/>
+         </fileset>
+         <link href="http://java.sun.com/javase/6/docs/api/" />
+      </javadoc>
+      <delete file="www/javadoc/package-list"/>
+   </target>
+
+   <!-- Targets for generating component jars and the distribution zip file -->
+
+   <target name="createjars"
+           depends="createjar-core, createjars-coverage, createjar-hibernate3emul"/>
+
+   <target name="createjar-core">
+      <jar destfile="jmockit.jar" compress="false" manifest="main/META-INF/MANIFEST.MF">
+         <fileset file="main/src/jmockit.properties"/>
+         <fileset dir="main/src" includes="mockit/**/*.java"/>
+         <fileset dir="main/classes" includes="mockit/**/*.class"/>
+         <fileset dir="${ASM_CLASSES}" excludes="LICENSE.txt **/package.html"/>
+         <fileset dir="main/hamcrest-classes" excludes="hamcrest-LICENSE.txt"/>
+         <manifest><attribute name="Implementation-Version" value="${version}"/></manifest>
+      </jar>
+   </target>
+
+   <target name="createjar-coverage">
+      <jar
+         destfile="jmockit-coverage.jar" basedir="coverage/classes" compress="false"
+         excludes="**/Basic*.class **/Full*.class">
+         <manifest><attribute name="Implementation-Version" value="${version}"/></manifest>
+      </jar>
+   </target>
+   <target name="createjar-coverage-xmlbasic">
+      <jar
+         destfile="jmockit-coverage-xmlbasic.jar" basedir="coverage/classes" compress="false"
+         includes="**/BasicXmlWriter.class">
+         <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
+      </jar>
+   </target>
+   <target name="createjar-coverage-xmlfull">
+      <jar
+         destfile="jmockit-coverage-xmlfull.jar" basedir="coverage/classes" compress="false"
+         includes="**/FullXmlWriter.class">
+         <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
+      </jar>
+   </target>
+   <target name="createjar-coverage-htmlbasic">
+      <jar
+         destfile="jmockit-coverage-htmlbasic.jar" basedir="coverage/classes" compress="false"
+         includes="**/BasicCoverageReport.class">
+         <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
+      </jar>
+   </target>
+   <target name="createjar-coverage-htmlfull">
+      <jar
+         destfile="jmockit-coverage-htmlfull.jar" basedir="coverage/classes" compress="false"
+         includes="**/FullCoverageReport.class">
+         <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
+      </jar>
+   </target>
+   <target name="createjar-incremental">
+      <jar destfile="jmockit-incremental.jar" basedir="incremental/classes" compress="false">
+         <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
+      </jar>
+   </target>
+   <target name="createjars-coverage"
+           depends="createjar-coverage, createjar-coverage-xmlbasic, createjar-coverage-xmlfull,
+                    createjar-coverage-htmlbasic, createjar-coverage-htmlfull, 
+                    createjar-incremental"/>
+
+   <target name="createjar-hibernate3emul">
+      <jar destfile="jmockit-hibernate3emul.jar" basedir="hibernate3emul/classes" compress="false"/>
+   </target>
+
+   <target name="createjar-aop">
+      <jar destfile="jmockit-aop.jar" compress="false" manifest="aop/META-INF/MANIFEST.MF">
+         <fileset dir="aop/classes">
+            <exclude name="**/integrationTests/**/*"/>
+         </fileset>
+         <fileset dir="${ASM_CLASSES}"/>
+      </jar>
+   </target>
+
+   <target name="createzip">
+      <!-- REMEMBER to update link to latest zip file in www/index.html -->
+      <zip
+         destfile="jmockit-${version}.zip" basedir=".." includes="${ant.project.name}/**"
+         excludes="jmockit/.idea/**, **/*.i*, **/*.zip, **/CVS, **/Temp.java,
+                   jmockit/samples/dddsample/**, jmockit/samples/*/coverage-report/**,
+                   jmockit/aop/**,
+                   jmockit/maven-repo/**, jmockit/repo/**, jmockit/pom.xml, jmockit/maven-*.jar,
+                   **/classes/**, **/test-classes/**,
+                   jmockit/coverage-report/**, **/coverage*.xml, **/testRun.properties"
+         encoding="UTF-8"/>
+   </target>
+
+   <target name="release" depends="buildAll, createjars, createzip"/>
+
+   <!-- Targets for running tests and generating corresponding test reports in HTML -->
+   
+   <macrodef name="testReport">
+      <attribute name="name"/>
+      <sequential>
+         <junitreport>
+           <fileset dir="." includes="TEST-*.xml"/>
+           <report format="noframes"/>
+         </junitreport>
+         <delete dir="." includes="TEST*-*.xml" failonerror="false"/>
+         <move file="junit-noframes.html" tofile="@{name}.html"/>
+      </sequential>
+   </macrodef>
+
+   <target name="tests">
+      <junit fork="yes" forkmode="once" filtertrace="on" dir="main">
+         <jvmarg
+            value="-javaagent:../jmockit.jar=coverage=mockit.*;mockit.integration.logging.Slf4jMocks"/>
+         <classpath refid="common.classpath"/>
+         <classpath location="main/test-classes"/>
+         <classpath path="jmockit.jar"/>
+         <classpath path="jmockit-coverage-htmlbasic.jar"/>
+         <batchtest>
+            <fileset dir="main/test-classes">
+               <include name="**/*Test.class"/>
+               <exclude name="**/*CodeUnderTest.class"/>
+               <exclude name="**/Base*Test.class"/>
+               <exclude name="**/JMockitTest.class"/>
+               <exclude name="**/TestNGDecoratorTest.class"/>
+               <exclude name="**/ExecutingTest.class"/>
+               <include name="integrationTests/textFile/*TestUsingExpectations.class"/>
+               <include name="integrationTests/textFile/*TestUsingMockAnnotation.class"/>
+            </fileset>
+         </batchtest>
+         <formatter type="xml"/>
+      </junit>
+      <testReport name="main/JMockitTests"/>
+   </target>
+
+   <target name="sampleTests">
+      <junit fork="yes" forkmode="once" filtertrace="on" dir="samples">
+         <classpath path="jmockit.jar"/>
+         <classpath path="jmockit-coverage-htmlfull.jar"/>
+         <classpath refid="common.classpath"/>
+         <classpath>
+            <fileset dir="samples" includes="**/*.jar"/>
+
+            <pathelement location="samples/jbossaop/classes"/>
+            <pathelement location="samples/jbossaop/test-classes"/>
+
+            <pathelement location="samples/easymock/classes"/>
+            <pathelement location="samples/easymock/test-classes"/>
+
+            <pathelement location="samples/easymockclassextension/classes"/>
+            <pathelement location="samples/easymockclassextension/test-classes"/>
+
+            <pathelement location="samples/jmock/classes"/>
+            <pathelement location="samples/jmock/test-classes"/>
+
+            <pathelement location="samples/powermock/classes"/>
+            <pathelement location="samples/powermock/test-classes"/>
+
+            <pathelement location="samples/mockito/classes"/>
+            <pathelement location="samples/mockito/test-classes"/>
+
+            <pathelement location="samples/unitils/classes"/>
+            <pathelement location="samples/unitils/test-classes"/>
+
+            <pathelement location="jmockit-hibernate3emul.jar"/>
+            <pathelement location="hibernate3emul/lib/hibernate3.jar"/>
+            <pathelement location="samples/orderMngmntWebapp/WEB-INF/classes"/>
+            <pathelement location="samples/orderMngmntWebapp/test-classes"/>
+
+            <pathelement location="samples/tutorial/classes"/>
+            <pathelement location="samples/tutorial/test-classes"/>
+
+            <pathelement location="samples/TimingFramework/classes"/>
+            <pathelement location="samples/TimingFramework/test-classes"/>
+
+            <pathelement location="samples/AnimatedTransitions/classes"/>
+            <pathelement location="samples/AnimatedTransitions/test-classes"/>
+
+            <pathelement location="samples/LoginService/classes"/>
+            <pathelement location="samples/LoginService/test-classes"/>
+         </classpath>
+         <batchtest>
+            <fileset dir="samples/jbossaop/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/easymock/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/easymockclassextension/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/jmock/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/mockito/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/unitils/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/orderMngmntWebapp/test-classes">
+               <include name="**/*Test.class"/>
+               <include name="**/*TestUsingExpectations.class"/>
+               <exclude name="orderMngr/service/domain/DomainTest.class"/>
+            </fileset>
+            <fileset dir="samples/tutorial/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/TimingFramework/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/AnimatedTransitions/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/LoginService/test-classes" includes="**/*Test.class"/>
+         </batchtest>
+         <batchtest>
+            <fileset dir="samples/powermock/test-classes" includes="**/*Test.class"/>
+         </batchtest>
+         <formatter type="xml"/>
+      </junit>
+      <testReport name="samples/JMockitSampleTests"/>
+   </target>
+
+   <target name="findbugs">
+      <taskdef
+         name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"
+         classpath="${FINDBUGS_HOME}/lib/findbugs-ant.jar"/>
+      <findbugs
+         home="${FINDBUGS_HOME}" output="html" outputFile="FindBugs-report.html"
+         projectname="JMockit" effort="max" reportlevel="low">
+         <auxclasspath refid="common.classpath"/>
+         <class location="${basedir}/main/classes"/>
+         <sourcepath path="${basedir}/main/src"/>
+      </findbugs>
+   </target>
+
+   <target name="push-to-maven-prepare">
+     <taskdef resource="maven-repository-importer.properties">
+       <classpath><pathelement path="maven-repository-importer-1.2.jar"/></classpath>
+     </taskdef>
+     <delete dir="maven-repo"/>
+     <maven-repository-importer destdir="maven-repo" version="${version}">
+       <artifact jar="jmockit.jar" pom="pom.xml"/>
+     </maven-repository-importer>
+   </target>
+   <target name="push-to-maven" depends="push-to-maven-prepare">
+     <tstamp/>
+     <cvs dest="maven-repo">
+       <commandline>
+         <argument value="-d:pserver:jmockit@cvs.dev.java.net:/cvs"/>
+         <argument line="-z9 import -W *.jar -kb -m"/>
+         <argument value="deploying new jars to the java.net maven repository"/>
+
+         <argument value="jmockit/repo"/>
+         <argument line="deployment-to-maven-repository t${DSTAMP}${TSTAMP}"/>
+       </commandline>
+     </cvs>
+   </target>
+</project>

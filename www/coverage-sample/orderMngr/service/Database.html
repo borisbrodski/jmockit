@@ -1,0 +1,485 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+  <title>JMockit Coverage Report</title>
+  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+  <link rel='stylesheet' type='text/css' href='../../coverage.css'/>
+</head>
+<body>
+  <table cellpadding='0' cellspacing='0'>
+    <caption><code>samples\orderMngmntWebapp\src\orderMngr\service\Database.java</code></caption>
+    <tr>
+      <td class='lineNo'>1</td><td/>
+      <td class='nonexec'><pre><span class='comment'>/*</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>2</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * JMockit: a class library for developer testing with "mock methods"</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>3</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * Copyright (c) 2006, 2007 Rogério Liesenfeld</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>4</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * All rights reserved.</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>5</td><td/>
+      <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>6</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>7</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * a copy of this software and associated documentation files (the</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>8</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * "Software"), to deal in the Software without restriction, including</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>9</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>10</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>11</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * permit persons to whom the Software is furnished to do so, subject to</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>12</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * the following conditions:</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>13</td><td/>
+      <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>14</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * The above copyright notice and this permission notice shall be</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>15</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * included in all copies or substantial portions of the Software.</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>16</td><td/>
+      <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>17</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>18</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>19</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>20</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>21</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>22</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>23</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>24</td><td/>
+      <td class='nonexec'><pre><span class='comment'> */</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>25</td><td/>
+      <td class='nonexec'><pre><span class='keyword'>package</span> orderMngr.service;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>26</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>27</td><td/>
+      <td class='nonexec'><pre><span class='keyword'>import</span> java.sql.*;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>28</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>29</td><td/>
+      <td class='nonexec'><pre><span class='comment'>/**</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>30</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * A static facade for database access through JDBC. It assumes the application can use a single</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>31</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * global DB connection. (This class is just for the sake of demonstration; in the real world,</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>32</td><td/>
+      <td class='nonexec'><pre><span class='comment'> * direct use of JDBC like this is not too practical.)</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>33</td><td/>
+      <td class='nonexec'><pre><span class='comment'> */</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>34</td><td class='count'>0</td>
+      <td class='uncovered'><pre><span class='keyword'>public</span> <span class='keyword'>final</span> <span class='keyword'>class</span> Database</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>35</td><td/>
+      <td class='nonexec'><pre>{</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>36</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>private</span> <span class='keyword'>static</span> Connection connection;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>37</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>38</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>synchronized</span> Connection connection()</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>39</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>40</td><td class='count'>0</td>
+      <td class='uncovered'><pre>      <span class='keyword'>if</span> (connection == <span class='keyword'>null</span>) {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>41</td><td/>
+      <td class='nonexec'><pre>         <span class='keyword'>try</span> {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>42</td><td class='count'>0</td>
+      <td class='uncovered'><pre>            connection = DriverManager.getConnection("jdbc:test:ordersDB");</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>43</td><td/>
+      <td class='nonexec'><pre>         }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>44</td><td class='count'>0</td>
+      <td class='uncovered'><pre>         <span class='keyword'>catch</span> (SQLException e) {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>45</td><td class='count'>0</td>
+      <td class='uncovered'><pre>            <span class='keyword'>throw</span> <span class='keyword'>new</span> RuntimeException(e);</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>46</td><td/>
+      <td class='nonexec'><pre>         }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>47</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>48</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>49</td><td class='count'>0</td>
+      <td class='uncovered'><pre>      <span class='keyword'>return</span> connection;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>50</td><td/>
+      <td class='nonexec'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>51</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>52</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>void</span> executeInsertUpdateOrDelete(String sql, Object... args)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>53</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>54</td><td class='count'>0</td>
+      <td class='uncovered'><pre>      PreparedStatement stmt = <span class='keyword'>null</span>;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>55</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>56</td><td/>
+      <td class='nonexec'><pre>      <span class='keyword'>try</span> {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>57</td><td class='count'>0</td>
+      <td class='uncovered'><pre>         stmt = createStatement(sql, args);</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>58</td><td class='count'>0</td>
+      <td class='uncovered'><pre>         stmt.executeUpdate();</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>59</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>60</td><td class='count'>0</td>
+      <td class='uncovered'><pre>      <span class='keyword'>catch</span> (SQLException e) {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>61</td><td class='count'>0</td>
+      <td class='uncovered'><pre>         <span class='keyword'>throw</span> <span class='keyword'>new</span> RuntimeException(e);</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>62</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>63</td><td class='count'>0</td>
+      <td class='uncovered'><pre>      <span class='keyword'>finally</span> {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>64</td><td class='count'>0</td>
+      <td class='uncovered'><pre>         closeStatement(stmt);</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>65</td><td class='count'>0</td>
+      <td class='uncovered'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>66</td><td class='count'>0</td>
+      <td class='uncovered'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>67</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>68</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>private</span> <span class='keyword'>static</span> PreparedStatement createStatement(String sql, Object... args) <span class='keyword'>throws</span> SQLException</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>69</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>70</td><td class='count'>2</td>
+      <td><pre class='covered'>      PreparedStatement stmt = connection().prepareStatement(sql);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>71</td><td class='count'>2</td>
+      <td><pre class='covered'>      <span class='keyword'>int</span> i = 1;</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>72</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>73</td><td class='count'>4</td>
+      <td><pre class='covered'>      <span class='keyword'>for</span> (Object arg : args) {</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>74</td><td class='count'>2</td>
+      <td><pre class='covered'>         stmt.setObject(i, arg);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>75</td><td class='count'>2</td>
+      <td><pre class='covered'>         i++;</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>76</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>77</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>78</td><td class='count'>2</td>
+      <td><pre class='covered'>      <span class='keyword'>return</span> stmt;</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>79</td><td/>
+      <td class='nonexec'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>80</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>81</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>void</span> closeStatement(Statement stmt)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>82</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>83</td><td class='count'>0</td>
+      <td class='uncovered'><pre>      <span class='keyword'>if</span> (stmt != <span class='keyword'>null</span>) {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>84</td><td/>
+      <td class='nonexec'><pre>         <span class='keyword'>try</span> {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>85</td><td class='count'>0</td>
+      <td class='uncovered'><pre>            stmt.close();</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>86</td><td/>
+      <td class='nonexec'><pre>         }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>87</td><td class='count'>0</td>
+      <td class='uncovered'><pre>         <span class='keyword'>catch</span> (SQLException e) {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>88</td><td class='count'>0</td>
+      <td class='uncovered'><pre>            <span class='keyword'>throw</span> <span class='keyword'>new</span> RuntimeException(e);</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>89</td><td/>
+      <td class='nonexec'><pre>         }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>90</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>91</td><td class='count'>0</td>
+      <td class='uncovered'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>92</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>93</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>void</span> closeStatement(ResultSet result)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>94</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>95</td><td class='count'>2</td>
+      <td><pre class='covered'>      <span class='keyword'>if</span> (result != <span class='keyword'>null</span>) {</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>96</td><td/>
+      <td class='nonexec'><pre>         <span class='keyword'>try</span> {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>97</td><td class='count'>2</td>
+      <td><pre class='covered'>            result.getStatement().close();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>98</td><td/>
+      <td class='nonexec'><pre>         }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>99</td><td class='count'>0</td>
+      <td class='uncovered'><pre>         <span class='keyword'>catch</span> (SQLException e) {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>100</td><td class='count'>0</td>
+      <td class='uncovered'><pre>            <span class='keyword'>throw</span> <span class='keyword'>new</span> RuntimeException(e);</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>101</td><td/>
+      <td class='nonexec'><pre>         }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>102</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>103</td><td class='count'>2</td>
+      <td><pre class='covered'>   }</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>104</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>105</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> ResultSet executeQuery(String sql, Object... args)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>106</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>107</td><td/>
+      <td class='nonexec'><pre>      <span class='keyword'>try</span> {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>108</td><td class='count'>2</td>
+      <td><pre class='covered'>         PreparedStatement stmt = createStatement(sql, args);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>109</td><td class='count'>2</td>
+      <td><pre class='covered'>         <span class='keyword'>return</span> stmt.executeQuery();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>110</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>111</td><td class='count'>0</td>
+      <td class='uncovered'><pre>      <span class='keyword'>catch</span> (SQLException e) {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>112</td><td class='count'>0</td>
+      <td class='uncovered'><pre>         <span class='keyword'>throw</span> <span class='keyword'>new</span> RuntimeException(e);</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>113</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>114</td><td/>
+      <td class='nonexec'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>115</td><td/>
+      <td class='nonexec'><pre>}</pre></td>
+    </tr>
+  </table>
+</body>
+</html>

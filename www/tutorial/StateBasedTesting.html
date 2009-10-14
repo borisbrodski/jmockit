@@ -1,0 +1,63 @@
+<!--
+  ~ JMockit Tutorial
+  ~ Copyright (c) 2006-2009 Rogério Liesenfeld
+  ~ All rights reserved.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining
+  ~ a copy of this software and associated documentation files (the
+  ~ "Software"), to deal in the Software without restriction, including
+  ~ without limitation the rights to use, copy, modify, merge, publish,
+  ~ distribute, sublicense, and/or sell copies of the Software, and to
+  ~ permit persons to whom the Software is furnished to do so, subject to
+  ~ the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be
+  ~ included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  ~ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+  ~ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+   <title>The JMockit Testing Toolkit Tutorial</title>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+   <link rel="stylesheet" type="text/css" href="../prettify.css"/>
+</head>
+<body>
+<h2>State-based testing with JMockit</h2>
+
+<p>
+   In the JMockit toolkit, the <code>Annotations</code> API provides support for the creation of
+   <em>state-based</em> tests.
+   The focus when doing this kind of testing is not on the <em>interactions</em> between objects,
+   but on their <em>state</em> after the code under test is exercised, and on the data items
+   exchanged between objects.
+</p>
+<p>
+   State verification <em>after</em> the unit under test is exercised can be done through regular
+   JUnit/TestNG assertions.
+   The JMockit Annotations API allows a test to apply state verification <em>during</em> test
+   execution, as the tested unit passes data to dependencies through method/constructor invocations.
+</p>
+<div style="text-align: center;" title="Click for API documentation">
+   <map name="figure1">
+      <area shape="rect" coords="328,15,442,42" href="../javadoc/mockit/MockUp.html">
+      <area shape="rect" coords="16,47,100,74" href="../javadoc/mockit/Mockit.html">
+      <area shape="rect" coords="113,47,191,74" href="../javadoc/mockit/Mock.html">
+      <area shape="rect" coords="203,47,313,74" href="../javadoc/mockit/MockClass.html">
+      <area shape="rect" coords="324,47,441,74" href="../javadoc/mockit/Instantiation.html">
+   </map>
+   <img src="StateBasedAPI.png" usemap="#figure1">
+</div>
+
+<del>More to be written</del>
+
+<script type="text/javascript" src="../prettify.js"></script>
+</body>
+</html>

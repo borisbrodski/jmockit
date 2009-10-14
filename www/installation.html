@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+   <title>JMockit installation instructions</title>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <link rel="stylesheet" type="text/css" href="prettify.css"/>
+</head>
+<body>
+<h1>Getting started with the JMockit Testing Toolkit</h1>
+<p>Follow these instructions to start using JMockit:</p>
+<ol>
+   <li>
+      Download the <a href="https://jmockit.dev.java.net/servlets/ProjectDocumentList">full
+      distribution</a>.
+   </li>
+   <li>
+      Unpack the zip file to any directory.
+      This will create the <code>jmockit</code> directory containing the library jars and source,
+      samples, Javadocs and additional documentation.
+   </li>
+   <li>
+      Add the library file <strong><code>jmockit.jar</code></strong> to your classpath (in your
+      Java IDE project, Ant build file, and so on, as required).
+      If you are using a JDK of version 1.6 or newer, also add
+      <strong><code>&lt;jdkDir>/lib/tools.jar</code></strong> to the classpath
+      (<code>&lt;jdkDir></code> is the home directory for your local JDK installation).
+      This second jar file isn't required, but it avoids the need to specify the initialization
+      parameter <code>-javaagent:jmockit.jar</code> to the JVM when running tests.
+   </li>
+   <li>
+      Optionally, configure your IDE to find API source and documentation in this same
+      <code>jmockit.jar</code> file.
+      Javadoc documentation in HTML is also available at <code>jmockit/www/javadoc</code>.
+   </li>
+</ol>
+<p>
+   From here, you should probably proceed to the <a href="tutorial.html">Tutorial</a>.
+   Check also the hundreds of JUnit <a href="samples.html">sample tests</a> available under the
+   <code>jmockit/samples</code> folder, most of which use the JMockit APIs.
+</p>
+</body>
+</html>

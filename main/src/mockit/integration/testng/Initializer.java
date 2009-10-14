@@ -1,0 +1,54 @@
+/*
+ * JMockit
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+package mockit.integration.testng;
+
+import org.testng.*;
+import mockit.internal.startup.*;
+
+/**
+ * A test listener implementation for TestNG that will properly initialize JMockit before any tests
+ * are executed. This class is useful if running on JDK 1.6+ and the JVM argument
+ * "-javaagent:jmockit.jar" isn't being used.
+ * If that is the case, then this mechanism avoids the need to make all test classes extend
+ * {@link mockit.integration.testng.JMockitTestNG}.
+ * <p/>
+ * Please check the <a href="http://testng.org/doc/documentation-main.html#running-testng">TestNG
+ * documentation</a> for ways to run it with this class as a listener.
+ */
+public final class Initializer implements ITestListener
+{
+   static
+   {
+      Startup.verifyInitialization();
+   }
+
+   public void onTestStart(ITestResult result) {}
+   public void onTestSuccess(ITestResult result) {}
+   public void onTestFailure(ITestResult result) {}
+   public void onTestSkipped(ITestResult result) {}
+   public void onTestFailedButWithinSuccessPercentage(ITestResult result) {}
+   public void onStart(ITestContext context) {}
+   public void onFinish(ITestContext context) {}
+}

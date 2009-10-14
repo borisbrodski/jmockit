@@ -1,0 +1,518 @@
+/*
+ * JMockit Annotations
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+package mockit;
+
+import java.util.*;
+import javax.security.auth.*;
+import javax.security.auth.callback.*;
+import javax.security.auth.login.*;
+
+import org.junit.*;
+
+import mockit.integration.junit4.*;
+import mockit.internal.state.*;
+
+@SuppressWarnings({"JUnitTestMethodWithNoAssertions", "ClassWithTooManyMethods"})
+public final class MockAnnotationsTest extends JMockitTest
+{
+   // The "code under test" for the tests in this class -------------------------------------------
+
+   private final CodeUnderTest codeUnderTest = new CodeUnderTest();
+   private boolean mockExecuted;
+
+   static class CodeUnderTest
+   {
+      private final Collaborator dependency = new Collaborator();
+
+      void doSomething()
+      {
+         dependency.provideSomeService();
+      }
+
+      int performComputation(int a, boolean b)
+      {
+         int i = dependency.getValue();
+         List<?> results = dependency.complexOperation(a, i);
+
+         if (b) {
+            dependency.setValue(i + results.size());
+         }
+
+         return i;
+      }
+   }
+
+   @SuppressWarnings({"UnusedDeclaration"})
+   static class Collaborator
+   {
+      static Object xyz;
+      private int value;
+
+      Collaborator() {}
+      Collaborator(int value) { this.value = value; }
+
+      private static String doInternal() { return "123"; }
+
+      void provideSomeService()
+      {
+         throw new RuntimeException("Real provideSomeService() called");
+      }
+
+      int getValue() { return value; }
+      void setValue(int value) { this.value = value; }
+
+      List<?> complexOperation(Object input1, Object... otherInputs)
+      {
+         return input1 == null ? Collections.emptyList() : Arrays.asList(otherInputs);
+      }
+
+      final void simpleOperation(int a, String b, Date c) {}
+   }
+
+   // Mocks without expectations ------------------------------------------------------------------
+
+   @Test
+   public void mockWithNoExpectationsPassingMockClass()
+   {
+      Mockit.setUpMocks(MockCollaborator1.class);
+
+      codeUnderTest.doSomething();
+   }
+
+   @MockClass(realClass = Collaborator.class)
+   static class MockCollaborator1
+   {
+      @Mock
+      void provideSomeService() {}
+   }
+
+   @Test
+   public void mockWithNoExpectationsPassingMockInstance()
+   {
+      Mockit.setUpMocks(new MockCollaborator1());
+
+      codeUnderTest.doSomething();
+   }
+
+   @Test
+   public void setUpMockForSingleClassPassingAnnotatedMockInstance()
+   {
+      Mockit.setUpMock(new MockCollaborator1());
+
+      codeUnderTest.doSomething();
+   }
+
+   @Test
+   public void setUpStubs()
+   {
+      Mockit.setUpMocksAndStubs(Collaborator.class);
+
+      codeUnderTest.doSomething();
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void attemptToSetUpMockWithoutRealClass()
+   {
+      Mockit.setUpMocks(MockCollaborator2.class);
+
+      codeUnderTest.doSomething();
+   }
+
+   static class MockCollaborator2
+   {
+      @Mock
+      void provideSomeService() {}
+   }
+
+   @Test
+   public void setUpMockForGivenRealClass()
+   {
+      Mockit.setUpMock(Collaborator.class, MockCollaborator2.class);
+
+      codeUnderTest.doSomething();
+   }
+
+   @Test
+   public void setUpMockForRealClassByName()
+   {
+      Mockit.setUpMock(Collaborator.class.getName(), MockCollaborator2.class);
+
+      codeUnderTest.doSomething();
+   }
+
+   @Test
+   public void setUpMockForGivenRealClassPassingMockInstance()
+   {
+      Mockit.setUpMock(Collaborator.class, new MockCollaborator2());
+
+      codeUnderTest.doSomething();
+   }
+
+   @Test
+   public void setUpMockForRealClassByNamePassingMockInstance()
+   {
+      Mockit.setUpMock(Collaborator.class.getName(), new MockCollaborator2());
+
+      codeUnderTest.doSomething();
+   }
+
+   @Test
+   public void setUpMockForInterface()
+   {
+      BusinessInterface mock = Mockit.setUpMock(new MockCollaborator3());
+
+      mock.provideSomeService();
+   }
+
+   interface BusinessInterface
+   {
+      void provideSomeService();
+   }
+
+   @MockClass(realClass = BusinessInterface.class)
+   static class MockCollaborator3
+   {
+      @Mock
+      void provideSomeService() {}
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void attemptToSetUpMockForInterfaceButWithoutCreatingAProxy()
+   {
+      Mockit.setUpMocks(new MockCollaborator3());
+   }
+
+   @Test(expected = RuntimeException.class)
+   public void setUpAndTearDownMocks()
+   {
+      Mockit.setUpMocks(MockCollaborator1.class);
+      codeUnderTest.doSomething();
+      Mockit.tearDownMocks();
+      codeUnderTest.doSomething();
+   }
+
+   @Test
+   public void setUpMocksFromInnerMockClassWithMockConstructor()
+   {
+      Mockit.setUpMocks(new MockCollaborator4());
+      assertFalse(mockExecuted);
+
+      new CodeUnderTest().doSomething();
+
+      assertTrue(mockExecuted);
+   }
+
+   @MockClass(realClass = Collaborator.class)
+   class MockCollaborator4
+   {
+      @Mock
+      void $init() { mockExecuted = true; }
+
+      @Mock
+      void provideSomeService() {}
+   }
+
+   @Test
+   public void setUpMocksFromMockClassWithStaticMockMethod()
+   {
+      Mockit.setUpMocks(MockCollaborator5.class);
+
+      codeUnderTest.doSomething();
+   }
+
+   @MockClass(realClass = Collaborator.class)
+   static class MockCollaborator5
+   {
+      @Mock
+      @Deprecated // to check that another annotation doesn't interfere, and to increase coverage
+      static void provideSomeService() {}
+   }
+
+   // Mocks WITH expectations ---------------------------------------------------------------------
+
+   @Test
+   public void setUpMocksContainingExpectations()
+   {
+      Mockit.setUpMocks(MockCollaboratorWithExpectations.class);
+
+      int result = codeUnderTest.performComputation(2, true);
+
+      assertEquals(0, result);
+   }
+
+   @MockClass(realClass = Collaborator.class)
+   static class MockCollaboratorWithExpectations
+   {
+      @Mock(minInvocations = 1)
+      int getValue() { return 0; }
+
+      @Mock(maxInvocations = 2)
+      void setValue(int value)
+      {
+         assertEquals(1, value);
+      }
+
+      @Mock
+      List<?> complexOperation(Object input1, Object... otherInputs)
+      {
+         int i = (Integer) otherInputs[0];
+         assertEquals(0, i);
+
+         List<Integer> values = new ArrayList<Integer>();
+         values.add((Integer) input1);
+         return values;
+      }
+
+      @Mock(invocations = 0)
+      void provideSomeService() {}
+   }
+
+   @Test(expected = AssertionError.class)
+   public void setUpMockWithMinInvocationsExpectationButFailIt()
+   {
+      Mockit.setUpMocks(MockCollaboratorWithMinInvocationsExpectation.class);
+   }
+
+   @MockClass(realClass = Collaborator.class)
+   static class MockCollaboratorWithMinInvocationsExpectation
+   {
+      @Mock(minInvocations = 2)
+      int getValue() { return 1; }
+   }
+
+   @Test(expected = AssertionError.class)
+   public void setUpMockWithMaxInvocationsExpectationButFailIt()
+   {
+      Mockit.setUpMocks(MockCollaboratorWithMaxInvocationsExpectation.class);
+
+      new Collaborator().setValue(23);
+   }
+
+   @MockClass(realClass = Collaborator.class)
+   static class MockCollaboratorWithMaxInvocationsExpectation
+   {
+      @Mock(maxInvocations = 0)
+      void setValue(int v) { assertEquals(23, v); }
+   }
+
+   @Test(expected = AssertionError.class)
+   public void setUpMockWithInvocationsExpectationButFailIt()
+   {
+      Mockit.setUpMocks(MockCollaboratorWithInvocationsExpectation.class);
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomething();
+   }
+
+   @MockClass(realClass = Collaborator.class)
+   static class MockCollaboratorWithInvocationsExpectation
+   {
+      @Mock(invocations = 1)
+      void provideSomeService() {}
+   }
+
+   // Reentrant mocks -----------------------------------------------------------------------------
+
+   @Test(expected = RuntimeException.class)
+   public void setUpReentrantMock()
+   {
+      Mockit.setUpMocks(MockCollaboratorWithReentrantMock.class);
+
+      codeUnderTest.doSomething();
+   }
+
+   @MockClass(realClass = Collaborator.class)
+   static class MockCollaboratorWithReentrantMock
+   {
+      Collaborator it;
+
+      @Mock(reentrant = false)
+      int getValue() { return 123; }
+
+      @Mock(reentrant = true, invocations = 1)
+      void provideSomeService() { it.provideSomeService(); }
+   }
+
+   // Mocks for constructors and static methods ---------------------------------------------------
+
+   @Test
+   public void setUpMockForConstructor()
+   {
+      Mockit.setUpMocks(MockCollaboratorWithConstructorMock.class);
+
+      new Collaborator(5);
+   }
+
+   @MockClass(realClass = Collaborator.class)
+   static class MockCollaboratorWithConstructorMock
+   {
+      @Mock(invocations = 1)
+      MockCollaboratorWithConstructorMock(int value)
+      {
+         assertEquals(5, value);
+      }
+   }
+
+   @Test
+   public void setUpMockForStaticMethod()
+   {
+      Mockit.setUpMocks(MockCollaboratorForStaticMethod.class);
+
+      Collaborator.doInternal();
+   }
+
+   @MockClass(realClass = Collaborator.class)
+   static class MockCollaboratorForStaticMethod
+   {
+      @Mock(invocations = 1)
+      static String doInternal() { return ""; }
+   }
+
+   @Test
+   public void setUpMockForSubclassConstructor()
+   {
+      Mockit.setUpMocks(MockSubCollaborator.class);
+
+      new SubCollaborator();
+   }
+
+   static class SubCollaborator extends Collaborator
+   {
+      SubCollaborator() {}
+   }
+
+   @MockClass(realClass = SubCollaborator.class)
+   static class MockSubCollaborator
+   {
+      @Mock(invocations = 1)
+      MockSubCollaborator() {}
+
+      @SuppressWarnings({"UnusedDeclaration"})
+      native void doNothing();
+   }
+
+   @Test // Note: this test only works under JDK 1.6+; JDK 1.5 does not support redefining natives.
+   public void mockNativeMethodInClassWithRegisterNatives()
+   {
+      Mockit.setUpMocks(MockSystem.class);
+      assertEquals(0, System.nanoTime());
+
+      Mockit.tearDownMocks();
+      assertTrue(System.nanoTime() > 0);
+   }
+
+   @MockClass(realClass = System.class)
+   static class MockSystem
+   {
+      @Mock
+      public static long nanoTime() { return 0; }
+   }
+
+   @Test // Note: this test only works under JDK 1.6+; JDK 1.5 does not support redefining natives.
+   public void mockNativeMethodInClassWithoutRegisterNatives() throws Exception
+   {
+      Mockit.setUpMocks(MockFloat.class);
+      assertEquals(0.0, Float.intBitsToFloat(2243019), 0.0);
+
+      Mockit.tearDownMocks();
+      assertTrue(Float.intBitsToFloat(2243019) > 0);
+   }
+
+   @MockClass(realClass = Float.class)
+   static class MockFloat
+   {
+      @SuppressWarnings({"UnusedDeclaration"})
+      @Mock
+      public static float intBitsToFloat(int bits) { return 0; }
+   }
+
+   @Test
+   public void setUpStartupMock()
+   {
+      Mockit.setUpStartupMocks(MockCollaborator1.class, new MockCollaborator4());
+
+      assertEquals(0, TestRun.mockFixture().getRedefinedClassCount());
+   }
+
+   @Test
+   public void setUpMockForJREClass()
+   {
+      MockThread mockThread = new MockThread();
+      Mockit.setUpMocks(mockThread);
+
+      Thread.currentThread().interrupt();
+
+      assertTrue(mockThread.interrupted);
+   }
+
+   @MockClass(realClass = Thread.class)
+   public static class MockThread
+   {
+      boolean interrupted;
+
+      @Mock(invocations = 1)
+      public void interrupt() { interrupted = true; }
+   }
+
+   @Test
+   public void mockJREMethodAndConstructor() throws Exception
+   {
+      Mockit.setUpMocks(new MockLoginContext("test", null));
+
+      new LoginContext("test", (CallbackHandler) null).login();
+   }
+
+   @MockClass(realClass = LoginContext.class)
+   public static class MockLoginContext
+   {
+      @Mock(invocations = 1)
+      public MockLoginContext(String name, CallbackHandler callbackHandler)
+      {
+         assertEquals("test", name);
+         assertNull(callbackHandler);
+      }
+
+      @Mock
+      public void login() {}
+
+      @Mock(maxInvocations = 1)
+      public Subject getSubject() { return null; }
+   }
+
+   @Test
+   public void mockJREMethodAndConstructorWithAnonymousMockClass() throws Exception
+   {
+      Mockit.setUpMock(LoginContext.class, new Object()
+      {
+         @Mock(invocations = 1)
+         public void $init(String name) { assertEquals("test", name); }
+
+         @Mock(invocations = 1)
+         public void login() {}
+      });
+
+      new LoginContext("test").login();
+   }
+}

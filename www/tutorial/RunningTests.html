@@ -1,0 +1,95 @@
+<!--
+  ~ JMockit Tutorial
+  ~ Copyright (c) 2006-2009 Rogério Liesenfeld
+  ~ All rights reserved.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining
+  ~ a copy of this software and associated documentation files (the
+  ~ "Software"), to deal in the Software without restriction, including
+  ~ without limitation the rights to use, copy, modify, merge, publish,
+  ~ distribute, sublicense, and/or sell copies of the Software, and to
+  ~ permit persons to whom the Software is furnished to do so, subject to
+  ~ the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be
+  ~ included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  ~ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+  ~ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+   <title>The JMockit Testing Toolkit Tutorial</title>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+   <link rel="stylesheet" type="text/css" href="../prettify.css"/>
+</head>
+<body>
+<h2>Running tests with JMockit</h2>
+
+<p>
+   To run tests that use any of the JMockit APIs, use your Java IDE, Ant script, etc. the way you
+   normally would, as long as the JVM gets a chance to load the "Java agent" which provides
+   instrumentation access to JMockit (it's inside <code>jmockit.jar</code>).
+   For that, you have two options:
+</p>
+<ol>
+<li>
+   Along with <code>jmockit.jar</code>, add <code>&lt;jdkHome>/lib/tools.jar</code> from a JDK 1.6
+   installation to the classpath used for running tests.
+   (This standard JDK 1.6 library contains the Sun Attach API which JMockit uses to automatically
+   load the javaagent from <code>jmockit.jar</code>. Although this API is not yet part of Java SE,
+   the JDKs from Sun, Oracle, IBM, and Apple come with it, to the best of my knowledge.)
+</li>
+<li>
+   Alternatively, or if you only have a JDK 1.5 installation available, pass
+   <code>-javaagent:jmockit.jar</code> as a JVM initialization parameter.
+   This can easily be done in the "Run/Debug Configuration" for both Eclipse and IntelliJ IDEA.
+   (Note that if <code>jmockit.jar</code> is not in the current working directory when running the
+   tests, you will have to insert the appropriate absolute or relative path after the colon, so the
+   JVM can locate the jar file.)
+</li>
+</ol>
+<p>
+   Although the first option (JDK 1.6 + tools.jar) does not require the use of any JVM
+   initialization arguments, it does have an additional requirement: all test classes must make sure
+   that JMockit gets initialized <em>before</em> the first test in the suite gets executed.
+   This is achieved in one of the following ways, for each test class:
+</p>
+<ol>
+   <li>
+      For JUnit 4.5+, annotate the test class with
+      <strong><code>@RunWith(JMockit.class)</code></strong>.
+   </li>
+   <li>
+      Make the test class extend <strong><code>JMockitTest</code></strong> (if using JUnit 4.5+),
+      <strong><code>JMockitTestCase</code></strong> (if using JUnit 3.8 or JUnit 4.5+ with old-style
+      tests), or <strong><code>JMockitTestNG</code></strong> (if using TestNG 5.8+).
+   </li>
+   <li>
+      In a static initializer, <code>@BeforeClass</code> method, etc., add a call to
+      <strong><code>Mockit.setUpMocks();</code></strong>.
+      This option can be used with any supported version of JUnit or TestNG.
+   </li>
+   <li>
+      For TestNG only, use
+      <strong><code>mockit.integration.testng.Initializer</code></strong> as a test listener when
+      running the suite.
+      See the <a href="http://testng.org/doc/documentation-main.html#running-testng">TestNG
+      documentation</a> for ways to run tests with a listener.
+   </li>
+</ol>
+<p>
+   Note that even if you use the "-javaagent" option, it is recommended to use one of
+   <code>@RunWith(JMockit.class)</code>, <code>JMockitTest</code>, etc. in each test class, so that
+   test suites can safely be run without the JVM argument.
+</p>
+
+<script type="text/javascript" src="../prettify.js"></script>
+</body>
+</html>

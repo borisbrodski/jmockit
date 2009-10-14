@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+   <title>JMockit Samples</title>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+   <link rel="stylesheet" type="text/css" href="prettify.css"/>
+</head>
+<body>
+<h1>Samples tests for the JMockit Testing Toolkit</h1>
+<p>
+   There are several separate test samples, seven of which compare published sample tests for other
+   tools with the equivalent JMockit version. Between the other samples, you will find
+   complete JUnit test suites for two third-party frameworks (both from the same author, and
+   originally implemented without any developer tests at all, but still great pieces of work, as
+   anyone can verify - see below).
+   These test suites aim to achieve 100% line and branch coverage for the relevant production code.
+</p>
+<p>
+   The list of existing samples follows. They can all be found under the "samples" folder in the
+   full distribution zip file. The Ant "build.xml" file contains a target "sampleTests" which will
+   run all sample tests and produce a JUnit test report in HTML, as well as a code coverage HTML
+   report (produced with the <em>JMockit Coverage</em> tool).
+   In total, there are more than 480 tests, all using JUnit and many also using JMockit; the others
+   are "pure" JUnit tests which use no mocks at all, or tests using other testing toolkits for 
+   comparison purposes.
+</p>
+<ol>
+   <li>
+      <a href="http://easymock.org/EasyMock2_5_1_Documentation.html">EasyMock 2.5 comparison sample</a>
+      &lt;==>
+      <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/easymock/test/org/easymock/samples/Example_JMockit_Test.java?view=markup"
+         >JMockit version</a>
+   </li>
+   <li>
+      <strong>EasyMock 2.4 Class Extension</strong> comparison sample: sample test sources can be
+      found in the
+      <a href="http://prdownloads.sourceforge.net/easymock/easymockclassextension2.4.zip"
+         >distribution zip file</a>
+      &lt;==>
+      <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/easymockclassextension/test/org/easymock/classextension/samples"
+         >JMockit version</a>
+   </li>
+   <li>
+      <strong>jMock</strong> comparison samples, with the originals found
+      <a href="http://www.jmock.org/getting-started.html">here</a> and (partially)
+      <a href="http://www.jmock.org/expectations.html">here</a> &lt;==>
+      <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/jmock/test/org/jmock/samples"
+         >JMockit version</a>
+   </li>
+   <li>
+      <strong>PowerMock</strong> comparison samples, with the originals found
+      <a href="http://code.google.com/p/powermock/wiki/PowerMock_tutorial">here</a> &lt;==>
+      <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/powermock/test/powermock/examples/tutorial"
+         >JMockit version</a>
+   </li>
+   <li>
+      <strong>Mockito</strong> comparison samples, with the originals found
+      <a href="http://mockito.googlecode.com/svn/branches/1.7/javadoc/org/mockito/Mockito.html">here</a>
+      and elsewhere in the Mockito SVN repository &lt;==>
+      <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/mockito/test/org/mockitousage"
+         >JMockit version</a>
+   </li>
+   <li>
+      <strong>Unitils Mocks</strong> comparison samples, with the originals found
+      <a href="http://unitils.org/tutorial.html#Testing_with_mock_objects">here</a> &lt;==>
+      <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/unitils/test/unitils/tutorial"
+         >JMockit version</a>
+   </li>
+   <li>
+      <a href="http://www.jboss.org/jbossaop/docs/2.0.0.GA/docs/aspect-framework/userguide/en/html/testing.html#testing1"
+         >JBoss AOP testing</a>
+      &lt;==>
+      <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/jbossaop/test/jbossaop/testing/bank/BankBusinessTest.java?view=markup"
+         >JMockit version</a>
+   </li>
+   <li>
+      The test
+      <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/tutorial/test/jmockit/tutorial/domain">sample</a>
+      from the JMockit Tutorial.
+   </li>
+   <li>
+      A set of tests for a fictitious web application, including integration tests which use the
+      <em>Hibernate 3 Emulation</em> tool: browse the source code
+      <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/orderMngmntWebapp/orderMngr">here</a>.
+   </li>
+   <li>
+      A complete suite with 150+ tests for the
+      <a href="https://timingframework.dev.java.net">Timing Framework</a>
+      (also found <a href="http://filthyrichclients.org">here</a>).
+      Demonstrates just about every feature of the two main JMockit testing
+      tools (<em>JMockit Annotations</em> and <em>JMockit Expectations</em>) by providing full
+      coverage for a real-world, professional quality, and well documented Java framework targeted
+      at rich <em>Swing</em> applications.
+      ==> browse them
+      <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/TimingFramework/test/org/jdesktop/animation/timing">here</a>.
+   </li>
+   <li>
+      Full suite of tests for another class library of the same author as the Timing Framework:
+      <a href="https://animatedtransitions.dev.java.net">Animated Transitions</a>.
+      ==> browse them
+      <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/AnimatedTransitions/test/org/jdesktop/animation/transitions">here</a>.
+   </li>
+   <li>
+      A small test suite for a single class (<code>LoginService</code>), based on 
+      <a href="http://schuchert.wikispaces.com/Mockito.LoginServiceExample">this</a> article.
+   </li>
+</ol>
+<p>
+   And finally, for those still wondering which testing toolkit to choose, I would like to propose
+   the <em>Timing Framework testing challenge</em>: ask the authors of your favorite testing
+   toolkit to provide a full test suite for this framework, so that an apples to apples, and
+   hopefully incontrovertible comparison can be made.
+</p>
+<p>
+   If you are willing to write the tests for the framework using another mocking tool, here are some
+   tips.
+   First, get the source code for both the Timing Framework production code and the JUnit tests from
+   the JMockit distribution. You can also use the original framework code from that project's web
+   site, if you prefer. The version in the JMockit distribution has some changes, none made
+   to facilitate writing the tests, but mostly because I could not resist making some small
+   improvements; there was only one bug that I could find while writing the tests, and some errors
+   in the use of generics, which were corrected in this modified version.
+   <br/>
+   Note also that the majority of these tests do <strong>not</strong> use JMockit in any way (only
+   about 60 of them do), so you can use them as they are as a starting point, with the goal of
+   reaching 100% code coverage (as determined by JMockit Coverage or any other code coverage tool).
+</p>
+</body>
+</html>

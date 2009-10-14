@@ -1,0 +1,205 @@
+<!--
+  ~ JMockit Tutorial
+  ~ Copyright (c) 2006-2009 Rogério Liesenfeld
+  ~ All rights reserved.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining
+  ~ a copy of this software and associated documentation files (the
+  ~ "Software"), to deal in the Software without restriction, including
+  ~ without limitation the rights to use, copy, modify, merge, publish,
+  ~ distribute, sublicense, and/or sell copies of the Software, and to
+  ~ permit persons to whom the Software is furnished to do so, subject to
+  ~ the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be
+  ~ included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  ~ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+  ~ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+   <title>The JMockit Testing Toolkit Tutorial</title>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+   <link rel="stylesheet" type="text/css" href="../prettify.css"/>
+</head>
+<body>
+<h2>Measuring code coverage with JMockit Coverage</h2>
+
+<p>
+   <a href="http://en.wikipedia.org/wiki/Code_coverage"><em>Code coverage</em></a> is a software
+   metric that can tell you how much of the production code is covered by a given test suite.
+   It's purely quantitative, and does not say anything about the <em>quality</em> of either the
+   production code or the test code. That said, the examination of code coverage reports will
+   sometimes lead to the discovery of unreachable code which can be eliminated. But more
+   importantly, such reports can be used as a guide for the discovery of missing tests.
+   This is not only useful when creating tests for existing production code, but also when writing
+   tests first, such as in the practice of TDD (Test Driven Development).
+</p>
+<p>
+   There are several ways in which specific code coverage metrics can be defined.
+   JMockit Coverage currently supports the two most well known metrics: <em>statement (or line)
+   coverage</em>, and <em>branch coverage</em>.
+   A <em>branch</em> exists wherever the program makes a decision between two possible execution
+   paths to follow. Any line of code containing a logical condition will be divided in at least two
+   segments, each belonging to a separate branch.
+</p>
+<p>
+   JMockit Coverage combines statement and branch coverage, showing a line of source code as fully
+   covered only if all statements contained in all branch segments in it were executed at least
+   once.
+   Lets say that <code>ns >= 1</code> is the number of segments belonging to different branches in a
+   given line of source code which contains at least one executable statement.
+   If <code>ne</code> is the number of branch segments in that line which were executed at least
+   once during a test suite run, then we can calculate the <em>coverage percentage</em> for that
+   line as <code>(ne / ns) * 100</code>.
+   From this percentage obtained for each executable line of code, a coverage percentage for the
+   source file can also be calculated, and likewise for the whole Java package.
+</p>
+<p>
+   An example coverage report is shown <a href="../coverage-sample/index.html">here</a>.
+</p>
+<p>
+   There are two ways to control whether code coverage metrics are gathered or not for a given test
+   run, and which kind of output should be generated: through the classpath, and through JVM
+   parameters.
+</p>
+
+<h3 id="jars">Controlling code coverage through jar files in the classpath</h3>
+<p>
+   To have code coverage output generated for a test suite run, add one of the following jar files
+   to the classpath:
+</p>
+<ul>
+   <li>
+      <code>jmockit-coverage-htmlbasic.jar</code>:
+      generates an XHTML report in the "coverage-report" directory, without call points
+   </li>
+   <li>
+      <code>jmockit-coverage-htmlfull.jar</code>:
+      generates an XHTML report in the "coverage-report" directory, with call points
+   </li>
+   <li>
+      <code>jmockit-coverage-xmlbasic.jar</code>:
+      generates an XML output file of name "coverage.xml", without call points
+   </li>
+   <li>
+      <code>jmockit-coverage-xmlfull.jar</code>:
+      generates an XML output file of name "coverage.xml", with call points
+   </li>
+</ul>
+<p>
+   All four jars above depend on <code>jmockit-coverage.jar</code>, which must be available in the
+   same directory. This last jar file does not need to be explicitly added to the classpath, though.
+</p>
+<p>
+   As with any other tool or API in the toolkit, JMockit must be initialized before it can do
+   anything. See <a href="RunningTests.html">these instructions</a>.
+</p>
+<p>
+   The "html" jars produce an XHTML report in the "coverage-report" directory, under the current
+   working directory. The directory is created if it doesn't yet exist; its contents are overwritten
+   if previously generated.
+   The XHTML report includes pages containing all Java source files covered by the test suite.
+   The coverage tool looks for ".java" files inside all directories of name "src" found directly or
+   indirectly under the current working directory. Any intermediate sub-directories between "src"
+   and the top-level package directory, such as "src/java" for example, will also be searched.
+</p>
+<p>
+   The "xml" jars produce an XML output file of name "coverage.xml" under the current working
+   directory. If the file already exists it is overwritten.
+</p>
+<p>
+   A "call point" is the point in the source test code from which an specific line of production
+   code was exercised. Note that generating coverage without this information is faster and produces
+   smaller output.
+</p>
+
+<h3 id="jvm">Controlling code coverage through JVM parameters</h3>
+<p>
+   To have direct control over the gathering of code coverage metrics for your tests, pass a command
+   line similar to <code>-javaagent:jmockit.jar=coverage=&lt;Coverage arguments></code>.
+   Note that you should be able to do this inside an Ant target or in a test run configuration for
+   your Java IDE of choice, using either JUnit or TestNG.
+</p>
+<dl>
+   <dt>
+      <code>Coverage arguments</code> consist of up to four different arguments, in the format
+      <code>classSelectionRegex:outputFormat:outputDir:srcDirs</code>, as follows.
+   </dt>
+   <dd>
+      <ol>
+         <li><code>classSelectionRegex</code> specifies the classes to be selected for coverage</li>
+         <li>
+            <code>outputFormat</code> specifies the format for the coverage output, and should be
+            one of: <code>xml</code>, <code>xml-nocp</code>, <code>html</code>,
+            <code>html-nocp</code>
+         </li>
+         <li><code>outputDir</code> specifies the destination directory for coverage output</li>
+         <li><code>srcDirs</code> is only applicable to the HTML reports, and is a comma-separated
+         list of Java source directories</li>
+      </ol>
+   </dd>
+</dl>
+<p>
+   The <code>classSelectionRegex</code> argument should be a
+   <code>java.util.regex</code>-conformable regular expression specifying the classes and/or
+   packages in production code for which coverage is desired.
+   For example, "orderMngr.domain.*" selects all classes in the <code>orderMngr.domain</code>
+   package as well as in any sub-packages.
+</p>
+<p>
+   The first two <code>outputFormat</code> values above indicate you want XML output, while the
+   other two indicate the generation of an HTML report. The "-nocp" suffix stands for "no call
+   points", meaning that information on call points will not be included, which usually makes the
+   output much smaller.
+</p>
+<dl>
+   <dt>
+      Each of these four arguments has a sensible default, so that you won't always have to specify
+      them all.
+   </dt>
+   <dd>
+      <ol>
+         <li>
+            If <code>classSelectionRegex</code> is empty, then coverage will be applied only to the
+            classes defined in the packages which contain the tests executed in the test run.
+         </li>
+         <li>If no <code>outputFormat</code> is specified, <code>html-nocp</code> is assumed.</li>
+         <li>
+            If <code>outputDir</code> is empty, the current working directory is assumed, with a
+            "coverage-report" subdirectory being created for the HTML report (if not already
+            existing).
+         </li>
+         <li>
+            The <code>srcDirs</code> can also be empty, in which case all "src" directories under
+            the current working dir are automatically found and searched for ".java" sources.
+         </li>
+      </ol>
+   </dd>
+</dl>
+
+<h3 id="switching">Turning coverage output on/off</h3>
+<p>
+   To facilitate turning code coverage on/off, the <em>read-only status</em> of the relevant file is
+   checked by JMockit at startup.
+   The relevant file for XML output is "coverage.xml", and "coverage-report/index.html" for XHTML
+   output, always in the working directory (which can usually be selected separately for each
+   test run configuration in the Java IDE).
+   If said file is currently marked as read-only in the OS, then the corresponding output is not
+   generated for the next test run.
+</p>
+<p>
+   Notice that a Java IDE usually provides an easy mechanism to toggle the read-only status of a
+   project file. In IntelliJ IDEA it is done by double clicking the status bar, with the desired
+   file opened in the editor. In Eclipse there is a "Read only" check box in the "Properties" screen
+   for the text file selected in the editor, which can be opened by typing "Alt + Enter".
+</p>
+</body>
+</html>

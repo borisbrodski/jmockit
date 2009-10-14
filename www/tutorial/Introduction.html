@@ -1,0 +1,210 @@
+<!--
+  ~ JMockit Tutorial
+  ~ Copyright (c) 2006-2009 Rogério Liesenfeld
+  ~ All rights reserved.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining
+  ~ a copy of this software and associated documentation files (the
+  ~ "Software"), to deal in the Software without restriction, including
+  ~ without limitation the rights to use, copy, modify, merge, publish,
+  ~ distribute, sublicense, and/or sell copies of the Software, and to
+  ~ permit persons to whom the Software is furnished to do so, subject to
+  ~ the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be
+  ~ included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  ~ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+  ~ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+   <title>The JMockit Testing Toolkit Tutorial</title>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+   <link rel="stylesheet" type="text/css" href="../prettify.css"/>
+</head>
+<body>
+<h2>Introduction</h2>
+<p>
+   In this tutorial we will examine the available mocking APIs, always with the help of relevant
+   code snippets.
+   Even though the tutorial is fairly complete, it does not attempt to cover the entire published
+   API in detail.
+   A more complete and detailed specification for all public classes, methods, etc. is provided
+   through the <a href="../javadoc/index.html">API documentation</a>, which can also be found under
+   the "jmockit/www/javadoc" folder inside the full toolkit distribution file.
+   The main library file, "jmockit.jar", contains Java source files (with Javadoc comments) for easy
+   access to the API source code and documentation from a Java IDE.
+</p>
+<p>
+   The additional tools which are provided through separate jar files are also covered, in separate
+   chapters of the tutorial.
+</p>
+
+<h3 id="isolation">Developer testing and test isolation</h3>
+<p>
+   Software tests written by the developers themselves, to test their own code, are often very
+   important for successful software development.
+   Such tests are usually written with the help of a testing framework, such as 
+   <a href="http://www.junit.org">JUnit</a>.
+</p>
+<p>
+   Developer tests can be divided in two main categories:
+</p>
+<ol>
+   <li>
+      <strong>Unit tests</strong>, intended to test a class in isolation from the rest of the
+      system.
+   </li>
+   <li>
+      <strong>Integration tests</strong>, intended to test system operations that encompass a class
+      and its dependencies (other classes with which the class under test interacts).
+   </li>
+</ol>
+<p>
+   Even though integration tests include the interaction between multiple classes, particular tests
+   may not be interested in exercising all components, layers, or sub-systems involved. The ability
+   to isolate the code under test from irrelevant parts of the system is therefore generally useful.
+</p>
+
+<h3 id="mocks">Testing with mock objects</h3>
+<p>
+   A common and powerful technique for testing code in isolation is the use of "mocks".
+   Traditionally, a <em>mock object</em> is an instance of a class specifically implemented for a
+   single test or set of related tests.
+   This instance is passed to code under test to take the place of one of its dependencies.
+   Each mock object behaves in the way expected by both the code under test and the
+   tests that use it, so that all tests can pass.
+   That, however, is not the only role mock objects usually play.
+   As a complement to the verifications (assertions) performed by each test, the mock class itself
+   can encode additional assertions.
+</p>
+<p>
+   The above is true for conventional mock object tools such as jMock and EasyMock (see the next
+   section for more on these tools).
+   JMockit goes beyond conventional mock objects by allowing individual methods and
+   constructors to be mocked directly on "real" (non-mock) classes, consequently eliminating the
+   need to instantiate mock objects in tests and pass them to code under test;
+   rather, the regular objects created by code under test will execute mock behavior defined by
+   tests whenever methods or constructors are called on the real classes.
+   In fact, with JMockit the implementations for existing methods/constructors are replaced with
+   mock implementations, usually for the duration of a single test.
+   In addition, <code>static</code>, <code>final</code> and even <code>native</code> methods can
+   have their implementations replaced, and therefore are also "mockable".
+</p>
+<p>
+   Mocks are most useful for unit tests, but can also be used for other kinds of developer tests,
+   such as integration tests. For example, you may want to test a presentation layer class along
+   with its interactions with other classes in the same layer, without actually depending on the
+   result of calls made to code in other application layers, such as the business or infrastructure
+   layers.
+</p>
+
+<h3 id="tools">Tools for testing with mock objects</h3>
+<p>
+   Existing tools for testing with mock objects include <a
+   href="http://www.easymock.org">EasyMock</a> and <a href="http://www.jmock.org">jMock</a>, both of
+   which are based on <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Proxy.html"
+   >java.lang.reflect.Proxy</a>, which requires an interface to be implemented. It's also possible
+   to create proxies for concrete classes with CGLIB-based extensions to these tools. Each of these
+   tools has a rich API for expressing expectations that are verified when the methods on mock
+   classes are called. It's not uncommon to see JUnit tests with most or all checks written as
+   EasyMock/jMock expectations, instead of with JUnit's own assertion methods. In that sense, such
+   tools compete with the base testing framework.
+</p>
+<p>
+   JMockit has its own <strong>Expectations API</strong>, which is similar to those APIs but goes
+   beyond them by providing support for mocking all kinds of methods, constructors, and types
+   (interfaces, abstract classes, final or non-final classes, classes from the JRE, etc.).
+</p>
+
+<h3 id="issues">Issues with conventional mock objects</h3>
+<p>
+   The conventional solutions for achieving isolation with mock objects impose certain design
+   restrictions on the code under test. JMockit was created as an alternative with no such
+   restrictions, by leveraging the facilities in the new <a
+   href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/instrument/package-summary.html"
+   >java.lang.instrument</a> Java 5 package (in addition to making use of - to a lesser degree -
+   reflection, dynamic proxies, and custom class loaders).
+</p>
+<p>
+   The restrictions on application classes for which a mock object may be needed in a given test
+   demand that said classes either implement a separate interface, or that all (instance) methods to
+   be mocked are overridable (which means neither the class itself nor any of those methods can be
+   declared to be <code>final</code>).
+   Additionally, the restrictions also imply that the instantiation of dependencies must be
+   controlled from outside the dependent unit, so that a proxy object (the mock) can be passed to it
+   in place of the "real" implementation for each dependency (see
+   <a href="http://en.wikipedia.org/wiki/Dependency_injection">dependency injection</a>).
+   That is, proxied classes can't simply be created with the <code>new</code> operator in client
+   code, because constructor invocations cannot be intercepted through conventional techniques.
+</p>
+<p>
+   To sum up, these are the design restrictions one has to live with when using a conventional
+   approach to mocking:
+</p>
+<ul>
+   <li>
+      Application classes have to implement a separate interface (to enable the use of
+      <code>java.lang.reflect.Proxy</code>) or at least not be declared <code>final</code>
+      (to enable the dynamic generation of a subclass through a custom class loader).
+      In this second case, no instance method to be mocked can be <code>final</code> either.
+      <br/>
+      Obviously, creating Java interfaces just so a mock implementation can exist is not desirable.
+      Separate interfaces (or more generally, abstractions) should be created only when multiple
+      implementations will exist in <em>production code</em>.
+      <br/>
+      In Java, making classes and methods <code>final</code> is optional, but it can be a great way
+      to capture certain design decisions; additionally, it allows static analysis tools (such as
+      Checkstyle, PMD, FindBugs, or your Java IDE) to provide useful warnings about the code (about,
+      for example, a final method which declares to throw a specific checked exception, but doesn't
+      actually throw it; such warning could not be given for a non-final method, since an override
+      could throw the exception).
+   </li>
+   <li>
+      No static methods for which a mock implementation might be needed can be used.
+      <br/>
+      In practice, this means that the use of a "static facade", otherwise a convenient solution to
+      provide stateless utility methods or as an abstraction to a complex subsystem, is disallowed.
+   </li>
+   <li>
+      All "mockable" methods must be public for mock classes that implement an interface, or at
+      least protected for mock subclasses.
+      Usually private methods don't need to be mocked, but in certain tests it may be the easiest
+      solution in getting the test done.
+   </li>
+   <li>
+      Having to provide the code under test with mock instances of classes they depend on, and by
+      extension being forced to create additional setter methods or constructors in dependent
+      classes so they can be "injected" with the necessary dependencies.
+      <br/>
+      This not only rules out the use of singletons, factories, and registries of service objects
+      (the "Service Locator" pattern), it also rules out the simplest possible way to get a
+      dependency from inside the dependent class: by directly instantiating it with the
+      <code>new</code> operator.
+      <br/>
+      This last situation where the use of <code>new</code> would do is particularly insidious,
+      often leading developers to over-engineer their designs by creating unnecessary abstractions
+      and ultimately introducing complex application frameworks just to deal with the configuration
+      of such abstractions and their (single) implementations.
+   </li>
+</ul>
+<p>
+   With JMockit, <strong>any</strong> design can be tested in isolation without restricting the
+   developer's freedom.
+   Design decisions which have a negative effect on testability when using only traditional mock
+   objects are inconsequential when using this new approach.
+   In effect, testability becomes much less of an issue in application design, allowing developers
+   to avoid complexities such as explicit interfaces, factories, dependency injection and so on,
+   when they aren't justified by actual system requirements.
+</p>
+
+<script type="text/javascript" src="../prettify.js"></script>
+</body>
+</html>

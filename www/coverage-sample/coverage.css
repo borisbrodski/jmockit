@@ -1,0 +1,32 @@
+caption { background-color: darkslateblue; color: white; font-size: larger; }
+th { background-color: cornflowerblue; color: white; }
+td { font-family: monospace; }
+pre { margin: 0; }
+ol {
+   background-color: lightcyan;
+   margin-left: 4em; margin-right: 2em; margin-bottom: 1ex; margin-top: 1ex;
+}
+
+span.comment { color: gray; }
+span.keyword { color: darkblue; font-weight: bolder; }
+
+.lineNo { text-align: right; }
+.count { background-color: yellow; padding-left: 4px; text-align: right; }
+
+.nonexec { background-color: white; }
+.covered { background-color: lightgreen; }
+.uncovered { background-color: lightcoral; }
+.partiallyCovered { background-color: goldenrod; }
+
+td.file {
+   vertical-align: middle; background-color: #e0e0e0; padding: 2px;
+   border-bottom: white solid 1px;
+}
+td.coverage {
+   font-weight: bolder; width: 6em; text-align: right; vertical-align: middle;
+   border-bottom: white solid 1px;
+}
+td.withBranches { background-color: #c8bb88; }
+td.withBranches pre { display: inline; margin-right: 2px; }
+
+.withCallPoints { cursor: pointer; }

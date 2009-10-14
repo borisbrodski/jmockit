@@ -1,0 +1,297 @@
+/*
+ * JMockit Expectations
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+package mockit;
+
+import java.util.*;
+
+import mockit.integration.junit4.*;
+import static org.junit.Assert.*;
+import org.junit.*;
+import org.junit.runner.*;
+
+@RunWith(JMockit.class)
+public final class ExpectationsWithInvocationCountsTest
+{
+   private final CodeUnderTest codeUnderTest = new CodeUnderTest();
+
+   static class CodeUnderTest
+   {
+      private final Collaborator dependency = new Collaborator();
+
+      void doSomething()
+      {
+         dependency.provideSomeService();
+      }
+
+      void doSomethingElse()
+      {
+         dependency.simpleOperation(1, "b", null);
+      }
+   }
+
+   static class Collaborator
+   {
+      Collaborator() {}
+
+      @SuppressWarnings({"UnusedDeclaration"})
+      Collaborator(int value) {}
+
+      void provideSomeService() {}
+
+      @SuppressWarnings({"UnusedDeclaration"})
+      final void simpleOperation(int a, String b, Date c) {}
+   }
+
+   @Test
+   public void expectOnce()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService();
+         }
+      };
+
+      codeUnderTest.doSomething();
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectOnceButReplayTwice()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService();
+         }
+      };
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomething();
+
+      fail("Should not get here");
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectOnceButReplayThreeTimes()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService();
+         }
+      };
+
+      codeUnderTest.doSomething();
+
+      try {
+         codeUnderTest.doSomething();
+      }
+      finally {
+         codeUnderTest.doSomething();
+      }
+
+      fail("Should not get here");
+   }
+
+   @Test
+   public void expectTwiceByRepeatingTheExpectation()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService();
+            mock.provideSomeService();
+         }
+      };
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomething();
+   }
+
+   @Test
+   public void expectTwiceByUsingInvocationCount()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); repeats(2);
+            mock.simpleOperation(1, "b", null);
+         }
+      };
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomethingElse();
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectTwiceByUsingInvocationCountButReplayOnlyOnce()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); repeats(2);
+            mock.simpleOperation(1, "b", null);
+         }
+      };
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomethingElse();
+   }
+
+   @Test
+   public void expectAtLeastOnceAndReplayTwice()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); repeatsAtLeast(1);
+            mock.simpleOperation(1, "b", null);
+         }
+      };
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomethingElse();
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectAtLeastTwiceButReplayOnce()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); repeatsAtLeast(2);
+            mock.simpleOperation(1, "b", null);
+         }
+      };
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomethingElse();
+   }
+
+   @Test
+   public void expectAtMostTwiceAndReplayOnce()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); repeatsAtMost(2);
+            mock.simpleOperation(1, "b", null);
+         }
+      };
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomethingElse();
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectAtMostOnceButReplayTwice()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); repeatsAtMost(1);
+            mock.simpleOperation(1, "b", null);
+         }
+      };
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomethingElse();
+   }
+
+   @Test
+   public void expectTwoOrThreeTimes()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); repeats(2, 3);
+            mock.simpleOperation(1, "b", null);
+         }
+      };
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomethingElse();
+   }
+
+   @Test
+   public void expectZeroOrMoreTimesAndReplayTwice()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); repeats(0, -1);
+            mock.simpleOperation(1, "b", null);
+         }
+      };
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomethingElse();
+   }
+
+   @Test
+   public void expectZeroOrMoreTimesAndReplayNone()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); repeats(0, 0);
+            mock.simpleOperation(1, "b", null);
+         }
+      };
+
+      codeUnderTest.doSomethingElse();
+   }
+}

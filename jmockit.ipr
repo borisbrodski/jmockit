@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project relativePaths="false" version="4">
+  <component name="BuildJarProjectSettings">
+    <option name="BUILD_JARS_ON_MAKE" value="false" />
+  </component>
+  <component name="CodeStyleSettingsManager">
+    <option name="PER_PROJECT_SETTINGS" />
+    <option name="USE_PER_PROJECT_SETTINGS" value="false" />
+  </component>
+  <component name="CompilerConfiguration">
+    <option name="DEFAULT_COMPILER" value="Javac" />
+    <option name="DEPLOY_AFTER_MAKE" value="0" />
+    <resourceExtensions>
+      <entry name=".+\.(properties|xml|html|dtd|tld)" />
+      <entry name=".+\.(gif|png|jpeg|jpg)" />
+    </resourceExtensions>
+    <wildcardResourcePatterns>
+      <entry name="?*.properties" />
+      <entry name="?*.xml" />
+      <entry name="?*.gif" />
+      <entry name="?*.png" />
+      <entry name="?*.jpeg" />
+      <entry name="?*.jpg" />
+      <entry name="?*.html" />
+      <entry name="?*.dtd" />
+      <entry name="?*.tld" />
+      <entry name="?*.ftl" />
+    </wildcardResourcePatterns>
+  </component>
+  <component name="CopyrightManager" default="">
+    <module2copyright />
+  </component>
+  <component name="DependencyValidationManager">
+    <option name="SKIP_IMPORT_STATEMENTS" value="false" />
+  </component>
+  <component name="EclipseCompilerSettings">
+    <option name="DEBUGGING_INFO" value="true" />
+    <option name="GENERATE_NO_WARNINGS" value="true" />
+    <option name="DEPRECATION" value="false" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+    <option name="MAXIMUM_HEAP_SIZE" value="128" />
+  </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="FireworksProject">
+    <option name="expectedTestCaseNameRegex" />
+    <option name="maxMemory" />
+    <option name="maxSize" value="5" />
+    <option name="enable" value="true" />
+    <option name="enableAutoTask" value="true" />
+    <option name="autoRunTestsDelayTime" value="1000" />
+    <option name="jvmArgs" />
+    <option name="clearLogConsole" value="true" />
+    <option name="autoShowErrorsInEditorAfterCompile" value="true" />
+  </component>
+  <component name="InspectionProjectProfileManager">
+    <option name="PROJECT_PROFILE" value="Project Default" />
+    <option name="USE_PROJECT_PROFILE" value="true" />
+    <version value="1.0" />
+    <profiles>
+      <profile version="1.0" is_locked="false">
+        <option name="myName" value="Project Default" />
+        <option name="myLocal" value="false" />
+      </profile>
+    </profiles>
+    <list size="0" />
+  </component>
+  <component name="JavacSettings">
+    <option name="DEBUGGING_INFO" value="true" />
+    <option name="GENERATE_NO_WARNINGS" value="false" />
+    <option name="DEPRECATION" value="true" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+    <option name="MAXIMUM_HEAP_SIZE" value="128" />
+  </component>
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" />
+    <option name="OPTION_SCOPE" value="protected" />
+    <option name="OPTION_HIERARCHY" value="true" />
+    <option name="OPTION_NAVIGATOR" value="true" />
+    <option name="OPTION_INDEX" value="true" />
+    <option name="OPTION_SEPARATE_INDEX" value="true" />
+    <option name="OPTION_DOCUMENT_TAG_USE" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_VERSION" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_DEPRECATED" value="true" />
+    <option name="OPTION_DEPRECATED_LIST" value="true" />
+    <option name="OTHER_OPTIONS" value="" />
+    <option name="HEAP_SIZE" />
+    <option name="LOCALE" />
+    <option name="OPEN_IN_BROWSER" value="true" />
+  </component>
+  <component name="JikesSettings">
+    <option name="JIKES_PATH" value="" />
+    <option name="DEBUGGING_INFO" value="true" />
+    <option name="DEPRECATION" value="true" />
+    <option name="GENERATE_NO_WARNINGS" value="false" />
+    <option name="IS_EMACS_ERRORS_MODE" value="true" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+  </component>
+  <component name="ProjectDetails">
+    <option name="projectName" value="jmockit" />
+  </component>
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/samples/AnimatedTransitions/AnimatedTransitions.iml" filepath="$PROJECT_DIR$/samples/AnimatedTransitions/AnimatedTransitions.iml" />
+      <module fileurl="file://$PROJECT_DIR$/asm2/Asm2.iml" filepath="$PROJECT_DIR$/asm2/Asm2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/coverage/Coverage.iml" filepath="$PROJECT_DIR$/coverage/Coverage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/easymock/Easymock.iml" filepath="$PROJECT_DIR$/samples/easymock/Easymock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/easymockclassextension/Easymockclassextension.iml" filepath="$PROJECT_DIR$/samples/easymockclassextension/Easymockclassextension.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hamcrest/Hamcrest.iml" filepath="$PROJECT_DIR$/hamcrest/Hamcrest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hibernate3emul/Hibernate3emul.iml" filepath="$PROJECT_DIR$/hibernate3emul/Hibernate3emul.iml" />
+      <module fileurl="file://$PROJECT_DIR$/incremental/Incremental.iml" filepath="$PROJECT_DIR$/incremental/Incremental.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/jbossaop/Jbossaop.iml" filepath="$PROJECT_DIR$/samples/jbossaop/Jbossaop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/jmock/Jmock.iml" filepath="$PROJECT_DIR$/samples/jmock/Jmock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/LoginService/LoginService.iml" filepath="$PROJECT_DIR$/samples/LoginService/LoginService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/main/Main.iml" filepath="$PROJECT_DIR$/main/Main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/mockito/Mockito.iml" filepath="$PROJECT_DIR$/samples/mockito/Mockito.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/orderMngmntWebapp/OrderMngmntWebapp.iml" filepath="$PROJECT_DIR$/samples/orderMngmntWebapp/OrderMngmntWebapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/powermock/Powermock.iml" filepath="$PROJECT_DIR$/samples/powermock/Powermock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/TimingFramework/TimingFramework.iml" filepath="$PROJECT_DIR$/samples/TimingFramework/TimingFramework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/tutorial/Tutorial.iml" filepath="$PROJECT_DIR$/samples/tutorial/Tutorial.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/unitils/Unitils.iml" filepath="$PROJECT_DIR$/samples/unitils/Unitils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/www/www.iml" filepath="$PROJECT_DIR$/www/www.iml" />
+    </modules>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="RmicSettings">
+    <option name="IS_EANABLED" value="false" />
+    <option name="DEBUGGING_INFO" value="true" />
+    <option name="GENERATE_NO_WARNINGS" value="false" />
+    <option name="GENERATE_IIOP_STUBS" value="false" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+  </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="" />
+  </component>
+  <component name="libraryTable">
+    <library name="Common samples lib">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/lib/commons-lang-2.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/cglib-nodep-2.1_3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-library-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/objenesis-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/easymockclassextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/dom4j-1.6.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/easymock-2.5.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/slf4j-nop-1.5.8.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Hibernate 3 + JTA">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/hibernate3emul/lib/jta.jar!/" />
+        <root url="jar://$PROJECT_DIR$/hibernate3emul/lib/hibernate3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="JMock 2.5.1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-legacy-2.5.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-junit4-2.5.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/objenesis-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Logging APIs">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/main/lib/commons-logging-1.1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/main/lib/log4j-1.2.15.jar!/" />
+        <root url="jar://$PROJECT_DIR$/main/lib/slf4j-api-1.5.8.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="PowerMock 1.2.5">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/powermock/lib/jaxen-1.1-beta-6.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/lib/javassist-3.9.0.GA.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/lib/powermock-1.2.5-full.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Unitils 2.3">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-2.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/asm-tree-3.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/asm-analysis-3.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/asm-3.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
+</project>
+

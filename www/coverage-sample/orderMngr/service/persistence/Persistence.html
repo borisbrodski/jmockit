@@ -1,0 +1,584 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+  <title>JMockit Coverage Report</title>
+  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+  <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
+</head>
+<body>
+  <table cellpadding='0' cellspacing='0'>
+    <caption><code>samples\orderMngmntWebapp\src\orderMngr\service\persistence\Persistence.java</code></caption>
+    <tr>
+      <td class='lineNo'>1</td><td/>
+      <td class='nonexec'><pre><span class='keyword'>package</span> orderMngr.service.persistence;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>2</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>3</td><td/>
+      <td class='nonexec'><pre><span class='keyword'>import</span> java.io.*;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>4</td><td/>
+      <td class='nonexec'><pre><span class='keyword'>import</span> java.util.*;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>5</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>6</td><td/>
+      <td class='nonexec'><pre><span class='keyword'>import</span> org.hibernate.*;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>7</td><td/>
+      <td class='nonexec'><pre><span class='keyword'>import</span> org.hibernate.cfg.*;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>8</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>9</td><td class='count'>1</td>
+      <td><pre class='covered'><span class='keyword'>public</span> <span class='keyword'>final</span> <span class='keyword'>class</span> Persistence</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>10</td><td/>
+      <td class='nonexec'><pre>{</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>11</td><td class='count'>1</td>
+      <td><pre class='covered'>   <span class='keyword'>private</span> <span class='keyword'>static</span> ThreadLocal&lt;Session> currentSession = <span class='keyword'>new</span> ThreadLocal&lt;Session>();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>12</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>private</span> <span class='keyword'>static</span> SessionFactory sessionFactory;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>13</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>14</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>static</span> {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>15</td><td/>
+      <td class='nonexec'><pre><span class='comment'>      //noinspection CatchGenericClass,OverlyBroadCatchBlock</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>16</td><td/>
+      <td class='nonexec'><pre>      <span class='keyword'>try</span> {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>17</td><td class='count'>1</td>
+      <td><pre class='covered'>         sessionFactory = <span class='keyword'>new</span> Configuration().configure().buildSessionFactory();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>18</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>19</td><td class='count'>0</td>
+      <td class='uncovered'><pre>      <span class='keyword'>catch</span> (Error e) {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>20</td><td class='count'>0</td>
+      <td class='uncovered'><pre>         System.err.println(e);</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>21</td><td class='count'>0</td>
+      <td class='uncovered'><pre>         <span class='keyword'>throw</span> e;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>22</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>23</td><td class='count'>0</td>
+      <td class='uncovered'><pre>      <span class='keyword'>catch</span> (RuntimeException e) {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>24</td><td class='count'>0</td>
+      <td class='uncovered'><pre>         System.err.println(e);</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>25</td><td class='count'>0</td>
+      <td class='uncovered'><pre>         <span class='keyword'>throw</span> e;</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>26</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>27</td><td/>
+      <td class='nonexec'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>28</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>29</td><td/>
+      <td class='nonexec'><pre><span class='comment'>   // Entity life-cycle methods -------------------------------------------------------------------</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>30</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>31</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> &lt;T> T load(Class&lt;T> entityClass, Serializable entityId)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>32</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>33</td><td class='count'>4</td>
+      <td><pre class='covered'>      <span class='keyword'>return</span> (T) session().load(entityClass, entityId);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>34</td><td/>
+      <td class='nonexec'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>35</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>36</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>boolean</span> exists(Class&lt;?> entityClass, Serializable entityId)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>37</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>38</td><td class='count'>1</td>
+      <td><pre class='partiallyCovered'>      <span class='keyword'>return</span> session().get(entityClass, entityId) != <span class='keyword'>null</span>;</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>39</td><td/>
+      <td class='nonexec'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>40</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>41</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>void</span> unload(Object entity)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>42</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>43</td><td class='count'>3</td>
+      <td><pre class='covered'>      session().evict(entity);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>44</td><td class='count'>3</td>
+      <td><pre class='covered'>   }</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>45</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>46</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>void</span> persist(Object entityData)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>47</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>48</td><td class='count'>8</td>
+      <td><pre class='covered'>      session().save(entityData);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>49</td><td class='count'>8</td>
+      <td><pre class='covered'>   }</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>50</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>51</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>void</span> delete(Object entity)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>52</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>53</td><td class='count'>1</td>
+      <td><pre class='covered'>      session().delete(entity);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>54</td><td class='count'>1</td>
+      <td><pre class='covered'>   }</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>55</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>56</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>private</span> <span class='keyword'>static</span> Session session()</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>57</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>58</td><td class='count'>66</td>
+      <td><pre class='covered'>      Session session = currentSession.get();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>59</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>60</td><td class='count'>66</td>
+      <td><pre class='covered'>      <span class='keyword'>if</span> (session == <span class='keyword'>null</span>) {</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>61</td><td class='count'>9</td>
+      <td><pre class='covered'>         session = sessionFactory.openSession();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>62</td><td class='count'>9</td>
+      <td><pre class='covered'>         currentSession.set(session);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>63</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>64</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>65</td><td class='count'>66</td>
+      <td><pre class='covered'>      <span class='keyword'>return</span> session;</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>66</td><td/>
+      <td class='nonexec'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>67</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>68</td><td/>
+      <td class='nonexec'><pre><span class='comment'>   // Query methods -------------------------------------------------------------------------------</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>69</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>70</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> &lt;E> List&lt;E> find(String ql, Object... args)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>71</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>72</td><td class='count'>5</td>
+      <td><pre class='covered'>      Query query = newQuery(ql, args);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>73</td><td class='count'>5</td>
+      <td><pre class='covered'>      <span class='keyword'>return</span> query.list();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>74</td><td/>
+      <td class='nonexec'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>75</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>76</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>private</span> <span class='keyword'>static</span> Query newQuery(String ql, Object... args)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>77</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>78</td><td class='count'>9</td>
+      <td><pre class='covered'>      Query query = session().createQuery(ql);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>79</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>80</td><td class='count'>26</td>
+      <td><pre class='covered'>      <span class='keyword'>for</span> (<span class='keyword'>int</span> i = 0; i &lt; args.length; i++) {</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>81</td><td class='count'>17</td>
+      <td><pre class='covered'>         query.setParameter(i, args[i]);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>82</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>83</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>84</td><td class='count'>9</td>
+      <td><pre class='covered'>      <span class='keyword'>return</span> query;</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>85</td><td/>
+      <td class='nonexec'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>86</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>87</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>boolean</span> exists(String ql, Object... args)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>88</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>89</td><td class='count'>4</td>
+      <td><pre class='covered'>      Query query = newQuery(ql, args);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>90</td><td class='count'>4</td>
+      <td><pre class='covered'>      query.setMaxResults(1);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>91</td><td class='count'>4</td>
+      <td><pre class='covered'>      <span class='keyword'>return</span> query.iterate().hasNext();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>92</td><td/>
+      <td class='nonexec'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>93</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>94</td><td/>
+      <td class='nonexec'><pre><span class='comment'>   // Methods related to the Unit of Work and the Transaction -------------------------------------</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>95</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>96</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>void</span> persistPendingChanges()</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>97</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>98</td><td class='count'>10</td>
+      <td><pre class='covered'>      session().flush();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>99</td><td class='count'>10</td>
+      <td><pre class='covered'>      session().beginTransaction();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>100</td><td class='count'>10</td>
+      <td><pre class='covered'>   }</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>101</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>102</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>void</span> clearUnitOfWork()</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>103</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>104</td><td class='count'>0</td>
+      <td class='uncovered'><pre>      session().clear();</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>105</td><td class='count'>0</td>
+      <td class='uncovered'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>106</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>107</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>void</span> closeUnitOfWork()</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>108</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>109</td><td class='count'>9</td>
+      <td><pre class='covered'>      Session session = currentSession.get();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>110</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>111</td><td class='count'>9</td>
+      <td><pre class='covered'>      <span class='keyword'>if</span> (session != <span class='keyword'>null</span>) {</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>112</td><td class='count'>9</td>
+      <td><pre class='covered'>         session.close();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>113</td><td class='count'>9</td>
+      <td><pre class='covered'>         currentSession.set(<span class='keyword'>null</span>);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>114</td><td/>
+      <td class='nonexec'><pre>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>115</td><td class='count'>9</td>
+      <td><pre class='covered'>   }</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>116</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>117</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>void</span> beginTransaction()</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>118</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>119</td><td class='count'>9</td>
+      <td><pre class='covered'>      session().beginTransaction();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>120</td><td class='count'>9</td>
+      <td><pre class='covered'>   }</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>121</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>122</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>void</span> rollbackTransaction()</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>123</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>124</td><td class='count'>9</td>
+      <td><pre class='covered'>      session().getTransaction().rollback();</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>125</td><td class='count'>9</td>
+      <td><pre class='covered'>   }</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>126</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>127</td><td/>
+      <td class='nonexec'><pre><span class='comment'>   // Miscelaneous methods ------------------------------------------------------------------------</span></pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>128</td><td/>
+      <td/>
+    </tr>
+    <tr>
+      <td class='lineNo'>129</td><td/>
+      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> Serializable entityId(Object entity)</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>130</td><td/>
+      <td class='nonexec'><pre>   {</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>131</td><td class='count'>2</td>
+      <td><pre class='covered'>      <span class='keyword'>return</span> session().getIdentifier(entity);</pre>
+      </td>
+    </tr>
+    <tr>
+      <td class='lineNo'>132</td><td/>
+      <td class='nonexec'><pre>   }</pre></td>
+    </tr>
+    <tr>
+      <td class='lineNo'>133</td><td/>
+      <td class='nonexec'><pre>}</pre></td>
+    </tr>
+  </table>
+</body>
+</html>

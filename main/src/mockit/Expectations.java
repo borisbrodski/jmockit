@@ -1,0 +1,460 @@
+/*
+ * JMockit Expectations
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+package mockit;
+
+import java.util.*;
+
+import mockit.internal.expectations.*;
+import mockit.internal.startup.*;
+import mockit.internal.state.*;
+
+/**
+ * Base class whose subclasses are defined in test code, and whose instances define a set of
+ * expected method/constructor invocations on the mocked types (classes or interfaces) declared
+ * through one or more <em>mock fields</em> and/or <em>mock parameters</em>.
+ * A (local) mock field is any field declared in a subclass which is either non-private or annotated
+ * with {@linkplain Mocked}.
+ * <p/>
+ * Typically, this class is used by extending it with <em>anonymous inner classes</em>
+ * (named as <em>expectation blocks</em>) inside test methods, which record expectations on the
+ * mocked types by calling instance methods on mock fields/parameters, static methods on mocked
+ * classes, and/or constructors of mocked classes.
+ * Arguments passed in such calls are later matched to the actual arguments passed from the code
+ * under test.
+ * <p/>
+ * Any mock fields declared within an expectation block will only be accessible for mock invocations
+ * inside this particular block.
+ * An alternative is to declare mock fields of the <em>test class</em> itself, so that all of its
+ * test methods can share the same mock fields. Such fields need to be annotated with 
+ * {@code @Mocked}, though.
+ * <p/>
+ * There are several API methods (all of them <code>protected final</code>) which the
+ * subclass/expectation block can use for setting {@linkplain #returns(Object) expected return
+ * values}, {@linkplain #throwsException(Exception) expected thrown exceptions} or
+ * {@linkplain #throwsError(Error) errors}, and argument matching constraints such as
+ * {@linkplain #withEqual(Object)}.
+ * <p/>
+ * Individual expectations are set during the <em>recording phase</em>, and later exercised during
+ * the <em>replay phase</em> of the test.
+ * At the end of the test, the test runner will automatically assert that all recorded invocations 
+ * were actually replayed as expected.
+ * <p/>
+ * Additional features and details about the process above are as follows:
+ * <ul>
+ * <li>
+ * A <strong>mock field</strong> can be of any non-primitive type, including interfaces, abstract
+ * classes, and concrete classes (even <code>final</code> classes).
+ * An instance will be automatically created when the subclass gets instantiated, unless the field
+ * is <code>final</code> (in which case, the test code itself will have the responsibility of
+ * obtaining an appropriate instance). This instance will be a mock object that can be used from
+ * that point forward; however, <strong>static methods</strong> and <strong>constructors</strong>
+ * belonging to the mocked class and its super-classes will also be mocked, and any invocations made
+ * to them will work just as a regular instance method invocation would.
+ * </li>
+ * <li>
+ * Unless specified otherwise, all expectations defined inside an {@code Expectations} immediate
+ * subclass will be <em>strict</em>, meaning that the recorded invocations are <em>expected</em> to
+ * occur in the same order during the replay phase, and that non-recorded invocations are <em>not
+ * allowed</em>.
+ * This default behavior can be overridden for individual expectations through the
+ * {@linkplain #notStrict()} method, and for whole mocked types through the {@linkplain NonStrict}
+ * annotation.
+ * </li>
+ * <li>
+ * There is a set of API methods that allow the {@linkplain #newInstance(String, Class[], Object...)
+ * instantiation of non-accessible (to the test) classes}, the
+ * {@linkplain #invoke(Object, String, Object...) invocation of non-accessible methods}, and the
+ * {@linkplain #setField(Object, String, Object) setting of non-accessible fields}.
+ * Most tests shouldn't need these facilities, though.
+ * </li>
+ * <li>
+ * Another set of API methods provides the ability to specify {@linkplain #repeats(int, int) how
+ * many times a recorded invocation is expected to occur} during replay.
+ * </li>
+ * <li>
+ * By default, the exact instance on which instance method invocations occur during the replay phase
+ * is <em>not</em> verified to be the same as the instance used when recording the corresponding
+ * expectation.
+ * If such verification is needed, the {@linkplain #onInstance(Object)} method should be used.
+ * </li>
+ * <li>
+ * There are additional constructors which provide other features:
+ * {@linkplain #Expectations(Object...) dynamic partial mocking}, and
+ * {@linkplain #Expectations(int, Object...) iterated invocations}.
+ * </li>
+ * </ul>
+ *
+ * @see #Expectations()
+ */
+@SuppressWarnings({"ClassWithTooManyMethods"})
+public class Expectations extends Invocations
+{
+   static
+   {
+      Startup.verifyInitialization();
+   }
+
+   private final RecordAndReplayExecution execution;
+
+   /**
+    * Initializes this set of expectations, entering the <em>record</em> phase.
+    * <p/>
+    * For each associated {@linkplain Mocked mocked type}, the following tasks are performed:
+    * <ol>
+    * <li>
+    * Redefines the <em>target class for mocking</em> derived from the mocked type.
+    * </li>
+    * <li>
+    * If the declared type to be mocked is an abstract class, then generates a concrete subclass
+    * with mock implementations for all inherited abstract methods.
+    * </li>
+    * <li>
+    * If the mocked type is the declared type of a non-<code>final</code> instance field, then
+    * creates and assigns a new mock instance to that field.
+    * </li>
+    * </ol>
+    * After this, test code can start recording invocations to the mocked types and mock instances.
+    * Each and every such call made from inside the expectation block is recorded.
+    */
+   protected Expectations()
+   {
+      execution = new RecordAndReplayExecution(this, (Object[]) null);
+   }
+
+   /**
+    * Same as {@linkplain #Expectations()}, except that one or more classes will be partially mocked
+    * according to the invocations received during the record phase.
+    * Such classes are those directly specified as well as those to which any given instances
+    * belong.
+    * <p/>
+    * During the replay phase, any invocations to one of these classes or instances will execute
+    * real production code, unless that invocation was expected (ie, previously recorded as an
+    * expectation).
+    *
+    * @param classesOrObjectsToBePartiallyMocked one or more classes or objects whose classes are
+    * to be considered for partial mocking
+    */
+   protected Expectations(Object... classesOrObjectsToBePartiallyMocked)
+   {
+      execution = new RecordAndReplayExecution(this, classesOrObjectsToBePartiallyMocked);
+   }
+
+   /**
+    * Identical to {@linkplain #Expectations(Object...)}, but considering that the invocations
+    * inside the block will occur in a given number of iterations.
+    * <p/>
+    * The effect of specifying a number of iterations larger than 1 (one) is equivalent to
+    * duplicating (like in "copy & paste") the whole sequence of <em>strict</em> invocations in the
+    * block.
+    * For any <em>non-strict</em> invocation inside the same block, the effect will be equivalent to
+    * multiplying the minimum and maximum invocation count by the specified number of iterations.
+    * <p/>
+    * It's also valid to have multiple expectation blocks for the same test, each with an arbitrary
+    * number of iterations, and containing any mix of strict and non-strict expectations.
+    * 
+    * @param numberOfIterations the positive number of iterations for the whole set of invocations
+    * recorded inside the block; when not specified, 1 (one) iteration is assumed
+    */
+   protected Expectations(int numberOfIterations, Object... classesOrObjectsToBePartiallyMocked)
+   {
+      this(classesOrObjectsToBePartiallyMocked);
+      getCurrentPhase().setNumberOfIterations(numberOfIterations);
+   }
+
+   @Override
+   final RecordPhase getCurrentPhase()
+   {
+      return execution.getRecordPhase();
+   }
+
+   /**
+    * Specify that the next invocation recorded on the given mock instance must be matched by a
+    * corresponding invocation on the <em>same</em> instance in the replay phase.
+    * <p/>
+    * By default, such instances can be different between the record and replay phases, even though
+    * the method or constructor invoked will be the same, and the invocation arguments will match.
+    * The use of this method allows the test to also match on the instance invoked.
+    */
+   protected final <T> T onInstance(T mock)
+   {
+      if (mock == null) {
+         throw new NullPointerException("Missing mock instance to match");
+      }
+
+      getCurrentPhase().setNextInstanceToMatch(mock);
+      return mock;
+   }
+
+   // Methods for setting expected return values and thrown exceptions ////////////////////////////
+
+   /**
+    * Specifies that the previously recorded method invocation will return a given value.
+    * <p/>
+    * More than one return value can be specified for the same invocation by simply calling this
+    * method multiple times, with the desired consecutive values to be later returned.
+    * For an strict expectation, the maximum number of expected invocations is automatically
+    * adjusted so that one invocation for each return value is allowed.
+    * If even more invocations are explicitly allowed then the last recorded return value is used
+    * for all remaining invocations during the replay phase.
+    * <p/>
+    * If the recorded invocation is for a method that does <em>not</em> return a
+    * {@linkplain Collection collection} or {@linkplain Iterator iterator}, then a collection (of
+    * any concrete type) or an iterator can be passed as argument to this method.
+    * In the first case, the elements inside the collection will be successively returned by
+    * sequential invocations to the recorded method, with the maximum number of invocations
+    * automatically adjusted to the number of elements in the collection.
+    * In the second case, each invocation to the recorded method will cause the next value from the
+    * iterator to be returned, until no more elements remain, without any predefined upper limit.
+    * For a recorded method that does return a collection or iterator, passing a collection/iterator
+    * to this method will have the regular effect of causing the collection/iterator to be later
+    * returned, as expected.
+    * <p/>
+    * For a non-void method, if no return value is recorded then all invocations to it will return
+    * the appropriate default value according to the method return type:
+    * <ul>
+    * <li>Primitive: the standard default value is returned (ie {@code false} for
+    * {@code boolean}, '\0' for {@code char}, {@code 0} for {@code int}, and so on).</li>
+    * <li>{@code java.util.Collection} or {@code java.util.List}: returns
+    * {@linkplain Collections#EMPTY_LIST}</li>
+    * <li>{@code java.util.Set}: returns {@linkplain Collections#EMPTY_SET}.</li>
+    * <li>{@code java.util.SortedSet}: returns an unmodifiable empty sorted set.</li>
+    * <li>{@code java.util.Map}: returns {@linkplain Collections#EMPTY_MAP}.</li>
+    * <li>{@code java.util.SortedMap}: returns an unmodifiable empty sorted map.</li>
+    * <li>A reference type (including {@code String} and wrapper types for primitives, and excluding
+    * the exact collection types above): returns {@code null}.</li>
+    * <li>An array type: an array with zero elements (empty) in each dimension is returned.</li>
+    * </ul>
+    * The actual value(s) to be returned can be determined at replay time through a
+    * {@linkplain Delegate} instance, typically created as an anonymous class at the point this
+    * method is called.
+    *
+    * @param value the value to be returned when the method is replayed; must be compatible with the
+    * method's return type
+    *
+    * @throws IllegalStateException if not currently recording an invocation
+    * @throws IllegalArgumentException if the given return value is not {@code null} but the
+    * preceding mock invocation is to a constructor or {@code void} method
+    */
+   protected final void returns(Object value)
+   {
+      Expectation expectation = getCurrentExpectation();
+
+      if (expectation.hasVoidReturnType()) {
+         validateReturnValueForConstructorOrVoidMethod(value);
+      }
+
+      InvocationResults results = expectation.getResults();
+
+      if (value instanceof Iterator && !expectation.hasReturnValueOfType(value.getClass())) {
+         results.addDeferredReturnValues((Iterator<?>) value);
+      }
+      else if (value instanceof Collection && !expectation.hasReturnValueOfType(value.getClass())) {
+         Collection<?> values = (Collection<?>) value;
+         results.addReturnValues(values.toArray(new Object[values.size()]));
+      }
+      else {
+         results.addReturnValue(value);
+      }
+   }
+
+   private void validateReturnValueForConstructorOrVoidMethod(Object value)
+   {
+      if (value != null && !(value instanceof Delegate)) {
+         throw new IllegalArgumentException(
+            "Non-null return value specified for constructor or void method");
+      }
+   }
+
+   /**
+    * Equivalent to calling {@linkplain #returns(Object)} two or more times in sequence.
+    * <p/>
+    * The current expectation will have its upper invocation count automatically set to the total
+    * number of values specified to be returned. This upper limit can be overridden through the
+    * {@code repeats} methods, if necessary.
+    *
+    * @param firstValue the first value to be returned in the replay phase
+    * @param remainingValues the remaining values to be returned, in the same order
+    *
+    * @throws IllegalStateException if not currently recording an invocation
+    * @throws IllegalArgumentException if one of the given return values is not {@code null} but the
+    * preceding mock invocation is to a constructor or {@code void} method
+    */
+   protected final void returns(Object firstValue, Object... remainingValues)
+   {
+      Expectation expectation = getCurrentExpectation();
+
+      if (expectation.hasVoidReturnType()) {
+         validateReturnValueForConstructorOrVoidMethod(firstValue);
+
+         for (Object anotherValue : remainingValues) {
+            validateReturnValueForConstructorOrVoidMethod(anotherValue);
+         }
+      }
+
+      InvocationResults results = expectation.getResults();
+      results.addReturnValue(firstValue);
+
+      if (remainingValues != null) {
+         results.addReturnValues(remainingValues);
+      }
+   }
+
+   /**
+    * Specifies in a type-safe way the return value for an individual mock invocation.
+    * All considerations made with respect to {@linkplain #returns(Object)} also apply here.
+    * 
+    * @param invocationReturningValue the value actually returned by an invocation of the desired
+    * method; the value itself is ignored, being only used to determine the method's return type
+    * @param expectedReturnValue the value to be returned when the recorded invocation is replayed
+    *
+    * @deprecated Use {@linkplain #returns(Object)} instead. This method will be removed for version
+    * 1.0.
+    */
+   @Deprecated
+   @SuppressWarnings({"UnusedDeclaration"})
+   protected final <T, ET extends T> void invokeReturning(
+      T invocationReturningValue, ET expectedReturnValue)
+   {
+      getCurrentExpectation().getResults().addReturnValue(expectedReturnValue);
+   }
+
+   /**
+    * Specifies that the preceding method/constructor invocation will throw an exception when
+    * executed in the replay phase.
+    * <p/>
+    * Just like with {@linkplain #returns(Object)}, multiple consecutive exceptions to be thrown can
+    * be specified by calling this method multiple times for the same invocation.
+    *
+    * @param exception the exception that will be thrown when the invocation is replayed
+    *
+    * @throws IllegalStateException if not currently recording an invocation
+    */
+   protected final void throwsException(Exception exception)
+   {
+      getCurrentExpectation().getResults().addThrowable(exception);
+   }
+
+   /**
+    * Specifies that the preceding method/constructor invocation will throw an error when replayed.
+    * <p/>
+    * Just like with {@linkplain #returns(Object)}, multiple consecutive errors to be thrown can be
+    * specified by calling this method multiple times for the same invocation.
+    *
+    * @param error the error that will be thrown when the invocation is replayed
+    *
+    * @throws IllegalStateException if not currently recording an invocation
+    */
+   protected final void throwsError(Error error)
+   {
+      getCurrentExpectation().getResults().addThrowable(error);
+   }
+
+   // Methods for defining expectation strictness /////////////////////////////////////////////////
+
+   /**
+    * Marks the preceding mock invocation as belonging to a <em>non-strict</em> expectation.
+    * Note that all invocations to {@linkplain NonStrict} mocks will be automatically considered
+    * non-strict. The same is true for all invocations inside a {@linkplain NonStrictExpectations}
+    * block.
+    * <p/>
+    * For a non-strict expectation, any number (including zero) of invocations with matching
+    * arguments can occur while in the replay phase, in any order, and they will all produce the
+    * same result (usually, the {@linkplain #returns(Object) specified return value}).
+    * Two or more non-strict expectations can be recorded for the same method or constructor, as
+    * long as the arguments differ. Argument matchers can be used as well.
+    * <p/>
+    * Expected invocation counts can also be specified for a non-strict expectation (with one of
+    * the "repeats" methods).
+    */
+   protected final void notStrict()
+   {
+      getCurrentPhase().setNotStrict();
+   }
+
+   // Methods related to phase switching, final verification and tear down ////////////////////////
+
+   /**
+    * Ends the recording of expected invocations.
+    * After this, the mock fields will be in the <strong>replay</strong> phase, when invocations are
+    * verified against previously recorded invocations.
+    * <p/>
+    * <strong>Warning</strong>:
+    * This method is called automatically as soon as the initialization of an expectation block is
+    * complete, so usually tests should not explicitly call it. There may be some rare situations,
+    * however, where ending the recording phase while still inside an expectation block will be
+    * convenient.
+    */
+   public final void endRecording()
+   {
+      execution.endRecording();
+   }
+
+   /**
+    * @deprecated Use {@link #assertSatisfied()} instead.
+    * This method will be removed for version 1.0.
+    */
+   @Deprecated
+   public final void endReplay()
+   {
+      assertSatisfied();
+   }
+
+   /**
+    * Ends the replay phase, verifying that all recorded invocations actually happened during test
+    * execution. If there is no active set of expectations, does nothing.
+    * After this, no more calls to mocked methods/constructors should be made.
+    * <p/>
+    * <strong>Warning</strong>:
+    * This method will be called automatically by the test runner at the end of each test, so in
+    * general tests should not explicitly call it.
+    *
+    * @throws IllegalStateException if the current set of expectations is active but still in the
+    * recording phase
+    * @throws AssertionError if any expected invocation for the active set of expectations is
+    * missing, that is, a corresponding invocation in the replay phase did not occur until now
+    */
+   public static void assertSatisfied()
+   {
+      RecordAndReplayExecution recordAndReplay = TestRun.getRecordAndReplayForRunningTest(true);
+
+      if (recordAndReplay != null) {
+         AssertionError error = recordAndReplay.endReplay();
+
+         if (error != null) {
+            throw error;
+         }
+      }
+   }
+
+   /**
+    * @deprecated Use {@link Mockit#restoreAllOriginalDefinitions()} instead.
+    * This method will be removed for version 1.0.
+    */
+   @Deprecated
+   public static void restoreFieldTypeDefinitions()
+   {
+      Mockit.restoreAllOriginalDefinitions();
+   }
+}
