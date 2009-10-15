@@ -63,7 +63,9 @@ public final class SavePoint
       Set<String> classesToRestore = getCopyOfAllTransformedClasses();
       classesToRestore.removeAll(previousTransformedClasses);
 
-      TestRun.mockFixture().restoreAndRemoveTransformedClasses(classesToRestore);
+      if (!classesToRestore.isEmpty()) {
+         TestRun.mockFixture().restoreAndRemoveTransformedClasses(classesToRestore);
+      }
    }
 
    private void restoreClassesRedefinedAfterSavepoint()
@@ -71,7 +73,9 @@ public final class SavePoint
       Set<Class<?>> classesToRestore = getCopyOfAllRedefinedClasses();
       classesToRestore.removeAll(previousRedefinedClasses);
 
-      TestRun.mockFixture().restoreAndRemoveRedefinedClasses(classesToRestore);
+      if (!classesToRestore.isEmpty()) {
+         TestRun.mockFixture().restoreAndRemoveRedefinedClasses(classesToRestore);
+      }
    }
 
    public static void registerNewActiveSavePoint()
