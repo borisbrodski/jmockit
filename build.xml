@@ -1,6 +1,7 @@
 <project name="jmockit" basedir="." default="fullRebuildWithTests">
    <property file="build.properties"/>
    <property name="ASM_CLASSES" value="asm2/classes"/>
+   <property name="HAMCREST_CLASSES" value="hamcrest/classes"/>
    <loadfile property="version" srcFile="version.txt"/>
 
    <path id="common.classpath">
@@ -32,7 +33,7 @@
             debug="true" source="@{jdkVersion}" target="@{jdkVersion}" nowarn="true">
             <classpath refid="common.classpath"/>
             <classpath location="${ASM_CLASSES}"/>
-            <classpath location="main/hamcrest-classes"/>
+            <classpath location="${HAMCREST_CLASSES}"/>
             <classpath location="main/classes"/>
             <classpath location="@{module}/classes"/>
             <classpath location="@{module}/@{outdir}"/>
@@ -150,7 +151,7 @@
          <fileset dir="main/src" includes="mockit/**/*.java"/>
          <fileset dir="main/classes" includes="mockit/**/*.class"/>
          <fileset dir="${ASM_CLASSES}" excludes="LICENSE.txt **/package.html"/>
-         <fileset dir="main/hamcrest-classes" excludes="hamcrest-LICENSE.txt"/>
+         <fileset dir="${HAMCREST_CLASSES}" excludes="hamcrest-LICENSE.txt **/package.html"/>
          <manifest><attribute name="Implementation-Version" value="${version}"/></manifest>
       </jar>
    </target>
