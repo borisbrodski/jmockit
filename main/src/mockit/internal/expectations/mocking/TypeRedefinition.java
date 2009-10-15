@@ -49,17 +49,24 @@ class TypeRedefinition
       targetClass = typeMetadata.getClassType();
    }
 
-   final Object redefineType(boolean finalField)
+   final void redefineTypeForFinalField()
    {
-      boolean filterResultWhenMatching = !typeMetadata.hasInverseFilters();
-      mockingCfg = new MockingConfiguration(typeMetadata.getFilters(), filterResultWhenMatching);
-      mockConstructorInfo = new MockConstructorInfo(objectWithInitializerMethods, typeMetadata);
+      buildMockingConfigurationFromSpecifiedMetadata();
+      adjustTargetClassIfRealClassNameSpecified();
 
-      if (finalField) {
-         reassignFinalFieldTypeAsSpecifiedInAnnotation();
-         redefineMethodsAndConstructorsInTargetType();
-         return null;
+      if (targetClass == null || targetClass.isInterface()) {
+         throw new IllegalArgumentException(
+            "Final mock field must be of a class type, or otherwise the real class must be " +
+            "specified through the @Mocked annotation:\n" + typeMetadata.mockId);
       }
+
+      redefineMethodsAndConstructorsInTargetType();
+   }
+
+   final Object redefineType()
+   {
+      buildMockingConfigurationFromSpecifiedMetadata();
+      adjustTargetClassIfRealClassNameSpecified();
 
       Object recordingMock;
 
@@ -67,24 +74,25 @@ class TypeRedefinition
          recordingMock = newRedefinedEmptyProxy();
       }
       else {
-         recordingMock = createNewInstanceForMockField();
+         recordingMock = createNewInstanceOfTargetClass();
       }
 
       return recordingMock;
    }
 
-   private void reassignFinalFieldTypeAsSpecifiedInAnnotation()
+   private void buildMockingConfigurationFromSpecifiedMetadata()
+   {
+      boolean filterResultWhenMatching = !typeMetadata.hasInverseFilters();
+      mockingCfg = new MockingConfiguration(typeMetadata.getFilters(), filterResultWhenMatching);
+      mockConstructorInfo = new MockConstructorInfo(objectWithInitializerMethods, typeMetadata);
+   }
+
+   private void adjustTargetClassIfRealClassNameSpecified()
    {
       String realClassName = typeMetadata.getRealClassName();
 
       if (realClassName.length() > 0) {
          targetClass = Utilities.loadClass(realClassName);
-      }
-
-      if (targetClass == null || targetClass.isInterface()) {
-         throw new IllegalArgumentException(
-            "Final mock field must be of a class type, or otherwise the real class must be " +
-            "specified through the @Mocked annotation:\n" + typeMetadata.mockId);
       }
    }
 
@@ -135,7 +143,7 @@ class TypeRedefinition
       return new ClassFile(realClass, true).getReader();
    }
 
-   private Object createNewInstanceForMockField()
+   private Object createNewInstanceOfTargetClass()
    {
       ExpectationsModifier modifier = redefineMethodsAndConstructorsInTargetType();
 

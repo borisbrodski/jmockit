@@ -53,10 +53,15 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
    {
       TypeRedefinition typeRedefinition = new SharedTypeRedefinition(parentObject, typeMetadata);
 
-      InstanceFactory factory = (InstanceFactory) typeRedefinition.redefineType(finalField);
+      if (finalField) {
+         typeRedefinition.redefineTypeForFinalField();
+      }
+      else {
+         InstanceFactory factory = (InstanceFactory) typeRedefinition.redefineType();
 
-      if (factory != null) {
-         mockInstanceFactories.put(typeMetadata, factory);
+         if (factory != null) {
+            mockInstanceFactories.put(typeMetadata, factory);
+         }
       }
 
       return typeRedefinition;

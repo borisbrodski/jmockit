@@ -86,6 +86,13 @@
       classes that are extended by more specific ones. The mock methods in the base mock class will
       be inherited by the mock subclass.
    </li>
+   <li>
+      Enhancement: a mocked field or parameter can now rely on the
+      <code>@Mocked(realClassName = "...")</code> annotation attribute to specify the class of the
+      mock object to be instantiated. The actual field/parameter type will not be considered for
+      mocking. This can be used to mock non-accessible classes (for example, private nested
+      classes), by declaring the field/parameter as being of type <code>Object</code>.
+   </li>
 </ul>
 
 <p>Release 0.990 (October 4/6, 2009):</p>

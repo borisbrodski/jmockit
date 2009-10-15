@@ -47,14 +47,18 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
    {
       TypeRedefinition typeRedefinition = new TypeRedefinition(parentObject, typeMetadata);
 
-      Object mock = typeRedefinition.redefineType(finalField);
+      if (finalField) {
+         typeRedefinition.redefineTypeForFinalField();
+      }
+      else {
+         Object mock = typeRedefinition.redefineType();
+         Utilities.setFieldValue(field, parentObject, mock);
 
-      Utilities.setFieldValue(field, parentObject, mock);
-
-      if (typeMetadata.nonStrict) {
-         // TODO 1: shouldn't this be done in SharedFieldTypeRedefinitions as well?!?
-         // TODO 2: for a NonStrictExpectations this is redundant, so it can be optimized away
-         TestRun.getExecutingTest().addNonStrictMock(mock);
+         if (typeMetadata.nonStrict) {
+            // TODO 1: shouldn't this be done in SharedFieldTypeRedefinitions as well?!?
+            // TODO 2: for a NonStrictExpectations this is redundant, so it can be optimized away
+            TestRun.getExecutingTest().addNonStrictMock(mock);
+         }
       }
 
       return typeRedefinition;

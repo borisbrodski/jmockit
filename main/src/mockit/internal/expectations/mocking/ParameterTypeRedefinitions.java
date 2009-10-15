@@ -63,7 +63,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       }
 
       TypeRedefinition redefinition = new TypeRedefinition(parentObject, typeMetadata);
-      Object mock = redefinition.redefineType(false);
+      Object mock = redefinition.redefineType();
       paramValues[paramIndex] = mock;
 
       if (typeMetadata.nonStrict) {
