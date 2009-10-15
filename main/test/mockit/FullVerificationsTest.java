@@ -35,7 +35,7 @@ public final class FullVerificationsTest extends JMockitTest
    {
       public void setSomething(int value) {}
       public void setSomethingElse(char value) {}
-      public void editABunchMoreStuff() {}
+      public boolean editABunchMoreStuff() { return false; }
       public void notifyBeforeSave() {}
       public void prepare() {}
       public void save() {}
@@ -61,12 +61,34 @@ public final class FullVerificationsTest extends JMockitTest
 
       new FullVerifications()
       {{
-          mock.prepare(); repeatsAtLeast(1);
-          mock.editABunchMoreStuff();
-          mock.notifyBeforeSave(); repeatsAtMost(1);
-          mock.setSomething(withAny(0)); repeats(0, 2);
-          mock.setSomethingElse(withAny(' '));
-          mock.save(); repeats(1);
+         mock.prepare(); repeatsAtLeast(1);
+         mock.editABunchMoreStuff();
+         mock.notifyBeforeSave(); repeatsAtMost(1);
+         mock.setSomething(withAny(0)); repeats(0, 2);
+         mock.setSomethingElse(withAny(' '));
+         mock.save(); repeats(1);
+      }};
+   }
+
+   @Test
+   public void verifyAllInvocationsWithSomeOfThemRecorded()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.editABunchMoreStuff(); returns(true);
+         mock.setSomething(45);
+      }};
+
+      exerciseCodeUnderTest();
+
+      new FullVerifications()
+      {{
+         mock.prepare();
+         mock.setSomething(withAny(1));
+         mock.setSomethingElse(withAny('\0'));
+         mock.editABunchMoreStuff();
+         mock.notifyBeforeSave();
+         mock.save();
       }};
    }
 
@@ -77,11 +99,11 @@ public final class FullVerificationsTest extends JMockitTest
 
       new FullVerifications()
       {{
-          mock.prepare();
-          mock.notifyBeforeSave();
-          mock.setSomething(withAny(0));
-          mock.setSomethingElse(withAny('0'));
-          mock.save();
+         mock.prepare();
+         mock.notifyBeforeSave();
+         mock.setSomething(withAny(0));
+         mock.setSomethingElse(withAny('0'));
+         mock.save();
       }};
    }
 
@@ -132,7 +154,7 @@ public final class FullVerificationsTest extends JMockitTest
    public void verifyRecordedInvocationThatIsAllowedToHappenAnyNoOfTimesAndDoesNotHappen()
    {
       new NonStrictExpectations() {{ mock.save(); }};
-      
+
       mock.prepare();
       mock.setSomething(123);
 
