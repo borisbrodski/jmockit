@@ -34,7 +34,7 @@ import java.lang.annotation.*;
  * Static methods and constructors belonging to a mocked class type (unless specifically excluded)
  * will also be mocked.
  * <p/>
- * In the case of an instance field, it can be declared in a test class, in a super-class of a test 
+ * In the case of an instance field, it can be declared in a test class, in a super-class of a test
  * class, or in a {@link Expectations} subclass.
  * In the case of a parameter, it can only be declared in a test method.
  * <p/>
@@ -52,7 +52,7 @@ import java.lang.annotation.*;
  * <p/>
  * In conclusion, there are three possible scopes for mocked types, from larger to smaller: the
  * whole test class, the test method, and the expectations block inside the test method.
- * Some tests will use only one or two of these scopes, while others can take advantage of all 
+ * Some tests will use only one or two of these scopes, while others can take advantage of all
  * three.
  * <p/>
  * Usually, an actual mock object gets created and assigned to a declared mock field automatically,
@@ -75,7 +75,7 @@ import java.lang.annotation.*;
  * <ol>
  * <li>The type is a concrete or <em>enum</em> class: this class and all its super-classes up to but
  * excluding <code>java.lang.Object</code> will be the target classes for mocking.</li>
- * <li>The type is an <em>interface</em> or <em>annotation</em>: a 
+ * <li>The type is an <em>interface</em> or <em>annotation</em>: a
  * {@linkplain java.lang.reflect.Proxy dynamic proxy class} is created and used as the only target.
  * </li>
  * <li>The type is an <em>abstract class</em>: a concrete subclass is generated with mock
@@ -185,7 +185,7 @@ public @interface Mocked
     * <p/>
     * Notice that this attribute does not apply to <code>final</code> mock fields, which cannot be
     * reassigned.
-    * 
+    *
     * @see Capturing
     */
    int capture() default 0;
@@ -203,7 +203,7 @@ public @interface Mocked
     * Note that this attribute can also be used when the desired concrete class is not accessible to
     * the test (for example, if it's a private inner class inside the code under test).
     *
-    * @see Expectations#newInstance(String, Class[], Object[])
+    * @see Expectations#newInstance(String, Class[], Object...)
     */
    String realClassName() default "";
 }
