@@ -1,5 +1,5 @@
 /*
- * JMockit Core
+ * JMockit Expectations
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -24,17 +24,17 @@
  */
 package integrationTests.homepage;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.junit.runner.*;
 
+import mockit.*;
+import mockit.integration.junit4.*;
+
 @RunWith(JMockit.class)
 public class JMockitExpectationsExampleTest
 {
-   // Mock fields can be declared here too.
+   // Common mock fields can be declared here, and must be annotated with @Mocked.
 
    @Test
    public void testDoOperationAbc()
@@ -49,13 +49,12 @@ public class JMockitExpectationsExampleTest
          }
       };
 
-      // ServiceAbc#doOperationAbc(String) instantiates DependencyXyz and calls "doSomething" on it
-      // with the same argument.
+      // In ServiceAbc#doOperationAbc(String s): "new DependencyXyz().doSomething(s);"
       Object result = new ServiceAbc().doOperationAbc("test");
 
       assertNotNull(result);
 
       // That all expectations recorded were actually executed in the replay phase is automatically
-      // verified at this point, through transparent integration with the JUnit test runner.
+      // verified at this point, through transparent integration with the JUnit/TestNG test runner.
    }
 }

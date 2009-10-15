@@ -1,5 +1,5 @@
 /*
- * JMockit Core
+ * JMockit Annotations
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -24,22 +24,19 @@
  */
 package integrationTests.homepage;
 
+import org.junit.*;
+
 import mockit.*;
 import mockit.integration.junit4.*;
-import static org.junit.Assert.*;
-import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
-public class JMockitAnnotationsExampleTest
+public class JMockitAnnotationsExampleTest extends JMockitTest
 {
    @Test
    public void testDoOperationAbc()
    {
       Mockit.setUpMocks(MockDependencyXyz.class);
 
-      // ServiceAbc#doOperationAbc(String) instantiates DependencyXyz and calls a method on it
-      // with the same argument.
+      // In ServiceAbc#doOperationAbc(String s): "new DependencyXyz().doSomething(s);"
       Object result = new ServiceAbc().doOperationAbc("test");
 
       assertNotNull(result);
@@ -54,5 +51,23 @@ public class JMockitAnnotationsExampleTest
          assertEquals("test", value);
          return 123;
       }
+   }
+
+   @Test // same as the previous test, but using an "in-line" (anonymous) mock class
+   public void testDoOperationAbc_inlineVersion()
+   {
+      new MockUp<DependencyXyz>()
+      {
+         @Mock(invocations = 1)
+         int doSomething(String value)
+         {
+            assertEquals("test", value);
+            return 123;
+         }
+      };
+
+      Object result = new ServiceAbc().doOperationAbc("test");
+
+      assertNotNull(result);
    }
 }

@@ -25,21 +25,15 @@
 package integrationTests.homepage;
 
 import mockit.*;
-import mockit.integration.junit4.*;
-import static org.junit.Assert.*;
-import org.junit.*;
-import org.junit.runner.*;
+import mockit.integration.junit3.*;
 
-@RunWith(JMockit.class)
-public class JMockitCoreExampleTest
+public class JMockitCoreExampleTest extends JMockitTestCase
 {
-   @Test
    public void testDoOperationAbc()
    {
       Mockit.redefineMethods(DependencyXyz.class, MockDependencyXyz.class);
 
-      // ServiceAbc#doOperationAbc(String) instantiates DependencyXyz and calls a method on it
-      // with the same argument.
+      // In ServiceAbc#doOperationAbc(String s): "new DependencyXyz().doSomething(s);"
       Object result = new ServiceAbc().doOperationAbc("test");
 
       assertNotNull(result);

@@ -1,5 +1,5 @@
 /*
- * JMockit Core
+ * JMockit Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -24,29 +24,29 @@
  */
 package integrationTests.homepage;
 
-import org.junit.runner.*;
 import org.junit.*;
-import mockit.integration.junit4.*;
+import org.junit.runner.*;
+
 import mockit.*;
-import static junit.framework.Assert.assertNotNull;
+import mockit.integration.junit4.*;
 
 @RunWith(JMockit.class)
-public class JMockitVerificationsTest
+public class JMockitVerificationsExampleTest
 {
-   @Test
+   @Test // notice the "mock parameter", whose argument value will be created automatically
    public void testDoAnotherOperation(final AnotherDependency anotherMock)
    {
       new NonStrictExpectations()
       {
-         DependencyXyz mock;
+         DependencyXyz mock; // mock instance created and assigned automatically
 
          {
             mock.doSomething("test"); returns(123);
          }
       };
 
-      // ServiceAbc#doAnotherOperationAbc(String) calls "doSomething" on DependencyXyz, but also
-      // calls "complexOperation" on AnotherDependency.
+      // In ServiceAbc#doAnotherOperationAbc(String s): "new DependencyXyz().doSomething(s);"
+      // and "new AnotherDependency().complexOperation(obj);".
       new ServiceAbc().doAnotherOperation("test");
 
       new Verifications()
