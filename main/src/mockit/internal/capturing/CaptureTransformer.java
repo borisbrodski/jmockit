@@ -61,7 +61,10 @@ final class CaptureTransformer implements ClassFileTransformer
       ClassLoader loader, String internalClassName, Class<?> classBeingRedefined,
       ProtectionDomain protectionDomain, byte[] classfileBuffer)
    {
-      if (inactive || classBeingRedefined != null || TestRun.getCurrentTestInstance() == null) {
+      if (
+         inactive || classBeingRedefined != null || TestRun.getCurrentTestInstance() == null ||
+         internalClassName.startsWith("mockit/internal/"))
+      {
          return null;
       }
 
