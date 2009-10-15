@@ -259,8 +259,6 @@
                <exclude name="**/JMockitTest.class"/>
                <exclude name="**/TestNGDecoratorTest.class"/>
                <exclude name="**/ExecutingTest.class"/>
-               <include name="integrationTests/textFile/*TestUsingExpectations.class"/>
-               <include name="integrationTests/textFile/*TestUsingMockAnnotation.class"/>
             </fileset>
          </batchtest>
          <formatter type="xml"/>
