@@ -33,7 +33,7 @@
 <h2>State-based testing with JMockit</h2>
 
 <p>
-   In the JMockit toolkit, the <code>Annotations</code> API provides support for the creation of
+   In the JMockit toolkit, the <strong>Annotations API</strong> provides support for the creation of
    <em>state-based</em> tests.
    The focus when doing this kind of testing is not on the <em>interactions</em> between objects,
    but on their <em>state</em> after the code under test is exercised, and on the data items
@@ -44,6 +44,9 @@
    JUnit/TestNG assertions.
    The JMockit Annotations API allows a test to apply state verification <em>during</em> test
    execution, as the tested unit passes data to dependencies through method/constructor invocations.
+   It also allows the test to verify if any given method or constructor of a mocked dependency is
+   called at all, or more generally to verify the actual number of invocations against an specified
+   exact, minimum, or maximum number of invocations.
 </p>
 <div style="text-align: center;" title="Click for API documentation">
    <map name="figure1">
@@ -56,7 +59,130 @@
    <img src="StateBasedAPI.png" usemap="#figure1">
 </div>
 
-<del>More to be written</del>
+<h3>Mock methods and mock classes</h3>
+<p>
+   In the context of the JMockit Annotations API, a <em>mock method</em> is one annotated with the
+   <code>mockit.Mock</code> annotation.
+   The class to which such methods belong is a <em>mock class</em>.
+   Similarly, a <em>mock constructor</em> is a constructor of a mock class, when annotated as
+   <code>@Mock</code>.
+   For short, in this chapter we will refer to such annotated mock methods and constructors simply
+   as "mocks" (in other contexts, the word "mock" may refer to an <em>instance</em> of a mocked
+   class instead).
+   The example below shows several mocks defined in a mock class.
+</p>
+<pre><code>   public static class MockLoginContext
+   {
+      @Mock
+      public MockLoginContext(String name, CallbackHandler callbackHandler)
+      {
+         assertEquals("test", name);
+         assertNull(callbackHandler);
+      }
+
+      @Mock
+      public void login() {}
+
+      @Mock
+      public Subject getSubject() { return null; }
+   }
+</code></pre>
+<p>
+   Mock classes are typically defined as nested classes inside a JUnit/TestNG test class.
+   That's why this example mock class is declared to be <code>static</code>; it could also have been
+   an inner (non-static) class.
+   There is nothing preventing mock classes from being top-level, though.
+   That would be useful if the mock class is to be reused in multiple test classes.
+</p>
+<p>
+   A mock class (which is part of "test code") is created when we have a "real class" defined in
+   production code which needs to be mocked for a given test.
+   By convention, for a real class named <code>Abc</code> we create a corresponding mock class named
+   <code>MockAbc</code>. This is just a convention, though. A mock class in fact is completely
+   independent from whichever real class it targets. It should define at least one mock method or
+   mock constructor, and may have any number of additional methods and constructors; it can also
+   define any number of fields.
+</p>
+<p>
+   For each mock method/constructor, on the other hand, there must exist a "real method/constructor"
+   with the same signature (name and parameters in the case of a mock method, or just the parameters
+   in the case of a mock constructor) in the targeted real class.
+   If the real method/constructor corresponding to a given mock method/constructor is missing from
+   the real class, an instance of <code>mockit.RealMethodNotFoundForMockException</code> will be
+   thrown when a test attempts to apply the mock class to the corresponding real class (the next
+   section discusses how exactly this is done).
+   Notice this exception can be caused by a refactoring in the real class (such as renaming the
+   real method), so it's important to understand why it happens.
+</p>
+<p>
+   Finally, notice there is no need to have mocks for <em>all</em> methods and constructors in a
+   real class.
+   Any such method or constructor for which no corresponding mock exists in the mock class will
+   simply stay "as is", that is, it won't be mocked.
+   This, of course, assuming there isn't some <em>other</em> mock class applied by the same test
+   to the same real class, something which is perfectly valid (and sometimes useful).
+   If two (or more) mock classes happen to be applied to the same real class for the same test,
+   then such mock classes should avoid defining the same mock twice. In case a mock <em>is</em>
+   duplicated, though, the "last" one to be applied wins.
+</p>
+<p>
+   When a mock class is applied to a real class, the latter gets the implementation of those methods
+   and constructors which have corresponding mocks temporarily replaced/redefined with the
+   implementations of the respective mock methods and constructors as defined in the mock class.
+   In other words, the real class becomes "mocked" for the duration of the test which applied the
+   mock class, and will respond accordingly whenever it receives invocations during test execution.
+   At runtime, what really happens is that the execution of a mocked method/constructor is
+   intercepted and redirected to the corresponding mock method/constructor, which then executes
+   and returns (unless a exception/error is thrown) to the original caller, without this one
+   noticing that a different method/constructor was actually executed.
+   Normally, the "caller" class is the one under test, while the mocked class is a dependency.
+</p>
+<p>
+   In the example above, we have one mock constructor and two mock methods.
+   Since such mocks can be used to verify the "state" passed from the class/unit under test to its
+   dependencies, we commonly see JUnit/TestNG assertions in them.
+   Such assertions will verify that the input arguments are as expected. When one of them fails,
+   the test will fail for the same reason (and with the same <code>AssertionError</code>).
+   Obviously, writing these assertions (if any) is up to the developer.
+   A mock method for a non-<code>void</code> real method will have to return an appropriate value
+   to the caller, based on the requirements of the class under test.
+   When an exceptional situation is being tested, a mock method or constructor will typically
+   throw an exception or error to simulate that situation.
+   Later we will see concrete examples for all of these different test cases.
+</p>
+
+<h3>Setting up mocks for a test</h3>
+<p>
+
+</p>
+
+<h4>Setting up mocks for a real class chosen at setup time</h4>
+
+<h4>Using the <code>@MockClass</code> annotation</h4>
+
+<h4>In-line mock classes</h4>
+
+<h4>Tearing down the mocks</h4>
+
+<h3>Invocation count constraints</h3>
+<p>
+
+</p>
+
+<h3>Controlling the instantiation of mock classes</h3>
+<p>
+
+</p>
+
+<h3>Accessing the mocked object: the "it" field</h3>
+<p>
+
+</p>
+
+<h3>Reentrant mocks</h3>
+<p>
+
+</p>
 
 <script type="text/javascript" src="../prettify.js"></script>
 </body>
