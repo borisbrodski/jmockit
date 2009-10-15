@@ -80,8 +80,8 @@ public @interface Capturing
     * during test execution and the specified number of new instances has not been previously
     * assigned, the (non-<code>final</code>) mock field will be assigned that new instance.
     * <p/>
-    * It is valid to declare two or more mocks of the same type with a positive <code>capture</code>
-    * number for each of them, say <code>n1</code>, <code>n2</code>, etc.
+    * It is valid to declare two or more fields of the same mocked type with a positive
+    * <code>capture</code> number for each of them, say <code>n1</code>, <code>n2</code>, etc.
     * In this case, the first <code>n1</code> new instances will be assigned to the first field,
     * the following <code>n2</code> new instances to the second, and so on.
     * <p/>
