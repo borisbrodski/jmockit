@@ -461,7 +461,7 @@ public final class CTest
       }
    }
 
-   // redefines nothing, since inherited methods are not considered
+   // Redefines the same as C2Mock, since inherited public methods ARE also considered.
    public class C3Mock extends C2Mock
    {
       C3Mock() {}
@@ -472,7 +472,7 @@ public final class CTest
    {
       redefineMethods(C2.class, new C3Mock());
       C2 c2 = new C2(12, "c2");
-      assertNotNull(c2.getCode());
+      assertNull(c2.getCode());
    }
 
    @Test

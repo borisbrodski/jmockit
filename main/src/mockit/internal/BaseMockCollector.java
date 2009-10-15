@@ -35,22 +35,38 @@ public class BaseMockCollector extends EmptyVisitor
 
    protected final MockMethods mockMethods;
    private String enclosingClassDescriptor;
+   private boolean collectingFromSuperClass;
 
    public BaseMockCollector(MockMethods mockMethods)
    {
       this.mockMethods = mockMethods;
    }
 
+   protected final void collectMockMethods(Class<?> mockClass)
+   {
+      Class<?> classToCollectMocksFrom = mockClass;
+
+      do {
+         ClassReader mcReader = ClassFile.createClassFileReader(classToCollectMocksFrom.getName());
+         mcReader.accept(this, true);
+         classToCollectMocksFrom = classToCollectMocksFrom.getSuperclass();
+         collectingFromSuperClass = true;
+      }
+      while (classToCollectMocksFrom != Object.class);
+   }
+
    @Override
    public final void visit(
       int version, int access, String name, String signature, String superName, String[] interfaces)
    {
-      mockMethods.setMockClassInternalName(name);
+      if (!collectingFromSuperClass) {
+         mockMethods.setMockClassInternalName(name);
 
-      int p = name.lastIndexOf('$');
+         int p = name.lastIndexOf('$');
 
-      if (p > 0) {
-         enclosingClassDescriptor = "(L" + name.substring(0, p) + ";)V";
+         if (p > 0) {
+            enclosingClassDescriptor = "(L" + name.substring(0, p) + ";)V";
+         }
       }
    }
 
@@ -69,7 +85,7 @@ public class BaseMockCollector extends EmptyVisitor
    public MethodVisitor visitMethod(
       int access, String name, String desc, String signature, String[] exceptions)
    {
-      if (enclosingClassDescriptor != null) {
+      if (!collectingFromSuperClass && enclosingClassDescriptor != null) {
          if ("<init>".equals(name) && desc.equals(enclosingClassDescriptor)) {
             mockMethods.setInnerMockClass(true);
             enclosingClassDescriptor = null;

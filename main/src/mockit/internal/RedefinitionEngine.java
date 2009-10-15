@@ -73,10 +73,9 @@ public final class RedefinitionEngine
          stubbingFilters = metadata.stubs();
          filtersNotInverted = !metadata.inverse();
 
-         mockMethods = new AnnotatedMockMethods(realClass);
-         ClassVisitor mockCollector =
-            new AnnotatedMockMethodCollector((AnnotatedMockMethods) mockMethods);
-         collectMockMethods(mockCollector);
+         AnnotatedMockMethods annotatedMocks = new AnnotatedMockMethods(realClass);
+         new AnnotatedMockMethodCollector(annotatedMocks).collectMockMethods(mockClass);
+         mockMethods = annotatedMocks;
 
          createMockInstanceAccordingToInstantiation();
       }
@@ -103,9 +102,8 @@ public final class RedefinitionEngine
    public RedefinitionEngine(Class<?> realClass, Object mock, Class<?> mockClass)
    {
       this(realClass, mockClass, mock, new AnnotatedMockMethods(realClass));
-      ClassVisitor mockCollector =
-         new AnnotatedMockMethodCollector((AnnotatedMockMethods) mockMethods);
-      collectMockMethods(mockCollector);
+      new AnnotatedMockMethodCollector((AnnotatedMockMethods) mockMethods).collectMockMethods(
+         mockClass);
    }
 
    public RedefinitionEngine(
@@ -130,18 +128,11 @@ public final class RedefinitionEngine
       }
    }
 
-   private void collectMockMethods(ClassVisitor mockCollector)
-   {
-      ClassReader mcReader = new ClassFile(mockClass, true).getReader();
-      mcReader.accept(mockCollector, true);
-   }
-
    public RedefinitionEngine(
       Class<?> realClass, Object mock, Class<?> mockClass, boolean allowDefaultConstructor)
    {
       this(realClass, mockClass, mock, new MockMethods());
-      ClassVisitor mockCollector = new MockMethodCollector(mockMethods, allowDefaultConstructor);
-      collectMockMethods(mockCollector);
+      new MockMethodCollector(mockMethods, allowDefaultConstructor).collectMockMethods(mockClass);
    }
 
    public RedefinitionEngine(
@@ -150,13 +141,14 @@ public final class RedefinitionEngine
       this(getRealClass(mockClass, ignoreRealClassIfNotInClasspath), mock, mockClass);
    }
 
-   private static Class<?> getRealClass(Class<?> mockClass, boolean ignoreRealClassIfNotInClasspath)
+   private static Class<?> getRealClass(
+      Class<?> specifiedMockClass, boolean ignoreRealClassIfNotInClasspath)
    {
       try {
-         MockClass mockClassAnnotation = mockClass.getAnnotation(MockClass.class);
+         MockClass mockClassAnnotation = specifiedMockClass.getAnnotation(MockClass.class);
 
          if (mockClassAnnotation == null) {
-            throw new IllegalArgumentException("Missing @MockClass for " + mockClass);
+            throw new IllegalArgumentException("Missing @MockClass for " + specifiedMockClass);
          }
 
          return mockClassAnnotation.realClass();

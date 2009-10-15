@@ -60,6 +60,7 @@ import java.lang.annotation.*;
  * @see mockit.MockClass
  */
 @Documented
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.CONSTRUCTOR, ElementType.METHOD})
 public @interface Mock

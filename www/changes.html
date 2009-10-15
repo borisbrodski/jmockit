@@ -81,6 +81,11 @@
       both specify such constraints for the <em>same</em> real class, only one set of constraints
       was discarded at the end of the test; this could then cause other tests to fail later.
    </li>
+   <li>
+      Enhancement: the <code>@Mock</code> annotation can now be applied to methods in reusable mock
+      classes that are extended by more specific ones. The mock methods in the base mock class will
+      be inherited by the mock subclass.
+   </li>
 </ul>
 
 <p>Release 0.990 (October 4/6, 2009):</p>
