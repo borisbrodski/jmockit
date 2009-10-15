@@ -35,9 +35,8 @@ import org.junit.*;
 import org.junit.runner.*;
 
 @RunWith(JMockit.class)
-public final class TextFileTestUsingExpectations
+public final class TextFileUsingExpectationsTest
 {
-   @SuppressWarnings({"JUnitTestMethodWithNoAssertions"})
    @Test
    public void createTextFile() throws Exception
    {
@@ -55,6 +54,70 @@ public final class TextFileTestUsingExpectations
    }
 
    @Test
+   public void createTextFileByStubbingOutTheTextReaderClass() throws Exception
+   {
+      Mockit.stubOutClass(TextReader.class.getName());
+
+      new TextFile("file", 0);
+   }
+
+   @Test
+   public void createTextFileByCapturingTheTextReaderClassThroughItsBaseType() throws Exception
+   {
+      new Expectations()
+      {
+         @Mocked(capture = 1)
+         ITextReader reader;
+      };
+
+      new TextFile("file", 0);
+   }
+
+   @Test
+   public void createTextFileByMockingTheTextReaderClassThroughItsName() throws Exception
+   {
+      new Expectations()
+      {
+         @Mocked(realClassName = "integrationTests.textFile.TextFile$TextReader")
+         final Object reader = null;
+      };
+
+      new TextFile("file", 0);
+   }
+
+   @Test
+   public void createTextFileByRecordingTheConstructorInvocationThroughReflection() throws Exception
+   {
+      new Expectations()
+      {
+         @Mocked(realClassName = "integrationTests.textFile.TextFile$TextReader")
+         final Object reader = newInstance("integrationTests.textFile.TextFile$TextReader", "file");
+
+         {
+            invoke(reader, "close");
+         }
+      };
+
+      new TextFile("file", 0).closeReader();
+   }
+
+   @Test
+   public void createTextFileByRecordingNonStrictInvocationsThroughReflection() throws Exception
+   {
+      new Expectations()
+      {
+         @NonStrict @Mocked(realClassName = "integrationTests.textFile.TextFile$TextReader")
+         Object reader;
+
+         {
+            invoke(reader, "close"); repeats(1);
+         }
+      };
+
+      new TextFile("file", 0).closeReader();
+   }
+
+   @Test
    public void parseTextFileUsingConcreteClass() throws Exception
    {
       new Expectations()
@@ -64,9 +127,7 @@ public final class TextFileTestUsingExpectations
          // Records TextFile#parse():
          {
             reader.skip(200); returns(200L);
-            reader.readLine(); returns("line1");
-            reader.readLine(); returns("another,line");
-            reader.readLine(); returns(null);
+            reader.readLine(); returns("line1", "another,line", null);
             reader.close();
          }
       };
@@ -97,9 +158,7 @@ public final class TextFileTestUsingExpectations
          // Records TextFile#parse():
          {
             reader.skip(200); returns(200L);
-            reader.readLine(); returns("line1");
-            reader.readLine(); returns("another,line");
-            reader.readLine(); returns(null);
+            reader.readLine(); returns("line1", "another,line", null);
             reader.close();
          }
       };
@@ -130,9 +189,7 @@ public final class TextFileTestUsingExpectations
          // Records TextFile#parse():
          {
             reader.skip(0); returns(0L);
-            reader.readLine(); returns("line1");
-            reader.readLine(); returns("another,line");
-            reader.readLine(); returns(null);
+            reader.readLine(); returns("line1"); returns("another,line"); returns(null);
             reader.close();
          }
       };

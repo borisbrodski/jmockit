@@ -1,3 +1,27 @@
+/*
+ * JMockit Annotations
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package integrationTests.textFile;
 
 import java.util.*;
@@ -12,16 +36,14 @@ import org.junit.*;
 import org.junit.runner.*;
 
 @RunWith(JMockit.class)
-public final class TextFileTestUsingMockAnnotation
+public final class TextFileUsingAnnotatedMockClassesTest
 {
    @Test
-   public void createTextFile() throws Exception
+   public void createTextFileUsingAnnotatedMockClass() throws Exception
    {
       setUpMocks(MockTextReader.class);
 
       new TextFile("file", 0);
-
-      assertExpectations();
    }
 
    @MockClass(realClass = TextReader.class)
@@ -35,6 +57,14 @@ public final class TextFileTestUsingMockAnnotation
    }
 
    @Test
+   public void createTextFileByMockingTheTextReaderThroughItsClassName() throws Exception
+   {
+      setUpMock("integrationTests.textFile.TextFile$TextReader", MockTextReader.class);
+
+      new TextFile("file", 0);
+   }
+
+   @Test
    public void parseTextFileUsingConcreteClass() throws Exception
    {
       setUpMocks(MockTextReader.class, new MockTextReaderForParse());
@@ -43,7 +73,6 @@ public final class TextFileTestUsingMockAnnotation
       List<String[]> result = textFile.parse();
 
       assertResultFromTextFileParsing(result);
-      assertExpectations();
    }
 
    @MockClass(realClass = TextReader.class)
@@ -88,6 +117,5 @@ public final class TextFileTestUsingMockAnnotation
       List<String[]> result = textFile.parse();
 
       assertResultFromTextFileParsing(result);
-      assertExpectations();
    }
 }

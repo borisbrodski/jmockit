@@ -1,6 +1,6 @@
 /*
- * JMockit: a Java class library for developer testing with "mock methods"
- * Copyright (c) 2006, 2007 Rogério Liesenfeld
+ * JMockit
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -120,7 +120,7 @@ public final class TextFile
       void close() throws IOException;
    }
 
-   public static final class TextReader implements ITextReader
+   static final class TextReader implements ITextReader
    {
       private final Reader reader;
 
