@@ -28,18 +28,18 @@ import mockit.internal.capturing.*;
 
 import org.objectweb.asm2.*;
 
-// TODO: implement support for filtering, constructor configuration, and capturing of instances,
-// just like in CaptureOfNewInstancesForFields
+// TODO: implement support for filtering and constructor configuration, just like in
+// CaptureOfNewInstancesForFields
 final class CaptureOfNewInstancesForParameters extends CaptureOfNewInstances
 {
-   CaptureOfNewInstancesForParameters()
+   CaptureOfNewInstancesForParameters() {}
+
+   public ClassWriter createModifier(ClassLoader classLoader, ClassReader cr)
    {
-      modifierFactory = new ModifierFactory()
-      {
-         public ClassWriter createModifier(ClassLoader classLoader, ClassReader cr)
-         {
-            return new ExpectationsModifier(classLoader, cr, null, null);
-         }
-      };
+      ExpectationsModifier modifier = new ExpectationsModifier(classLoader, cr, null, null);
+
+      modifier.setClassNameForInstanceMethods(baseTypeDesc);
+
+      return modifier;
    }
 }

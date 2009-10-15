@@ -31,9 +31,9 @@ import mockit.internal.util.*;
 
 public class ExpectedInvocation
 {
-   final Object recordedInstance;
+   final Object instance;
    final boolean methodWithVarargs;
-   final String recordedClassDesc;
+   final String classDesc;
    final String methodNameAndDesc;
    private final boolean isConstructor;
    private final boolean matchInstance;
@@ -54,9 +54,9 @@ public class ExpectedInvocation
       Object mock, int methodAccess, String mockedClassDesc, String mockNameAndDesc,
       boolean matchInstance, Object[] args, Map<Object, Object> recordToReplayInstanceMap)
    {
-      recordedInstance = mock;
+      instance = mock;
       methodWithVarargs = (methodAccess & 128) != 0;
-      recordedClassDesc = mockedClassDesc;
+      classDesc = mockedClassDesc;
       methodNameAndDesc = mockNameAndDesc;
       isConstructor = mockNameAndDesc.startsWith("<init>");
       this.matchInstance = matchInstance;
@@ -68,9 +68,9 @@ public class ExpectedInvocation
 
    ExpectedInvocation(Object mock, String mockedClassDesc, String mockNameAndDesc, Object[] args)
    {
-      recordedInstance = mock;
+      instance = mock;
       methodWithVarargs = false;
-      recordedClassDesc = mockedClassDesc;
+      classDesc = mockedClassDesc;
       methodNameAndDesc = mockNameAndDesc;
       isConstructor = false;
       matchInstance = false;
@@ -82,7 +82,7 @@ public class ExpectedInvocation
 
    public String getClassName()
    {
-      return recordedClassDesc.replace('/', '.');
+      return classDesc.replace('/', '.');
    }
 
    public String getMethodNameAndDescription()
@@ -90,19 +90,19 @@ public class ExpectedInvocation
       return methodNameAndDesc;
    }
 
-   final boolean isMatch(Object replayInstance, String invokedMethod)
+   final boolean isMatch(Object replayInstance, String invokedClassDesc, String invokedMethod)
    {
       return
-         invokedMethod.equals(methodNameAndDesc) &&
+         invokedMethod.equals(methodNameAndDesc) && invokedClassDesc.equals(classDesc) &&
          (isConstructor || isEquivalentInstance(replayInstance));
    }
 
    private boolean isEquivalentInstance(Object replayInstance)
    {
       return
-         !matchInstance || 
-         replayInstance == recordedInstance ||
-         replayInstance == recordToReplayInstanceMap.get(recordedInstance);
+         !matchInstance ||
+         replayInstance == instance ||
+         replayInstance == recordToReplayInstanceMap.get(instance);
    }
 
    final AssertionError errorForUnexpectedInvocation()
@@ -119,7 +119,7 @@ public class ExpectedInvocation
          Utilities.filterStackTrace(invocationCause);
          error.initCause(invocationCause);
       }
-      
+
       return error;
    }
 
@@ -136,12 +136,12 @@ public class ExpectedInvocation
    }
 
    final AssertionError errorForUnexpectedInvocation(
-      Object mock, String classDesc, String invokedMethod)
+      Object mock, String invokedClassDesc, String invokedMethod)
    {
       String instanceDescription = mock == null ? "" : "\non instance: " + objectIdentity(mock);
       return newErrorWithCause(
          "Unexpected invocation",
-         "Unexpected invocation of:\n" + new MethodFormatter(classDesc, invokedMethod) +
+         "Unexpected invocation of:\n" + new MethodFormatter(invokedClassDesc, invokedMethod) +
          instanceDescription + "\nwhen was expecting an invocation of");
    }
 
@@ -175,8 +175,8 @@ public class ExpectedInvocation
          }
       }
 
-      if (recordedInstance != null) {
-         desc.append("\non mock instance: ").append(objectIdentity(recordedInstance));
+      if (instance != null) {
+         desc.append("\non mock instance: ").append(objectIdentity(instance));
       }
 
       return desc.toString();
@@ -184,7 +184,7 @@ public class ExpectedInvocation
 
    final MethodFormatter invokedMethodSignature()
    {
-      return new MethodFormatter(recordedClassDesc, methodNameAndDesc);
+      return new MethodFormatter(classDesc, methodNameAndDesc);
    }
 
    AssertionError assertThatInvocationArgumentsMatch(Object[] replayArgs)

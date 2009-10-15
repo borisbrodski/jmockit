@@ -35,10 +35,13 @@ final class UnorderedVerificationPhase extends VerificationPhase
    }
 
    @Override
-   protected void findNonStrictExpectation(Object mock, String mockDesc, Object[] args)
+   protected void findNonStrictExpectation(
+      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
-      for (Expectation expectation : getNonStrictExpectations()) {
-         if (matches(mock, mockDesc, args, expectation)) {
+      List<Expectation> expectations = getNonStrictExpectations();
+
+      for (Expectation expectation : expectations) {
+         if (matches(mock, mockClassDesc, mockNameAndDesc, args, expectation)) {
             if (argMatchers == null) {
                currentExpectation = expectation;
                break;

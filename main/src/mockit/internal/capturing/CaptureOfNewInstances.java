@@ -32,15 +32,19 @@ import mockit.internal.startup.*;
 
 import org.objectweb.asm2.*;
 
-public class CaptureOfNewInstances
+public abstract class CaptureOfNewInstances implements ModifierFactory
 {
    private final List<CaptureTransformer> captureTransformers = new ArrayList<CaptureTransformer>();
-   protected ModifierFactory modifierFactory;
+   protected String baseTypeDesc;
 
    protected CaptureOfNewInstances() {}
 
    public final void makeSureAllSubtypesAreModified(Class<?> baseType, Capturing capturing)
    {
+      if (baseType != null) {
+         baseTypeDesc = baseType.getName().replace('.', '/');
+      }
+
       CapturedType captureMetadata = new CapturedType(baseType, capturing);
       Class<?>[] classesLoaded =
          Startup.instrumentation().getInitiatedClasses(getClass().getClassLoader());
@@ -59,8 +63,7 @@ public class CaptureOfNewInstances
       // TODO: a mocked field/parameter type will be redefined twice when it could be redefined
       // once, already considering capture in the first redefinition; optimize the second one away
       ClassReader classReader = new ClassFile(realClass, true).getReader();
-      ClassWriter modifier =
-         modifierFactory.createModifier(realClass.getClassLoader(), classReader);
+      ClassWriter modifier = createModifier(realClass.getClassLoader(), classReader);
       classReader.accept(modifier, false);
       byte[] modifiedClass = modifier.toByteArray();
 
@@ -69,7 +72,7 @@ public class CaptureOfNewInstances
 
    private void createCaptureTransformer(CapturedType captureMetadata)
    {
-      CaptureTransformer transformer = new CaptureTransformer(captureMetadata, modifierFactory);
+      CaptureTransformer transformer = new CaptureTransformer(captureMetadata, this);
       Startup.instrumentation().addTransformer(transformer);
       captureTransformers.add(transformer);
    }

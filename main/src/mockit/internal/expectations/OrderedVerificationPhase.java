@@ -45,7 +45,8 @@ public final class OrderedVerificationPhase extends VerificationPhase
    }
 
    @Override
-   protected void findNonStrictExpectation(Object mock, String mockDesc, Object[] args)
+   protected void findNonStrictExpectation(
+      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
       int i = replayIndex;
 
@@ -53,7 +54,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
          Expectation expectation = expectationsInReplayOrder.get(i);
          i += indexIncrement;
 
-         if (matches(mock, mockDesc, args, expectation)) {
+         if (matches(mock, mockClassDesc, mockNameAndDesc, args, expectation)) {
             currentExpectation = expectation;
             i += 1 - indexIncrement;
             indexIncrement = 1;
@@ -98,8 +99,9 @@ public final class OrderedVerificationPhase extends VerificationPhase
    public void handleInvocationCountConstraint(int minInvocations, int maxInvocations)
    {
       ExpectedInvocationWithMatchers invocation = currentExpectation.expectedInvocation;
-      Object mock = invocation.recordedInstance;
-      String mockDesc = invocation.methodNameAndDesc;
+      Object mock = invocation.instance;
+      String mockClassDesc = invocation.classDesc;
+      String mockNameAndDesc = invocation.methodNameAndDesc;
       Object[] args = invocation.invocationArgs;
       argMatchers = invocation.invocationArgMatchers;
       int invocationCount = 1;
@@ -107,7 +109,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
       while (replayIndex < expectationCount) {
          Expectation nextExpectation = expectationsInReplayOrder.get(replayIndex);
 
-         if (matches(mock, mockDesc, args, nextExpectation)) {
+         if (matches(mock, mockClassDesc, mockNameAndDesc, args, nextExpectation)) {
             invocationCount++;
 
             if (invocationCount > maxInvocations) {
@@ -181,8 +183,8 @@ public final class OrderedVerificationPhase extends VerificationPhase
 
          argMatchers = invocation.invocationArgMatchers;
          handleInvocation(
-            invocation.recordedInstance, 0, invocation.recordedClassDesc,
-            invocation.methodNameAndDesc, invocation.invocationArgs);
+            invocation.instance, 0, invocation.classDesc, invocation.methodNameAndDesc,
+            invocation.invocationArgs);
 
          if (recordAndReplay.errorThrown != null) {
             throw recordAndReplay.errorThrown;

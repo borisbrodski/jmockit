@@ -29,14 +29,10 @@ import mockit.internal.*;
 
 public final class CaptureOfSubtypes extends CaptureOfNewInstances
 {
-   public CaptureOfSubtypes()
+   public CaptureOfSubtypes() {}
+
+   public ClassWriter createModifier(ClassLoader classLoader, ClassReader cr)
    {
-      modifierFactory = new ModifierFactory()
-      {
-         public ClassWriter createModifier(ClassLoader classLoader, ClassReader cr)
-         {
-            return new StubOutModifier(cr, null, true);
-         }
-      };
+      return new StubOutModifier(cr, null, true);
    }
 }

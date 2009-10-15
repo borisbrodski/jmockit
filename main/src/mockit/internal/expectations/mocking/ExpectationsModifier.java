@@ -24,11 +24,14 @@
  */
 package mockit.internal.expectations.mocking;
 
+import java.lang.reflect.*;
+
 import mockit.internal.*;
 import mockit.internal.startup.*;
 import mockit.internal.filtering.*;
 import mockit.internal.util.*;
 import org.objectweb.asm2.*;
+import org.objectweb.asm2.Type;
 import org.objectweb.asm2.commons.*;
 import static org.objectweb.asm2.Opcodes.*;
 
@@ -42,6 +45,7 @@ final class ExpectationsModifier extends BaseClassModifier
    private String redefinedConstructorDesc;
    private String superClassName;
    private String className;
+   private String classNameForInstanceMethods;
    private boolean isProxy;
 
    ExpectationsModifier(
@@ -53,6 +57,11 @@ final class ExpectationsModifier extends BaseClassModifier
       mockingCfgNullOrEmpty = mockingConfiguration == null || mockingConfiguration.isEmpty();
       this.mockConstructorInfo = mockConstructorInfo;
       setUseMockingBridge(classLoader);
+   }
+
+   public void setClassNameForInstanceMethods(String internalClassName)
+   {
+      classNameForInstanceMethods = internalClassName;
    }
 
    @Override
@@ -93,7 +102,7 @@ final class ExpectationsModifier extends BaseClassModifier
          return super.visitMethod(access, name, desc, signature, exceptions);
       }
 
-      if ((access & ACC_NATIVE) != 0 && !Startup.isJava6OrLater()) {
+      if (Modifier.isNative(access) && !Startup.isJava6OrLater()) {
          throw new IllegalArgumentException(
             "Mocking of native methods not supported under JDK 1.5; please filter out method \"" +
             name + "\", or run under JDK 1.6+");
@@ -102,16 +111,24 @@ final class ExpectationsModifier extends BaseClassModifier
       // Otherwise, replace original implementation.
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
 
-      if (superClassName != null && "<init>".equals(name)) {
+      boolean callToConstructor = "<init>".equals(name);
+
+      if (superClassName != null && callToConstructor) {
          redefinedConstructorDesc = desc;
          generateCallToDefaultOrConfiguredSuperConstructor();
       }
 
+      String internalClassName = className;
+
+      if (classNameForInstanceMethods != null && !callToConstructor && !Modifier.isStatic(access)) {
+         internalClassName = classNameForInstanceMethods;
+      }
+
       if (useMockingBridge) {
-         generateCallToRecordOrReplayThroughMockingBridge(className, access, name, desc);
+         generateCallToRecordOrReplayThroughMockingBridge(internalClassName, access, name, desc);
       }
       else {
-         generateDirectCallToRecordOrReplay(className, access, name, desc);
+         generateDirectCallToRecordOrReplay(internalClassName, access, name, desc);
       }
 
       generateReturnWithObjectAtTopOfTheStack(desc);

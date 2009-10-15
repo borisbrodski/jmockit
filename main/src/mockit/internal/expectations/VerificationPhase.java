@@ -57,7 +57,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
 
    @Override
    final Object handleInvocation(
-      Object mock, int mockAccess, String mockedClassDesc, String mockNameAndDesc, Object[] args)
+      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
       if (pendingError != null) {
          recordAndReplay.errorThrown = pendingError;
@@ -67,7 +67,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
 
       currentExpectation = null;
       aggregate = null;
-      findNonStrictExpectation(mock, mockNameAndDesc, args);
+      findNonStrictExpectation(mock, mockClassDesc, mockNameAndDesc, args);
       argMatchers = null;
 
       if (recordAndReplay.errorThrown != null) {
@@ -88,27 +88,29 @@ public abstract class VerificationPhase extends TestOnlyPhase
       if (currentExpectation == null) {
          ExpectedInvocationWithMatchers invocation =
             new ExpectedInvocationWithMatchers(
-               mock, mockAccess, mockedClassDesc, mockNameAndDesc, false, args, null,
+               mock, mockAccess, mockClassDesc, mockNameAndDesc, false, args, null,
                recordAndReplay.recordToReplayInstanceMap);
 
          currentExpectation = new Expectation(null, invocation, true);
-         
+
          pendingError =
-            new ExpectedInvocation(mock, mockedClassDesc, mockNameAndDesc, args)
+            new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, args)
                .errorForMissingInvocation();
       }
 
       return currentExpectation.expectedInvocation.getDefaultValueForReturnType();
    }
 
-   protected abstract void findNonStrictExpectation(Object mock, String mockDesc, Object[] args);
+   protected abstract void findNonStrictExpectation(
+      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args);
 
    protected final boolean matches(
-      Object mock, String mockNameAndDesc, Object[] args, Expectation expectation)
+      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args,
+      Expectation expectation)
    {
       ExpectedInvocationWithMatchers invocation = expectation.expectedInvocation;
 
-      if (invocation.isMatch(mock, mockNameAndDesc)) {
+      if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc)) {
          Object[] argsToVerify =
             argMatchers == null ?
                args : invocation.prepareArgumentsForVerification(args, argMatchers);

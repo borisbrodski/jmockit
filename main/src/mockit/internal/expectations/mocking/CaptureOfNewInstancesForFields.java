@@ -67,15 +67,16 @@ final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
    private MockingConfiguration mockingCfg;
    private MockConstructorInfo mockConstructorInfo;
 
-   CaptureOfNewInstancesForFields()
+   CaptureOfNewInstancesForFields() {}
+
+   public ClassWriter createModifier(ClassLoader classLoader, ClassReader cr)
    {
-      modifierFactory = new ModifierFactory()
-      {
-         public ClassWriter createModifier(ClassLoader classLoader, ClassReader cr)
-         {
-            return new ExpectationsModifier(classLoader, cr, mockingCfg, mockConstructorInfo);
-         }
-      };
+      ExpectationsModifier modifier =
+         new ExpectationsModifier(classLoader, cr, mockingCfg, mockConstructorInfo);
+
+      modifier.setClassNameForInstanceMethods(baseTypeDesc);
+
+      return modifier;
    }
 
    @SuppressWarnings({"ParameterHidesMemberVariable"})

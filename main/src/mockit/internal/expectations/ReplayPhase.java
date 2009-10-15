@@ -62,13 +62,14 @@ final class ReplayPhase extends Phase
 
    @Override
    Object handleInvocation(
-      Object mock, int mockAccess, String className, String mockNameAndDesc, Object[] args)
+      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, Object[] args)
       throws Throwable
    {
       nonStrictExpectation = null;
 
-      if (!findNonStrictExpectation(mock, mockNameAndDesc, args)) {
-         createExpectationIfNonStrictInvocation(mock, mockAccess, className, mockNameAndDesc, args);
+      if (!findNonStrictExpectation(mock, mockClassDesc, mockNameAndDesc, args)) {
+         createExpectationIfNonStrictInvocation(
+            mock, mockAccess, mockClassDesc, mockNameAndDesc, args);
       }
 
       if (nonStrictExpectation != null) {
@@ -76,16 +77,17 @@ final class ReplayPhase extends Phase
          return updateConstraintsAndProduceResult(args);
       }
 
-      return handleStrictInvocation(mock, className, mockNameAndDesc, args);
+      return handleStrictInvocation(mock, mockClassDesc, mockNameAndDesc, args);
    }
 
-   private boolean findNonStrictExpectation(Object mock, String mockNameAndDesc, Object[] args)
+   private boolean findNonStrictExpectation(
+      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
       for (Expectation nonStrict : getNonStrictExpectations()) {
          ExpectedInvocation invocation = nonStrict.expectedInvocation;
 
          if (
-            invocation.isMatch(mock, mockNameAndDesc) &&
+            invocation.isMatch(mock, mockClassDesc, mockNameAndDesc) &&
             invocation.assertThatInvocationArgumentsMatch(args) == null
          ) {
             nonStrictExpectation = nonStrict;
@@ -125,21 +127,22 @@ final class ReplayPhase extends Phase
    }
 
    private Object handleStrictInvocation(
-      Object mock, String className, String mockNameAndDesc, Object[] replayArgs) throws Throwable
+      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] replayArgs)
+      throws Throwable
    {
       while (true) {
          if (currentExpectation == null) {
             recordAndReplay.errorThrown =
-               new ExpectedInvocation(mock, className, mockNameAndDesc, replayArgs)
+               new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, replayArgs)
                   .errorForUnexpectedInvocation();
             return null;
          }
 
          ExpectedInvocation invocation = currentExpectation.expectedInvocation;
 
-         if (invocation.isMatch(mock, mockNameAndDesc)) {
-            if (mock != invocation.recordedInstance) {
-               recordAndReplay.recordToReplayInstanceMap.put(invocation.recordedInstance, mock);
+         if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc)) {
+            if (mock != invocation.instance) {
+               recordAndReplay.recordToReplayInstanceMap.put(invocation.instance, mock);
             }
 
             AssertionError error = invocation.assertThatInvocationArgumentsMatch(replayArgs);
@@ -162,7 +165,7 @@ final class ReplayPhase extends Phase
          }
          else {
             recordAndReplay.errorThrown =
-               invocation.errorForUnexpectedInvocation(mock, className, mockNameAndDesc);
+               invocation.errorForUnexpectedInvocation(mock, mockClassDesc, mockNameAndDesc);
             return null;
          }
       }

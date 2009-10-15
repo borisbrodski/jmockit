@@ -56,6 +56,6 @@ public abstract class Phase
    }
 
    abstract Object handleInvocation(
-      Object mock, int mockAccess, String className, String methodDesc, Object[] args)
+      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, Object[] args)
       throws Throwable;
 }

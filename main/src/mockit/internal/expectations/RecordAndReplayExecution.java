@@ -204,7 +204,8 @@ public final class RecordAndReplayExecution
       Class<?> mockedClass = mock.getClass();
 
       if (mockedClass.isAnonymousClass()) {
-         mockedClass = mockedClass.getSuperclass();
+         // TODO: why was this done, and is it still needed?
+//         mockedClass = mockedClass.getSuperclass();
       }
 
       return !constructorClass.equals(mockedClass.getName());
@@ -235,7 +236,7 @@ public final class RecordAndReplayExecution
    void addExpectation(Expectation expectation, boolean nonStrictInvocation)
    {
       ExpectedInvocation invocation = expectation.expectedInvocation;
-      
+
       if (nonStrictInvocation) {
          nonStrictExpectations.add(expectation);
       }
