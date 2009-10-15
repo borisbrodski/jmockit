@@ -58,7 +58,21 @@ public final class AnnotatedMockStates
       return mockStates;
    }
 
-   public void removeClassState(String mockClassInternalName)
+   public void removeClassState(String internalNameForOneOrMoreMockClasses)
+   {
+      if (internalNameForOneOrMoreMockClasses.indexOf(' ') < 0) {
+         removeMockStates(internalNameForOneOrMoreMockClasses);
+      }
+      else {
+         String[] mockClassesInternalNames = internalNameForOneOrMoreMockClasses.split(" ");
+
+         for (String mockClassInternalName : mockClassesInternalNames) {
+            removeMockStates(mockClassInternalName);
+         }
+      }
+   }
+
+   private void removeMockStates(String mockClassInternalName)
    {
       MockClassState mockStates = classStates.remove(mockClassInternalName);
 

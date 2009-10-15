@@ -103,7 +103,12 @@ public final class MockFixture
       String mockClassInternalName, Class<?> redefinedClass, byte[] modifiedClassfile)
    {
       if (mockClassInternalName != null) {
-         realClassesToMockClasses.put(redefinedClass, mockClassInternalName);
+         String previousNames = realClassesToMockClasses.put(redefinedClass, mockClassInternalName);
+
+         if (previousNames != null) {
+            realClassesToMockClasses.put(
+               redefinedClass, previousNames + ' ' + mockClassInternalName);
+         }
       }
 
       redefinedClasses.put(redefinedClass, modifiedClassfile);
@@ -142,10 +147,10 @@ public final class MockFixture
 
    private void discardStateForCorrespondingMockClassIfAny(Class<?> redefinedClass)
    {
-      String mockClassInternalName = realClassesToMockClasses.remove(redefinedClass);
+      String mockClassesInternalNames = realClassesToMockClasses.remove(redefinedClass);
 
-      if (mockClassInternalName != null) {
-         TestRun.getMockClasses().getMockStates().removeClassState(mockClassInternalName);
+      if (mockClassesInternalNames != null) {
+         TestRun.getMockClasses().getMockStates().removeClassState(mockClassesInternalNames);
       }
    }
 
