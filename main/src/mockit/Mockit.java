@@ -123,7 +123,7 @@ public final class Mockit
     * method is called instead. For an instance mock method, the mock class instance on which the
     * call is made is created with the default constructor for the mock class, <strong>every
     * time</strong> the mocked real method is called. If you want to reuse mock instances for all
-    * such calls you should pass an instance of the mock class instead of its <code>Class</code> 
+    * such calls you should pass an instance of the mock class instead of its <code>Class</code>
     * object.
     * <p/>
     * For a <strong>mock method</strong> to be considered as <strong>corresponding</strong> to a
@@ -169,7 +169,7 @@ public final class Mockit
     * whenever a mock method is called. Note that through this field the mock class will be able to
     * call any accessible instance method on the real class, including the real method corresponding
     * to the current mock method. In this case, however, such calls are not allowed because they
-    * lead to infinite recursion, with the mock calling itself indirectly through the redefined real 
+    * lead to infinite recursion, with the mock calling itself indirectly through the redefined real
     * method. If you really need to call the real method from its mock method, then you will have to
     * use the <em>JMockit Annotations</em> API, such as {@link #setUpMocks(Object...)}, using the
     * {@link Mock} annotation with <code>reentrant = true</code>.
@@ -226,16 +226,19 @@ public final class Mockit
    }
 
    /**
-    * Same as {@link #stubOut(Class...)} for the given class, except that only the specified
-    * methods, constructors, and static initializers are stubbed out, leaving the rest unaffected.
+    * Same as {@link #stubOut(Class...)} for the given class, except that only the specified class
+    * members (if any) are stubbed out, leaving the rest unaffected.
+    * Such class members include the methods and constructors defined by the class, plus any static
+    * or instance initialization blocks it might have.
+    * Note that if <em>no</em> filters are specified the whole class will be stubbed out.
     * <p/>
-    * The filters are really {@linkplain java.util.regex.Pattern regular expressions} for method
-    * names, which can be combined with parameter type names between parentheses.
-    * In fact, they follow the same syntax as the mock filters that can be specified with the
-    * {@link MockClass#stubs} annotation attribute.
+    * For methods, the filters are {@linkplain java.util.regex.Pattern regular expressions} for
+    * method names, optionally followed by parameter type names between parentheses.
+    * For constructors, only the parameters are specified.
+    * For more details about the syntax for mock filters, see the {@link MockClass#stubs} annotation
+    * attribute.
     * <p/>
-    * Additionally, the special filter "&lt;clinit>" will match all static initializers in the given
-    * class.
+    * The special filter "&lt;clinit>" will match all static initializers in the given class.
     * <p/>
     * To stub out instance field initializers it is necessary to actually specify all constructors
     * in the class, because such initialization assignments are copied to each and every constructor
@@ -255,12 +258,32 @@ public final class Mockit
    /**
     * The same as {@link #stubOutClass(Class, String...)}, but specifying whether filters are to be
     * inverted or not.
-    * 
+    *
     * @param inverse indicates whether the mock filters are to be inverted or not; if inverted, only
     * the methods and constructors matching them are <strong>not</strong> mocked
     */
    public static void stubOutClass(Class<?> realClass, boolean inverse, String... filters)
    {
+      new RedefinitionEngine(realClass, !inverse, filters).stubOut();
+   }
+
+   /**
+    * Same as {@link #stubOutClass(Class, String...)}, but accepting the (fully qualified) name of
+    * the real class. This is useful when said class is not accessible from the test.
+    */
+   public static void stubOutClass(String realClassName, String... filters)
+   {
+      Class<?> realClass = Utilities.loadClass(realClassName);
+      new RedefinitionEngine(realClass, true, filters).stubOut();
+   }
+
+   /**
+    * Same as {@link #stubOutClass(Class, boolean, String...)}, but accepting the (fully qualified)
+    * name of the real class. This is useful when said class is not accessible from the test.
+    */
+   public static void stubOutClass(String realClassName, boolean inverse, String... filters)
+   {
+      Class<?> realClass = Utilities.loadClass(realClassName);
       new RedefinitionEngine(realClass, !inverse, filters).stubOut();
    }
 
@@ -350,7 +373,7 @@ public final class Mockit
     * </ol>
     * Note that if you pass all desired mock classes to JMockit at startup using one of these two
     * mechanisms, this method won't be used. However, it's also possible to pass only one of those
-    * mock classes to JMockit and then call this method in the no-args constructor of the chosen 
+    * mock classes to JMockit and then call this method in the no-args constructor of the chosen
     * mock class, to cause the remaining mock classes to be applied.
     * <p/>
     * Note also that it's possible to package a whole set of mock classes in a jar file containing
@@ -497,7 +520,7 @@ public final class Mockit
    /**
     * Discards any mocks set up for the specified classes that are currently in effect, for all test
     * scopes (the current test method, the current test class, and the current test suite).
-    * Notice that doing this will effectively prevent mocks to be set up at the test class and test 
+    * Notice that doing this will effectively prevent mocks to be set up at the test class and test
     * suite levels.
     * <p/>
     * In practice, this method should only be used if some mocked class needs to be restored in the
