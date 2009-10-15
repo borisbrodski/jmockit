@@ -77,11 +77,20 @@ public final class CapturingInstancesTest extends JMockitTest
    private Service service;
 
    @Test
-   public void captureAllInternallyCreatedInstances(@Mocked(capture = 1) final Callable<?> callable)
-      throws Exception
+   public void captureServiceInstancesCreatedByTestedConstructor()
    {
       Service initialMockService = service;
 
+      new TestedUnit();
+
+      assertNotSame(initialMockService, service);
+      assertFalse(service instanceof ServiceImpl);
+   }
+
+   @Test
+   public void captureAllInternallyCreatedInstances(@Mocked(capture = 1) final Callable<?> callable)
+      throws Exception
+   {
       new NonStrictExpectations()
       {
          @Mocked(capture = 1) Observable observable;
@@ -95,7 +104,6 @@ public final class CapturingInstancesTest extends JMockitTest
       int result = unit.businessOperation(true);
 
       assertNotNull(unit.observable);
-      assertNotSame(initialMockService, service);
       assertEquals(7, result);
 
       new Verifications()
