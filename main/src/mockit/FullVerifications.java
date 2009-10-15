@@ -43,10 +43,6 @@ public class FullVerifications extends Verifications
    /**
     * Begins <em>full</em> verification on the mocked types that can potentially be invoked during
     * the replay phase of the test.
-    * <p/>
-    * Inside this block, all of those possible invocations are supposed to be explicitly verified.
-    * Note that even so, invocations explicitly <em>recorded</em> previously don't need to have
-    * matching verification calls, since they are considered to be implicitly verified.
     */
    protected FullVerifications()
    {

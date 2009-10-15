@@ -26,16 +26,16 @@ package mockit;
 
 /**
  * A combination of {@link FullVerifications} and {@link VerificationsInOrder}.
+ * <p/>
+ * Note that the behavior provided by this class is essentially the same obtained through an strict
+ * {@link Expectations} recording block, except that the number of expected invocations for each
+ * expectation is still "non-strict".
  */
 public class FullVerificationsInOrder extends Verifications
 {
    /**
     * Begins <em>in-order</em> verification for <em>all</em> invocations on the mocked types that
     * can potentially be invoked during the replay phase.
-    * <p/>
-    * The behavior provided by this class is essentially the same obtained through an strict
-    * {@link Expectations} recording block, except that the number of expected invocations for each
-    * expectation is still "non-strict".
     */
    public FullVerificationsInOrder()
    {
