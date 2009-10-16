@@ -39,7 +39,7 @@ public final class Cache_JMockit_Test
 
    @Mocked private Clock clock;
    @Mocked private Loader loader;
-   @Mocked private CacheReloadPolicy reloadPolicy;
+   @NonStrict private CacheReloadPolicy reloadPolicy;
 
    @Test
    public void returnsCachedObjectWithinTimeout()
@@ -77,7 +77,7 @@ public final class Cache_JMockit_Test
 
          {
             clock.time(); returns(fetchTime);
-            reloadPolicy.shouldReload(loadTime, fetchTime); returns(false); notStrict();
+            reloadPolicy.shouldReload(loadTime, fetchTime); returns(false);
          }
       };
 
@@ -107,7 +107,7 @@ public final class Cache_JMockit_Test
 
          {
             clock.time(); returns(fetchTime);
-            reloadPolicy.shouldReload(loadTime, fetchTime); returns(false); notStrict();
+            reloadPolicy.shouldReload(loadTime, fetchTime); returns(false);
          }
       };
 
@@ -138,7 +138,7 @@ public final class Cache_JMockit_Test
 
          {
             clock.time(); returns(fetchTime);
-            reloadPolicy.shouldReload(loadTime, fetchTime); returns(false); notStrict();
+            reloadPolicy.shouldReload(loadTime, fetchTime); returns(false);
          }
       };
 
