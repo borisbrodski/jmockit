@@ -1,6 +1,3 @@
-#apphead, #navcol { display: none; }
-.tasknav, .axial { display: none; }
-
 h2 {
    margin-top: 2ex; font-size: 115%; padding: 3px;
    text-shadow: 2px 2px 2px #123152;
