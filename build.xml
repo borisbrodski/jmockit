@@ -127,7 +127,7 @@
    <target name="createjavadocs">
       <delete dir="www/javadoc" includes="**/*.html"/>
       <javadoc
-         destdir="www/javadoc" overview="www/overview.html" stylesheetfile="www/documentation.css"
+         destdir="www/javadoc" overview="www/overview.html"
          nodeprecated="true" noindex="true" notree="true" nohelp="true"
          breakiterator="true" source="1.5" windowtitle="JMockit Toolkit API Documentation"
          encoding="UTF-8" charset="UTF-8" docencoding="UTF-8" classpathref="common.classpath">
