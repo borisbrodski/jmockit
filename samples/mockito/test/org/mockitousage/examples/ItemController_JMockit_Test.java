@@ -1,4 +1,4 @@
-package org.mockitousage.examples;/*
+/*
  * JMockit Samples
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
@@ -22,6 +22,7 @@ package org.mockitousage.examples;/*
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package org.mockitousage.examples;
 
 import java.util.*;
 
