@@ -27,7 +27,7 @@ package mockit.internal.expectations.mocking;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 
-import mockit.*;
+import mockit.internal.filtering.*;
 import mockit.internal.state.*;
 
 public final class ParameterTypeRedefinitions extends TypeRedefinitions
@@ -71,28 +71,22 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       }
 
       if (typeMetadata.getMaxInstancesToCapture() > 0) {
-         registerCaptureOfNewInstances(paramIndex, typeMetadata.capturing);
+         registerCaptureOfNewInstances(typeMetadata, redefinition.mockingCfg);
       }
    }
 
-   private void registerCaptureOfNewInstances(int paramIndex, Capturing capturing)
+   private void registerCaptureOfNewInstances(
+      MockedType typeMetadata, MockingConfiguration mockingCfg)
    {
       if (captureOfNewInstances == null) {
          captureOfNewInstances = new CaptureOfNewInstancesForParameters();
          TestRun.getExecutingTest().setCaptureOfNewInstances(captureOfNewInstances);
       }
 
-      Type paramType = paramTypes[paramIndex];
-      Class<?> paramClass = null;
+      ((CaptureOfNewInstancesForParameters) captureOfNewInstances).setMockingConfiguration(
+         mockingCfg);
 
-      if (paramType instanceof Class) {
-         paramClass = (Class<?>) paramType;
-      }
-      else if (paramType instanceof ParameterizedType) {
-         ParameterizedType parameterizedType = (ParameterizedType) paramType;
-         paramClass = (Class<?>) parameterizedType.getRawType();
-      }
-
-      captureOfNewInstances.makeSureAllSubtypesAreModified(paramClass, capturing);
+      Class<?> paramClass = typeMetadata.getClassType();
+      captureOfNewInstances.makeSureAllSubtypesAreModified(paramClass, typeMetadata.capturing);
    }
 }

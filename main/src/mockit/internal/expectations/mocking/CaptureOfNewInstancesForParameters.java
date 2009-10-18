@@ -25,21 +25,25 @@
 package mockit.internal.expectations.mocking;
 
 import mockit.internal.capturing.*;
+import mockit.internal.filtering.*;
 
 import org.objectweb.asm2.*;
 
-// TODO: implement support for filtering and constructor configuration, just like in
-// CaptureOfNewInstancesForFields
 final class CaptureOfNewInstancesForParameters extends CaptureOfNewInstances
 {
+   private MockingConfiguration mockingCfg;
+
    CaptureOfNewInstancesForParameters() {}
 
    public ClassWriter createModifier(ClassLoader classLoader, ClassReader cr)
    {
-      ExpectationsModifier modifier = new ExpectationsModifier(classLoader, cr, null, null);
-
+      ExpectationsModifier modifier = new ExpectationsModifier(classLoader, cr, mockingCfg, null);
       modifier.setClassNameForInstanceMethods(baseTypeDesc);
-
       return modifier;
+   }
+
+   void setMockingConfiguration(MockingConfiguration mockingCfg)
+   {
+      this.mockingCfg = mockingCfg;
    }
 }

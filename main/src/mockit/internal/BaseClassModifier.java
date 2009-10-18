@@ -186,13 +186,6 @@ public class BaseClassModifier extends ClassWriter
          "[Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
-   protected final void generateCallToRecordOrReplayThroughMockingBridge(
-      String className, int access, String name, String desc)
-   {
-      generateCallToMockingBridge(
-         MockingBridge.Target.RECORD_OR_REPLAY, className, access, name, desc, null);
-   }
-
    protected final void generateCallToMockingBridge(
       int targetId, String mockClassName, int mockAccess, String mockName, String mockDesc,
       Object extra)
