@@ -128,11 +128,9 @@ public class TestRunnerDecorator
          TestRun.setSharedFieldTypeRedefinitions(sharedRedefinitions);
       }
       else {
-         // TODO: fix bug for fields with capturing, where captured classes redefined for a previous
-         // test do not get redefined for another test; also, create new subclass of
-         // ExpectationsModified named ExpectationsWithCapturingModifier that modifies constructors
-         // of captured classes so they call a capturing-specific handler method
-//         sharedRedefinitions.redefineTypesForTestClass();
+         // TODO: separate FieldTypeRedefinitions in two classes, one just for mocking of fields,
+         // another just for capturing
+         sharedRedefinitions.redefineTypesForTestClass();
       }
 
       if (target != TestRun.getCurrentTestInstance()) {
