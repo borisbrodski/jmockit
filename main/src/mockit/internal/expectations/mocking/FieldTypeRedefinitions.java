@@ -77,8 +77,10 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
          finalField = isFinal(fieldModifiers);
 
          TypeRedefinition typeRedefinition = redefineTypeForMockField();
+         typeMetadata.mockingCfg = typeRedefinition.mockingCfg;
+         typeMetadata.mockConstructorInfo = typeRedefinition.mockConstructorInfo;
 
-         registerCaptureOfNewInstances(typeRedefinition);
+         registerCaptureOfNewInstances();
       }
    }
 
@@ -89,25 +91,22 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
       return (CaptureOfNewInstancesForFields) captureOfNewInstances;
    }
 
-   private void registerCaptureOfNewInstances(TypeRedefinition typeRedefinition)
+   private void registerCaptureOfNewInstances()
    {
       if (typeMetadata.getMaxInstancesToCapture() <= 0) {
          return;
       }
 
-      // TODO: if informed in @Mocked, use "realClassName" to load and redefine that single class
-
       if (captureOfNewInstances == null) {
          captureOfNewInstances = new CaptureOfNewInstancesForFields();
       }
 
-      getCaptureOfNewInstances().registerCaptureOfNewInstances(
-         field, typeMetadata, typeRedefinition.mockingCfg, typeRedefinition.mockConstructorInfo);
+      getCaptureOfNewInstances().registerCaptureOfNewInstances(typeMetadata);
    }
 
    /**
-    * @return true iff the mock instance concrete class is not mocked in some test, ie it's a class
-    * which only appears in the code under test
+    * Returns true iff the mock instance concrete class is not mocked in some test, ie it's a class
+    * which only appears in the code under test.
     */
    public abstract boolean captureNewInstanceForApplicableMockField(Object mock);
 }

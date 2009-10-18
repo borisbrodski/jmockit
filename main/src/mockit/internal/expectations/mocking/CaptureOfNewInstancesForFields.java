@@ -38,19 +38,18 @@ final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
 {
    private static final class FieldWithCapture
    {
-      final Field mockField;
-      final int instancesToCapture;
+      final MockedType typeMetadata;
       int instancesCaptured;
 
-      FieldWithCapture(Field mockField, int instancesToCapture)
+      FieldWithCapture(MockedType typeMetadata)
       {
-         this.mockField = mockField;
-         this.instancesToCapture = instancesToCapture;
+         this.typeMetadata = typeMetadata;
       }
 
       boolean reassignInstance(Object fieldOwner, Object newInstance)
       {
-         if (instancesCaptured < instancesToCapture) {
+         if (instancesCaptured < typeMetadata.getMaxInstancesToCapture()) {
+            Field mockField = typeMetadata.field;
             Object previousInstance = Utilities.getFieldValue(mockField, fieldOwner);
             Utilities.setFieldValue(mockField, fieldOwner, newInstance);
             TestRun.getExecutingTest().substituteMock(previousInstance, newInstance);
@@ -80,12 +79,10 @@ final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
    }
 
    @SuppressWarnings({"ParameterHidesMemberVariable"})
-   void registerCaptureOfNewInstances(
-      Field mockField, MockedType typeMetadata,
-      MockingConfiguration mockingCfg, MockConstructorInfo mockConstructorInfo)
+   void registerCaptureOfNewInstances(MockedType typeMetadata)
    {
-      this.mockingCfg = mockingCfg;
-      this.mockConstructorInfo = mockConstructorInfo;
+      this.mockingCfg = typeMetadata.mockingCfg;
+      this.mockConstructorInfo = typeMetadata.mockConstructorInfo;
 
       Class<?> fieldType = typeMetadata.getClassType();
 
@@ -100,8 +97,7 @@ final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
          fieldTypeToFields.put(fieldType, fieldsWithCaptureForType);
       }
 
-      FieldWithCapture capture =
-         new FieldWithCapture(mockField, typeMetadata.getMaxInstancesToCapture());
+      FieldWithCapture capture = new FieldWithCapture(typeMetadata);
       fieldsWithCaptureForType.add(capture);
    }
 
@@ -170,7 +166,7 @@ final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
    private void resetCaptureCount(Field mockField, List<FieldWithCapture> fieldsWithCapture)
    {
       for (FieldWithCapture fieldWithCapture : fieldsWithCapture) {
-         if (fieldWithCapture.mockField == mockField) {
+         if (fieldWithCapture.typeMetadata.field == mockField) {
             fieldWithCapture.instancesCaptured = 0;
          }
       }

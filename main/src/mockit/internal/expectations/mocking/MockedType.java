@@ -29,6 +29,7 @@ import java.lang.reflect.*;
 import static java.lang.reflect.Modifier.*;
 
 import mockit.*;
+import mockit.internal.filtering.*;
 
 @SuppressWarnings({"deprecation"})
 final class MockedType
@@ -42,6 +43,8 @@ final class MockedType
    final boolean nonStrict;
    final Type declaredType;
    final String mockId;
+   MockingConfiguration mockingCfg;
+   MockConstructorInfo mockConstructorInfo;
 
    MockedType(Field field, boolean fromTestClass)
    {
