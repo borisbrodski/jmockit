@@ -349,27 +349,4 @@
          <sourcepath path="${basedir}/main/src"/>
       </findbugs>
    </target>
-
-   <target name="push-to-maven-prepare">
-     <taskdef resource="maven-repository-importer.properties">
-       <classpath><pathelement path="maven-repository-importer-1.2.jar"/></classpath>
-     </taskdef>
-     <delete dir="maven-repo"/>
-     <maven-repository-importer destdir="maven-repo" version="${version}">
-       <artifact jar="jmockit.jar" pom="pom.xml"/>
-     </maven-repository-importer>
-   </target>
-   <target name="push-to-maven" depends="push-to-maven-prepare">
-     <tstamp/>
-     <cvs dest="maven-repo">
-       <commandline>
-         <argument value="-d:pserver:jmockit@cvs.dev.java.net:/cvs"/>
-         <argument line="-z9 import -W *.jar -kb -m"/>
-         <argument value="deploying new jars to the java.net maven repository"/>
-
-         <argument value="jmockit/repo"/>
-         <argument line="deployment-to-maven-repository t${DSTAMP}${TSTAMP}"/>
-       </commandline>
-     </cvs>
-   </target>
 </project>
