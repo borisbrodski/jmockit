@@ -11,9 +11,27 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="JUnit 4.7" level="application" />
     <orderEntry type="library" name="Java EE 5" level="application" />
-    <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Hibernate 3 + JTA" level="project" />
-    <orderEntry type="module" module-name="Main" />
+    <orderEntry type="library" name="JMockit" level="project" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../jmockit-hibernate3emul.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/dom4j-1.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 
