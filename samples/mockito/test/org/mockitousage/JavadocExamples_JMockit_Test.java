@@ -152,8 +152,8 @@ public class JavadocExamples_JMockit_Test
       new Verifications()
       {
          {
-            // Following two verifications work exactly the same (repeats(1) is the default):
-            mockedList.add("once");
+            // Following two verifications work exactly the same:
+            mockedList.add("once"); // repeatsAtLeast(1) is the default
             mockedList.add("once"); repeats(1);
 
             // Verifies exact number of invocations:
@@ -348,7 +348,7 @@ public class JavadocExamples_JMockit_Test
       // Second call: prints "foo".
       assertEquals("foo", mock.next());
 
-      // Any consecutive call: prints "foo" as well (because of "repeatsAtLeast(1)").
+      // Any consecutive call: prints "foo" as well.
       assertEquals("foo", mock.next());
    }
 
@@ -394,39 +394,53 @@ public class JavadocExamples_JMockit_Test
       public Object getItem(int index) { return items.get(index); }
    }
 
-   // TODO: re-implement dynamic partial mocking so that everything gets and remains mocked for the
-   // whole test, but preserving the original bytecode; in the replay phase, all invocations will
-   // first go to RecordAndReplayExecution, be registered for later verification if non-strict, and
-   // then either produce the recorded result and do nothing more, or return to the mocked
-   // method/constructor and allow its original definition to execute; only explicitly recorded
-   // invocations will prevent the original method from being executed
-   @Test
-   public void spyingOnRealObjects()
+   @Test // essentially equivalent to "spyingOnRealObjects", with some differences in behavior
+   public void dynamicPartialMocking()
    {
-      final TestedClass spy = new TestedClass();
+      final TestedClass partialMock = new TestedClass();
 
       // Optionally, you can record some invocations:
-      new NonStrictExpectations(spy)
+      new NonStrictExpectations(partialMock)
       {
          {
-            spy.getItemCount(); returns(100);
+            partialMock.getItemCount(); returns(100);
+
+            // When recording invocations, real methods are never called, so this would not throw an
+            // IndexOutOfBoundsException, but it would prevent the real "getItem" method from being
+            // executed in the replay phase:
+            // partialMock.getItem(1); returns("an item");
          }
       };
 
-      // Using the spy calls real methods, except those with recorded invocations:
-      spy.addItem("one");
-      spy.addItem("two");
+      // Using the mock calls real methods, except those with recorded invocations:
+      partialMock.addItem("one");
+      partialMock.addItem("two");
 
-      assertEquals("one", spy.getItem(0));
-      assertEquals(100, spy.getItemCount());
+      assertEquals("one", partialMock.getItem(0));
+      assertEquals(100, partialMock.getItemCount());
 
-      // Optionally, you can verify:
+      // Optionally, you can verify the actual execution of recorded invocations:
       new Verifications()
       {
          {
-            spy.addItem("one");
-            spy.addItem("two");
+            // This works, but adding a call to "repeats(1);" when recording the invocation would
+            // have been simpler:
+            partialMock.getItemCount();
+
+            // Since no invocations were recorded for the "addItem" method, it was not mocked during
+            // the replay phase. Therefore the following call will NOT verify anything; instead, it
+            // will execute the real method.
+            // If a test really needs to verify the execution of such a method, it can be done by
+            // recording a strict invocation, or by specifying the minimum or exact invocation count
+            // on the recording of a non-strict invocation; but then the real method would not be
+            // executed in the replay phase.
+            partialMock.addItem("three");
          }
       };
+
+      // From the above, we can see that invocations to REAL (unmocked) methods cannot be explicitly
+      // verified with JMockit. It is doubtful that such a thing would be useful in real-world
+      // tests, since the point of not mocking a method is to allow it to be exercised normally as
+      // part of the code under test.
    }
 }

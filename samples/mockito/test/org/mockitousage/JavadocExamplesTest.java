@@ -267,16 +267,24 @@ public class JavadocExamplesTest
 
       //optionally, you can stub out some methods:
       when(spy.getItemCount()).thenReturn(100);
- 
+
+      // When using the regular "when(spy.someMethod(...)).thenDoXyz(...)" API, all calls to a spy
+      // object will not only perform stubbing, but also execute the real method:
+      // when(spy.getItem(1)).thenReturn("an item"); => would throw an IndexOutOfBoundsException
+
+      // Therefore, a different API must sometimes be used for stubbing, to avoid side effects:
+      doReturn("an item").when(spy).getItem(1);
+      
       //using the spy calls real methods, except those stubbed out
       spy.addItem("one");
       spy.addItem("two");
 
       assertEquals("one", spy.getItem(0));
+      assertEquals("an item", spy.getItem(1));
       assertEquals(100, spy.getItemCount());
 
       //optionally, you can verify
-      verify(spy).addItem("one");
+      verify(spy).addItem("one"); // the real "addItem" is not called here
       verify(spy).addItem("two");
    }
 }
