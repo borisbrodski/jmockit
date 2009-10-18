@@ -22,7 +22,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.integration.junit4;
+package mockit.integration.junit4.internal;
 
 import org.junit.runner.notification.*;
 import org.junit.runner.*;

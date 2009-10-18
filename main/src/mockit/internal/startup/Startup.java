@@ -30,9 +30,9 @@ import java.util.*;
 
 import org.objectweb.asm2.*;
 
-import mockit.integration.junit3.*;
-import mockit.integration.junit4.*;
-import mockit.integration.testng.*;
+import mockit.integration.junit3.internal.*;
+import mockit.integration.junit4.internal.*;
+import mockit.integration.testng.internal.*;
 import mockit.internal.*;
 import mockit.internal.expectations.*;
 import mockit.internal.state.*;
