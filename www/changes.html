@@ -65,7 +65,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.991 (<del>tentative date</del>: October 18, 2009):</p>
+<p>Release 0.991 (tentative date: October 25, 2009):</p>
 <ul>
    <li>
       Fixed a bug with mocked types in the Expectations API: when different types (usually classes)
@@ -95,6 +95,11 @@
       mock object to be instantiated. The actual field/parameter type will not be considered for
       mocking. This can be used to mock non-accessible classes (for example, private nested
       classes), by declaring the field/parameter as being of type <code>Object</code>.
+   </li>
+   <li>
+      Implemented support for mock filters in captured implementation classes (when
+      <code>@Capturing</code> or <code>@Mocked(capture = n)</code> is used with
+      <code>@Mocked(methods = "...")</code> for the same field or parameter.
    </li>
 </ul>
 
