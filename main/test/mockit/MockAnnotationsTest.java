@@ -581,4 +581,38 @@ public final class MockAnnotationsTest extends JMockitTest
       @Mock(invocations = 1)
       static void clearState() {}
    }
+
+   @Test
+   public void mockJREClassWithStubs() throws Exception
+   {
+      Mockit.setUpMocks(new MockLoginContextWithStubs());
+
+      LoginContext context = new LoginContext("");
+      context.login();
+      context.logout();
+   }
+
+   @MockClass(realClass = LoginContext.class, stubs = {"(String)", "logout"})
+   final class MockLoginContextWithStubs
+   {
+      @Mock(invocations = 1)
+      void login() {}
+   }
+
+   @Test
+   public void mockJREClassWithInverseStubs() throws Exception
+   {
+      Mockit.setUpMocks(MockLoginContextWithInverseStubs.class);
+
+      LoginContext context = new LoginContext("", null, null);
+      context.login();
+      context.logout();
+   }
+
+   @MockClass(realClass = LoginContext.class, stubs = "", inverse = true)
+   static class MockLoginContextWithInverseStubs
+   {
+      @Mock(invocations = 1)
+      static void login() {}
+   }
 }
