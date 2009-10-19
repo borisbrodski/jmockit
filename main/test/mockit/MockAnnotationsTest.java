@@ -477,7 +477,38 @@ public final class MockAnnotationsTest extends JMockitTest
    }
 
    @Test
-   public void mockJREMethodAndConstructor() throws Exception
+   public void mockJREMethodAndConstructorForGivenRealClass() throws Exception
+   {
+      Mockit.setUpMock(LoginContext.class, MockLoginContextWithoutAnnotation.class);
+
+      new LoginContext("test", (CallbackHandler) null).login();
+   }
+
+   @Test
+   public void mockJREMethodAndConstructorForGivenRealClassWithGivenMockInstance() throws Exception
+   {
+      Mockit.setUpMock(LoginContext.class, new MockLoginContextWithoutAnnotation());
+
+      new LoginContext("test", (CallbackHandler) null).login();
+   }
+
+   public static class MockLoginContextWithoutAnnotation
+   {
+      MockLoginContextWithoutAnnotation() {}
+
+      @Mock
+      public MockLoginContextWithoutAnnotation(String name, CallbackHandler callbackHandler)
+      {
+         assertEquals("test", name);
+         assertNull(callbackHandler);
+      }
+
+      @Mock
+      public void login() {}
+   }
+
+   @Test
+   public void mockJREMethodAndConstructorUsingAnnotatedMockClass() throws Exception
    {
       Mockit.setUpMocks(new MockLoginContext("test", null));
 
@@ -514,5 +545,40 @@ public final class MockAnnotationsTest extends JMockitTest
       });
 
       new LoginContext("test").login();
+   }
+
+   @Test(expected = LoginException.class)
+   public void mockJREMethodAndConstructorWithMockUpClass() throws Exception
+   {
+      new MockUp<LoginContext>()
+      {
+         @Mock
+         public void $init(String name) { assertEquals("test", name); }
+
+         @Mock
+         public void login() throws LoginException
+         {
+            throw new LoginException();
+         }
+      };
+
+      new LoginContext("test").login();
+   }
+
+   @Test
+   public void mockPrivateMethodInJREClassByName() throws Exception
+   {
+      Mockit.setUpMock(LoginContext.class.getName(), new MockLoginContextForPrivateMethod());
+
+      Deencapsulation.invoke(new LoginContext(""), "clearState");
+   }
+
+   static final class MockLoginContextForPrivateMethod
+   {
+      @Mock @SuppressWarnings({"UnusedDeclaration"})
+      void $init(String name) {}
+
+      @Mock(invocations = 1)
+      static void clearState() {}
    }
 }
