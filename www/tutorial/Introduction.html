@@ -86,7 +86,7 @@
 <p>
    Existing tools for testing with mock objects include <a
    href="http://www.easymock.org">EasyMock</a> and <a href="http://www.jmock.org">jMock</a>, both of
-   which are based on <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Proxy.html"
+   which are based on <a href="http://java.sun.com/javase/6/docs/api/java/lang/reflect/Proxy.html"
    >java.lang.reflect.Proxy</a>, which requires an interface to be implemented. It's also possible
    to create proxies for concrete classes with CGLIB-based extensions to these tools. Each of these
    tools has a rich API for expressing expectations that are verified when the methods on mock
@@ -105,7 +105,7 @@
    The conventional solutions for achieving isolation with mock objects impose certain design
    restrictions on the code under test. JMockit was created as an alternative with no such
    restrictions, by leveraging the facilities in the new <a
-   href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/instrument/package-summary.html"
+   href="http://java.sun.com/javase/6/docs/api/java/lang/instrument/package-summary.html"
    >java.lang.instrument</a> Java 5 package (in addition to making use of - to a lesser degree -
    reflection, dynamic proxies, and custom class loaders).
 </p>
