@@ -276,10 +276,104 @@
 </p>
 
 <h4>Using the <code>@MockClass</code> annotation</h4>
+<p>
+   The <code>Mockit.setUpMock</code> method, in all of its two-parameter variations, requires the
+   real class to be explicitly provided through an argument.
+   The <a href="../javadoc/mockit/Mockit.html#setUpMocks(java.lang.Object...)">Mockit.setUpMocks</a>
+   method, in constrast, takes only mock class literals and/or mock class instances.
+   The applicable real class is specified through the <code>mockit.MockClass</code> annotation,
+   applied on the mock class itself, as the following example shows.
+</p>
+<pre><code>   @MockClass(realClass = LoginContext.class)
+   public static class MockLoginContext
+   {
+      // @Mocks here...
+   }
+
+   @MockClass(realClass = SomethingElse.class)
+   public final class MockSomethingElse
+   {
+      // @Mocks here...
+   }
+
+   @Test
+   public void setUpMocksForMultipleClasses()
+   {
+      Mockit.<strong>setUpMocks(MockLoginContext.class, new MockSomethingElse())</strong>;
+
+      // Calls code under test that uses the "LoginContext" and "SomethingElse" classes:
+      ...
+   }
+</code></pre>
+<p>
+   The <code>realClass</code> attribute is mandatory for <code>@MockClass</code>.
+   A mock class is normally used for the same real class every time. Therefore, nothing more natural
+   than associating said class directly with the mock class, avoiding the need to specify it every
+   time the mocks are set up.
+</p>
+
+<h5>Specifying stubs with a mock class</h5>
+<p>
+   Another benefit we get through the use of <code>@MockClass</code> is the ability to specify
+   methods and/or constructors in the real class that should be <em>stubbed out</em> so they have no
+   effect when called during a test.
+   Stubbing out a method achieves the same result as mocking it with a mock method that does
+   nothing, except for returning the default value according to the method return type when it's
+   not <code>void</code>.
+</p>
+<p>
+   The following example tests make use of this feature.
+</p>
+<pre><code>   @Test
+   public void mockAndStubOutClassAccordingToSpecifiedStubs() throws Exception
+   {
+      Mockit.setUpMocks(new MockLoginContextWithStubs());
+
+      LoginContext context = new LoginContext("");
+      context.login();
+      context.logout();
+   }
+
+   @MockClass(realClass = LoginContext.class, stubs = {"(String)", "logout"})
+   final class MockLoginContextWithStubs
+   {
+      @Mock
+      void login() {} // this could also have been an stub
+   }
+
+   @Test
+   public void mockAndStubOutClassAccordingToSpecifiedInverseStubs() throws Exception
+   {
+      Mockit.setUpMocks(MockLoginContextWithInverseStubs.class);
+
+      LoginContext context = new LoginContext("", null, null);
+      context.login();
+      context.logout();
+   }
+
+   @MockClass(realClass = LoginContext.class, stubs = "", inverse = true)
+   static class MockLoginContextWithInverseStubs
+   {
+      @Mock
+      static void login() {}
+   }
+</code></pre>
+<p>
+   In the first test above, the constructor of the real class (<code>LoginContext</code>) which has
+   one parameter of type <code>String</code> is stubbed out, as well as all methods in the same
+   class with name <code>logout</code>. Parameters are ignored if not specified in the stub filter,
+   so all overloads (in case there is more than one) with the same method name will be stubbed out. 
+</p>
+<p>
+   The second mock class, <code>MockLoginContextWithInverseStubs</code>, uses the
+   <code>inverse</code> attribute (which by default is <code>false</code>) to specify that all
+   methods and constructors <em>not</em> matching the specified stub filters will be stubbed out.
+   In this example, the list of stub filters contains only an empty filter which matches nothing,
+   so everything in the real class is stubbed out. Any mocks defined in the mock class will override
+   the stub, however.
+</p>
 
 <h4>In-line mock classes</h4>
-
-<h4>Tearing down the mocks</h4>
 
 <h3 id="constraints">Invocation count constraints</h3>
 <p>
@@ -300,6 +394,8 @@
 <p>
 
 </p>
+
+<h3>Reusing mocks between tests</h3>
 
 <script type="text/javascript" src="../prettify.js"></script>
 </body>
