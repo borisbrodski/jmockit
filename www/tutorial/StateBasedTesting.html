@@ -312,11 +312,81 @@
    time the mocks are set up.
 </p>
 
-<h4>Specifying stubs with a mock class</h4>
+<h4>In-line mock classes</h4>
 <p>
-   Another benefit we get through the use of <code>@MockClass</code> is the ability to specify
-   methods and/or constructors in the real class that should be <em>stubbed out</em> so they have no
-   effect when called during a test.
+   Named mock classes, typically defined as nested or inner classes of the test class, definitely
+   have their place.
+   Often, however, an specific group of mocks for a given real class will be useful for a single
+   test.
+   In such a situation we can create <em>anonymous mock classes</em> inside individual test methods,
+   as demonstrated by the next example.
+</p>
+<pre><code>   @Test
+   public void setUpMocksUsingAnonymousMockClass() throws Exception
+   {
+      Mockit.setUpMock(LoginContext.class, new Object()
+      {
+         @Mock
+         void $init(String name) { assertEquals("test", name); }
+
+         @Mock
+         void login() {}
+      });
+
+      new LoginContext("test").login();
+   }
+</code></pre>
+<p>
+   An anonymous mock class is always instantiated at the place of definition and cannot be annotated
+   with <code>@MockClass</code>, so we need a mock setup mechanism that takes both the real class
+   and the mock instance.
+   In addition to that, an anonymous class cannot define its own constructors (apart from the
+   implicit constructor that initializes the local instance), so we can't have mock constructors.
+   As the example above shows, though, we can mock any constructor of the real class by defining a
+   mock method with the special name <code>$init</code>, return type <code>void</code>, and the same
+   parameters as the desired constructor in the real class.
+</p>
+<p>
+   A more elegant alternative to the use of <code>Mockit.setUpMock</code> with an "in-line mock
+   class" is shown next, using the <code>mockit.MockUp&lt;T></code> generic base class.
+</p>
+<pre><code>   @Test
+   public void setUpMocksUsingLocalMockUpClass() throws Exception
+   {
+      new MockUp&lt;LoginContext>()
+      {
+         @Mock
+         void $init(String name) { assertEquals("test", name); }
+
+         @Mock
+         void login() {}
+      };
+
+      new LoginContext("test").login();
+   }
+</code></pre>
+<p>
+   In this case, we still have an anonymous mock class, but it is created as a subclass of
+   <strong><code>SetUp&lt;T></code></strong> where the real class is specified through the generic
+   <em>type parameter</em> <strong><code>T</code></strong>.
+   (Subclasses of <code>MockUp</code> can also be named, of course.)
+   Given this succinct and readable syntax, and the fact that mock classes tend to be specific to
+   individual tests, this should be the most common way to define mocks with the Annotations API.
+</p>
+<p>
+   As the previous example tests have shown, it is perfectly safe to declare mock methods in an
+   anonymous mock class as non-<code>public</code> (always).
+   This is an added bonus over annotated (and named) mock classes, which often (but not always) need
+   to be public with their mocks also public.
+</p>
+
+<h3>Mocking interfaces</h3>
+
+<h3>Specifying stubs with a mock class</h3>
+<p>
+   The <code>@MockClass</code> annotation also gives us the ability to specify methods and/or
+   constructors in the real class that should be <em>stubbed out</em> so they have no effect when
+   called during a test.
    Stubbing out a method achieves the same result as mocking it with a mock method that does
    nothing, except for returning the default value according to the method return type when it's
    not <code>void</code>.
@@ -362,7 +432,7 @@
    In the first test above, the constructor of the real class (<code>LoginContext</code>) which has
    one parameter of type <code>String</code> is stubbed out, as well as all methods in the same
    class with name <code>logout</code>. Parameters are ignored if not specified in the stub filter,
-   so all overloads (in case there is more than one) with the same method name will be stubbed out. 
+   so all overloads (in case there is more than one) with the same method name will be stubbed out.
 </p>
 <p>
    The second mock class, <code>MockLoginContextWithInverseStubs</code>, uses the
@@ -386,11 +456,6 @@
    Finally, as seen in the example above, the empty stub filter will match <em>no</em> methods or
    constructors in the real class, or <em>all</em> methods and constructors if used with
    <code>inverse = true</code>.
-</p>
-
-<h4>In-line mock classes</h4>
-<p>
-
 </p>
 
 <h3 id="constraints">Invocation count constraints</h3>
