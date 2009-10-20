@@ -33,9 +33,12 @@ import mockit.integration.junit4.*;
 @RunWith(JMockit.class)
 public final class MisusedExpectationsTest
 {
+   @SuppressWarnings({"UnusedDeclaration"})
    static class Blah
    {
       int value() { return 0; }
+      void setValue(int value) {}
+      String doSomething(boolean b) { return ""; }
    }
 
    @Mocked Blah mock;
@@ -86,5 +89,43 @@ public final class MisusedExpectationsTest
       assertEquals(2, mock.value());
       assertEquals(3, mock.value());
       assertEquals(4, mock.value());
+   }
+
+   @Test
+   public void recordDuplicateInvocationsWhereAllButTheFirstOneWillBeIgnored()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.value(); returns(1);
+         mock.value(); returns(2);
+
+         mock.setValue(1);
+         mock.setValue(1); throwsError(new UnknownError());
+      }};
+
+      assertEquals(1, mock.value());
+      assertEquals(1, mock.value());
+
+      mock.setValue(1);
+      mock.setValue(1); // won't throw an error
+   }
+
+   @Test
+   public void recordAmbiguousExpectationsUsingArgumentMatchers()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.setValue(1);
+         mock.setValue(withAny(0)); throwsError(new UnknownError());
+
+         mock.doSomething(withEqual(true)); returns("first");
+         mock.doSomething(withNotEqual(false)); returns("second");
+      }};
+
+      mock.setValue(1);
+      mock.setValue(1); // won't throw an error
+
+      assertNull(mock.doSomething(false));
+      assertEquals("first", mock.doSomething(true));
    }
 }
