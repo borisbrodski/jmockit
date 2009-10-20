@@ -155,7 +155,7 @@
    A given mock class must be applied to a corresponding real class to have any effect.
    We call this "setting up" the mock class.
    This is normally done for a specific test or set of tests. In the first case, it occurs inside
-   invididual test methods. In the second one, a <code>@BeforeMethod</code> (TestNG),
+   individual test methods. In the second one, a <code>@BeforeMethod</code> (TestNG),
    <code>setUp()</code> (JUnit 3.8), or <code>@Before</code> (JUnit 4) method can be used.
    During the time a mock class is in effect, the methods and constructors of the real class which
    have corresponding mocks will stay mocked, with any calls made on them automatically and
@@ -280,7 +280,7 @@
    The <code>Mockit.setUpMock</code> method, in all of its two-parameter variations, requires the
    real class to be explicitly provided through an argument.
    The <a href="../javadoc/mockit/Mockit.html#setUpMocks(java.lang.Object...)">Mockit.setUpMocks</a>
-   method, in constrast, takes only mock class literals and/or mock class instances.
+   method, in contrast, takes only mock class literals and/or mock class instances.
    The applicable real class is specified through the <code>mockit.MockClass</code> annotation,
    applied on the mock class itself, as the following example shows.
 </p>
@@ -312,7 +312,7 @@
    time the mocks are set up.
 </p>
 
-<h5>Specifying stubs with a mock class</h5>
+<h4>Specifying stubs with a mock class</h4>
 <p>
    Another benefit we get through the use of <code>@MockClass</code> is the ability to specify
    methods and/or constructors in the real class that should be <em>stubbed out</em> so they have no
@@ -372,12 +372,102 @@
    so everything in the real class is stubbed out. Any mocks defined in the mock class will override
    the stub, however.
 </p>
+<p>
+   Each stub filter string specified with the <code>stubs</code> attribute can match any number of
+   methods of the real class, since the initial part actually is a <em>regular expression</em> for
+   method names.
+   For constructors, this part is left empty since they have no names.
+   The second part in a stub filter string, which can be empty for methods but never for
+   constructors, is a comma-separated list of parameter type names, between parentheses.
+   Each parameter type name either is the name of a primitive type, or a fully qualified reference
+   type name.
+   For convenience, it can be a <em>unique suffix</em> for such type names instead; this makes it
+   easy to specify reference type names, since in most cases the package name can be omitted.
+   Finally, as seen in the example above, the empty stub filter will match <em>no</em> methods or
+   constructors in the real class, or <em>all</em> methods and constructors if used with
+   <code>inverse = true</code>.
+</p>
 
 <h4>In-line mock classes</h4>
+<p>
+
+</p>
 
 <h3 id="constraints">Invocation count constraints</h3>
 <p>
+   All example tests shown so far only used JUnit/TestNG "asserts" to verify invocation arguments.
+   This is the part of the API that extends conventional state-based testing to the data items
+   exchanged between objects.
+   Sometimes, though, we may want to verify if a given method/constructor in a dependency is invoked
+   at all by the unit under test.
+   We may also want to verify exactly how many invocations a given mock received during the
+   execution of a test, or specify that the test should fail if more/less than a certain number of
+   invocations occurs.
+   For this, we can specify <em>declarative constraints</em> on the <em>invocation count</em> of a
+   given mock, as the following example shows.
+</p>
+<pre><code>   @Test
+   public void specifyInvocationCountConstraints() throws Exception
+   {
+      Mockit.setUpMock(LoginContext.class, new Object()
+      {
+         @Mock(minInvocations = 1)
+         void $init(String name) { assertEquals("test", name); }
 
+         @Mock(invocations = 1)
+         void login() {}
+
+         @Mock(maxInvocations = 1)
+         void logout() {}
+      });
+
+      new LoginContext("test").login();
+   }
+</code></pre>
+<p>
+   (In the test above we used an anonymous mock class with the <code>setUpMock</code> method,
+   although a nicer solution could be obtained with a local <code>MockUp</code> object.)
+   In this test we used all three attributes of the <code>@Mock</code> annotation related to
+   invocation counts.
+   The first mock specifies that the <code>LoginContext(String)</code> constructor must be invoked
+   <em>at least once</em> during the test.
+   The second one specifies that the <code>login()</code> method must be invoked <em>exactly
+   once</em>, while the third declares that <code>logout()</code> <em>can</em> be invoked, but not
+   more than once.
+</p>
+<p>
+   It is also valid to specify both <code>minInvocations</code> and <code>maxInvocations</code> on
+   the same mock, in order to constrain the invocation count to a given range.
+</p>
+
+<h3>Mocking and stubbing class initializers</h3>
+<p>
+   When a class in production code performs some work in one or more <em>static initialization
+   blocks</em>, we often need to stub it out so it doesn't interfere with test execution.
+   To do just that for a given real class, we can write something like
+   <code>@MockClass(realClass = MyRealClass.class, <strong>stubs = "&lt;clinit>"</strong>)</code>.
+   If we instead want some test code to execute when the static initialization of the real class
+   gets executed by the JVM, then we can define an special mock, as shown below.
+</p>
+<pre><code>   @Test
+   public void mockStaticInitializer()
+   {
+      new MockUp&lt;ClassWithStaticInitializers>()
+      {
+         @Mock(invocations = 1)
+         void $clinit()
+         {
+            // Do something here.
+         }
+      };
+
+      ClassWithStaticInitializers.doSomething();
+   }
+</code></pre>
+<p>
+   We can even verify that static initialization occurs, as specified by the invocation count
+   constraint above. Notice however that once loaded by the JVM, a class will be initialized no more
+   than once, so the test would fail if it runs after the class has already been initialized.
 </p>
 
 <h3 id="instantiation">Controlling the instantiation of mock classes</h3>

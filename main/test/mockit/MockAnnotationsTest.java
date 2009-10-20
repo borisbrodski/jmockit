@@ -537,11 +537,14 @@ public final class MockAnnotationsTest extends JMockitTest
    {
       Mockit.setUpMock(LoginContext.class, new Object()
       {
-         @Mock(invocations = 1)
-         public void $init(String name) { assertEquals("test", name); }
+         @Mock(minInvocations = 1)
+         void $init(String name) { assertEquals("test", name); }
 
          @Mock(invocations = 1)
-         public void login() {}
+         void login() {}
+
+         @Mock(maxInvocations = 1)
+         void logout() {}
       });
 
       new LoginContext("test").login();
@@ -553,10 +556,10 @@ public final class MockAnnotationsTest extends JMockitTest
       new MockUp<LoginContext>()
       {
          @Mock
-         public void $init(String name) { assertEquals("test", name); }
+         void $init(String name) { assertEquals("test", name); }
 
          @Mock
-         public void login() throws LoginException
+         void login() throws LoginException
          {
             throw new LoginException();
          }
@@ -614,5 +617,65 @@ public final class MockAnnotationsTest extends JMockitTest
    {
       @Mock(invocations = 1)
       static void login() {}
+   }
+
+   static class ClassWithStaticInitializers
+   {
+      static String str = "initialized"; // if final it would be a compile-time constant
+      static final Object obj = new Object(); // constant, but only at runtime
+
+      static
+      {
+         System.exit(1);
+      }
+
+      static void doSomething() {}
+
+      static
+      {
+         try {
+            Class.forName("NonExistentClass");
+         }
+         catch (ClassNotFoundException e) {
+            e.printStackTrace();
+         }
+      }
+   }
+
+   @Test
+   public void mockStaticInitializer()
+   {
+      new MockUp<ClassWithStaticInitializers>()
+      {
+         @Mock(invocations = 1)
+         void $clinit() {}
+      };
+
+      ClassWithStaticInitializers.doSomething();
+
+      assertNull(ClassWithStaticInitializers.str);
+      assertNull(ClassWithStaticInitializers.obj);
+   }
+
+   static class AnotherClassWithStaticInitializers
+   {
+      static { System.exit(1); }
+
+      static void doSomething() { throw new RuntimeException(); }
+   }
+
+   @Test
+   public void stubOutStaticInitializer() throws Exception
+   {
+      Mockit.setUpMock(new MockForClassWithInitializer());
+
+      AnotherClassWithStaticInitializers.doSomething();
+   }
+
+   @MockClass(realClass = AnotherClassWithStaticInitializers.class, stubs = "<clinit>")
+   static class MockForClassWithInitializer
+   {
+      @Mock(minInvocations = 1, maxInvocations = 1)
+      void doSomething() {}
    }
 }
