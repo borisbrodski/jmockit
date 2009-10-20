@@ -42,7 +42,7 @@ package mockit;
  * Even {@code static} methods in the mocked type can have delegates, which in turn can be static or
  * not. The same is true for {@code private}, {@code final}, and {@code native} methods.
  * <p/>
- * <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/easymock/test/org/easymock/samples/Example_JMockit_Test.java?view=markup">Example</a>
+ * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/easymock/test/org/easymock/samples/DocumentManager_JMockit_Test.java">Example</a>
  */
 public interface Delegate
 {

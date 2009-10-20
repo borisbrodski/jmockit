@@ -41,9 +41,9 @@ import java.lang.annotation.*;
  * mocked type is a class) the mocked type will also be mocked.
  * <p/>
  * Examples:
- * <a href="https://jmockit.dev.java.net/source/browse/jmockit/main/test/integrationTests/SubclassTest.java?view=markup">SubclassTest</a>
- * <a href="https://jmockit.dev.java.net/source/browse/jmockit/main/test/mockit/CapturingImplementationsTest.java?view=markup">CapturingImplementationsTest</a>
- * <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/TimingFramework/test/org/jdesktop/animation/timing/interpolation/PropertySetterTest.java?view=markup">PropertySetterTest</a>
+ * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/SubclassTest.java">SubclassTest</a>
+ * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/CapturingImplementationsTest.java">CapturingImplementationsTest</a>
+ * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/TimingFramework/test/org/jdesktop/animation/timing/interpolation/PropertySetterTest.java">PropertySetterTest</a>
  *
  * @see #classNames
  * @see #inverse

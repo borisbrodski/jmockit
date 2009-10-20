@@ -107,7 +107,7 @@ public final class Mockit
     * Same as {@link #redefineMethods(Class, Class)}, for a given mock class instance.
     * The mock methods will be called on this instance from the modified real methods.
     *
-    * @see <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java?view=markup">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java">Example</a>
     */
    public static void redefineMethods(Class<?> realClass, Object mock)
    {
@@ -182,7 +182,7 @@ public final class Mockit
     * @throws RealMethodNotFoundForMockException if the mock class contains a public method for
     * which no corresponding method is found in the real class
     *
-    * @see <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/tutorial/test/jmockit/tutorial/domain/ServiceA_CoreAPI_Test.java?view=markup">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/test/jmockit/tutorial/domain/ServiceA_CoreAPI_Test.java">Example</a>
     */
    public static void redefineMethods(Class<?> realClass, Class<?> mockClass)
    {
@@ -216,7 +216,7 @@ public final class Mockit
     *
     * @param realClasses one or more regular classes to be stubbed out
     *
-    * @see <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/powermock/test/powermock/examples/suppress/constructor/ExampleWithEvilChild_JMockit_Test.java?view=markup">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/powermock/test/powermock/examples/suppress/constructor/ExampleWithEvilChild_JMockit_Test.java">Example</a>
     */
    public static void stubOut(Class<?>... realClasses)
    {
@@ -248,7 +248,7 @@ public final class Mockit
     * @param filters one or more filters that specify which class members (methods, constructors,
     * and/or static initialization blocks) to be stubbed out
     *
-    * @see <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/powermock/test/powermock/examples/suppress/method/ExampleWithEvilMethod_JMockit_Test.java?view=markup">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/powermock/test/powermock/examples/suppress/method/ExampleWithEvilMethod_JMockit_Test.java">Example</a>
     */
    public static void stubOutClass(Class<?> realClass, String... filters)
    {
@@ -332,7 +332,7 @@ public final class Mockit
     * @throws IllegalArgumentException if any mock class fails to specify the corresponding real
     * class using the <code>@MockClass(realClass = ...)</code> annotation
     *
-    * @see <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/orderMngmntWebapp/test/orderMngr/web/submitOrder/OrderEntryPageTest.java?view=markup">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/web/submitOrder/OrderEntryPageTest.java">Example</a>
     */
    public static void setUpMocks(Object... mockClassesOrInstances)
    {
@@ -420,7 +420,7 @@ public final class Mockit
     * @param mock an instance of the class containing the mock methods/constructors for the real
     * class
     *
-    * @see <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderFactoryTest.java?view=markup">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderFactoryTest.java">Example</a>
     */
    public static void setUpMock(Class<?> realClass, Object mock)
    {
@@ -448,7 +448,7 @@ public final class Mockit
     * @param realClass the class to be mocked that is used by code under test
     * @param mockClass the class containing the mock methods/constructors for the real class
     *
-    * @see <a href="https://jmockit.dev.java.net/source/browse/jmockit/main/test/mockit/MockAnnotationsTest.java?view=markup">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java">Example</a>
     */
    public static void setUpMock(Class<?> realClass, Class<?> mockClass)
    {
@@ -479,7 +479,7 @@ public final class Mockit
     *
     * @see #setUpMock(Class, Object)
     * @see #setUpMocks(Object...)
-    * @see <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderFactoryTest.java?view=markup">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderFactoryTest.java">Example</a>
     */
    public static <T> T setUpMock(Object mock)
    {
@@ -644,7 +644,7 @@ public final class Mockit
     *
     * @see #newEmptyProxy(Class)
     * @see #newEmptyProxy(Type...)
-    * @see <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java?view=markup">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java">Example</a>
     */
    public static <E> E newEmptyProxy(ClassLoader loader, Class<E> interfaceToBeProxied)
    {

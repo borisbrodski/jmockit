@@ -35,9 +35,9 @@ import mockit.internal.util.*;
  * So, when dealing with mocked types through the Expectations API there is usually no need to
  * import this class. If used it will work just as well, though.
  *
- * @see <a href="https://jmockit.dev.java.net/source/browse/jmockit/main/test/mockit/DeencapsulationTest.java?view=markup">DeencapsulationTest</a>
- * @see <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/powermock/test/powermock/examples/bypassencapsulation/ServiceHolder_JMockit_Test.java?view=markup">ServiceHolder_JMockit_Test</a>
- * @see <a href="https://jmockit.dev.java.net/source/browse/jmockit/samples/AnimatedTransitions/test/org/jdesktop/animation/transitions/ScreenTransitionContainerResizeTest.java?view=markup">ScreenTransitionContainerResizeTest</a>
+ * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/DeencapsulationTest.java">DeencapsulationTest</a>
+ * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/powermock/test/powermock/examples/bypassencapsulation/ServiceHolder_JMockit_Test.java">ServiceHolder_JMockit_Test</a>
+ * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/AnimatedTransitions/test/org/jdesktop/animation/transitions/ScreenTransitionContainerResizeTest.java">ScreenTransitionContainerResizeTest</a>
  */
 @SuppressWarnings({"unchecked"})
 public final class Deencapsulation
