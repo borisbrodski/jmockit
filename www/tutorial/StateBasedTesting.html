@@ -472,7 +472,98 @@
 
 <h3 id="instantiation">Controlling the instantiation of mock classes</h3>
 <p>
+   We have already seen three different situations when mock classes get instantiated:
+</p>
+<ol>
+   <li>
+      The mock class is instantiated directly by test code with the <code>new</code> operator, and
+      passed to JMockit in a call to a <code>Mockit.setUpMock</code> or
+      <code>Mockit.setUpMocks</code> method, or alternatively as a <code>MockUp</code> subclass
+      instance.
+      In this case the same mock instance is used for all calls to instance mock methods, as long as
+      the mock class remains in effect.
+   </li>
+   <li>
+      The mock class is instantiated "behind the covers" by JMockit whenever it needs an instance to
+      invoke an instance mock method on.
+      In this situation a mock instance is created, a mock is executed on it, and then it is
+      discarded (that is, it becomes eligible for garbage collection).
+   </li>
+   <li>
+      JMockit instantiates the mock class so that a mock constructor can be invoked, whenever the
+      corresponding mocked constructor is invoked by tested code.
+      This situation cannot be avoided for mock constructors, since pre-existing instances can't be
+      used.
+   </li>
+</ol>
+<p>
+   Sometimes it may be important to have more control on when exactly a mock class is automatically
+   instantiated by JMockit (except for the third situation above, which cannot be changed but can be
+   avoided by using a <code>$init</code> mock method instead of a mock constructor).
+   There is also a situation which is not covered by the previously described instantiation
+   mechanisms, and which may be needed or useful for certain test cases: <em>instantiation per
+   mocked instance</em>.
+   To cover such needs the <code>@MockClass</code> annotation has an <code>instantiation</code>
+   attribute, whose values are given by the
+   <a href="../javadoc/mockit/Instantiation.html">Instantiation</a> "enum".
+   The default value for this attribute is <code>Instantiation.PerMockInvocation</code>.
+</p>
+<p>
+   The following sub-sections describe each of the possible instantiation modes which can be used
+   to control how and when JMockit creates automatic mock class instances.
+   Notice this is applicable only to situation 2 above.
+</p>
 
+<h4>Instantiation per Mock Setup</h4>
+<p>
+   For a mock class annotated as
+   <code>@MockClass(realClass = ..., <strong>instantiation = PerMockSetup</strong>)</code>, a call
+   like <code>Mockit.setUpMock(realClass, MyMockClass.class)</code> or
+   <code>Mockit.setUpMocks(MyMockClass.class)</code> will result in the creation of the mock
+   instance at the time of the call.
+   This single mock instance will then be used for all instance method invocations, for as long as
+   the mock class remains in effect.
+</p>
+<p>
+   Notice this is equivalent to passing an instance created by test code in one of those mock setup
+   calls.
+</p>
+
+<h4>Instantiation per Mock Invocation</h4>
+<p>
+   For a mock class annotated as
+   <code>@MockClass(realClass = ..., <strong>instantiation = PerMockInvocation</strong>)</code>, a
+   call like <code>Mockit.setUpMock(realClass, MyMockClass.class)</code> or
+   <code>Mockit.setUpMocks(MyMockClass.class)</code> will <em>not</em> result in the creation of any
+   mock instance at this time, but will later if and when an instance mock method needs to be
+   invoked.
+   For each such invocation, a new mock instance is created and then discarded as soon as the mock
+   call terminates.
+</p>
+<p>
+   Notice this is the default JMockit behavior when a class literal for the mock class is passed in
+   a mock setup call, and the <code>instantiation</code> attribute isn't specified.
+</p>
+
+<h4>Instantiation per Mocked Instance</h4>
+<p>
+   For a mock class annotated as
+   <code>@MockClass(realClass = ..., <strong>instantiation = PerMockedInstance</strong>)</code>, a
+   call like <code>Mockit.setUpMock(realClass, MyMockClass.class)</code> or
+   <code>Mockit.setUpMocks(MyMockClass.class)</code> will result in the <em>on-demand</em> creation
+   of one new mock instance for each and every new <em>mocked instance</em>.
+   In other words, once the mock class is in effect, whenever a mocked instance method of the real
+   class is invoked, a paired instance of the mock class will be created if none yet exists for that
+   particular instance of the real class; this same mock instance will then be used for all
+   invocations to mock instance methods.
+</p>
+<p>
+   The ability to have a mock class instance for each real class instance will normally only be
+   useful if the mock class stores some state that is specific to each instance of the real class.
+</p>
+<p>
+   Notice the mock object lifetime described above can only be achieved by using this particular
+   instantiation mode.
 </p>
 
 <h3 id="it">Accessing the mocked object: the "it" field</h3>
