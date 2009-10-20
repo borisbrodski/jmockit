@@ -50,14 +50,17 @@ public @interface MockClass
     * One or more stubbing filters which specify the set of methods and constructors in the real
     * class that are to be stubbed out with empty implementations.
     * <p/>
-    * Each filter must follow the syntax
-    * <strong><code>[nameRegex][(paramTypeName...)]</code></strong>,
-    * where <code>nameRegex</code> is a {@linkplain java.util.regex.Pattern regular expression} for
-    * matching method names, and <code>paramTypeName</code> is the name of a primitive or reference
-    * parameter type (actually, any suffix of the type name is enough, like "String" instead of the
-    * full class name "java.lang.String").
-    * If <code>nameRegex</code> is omitted the filter matches only constructors.
-    * If <code>(paramTypeName...)</code> is omitted the filter matches methods with any parameters.
+    * Each filter must follow the syntax <strong>{@code [nameRegex][(paramTypeName...)]}</strong>,
+    * where {@code nameRegex} is a {@linkplain java.util.regex.Pattern regular expression} for
+    * matching method names, and {@code paramTypeName} is the name of a primitive or reference
+    * parameter type. Actually, any <em>suffix</em> of the type name is enough, like "String"
+    * instead of the full class name "java.lang.String".
+    * If {@code nameRegex} is omitted the filter matches only constructors.
+    * If {@code (paramTypeName...)} is omitted the filter matches methods with any parameters.
+    * <p/>
+    * Note that an empty filter ({@code stubs = ""}) will match <em>no</em> methods or constructors
+    * in the real class, or <em>all</em> methods and constructors if used with
+    * {@code inverse = true}.
     * <p/>
     * To specify the static initializers of the class, inform the filter "&lt;clinit>".
     */
