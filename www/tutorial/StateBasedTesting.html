@@ -367,11 +367,12 @@
 </code></pre>
 <p>
    In this case, we still have an anonymous mock class, but it is created as a subclass of
-   <strong><code>SetUp&lt;T></code></strong> where the real class is specified through the generic
+   <strong><code>MockUp&lt;T></code></strong> where the real class is specified through the generic
    <em>type parameter</em> <strong><code>T</code></strong>.
    (Subclasses of <code>MockUp</code> can also be named, of course.)
    Given this succinct and readable syntax, and the fact that mock classes tend to be specific to
-   individual tests, this should be the most common way to define mocks with the Annotations API.
+   individual tests, the creation of such <em>mock-up classes</em> should be the most common way to
+   define mocks with the Annotations API.
 </p>
 <p>
    As the previous example tests have shown, it is perfectly safe to declare mock methods in an
@@ -381,6 +382,66 @@
 </p>
 
 <h3>Mocking interfaces</h3>
+<p>
+   Most of the time a mock class targets a real class directly.
+   But what if we need a mock object that implements a certain interface, to be passed to code under
+   test?
+   The two following example tests show how it is done, one using an annotated mock class, the other
+   a mock-up class. The mocked interface is
+   <a href="http://java.sun.com/javase/6/docs/api/javax/security/auth/callback/CallbackHandler.html">
+      javax.security.auth.callback.CallbackHandler</a>.
+</p>
+<pre><code>   @Test
+   public void setUpMocksForInterface() throws Exception
+   {
+      CallbackHandler callbackHandler = Mockit.setUpMock(new MockCallbackHandler());
+
+      callbackHandler.handle(new Callback[] {new NameCallback("Enter name:")});
+   }
+
+   @MockClass(realClass = CallbackHandler.class)
+   public static class MockCallbackHandler
+   {
+      @Mock
+      public void handle(Callback[] callbacks)
+      {
+         assertEquals(1, callbacks.length);
+         assertTrue(callbacks[0] instanceof NameCallback);
+      }
+   }
+
+   @Test
+   public void mockInterfaceWithMockUp() throws Exception
+   {
+      CallbackHandler callbackHandler = new MockUp&lt;CallbackHandler>()
+      {
+         @Mock
+         void handle(Callback[] callbacks)
+         {
+            assertEquals(1, callbacks.length);
+            assertTrue(callbacks[0] instanceof NameCallback);
+         }
+      }.getMockInstance();
+
+      callbackHandler.handle(new Callback[] {new NameCallback("Enter name:")});
+   }
+</code></pre>
+<p>
+   The
+   <a href="../javadoc/mockit/Mockit.html#setUpMock(java.lang.Object)">Mockit.setUpMock(Object)</a>
+   method returns a proxy object that implements the desired interface.
+   The object passed to this method must be an instance of an annotated mock class which specifies
+   the interface as the value for the <code>realClass</code> attribute.
+   Again, a more elegant alternative is obtained with the use of a mock-up class, which provides
+   the proxy instance through a call to the <code>getMockInstance()</code> method.
+   (This method returns <code>null</code> when the mocked type is not an interface, though.)
+</p>
+<p>
+   Notice that for the first test the mock class and its mock methods are declared to be
+   <code>public</code> and must be so to avoid an <code>IllegalAccessError</code>, while in the
+   second test the mock-up class and the mock method <em>don't have</em> to be public (an anonymous
+   class is always non-public anyway).
+</p>
 
 <h3>Specifying stubs with a mock class</h3>
 <p>

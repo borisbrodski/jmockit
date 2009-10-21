@@ -678,4 +678,39 @@ public final class MockAnnotationsTest extends JMockitTest
       @Mock(minInvocations = 1, maxInvocations = 1)
       void doSomething() {}
    }
+
+   @Test
+   public void mockJREInterface() throws Exception
+   {
+      CallbackHandler callbackHandler = Mockit.setUpMock(new MockCallbackHandler());
+
+      callbackHandler.handle(new Callback[] {new NameCallback("Enter name:")});
+   }
+
+   @MockClass(realClass = CallbackHandler.class)
+   public static class MockCallbackHandler
+   {
+      @Mock(invocations = 1)
+      public void handle(Callback[] callbacks)
+      {
+         assertEquals(1, callbacks.length);
+         assertTrue(callbacks[0] instanceof NameCallback);
+      }
+   }
+
+   @Test
+   public void mockJREInterfaceWithMockUp() throws Exception
+   {
+      CallbackHandler callbackHandler = new MockUp<CallbackHandler>()
+      {
+         @Mock(invocations = 1)
+         void handle(Callback[] callbacks)
+         {
+            assertEquals(1, callbacks.length);
+            assertTrue(callbacks[0] instanceof NameCallback);
+         }
+      }.getMockInstance();
+
+      callbackHandler.handle(new Callback[] {new NameCallback("Enter name:")});
+   }
 }
