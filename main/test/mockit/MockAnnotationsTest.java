@@ -31,6 +31,7 @@ import javax.security.auth.login.*;
 
 import org.junit.*;
 
+import static mockit.Deencapsulation.setField;
 import mockit.integration.junit4.*;
 import mockit.internal.state.*;
 
@@ -712,5 +713,44 @@ public final class MockAnnotationsTest extends JMockitTest
       }.getMockInstance();
 
       callbackHandler.handle(new Callback[] {new NameCallback("Enter name:")});
+   }
+
+   @Test
+   public void accessMockedInstanceThroughItField() throws Exception
+   {
+      final Subject testSubject = new Subject();
+
+      new MockUp<LoginContext>()
+      {
+         LoginContext it;
+
+         @Mock(invocations = 1)
+         void $init(String name, Subject subject)
+         {
+            assertNotNull(name);
+            assertSame(testSubject, subject);
+            assertNotNull(it);
+            setField(it, subject); // forces setting of private field, since no setter is available
+         }
+
+         @Mock(invocations = 1)
+         void login()
+         {
+            assertNotNull(it);
+            assertNull(it.getSubject()); // returns null until the subject is authenticated
+            setField(it, "loginSucceeded", true); // private field set to true when login succeeds
+         }
+
+         @Mock(invocations = 1)
+         void logout()
+         {
+            assertNotNull(it);
+            assertSame(testSubject, it.getSubject());
+         }
+      };
+
+      LoginContext theMockedInstance = new LoginContext("test", testSubject);
+      theMockedInstance.login();
+      theMockedInstance.logout();
    }
 }

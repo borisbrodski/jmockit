@@ -677,7 +677,8 @@
    <code>@MockClass(realClass = ..., <strong>instantiation = PerMockedInstance</strong>)</code>, a
    call like <code>Mockit.setUpMock(realClass, MyMockClass.class)</code> or
    <code>Mockit.setUpMocks(MyMockClass.class)</code> will result in the <em>on-demand</em> creation
-   of one new mock instance for each and every new <em>mocked instance</em>.
+   of one new mock instance for each and every new <em>mocked instance</em> (ie, an instance of the
+   real class).
    In other words, once the mock class is in effect, whenever a mocked instance method of the real
    class is invoked, a paired instance of the mock class will be created if none yet exists for that
    particular instance of the real class; this same mock instance will then be used for all
@@ -694,7 +695,73 @@
 
 <h3 id="it">Accessing the mocked object: the "it" field</h3>
 <p>
+   As we have seen, there is a relationship between <em>mocked instances</em> (that is, instances of
+   real classes which have been mocked) and <em>mock instances</em> (instances of mock classes).
+   Mock instances can be created explicitly in test code, or automatically by JMockit according to
+   the instantiation mode of the mock class.
+   Mocked instances are created inside tested code, or in test code so they can be passed to tested
+   code.
+</p>
+<p>
+   For certain use cases, a mock method executing on a mock instance may need access to the
+   corresponding mocked instance.
+   This can be achieved by declaring an instance field of name <strong><code>it</code></strong> in
+   the mock class, with the type of the mocked real class.
+   Every time a mocked instance method is redirected to execute the corresponding mock instance
+   method, the <code>it</code> field on the mock instance will be set to the mocked instance.
+   If a mocked <em>constructor</em> has a corresponding <code>$init</code> mock method, then the
+   field will be set to the newly created (and uninitialized) instance.
+</p>
+<p>
+   In practice, the use of an <code>it</code> field by itself is uncommon, so the following example
+   test is a contrived (although interesting) one. The next section describes a more likely use for
+   such fields.
+</p>
+<pre><code>   @Test
+   public void accessMockedInstanceThroughItField() throws Exception
+   {
+      final Subject testSubject = new Subject();
 
+      new MockUp&lt;LoginContext>()
+      {
+         <strong>LoginContext it;</strong>
+
+         @Mock(invocations = 1)
+         void $init(String name, Subject subject)
+         {
+            assertNotNull(name);
+            assertSame(testSubject, subject);
+            setField(it, subject); // forces setting of private Subject field, since no setter is available
+         }
+
+         @Mock(invocations = 1)
+         void login()
+         {
+            assertNull(it.getSubject()); // getSubject() returns null until the subject is authenticated
+            setField(it, "loginSucceeded", true); // private field set to true when login succeeds
+         }
+
+         @Mock(invocations = 1)
+         void logout()
+         {
+            assertSame(testSubject, it.getSubject());
+         }
+      };
+
+      LoginContext theMockedInstance = new LoginContext("test", testSubject);
+      theMockedInstance.login();
+      theMockedInstance.logout();
+   }
+</code></pre>
+<p>
+   The example above (which is an actual test in JMockit's own test suite) used a mock-up class, but
+   annotated and regular anonymous mock classes can also declare an <code>it</code> field.
+   The <code>setField</code> methods used in this test are statically imported from the
+   <code>mockit.Deencapsulation</code> utility class, and are only used here to make the test more
+   meaningful.
+   The local variable <code>theMockedInstance</code> contains the instance which the <code>it</code>
+   field will be set to on the mock-up instance, for each of the three mock invocations in this
+   particular test.
 </p>
 
 <h3 id="reentrant">Reentrant mocks</h3>
