@@ -28,6 +28,7 @@ import java.util.*;
 import javax.security.auth.*;
 import javax.security.auth.callback.*;
 import javax.security.auth.login.*;
+import javax.security.auth.spi.*;
 
 import org.junit.*;
 
@@ -752,5 +753,85 @@ public final class MockAnnotationsTest extends JMockitTest
       LoginContext theMockedInstance = new LoginContext("test", testSubject);
       theMockedInstance.login();
       theMockedInstance.logout();
+   }
+
+   @Test
+   public void reenterMockedMethodsThroughItField() throws Exception
+   {
+      // Create objects to be exercised by the code under test:
+      Configuration configuration = new Configuration()
+      {
+         @Override
+         public AppConfigurationEntry[] getAppConfigurationEntry(String name)
+         {
+            Map<String, ?> options = Collections.emptyMap();
+            return new AppConfigurationEntry[]
+            {
+               new AppConfigurationEntry(
+                  TestLoginModule.class.getName(),
+                  AppConfigurationEntry.LoginModuleControlFlag.SUFFICIENT, options)
+            };
+         }
+      };
+      LoginContext loginContext = new LoginContext("test", null, null, configuration);
+
+      // Set up mocks:
+      ReentrantMockLoginContext mockInstance = new ReentrantMockLoginContext();
+
+      // Exercise the code under test:
+      assertNull(loginContext.getSubject());
+      loginContext.login();
+      assertNotNull(loginContext.getSubject());
+      assertTrue(mockInstance.loggedIn);
+
+      mockInstance.ignoreLogout = true;
+      loginContext.logout();
+      assertTrue(mockInstance.loggedIn);
+
+      mockInstance.ignoreLogout = false;
+      loginContext.logout();
+      assertFalse(mockInstance.loggedIn);
+   }
+
+   static final class ReentrantMockLoginContext extends MockUp<LoginContext>
+   {
+      LoginContext it;
+      boolean ignoreLogout;
+      boolean loggedIn;
+
+      @Mock(reentrant = true)
+      void login() throws LoginException
+      {
+         try {
+            it.login();
+            loggedIn = true;
+         }
+         finally {
+            System.out.println("Login attempted for " + it.getSubject());
+         }
+      }
+
+      @Mock(reentrant = true)
+      void logout() throws LoginException
+      {
+         if (!ignoreLogout) {
+            it.logout();
+            loggedIn = false;
+         }
+      }
+   }
+
+   public static class TestLoginModule implements LoginModule
+   {
+      public void initialize(
+         Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState,
+         Map<String, ?> options)
+      {
+      }
+
+      public boolean login() { return true; }
+      public boolean commit() { return true; }
+      public boolean abort() { return false; }
+      public boolean logout() { return true; }
    }
 }

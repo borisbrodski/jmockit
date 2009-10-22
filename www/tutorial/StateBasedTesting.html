@@ -200,7 +200,7 @@
    is not annotated.
    The test uses this constructor to instantiate the mock class, passing this instance in the call
    to <a href="../javadoc/mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)">
-      Mockit.setUpMock(Class<?> realClass, Object mock)</a>.
+      <code>Mockit.setUpMock(Class<?> realClass, Object mock)</code></a>.
    This mock instance will be the one on which any mock method (such as <code>login</code>) is
    called.
    On the other hand, it won't be the instance on which a mock constructor is invoked; a mock
@@ -279,7 +279,7 @@
 <p>
    The <code>Mockit.setUpMock</code> method, in all of its two-parameter variations, requires the
    real class to be explicitly provided through an argument.
-   The <a href="../javadoc/mockit/Mockit.html#setUpMocks(java.lang.Object...)">Mockit.setUpMocks</a>
+   The <a href="../javadoc/mockit/Mockit.html#setUpMocks(java.lang.Object...)"><code>Mockit.setUpMocks</code></a>
    method, in contrast, takes only mock class literals and/or mock class instances.
    The applicable real class is specified through the <code>mockit.MockClass</code> annotation,
    applied on the mock class itself, as the following example shows.
@@ -428,7 +428,7 @@
 </code></pre>
 <p>
    The
-   <a href="../javadoc/mockit/Mockit.html#setUpMock(java.lang.Object)">Mockit.setUpMock(Object)</a>
+   <a href="../javadoc/mockit/Mockit.html#setUpMock(java.lang.Object)"><code>Mockit.setUpMock(Object)</code></a>
    method returns a proxy object that implements the desired interface.
    The object passed to this method must be an instance of an annotated mock class which specifies
    the interface as the value for the <code>realClass</code> attribute.
@@ -631,7 +631,7 @@
    mocked instance</em>.
    To cover such needs the <code>@MockClass</code> annotation has an <code>instantiation</code>
    attribute, whose values are given by the
-   <a href="../javadoc/mockit/Instantiation.html">Instantiation</a> "enum".
+   <a href="../javadoc/mockit/Instantiation.html"><code>Instantiation</code></a> "enum".
    The default value for this attribute is <code>Instantiation.PerMockInvocation</code>.
 </p>
 <p>
@@ -766,7 +766,94 @@
 
 <h3 id="reentrant">Reentrant mocks</h3>
 <p>
+   Usually, a <em>reentrant method</em> is one which can be re-entered once it is already executing.
+   Recursive methods, for example, are typically reentrant.
+   A <em>reentrant mock method</em> is similar, but instead of causing itself to be re-entered, it
+   causes the corresponding <em>mocked</em> method to be re-entered; and when this happens the
+   original code of the real method is executed, without going through the mock again.
+</p>
+<p>
+   If the mock is an instance method mocking a real instance method, it will need access to the
+   mocked instance in order to call back the mocked instance method.
+   For this, the mock class will need to declare an appropriate <code>it</code> field.
+</p>
+<p>
+   A mocked method which has a reentrant mock will have different behavior than if it had a regular
+   mock, so we use the <code>@Mock(<strong>reentrant = true</strong>)</code> annotation attribute
+   to tell JMockit about our intentions.
+   The example test below exercises a <code>LoginContext</code> object created normally (without any
+   mocking in effect at creation time), using an unspecified <code>configuration</code>.
+   (For the complete version of the test, see the
+   <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java">
+      <code>mockit.MockAnnotationsTest</code></a> class.)
+</p>
+<pre><code>   @Test
+   public void reenterMockedMethodsThroughItField() throws Exception
+   {
+      // Create objects to be exercised by the code under test:
+      LoginContext loginContext = new LoginContext("test", null, null, configuration);
 
+      // Set up mocks:
+      ReentrantMockLoginContext mockInstance = new ReentrantMockLoginContext();
+
+      // Exercise the code under test:
+      assertNull(loginContext.getSubject());
+      <strong>loginContext.login();</strong>
+      assertNotNull(loginContext.getSubject());
+      assertTrue(mockInstance.loggedIn);
+
+      mockInstance.ignoreLogout = true;
+      <strong>loginContext.logout();</strong> // first entry, won't re-enter
+      assertTrue(mockInstance.loggedIn);
+
+      mockInstance.ignoreLogout = false;
+      <strong>loginContext.logout();</strong> // second entry, will re-enter
+      assertFalse(mockInstance.loggedIn);
+   }
+
+   static final class ReentrantMockLoginContext extends MockUp&lt;LoginContext>
+   {
+      LoginContext <strong>it</strong>;
+      boolean ignoreLogout;
+      boolean loggedIn;
+
+      @Mock(<strong>reentrant = true</strong>)
+      void login() throws LoginException
+      {
+         try {
+            <strong>it.login();</strong> // re-enters the mocked method, executing the real code
+            loggedIn = true;
+         }
+         finally {
+            // This is here just to show that arbitrary actions can be taken inside the mock,
+            // <em>before</em> and/or <em>after</em> the real method gets executed.
+            System.out.println("Login attempted for " + it.getSubject());
+         }
+      }
+
+      @Mock(<strong>reentrant = true</strong>)
+      void logout() throws LoginException
+      {
+         // A reentrant mock execution can re-enter the mocked method <em>or not</em>, based on a condition.
+         if (!ignoreLogout) {
+            <strong>it.logout();</strong>
+            loggedIn = false;
+         }
+      }
+   }
+</code></pre>
+<p>
+   In the example above, <em>all</em> real code exercised by the test actually gets executed, even
+   though some methods (<code>login</code> and <code>logout</code>) are mocked.
+   The example indeed is contrived; in practice, reentrant mocks would not normally be useful for
+   <em>testing</em> per se, not directly at least.
+</p>
+<p>
+   You may have noticed that a reentrant mock effectively behaves like <em>advice</em> (from AOP
+   jargon) for the corresponding real method.
+   This is a powerful ability that can be useful for certain things.
+   JMockit itself uses mock classes containing reentrant mocks to provide integration with the
+   JUnit and TestNG test runners.
 </p>
 
 <h3>Reusing mocks between tests</h3>
