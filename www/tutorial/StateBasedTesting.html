@@ -381,7 +381,7 @@
    to be public with their mocks also public.
 </p>
 
-<h3>Mocking interfaces</h3>
+<h3 id="interfaces">Mocking interfaces</h3>
 <p>
    Most of the time a mock class targets a real class directly.
    But what if we need a mock object that implements a certain interface, to be passed to code under
@@ -443,7 +443,7 @@
    class is always non-public anyway).
 </p>
 
-<h3>Specifying stubs with a mock class</h3>
+<h3 id="stubs">Specifying stubs with a mock class</h3>
 <p>
    The <code>@MockClass</code> annotation also gives us the ability to specify methods and/or
    constructors in the real class that should be <em>stubbed out</em> so they have no effect when
@@ -566,7 +566,7 @@
    the same mock, in order to constrain the invocation count to a given range.
 </p>
 
-<h3>Mocking and stubbing class initializers</h3>
+<h3 id="initializers">Mocking and stubbing class initializers</h3>
 <p>
    When a class in production code performs some work in one or more <em>static initialization
    blocks</em>, we often need to stub it out so it doesn't interfere with test execution.
@@ -856,7 +856,7 @@
    JUnit and TestNG test runners.
 </p>
 
-<h3>Reusing mocks between tests</h3>
+<h3 id="reuse">Reusing mocks between tests</h3>
 
 <script type="text/javascript" src="../prettify.js"></script>
 </body>
