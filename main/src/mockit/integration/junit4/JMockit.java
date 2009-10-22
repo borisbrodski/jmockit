@@ -41,24 +41,31 @@ import mockit.internal.startup.*;
  * <p/>
  * In any case, the integration adds the following benefits to test code:
  * <ol>
- * <li>{@link Mockit#assertExpectations()} and {@link Expectations#assertSatisfied()}
- * are automatically called just before the execution of a test ends (that is, after the test itself
- * executed, but before any <code>@After</code> methods are executed. Therefore, you don't to have
- * to worry about putting such calls at the proper places inside tests. (It does no harm to still
- * have them, though.)</li>
- * <li>Any mock defined inside a test will be discarded before the execution of the test method
- * ends, so it is not necessary to call {@link Mockit#restoreAllOriginalDefinitions()} or
- * {@link Mockit#tearDownMocks()} at the end of each test, or in an <code>@After</code> method.</li>
- * <li>Any {@linkplain mockit.MockClass mock class} set up for the whole test class (either through
- * a call to {@link Mockit#setUpMocks} from inside a <code>@BeforeClass</code> method, or by
+ * <li>
+ * {@link Mockit#assertExpectations()} and {@link Expectations#assertSatisfied()} are automatically
+ * called just before the execution of a test ends (that is, after the test itself executed, but
+ * before any {@code @After} methods are executed.
+ * Therefore, you don't to have to worry about putting such calls at the proper places inside tests.
+ * (It does no harm to still have them, though.)
+ * </li>
+ * <li>
+ * Any mock classes applied with the Core or Annotations API from inside a test method will be
+ * discarded before the execution of the test method ends, so it is not necessary to call
+ * {@link Mockit#tearDownMocks()} (or {@link Mockit#restoreAllOriginalDefinitions()}) at the end of
+ * the test, be it from inside the test method itself or from an {@code @After} method.
+ * The same is <em>not</em> true for mocks applied in a {@code @Before} method, however: you
+ * <em>will</em> need to explicitly tear down those mock classes in an {@code @After} method, so
+ * that the mocked real classes are properly restored to their original definitions.
+ * </li>
+ * <li>
+ * Any {@linkplain mockit.MockClass mock class} set up for the whole test class (either through
+ * a call to {@link Mockit#setUpMocks} from inside a {@code @BeforeClass} method, or by
  * annotating the test class with {@link mockit.UsingMocksAndStubs}) will only apply to the test
- * methods in this same test class.</li> That is, you should not explicitly tell JMockit to restore
- * the mocked classes in a <code>@AfterClass</code> method.
+ * methods in this same test class.
+ * That is, you should not explicitly tell JMockit to restore the mocked classes in an
+ * {@code @AfterClass} method.
+ * </li>
  * </ol>
- * Note that explicitly calling a method like {@link mockit.Mockit#tearDownMocks()} will actually
- * prevent JMockit from doing the proper clean-up automatically. So, only use those methods if
- * absolutely necessary.
- * <p/>
  * If you happen to already have a <code>@RunWith</code> annotation in your JUnit test classes, you
  * can still activate integration by simply making sure that JMockit is initialized before any test
  * is executed. For example, the following static block in the test class or in a base test class
