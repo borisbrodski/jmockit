@@ -500,15 +500,23 @@ public final class Mockit
    }
 
    /**
-    * Discards any mocks currently in effect, for all test scopes (the current test method, the
-    * current test class, and the current test suite). Notice that doing this will effectively
-    * prevent mocks to be set up at the test class and test suite levels.
+    * Discards any mocks currently in effect, for all test scopes: the current test method (if any),
+    * the current test (which starts with the first "before" method and continues until the last
+    * "after" method), the current test class (which includes all code from the first "before class"
+    * method to the last "after class" method), and the current test suite.
     * <p/>
-    * In practice, this method should only be used if some mocked class needs to be restored in the
-    * middle of some test. Otherwise, it is unnecessary because JMockit will automatically restore
-    * all classes mocked by a test at the end of that test, as well as all classes mocked for the
-    * test class as a whole (eg, in a <code>@BeforeClass</code> JUnit method) before the first test
-    * in the next test class is executed.
+    * Notice that a call to this method will tear down <em>all</em> mock classes that were applied
+    * through use of the Annotations or Core API that are still in effect, as well as any mock
+    * classes or stubs applied to the current test class through {@code @UsingMocksAndStubs}.
+    * In other words, it would effectively prevent mocks to be set up at the test class and test
+    * suite levels. So, use it only if necessary and if it won't discard mock classes that should
+    * remain in effect. Consider using {@link #tearDownMocks(Class...)} instead, which lets you
+    * restrict the set of real classes to be restored.
+    * <p/>
+    * JMockit will automatically restore classes mocked by a test method at the end of that test
+    * method's execution, as well as all classes mocked for the test class as a whole (through a
+    * "before class" method or an {@code @UsingMocksAndStubs} annotation) before the first test in
+    * the next test class is executed.
     * <p/>
     * This is equivalent to {@link #restoreAllOriginalDefinitions()}.
     */
@@ -519,15 +527,21 @@ public final class Mockit
 
    /**
     * Discards any mocks set up for the specified classes that are currently in effect, for all test
-    * scopes (the current test method, the current test class, and the current test suite).
-    * Notice that doing this will effectively prevent mocks to be set up at the test class and test
-    * suite levels.
+    * scopes: the current test method (if any), the current test (which starts with the first
+    * "before" method and continues until the last "after" method), the current test class (which
+    * includes all code from the first "before class" method to the last "after class" method), and
+    * the current test suite.
     * <p/>
-    * In practice, this method should only be used if some mocked class needs to be restored in the
-    * middle of some test. Otherwise, it is unnecessary because JMockit will automatically restore
-    * all classes mocked by a test at the end of that test, as well as all classes mocked for the
-    * test class as a whole (eg, in a <code>@BeforeClass</code> JUnit method) before the first test
-    * in the next test class is executed.
+    * Notice that if one of the given real classes has a mock class applied at the level of the test
+    * class, calling this method would negate the application of that mock class.
+    * JMockit will automatically restore classes mocked by a test method at the end of that test
+    * method's execution, as well as all classes mocked for the test class as a whole (through a
+    * "before class" method or an {@code @UsingMocksAndStubs} annotation) before the first test in
+    * the next test class is executed.
+    * <p/>
+    * In practice, this method should only be used inside "after" methods ({@code tearDown()} in a
+    * JUnit 3.8 test class), since mock classes set up in a "before" or {@code setUp()} method are
+    * <em>not</em> automatically discarded.
     * <p/>
     * This is equivalent to {@link #restoreOriginalDefinition(Class...)}.
     */
@@ -564,11 +578,13 @@ public final class Mockit
     * Restores a given set of classes to their original definitions. This is equivalent to calling
     * <code>redefineMethods(realClass, realClass)</code>.
     * <p/>
-    * In practice, this method should only be used if some mocked class needs to be restored in the
-    * middle of some test. Otherwise, it is redundant because JMockit will automatically restore all
-    * classes mocked by a test at the end of that test, as well as all classes mocked for the test
-    * class as a whole (eg, in a <code>@BeforeClass</code> JUnit method) before the first test in
-    * the next test class is executed.
+    * In practice, this method should only be used inside "after" methods ({@code tearDown()} with
+    * JUnit 3.8, {@code @After}-annotated with JUnit 4, and {@code @AfterMethod}-annotated with
+    * TestNG). 
+    * Otherwise, it is redundant because JMockit will automatically restore all classes mocked by a
+    * test method at the end of that test method's execution, as well as all classes mocked for the
+    * test class as a whole (through a "before class" method or an {@code @UsingMocksAndStubs}
+    * annotation) before the first test in the next test class is executed.
     *
     * @param realClasses one or more real classes from production code, which may have had methods
     * redefined
@@ -585,7 +601,7 @@ public final class Mockit
     * which have been redefined, if any. Once this method executes, all "real" classes will be back
     * to the definitions they had at JVM startup.
     * <p/>
-    * In practice, this method should only be used if some mocked class needs to be restored in the
+    * In practice, this method should only be used if all mocked classes needs to be restored in the
     * middle of some test. Otherwise, it is unnecessary because JMockit will automatically restore
     * all classes mocked by a test at the end of that test, as well as all classes mocked for the
     * test class as a whole (eg, in a <code>@BeforeClass</code> JUnit method) before the first test
