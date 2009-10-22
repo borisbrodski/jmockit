@@ -31,12 +31,6 @@ import static mockit.Mockit.*;
 
 public final class ReentrantMockTest
 {
-   @After
-   public void tearDown()
-   {
-      tearDownMocks();
-   }
-
    @Test
    public void callMockMethodUsingCoreAPI()
    {
@@ -195,7 +189,7 @@ public final class ReentrantMockTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void attempToSetUpReentrantMockForNativeMethod()
+   public void attemptToSetUpReentrantMockForNativeMethod()
    {
       setUpMocks(ReentrantMockForNativeMethod.class);
    }
@@ -226,7 +220,7 @@ public final class ReentrantMockTest
    }
 
    @Test(timeout = 1000)
-   public void twoConcurrentThreadsCallingTheSameReentrantMock() throws InterruptedException
+   public void twoConcurrentThreadsCallingTheSameReentrantMock() throws Exception
    {
       setUpMocks(MultiThreadedMock.class);
 
