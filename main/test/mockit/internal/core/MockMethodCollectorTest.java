@@ -116,7 +116,7 @@ public final class MockMethodCollectorTest
    {
       String firstMethodName = "aMethod";
       String firstMethodDesc = "()V";
-      mockMethods.addMethod(firstMethodName, firstMethodDesc, false);
+      mockMethods.addMethod(false, firstMethodName, firstMethodDesc, false);
 
       assertVisitMethod(ACC_PUBLIC + ACC_FINAL, "booleanMethod", "()Z");
       assertTrue(mockMethods.containsMethod(firstMethodName, firstMethodDesc));

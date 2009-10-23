@@ -74,7 +74,7 @@ public final class MockMethodCollector extends BaseMockCollector
          // not public or with invalid access, so ignore the method
       }
       else if (allowDefaultConstructor || !isDefaultConstructor(name, desc)) {
-         mockMethods.addMethod(name, desc, isStatic(access));
+         mockMethods.addMethod(collectingFromSuperClass, name, desc, isStatic(access));
       }
 
       return null;

@@ -51,8 +51,12 @@ public class MockMethods
 
    public MockMethods() {}
 
-   public final String addMethod(String name, String desc, boolean isStatic)
+   public final String addMethod(boolean fromSuperclass, String name, String desc, boolean isStatic)
    {
+      if (fromSuperclass && isMethodAlreadyAdded(name, desc)) {
+         return null;
+      }
+
       String nameAndDesc = name + desc;
 
       if (isStatic) {
@@ -61,6 +65,20 @@ public class MockMethods
 
       methods.add(nameAndDesc);
       return nameAndDesc;
+   }
+
+   private boolean isMethodAlreadyAdded(String name, String desc)
+   {
+      int p = desc.lastIndexOf(')');
+      String nameAndParams = name + desc.substring(0, p + 1);
+
+      for (String method : methods) {
+         if (method.startsWith(nameAndParams)) {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    /**

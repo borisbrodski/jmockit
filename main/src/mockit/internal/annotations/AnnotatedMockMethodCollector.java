@@ -78,9 +78,12 @@ public final class AnnotatedMockMethodCollector extends BaseMockCollector
          {
             if ("Lmockit/Mock;".equals(desc)) {
                String nameAndDesc =
-                  mockMethods.addMethod(name, methodDesc, Modifier.isStatic(access));
+                  mockMethods.addMethod(
+                     collectingFromSuperClass, name, methodDesc, Modifier.isStatic(access));
 
-               return new MockAnnotationVisitor(nameAndDesc);
+               if (nameAndDesc != null) {
+                  return new MockAnnotationVisitor(nameAndDesc);
+               }
             }
 
             return this;

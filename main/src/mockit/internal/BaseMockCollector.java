@@ -37,7 +37,7 @@ public class BaseMockCollector extends EmptyVisitor
 
    protected final MockMethods mockMethods;
    private String enclosingClassDescriptor;
-   private boolean collectingFromSuperClass;
+   protected boolean collectingFromSuperClass;
 
    public BaseMockCollector(MockMethods mockMethods)
    {
