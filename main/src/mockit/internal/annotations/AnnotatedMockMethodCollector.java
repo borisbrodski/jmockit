@@ -26,11 +26,11 @@ package mockit.internal.annotations;
 
 import java.lang.reflect.*;
 
+import org.objectweb.asm2.*;
+import org.objectweb.asm2.commons.*;
+
 import mockit.*;
 import mockit.internal.*;
-import org.objectweb.asm2.*;
-import static org.objectweb.asm2.Opcodes.*;
-import org.objectweb.asm2.commons.*;
 
 /**
  * Responsible for collecting the signatures of all methods and constructors defined in a given mock
@@ -38,8 +38,6 @@ import org.objectweb.asm2.commons.*;
  */
 public final class AnnotatedMockMethodCollector extends BaseMockCollector
 {
-   private static final int INVALID_METHOD_ACCESS = ACC_NATIVE + ACC_ABSTRACT;
-
    private final Class<?> realClass;
 
    public AnnotatedMockMethodCollector(AnnotatedMockMethods mockMethods)
@@ -69,7 +67,7 @@ public final class AnnotatedMockMethodCollector extends BaseMockCollector
    {
       super.visitMethod(access, name, methodDesc, signature, exceptions);
 
-      if ((access & INVALID_METHOD_ACCESS) != 0) {
+      if (isMethodWithInvalidAccess(access)) {
          return null;
       }
 

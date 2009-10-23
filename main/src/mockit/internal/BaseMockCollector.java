@@ -31,7 +31,9 @@ import org.objectweb.asm2.commons.*;
 
 public class BaseMockCollector extends EmptyVisitor
 {
-   private static final int INVALID_FIELD_ACCESS = ACC_FINAL + ACC_STATIC + ACC_SYNTHETIC;
+   private static final int INVALID_METHOD_ACCESSES =
+      ACC_BRIDGE + ACC_SYNTHETIC + ACC_ABSTRACT + ACC_NATIVE;
+   private static final int INVALID_FIELD_ACCESSES = ACC_FINAL + ACC_STATIC + ACC_SYNTHETIC;
 
    protected final MockMethods mockMethods;
    private String enclosingClassDescriptor;
@@ -55,6 +57,11 @@ public class BaseMockCollector extends EmptyVisitor
       while (classToCollectMocksFrom != Object.class);
    }
 
+   protected final boolean isMethodWithInvalidAccess(int access)
+   {
+      return (access & INVALID_METHOD_ACCESSES) != 0;
+   }
+
    @Override
    public final void visit(
       int version, int access, String name, String signature, String superName, String[] interfaces)
@@ -74,7 +81,7 @@ public class BaseMockCollector extends EmptyVisitor
    public final FieldVisitor visitField(
       int access, String name, String desc, String signature, Object value)
    {
-      if ((access & INVALID_FIELD_ACCESS) == 0 && "it".equals(name)) {
+      if ((access & INVALID_FIELD_ACCESSES) == 0 && "it".equals(name)) {
          mockMethods.setWithItField(true);
       }
 

@@ -123,7 +123,7 @@ public class MockMethods
       return methods.size();
    }
 
-   public List<String> getMethods()
+   public final List<String> getMethods()
    {
       return methods;
    }

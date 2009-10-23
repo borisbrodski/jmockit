@@ -24,10 +24,10 @@
  */
 package mockit.internal.core;
 
-import java.lang.reflect.*;
+import static java.lang.reflect.Modifier.*;
 
 import org.objectweb.asm2.*;
-import static org.objectweb.asm2.Opcodes.*;
+
 import mockit.internal.*;
 
 /**
@@ -36,9 +36,6 @@ import mockit.internal.*;
  */
 public final class MockMethodCollector extends BaseMockCollector
 {
-   private static final int INVALID_ACCESSES =
-      ACC_BRIDGE + ACC_SYNTHETIC + ACC_ABSTRACT + ACC_NATIVE;
-
    /**
     * Indicates whether a public default constructor in the mock class is allowed as a mock for the
     * default constructor in the real class.
@@ -57,7 +54,7 @@ public final class MockMethodCollector extends BaseMockCollector
     * mock, as indicated by its access modifiers.
     *
     * @param access access modifiers, indicating "public", "static", and so on; if "public" is not
-    * indicated, or one or more of the {@link #INVALID_ACCESSES invalid access modifiers} is
+    * indicated, or one or more of the {@link #INVALID_METHOD_ACCESSES invalid access modifiers} is
     * indicated, the method or constructor is ignored (not added to the set)
     * @param name the method or constructor name
     * @param desc internal JVM description of parameters and return type
@@ -73,11 +70,11 @@ public final class MockMethodCollector extends BaseMockCollector
    {
       super.visitMethod(access, name, desc, signature, exceptions);
 
-      if (!Modifier.isPublic(access) || (access & INVALID_ACCESSES) != 0) {
+      if (!isPublic(access) || isMethodWithInvalidAccess(access)) {
          // not public or with invalid access, so ignore the method
       }
       else if (allowDefaultConstructor || !isDefaultConstructor(name, desc)) {
-         mockMethods.addMethod(name, desc, Modifier.isStatic(access));
+         mockMethods.addMethod(name, desc, isStatic(access));
       }
 
       return null;
