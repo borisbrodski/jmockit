@@ -52,6 +52,11 @@ final class MockState
       this.mockNameAndDesc = mockNameAndDesc;
    }
 
+   Class<?> getRealClass()
+   {
+      return realClass;
+   }
+
    boolean isReentrant()
    {
       return onReentrantCall != null;

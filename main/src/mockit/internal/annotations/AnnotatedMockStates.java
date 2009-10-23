@@ -58,16 +58,38 @@ public final class AnnotatedMockStates
       return mockStates;
    }
 
-   public void removeClassState(String internalNameForOneOrMoreMockClasses)
+   public void removeClassState(Class<?> redefinedClass, String internalNameForOneOrMoreMockClasses)
    {
-      if (internalNameForOneOrMoreMockClasses.indexOf(' ') < 0) {
-         removeMockStates(internalNameForOneOrMoreMockClasses);
-      }
-      else {
-         String[] mockClassesInternalNames = internalNameForOneOrMoreMockClasses.split(" ");
+      removeMockStates(redefinedClass);
 
-         for (String mockClassInternalName : mockClassesInternalNames) {
-            removeMockStates(mockClassInternalName);
+      if (internalNameForOneOrMoreMockClasses != null) {
+         if (internalNameForOneOrMoreMockClasses.indexOf(' ') < 0) {
+            removeMockStates(internalNameForOneOrMoreMockClasses);
+         }
+         else {
+            String[] mockClassesInternalNames = internalNameForOneOrMoreMockClasses.split(" ");
+
+            for (String mockClassInternalName : mockClassesInternalNames) {
+               removeMockStates(mockClassInternalName);
+            }
+         }
+      }
+   }
+
+   private void removeMockStates(Class<?> redefinedClass)
+   {
+      for (
+         Iterator<Map.Entry<String, MockClassState>> itr = classStates.entrySet().iterator();
+         itr.hasNext();
+      ) {
+         Map.Entry<String, MockClassState> mockClassAndItsState = itr.next();
+         MockClassState mockClassState = mockClassAndItsState.getValue();
+         MockState mockState = mockClassState.mockStates.get(0);
+
+         if (mockState.getRealClass() == redefinedClass) {
+            mockStatesWithExpectations.removeAll(mockClassState.mockStates);
+            mockClassState.mockStates.clear();
+            itr.remove();
          }
       }
    }

@@ -149,9 +149,8 @@ public final class MockFixture
    {
       String mockClassesInternalNames = realClassesToMockClasses.remove(redefinedClass);
 
-      if (mockClassesInternalNames != null) {
-         TestRun.getMockClasses().getMockStates().removeClassState(mockClassesInternalNames);
-      }
+      TestRun.getMockClasses().getMockStates().removeClassState(
+         redefinedClass, mockClassesInternalNames);
    }
 
    // Methods that deal with redefined native methods /////////////////////////////////////////////
