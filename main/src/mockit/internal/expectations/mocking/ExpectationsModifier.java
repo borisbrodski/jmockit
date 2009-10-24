@@ -85,10 +85,12 @@ final class ExpectationsModifier extends BaseClassModifier
    public MethodVisitor visitMethod(
       int access, String name, String desc, String signature, String[] exceptions)
    {
+      boolean visitingConstructor = "<init>".equals(name);
+
       if (
          (access & METHOD_ACCESS_MASK) != 0 || "<clinit>".equals(name) ||
          isProxy && isConstructorOrSystemMethodNotToBeMocked(name, desc) ||
-         isMethodFromCapturedClassNotToBeMocked(access)
+         !visitingConstructor && isMethodFromCapturedClassNotToBeMocked(access)
       ) {
          // Copies original without modifications when it's synthetic, abstract, a class
          // initialization block, belongs to a Proxy subclass, or is a static or private method in
@@ -96,7 +98,6 @@ final class ExpectationsModifier extends BaseClassModifier
          return super.visitMethod(access, name, desc, signature, exceptions);
       }
 
-      boolean visitingConstructor = "<init>".equals(name);
       boolean matchesFilters =
          baseClassNameForCapturedInstanceMethods != null && visitingConstructor ||
          mockingCfg == null || mockingCfg.matchesFilters(name, desc);
