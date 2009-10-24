@@ -142,6 +142,7 @@
          <footer><![CDATA[
             <a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>
          ]]></footer>
+         <bottom>© 2006-2009 Rogério Liesenfeld</bottom>
       </javadoc>
       <delete file="www/javadoc/package-list"/>
    </target>
