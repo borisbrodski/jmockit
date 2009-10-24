@@ -135,7 +135,13 @@
             <include name="mockit/*.java"/>
             <include name="mockit/integration/*/*.java"/>
          </fileset>
-         <link href="http://java.sun.com/javase/6/docs/api/" />
+         <link href="http://java.sun.com/javase/6/docs/api/"/>
+         <header><![CDATA[
+            <a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>
+         ]]></header>
+         <footer><![CDATA[
+            <a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>
+         ]]></footer>
       </javadoc>
       <delete file="www/javadoc/package-list"/>
    </target>
