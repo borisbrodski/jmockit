@@ -59,9 +59,11 @@ public @interface Capturing
    /**
     * Specifies the base interface/class type whose implementations to capture at runtime.
     * <p/>
-    * Any classes implementing this base type will be fully {@linkplain Mockit#stubOut(Class[])
-    * stubbed out} or mocked when loaded by the JVM during test execution.
-    * Any already loaded implementations of the base type will also be stubbed out or mocked.
+    * Any classes implementing this base type will be fully mocked or
+    * {@linkplain Mockit#stubOut(Class[]) stubbed out} when loaded by the JVM during test execution
+    * (they are mocked if the annotation is applied to a field or parameter, and stubbed out if
+    * applied to a test class).
+    * Any already loaded implementations of the base type will also be mocked or stubbed out.
     * <p/>
     * This attribute is mandatory for test classes, and optional for instance fields and test method
     * parameters. In the case of fields and parameters, the base type will be the declared field or
@@ -75,14 +77,15 @@ public @interface Capturing
     * running, between those instances which are assignable to the mocked type and are created
     * during the test.
     * <p/>
-    * If {@code capture} is zero (or negative), no instances created by a test are captured.
+    * If {@code maxInstances} is zero (or negative), no instances created by a test are captured.
     * <p/>
-    * If the value for this attribute is positive, then whenever an assignable instance is created
+    * If the value for this attribute is positive or unspecified (the default is 
+    * {@code Integer.MAX_VALUE}), then whenever an assignable instance is created
     * during test execution and the specified number of new instances has not been previously
     * assigned, the (non-{@code final}) mock field will be assigned that new instance.
     * <p/>
-    * It is valid to declare two or more fields of the same mocked type with a positive
-    * {@code capture} number for each of them, say {@code n1}, {@code n2}, etc.
+    * It is valid to declare two or more fields of the same mocked type with a positive number of
+    * {@code maxInstances} for each one of them, say {@code n1}, {@code n2}, etc.
     * In this case, the first {@code n1} new instances will be assigned to the first field,
     * the following {@code n2} new instances to the second, and so on.
     * <p/>
