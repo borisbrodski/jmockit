@@ -707,7 +707,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    If one or more matching invocations did happen, the test will fail.
 </p>
 
-<h4>Verification in order</h4>
+<h4 id="VerificationInOrder">Verification in order</h4>
 <p>
    Regular verification blocks, like the one below, are <em>unordered</em>.
    The actual relative order in which <code>aMethod()</code> and <code>anotherMethod()</code> were
@@ -805,7 +805,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    block is evaluated independently from the others.
 </p>
 
-<h4>Full verification</h4>
+<h4 id="FullVerification">Full verification</h4>
 <p>
    Sometimes it may be important to have <em>all</em> invocations to the mocked types involved in a
    test verified.
@@ -834,7 +834,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 
-<h4>Full verification in order</h4>
+<h4 id="FullVerificationInOrder">Full verification in order</h4>
 <p>
    So, we have seen how to do <em>unordered</em> verifications with <code>Verifications</code>,
    <em>ordered</em> verifications with <code>VerificationsInOrder</code>, and full verifications

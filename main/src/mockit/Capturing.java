@@ -40,9 +40,10 @@ import java.lang.annotation.*;
  * Each class implementing (in case the mocked type is an interface) or extending (in case the
  * mocked type is a class) the mocked type will also be mocked.
  * <p/>
- * Examples:
- * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/SubclassTest.java">SubclassTest</a>
- * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/CapturingImplementationsTest.java">CapturingImplementationsTest</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/CapturingImplementations.html">Tutorial</a>
+ * <br/>Sample tests:
+ * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/SubclassTest.java">SubclassTest</a>,
+ * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/CapturingImplementationsTest.java">CapturingImplementationsTest</a>,
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/TimingFramework/test/org/jdesktop/animation/timing/interpolation/PropertySetterTest.java">PropertySetterTest</a>
  *
  * @see #classNames
@@ -74,18 +75,18 @@ public @interface Capturing
     * running, between those instances which are assignable to the mocked type and are created
     * during the test.
     * <p/>
-    * If <code>capture</code> is zero (or negative), no instances created by a test are captured.
+    * If {@code capture} is zero (or negative), no instances created by a test are captured.
     * <p/>
     * If the value for this attribute is positive, then whenever an assignable instance is created
     * during test execution and the specified number of new instances has not been previously
-    * assigned, the (non-<code>final</code>) mock field will be assigned that new instance.
+    * assigned, the (non-{@code final}) mock field will be assigned that new instance.
     * <p/>
     * It is valid to declare two or more fields of the same mocked type with a positive
-    * <code>capture</code> number for each of them, say <code>n1</code>, <code>n2</code>, etc.
-    * In this case, the first <code>n1</code> new instances will be assigned to the first field,
-    * the following <code>n2</code> new instances to the second, and so on.
+    * {@code capture} number for each of them, say {@code n1}, {@code n2}, etc.
+    * In this case, the first {@code n1} new instances will be assigned to the first field,
+    * the following {@code n2} new instances to the second, and so on.
     * <p/>
-    * Notice that this attribute does not apply to <code>final</code> mock fields, which cannot be
+    * Notice that this attribute does not apply to {@code final} mock fields, which cannot be
     * reassigned.
     */
    int maxInstances() default Integer.MAX_VALUE;

@@ -37,6 +37,8 @@ import mockit.internal.util.*;
  * <p/>
  * The intention is to alert the developer as quickly as possible about the need to correct the
  * original mock method/constructor, so that it again matches the proper real method/constructor.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#mocks">Tutorial</a>
  */
 public final class RealMethodNotFoundForMockException extends IllegalArgumentException
 {

@@ -32,8 +32,10 @@ import mockit.internal.startup.*;
  * <p/>
  * If using the JVM parameter "-javaagent:jmockit.jar" this class doesn't need to be used.
  * Otherwise, all JUnit 3.8 test classes will need to either extend it or verify the initialization
- * of JMockit by calling <code>Mockit.setUpMocks()</code> in a static initializer or constructor of
- * the test class.
+ * of JMockit by calling {@code Mockit.setUpMocks()} in a static initializer or constructor of the
+ * test class.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">Tutorial</a>
  */
 @SuppressWarnings({"JUnitTestCaseWithNoTests", "UnconstructableJUnitTestCase", "UnusedDeclaration"})
 public class JMockitTestCase extends TestCase

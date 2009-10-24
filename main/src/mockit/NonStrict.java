@@ -33,7 +33,7 @@ import java.lang.annotation.*;
  * While in the replay phase, invocations on the non-strict mocked type can be made in any number
  * and in any order.
  * For each of these invocations, the result (return value or thrown error/exception) will be either
- * a "no-op" (doing nothing for constructors and <code>void</code> methods, or returning the default
+ * a "no-op" (doing nothing for constructors and {@code void} methods, or returning the default
  * value appropriate to the return type) or whatever was specified through a matching invocation
  * executed in the record phase (matching on the parameter values, optionally using Hamcrest
  * matchers).
@@ -49,7 +49,9 @@ import java.lang.annotation.*;
  * <p/>
  * Invocations that are <strong>not</strong> recorded but should occur in the replay phase may be
  * explicitly verified at the end of the test using a {@linkplain mockit.Verifications
- * verifications block}.
+ * verification block}.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#strictness">Tutorial</a>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})

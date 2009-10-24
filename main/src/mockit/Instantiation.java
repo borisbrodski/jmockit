@@ -27,6 +27,8 @@ package mockit;
 /**
  * Defines the lifetime of the instances automatically created for a
  * {@linkplain MockClass mock class}.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#instantiation">Tutorial</a>
  */
 public enum Instantiation
 {

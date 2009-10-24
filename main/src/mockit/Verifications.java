@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -56,6 +56,8 @@ import mockit.internal.expectations.*;
  * multiple (non-nested) verification blocks. The relative order of the blocks is not relevant.
  * Such blocks can be of different types. (Typically, when using multiple verification blocks there
  * will be a mix of ordered and unordered ones.)
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#verification">Tutorial</a>
  *
  * @see Expectations#notStrict()
  * @see NonStrict
@@ -107,11 +109,11 @@ public class Verifications extends Invocations
     * Specifies that the <strong>next</strong> invocation to be verified must never have happened
     * during the replay phase.
     * <p/>
-    * This is like calling <code>repeats(0)</code> in the recording phase, with the difference that
-    * it must be called just before the actual invocation to be verified.
+    * This is like calling {@code repeats(0)} in the recording phase, with the difference that it
+    * must be called just before the actual invocation to be verified.
     *
-    * @deprecated Call <code>repeats(0)</code> after the invocation to be verified instead. This
-    * method will be removed for release 1.0.
+    * @deprecated Call {@code repeats(0)} after the invocation to be verified instead.
+    * This method will be removed for release 1.0.
     */
    @Deprecated
    protected final void neverHappens()

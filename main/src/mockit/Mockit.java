@@ -45,21 +45,19 @@ import mockit.internal.util.*;
  * <ul>
  * <li>
  * <strong>Core API</strong>: {@linkplain #redefineMethods(Class, Class)} and its several overloads,
- * {@linkplain #restoreAllOriginalDefinitions()} /
- * {@linkplain #restoreOriginalDefinition(Class...)}, and
- * {@linkplain #stubOut(Class...)} / {@linkplain #stubOutClass(Class, String...)} /
- * {@linkplain #stubOutClass(Class, boolean, String...)}.
+ * {@link #restoreAllOriginalDefinitions()} / {@link #restoreOriginalDefinition(Class...)}, and
+ * {@link #stubOut(Class...)} / {@link #stubOutClass(Class, String...)} /
+ * {@link #stubOutClass(Class, boolean, String...)}.
  * </li>
  * <li>
- * <strong>Annotations API</strong>: {@linkplain #setUpMocks(Object...)},
- * {@linkplain #setUpMock(Class, Class)} and its several overloads,
- * {@linkplain #setUpStartupMocks(Object...)}, {@linkplain #setUpMocksAndStubs(Class...)},
- * {@linkplain #tearDownMocks(Class...)} / {@linkplain #tearDownMocks()}, and
- * {@linkplain #assertExpectations()}.
+ * <strong>Annotations API</strong>: {@link #setUpMocks(Object...)},
+ * {@link #setUpMock(Class, Class)} and its several overloads,
+ * {@link #setUpStartupMocks(Object...)}, {@link #setUpMocksAndStubs(Class...)},
+ * {@link #tearDownMocks(Class...)} / {@link #tearDownMocks()}, and {@link #assertExpectations()}.
  * </li>
  * <li>
  * <strong>Proxy-based utilities</strong>:
- * {@linkplain #newEmptyProxy(ClassLoader, Class)} and its overloads.
+ * {@link #newEmptyProxy(ClassLoader, Class)} and its overloads.
  * These are merely convenience methods that create empty implementation classes for one or more
  * interfaces, where all implemented methods do nothing beyond returning a default value according
  * to the return type of each interface method.
@@ -67,6 +65,9 @@ import mockit.internal.util.*;
  * instances passed to code under test.
  * </li>
  * </ul>
+ * Tutorial:
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html">Writing state-based tests</a>,
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/ReflectionUtilities.html">Reflection-based utilities</a>
  */
 public final class Mockit
 {

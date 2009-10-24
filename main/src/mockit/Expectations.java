@@ -50,7 +50,7 @@ import mockit.internal.state.*;
  * test methods can share the same mock fields. Such fields need to be annotated with 
  * {@code @Mocked}, though.
  * <p/>
- * There are several API methods (all of them <code>protected final</code>) which the
+ * There are several API methods (all of them {@code protected final}) which the
  * subclass/expectation block can use for setting {@linkplain #returns(Object) expected return
  * values}, {@linkplain #throwsException(Exception) expected thrown exceptions} or
  * {@linkplain #throwsError(Error) errors}, and argument matching constraints such as
@@ -65,9 +65,9 @@ import mockit.internal.state.*;
  * <ul>
  * <li>
  * A <strong>mock field</strong> can be of any non-primitive type, including interfaces, abstract
- * classes, and concrete classes (even <code>final</code> classes).
+ * classes, and concrete classes (even {@code final} classes).
  * An instance will be automatically created when the subclass gets instantiated, unless the field
- * is <code>final</code> (in which case, the test code itself will have the responsibility of
+ * is {@code final} (in which case, the test code itself will have the responsibility of
  * obtaining an appropriate instance). This instance will be a mock object that can be used from
  * that point forward; however, <strong>static methods</strong> and <strong>constructors</strong>
  * belonging to the mocked class and its super-classes will also be mocked, and any invocations made
@@ -79,8 +79,7 @@ import mockit.internal.state.*;
  * occur in the same order during the replay phase, and that non-recorded invocations are <em>not
  * allowed</em>.
  * This default behavior can be overridden for individual expectations through the
- * {@linkplain #notStrict()} method, and for whole mocked types through the {@linkplain NonStrict}
- * annotation.
+ * {@link #notStrict()} method, and for whole mocked types through the {@link NonStrict} annotation.
  * </li>
  * <li>
  * There is a set of API methods that allow the {@linkplain #newInstance(String, Class[], Object...)
@@ -97,7 +96,7 @@ import mockit.internal.state.*;
  * By default, the exact instance on which instance method invocations occur during the replay phase
  * is <em>not</em> verified to be the same as the instance used when recording the corresponding
  * expectation.
- * If such verification is needed, the {@linkplain #onInstance(Object)} method should be used.
+ * If such verification is needed, the {@link #onInstance(Object)} method should be used.
  * </li>
  * <li>
  * There are additional constructors which provide other features:
@@ -105,6 +104,7 @@ import mockit.internal.state.*;
  * {@linkplain #Expectations(int, Object...) iterated invocations}.
  * </li>
  * </ul>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#expectation">Tutorial</a>
  *
  * @see #Expectations()
  */

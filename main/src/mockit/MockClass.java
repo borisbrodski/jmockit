@@ -29,6 +29,8 @@ import java.lang.annotation.*;
 /**
  * Indicates a mock class containing one or more mock methods/constructors, each one of them
  * properly indicated as {@linkplain Mock such}.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#MockClass">Tutorial</a>
  *
  * @see #realClass
  * @see #stubs

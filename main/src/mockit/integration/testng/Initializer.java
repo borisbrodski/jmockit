@@ -36,6 +36,8 @@ import mockit.internal.startup.*;
  * <p/>
  * Please check the <a href="http://testng.org/doc/documentation-main.html#running-testng">TestNG
  * documentation</a> for ways to run it with this class as a listener.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">Tutorial</a>
  */
 public final class Initializer implements ITestListener
 {

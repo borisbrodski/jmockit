@@ -30,6 +30,8 @@ package mockit;
  * <p/>
  * Such expectations will typically be later verified through a {@link Verifications} block,
  * executed after the replay phase of the test.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#strictness">Tutorial</a>
  *
  * @see NonStrict
  */

@@ -32,6 +32,8 @@ import mockit.internal.startup.*;
  * If using the JVM parameter "-javaagent:jmockit.jar" this class doesn't need to be used.
  * For another way to initialize JMockit while avoiding the need to extend this class, see the
  * {@link mockit.integration.testng.Initializer}.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">Tutorial</a>
  */
 public class JMockitTestNG
 {

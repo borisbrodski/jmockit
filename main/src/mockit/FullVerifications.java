@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -37,6 +37,8 @@ package mockit;
  * {@linkplain Expectations strict expectations} (where no unexpected invocations are allowed),
  * except for the ordering and the number of occurrences of invocations, which are both still
  * "non-strict".
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerification">Tutorial</a>
  */
 public class FullVerifications extends Verifications
 {

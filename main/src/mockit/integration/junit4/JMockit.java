@@ -33,8 +33,8 @@ import mockit.internal.startup.*;
 /**
  * A test runner for <em>JUnit 4.5+</em>, with special modifications to integrate with JMockit.
  * <p/>
- * Specifying this runner with <code>@RunWith</code> in every test class is <strong>not</strong> the
- * only way to apply those modifications, though. When the <code>-javaagent:jmockit.jar</code> JVM
+ * Specifying this runner with {@code @RunWith} in every test class is <strong>not</strong> the
+ * only way to apply those modifications, though. When the {@code -javaagent:jmockit.jar} JVM
  * argument is specified, JMockit will automatically apply them to the standard JUnit test runner.
  * Additionally, the modifications will be applied (if they have not been already) the first time
  * a method belonging to the JMockit API is called, for example in a test or setup method.
@@ -66,7 +66,7 @@ import mockit.internal.startup.*;
  * {@code @AfterClass} method.
  * </li>
  * </ol>
- * If you happen to already have a <code>@RunWith</code> annotation in your JUnit test classes, you
+ * If you happen to already have a {@code @RunWith} annotation in your JUnit test classes, you
  * can still activate integration by simply making sure that JMockit is initialized before any test
  * is executed. For example, the following static block in the test class or in a base test class
  * will get the job done:
@@ -76,6 +76,7 @@ import mockit.internal.startup.*;
       Mockit.setUpMocks();
    }
  * </pre>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">Tutorial</a>
  *
  * @see JMockitTest
  */

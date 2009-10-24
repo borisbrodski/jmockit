@@ -28,6 +28,8 @@ import java.lang.annotation.*;
 
 /**
  * Indicates one or more {@linkplain #value() classes} to be mocked or stubbed out.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/UsingMocksAndStubs.html">Tutorial</a>
  *
  * @see MockClass
  * @see Mockit#setUpMocks

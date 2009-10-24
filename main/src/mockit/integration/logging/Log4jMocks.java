@@ -33,10 +33,12 @@ import static mockit.Instantiation.*;
 /**
  * A mock class containing mocks and stubs for the Log4j API.
  * <p/>
- * When a test class is annotated as <code>@UsingMocksAndStubs(Log4jMocks.class)</code>, all
- * production code touched by the tests in that class will receive mock <code>Logger</code>
- * instances instead of real ones, when one of the factory methods in class
- * <code>org.apache.log4j.Logger</code> is called.
+ * When a test class is annotated as {@code @UsingMocksAndStubs(Log4jMocks.class)}, all
+ * production code touched by the tests in that class will receive mock {@code Logger} instances
+ * instead of real ones, when one of the factory methods in class {@code org.apache.log4j.Logger}
+ * is called.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/UsingMocksAndStubs.html">Tutorial</a>
  */
 @SuppressWarnings({"UnusedDeclaration"})
 @MockClass(
@@ -51,22 +53,22 @@ public final class Log4jMocks
    }
 
    /**
-    * Returns a singleton mock <code>Logger</code> instance, whose methods do nothing.
+    * Returns a singleton mock {@code Logger} instance, whose methods do nothing.
     */
    @Mock public static Logger getLogger(String name) { return MOCK_LOGGER; }
 
    /**
-    * Returns a singleton mock <code>Logger</code> instance, whose methods do nothing.
+    * Returns a singleton mock {@code Logger} instance, whose methods do nothing.
     */
    @Mock public static Logger getLogger(Class<?> clazz) { return MOCK_LOGGER; }
 
    /**
-    * Returns a singleton mock <code>Logger</code> instance, whose methods do nothing.
+    * Returns a singleton mock {@code Logger} instance, whose methods do nothing.
     */
    @Mock public static Logger getRootLogger() { return MOCK_LOGGER; }
 
    /**
-    * Returns a singleton mock <code>Logger</code> instance, whose methods do nothing.
+    * Returns a singleton mock {@code Logger} instance, whose methods do nothing.
     */
    @Mock public static Logger getLogger(String name, LoggerFactory lf) { return MOCK_LOGGER; }
 }

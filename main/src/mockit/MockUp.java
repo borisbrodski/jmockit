@@ -35,6 +35,8 @@ import java.lang.reflect.*;
  * <p/>
  * This class is particularly useful for the creation on <em>in-line mock classes</em>, defined
  * inside individual test methods as anonymous inner classes.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#inline">Tutorial</a>
  *
  * @param <T> specifies the class or interface(s) to be mocked
  */
@@ -48,7 +50,7 @@ public class MockUp<T>
     * <p/>
     * When one or more interfaces are specified to be mocked, a mocked proxy class that implements
     * the interfaces is created, with the proxy instance made available through a call to
-    * {@linkplain #getMockInstance()}.
+    * {@link #getMockInstance()}.
     */
    protected MockUp()
    {
@@ -79,7 +81,7 @@ public class MockUp<T>
 
    /**
     * Returns the mock instance created for the interface(s) to be mocked specified by the type
-    * parameter {@code T}, or {@code null} otherwise (ie, if a class was specified to be mocked).
+    * parameter {@code T}, or {@literal null} otherwise (ie, if a class was specified to be mocked).
     */
    public final T getMockInstance()
    {

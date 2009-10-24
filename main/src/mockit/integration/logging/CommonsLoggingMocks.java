@@ -31,10 +31,12 @@ import mockit.*;
 /**
  * A mock class containing mocks and stubs for the Apache Commons Logging API.
  * <p/>
- * When a test class is annotated as <code>@UsingMocksAndStubs(CommonsLoggingMocks.class)</code>,
- * all production code touched by the tests in that class will receive mock <code>Log</code>
- * instances instead of real ones, when one of the factory methods in class
- * <code>org.apache.commons.logging.LogFactory</code> is called.
+ * When a test class is annotated as {@code @UsingMocksAndStubs(CommonsLoggingMocks.class)},
+ * all production code touched by the tests in that class will receive mock {@code Log} instances
+ * instead of real ones, when one of the factory methods in class
+ * {@code org.apache.commons.logging.LogFactory} is called.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/UsingMocksAndStubs.html">Tutorial</a>
  */
 @SuppressWarnings({"UnusedDeclaration"})
 @MockClass(realClass = LogFactory.class)
@@ -45,12 +47,12 @@ public final class CommonsLoggingMocks
    private CommonsLoggingMocks() {}
 
    /**
-    * Returns a singleton mock <code>Log</code> instance, whose methods do nothing.
+    * Returns a singleton mock {@code Log} instance, whose methods do nothing.
     */
    @Mock public static Log getLog(String name) { return MOCK_LOG; }
 
    /**
-    * Returns a singleton mock <code>Log</code> instance, whose methods do nothing.
+    * Returns a singleton mock {@code Log} instance, whose methods do nothing.
     */
    @Mock public static Log getLog(Class<?> clazz) { return MOCK_LOG; }
 }

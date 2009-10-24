@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -29,6 +29,8 @@ import mockit.internal.expectations.*;
 /**
  * Same as {@link Verifications}, but checking that invocations in the replay phase occurred in the
  * same order as specified in this <em>ordered</em> verification block.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#VerificationInOrder">Tutorial</a>
  *
  * @see #VerificationsInOrder()
  * @see #VerificationsInOrder(int)

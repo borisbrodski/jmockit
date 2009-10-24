@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -30,6 +30,8 @@ package mockit;
  * Note that the behavior provided by this class is essentially the same obtained through an strict
  * {@link Expectations} recording block, except that the number of expected invocations for each
  * expectation is still "non-strict".
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerificationInOrder">Tutorial</a>
  */
 public class FullVerificationsInOrder extends Verifications
 {

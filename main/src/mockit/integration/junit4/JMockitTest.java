@@ -32,19 +32,22 @@ import mockit.internal.startup.*;
 /**
  * A convenience base class for tests which use the JMockit toolkit with <em>JUnit 4.5+</em>.
  * <p/>
- * Besides being annotated with <code>@RunWith(JMockit.class)</code>, the use of this base class for
+ * Besides being annotated with {@code @RunWith(JMockit.class)}, the use of this base class for
  * your test classes has the advantage of inheriting {@link org.junit.Assert}, which eliminates the
  * need to statically import its methods.
  * <p/>
- * It is recommended to use either <code>@RunWith(JMockit.class)</code> or
- * <code>extends JMockitTest</code> for all JUnit 4 test classes, so that JMockit gets properly
- * initialized before any tests are executed. Otherwise, JMockit will have to be initialized through
- * a call to <code>Mockit.setUpMocks();</code> in a static initialization block, or through the use
- * of "-javaagent:jmockit.jar" as a JVM command line argument.
+ * It is recommended to use either {@code @RunWith(JMockit.class)} or {@code extends JMockitTest}
+ * for all JUnit 4 test classes, so that JMockit gets properly initialized before any tests are
+ * executed.
+ * Otherwise, JMockit will have to be initialized through a call to {@code Mockit.setUpMocks();} in
+ * a static initialization block, or through the use of "-javaagent:jmockit.jar" as a JVM command
+ * line argument.
  * <p/>
  * If JMockit is not explicitly initialized before the first test executes, it will still get
  * initialized on the first call to a method in the API. However, this will probably cause the first
  * test, and possibly others, to fail.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">Tutorial</a>
  */
 @RunWith(JMockit.class)
 @Ignore

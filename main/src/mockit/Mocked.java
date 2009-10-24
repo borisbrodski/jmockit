@@ -58,9 +58,9 @@ import java.lang.annotation.*;
  * Usually, an actual mock object gets created and assigned to a declared mock field automatically,
  * without the test code having to do anything.
  * It is also possible, however, for the test itself to provide this instance, by declaring the
- * field as <code>final</code> and assigning to it the desired instance.
+ * field as {@code final} and assigning to it the desired instance.
  * If no mock instance is necessary because only static methods or constructors will be called, then
- * this final field can receive the value <code>null</code>.
+ * this final field can receive the value {@literal null}.
  * Mock parameters, on the other hand, will always receive a mock argument whenever the test method
  * is executed by the test runner.
  * <p/>
@@ -74,15 +74,16 @@ import java.lang.annotation.*;
  * There are three rules that are applied when deriving the target classes from the mocked type:
  * <ol>
  * <li>The type is a concrete or <em>enum</em> class: this class and all its super-classes up to but
- * excluding <code>java.lang.Object</code> will be the target classes for mocking.</li>
+ * excluding {@code java.lang.Object} will be the target classes for mocking.</li>
  * <li>The type is an <em>interface</em> or <em>annotation</em>: a
  * {@linkplain java.lang.reflect.Proxy dynamic proxy class} is created and used as the only target.
  * </li>
  * <li>The type is an <em>abstract class</em>: a concrete subclass is generated with mock
  * implementations for the abstract methods in that class and in all of its super-classes (again,
- * excluding <code>Object</code>), which are also the target for mocking of the non-abstract
- * methods and constructors.</li>
+ * excluding {@code Object}), which are also the target for mocking of the non-abstract methods and
+ * constructors.</li>
  * </ol>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#declaration">Tutorial</a>
  *
  * @see #methods
  * @see #inverse
@@ -111,13 +112,13 @@ public @interface Mocked
     * any annotation attribute.
     * <p/>
     * Each mock filter must follow the syntax
-    * <strong><code>[nameRegex][(paramTypeName...)]</code></strong>,
-    * where <code>nameRegex</code> is a {@linkplain java.util.regex.Pattern regular expression} for
-    * matching method names, and <code>paramTypeName</code> is the name of a primitive or reference
+    * <strong>{@code [nameRegex][(paramTypeName...)]}</strong>,
+    * where {@code nameRegex} is a {@linkplain java.util.regex.Pattern regular expression} for
+    * matching method names, and {@code paramTypeName} is the name of a primitive or reference
     * parameter type (actually, any suffix of the type name is enough, like "String" instead of the
     * full class name "java.lang.String").
-    * If <code>nameRegex</code> is omitted the filter matches only constructors. If
-    * <code>(paramTypeName...)</code> is omitted the filter matches methods with any parameters.
+    * If {@code nameRegex} is omitted the filter matches only constructors.
+    * If {@code (paramTypeName...)} is omitted the filter matches methods with any parameters.
     * <p/>
     * If no filters are specified, then all methods and constructors declared in the target class
     * are mocked.
@@ -128,10 +129,10 @@ public @interface Mocked
     * By default, one of the available constructors is chosen in an arbitrary way (the first in
     * declaration order, normally).
     * The special syntax actually comes in two forms:
-    * <strong><code>(paramTypeName...): (paramTypeNameForSuper...)</code></strong>, where
-    * <code>paramTypeNameForSuper</code> is the fully qualified (optional when the type belongs to
-    * <code>java.lang</code>) type name for a constructor parameter in the super-class; and
-    * <strong><code>(paramTypeName...): n</code></strong>, where <code>n</code> is the number of the
+    * <strong>{@code (paramTypeName...): (paramTypeNameForSuper...)}</strong>, where
+    * {@code paramTypeNameForSuper} is the fully qualified (optional when the type belongs to
+    * {@code java.lang}) type name for a constructor parameter in the super-class; and
+    * <strong>{@code (paramTypeName...): n}</strong>, where {@code n} is the number of the
     * desired constructor from the super-class in declaration order, starting at 1 (one) for the
     * first declared constructor.
     */
@@ -144,23 +145,23 @@ public @interface Mocked
    boolean inverse() default false;
 
    /**
-    * Specifies the name of an instance method defined in the <code>Expectations</code> subclass or
-    * in its enclosing class (if any), which will be used to determine which constructor to call in
+    * Specifies the name of an instance method defined in the {@code Expectations} subclass or in
+    * its enclosing class (if any), which will be used to determine which constructor to call in
     * the immediate super-class of the target class for mocking, and which arguments to pass when
     * instantiating the target class.
     * <p/>
     * There must be only one method with this name, and its parameters must match those of the
     * desired constructor.
-    * The return type of the method must be <code>Object[]</code>, with each element corresponding
-    * to a constructor parameter.
+    * The return type of the method must be {@code Object[]}, with each element corresponding to a
+    * constructor parameter.
     * <p/>
-    * If the target class for mocking is <code>abstract</code>, then the constructor under
-    * consideration will be one of those declared in the target class itself, instead of in its
-    * immediate super-class.
+    * If the target class for mocking is {@code abstract}, then the constructor under consideration
+    * will be one of those declared in the target class itself, instead of in its immediate
+    * super-class.
     * <p/>
     * If this attribute is not specified, the argument values passed to the constructor in the
     * super-class will be the default values corresponding to its parameter types (if any), that is,
-    * <code>0</code> for <code>int</code>, <code>false</code> for <code>boolean</code>, and so on.
+    * {@literal 0} for {@code int}, {@literal false} for {@code boolean}, and so on.
     */
    String constructorArgsMethod() default "";
 
@@ -170,20 +171,20 @@ public @interface Mocked
     * are created during the test (note this can happen at any moment before the first expected
     * invocation is recorded, or during the recording and replay phases).
     * <p/>
-    * If <code>capture</code> is zero (the default), a mock field initially receives a single
+    * If {@code capture} is zero (the default), a mock field initially receives a single
     * instance and then remains with this same instance for the duration of the test; in this case,
     * no instances created by the test are later captured.
     * <p/>
     * If the value for this attribute is positive, then whenever an assignable instance is created
     * during test execution and the specified number of new instances has not been previously
-    * captured, the (non-<code>final</code>) mock field will be assigned that new instance.
+    * captured, the (non-{@code final}) mock field will be assigned that new instance.
     * <p/>
-    * It is valid to declare two or more mocks of the same type with a positive <code>capture</code>
-    * number for each of them, say <code>n1</code>, <code>n2</code>, etc.
-    * In this case, the first <code>n1</code> new instances will be assigned to the first field,
-    * the following <code>n2</code> new instances to the second, and so on.
+    * It is valid to declare two or more mocks of the same type with a positive {@code capture}
+    * number for each of them, say {@code n1}, {@code n2}, etc.
+    * In this case, the first {@code n1} new instances will be assigned to the first field, the
+    * following {@code n2} new instances to the second, and so on.
     * <p/>
-    * Notice that this attribute does not apply to <code>final</code> mock fields, which cannot be
+    * Notice that this attribute does not apply to {@code final} mock fields, which cannot be
     * reassigned.
     *
     * @see Capturing
@@ -195,7 +196,7 @@ public @interface Mocked
     * when it cannot be used as the declared type, and the instance automatically created by JMockit
     * for a super-type wouldn't be appropriate for the test.
     * <p/>
-    * This attribute can be used with fields that are <code>final</code> or not.
+    * This attribute can be used with fields that are {@code final} or not.
     * In the second case it can be used in conjunction with the {@link #capture} attribute, so that
     * only the specified class is mocked, instead of all classes that implement/extend a given
     * super-type.

@@ -30,10 +30,11 @@ import org.slf4j.*;
 /**
  * A mock class containing mocks and stubs for the SLF4j API.
  * <p/>
- * When a test class is annotated as <code>@UsingMocksAndStubs(Slf4jMocks.class)</code>, all
- * production code touched by the tests in that class will receive mock <code>Logger</code>
- * instances instead of real ones, when one of the factory methods in class
- * <code>org.slf4j.LoggerFactory</code> is called.
+ * When a test class is annotated as {@code @UsingMocksAndStubs(Slf4jMocks.class)}, all production
+ * code touched by the tests in that class will receive mock {@code Logger} instances instead of
+ * real ones, when one of the factory methods in class {@code org.slf4j.LoggerFactory} is called.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/UsingMocksAndStubs.html">Tutorial</a>
  */
 @SuppressWarnings({"UnusedDeclaration"})
 @MockClass(realClass = LoggerFactory.class, stubs = "getILoggerFactory")
@@ -44,12 +45,12 @@ public final class Slf4jMocks
    private Slf4jMocks() {}
 
    /**
-    * Returns a singleton mock <code>Logger</code> instance, whose methods do nothing.
+    * Returns a singleton mock {@code Logger} instance, whose methods do nothing.
     */
    @Mock public static Logger getLogger(String name) { return MOCK_LOGGER; }
 
    /**
-    * Returns a singleton mock <code>Logger</code> instance, whose methods do nothing.
+    * Returns a singleton mock {@code Logger} instance, whose methods do nothing.
     */
    @Mock public static Logger getLogger(Class<?> clazz) { return MOCK_LOGGER; }
 }
