@@ -32,6 +32,7 @@
       <entry name="?*.dtd" />
       <entry name="?*.tld" />
       <entry name="?*.ftl" />
+      <entry name="?*.css" />
     </wildcardResourcePatterns>
     <annotationProcessing enabled="false" useClasspath="true" />
   </component>
@@ -67,6 +68,7 @@
       <profile version="1.0" is_locked="false">
         <option name="myName" value="Project Default" />
         <option name="myLocal" value="false" />
+        <inspection_tool class="AssertEqualsMayBeAssertSame" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="JavaDoc" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="TOP_LEVEL_CLASS_OPTIONS">
             <value>
@@ -97,8 +99,18 @@
           <option name="myAdditionalJavadocTags" value="" />
         </inspection_tool>
         <inspection_tool class="JavadocReference" enabled="true" level="INFO" enabled_by_default="true" />
+        <inspection_tool class="MissingOverrideAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="NonSynchronizedMethodOverridesSynchronizedMethod" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="RequiredAttributes" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="myAdditionalRequiredHtmlAttributes" value="alt" />
+        </inspection_tool>
+        <inspection_tool class="SerializableHasSerialVersionUIDField" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="superClassString" value="java.awt.Component" />
+        </inspection_tool>
+        <inspection_tool class="SpellCheckingInspection" enabled="true" level="INFO" enabled_by_default="true">
+          <option name="processCode" value="true" />
+          <option name="processLiterals" value="true" />
+          <option name="processComments" value="true" />
         </inspection_tool>
         <inspection_tool class="ThrowableInstanceNeverThrown" enabled="false" level="WARNING" enabled_by_default="false" />
         <inspection_tool class="ThrowableResultOfMethodCallIgnored" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -175,8 +187,57 @@
   <component name="ProjectDictionaryState">
     <dictionary name="Administrator">
       <words>
+        <w>args</w>
+        <w>bytecode</w>
+        <w>bytecodes</w>
+        <w>charset</w>
+        <w>classfile</w>
+        <w>classfiles</w>
+        <w>classpath</w>
+        <w>clazz</w>
+        <w>clinit</w>
+        <w>deencapsulation</w>
+        <w>defs</w>
+        <w>desc</w>
+        <w>finalizers</w>
+        <w>initializer</w>
+        <w>initializers</w>
+        <w>interpolator</w>
+        <w>jaas</w>
+        <w>javaagent</w>
+        <w>liesenfeld</w>
+        <w>lifecycle</w>
+        <w>login</w>
+        <w>logout</w>
         <w>metadata</w>
+        <w>microsystems</w>
+        <w>mockit</w>
+        <w>multi</w>
+        <w>nano</w>
+        <w>noninfringement</w>
         <w>param</w>
+        <w>parameterized</w>
+        <w>params</w>
+        <w>precreated</w>
+        <w>premain</w>
+        <w>preprocessor</w>
+        <w>pretransform</w>
+        <w>proxied</w>
+        <w>rect</w>
+        <w>recurse</w>
+        <w>redefs</w>
+        <w>redistributions</w>
+        <w>reentrant</w>
+        <w>regex</w>
+        <w>reregister</w>
+        <w>resize</w>
+        <w>runtime</w>
+        <w>savepoint</w>
+        <w>smil</w>
+        <w>startup</w>
+        <w>stylesheet</w>
+        <w>sublicense</w>
+        <w>throwable</w>
       </words>
     </dictionary>
   </component>
