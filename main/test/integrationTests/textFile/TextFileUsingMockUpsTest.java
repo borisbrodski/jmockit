@@ -24,6 +24,7 @@
  */
 package integrationTests.textFile;
 
+import java.io.*;
 import java.util.*;
 
 import integrationTests.textFile.TextFile.*;
@@ -42,12 +43,12 @@ public final class TextFileUsingMockUpsTest
    @Test
    public void createTextFileUsingNamedMockUp() throws Exception
    {
-      new MockTextReader();
+      new MockTextReaderConstructor();
 
       new TextFile("file", 0);
    }
 
-   static final class MockTextReader extends MockUp<TextReader>
+   static final class MockTextReaderConstructor extends MockUp<DefaultTextReader>
    {
       @Mock(invocations = 1)
       void $init(String fileName)
@@ -57,10 +58,10 @@ public final class TextFileUsingMockUpsTest
    }
 
    @Test
-   public void parseTextFileUsingConcreteClass() throws Exception
+   public void parseTextFileUsingDefaultTextReader() throws Exception
    {
-      new MockTextReader();
-      new MockTextReaderForParse<TextReader>() {};
+      new MockTextReaderConstructor();
+      new MockTextReaderForParse<DefaultTextReader>() {};
 
       TextFile textFile = new TextFile("file", 200);
       List<String[]> result = textFile.parse();
@@ -68,7 +69,7 @@ public final class TextFileUsingMockUpsTest
       assertResultFromTextFileParsing(result);
    }
 
-   static class MockTextReaderForParse<T extends ITextReader> extends MockUp<T>
+   static class MockTextReaderForParse<T extends TextReader> extends MockUp<T>
    {
       static final String[] LINES = { "line1", "another,line", null};
       int invocation;
@@ -81,7 +82,7 @@ public final class TextFileUsingMockUpsTest
       }
 
       @Mock(invocations = 3)
-      String readLine() { return LINES[invocation++]; }
+      String readLine() throws IOException { return LINES[invocation++]; }
 
       @Mock(invocations = 1)
       void close() {}
@@ -100,9 +101,33 @@ public final class TextFileUsingMockUpsTest
    }
 
    @Test
-   public void parseTextFileUsingInterface() throws Exception
+   public void doesNotCloseTextReaderInCaseOfIOFailure() throws Exception
    {
-      ITextReader textReader = new MockTextReaderForParse<ITextReader>() {}.getMockInstance();
+      new MockTextReaderConstructor();
+      new MockTextReaderForParse<DefaultTextReader>()
+      {
+         @Override @Mock
+         String readLine() throws IOException { throw new IOException(); }
+
+         @Override @Mock(invocations = 0)
+         void close() {}
+      };
+
+      TextFile textFile = new TextFile("file", 200);
+
+      try {
+         textFile.parse();
+         fail();
+      }
+      catch (RuntimeException e) {
+         assertTrue(e.getCause() instanceof IOException);
+      }
+   }
+
+   @Test
+   public void parseTextFileUsingProvidedTextReader() throws Exception
+   {
+      TextReader textReader = new MockTextReaderForParse<TextReader>() {}.getMockInstance();
 
       TextFile textFile = new TextFile(textReader, 200);
       List<String[]> result = textFile.parse();

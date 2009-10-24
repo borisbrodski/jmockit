@@ -42,11 +42,11 @@ public final class TextFileUsingExpectationsTest
    {
       new Expectations()
       {
-         TextReader reader;
+         DefaultTextReader reader;
 
          // Records TextFile#TextFile(String, int):
          {
-            new TextReader("file");
+            new DefaultTextReader("file");
          }
       };
 
@@ -56,7 +56,7 @@ public final class TextFileUsingExpectationsTest
    @Test
    public void createTextFileByStubbingOutTheTextReaderClass() throws Exception
    {
-      Mockit.stubOutClass(TextReader.class.getName());
+      Mockit.stubOutClass(DefaultTextReader.class.getName());
 
       new TextFile("file", 0);
    }
@@ -67,7 +67,7 @@ public final class TextFileUsingExpectationsTest
       new Expectations()
       {
          @Mocked(capture = 1)
-         ITextReader reader;
+         TextReader reader;
       };
 
       new TextFile("file", 0);
@@ -78,7 +78,7 @@ public final class TextFileUsingExpectationsTest
    {
       new Expectations()
       {
-         @Mocked(realClassName = "integrationTests.textFile.TextFile$TextReader")
+         @Mocked(realClassName = "integrationTests.textFile.TextFile$DefaultTextReader")
          final Object reader = null;
       };
 
@@ -90,8 +90,9 @@ public final class TextFileUsingExpectationsTest
    {
       new Expectations()
       {
-         @Mocked(realClassName = "integrationTests.textFile.TextFile$TextReader")
-         final Object reader = newInstance("integrationTests.textFile.TextFile$TextReader", "file");
+         @Mocked(realClassName = "integrationTests.textFile.TextFile$DefaultTextReader")
+         final Object reader =
+            newInstance("integrationTests.textFile.TextFile$DefaultTextReader", "file");
 
          {
             invoke(reader, "close");
@@ -106,7 +107,7 @@ public final class TextFileUsingExpectationsTest
    {
       new Expectations()
       {
-         @NonStrict @Mocked(realClassName = "integrationTests.textFile.TextFile$TextReader")
+         @NonStrict @Mocked(realClassName = "integrationTests.textFile.TextFile$DefaultTextReader")
          Object reader;
 
          {
@@ -122,7 +123,7 @@ public final class TextFileUsingExpectationsTest
    {
       new Expectations()
       {
-         final TextReader reader = new TextReader("file");
+         final DefaultTextReader reader = new DefaultTextReader("file");
 
          // Records TextFile#parse():
          {
@@ -151,7 +152,7 @@ public final class TextFileUsingExpectationsTest
    }
 
    @Test
-   public void parseTextFileUsingInterface(final ITextReader reader) throws Exception
+   public void parseTextFileUsingInterface(final TextReader reader) throws Exception
    {
       new Expectations()
       {

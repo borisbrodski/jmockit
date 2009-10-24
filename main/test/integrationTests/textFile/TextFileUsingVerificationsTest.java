@@ -40,7 +40,7 @@ import mockit.integration.junit4.*;
 public final class TextFileUsingVerificationsTest
 {
    @Test
-   public void createTextFile(TextReader reader) throws Exception
+   public void createTextFile(DefaultTextReader reader) throws Exception
    {
       assertNotNull(reader);
 
@@ -49,21 +49,21 @@ public final class TextFileUsingVerificationsTest
       new Verifications()
       {
          {
-            new TextReader("file");
+            new DefaultTextReader("file");
          }
       };
    }
 
    @Test
    public void createTextFileByCapturingTheTextReaderClassThroughItsBaseType(
-      @Capturing ITextReader reader) throws Exception
+      @Capturing TextReader reader) throws Exception
    {
       new TextFile("file", 0);
    }
 
    @Test
    public void createTextFileByMockingTheTextReaderClassThroughItsName(
-      @Mocked(realClassName = "integrationTests.textFile.TextFile$TextReader") Object reader)
+      @Mocked(realClassName = "integrationTests.textFile.TextFile$DefaultTextReader") Object reader)
       throws Exception
    {
       new TextFile("file", 0);
@@ -71,8 +71,8 @@ public final class TextFileUsingVerificationsTest
 
    @Test
    public void createTextFileWhileVerifyingTheCreatedTextReaderIsClosed(
-      @Mocked(realClassName = "integrationTests.textFile.TextFile$TextReader")
-      final ITextReader reader) throws Exception
+      @Mocked(realClassName = "integrationTests.textFile.TextFile$DefaultTextReader")
+      final TextReader reader) throws Exception
    {
       new TextFile("file", 0).closeReader();
 
@@ -86,7 +86,8 @@ public final class TextFileUsingVerificationsTest
 
    @Test
    public void createTextFileVerifyingInvocationsThroughReflection(
-      @Mocked(realClassName = "integrationTests.textFile.TextFile$TextReader") final Object reader)
+      @Mocked(realClassName = "integrationTests.textFile.TextFile$DefaultTextReader")
+      final Object reader)
       throws Exception
    {
       new TextFile("file", 0).closeReader();
@@ -94,14 +95,14 @@ public final class TextFileUsingVerificationsTest
       new FullVerificationsInOrder()
       {
          {
-            newInstance("integrationTests.textFile.TextFile$TextReader", "file");
+            newInstance("integrationTests.textFile.TextFile$DefaultTextReader", "file");
             invoke(reader, "close");
          }
       };
    }
 
    @Test
-   public void parseTextFileUsingConcreteClass(final TextReader reader) throws Exception
+   public void parseTextFileUsingConcreteClass(final DefaultTextReader reader) throws Exception
    {
       new NonStrictExpectations()
       {
@@ -136,7 +137,7 @@ public final class TextFileUsingVerificationsTest
    }
 
    @Test
-   public void parseTextFileUsingInterface(@NonStrict final ITextReader reader) throws Exception
+   public void parseTextFileUsingInterface(@NonStrict final TextReader reader) throws Exception
    {
       new Expectations()
       {

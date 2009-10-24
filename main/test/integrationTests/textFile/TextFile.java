@@ -30,7 +30,7 @@ import java.util.*;
 public final class TextFile
 {
    private final BufferedReader bufferedInput;
-   private final ITextReader input;
+   private final TextReader input;
    private final long headerLength;
 
    public TextFile(String fileName) throws FileNotFoundException
@@ -42,10 +42,10 @@ public final class TextFile
 
    public TextFile(String fileName, long headerLength) throws FileNotFoundException
    {
-      this(new TextReader(fileName), headerLength);
+      this(new DefaultTextReader(fileName), headerLength);
    }
 
-   public TextFile(ITextReader input, long headerLength)
+   public TextFile(TextReader input, long headerLength)
    {
       bufferedInput = null;
       this.input = input;
@@ -113,18 +113,18 @@ public final class TextFile
       }
    }
 
-   public interface ITextReader
+   public interface TextReader
    {
       long skip(long n) throws IOException;
       String readLine() throws IOException;
       void close() throws IOException;
    }
 
-   static final class TextReader implements ITextReader
+   static final class DefaultTextReader implements TextReader
    {
       private final Reader reader;
 
-      TextReader(String fileName) throws FileNotFoundException
+      DefaultTextReader(String fileName) throws FileNotFoundException
       {
          reader = new FileReader(fileName);
       }

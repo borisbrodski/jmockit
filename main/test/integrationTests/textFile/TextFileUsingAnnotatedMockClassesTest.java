@@ -46,7 +46,7 @@ public final class TextFileUsingAnnotatedMockClassesTest
       new TextFile("file", 0);
    }
 
-   @MockClass(realClass = TextReader.class)
+   @MockClass(realClass = DefaultTextReader.class)
    static class MockTextReader
    {
       @Mock(invocations = 1)
@@ -59,7 +59,7 @@ public final class TextFileUsingAnnotatedMockClassesTest
    @Test
    public void createTextFileByMockingTheTextReaderThroughItsClassName() throws Exception
    {
-      setUpMock("integrationTests.textFile.TextFile$TextReader", MockTextReader.class);
+      setUpMock("integrationTests.textFile.TextFile$DefaultTextReader", MockTextReader.class);
 
       new TextFile("file", 0);
    }
@@ -75,7 +75,7 @@ public final class TextFileUsingAnnotatedMockClassesTest
       assertResultFromTextFileParsing(result);
    }
 
-   @MockClass(realClass = TextReader.class)
+   @MockClass(realClass = DefaultTextReader.class)
    public static class MockTextReaderForParse
    {
       private static final String[] LINES = { "line1", "another,line", null};
@@ -110,7 +110,7 @@ public final class TextFileUsingAnnotatedMockClassesTest
    @Test
    public void parseTextFileUsingInterface() throws Exception
    {
-      ITextReader textReader = newEmptyProxy(ITextReader.class);
+      TextReader textReader = newEmptyProxy(TextReader.class);
       setUpMock(textReader.getClass(), new MockTextReaderForParse());
 
       TextFile textFile = new TextFile(textReader, 200);

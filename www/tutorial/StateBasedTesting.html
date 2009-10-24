@@ -857,6 +857,270 @@
 </p>
 
 <h3 id="reuse">Reusing mocks between tests</h3>
+<p>
+   Most tests will probably only use dedicated mock classes, specifically created for each
+   particular test.
+   There will be times, though, when the same mock class can be reused by multiple test methods,
+   either in a single test class or across the entire test suite.
+   We will now see different ways to set up mocks so they are shared by a whole group of tests, as
+   well as ways to define reusable mock classes.
+</p>
+
+<h4>Using before/after methods</h4>
+<p>
+   In a given test class, we can define instance methods that will run <em>before</em> and
+   <em>after</em> each test method (even when the test throws an error or exception).
+   In JUnit 3.8, these are the <code>setUp()</code> and <code>tearDown()</code> method overrides.
+   In JUnit 4.x we use the <code>@Before</code> and <code>@After</code> annotations on one or more
+   arbitrary instance methods of the test class. The same applies to the <code>@BeforeMethod</code>
+   and <code>@AfterMethod</code> annotations of TestNG.
+</p>
+<p>
+   Any mock class that can be applied from inside a test method can also be applied from a "before"
+   method, using one of the "set-up" methods or by instantiating a mock-up class.
+   Such a mock class will remain in effect for the execution of all test methods in the test class.
+   There is a difference, though.
+   When a mock class is applied from inside a test method, the mocked class is restored to its
+   original definition at the end of the test (no matter if the test fails or succeeds).
+   On the other hand, when the mock class is applied from a "before" method, the mocked class will
+   <em>not</em> be automatically restored.
+   Instead, the developer will be responsible for calling the
+   <a href="../javadoc/mockit/Mockit.html#tearDownMocks(java.lang.Class...)">
+      <code>Mockit.tearDownMocks(...)</code></a> method explicitly from inside a corresponding
+   "after" method.
+</p>
+<p>
+   For example, if we wanted to mock the <code>LoginContext</code> class with a mock-up class for a
+   bunch of related tests, we would have the following methods in the test class:
+</p>
+<pre><code>@RunWith(JMockit.class)
+public class MyTestClass
+{
+   @Before
+   public void setUpSharedMocks()
+   {
+      new MockUp&lt;LoginContext>()
+      {
+         // shared mocks here...
+      };
+   }
+
+   // test methods that will share the mocks set up above...
+
+   @After
+   public void tearDownSharedMocks()
+   {
+      // Notice that the <em>mocked class</em> is passed in the call, not the mock class.
+      Mockit.tearDownMocks(LoginContext.class);
+   }
+}
+</code></pre>
+<p>
+   If we had an annotated mock class instead of a mock-up, the set up would be done with a
+   <code>Mockit.setUpMocks(NamedMockClass.class)</code> call or with a
+   <code>Mockit.setUpMock</code> variant.
+</p>
+<p>
+   The example above uses JUnit 4, but the equivalent code for JUnit 3.8 or TestNG would be almost
+   the same.
+</p>
+<p>
+   It is also valid to extend from base test classes, which may optionally define "before" and/or
+   "after" methods containing calls to the Annotations API.
+</p>
+
+<h4>Reusable mock classes</h4>
+<p>
+   Named mock classes of all kinds (annotated with <code>@MockClass</code> or not, mock-up classes)
+   can be designed as concrete (and optionally <code>final</code>) classes that are then used in
+   specific tests.
+   When instantiated directly by test code, such mock instances can be configured through
+   constructor arguments, fields, or non-mock methods.
+   Alternatively, they can be designed as base classes (possibly <code>abstract</code>) to be
+   extended by concrete mock classes inside specific test classes or methods.
+</p>
+<p>
+   The example tests for this section come from JMockit's own test suite. They exercise the
+   following class, partially reproduced here:
+</p>
+<pre><code>public final class TextFile
+{
+   // fields and constructors that accept a TextReader or DefaultTextReader object...
+   
+   public List&lt;String[]> parse()
+   {
+      <strong>skipHeader();</strong>
+
+      List&lt;String[]> result = new ArrayList&lt;String[]>();
+
+      while(true) {
+         String  strLine = <strong>nextLine();</strong>
+
+         if (strLine == null) {
+            <strong>closeReader();</strong>
+            break;
+         }
+
+         String[] parsedLine = strLine.split(",");
+         result.add(parsedLine);
+      }
+
+      return result;
+   }
+
+   // private helper methods that call "skip(n)", "readLine()", and "close()"...
+   
+   public interface <strong>TextReader</strong>
+   {
+      long skip(long n) throws IOException;
+      String readLine() throws IOException;
+      void close() throws IOException;
+   }
+
+   static final class <strong>DefaultTextReader</strong> implements TextReader
+   {
+      DefaultTextReader(String fileName) throws FileNotFoundException { ...mocked... }
+      public long skip(long n) throws IOException { ...mocked... }
+      public String readLine() throws IOException { ...mocked... }
+      public void close() throws IOException { ...mocked... }
+   }
+}
+</code></pre>
+<p>
+   Some of the tests for the class above are as follows.
+</p>
+<pre><code>@RunWith(JMockit.class)
+public final class TextFileUsingMockUpsTest
+{
+   // A reusable mock-up class to be directly instantiated in specific tests.
+   static final class <strong>MockTextReaderConstructor</strong> extends MockUp&lt;<strong>DefaultTextReader</strong>>
+   {
+      @Mock(invocations = 1)
+      void $init(String fileName) { assertThat(fileName, equalTo("file")); }
+   }
+
+   @Test
+   public void parseTextFileUsingDefaultTextReader() throws Exception
+   {
+      <strong>new MockTextReaderConstructor();</strong>
+      <strong>new MockTextReaderForParse&lt;DefaultTextReader>() {};</strong>
+
+      List&lt;String[]> result = new TextFile("file", 200).parse();
+
+      // assert result from parsing
+   }
+
+   ...
+</code></pre>
+<p>
+   The test above uses two reusable mock classes. The first one encapsulates a mock for the single
+   constructor of the <code>TextFile.DefaultTextReader</code> nested class.
+   Any tests exercising code in the <code>TextFile</code> class that invokes this constructor will
+   therefore use this mock class.
+   And since it is a mock-up class, it can be applied through simple instantiation inside the test
+   method.
+</p>
+<p>
+   The second mock class used by the test targets the same <code>DefaultTextReader</code> class.
+   As we see next, it defines mocks for a whole different set of members, which happen to be
+   the methods called from the <code>TextFile#parse()</code> method.
+</p>
+<pre><code>   ...
+
+   // A reusable base mock class to be extended in specific tests.
+   static class <strong>MockTextReaderForParse&lt;T extends TextReader></strong> extends MockUp&lt;T>
+   {
+      static final String[] LINES = { "line1", "another,line", null};
+      int invocation;
+
+      @Mock(invocations = 1)
+      long skip(long n)
+      {
+         assertEquals(200, n);
+         return n;
+      }
+
+      @Mock(invocations = 3)
+      String readLine() throws IOException { return LINES[invocation++]; }
+
+      @Mock(invocations = 1)
+      void close() {}
+   }
+
+   ...
+</code></pre>
+<p>
+   The mock-up class above, like the <code>mockit.MockUp&lt;T></code> class which it extends, is
+   <em>generic</em>.
+   In this particular case, this is necessary because the tested <code>TextFile</code> class works
+   with two different types for the "text reader" dependency:
+   <code>TextFile.TextReader</code> (an interface which client code can implement), and
+   <code>TextFile.DefaultTextReader</code> (an internal default implementation of the interface).
+   The previous test simply used this mock class <em>as is</em>, by defining an anonymous subclass
+   which specifies the type to be mocked as the <code>DefaultTextReader</code> concrete class.
+   The next test, on the other hand, passes a <code>TextReader</code> implementation to
+   <code>TextFile</code>:
+</p>
+<pre><code>   ...
+
+   @Test
+   public void parseTextFileUsingProvidedTextReader() throws Exception
+   {
+      TextReader textReader = <strong>new MockTextReaderForParse&lt;TextReader>() {}</strong>.getMockInstance();
+
+      List&lt;String[]> result = new TextFile(textReader, 200).parse();
+
+      // assert result from parsing
+   }
+
+   ...
+</code></pre>
+<p>
+   The interface implementation, in this case, is a mock proxy object obtained through the
+   <code>MockUp&lt;T>#getMockInstance()</code> method.
+</p>
+<p>
+   Finally, we get to a more interesting case, where the concrete mock subclass actually
+   <em>overrides</em> some of the mocks inherited from the base mock class:
+</p>
+<pre><code>   ...
+
+   @Test
+   public void doesNotCloseTextReaderInCaseOfIOFailure() throws Exception
+   {
+      new MockTextReaderConstructor();
+   
+      <strong>new MockTextReaderForParse&lt;DefaultTextReader>()</strong>
+      {
+         <strong>@Override</strong> @Mock
+         String readLine() throws IOException { <strong>throw new IOException();</strong> }
+
+         <strong>@Override</strong> @Mock(<strong>invocations = 0</strong>)
+         void close() {}
+      };
+
+      TextFile textFile = new TextFile("file", 200);
+
+      try {
+         textFile.parse();
+         fail();
+      }
+      catch (RuntimeException e) {
+         assertTrue(e.getCause() instanceof IOException);
+      }
+   }
+}
+</code></pre>
+<p>
+   The test forces an <code>IOException</code> to be thrown in the first call to
+   <code>readLine()</code>.
+   (This exception will get wrapped in a <code>RuntimeException</code> by the <code>parse</code>
+   method.)
+   It also specifies, through an invocation count constraint, that the <code>close()</code> method
+   should never be called.
+   This shows that not only the behavior of the inherited mock is overridden, but also any of the
+   metadata specified through the <code>@Mock</code> annotation.
+</p>
 
 <script type="text/javascript" src="../prettify.js"></script>
 </body>
