@@ -74,7 +74,15 @@ public class BaseJUnit4DecoratorTest
    @After
    public final void afterBase()
    {
+      assertEquals("TEST0", new RealClass0().getValue());
       assertEquals("TEST1", new RealClass1().getValue());
       Mockit.tearDownMocks(RealClass1.class);
+   }
+
+   @AfterClass
+   public static void afterClass()
+   {
+      assertEquals("REAL0", new RealClass0().getValue());
+      assertEquals("REAL1", new RealClass1().getValue());
    }
 }
