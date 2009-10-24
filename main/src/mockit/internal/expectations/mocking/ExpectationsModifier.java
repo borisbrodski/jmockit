@@ -98,14 +98,9 @@ final class ExpectationsModifier extends BaseClassModifier
          return super.visitMethod(access, name, desc, signature, exceptions);
       }
 
-      boolean matchesFilters =
-         baseClassNameForCapturedInstanceMethods != null && visitingConstructor ||
-         mockingCfg == null || mockingCfg.matchesFilters(name, desc);
+      boolean matchesFilters = mockingCfg == null || mockingCfg.matchesFilters(name, desc);
 
-      if (
-         !matchesFilters ||
-         !visitingConstructor && mockingCfgNullOrEmpty && isMethodFromObject(name, desc)
-      ) {
+      if (!matchesFilters || mockingCfgNullOrEmpty && isMethodFromObject(name, desc)) {
          // Copies original without modifications if it doesn't pass the filters, or when it's an
          // override of equals, hashCode, toString or finalize (from java.lang.Object) not
          // prohibited by any mock filter.
@@ -126,27 +121,19 @@ final class ExpectationsModifier extends BaseClassModifier
          generateCallToDefaultOrConfiguredSuperConstructor();
       }
 
-//      if (baseClassNameForCapturedInstanceMethods == null || !visitingConstructor) {
-         String internalClassName = className;
+      String internalClassName = className;
 
-         if (baseClassNameForCapturedInstanceMethods != null && !visitingConstructor) {
-            internalClassName = baseClassNameForCapturedInstanceMethods;
-         }
+      if (baseClassNameForCapturedInstanceMethods != null && !visitingConstructor) {
+         internalClassName = baseClassNameForCapturedInstanceMethods;
+      }
 
-         if (useMockingBridge) {
-            generateCallToMockingBridge(
-               MockingBridge.Target.RECORD_OR_REPLAY, internalClassName, access, name, desc, null);
-         }
-         else {
-            generateDirectCallToRecordOrReplay(internalClassName, access, name, desc);
-         }
-//      }
-//      else if (useMockingBridge) {
-//
-//      }
-//      else {
-//
-//      }
+      if (useMockingBridge) {
+         generateCallToMockingBridge(
+            MockingBridge.Target.RECORD_OR_REPLAY, internalClassName, access, name, desc, null);
+      }
+      else {
+         generateDirectCallToRecordOrReplay(internalClassName, access, name, desc);
+      }
 
       generateReturnWithObjectAtTopOfTheStack(desc);
       mw.visitMaxs(1, 0);
