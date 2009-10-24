@@ -204,8 +204,9 @@ public final class RecordAndReplayExecution
       Class<?> mockedClass = mock.getClass();
 
       if (mockedClass.isAnonymousClass()) {
-         // TODO: why was this done, and is it still needed?
-//         mockedClass = mockedClass.getSuperclass();
+         // An anonymous class instantiation always invokes the constructor on the super-class,
+         // so that is the class we need to consider, not the anonymous one.
+         mockedClass = mockedClass.getSuperclass();
       }
 
       return !constructorClass.equals(mockedClass.getName());
