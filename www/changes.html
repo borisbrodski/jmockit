@@ -63,19 +63,13 @@
    If after making such changes some tests remain broken that weren't before, please let me know.
 </p>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
-<p>Release 0.991 (tentative date: October 25, 2009):</p>
+<p>Release 0.991 (October 25, 2009):</p>
 <ul>
    <li>
       The chapter on <a href="tutorial/StateBasedTesting.html">state-based testing</a>
       (Annotations API) in the <strong>JMockit Tutorial</strong> is now complete.
-   </li>
-   <li>
-      Fixed a bug with mocked types in the Expectations API: when different types (usually classes)
-      were mocked for a test which records invocations to methods of same signature but belonging to
-      different classes, then the corresponding expectations got wrongly matched, causing the test
-      to fail (issue 37).
    </li>
    <li>
       Created two new overloads for the <code>Mockit#stubOutClass</code> method which take a class
@@ -83,15 +77,13 @@
       from the test class.
    </li>
    <li>
-      Fixed a bug in the handling of invocation count constraints specified through the
-      <code>@Mock</code> annotation: when the same test applied two different mock classes which
-      both specify such constraints for the <em>same</em> real class, only one set of constraints
-      was discarded at the end of the test; this could then cause other tests to fail later.
-   </li>
-   <li>
       Enhancement: the <code>@Mock</code> annotation can now be applied to methods in reusable mock
       classes that are extended by more specific ones. The mock methods in the base mock class will
       be inherited by the mock subclass.
+   </li>
+   <li>
+      Enhancement: mock method overrides are now supported, to further enable the reuse of base mock
+      classes with the Annotations and Core APIs.
    </li>
    <li>
       Enhancement: a mocked field or parameter can now rely on the
@@ -101,17 +93,25 @@
       classes), by declaring the field/parameter as being of type <code>Object</code>.
    </li>
    <li>
-      Implemented support for mock filters in captured implementation classes (when
+      Enhancement: implemented support for mock filters in captured implementation classes (when
       <code>@Capturing</code> or <code>@Mocked(capture = n)</code> is used with
       <code>@Mocked(methods = "...")</code> for the same field or parameter.
    </li>
    <li>
-      Enhancement: mock method overrides are now supported, to further enable the reuse of base mock
-      classes with the Annotations and Core APIs.
+      Fixed a bug with mocked types in the Expectations API: when different types (usually classes)
+      were mocked for a test which records invocations to methods of same signature but belonging to
+      different classes, then the corresponding expectations got wrongly matched, causing the test
+      to fail (issue 37).
+   </li>
+   <li>
+      Fixed a bug in the handling of invocation count constraints specified through the
+      <code>@Mock</code> annotation: when the same test applied two different mock classes which
+      both specify such constraints for the <em>same</em> real class, only one set of constraints
+      was discarded at the end of the test; this could then cause other tests to fail later.
    </li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release 0.990 (October 4/6, 2009):</p>
 <ul>
@@ -178,8 +178,6 @@
       API, even though it <em>is</em> allowed.
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.989 (September 20, 2009):</p>
 <ul>
