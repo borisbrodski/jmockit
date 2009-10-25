@@ -48,7 +48,6 @@ public final class TimingTriggerTest
             onInstance(source).addTarget(new TimingTrigger(target, event, false));
             endRecording();
 
-            // TODO: implement support for capturing mock parameters, so this can be moved outside
             TimingTrigger triggerAdded = TimingTrigger.addTrigger(source, target, event);
             assertSame(timingTrigger, triggerAdded);
          }
