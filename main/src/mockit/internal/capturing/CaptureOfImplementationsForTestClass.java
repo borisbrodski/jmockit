@@ -27,9 +27,9 @@ package mockit.internal.capturing;
 import org.objectweb.asm2.*;
 import mockit.internal.*;
 
-public final class CaptureOfSubtypes extends CaptureOfNewInstances
+public final class CaptureOfImplementationsForTestClass extends CaptureOfImplementations
 {
-   public CaptureOfSubtypes() {}
+   public CaptureOfImplementationsForTestClass() {}
 
    public ClassWriter createModifier(ClassLoader classLoader, ClassReader cr)
    {

@@ -46,7 +46,7 @@ public final class TestRun
    private Object currentTestInstance;
    private boolean runningTestMethod;
 
-   private CaptureOfSubtypes captureOfSubtypes;
+   private CaptureOfImplementationsForTestClass captureOfSubtypes;
    private SharedFieldTypeRedefinitions sharedFieldTypeRedefinitions;
 
    private final ProxyClasses proxyClasses = new ProxyClasses();
@@ -72,7 +72,7 @@ public final class TestRun
          !protectionDomain.getCodeSource().getLocation().getPath().endsWith(".jar");
    }
 
-   public static CaptureOfSubtypes getCaptureOfSubtypes() { return instance.captureOfSubtypes; }
+   public static CaptureOfImplementationsForTestClass getCaptureOfSubtypes() { return instance.captureOfSubtypes; }
 
    public static SharedFieldTypeRedefinitions getSharedFieldTypeRedefinitions()
    {
@@ -118,7 +118,7 @@ public final class TestRun
       instance.currentTestInstance = testInstance;
    }
 
-   public static void setCaptureOfSubtypes(CaptureOfSubtypes captureOfSubtypes)
+   public static void setCaptureOfSubtypes(CaptureOfImplementationsForTestClass captureOfSubtypes)
    {
       instance.captureOfSubtypes = captureOfSubtypes;
    }

@@ -27,7 +27,6 @@ package mockit.internal.expectations.mocking;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 
-import mockit.internal.filtering.*;
 import mockit.internal.state.*;
 
 public final class ParameterTypeRedefinitions extends TypeRedefinitions
@@ -62,8 +61,10 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
          return;
       }
 
-      TypeRedefinition redefinition = new TypeRedefinition(parentObject, typeMetadata);
-      Object mock = redefinition.redefineType();
+      TypeRedefinition typeRedefinition = new TypeRedefinition(parentObject, typeMetadata);
+      typeMetadata.mockingCfg = typeRedefinition.mockingCfg;
+
+      Object mock = typeRedefinition.redefineType();
       paramValues[paramIndex] = mock;
 
       if (typeMetadata.nonStrict) {
@@ -71,22 +72,24 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       }
 
       if (typeMetadata.getMaxInstancesToCapture() > 0) {
-         registerCaptureOfNewInstances(typeMetadata, redefinition.mockingCfg);
+         registerCaptureOfNewInstances(typeMetadata);
       }
    }
 
-   private void registerCaptureOfNewInstances(
-      MockedType typeMetadata, MockingConfiguration mockingCfg)
+   private void registerCaptureOfNewInstances(MockedType typeMetadata)
    {
-      if (captureOfNewInstances == null) {
-         captureOfNewInstances = new CaptureOfNewInstancesForParameters();
-         TestRun.getExecutingTest().setCaptureOfNewInstances(captureOfNewInstances);
+      CaptureOfNewInstancesForParameters capture =
+         (CaptureOfNewInstancesForParameters) captureOfNewInstances;
+
+      if (capture == null) {
+         capture = new CaptureOfNewInstancesForParameters();
+         TestRun.getExecutingTest().setCaptureOfNewInstancesForParameters(capture);
+         captureOfNewInstances = capture;
       }
 
-      ((CaptureOfNewInstancesForParameters) captureOfNewInstances).setMockingConfiguration(
-         mockingCfg);
+      capture.registerCaptureOfNewInstances(typeMetadata);
 
       Class<?> paramClass = typeMetadata.getClassType();
-      captureOfNewInstances.makeSureAllSubtypesAreModified(paramClass, typeMetadata.capturing);
+      capture.makeSureAllSubtypesAreModified(paramClass, typeMetadata.capturing);
    }
 }

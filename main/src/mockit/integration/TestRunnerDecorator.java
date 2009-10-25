@@ -77,7 +77,7 @@ public class TestRunnerDecorator
    public static void cleanUpMocksFromPreviousTestClass()
    {
       SavePoint.rollbackForTestClass();
-      CaptureOfSubtypes capture = TestRun.getCaptureOfSubtypes();
+      CaptureOfImplementationsForTestClass capture = TestRun.getCaptureOfSubtypes();
 
       if (capture != null) {
          capture.cleanUp();
@@ -112,7 +112,7 @@ public class TestRunnerDecorator
       Capturing capturingType = testClass.getAnnotation(Capturing.class);
 
       if (capturingType != null) {
-         CaptureOfSubtypes capture = new CaptureOfSubtypes();
+         CaptureOfImplementationsForTestClass capture = new CaptureOfImplementationsForTestClass();
          capture.makeSureAllSubtypesAreModified(null, capturingType);
          TestRun.setCaptureOfSubtypes(capture);
       }

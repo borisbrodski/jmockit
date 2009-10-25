@@ -28,13 +28,13 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.*;
-import mockit.internal.capturing.*;
 import mockit.internal.expectations.*;
+import mockit.internal.expectations.mocking.*;
 
 public final class ExecutingTest
 {
    private RecordAndReplayExecution recordAndReplay;
-   private CaptureOfNewInstances captureOfNewInstances;
+   private CaptureOfNewInstancesForParameters captureOfNewInstancesForParameters;
    private final List<Object> nonStrictMocks = new ArrayList<Object>();
    private final List<Object> strictMocks = new ArrayList<Object>();
 
@@ -54,9 +54,14 @@ public final class ExecutingTest
       return previous;
    }
 
-   public void setCaptureOfNewInstances(CaptureOfNewInstances captureOfNewInstances)
+   public CaptureOfNewInstancesForParameters getCaptureOfNewInstancesForParameters()
    {
-      this.captureOfNewInstances = captureOfNewInstances;
+      return captureOfNewInstancesForParameters;
+   }
+
+   public void setCaptureOfNewInstancesForParameters(CaptureOfNewInstancesForParameters capture)
+   {
+      captureOfNewInstancesForParameters = capture;
    }
 
    public void addNonStrictMock(Object mock)
@@ -127,9 +132,9 @@ public final class ExecutingTest
    {
       recordAndReplay = null;
 
-      if (captureOfNewInstances != null) {
-         captureOfNewInstances.cleanUp();
-         captureOfNewInstances = null;
+      if (captureOfNewInstancesForParameters != null) {
+         captureOfNewInstancesForParameters.cleanUp();
+         captureOfNewInstancesForParameters = null;
       }
 
       strictMocks.clear();

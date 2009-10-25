@@ -32,12 +32,12 @@ import mockit.internal.startup.*;
 
 import org.objectweb.asm2.*;
 
-public abstract class CaptureOfNewInstances implements ModifierFactory
+public abstract class CaptureOfImplementations implements ModifierFactory
 {
    private final List<CaptureTransformer> captureTransformers = new ArrayList<CaptureTransformer>();
    protected String baseTypeDesc;
 
-   protected CaptureOfNewInstances() {}
+   protected CaptureOfImplementations() {}
 
    public final void makeSureAllSubtypesAreModified(Class<?> baseType, Capturing capturing)
    {

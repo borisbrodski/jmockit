@@ -29,7 +29,7 @@ import mockit.internal.capturing.*;
 class TypeRedefinitions
 {
    protected final Object parentObject;
-   protected CaptureOfNewInstances captureOfNewInstances;
+   protected CaptureOfImplementations captureOfNewInstances;
 
    protected TypeRedefinitions(Object parentObject)
    {

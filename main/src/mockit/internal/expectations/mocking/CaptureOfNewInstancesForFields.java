@@ -27,145 +27,37 @@ package mockit.internal.expectations.mocking;
 import java.lang.reflect.*;
 import java.util.*;
 
-import mockit.internal.capturing.*;
 import mockit.internal.util.*;
-import mockit.internal.filtering.*;
 import mockit.internal.state.*;
-
-import org.objectweb.asm2.*;
 
 final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
 {
-   private static final class FieldWithCapture
-   {
-      final MockedType typeMetadata;
-      int instancesCaptured;
-
-      FieldWithCapture(MockedType typeMetadata)
-      {
-         this.typeMetadata = typeMetadata;
-      }
-
-      boolean reassignInstance(Object fieldOwner, Object newInstance)
-      {
-         if (instancesCaptured < typeMetadata.getMaxInstancesToCapture()) {
-            Field mockField = typeMetadata.field;
-            Object previousInstance = Utilities.getFieldValue(mockField, fieldOwner);
-            Utilities.setFieldValue(mockField, fieldOwner, newInstance);
-            TestRun.getExecutingTest().substituteMock(previousInstance, newInstance);
-            instancesCaptured++;
-            return true;
-         }
-
-         return false;
-      }
-   }
-
-   private final Map<Class<?>, List<FieldWithCapture>> fieldTypeToFields =
-      new HashMap<Class<?>, List<FieldWithCapture>>();
-   private MockingConfiguration mockingCfg;
-   private MockConstructorInfo mockConstructorInfo;
-
    CaptureOfNewInstancesForFields() {}
-
-   public ClassWriter createModifier(ClassLoader classLoader, ClassReader cr)
-   {
-      ExpectationsModifier modifier =
-         new ExpectationsModifier(classLoader, cr, mockingCfg, mockConstructorInfo);
-
-      modifier.setClassNameForInstanceMethods(baseTypeDesc);
-
-      return modifier;
-   }
-
-   @SuppressWarnings({"ParameterHidesMemberVariable"})
-   void registerCaptureOfNewInstances(MockedType typeMetadata)
-   {
-      this.mockingCfg = typeMetadata.mockingCfg;
-      this.mockConstructorInfo = typeMetadata.mockConstructorInfo;
-
-      Class<?> fieldType = typeMetadata.getClassType();
-
-      if (!typeMetadata.isFinalFieldOrParameter()) {
-         makeSureAllSubtypesAreModified(fieldType, typeMetadata.capturing);
-      }
-
-      List<FieldWithCapture> fieldsWithCaptureForType = fieldTypeToFields.get(fieldType);
-
-      if (fieldsWithCaptureForType == null) {
-         fieldsWithCaptureForType = new ArrayList<FieldWithCapture>();
-         fieldTypeToFields.put(fieldType, fieldsWithCaptureForType);
-      }
-
-      FieldWithCapture capture = new FieldWithCapture(typeMetadata);
-      fieldsWithCaptureForType.add(capture);
-   }
-
-   @Override
-   public void cleanUp()
-   {
-      super.cleanUp();
-      fieldTypeToFields.clear();
-   }
 
    boolean captureNewInstanceForApplicableMockField(Object fieldOwner, Object mock)
    {
-      Class<?> mockedClass = mock.getClass();
-      List<FieldWithCapture> fieldsWithCaptureForType = fieldTypeToFields.get(mockedClass);
-      boolean capturedImplementationClassNotMocked = false;
+      boolean capturedImplementationClassNotMocked = captureNewInstance(mock);
 
-      if (fieldsWithCaptureForType == null) {
-         fieldsWithCaptureForType = findFieldsWithCaptureForType(mockedClass);
-
-         if (fieldsWithCaptureForType == null) {
-            return false;
-         }
-
-         capturedImplementationClassNotMocked = true;
-      }
-
-      for (FieldWithCapture fieldWithCapture : fieldsWithCaptureForType) {
-         if (fieldWithCapture.reassignInstance(fieldOwner, mock)) {
-            break;
-         }
+      if (captureFound != null) {
+         Field mockField = captureFound.typeMetadata.field;
+         Object previousInstance = Utilities.getFieldValue(mockField, fieldOwner);
+         Utilities.setFieldValue(mockField, fieldOwner, mock);
+         TestRun.getExecutingTest().substituteMock(previousInstance, mock);
       }
 
       return capturedImplementationClassNotMocked;
    }
 
-   private List<FieldWithCapture> findFieldsWithCaptureForType(Class<?> mockedClass)
-   {
-      Class<?>[] interfaces = mockedClass.getInterfaces();
-
-      for (Class<?> anInterface : interfaces) {
-         List<FieldWithCapture> found = fieldTypeToFields.get(anInterface);
-
-         if (found != null) {
-            return found;
-         }
-      }
-
-      Class<?> superclass = mockedClass.getSuperclass();
-
-      if (superclass == Object.class) {
-         return null;
-      }
-
-      List<FieldWithCapture> found = fieldTypeToFields.get(superclass);
-
-      return found != null ? found : findFieldsWithCaptureForType(superclass);
-   }
-
    void resetCaptureCount(Field mockField)
    {
-      for (List<FieldWithCapture> fieldsWithCapture : fieldTypeToFields.values()) {
+      for (List<Capture> fieldsWithCapture : baseTypeToCaptures.values()) {
          resetCaptureCount(mockField, fieldsWithCapture);
       }
    }
 
-   private void resetCaptureCount(Field mockField, List<FieldWithCapture> fieldsWithCapture)
+   private void resetCaptureCount(Field mockField, List<Capture> fieldsWithCapture)
    {
-      for (FieldWithCapture fieldWithCapture : fieldsWithCapture) {
+      for (Capture fieldWithCapture : fieldsWithCapture) {
          if (fieldWithCapture.typeMetadata.field == mockField) {
             fieldWithCapture.instancesCaptured = 0;
          }
