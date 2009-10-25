@@ -156,7 +156,7 @@ public final class AnimatorTimingSourceTest extends JMockitTest
 
             // Expectations:
             timingTarget.begin();
-            timingTarget.timingEvent(withEqual(0.0f, 0.02));
+            timingTarget.timingEvent(withEqual(0.0f, 0.04));
          }
       };
 
