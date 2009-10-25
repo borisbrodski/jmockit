@@ -222,13 +222,11 @@
    </target>
 
    <target name="createzip">
-      <!-- REMEMBER to update link to latest zip file in www/index.html -->
       <zip
          destfile="jmockit-${version}.zip" basedir=".." includes="${ant.project.name}/**"
-         excludes="jmockit/.idea/**, **/*.i*, **/*.zip, **/CVS, **/Temp.java,
-                   jmockit/samples/dddsample/**, jmockit/samples/*/coverage-report/**,
-                   jmockit/aop/**,
-                   jmockit/maven-repo/**, jmockit/repo/**, jmockit/pom.xml, jmockit/maven-*.jar,
+         excludes="**/*.i*, **/*.zip, **/Temp.java,
+                   jmockit/samples/*/coverage-report/**,
+                   jmockit/target/**,
                    **/classes/**, **/test-classes/**,
                    jmockit/coverage-report/**, **/coverage*.xml, **/testRun.properties"
          encoding="UTF-8"/>
