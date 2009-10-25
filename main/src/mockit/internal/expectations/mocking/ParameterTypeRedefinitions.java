@@ -62,10 +62,9 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       }
 
       TypeRedefinition typeRedefinition = new TypeRedefinition(parentObject, typeMetadata);
-      typeMetadata.mockingCfg = typeRedefinition.mockingCfg;
-
       Object mock = typeRedefinition.redefineType();
       paramValues[paramIndex] = mock;
+      typeMetadata.mockingCfg = typeRedefinition.mockingCfg;
 
       if (typeMetadata.nonStrict) {
          TestRun.getExecutingTest().addNonStrictMock(mock);
