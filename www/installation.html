@@ -8,6 +8,7 @@
 <body>
 
 <h2>Getting started with the JMockit Testing Toolkit</h2>
+
 <p>Follow these instructions to start using JMockit:</p>
 <ol>
    <li>
@@ -35,9 +36,48 @@
    </li>
 </ol>
 <p>
+   If your project uses <strong>Maven</strong>, then add the following dependency to your
+   <code>pom.xml</code> file:
+</p>
+<pre>
+      &lt;dependency>
+         &lt;groupId>mockit&lt;/groupId>
+         &lt;artifactId>jmockit&lt;/artifactId>
+         &lt;version>0.991&lt;/version>
+         &lt;scope>test&lt;/scope>
+      &lt;/dependency>
+</pre>
+<p>
+   The JMockit artifacts, including a binary jar and a sources jar for each release, are located in
+   the <a href="http://download.java.net/maven/2/">Java.net Maven 2 Repository</a>.
+</p>
+<p>
+   You might also need to add the following to your Maven configuration:
+</p>
+<pre>
+      &lt;repository>
+         &lt;id>maven2-repository.dev.java.net&lt;/id>
+         &lt;name>Java.net Repository for Maven&lt;/name>
+         &lt;url>http://download.java.net/maven/2/&lt;/url>
+      &lt;/repository>
+</pre>
+<p>
+   If using JDK 1.6, you will probably also want to have the following dependency in your project:
+</p>
+<pre>
+      &lt;dependency>
+         &lt;groupId>com.sun&lt;/groupId>
+         &lt;artifactId>tools&lt;/artifactId>
+         &lt;version>1.6.0&lt;/version>
+         &lt;scope>system&lt;/scope>
+         &lt;systemPath>${java.home}/../lib/tools.jar&lt;/systemPath>
+      &lt;/dependency>
+</pre>
+<p>
    From here, you should probably proceed to the <a href="tutorial.html">Tutorial</a>.
    Check also the hundreds of JUnit <a href="samples.html">sample tests</a> available under the
-   <code>jmockit/samples</code> folder, most of which use the JMockit APIs.
+   <code>jmockit/samples</code> folder.
 </p>
+
 </body>
 </html>
