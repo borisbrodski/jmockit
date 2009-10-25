@@ -49,7 +49,7 @@ public final class MockedParametersWithCapturingTest extends JMockitTest
       public void doSomethingElse(int i) { throw new IllegalMonitorStateException(); }
 
       private boolean privateMethod() { return true; }
-      private boolean staticMethod() { return true; }
+      static boolean staticMethod() { return true; }
    }
 
    public static final class TestedUnit
@@ -76,12 +76,13 @@ public final class MockedParametersWithCapturingTest extends JMockitTest
       assertEquals(0, service.doSomething());
 
       TestedUnit unit = new TestedUnit();
-      ServiceImpl service1 = (ServiceImpl) unit.service1;
-
       assertEquals(3, unit.businessOperation());
+
+      assertTrue(ServiceImpl.staticMethod());
+
+      ServiceImpl service1 = (ServiceImpl) unit.service1;
       assertTrue(service1.privateMethod());
-      assertTrue(service1.staticMethod());
-      assertNull(service1.str);
+      assertEquals("test", service1.str);
    }
 
    @Test(expected = IllegalMonitorStateException.class)
@@ -142,21 +143,15 @@ public final class MockedParametersWithCapturingTest extends JMockitTest
       DerivedClass(String str) { super(str); }
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
-   Object[] valueForSuper(String s)
-   {
-      return new Object[] {"mock"};
-   }
-
-   @Ignore @Test
-   public void useSpecifiedConstructorToCallSuperUsingMockField()
+   @Test
+   public void useSpecifiedConstructorToCallSuperUsingLocalMockField()
    {
       new Expectations()
       {
-         @Mocked(methods = "", constructorArgsMethod = "valueForSuper") DerivedClass mock;
+         @Mocked(methods = "()", constructorArgsMethod = "valueForSuper") DerivedClass mock;
 
          {
-            assertNull(mock.str);
+            assertEquals("mock", mock.str);
          }
 
          @SuppressWarnings({"UnusedDeclaration"})
@@ -169,17 +164,31 @@ public final class MockedParametersWithCapturingTest extends JMockitTest
       assertEquals("mock", new DerivedClass().str);
    }
 
-   @Ignore @Test
+   @Test
    public void useSpecifiedConstructorToCallSuper(
-      @Mocked(methods = "", constructorArgsMethod = "valueForSuper") final DerivedClass mock)
+      @Mocked(methods = {"()"}, constructorArgsMethod = "valueForSuper") final DerivedClass mock)
    {
-      assertNull(mock.str);
+      assertEquals("mock", mock.str);
       assertEquals("mock", new DerivedClass().str);
+   }
+
+   @SuppressWarnings({"UnusedDeclaration"})
+   Object[] valueForSuper(String s)
+   {
+      return new Object[] {"mock"};
    }
 
    @Test
    public void captureDerivedClass(@Capturing final BaseClass service)
    {
       assertNull(new DerivedClass("test").str);
+   }
+
+   @Test
+   public void captureDerivedClassButWithoutMockingAnything(
+      @Mocked(methods = "", capture = 1) final BaseClass mock)
+   {
+      assertEquals("", mock.str);
+      assertEquals("test", new DerivedClass("test").str);
    }
 }
