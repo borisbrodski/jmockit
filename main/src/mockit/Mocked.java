@@ -145,10 +145,14 @@ public @interface Mocked
    boolean inverse() default false;
 
    /**
-    * Specifies the name of an instance method defined in the {@code Expectations} subclass or in
-    * its enclosing class (if any), which will be used to determine which constructor to call in
-    * the immediate super-class of the target class for mocking, and which arguments to pass when
-    * instantiating the target class.
+    * Specifies the name of an instance method which will be used to determine which constructor to
+    * call in the immediate super-class of the target class for mocking, and which arguments to pass
+    * when instantiating the target class.
+    * <p/>
+    * For a mock field (defined either inside the test class or inside an expectation block) the
+    * method must be defined inside the same class the field is.
+    * For a mock parameter of a test method, the "constructor args method" must belong to the test
+    * class.
     * <p/>
     * There must be only one method with this name, and its parameters must match those of the
     * desired constructor.
