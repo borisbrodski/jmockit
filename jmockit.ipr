@@ -190,6 +190,7 @@
         <w>args</w>
         <w>bytecode</w>
         <w>bytecodes</w>
+        <w>cdata</w>
         <w>charset</w>
         <w>classfile</w>
         <w>classfiles</w>

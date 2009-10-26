@@ -9,7 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
     </content>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" name="JUnit 4.7" level="application" />
+    <orderEntry type="library" scope="TEST" name="JUnit 4.7" level="application" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Asm2" />
     <orderEntry type="module" module-name="Incremental" />

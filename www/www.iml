@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module relativePaths="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="LoginService" />
+    <orderEntry type="module" module-name="Easymock" />
+    <orderEntry type="module" module-name="Easymockclassextension" />
+    <orderEntry type="module" module-name="Jmock" />
+    <orderEntry type="module" module-name="Jbossaop" />
+    <orderEntry type="module" module-name="Unitils" />
+    <orderEntry type="module" module-name="Mockito" />
+    <orderEntry type="module" module-name="Powermock" />
+    <orderEntry type="module" module-name="Tutorial" />
+    <orderEntry type="module" module-name="TimingFramework" />
+    <orderEntry type="module" module-name="AnimatedTransitions" />
+    <orderEntry type="module" module-name="OrderMngmntWebapp" />
+    <orderEntry type="module" module-name="Main" />
   </component>
 </module>
 
