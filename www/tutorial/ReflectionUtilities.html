@@ -9,6 +9,8 @@
 <h2>Reflection-based utilities</h2>
 
 <p>
+   The utility methods described in this chapter are all <code>static</code> and stateless.
+   They can be used in all kinds of tests, not just those which use the JMockit mocking APIs.
 </p>
 <div style="text-align: center;" title="Click for API documentation">
    <map name="figure1">
@@ -19,7 +21,67 @@
 </div>
 <p>
 </p>
-<del>more to be written</del>
+
+<h3>Getting access to non-accessible members</h3>
+<p>
+   The methods described in this section are all from the <code>mockit.Deencapsulation</code> class.
+   To avoid the need to separately import these methods when using the behavior-based mocking API,
+   identical methods are directly available inside <em>expectation</em> and <em>verification</em>
+   blocks (see the <a href="BehaviorBasedTesting.html#deencapsulation">relevant section</a> in that
+   chapter).
+   Therefore, this class is only used outside expectation/verification blocks, in tests written with
+   the <a href="StateBasedTesting.html">state-based mocking API</a>, or in "pure" JUnit/TestNG
+   tests. 
+</p>
+
+<h4>Getting/setting non-accessible fields by name or type</h4>
+
+<h4>Invoking non-accessible methods by name</h4>
+<p>
+   There are only two utility methods for invoking non-accessible methods: one for instance methods
+   and another for <code>static</code> methods.
+   In both cases, the name of the method to be invoked is specified in a string.
+   The invocation arguments, one for each declared parameter of the target method, are passed
+   through a "varargs" parameter of the utility method:
+</p>
+<pre><code>...
+import static mockit.Deencapsulation.*;
+
+public class AbcTest
+{
+   @Test
+   public void testSomething()
+   {
+      UnitUnderTest testedUnit = new UnitUnderTest(...);
+      ...
+
+      String result = <strong><em>invoke</em>(testedUnit, "instanceMethod", (short) 7, "abc", true)</strong>;
+
+      <strong><em>invoke</em>(UnitUnderTest.class, "staticMethod", Integer.class, "test")</strong>;
+
+      ...
+   }
+}
+</code></pre>
+<p>
+   The invocation of <code>String instanceMethod(short, String, boolean)</code>, a
+   <code>private</code> method of the <code>UnitUnderTest</code> class above should be clear enough.
+   The second call causes <code>UnitUnderTest.staticMethod(Integer, String)</code> to be invoked
+   with the value <code>null</code> as the first argument.
+   The reason we can't simply pass <code>null</code> directly is that the type of each argument
+   (ie, each value in the "varargs" parameter of the "invoke" method) is used to determine the type
+   of the corresponding parameter in the target method.
+   Instead, the <code>Class</code> object for the correct parameter type must be passed.
+   If the target class has multiple overloads for the same method name, then the best match will be
+   chosen based on the parameter types inferred from the given argument values.
+</p>
+
+<h4>Creating instances through non-accessible constructors</h4>
+
+<h3>Creating empty proxies</h3>
+<p>
+   The methods described in this section are all from the <code>mockit.Mockit</code> class.
+</p>
 
 <script type="text/javascript" src="../prettify.js"></script>
 </body>
