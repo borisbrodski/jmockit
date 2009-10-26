@@ -63,6 +63,19 @@
                      </sources>
                   </configuration>
                </execution>
+               <execution>
+                  <id>add-resource</id>
+                  <phase>generate-sources</phase>
+                  <goals><goal>add-resource</goal></goals>
+                  <configuration>
+                     <resources>
+                        <resource>
+                           <directory>main/src</directory>
+                           <includes><include>*.properties</include></includes>
+                        </resource>
+                     </resources>
+                  </configuration>
+               </execution>
             </executions>
          </plugin>
          <plugin>
