@@ -166,7 +166,7 @@
    <target name="createjar-coverage">
       <jar
          destfile="jmockit-coverage.jar" basedir="coverage/classes" compress="false"
-         excludes="**/Basic*.class **/Full*.class">
+         excludes="**/Basic*.class **/Full*.class integrationTests/**">
          <manifest><attribute name="Implementation-Version" value="${version}"/></manifest>
       </jar>
    </target>
