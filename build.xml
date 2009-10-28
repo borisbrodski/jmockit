@@ -153,7 +153,7 @@
            depends="createjar-core, createjars-coverage, createjar-hibernate3emul"/>
 
    <target name="createjar-core">
-      <jar destfile="jmockit.jar" compress="false" manifest="main/META-INF/MANIFEST.MF">
+      <jar destfile="jmockit.jar" manifest="main/META-INF/MANIFEST.MF">
          <fileset file="main/src/jmockit.properties"/>
          <fileset dir="main/src" includes="mockit/**/*.java"/>
          <fileset dir="main/classes" includes="mockit/**/*.class"/>
@@ -165,41 +165,41 @@
 
    <target name="createjar-coverage">
       <jar
-         destfile="jmockit-coverage.jar" basedir="coverage/classes" compress="false"
+         destfile="jmockit-coverage.jar" basedir="coverage/classes"
          excludes="**/Basic*.class **/Full*.class integrationTests/**">
          <manifest><attribute name="Implementation-Version" value="${version}"/></manifest>
       </jar>
    </target>
    <target name="createjar-coverage-xmlbasic">
       <jar
-         destfile="jmockit-coverage-xmlbasic.jar" basedir="coverage/classes" compress="false"
+         destfile="jmockit-coverage-xmlbasic.jar" basedir="coverage/classes"
          includes="**/BasicXmlWriter.class">
          <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
       </jar>
    </target>
    <target name="createjar-coverage-xmlfull">
       <jar
-         destfile="jmockit-coverage-xmlfull.jar" basedir="coverage/classes" compress="false"
+         destfile="jmockit-coverage-xmlfull.jar" basedir="coverage/classes"
          includes="**/FullXmlWriter.class">
          <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
       </jar>
    </target>
    <target name="createjar-coverage-htmlbasic">
       <jar
-         destfile="jmockit-coverage-htmlbasic.jar" basedir="coverage/classes" compress="false"
+         destfile="jmockit-coverage-htmlbasic.jar" basedir="coverage/classes"
          includes="**/BasicCoverageReport.class">
          <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
       </jar>
    </target>
    <target name="createjar-coverage-htmlfull">
       <jar
-         destfile="jmockit-coverage-htmlfull.jar" basedir="coverage/classes" compress="false"
+         destfile="jmockit-coverage-htmlfull.jar" basedir="coverage/classes"
          includes="**/FullCoverageReport.class">
          <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
       </jar>
    </target>
    <target name="createjar-incremental">
-      <jar destfile="jmockit-incremental.jar" basedir="incremental/classes" compress="false">
+      <jar destfile="jmockit-incremental.jar" basedir="incremental/classes">
          <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
       </jar>
    </target>
@@ -209,11 +209,11 @@
                     createjar-incremental"/>
 
    <target name="createjar-hibernate3emul">
-      <jar destfile="jmockit-hibernate3emul.jar" basedir="hibernate3emul/classes" compress="false"/>
+      <jar destfile="jmockit-hibernate3emul.jar" basedir="hibernate3emul/classes"/>
    </target>
 
    <target name="createjar-aop">
-      <jar destfile="jmockit-aop.jar" compress="false" manifest="aop/META-INF/MANIFEST.MF">
+      <jar destfile="jmockit-aop.jar" manifest="aop/META-INF/MANIFEST.MF">
          <fileset dir="aop/classes">
             <exclude name="**/integrationTests/**/*"/>
          </fileset>
