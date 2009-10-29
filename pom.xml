@@ -105,12 +105,14 @@
          <version>1.6.0</version>
          <scope>system</scope>
          <systemPath>${java.home}/../lib/tools.jar</systemPath>
+         <optional>true</optional>
       </dependency>
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <version>4.7</version>
          <scope>compile</scope>
+         <optional>true</optional>
       </dependency>
       <dependency>
          <groupId>org.testng</groupId>
@@ -118,18 +120,21 @@
          <version>5.10</version>
          <classifier>jdk15</classifier>
          <scope>compile</scope>
+         <optional>true</optional>
       </dependency>
       <dependency>
          <groupId>commons-logging</groupId>
          <artifactId>commons-logging</artifactId>
          <version>1.1.1</version>
          <scope>compile</scope>
+         <optional>true</optional>
       </dependency>
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-log4j12</artifactId>
          <version>1.5.8</version>
          <scope>compile</scope>
+         <optional>true</optional>
       </dependency>
    </dependencies>
 
