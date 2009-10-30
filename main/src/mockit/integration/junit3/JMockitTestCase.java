@@ -45,6 +45,6 @@ public class JMockitTestCase extends TestCase
       Startup.verifyInitialization();
    }
 
-   protected JMockitTestCase() {}
-   protected JMockitTestCase(String name) { super(name); }
+   public JMockitTestCase() {}
+   public JMockitTestCase(String name) { super(name); }
 }
