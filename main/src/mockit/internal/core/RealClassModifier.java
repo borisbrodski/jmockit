@@ -255,8 +255,8 @@ public class RealClassModifier extends BaseClassModifier
    {
       if (useMockingBridge) {
          generateCallToMockingBridge(
-            MockingBridge.Target.CALL_CONSTRUCTOR_MOCK, getMockClassInternalName(), access,
-            mockName, desc, null);
+            MockingBridge.CALL_CONSTRUCTOR_MOCK, getMockClassInternalName(), access, mockName, desc,
+            null);
          return;
       }
 
@@ -286,7 +286,7 @@ public class RealClassModifier extends BaseClassModifier
 
       if (useMockingBridge) {
          generateCallToMockingBridge(
-            MockingBridge.Target.CALL_STATIC_MOCK, mockClassName, access, mockName, desc, null);
+            MockingBridge.CALL_STATIC_MOCK, mockClassName, access, mockName, desc, null);
       }
       else {
          int initialVar = initialLocalVariableIndexForRealMethod(access);
@@ -306,7 +306,7 @@ public class RealClassModifier extends BaseClassModifier
 
       if (useMockingBridge) {
          generateCallToMockingBridge(
-            MockingBridge.Target.CALL_INSTANCE_MOCK, mockClassName, access, mockName, desc,
+            MockingBridge.CALL_INSTANCE_MOCK, mockClassName, access, mockName, desc,
             mockInstanceIndex);
          return;
       }

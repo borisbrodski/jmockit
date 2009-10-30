@@ -32,17 +32,13 @@ import mockit.internal.util.*;
 
 public final class MockingBridge implements InvocationHandler
 {
-   public interface Target
-   {
-      int RECORD_OR_REPLAY = 1;
-      int CALL_CONSTRUCTOR_MOCK = 2;
-      int CALL_STATIC_MOCK = 3;
-      int CALL_INSTANCE_MOCK = 4;
-      int UPDATE_MOCK_STATE = 5;
-      int EXIT_REENTRANT_MOCK = 6;
-
-      int FIRST_TARGET_WITH_EXTRA_ARG = CALL_INSTANCE_MOCK;
-   }
+   public static final int RECORD_OR_REPLAY = 1;
+   public static final int CALL_CONSTRUCTOR_MOCK = 2;
+   public static final int CALL_STATIC_MOCK = 3;
+   public static final int CALL_INSTANCE_MOCK = 4;
+   public static final int UPDATE_MOCK_STATE = 5;
+   public static final int EXIT_REENTRANT_MOCK = 6;
+   public static final int FIRST_TARGET_WITH_EXTRA_ARG = CALL_INSTANCE_MOCK;
 
    private Integer targetId;
    private Integer mockAccess;
@@ -56,17 +52,17 @@ public final class MockingBridge implements InvocationHandler
    {
       extractIndividualDataItems(args);
 
-      if (targetId == Target.RECORD_OR_REPLAY) {
+      if (targetId == RECORD_OR_REPLAY) {
          return
             RecordAndReplayExecution.recordOrReplay(
                mocked, mockAccess, mockClassInternalName, mockName + mockDesc, mockArgs);
       }
 
-      if (targetId == Target.UPDATE_MOCK_STATE) {
+      if (targetId == UPDATE_MOCK_STATE) {
          return TestRun.updateMockState(mockClassInternalName, mockIndex);
       }
 
-      if (targetId == Target.EXIT_REENTRANT_MOCK) {
+      if (targetId == EXIT_REENTRANT_MOCK) {
         TestRun.exitReentrantMock(mockClassInternalName, mockIndex);
         return null;
       }
@@ -82,7 +78,7 @@ public final class MockingBridge implements InvocationHandler
       mockClassInternalName = (String) args[i++];
       mockName = (String) args[i++];
       mockDesc = (String) args[i++];
-      mockIndex = targetId < Target.FIRST_TARGET_WITH_EXTRA_ARG ? -1 : (Integer) args[i++];
+      mockIndex = targetId < FIRST_TARGET_WITH_EXTRA_ARG ? -1 : (Integer) args[i++];
 
       mockArgs = new Object[args.length - i];
       System.arraycopy(args, i, mockArgs, 0, mockArgs.length);
@@ -90,7 +86,7 @@ public final class MockingBridge implements InvocationHandler
 
    private Object callMock(Object mocked)
    {
-      if (targetId == Target.CALL_CONSTRUCTOR_MOCK) {
+      if (targetId == CALL_CONSTRUCTOR_MOCK) {
          String mockClassName = getMockClassName();
          Class<?>[] paramClasses = Utilities.getParameterTypes(mockDesc);
          Utilities.newInstance(mockClassName, paramClasses, mockArgs);
@@ -100,13 +96,13 @@ public final class MockingBridge implements InvocationHandler
       Class<?> mockClass;
       Object mock;
 
-      if (targetId == Target.CALL_STATIC_MOCK) {
+      if (targetId == CALL_STATIC_MOCK) {
          mock = mocked;
          String mockClassName = getMockClassName();
          mockClass = Utilities.loadClass(mockClassName);
       }
       else {
-         assert targetId == Target.CALL_INSTANCE_MOCK;
+         assert targetId == CALL_INSTANCE_MOCK;
 
          if (mockIndex < 0) { // call to instance mock method on mock not yet instantiated
             String mockClassName = getMockClassName();

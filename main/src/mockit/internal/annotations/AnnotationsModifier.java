@@ -203,7 +203,7 @@ public final class AnnotationsModifier extends RealClassModifier
 
          if (useMockingBridgeForUpdatingMockState) {
             generateCallToMockingBridge(
-               MockingBridge.Target.UPDATE_MOCK_STATE, mockClassDesc, ACC_STATIC, null, null,
+               MockingBridge.UPDATE_MOCK_STATE, mockClassDesc, ACC_STATIC, null, null,
                mockStateIndex);
             mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z");
          }
@@ -230,7 +230,7 @@ public final class AnnotationsModifier extends RealClassModifier
 
       if (useMockingBridgeForUpdatingMockState) {
          generateCallToMockingBridge(
-            MockingBridge.Target.EXIT_REENTRANT_MOCK, mockClassDesc, ACC_STATIC, null, null,
+            MockingBridge.EXIT_REENTRANT_MOCK, mockClassDesc, ACC_STATIC, null, null,
             mockStateIndex);
          mw.visitInsn(POP);
       }

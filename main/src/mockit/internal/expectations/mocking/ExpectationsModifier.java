@@ -129,7 +129,7 @@ final class ExpectationsModifier extends BaseClassModifier
 
       if (useMockingBridge) {
          generateCallToMockingBridge(
-            MockingBridge.Target.RECORD_OR_REPLAY, internalClassName, access, name, desc, null);
+            MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, null);
       }
       else {
          generateDirectCallToRecordOrReplay(internalClassName, access, name, desc);
