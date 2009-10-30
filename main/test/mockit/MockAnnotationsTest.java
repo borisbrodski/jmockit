@@ -33,6 +33,8 @@ import javax.security.auth.spi.*;
 import org.junit.*;
 
 import static mockit.Deencapsulation.setField;
+import static mockit.Mockit.setUpMock;
+
 import mockit.integration.junit4.*;
 import mockit.internal.state.*;
 
@@ -126,18 +128,33 @@ public final class MockAnnotationsTest extends JMockitTest
       codeUnderTest.doSomething();
    }
 
+   @MockClass(realClass = Collaborator.class)
+   public static class MockCollaborator6
+   {
+      @Mock
+      int getValue() { return 1; }
+   }
+
+   @Test
+   public void setUpMockForSingleRealClassByPassingTheMockClassLiteral()
+   {
+      setUpMock(MockCollaborator6.class);
+
+      assertEquals(1, new Collaborator().getValue());
+   }
+
+   @Test
+   public void setUpMockForSingleRealClassByPassingAMockClassInstance()
+   {
+      setUpMock(new MockCollaborator6());
+
+      assertEquals(1, new Collaborator().getValue());
+   }
+
    @Test
    public void setUpStubs()
    {
       Mockit.setUpMocksAndStubs(Collaborator.class);
-
-      codeUnderTest.doSomething();
-   }
-
-   @Test(expected = IllegalArgumentException.class)
-   public void attemptToSetUpMockWithoutRealClass()
-   {
-      Mockit.setUpMocks(MockCollaborator2.class);
 
       codeUnderTest.doSomething();
    }
@@ -198,12 +215,6 @@ public final class MockAnnotationsTest extends JMockitTest
    {
       @Mock
       void provideSomeService() {}
-   }
-
-   @Test(expected = IllegalArgumentException.class)
-   public void attemptToSetUpMockForInterfaceButWithoutCreatingAProxy()
-   {
-      Mockit.setUpMocks(new MockCollaborator3());
    }
 
    @Test(expected = RuntimeException.class)

@@ -467,35 +467,48 @@ public final class Mockit
    }
 
    /**
-    * Convenience method that can set up mocks for a single real class, creating a
-    * {@linkplain #newEmptyProxy(ClassLoader, Class) new empty proxy} if the type
-    * {@linkplain MockClass#realClass referred to} by the mock class is actually an interface.
+    * Sets up the mocks defined in the given mock class.
+    * <p/>
+    * If the type {@linkplain MockClass#realClass referred to} by the mock class is actually an
+    * interface, then a {@linkplain #newEmptyProxy(ClassLoader, Class) new empty proxy} is created.
     *
-    * @param mock an instance of the mock class
+    * @param mockClassOrInstance the mock class itself (given by its {@code Class} literal), or an
+    * instance of the mock class
     *
     * @return the new proxy instance created for the mocked interface, or null otherwise
     *
     * @throws IllegalArgumentException if the mock class fails to specify an interface or class
-    * using the <code>@MockClass(realClass = ...)</code> annotation
+    * using the {@code @MockClass(realClass = ...)} annotation
     *
     * @see #setUpMock(Class, Object)
     * @see #setUpMocks(Object...)
     * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderFactoryTest.java">Example</a>
     */
-   public static <T> T setUpMock(Object mock)
+   public static <T> T setUpMock(Object mockClassOrInstance)
    {
-      Class<?> mockClass = mock.getClass();
-      RedefinitionEngine redefinitionEngine = new RedefinitionEngine(mock, mockClass, false);
-      Class<?> realClass = redefinitionEngine.getRealClass();
+      Class<?> mockClass;
+      Object mock;
+
+      if (mockClassOrInstance instanceof Class) {
+         mockClass = (Class<?>) mockClassOrInstance;
+         mock = null;
+      }
+      else {
+         mockClass = mockClassOrInstance.getClass();
+         mock = mockClassOrInstance;
+      }
+
+      RedefinitionEngine redefinition = new RedefinitionEngine(mock, mockClass, false);
+      Class<?> realClass = redefinition.getRealClass();
       T proxy = null;
 
       if (realClass.isInterface()) {
          //noinspection unchecked
          proxy = (T) newEmptyProxy(mockClass.getClassLoader(), realClass);
-         redefinitionEngine.setRealClass(proxy.getClass());
+         redefinition.setRealClass(proxy.getClass());
       }
 
-      redefinitionEngine.redefineMethods();
+      redefinition.redefineMethods();
 
       return proxy;
    }
