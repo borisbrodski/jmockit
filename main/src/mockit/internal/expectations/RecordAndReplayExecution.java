@@ -61,18 +61,7 @@ public final class RecordAndReplayExecution
       RecordAndReplayExecution previous = TestRun.getExecutingTest().setRecordAndReplay(null);
       Class<?> enclosingClassForTargetObject = targetObject.getClass().getEnclosingClass();
 
-      if (enclosingClassForTargetObject == null) {
-         redefinitions = null;
-         previous = null;
-      }
-      else if (enclosingClassForTargetObject == TestRun.class) {
-         redefinitions = null;
-      }
-      else {
-         redefinitions = redefineFieldTypes(targetObject);
-      }
-
-      if (previous == null) {
+      if (previous == null || enclosingClassForTargetObject == null) {
          expectations = new ArrayList<Expectation>();
          nonStrictExpectations = new ArrayList<Expectation>();
          recordToReplayInstanceMap = new IdentityHashMap<Object, Object>();
@@ -86,6 +75,14 @@ public final class RecordAndReplayExecution
       }
 
       recordPhase = new RecordPhase(this, targetObject instanceof NonStrictExpectations);
+
+      if (enclosingClassForTargetObject == null || enclosingClassForTargetObject == TestRun.class) {
+         redefinitions = null;
+      }
+      else {
+         redefinitions = redefineFieldTypes(targetObject);
+      }
+
       dynamicPartialMocking = applyDynamicPartialMocking(classesOrInstancesToBePartiallyMocked);
 
       TestRun.getExecutingTest().setRecordAndReplay(this);
