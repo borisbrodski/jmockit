@@ -429,12 +429,15 @@
 <p>
    The
    <a href="../javadoc/mockit/Mockit.html#setUpMock(java.lang.Object)"><code>Mockit.setUpMock(Object)</code></a>
-   method returns a proxy object that implements the desired interface.
-   The object passed to this method must be an instance of an annotated mock class which specifies
-   the interface as the value for the <code>realClass</code> attribute.
+   method returns a proxy object that implements the desired interface, when the mock class
+   specifies that interface as the value of the <code>realClass</code> attribute (if an actual class
+   is specified in the attribute, the method will apply the mock class and return
+   <code>null</code>).
+   The method accepts either an instance of the annotated mock class or the <code>Class</code>
+   literal for the same.
    Again, a more elegant alternative is obtained with the use of a mock-up class, which provides
    the proxy instance through a call to the <code>getMockInstance()</code> method.
-   (This method returns <code>null</code> when the mocked type is not an interface, though.)
+   This method returns <code>null</code> if the mocked type is not an interface.
 </p>
 <p>
    Notice that for the first test the mock class and its mock methods are declared to be
