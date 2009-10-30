@@ -9,59 +9,23 @@
 
 <h2>JMockit development history</h2>
 
-<h3>Migrating from a previous release</h3>
-<p>
-   The following changes need to be made to existing JUnit test suites, when migrating from JMockit
-   release 0.97 (or older) to release 0.98x.
-</p>
-<ol>
-   <li>First of all, recompile all test sources with the new jmockit.jar in the classpath.</li>
+<h3>Next release</h3>
+
+<p>Release 0.992 (November ??, 2009):</p>
+<ul>
    <li>
-      Any test classes that extended <code>junit.framework.TestCase</code> now need to extend
-      <code>mockit.integration.junit3.JMockitTestCase</code>, unless the test suite is always run
-      with "-javaagent:jmockit.jar".
-      Alternatively, the test class can be converted to JUnit 4, with the addition of 
-      <code>@RunWith(JMockit.class)</code> to the class and of <code>@Test</code> to its test
-      methods.
+      Fixed an issue in the Maven 2 project file (<code>pom.xml</code>) for
+      <code>jmockit.jar</code>: internal dependencies (on JUnit, TestNG, etc.) were made
+      <em>optional</em> so they won't be transitively added as dependencies in client Maven
+      projects.
    </li>
    <li>
-      In any test class which itself extends <code>mockit.Expectations</code>, if there is any
-      initialization of instance fields outside of a <code>@Before/setUp</code> method, then a JUnit
-      fixture setup method will have to be created to perform the initialization.
-      This is necessary because now any mock fields of the test class will only be assigned
-      <em>after</em> the test class instance is created (but before any setup or test methods are
-      executed).
+      Enhancement: in the Annotations API, the method <code>Mockit.setUpMock(Object)</code> now also
+      accepts a <code>Class</code> object for the mock class, instead of only an instance of the
+      mock class. This should avoid confusion with the <code>Mockit.setUpMocks(Object...)</code>
+      method, which always accepted both ways of passing the mock class.
    </li>
-   <li>
-      If an <code>Expectations</code> subclass (which can be a test class, an anonymous inner class
-      inside a test method, and so on) declares two or more mock fields of the same type or with a
-      common base type, then these fields must mock exactly the same set of methods and constructors
-      belonging to the common class types.
-      By default, all methods and constructors are mocked, so this issue can only happen when
-      (static) partial mocking is used, through the <code>methods</code> or <code>value</code>
-      attribute of the <code>MockField/Mocked</code> annotation.
-      So, if that's the case, simply copy the mock filters specified in one mock field to the 
-      others.
-   </li>
-   <li>
-      JMockit now restores mocked classes automatically both for test-scoped and test class-scoped
-      mocks.
-      Consequently, none of the methods <code>Mockit.tearDownMocks()</code>,
-      <code>Mockit.restoreAllOriginalDefinitions()</code>, or
-      <code>Mockit.restoreOriginalDefinition(...)</code> need to be explicitly called anymore,
-      unless a given test method really needs to restore some mocked class before the test completes
-      its execution.
-      This also means that classes that remained mocked between tests or from one test class to the
-      next in the suite, will <em>not</em> remain mocked as before, but will be restored
-      automatically either between individual tests, or from one test class to the next.
-      Therefore, it will be necessary to set up the mocks again at the appropriate point (for
-      example, in a <code>@Before</code> or <code>@BeforeClass</code> method when using JUnit 4).
-   </li>
-</ol>
-<p>
-   It should be easy enough to adapt existing tests according to the incompatibilities listed above.
-   If after making such changes some tests remain broken that weren't before, please let me know.
-</p>
+</ul>
 
 <h3>Current release</h3>
 
@@ -591,6 +555,60 @@
       Other fixes and small enhancements.
    </li>
 </ul>
+
+<h4>Migrating from a previous release</h4>
+<p>
+   The following changes need to be made to existing JUnit test suites, when migrating from JMockit
+   release 0.97 (or older) to newer releases.
+</p>
+<ol>
+   <li>First of all, recompile all test sources with the new jmockit.jar in the classpath.</li>
+   <li>
+      Any test classes that extended <code>junit.framework.TestCase</code> now need to extend
+      <code>mockit.integration.junit3.JMockitTestCase</code>, unless the test suite is always run
+      with "-javaagent:jmockit.jar".
+      Alternatively, the test class can be converted to JUnit 4, with the addition of
+      <code>@RunWith(JMockit.class)</code> to the class and of <code>@Test</code> to its test
+      methods.
+   </li>
+   <li>
+      In any test class which itself extends <code>mockit.Expectations</code>, if there is any
+      initialization of instance fields outside of a <code>@Before/setUp</code> method, then a JUnit
+      fixture setup method will have to be created to perform the initialization.
+      This is necessary because now any mock fields of the test class will only be assigned
+      <em>after</em> the test class instance is created (but before any setup or test methods are
+      executed).
+   </li>
+   <li>
+      If an <code>Expectations</code> subclass (which can be a test class, an anonymous inner class
+      inside a test method, and so on) declares two or more mock fields of the same type or with a
+      common base type, then these fields must mock exactly the same set of methods and constructors
+      belonging to the common class types.
+      By default, all methods and constructors are mocked, so this issue can only happen when
+      (static) partial mocking is used, through the <code>methods</code> or <code>value</code>
+      attribute of the <code>MockField/Mocked</code> annotation.
+      So, if that's the case, simply copy the mock filters specified in one mock field to the
+      others.
+   </li>
+   <li>
+      JMockit now restores mocked classes automatically both for test-scoped and test class-scoped
+      mocks.
+      Consequently, none of the methods <code>Mockit.tearDownMocks()</code>,
+      <code>Mockit.restoreAllOriginalDefinitions()</code>, or
+      <code>Mockit.restoreOriginalDefinition(...)</code> need to be explicitly called anymore,
+      unless a given test method really needs to restore some mocked class before the test completes
+      its execution.
+      This also means that classes that remained mocked between tests or from one test class to the
+      next in the suite, will <em>not</em> remain mocked as before, but will be restored
+      automatically either between individual tests, or from one test class to the next.
+      Therefore, it will be necessary to set up the mocks again at the appropriate point (for
+      example, in a <code>@Before</code> or <code>@BeforeClass</code> method when using JUnit 4).
+   </li>
+</ol>
+<p>
+   It should be easy enough to adapt existing tests according to the incompatibilities listed above.
+   If after making such changes some tests remain broken that weren't before, please let me know.
+</p>
 
 <p>Release 0.98 (June 7, 2009):</p>
 <ul>
