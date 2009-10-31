@@ -497,8 +497,8 @@ public class ClassWriter implements ClassVisitor {
      * without emitting visit events for all the method instructions), which
      * saves a <i>lot</i> of time. Untransformed methods are detected by the
      * fact that the {@link ClassReader} receives {@link MethodVisitor} objects
-     * that come from a {@link ClassWriter} (and not from a custom
-     * {@link ClassAdapter} or any other {@link ClassVisitor} instance).</li>
+     * that come from a {@link ClassWriter} (and not from any other {@link ClassVisitor}
+     * instance).</li>
      * </ul>
      * 
      * @param classReader the {@link ClassReader} used to read the original
