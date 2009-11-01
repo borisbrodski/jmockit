@@ -17,96 +17,99 @@ package powermock.examples.tutorial.domainmocking.impl;
 
 import powermock.examples.tutorial.domainmocking.*;
 import powermock.examples.tutorial.domainmocking.domain.*;
+
 import org.junit.*;
+
 import static org.junit.Assert.*;
+
 import org.junit.runner.*;
+
 import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.*;
+
 import org.powermock.core.classloader.annotations.*;
 import org.powermock.modules.junit4.*;
+
 import static org.easymock.EasyMock.expect;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { SampleServiceImpl.class, BusinessMessages.class, Person.class })
-public class SampleServiceImplTest {
+@PrepareForTest({SampleServiceImpl.class, BusinessMessages.class, Person.class})
+public class SampleServiceImplTest
+{
+   private PersonService personService;
+   private EventService eventService;
+   private SampleServiceImpl tested;
 
-	private SampleServiceImpl tested;
-	private PersonService personServiceMock;
-	private EventService eventService;
+   @Before
+   public void setUp()
+   {
+      personService = createMock(PersonService.class);
+      eventService = createMock(EventService.class);
 
-	@Before
-	public void setUp() {
-		personServiceMock = createMock(PersonService.class);
-		eventService = createMock(EventService.class);
+      tested = new SampleServiceImpl(personService, eventService);
+   }
 
-		tested = new SampleServiceImpl(personServiceMock, eventService);
-	}
+   @Test
+   public void testCreatePerson() throws Exception
+   {
+      // Mock the creation of person
+      final String firstName = "firstName";
+      final String lastName = "lastName";
+      Person personMock = createMockAndExpectNew(Person.class, firstName, lastName);
 
-	@After
-	public void tearDown() {
-		personServiceMock = null;
-		eventService = null;
-		tested = null;
-	}
+      // Mock the creation of BusinessMessages
+      BusinessMessages businessMessagesMock = createMockAndExpectNew(BusinessMessages.class);
 
-	@Test
-	public void testCreatePerson() throws Exception {
-		// Mock the creation of person
-		final String firstName = "firstName";
-		final String lastName = "lastName";
-		Person personMock = createMockAndExpectNew(Person.class, firstName, lastName);
+      personService.create(personMock, businessMessagesMock);
+      expectLastCall().times(1);
 
-		// Mock the creation of BusinessMessages
-		BusinessMessages businessMessagesMock = createMockAndExpectNew(BusinessMessages.class);
+      expect(businessMessagesMock.hasErrors()).andReturn(false);
 
-		personServiceMock.create(personMock, businessMessagesMock);
-		expectLastCall().times(1);
+      replayAll();
 
-		expect(businessMessagesMock.hasErrors()).andReturn(false);
+      assertTrue(tested.createPerson(firstName, lastName));
 
-		replayAll();
+      verifyAll();
+   }
 
-		assertTrue(tested.createPerson(firstName, lastName));
+   @Test
+   public void testCreatePerson_error() throws Exception
+   {
+      // Mock the creation of person
+      final String firstName = "firstName";
+      final String lastName = "lastName";
+      Person personMock = createMockAndExpectNew(Person.class, firstName, lastName);
 
-		verifyAll();
-	}
+      // Mock the creation of BusinessMessages
+      BusinessMessages businessMessagesMock = createMockAndExpectNew(BusinessMessages.class);
 
-	@Test
-	public void testCreatePerson_error() throws Exception {
-		// Mock the creation of person
-		final String firstName = "firstName";
-		final String lastName = "lastName";
-		Person personMock = createMockAndExpectNew(Person.class, firstName, lastName);
+      personService.create(personMock, businessMessagesMock);
+      expectLastCall().times(1);
 
-		// Mock the creation of BusinessMessages
-		BusinessMessages businessMessagesMock = createMockAndExpectNew(BusinessMessages.class);
+      expect(businessMessagesMock.hasErrors()).andReturn(true);
 
-		personServiceMock.create(personMock, businessMessagesMock);
-		expectLastCall().times(1);
+      eventService.sendErrorEvent(personMock, businessMessagesMock);
+      expectLastCall().times(1);
 
-		expect(businessMessagesMock.hasErrors()).andReturn(true);
+      replayAll();
 
-		eventService.sendErrorEvent(personMock, businessMessagesMock);
-		expectLastCall().times(1);
+      assertFalse(tested.createPerson(firstName, lastName));
 
-		replayAll();
+      verifyAll();
+   }
 
-		assertFalse(tested.createPerson(firstName, lastName));
+   @Test(expected = SampleServiceException.class)
+   public void testCreatePerson_illegalName() throws Exception
+   {
+      // Mock the creation of person
+      final String firstName = "firstName";
+      final String lastName = "lastName";
+      expectNew(Person.class, firstName, lastName).andThrow(new IllegalArgumentException("Illegal name"));
 
-		verifyAll();
-	}
+      replayAll();
 
-	@Test(expected = SampleServiceException.class)
-	public void testCreatePerson_illegalName() throws Exception {
-		// Mock the creation of person
-		final String firstName = "firstName";
-		final String lastName = "lastName";
-		expectNew(Person.class, firstName, lastName).andThrow(new IllegalArgumentException("Illegal name"));
+      tested.createPerson(firstName, lastName);
 
-		replayAll();
-
-		tested.createPerson(firstName, lastName);
-
-		verifyAll();
-	}
+      verifyAll();
+   }
 }

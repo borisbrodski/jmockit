@@ -24,10 +24,11 @@
  */
 package powermock.examples.tutorial.hellopower;
 
-import powermock.examples.tutorial.hellopower.*;
 import mockit.*;
 import mockit.integration.junit4.*;
+
 import static org.junit.Assert.*;
+
 import org.junit.*;
 import org.junit.runner.*;
 
@@ -35,7 +36,7 @@ import org.junit.runner.*;
 public final class HelloWorld_JMockit_Test
 {
    @Test
-   public void testGreetingUsingJMockitExpectations()
+   public void testGreetingUsingExpectationsAPI()
    {
       new Expectations()
       {
@@ -51,20 +52,17 @@ public final class HelloWorld_JMockit_Test
    }
 
    @Test
-   public void testGreetingUsingJMockitAnnotations()
+   public void testGreetingUsingAnnotationsAPI()
    {
-      Mockit.setUpMocks(MockSimpleConfig.class);
+      new MockUp<SimpleConfig>()
+      {
+         @Mock
+         public String getGreeting() { return "Hello"; }
+
+         @Mock
+         public String getTarget() { return "world"; }
+      };
 
       assertEquals("Hello world", new HelloWorld().greet());
-   }
-
-   @MockClass(realClass = SimpleConfig.class)
-   public static class MockSimpleConfig
-   {
-      @Mock
-      public String getGreeting() { return "Hello"; }
-
-      @Mock
-      public String getTarget() { return "world"; }
    }
 }

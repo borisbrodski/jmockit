@@ -23,14 +23,14 @@ import java.util.Random;
  * (for example validation errors) in this message (even though these methods
  * are not implemented or even defined here).
  */
-public class BusinessMessages {
-
-	/**
-	 * @return <code>true</code> if the an error has occurred when invoking an
-	 *         operation, <code>false</code> otherwise.
-	 */
-	public boolean hasErrors() {
-		return new Random().nextBoolean();
-	}
-
+public class BusinessMessages
+{
+   /**
+    * @return <code>true</code> if the an error has occurred when invoking an
+    *         operation, <code>false</code> otherwise.
+    */
+   public boolean hasErrors()
+   {
+      return new Random().nextBoolean();
+   }
 }

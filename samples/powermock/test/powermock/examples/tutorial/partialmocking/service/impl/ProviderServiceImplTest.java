@@ -20,146 +20,155 @@ import java.util.*;
 import powermock.examples.tutorial.partialmocking.dao.*;
 import powermock.examples.tutorial.partialmocking.dao.domain.impl.*;
 import powermock.examples.tutorial.partialmocking.domain.*;
+
 import static org.easymock.EasyMock.*;
+
 import org.junit.*;
+
 import static org.junit.Assert.*;
+
 import org.junit.runner.*;
+
 import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.*;
+
 import org.powermock.core.classloader.annotations.*;
 import org.powermock.modules.junit4.*;
+
 import static org.powermock.reflect.Whitebox.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ProviderServiceImpl.class)
-public class ProviderServiceImplTest {
+public class ProviderServiceImplTest
+{
+   private ProviderServiceImpl tested;
+   private ProviderDao providerDaoMock;
 
-	private ProviderServiceImpl tested;
-	private ProviderDao providerDaoMock;
+   @Before // What this method does is used only by the last two tests.
+   public void setUp()
+   {
+      tested = new ProviderServiceImpl();
+      providerDaoMock = createMock(ProviderDao.class);
 
-	@Before
-	public void setUp() {
-		tested = new ProviderServiceImpl();
-		providerDaoMock = createMock(ProviderDao.class);
+      setInternalState(tested, providerDaoMock);
+   }
 
-		setInternalState(tested, providerDaoMock);
-	}
+   @Test
+   public void testGetAllServiceProviders() throws Exception
+   {
+      final String methodNameToMock = "getAllServiceProducers";
+      final Set<ServiceProducer> expectedServiceProducers = new HashSet<ServiceProducer>();
+      expectedServiceProducers.add(new ServiceProducer(1, "mock name"));
 
-	@After
-	public void tearDown() {
-		tested = null;
-		providerDaoMock = null;
-	}
+      tested = createPartialMock(ProviderServiceImpl.class, methodNameToMock);
 
-	@Test
-	public void testGetAllServiceProviders() throws Exception {
-		final String methodNameToMock = "getAllServiceProducers";
-		final Set<ServiceProducer> expectedServiceProducers = new HashSet<ServiceProducer>();
-		expectedServiceProducers.add(new ServiceProducer(1, "mock name"));
+      expectPrivate(tested, methodNameToMock).andReturn(expectedServiceProducers);
 
-		tested = createPartialMock(ProviderServiceImpl.class, methodNameToMock);
+      replayAll();
 
-		expectPrivate(tested, methodNameToMock).andReturn(expectedServiceProducers);
+      Set<ServiceProducer> actualServiceProviders = tested.getAllServiceProviders();
 
-		replayAll();
+      verifyAll();
 
-		Set<ServiceProducer> actualServiceProviders = tested.getAllServiceProviders();
+      assertSame(expectedServiceProducers, actualServiceProviders);
+   }
 
-		verifyAll();
+   @Test
+   public void testGetAllServiceProviders_noServiceProvidersFound() throws Exception
+   {
+      final String methodNameToMock = "getAllServiceProducers";
+      final Set<ServiceProducer> expectedServiceProducers = new HashSet<ServiceProducer>();
 
-		assertSame(expectedServiceProducers, actualServiceProviders);
-	}
+      tested = createPartialMock(ProviderServiceImpl.class, methodNameToMock);
 
-	@Test
-	public void testGetAllServiceProviders_noServiceProvidersFound() throws Exception {
-		final String methodNameToMock = "getAllServiceProducers";
-		final Set<ServiceProducer> expectedServiceProducers = new HashSet<ServiceProducer>();
+      expectPrivate(tested, methodNameToMock).andReturn(null);
 
-		tested = createPartialMock(ProviderServiceImpl.class, methodNameToMock);
+      replayAll();
 
-		expectPrivate(tested, methodNameToMock).andReturn(null);
+      Set<ServiceProducer> actualServiceProviders = tested.getAllServiceProviders();
 
-		replayAll();
+      verifyAll();
 
-		Set<ServiceProducer> actualServiceProviders = tested.getAllServiceProviders();
+      assertNotSame(expectedServiceProducers, actualServiceProviders);
+      assertEquals(expectedServiceProducers, actualServiceProviders);
+   }
 
-		verifyAll();
+   @Test
+   public void testServiceProvider_found() throws Exception
+   {
+      final String methodNameToMock = "getAllServiceProducers";
+      final int expectedServiceProducerId = 1;
+      final ServiceProducer expected = new ServiceProducer(expectedServiceProducerId, "mock name");
 
-		assertNotSame(expectedServiceProducers, actualServiceProviders);
-		assertEquals(expectedServiceProducers, actualServiceProviders);
-	}
+      final Set<ServiceProducer> serviceProducers = new HashSet<ServiceProducer>();
+      serviceProducers.add(expected);
 
-	@Test
-	public void testServiceProvider_found() throws Exception {
-		final String methodNameToMock = "getAllServiceProducers";
-		final int expectedServiceProducerId = 1;
-		final ServiceProducer expected = new ServiceProducer(expectedServiceProducerId, "mock name");
+      tested = createPartialMock(ProviderServiceImpl.class, methodNameToMock);
 
-		final Set<ServiceProducer> serviceProducers = new HashSet<ServiceProducer>();
-		serviceProducers.add(expected);
+      expectPrivate(tested, methodNameToMock).andReturn(serviceProducers);
 
-		tested = createPartialMock(ProviderServiceImpl.class, methodNameToMock);
+      replayAll();
 
-		expectPrivate(tested, methodNameToMock).andReturn(serviceProducers);
+      ServiceProducer actual = tested.getServiceProvider(expectedServiceProducerId);
 
-		replayAll();
+      verifyAll();
 
-		ServiceProducer actual = tested.getServiceProvider(expectedServiceProducerId);
+      assertSame(expected, actual);
+   }
 
-		verifyAll();
+   @Test
+   public void testServiceProvider_notFound() throws Exception
+   {
+      final String methodNameToMock = "getAllServiceProducers";
 
-		assertSame(expected, actual);
-	}
+      tested = createPartialMock(ProviderServiceImpl.class, methodNameToMock);
 
-	@Test
-	public void testServiceProvider_notFound() throws Exception {
-		final String methodNameToMock = "getAllServiceProducers";
-		final int expectedServiceProducerId = 1;
+      expectPrivate(tested, methodNameToMock).andReturn(new HashSet<ServiceProducer>());
 
-		tested = createPartialMock(ProviderServiceImpl.class, methodNameToMock);
+      replayAll();
 
-		expectPrivate(tested, methodNameToMock).andReturn(new HashSet<ServiceProducer>());
+      ServiceProducer actual = tested.getServiceProvider(1);
 
-		replayAll();
+      assertNull(actual);
+      verifyAll();
+   }
 
-		assertNull(tested.getServiceProvider(expectedServiceProducerId));
+   @Test
+   @SuppressWarnings("unchecked")
+   public void getAllServiceProducers() throws Exception
+   {
+      final String expectedName = "mock name";
+      final int expectedId = 1;
 
-		verifyAll();
+      final Set<ServiceArtifact> serviceArtifacts = new HashSet<ServiceArtifact>();
+      serviceArtifacts.add(new ServiceArtifact(expectedId, expectedName));
 
-	}
+      expect(providerDaoMock.getAllServiceProducers()).andReturn(serviceArtifacts);
 
-	@Test
-	@SuppressWarnings("unchecked")
-	public void getAllServiceProducers() throws Exception {
-		final String expectedName = "mock name";
-		final int expectedId = 1;
+      replayAll();
 
-		final Set<ServiceArtifact> serviceArtifacts = new HashSet<ServiceArtifact>();
-		serviceArtifacts.add(new ServiceArtifact(expectedId, expectedName));
+      Set<ServiceProducer> serviceProducers =
+         (Set<ServiceProducer>) invokeMethod(tested, "getAllServiceProducers");
 
-		expect(providerDaoMock.getAllServiceProducers()).andReturn(serviceArtifacts);
+      verifyAll();
 
-		replayAll();
+      assertEquals(1, serviceProducers.size());
+      assertTrue(serviceProducers.contains(new ServiceProducer(expectedId, expectedName)));
+   }
 
-		Set<ServiceProducer> serviceProducers = (Set<ServiceProducer>) invokeMethod(tested, "getAllServiceProducers");
+   @Test
+   @SuppressWarnings("unchecked")
+   public void getAllServiceProducers_empty() throws Exception
+   {
+      expect(providerDaoMock.getAllServiceProducers()).andReturn(new HashSet<ServiceArtifact>());
 
-		verifyAll();
+      replayAll();
 
-		assertEquals(1, serviceProducers.size());
-		assertTrue(serviceProducers.contains(new ServiceProducer(expectedId, expectedName)));
-	}
+      Set<ServiceProducer> actual =
+         (Set<ServiceProducer>) invokeMethod(tested, "getAllServiceProducers");
 
-	@Test
-	@SuppressWarnings("unchecked")
-	public void getAllServiceProducers_empty() throws Exception {
-		expect(providerDaoMock.getAllServiceProducers()).andReturn(new HashSet<ServiceArtifact>());
+      verifyAll();
 
-		replayAll();
-
-		Set<ServiceProducer> actual = (Set<ServiceProducer>) invokeMethod(tested, "getAllServiceProducers");
-
-		verifyAll();
-
-		assertTrue(actual.isEmpty());
-	}
+      assertTrue(actual.isEmpty());
+   }
 }

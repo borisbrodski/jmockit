@@ -18,62 +18,67 @@ package powermock.examples.tutorial.partialmocking.dao.domain.impl;
 import powermock.examples.tutorial.partialmocking.dao.domain.Connection;
 import powermock.examples.tutorial.partialmocking.domain.DataProducer;
 
-public class ServiceArtifact {
+public class ServiceArtifact
+{
+   private final int id;
+   private final String name;
+   private final DataProducer[] dataProducers;
 
-	private final int id;
+   public ServiceArtifact(int id, String name, DataProducer... dataProducers)
+   {
+      this.id = id;
+      this.name = name;
+      this.dataProducers = dataProducers;
+   }
 
-	private final String name;
+   public DataProducer[] getDataProducers()
+   {
+      return dataProducers;
+   }
 
-	private final DataProducer[] dataProducers;
+   public int getId()
+   {
+      return id;
+   }
 
-	public ServiceArtifact(int id, String name, DataProducer... dataProducers) {
-		this.id = id;
-		this.name = name;
-		this.dataProducers = dataProducers;
-	}
+   public String getName()
+   {
+      return name;
+   }
 
-	public DataProducer[] getDataProducers() {
-		return dataProducers;
-	}
+   public Connection connectToService()
+   {
+      return new ConnectionImpl();
+   }
 
-	public int getId() {
-		return id;
-	}
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + id;
+      result = prime * result + ((name == null) ? 0 : name.hashCode());
+      return result;
+   }
 
-	public String getName() {
-		return name;
-	}
-
-	public Connection connectToService() {
-		return new ConnectionImpl();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final ServiceArtifact other = (ServiceArtifact) obj;
-		if (id != other.id)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
-	}
-
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+         return true;
+      if (obj == null)
+         return false;
+      if (getClass() != obj.getClass())
+         return false;
+      final ServiceArtifact other = (ServiceArtifact) obj;
+      if (id != other.id)
+         return false;
+      if (name == null) {
+         if (other.name != null)
+            return false;
+      }
+      else if (!name.equals(other.name))
+         return false;
+      return true;
+   }
 }

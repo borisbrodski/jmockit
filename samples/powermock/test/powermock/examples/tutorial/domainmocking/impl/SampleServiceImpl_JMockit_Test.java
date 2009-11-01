@@ -26,7 +26,6 @@ package powermock.examples.tutorial.domainmocking.impl;
 
 import powermock.examples.tutorial.domainmocking.*;
 import powermock.examples.tutorial.domainmocking.domain.*;
-import powermock.examples.tutorial.domainmocking.impl.*;
 import mockit.*;
 import mockit.integration.junit4.*;
 import org.junit.*;
@@ -35,6 +34,13 @@ public final class SampleServiceImpl_JMockit_Test extends JMockitTest
 {
    @Mocked private PersonService personService;
    @Mocked private EventService eventService;
+   private SampleServiceImpl tested;
+
+   @Before
+   public void setUp()
+   {
+      tested = new SampleServiceImpl(personService, eventService);
+   }
 
    @Test
    public void testCreatePerson()
@@ -44,19 +50,20 @@ public final class SampleServiceImpl_JMockit_Test extends JMockitTest
 
       new Expectations()
       {
-         BusinessMessages businessMessages;
-         Person person;
+         final BusinessMessages businessMessages;
+         final Person person;
 
          {
+            // All mocks here are strict, so the order of invocation matters:
             businessMessages = new BusinessMessages();
-            Person person = new Person(firstName, lastName);
+            person = new Person(firstName, lastName);
+
             personService.create(person, businessMessages);
             businessMessages.hasErrors(); returns(false);
          }
       };
 
-      SampleService sampleService = new SampleServiceImpl(personService, eventService);
-      assertTrue(sampleService.createPerson(firstName, lastName));
+      assertTrue(tested.createPerson(firstName, lastName));
    }
 
    @Test
@@ -67,20 +74,19 @@ public final class SampleServiceImpl_JMockit_Test extends JMockitTest
 
       new Expectations()
       {
-         BusinessMessages businessMessages;
-         Person person;
+         // Declared non-strict so that the order of invocation is irrelevant:
+         @NonStrict final BusinessMessages businessMessages = new BusinessMessages();
+         @NonStrict final Person person = new Person(firstName, lastName);
 
          {
-            businessMessages = new BusinessMessages();
-            Person person = new Person(firstName, lastName);
+            // The following mocks are strict, so the order of invocation for them does matter:
             personService.create(person, businessMessages);
             businessMessages.hasErrors(); returns(true);
             eventService.sendErrorEvent(person, businessMessages);
          }
       };
 
-      SampleService sampleService = new SampleServiceImpl(personService, eventService);
-      assertFalse(sampleService.createPerson(firstName, lastName));
+      assertFalse(tested.createPerson(firstName, lastName));
    }
 
    // Notice that this test does not in fact need any mocking, but just for demonstration...
@@ -99,7 +105,6 @@ public final class SampleServiceImpl_JMockit_Test extends JMockitTest
          }
       };
 
-      SampleService sampleService = new SampleServiceImpl(personService, eventService);
-      sampleService.createPerson(firstName, lastName);
+      tested.createPerson(firstName, lastName);
    }
 }

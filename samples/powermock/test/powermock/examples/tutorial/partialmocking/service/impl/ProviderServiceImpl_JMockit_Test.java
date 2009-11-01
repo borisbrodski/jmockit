@@ -40,8 +40,8 @@ import org.junit.*;
  * mocking, the names of the desired methods need to be individually specified in strings.
  * <p/>
  * The first four tests mock a private method defined in the class under test, while the last two
- * tests directly exercise this private method. This is not something I recommend, though. Instead,
- * unit tests should be created only for the non-private methods in the class under test.
+ * tests directly exercise this private method. This is not recommended, though. Instead, unit tests
+ * should be created only for the non-private methods in the class under test.
  */
 public final class ProviderServiceImpl_JMockit_Test extends JMockitTest
 {
@@ -51,16 +51,16 @@ public final class ProviderServiceImpl_JMockit_Test extends JMockitTest
       final Set<ServiceProducer> expectedServiceProducers = new HashSet<ServiceProducer>();
       expectedServiceProducers.add(new ServiceProducer(1, "mock name"));
 
-      final ProviderService providerService = new ProviderServiceImpl();
+      final ProviderService tested = new ProviderServiceImpl();
 
-      new Expectations(providerService)
+      new Expectations(tested)
       {
          {
-            invoke(providerService, "getAllServiceProducers"); returns(expectedServiceProducers);
+            invoke(tested, "getAllServiceProducers"); returns(expectedServiceProducers);
          }
       };
 
-      Set<ServiceProducer> actualServiceProviders = providerService.getAllServiceProviders();
+      Set<ServiceProducer> actualServiceProviders = tested.getAllServiceProviders();
 
       assertSame(expectedServiceProducers, actualServiceProviders);
    }
@@ -69,16 +69,16 @@ public final class ProviderServiceImpl_JMockit_Test extends JMockitTest
    public void testGetAllServiceProviders_noServiceProvidersFound()
    {
       Set<ServiceProducer> expectedServiceProducers = new HashSet<ServiceProducer>();
-      final ProviderService providerService = new ProviderServiceImpl();
+      final ProviderService tested = new ProviderServiceImpl();
 
-      new Expectations(providerService)
+      new Expectations(tested)
       {
          {
-            invoke(providerService, "getAllServiceProducers"); returns(null);
+            invoke(tested, "getAllServiceProducers"); returns(null);
          }
       };
 
-      Set<ServiceProducer> actualServiceProviders = providerService.getAllServiceProviders();
+      Set<ServiceProducer> actualServiceProviders = tested.getAllServiceProviders();
 
       assertNotSame(expectedServiceProducers, actualServiceProviders);
       assertEquals(expectedServiceProducers, actualServiceProviders);
@@ -93,16 +93,16 @@ public final class ProviderServiceImpl_JMockit_Test extends JMockitTest
       final Set<ServiceProducer> serviceProducers = new HashSet<ServiceProducer>();
       serviceProducers.add(expected);
 
-      final ProviderService providerService = new ProviderServiceImpl();
+      final ProviderService tested = new ProviderServiceImpl();
 
-      new Expectations(providerService)
+      new Expectations(tested)
       {
          {
-            invoke(providerService, "getAllServiceProducers"); returns(serviceProducers);
+            invoke(tested, "getAllServiceProducers"); returns(serviceProducers);
          }
       };
 
-      ServiceProducer actual = providerService.getServiceProvider(expectedServiceProducerId);
+      ServiceProducer actual = tested.getServiceProvider(expectedServiceProducerId);
 
       assertSame(expected, actual);
    }
@@ -110,17 +110,18 @@ public final class ProviderServiceImpl_JMockit_Test extends JMockitTest
    @Test
    public void testGetServiceProvider_notFound()
    {
-      final ProviderService providerService = new ProviderServiceImpl();
+      final ProviderService tested = new ProviderServiceImpl();
 
-      new Expectations(providerService)
+      new Expectations(tested)
       {
          {
-            invoke(providerService, "getAllServiceProducers");
-            returns(new HashSet<ServiceProducer>());
+            invoke(tested, "getAllServiceProducers");
+            // An empty collection is the default return value, so we don't have to record it here.
+            // returns(new HashSet<ServiceProducer>());
          }
       };
 
-      ServiceProducer actual = providerService.getServiceProvider(1);
+      ServiceProducer actual = tested.getServiceProvider(1);
 
       assertNull(actual);
    }

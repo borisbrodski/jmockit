@@ -48,9 +48,6 @@ public class ServiceRegistratorTest
       mockStatic(IdGenerator.class);
    }
 
-   /**
-    * Test for the {@link ServiceRegistrator#registerService(String, Object)} method.
-    */
    @Test
    public void testRegisterService()
    {
@@ -79,29 +76,18 @@ public class ServiceRegistratorTest
       Map<Long, ServiceRegistration> serviceRegistrations = getInternalState(tested, Map.class);
 
       assertEquals(1, serviceRegistrations.size());
-      assertTrue(
-         "The id " + actualId + " was not found in the mServiceRegistrations map.",
-         serviceRegistrations.containsKey(actualId));
-      assertTrue(
-         "The service " + serviceRegistrationMock +
-         " was not found in the mServiceRegistrations map.",
-         serviceRegistrations.containsValue(serviceRegistrationMock));
-      assertNotNull(serviceRegistrations.get(expectedId));
+      assertSame(serviceRegistrationMock, serviceRegistrations.get(actualId));
    }
 
-   /**
-    * Test for the {@link ServiceRegistrator#unregisterService(long)} method.
-    *
-    * @throws Exception If an error occurs.
-    */
    @Test
    public void testUnregisterService() throws Exception
    {
-      Map<Long, ServiceRegistration> map = new HashMap<Long, ServiceRegistration>();
+      Map<Long, ServiceRegistration> serviceRegistrations =
+         new HashMap<Long, ServiceRegistration>();
       final long id = 1L;
-      map.put(id, serviceRegistrationMock);
+      serviceRegistrations.put(id, serviceRegistrationMock);
 
-      setInternalState(tested, map);
+      setInternalState(tested, serviceRegistrations);
 
       serviceRegistrationMock.unregister();
       expectLastCall().times(1);
@@ -112,35 +98,20 @@ public class ServiceRegistratorTest
 
       verifyAll();
 
-      assertTrue("Map should be empty", map.isEmpty());
+      assertTrue(serviceRegistrations.isEmpty());
    }
 
-   /**
-    * Test for the {@link ServiceRegistrator#unregisterService(long)} method when the ID doesn't
-    * exist.
-    */
    @Test
-   public void testUnregisterService_idDoesntExist() throws Exception
+   public void testUnregisterService_idDoesntExist()
    {
-      Map<Long, ServiceRegistration> map = new HashMap<Long, ServiceRegistration>();
-      final long id = 1L;
-
-      setInternalState(tested, map);
-
       replayAll();
 
       try {
-         tested.unregisterService(id);
+         tested.unregisterService(1L);
          fail("Should throw IllegalStateException");
       }
       catch (IllegalStateException e) {
-         assertEquals(
-            "Registration with id " + id + " has already been removed or has never been registered",
-            e.getMessage());
+         verifyAll();
       }
-      
-      verifyAll();
-
-      assertTrue("Map should be empty", map.isEmpty());
    }
 }

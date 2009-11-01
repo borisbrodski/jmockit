@@ -102,7 +102,7 @@ public final class ServiceRegistrator_JMockit_Test extends JMockitTest
 
       tested.unregisterService(id);
 
-      assertTrue("Map should be empty", serviceRegistrations.isEmpty());
+      assertTrue(serviceRegistrations.isEmpty());
    }
 
    @Test(expected = IllegalStateException.class)

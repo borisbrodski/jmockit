@@ -32,42 +32,47 @@ import powermock.examples.tutorial.partialmocking.service.ProviderService;
  * <code>providerDao</code> field without setters), partial mocking and
  * expectations of private methods.
  */
-public class ProviderServiceImpl implements ProviderService {
+public final class ProviderServiceImpl implements ProviderService
+{
+   @Inject
+   private ProviderDao providerDao;
 
-	@Inject
-	private ProviderDao providerDao;
+   public Set<ServiceProducer> getAllServiceProviders()
+   {
+      final Set<ServiceProducer> serviceProducers = getAllServiceProducers();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Set<ServiceProducer> getAllServiceProviders() {
-		final Set<ServiceProducer> serviceProducers = getAllServiceProducers();
-		if (serviceProducers == null) {
-			return Collections.emptySet();
-		}
-		return serviceProducers;
-	}
+      if (serviceProducers == null) {
+         return Collections.emptySet();
+      }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public ServiceProducer getServiceProvider(int id) {
-		Set<ServiceProducer> allServiceProducers = getAllServiceProducers();
-		for (ServiceProducer serviceProducer : allServiceProducers) {
-			if (serviceProducer.getId() == id) {
-				return serviceProducer;
-			}
-		}
-		return null;
-	}
+      return serviceProducers;
+   }
 
-	private Set<ServiceProducer> getAllServiceProducers() {
-		Set<ServiceArtifact> serviceArtifacts = providerDao.getAllServiceProducers();
-		Set<ServiceProducer> serviceProducers = new HashSet<ServiceProducer>();
+   public ServiceProducer getServiceProvider(int id)
+   {
+      Set<ServiceProducer> allServiceProducers = getAllServiceProducers();
 
-		for (ServiceArtifact serviceArtifact : serviceArtifacts) {
-			serviceProducers.add(new ServiceProducer(serviceArtifact.getId(), serviceArtifact.getName(), serviceArtifact.getDataProducers()));
-		}
-		return serviceProducers;
-	}
+      for (ServiceProducer serviceProducer : allServiceProducers) {
+         if (serviceProducer.getId() == id) {
+            return serviceProducer;
+         }
+      }
+
+      return null;
+   }
+
+   private Set<ServiceProducer> getAllServiceProducers()
+   {
+      Set<ServiceArtifact> serviceArtifacts = providerDao.getAllServiceProducers();
+      Set<ServiceProducer> serviceProducers = new HashSet<ServiceProducer>();
+
+      for (ServiceArtifact serviceArtifact : serviceArtifacts) {
+         serviceProducers.add(
+            new ServiceProducer(
+               serviceArtifact.getId(), serviceArtifact.getName(),
+               serviceArtifact.getDataProducers()));
+      }
+
+      return serviceProducers;
+   }
 }
