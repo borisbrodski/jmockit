@@ -45,7 +45,17 @@ public final class TestRun
    private Class<?> currentTestClass;
    private Object currentTestInstance;
    private boolean runningTestMethod;
-   private int noMockingCount;
+   private final ThreadLocal<Integer> noMockingCount = new ThreadLocal<Integer>()
+   {
+      @Override
+      protected Integer initialValue() { return 0; }
+
+      @Override
+      public void set(Integer valueToAdd)
+      {
+         super.set(get() + valueToAdd);
+      }
+   };
 
    private CaptureOfImplementationsForTestClass captureOfSubtypes;
    private SharedFieldTypeRedefinitions sharedFieldTypeRedefinitions;
@@ -64,7 +74,7 @@ public final class TestRun
 
    public static boolean isInsideNoMockingZone()
    {
-      return instance.noMockingCount > 0;
+      return instance.noMockingCount.get() > 0;
    }
 
    public static boolean isRunningTestCode(ProtectionDomain protectionDomain)
@@ -78,7 +88,10 @@ public final class TestRun
          !protectionDomain.getCodeSource().getLocation().getPath().endsWith(".jar");
    }
 
-   public static CaptureOfImplementationsForTestClass getCaptureOfSubtypes() { return instance.captureOfSubtypes; }
+   public static CaptureOfImplementationsForTestClass getCaptureOfSubtypes()
+   {
+      return instance.captureOfSubtypes;
+   }
 
    public static SharedFieldTypeRedefinitions getSharedFieldTypeRedefinitions()
    {
@@ -121,12 +134,12 @@ public final class TestRun
 
    public static void enterNoMockingZone()
    {
-      instance.noMockingCount++;
+      instance.noMockingCount.set(1);
    }
 
    public static void exitNoMockingZone()
    {
-      instance.noMockingCount--;
+      instance.noMockingCount.set(-1);
    }
 
    public static void setRunningIndividualTest(Object testInstance)
