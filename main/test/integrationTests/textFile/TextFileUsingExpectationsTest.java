@@ -177,13 +177,11 @@ public final class TextFileUsingExpectationsTest
    {
       new Expectations()
       {
-         @Mocked("(InputStream)") private final InputStreamReader inputStreamReader = null;
-         @Mocked("(String)") private final FileReader fileReader = null;
-         @Mocked({"(Reader)", "skip", "readLine", "close"}) private BufferedReader reader;
+         final FileReader fileReader = null;
+         BufferedReader reader;
 
          // Records TextFile#TextFile(String):
          {
-            //noinspection IOResourceOpenedButNotSafelyClosed
             new BufferedReader(new FileReader("file"));
          }
 
