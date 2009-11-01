@@ -130,6 +130,7 @@ public class TestRunnerDecorator
       else {
          // TODO: separate FieldTypeRedefinitions in two classes, one just for mocking of fields,
          // another just for capturing
+         sharedRedefinitions.cleanUp();
          sharedRedefinitions.redefineTypesForTestClass();
       }
 
