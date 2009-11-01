@@ -42,7 +42,7 @@ public final class MockingBridge implements InvocationHandler
 
    private static final Object[] EMPTY_ARGS = {};
 
-   private Integer targetId;
+   private int targetId;
    private String mockClassInternalName;
    private String mockName;
    private String mockDesc;
@@ -63,6 +63,12 @@ public final class MockingBridge implements InvocationHandler
          return null;
       }
 
+      extractMockMethodAndArguments(args);
+
+      if (targetId != RECORD_OR_REPLAY) {
+         return callMock(mocked);
+      }
+
       if (TestRun.isInsideNoMockingZone()) {
          return Void.class;
       }
@@ -70,16 +76,11 @@ public final class MockingBridge implements InvocationHandler
       TestRun.enterNoMockingZone();
 
       try {
-         extractMockMethodAndArguments(args);
+         int mockAccess = (Integer) args[1];
 
-         if (targetId == RECORD_OR_REPLAY) {
-            Integer mockAccess = (Integer) args[1];
-            return
-               RecordAndReplayExecution.recordOrReplay(
-                  mocked, mockAccess, mockClassInternalName, mockName + mockDesc, mockArgs);
-         }
-
-         return callMock(mocked);
+         return
+            RecordAndReplayExecution.recordOrReplay(
+               mocked, mockAccess, mockClassInternalName, mockName + mockDesc, mockArgs);
       }
       finally {
          TestRun.exitNoMockingZone();
