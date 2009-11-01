@@ -18,7 +18,7 @@
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../../Java/mockito-1.8.0/sources/mockito-core-1.8.0-sources.jar!/" />
+          <root url="jar://C:/Java/mockito-1.8.0/sources/mockito-core-1.8.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

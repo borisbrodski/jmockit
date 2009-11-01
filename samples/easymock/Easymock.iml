@@ -18,7 +18,7 @@
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../../Java/easymock-2.5.2/easymock-2.5.2-sources.jar!/" />
+          <root url="jar://C:/Java/easymock-2.5.2/easymock-2.5.2-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
