@@ -419,7 +419,6 @@ function PR_splitStringAndCommentTokens(sourceCode) {
 
 var PR_C_STYLE_LITERAL_IDENTIFIER_PUNC_RECOGNIZER = PR_createSimpleLexer([], [
     [PR_PLAIN,       /^\s+/, null, ' \r\n'],
-    // TODO(mikesamuel): recognize non-latin letters and numerals in identifiers
     [PR_PLAIN,       /^[a-z_$@][a-z_$@0-9]*/i, null],
     // A hex number
     [PR_LITERAL,     /^0x[a-f0-9]+[a-z]/i, null],
