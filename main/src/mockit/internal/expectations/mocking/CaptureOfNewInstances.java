@@ -94,8 +94,9 @@ abstract class CaptureOfNewInstances extends CaptureOfImplementations
 
       Class<?> mockedClass = mock.getClass();
       List<Capture> captures = baseTypeToCaptures.get(mockedClass);
+      boolean implementationClassModifiedForCaptureOnly = captures == null;
 
-      if (captures == null) {
+      if (implementationClassModifiedForCaptureOnly) {
          captures = findCaptures(mockedClass);
 
          if (captures == null) {
@@ -110,7 +111,7 @@ abstract class CaptureOfNewInstances extends CaptureOfImplementations
          }
       }
 
-      return true;
+      return implementationClassModifiedForCaptureOnly;
    }
 
    private List<Capture> findCaptures(Class<?> mockedClass)

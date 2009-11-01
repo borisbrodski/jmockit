@@ -36,7 +36,7 @@ final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
 
    boolean captureNewInstanceForApplicableMockField(Object fieldOwner, Object mock)
    {
-      boolean capturedImplementationClassNotMocked = captureNewInstance(mock);
+      boolean implementationClassModifiedForCaptureOnly = captureNewInstance(mock);
 
       if (captureFound != null) {
          Field mockField = captureFound.typeMetadata.field;
@@ -45,7 +45,7 @@ final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
          TestRun.getExecutingTest().substituteMock(previousInstance, mock);
       }
 
-      return capturedImplementationClassNotMocked;
+      return implementationClassModifiedForCaptureOnly;
    }
 
    void resetCaptureCount(Field mockField)

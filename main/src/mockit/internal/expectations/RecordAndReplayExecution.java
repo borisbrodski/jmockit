@@ -176,8 +176,7 @@ public final class RecordAndReplayExecution
       }
 
       if (TestRun.getCurrentTestInstance() != null) {
-         LocalFieldTypeRedefinitions fieldTypeRedefs =
-            instance == null ? null : instance.redefinitions;
+         FieldTypeRedefinitions fieldTypeRedefs = instance == null ? null : instance.redefinitions;
 
          if (
             fieldTypeRedefs != null &&
@@ -186,18 +185,17 @@ public final class RecordAndReplayExecution
             return true;
          }
 
-         CaptureOfNewInstancesForParameters paramTypeRedefs =
+         CaptureOfNewInstancesForParameters paramTypeCaptures =
             TestRun.getExecutingTest().getCaptureOfNewInstancesForParameters();
 
          if (
-            paramTypeRedefs != null &&
-            paramTypeRedefs.captureNewInstanceForApplicableMockParameter(mock)
+            paramTypeCaptures != null &&
+            paramTypeCaptures.captureNewInstanceForApplicableMockParameter(mock)
          ) {
             return true;
          }
 
-         SharedFieldTypeRedefinitions sharedFieldTypeRedefs =
-            TestRun.getSharedFieldTypeRedefinitions();
+         FieldTypeRedefinitions sharedFieldTypeRedefs = TestRun.getSharedFieldTypeRedefinitions();
 
          if (sharedFieldTypeRedefs.captureNewInstanceForApplicableMockField(mock)) {
             return true;
