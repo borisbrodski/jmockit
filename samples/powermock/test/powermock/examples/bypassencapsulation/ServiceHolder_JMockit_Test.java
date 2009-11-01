@@ -28,10 +28,14 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 import org.junit.*;
+import org.junit.runner.*;
+
+import mockit.integration.junit4.*;
 
 import static mockit.Deencapsulation.*;
 
-public class ServiceHolder_JMockit_Test
+@RunWith(JMockit.class)
+public final class ServiceHolder_JMockit_Test
 {
    @Test
    public void testAddService()
