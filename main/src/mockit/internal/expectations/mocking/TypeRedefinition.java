@@ -32,6 +32,7 @@ import org.objectweb.asm2.*;
 import mockit.*;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 class TypeRedefinition
@@ -146,6 +147,7 @@ class TypeRedefinition
    private Object createNewInstanceOfTargetClass()
    {
       ExpectationsModifier modifier = redefineMethodsAndConstructorsInTargetType();
+      TestRun.exitNoMockingZone();
 
       try {
          if (isAbstract(targetClass.getModifiers())) {
@@ -161,6 +163,9 @@ class TypeRedefinition
          Utilities.filterStackTrace(e.getCause());
          e.printStackTrace();
          throw e;
+      }
+      finally {
+         TestRun.enterNoMockingZone();
       }
 
       return null;

@@ -24,6 +24,8 @@
  */
 package mockit.internal.expectations.mocking;
 
+import java.util.*;
+
 import static java.lang.reflect.Modifier.*;
 
 import org.objectweb.asm2.*;
@@ -39,6 +41,12 @@ import mockit.internal.util.*;
 final class ExpectationsModifier extends BaseClassModifier
 {
    private static final int METHOD_ACCESS_MASK = ACC_SYNTHETIC + ACC_ABSTRACT;
+   private static final Type VOID_TYPE = Type.getType("Ljava/lang/Void;");
+
+   private static final Map<String, String> DEFAULT_FILTERS = new HashMap<String, String>()
+   {{
+      put("java/lang/System", "arraycopy getSecurityManager");
+   }};
 
    private final MockingConfiguration mockingCfg;
    private final boolean mockingCfgNullOrEmpty;
@@ -48,6 +56,7 @@ final class ExpectationsModifier extends BaseClassModifier
    private String className;
    private String baseClassNameForCapturedInstanceMethods;
    private boolean isProxy;
+   private String defaultFilters;
 
    ExpectationsModifier(
       ClassLoader classLoader, ClassReader classReader, MockingConfiguration mockingConfiguration,
@@ -78,7 +87,15 @@ final class ExpectationsModifier extends BaseClassModifier
       super.visit(version, access, name, signature, superName, interfaces);
 
       isProxy = "java/lang/reflect/Proxy".equals(superName);
-      className = isProxy ? interfaces[0] : name;
+
+      if (isProxy) {
+         className = interfaces[0];
+         defaultFilters = null;
+      }
+      else {
+         className = name;
+         defaultFilters = DEFAULT_FILTERS.get(name);
+      }
    }
 
    @Override
@@ -90,7 +107,7 @@ final class ExpectationsModifier extends BaseClassModifier
       if (
          (access & METHOD_ACCESS_MASK) != 0 || "<clinit>".equals(name) ||
          isProxy && isConstructorOrSystemMethodNotToBeMocked(name, desc) ||
-         !visitingConstructor && isMethodFromCapturedClassNotToBeMocked(access)
+         !visitingConstructor && isMethodNotToBeMocked(access, name)
       ) {
          // Copies original without modifications when it's synthetic, abstract, a class
          // initialization block, belongs to a Proxy subclass, or is a static or private method in
@@ -107,7 +124,9 @@ final class ExpectationsModifier extends BaseClassModifier
          return super.visitMethod(access, name, desc, signature, exceptions);
       }
 
-      if (isNative(access) && !Startup.isJava6OrLater()) {
+      boolean visitingNativeMethod = isNative(access);
+
+      if (visitingNativeMethod && !Startup.isJava6OrLater()) {
          throw new IllegalArgumentException(
             "Mocking of native methods not supported under JDK 1.5; please filter out method \"" +
             name + "\", or run under JDK 1.6+");
@@ -130,14 +149,20 @@ final class ExpectationsModifier extends BaseClassModifier
       if (useMockingBridge) {
          generateCallToMockingBridge(
             MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, null);
-      }
-      else {
-         generateDirectCallToRecordOrReplay(internalClassName, access, name, desc);
+         generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
+
+         if (visitingNativeMethod) {
+            generateEmptyImplementation(desc);
+            return null;
+         }
+         else {
+            return new MethodAdapter(mw);
+         }
       }
 
+      generateDirectCallToRecordOrReplay(internalClassName, access, name, desc);
       generateReturnWithObjectAtTopOfTheStack(desc);
       mw.visitMaxs(1, 0);
-
       return null;
    }
 
@@ -155,6 +180,13 @@ final class ExpectationsModifier extends BaseClassModifier
          "hashCode".equals(name) && "()I".equals(desc) ||
          "toString".equals(name) && "()Ljava/lang/String;".equals(desc) ||
          "finalize".equals(name) && "()V".equals(desc);
+   }
+
+   private boolean isMethodNotToBeMocked(int access, String name)
+   {
+      return
+         isMethodFromCapturedClassNotToBeMocked(access) ||
+         defaultFilters != null && defaultFilters.contains(name);
    }
 
    private boolean isMethodFromCapturedClassNotToBeMocked(int access)
@@ -231,6 +263,20 @@ final class ExpectationsModifier extends BaseClassModifier
          // the argument value
          mw.visitInsn(ACONST_NULL);
       }
+   }
+
+   private void generateDecisionBetweenReturningOrContinuingToRealImplementation(String desc)
+   {
+      mw.visitInsn(DUP);
+      mw.visitLdcInsn(VOID_TYPE);
+
+      Label startOfRealImplementation = new Label();
+      mw.visitJumpInsn(IF_ACMPEQ, startOfRealImplementation);
+
+      generateReturnWithObjectAtTopOfTheStack(desc);
+
+      mw.visitLabel(startOfRealImplementation);
+      mw.visitInsn(POP);
    }
 
    String getRedefinedConstructorDesc()

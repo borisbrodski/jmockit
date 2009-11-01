@@ -40,8 +40,9 @@ public final class MockingBridge implements InvocationHandler
    public static final int EXIT_REENTRANT_MOCK = 6;
    public static final int FIRST_TARGET_WITH_EXTRA_ARG = CALL_INSTANCE_MOCK;
 
+   private static final Object[] EMPTY_ARGS = {};
+
    private Integer targetId;
-   private Integer mockAccess;
    private String mockClassInternalName;
    private String mockName;
    private String mockDesc;
@@ -50,38 +51,55 @@ public final class MockingBridge implements InvocationHandler
 
    public Object invoke(Object mocked, Method method, Object[] args) throws Throwable
    {
-      extractIndividualDataItems(args);
-
-      if (targetId == RECORD_OR_REPLAY) {
-         return
-            RecordAndReplayExecution.recordOrReplay(
-               mocked, mockAccess, mockClassInternalName, mockName + mockDesc, mockArgs);
-      }
+      targetId = (Integer) args[0];
+      mockClassInternalName = (String) args[2];
+      mockIndex = targetId < FIRST_TARGET_WITH_EXTRA_ARG ? -1 : (Integer) args[5];
 
       if (targetId == UPDATE_MOCK_STATE) {
          return TestRun.updateMockState(mockClassInternalName, mockIndex);
       }
-
-      if (targetId == EXIT_REENTRANT_MOCK) {
-        TestRun.exitReentrantMock(mockClassInternalName, mockIndex);
-        return null;
+      else if (targetId == EXIT_REENTRANT_MOCK) {
+         TestRun.exitReentrantMock(mockClassInternalName, mockIndex);
+         return null;
       }
 
-      return callMock(mocked);
+      if (TestRun.isInsideNoMockingZone()) {
+         return Void.class;
+      }
+
+      TestRun.enterNoMockingZone();
+
+      try {
+         extractMockMethodAndArguments(args);
+
+         if (targetId == RECORD_OR_REPLAY) {
+            Integer mockAccess = (Integer) args[1];
+            return
+               RecordAndReplayExecution.recordOrReplay(
+                  mocked, mockAccess, mockClassInternalName, mockName + mockDesc, mockArgs);
+         }
+
+         return callMock(mocked);
+      }
+      finally {
+         TestRun.exitNoMockingZone();
+      }
    }
 
-   private void extractIndividualDataItems(Object[] args)
+   private void extractMockMethodAndArguments(Object[] args)
    {
-      int i = 0;
-      targetId = (Integer) args[i++];
-      mockAccess = (Integer) args[i++];
-      mockClassInternalName = (String) args[i++];
-      mockName = (String) args[i++];
-      mockDesc = (String) args[i++];
-      mockIndex = targetId < FIRST_TARGET_WITH_EXTRA_ARG ? -1 : (Integer) args[i++];
+      mockName = (String) args[3];
+      mockDesc = (String) args[4];
 
-      mockArgs = new Object[args.length - i];
-      System.arraycopy(args, i, mockArgs, 0, mockArgs.length);
+      int i = targetId < FIRST_TARGET_WITH_EXTRA_ARG ? 5 : 6;
+
+      if (args.length > i) {
+         mockArgs = new Object[args.length - i];
+         System.arraycopy(args, i, mockArgs, 0, mockArgs.length);
+      }
+      else {
+         mockArgs = EMPTY_ARGS;
+      }
    }
 
    private Object callMock(Object mocked)

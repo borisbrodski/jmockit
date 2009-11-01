@@ -45,6 +45,7 @@ public final class TestRun
    private Class<?> currentTestClass;
    private Object currentTestInstance;
    private boolean runningTestMethod;
+   private int noMockingCount;
 
    private CaptureOfImplementationsForTestClass captureOfSubtypes;
    private SharedFieldTypeRedefinitions sharedFieldTypeRedefinitions;
@@ -60,6 +61,11 @@ public final class TestRun
    public static Class<?> getCurrentTestClass() { return instance.currentTestClass; }
 
    public static Object getCurrentTestInstance() { return instance.currentTestInstance; }
+
+   public static boolean isInsideNoMockingZone()
+   {
+      return instance.noMockingCount > 0;
+   }
 
    public static boolean isRunningTestCode(ProtectionDomain protectionDomain)
    {
@@ -111,6 +117,16 @@ public final class TestRun
    public static void setRunningTestMethod(boolean runningTestMethod)
    {
       instance.runningTestMethod = runningTestMethod;
+   }
+
+   public static void enterNoMockingZone()
+   {
+      instance.noMockingCount++;
+   }
+
+   public static void exitNoMockingZone()
+   {
+      instance.noMockingCount--;
    }
 
    public static void setRunningIndividualTest(Object testInstance)

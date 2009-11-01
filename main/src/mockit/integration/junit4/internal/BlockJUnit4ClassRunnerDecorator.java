@@ -114,6 +114,7 @@ public final class BlockJUnit4ClassRunnerDecorator extends TestRunnerDecorator
          nothingThrownByTest = true;
       }
       finally {
+         TestRun.enterNoMockingZone();
          AssertionError expectationsFailure = RecordAndReplayExecution.endCurrentReplayIfAny();
 
          try {
@@ -123,6 +124,7 @@ public final class BlockJUnit4ClassRunnerDecorator extends TestRunnerDecorator
          }
          finally {
             savePoint.rollback();
+            TestRun.exitNoMockingZone();
          }
 
          if (nothingThrownByTest && expectationsFailure != null) {

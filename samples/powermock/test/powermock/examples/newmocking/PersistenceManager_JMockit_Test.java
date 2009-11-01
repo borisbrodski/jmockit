@@ -36,16 +36,12 @@ import mockit.integration.junit4.*;
 @RunWith(JMockit.class)
 public final class PersistenceManager_JMockit_Test
 {
-   @Ignore @Test
+   @Test
    public void testCreateDirectoryStructure_ok()
    {
       final String path = "directoryPath";
       PersistenceManager tested = new PersistenceManager();
 
-      // TODO: see related TODO in JavadocExamples_JMockit_Test; here, in addition to what is
-      // specified there, we need that any call to the mocked class coming from inside JMockit
-      // itself (or from the JDK, JUnit, TestNG, and perhaps any other jar file) always execute the
-      // original method/constructor bytecode, without affecting the test
       new Expectations(File.class)
       {
          {
@@ -58,7 +54,7 @@ public final class PersistenceManager_JMockit_Test
       assertTrue(tested.createDirectoryStructure(path));
    }
 
-   @Ignore @Test
+   @Test
    public void testCreateDirectoryStructure_usingCreateMockAndExpectNew()
    {
       final String path = "directoryPath";
@@ -77,7 +73,7 @@ public final class PersistenceManager_JMockit_Test
       assertTrue(tested.createDirectoryStructure(path));
    }
 
-   @Ignore @Test(expected = IllegalArgumentException.class)
+   @Test(expected = IllegalArgumentException.class)
    public void testCreateDirectoryStructure_fails()
    {
       final String path = "directoryPath";

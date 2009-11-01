@@ -24,7 +24,10 @@
  */
 package mockit;
 
+import java.io.*;
+
 import mockit.integration.junit4.*;
+
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.junit.runner.*;
@@ -303,5 +306,36 @@ public final class ExpectationsTest
       Expectations.assertSatisfied();
 
       assertTrue(System.nanoTime() > 0);
+   }
+
+   @Test
+   public void mockSystemGetenvMethod()
+   {
+      new Expectations()
+      {
+         System mockedSystem;
+
+         {
+            System.getenv("envVar"); returns(".");
+         }
+      };
+
+      assertEquals(".", System.getenv("envVar"));
+   }
+
+   @Test
+   public void mockConstructorsInJREClassHierarchies() throws Exception
+   {
+      new Expectations()
+      {
+         final FileWriter fileWriter;
+         PrintWriter printWriter;
+
+         {
+            fileWriter = new FileWriter("no.file");
+         }
+      };
+
+      new FileWriter("no.file");
    }
 }
