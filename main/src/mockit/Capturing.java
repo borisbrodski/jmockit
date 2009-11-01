@@ -93,7 +93,6 @@ public @interface Capturing
     * reassigned.
     */
    int maxInstances() default Integer.MAX_VALUE;
-   // TODO: implement this attribute
 
    /**
     * One or more implementation class filters.
