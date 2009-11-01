@@ -161,21 +161,31 @@ public final class OrderedVerificationPhase extends VerificationPhase
             "Unexpected invocations after" + currentExpectation.expectedInvocation);
       }
 
-      verifyMultipleIterations();
+      AssertionError error = verifyMultipleIterations();
+
+      if (error != null) {
+         return error;
+      }
 
       return super.endVerification();
    }
 
-   private void verifyMultipleIterations()
+   private AssertionError verifyMultipleIterations()
    {
       int n = expectationsVerified.size();
 
       for (int i = 1; i < numberOfIterations; i++) {
-         verifyNextIterationOfWholeBlockOfInvocations(n);
+         AssertionError error = verifyNextIterationOfWholeBlockOfInvocations(n);
+
+         if (error != null) {
+            return error;
+         }
       }
+
+      return null;
    }
 
-   private void verifyNextIterationOfWholeBlockOfInvocations(int n)
+   private AssertionError verifyNextIterationOfWholeBlockOfInvocations(int n)
    {
       for (int i = 0; i < n; i++) {
          Expectation verified = expectationsVerified.get(i);
@@ -187,8 +197,10 @@ public final class OrderedVerificationPhase extends VerificationPhase
             invocation.invocationArgs);
 
          if (recordAndReplay.errorThrown != null) {
-            throw recordAndReplay.errorThrown;
+            return recordAndReplay.errorThrown;
          }
       }
+
+      return null;
    }
 }
