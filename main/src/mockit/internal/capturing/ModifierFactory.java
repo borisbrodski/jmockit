@@ -28,5 +28,5 @@ import org.objectweb.asm2.*;
 
 public interface ModifierFactory
 {
-   ClassWriter createModifier(ClassLoader classLoader, ClassReader cr);
+   ClassWriter createModifier(ClassLoader classLoader, ClassReader cr, String capturedTypeDesc);
 }

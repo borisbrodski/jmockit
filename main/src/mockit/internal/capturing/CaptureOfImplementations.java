@@ -35,35 +35,31 @@ import org.objectweb.asm2.*;
 public abstract class CaptureOfImplementations implements ModifierFactory
 {
    private final List<CaptureTransformer> captureTransformers = new ArrayList<CaptureTransformer>();
-   protected String baseTypeDesc;
 
    protected CaptureOfImplementations() {}
 
    public final void makeSureAllSubtypesAreModified(Class<?> baseType, Capturing capturing)
    {
-      if (baseType != null) {
-         baseTypeDesc = baseType.getName().replace('.', '/');
-      }
-
+      String baseTypeDesc = baseType == null ? null : baseType.getName().replace('.', '/');
       CapturedType captureMetadata = new CapturedType(baseType, capturing);
       Class<?>[] classesLoaded =
          Startup.instrumentation().getInitiatedClasses(getClass().getClassLoader());
 
       for (Class<?> aClass : classesLoaded) {
          if (captureMetadata.isToBeCaptured(aClass)) {
-            redefineClass(aClass);
+            redefineClass(aClass, baseTypeDesc);
          }
       }
 
       createCaptureTransformer(captureMetadata);
    }
 
-   private void redefineClass(Class<?> realClass)
+   private void redefineClass(Class<?> realClass, String baseTypeDesc)
    {
       // TODO: a mocked field/parameter type will be redefined twice when it could be redefined
       // once, already considering capture in the first redefinition; optimize the second one away
       ClassReader classReader = new ClassFile(realClass, true).getReader();
-      ClassWriter modifier = createModifier(realClass.getClassLoader(), classReader);
+      ClassWriter modifier = createModifier(realClass.getClassLoader(), classReader, baseTypeDesc);
       classReader.accept(modifier, false);
       byte[] modifiedClass = modifier.toByteArray();
 

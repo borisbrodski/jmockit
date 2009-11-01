@@ -59,10 +59,10 @@ abstract class CaptureOfNewInstances extends CaptureOfImplementations
 
    CaptureOfNewInstances() {}
 
-   public final ClassWriter createModifier(ClassLoader classLoader, ClassReader cr)
+   public final ClassWriter createModifier(ClassLoader cl, ClassReader cr, String baseTypeDesc)
    {
       ExpectationsModifier modifier =
-         new ExpectationsModifier(classLoader, cr, mockingCfg, mockConstructorInfo);
+         new ExpectationsModifier(cl, cr, mockingCfg, mockConstructorInfo);
       modifier.setClassNameForInstanceMethods(baseTypeDesc);
       return modifier;
    }

@@ -91,7 +91,7 @@ final class CaptureTransformer implements ClassFileTransformer
 
    private byte[] modifyAndRegisterClass(ClassLoader loader, String className, ClassReader cr)
    {
-      ClassWriter modifier = modifierFactory.createModifier(loader, cr);
+      ClassWriter modifier = modifierFactory.createModifier(loader, cr, capturedType);
       cr.accept(modifier, false);
 
       TestRun.mockFixture().addTransformedClass(className, cr.b);
