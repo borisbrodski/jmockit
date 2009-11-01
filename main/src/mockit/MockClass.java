@@ -45,8 +45,15 @@ public @interface MockClass
    /**
     * The real class whose methods/constructors will be redefined with the corresponding
     * methods/constructors in the mock class.
+    * <p/>
+    * Alternatively, the {@code Class} object provided can point to an interface.
+    * In that case, a proxy implementation class will be created and then used as the target class
+    * for mocking.
+    * The only way for a test to use such a mocked class will be through the proxy instance returned
+    * by {@link Mockit#setUpMock(Object)}, so it only makes sense to use an interface for this
+    * attribute when the mock class is set up through that method.
     */
-   Class<?> realClass(); // TODO: add support for interfaces, capturing all implementations
+   Class<?> realClass();
 
    /**
     * One or more stubbing filters which specify the set of methods and constructors in the real
