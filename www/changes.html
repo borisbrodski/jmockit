@@ -11,7 +11,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.992 (November ??, 2009):</p>
+<p>Release 0.992 (November 8, 2009):</p>
 <ul>
    <li>
       Fixed an issue in the Maven 2 project file (<code>pom.xml</code>) for
@@ -24,6 +24,15 @@
       accepts a <code>Class</code> object for the mock class, instead of only an instance of the
       mock class. This should avoid confusion with the <code>Mockit.setUpMocks(Object...)</code>
       method, which always accepted both ways of passing the mock class.
+   </li>
+   <li>
+      Enhancement: when using the Expectations API to mock JRE classes (for example,
+      <code>java.lang.System</code> or <code>java.io.InputStreamReader</code>), all methods can
+      safely be mocked even if JMockit itself or other parts of the JRE need to execute the original
+      code (see <a href="http://code.google.com/p/jmockit/issues/detail?id=2">issue 2</a>).
+   </li>
+   <li>
+      Fixed a couple of bugs with the <em>capturing</em> of new instances through mock fields.
    </li>
 </ul>
 
