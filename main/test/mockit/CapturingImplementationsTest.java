@@ -69,23 +69,17 @@ public final class CapturingImplementationsTest extends JMockitTest
 
    static final class ServiceImpl implements Service
    {
-      public int doSomething()
-      {
-         return 1;
-      }
+      public int doSomething() { return 1; }
    }
 
    @Test
    public void captureImplementationUsingMockField()
    {
-      ServiceImpl service = new ServiceImpl();
+      Service service = new ServiceImpl();
 
       new Expectations()
       {
-         // TODO: make it work for strict mocks as well
-         @NonStrict
-         @Capturing
-         Service mock;
+         @Capturing Service mock;
 
          {
             mock.doSomething();
@@ -98,7 +92,7 @@ public final class CapturingImplementationsTest extends JMockitTest
    }
 
    @Test
-   public void captureImplementationUsingMockParameter(@NonStrict @Capturing final Service mock)
+   public void captureImplementationUsingMockParameter(@Capturing final Service mock)
    {
       ServiceImpl service = new ServiceImpl();
 
@@ -121,18 +115,12 @@ public final class CapturingImplementationsTest extends JMockitTest
 
    static final class ServiceImpl2 implements AnotherService
    {
-      public int doSomethingElse()
-      {
-         return 2;
-      }
+      public int doSomethingElse() { return 2; }
    }
 
    static final class ServiceImpl3 implements AnotherService
    {
-      public int doSomethingElse()
-      {
-         return 3;
-      }
+      public int doSomethingElse() { return 3; }
    }
 
    @Test
@@ -151,13 +139,11 @@ public final class CapturingImplementationsTest extends JMockitTest
 
       new Expectations()
       {
-         @NonStrict
-         @Capturing(classNames = ".+ServiceImpl3", inverse = true)
+         @NonStrict @Capturing(classNames = ".+ServiceImpl3", inverse = true)
          AnotherService mock;
 
          {
-            mock.doSomethingElse();
-            returns(3);
+            mock.doSomethingElse(); returns(3);
          }
       };
 
@@ -169,12 +155,10 @@ public final class CapturingImplementationsTest extends JMockitTest
    {
       new Expectations()
       {
-         @Mocked(capture = 2)
-         AnotherService mock;
+         @Mocked(capture = 2) AnotherService mock;
 
          {
-            mock.doSomethingElse();
-            returns(5, 6);
+            mock.doSomethingElse(); returns(5, 6);
          }
       };
 
@@ -190,10 +174,7 @@ public final class CapturingImplementationsTest extends JMockitTest
    static final class DefaultServiceImpl extends AbstractService
    {
       @Override
-      protected boolean doSomething()
-      {
-         return true;
-      }
+      protected boolean doSomething() { return true; }
    }
 
    @Test
@@ -214,15 +195,13 @@ public final class CapturingImplementationsTest extends JMockitTest
    @Test
    public void captureGeneratedMockSubclass(@Capturing final AbstractService mock1)
    {
-      new Expectations()
+      new NonStrictExpectations()
       {
          AbstractService mock2;
 
          {
-            onInstance(mock1).doSomething();
-            returns(true);
-            onInstance(mock2).doSomething();
-            returns(true);
+            onInstance(mock1).doSomething(); returns(true);
+            onInstance(mock2).doSomething(); returns(true);
             endRecording();
 
             assertTrue(mock1.doSomething());
