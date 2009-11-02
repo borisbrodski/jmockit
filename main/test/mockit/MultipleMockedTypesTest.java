@@ -227,7 +227,7 @@ public final class MultipleMockedTypesTest
 
    @Test
    public void invocationsOnCapturedImplementationsOfInterfaces(
-      @Capturing Callable<String> callable) throws Exception
+      @Capturing final Callable<String> callable) throws Exception
    {
       new NonStrictExpectations()
       {
@@ -243,12 +243,7 @@ public final class MultipleMockedTypesTest
       new Verifications()
       {
          {
-            // TODO: callable.call(); should work here, but doesn't because the type parameter
-            // (String) is "erased" from the bytecode, resulting in "call()java/lang/Object;"
-            new Callable<String>()
-            {
-               public String call() { return null; }
-            }.call();
+            callable.call();
          }
       };
    }

@@ -27,6 +27,8 @@ package mockit.internal.expectations;
 import java.lang.reflect.*;
 import java.util.*;
 
+import org.objectweb.asm2.Type;
+
 import mockit.internal.util.*;
 
 public class ExpectedInvocation
@@ -93,8 +95,56 @@ public class ExpectedInvocation
    final boolean isMatch(Object replayInstance, String invokedClassDesc, String invokedMethod)
    {
       return
-         invokedMethod.equals(methodNameAndDesc) && invokedClassDesc.equals(classDesc) &&
+         invokedClassDesc.equals(classDesc) && isMatchingMethod(invokedMethod) &&
          (isConstructor || isEquivalentInstance(replayInstance));
+   }
+
+   private boolean isMatchingMethod(String invokedMethod)
+   {
+      int i = 0;
+
+      // Will return false if the method names or parameters are different:
+      while (true) {
+         char c = methodNameAndDesc.charAt(i);
+
+         if (c != invokedMethod.charAt(i)) {
+            return false;
+         }
+
+         i++;
+
+         if (c == ')') {
+            break;
+         }
+      }
+
+      int n = invokedMethod.length();
+
+      if (n == methodNameAndDesc.length()) {
+         int j = i;
+
+         // Given return types of same length, will return true if they are identical:
+         while (true) {
+            char c = methodNameAndDesc.charAt(j);
+
+            if (c != invokedMethod.charAt(j)) {
+               break;
+            }
+
+            j++;
+
+            if (j == n) {
+               return true;
+            }
+         }
+      }
+
+      // At this point the methods are known to differ only in return type, so check if the return
+      // type of the recorded one is assignable to the return type of the one invoked:
+      Type rt1 = Type.getType(methodNameAndDesc.substring(i));
+      Type rt2 = Type.getType(invokedMethod.substring(i));
+
+      return Utilities.getClassForType(rt2).isAssignableFrom(Utilities.getClassForType(rt1));
    }
 
    private boolean isEquivalentInstance(Object replayInstance)
