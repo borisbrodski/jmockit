@@ -38,8 +38,8 @@ public final class AlertService_JMockit_Test extends JMockitTest
    private Message alert2;
    private List<Message> alerts;
 
-   @Mocked private SchedulerService mockSchedulerService;
-   @Mocked private MessageService mockMessageService;
+   @Mocked SchedulerService mockSchedulerService;
+   @Mocked MessageService mockMessageService;
 
    @Before
    public void init()
@@ -51,11 +51,11 @@ public final class AlertService_JMockit_Test extends JMockitTest
    }
 
    @Test
-   public void testSendScheduledAlerts()
+   public void sendScheduledAlerts()
    {
       new NonStrictExpectations()
       {{
-         mockSchedulerService.getScheduledAlerts(withAny(), withAny(0), withAny(false));
+         mockSchedulerService.getScheduledAlerts(withAny(), withEqual(1), withAny(false));
          returns(alerts);
       }};
 
@@ -63,8 +63,113 @@ public final class AlertService_JMockit_Test extends JMockitTest
 
       new Verifications()
       {{
+         mockMessageService.sendMessage(alert2);
+         mockMessageService.sendMessage(alert1);
+      }};
+   }
+
+   @Test
+   public void sendScheduledAlertsInProperSequence()
+   {
+      new NonStrictExpectations()
+      {{
+         mockSchedulerService.getScheduledAlerts(withAny(), withEqual(1), withAny(false));
+         returns(alerts);
+      }};
+
+      alertService.sendScheduledAlerts();
+
+      new VerificationsInOrder()
+      {{
          mockMessageService.sendMessage(alert1);
          mockMessageService.sendMessage(alert2);
       }};
+   }
+
+   @Test
+   public void sendNothingWhenNoAlertsAvailable()
+   {
+      alertService.sendScheduledAlerts();
+
+      new Verifications()
+      {
+         {
+            mockMessageService.sendMessage((Message) withAny()); repeats(0);
+         }
+      };
+   }
+
+   @Test
+   public void sendNothingWhenNoAlertsAvailable_usingFullVerifications()
+   {
+      alertService.sendScheduledAlerts();
+
+      new FullVerifications()
+      {
+         {
+            mockSchedulerService.getScheduledAlerts(withAny(), withAny(0), withAny(false));
+         }
+      };
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void attemptToGetScheduledAlertsWithInvalidArguments()
+   {
+      new Expectations()
+      {
+         {
+            mockSchedulerService.getScheduledAlerts("123", 1, true);
+            throwsException(new IllegalArgumentException());
+         }
+      };
+
+      alertService.sendScheduledAlerts();
+   }
+
+   @Test(expected = Exception.class)
+   public void recordConsecutiveInvocationsToSameMethodWithSameArguments()
+   {
+      new Expectations()
+      {
+         {
+            mockSchedulerService.getScheduledAlerts(null, 0, true); returns(alerts);
+            mockSchedulerService.getScheduledAlerts(null, 0, true); throwsException(new Exception());
+         }
+      };
+
+      assertEquals(alerts, mockSchedulerService.getScheduledAlerts(null, 0, true));
+      mockSchedulerService.getScheduledAlerts(null, 0, true);
+   }
+
+   @Test
+   public void specifyingCustomMockBehavior()
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mockSchedulerService.getScheduledAlerts("123", 1, true);
+            returns(new Delegate()
+            {
+               List<Message> getScheduledAlerts(Object arg0, int arg1, boolean arg2)
+               {
+                  assertEquals("123", arg0);
+                  assertEquals(1, arg1);
+                  assertEquals(true, arg2);
+
+                  return Arrays.asList(alert2);
+               }
+            });
+         }
+      };
+
+      alertService.sendScheduledAlerts();
+
+      new Verifications()
+      {
+         {
+            mockMessageService.sendMessage(alert1); repeats(0);
+            mockMessageService.sendMessage(alert2);
+         }
+      };
    }
 }
