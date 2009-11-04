@@ -95,19 +95,6 @@ public final class ExpectationsWithArgMatchersTest
    }
 
    @Test(expected = AssertionError.class)
-   public void expectUsingIncompleteMatchers()
-   {
-      new Expectations()
-      {
-         {
-            mock.simpleOperation(withEqual(1), "", null);
-         }
-      };
-
-      mock.simpleOperation(1, "", null);
-   }
-
-   @Test(expected = AssertionError.class)
    public void expectInvocationWithDifferentThanExpectedProxyArgument()
    {
       new Expectations()
