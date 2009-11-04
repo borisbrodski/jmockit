@@ -55,8 +55,7 @@ public final class AlertService_JMockit_Test extends JMockitTest
    {
       new NonStrictExpectations()
       {{
-         mockSchedulerService.getScheduledAlerts(null, 1, anyBoolean);
-         returns(alerts);
+         mockSchedulerService.getScheduledAlerts(null, 1, anyBoolean); returns(alerts);
       }};
 
       alertService.sendScheduledAlerts();
@@ -73,8 +72,7 @@ public final class AlertService_JMockit_Test extends JMockitTest
    {
       new NonStrictExpectations()
       {{
-         mockSchedulerService.getScheduledAlerts(withAny(), withEqual(1), withAny(false));
-         returns(alerts);
+         mockSchedulerService.getScheduledAlerts(null, 1, anyBoolean); returns(alerts);
       }};
 
       alertService.sendScheduledAlerts();
@@ -94,7 +92,7 @@ public final class AlertService_JMockit_Test extends JMockitTest
       new Verifications()
       {
          {
-            mockMessageService.sendMessage((Message) withAny()); repeats(0);
+            mockMessageService.sendMessage((Message) any); repeats(0);
          }
       };
    }
@@ -107,7 +105,7 @@ public final class AlertService_JMockit_Test extends JMockitTest
       new FullVerifications()
       {
          {
-            mockSchedulerService.getScheduledAlerts(withAny(), withAny(0), withAny(false));
+            mockSchedulerService.getScheduledAlerts(null, anyInt, anyBoolean);
          }
       };
    }
