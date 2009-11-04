@@ -46,11 +46,41 @@ public abstract class TestOnlyPhase extends Phase
 
    public final void addArgMatcher(Matcher<?> matcher)
    {
+      createArgMatchersListIfNeeded();
+      argMatchers.add(matcher);
+   }
+
+   private void createArgMatchersListIfNeeded()
+   {
       if (argMatchers == null) {
          argMatchers = new ArrayList<Matcher<?>>();
       }
+   }
 
-      argMatchers.add(matcher);
+   final void addArgMatcher(int index, Matcher<?> matcher)
+   {
+      createArgMatchersListIfNeeded();
+
+      while (index > argMatchers.size()) {
+         argMatchers.add(null);
+      }
+
+      argMatchers.add(index, matcher);
+   }
+
+   final void moveArgMatcher(int originalMatcherIndex, int toIndex)
+   {
+      int i = 0;
+
+      for (int matchersFound = 0; matchersFound <= originalMatcherIndex; i++) {
+         if (argMatchers.get(i) != null) {
+            matchersFound++;
+         }
+      }
+
+      for (i--; i < toIndex; i++) {
+         argMatchers.add(i, null);
+      }
    }
 
    public abstract void handleInvocationCountConstraint(int minInvocations, int maxInvocations);

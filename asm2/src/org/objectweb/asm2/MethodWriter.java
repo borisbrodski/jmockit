@@ -37,7 +37,7 @@ package org.objectweb.asm2;
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
-class MethodWriter implements MethodVisitor {
+public class MethodWriter implements MethodVisitor {
 
     /**
      * Next method writer (see {@link ClassWriter#firstMethod firstMethod}).
@@ -229,7 +229,7 @@ class MethodWriter implements MethodVisitor {
      * Label#beginStackSize beginStackSize} of the current basic block plus
      * <tt>stackSize</tt>.
      */
-    private int stackSize;
+    public int stackSize;
 
     /**
      * The (relative) maximum stack size after the last visited instruction.

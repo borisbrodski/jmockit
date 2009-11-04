@@ -121,7 +121,8 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 
    private final class EndOfBlockModifier extends ClassWriter
    {
-      private MethodVisitor mw;
+      MethodVisitor mw;
+      String classDesc;
 
       EndOfBlockModifier(ClassReader cr) { super(cr, true); }
 
@@ -141,6 +142,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
                   superClassAnalyser.classExtendsInvocationsClass(superName)
                ) {
                   super.visit(version, access, name, signature, superName, interfaces);
+                  classDesc = name;
                   return; // go on and modify the class
                }
             }
@@ -160,7 +162,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
          mw = super.visitMethod(access, name, desc, signature, exceptions);
 
          if ("<init>".equals(name)) {
-            return new ConstructorModifier(mw);
+            return new ConstructorModifier((MethodWriter) mw, classDesc);
          }
 
          return mw;
@@ -169,18 +171,96 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 
    private static final class ConstructorModifier extends MethodAdapter
    {
-      ConstructorModifier(MethodVisitor mv) { super(mv); }
+      static final String CALLBACK_CLASS_DESC = "mockit/internal/expectations/ActiveInvocations";
+      final int[] matcherStacks = new int[20];
+      int matchers;
+      final MethodWriter mw;
+      final String fieldOwner;
+
+      ConstructorModifier(MethodWriter mw, String fieldOwner)
+      {
+         super(mw);
+         this.mw = mw;
+         this.fieldOwner = fieldOwner;
+      }
+
+      @Override
+      public void visitFieldInsn(int opcode, String owner, String name, String desc)
+      {
+         mw.visitFieldInsn(opcode, owner, name, desc);
+
+         if (opcode == GETSTATIC && fieldOwner.equals(owner) && name.startsWith("any")) {
+            mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "addArgMatcher", "()V");
+            matcherStacks[matchers++] = mw.stackSize;
+         }
+      }
+
+      @Override
+      public void visitMethodInsn(int opcode, String owner, String name, String desc)
+      {
+         if (opcode == INVOKEVIRTUAL && owner.equals(fieldOwner) && name.startsWith("with")) {
+            mw.visitMethodInsn(opcode, owner, name, desc);
+            matcherStacks[matchers++] = mw.stackSize;
+            return;
+         }
+
+         Type[] argTypes = Type.getArgumentTypes(desc);
+         int stackAfter = mw.stackSize - sumOfSizes(argTypes);
+
+         if (matchers > 0 && stackAfter < matcherStacks[0]) {
+            // TODO: remove the System.outs later
+//            System.out.print(stackAfter + " = " + name);
+            generateCallsToMoveArgMatchers(argTypes, stackAfter);
+            matchers = 0;
+         }
+
+         mw.visitMethodInsn(opcode, owner, name, desc);
+      }
+
+      private int sumOfSizes(Type[] argTypes)
+      {
+         int sum = 0;
+
+         for (Type argType : argTypes) {
+            sum += argType.getSize();
+         }
+
+         return sum;
+      }
+
+      private void generateCallsToMoveArgMatchers(Type[] argTypes, int initialStack)
+      {
+//         for (int i = 0; i < matchers; i++) {
+//            System.out.print((i == 0 ? "(" : ",") + matcherStacks[i]);
+//         }
+//
+//         System.out.println(")");
+         int stack = initialStack;
+         int nextMatcher = 0;
+
+         for (int i = 0; i < argTypes.length && nextMatcher < matchers; i++) {
+            if (stack + 1 == matcherStacks[nextMatcher]) {
+               if (nextMatcher < i) {
+                  mw.visitIntInsn(SIPUSH, nextMatcher);
+                  mw.visitIntInsn(SIPUSH, i);
+                  mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "moveArgMatcher", "(II)V");
+               }
+
+               nextMatcher++;
+            }
+
+            stack += argTypes[i].getSize();
+         }
+      }
 
       @Override
       public void visitInsn(int opcode)
       {
          if (opcode == RETURN) {
-            mv.visitMethodInsn(
-               INVOKESTATIC, "mockit/internal/expectations/RecordAndReplayExecution",
-               "endInvocations", "()V");
+            mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "endInvocations", "()V");
          }
 
-         super.visitInsn(opcode);
+         mw.visitInsn(opcode);
       }
    }
 

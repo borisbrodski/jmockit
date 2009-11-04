@@ -26,6 +26,8 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
+import org.hamcrest.core.*;
+
 import mockit.*;
 import mockit.internal.expectations.mocking.*;
 import mockit.internal.state.*;
@@ -33,6 +35,8 @@ import mockit.internal.util.*;
 
 public final class RecordAndReplayExecution
 {
+   private static final IsAnything MATCHES_ANYTHING = new IsAnything();
+
    private final LocalFieldTypeRedefinitions redefinitions;
    private final DynamicPartialMocking dynamicPartialMocking;
    final List<Expectation> expectations;
@@ -328,30 +332,41 @@ public final class RecordAndReplayExecution
       return error;
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
-   public static void endInvocations()
+   void addArgMatcher()
    {
-      TestRun.enterNoMockingZone();
+      TestOnlyPhase currentPhase = getCurrentTestOnlyPhase();
 
-      try {
-         RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(true);
-
-         if (instance != null) {
-            if (instance.verificationPhase == null) {
-               instance.endRecording();
-            }
-            else {
-               AssertionError error = instance.verificationPhase.endVerification();
-               instance.verificationPhase = null;
-
-               if (error != null) {
-                  throw error;
-               }
-            }
-         }
+      if (currentPhase != null) {
+         currentPhase.addArgMatcher(MATCHES_ANYTHING);
       }
-      finally {
-         TestRun.exitNoMockingZone();
+   }
+
+   TestOnlyPhase getCurrentTestOnlyPhase()
+   {
+      return recordPhase != null ? recordPhase : verificationPhase;
+   }
+
+   void moveArgMatcher(int originalMatcherIndex, int toIndex)
+   {
+      TestOnlyPhase currentPhase = getCurrentTestOnlyPhase();
+
+      if (currentPhase != null) {
+         currentPhase.moveArgMatcher(originalMatcherIndex, toIndex);
+      }
+   }
+
+   void endInvocations()
+   {
+      if (verificationPhase == null) {
+         endRecording();
+      }
+      else {
+         AssertionError error = verificationPhase.endVerification();
+         verificationPhase = null;
+
+         if (error != null) {
+            throw error;
+         }
       }
    }
 }

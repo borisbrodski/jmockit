@@ -41,6 +41,17 @@ import mockit.internal.util.*;
 @SuppressWarnings({"ClassWithTooManyMethods"})
 abstract class Invocations
 {
+   protected static final Object any = null;
+   protected static final String anyString = "";
+   protected static final Long anyLong = 0L;
+   protected static final Integer anyInt = 0;
+   protected static final Short anyShort = 0;
+   protected static final Byte anyByte = 0;
+   protected static final Boolean anyBoolean = false;
+   protected static final Character anyChar = '\0';
+   protected static final Double anyDouble = 0.0;
+   protected static final Float anyFloat = 0.0F;
+
    protected Invocations() {}
 
    abstract TestOnlyPhase getCurrentPhase();

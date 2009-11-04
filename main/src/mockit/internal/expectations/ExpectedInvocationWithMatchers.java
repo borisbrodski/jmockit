@@ -27,6 +27,7 @@ package mockit.internal.expectations;
 import java.util.*;
 
 import org.hamcrest.*;
+import org.hamcrest.core.*;
 
 final class ExpectedInvocationWithMatchers extends ExpectedInvocation
 {
@@ -68,21 +69,18 @@ final class ExpectedInvocationWithMatchers extends ExpectedInvocation
          varargsCount = replayVarArgs.length;
       }
 
-      int n = argCount + varargsCount - invocationArgMatchers.size();
+      int n = argCount + varargsCount;
 
-      if (n != 0) {
-         String pluralSuffix = n == 1 || n == -1 ? " " : "s ";
-         String errorMsg = n > 0 ?
-            "Missing " + n + " argument matcher" + pluralSuffix :
-            "Argument matcher" + pluralSuffix + invocationArgMatchers.subList(0, -n) +
-            " recorded in excess";
-
-         return new AssertionError(errorMsg + " in call to " + invokedMethodSignature());
-      }
-
-      for (int i = 0; i < invocationArgMatchers.size(); i++) {
+      for (int i = 0; i < n; i++) {
          Object actual = i < argCount ? replayArgs[i] : replayVarArgs[i - argCount];
-         Matcher<?> expected = invocationArgMatchers.get(i);
+         Matcher<?> expected =
+            i < invocationArgMatchers.size() ? invocationArgMatchers.get(i) : null;
+
+         if (expected == null) {
+            Object invocationArg = invocationArgs[i];
+            expected =
+               invocationArg == null ? new IsAnything() : new IsEqual<Object>(invocationArg);
+         }
 
          if (!expected.matches(actual)) {
             return argumentMismatchErrorMessage(i, expected, actual);

@@ -55,7 +55,7 @@ public final class AlertService_JMockit_Test extends JMockitTest
    {
       new NonStrictExpectations()
       {{
-         mockSchedulerService.getScheduledAlerts(withAny(), withEqual(1), withAny(false));
+         mockSchedulerService.getScheduledAlerts(null, 1, anyBoolean);
          returns(alerts);
       }};
 
