@@ -26,10 +26,10 @@
       method, which always accepted both ways of passing the mock class.
    </li>
    <li>
-      Enhancement: when using the Expectations API to mock JRE classes (for example,
-      <code>java.lang.System</code> or <code>java.io.InputStreamReader</code>), all methods can
-      safely be mocked even if JMockit itself or other parts of the JRE need to execute the original
-      code (see <a href="http://code.google.com/p/jmockit/issues/detail?id=2">issue 2</a>).
+      <strong>Enhancement</strong>: when using the Expectations API to mock JRE classes (for 
+      example, <code>java.lang.System</code> or <code>java.io.InputStreamReader</code>), all methods
+      can safely be mocked even if JMockit itself or other parts of the JRE need to execute the
+      original code (see <a href="http://code.google.com/p/jmockit/issues/detail?id=2">issue 2</a>).
    </li>
    <li>
       Fixed a couple of bugs with the <em>capturing</em> of new instances through mock fields.
@@ -38,6 +38,29 @@
       Enhancement: better support for <em>covariant return types</em>, so that an expectation
       recorded for a method with a more specific return type can be matched to an invocation with a
       less specific but compatible return type.
+   </li>
+   <li>
+      <strong>New features</strong> that improve the use of
+      <a href="tutorial/BehaviorBasedTesting.html#hamcrest">argument matching constraints</a>
+      with the Expectations/Verifications API:
+      <ol>
+         <li>
+            It is no longer necessary to specify matchers for <em>all</em> arguments in an
+            invocation.
+            Regular arguments will be matched on equality, as they would if no explicit matchers at
+            all were used.
+         </li>
+         <li>
+            Argument matching <em>fields</em> were added to the <code>mockit.Invocations</code> base
+            class; they are equivalent to the <code>T withAny()</code>/<code>T withAny(T)</code>
+            methods: <code>any</code>, <code>anyInt</code>, <code>anyBoolean</code>, etc.
+         </li>
+         <li>
+            The <code>null</code> reference can now be used to match any object reference, instead
+            of <code>withAny()</code> (or instead of the new <code>any</code> field), as long as
+            there is at least one explicit matcher specified for the invocation.
+         </li>
+      </ol>
    </li>
 </ul>
 
