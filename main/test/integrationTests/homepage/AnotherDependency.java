@@ -1,5 +1,5 @@
 /*
- * JMockit Core
+ * JMockit
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -26,7 +26,7 @@ package integrationTests.homepage;
 
 public final class AnotherDependency
 {
-   public void complexOperation(Object data)
+   public void complexOperation(int i, Object data)
    {
    }
 }

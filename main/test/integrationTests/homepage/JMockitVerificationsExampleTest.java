@@ -52,7 +52,7 @@ public class JMockitVerificationsExampleTest
       new Verifications()
       {
          {
-            anotherMock.complexOperation(withAny());
+            anotherMock.complexOperation(anyInt, null);
          }
       };
    }

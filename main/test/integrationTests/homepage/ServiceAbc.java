@@ -1,5 +1,5 @@
 /*
- * JMockit Core
+ * JMockit
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -37,6 +37,6 @@ public final class ServiceAbc
    public void doAnotherOperation(String s)
    {
       xyz.doSomething(s);
-      new AnotherDependency().complexOperation(new Object());
+      new AnotherDependency().complexOperation(1, new Object());
    }
 }

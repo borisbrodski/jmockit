@@ -657,13 +657,13 @@ public class JMockitExpectationsExampleTest
       };
 
       // In ServiceAbc#doAnotherOperationAbc(String s): "new DependencyXyz().doSomething(s);"
-      // and "new AnotherDependency().complexOperation(obj);".
+      // and "new AnotherDependency().complexOperation(1, obj);".
       new ServiceAbc().doAnotherOperation("test");
 
       new Verifications()
       {
          {
-            anotherMock.complexOperation(withAny());
+            anotherMock.complexOperation(<em>anyInt</em>, null);
          }
       };
    }
