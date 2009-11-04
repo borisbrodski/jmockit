@@ -41,15 +41,80 @@ import mockit.internal.util.*;
 @SuppressWarnings({"ClassWithTooManyMethods"})
 abstract class Invocations
 {
+   /**
+    * Matches any {@code Object} reference for the relevant parameter.
+    * Note that the use of this field will usually require a cast to the specific parameter type.
+    * If there is any other parameter for which an argument matching constraint can be specified,
+    * though, the {@code null} reference can be passed instead, as it will also match any
+    * reference during the replay phase.
+    *
+    * @see #anyInt
+    */
    protected static final Object any = null;
+
+   /**
+    * Matches any {@code String} value for the relevant parameter.
+    *
+    * @see #anyInt
+    */
    protected static final String anyString = "";
+
+   /**
+    * Matches any {@code long} or {@code Long} value for the relevant parameter.
+    *
+    * @see #anyInt
+    */
    protected static final Long anyLong = 0L;
+
+   /**
+    * Matches any {@code int} or {@code Integer} value for the relevant parameter.
+    * <p/>
+    * When used as argument for a method/constructor invocation in the recording or verification
+    * phase of a test, specifies the matching of <em>any</em> value passed as argument to
+    * corresponding invocations in the replay phase.
+    */
    protected static final Integer anyInt = 0;
+
+   /**
+    * Matches any {@code short} or {@code Short} value for the relevant parameter.
+    *
+    * @see #anyInt
+    */
    protected static final Short anyShort = 0;
+
+   /**
+    * Matches any {@code byte} or {@code Byte} value for the relevant parameter.
+    *
+    * @see #anyInt
+    */
    protected static final Byte anyByte = 0;
+
+   /**
+    * Matches any {@code boolean} or {@code Boolean} value for the relevant parameter.
+    *
+    * @see #anyInt
+    */
    protected static final Boolean anyBoolean = false;
+
+   /**
+    * Matches any {@code char} or {@code Character} value for the relevant parameter.
+    *
+    * @see #anyInt
+    */
    protected static final Character anyChar = '\0';
+
+   /**
+    * Matches any {@code double} or {@code Double} value for the relevant parameter.
+    *
+    * @see #anyInt
+    */
    protected static final Double anyDouble = 0.0;
+
+   /**
+    * Matches any {@code float} or {@code Float} value for the relevant parameter.
+    *
+    * @see #anyInt
+    */
    protected static final Float anyFloat = 0.0F;
 
    protected Invocations() {}
@@ -74,7 +139,7 @@ abstract class Invocations
     * @param argValue an arbitrary value of the proper type, necessary to provide a valid argument
     * to the invocation parameter
     *
-    * @return the given <code>argValue</code>
+    * @return the given {@code argValue</code>
     */
    protected final <T> T with(T argValue, Matcher<T> argumentMatcher)
    {
@@ -92,8 +157,8 @@ abstract class Invocations
     * This works like {@link #with(Object, org.hamcrest.Matcher)}, but attempting to extract the
     * argument value from the supplied argument matcher.
     *
-    * @return the value recorded inside the given argument matcher, or <code>null</code> if no such
-    * value could be determined
+    * @return the value recorded inside the given argument matcher, or {@code null} if no such value
+    * could be determined
     */
    protected final <T> T with(Matcher<T> argumentMatcher)
    {
@@ -138,6 +203,10 @@ abstract class Invocations
 
    /**
     * Same as {@link #withEqual(Object)}, but matching any argument value of the appropriate type.
+    * <p/>
+    * Consider using instead the "any" field appropriate to the parameter type: {@link #any},
+    * {@link #anyBoolean}, {@link #anyByte}, {@link #anyChar}, {@link #anyDouble},
+    * {@link #anyFloat}, {@link #anyInt}, {@link #anyLong}, {@link #anyShort}, {@link #anyString}.
     *
     * @param arg an arbitrary value which will match any argument value in the replay phase
     *
@@ -150,16 +219,13 @@ abstract class Invocations
    }
 
    /**
-    * When called as argument for an expected method/constructor call in the recording or
-    * verification phase of a test, creates a new matcher that will check if the given value is
+    * When called as argument for a method/constructor invocation in the recording or verification
+    * phase of a test, creates a new matcher that will check if the given value is
     * {@link Object#equals(Object) equal} to the corresponding invocation argument in the replay
     * phase.
     * <p/>
     * The matcher is added to the end of the list of argument matchers for the invocation being
     * recorded/verified. It cannot be reused for a different parameter.
-    * <p/>
-    * When a matcher is specified for one argument in an expected invocation, then a separate
-    * matcher <em>must</em> be specified for every other argument in that same invocation.
     * <p/>
     * For methods with a <strong>varargs</strong> parameter, a corresponding matcher must be
     * specified for each element in the varargs array passed in the replay phase.
@@ -170,7 +236,6 @@ abstract class Invocations
     */
    protected final <T> T withEqual(T arg)
    {
-      // TODO: implement discovery of which parameter is getting an argument with this "with" call
       //noinspection unchecked
       addMatcher(new IsEqual(arg));
       return arg;
@@ -214,8 +279,8 @@ abstract class Invocations
     * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay
     * phase is an instance of the same class as the given object.
     * <p/>
-    * Equivalent to a call "<code>withInstanceOf(object.getClass())</code>", except that it returns
-    * <code>object</code> instead of <code>null</code>.
+    * Equivalent to a call <code>withInstanceOf(object.getClass())</code>, except that it returns
+    * {@code object} instead of {@code null}.
     */
    protected final <T> T withInstanceLike(T object)
    {
@@ -249,9 +314,9 @@ abstract class Invocations
 
    /**
     * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay
-    * phase is not <code>null</code>.
+    * phase is not {@code null}.
     *
-    * @return always <code>null</code>
+    * @return always {@code null}
     */
    protected final <T> T withNotNull()
    {
@@ -261,9 +326,9 @@ abstract class Invocations
 
    /**
     * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay
-    * phase is <code>null</code>.
+    * phase is {@code null}.
     *
-    * @return always <code>null</code>
+    * @return always {@code null}
     */
    protected final <T> T withNull()
    {
@@ -319,7 +384,7 @@ abstract class Invocations
     * replay phase matches the given {@link Pattern regular expression}.
     * <p/>
     * Note that this can be used for any string comparison, including case insensitive ones (with
-    * <code>"(?i)"</code> in the regex).
+    * {@code "(?i)"} in the regex).
     *
     * @see Pattern#compile(String, int)
     */

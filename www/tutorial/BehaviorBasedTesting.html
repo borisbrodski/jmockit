@@ -523,7 +523,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 
             // Will match "voidMethod(String, List)" invocations with the first argument
             // equal to "str" and the second not null.
-            abc.voidMethod(<strong>withEqual("str"), (List<?>) withNotNull()</strong>);
+            abc.voidMethod(<strong>"str", (List&lt;?>) withNotNull()</strong>);
 
             // Will match invocations to DependencyAbc#stringReturningMethod(DataItem, String)
             // with the first argument pointing to "item" and the second one containing "xyz".
@@ -544,13 +544,8 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </code></pre>
 <p>
    There are more "with" methods than shown above.
-   See the <a href="../javadoc/mockit/Expectations.html">API documentation</a> for more details.
-   You may wonder why the second recorded invocation above isn't simply written as
-   <code>abc.voidMethod("str", (List<?>) withNotNull());</code>.
-   Ideally, it should be possible to use constraints only for same parameters, but not necessarily
-   for all. For now, though, if a constraint for one parameter is specified, then all other
-   parameters must also be matched through such constraints. A future version of JMockit will
-   probably remove this inconvenience.
+   See the <a href="../javadoc/mockit/Expectations.html#withEqual(T)">API documentation</a> for more
+   details.
 </p>
 <p>
    Besides the several predefined argument matching constraints available in the API, JMockit allows
@@ -559,6 +554,92 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    <code>&lt;T> T with(T, org.hamcrest.Matcher&lt;T>)</code> generic methods.
    The <code>org.hamcrest.Matcher</code> interface belongs to the
    <a href="http://code.google.com/p/hamcrest">Hamcrest</a> library, which is bundled with JUnit 4.
+</p>
+
+<h4>Argument matching <em>fields</em>: a succinct alternative</h4>
+<p>
+   For the <code>withAny(?)</code> methods that take no arguments or take one only to designate
+   the parameter type, there is a set of special <em>argument matching fields</em> that are
+   available to expectation and verification blocks.
+   Using these "any" fields will have the same effect as using the corresponding "withAny" method,
+   as demonstrated below.
+</p>
+<pre><code>   @Test
+   public void someTestMethod(@NonStrict final DependencyAbc abc)
+   {
+      final DataItem item = new DataItem(...);
+
+      new Expectations()
+      {
+         {
+            // Will match "new DependencyAbc(int)" invocations with any int-valued argument.
+            new DependencyAbc(<strong><em>anyInt</em></strong>);
+
+            // Will match "voidMethod(String, List)" invocations where the first argument is
+            // "str" but the second can be anything.
+            abc.voidMethod(<strong>"str", (List&lt;?>) <em>any</em></strong>);
+         }
+      };
+
+      new UnitUnderTest().doSomething(item);
+
+      new Verifications()
+      {
+         {
+            // Matches invocations to the specified method with any long-valued argument.
+            abc.anotherVoidMethod(<strong><em>anyLong</em></strong>);
+         }
+      };
+   }
+</code></pre>
+<p>
+   Again, see the <a href="../javadoc/mockit/Expectations.html#anyInt">API documentation</a> for
+   more details on argument matching fields.
+</p>
+
+<h4>Using the <code>null</code> value to match any object reference</h4>
+<p>
+   When using at least one argument matching method or field for a given expectation, we can specify
+   that any object reference be accepted for a parameter of reference type by simply passing the
+   <code>null</code> value instead of a <code>withAny()</code> or <code>any</code> argument matcher.
+   In particular, this avoids the need to cast the value to the declared parameter type.
+   However, bear in mind that this behavior is only applicable when <em>at least one</em> explicit
+   argument matcher (either a "with" method or an "any" field) is used for the expectation.
+   When passed in an invocation that uses no matchers, the <code>null</code> value will match only
+   the <code>null</code> reference.
+</p>
+<p>
+   In the previous test, we could therefore have written:
+</p>
+<pre><code>   @Test
+   public void someTestMethod(@NonStrict final DependencyAbc abc)
+   {
+      ...
+
+      new Expectations()
+      {
+         {
+            ...
+            abc.voidMethod(<strong>withEqual("str"), null</strong>);
+         }
+      };
+
+      ...
+   }
+</code></pre>
+<p>
+   When one or more explicit matchers are present and the <code>null</code> reference must be
+   matched for a given parameter, the <code>withNull()</code> method should be used.
+</p>
+<p>
+   In conclusion, there are two <em>modes</em> for argument matching: the basic one where no
+   matching constraints are specified and all arguments must be equal, and the one where matching
+   constraints are specified for some or all parameters.
+   The meaning of the <code>null</code> value is different for each mode, which may lead to
+   confusion at times.
+   For complex invocations where multiple arguments are involved, though, the benefits of being able
+   to use "any" fields and the <code>null</code> reference should outweigh the additional API
+   complexity.
 </p>
 
 <h3 id="constraints">Specifying invocation count constraints</h3>
