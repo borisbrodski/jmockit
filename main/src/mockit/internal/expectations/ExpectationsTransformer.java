@@ -209,8 +209,6 @@ public final class ExpectationsTransformer implements ClassFileTransformer
             int stackAfter = mw.stackSize - sumOfSizes(argTypes);
 
             if (stackAfter < matcherStacks[0]) {
-               // TODO: remove the System.outs later
-//               System.out.print(stackAfter + " = " + name);
                generateCallsToMoveArgMatchers(argTypes, stackAfter);
                matchers = 0;
             }
@@ -232,11 +230,6 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 
       private void generateCallsToMoveArgMatchers(Type[] argTypes, int initialStack)
       {
-//         for (int i = 0; i < matchers; i++) {
-//            System.out.print((i == 0 ? "(" : ",") + matcherStacks[i]);
-//         }
-//
-//         System.out.println(")");
          int stack = initialStack;
          int nextMatcher = 0;
          int matcherStack = matcherStacks[0];
