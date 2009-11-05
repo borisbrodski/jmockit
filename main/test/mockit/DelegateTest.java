@@ -81,7 +81,7 @@ public final class DelegateTest extends JMockitTestCase
       assertEquals("", collaborator.doSomething(bExpected, iExpected, sExpected));
    }
 
-   public void testReturnsTwoConsecutiveReturnValuesThroughDelegates()
+   public void testConsecutiveReturnValuesThroughDelegatesUsingSeparateReturns()
    {
       new NonStrictExpectations()
       {
@@ -97,6 +97,43 @@ public final class DelegateTest extends JMockitTestCase
       Collaborator collaborator = new Collaborator();
       assertEquals(1, collaborator.getValue());
       assertEquals(2, collaborator.getValue());
+   }
+
+   public void testConsecutiveReturnValuesThroughDelegatesUsingSingleReturnsWithVarargs()
+   {
+      Collaborator collaborator = new Collaborator();
+      final int[] array = {1, 2};
+
+      new NonStrictExpectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.doSomething(true, array, "");
+            returns(
+               new Delegate()
+               {
+                  String execute(boolean b, int[] i, String s)
+                  {
+                     assertEquals(1, i[0]);
+                     return "a";
+                  }
+               },
+               new Delegate()
+               {
+                  String execute(boolean b, int[] i, String s)
+                  {
+                     assertEquals(2, i[0]);
+                     return "b";
+                  }
+               });
+         }
+      };
+
+      assertEquals("a", collaborator.doSomething(true, array, ""));
+
+      array[0] = 2;
+      assertEquals("b", collaborator.doSomething(true, array, ""));
    }
 
    public void testReturnsMultipleReturnValuesThroughSingleDelegate(final Collaborator collaborator)
