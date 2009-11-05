@@ -204,14 +204,16 @@ public final class ExpectationsTransformer implements ClassFileTransformer
             return;
          }
 
-         Type[] argTypes = Type.getArgumentTypes(desc);
-         int stackAfter = mw.stackSize - sumOfSizes(argTypes);
+         if (matchers > 0) {
+            Type[] argTypes = Type.getArgumentTypes(desc);
+            int stackAfter = mw.stackSize - sumOfSizes(argTypes);
 
-         if (matchers > 0 && stackAfter < matcherStacks[0]) {
-            // TODO: remove the System.outs later
-//            System.out.print(stackAfter + " = " + name);
-            generateCallsToMoveArgMatchers(argTypes, stackAfter);
-            matchers = 0;
+            if (stackAfter < matcherStacks[0]) {
+               // TODO: remove the System.outs later
+//               System.out.print(stackAfter + " = " + name);
+               generateCallsToMoveArgMatchers(argTypes, stackAfter);
+               matchers = 0;
+            }
          }
 
          mw.visitMethodInsn(opcode, owner, name, desc);
@@ -237,20 +239,26 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 //         System.out.println(")");
          int stack = initialStack;
          int nextMatcher = 0;
+         int matcherStack = matcherStacks[0];
 
          for (int i = 0; i < argTypes.length && nextMatcher < matchers; i++) {
-            if (stack + 1 == matcherStacks[nextMatcher]) {
+            stack += argTypes[i].getSize();
+
+            if (stack == matcherStack || stack == matcherStack + 1) {
                if (nextMatcher < i) {
-                  mw.visitIntInsn(SIPUSH, nextMatcher);
-                  mw.visitIntInsn(SIPUSH, i);
-                  mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "moveArgMatcher", "(II)V");
+                  generateCallToMoveArgMatcher(nextMatcher, i);
                }
 
-               nextMatcher++;
+               matcherStack = matcherStacks[++nextMatcher];
             }
-
-            stack += argTypes[i].getSize();
          }
+      }
+
+      private void generateCallToMoveArgMatcher(int originalMatcherIndex, int toIndex)
+      {
+         mw.visitIntInsn(SIPUSH, originalMatcherIndex);
+         mw.visitIntInsn(SIPUSH, toIndex);
+         mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "moveArgMatcher", "(II)V");
       }
 
       @Override
