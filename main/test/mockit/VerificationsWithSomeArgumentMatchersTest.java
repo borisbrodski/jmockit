@@ -170,11 +170,12 @@ public final class VerificationsWithSomeArgumentMatchersTest
    @Test
    public void useSeveralAnyFields()
    {
-      mock.simpleOperation(2, "abc", new Date());
+      final Date now = new Date();
+      mock.simpleOperation(2, "abc", now);
       mock.simpleOperation(5, "test", null);
       mock.simpleOperation(3, "test2", null);
-      mock.simpleOperation(-1, "Xyz", new Date());
-      mock.simpleOperation(1, "", new Date());
+      mock.simpleOperation(-1, "Xyz", now);
+      mock.simpleOperation(1, "", now);
 
       Collaborator.staticSetValues(2, (byte) 1, 0, (short) 2);
       Collaborator.staticLongValues(23L, (byte) 1, 1.34, 'S');
@@ -187,7 +188,7 @@ public final class VerificationsWithSomeArgumentMatchersTest
             mock.simpleOperation(anyInt, "test", null);
             mock.simpleOperation(3, "test2", null);
             mock.simpleOperation(-1, null, (Date) any);
-            mock.simpleOperation(1, anyString, new Date());
+            mock.simpleOperation(1, anyString, now);
 
             Collaborator.staticSetValues(2L, anyByte, 0.0, anyShort);
             Collaborator.staticLongValues(anyLong, (byte) 1, anyDouble, anyChar);
@@ -199,11 +200,12 @@ public final class VerificationsWithSomeArgumentMatchersTest
    @Test
    public void useWithMethodsMixedWithAnyFields()
    {
-      mock.simpleOperation(2, "abc", new Date());
+      Date now = new Date();
+      mock.simpleOperation(2, "abc", now);
       mock.simpleOperation(5, "test", null);
       mock.simpleOperation(3, "test2", null);
-      mock.simpleOperation(-1, "Xyz", new Date());
-      mock.simpleOperation(1, "", new Date());
+      mock.simpleOperation(-1, "Xyz", now);
+      mock.simpleOperation(1, "", now);
 
       new Verifications()
       {

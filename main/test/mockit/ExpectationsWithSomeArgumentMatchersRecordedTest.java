@@ -172,6 +172,8 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
    @Test
    public void useSeveralAnyFields()
    {
+      final Date now = new Date();
+
       new Expectations()
       {
          {
@@ -179,17 +181,17 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
             mock.simpleOperation(anyInt, "test", null);
             mock.simpleOperation(3, "test2", null);
             mock.simpleOperation(-1, null, (Date) any);
-            mock.simpleOperation(1, anyString, new Date());
+            mock.simpleOperation(1, anyString, now);
 
             Collaborator.staticSetValues(2L, anyByte, 0.0, anyShort);
          }
       };
 
-      mock.simpleOperation(2, "abc", new Date());
+      mock.simpleOperation(2, "abc", now);
       mock.simpleOperation(5, "test", null);
       mock.simpleOperation(3, "test2", null);
-      mock.simpleOperation(-1, "Xyz", new Date());
-      mock.simpleOperation(1, "", new Date());
+      mock.simpleOperation(-1, "Xyz", now);
+      mock.simpleOperation(1, "", now);
 
       Collaborator.staticSetValues(2, (byte) 1, 0, (short) 2);
    }
