@@ -30,13 +30,13 @@ import static org.junit.Assert.*;
 
 import mockit.integration.junit3.*;
 
+@SuppressWarnings({"UnusedDeclaration"})
 public final class DelegateTest extends JMockitTestCase
 {
    static class Collaborator
    {
       Collaborator() {}
 
-      @SuppressWarnings({"UnusedDeclaration"})
       Collaborator(int i) {}
 
       int getValue() { return -1; }
@@ -46,7 +46,7 @@ public final class DelegateTest extends JMockitTestCase
       native long nativeMethod(boolean b);
       final char finalMethod() { return 's'; }
       private float privateMethod() { return 1.2F; }
-      void addElements(Collection<String> elements) { elements.add("one element"); };
+      void addElements(Collection<String> elements) { elements.add("one element"); }
    }
 
    public void testReturnsDelegate()
@@ -141,7 +141,6 @@ public final class DelegateTest extends JMockitTestCase
    {
       int capturedArgument;
 
-      @SuppressWarnings({"UnusedDeclaration"})
       void $init(int i) { capturedArgument = i; }
    }
 
@@ -273,12 +272,74 @@ public final class DelegateTest extends JMockitTestCase
             collaborator.doSomething(true, null, null);
             returns(new Delegate()
             {
-               @SuppressWarnings({"UnusedDeclaration"})
                void doSomething(boolean b, int[] i, String s) {}
             });
          }
       };
 
       assertNull(new Collaborator().doSomething(true, null, null));
+   }
+
+   public void testDelegateWithTwoMethods(final Collaborator collaborator)
+   {
+      new NonStrictExpectations()
+      {
+         {
+            collaborator.doSomething(true, null, "str");
+            returns(new Delegate()
+            {
+               String someOther() { return ""; }
+               void doSomething(boolean b, int[] i, String s) {}
+            });
+         }
+      };
+
+      assertNull(collaborator.doSomething(true, null, "str"));
+   }
+
+   public void testDelegateWithSingleMethodOfDifferentName()
+   {
+      new NonStrictExpectations()
+      {
+         Collaborator collaborator;
+
+         {
+            collaborator.doSomething(true, null, "str");
+            returns(new Delegate()
+            {
+               void onReplay(boolean b, int[] i, String s)
+               {
+                  assertTrue(b);
+                  assertNull(i);
+                  assertEquals("str", s);
+               }
+            });
+         }
+      };
+
+      assertNull(new Collaborator().doSomething(true, null, "str"));
+   }
+
+   public void testDelegateWithTwoInvalidMethods(final Collaborator collaborator)
+   {
+      new NonStrictExpectations()
+      {
+         {
+            collaborator.doSomething(true, null, "str");
+            returns(new Delegate()
+            {
+               String someOther() { return ""; }
+               void doSomethingElse(boolean b, int[] i, String s) {}
+            });
+         }
+      };
+
+      try {
+         assertNull(collaborator.doSomething(true, null, "str"));
+         fail();
+      }
+      catch (IllegalArgumentException e) {
+         assertTrue(e.getMessage().startsWith("No compatible method found"));
+      }
    }
 }

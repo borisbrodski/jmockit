@@ -34,6 +34,14 @@ package mockit;
  * That is, they should have the same name and parameters. In the case of delegating a constructor,
  * a delegate <em>method</em> should still be used, with name "$init".
  * <p/>
+ * Alternatively, for the common case where the delegate implementation class defines a
+ * <em>single</em> method, the name is allowed to be different from the recorded method.
+ * The parameters should still match, though. Besides giving more flexibility, this ability also
+ * prevents the test from breaking in case the recorded method is renamed.
+ * Note that if the delegate class defines two or more methods ({@code private} ones included, if
+ * any), then exactly one of them <em>must</em> match both the name and the parameters of the
+ * recorded method.
+ * <p/>
  * At replay time, when that method/constructor is called the corresponding "delegate" method will
  * be called to produce the desired result. The arguments passed to the delegate method will be the
  * same as those received by the recorded invocation during replay. The result can be any return

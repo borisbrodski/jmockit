@@ -24,11 +24,12 @@
  */
 package mockit.internal.expectations;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.*;
 import mockit.internal.util.*;
-import org.objectweb.asm2.*;
+import org.objectweb.asm2.Type;
 
 abstract class InvocationResult
 {
@@ -63,12 +64,23 @@ abstract class InvocationResult
    static final class DelegatedResult extends InvocationResult
    {
       private final Delegate delegate;
+      private final Method singleMethod;
       
-      DelegatedResult(Delegate delegate) { this.delegate = delegate; }
+      DelegatedResult(Delegate delegate)
+      {
+         this.delegate = delegate;
+
+         Method[] declaredMethods = delegate.getClass().getDeclaredMethods();
+         singleMethod = declaredMethods.length == 1 ? declaredMethods[0] : null;
+      }
 
       @Override
       Object produceResult(ExpectedInvocation invocation, Object[] args) throws Throwable
       {
+         if (singleMethod != null) {
+            return Utilities.invoke(delegate, singleMethod, args);
+         }
+
          String methodNameAndDesc = invocation.getMethodNameAndDescription();
          int leftParen = methodNameAndDesc.indexOf('(');
 

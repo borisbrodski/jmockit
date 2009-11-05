@@ -1067,6 +1067,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
             abc.intReturningMethod(withAny(0), withAny(""));
             returns(<strong>new Delegate()
             {
+               // The name of this method can actually be anything.
                int intReturningMethod(int i, String s)
                {
                   assertTrue(i > 0);
@@ -1084,13 +1085,19 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    The <code>Delegate</code> interface is empty, being used simply to tell the <code>returns</code>
    method that actual invocations at replay time should be delegated to the corresponding methods in
    the delegate object.
-   A corresponding method in the delegate implementation must have the same signature as the method
+</p>
+<p>
+   A corresponding method in the delegate implementation must have parameters matching the method
    in the mocked type for which an invocation is being recorded.
-   Notice that the return type does not have to be exactly the same, since it's not part of the
-   method signature. It should be compatible, though, otherwise a <code>ClassCastException</code> is
-   likely.
-   Notice also that this can de done for non-<code>public</code> methods and even for 
-   <code>static</code>, <code>final</code>, and <code>native</code> methods.
+   The name of this delegate method can be different though, provided it is the <em>only one</em>
+   defined in the delegate implementation class.
+   If the class has two or more methods (with <em>any</em> modifiers), then one of them will have
+   to match both the name and the parameters of the corresponding recorded method.
+   Note that the return type of a delegate method does not have to be exactly the same, since it's
+   not part of the method signature. It should be compatible, though, otherwise a
+   <code>ClassCastException</code> is likely.
+   Note also that this can de done for non-<code>public</code> methods and even for
+   <code>static</code>, <code>final</code>, and <code>native</code> mocked methods.
 </p>
 <p>
    The following example test shows a <em>constructor</em> invocation being delegated in a reusable
