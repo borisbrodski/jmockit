@@ -92,7 +92,7 @@ public final class FullVerificationsTest extends JMockitTest
       }};
    }
 
-   @Test
+   @Ignore @Test
    public void verifyAllInvocationsWithThoseRecordedAsExpectedToOccurVerifiedImplicitly()
    {
       new NonStrictExpectations()
