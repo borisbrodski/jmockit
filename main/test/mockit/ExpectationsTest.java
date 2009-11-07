@@ -295,7 +295,7 @@ public final class ExpectationsTest
    {
       new Expectations()
       {
-         @Mocked("nanoTime") final System system = null;
+         final System system = null;
 
          {
             System.nanoTime(); returns(0L);
@@ -303,9 +303,6 @@ public final class ExpectationsTest
       };
 
       assertEquals(0, System.nanoTime());
-      Expectations.assertSatisfied();
-
-      assertTrue(System.nanoTime() > 0);
    }
 
    @Test
