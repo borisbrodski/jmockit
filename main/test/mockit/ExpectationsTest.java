@@ -261,21 +261,6 @@ public final class ExpectationsTest
       };
    }
 
-   @Test(expected = AssertionError.class)
-   public void assertSatisfiedWithMissingExpectedMethodInvocation()
-   {
-      new Expectations()
-      {
-         Collaborator mock;
-
-         {
-            mock.setValue(123);
-         }
-      };
-
-      Expectations.assertSatisfied();
-   }
-
    @Test
    public void defineTwoConsecutiveReturnValues(final Collaborator mock)
    {
