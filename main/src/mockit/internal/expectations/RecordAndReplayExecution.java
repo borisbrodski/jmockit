@@ -105,7 +105,8 @@ public final class RecordAndReplayExecution
       //noinspection CatchGenericClass
       try {
          typeRedefinitions.redefineTypesForNestedClass();
-         return typeRedefinitions;
+
+         return typeRedefinitions.getFieldsRedefined() == 0 ? null : typeRedefinitions;
       }
       catch (Error e) {
          typeRedefinitions.cleanUp();
