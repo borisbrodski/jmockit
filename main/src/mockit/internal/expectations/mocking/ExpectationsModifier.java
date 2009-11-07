@@ -46,6 +46,8 @@ final class ExpectationsModifier extends BaseClassModifier
    private static final Map<String, String> DEFAULT_FILTERS = new HashMap<String, String>()
    {{
       put("java/lang/System", "arraycopy getSecurityManager");
+      put("java/util/AbstractList", "iterator");
+      put("java/util/ArrayList", "get size RangeCheck");
    }};
 
    private final MockingConfiguration mockingCfg;
