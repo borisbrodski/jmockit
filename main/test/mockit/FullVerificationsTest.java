@@ -64,8 +64,8 @@ public final class FullVerificationsTest extends JMockitTest
          mock.prepare(); repeatsAtLeast(1);
          mock.editABunchMoreStuff();
          mock.notifyBeforeSave(); repeatsAtMost(1);
-         mock.setSomething(withAny(0)); repeats(0, 2);
-         mock.setSomethingElse(withAny(' '));
+         mock.setSomething(anyInt); repeats(0, 2);
+         mock.setSomethingElse(anyChar);
          mock.save(); repeats(1);
       }};
    }
@@ -84,9 +84,31 @@ public final class FullVerificationsTest extends JMockitTest
       new FullVerifications()
       {{
          mock.prepare();
-         mock.setSomething(withAny(1));
-         mock.setSomethingElse(withAny('\0'));
+         mock.setSomething(anyInt);
+         mock.setSomethingElse(anyChar);
          mock.editABunchMoreStuff();
+         mock.notifyBeforeSave();
+         mock.save();
+      }};
+   }
+
+   @Test
+   public void verifyAllInvocationsWithThoseRecordedAsExpectedToOccurVerifiedImplicitly()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.setSomething(45); repeats(1);
+         mock.editABunchMoreStuff(); returns(true); repeatsAtLeast(1);
+      }};
+
+      exerciseCodeUnderTest();
+
+      // TODO: review documentation (API and tutorial) once this redundant verification is fixed
+      new FullVerifications()
+      {{
+         mock.prepare();
+         mock.setSomething(123);
+         mock.setSomethingElse(anyChar);
          mock.notifyBeforeSave();
          mock.save();
       }};
@@ -101,8 +123,8 @@ public final class FullVerificationsTest extends JMockitTest
       {{
          mock.prepare();
          mock.notifyBeforeSave();
-         mock.setSomething(withAny(0));
-         mock.setSomethingElse(withAny('0'));
+         mock.setSomething(anyChar);
+         mock.setSomethingElse(anyChar);
          mock.save();
       }};
    }
@@ -117,7 +139,7 @@ public final class FullVerificationsTest extends JMockitTest
       new FullVerifications()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0)); repeats(2);
+         mock.setSomething(anyInt); repeats(2);
          mock.notifyBeforeSave(); repeats(0);
       }};
    }
@@ -145,7 +167,7 @@ public final class FullVerificationsTest extends JMockitTest
       new FullVerifications()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0));
+         mock.setSomething(anyInt);
          mock.save(); repeatsAtLeast(0);
       }};
    }
@@ -161,7 +183,7 @@ public final class FullVerificationsTest extends JMockitTest
       new FullVerifications()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0));
+         mock.setSomething(anyInt);
          mock.save(); repeatsAtLeast(0);
       }};
    }
@@ -175,7 +197,7 @@ public final class FullVerificationsTest extends JMockitTest
       new FullVerifications()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0));
+         mock.setSomething(anyInt);
          mock.save(); repeatsAtLeast(0);
       }};
    }
@@ -195,11 +217,9 @@ public final class FullVerificationsTest extends JMockitTest
    public void verifyRecordedInvocationThatShouldHappenButDoesnt()
    {
       new NonStrictExpectations()
-      {
-         {
-            mock.notifyBeforeSave();
-         }
-      };
+      {{
+         mock.notifyBeforeSave();
+      }};
 
       mock.setSomething(1);
 
@@ -231,7 +251,7 @@ public final class FullVerificationsTest extends JMockitTest
 
       new FullVerifications()
       {{
-         mock.setSomething(withAny(0)); repeats(1);
+         mock.setSomething(anyInt); repeats(1);
       }};
    }
 
@@ -244,7 +264,7 @@ public final class FullVerificationsTest extends JMockitTest
 
       new FullVerifications()
       {{
-         mock.setSomething(withAny(0)); repeats(1);
+         mock.setSomething(anyInt); repeats(1);
       }};
    }
 
@@ -255,7 +275,7 @@ public final class FullVerificationsTest extends JMockitTest
 
       new FullVerifications()
       {{
-         mock.setSomethingElse(withAny('T')); repeats(3);
+         mock.setSomethingElse(anyChar); repeats(3);
       }};
    }
 
@@ -269,7 +289,7 @@ public final class FullVerificationsTest extends JMockitTest
 
       new FullVerifications(2)
       {{
-         mock.setSomething(withAny(1));
+         mock.setSomething(anyInt);
          mock.save();
       }};
    }
@@ -295,7 +315,7 @@ public final class FullVerificationsTest extends JMockitTest
       new FullVerifications(2)
       {{
          mock.prepare(); repeatsAtMost(1);
-         mock.setSomething(withAny(0)); repeatsAtLeast(2);
+         mock.setSomething(anyInt); repeatsAtLeast(2);
          mock.setSomethingElse('a');
          mock.editABunchMoreStuff(); repeats(0, 5);
          mock.notifyBeforeSave();
