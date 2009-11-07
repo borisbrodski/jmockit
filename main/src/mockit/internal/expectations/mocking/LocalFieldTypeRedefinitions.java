@@ -29,12 +29,9 @@ import mockit.internal.util.*;
 
 public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
 {
-   private final SavePoint localSavePoint;
-
    public LocalFieldTypeRedefinitions(Object objectWithMockFields)
    {
       super(objectWithMockFields);
-      localSavePoint = new SavePoint();
    }
 
    public void redefineTypesForNestedClass()
@@ -70,12 +67,5 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
       return
          captureOfNewInstances != null &&
          getCaptureOfNewInstances().captureNewInstanceForApplicableMockField(parentObject, mock);
-   }
-
-   @Override
-   public void cleanUp()
-   {
-      super.cleanUp();
-      localSavePoint.rollback();
    }
 }
