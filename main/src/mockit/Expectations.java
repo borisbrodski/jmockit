@@ -412,8 +412,10 @@ public class Expectations extends Invocations
    }
 
    /**
-    * @deprecated Use {@link #assertSatisfied()} instead.
-    * This method will be removed for version 1.0.
+    * See {@link #assertSatisfied()} instead.
+    * 
+    * @deprecated This method will be removed for version 1.0. If you have any calls to it in
+    * existing tests, remove them before then.
     */
    @Deprecated
    public final void endReplay()
@@ -434,7 +436,11 @@ public class Expectations extends Invocations
     * recording phase
     * @throws AssertionError if any expected invocation for the active set of expectations is
     * missing, that is, a corresponding invocation in the replay phase did not occur until now
+    * 
+    * @deprecated This method will be removed for version 1.0. If you have any calls to it in
+    * existing tests, remove them before then.
     */
+   @Deprecated
    public static void assertSatisfied()
    {
       RecordAndReplayExecution recordAndReplay = TestRun.getRecordAndReplayForRunningTest(true);
@@ -449,8 +455,10 @@ public class Expectations extends Invocations
    }
 
    /**
-    * @deprecated Use {@link Mockit#restoreAllOriginalDefinitions()} instead.
-    * This method will be removed for version 1.0.
+    * See {@link Mockit#restoreAllOriginalDefinitions()} instead.
+    *
+    * @deprecated This method will be removed for version 1.0. If you have any calls to it in
+    * existing tests, remove them before then.
     */
    @Deprecated
    public static void restoreFieldTypeDefinitions()
