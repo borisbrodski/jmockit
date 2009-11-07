@@ -84,8 +84,8 @@ public final class BankBusinessTest extends JMockitTestCase
       double sum = business.getSumOfAllAccounts(customer);
       assertEquals(600, sum, 0);
 
-      // Note that all expected invocations are verified to have actually occurred at this point,
-      // even without a explicit call to "Expectations.assertSatisfied()". This happens because
-      // JMockit provides automatic and transparent integration with the JUnit 3.8 test runner.
+      // Note that all expected invocations are verified to have actually occurred at this point.
+      // This happens because JMockit provides automatic and transparent integration with the JUnit
+      // 3.8 test runner.
    }
 }
