@@ -57,7 +57,7 @@ abstract class Invocations
     *
     * @see #anyInt
     */
-   protected static final String anyString = "";
+   protected static final String anyString = null;
 
    /**
     * Matches any {@code long} or {@code Long} value for the relevant parameter.

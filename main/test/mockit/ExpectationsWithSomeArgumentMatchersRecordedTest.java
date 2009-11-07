@@ -43,6 +43,7 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
       void setValue(int value) {}
       void setValue(double value) {}
       void setValue(float value) {}
+      String setValue(String value) { return ""; }
 
       void setValues(long value1, byte value2, double value3, short value4) {}
       boolean booleanValues(long value1, byte value2, double value3, short value4) { return true; }
@@ -167,6 +168,20 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
       };
 
       mock.setValue(1);
+   }
+
+   @Test
+   public void useAnyStringField()
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mock.setValue(anyString); returns("one", "two");
+         }
+      };
+
+      assertEquals("one", mock.setValue("test"));
+      assertEquals("two", mock.setValue(""));
    }
 
    @Test
