@@ -42,11 +42,9 @@ import mockit.internal.startup.*;
  * In any case, the integration adds the following benefits to test code:
  * <ol>
  * <li>
- * {@link Mockit#assertExpectations()} and {@link Expectations#assertSatisfied()} are automatically
- * called just before the execution of a test ends (that is, after the test itself executed, but
- * before any {@code @After} methods are executed.
- * Therefore, you don't to have to worry about putting such calls at the proper places inside tests.
- * (It does no harm to still have them, though.)
+ * Unexpected invocations specified through the Annotations or the Expectations API are
+ * automatically verified just before the execution of a test ends (that is, after the test itself
+ * executed, but before any {@code @After} methods are executed).
  * </li>
  * <li>
  * Any mock classes applied with the Core or Annotations API from inside a test method will be
