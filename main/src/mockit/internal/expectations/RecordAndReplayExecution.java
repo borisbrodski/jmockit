@@ -305,7 +305,6 @@ public final class RecordAndReplayExecution
          redefinitions.cleanUp();
       }
 
-      TestRun.getExecutingTest().setRecordAndReplay(null);
       return replayPhase.endExecution();
    }
 

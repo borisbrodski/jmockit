@@ -95,7 +95,9 @@ public class Verifications extends Invocations
 
    Verifications(boolean inOrder)
    {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(true);
+      RecordAndReplayExecution instance =
+         TestRun.getExecutingTest().getRecordAndReplayForVerifications();
+
       verificationPhase = instance.startVerifications(inOrder);
    }
 

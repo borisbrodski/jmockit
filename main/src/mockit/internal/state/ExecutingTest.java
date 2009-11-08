@@ -33,25 +33,43 @@ import mockit.internal.expectations.mocking.*;
 
 public final class ExecutingTest
 {
-   private RecordAndReplayExecution recordAndReplay;
+   private RecordAndReplayExecution currentRecordAndReplay;
+   private RecordAndReplayExecution recordAndReplayForLastTestMethod;
    private CaptureOfNewInstancesForParameters captureOfNewInstancesForParameters;
    private final List<Object> nonStrictMocks = new ArrayList<Object>();
    private final List<Object> strictMocks = new ArrayList<Object>();
 
    RecordAndReplayExecution getRecordAndReplay(boolean createIfUndefined)
    {
-      if (recordAndReplay == null && createIfUndefined) {
+      if (currentRecordAndReplay == null && createIfUndefined) {
          new NonStrictExpectations() {}.endRecording();
       }
 
-      return recordAndReplay;
+      return currentRecordAndReplay;
    }
 
    public RecordAndReplayExecution setRecordAndReplay(RecordAndReplayExecution newRecordAndReplay)
    {
-      RecordAndReplayExecution previous = recordAndReplay;
-      recordAndReplay = newRecordAndReplay;
+      recordAndReplayForLastTestMethod = null;
+      RecordAndReplayExecution previous = currentRecordAndReplay;
+      currentRecordAndReplay = newRecordAndReplay;
       return previous;
+   }
+
+   public RecordAndReplayExecution getRecordAndReplayForVerifications()
+   {
+      if (currentRecordAndReplay != null) {
+         return currentRecordAndReplay;
+      }
+      else if (recordAndReplayForLastTestMethod != null) {
+         return recordAndReplayForLastTestMethod;
+      }
+      else {
+         // This should only happen if no expectation at all were created by the whole test, but
+         // there is a (probably empty) verification block.
+         new NonStrictExpectations() {}.endRecording();
+         return currentRecordAndReplay;
+      }
    }
 
    public CaptureOfNewInstancesForParameters getCaptureOfNewInstancesForParameters()
@@ -130,7 +148,8 @@ public final class ExecutingTest
 
    void finishExecution()
    {
-      recordAndReplay = null;
+      recordAndReplayForLastTestMethod = currentRecordAndReplay;
+      currentRecordAndReplay = null;
 
       if (captureOfNewInstancesForParameters != null) {
          captureOfNewInstancesForParameters.cleanUp();

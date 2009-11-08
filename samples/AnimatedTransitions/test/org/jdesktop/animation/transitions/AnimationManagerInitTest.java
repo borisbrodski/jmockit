@@ -41,11 +41,8 @@ import mockit.integration.junit4.*;
 public final class AnimationManagerInitTest extends JMockitTest
 {
    @Mocked private Animator animator;
-   @Mocked({"createImage", "setVisible"}) private JComponent container;
-   @Mocked private BufferedImage bgImage;
    @Mocked private AnimationState animationState;
-   @Mocked({"(JComponent)", "get.+", "paintHierarchySingleBuffered"})
-   private ComponentState componentState;
+   @Mocked private ComponentState componentState;
 
    private JComponent component;
    private AnimationManager manager;
@@ -53,84 +50,62 @@ public final class AnimationManagerInitTest extends JMockitTest
    @Before
    public void setUp()
    {
-      container = new JPanel();
+      final JComponent container = new JPanel();
+      container.setSize(100, 100);
 
       manager = new AnimationManager(container);
-      container.setSize(100, 100);
 
       Map<JComponent, AnimationState> animationStates = getField(manager, Map.class);
       component = new JButton();
       animationStates.put(component, animationState);
 
-      // Common initial expectation:
-      new Expectations()
+      // Common stubbings:
+      new NonStrictExpectations(container)
       {
+         BufferedImage bgImage;
+         Graphics gImg;
+
          {
             container.createImage(100, 100); returns(bgImage);
+            bgImage.getGraphics(); returns(gImg);
          }
       };
+   }
+
+   @After
+   public void verifyInitializationOfAnimationState()
+   {
+      new Verifications()
+      {{
+         animationState.init(animator);
+      }};
    }
 
    @Test
    public void initForComponentWithStartStateOnly()
    {
-      new Expectations()
+      new NonStrictExpectations()
       {
          {
             // Expect checking of states to remove those components completely outside the
             // container:
             animationState.getStart(); returns(componentState);
-            animationState.getEnd(); returns(null);
-         }
-      };
-
-      new ReadingOfComponentBounds();
-      new PaintingOfBackgroundImageOnContainer();
-
-      // Expect initialization of animation states:
-      new Expectations()
-      {
-         {
-            animationState.init(animator);
          }
       };
 
       manager.init(animator);
    }
 
-   final class ReadingOfComponentBounds extends NonStrictExpectations
-   {{
-      componentState.getWidth(); returns(20);
-      componentState.getHeight(); returns(10);
-   }}
-
-   final class PaintingOfBackgroundImageOnContainer extends NonStrictExpectations
-   {
-      Graphics gImg;
-
-      {
-         bgImage.getGraphics(); returns(gImg);
-         gImg.clearRect(0, 0, bgImage.getWidth(), bgImage.getHeight());
-         ComponentState.paintHierarchySingleBuffered(withInstanceOf(JComponent.class), gImg);
-      }
-   }
-
    @Test
    public void initForComponentWithEndStateOnly()
    {
       // Expect checking of states to remove those components completely outside the container:
-      new Expectations()
+      new NonStrictExpectations()
       {
          {
-            animationState.getStart(); returns(null);
             animationState.getEnd(); returns(componentState);
          }
       };
-
-      new ReadingOfComponentBounds();
-      new PaintingOfBackgroundImageOnContainer();
-
-      new Expectations() {{ animationState.init(animator); }};
 
       manager.init(animator);
    }
@@ -139,19 +114,13 @@ public final class AnimationManagerInitTest extends JMockitTest
    public void initForComponentWithStartAndEndStates()
    {
       // Expect checking of states to remove those components completely outside the container:
-      new Expectations()
+      new NonStrictExpectations()
       {
          {
             animationState.getStart(); returns(componentState);
             animationState.getEnd(); returns(componentState);
          }
       };
-
-      new ReadingOfComponentBounds();
-      new ReadingOfComponentBounds();
-      new PaintingOfBackgroundImageOnContainer();
-
-      new Expectations() {{ animationState.init(animator); }};
 
       manager.init(animator);
    }
@@ -170,16 +139,7 @@ public final class AnimationManagerInitTest extends JMockitTest
          }
       };
 
-      new PaintingOfBackgroundImageOnContainer();
-
       manager.init(animator);
-
-      new Verifications()
-      {
-         {
-            animationState.init(animator);
-         }
-      };
    }
 
    @Test
@@ -188,27 +148,12 @@ public final class AnimationManagerInitTest extends JMockitTest
       List<JComponent> changingComponents = getField(manager, List.class);
       changingComponents.add(component);
 
-      new Expectations()
+      new NonStrictExpectations()
       {
          {
             animationState.getStart(); returns(componentState);
-            animationState.getEnd(); returns(null);
          }
       };
-
-      new ReadingOfComponentBounds();
-
-      component.setVisible(false);
-      new PaintingOfBackgroundImageOnContainer();
-      component.setVisible(true);
-
-      new Expectations() {{ animationState.init(animator); }};
-
-      // TODO: in this test, sometimes during GC the JVM thread finalizer decides to finalize
-      // Graphics objects, causing spurious expectations to be recorded; implement checks to prevent
-      // threads other than the the thread running the test to record or verify expectations, while
-      // allowing invocations in the replay phase from any user thread (but not from internal JVM
-      // threads such as the finalizer thread)
 
       manager.init(animator);
    }
