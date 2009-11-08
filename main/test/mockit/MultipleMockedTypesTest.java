@@ -234,7 +234,7 @@ public final class MultipleMockedTypesTest
          @Mocked(capture = 1) Observer observer;
 
          {
-            observer.update((Observable) withAny(), withAny()); repeats(1);
+            observer.update(null, any); repeats(1);
          }
       };
 

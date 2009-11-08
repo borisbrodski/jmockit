@@ -206,7 +206,7 @@ public final class DelegateTest extends JMockitTestCase
             Collaborator.staticMethod(withAny(1));
             returns(new StaticDelegate());
 
-            mock.doSomething(withAny(false), (int[]) withAny(), withAny(""));
+            mock.doSomething(anyBoolean, null, null);
             returns(new StaticDelegate());
          }
       };
