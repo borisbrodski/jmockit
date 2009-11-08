@@ -176,10 +176,6 @@ public final class RecordAndReplayExecution
    private static boolean handleCallToConstructor(
       RecordAndReplayExecution instance, Object mock, String classDesc)
    {
-      if (isCallToSuperClassConstructor(mock, classDesc)) {
-         return true;
-      }
-
       if (TestRun.getCurrentTestInstance() != null) {
          FieldTypeRedefinitions fieldTypeRedefs = instance == null ? null : instance.redefinitions;
 
@@ -207,7 +203,7 @@ public final class RecordAndReplayExecution
          }
       }
 
-      return false;
+      return isCallToSuperClassConstructor(mock, classDesc);
    }
 
    private static boolean isCallToSuperClassConstructor(Object mock, String calledClassDesc)
