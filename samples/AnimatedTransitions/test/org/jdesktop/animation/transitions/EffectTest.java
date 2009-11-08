@@ -305,7 +305,7 @@ public final class EffectTest
       new VerificationsInOrder()
       {
          {
-            component.setBounds((Rectangle) withAny());
+            component.setBounds((Rectangle) any);
             ComponentState.paintSingleBuffered(component, g2D);
          }
       };
@@ -324,10 +324,7 @@ public final class EffectTest
       new Verifications()
       {
          {
-            // TODO: only the last matcher is needed here; remove others when new feature available
-            g2D.drawImage(
-               withSameInstance(image), withEqual(0), withEqual(0), withEqual(20), withEqual(10),
-               (ImageObserver) withAny());
+            g2D.drawImage(image, 0, 0, 20, 10, (ImageObserver) any);
          }
       };
    }
