@@ -48,6 +48,8 @@ final class ExpectationsModifier extends BaseClassModifier
       put("java/lang/System", "arraycopy getSecurityManager");
       put("java/util/AbstractList", "iterator");
       put("java/util/ArrayList", "get size RangeCheck");
+      put("java/lang/Throwable", "<init> fillInStackTrace");
+      put("java/lang/Exception", "<init>");
    }};
 
    private final MockingConfiguration mockingCfg;
@@ -104,12 +106,10 @@ final class ExpectationsModifier extends BaseClassModifier
    public MethodVisitor visitMethod(
       int access, String name, String desc, String signature, String[] exceptions)
    {
-      boolean visitingConstructor = "<init>".equals(name);
-
       if (
          (access & METHOD_ACCESS_MASK) != 0 || "<clinit>".equals(name) ||
          isProxy && isConstructorOrSystemMethodNotToBeMocked(name, desc) ||
-         !visitingConstructor && isMethodNotToBeMocked(access, name)
+         isMethodOrConstructorNotToBeMocked(access, name)
       ) {
          // Copies original without modifications when it's synthetic, abstract, a class
          // initialization block, belongs to a Proxy subclass, or is a static or private method in
@@ -136,6 +136,8 @@ final class ExpectationsModifier extends BaseClassModifier
 
       // Otherwise, replace original implementation.
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
+
+      boolean visitingConstructor = "<init>".equals(name);
 
       if (superClassName != null && visitingConstructor) {
          redefinedConstructorDesc = desc;
@@ -184,7 +186,7 @@ final class ExpectationsModifier extends BaseClassModifier
          "finalize".equals(name) && "()V".equals(desc);
    }
 
-   private boolean isMethodNotToBeMocked(int access, String name)
+   private boolean isMethodOrConstructorNotToBeMocked(int access, String name)
    {
       return
          isMethodFromCapturedClassNotToBeMocked(access) ||
