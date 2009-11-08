@@ -9,36 +9,10 @@
 
 <h2>JMockit development history</h2>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
 <p>Release 0.992 (November 8, 2009):</p>
 <ul>
-   <li>
-      Fixed an issue in the Maven 2 project file (<code>pom.xml</code>) for
-      <code>jmockit.jar</code>: internal dependencies (on JUnit, TestNG, etc.) were made
-      <em>optional</em> so they won't be transitively added as dependencies in client Maven
-      projects.
-   </li>
-   <li>
-      Enhancement: in the Annotations API, the method <code>Mockit.setUpMock(Object)</code> now also
-      accepts a <code>Class</code> object for the mock class, instead of only an instance of the
-      mock class. This should avoid confusion with the <code>Mockit.setUpMocks(Object...)</code>
-      method, which always accepted both ways of passing the mock class.
-   </li>
-   <li>
-      <strong>Enhancement</strong>: when using the Expectations API to mock JRE classes (for 
-      example, <code>java.lang.System</code> or <code>java.io.InputStreamReader</code>), all methods
-      can safely be mocked even if JMockit itself or other parts of the JRE need to execute the
-      original code (see <a href="http://code.google.com/p/jmockit/issues/detail?id=2">issue 2</a>).
-   </li>
-   <li>
-      Fixed a couple of bugs with the <em>capturing</em> of new instances through mock fields.
-   </li>
-   <li>
-      Enhancement: better support for <em>covariant return types</em>, so that an expectation
-      recorded for a method with a more specific return type can be matched to an invocation with a
-      less specific but compatible return type.
-   </li>
    <li>
       <strong>New features</strong> that improve the use of
       <a href="tutorial/BehaviorBasedTesting.html#hamcrest">argument matching constraints</a>
@@ -63,13 +37,26 @@
       </ol>
    </li>
    <li>
+      <strong>Enhancement</strong>: when using the Expectations API to mock JRE classes (for
+      example, <code>java.lang.System</code> or <code>java.io.InputStreamReader</code>), all methods
+      can safely be mocked even if JMockit itself or other parts of the JRE need to execute the
+      original code (see <a href="http://code.google.com/p/jmockit/issues/detail?id=2">issue 2</a>).
+   </li>
+   <li>
       Enhancement: <code>Delegate</code> implementation classes can now define a method named
       differently from the recorded method to which the delegation applies, provided it's the only
       method in the delegate class.
    </li>
    <li>
-      The old method <code>Expectations.assertSatisfied()</code> (which has been unnecessary for a
-      long time already), was deprecated in this release and will be removed for version 1.0.
+      Enhancement: in the Annotations API, the method <code>Mockit.setUpMock(Object)</code> now also
+      accepts a <code>Class</code> object for the mock class, instead of only an instance of the
+      mock class. This should avoid confusion with the <code>Mockit.setUpMocks(Object...)</code>
+      method, which always accepted both ways of passing the mock class.
+   </li>
+   <li>
+      Enhancement: better support for <em>covariant return types</em>, so that an expectation
+      recorded for a method with a more specific return type can be matched to an invocation with a
+      less specific but compatible return type.
    </li>
    <li>
       For better robustness, when an object to be partially mocked is passed to the
@@ -81,12 +68,28 @@
       partially mocked object in the first place.
    </li>
    <li>
+      Fixed a couple of bugs with the <em>capturing</em> of new instances through mock fields.
+   </li>
+   <li>
       Fixed an issue which prevented the use of verification blocks inside "after" methods (ie,
       <code>tearDown</code>, <code>@After</code>, or <code>@AfterMethod</code>).
    </li>
+   <li>
+      The old method <code>Expectations.assertSatisfied()</code> (which has been unnecessary for a
+      long time already), was deprecated in this release and will be removed for version 1.0.
+   </li>
+   <li>
+      Fixed an issue in the Maven 2 project file (<code>pom.xml</code>) for
+      <code>jmockit.jar</code>: internal dependencies (on JUnit, TestNG, etc.) were made
+      <em>optional</em> so they won't be transitively added as dependencies in client Maven
+      projects.
+   </li>
+   <li>
+      JMockit x Unitils comparison test suite upgraded to Unitils 3.0, with some new tests added.
+   </li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release 0.991 (October 25, 2009):</p>
 <ul>
@@ -133,8 +136,6 @@
       was discarded at the end of the test; this could then cause other tests to fail later.
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.990 (October 4/6, 2009):</p>
 <ul>
