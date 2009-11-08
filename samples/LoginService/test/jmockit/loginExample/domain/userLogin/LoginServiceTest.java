@@ -66,7 +66,7 @@ public final class LoginServiceTest
    {
       new NonStrictExpectations()
       {{
-         account.passwordMatches(withAny("")); returns(match);
+         account.passwordMatches(anyString); returns(match);
       }};
    }
 
@@ -106,7 +106,7 @@ public final class LoginServiceTest
       new NonStrictExpectations()
       {{
          UserAccount.find("roger"); returns(secondAccount);
-         secondAccount.passwordMatches(withAny("")); returns(false);
+         secondAccount.passwordMatches(anyString); returns(false);
       }};
 
       service.login("john", "password");
@@ -164,7 +164,7 @@ public final class LoginServiceTest
    {
       new NonStrictExpectations()
       {{
-         account.passwordMatches(withAny("")); returns(false, false, true, false);
+         account.passwordMatches(anyString); returns(false, false, true, false);
       }};
 
       service.login("john", "password");
