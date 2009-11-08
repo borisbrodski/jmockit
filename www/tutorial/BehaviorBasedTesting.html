@@ -6,7 +6,10 @@
    <link rel="stylesheet" type="text/css" href="../prettify.css"/>
 </head>
 <body>
-<h2>Behavior-based testing with JMockit</h2>
+<h2>
+   Behavior-based testing with JMockit
+   <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+</h2>
 
 <p>
    In the JMockit toolkit, the <code>Expectations & Verifications</code> APIs provide rich support
@@ -39,7 +42,16 @@
    <img src="BehaviorBasedAPI.png" usemap="#figure1">
 </div>
 
-<h3 id="mocked">Mocked types</h3>
+<h3 id="mocked">
+   Mocked types
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#expectation"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    The methods and constructors which are invoked from the unit under test, and which belong to a
    dependency of that unit, will be our regular targets for <em>mocking</em>.
@@ -86,7 +98,16 @@
    }
 </code></pre>
 
-<h3 id="expectation">Expectations</h3>
+<h3 id="expectation">
+   Expectations
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#mocked"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#model"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    An <em>expectation</em> is a set of invocations to an specific mocked method/constructor that is
    relevant for a given test.
@@ -138,7 +159,16 @@
    <em>recording</em> and <em>verifying</em> individual invocations.
 </p>
 
-<h3 id="model">The <em>record-replay-verify</em> model</h3>
+<h3 id="model">
+   The <em>record-replay-verify</em> model
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#expectation"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#declaration"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    Any developer (unit/integration) test can be divided in at least three separate execution
    <em>phases</em>. We refer here to the sequential division of execution time, for a given test
@@ -284,7 +314,16 @@ public class SomeTest
 </p>
 <img src="folding.PNG">
 
-<h3 id="declaration">Declaring and using mocked types</h3>
+<h3 id="declaration">
+   Declaring and using mocked types
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#model"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#results"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    A mocked type can be introduced either through an instance field or a parameter declaration.
    In the first case, the field belongs to the test class or to a <code>mockit.Expectations</code>
@@ -391,7 +430,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    interfaces in each case.
 </p>
 
-<h3 id="results">Recording results for an expectation</h3>
+<h3 id="results">
+   Recording results for an expectation
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#declaration"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#onInstance"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    For a given method with non-<code>void</code> return type, a return value can be recorded through
    the <code>Expectations#returns(...)</code> method.
@@ -455,7 +503,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    invocations in a given test. We will soon address this issue.
 </p>
 
-<h3 id="onInstance">Matching invocations to specific mock objects</h3>
+<h3 id="onInstance">
+   Matching invocations to specific mock objects
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#results"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#hamcrest"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    On the previous section we mentioned that a recorded invocation like
    <code>abc.intReturningMethod();</code> would actually match invocations to
@@ -491,7 +548,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    <em>Timing Framework</em> sample test suite.)
 </p>
 
-<h3 id="hamcrest">Constraint-based matching of argument values</h3>
+<h3 id="hamcrest">
+   Constraint-based matching of argument values
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#onInstance"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#constraints"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    In both the <em>record</em> and <em>verify</em> phases, an invocation to a mocked method or
    constructor identifies an expectation.
@@ -642,7 +708,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    complexity.
 </p>
 
-<h3 id="constraints">Specifying invocation count constraints</h3>
+<h3 id="constraints">
+   Specifying invocation count constraints
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#hamcrest"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#strictness"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    So far, we saw that besides an associated method or constructor, an expectation can have a list
    of invocation results (a mix of return values for non-void methods, and/or thrown
@@ -703,7 +778,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 
-<h3 id="strictness"><em>Strict</em> and <em>non-strict</em> expectations</h3>
+<h3 id="strictness">
+   <em>Strict</em> and <em>non-strict</em> expectations
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#constraints"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#verification"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    Expectations recorded inside a <code>new Expectations() {...}</code> block are all
    <em>strict</em> by default, meaning that the invocations they specify are <em>expected</em> to
@@ -764,7 +848,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    kinds of expectations, so there is a lot of flexibility in using them.
 </p>
 
-<h3 id="verification">Explicit verification</h3>
+<h3 id="verification">
+   Explicit verification
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#strictness"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#delegates"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    Strict expectations are verified implicitly, so there is no point in re-verifying them in a
    explicit verification block.
@@ -1045,7 +1138,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    <code>VerificationsInOrder</code> block.
 </p>
 
-<h3 id="delegates">Delegates: specifying custom results and capturing arguments</h3>
+<h3 id="delegates">
+   Delegates: specifying custom results and capturing arguments
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#verification"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#deencapsulation"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    We have seen how to record results for invocations through the <code>returns(...)</code>,
    <code>throwsException(...)</code> and <code>throwsError(...)</code> methods.
@@ -1134,7 +1236,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    named "$init".
 </p>
 
-<h3 id="deencapsulation">Accessing private fields, methods and constructors</h3>
+<h3 id="deencapsulation">
+   Accessing private fields, methods and constructors
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#delegates"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#partial"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    Normally, behavior-based tests for a given unit are written against the
    <code>public/protected/default</code> interface of the unit's dependencies.
@@ -1199,7 +1310,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    Its methods are all <code>static</code>, so they can be statically imported for easier access.
 </p>
 
-<h3 id="partial">Partial mocking</h3>
+<h3 id="partial">
+   Partial mocking
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#deencapsulation"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#capturing"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    In a test class, we declare mocked types through mock fields and mock parameters, sometimes using
    one of the <code>@Mocked</code> and <code>@NonStrict</code> annotations, sometimes by simply
@@ -1387,7 +1507,16 @@ public class MyTestClass
    wouldn't probably be of much use.
 </p>
 
-<h3 id="capturing">Capturing internal instances of mocked types</h3>
+<h3 id="capturing">
+   Capturing internal instances of mocked types
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#partial"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#reuse"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    Our discussion of this feature will be based on the (contrived) code below.
    Realistic examples can be found in the <em>Timing Framework</em> and <em>Animated 
@@ -1503,7 +1632,16 @@ public final class TestedUnit
    mocked types, as exemplified in the expectation and verification blocks above.
 </p>
 
-<h3 id="reuse">Reusing expectation and verification blocks</h3>
+<h3 id="reuse">
+   Reusing expectation and verification blocks
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#capturing"><img align="right" src="go-up.png" title="Previous section"></a>
+      <img align="right" src="blank.gif" width="22">
+   </div>
+</h3>
 <p>
    The simplest form of test code reuse with JMockit is the declaration of mock fields at the test
    class level.

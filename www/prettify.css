@@ -17,6 +17,9 @@ img { border: none; }
 .links a { padding-right: 1em; }
 .rounded { border: 2px outset slategray; -moz-border-radius: 7px; -webkit-border-radius: 7px; }
 
+.navigation { display: inline; }
+.navigation img { margin-left: 2px; margin-right: 2px; }
+
 /* Pretty printing styles. Used with prettify.js. */
 
 .str { color: #080; }
