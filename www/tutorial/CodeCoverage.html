@@ -6,7 +6,10 @@
    <link rel="stylesheet" type="text/css" href="../prettify.css"/>
 </head>
 <body>
-<h2>Measuring code coverage with JMockit Coverage</h2>
+<h2>
+   Measuring code coverage with JMockit Coverage
+   <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+</h2>
 
 <p>
    <a href="http://en.wikipedia.org/wiki/Code_coverage"><em>Code coverage</em></a> is a software
@@ -47,7 +50,16 @@
    parameters.
 </p>
 
-<h3 id="jars">Controlling code coverage through jar files in the classpath</h3>
+<h3 id="jars">
+   Controlling code coverage through jar files in the classpath
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#jvm"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    To have code coverage output generated for a test suite run, add one of the following jar files
    to the classpath:
@@ -97,7 +109,16 @@
    smaller output.
 </p>
 
-<h3 id="jvm">Controlling code coverage through JVM parameters</h3>
+<h3 id="jvm">
+   Controlling code coverage through JVM parameters
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <img align="right" src="blank.gif" width="22">
+      <a href="#jars"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#switching"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    To have direct control over the gathering of code coverage metrics for your tests, pass a command
    line similar to <code>-javaagent:jmockit.jar=coverage=&lt;Coverage arguments></code>.
@@ -161,7 +182,16 @@
    </dd>
 </dl>
 
-<h3 id="switching">Turning coverage output on/off</h3>
+<h3 id="switching">
+   Turning coverage output on/off
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#jars"><img align="right" src="go-top.png" title="First section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#jvm"><img align="right" src="go-up.png" title="Previous section"></a>
+      <img align="right" src="blank.gif" width="22">
+   </div>
+</h3>
 <p>
    To facilitate turning code coverage on/off, the <em>read-only status</em> of the relevant file is
    checked by JMockit at startup.

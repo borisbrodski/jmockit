@@ -6,7 +6,10 @@
    <link rel="stylesheet" type="text/css" href="../prettify.css"/>
 </head>
 <body>
-<h2>State-based testing with JMockit</h2>
+<h2>
+   State-based testing with JMockit
+   <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+</h2>
 
 <p>
    In the JMockit toolkit, the <strong>Annotations API</strong> provides support for the creation of
@@ -54,7 +57,16 @@
    of its methods and constructors "mocked" for any given test which involves authentication logic.
 </p>
 
-<h3 id="mocks">Mock methods and mock classes</h3>
+<h3 id="mocks">
+   Mock methods and mock classes
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#setUp"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    In the context of the JMockit Annotations API, a <em>mock method</em> is one annotated with the
    <code>mockit.Mock</code> annotation.
@@ -150,7 +162,16 @@
    Later we will see concrete examples for all of these different test cases.
 </p>
 
-<h3 id="setUp">Setting up mocks for a test</h3>
+<h3 id="setUp">
+   Setting up mocks for a test
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#mocks"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#interfaces"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    A given mock class must be applied to a corresponding real class to have any effect.
    We call this "setting up" the mock class.
@@ -381,7 +402,16 @@
    to be public with their mocks also public.
 </p>
 
-<h3 id="interfaces">Mocking interfaces</h3>
+<h3 id="interfaces">
+   Mocking interfaces
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#setUp"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#stubs"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    Most of the time a mock class targets a real class directly.
    But what if we need a mock object that implements a certain interface, to be passed to code under
@@ -446,7 +476,16 @@
    class is always non-public anyway).
 </p>
 
-<h3 id="stubs">Specifying stubs with a mock class</h3>
+<h3 id="stubs">
+   Specifying stubs with a mock class
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#interfaces"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#constraints"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    The <code>@MockClass</code> annotation also gives us the ability to specify methods and/or
    constructors in the real class that should be <em>stubbed out</em> so they have no effect when
@@ -522,7 +561,16 @@
    <code>inverse = true</code>.
 </p>
 
-<h3 id="constraints">Invocation count constraints</h3>
+<h3 id="constraints">
+   Invocation count constraints
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#stubs"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#initializers"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    All example tests shown so far only used JUnit/TestNG "asserts" to verify invocation arguments.
    This is the part of the API that extends conventional state-based testing to the data items
@@ -569,7 +617,16 @@
    the same mock, in order to constrain the invocation count to a given range.
 </p>
 
-<h3 id="initializers">Mocking and stubbing class initializers</h3>
+<h3 id="initializers">
+   Mocking and stubbing class initializers
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#constraints"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#instantiation"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    When a class in production code performs some work in one or more <em>static initialization
    blocks</em>, we often need to stub it out so it doesn't interfere with test execution.
@@ -599,7 +656,16 @@
    than once, so the test would fail if it runs after the class has already been initialized.
 </p>
 
-<h3 id="instantiation">Controlling the instantiation of mock classes</h3>
+<h3 id="instantiation">
+   Controlling the instantiation of mock classes
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#initializers"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#it"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    We have already seen three different situations when mock classes get instantiated:
 </p>
@@ -696,7 +762,16 @@
    instantiation mode.
 </p>
 
-<h3 id="it">Accessing the mocked object: the "it" field</h3>
+<h3 id="it">
+   Accessing the mocked object: the "it" field
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#instantiation"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#reentrant"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    As we have seen, there is a relationship between <em>mocked instances</em> (that is, instances of
    real classes which have been mocked) and <em>mock instances</em> (instances of mock classes).
@@ -767,7 +842,16 @@
    particular test.
 </p>
 
-<h3 id="reentrant">Reentrant mocks</h3>
+<h3 id="reentrant">
+   Reentrant mocks
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#it"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#reuse"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    Usually, a <em>reentrant method</em> is one which can be re-entered once it is already executing.
    Recursive methods, for example, are typically reentrant.
@@ -859,7 +943,16 @@
    JUnit and TestNG test runners.
 </p>
 
-<h3 id="reuse">Reusing mocks between tests</h3>
+<h3 id="reuse">
+   Reusing mocks between tests
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#reentrant"><img align="right" src="go-up.png" title="Previous section"></a>
+      <img align="right" src="blank.gif" width="22">
+   </div>
+</h3>
 <p>
    Most tests will probably only use dedicated mock classes, specifically created for each
    particular test.
