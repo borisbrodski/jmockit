@@ -16,7 +16,6 @@
   </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
-    <option name="DEPLOY_AFTER_MAKE" value="0" />
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -69,6 +68,7 @@
         <option name="myName" value="Project Default" />
         <option name="myLocal" value="false" />
         <inspection_tool class="AssertEqualsMayBeAssertSame" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="CheckImageSize" enabled="false" level="WARNING" enabled_by_default="false" />
         <inspection_tool class="IgnoreResultOfCall" enabled="false" level="WARNING" enabled_by_default="false">
           <option name="m_reportAllNonLibraryCalls" value="true" />
           <option name="callCheckString" value="java.io.InputStream,read,java.io.InputStream,skip,java.lang.StringBuffer,toString,java.lang.StringBuilder,toString,java.lang.String,.*,java.math.BigInteger,.*,java.math.BigDecimal,.*,java.net.InetAddress,.*,java.io.File,.*,java.lang.Object,equals|hashCode" />
@@ -124,12 +124,14 @@
           <option name="REPORT_PARAMETER_FOR_PUBLIC_METHODS" value="true" />
           <option name="INJECTION_ANNOS">
             <value>
-              <list size="5">
+              <list size="7">
                 <item index="0" class="java.lang.String" itemvalue="mockit.Capturing" />
                 <item index="1" class="java.lang.String" itemvalue="mockit.Mock" />
                 <item index="2" class="java.lang.String" itemvalue="mockit.Mocked" />
                 <item index="3" class="java.lang.String" itemvalue="mockit.NonStrict" />
-                <item index="4" class="java.lang.String" itemvalue="org.powermock.api.easymock.annotation.Mock" />
+                <item index="4" class="java.lang.String" itemvalue="org.mockito.Mock" />
+                <item index="5" class="java.lang.String" itemvalue="org.powermock.api.easymock.annotation.Mock" />
+                <item index="6" class="java.lang.String" itemvalue="powermock.examples.tutorial.common.annotation.Inject" />
               </list>
             </value>
           </option>
@@ -200,11 +202,13 @@
         <w>classpath</w>
         <w>clazz</w>
         <w>clinit</w>
+        <w>covariant</w>
         <w>deencapsulation</w>
         <w>defs</w>
         <w>desc</w>
         <w>destfile</w>
         <w>finalizers</w>
+        <w>formatter</w>
         <w>getenv</w>
         <w>initializer</w>
         <w>initializers</w>
@@ -214,6 +218,7 @@
         <w>liesenfeld</w>
         <w>lifecycle</w>
         <w>login</w>
+        <w>logins</w>
         <w>logout</w>
         <w>metadata</w>
         <w>microsystems</w>
@@ -242,9 +247,11 @@
         <w>savepoint</w>
         <w>smil</w>
         <w>startup</w>
+        <w>stubbings</w>
         <w>stylesheet</w>
         <w>sublicense</w>
         <w>throwable</w>
+        <w>unmocked</w>
       </words>
     </dictionary>
   </component>
@@ -282,7 +289,6 @@
     <option name="GENERATE_IIOP_STUBS" value="false" />
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" Folders="0" Dictionaries="0" />
   <component name="SvnBranchConfigurationManager">
     <option name="myConfigurationMap">
       <map>
@@ -360,13 +366,21 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="Unitils 2.4">
+    <library name="Unitils 3.0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-2.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-mock-3.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-core-3.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/cglib-2.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/asm-3.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/asm-analysis-3.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/asm-tree-3.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/commons-lang-2.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/objenesis-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/main/lib/commons-logging-1.1.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="file://C:/Java/unitils-2.4/src/main/java" />
+        <root url="file://C:/Java/unitils-3.0/unitils-mock/src/main/java" />
       </SOURCES>
     </library>
     <library name="JMockit">
