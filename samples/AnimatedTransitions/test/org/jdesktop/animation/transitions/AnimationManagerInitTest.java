@@ -111,8 +111,7 @@ public final class AnimationManagerInitTest extends JMockitTest
       {
          bgImage.getGraphics(); returns(gImg);
          gImg.clearRect(0, 0, bgImage.getWidth(), bgImage.getHeight());
-         ComponentState.paintHierarchySingleBuffered(
-         withInstanceOf(JComponent.class), withSameInstance(gImg));
+         ComponentState.paintHierarchySingleBuffered(withInstanceOf(JComponent.class), gImg);
       }
    }
 

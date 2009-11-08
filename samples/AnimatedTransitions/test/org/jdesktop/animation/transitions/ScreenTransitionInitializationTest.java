@@ -87,7 +87,7 @@ public final class ScreenTransitionInitializationTest
       new Expectations()
       {
          {
-            animator = new Animator(withEqual(duration), withInstanceOf(TimingTargetAdapter.class));
+            animator = new Animator(duration, withInstanceOf(TimingTargetAdapter.class));
          }
       };
 
