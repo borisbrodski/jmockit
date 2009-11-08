@@ -80,6 +80,10 @@
       test should not be recording expectations on constructors which were used to create the
       partially mocked object in the first place.
    </li>
+   <li>
+      Fixed an issue which prevented the use of verification blocks inside "after" methods (ie,
+      <code>tearDown</code>, <code>@After</code>, or <code>@AfterMethod</code>).
+   </li>
 </ul>
 
 <h3>Current release</h3>
