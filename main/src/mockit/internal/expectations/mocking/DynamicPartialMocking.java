@@ -35,6 +35,14 @@ import mockit.internal.filtering.*;
 
 public final class DynamicPartialMocking
 {
+   private static final List<MockFilter> exclusionFiltersForMockObject = new ArrayList<MockFilter>()
+   {{
+      add(new MockFilter()
+      {
+         public boolean matches(String name, String desc) { return "<init>".equals(name); }
+      });
+   }};
+
    private final Map<Class<?>, List<MockFilter>> classesAndMockFilters =
       new LinkedHashMap<Class<?>, List<MockFilter>>();
    private final Map<Class<?>, byte[]> modifiedClassfiles = new HashMap<Class<?>, byte[]>();
@@ -42,8 +50,6 @@ public final class DynamicPartialMocking
 
    public void redefineTypes(Object[] classesOrInstancesToBePartiallyMocked)
    {
-      mockingCfg = null;
-
       for (Object classOrInstance : classesOrInstancesToBePartiallyMocked) {
          redefineTargetType(classOrInstance);
       }
@@ -64,9 +70,11 @@ public final class DynamicPartialMocking
                "Invalid interface type " + targetClass.getName() + " for partial mocking");
          }
 
+         mockingCfg = null;
          redefineClass(targetClass);
       }
       else {
+         mockingCfg = new MockingConfiguration(exclusionFiltersForMockObject, false);
          targetClass = classOrInstance.getClass();
          redefineClassAndItsSuperClasses(targetClass);
       }

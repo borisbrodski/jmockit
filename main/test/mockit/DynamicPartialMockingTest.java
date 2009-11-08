@@ -27,6 +27,7 @@ package mockit;
 import java.util.*;
 
 import mockit.integration.junit4.*;
+
 import org.junit.*;
 
 public final class DynamicPartialMockingTest extends JMockitTest
@@ -218,5 +219,27 @@ public final class DynamicPartialMockingTest extends JMockitTest
       // Not mocked:
       assertTrue(collaborator.simpleOperation(0, null, null));
       assertNull(dependency.doSomethingElse(3));
+   }
+
+   @Test
+   public void dynamicallyMockJREClass()
+   {
+      final List<String> list = new LinkedList<String>();
+
+      new NonStrictExpectations(list)
+      {
+         {
+            list.get(1); returns("an item");
+            list.size(); returns(2);
+         }
+      };
+
+      // Use mocked methods:
+      assertEquals(2, list.size());
+      assertEquals("an item", list.get(1));
+
+      // Use unmocked methods:
+      assertTrue(list.add("another"));
+      assertEquals("another", list.remove(0));
    }
 }

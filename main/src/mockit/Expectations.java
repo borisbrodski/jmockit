@@ -150,8 +150,15 @@ public class Expectations extends Invocations
     * belong.
     * <p/>
     * During the replay phase, any invocations to one of these classes or instances will execute
-    * real production code, unless that invocation was expected (ie, previously recorded as an
-    * expectation).
+    * real production code, unless a corresponding invocation was previously recorded as an
+    * expectation inside the block.
+    * <p/>
+    * For a given <em>object</em> (of any valid mockable type) that is to be partially mocked, all
+    * methods will be considered for mocking, from the concrete class of the given object up to but
+    * not including {@code java.lang.Object}. The constructors of those classes, though, will not be
+    * considered.
+    * For a given {@code Class} object, on the other hand, both constructors and methods will be
+    * considered for mocking, but only those belonging to the specified class.
     *
     * @param classesOrObjectsToBePartiallyMocked one or more classes or objects whose classes are
     * to be considered for partial mocking

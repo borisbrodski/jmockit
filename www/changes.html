@@ -71,6 +71,15 @@
       The old method <code>Expectations.assertSatisfied()</code> (which has been unnecessary for a
       long time already), was deprecated in this release and will be removed for version 1.0.
    </li>
+   <li>
+      For better robustness, when an object to be partially mocked is passed to the
+      <code>Expectations</code> or <code>NonStrictExpectations</code> constructor which has a
+      "varargs" parameter, only <em>methods</em> are now considered for mocking, not the
+      <em>constructors</em> of the classes to which the given object belongs.
+      This change can break existing tests, but is not likely to do so because in such cases the
+      test should not be recording expectations on constructors which were used to create the
+      partially mocked object in the first place.
+   </li>
 </ul>
 
 <h3>Current release</h3>
