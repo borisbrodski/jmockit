@@ -102,10 +102,11 @@ final class MockedType
    {
       boolean mock = mocked != null || mockField != null || capturing != null || nonStrict;
 
-      if (!mock && (fieldFromTestClass || isPrivate(accessModifiers))) {
-         return false;
-      }
+      return (mock || !fieldFromTestClass && !isPrivate(accessModifiers)) && isMockableType();
+   }
 
+   private boolean isMockableType()
+   {
       if (declaredType instanceof Class) {
          Class<?> classType = (Class<?>) declaredType;
          return !classType.isPrimitive() && !classType.isArray();
@@ -114,9 +115,14 @@ final class MockedType
       return true;
    }
 
+   boolean isMockParameter()
+   {
+      return isMockableType();
+   }
+
    boolean isFinalFieldOrParameter()
    {
-      return isFinal(accessModifiers);
+      return field == null || isFinal(accessModifiers);
    }
 
    String[] getFilters()

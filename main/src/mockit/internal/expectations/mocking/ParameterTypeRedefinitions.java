@@ -57,7 +57,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       Type paramType = paramTypes[paramIndex];
       MockedType typeMetadata = new MockedType(paramIndex, paramType, paramAnnotations[paramIndex]);
 
-      if (!typeMetadata.isMockField()) {
+      if (!typeMetadata.isMockParameter()) {
          return;
       }
 
