@@ -6,7 +6,10 @@
    <link rel="stylesheet" type="text/css" href="../prettify.css"/>
 </head>
 <body>
-<h2>An example</h2>
+<h2>
+   An example
+   <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+</h2>
 
 <p>
    Say you have a business domain layer class (a "service" class) with a business operation which
@@ -53,10 +56,21 @@
    In all three cases, a JUnit test case will mock out the three dependencies of the method under
    test, that is, the method calls at <code>(1)</code>, <code>(2)</code>, and <code>(3)</code>.
 </p>
+
+<h3 id="expectations">
+   Using the Expectations API
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#core"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#verifications"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    First, lets use the <strong>JMockit Expectations</strong> API.
 </p>
-<pre id="expectations"><code>   package jmockit.tutorial.domain;
+<pre><code>   package jmockit.tutorial.domain;
 
    import java.math.*;
    import java.util.*;
@@ -175,6 +189,17 @@
    There is more to the Expectations API, about which you can find in the Javadoc documentation,
    and also in the many additional sample tests inside the full distribution.
 </p>
+
+<h3 id="verifications">
+   Using the Verifications API
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#core"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#expectations"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#annotations"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    Up to this point we focused on <em>strict</em> expectations, that is, those that when recorded
    <em>must</em> be executed by the code under test in the same order; additionally, only explicitly
@@ -183,8 +208,7 @@
    Lets now consider testing with <em>non-strict</em> expectations, and the use of the
    <strong>JMockit Verifications</strong> API.
 </p>
-
-<pre id="verifications"><code>   package jmockit.tutorial.domain;
+<pre><code>   package jmockit.tutorial.domain;
 
    import java.util.*;
 
@@ -304,11 +328,21 @@
    <code>neverHappens()</code> method just before the invocation to verify is executed inside the
    verifications block.
 </p>
+
+<h3 id="annotations">
+   Using the Annotations API
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#expectations"><img align="right" src="go-top.png" title="First section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#verifications"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#core"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    Next, lets see how the <strong>JMockit Annotations</strong> API solves the problem.
 </p>
-
-<pre id="annotations"><code>   package domain;
+<pre><code>   package domain;
 
    import java.math.*;
    import java.util.*;
@@ -406,6 +440,16 @@
    should be used sparingly, though.)
 </p>
 
+<h3 id="core">
+   Using the Core API
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#expectations"><img align="right" src="go-top.png" title="First section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#annotations"><img align="right" src="go-up.png" title="Previous section"></a>
+      <img align="right" src="blank.gif" width="22">
+   </div>
+</h3>
 <p>
    Lastly, there is the <strong>JMockit Core</strong> API, which really is just an older and less
    capable version of the Annotations API. It allows tests written with JDK 1.4, but these days
@@ -415,7 +459,7 @@
    JUnit 4.5+ (for Java SE 5+) can always be used. TestNG can also be used (tested with versions
    5.8 and 5.9).
 </p>
-<pre id="core"><code>   package domain;
+<pre><code>   package domain;
 
    import java.math.*;
    import java.util.*;

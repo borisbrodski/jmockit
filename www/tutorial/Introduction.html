@@ -6,7 +6,11 @@
    <link rel="stylesheet" type="text/css" href="../prettify.css"/>
 </head>
 <body>
-<h2>Introduction</h2>
+<h2>
+   Introduction
+   <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+</h2>
+
 <p>
    In this tutorial we will examine the available mocking APIs, always with the help of relevant
    code snippets.
@@ -23,7 +27,16 @@
    chapters of the tutorial.
 </p>
 
-<h3 id="isolation">Developer testing and test isolation</h3>
+<h3 id="isolation">
+   Developer testing and test isolation
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#issues"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#mocks"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    Software tests written by the developers themselves, to test their own code, are often very
    important for successful software development.
@@ -49,7 +62,16 @@
    to isolate the code under test from irrelevant parts of the system is therefore generally useful.
 </p>
 
-<h3 id="mocks">Testing with mock objects</h3>
+<h3 id="mocks">
+   Testing with mock objects
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#issues"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#isolation"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#tools"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    A common and powerful technique for testing code in isolation is the use of "mocks".
    Traditionally, a <em>mock object</em> is an instance of a class specifically implemented for a
@@ -82,7 +104,16 @@
    layers.
 </p>
 
-<h3 id="tools">Tools for testing with mock objects</h3>
+<h3 id="tools">
+   Tools for testing with mock objects
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#isolation"><img align="right" src="go-top.png" title="First section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#mocks"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#issues"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    Existing tools for testing with mock objects include <a
    href="http://www.easymock.org">EasyMock</a> and <a href="http://www.jmock.org">jMock</a>, both of
@@ -100,7 +131,16 @@
    (interfaces, abstract classes, final or non-final classes, classes from the JRE, etc.).
 </p>
 
-<h3 id="issues">Issues with conventional mock objects</h3>
+<h3 id="issues">
+   Issues with conventional mock objects
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#isolation"><img align="right" src="go-top.png" title="First section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#tools"><img align="right" src="go-up.png" title="Previous section"></a>
+      <img align="right" src="blank.gif" width="22">
+   </div>
+</h3>
 <p>
    The conventional solutions for achieving isolation with mock objects impose certain design
    restrictions on the code under test. JMockit was created as an alternative with no such
