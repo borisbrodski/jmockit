@@ -4,7 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>mockit</groupId>
    <artifactId>jmockit</artifactId>
-   <version>0.991</version>
+   <version>0.992</version>
    <name>JMockit Testing Toolkit</name>
    <url>http://code.google.com/p/jmockit/</url>
    <description>

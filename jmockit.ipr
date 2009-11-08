@@ -470,6 +470,7 @@
         <root url="jar://c:/java/jdk1.6.0_16/jre/../lib/tools.jar!/" />
         <root url="jar://c:/java/jdk1.6.0_16/jre/../lib/tools.jar!/" />
         <root url="jar://c:/java/jdk1.6.0_16/jre/../lib/tools.jar!/" />
+        <root url="jar://$APPLICATION_HOME_DIR$/jre/jre/../lib/tools.jar!/" />
       </CLASSES>
       <JAVADOC>
         <root url="jar://c:/java/jdk1.6.0_16/jre/../lib/tools-javadoc.jar!/" />
@@ -481,6 +482,7 @@
         <root url="jar://c:/java/jdk1.6.0_16/jre/../lib/tools-javadoc.jar!/" />
         <root url="jar://c:/java/jdk1.6.0_16/jre/../lib/tools-javadoc.jar!/" />
         <root url="jar://c:/java/jdk1.6.0_16/jre/../lib/tools-javadoc.jar!/" />
+        <root url="jar://$APPLICATION_HOME_DIR$/jre/jre/../lib/tools-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
         <root url="jar://c:/java/jdk1.6.0_16/jre/../lib/tools-sources.jar!/" />
@@ -492,6 +494,7 @@
         <root url="jar://c:/java/jdk1.6.0_16/jre/../lib/tools-sources.jar!/" />
         <root url="jar://c:/java/jdk1.6.0_16/jre/../lib/tools-sources.jar!/" />
         <root url="jar://c:/java/jdk1.6.0_16/jre/../lib/tools-sources.jar!/" />
+        <root url="jar://$APPLICATION_HOME_DIR$/jre/jre/../lib/tools-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="PowerMock 1.3">
