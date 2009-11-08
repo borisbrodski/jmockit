@@ -30,6 +30,7 @@ import org.objectweb.asm2.*;
 
 import mockit.internal.capturing.*;
 import mockit.internal.filtering.*;
+import mockit.internal.util.*;
 
 abstract class CaptureOfNewInstances extends CaptureOfImplementations
 {
@@ -39,6 +40,11 @@ abstract class CaptureOfNewInstances extends CaptureOfImplementations
       int instancesCaptured;
 
       private Capture(MockedType typeMetadata) { this.typeMetadata = typeMetadata; }
+
+      private boolean isInstanceAlreadyCaptured(Object fieldOwner, Object mock)
+      {
+         return mock == Utilities.getFieldValue(typeMetadata.field, fieldOwner);
+      }
 
       private boolean captureInstance()
       {
@@ -88,7 +94,7 @@ abstract class CaptureOfNewInstances extends CaptureOfImplementations
       captures.add(new Capture(typeMetadata));
    }
 
-   final boolean captureNewInstance(Object mock)
+   final boolean captureNewInstance(Object fieldOwner, Object mock)
    {
       captureFound = null;
 
@@ -105,7 +111,10 @@ abstract class CaptureOfNewInstances extends CaptureOfImplementations
       }
 
       for (Capture capture : captures) {
-         if (capture.captureInstance()) {
+         if (fieldOwner != null && capture.isInstanceAlreadyCaptured(fieldOwner, mock)) {
+            break;
+         }
+         else if (capture.captureInstance()) {
             captureFound = capture;
             break;
          }

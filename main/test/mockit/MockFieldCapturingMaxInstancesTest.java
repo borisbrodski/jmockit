@@ -47,7 +47,7 @@ public final class MockFieldCapturingMaxInstancesTest extends JMockitTest
    @Test
    public void mockFieldWithUnlimitedCapturing()
    {
-      assertNotNull(Proxy.isProxyClass(mock2.getClass()));
+      assertTrue(Proxy.isProxyClass(mock1.getClass()));
 
       new Expectations()
       {
@@ -88,7 +88,7 @@ public final class MockFieldCapturingMaxInstancesTest extends JMockitTest
    @Test
    public void mockFieldWithCapturingLimitedToOneInstance()
    {
-      assertNotNull(Proxy.isProxyClass(mock2.getClass()));
+      assertNotNull(mock2);
 
       BaseClass service1 = new DerivedClass("test 1");
       assertNull(service1.str);
@@ -104,13 +104,13 @@ public final class MockFieldCapturingMaxInstancesTest extends JMockitTest
    @Test
    public void secondMockFieldWithCapturingLimitedToOneInstance()
    {
-      assertNotNull(Proxy.isProxyClass(mock2.getClass()));
+      assertNotNull(mock2);
 
       BaseClass service1 = new DerivedClass("test 1");
       assertNull(service1.str);
       assertSame(service1, mock2);
 
-      assertNotNull(Proxy.isProxyClass(mock3.getClass()));
+      assertNotNull(mock3);
 
       BaseClass service2 = new BaseClass("test 2");
       assertNull(service2.str);

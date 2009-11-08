@@ -30,6 +30,6 @@ public final class CaptureOfNewInstancesForParameters extends CaptureOfNewInstan
 
    public boolean captureNewInstanceForApplicableMockParameter(Object mock)
    {
-      return captureNewInstance(mock);
+      return captureNewInstance(null, mock);
    }
 }
