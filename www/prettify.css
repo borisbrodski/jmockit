@@ -8,7 +8,7 @@ h3 {
    margin-top: 3ex; font-size: 105%; padding: 3px;
    text-shadow: 2px 2px 2px #123152;
    background: -webkit-gradient(linear, left bottom, left top, from(darkslategray), to(lightseagreen));
-   color: azure; background-color: darkslategray;
+   color: azure; background-color: #4f6f6f;
    border: 1px solid navy; -moz-border-radius: 5px; -webkit-border-radius: 5px;
 }
 h4 { margin-top: 3ex; margin-bottom: 1ex; font-size: 100%; }
