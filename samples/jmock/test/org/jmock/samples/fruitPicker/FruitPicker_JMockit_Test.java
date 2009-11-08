@@ -46,7 +46,7 @@ public final class FruitPicker_JMockit_Test
       new Expectations()
       {
          {
-            mangoTree.pickFruit(withAny((Collection<Fruit>) null));
+            mangoTree.pickFruit((Collection<Fruit>) any);
             returns(new Delegate()
             {
                void pickFruit(Collection<Fruit> fruits)
