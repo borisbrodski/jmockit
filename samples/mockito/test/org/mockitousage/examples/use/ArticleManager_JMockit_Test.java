@@ -51,7 +51,7 @@ public class ArticleManager_JMockit_Test
       {
          {
             mockCalculator.countArticles("Guardian"); returns(12);
-            mockCalculator.countArticlesInPolish(withAny("")); returns(5);
+            mockCalculator.countArticlesInPolish(anyString); returns(5);
          }
       };
 

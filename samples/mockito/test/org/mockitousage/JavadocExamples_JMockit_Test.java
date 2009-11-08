@@ -27,12 +27,14 @@ package org.mockitousage;
 import java.util.*;
 
 import org.hamcrest.beans.*;
-import static org.junit.Assert.*;
+
 import org.junit.*;
 import org.junit.runner.*;
 
 import mockit.*;
 import mockit.integration.junit4.*;
+
+import static org.junit.Assert.*;
 
 @RunWith(JMockit.class)
 public class JavadocExamples_JMockit_Test
@@ -42,9 +44,11 @@ public class JavadocExamples_JMockit_Test
    @Test
    public void verifyBehavior()
    {
+      // Mock is used (replay phase):
       mockedList.add("one");
       mockedList.clear();
 
+      // Invocations to mock are verified (verify phase):
       new Verifications()
       {
          {
@@ -89,6 +93,10 @@ public class JavadocExamples_JMockit_Test
 
       assertEquals("first", mockedList.get(0));
 
+      // Note that verifying a stubbed invocation isn't "just redundant" if the test cares that the
+      // invocation occurs at least once. If this is the case, then it's not safe to expect the test
+      // to break without an explicit verification, because the method under test may never call the
+      // stubbed one, and that would be a bug that the test should detect.
       new Verifications()
       {
          {
@@ -121,7 +129,7 @@ public class JavadocExamples_JMockit_Test
       new NonStrictExpectations()
       {
          {
-            mockedList.get(withAny(0)); returns("element");
+            mockedList.get(anyInt); returns("element");
             mockedList.contains(with(new HasProperty<String>("abc"))); returns(true);
          }
       };
@@ -131,7 +139,7 @@ public class JavadocExamples_JMockit_Test
       new Verifications()
       {
          {
-            mockedList.get(withAny(1));
+            mockedList.get(anyInt);
          }
       };
    }
@@ -366,58 +374,76 @@ public class JavadocExamples_JMockit_Test
    }
 
    @Test
-   public void stubbingWithCallbacks()
+   public void stubbingWithCallbacksUsingDelegate(final TestedClass mock)
    {
-      TestedClass mock = new TestedClass();
+      new NonStrictExpectations()
+      {
+         {
+            mock.someMethod(anyString);
+            returns(new Delegate()
+            {
+               String delegate(String s)
+               {
+                  return "called with arguments: " + s;
+               }
+            });
+         }
+      };
 
-      Mockit.setUpMock(TestedClass.class, new Object()
+      assertEquals("called with arguments: foo", mock.someMethod("foo"));
+   }
+
+   @Test
+   public void stubbingWithCallbacksUsingMockUp()
+   {
+      final TestedClass mock = new TestedClass();
+
+      new MockUp<TestedClass>()
       {
          TestedClass it;
 
          @Mock
-         public String addItem(String s)
+         String someMethod(String s)
          {
-            System.out.println("Real instance: " + it);
-            return "called with: " + s;
+            assertSame(mock, it);
+            return "called with arguments: " + s;
          }
-      });
+      };
 
-      assertEquals("called with: foo", mock.addItem("foo"));
+      assertEquals("called with arguments: foo", mock.someMethod("foo"));
    }
 
    static final class TestedClass
    {
-      private final List<String> items = new LinkedList<String>();
-
-      public String addItem(String item) { items.add(item); return ""; }
-      public int getItemCount() { return items.size(); }
-      public Object getItem(int index) { return items.get(index); }
+      public String someMethod(String s) { return s; }
    }
 
    @Test // essentially equivalent to "spyingOnRealObjects", with some differences in behavior
    public void dynamicPartialMocking()
    {
-      final TestedClass partialMock = new TestedClass();
+      final List<String> partialMock = new LinkedList<String>();
 
       // Optionally, you can record some invocations:
       new NonStrictExpectations(partialMock)
       {
          {
-            partialMock.getItemCount(); returns(100);
+            partialMock.size(); returns(100);
 
             // When recording invocations, real methods are never called, so this would not throw an
-            // IndexOutOfBoundsException, but it would prevent the real "getItem" method from being
+            // IndexOutOfBoundsException, but it would prevent the real "get" method from being
             // executed in the replay phase:
-            // partialMock.getItem(1); returns("an item");
+            // partialMock.get(1); returns("an item");
+            // TODO: allow execution of a mocked method when no matching invocation was recorded
          }
       };
 
       // Using the mock calls real methods, except those with recorded invocations:
-      partialMock.addItem("one");
-      partialMock.addItem("two");
+      partialMock.add("one");
+      partialMock.add("two");
 
-      assertEquals("one", partialMock.getItem(0));
-      assertEquals(100, partialMock.getItemCount());
+      assertEquals("one", partialMock.get(0));
+      assertEquals("two", partialMock.get(1));
+      assertEquals(100, partialMock.size());
 
       // Optionally, you can verify the actual execution of recorded invocations:
       new Verifications()
@@ -425,16 +451,16 @@ public class JavadocExamples_JMockit_Test
          {
             // This works, but adding a call to "repeats(1);" when recording the invocation would
             // have been simpler:
-            partialMock.getItemCount();
+            partialMock.size();
 
-            // Since no invocations were recorded for the "addItem" method, it was not mocked during
+            // Since no invocations were recorded for the "add" method, it was not mocked during
             // the replay phase. Therefore the following call will NOT verify anything; instead, it
             // will execute the real method.
             // If a test really needs to verify the execution of such a method, it can be done by
             // recording a strict invocation, or by specifying the minimum or exact invocation count
             // on the recording of a non-strict invocation; but then the real method would not be
             // executed in the replay phase.
-            partialMock.addItem("three");
+            partialMock.add("three");
          }
       };
 

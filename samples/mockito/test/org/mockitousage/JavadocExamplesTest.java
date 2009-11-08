@@ -18,6 +18,7 @@ import org.hamcrest.beans.*;
  * <a href="http://mockito.googlecode.com/svn/branches/1.7/javadoc/org/mockito/Mockito.html">Mockito documentation</a>,
  * with some minor changes.
  */
+@SuppressWarnings({"unchecked"})
 @RunWith(MockitoJUnitRunner.class)
 public class JavadocExamplesTest
 {
@@ -63,13 +64,11 @@ public class JavadocExamplesTest
    @Test
    public void stubbingAndVerifying()
    {
-      List<String> mockedList = mock(LinkedList.class);
-
       when(mockedList.get(0)).thenReturn("first");
 
       assertEquals("first", mockedList.get(0));
 
-      // Although it is possible to verify a stubbed invocation, usually it's just redundant
+      // Although it is possible to verify a stubbed invocation, usually it's just redundant.
       // If your code cares what get(0) returns then something else breaks (often before even
       // verify() gets executed).
       // If your code doesn't care what get(0) returns then it should not be stubbed.
@@ -235,14 +234,14 @@ public class JavadocExamplesTest
    @Test
    public void stubbingWithCallbacks()
    {
-      TestedClass mock = mock(TestedClass.class);
+      final TestedClass mock = mock(TestedClass.class);
 
       when(mock.someMethod(anyString())).thenAnswer(new Answer()
       {
          public Object answer(InvocationOnMock invocation)
          {
+            assertSame(mock, invocation.getMock());
             Object[] args = invocation.getArguments();
-            Object mock = invocation.getMock();
             return "called with arguments: " + Arrays.toString(args);
          }
       });
@@ -250,41 +249,35 @@ public class JavadocExamplesTest
       assertEquals("called with arguments: [foo]", mock.someMethod("foo"));
    }
 
-   static class TestedClass
+   static class TestedClass // cannot be "final"
    {
-      private final List<String> items = new LinkedList<String>();
-
-      public String someMethod(String s) { return ""; }
-      public String addItem(String item) { items.add(item); return ""; }
-      public int getItemCount() { return items.size(); }
-      public Object getItem(int index) { return items.get(index); }
+      public String someMethod(String s) { return s; }
    }
 
    @Test
    public void spyingOnRealObjects()
    {
-      TestedClass spy = spy(new TestedClass());
+      List<String> spy = spy(new LinkedList<String>());
 
       //optionally, you can stub out some methods:
-      when(spy.getItemCount()).thenReturn(100);
+      when(spy.size()).thenReturn(100);
 
       // When using the regular "when(spy.someMethod(...)).thenDoXyz(...)" API, all calls to a spy
       // object will not only perform stubbing, but also execute the real method:
-      // when(spy.getItem(1)).thenReturn("an item"); => would throw an IndexOutOfBoundsException
-
+      // when(spy.get(1)).thenReturn("an item"); => would throw an IndexOutOfBoundsException.
       // Therefore, a different API must sometimes be used for stubbing, to avoid side effects:
-      doReturn("an item").when(spy).getItem(1);
+      doReturn("an item").when(spy).get(1);
       
       //using the spy calls real methods, except those stubbed out
-      spy.addItem("one");
-      spy.addItem("two");
+      spy.add("one");
+      spy.add("two");
 
-      assertEquals("one", spy.getItem(0));
-      assertEquals("an item", spy.getItem(1));
-      assertEquals(100, spy.getItemCount());
+      assertEquals("one", spy.get(0));
+      assertEquals("an item", spy.get(1));
+      assertEquals(100, spy.size());
 
       //optionally, you can verify
-      verify(spy).addItem("one"); // the real "addItem" is not called here
-      verify(spy).addItem("two");
+      verify(spy).add("one"); // the real "addItem" is not called here
+      verify(spy).add("two");
    }
 }
