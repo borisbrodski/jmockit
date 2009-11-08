@@ -79,14 +79,14 @@
       @Test
       public void doBusinessOperationXyz() throws Exception
       {
-         EntityX data = new EntityX(5, "abc", "5453-1");
-         BigDecimal total = new BigDecimal("125.40");
+         final EntityX data = new EntityX(5, "abc", "5453-1");
+         final BigDecimal total = new BigDecimal("125.40");
 
          new Expectations()
          {
             {
                List&lt;?> items = new ArrayList&lt;Object>();
-(1)            Database.find(withSubstring("select"), withAny("")); returns(items);
+(1)            Database.find(withSubstring("select"), null); returns(items);
 
 (2)            new ServiceB().computeTotal(items); returns(total);
 (3)            Database.save(data);
@@ -104,7 +104,7 @@
          new Expectations()
          {
             {
-(1)            Database.find(withAny(""), withAny(""));
+(1)            Database.find(anyString, anyString);
 
 (2)            new ServiceB().computeTotal((List&lt;?>) withNotNull());
                throwsException(new InvalidItemStatus());
@@ -166,8 +166,8 @@
    The similar <code>@RunWith(JMockit.class)</code> in JMockit isn't strictly required, though.
 </p>
 <p>
-   The method calls <code>withXyz(...)</code> use <em>Hamcrest matchers</em> for flexible argument
-   matching.
+   The method calls <code>withXyz(...)</code>, as well as the field accesses <code>anyAbc</code> use
+   <em>Hamcrest matchers</em> for flexible argument matching.
    Otherwise, an exact match is expected between recorded argument values and the corresponding
    values received in the replay phase.
 </p>

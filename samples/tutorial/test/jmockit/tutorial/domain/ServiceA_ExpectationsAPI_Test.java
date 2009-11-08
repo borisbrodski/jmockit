@@ -52,7 +52,7 @@ public final class ServiceA_ExpectationsAPI_Test
       {
          {
             List<?> items = new ArrayList<Object>();
-            Database.find(withSubstring("select"), withAny("")); returns(items);
+            Database.find(withSubstring("select"), null); returns(items);
 
             new ServiceB().computeTotal(items); returns(total);
             Database.save(data);
@@ -70,7 +70,7 @@ public final class ServiceA_ExpectationsAPI_Test
       new Expectations()
       {
          {
-            Database.find(withAny(""), withAny(""));
+            Database.find(anyString, anyString);
 
             new ServiceB().computeTotal((List<?>) withNotNull());
             throwsException(new InvalidItemStatus());
