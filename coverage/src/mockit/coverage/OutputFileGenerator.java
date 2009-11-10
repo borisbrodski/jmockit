@@ -34,44 +34,55 @@ final class OutputFileGenerator extends Thread
    private final String outputFormat;
    private final String outputDir;
    private final String[] sourceDirs;
+   private String[] classPath;
 
    OutputFileGenerator(String outputFormat, String outputDir, String[] sourceDirs)
    {
-      this.outputFormat = outputFormat.length() > 0 ? outputFormat : outputFormatFromClasspath();
       this.outputDir = outputDir;
       this.sourceDirs = sourceDirs;
+
+      String format = outputFormat.length() > 0 ? outputFormat : outputFormatFromClasspath();
+
+      if (format.length() == 0) {
+         format = "html-nocp";
+      }
+
+      this.outputFormat = format;
    }
 
    private String outputFormatFromClasspath()
    {
+      classPath = System.getProperty("java.class.path").split(File.pathSeparator);
       String result = "";
 
-      if (availableInTheClasspath("mockit.coverage.output.BasicXmlWriter")) {
+      if (availableInTheClasspath("xmlbasic")) {
          result = "xml-nocp";
       }
-      else if (availableInTheClasspath("mockit.coverage.output.FullXmlWriter")) {
+      else if (availableInTheClasspath("xmlfull")) {
          result = "xml";
       }
       
-      if (availableInTheClasspath("mockit.coverage.reporting.BasicCoverageReport")) {
+      if (availableInTheClasspath("htmlbasic")) {
          result += "html-nocp";
       }
-      else if (availableInTheClasspath("mockit.coverage.reporting.FullCoverageReport")) {
+      else if (availableInTheClasspath("htmlfull")) {
          result += "html";
       }
 
       return result;
    }
 
-   private boolean availableInTheClasspath(String outputGeneratorClassName)
+   private boolean availableInTheClasspath(String jarFileNameSuffix)
    {
-      try {
-         Class.forName(outputGeneratorClassName);
-         return true;
+      String desiredJarFile = "jmockit-coverage-" + jarFileNameSuffix + ".jar";
+
+      for (String cpEntry : classPath) {
+         if (cpEntry.endsWith(desiredJarFile)) {
+            return true;
+         }
       }
-      catch (ClassNotFoundException ignore) {
-         return false;
-      }
+
+      return false;
    }
 
    boolean isOutputToBeGenerated()
@@ -92,22 +103,31 @@ final class OutputFileGenerator extends Thread
       CoverageData coverageData = CoverageData.instance();
 
       try {
-         if (outputFormat.contains("xml-nocp")) {
-            new BasicXmlWriter(coverageData).writeToXmlFile(outputDir);
-         }
-         else if (outputFormat.contains("xml")) {
-            new FullXmlWriter(coverageData).writeToXmlFile(outputDir);
-         }
-
-         if (outputFormat.contains("html-nocp")) {
-            new BasicCoverageReport(outputDir, sourceDirs, coverageData).generate();
-         }
-         else if (outputFormat.contains("html")) {
-            new FullCoverageReport(outputDir, sourceDirs, coverageData).generate();
-         }
+         generateXMLOutputFileIfRequested(coverageData);
+         generateHTMLReportIfRequested(coverageData);
       }
       catch (IOException e) {
          throw new RuntimeException(e);
+      }
+   }
+
+   private void generateXMLOutputFileIfRequested(CoverageData coverageData) throws IOException
+   {
+      if (outputFormat.contains("xml-nocp")) {
+         new BasicXmlWriter(coverageData).writeToXmlFile(outputDir);
+      }
+      else if (outputFormat.contains("xml")) {
+         new FullXmlWriter(coverageData).writeToXmlFile(outputDir);
+      }
+   }
+
+   private void generateHTMLReportIfRequested(CoverageData coverageData) throws IOException
+   {
+      if (outputFormat.contains("html-nocp")) {
+         new BasicCoverageReport(outputDir, sourceDirs, coverageData).generate();
+      }
+      else if (outputFormat.contains("html")) {
+         new FullCoverageReport(outputDir, sourceDirs, coverageData).generate();
       }
    }
 }
