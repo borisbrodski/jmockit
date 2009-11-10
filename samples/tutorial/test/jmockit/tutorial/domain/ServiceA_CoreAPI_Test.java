@@ -29,10 +29,11 @@ import java.util.*;
 
 import jmockit.tutorial.infrastructure.*;
 
-import mockit.*;
-import mockit.integration.junit3.*;
+import junit.framework.*;
 
-public final class ServiceA_CoreAPI_Test extends JMockitTestCase
+import mockit.*;
+
+public final class ServiceA_CoreAPI_Test extends TestCase
 {
    private boolean serviceMethodCalled;
 

@@ -1,5 +1,5 @@
 /*
- * JMockit Core
+ * JMockit
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -35,18 +35,7 @@ public final class AgentInitialization
       String jarFilePath = discoverPathToJarFile();
 
       if (Startup.jdk6OrLater) {
-         try {
-            Class.forName("com.sun.tools.attach.VirtualMachine");
-
-            // The JDK6AgentLoader won't be loaded if this line is not executed, at least in
-            // the Sun JDKs.
-            new JDK6AgentLoader(jarFilePath).loadAgent();
-         }
-         catch (ClassNotFoundException e) {
-            throw new IllegalStateException(
-               "Please add <jdk_dir>/lib/tools.jar to the classpath, or specify -javaagent:" +
-               jarFilePath + " in the command line for starting the JVM.", e);
-         }
+         new JDK6AgentLoader(jarFilePath).loadAgent();
       }
       else if ("1.5".equals(Startup.javaSpecVersion)) {
          throw new IllegalStateException(

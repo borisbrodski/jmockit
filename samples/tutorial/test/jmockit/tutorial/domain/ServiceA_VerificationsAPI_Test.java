@@ -26,17 +26,16 @@ package jmockit.tutorial.domain;
 
 import java.util.*;
 
+import jmockit.tutorial.infrastructure.*;
+
 import org.junit.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
-import jmockit.tutorial.infrastructure.*;
-
-public final class ServiceA_VerificationsAPI_Test extends JMockitTest
+public final class ServiceA_VerificationsAPI_Test
 {
-   @Mocked private final Database onlyStatics = null;
-   @Mocked private final ServiceB unused = null;
+   @Mocked final Database onlyStatics = null;
+   @Mocked final ServiceB unused = null;
 
    @Test
    public void doBusinessOperationXyzSavesData() throws Exception

@@ -9,7 +9,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" scope="RUNTIME" name="Attach API" level="application" />
     <orderEntry type="library" name="JUnit 4.7" level="application" />
     <orderEntry type="module-library">
       <library>
@@ -22,7 +21,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../lib/objenesis-1.1.jar!/" />

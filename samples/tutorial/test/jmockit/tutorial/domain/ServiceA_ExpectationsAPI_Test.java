@@ -29,18 +29,15 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
 import jmockit.tutorial.infrastructure.*;
 
-@RunWith(JMockit.class)
 public final class ServiceA_ExpectationsAPI_Test
 {
-   @Mocked private final Database unused = null;
-   @Mocked private ServiceB serviceB;
+   @Mocked final Database unused = null;
+   @Mocked ServiceB serviceB;
 
    @Test
    public void doBusinessOperationXyz() throws Exception

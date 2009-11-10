@@ -207,14 +207,18 @@
         <w>defs</w>
         <w>desc</w>
         <w>destfile</w>
+        <w>enqueue</w>
         <w>finalizers</w>
         <w>formatter</w>
         <w>getenv</w>
+        <w>htmlbasic</w>
+        <w>htmlfull</w>
         <w>initializer</w>
         <w>initializers</w>
         <w>interpolator</w>
         <w>jaas</w>
         <w>javaagent</w>
+        <w>jplis</w>
         <w>liesenfeld</w>
         <w>lifecycle</w>
         <w>login</w>
@@ -246,12 +250,15 @@
         <w>runtime</w>
         <w>savepoint</w>
         <w>smil</w>
+        <w>solaris</w>
         <w>startup</w>
         <w>stubbings</w>
         <w>stylesheet</w>
         <w>sublicense</w>
         <w>throwable</w>
         <w>unmocked</w>
+        <w>xmlbasic</w>
+        <w>xmlfull</w>
       </words>
     </dictionary>
   </component>
@@ -279,7 +286,7 @@
       <module fileurl="file://$PROJECT_DIR$/www/www.iml" filepath="$PROJECT_DIR$/www/www.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="Sun 1.6.0_17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
   <component name="RmicSettings">
@@ -516,6 +523,13 @@
       <SOURCES>
         <root url="jar://C:/Java/mockito-1.8.0/sources/mockito-core-1.8.0-sources.jar!/" />
       </SOURCES>
+    </library>
+    <library name="JMockit Coverage">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/jmockit-coverage.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
     </library>
   </component>
 </project>

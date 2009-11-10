@@ -24,12 +24,34 @@
  */
 package mockit.internal.startup;
 
+import java.io.*;
 import java.lang.management.*;
+import java.util.*;
 
 import com.sun.tools.attach.*;
+import com.sun.tools.attach.spi.*;
+import sun.tools.attach.*;
+
+import mockit.internal.util.*;
 
 final class JDK6AgentLoader
 {
+   private static final Class<?>[] CONSTRUCTOR_PARAMS = {AttachProvider.class, String.class};
+   private static final AttachProvider ATTACH_PROVIDER = new AttachProvider()
+   {
+      @Override
+      public String name() { return null; }
+
+      @Override
+      public String type() { return null; }
+
+      @Override
+      public VirtualMachine attachVirtualMachine(String id) { return null; }
+
+      @Override
+      public List<VirtualMachineDescriptor> listVirtualMachines() { return null; }
+   };
+
    private final String jarFilePath;
 
    JDK6AgentLoader(String jarFilePath)
@@ -39,17 +61,35 @@ final class JDK6AgentLoader
 
    void loadAgent()
    {
-      String nameOfRunningVM = ManagementFactory.getRuntimeMXBean().getName();
-      int p = nameOfRunningVM.indexOf('@');
-      String pid = nameOfRunningVM.substring(0, p);
+      Class<? extends VirtualMachine> virtualMachineImpl = discoverVirtualMachineImplementation();
+      String pid = obtainProcessIdForRunningVM();
 
       try {
-         VirtualMachine vm = VirtualMachine.attach(pid);
+         VirtualMachine vm =
+            Utilities.newInstance(virtualMachineImpl, CONSTRUCTOR_PARAMS, ATTACH_PROVIDER, pid);
+
          vm.loadAgent(jarFilePath, "");
          vm.detach();
       }
       catch (Exception e) {
          throw new RuntimeException(e);
       }
+   }
+
+   private Class<? extends VirtualMachine> discoverVirtualMachineImplementation()
+   {
+      if (File.separatorChar == '\\') {
+         return WindowsVirtualMachine.class;
+      }
+
+      return LinuxVirtualMachine.class;
+   }
+
+   private String obtainProcessIdForRunningVM()
+   {
+      String nameOfRunningVM = ManagementFactory.getRuntimeMXBean().getName();
+      int p = nameOfRunningVM.indexOf('@');
+
+      return nameOfRunningVM.substring(0, p);
    }
 }

@@ -29,15 +29,12 @@ import java.util.*;
 
 import org.junit.*;
 import static org.junit.Assert.*;
-import org.junit.runner.*;
 
 import mockit.*;
 import static mockit.Mockit.*;
-import mockit.integration.junit4.*;
 
 import jmockit.tutorial.infrastructure.*;
 
-@RunWith(JMockit.class)
 public final class ServiceA_AnnotationsAPI_Test
 {
    @MockClass(realClass = Database.class)

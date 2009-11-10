@@ -156,7 +156,9 @@
       <jar destfile="jmockit.jar" manifest="main/META-INF/MANIFEST.MF">
          <fileset file="main/src/jmockit.properties"/>
          <fileset dir="main/src" includes="mockit/**/*.java"/>
-         <fileset dir="main/classes" includes="mockit/**/*.class"/>
+         <fileset
+            dir="main/classes"
+            includes="mockit/**/*.class **/attach/**/*.class org/junit/runner/*.class"/>
          <fileset dir="${ASM_CLASSES}" excludes="LICENSE.txt **/package.html"/>
          <fileset dir="${HAMCREST_CLASSES}" excludes="hamcrest-LICENSE.txt **/package.html"/>
          <manifest><attribute name="Implementation-Version" value="${version}"/></manifest>
@@ -165,36 +167,27 @@
 
    <target name="createjar-coverage">
       <jar
-         destfile="jmockit-coverage.jar" basedir="coverage/classes"
-         excludes="**/Basic*.class **/Full*.class integrationTests/**">
+         destfile="jmockit-coverage.jar" basedir="coverage/classes" excludes="integrationTests/**">
          <manifest><attribute name="Implementation-Version" value="${version}"/></manifest>
       </jar>
    </target>
    <target name="createjar-coverage-xmlbasic">
-      <jar
-         destfile="jmockit-coverage-xmlbasic.jar" basedir="coverage/classes"
-         includes="**/BasicXmlWriter.class">
+      <jar destfile="jmockit-coverage-xmlbasic.jar" basedir="coverage/classes" excludes="**/*">
          <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
       </jar>
    </target>
    <target name="createjar-coverage-xmlfull">
-      <jar
-         destfile="jmockit-coverage-xmlfull.jar" basedir="coverage/classes"
-         includes="**/FullXmlWriter.class">
+      <jar destfile="jmockit-coverage-xmlfull.jar" basedir="coverage/classes" excludes="**/*">
          <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
       </jar>
    </target>
    <target name="createjar-coverage-htmlbasic">
-      <jar
-         destfile="jmockit-coverage-htmlbasic.jar" basedir="coverage/classes"
-         includes="**/BasicCoverageReport.class">
+      <jar destfile="jmockit-coverage-htmlbasic.jar" basedir="coverage/classes" excludes="**/*">
          <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
       </jar>
    </target>
    <target name="createjar-coverage-htmlfull">
-      <jar
-         destfile="jmockit-coverage-htmlfull.jar" basedir="coverage/classes"
-         includes="**/FullCoverageReport.class">
+      <jar destfile="jmockit-coverage-htmlfull.jar" basedir="coverage/classes" excludes="**/*">
          <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
       </jar>
    </target>
