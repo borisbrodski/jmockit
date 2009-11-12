@@ -29,16 +29,12 @@ import java.io.*;
 
 import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
-
-import mockit.integration.junit4.*;
 
 interface Dependency
 {
    String doSomething(boolean b);
 }
 
-@RunWith(JMockit.class)
 public final class ExpectationsUsingMockedTest<MultiMock extends Dependency & Runnable>
 {
    @Mocked private MultiMock multiMock;
@@ -107,23 +103,6 @@ public final class ExpectationsUsingMockedTest<MultiMock extends Dependency & Ru
 
       // Calls the mock method.
       collaborator.getValue();
-   }
-
-   @Test
-   public void mockFieldUsingDeprecatedAnnotationWithFilters()
-   {
-      //noinspection deprecation
-      new Expectations()
-      {
-         @MockField("getValue")
-         final Collaborator mock = new Collaborator();
-
-         {
-            mock.getValue();
-         }
-      };
-
-      new Collaborator().getValue();
    }
 
    @Test

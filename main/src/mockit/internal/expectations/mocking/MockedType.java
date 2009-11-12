@@ -31,14 +31,12 @@ import static java.lang.reflect.Modifier.*;
 import mockit.*;
 import mockit.internal.filtering.*;
 
-@SuppressWarnings({"deprecation"})
 final class MockedType
 {
    final Field field;
    private final boolean fieldFromTestClass;
    private final int accessModifiers;
    private final Mocked mocked;
-   private final MockField mockField;
    final Capturing capturing;
    final boolean nonStrict;
    final Type declaredType;
@@ -52,7 +50,6 @@ final class MockedType
       fieldFromTestClass = fromTestClass;
       accessModifiers = field.getModifiers();
       mocked = field.getAnnotation(Mocked.class);
-      mockField = mocked == null ? field.getAnnotation(MockField.class) : null;
       capturing = field.getAnnotation(Capturing.class);
       nonStrict = field.isAnnotationPresent(NonStrict.class);
       declaredType = field.getGenericType();
@@ -65,7 +62,6 @@ final class MockedType
       fieldFromTestClass = false;
       accessModifiers = 0;
       mocked = getAnnotation(annotationsOnParameter, Mocked.class);
-      mockField = null;
       capturing = getAnnotation(annotationsOnParameter, Capturing.class);
       nonStrict = getAnnotation(annotationsOnParameter, NonStrict.class) != null;
       declaredType = parameterType;
@@ -100,7 +96,7 @@ final class MockedType
 
    boolean isMockField()
    {
-      boolean mock = mocked != null || mockField != null || capturing != null || nonStrict;
+      boolean mock = mocked != null || capturing != null || nonStrict;
 
       return (mock || !fieldFromTestClass && !isPrivate(accessModifiers)) && isMockableType();
    }
@@ -127,21 +123,14 @@ final class MockedType
 
    String[] getFilters()
    {
-      String[] filters = null;
-
-      if (mocked != null) {
-         filters = mocked.methods();
-
-         if (filters.length == 0) {
-            filters = mocked.value();
-         }
+      if (mocked == null) {
+         return null;
       }
-      else if (mockField != null) {
-         filters = mockField.methods();
 
-         if (filters.length == 0) {
-            filters = mockField.value();
-         }
+      String[] filters = mocked.methods();
+
+      if (filters.length == 0) {
+         filters = mocked.value();
       }
 
       return filters;
@@ -149,26 +138,12 @@ final class MockedType
 
    boolean hasInverseFilters()
    {
-      if (mocked != null) {
-         return mocked.inverse();
-      }
-      else if (mockField != null) {
-         return mockField.inverse();
-      }
-
-      return false;
+      return mocked != null && mocked.inverse();
    }
 
    String getConstructorArgsMethod()
    {
-      if (mocked != null) {
-         return mocked.constructorArgsMethod();
-      }
-      else if (mockField != null) {
-         return mockField.constructorArgsMethod();
-      }
-
-      return "";
+      return mocked == null ? "" : mocked.constructorArgsMethod();
    }
 
    int getMaxInstancesToCapture()
@@ -179,22 +154,12 @@ final class MockedType
       else if (mocked != null) {
          return mocked.capture();
       }
-      else if (mockField != null) {
-         return mockField.capture();
-      }
 
       return 0;
    }
 
    String getRealClassName()
    {
-      if (mocked != null) {
-         return mocked.realClassName();
-      }
-      else if (mockField != null) {
-         return mockField.realClassName();
-      }
-
-      return "";
+      return mocked == null ? "" : mocked.realClassName();
    }
 }
