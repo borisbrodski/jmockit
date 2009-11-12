@@ -51,8 +51,13 @@ public final class MockingBridge implements InvocationHandler
 
    public Object invoke(Object mocked, Method method, Object[] args) throws Throwable
    {
-      targetId = (Integer) args[0];
       mockClassInternalName = (String) args[2];
+
+      if (isCallThatParticipatesInClassLoading(mocked)) {
+         return Void.class;
+      }
+
+      targetId = (Integer) args[0];
       mockIndex = targetId < FIRST_TARGET_WITH_EXTRA_ARG ? -1 : (Integer) args[5];
 
       if (targetId == UPDATE_MOCK_STATE) {
@@ -85,6 +90,26 @@ public final class MockingBridge implements InvocationHandler
       finally {
          TestRun.exitNoMockingZone();
       }
+   }
+
+   private boolean isCallThatParticipatesInClassLoading(Object mocked)
+   {
+      if (mocked != null && mocked.getClass() == java.io.File.class) {
+         StackTraceElement[] st = new Throwable().getStackTrace();
+
+         for (int i = 3; i < st.length; i++) {
+            StackTraceElement ste = st[i];
+
+            if (
+               "ClassLoader.java".equals(ste.getFileName()) && 
+               "loadClassInternal".equals(ste.getMethodName())
+            ) {
+               return true;
+            }
+         }
+      }
+
+      return false;
    }
 
    private void extractMockMethodAndArguments(Object[] args)

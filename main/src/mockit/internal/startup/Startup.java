@@ -109,20 +109,24 @@ public final class Startup
     *                  classpath; the part between square brackets is optional
     * @param inst      the instrumentation service provided by the JVM
     */
-   public static void premain(String agentArgs, Instrumentation inst) throws IOException
+   public static void premain(String agentArgs, Instrumentation inst) throws Exception
    {
       initialize(agentArgs, inst);
    }
 
    @SuppressWarnings({"UnusedDeclaration"})
-   public static void agentmain(String agentArgs, Instrumentation inst) throws IOException
+   public static void agentmain(String agentArgs, Instrumentation inst) throws Exception
    {
       initialize(agentArgs, inst);
    }
 
-   private static void initialize(String agentArgs, Instrumentation inst) throws IOException
+   private static void initialize(String agentArgs, Instrumentation inst)
+      throws IOException, ClassNotFoundException
    {
       instrumentation = inst;
+
+      // Pre-load the mocking bridge to avoid a ClassCircularityError.
+      Class.forName("mockit.internal.MockingBridge");
 
       loadInternalStartupMocks();
 
