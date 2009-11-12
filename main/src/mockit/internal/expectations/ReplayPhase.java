@@ -148,6 +148,11 @@ final class ReplayPhase extends Phase
             AssertionError error = invocation.assertThatInvocationArgumentsMatch(replayArgs);
 
             if (error != null) {
+               if (currentExpectation.constraints.isInvocationCountInExpectedRange()) {
+                  moveToNextExpectation();
+                  continue;
+               }
+
                recordAndReplay.errorThrown = error;
                return null;
             }

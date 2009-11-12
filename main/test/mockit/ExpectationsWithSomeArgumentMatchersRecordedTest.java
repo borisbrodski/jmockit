@@ -27,14 +27,10 @@ package mockit;
 import java.util.*;
 
 import org.junit.*;
-import org.junit.runner.*;
-
-import mockit.integration.junit4.*;
 
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
-@RunWith(JMockit.class)
 public final class ExpectationsWithSomeArgumentMatchersRecordedTest
 {
    @SuppressWarnings({"UnusedDeclaration"})
@@ -75,8 +71,7 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
          {
             mock.simpleOperation(withEqual(1), "", null);
             mock.simpleOperation(withNotEqual(1), null, (Date) withNull());
-            mock.simpleOperation(1, withNotEqual("arg"), null);
-            repeats(1, 1); // TODO: bug with repeats(1, 2);
+            mock.simpleOperation(1, withNotEqual("arg"), null); repeats(1, 2);
             mock.simpleOperation(12, "arg", (Date) withNotNull());
 
             mock.anotherOperation((byte) 0, withAny(0L)); returns(123L);

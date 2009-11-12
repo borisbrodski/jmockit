@@ -26,12 +26,10 @@ package mockit;
 
 import java.util.*;
 
-import mockit.integration.junit4.*;
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public final class ExpectationsWithInvocationCountsTest
 {
    private final CodeUnderTest codeUnderTest = new CodeUnderTest();
@@ -241,6 +239,22 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomething();
       codeUnderTest.doSomething();
       codeUnderTest.doSomethingElse();
+   }
+
+   @Test
+   public void expectSameMethodOnceOrTwiceThenOnceButReplayEachExpectationOnlyOnce(
+      final Collaborator mock)
+   {
+      new Expectations()
+      {
+         {
+            mock.simpleOperation(1, "", null); repeats(1, 2);
+            mock.simpleOperation(2, "", null);
+         }
+      };
+
+      mock.simpleOperation(1, "", null);
+      mock.simpleOperation(2, "", null);
    }
 
    @Test
