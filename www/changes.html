@@ -41,7 +41,29 @@
             The <code>Verifications#neverHappens()</code> method: replace with a
             <code>repeats(0);</code> call right after the invocation to be verified.
          </li>
+         <li>
+            The <code>Expectations#invokeReturning</code> generic method: use the
+            <code>returns</code> method instead.
+         </li>
+         <li>The <code>Expectations#endReplay()</code> method: simply remove any calls to it.</li>
+         <li>
+            The <code>Expectations.assertSatisfied()</code> static method: this method was
+            deprecated in the previous release, and is also being removed now because it does the 
+            same as <code>endReplay()</code>.
+         </li>
+         <li>
+            The <code>Expectations.restoreFieldTypeDefinitions()</code> static method: either remove
+            any calls to it, or replace them with calls to
+            <code>Mockit.restoreAllOriginalDefinitions()</code>, which has the same effect.
+         </li>
       </ol>
+   </li>
+   <li>
+      Fixed an issue in the mocking of certain JRE classes (<code>java.io.File</code> and others)
+      that are used during the class loading process triggered by the JVM.
+      This avoids the occurrence of a <code>ClassCircularityError</code> under certain situations
+      (in particular, when classes used in a test are loaded on demand by the JVM and a critical
+      JRE class is mocked at the same time).
    </li>
 </ul>
 

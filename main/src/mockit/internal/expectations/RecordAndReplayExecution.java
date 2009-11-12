@@ -290,24 +290,6 @@ public final class RecordAndReplayExecution
       return verificationPhase;
    }
 
-   public AssertionError endReplay()
-   {
-      if (replayPhase == null) {
-         throw new IllegalStateException("Not in the replay phase yet");
-      }
-
-      return endReplayPhaseExecution();
-   }
-
-   private AssertionError endReplayPhaseExecution()
-   {
-      if (redefinitions != null) {
-         redefinitions.cleanUp();
-      }
-
-      return replayPhase.endExecution();
-   }
-
    public static AssertionError endCurrentReplayIfAny()
    {
       RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
@@ -318,7 +300,11 @@ public final class RecordAndReplayExecution
    {
       endRecording();
 
-      AssertionError error = endReplayPhaseExecution();
+      if (redefinitions != null) {
+         redefinitions.cleanUp();
+      }
+
+      AssertionError error = replayPhase.endExecution();
 
       if (error == null && verificationPhase != null) {
          error = verificationPhase.endVerification();

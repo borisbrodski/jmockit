@@ -28,7 +28,6 @@ import java.util.*;
 
 import mockit.internal.expectations.*;
 import mockit.internal.startup.*;
-import mockit.internal.state.*;
 
 /**
  * Base class whose subclasses are defined in test code, and whose instances define a set of
@@ -108,7 +107,6 @@ import mockit.internal.state.*;
  *
  * @see #Expectations()
  */
-@SuppressWarnings({"ClassWithTooManyMethods"})
 public class Expectations extends Invocations
 {
    static
@@ -329,25 +327,6 @@ public class Expectations extends Invocations
    }
 
    /**
-    * Specifies in a type-safe way the return value for an individual mock invocation.
-    * All considerations made with respect to {@linkplain #returns(Object)} also apply here.
-    * 
-    * @param invocationReturningValue the value actually returned by an invocation of the desired
-    * method; the value itself is ignored, being only used to determine the method's return type
-    * @param expectedReturnValue the value to be returned when the recorded invocation is replayed
-    *
-    * @deprecated Use {@linkplain #returns(Object)} instead. This method will be removed for version
-    * 1.0.
-    */
-   @Deprecated
-   @SuppressWarnings({"UnusedDeclaration"})
-   protected final <T, ET extends T> void invokeReturning(
-      T invocationReturningValue, ET expectedReturnValue)
-   {
-      getCurrentExpectation().getResults().addReturnValue(expectedReturnValue);
-   }
-
-   /**
     * Specifies that the preceding method/constructor invocation will throw an exception when
     * executed in the replay phase.
     * <p/>
@@ -400,7 +379,7 @@ public class Expectations extends Invocations
       getCurrentPhase().setNotStrict();
    }
 
-   // Methods related to phase switching, final verification and tear down ////////////////////////
+   // Other methods ///////////////////////////////////////////////////////////////////////////////
 
    /**
     * Ends the recording of expected invocations.
@@ -416,60 +395,5 @@ public class Expectations extends Invocations
    public final void endRecording()
    {
       execution.endRecording();
-   }
-
-   /**
-    * See {@link #assertSatisfied()} instead.
-    * 
-    * @deprecated This method will be removed for version 1.0. If you have any calls to it in
-    * existing tests, remove them before then.
-    */
-   @Deprecated
-   public final void endReplay()
-   {
-      assertSatisfied();
-   }
-
-   /**
-    * Ends the replay phase, verifying that all recorded invocations actually happened during test
-    * execution. If there is no active set of expectations, does nothing.
-    * After this, no more calls to mocked methods/constructors should be made.
-    * <p/>
-    * <strong>Warning</strong>:
-    * This method will be called automatically by the test runner at the end of each test, so in
-    * general tests should not explicitly call it.
-    *
-    * @throws IllegalStateException if the current set of expectations is active but still in the
-    * recording phase
-    * @throws AssertionError if any expected invocation for the active set of expectations is
-    * missing, that is, a corresponding invocation in the replay phase did not occur until now
-    * 
-    * @deprecated This method will be removed for version 1.0. If you have any calls to it in
-    * existing tests, remove them before then.
-    */
-   @Deprecated
-   public static void assertSatisfied()
-   {
-      RecordAndReplayExecution recordAndReplay = TestRun.getRecordAndReplayForRunningTest(true);
-
-      if (recordAndReplay != null) {
-         AssertionError error = recordAndReplay.endReplay();
-
-         if (error != null) {
-            throw error;
-         }
-      }
-   }
-
-   /**
-    * See {@link Mockit#restoreAllOriginalDefinitions()} instead.
-    *
-    * @deprecated This method will be removed for version 1.0. If you have any calls to it in
-    * existing tests, remove them before then.
-    */
-   @Deprecated
-   public static void restoreFieldTypeDefinitions()
-   {
-      Mockit.restoreAllOriginalDefinitions();
    }
 }
