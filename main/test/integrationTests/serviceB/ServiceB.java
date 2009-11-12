@@ -41,8 +41,6 @@ public final class ServiceB
 
    public int computeX(int a, int b)
    {
-      System.out.println("The real ServiceB.computeX was called!");
-
       // Instead of a simple sum, assume that a complex calculation is performed, perhaps accessing
       // a database or another external resource.
       return a + b;

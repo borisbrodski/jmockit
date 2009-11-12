@@ -45,24 +45,6 @@ public final class CTest
       Mockit.restoreAllOriginalDefinitions();
    }
 
-   @Test
-   public void testPublicStaticBooleanNoArgs() throws Exception
-   {
-      redefineMethods(C.class, D.class);
-
-      boolean b = C.b();
-      assertFalse(b);
-   }
-
-   @Test
-   public void testPublicIntNoArgs() throws Exception
-   {
-      redefineMethods(C.class, new E());
-
-      int i = new C().i();
-      assertEquals(2, i);
-   }
-
    public static class E
    {
       static boolean noReturnCalled;
@@ -206,23 +188,6 @@ public final class CTest
    }
 
    @Test
-   public void testPublicFinalDate3Args()
-   {
-     redefineMethods(C.class, G.class);
-
-     assertNull(new C().createOtherObject(true, new Date(1000), 2000));
-   }
-
-   public static class G
-   {
-      public final Date createOtherObject(boolean b, Date d, int a)
-      {
-         System.out.println("G.createOtherObject(" + b + "," + d + "," + a + "," + ")");
-         return null;
-      }
-   }
-
-   @Test
    public void testPrivateStaticVoidNoArgs()
    {
       redefineMethods(C.class, H.class);
@@ -348,7 +313,6 @@ public final class CTest
       public void printArgs(Object... args)
       {
          C.printedText = "mock";
-         System.out.println("M.printArgs: " + asList(args));
       }
    }
 

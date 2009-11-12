@@ -176,7 +176,6 @@ public final class ServiceATest
       @Mock(reentrant = true)
       public int computeX(int a, int b)
       {
-         System.out.println("Entered computeX with a=" + a + " and b=" + b);
          return it.computeX(a, b);
       }
    }
@@ -201,14 +200,15 @@ public final class ServiceATest
       @Mock(reentrant = true)
       public int computeX(int a, int b)
       {
-         Integer x = null;
+         Integer x;
 
          try {
             x = it.computeX(a, b);
             return x;
          }
          finally {
-            System.out.println("Exited computeX with x=" + x);
+            // Statements to be executed on exit would be here.
+            x = a + b;
          }
       }
    }
@@ -233,9 +233,7 @@ public final class ServiceATest
       @Mock(reentrant = true)
       public int computeX(int a, int b)
       {
-         System.out.println("Computing x from " + a + " and " + b);
          int x = it.computeX(a, b);
-         System.out.println("result: x = " + x);
          return x;
       }
    }

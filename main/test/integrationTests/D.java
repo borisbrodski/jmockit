@@ -1,6 +1,6 @@
 /*
- * JMockit: a Java class library for developer testing with "mock methods" 
- * Copyright (c) 2006 Rogerio Liesenfeld
+ * JMockit Core
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -28,7 +28,6 @@ public final class D
 {
    public static boolean b()
    {
-      System.out.println("D.b");
       return false;
    }
 }
