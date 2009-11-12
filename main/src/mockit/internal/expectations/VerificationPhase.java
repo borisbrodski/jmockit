@@ -26,13 +26,10 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
-import mockit.internal.util.*;
-
 public abstract class VerificationPhase extends TestOnlyPhase
 {
    private final List<Expectation> expectationsInReplayOrder;
    protected final List<Expectation> expectationsVerified;
-   private boolean nextInvocationNeverHappens;
    private boolean allInvocationsDuringReplayMustBeVerified;
    protected AssertionError pendingError;
    private Expectation aggregate;
@@ -43,11 +40,6 @@ public abstract class VerificationPhase extends TestOnlyPhase
       super(recordAndReplay);
       this.expectationsInReplayOrder = expectationsInReplayOrder;
       expectationsVerified = new ArrayList<Expectation>();
-   }
-
-   public final void setNextInvocationNeverHappens(boolean nextInvocationNeverHappens)
-   {
-      this.nextInvocationNeverHappens = nextInvocationNeverHappens;
    }
 
    public final void setAllInvocationsMustBeVerified()
@@ -71,17 +63,6 @@ public abstract class VerificationPhase extends TestOnlyPhase
       argMatchers = null;
 
       if (recordAndReplay.errorThrown != null) {
-         return null;
-      }
-
-      if (nextInvocationNeverHappens) {
-         nextInvocationNeverHappens = false;
-
-         if (currentExpectation == null) {
-            return DefaultValues.computeForReturnType(mockNameAndDesc);
-         }
-
-         recordAndReplay.errorThrown = currentExpectation.errorForNeverHappened();
          return null;
       }
 

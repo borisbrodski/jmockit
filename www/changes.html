@@ -9,6 +9,42 @@
 
 <h2>JMockit development history</h2>
 
+<h3>Next release</h3>
+
+<p>Release 0.993 (November ??, 2009):</p>
+<ul>
+   <li>
+      <strong>Enhancement</strong>: to make JMockit easier to use when running under JDK 1.6+
+      without the <code>-javaagent</code> JVM parameter, two simplifications were introduced:
+      <ol>
+         <li>
+            The <code>&lt;jdkDir>/lib/tools.jar</code> file no longer needs to be added to
+            classpath.
+         </li>
+         <li>
+            Test classes no longer need to be annotated with <code>@RunWith(JMockit.class)</code>
+            (for JUnit 4 tests), nor extend a JUnit/TestNG integration base class
+            (<code>JMockitTest</code>, <code>JMockitTestCase</code>, <code>JMockitTestNG</code>).
+         </li>
+      </ol>
+      There is a requirement for the second item, though: <code>jmockit.jar</code> needs to come
+      <em>before</em> <code>junit.jar</code> or <code>testng.jar</code> in the classpath (the jar
+      file names don't need to be exactly these, of course).
+   </li>
+   <li>
+      Removed several API elements which were deprecated in releases 0.980 and 0.989.
+      Existing tests still using them will require the changes indicated below (all trivial,
+      though):
+      <ol>
+         <li>The <code>@MockField</code> annotation: simply replace with <code>@Mocked</code>.</li>
+         <li>
+            The <code>Verifications#neverHappens()</code> method: replace with a
+            <code>repeats(0);</code> call right after the invocation to be verified.
+         </li>
+      </ol>
+   </li>
+</ul>
+
 <h3>Current release</h3>
 
 <p>Release 0.992 (November 8, 2009):</p>

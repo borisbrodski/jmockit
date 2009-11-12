@@ -319,14 +319,13 @@
    Syntactically, a <em>verifications code block</em> is just like a expectations code block.
    Invocations to mocked types are immediately verified to match corresponding invocations made
    during the replay phase. Hamcrest matchers can be used so that a single invocation in a
-   verifications block verifies several invocations executed by the code under test.
+   verification block verifies several invocations executed by the code under test.
    The invocation count for a particular method or constructor can be verified by specifying
    constraints through one of the <code>repeats</code>, <code>repeatsAtLeast</code>,
    <code>repeatsAtMost</code> methods, just like it can be done for expected invocations in the
    recording phase (ie inside a expectations block).
-   Additionally, it can be verified that a particular invocation never happened by calling the
-   <code>neverHappens()</code> method just before the invocation to verify is executed inside the
-   verifications block.
+   In particular, it can be verified that a particular invocation never happened by calling
+   <code>repeats(0)</code> right after the invocation to verify inside the verification block.
 </p>
 
 <h3 id="annotations">

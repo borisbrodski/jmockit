@@ -106,20 +106,4 @@ public class Verifications extends Invocations
    {
       return verificationPhase;
    }
-
-   /**
-    * Specifies that the <strong>next</strong> invocation to be verified must never have happened
-    * during the replay phase.
-    * <p/>
-    * This is like calling {@code repeats(0)} in the recording phase, with the difference that it
-    * must be called just before the actual invocation to be verified.
-    *
-    * @deprecated Call {@code repeats(0)} after the invocation to be verified instead.
-    * This method will be removed for release 1.0.
-    */
-   @Deprecated
-   protected final void neverHappens()
-   {
-      verificationPhase.setNextInvocationNeverHappens(true);
-   }
 }
