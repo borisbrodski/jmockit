@@ -53,43 +53,83 @@ final class JDK6AgentLoader
    };
 
    private final String jarFilePath;
+   private final String pid;
 
    JDK6AgentLoader(String jarFilePath)
    {
       this.jarFilePath = jarFilePath;
+      pid = discoverProcessIdForRunningVM();
    }
 
-   void loadAgent()
-   {
-      Class<? extends VirtualMachine> virtualMachineImpl = discoverVirtualMachineImplementation();
-      String pid = obtainProcessIdForRunningVM();
-
-      try {
-         VirtualMachine vm =
-            Utilities.newInstance(virtualMachineImpl, CONSTRUCTOR_PARAMS, ATTACH_PROVIDER, pid);
-
-         vm.loadAgent(jarFilePath, "");
-         vm.detach();
-      }
-      catch (Exception e) {
-         throw new RuntimeException(e);
-      }
-   }
-
-   private Class<? extends VirtualMachine> discoverVirtualMachineImplementation()
-   {
-      if (File.separatorChar == '\\') {
-         return WindowsVirtualMachine.class;
-      }
-
-      return LinuxVirtualMachine.class;
-   }
-
-   private String obtainProcessIdForRunningVM()
+   private String discoverProcessIdForRunningVM()
    {
       String nameOfRunningVM = ManagementFactory.getRuntimeMXBean().getName();
       int p = nameOfRunningVM.indexOf('@');
 
       return nameOfRunningVM.substring(0, p);
+   }
+
+   void loadAgent()
+   {
+      VirtualMachine vm;
+
+      if (AttachProvider.providers().isEmpty()) {
+         vm = getVirtualMachineImplementationFromEmbeddedOnes();
+      }
+      else {
+         vm = attachToThisVM();
+      }
+
+      loadAgentAndDetachFromThisVM(vm);
+   }
+
+   private VirtualMachine getVirtualMachineImplementationFromEmbeddedOnes()
+   {
+      Class<? extends VirtualMachine> vmImplClass;
+
+      if (File.separatorChar == '\\') {
+         vmImplClass = WindowsVirtualMachine.class;
+      }
+      else {
+         vmImplClass = LinuxVirtualMachine.class;
+      }
+
+      try {
+         return Utilities.newInstance(vmImplClass, CONSTRUCTOR_PARAMS, ATTACH_PROVIDER, pid);
+      }
+      catch (UnsatisfiedLinkError e) {
+         throw new IllegalStateException(
+            "Unable to load Java agent; please add lib/tools.jar from your JDK to the classpath");
+      }
+   }
+
+   private VirtualMachine attachToThisVM()
+   {
+      try {
+         return VirtualMachine.attach(pid);
+      }
+      catch (AttachNotSupportedException e) {
+         throw new RuntimeException(e);
+      }
+      catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private void loadAgentAndDetachFromThisVM(VirtualMachine vm)
+   {
+      try {
+         vm.loadAgent(jarFilePath, null);
+         vm.detach();
+      }
+      catch (AgentLoadException e) {
+         throw new RuntimeException(e);
+      }
+      catch (AgentInitializationException e) {
+         throw new RuntimeException(e);
+      }
+      catch (IOException e) {
+         throw new RuntimeException(e);
+      }
    }
 }
