@@ -25,14 +25,11 @@
 package jmockit.loginExample.domain.userLogin;
 
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
 import jmockit.loginExample.domain.userAccount.*;
 
-@RunWith(JMockit.class)
 public final class LoginServiceTest
 {
    @Mocked private UserAccount account;
