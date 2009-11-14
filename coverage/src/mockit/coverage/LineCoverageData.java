@@ -157,4 +157,27 @@ public final class LineCoverageData implements Serializable
 
       return 100 * branchesCovered / branches.size();
    }
+
+   void addCountsFromPreviousMeasurement(LineCoverageData previousData)
+   {
+      executionCount += previousData.executionCount;
+
+      if (previousData.containsCallPoints()) {
+         if (containsCallPoints()) {
+            callPoints.addAll(0, previousData.callPoints);
+         }
+         else {
+            callPoints = previousData.callPoints;
+         }
+      }
+
+      if (containsBranches()) {
+         for (int i = 0; i < branches.size(); i++) {
+            BranchCoverageData branchData = branches.get(i);
+            BranchCoverageData previousBranchData = previousData.branches.get(i);
+
+            branchData.addCountsFromPreviousMeasurement(previousBranchData);
+         }
+      }
+   }
 }

@@ -109,7 +109,7 @@ final class OutputFileGenerator extends Thread
       CoverageData coverageData = CoverageData.instance();
 
       try {
-         mergeCoverageDataFromPreviousTestRunIfRequestedAndAvailable(coverageData);
+         generateAccretionDataFileIfRequested(coverageData);
          generateXMLOutputFileIfRequested(coverageData);
          generateHTMLReportIfRequested(coverageData);
       }
@@ -133,19 +133,11 @@ final class OutputFileGenerator extends Thread
       }
    }
 
-   private void mergeCoverageDataFromPreviousTestRunIfRequestedAndAvailable(CoverageData data)
+   private void generateAccretionDataFileIfRequested(CoverageData newData)
       throws IOException, ClassNotFoundException
    {
       if (outputFormat.contains("merge")) {
-         String parentDir = outputDir.length() == 0 ? null : outputDir;
-         File dataFile = new File(parentDir, "coverage.ser");
-
-         if (dataFile.exists()) {
-            CoverageData previousData = CoverageData.readDataFromFile(dataFile);
-            data.merge(previousData);
-         }
-
-         data.writeDataToFile(dataFile);
+         new AccretionFile(outputDir).generate(newData);
       }
    }
 
