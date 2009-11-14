@@ -24,8 +24,12 @@
  */
 package mockit.coverage;
 
-public final class CallPoint
+import java.io.*;
+
+public final class CallPoint implements Serializable
 {
+   private static final long serialVersionUID = 362727169057343840L;
+
    private final StackTraceElement ste;
 
    public CallPoint(StackTraceElement ste)

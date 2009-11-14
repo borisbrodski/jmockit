@@ -46,104 +46,157 @@
 </p>
 <p>
    There are two ways to control whether code coverage metrics are gathered or not for a given test
-   run, and which kind of output should be generated: through the classpath, and through JVM
-   parameters.
+   run, and which kind of output should be generated at the end: through the classpath, and through
+   JVM parameters.
+   In both cases, <code>jmockit.jar</code> (or an equivalent jar obtained from the
+   <a href="http://download.java.net/maven/2/mockit/jmockit/">Maven repository</a>) needs to be
+   present in the classpath.
 </p>
 
-<h3 id="jars">
-   Controlling code coverage through jar files in the classpath
+<h3 id="output">
+   Available types of coverage output
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <img align="right" src="blank.gif" width="22">
       <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
       <img align="right" src="blank.gif" width="22">
+      <a href="#jars"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
+<p>
+   The JMockit Coverage tool can generate the following types of output:
+</p>
+<ol>
+   <li>
+      XHTML reports: a multi-page XHTML report is written in the "coverage-report" directory, under
+      the current working directory. The directory is created if it doesn't yet exist; its contents
+      are overwritten if previously generated.
+      The report will include pages containing all Java source files covered by the test suite.
+      By default, the tool looks for ".java" source files inside all directories of name "src" found
+      directly or indirectly under the current working directory.
+      Any intermediate sub-directories between "src" and the top-level package directory, such as
+      "src/java" for example, will also be searched.
+   </li>
+   <li>
+      XML files: a single XML output file of name "coverage.xml" is written under the current
+      working directory. If the file already exists it is overwritten.
+   </li>
+</ol>
+<p>
+   For both types of output, there is optional "call point" information which may be included or
+   not, as selected by the user.
+   A <em>call point</em> is the point in the source test code from which an specific line of
+   production code was exercised.
+   Note that generating coverage with this extra information takes more time and produces
+   significantly larger output. On the other hand, it can be useful to know which lines of test code
+   caused a given line of production code to be executed during the test run. The XHTML report, in
+   particular, makes this information easily viewable, though hiding it at first.
+</p>
+
+<h3 id="jars">
+   Controlling coverage through the classpath
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#output"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#jvm"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
-   To have code coverage output generated for a test suite run, add one of the following jar files
-   to the classpath:
+   This mechanism applies when the <code>-javaagent:jmockit.jar</code> JVM parameter is <em>not</em>
+   used for running tests with JMockit. As such, it's only valid when running on JDK 1.6. (See the
+   <a href="RunningTests.html">relevant chapter</a> for details.)
+</p>
+<p>
+   To have code coverage output generated for a test run, add at least one of the following jar
+   files to the classpath:
 </p>
 <ul>
    <li>
-      <code>jmockit-coverage-htmlbasic.jar</code>:
-      generates an XHTML report in the "coverage-report" directory, without call points
+      <code>jmockit-coverage-<strong>htmlbasic</strong>.jar</code>:
+      generates an XHTML report in the "coverage-report" directory, without call points.
    </li>
    <li>
-      <code>jmockit-coverage-htmlfull.jar</code>:
-      generates an XHTML report in the "coverage-report" directory, with call points
+      <code>jmockit-coverage-<strong>htmlfull</strong>.jar</code>:
+      generates an XHTML report in the "coverage-report" directory, with call points.
    </li>
    <li>
-      <code>jmockit-coverage-xmlbasic.jar</code>:
-      generates an XML output file of name "coverage.xml", without call points
+      <code>jmockit-coverage-<strong>xmlbasic</strong>.jar</code>:
+      generates an XML output file of name "coverage.xml", without call points.
    </li>
    <li>
-      <code>jmockit-coverage-xmlfull.jar</code>:
-      generates an XML output file of name "coverage.xml", with call points
+      <code>jmockit-coverage-<strong>xmlfull</strong>.jar</code>:
+      generates an XML output file of name "coverage.xml", with call points.
    </li>
 </ul>
 <p>
-   All four jars above depend on <code>jmockit-coverage.jar</code>, which must be available in the
-   same directory. This last jar file does not need to be explicitly added to the classpath, though.
+   The "htmlbasic" and "htmlfull" jars are mutually exclusive, and the same holds for "xmlbasic" and
+   "xmlfull".
+   However, it <em>is</em> valid to have one of each pair in the classpath at the same time.
+   For example, if "htmlbasic" and "xmlfull" are both added to the classpath, at the end of the test
+   run both a "coverage.xml" file and a "coverage-report" directory will be written.
 </p>
 <p>
-   As with any other tool or API in the toolkit, JMockit must be initialized before it can do
-   anything. See <a href="RunningTests.html">these instructions</a>.
+   Each one of these <em>output specification jars</em> is empty except for the standard
+   <code>META-INF/MANIFEST.MF</code> file.
+   Still, they depend on <strong><code>jmockit-coverage.jar</code></strong> and this is specified
+   through the <code>Class-Path</code> property inside <code>MANIFEST.MF</code>.
+   Consequently, if this last jar file is available in the same directory then it does not need to
+   be explicitly added to the classpath; otherwise, it (or an equivalent jar from the Maven
+   repository) will need to be added.
 </p>
 <p>
-   The "html" jars produce an XHTML report in the "coverage-report" directory, under the current
-   working directory. The directory is created if it doesn't yet exist; its contents are overwritten
-   if previously generated.
-   The XHTML report includes pages containing all Java source files covered by the test suite.
-   The coverage tool looks for ".java" files inside all directories of name "src" found directly or
-   indirectly under the current working directory. Any intermediate sub-directories between "src"
-   and the top-level package directory, such as "src/java" for example, will also be searched.
-</p>
-<p>
-   The "xml" jars produce an XML output file of name "coverage.xml" under the current working
-   directory. If the file already exists it is overwritten.
-</p>
-<p>
-   A "call point" is the point in the source test code from which an specific line of production
-   code was exercised. Note that generating coverage without this information is faster and produces
-   smaller output.
+   If none of the output specification jars is added to the classpath, but
+   <code>jmockit-coverage.jar</code> is, then the "htmlbasic" report will be generated.
 </p>
 
 <h3 id="jvm">
-   Controlling code coverage through JVM parameters
+   Controlling coverage through JVM parameters
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
-      <img align="right" src="blank.gif" width="22">
+      <a href="#output"><img align="right" src="go-top.png" title="First section"></a>
       <img align="right" src="blank.gif" width="22">
       <a href="#jars"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#switching"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
-   To have direct control over the gathering of code coverage metrics for your tests, pass a command
-   line similar to <code>-javaagent:jmockit.jar=coverage=&lt;Coverage arguments></code>.
+   To have control over all aspects of the code coverage tool, use a JVM command line with
+   <code>-javaagent:jmockit.jar=coverage=&lt;Coverage arguments></code> when running the test suite.
    Note that you should be able to do this inside an Ant target or in a test run configuration for
    your Java IDE of choice, using either JUnit or TestNG.
 </p>
-<dl>
-   <dt>
-      <code>Coverage arguments</code> consist of up to four different arguments, in the format
-      <code>classSelectionRegex:outputFormat:outputDir:srcDirs</code>, as follows.
-   </dt>
-   <dd>
-      <ol>
-         <li><code>classSelectionRegex</code> specifies the classes to be selected for coverage</li>
-         <li>
-            <code>outputFormat</code> specifies the format for the coverage output, and should be
-            one of: <code>xml</code>, <code>xml-nocp</code>, <code>html</code>,
-            <code>html-nocp</code>
-         </li>
-         <li><code>outputDir</code> specifies the destination directory for coverage output</li>
-         <li><code>srcDirs</code> is only applicable to the HTML reports, and is a comma-separated
-         list of Java source directories</li>
-      </ol>
-   </dd>
-</dl>
+<p>
+   The "<code>Coverage arguments</code>" part consist of up to four different arguments, in the
+   format <code>classSelectionRegex:outputFormat:outputDir:srcDirs</code>, as follows.
+   Each of these four arguments has a sensible default, so that you won't always have to specify
+   them all.
+</p>
+<ol>
+   <li>
+      <code>classSelectionRegex</code> specifies the classes to be selected for coverage;
+      if empty, coverage will be applied only to the classes defined in the packages which
+      contain the tests actually executed.
+   </li>
+   <li>
+      <code>outputFormat</code> specifies the format for the coverage output, and should be
+      one or more of: <code>xml</code>, <code>xml-nocp</code>, <code>html</code>,
+      <code>html-nocp</code>; more than one value can be specified by separating them with a
+      comma; if no value is specified, <code>html-nocp</code> is assumed.
+   </li>
+   <li>
+      <code>outputDir</code> specifies the destination directory for coverage output;
+      if empty, the current working directory is assumed, with a "coverage-report"
+      subdirectory being created for the XHTML report (if not already existing).
+   </li>
+   <li>
+      <code>srcDirs</code> is only applicable to the XHTML report, and is a comma-separated
+      list of Java source directories;
+      if empty, all "src" directories under the current working dir are automatically found
+      and searched for ".java" sources.
+   </li>
+</ol>
 <p>
    The <code>classSelectionRegex</code> argument should be a
    <code>java.util.regex</code>-conformable regular expression specifying the classes and/or
@@ -152,52 +205,29 @@
    package as well as in any sub-packages.
 </p>
 <p>
-   The first two <code>outputFormat</code> values above indicate you want XML output, while the
-   other two indicate the generation of an HTML report. The "-nocp" suffix stands for "no call
-   points", meaning that information on call points will not be included, which usually makes the
-   output much smaller.
+   In the <code>outputFormat</code> specifier, the "-nocp" suffix stands for "no call points",
+   meaning that information on call points will not be included, which usually makes the output much
+   smaller.
+   Notice that both types (XML and XHTML) of output can be specified; if both variants for the same
+   type are specified, for example "xml,xml-nocp", then the first occurrence will take precedence.
 </p>
-<dl>
-   <dt>
-      Each of these four arguments has a sensible default, so that you won't always have to specify
-      them all.
-   </dt>
-   <dd>
-      <ol>
-         <li>
-            If <code>classSelectionRegex</code> is empty, then coverage will be applied only to the
-            classes defined in the packages which contain the tests executed in the test run.
-         </li>
-         <li>If no <code>outputFormat</code> is specified, <code>html-nocp</code> is assumed.</li>
-         <li>
-            If <code>outputDir</code> is empty, the current working directory is assumed, with a
-            "coverage-report" subdirectory being created for the HTML report (if not already
-            existing).
-         </li>
-         <li>
-            The <code>srcDirs</code> can also be empty, in which case all "src" directories under
-            the current working dir are automatically found and searched for ".java" sources.
-         </li>
-      </ol>
-   </dd>
-</dl>
 
 <h3 id="switching">
    Turning coverage output on/off
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
-      <a href="#jars"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#output"><img align="right" src="go-top.png" title="First section"></a>
       <img align="right" src="blank.gif" width="22">
       <a href="#jvm"><img align="right" src="go-up.png" title="Previous section"></a>
       <img align="right" src="blank.gif" width="22">
    </div>
 </h3>
 <p>
-   To facilitate turning code coverage on/off, the <em>read-only status</em> of the relevant file is
-   checked by JMockit at startup.
-   The relevant file for XML output is "coverage.xml", and "coverage-report/index.html" for XHTML
-   output, always in the working directory (which can usually be selected separately for each
-   test run configuration in the Java IDE).
+   To facilitate switching on/off the generation of code coverage output, the
+   <em>read-only status</em> of the relevant file is checked by JMockit at startup.
+   The relevant file, always in the working directory, is "coverage.xml" for XML output and
+   "coverage-report/index.html" for XHTML output. (Note that the working directory can usually be
+   selected separately for each test run configuration in the Java IDE.)
    If said file is currently marked as read-only in the OS, then the corresponding output is not
    generated for the next test run.
 </p>
@@ -205,7 +235,7 @@
    Notice that a Java IDE usually provides an easy mechanism to toggle the read-only status of a
    project file. In IntelliJ IDEA it is done by double clicking the status bar, with the desired
    file opened in the editor. In Eclipse there is a "Read only" check box in the "Properties" screen
-   for the text file selected in the editor, which can be opened by typing "Alt + Enter".
+   for the text file selected in the editor; this screen can be opened by typing "Alt + Enter".
 </p>
 </body>
 </html>

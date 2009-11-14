@@ -61,12 +61,16 @@ final class OutputFileGenerator extends Thread
       else if (availableInTheClasspath("xmlfull")) {
          result = "xml";
       }
-      
+
       if (availableInTheClasspath("htmlbasic")) {
-         result += "html-nocp";
+         result += " html-nocp";
       }
       else if (availableInTheClasspath("htmlfull")) {
-         result += "html";
+         result += " html";
+      }
+
+      if (availableInTheClasspath("merge")) {
+         result += " merge";
       }
 
       return result;
@@ -100,14 +104,48 @@ final class OutputFileGenerator extends Thread
    @Override
    public void run()
    {
+      createOutputDirIfSpecifiedButNotExists();
+
       CoverageData coverageData = CoverageData.instance();
 
       try {
+         mergeCoverageDataFromPreviousTestRunIfRequestedAndAvailable(coverageData);
          generateXMLOutputFileIfRequested(coverageData);
          generateHTMLReportIfRequested(coverageData);
       }
       catch (IOException e) {
          throw new RuntimeException(e);
+      }
+      catch (ClassNotFoundException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private void createOutputDirIfSpecifiedButNotExists()
+   {
+      if (outputDir.length() > 0) {
+         File outDir = new File(outputDir);
+
+         if (!outDir.exists()) {
+            boolean dirCreated = outDir.mkdir();
+            assert dirCreated : "Failed to create specified output dir: " + outputDir;
+         }
+      }
+   }
+
+   private void mergeCoverageDataFromPreviousTestRunIfRequestedAndAvailable(CoverageData data)
+      throws IOException, ClassNotFoundException
+   {
+      if (outputFormat.contains("merge")) {
+         String parentDir = outputDir.length() == 0 ? null : outputDir;
+         File dataFile = new File(parentDir, "coverage.ser");
+
+         if (dataFile.exists()) {
+            CoverageData previousData = CoverageData.readDataFromFile(dataFile);
+            data.merge(previousData);
+         }
+
+         data.writeDataToFile(dataFile);
       }
    }
 

@@ -24,13 +24,16 @@
  */
 package mockit.coverage;
 
+import java.io.*;
 import java.util.*;
 
 /**
  * Coverage data gathered for a branch inside a line of source code.
  */
-public final class BranchCoverageData
+public final class BranchCoverageData implements Serializable
 {
+   private static final long serialVersionUID = 1003335601845442606L;
+   
    private boolean unreachable;
    private final int jumpInsnIndex;
    private int jumpTargetInsnIndex = -1;

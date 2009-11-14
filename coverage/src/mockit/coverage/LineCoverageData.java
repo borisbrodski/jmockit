@@ -24,16 +24,19 @@
  */
 package mockit.coverage;
 
+import java.io.*;
 import java.util.*;
 
 /**
  * Coverage data gathered for a single line of code in a source file.
  */
-public final class LineCoverageData
+public final class LineCoverageData implements Serializable
 {
+   private static final long serialVersionUID = -6233980722802474992L;
+   
    private boolean unreachable;
    private List<BranchCoverageData> branches;
-   private List<String> sourceElements;
+   private transient List<String> sourceElements;
    private List<CallPoint> callPoints;
    private int executionCount;
 

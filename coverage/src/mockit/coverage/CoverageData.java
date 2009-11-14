@@ -24,6 +24,7 @@
  */
 package mockit.coverage;
 
+import java.io.*;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
@@ -32,8 +33,11 @@ import java.util.concurrent.*;
 /**
  * Coverage data captured for all source files exercised during a test run.
  */
-public final class CoverageData
+@SuppressWarnings({"UnusedDeclaration"})
+public final class CoverageData implements Serializable
 {
+   private static final long serialVersionUID = -4860004226098360259L;
+
    private static final CoverageData instance = new CoverageData();
    private static final ThreadLocal<Boolean> executingCoverageCall = new ThreadLocal<Boolean>()
    {
@@ -283,5 +287,50 @@ public final class CoverageData
       fileData.registerBranchExecution(line, branchIndex, false, callPoint);
 
       executingCoverageCall.set(false);
+   }
+
+   static CoverageData readDataFromFile(File dataFile) throws IOException, ClassNotFoundException
+   {
+      ObjectInputStream input = new ObjectInputStream(new FileInputStream(dataFile));
+
+      try {
+         return (CoverageData) input.readObject();
+      }
+      finally {
+         input.close();
+      }
+   }
+
+   void writeDataToFile(File dataFile) throws IOException
+   {
+      ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(dataFile));
+
+      try {
+         output.writeObject(this);
+      }
+      finally {
+         output.close();
+      }
+
+      System.out.println("JMockit: Coverage data written to " + dataFile.getCanonicalPath());
+   }
+
+   void merge(CoverageData previousData)
+   {
+      withCallPoints |= previousData.withCallPoints;
+
+      for (
+         Map.Entry<String, FileCoverageData> previousFileAndFileData :
+            previousData.fileToFileData.entrySet()
+      ) {
+         String previousFile = previousFileAndFileData.getKey();
+
+         if (fileToFileData.containsKey(previousFile)) {
+            // TODO: implement
+         }
+         else {
+            fileToFileData.put(previousFile, previousFileAndFileData.getValue());
+         }
+      }
    }
 }

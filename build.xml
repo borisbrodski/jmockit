@@ -191,6 +191,11 @@
          <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
       </jar>
    </target>
+   <target name="createjar-coverage-merge">
+      <jar destfile="jmockit-coverage-merge.jar" basedir="coverage/classes" excludes="**/*">
+         <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
+      </jar>
+   </target>
    <target name="createjar-incremental">
       <jar destfile="jmockit-incremental.jar" basedir="incremental/classes">
          <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
@@ -199,7 +204,7 @@
    <target name="createjars-coverage"
            depends="createjar-coverage, createjar-coverage-xmlbasic, createjar-coverage-xmlfull,
                     createjar-coverage-htmlbasic, createjar-coverage-htmlfull, 
-                    createjar-incremental"/>
+                    createjar-coverage-merge, createjar-incremental"/>
 
    <target name="createjar-hibernate3emul">
       <jar destfile="jmockit-hibernate3emul.jar" basedir="hibernate3emul/classes"/>

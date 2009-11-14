@@ -24,13 +24,16 @@
  */
 package mockit.coverage;
 
+import java.io.*;
 import java.util.*;
 
 /**
  * Coverage data gathered for the lines and branches of a single source file.
  */
-public final class FileCoverageData
+public final class FileCoverageData implements Serializable
 {
+   private static final long serialVersionUID = 3508592808457531011L;
+
    private final SortedMap<Integer, LineCoverageData> lineToLineData =
       new TreeMap<Integer, LineCoverageData>();
 
