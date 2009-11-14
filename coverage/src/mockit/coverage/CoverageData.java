@@ -27,13 +27,15 @@ package mockit.coverage;
 import java.io.*;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
+import java.security.*;
 import java.util.*;
 import java.util.concurrent.*;
+
+import mockit.internal.util.*;
 
 /**
  * Coverage data captured for all source files exercised during a test run.
  */
-@SuppressWarnings({"UnusedDeclaration"})
 public final class CoverageData implements Serializable
 {
    private static final long serialVersionUID = -4860004226098360259L;
@@ -132,6 +134,7 @@ public final class CoverageData implements Serializable
       return fileToFileData.get(file);
    }
 
+   @SuppressWarnings({"UnusedDeclaration"})
    public static void lineExecuted(String file, int line)
    {
       if (executingCoverageCall.get()) {
@@ -255,6 +258,7 @@ public final class CoverageData implements Serializable
       return false;
    }
 
+   @SuppressWarnings({"UnusedDeclaration"})
    public static void jumpTargetExecuted(String file, int line, int branchIndex)
    {
       if (executingCoverageCall.get()) {
@@ -272,6 +276,7 @@ public final class CoverageData implements Serializable
       executingCoverageCall.set(false);
    }
 
+   @SuppressWarnings({"UnusedDeclaration"})
    public static void noJumpTargetExecuted(String file, int line, int branchIndex)
    {
       if (executingCoverageCall.get()) {
@@ -287,6 +292,24 @@ public final class CoverageData implements Serializable
       fileData.registerBranchExecution(line, branchIndex, false, callPoint);
 
       executingCoverageCall.set(false);
+   }
+
+   void fillLastModifiedTimesForAllClassFiles()
+   {
+      for (Map.Entry<String, FileCoverageData> fileAndFileData : fileToFileData.entrySet()) {
+         File coveredClassFile = getClassFile(fileAndFileData.getKey());
+         fileAndFileData.getValue().lastModified = coveredClassFile.lastModified();
+      }
+   }
+
+   private File getClassFile(String sourceFilePath)
+   {
+      String sourceFilePathNoExt = sourceFilePath.substring(0, sourceFilePath.length() - 5);
+      Class<?> coveredClass = Utilities.loadClass(sourceFilePathNoExt.replace('/', '.'));
+      CodeSource codeSource = coveredClass.getProtectionDomain().getCodeSource();
+      String pathToClassFile = codeSource.getLocation().getPath() + sourceFilePathNoExt + ".class";
+
+      return new File(pathToClassFile);
    }
 
    static CoverageData readDataFromFile(File dataFile) throws IOException, ClassNotFoundException
@@ -311,8 +334,6 @@ public final class CoverageData implements Serializable
       finally {
          output.close();
       }
-
-      System.out.println("JMockit: Coverage data written to " + dataFile.getCanonicalPath());
    }
 
    void merge(CoverageData previousData)
@@ -324,12 +345,14 @@ public final class CoverageData implements Serializable
             previousData.fileToFileData.entrySet()
       ) {
          String previousFile = previousFileAndFileData.getKey();
+         FileCoverageData previousFileData = previousFileAndFileData.getValue();
+         FileCoverageData fileData = fileToFileData.get(previousFile);
 
-         if (fileToFileData.containsKey(previousFile)) {
-            // TODO: implement
+         if (fileData == null) {
+            fileToFileData.put(previousFile, previousFileData);
          }
-         else {
-            fileToFileData.put(previousFile, previousFileAndFileData.getValue());
+         else if (previousFileData.lastModified == fileData.lastModified) {
+            fileData.addCountsFromPreviousMeasurement(previousFileData);
          }
       }
    }

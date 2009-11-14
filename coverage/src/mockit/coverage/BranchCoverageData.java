@@ -133,4 +133,27 @@ public final class BranchCoverageData implements Serializable
    {
       unreachable = true;
    }
+
+   void addCountsFromPreviousMeasurement(BranchCoverageData previousData)
+   {
+      jumpExecutionCount += previousData.jumpExecutionCount;
+      jumpCallPoints = addPreviousCallPoints(jumpCallPoints, previousData.jumpCallPoints);
+
+      noJumpExecutionCount += previousData.noJumpExecutionCount;
+      noJumpCallPoints = addPreviousCallPoints(noJumpCallPoints, previousData.noJumpCallPoints);
+   }
+
+   private List<CallPoint> addPreviousCallPoints(List<CallPoint> current, List<CallPoint> previous)
+   {
+      if (previous != null) {
+         if (current != null) {
+            current.addAll(0, previous);
+         }
+         else {
+            return previous;
+         }
+      }
+
+      return current;
+   }
 }

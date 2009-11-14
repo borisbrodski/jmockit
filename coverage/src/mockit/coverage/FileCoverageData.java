@@ -34,6 +34,7 @@ public final class FileCoverageData implements Serializable
 {
    private static final long serialVersionUID = 3508592808457531011L;
 
+   long lastModified;
    private final SortedMap<Integer, LineCoverageData> lineToLineData =
       new TreeMap<Integer, LineCoverageData>();
 
@@ -80,5 +81,16 @@ public final class FileCoverageData implements Serializable
       }
 
       return (int) ((double) result / lines.size() + 0.5);
+   }
+
+   void addCountsFromPreviousMeasurement(FileCoverageData previousData)
+   {
+      for (Map.Entry<Integer, LineCoverageData> lineAndLineData : lineToLineData.entrySet()) {
+         Integer line = lineAndLineData.getKey();
+         LineCoverageData lineData = lineAndLineData.getValue();
+         LineCoverageData previousLineData = previousData.lineToLineData.get(line);
+
+         lineData.addCountsFromPreviousMeasurement(previousLineData);
+      }
    }
 }
