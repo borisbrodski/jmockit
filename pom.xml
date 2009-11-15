@@ -50,6 +50,7 @@
                   <forced/>
                   <manifestFile>main/META-INF/MANIFEST.MF</manifestFile>
                </archive>
+               <excludes><exclude>Temp.class</exclude></excludes>
             </configuration>
          </plugin>
          <plugin>
@@ -57,7 +58,6 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
                <source>1.5</source><target>1.5</target>
-               <excludes><exclude>Temp.java</exclude></excludes>
             </configuration>
          </plugin>
          <plugin>
