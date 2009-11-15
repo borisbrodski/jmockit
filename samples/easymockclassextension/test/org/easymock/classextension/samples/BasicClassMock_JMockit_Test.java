@@ -24,13 +24,10 @@
  */
 package org.easymock.classextension.samples;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-
 import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
+import mockit.*;
+
 public final class BasicClassMock_JMockit_Test
 {
    @Mocked private Printer printer;

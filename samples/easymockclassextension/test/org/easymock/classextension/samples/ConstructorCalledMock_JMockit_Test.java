@@ -26,14 +26,12 @@ package org.easymock.classextension.samples;
 
 import java.math.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public final class ConstructorCalledMock_JMockit_Test
 {
    @Mocked(methods = "rate", constructorArgsMethod = "taxCalculatorValues")
