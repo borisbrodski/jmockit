@@ -26,13 +26,12 @@ package org.jdesktop.animation.transitions.effects;
 
 import java.awt.*;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-import org.jdesktop.animation.transitions.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
+import mockit.*;
+
+import org.jdesktop.animation.transitions.*;
+
 public final class FadeTest
 {
    @Test

@@ -26,14 +26,15 @@ package org.jdesktop.animation.transitions;
 
 import javax.swing.*;
 
-import mockit.integration.junit4.*;
-import org.jdesktop.animation.transitions.effects.*;
 import org.junit.*;
 
-public final class TransitionTypeTest extends JMockitTest
+import org.jdesktop.animation.transitions.effects.*;
+import static org.junit.Assert.*;
+
+public final class TransitionTypeTest
 {
-   private final JComponent component = new JComponent() {};
-   private final Effect effect = new Unchanging();
+   final JComponent component = new JComponent() {};
+   final Effect effect = new Unchanging();
 
    @Test
    public void testSetEffectAndGetEffect()

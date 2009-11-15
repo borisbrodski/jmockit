@@ -30,12 +30,14 @@ import java.util.List;
 import java.util.*;
 import javax.swing.*;
 
-import mockit.*;
-import static mockit.Deencapsulation.*;
-import mockit.integration.junit4.*;
 import org.junit.*;
 
-public final class AnimationManagerTest extends JMockitTest
+import mockit.*;
+
+import static mockit.Deencapsulation.*;
+import static org.junit.Assert.*;
+
+public final class AnimationManagerTest
 {
    @Test
    public void recreateImageForContainerOfSizeZero(final JComponent container)

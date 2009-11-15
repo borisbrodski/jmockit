@@ -28,24 +28,23 @@ import java.awt.*;
 import java.awt.image.*;
 import javax.swing.*;
 
-import static junit.framework.Assert.*;
+import org.junit.*;
+
 import mockit.*;
-import mockit.integration.junit4.*;
+
+import static junit.framework.Assert.*;
 import org.jdesktop.animation.timing.*;
 import org.jdesktop.animation.timing.interpolation.*;
-import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
 @UsingMocksAndStubs(PropertySetter.class)
 public final class ScreenTransitionExecutionTest
 {
-   @Mocked private JComponent container;
-   @Mocked private TransitionTarget target;
-   @Mocked private Animator animator;
-   @Mocked private AnimationManager manager;
-   @Mocked private AnimationLayer animationLayer;
-   @Mocked(methods = "()", capture = 1) private TimingTarget timingTarget;
+   @Mocked JComponent container;
+   @Mocked TransitionTarget target;
+   @Mocked Animator animator;
+   @Mocked AnimationManager manager;
+   @Mocked AnimationLayer animationLayer;
+   @Mocked(methods = "()", capture = 1) TimingTarget timingTarget;
 
    private ScreenTransition transition;
 

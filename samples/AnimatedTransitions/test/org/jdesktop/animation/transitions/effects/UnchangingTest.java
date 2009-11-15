@@ -24,10 +24,9 @@
  */
 package org.jdesktop.animation.transitions.effects;
 
-import mockit.integration.junit4.*;
 import org.junit.*;
 
-public final class UnchangingTest extends JMockitTest
+public final class UnchangingTest
 {
    @Test
    public void createUnchangingEffect()

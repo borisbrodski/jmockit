@@ -27,15 +27,17 @@ package org.jdesktop.animation.transitions;
 import java.awt.*;
 import javax.swing.*;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-import org.jdesktop.animation.timing.*;
-import org.jdesktop.animation.transitions.effects.*;
 import org.junit.*;
 
-public final class AnimationStateTest extends JMockitTest
+import mockit.*;
+
+import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.transitions.effects.*;
+import static org.junit.Assert.*;
+
+public final class AnimationStateTest
 {
-   private final JComponent component = new JButton();
+   final JComponent component = new JButton();
 
    @Test
    public void testCreateAnimationStartStateFromComponentState()

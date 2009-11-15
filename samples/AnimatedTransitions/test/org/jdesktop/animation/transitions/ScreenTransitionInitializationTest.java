@@ -27,23 +27,22 @@ package org.jdesktop.animation.transitions;
 import java.awt.event.*;
 import javax.swing.*;
 
+import org.junit.*;
+
 import mockit.*;
-import mockit.integration.junit4.*;
+
 import org.jdesktop.animation.timing.*;
 import org.jdesktop.animation.timing.interpolation.*;
 import static org.junit.Assert.*;
-import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
 @UsingMocksAndStubs(PropertySetter.class)
 public final class ScreenTransitionInitializationTest
 {
-   @NonStrict private JComponent container;
-   @Mocked private TransitionTarget target;
-   @Mocked private Animator animator;
-   @Mocked private final AnimationManager manager = null;
-   @Mocked private AnimationLayer layer;
+   @NonStrict JComponent container;
+   @Mocked TransitionTarget target;
+   @Mocked Animator animator;
+   @Mocked final AnimationManager manager = null;
+   @Mocked AnimationLayer layer;
 
    @Test
    public void createScreenTransitionWithNonRunningAnimator()

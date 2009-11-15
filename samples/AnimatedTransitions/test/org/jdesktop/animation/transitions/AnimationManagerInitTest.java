@@ -30,19 +30,18 @@ import java.util.List;
 import java.util.*;
 import javax.swing.*;
 
-import org.jdesktop.animation.timing.*;
-
 import org.junit.*;
 
-import static mockit.Deencapsulation.*;
 import mockit.*;
-import mockit.integration.junit4.*;
 
-public final class AnimationManagerInitTest extends JMockitTest
+import static mockit.Deencapsulation.*;
+import org.jdesktop.animation.timing.*;
+
+public final class AnimationManagerInitTest
 {
-   @Mocked private Animator animator;
-   @Mocked private AnimationState animationState;
-   @Mocked private ComponentState componentState;
+   @Mocked Animator animator;
+   @Mocked AnimationState animationState;
+   @Mocked ComponentState componentState;
 
    private JComponent component;
    private AnimationManager manager;

@@ -27,19 +27,18 @@ package org.jdesktop.animation.transitions.effects;
 import java.awt.*;
 import javax.swing.*;
 
+import org.junit.*;
+
 import mockit.*;
-import mockit.integration.junit4.*;
+
 import org.jdesktop.animation.timing.*;
 import org.jdesktop.animation.timing.interpolation.*;
 import org.jdesktop.animation.transitions.*;
-import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
 public final class RotateTest
 {
-   @Mocked private Animator animator;
-   @Mocked({"init", "setup"}) private Effect effect;
+   @Mocked Animator animator;
+   @Mocked({"init", "setup"}) Effect effect;
 
    @Test
    public void testInit(ComponentState start, ComponentState end)

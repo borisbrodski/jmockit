@@ -29,20 +29,18 @@ import java.awt.image.*;
 import javax.swing.*;
 
 import org.junit.*;
-import static org.junit.Assert.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
-import org.jdesktop.animation.timing.*;
 
-@RunWith(JMockit.class)
+import org.jdesktop.animation.timing.*;
+import static org.junit.Assert.*;
+
 public final class EffectTest
 {
-   @Mocked private JComponent component;
-   @Mocked private ComponentState state;
+   @Mocked JComponent component;
+   @Mocked ComponentState state;
 
-   private final Effect effect = new Effect() {};
+   final Effect effect = new Effect() {};
 
    @Test
    public void testSetComponentStates()

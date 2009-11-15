@@ -27,13 +27,15 @@ package org.jdesktop.animation.transitions;
 import java.awt.*;
 import javax.swing.*;
 
-import mockit.*;
-import mockit.integration.junit4.*;
 import org.junit.*;
+
+import mockit.*;
+
+import static org.junit.Assert.*;
 
 // The tests in this class probably aren't worth the trouble, but since we want to achieve maximum
 // coverage...
-public final class AnimationLayerTest extends JMockitTest
+public final class AnimationLayerTest
 {
    @Test
    public void testSetupBackground()

@@ -27,16 +27,15 @@ package org.jdesktop.animation.transitions;
 import java.awt.*;
 import javax.swing.*;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
+import mockit.*;
+
+import static org.junit.Assert.*;
+
 public final class ComponentStateTest
 {
-   @Mocked("print") private final JComponent component = new JButton();
+   @Mocked("print") final JComponent component = new JButton();
 
    @Test
    public void testCreateComponentStateForComponentOfZeroSize()

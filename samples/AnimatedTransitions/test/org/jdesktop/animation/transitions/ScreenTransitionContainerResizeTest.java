@@ -29,26 +29,24 @@ import java.awt.event.*;
 import java.awt.image.*;
 import javax.swing.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
+
+import mockit.*;
 
 import static mockit.Deencapsulation.*;
-import mockit.*;
-import mockit.integration.junit4.*;
 import org.jdesktop.animation.timing.*;
 import org.jdesktop.animation.timing.interpolation.*;
+import static org.junit.Assert.*;
 
-@RunWith(JMockit.class)
 @UsingMocksAndStubs({Animator.class, PropertySetter.class})
 public final class ScreenTransitionContainerResizeTest
 {
-   @Mocked("createImage(int, int)") private JComponent container;
-   @NonStrict private BufferedImage transitionImage;
-   @NonStrict private AnimationManager manager;
+   @Mocked("createImage(int, int)") JComponent container;
+   @NonStrict BufferedImage transitionImage;
+   @NonStrict AnimationManager manager;
 
-   private final Dimension newSize = new Dimension(100, 80);
-   private ScreenTransition transition;
+   final Dimension newSize = new Dimension(100, 80);
+   ScreenTransition transition;
 
    @Test
    public void resizeTransitionContainerOnce()

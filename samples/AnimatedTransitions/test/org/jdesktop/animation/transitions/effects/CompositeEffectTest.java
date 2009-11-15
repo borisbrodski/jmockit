@@ -27,14 +27,15 @@ package org.jdesktop.animation.transitions.effects;
 import java.awt.*;
 import java.util.List;
 
+import org.junit.*;
+
 import mockit.*;
-import mockit.integration.junit4.*;
 
 import org.jdesktop.animation.timing.*;
 import org.jdesktop.animation.transitions.*;
-import org.junit.*;
+import static org.junit.Assert.*;
 
-public final class CompositeEffectTest extends JMockitTest
+public final class CompositeEffectTest
 {
    @Mocked private ComponentState start;
    @Mocked private ComponentState end;
