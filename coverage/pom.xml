@@ -36,10 +36,24 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
                <source>1.5</source><target>1.5</target>
-               <excludes><exclude>**/integrationTests/**/*.java</exclude></excludes>
+               <excludes>
+                  <exclude>**/integrationTests/**/*.java</exclude>
+               </excludes>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId><artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+               <excludes><exclude>**/integrationTests/</exclude></excludes>
             </configuration>
          </plugin>
       </plugins>
+      <extensions>
+         <extension>
+            <groupId>org.jvnet.wagon-svn</groupId><artifactId>wagon-svn</artifactId>
+            <version>1.9</version>
+         </extension>
+      </extensions>
    </build>
 
    <dependencies>
