@@ -269,9 +269,13 @@
    </target>
 
    <target name="sampleTests">
+      <taskdef resource="testngtasks" classpath="${TESTNG_JAR}"/>
+      <delete file="samples/coverage.ser" quiet="true"/>
+
       <junit fork="yes" forkmode="once" filtertrace="on" dir="samples">
          <classpath path="jmockit.jar"/>
          <classpath path="jmockit-coverage-htmlfull.jar"/>
+         <classpath path="jmockit-coverage-merge.jar"/>
          <classpath refid="common.classpath"/>
          <classpath>
             <fileset dir="samples" includes="**/*.jar"/>
@@ -310,9 +314,6 @@
 
             <pathelement location="samples/AnimatedTransitions/classes"/>
             <pathelement location="samples/AnimatedTransitions/test-classes"/>
-
-            <pathelement location="samples/LoginService/classes"/>
-            <pathelement location="samples/LoginService/test-classes"/>
          </classpath>
          <batchtest>
             <fileset dir="samples/jbossaop/test-classes" includes="**/*Test.class"/>
@@ -329,7 +330,6 @@
             <fileset dir="samples/tutorial/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/TimingFramework/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/AnimatedTransitions/test-classes" includes="**/*Test.class"/>
-            <fileset dir="samples/LoginService/test-classes" includes="**/*Test.class"/>
          </batchtest>
          <batchtest>
             <fileset dir="samples/powermock/test-classes" includes="**/*Test.class"/>
@@ -337,6 +337,19 @@
          <formatter type="xml"/>
       </junit>
       <testReport name="samples/JMockitSampleTests"/>
+
+      <testng workingdir="samples" listener="mockit.integration.testng.Initializer">
+         <classpath path="jmockit.jar"/>
+         <classpath path="jmockit-coverage-htmlfull.jar"/>
+         <classpath path="jmockit-coverage-merge.jar"/>
+         <classpath refid="common.classpath"/>
+         <classpath>
+            <fileset dir="samples" includes="lib/*.jar"/>
+            <pathelement location="samples/LoginService/classes"/>
+            <pathelement location="samples/LoginService/test-classes"/>
+         </classpath>
+         <classfileset dir="samples/LoginService/test-classes" includes="**/*Test.class"/>
+      </testng>
    </target>
 
    <target name="findbugs">
