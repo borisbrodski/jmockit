@@ -24,7 +24,7 @@
  */
 package jmockit.loginExample.domain.userLogin;
 
-import org.junit.*;
+import org.testng.annotations.*;
 
 import mockit.*;
 
@@ -32,10 +32,10 @@ import jmockit.loginExample.domain.userAccount.*;
 
 public final class LoginServiceTest
 {
-   @Mocked private UserAccount account;
-   private LoginService service;
+   @Mocked UserAccount account;
+   LoginService service;
 
-   @Before
+   @BeforeMethod
    public void init()
    {
       service = new LoginService();
@@ -100,6 +100,7 @@ public final class LoginServiceTest
       final UserAccount secondAccount) throws Exception
    {
       willMatchPassword(false);
+
       new NonStrictExpectations()
       {{
          UserAccount.find("roger"); returns(secondAccount);
@@ -121,10 +122,11 @@ public final class LoginServiceTest
       }
    }
 
-   @Test(expected = AccountLoginLimitReachedException.class)
+   @Test(expectedExceptions = AccountLoginLimitReachedException.class)
    public void disallowConcurrentLogins() throws Exception
    {
       willMatchPassword(true);
+
       new NonStrictExpectations()
       {{
          account.isLoggedIn(); returns(true);
@@ -133,7 +135,7 @@ public final class LoginServiceTest
       service.login("john", "password");
    }
 
-   @Test(expected = UserAccountNotFoundException.class)
+   @Test(expectedExceptions = UserAccountNotFoundException.class)
    public void throwExceptionIfAccountNotFound() throws Exception
    {
       new NonStrictExpectations()
@@ -144,10 +146,11 @@ public final class LoginServiceTest
       new LoginService().login("roger", "password");
    }
 
-   @Test(expected = UserAccountRevokedException.class)
+   @Test(expectedExceptions = UserAccountRevokedException.class)
    public void disallowLoggingIntoRevokedAccount() throws Exception
    {
       willMatchPassword(true);
+
       new NonStrictExpectations()
       {{
          account.isRevoked(); returns(true);

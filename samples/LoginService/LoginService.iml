@@ -10,26 +10,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="JMockit" level="project" />
-    <orderEntry type="library" name="JUnit 4.7" level="application" />
+    <orderEntry type="library" name="TestNG 5.10" level="application" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../jmockit-coverage-merge.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../jmockit-coverage-htmlfull.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
   </component>
 </module>
 
