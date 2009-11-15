@@ -158,7 +158,7 @@
          <fileset dir="main/src" includes="mockit/**/*.java"/>
          <fileset
             dir="main/classes"
-            includes="mockit/**/*.class **/attach/**/*.class org/junit/runner/*.class"/>
+            includes="mockit/**/*.class **/attach/**/*.class org/junit/*/*.class junit/*/*.class"/>
          <fileset dir="${ASM_CLASSES}" excludes="LICENSE.txt **/package.html"/>
          <fileset dir="${HAMCREST_CLASSES}" excludes="hamcrest-LICENSE.txt **/package.html"/>
          <manifest><attribute name="Implementation-Version" value="${version}"/></manifest>
