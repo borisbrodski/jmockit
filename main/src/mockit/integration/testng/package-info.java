@@ -31,5 +31,8 @@
  * at startup.
  * <p/>
  * Also contains the "startup mock" implementation for integration with the TestNG 5.8+ test runner.
+ * <p/>
+ * This integration provides the same benefits to test code as the one for
+ * <a href="../junit4/package-summary.html">JUnit 4</a>.
  */
 package mockit.integration.testng;

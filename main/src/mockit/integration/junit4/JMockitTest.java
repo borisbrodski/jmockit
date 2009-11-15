@@ -31,17 +31,14 @@ import mockit.internal.startup.*;
 
 /**
  * A convenience base class for tests which use the JMockit toolkit with <em>JUnit 4.5+</em>.
+ * Normally, though, it shouldn't be necessary to use this class. Instead, simply make sure that
+ * {@code jmockit.jar} precedes {@code junit-4.n.jar} in the classpath, when running on JDK 1.6+
+ * (if running on JDK 1.5, then "-javaagent:jmockit.jar" will be mandatory and this class would have
+ * no effect since JMockit would already be initialized).
  * <p/>
  * Besides being annotated with {@code @RunWith(JMockit.class)}, the use of this base class for
  * your test classes has the advantage of inheriting {@link org.junit.Assert}, which eliminates the
  * need to statically import its methods.
- * <p/>
- * It is recommended to use either {@code @RunWith(JMockit.class)} or {@code extends JMockitTest}
- * for all JUnit 4 test classes, so that JMockit gets properly initialized before any tests are
- * executed.
- * Otherwise, JMockit will have to be initialized through a call to {@code Mockit.setUpMocks();} in
- * a static initialization block, or through the use of "-javaagent:jmockit.jar" as a JVM command
- * line argument.
  * <p/>
  * If JMockit is not explicitly initialized before the first test executes, it will still get
  * initialized on the first call to a method in the API. However, this will probably cause the first

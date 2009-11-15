@@ -30,7 +30,8 @@ import mockit.internal.startup.*;
 /**
  * Simply makes sure that JMockit is initialized before the first JUnit 3.8 test runs.
  * <p/>
- * If using the JVM parameter "-javaagent:jmockit.jar" this class doesn't need to be used.
+ * If using the JVM parameter "-javaagent:jmockit.jar" or using JDK 1.6+ with {@code jmockit.jar}
+ * preceding {@code junit-4.n.jar} in the classpath, this class doesn't need to be used.
  * Otherwise, all JUnit 3.8 test classes will need to either extend it or verify the initialization
  * of JMockit by calling {@code Mockit.setUpMocks()} in a static initializer or constructor of the
  * test class.
