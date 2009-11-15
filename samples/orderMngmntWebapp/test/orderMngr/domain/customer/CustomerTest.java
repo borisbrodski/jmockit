@@ -41,10 +41,10 @@ import mockit.integration.junit4.*;
  * In order for the emulator to be used when running these tests, the usual "-javaagent" JVM
  * argument must be specified as <code>-javaagent:jmockit.jar=hibernate</code> (inserting the
  * correct path to jmockit.jar if necessary), when using a conventional Hibernate configuration
- * (that is, the <code>org.hibernate.Configuration</code> class). Alternativelly, if tools.jar from
- * the JDK 1.6 and jmockit-hibernate3emul.jar are in the classpath, then the emulator will be used
- * automatically, without the need for any JVM initialization parameter. In this last case, the
- * use of the "@RunWith(JMockit.class)" annotation is necessary.
+ * (that is, the <code>org.hibernate.Configuration</code> class).
+ * Alternatively, if {@code jmockit-hibernate3emul.jar} is in the classpath (along with
+ * {@code tools.jar} from JDK 1.6 in Mac OS X), then the emulator will be used automatically,
+ * without the need for any JVM initialization parameter.
  * <p/>
  * If run without the emulator, the tests should still pass, as long as an appropriate Hibernate
  * session factory and the corresponding relational database are available. The use of the emulator
