@@ -12,25 +12,31 @@
 </h2>
 
 <p>
-   There are several separate test samples, seven of which compare published sample tests for other
-   tools with the equivalent JMockit version. Between the other samples, you will find
-   complete JUnit test suites for two third-party frameworks (both from the same author, and
-   originally implemented without any developer tests at all, but still great pieces of work, as
-   anyone can verify - see below).
-   These test suites aim to achieve 100% line and branch coverage for the relevant production code.
+   The available sample test suites can all be found under the "samples" folder in the full
+   distribution zip file.
+   The Ant "build.xml" file contains a target "sampleTests" which will run all sample tests and
+   produce a JUnit test report in HTML, as well as a code coverage HTML report (produced with the
+   <em>JMockit Coverage</em> tool).
 </p>
 <p>
-   The list of existing samples follows. They can all be found under the "samples" folder in the
-   full distribution zip file. The Ant "build.xml" file contains a target "sampleTests" which will
-   run all sample tests and produce a JUnit test report in HTML, as well as a code coverage HTML
-   report (produced with the <em>JMockit Coverage</em> tool).
-   In total, there are more than 500 tests, all using JUnit and many also using JMockit; the others
-   are "pure" JUnit tests which use no mocks at all, or tests using other testing toolkits for 
-   comparison purposes.
+   In total, there are more than 500 sample tests, all using JUnit and most also using JMockit; the
+   others are "pure" JUnit tests which use no mocks at all, or tests using other testing toolkits
+   for comparison purposes.
+</p>
+<p>
+   The example tests used in the JMockit Tutorial <a href="tutorial/AnExample.html">introductory
+   chapter</a> can be found
+   <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/test/jmockit/tutorial/domain">here</a>.
+</p>
+
+<h3>Test suites for comparison with other tools and mocking APIs</h3>
+<p>
+   The following test suites are intended to compare published sample tests for other tools with the
+   equivalent JMockit version:
 </p>
 <ol>
    <li>
-      <a href="http://easymock.org/EasyMock2_5_1_Documentation.html">EasyMock 2.5 comparison sample</a>
+      <a href="http://easymock.org/EasyMock2_5_2_Documentation.html">EasyMock 2.5 comparison sample</a>
       &lt;==>
       <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/easymock/test/org/easymock/samples/DocumentManager_JMockit_Test.java"
          >JMockit version</a>
@@ -77,16 +83,17 @@
       <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/jbossaop/test/jbossaop/testing/bank/BankBusinessTest.java"
          >JMockit version</a>
    </li>
-   <li>
-      The test
-      <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/test/jmockit/tutorial/domain">sample</a>
-      from the JMockit Tutorial.
-   </li>
-   <li>
-      A set of tests for a fictitious web application, including integration tests which use the
-      <em>Hibernate 3 Emulation</em> tool: browse the source code
-      <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp">here</a>.
-   </li>
+</ol>
+
+<h3>Test suites for third-party class libraries</h3>
+<p>
+   There are a couple samples which provide complete JUnit test suites for two third-party
+   frameworks.
+   (They are both from the same author, and originally implemented without any developer tests at
+   all, but still great pieces of work, as anyone can verify.)
+   These test suites aim to achieve 100% line and branch coverage for the relevant production code:
+</p>
+<ol>
    <li>
       A complete suite with 150+ tests for the
       <a href="https://timingframework.dev.java.net">Timing Framework</a>
@@ -104,31 +111,23 @@
       ==> browse them
       <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/AnimatedTransitions/test/org/jdesktop/animation/transitions">here</a>.
    </li>
+</ol>
+
+<h3>Miscellaneous test suites</h3>
+<p>
+   Another couple of sample suites:
+</p>
+<ol>
    <li>
-      A small test suite for a single class (<code>LoginService</code>), based on 
+      A set of tests for a fictitious web application, including integration tests which use the
+      <em>Hibernate 3 Emulation</em> tool: browse the source code
+      <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp">here</a>.
+   </li>
+   <li>
+      A small test suite for a single class (<code>LoginService</code>), based on
       <a href="http://schuchert.wikispaces.com/Mockito.LoginServiceExample">this</a> article.
       ==> <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/LoginService">JMockit version</a>
    </li>
 </ol>
-<p>
-   And finally, for those still wondering which testing toolkit to choose, I would like to propose
-   the <em>Timing Framework testing challenge</em>: ask the authors of your favorite testing
-   toolkit to provide a full test suite for this framework, so that an apples to apples, and
-   hopefully incontrovertible comparison can be made.
-</p>
-<p>
-   If you are willing to write the tests for the framework using another mocking tool, here are some
-   tips.
-   First, get the source code for both the Timing Framework production code and the JUnit tests from
-   the JMockit distribution. You can also use the original framework code from that project's web
-   site, if you prefer. The version in the JMockit distribution has some changes, none made
-   to facilitate writing the tests, but mostly because I could not resist making some small
-   improvements; there was only one bug that I could find while writing the tests, and some errors
-   in the use of generics, which were corrected in this modified version.
-   <br/>
-   Note also that the majority of these tests do <strong>not</strong> use JMockit in any way (only
-   about 60 of them do), so you can use them as they are as a starting point, with the goal of
-   reaching 100% code coverage (as determined by JMockit Coverage or any other code coverage tool).
-</p>
 </body>
 </html>
