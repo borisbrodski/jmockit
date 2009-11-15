@@ -85,12 +85,24 @@ public final class FileCoverageData implements Serializable
 
    void addCountsFromPreviousMeasurement(FileCoverageData previousData)
    {
-      for (Map.Entry<Integer, LineCoverageData> lineAndLineData : lineToLineData.entrySet()) {
-         Integer line = lineAndLineData.getKey();
-         LineCoverageData lineData = lineAndLineData.getValue();
-         LineCoverageData previousLineData = previousData.lineToLineData.get(line);
+      SortedMap<Integer, LineCoverageData> previousLineToLineData = previousData.lineToLineData;
 
-         lineData.addCountsFromPreviousMeasurement(previousLineData);
+      for (Map.Entry<Integer, LineCoverageData> lineAndData : lineToLineData.entrySet()) {
+         Integer line = lineAndData.getKey();
+         LineCoverageData previousLineData = previousLineToLineData.get(line);
+
+         if (previousLineData != null) {
+            LineCoverageData lineData = lineAndData.getValue();
+            lineData.addCountsFromPreviousMeasurement(previousLineData);
+         }
+      }
+
+      for (Map.Entry<Integer, LineCoverageData> lineAndData : previousLineToLineData.entrySet()) {
+         Integer line = lineAndData.getKey();
+
+         if (!lineToLineData.containsKey(line)) {
+            lineToLineData.put(line, lineAndData.getValue());
+         }
       }
    }
 }
