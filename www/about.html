@@ -205,9 +205,18 @@
 
 <h4>Testability</h4>
 <p>
-   By eliminating the technical limitations traditionally involved in the isolation of an unit from
-   its dependencies, we get the benefit that no artificial design restrictions must be imposed on
-   production code for the sake of unit testing.
+   The set of limitations listed above, which are found in conventional mocking tools, has come
+   to be associated with the idea of "untestable code".
+   Often, we see the restrictions resulting from those limitations considered as inevitable, or even
+   as something that could be beneficial.
+   The JMockit toolkit, which breaks away from these limitations and restrictions, shows that in
+   fact there is no such thing as truly untestable code. There is, of course, code that is harder to
+   test because it is too complicated and convoluted, lacks cohesion, and so on and so forth.
+</p>
+<p>
+   Therefore, by eliminating the technical limitations traditionally involved in the isolation of an
+   unit from its dependencies, we get the benefit that no artificial design restrictions must be
+   imposed on production code for the sake of unit testing.
    Additionally, it becomes possible to write unit tests for legacy code, without the need for any
    prior adaptation or refactoring.
    In short, with a less restrictive mock testing tool the <em>testability</em> of production code
@@ -217,7 +226,6 @@
 <p>
    Another way of thinking about testability is to differentiate between <em>intrinsic</em> and
    <em>extrinsic</em> testability.
-   <br/>
    In the first case, we can conclude that whatever makes the code more or less maintainable also
    makes it more or less easily testable, and vice-versa.
    For example, methods with higher <em>cyclomatic complexity</em> (basically, the number of
@@ -225,7 +233,6 @@
    the same time being more difficult to understand and change; in other words, intrinsic
    testability is not particularly useful as a separate measure for code quality, if it is nothing
    more than <em>maintainability</em>.
-   <br/>
    In the second case, <em>extrinsic testability</em>, we are not really considering properties of
    the production code, but instead properties of the <em>tools</em> used to <em>test</em> that
    code.
@@ -242,10 +249,10 @@
 </p>
 <p>
    In the following discussion, five different mocking toolkits (besides JMockit) are considered,
-   all in their latest stable releases as of October 5, 2009:
+   all in their latest stable releases as of November 15, 2009:
    <strong>EasyMock 2.5.2/EasyMock Class Extension 2.4</strong>, <strong>jMock 2.5.1</strong>,
-   <strong>PowerMock 1.2.5</strong>, <strong>Mockito 1.8.0</strong>, and
-   <strong>Unitils 2.4</strong>.
+   <strong>PowerMock 1.3.1</strong>, <strong>Mockito 1.8.0</strong>, and
+   <strong>Unitils 3.0</strong>.
    The code snippets below come from the sample JMockit test suites that compare the JMockit
    approach with those other toolkits.
 </p>
@@ -289,11 +296,11 @@
       Such calls are always kept separate from calls to mocked methods, though. In other words,
       JMockit does not follow the
       <a href="http://martinfowler.com/dslwip/MethodChaining.html">method chaining</a> approach.
-      Although it sometimes looks nice, the chaining of several method calls looks too
-      "syntactically heavy", in my opinion.
-      In addition, method chaining requires a different API when setting return values or thrown
-      exceptions for <code>void</code> methods, since calls to such methods cannot be wrapped in an
-      API call like <code>expect(&lt;call to mocked method>)</code>.
+      Although it sometimes looks nice, the chaining and/or wrapping of several method calls
+      combines too much in a single statement, making it harder to read and understand.
+      In addition, method chaining/wrapping requires a different API when setting return values or
+      thrown exceptions for <code>void</code> methods, since calls to such methods cannot be wrapped
+      in an API call like <code>expect(&lt;call to mocked method>)</code>.
    </li>
    <li>
       All mocking toolkits above, including JMockit, follow a <em>record-replay-verify</em>
@@ -328,16 +335,16 @@
       written inside an <em>Expectations</em> code block (an anonymous inner class containing one
       instance initialization block but no method implementations).
       However, jMock has nothing like the <em>Verifications</em> block available in JMockit, and
-      each expectations block must be passed as argument in a call to the
+      each Expectations instance must be passed as argument in a call to the
       <code>Mockery#checking</code> method, which transitions the test from <em>record</em> to
       <em>replay</em>.
       <br/>
       The JMockit Expectations/Verifications API relies on the instance initialization of anonymous
       inner classes to demarcate the <em>record</em> and <em>verify</em> phases.
-      This may be criticized as requiring extra indentation levels and curly braces;
-      that's true, but the advantages are big: the explicit expectation/verification blocks avoid
-      repetition of method calls like "expect(...)" and "verify(...)", while adding structure and
-      readability to the test by clearly separating code which belongs to each of the three phases.
+      This does require extra indentation levels and curly braces, but the advantages are big: the
+      explicit expectation/verification blocks avoid repetition of method calls like "expect(...)"
+      and "verify(...)", while adding structure and readability to the test by clearly separating
+      code which belongs to each of the three phases.
    </li>
 </ul>
 <p>
@@ -374,7 +381,7 @@
    <code>@PrepareForTest({ClassA.class, ...})</code> annotation) and requiring specific API calls to
    deal with various kinds of language constructs that may be present in the production code:
    static methods (<code>mockStatic(ClassA.class)</code>),
-   constructors (<code>suppressConstructor(ClassXyz.class)</code>),
+   constructors (<code>suppress(constructor(ClassXyz.class))</code>),
    constructor invocations (<code>expectNew(AClass.class)</code>),
    partial mocks (<code>createPartialMock(ClassX.class, "methodToMock")</code>), etc.
    <br/>
@@ -386,12 +393,11 @@
    this last case the <code>@Mocked</code> annotation often won't be needed).
 </li>
 <li>
-   Several capabilities available in JMockit, such as support for mocking final system classes,
-   <code>equals</code> and <code>hashCode</code>, overridden methods, and others, are currently not
-   supported in PowerMock.
-   I am sure all this will be solved eventually, but my impression is that the internal
-   implementation approach used in PowerMock (custom class loading) makes such problems inherently
-   harder to solve.
+   Several capabilities available in JMockit, such as support for mocking <code>equals</code> and
+   <code>hashCode</code>, overridden methods, and others, are currently not supported in PowerMock.
+   Also, there is no equivalent to JMockit's ability to capture instances and mock implementations
+   of specified base types as the test executes, without the test code itself having any knowledge
+   of the actual implementation classes.
 </li>
 <li>
    PowerMock uses custom class loaders (usually one per test class) in order to generate modified
@@ -400,11 +406,11 @@
    the need to sometimes use the <code>@PowerMockIgnore("package.to.be.ignored")</code> annotation
    on test classes.
    <br/>
-   The mechanism used by JMockit (runtime instrumentation through a "java agent") is simpler and
+   The mechanism used by JMockit (runtime instrumentation through a "Java agent") is simpler and
    safer, although it does require passing a "-javaagent" parameter to the JVM when developing on
    JDK 1.5; on JDK 1.6+ (which can always be used for development, even if deploying on an older
-   version) this requirement was eliminated, since the Attach API available in
-   "&lt;jdkHome>/lib/tools.jar" allows JMockit to load the java agent on demand.
+   version) there is no such requirement, since JMockit can transparently load the Java agent on
+   demand by using the Attach API.
 </li>
 </ul></dl>
 
@@ -420,14 +426,15 @@
    Mockito relies on explicit calls to its API in order to separate code between the <em>record</em>
    (<code>when(...)</code>) and <em>verify</em> (<code>verify(...)</code>) phases.
    This means that any invocation to a mock object in test code will also require a call to the
-   mocking API. Additionally, this will often lead to repetitive <code>when/verify</code> calls.
+   mocking API. Additionally, this will often lead to repetitive <code>when(...)</code> and
+   <code>verify(mock)...</code> calls.
    <br/>
    With JMockit, no similar calls exist. Sure, we have the <code>new NonStrictExpectations()</code>
    and <code>new Verifications()</code> constructor calls, but they occur only once per test
-   (typically), and are completely separate from the invocations to mock methods and constructors.
+   (typically), and are completely separate from the invocations to mocked methods and constructors.
 </li>
 <li>
-   The Mockito API uses inconsistent syntax in invocations to mock methods.
+   The Mockito API uses inconsistent syntax in invocations to mocked methods.
    In the <em>record</em> phase, we have calls like
    <code>when<strong>(mock.mockedMethod(args))</strong>...</code> while in the
    <em>verify</em> phase this same call will be written as
@@ -456,21 +463,20 @@
    For example, if <code>spy</code> refers to an empty <code>List</code>, then instead of writing
    <code>when(spy.get(0)).thenReturn("foo");</code> you will need to write
    <code>doReturn("foo").when(spy).get(0);</code>.
-   With JMockit, the <em>dynamic mocking</em> feature provides equivalent functionality to spies,
-   but without this issue, since real methods will only be executed during the <em>replay</em>
-   phase.
+   With JMockit, the <em>dynamic mocking</em> feature provides similar functionality to spies,
+   but without this issue since real methods only get executed during the <em>replay</em> phase.
 </li>
 <li>
    In EasyMock and jMock, the first mocking APIs for Java, the focus was entirely on the recording
-   of <em>expected invocations</em> of mock methods, for mock objects that (by default) do not allow
-   unexpected invocations. Those APIs also provide the recording of <em>allowed invocations</em> for
-   mock objects that do allow unexpected invocations, but this was treated as a second-class
-   feature.
+   of <em>expected invocations</em> of mocked methods, for mock objects that (by default) do not
+   allow unexpected invocations.
+   Those APIs also provide the recording of <em>allowed invocations</em> for mock objects that do
+   allow unexpected invocations, but this was treated as a second-class feature.
    Additionally, with these tools there is no way to explicitly verify invocations to mocks after
    the code under test is exercised. All such verifications are performed implicitly and
    automatically.
    <br/>
-   In Mockito (and also in Unitils Mocks), the opposite viewpoint is taken.
+   In Mockito (and also in Unitils Mock), the opposite viewpoint is taken.
    All invocations to mock objects that may happen during the test, whether recorded or not, are
    <em>allowed</em>, never <em>expected</em>.
    Verification is performed explicitly after the code under test is exercised, never automatically.
@@ -481,9 +487,9 @@
    mock invocations for each test.
    <br/>
    To be more clear, the Mockito API has the following shortcoming. If you need to verify that a
-   certain invocation to a non-<code>void</code> mock method happened during the test, but the test
-   requires a return value from that method that is different from the default for the return type,
-   then the Mockito test will have duplicate code: a
+   certain invocation to a non-<code>void</code> mocked method happened during the test, but the
+   test requires a return value from that method that is different from the default for the return
+   type, then the Mockito test will have duplicate code: a
    <code>when(mock.someMethod()).thenReturn(xyz)</code> call in the <em>record</em> phase, and a
    <code>verify(mock).someMethod()</code> in the <em>verify</em> phase.
    With JMockit, an <em>strict</em> expectation can always be recorded, which won't have to be
@@ -527,8 +533,7 @@
    <a href="#annotations">JMockit Annotations</a>
    are both powerful and simple (in terms of a small user API). However, because of the need to
    write separate classes and methods to define mocks, tests tend to be longer than similar tests
-   written with <a href="http://www.easymock.org">EasyMock</a>/
-   <a href="http://www.jmock.org">jMock</a> would be.
+   written with EasyMock or jMock would be.
 </p>
 <p>
    <em>JMockit Expectations</em> therefore provides a <em>record-replay</em> model for writing
@@ -542,8 +547,7 @@
    of test methods (even though JUnit doesn't normally allow test methods to have parameters).
    After all expectations are defined in this <em>recording phase</em>, the test transitions to the
    <em>replay phase</em>, when the code under test is exercised, and the invocations that actually
-   are made on the mocked collaborators are dispatched to the corresponding mock methods and
-   constructors.
+   are made on the mocked collaborators are handled according to those expectations.
    At the end of the replay phase, the expectations are verified for any missing invocations.
 </p>
 <p>
@@ -552,9 +556,9 @@
    methods), as well as on class instantiation through any constructors.
    Even private methods/constructors can have expectations defined, although at the cost of using
    strings for their names. (Other tools also allow a private method to be identified by its
-   parameters. However, changing parameters can occur just as often as renaming methods, not to
-   mention that the invocation of private methods from tests is not commonly considered to be good
-   practice.)
+   parameters. However, changing parameters can occur just as often as renaming methods, and when it
+   happens the resulting error message won't be as easy to understand as one that indicates the old
+   method by name.)
 </p>
 <p>
    This API allows the use of <a href="http://code.google.com/p/hamcrest">Hamcrest matchers</a> for
@@ -562,8 +566,7 @@
    errors/exceptions, as well as to specify lower and/or upper limits on the number of expected
    invocations for a given expectation.
 </p>
-<pre><code>@RunWith(JMockit.class)
-public class JMockitExpectationsExampleTest
+<pre><code>public class JMockitExpectationsExampleTest
 {
    // Common mock fields can be declared here, and must be annotated with @Mocked.
    
@@ -598,7 +601,7 @@ public class JMockitExpectationsExampleTest
    <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/easymock">Sample for
       comparison with EasyMock</a>
    <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/easymockclassextension">Sample
-      for comparison with EasyMock Class Extension</a>
+      for comparison with EasyMock CE</a>
    <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/jmock">Sample for
       comparison with jMock</a>
 </div>
@@ -677,7 +680,7 @@ public class JMockitExpectationsExampleTest
    <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/mockito">Sample for
       comparison with Mockito</a>
    <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/unitils">Sample for
-      comparison with Unitils Mocks</a>
+      comparison with Unitils Mock</a>
 </div>
 
 <h3 id="annotations">JMockit Annotations</h3>
@@ -692,7 +695,7 @@ public class JMockitExpectationsExampleTest
    New users interested in state-based testing should use this API instead of the old-fashioned and
    more limited Core API.
 </p>
-<pre><code>public class JMockitAnnotationsExampleTest extends JMockitTest
+<pre><code>public class JMockitAnnotationsExampleTest
 {
    @Test
    public void testDoOperationAbc()
@@ -733,7 +736,7 @@ public class JMockitExpectationsExampleTest
    Although it is the easiest API to learn, it falls short in actually helping write complex tests,
    so at this point it can be considered a "legacy" API in the JMockit Toolkit.
 </p>
-<pre><code>public class JMockitCoreExampleTest extends JMockitTestCase
+<pre><code>public class JMockitCoreExampleTest extends TestCase
 {
    public void testDoOperationAbc()
    {
@@ -787,17 +790,15 @@ public class JMockitExpectationsExampleTest
    <li>
       No need to specify which classes should be considered for coverage (it still can be specified
       if needed, though).
-      As long as JMockit is initialized before the first test is run (which can be achieved in
-      several different ways), all code under test will automatically be analyzed for coverage.
+      All code under test will automatically be analyzed for coverage.
       Specifically, the tool will gather coverage data for all production code executed by the test
       suite, excluding classes defined inside jar files (on the assumption that such code belongs
       to libraries used by code under test).
    </li>
    <li>
       An XML output file and/or an XHTML report can be generated at the end of each test run with no
-      extra configuration beyond adding the relevant jar file to the classpath, provided the test
-      suite is JMockit-enabled (meaning only that JMockit has to be initialized before the first
-      test is executed).
+      extra configuration beyond adding the relevant jar files to the classpath
+      (<code>jmockit.jar</code> plus at least one <code>jmockit-coverage-xyz.jar</code> file).
       For the generation of the XHTML report, Java source files are automatically searched in all
       "src" directories under the working directory.
    </li>
@@ -817,9 +818,10 @@ public class JMockitExpectationsExampleTest
 -->
    <li>
       An <strong>incremental test runner</strong> (actually, an automatic modification to the
-      JUnit 4.x standard test runner) is provided. When using this modified runner, only the
-      individual tests which cover locally modified code are rerun. Any other tests included in the
-      suite are ignored for that particular test run.
+      JUnit 4.x standard test runner) is provided.
+      When using this modified runner, only the individual tests which cover locally modified code
+      are re-executed.
+      Any other tests included in the suite are ignored for that particular test run.
    </li>
    <li>
       Additional features are planned: use of <code>assert</code> for marking blocks of unreachable
