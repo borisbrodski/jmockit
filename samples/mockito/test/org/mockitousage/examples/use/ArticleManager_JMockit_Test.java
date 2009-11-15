@@ -24,14 +24,12 @@
  */
 package org.mockitousage.examples.use;
 
-import static java.util.Arrays.*;
+import org.junit.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
-import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
+import static java.util.Arrays.*;
+
 public class ArticleManager_JMockit_Test
 {
    @NonStrict private ArticleCalculator mockCalculator;

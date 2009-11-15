@@ -26,17 +26,13 @@ package org.mockitousage;
 
 import java.util.*;
 
-import org.hamcrest.beans.*;
-
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
+import org.hamcrest.beans.*;
 import static org.junit.Assert.*;
 
-@RunWith(JMockit.class)
 public class JavadocExamples_JMockit_Test
 {
    @Mocked private List<String> mockedList;

@@ -26,13 +26,12 @@ package org.mockitousage.examples;
 
 import java.util.*;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
+import mockit.*;
+
+import static org.junit.Assert.*;
+
 public class ItemController_JMockit_Test
 {
    private ItemController itemController;
