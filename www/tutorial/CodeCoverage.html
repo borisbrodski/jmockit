@@ -81,10 +81,17 @@
       XML files: a single XML output file of name "coverage.xml" is written under the current
       working directory. If the file already exists it is overwritten.
    </li>
+   <li>
+      Coverage data files: a single serialized file of name "coverage.ser" is written under the
+      current working directory.
+      Differently from the other cases, however, if the file already exists its contents are first
+      read and <em>merged</em> with the in-memory results of the current test run.
+      In the end, the file is re-written with the merged coverage data.
+   </li>
 </ol>
 <p>
-   For both types of output, there is optional "call point" information which may be included or
-   not, as selected by the user.
+   For the first two types of output, there is optional "call point" information which may be
+   included or not, as selected by the user.
    A <em>call point</em> is the point in the source test code from which an specific line of
    production code was exercised.
    Note that generating coverage with this extra information takes more time and produces
@@ -129,6 +136,10 @@
       <code>jmockit-coverage-<strong>xmlfull</strong>.jar</code>:
       generates an XML output file of name "coverage.xml", with call points.
    </li>
+   <li>
+      <code>jmockit-coverage-<strong>merge</strong>.jar</code>:
+      generates a merged data file of name "coverage.ser".
+   </li>
 </ul>
 <p>
    The "htmlbasic" and "htmlfull" jars are mutually exclusive, and the same holds for "xmlbasic" and
@@ -156,9 +167,9 @@
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#output"><img align="right" src="go-top.png" title="First section"></a>
-      <img align="right" src="blank.gif" width="22">
+      <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#jars"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#switching"><img align="right" src="go-down.png" title="Next section"></a>
+      <a href="#merging"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
@@ -182,8 +193,8 @@
    <li>
       <code>outputFormat</code> specifies the format for the coverage output, and should be
       one or more of: <code>xml</code>, <code>xml-nocp</code>, <code>html</code>,
-      <code>html-nocp</code>; more than one value can be specified by separating them with a
-      comma; if no value is specified, <code>html-nocp</code> is assumed.
+      <code>html-nocp</code>, <code>merge</code>; more than one value can be specified by separating
+      them with a comma; if no value is specified, <code>html-nocp</code> is assumed.
    </li>
    <li>
       <code>outputDir</code> specifies the destination directory for coverage output;
@@ -212,13 +223,58 @@
    type are specified, for example "xml,xml-nocp", then the first occurrence will take precedence.
 </p>
 
+<h3 id="merging">
+   Generating aggregate reports for separate test runs
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#output"><img align="right" src="go-top.png" title="First section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#jvm"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#switching"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
+<p>
+   Suppose you have multiple test run configurations (in separate Ant targets, for example), and
+   you want to generate a single XHTML report for the production code covered by the full set of
+   tests.
+   Normally, when JMockit Coverage generates a report at the end of a test run, it overwrites any
+   previous report that may have been generated in the same output directory.
+   So, instead of getting an aggregate report as desired, you would end up with the report for the
+   last test run only (assuming all test runs used the same working dir).
+   Here is where the third type of output, the <em>merged data file</em> (coverage.ser), comes in.
+</p>
+<p>
+   As seen in other sections, we activate the generation of this file by either adding
+   <code>jmockit-coverage-merge.jar</code> to the classpath or by using a JVM command line such as
+   "<code>-javaagent:jmockit.jar=coverage=:html,merge</code>".
+</p>
+<p>
+   At the end of any test run, and <em>before</em> any XML output file or XHTML report is generated,
+   an existing "coverage.ser" file in the current working dir will be read, with the coverage data
+   in it merged with the current in-memory coverage data.
+   The modified in-memory data is then used in the generation of any XML/XHTML output, according to
+   the output types which were specified for the test run.
+</p>
+<p>
+   Note that these separate test runs may be for the <em>same</em> test suite, or for
+   <em>different</em> test suites.
+   The only thing in common between all test runs, if a single XHTML report or XML file is
+   desired from them, is that the working directory should be the same.
+   Otherwise, the shared "coverage.ser" file won't be found and a new "coverage.xml" file or
+   "coverage-report" directory will be created.
+   If different test runs <em>must</em> use different working dirs (perhaps because the source
+   directories are not all under the same top-level directory, or for some other reason), then the
+   "coverage.ser" file will have to be provided in each working dir by whatever means are available
+   (for example, by moving the file through an Ant task, or by creating a link in the file system).
+</p>
+
 <h3 id="switching">
    Turning coverage output on/off
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#output"><img align="right" src="go-top.png" title="First section"></a>
       <img align="right" src="blank.gif" width="22">
-      <a href="#jvm"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#merging"><img align="right" src="go-up.png" title="Previous section"></a>
       <img align="right" src="blank.gif" width="22">
    </div>
 </h3>

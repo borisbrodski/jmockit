@@ -11,7 +11,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.993 (November ??, 2009):</p>
+<p>Release 0.993 (November 15, 2009):</p>
 <ul>
    <li>
       <strong>Enhancement</strong>: to make JMockit easier to use when running under JDK 1.6+
@@ -64,6 +64,11 @@
       This avoids the occurrence of a <code>ClassCircularityError</code> under certain situations
       (in particular, when classes used in a test are loaded on demand by the JVM and a critical
       JRE class is mocked at the same time).
+   </li>
+   <li>
+      <strong>New feature in JMockit Coverage</strong>: the ability to merge coverage data from
+      consecutive test runs was implemented. This allows the generation of a single aggregate report
+      from multiple test runs (for the same test suite or not). See issue 3.
    </li>
 </ul>
 
