@@ -27,11 +27,12 @@ package org.jdesktop.animation.timing;
 import org.junit.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
 import static org.jdesktop.animation.timing.Animator.*;
+import static org.junit.Assert.*;
 
-public final class AnimatorLifecycleTest extends JMockitTest
+@UsingMocksAndStubs(java.awt.Toolkit.class)
+public final class AnimatorLifecycleTest
 {
    @Capturing
    private TimingSource timer;

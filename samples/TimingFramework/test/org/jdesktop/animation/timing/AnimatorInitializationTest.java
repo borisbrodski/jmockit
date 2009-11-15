@@ -24,15 +24,17 @@
  */
 package org.jdesktop.animation.timing;
 
-import mockit.integration.junit4.*;
-import mockit.*;
 import org.junit.*;
-import org.jdesktop.animation.timing.interpolation.*;
-import static org.jdesktop.animation.timing.Animator.*;
 
+import mockit.*;
+
+import static org.jdesktop.animation.timing.Animator.*;
+import org.jdesktop.animation.timing.interpolation.*;
+import static org.junit.Assert.*;
+
+@UsingMocksAndStubs(java.awt.Toolkit.class)
 @Capturing(baseType = TimingSource.class)
-@SuppressWarnings({"ClassWithTooManyMethods"})
-public final class AnimatorInitializationTest extends JMockitTest
+public final class AnimatorInitializationTest
 {
    @Test
    public void testGetDuration()

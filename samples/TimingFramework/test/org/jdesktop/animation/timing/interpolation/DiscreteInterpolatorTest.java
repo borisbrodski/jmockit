@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,22 +24,20 @@
  */
 package org.jdesktop.animation.timing.interpolation;
 
-import mockit.integration.junit4.*;
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public final class DiscreteInterpolatorTest
 {
-    @Test
-    public void testInterpolate()
-    {
-        Interpolator interp = DiscreteInterpolator.getInstance();
+   @Test
+   public void testInterpolate()
+   {
+      Interpolator interp = DiscreteInterpolator.getInstance();
 
-        assertEquals(0.0f, interp.interpolate(0.0f), 0.0f);
-        //noinspection MagicNumber
-        assertEquals(0.0f, interp.interpolate(0.2f), 0.0f);
-        assertEquals(1.0f, interp.interpolate(1.0f), 0.0f);
-    }
+      assertEquals(0.0f, interp.interpolate(0.0f), 0.0f);
+      //noinspection MagicNumber
+      assertEquals(0.0f, interp.interpolate(0.2f), 0.0f);
+      assertEquals(1.0f, interp.interpolate(1.0f), 0.0f);
+   }
 }

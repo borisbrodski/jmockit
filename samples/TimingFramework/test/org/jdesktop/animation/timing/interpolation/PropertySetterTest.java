@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -26,24 +26,25 @@ package org.jdesktop.animation.timing.interpolation;
 
 import java.awt.*;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-import org.jdesktop.animation.timing.*;
 import org.junit.*;
 
+import mockit.*;
+
+import org.jdesktop.animation.timing.*;
+import static org.junit.Assert.*;
+
+@UsingMocksAndStubs(java.awt.Toolkit.class)
 @Capturing(baseType = TimingSource.class)
-public final class PropertySetterTest extends JMockitTest
+public final class PropertySetterTest
 {
    private static final class Animated
    {
       private int value;
 
       Animated() {}
-
       Animated(int value) { this.value = value; }
 
       public int getValue() { return value; }
-
       public void setValue(int value) { this.value = value; }
    }
 
@@ -150,7 +151,7 @@ public final class PropertySetterTest extends JMockitTest
       new Expectations()
       {
          {
-            animated.setValue(withAny(1)); throwsException(new IllegalStateException("test"));
+            animated.setValue(anyInt); throwsException(new IllegalStateException("test"));
          }
       };
 

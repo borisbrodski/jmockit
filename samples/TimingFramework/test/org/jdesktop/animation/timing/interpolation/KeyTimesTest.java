@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,43 +24,41 @@
  */
 package org.jdesktop.animation.timing.interpolation;
 
-import static org.junit.Assert.*;
-import org.junit.runner.*;
 import org.junit.*;
-import mockit.integration.junit4.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public final class KeyTimesTest
 {
-    @Test
-    public void testCreateAndExerciseKeyTimes()
-    {
-        KeyTimes keyTimes = new KeyTimes(0.0f, 0.5f, 1.0f);
+   @Test
+   public void testCreateAndExerciseKeyTimes()
+   {
+      KeyTimes keyTimes = new KeyTimes(0.0f, 0.5f, 1.0f);
 
-        assertEquals(3, keyTimes.getSize());
-        assertEquals(0.0f, keyTimes.getTime(0), 0.0f);
-        assertEquals(0.5f, keyTimes.getTime(1), 0.0f);
-        assertEquals(1.0f, keyTimes.getTime(2), 0.0f);
-        assertEquals(0, keyTimes.getInterval(0.0f));
-        assertEquals(1, keyTimes.getInterval(1));
-        assertEquals(2, keyTimes.getInterval(2));
-    }
+      assertEquals(3, keyTimes.getSize());
+      assertEquals(0.0f, keyTimes.getTime(0), 0.0f);
+      assertEquals(0.5f, keyTimes.getTime(1), 0.0f);
+      assertEquals(1.0f, keyTimes.getTime(2), 0.0f);
+      assertEquals(0, keyTimes.getInterval(0.0f));
+      assertEquals(1, keyTimes.getInterval(1));
+      assertEquals(2, keyTimes.getInterval(2));
+   }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateKeyTimesWithFirstValueNotZero()
-    {
-        new KeyTimes(1);
-    }
+   @Test(expected = IllegalArgumentException.class)
+   public void testCreateKeyTimesWithFirstValueNotZero()
+   {
+      new KeyTimes(1);
+   }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateKeyTimesWithLastValueNotOne()
-    {
-        new KeyTimes(0.0f, 0.1f);
-    }
+   @Test(expected = IllegalArgumentException.class)
+   public void testCreateKeyTimesWithLastValueNotOne()
+   {
+      new KeyTimes(0.0f, 0.1f);
+   }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateKeyTimesWithValuesNotInIncreasingOrder()
-    {
-        new KeyTimes(0.0f, 0.5f, 0.2f, 1.0f);
-    }
+   @Test(expected = IllegalArgumentException.class)
+   public void testCreateKeyTimesWithValuesNotInIncreasingOrder()
+   {
+      new KeyTimes(0.0f, 0.5f, 0.2f, 1.0f);
+   }
 }

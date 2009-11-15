@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -30,6 +30,7 @@ import static org.jdesktop.animation.timing.Animator.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+@UsingMocksAndStubs(java.awt.Toolkit.class)
 @Capturing(baseType = TimingSource.class)
 public final class AnimatorRunningTest
 {

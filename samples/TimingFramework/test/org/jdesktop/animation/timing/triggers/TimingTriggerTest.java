@@ -24,14 +24,13 @@
  */
 package org.jdesktop.animation.timing.triggers;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
-import org.jdesktop.animation.timing.*;
 
-@RunWith(JMockit.class)
+import mockit.*;
+
+import org.jdesktop.animation.timing.*;
+import static org.junit.Assert.*;
+
 public final class TimingTriggerTest
 {
    @Test

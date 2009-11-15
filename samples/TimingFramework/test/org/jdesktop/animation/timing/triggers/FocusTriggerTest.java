@@ -28,13 +28,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
+import mockit.*;
+
+import static org.junit.Assert.*;
+
 public final class FocusTriggerTest
 {
    @Test

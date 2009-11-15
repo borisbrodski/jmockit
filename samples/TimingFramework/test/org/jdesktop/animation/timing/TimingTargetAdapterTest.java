@@ -27,7 +27,7 @@ package org.jdesktop.animation.timing;
 import org.junit.*;
 
 /**
- * Created only to achieve full code coverage. Unfortunatelly, there is no way to actually verify
+ * Created only to achieve full code coverage. Unfortunately, there is no way to actually verify
  * that the methods in the adapter class do nothing.
  */
 public final class TimingTargetAdapterTest

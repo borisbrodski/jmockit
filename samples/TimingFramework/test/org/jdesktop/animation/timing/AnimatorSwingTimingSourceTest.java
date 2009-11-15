@@ -27,11 +27,13 @@ package org.jdesktop.animation.timing;
 import java.awt.event.*;
 import javax.swing.*;
 
-import mockit.*;
-import mockit.integration.junit4.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 
-public final class AnimatorSwingTimingSourceTest extends JMockitTest
+import mockit.*;
+
+@UsingMocksAndStubs(java.awt.Toolkit.class)
+public final class AnimatorSwingTimingSourceTest
 {
    private ActionListener timerTarget;
 
@@ -50,11 +52,10 @@ public final class AnimatorSwingTimingSourceTest extends JMockitTest
          {
             animator.addTarget(timingTarget);
 
-            System.nanoTime(); returns(0L);
-            System.nanoTime(); returns(50L * 1000000);
+            System.nanoTime(); returns(0L, 50L * 1000000);
 
             timingTarget.begin();
-            timingTarget.timingEvent(withEqual(1.0f, 0));
+            timingTarget.timingEvent(1.0f);
             timingTarget.end();
          }
       };
@@ -62,7 +63,7 @@ public final class AnimatorSwingTimingSourceTest extends JMockitTest
       animator.start();
       timerTarget.actionPerformed(null);
 
-      // Exercises other methods of the SwingTimingSource to fully cover the code, verifying through
+      // Exercise other methods of the SwingTimingSource to fully cover the code, verifying through
       // MockTimer.
       animator.setResolution(10);
       animator.setStartDelay(0);
@@ -79,14 +80,19 @@ public final class AnimatorSwingTimingSourceTest extends JMockitTest
          timerTarget = actionListener;
       }
 
+      @Mock(invocations = 1)
+      void start()
+      {
+      }
+
       @Mock(invocations = 1) // invocation from animator.setResolution
-      public void setDelay(int delay)
+      void setDelay(int delay)
       {
          assertEquals(10, delay);
       }
 
       @Mock(invocations = 2) // one invocation from Animator(d), another from animator.setStartDelay
-      public void setInitialDelay(int initialDelay)
+      void setInitialDelay(int initialDelay)
       {
          assertEquals(0, initialDelay);
       }

@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,12 +24,10 @@
  */
 package org.jdesktop.animation.timing.interpolation;
 
-import static org.junit.Assert.*;
-import org.junit.runner.*;
 import org.junit.*;
-import mockit.integration.junit4.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public final class KeyFramesTest
 {
    private KeyFrames<Integer> keyFrames;

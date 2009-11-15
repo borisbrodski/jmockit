@@ -31,10 +31,10 @@ import static org.jdesktop.animation.timing.Animator.*;
 import org.junit.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
+@UsingMocksAndStubs(java.awt.Toolkit.class)
 @Capturing(baseType = TimingSource.class)
-public final class AnimatorTimingSourceTest extends JMockitTest
+public final class AnimatorTimingSourceTest
 {
    @Test
    public void setTimer(final TimingSource timingSource)
@@ -69,10 +69,9 @@ public final class AnimatorTimingSourceTest extends JMockitTest
       {
          {
             timingSource.addEventListener(withInstanceOf(TimingEventListener.class));
-            timingSource.setResolution(withAny(1));
-            timingSource.setStartDelay(withAny(1));
+            timingSource.setResolution(anyInt);
+            timingSource.setStartDelay(anyInt);
             timingSource.removeEventListener(withInstanceOf(TimingEventListener.class));
-            endRecording();
          }
       };
 
@@ -187,7 +186,7 @@ public final class AnimatorTimingSourceTest extends JMockitTest
 
             // Resulting expected interactions:
             timingTarget.begin();
-            timingTarget.timingEvent(withEqual(1.0f, 0));
+            timingTarget.timingEvent(1.0f);
             timingTarget.end();
          }
       };
@@ -211,8 +210,7 @@ public final class AnimatorTimingSourceTest extends JMockitTest
          {
             animator.addTarget(timingTarget);
 
-            System.nanoTime(); returns(0L);
-            System.nanoTime(); returns(60L * 1000000);
+            System.nanoTime(); returns(0L, 60L * 1000000);
 
             timingTarget.begin();
             timingTarget.repeat();

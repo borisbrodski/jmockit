@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,21 +24,19 @@
  */
 package org.jdesktop.animation.timing.triggers;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
-import mockit.integration.junit4.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public final class MouseTriggerEventTest
 {
-    @Test
-    public void testGetOppositeEvent()
-    {
-        assertSame(MouseTriggerEvent.EXIT, MouseTriggerEvent.ENTER.getOppositeEvent());
-        assertSame(MouseTriggerEvent.ENTER, MouseTriggerEvent.EXIT.getOppositeEvent());
-        assertSame(MouseTriggerEvent.RELEASE, MouseTriggerEvent.PRESS.getOppositeEvent());
-        assertSame(MouseTriggerEvent.PRESS, MouseTriggerEvent.RELEASE.getOppositeEvent());
-        assertSame(MouseTriggerEvent.CLICK, MouseTriggerEvent.CLICK.getOppositeEvent());
-    }
+   @Test
+   public void testGetOppositeEvent()
+   {
+      assertSame(MouseTriggerEvent.EXIT, MouseTriggerEvent.ENTER.getOppositeEvent());
+      assertSame(MouseTriggerEvent.ENTER, MouseTriggerEvent.EXIT.getOppositeEvent());
+      assertSame(MouseTriggerEvent.RELEASE, MouseTriggerEvent.PRESS.getOppositeEvent());
+      assertSame(MouseTriggerEvent.PRESS, MouseTriggerEvent.RELEASE.getOppositeEvent());
+      assertSame(MouseTriggerEvent.CLICK, MouseTriggerEvent.CLICK.getOppositeEvent());
+   }
 }

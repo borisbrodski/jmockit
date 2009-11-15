@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,19 +24,17 @@
  */
 package org.jdesktop.animation.timing.triggers;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
-import mockit.integration.junit4.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public final class TimingTriggerEventTest
 {
-    @Test
-    public void testGetOppositeEvent()
-    {
-        assertSame(TimingTriggerEvent.STOP, TimingTriggerEvent.START.getOppositeEvent());
-        assertSame(TimingTriggerEvent.START, TimingTriggerEvent.STOP.getOppositeEvent());
-        assertSame(TimingTriggerEvent.REPEAT, TimingTriggerEvent.REPEAT.getOppositeEvent());
-    }
+   @Test
+   public void testGetOppositeEvent()
+   {
+      assertSame(TimingTriggerEvent.STOP, TimingTriggerEvent.START.getOppositeEvent());
+      assertSame(TimingTriggerEvent.START, TimingTriggerEvent.STOP.getOppositeEvent());
+      assertSame(TimingTriggerEvent.REPEAT, TimingTriggerEvent.REPEAT.getOppositeEvent());
+   }
 }

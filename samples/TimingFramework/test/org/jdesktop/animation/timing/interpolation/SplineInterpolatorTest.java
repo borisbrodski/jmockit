@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,28 +24,26 @@
  */
 package org.jdesktop.animation.timing.interpolation;
 
-import mockit.integration.junit4.*;
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public final class SplineInterpolatorTest
 {
-    @Test
-    public void testInterpolate()
-    {
-        Interpolator interp = new SplineInterpolator(0.0f, 0.0f, 1.0f, 0.0f);
+   @Test
+   public void testInterpolate()
+   {
+      Interpolator interp = new SplineInterpolator(0.0f, 0.0f, 1.0f, 0.0f);
 
-        assertEquals(0.0f, interp.interpolate(0.0f), 0.0f);
-        assertEquals(0.28f, interp.interpolate(0.5f), 0.001f);
-        assertEquals(1.0f, interp.interpolate(1.0f), 0.0001f);
-        assertEquals(1.0f, interp.interpolate(1.1f), 0.0001f);
-    }
+      assertEquals(0.0f, interp.interpolate(0.0f), 0.0f);
+      assertEquals(0.28f, interp.interpolate(0.5f), 0.001f);
+      assertEquals(1.0f, interp.interpolate(1.0f), 0.0001f);
+      assertEquals(1.0f, interp.interpolate(1.1f), 0.0001f);
+   }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateSplineWithInvalidControlPoint()
-    {
-        new SplineInterpolator(0.0f, 0.0f, -1.0f, 2.0f);
-    }
+   @Test(expected = IllegalArgumentException.class)
+   public void testCreateSplineWithInvalidControlPoint()
+   {
+      new SplineInterpolator(0.0f, 0.0f, -1.0f, 2.0f);
+   }
 }

@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -25,11 +25,10 @@
 package org.jdesktop.animation.timing;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
 import org.junit.*;
 
-public final class TimingSourceTest extends JMockitTest
+public final class TimingSourceTest
 {
    @Mocked private TimingEventListener timingEventListener;
    private TimingSource source;
