@@ -12,6 +12,7 @@
     <orderEntry type="library" scope="TEST" name="JMockit" level="project" />
     <orderEntry type="library" scope="TEST" name="JUnit 4.7" level="application" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="Coverage" />
   </component>
 </module>
 
