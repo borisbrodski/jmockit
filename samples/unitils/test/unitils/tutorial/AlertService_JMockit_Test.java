@@ -29,9 +29,10 @@ import java.util.*;
 import org.junit.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
-public final class AlertService_JMockit_Test extends JMockitTest
+import static org.junit.Assert.assertEquals;
+
+public final class AlertService_JMockit_Test
 {
    private AlertService alertService;
    private Message alert1;
