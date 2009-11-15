@@ -24,9 +24,11 @@
  */
 package jbossaop.testing.bank;
 
-import jbossaop.testing.customer.*;
+import junit.framework.*;
+
 import mockit.*;
-import mockit.integration.junit3.*;
+
+import jbossaop.testing.customer.*;
 
 /**
  * This class is JMockit's version of the JBoss AOP test from the
@@ -39,12 +41,9 @@ import mockit.integration.junit3.*;
  * (such as jboss-aop.xml) is required, no external bytecode modification tool (such as aopc) is
  * used, and (assuming the use of JDK 1.6 for <strong>running</strong> the tests - but not
  * necessarily for compiling the sources or running the production code) no extra JVM initialization
- * arguments are needed. (Besides having <em>jmockit.jar</em> in the classpath, when using
- * <em>JDK 1.6</em> it is necessary to also have <em>tools.jar</em> in the classpath; with
- * <em>JDK 1.5</em> it is necessary instead to pass the initialization argument
- * <em>"-javaagent:jmockit.jar"</em> to the JVM.)
+ * arguments are needed.
  */
-public final class BankBusinessTest extends JMockitTestCase
+public final class BankBusinessTest extends TestCase
 {
    private BankAccount account1;
    private BankAccount account2;
