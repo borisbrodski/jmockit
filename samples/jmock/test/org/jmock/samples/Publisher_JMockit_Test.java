@@ -24,13 +24,10 @@
  */
 package org.jmock.samples;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-import org.jmock.samples.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
+import mockit.*;
+
 public final class Publisher_JMockit_Test
 {
    @Test

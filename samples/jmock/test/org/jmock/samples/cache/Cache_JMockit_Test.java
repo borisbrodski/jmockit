@@ -24,14 +24,12 @@
  */
 package org.jmock.samples.cache;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public final class Cache_JMockit_Test
 {
    private static final String KEY = "cachedItem";

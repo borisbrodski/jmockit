@@ -25,14 +25,12 @@
 package org.jmock.samples.parentChild;
 
 import org.junit.*;
-import org.junit.runner.*;
-import mockit.integration.junit4.*;
+
 import mockit.*;
 
 /**
  * Notice how much simpler the equivalent test is with JMockit.
  */
-@RunWith(JMockit.class)
 public final class Child_JMockit_Test
 {
    @Mocked Parent parent;

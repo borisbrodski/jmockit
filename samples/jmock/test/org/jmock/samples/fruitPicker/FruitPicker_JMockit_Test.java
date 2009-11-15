@@ -24,17 +24,15 @@
  */
 package org.jmock.samples.fruitPicker;
 
-import static org.junit.Assert.*;
-import org.junit.*;
-import org.junit.runner.*;
-
-import static java.util.Arrays.*;
 import java.util.*;
 
-import mockit.integration.junit4.*;
+import org.junit.*;
+
 import mockit.*;
 
-@RunWith(JMockit.class)
+import static java.util.Arrays.*;
+import static org.junit.Assert.*;
+
 public final class FruitPicker_JMockit_Test
 {
    @Test
