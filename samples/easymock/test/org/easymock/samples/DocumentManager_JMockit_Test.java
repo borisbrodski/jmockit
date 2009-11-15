@@ -27,13 +27,11 @@ package org.easymock.samples;
 import java.util.*;
 
 import org.junit.*;
-import org.junit.runner.*;
-import static org.junit.Assert.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public final class DocumentManager_JMockit_Test
 {
    private DocumentManager classUnderTest;
