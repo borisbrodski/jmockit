@@ -8,7 +8,6 @@
       <pathelement location="main/lib/commons-logging-1.1.1.jar"/>
       <pathelement location="main/lib/log4j-1.2.15.jar"/>
       <pathelement location="main/lib/slf4j-api-1.5.8.jar"/>
-      <fileset file="${TOOLS_JAR}"/>
       <fileset file="${JUNIT_JAR}"/>
       <fileset file="${TESTNG_JAR}"/>
       <fileset file="${JAVAEE_JAR}" erroronmissingdir="false"/>

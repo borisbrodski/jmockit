@@ -13,7 +13,6 @@
     <orderEntry type="library" scope="TEST" name="JUnit 4.7" level="application" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Asm2" />
-    <orderEntry type="module" module-name="Incremental" />
     <orderEntry type="module" module-name="Main" />
   </component>
 </module>

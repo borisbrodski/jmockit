@@ -5,19 +5,6 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="LoginService" />
-    <orderEntry type="module" module-name="EasyMock" />
-    <orderEntry type="module" module-name="Easymockclassextension" />
-    <orderEntry type="module" module-name="jMock" />
-    <orderEntry type="module" module-name="Jbossaop" />
-    <orderEntry type="module" module-name="Unitils" />
-    <orderEntry type="module" module-name="Mockito" />
-    <orderEntry type="module" module-name="Powermock" />
-    <orderEntry type="module" module-name="Tutorial" />
-    <orderEntry type="module" module-name="TimingFramework" />
-    <orderEntry type="module" module-name="AnimatedTransitions" />
-    <orderEntry type="module" module-name="OrderMngmntWebapp" />
-    <orderEntry type="module" module-name="Main" />
   </component>
 </module>
 

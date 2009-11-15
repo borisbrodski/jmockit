@@ -4,7 +4,8 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>mockit</groupId>
    <artifactId>jmockit</artifactId>
-   <version>0.992</version>
+   <packaging>jar</packaging>
+   <version>0.993</version>
    <name>JMockit Testing Toolkit</name>
    <url>http://code.google.com/p/jmockit/</url>
    <description>
@@ -24,15 +25,26 @@
       <developer><name>Rogério Liesenfeld</name><email>javamockit@yahoo.com</email></developer>
    </developers>
 
-   <properties>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-   </properties>
+   <issueManagement><url>http://code.google.com/p/jmockit/issues/list</url></issueManagement>
+   <mailingLists>
+      <mailingList>
+         <name>JMockit Users</name>
+         <archive>http://groups.google.com/group/jmockit-users</archive>
+         <post>jmockit-users@googlegroups.com</post>
+      </mailingList>
+   </mailingLists>
+   <scm>
+      <url>http://code.google.com/p/jmockit/source/browse/trunk</url>
+      <connection>scm:http://jmockit.googlecode.com/svn/trunk/ jmockit-read-only</connection>
+   </scm>
+
+   <properties><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
 
    <build>
+      <sourceDirectory>main/src</sourceDirectory>
       <plugins>
          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
+            <groupId>org.apache.maven.plugins</groupId><artifactId>maven-jar-plugin</artifactId>
             <configuration>
                <archive>
                   <forced/>
@@ -41,33 +53,29 @@
             </configuration>
          </plugin>
          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
                <source>1.5</source><target>1.5</target>
+               <excludes><exclude>Temp.java</exclude></excludes>
             </configuration>
          </plugin>
          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
+            <groupId>org.codehaus.mojo</groupId><artifactId>build-helper-maven-plugin</artifactId>
             <version>1.3</version>
             <executions>
                <execution>
                   <id>add-source</id>
                   <phase>generate-sources</phase>
-                  <goals><goal>add-source</goal></goals>
+                  <goals>
+                     <goal>add-source</goal>
+                     <goal>add-resource</goal>
+                  </goals>
                   <configuration>
                      <sources>
                         <source>asm2/src</source>
                         <source>hamcrest/src</source>
-                        <source>main/src</source>
                      </sources>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>add-resource</id>
-                  <phase>generate-sources</phase>
-                  <goals><goal>add-resource</goal></goals>
-                  <configuration>
                      <resources>
                         <resource>
                            <directory>main/src</directory>
@@ -79,8 +87,7 @@
             </executions>
          </plugin>
          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
+            <groupId>org.apache.maven.plugins</groupId><artifactId>maven-source-plugin</artifactId>
             <executions>
                <execution>
                   <id>attach-sources</id>
@@ -91,8 +98,7 @@
       </plugins>
       <extensions>
          <extension>
-            <groupId>org.jvnet.wagon-svn</groupId>
-            <artifactId>wagon-svn</artifactId>
+            <groupId>org.jvnet.wagon-svn</groupId><artifactId>wagon-svn</artifactId>
             <version>1.9</version>
          </extension>
       </extensions>
@@ -100,57 +106,39 @@
 
    <dependencies>
       <dependency>
-         <groupId>com.sun</groupId>
-         <artifactId>tools</artifactId>
-         <version>1.6.0</version>
-         <scope>system</scope>
-         <systemPath>${java.home}/../lib/tools.jar</systemPath>
+         <groupId>junit</groupId><artifactId>junit</artifactId><version>4.7</version>
          <optional>true</optional>
       </dependency>
       <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <version>4.7</version>
-         <scope>compile</scope>
-         <optional>true</optional>
-      </dependency>
-      <dependency>
-         <groupId>org.testng</groupId>
-         <artifactId>testng</artifactId>
-         <version>5.10</version>
+         <groupId>org.testng</groupId><artifactId>testng</artifactId><version>5.10</version>
          <classifier>jdk15</classifier>
-         <scope>compile</scope>
          <optional>true</optional>
       </dependency>
       <dependency>
-         <groupId>commons-logging</groupId>
-         <artifactId>commons-logging</artifactId>
+         <groupId>commons-logging</groupId><artifactId>commons-logging</artifactId>
          <version>1.1.1</version>
-         <scope>compile</scope>
          <optional>true</optional>
       </dependency>
       <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-log4j12</artifactId>
-         <version>1.5.8</version>
-         <scope>compile</scope>
+         <groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>1.5.8</version>
          <optional>true</optional>
+      </dependency>
+      <dependency>
+         <groupId>log4j</groupId><artifactId>log4j</artifactId><version>1.2.15</version>
+         <optional>true</optional>
+         <exclusions>
+            <exclusion><groupId>javax.jms</groupId><artifactId>jms</artifactId></exclusion>
+            <exclusion><groupId>javax.mail</groupId><artifactId>mail</artifactId></exclusion>
+            <exclusion><groupId>com.sun.jmx</groupId><artifactId>jmxri</artifactId></exclusion>
+            <exclusion><groupId>com.sun.jdmk</groupId><artifactId>jmxtools</artifactId></exclusion>
+         </exclusions>
       </dependency>
    </dependencies>
 
    <distributionManagement>
       <repository>
-         <uniqueVersion>false</uniqueVersion>
          <id>java.net-m2-repository</id>
          <url>java-net:/maven2-repository/trunk/repository/</url>
       </repository>
    </distributionManagement>
-
-   <repositories>
-      <repository>
-         <id>maven2-repository.dev.java.net</id>
-         <name>Java.net Repository for Maven</name>
-         <url>http://download.java.net/maven/2/</url>
-      </repository>
-   </repositories>
 </project>

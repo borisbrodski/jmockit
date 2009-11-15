@@ -1,0 +1,57 @@
+<project
+   xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>mockit</groupId>
+   <artifactId>jmockit-coverage</artifactId>
+   <version>0.993</version>
+   <name>JMockit Coverage</name>
+   <url>http://code.google.com/p/jmockit/</url>
+   <description>JMockit Coverage is the code coverage tool in the JMockit toolkit.</description>
+   <licenses>
+      <license>
+         <name>MIT LICENSE</name>
+         <url>http://www.opensource.org/licenses/mit-license.php</url>
+         <distribution>repo</distribution>
+      </license>
+   </licenses>
+   <developers>
+      <developer><name>Rogério Liesenfeld</name><email>javamockit@yahoo.com</email></developer>
+   </developers>
+
+   <properties><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
+
+   <build>
+      <finalName>${artifactId}</finalName>
+      <resources>
+         <resource>
+            <directory>src</directory>
+            <includes><include>**/*.css</include></includes>
+         </resource>
+      </resources>
+      <sourceDirectory>src</sourceDirectory>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+               <source>1.5</source><target>1.5</target>
+               <excludes><exclude>**/integrationTests/**/*.java</exclude></excludes>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+
+   <dependencies>
+      <dependency>
+         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>0.993</version>
+      </dependency>
+   </dependencies>
+
+   <distributionManagement>
+      <repository>
+         <id>java.net-m2-repository</id>
+         <url>java-net:/maven2-repository/trunk/repository/</url>
+      </repository>
+   </distributionManagement>
+</project>

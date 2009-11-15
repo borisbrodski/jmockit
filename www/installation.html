@@ -11,7 +11,13 @@
    Getting started with the JMockit Testing Toolkit
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
+<p>
+   Available toolkit artifacts include a full distribution zip file as well as binary and source
+   jars in a public Maven 2 repository.
+   The toolkit is documented through a tutorial, API documentation, and several sample test suites.
+</p>
 
+<h3>Using the JMockit full distribution</h3>
 <p>Follow these instructions to start using JMockit:</p>
 <ol>
    <li>
@@ -24,38 +30,34 @@
       samples, Javadocs and additional documentation.
    </li>
    <li>
-      Add the library file <strong><code>jmockit.jar</code></strong> to your classpath (in your
-      Java IDE project, Ant build file, and so on, as required).
-      If you are using a JDK of version 1.6 or newer, also add
+      Add the library file <strong><code>jmockit.jar</code></strong> to your classpath (in your Java
+      IDE project, Ant build file, and so on, as required).
+      Verify that this file appears <em>before</em> any JUnit jar file in the classpath
+      (this isn't required, but it will provide the greatest ease of use).
+   </li>
+   <li>
+      If you are using a JDK of version 1.6 or newer on <strong>Mac OS X</strong>, also add
       <strong><code>&lt;jdkDir>/lib/tools.jar</code></strong> to the classpath
       (<code>&lt;jdkDir></code> is the home directory for your local JDK installation).
       This second jar file isn't required, but it avoids the need to specify the initialization
       parameter <code>-javaagent:jmockit.jar</code> to the JVM when running tests.
+      When using a Sun JDK 1.6+ on Windows or Linux, adding this extra jar file to the classpath is
+      optional.
    </li>
    <li>
       Optionally, configure your IDE to find API source code (and consequently the associated
       Javadoc comments) in this same <code>jmockit.jar</code> file.
-      API documentation in HTML is also available at <code>jmockit/www/javadoc</code>.
+      API documentation in HTML is also available in the <code>jmockit/www/javadoc</code> directory,
+      as well as
+      <a href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/index.html">on-line</a>.
    </li>
 </ol>
-<p>
-   If your project uses <strong>Maven</strong>, then add the following dependency to your
-   <code>pom.xml</code> file:
-</p>
-<pre>
-      &lt;dependency>
-         &lt;groupId>mockit&lt;/groupId>
-         &lt;artifactId>jmockit&lt;/artifactId>
-         &lt;version>0.992&lt;/version>
-         &lt;scope>test&lt;/scope>
-      &lt;/dependency>
-</pre>
+
+<h3>Using JMockit in a Maven project</h3>
 <p>
    The JMockit artifacts, including a binary jar and a sources jar for each release, are located in
    the <a href="http://download.java.net/maven/2/">Java.net Maven 2 Repository</a>.
-</p>
-<p>
-   You might also need to add the following to your Maven configuration:
+   Therefore, you might need to add the following to your Maven configuration:
 </p>
 <pre>
       &lt;repository>
@@ -65,7 +67,23 @@
       &lt;/repository>
 </pre>
 <p>
-   If using JDK 1.6, you will probably also want to have the following dependency in your project:
+   For any project containing JMockit tests or making use of a separate JMockit tool (such as
+   JMockit Coverage), add the following dependency to the <code>pom.xml</code> file:
+</p>
+<pre>
+      &lt;dependency>
+         &lt;groupId>mockit&lt;/groupId>
+         &lt;artifactId>jmockit&lt;/artifactId>
+         &lt;version>0.993&lt;/version>
+         &lt;scope>test&lt;/scope>
+      &lt;/dependency>
+</pre>
+<p>
+   This dependency should come <em>before</em> the <code>junit</code> dependency, if any.
+</p>
+<p>
+   If using JDK 1.6 on Mac OS X, you will probably also want to have the following dependency in
+   your project:
 </p>
 <pre>
       &lt;dependency>
@@ -76,6 +94,12 @@
          &lt;systemPath>${java.home}/../lib/tools.jar&lt;/systemPath>
       &lt;/dependency>
 </pre>
+<p>
+   This dependency is <em>not</em> needed in a Windows or Linux environment when using a Sun JDK
+   1.6+.
+</p>
+
+<h3>Learning the JMockit tools & APIs</h3>
 <p>
    From here, you should probably proceed to the <a href="tutorial.html">Tutorial</a>.
    Check also the hundreds of JUnit <a href="samples.html">sample tests</a> available under the

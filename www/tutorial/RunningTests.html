@@ -15,15 +15,38 @@
    To run tests that use any of the JMockit APIs, use your Java IDE, Ant script, etc. the way you
    normally would, as long as the JVM gets a chance to load the "Java agent" which provides
    instrumentation access to JMockit (it's inside <code>jmockit.jar</code>).
-   For that, you have two options:
+   For that, you have several options, from easiest to most complex:
 </p>
 <ol>
 <li>
+   First of all, add <code>jmockit.jar</code> to the classpath.
+   <ul>
+      <li>
+         For JUnit test suites, make sure that <code>jmockit.jar</code> appears <em>before</em> any
+         JUnit jar in the classpath.
+      </li>
+      <li>
+         For TestNG test suites, configure TestNG with the
+         <code>mockit.integration.testng.Initializer</code>
+         <a href="http://testng.org/doc/documentation-main.html#testng-listeners">test listener</a>.
+         This can be done through the command line
+         (<code>-listener mockit.integration.testng.Initializer</code>) or in the
+         <code>testng.xml</code> configuration file:
+         <code style="white-space: nowrap;">&lt;listener class-name="mockit.integration.testng.Initializer"/></code>.
+      </li>
+   </ul>
+   This option applies to what probably is the most common development environment: Windows or
+   Linux with a Sun JDK of version 1.6 or newer.
+</li>
+<li>
    Along with <code>jmockit.jar</code>, add <code>&lt;jdkHome>/lib/tools.jar</code> from a JDK 1.6
-   installation to the classpath used for running tests.
+   installation to the classpath.
    (This standard JDK 1.6 library contains the Sun Attach API which JMockit uses to automatically
-   load the javaagent from <code>jmockit.jar</code>. Although this API is not yet part of Java SE,
+   load the Java agent from <code>jmockit.jar</code>. Although this API is not yet part of Java SE,
    the JDKs from Sun, Oracle, IBM, and Apple come with it, to the best of my knowledge.)
+   This will be necessary in environments such as Mac OS X which are not supported by the Attach API
+   implementation classes from OpenJDK embedded in <code>jmockit.jar</code> (currently, these
+   classes support only Windows and Linux JVMs).
 </li>
 <li>
    Alternatively, or if you only have a JDK 1.5 installation available, pass
@@ -35,9 +58,10 @@
 </li>
 </ol>
 <p>
-   Although the first option (JDK 1.6 + tools.jar) does not require the use of any JVM
-   initialization arguments, it does have an additional requirement: all test classes must make sure
-   that JMockit gets initialized <em>before</em> the first test in the suite gets executed.
+   If use of the <code>-javaagent</code> JVM parameter is not desired, but for some reason
+   <code>jmockit.jar</code> cannot precede <code>junit.jar</code> in the classpath or the TestNG
+   listener cannot be used, then all test classes must make sure that JMockit gets initialized
+   <em>before</em> the first test in the suite gets executed.
    This is achieved in one of the following ways, for each test class:
 </p>
 <ol>
@@ -55,19 +79,7 @@
       <strong><code>Mockit.setUpMocks();</code></strong>.
       This option can be used with any supported version of JUnit or TestNG.
    </li>
-   <li>
-      For TestNG only, use
-      <strong><code>mockit.integration.testng.Initializer</code></strong> as a test listener when
-      running the suite.
-      See the <a href="http://testng.org/doc/documentation-main.html#running-testng">TestNG
-      documentation</a> for ways to run tests with a listener.
-   </li>
 </ol>
-<p>
-   Note that even if you use the "-javaagent" option, it is recommended to use one of
-   <code>@RunWith(JMockit.class)</code>, <code>JMockitTest</code>, etc. in each test class, so that
-   test suites can safely be run without the JVM argument.
-</p>
 
 <script type="text/javascript" src="../prettify.js"></script>
 </body>
