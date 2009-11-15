@@ -336,13 +336,12 @@
       <module fileurl="file://$PROJECT_DIR$/samples/AnimatedTransitions/AnimatedTransitions.iml" filepath="$PROJECT_DIR$/samples/AnimatedTransitions/AnimatedTransitions.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/asm2/Asm2.iml" filepath="$PROJECT_DIR$/asm2/Asm2.iml" />
       <module fileurl="file://$PROJECT_DIR$/coverage/Coverage.iml" filepath="$PROJECT_DIR$/coverage/Coverage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/easymock/EasyMock2.iml" filepath="$PROJECT_DIR$/samples/easymock/EasyMock2.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/easymockclassextension/EasyMockCE.iml" filepath="$PROJECT_DIR$/samples/easymockclassextension/EasyMockCE.iml" group="Samples" />
-      <module fileurl="file://$PROJECT_DIR$/samples/easymock/Easymock.iml" filepath="$PROJECT_DIR$/samples/easymock/Easymock.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/hamcrest/Hamcrest.iml" filepath="$PROJECT_DIR$/hamcrest/Hamcrest.iml" />
       <module fileurl="file://$PROJECT_DIR$/hibernate3emul/Hibernate3emul.iml" filepath="$PROJECT_DIR$/hibernate3emul/Hibernate3emul.iml" />
       <module fileurl="file://$PROJECT_DIR$/incremental/Incremental.iml" filepath="$PROJECT_DIR$/incremental/Incremental.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/jbossaop/Jbossaop.iml" filepath="$PROJECT_DIR$/samples/jbossaop/Jbossaop.iml" group="Samples" />
-      <module fileurl="file://$PROJECT_DIR$/samples/jmock/Jmock.iml" filepath="$PROJECT_DIR$/samples/jmock/Jmock.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/LoginService/LoginService.iml" filepath="$PROJECT_DIR$/samples/LoginService/LoginService.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/main/Main.iml" filepath="$PROJECT_DIR$/main/Main.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/mockito/Mockito.iml" filepath="$PROJECT_DIR$/samples/mockito/Mockito.iml" group="Samples" />
@@ -351,6 +350,7 @@
       <module fileurl="file://$PROJECT_DIR$/samples/TimingFramework/TimingFramework.iml" filepath="$PROJECT_DIR$/samples/TimingFramework/TimingFramework.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/tutorial/Tutorial.iml" filepath="$PROJECT_DIR$/samples/tutorial/Tutorial.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/unitils/Unitils.iml" filepath="$PROJECT_DIR$/samples/unitils/Unitils.iml" group="Samples" />
+      <module fileurl="file://$PROJECT_DIR$/samples/jmock/jMock2.iml" filepath="$PROJECT_DIR$/samples/jmock/jMock2.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/jmockit.iml" filepath="$PROJECT_DIR$/jmockit.iml" />
       <module fileurl="file://$PROJECT_DIR$/www/www.iml" filepath="$PROJECT_DIR$/www/www.iml" />
     </modules>
