@@ -6,9 +6,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="LoginService" />
-    <orderEntry type="module" module-name="Easymock" />
+    <orderEntry type="module" module-name="EasyMock" />
     <orderEntry type="module" module-name="Easymockclassextension" />
-    <orderEntry type="module" module-name="Jmock" />
+    <orderEntry type="module" module-name="jMock" />
     <orderEntry type="module" module-name="Jbossaop" />
     <orderEntry type="module" module-name="Unitils" />
     <orderEntry type="module" module-name="Mockito" />
