@@ -246,7 +246,7 @@
    </macrodef>
 
    <target name="tests">
-      <junit fork="yes" forkmode="once" filtertrace="on" dir="main">
+      <junit fork="yes" forkmode="once" dir="main">
          <jvmarg
             value="-javaagent:../jmockit.jar=coverage=mockit.*;mockit.integration.logging.Slf4jMocks"/>
          <classpath refid="common.classpath"/>
@@ -272,7 +272,7 @@
       <taskdef resource="testngtasks" classpath="${TESTNG_JAR}"/>
       <delete file="samples/coverage.ser" quiet="true"/>
 
-      <junit fork="yes" forkmode="once" filtertrace="on" dir="samples">
+      <junit fork="yes" forkmode="once" dir="samples">
          <classpath path="jmockit.jar"/>
          <classpath path="jmockit-coverage-htmlfull.jar"/>
          <classpath path="jmockit-coverage-merge.jar"/>
