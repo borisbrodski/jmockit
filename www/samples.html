@@ -20,29 +20,29 @@
 </p>
 <p>
    In total, there are more than 500 sample tests, all using JUnit (except for a few that use
-   TestNG) and most also using JMockit; the others are "pure" unit tests which use no mocks at all,
-   or tests using other testing toolkits for comparison purposes.
+   TestNG) and most also using JMockit; the ones that don't use JMockit are "pure" unit tests which
+   use no mocks at all, or tests using other mocking toolkits for comparison purposes.
 </p>
 <p>
    The example tests used in the JMockit Tutorial <a href="tutorial/AnExample.html">introductory
-   chapter</a> can be found
+   chapter</a> can be found on-line
    <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/test/jmockit/tutorial/domain">here</a>.
 </p>
 
-<h3>Test suites for comparison with other tools and mocking APIs</h3>
+<h3>Test suites for comparison with other mocking APIs</h3>
 <p>
    The following test suites are intended to compare published sample tests for other tools with the
    equivalent JMockit version:
 </p>
 <ol>
    <li>
-      <a href="http://easymock.org/EasyMock2_5_2_Documentation.html">EasyMock 2.5 comparison sample</a>
+      <a href="http://easymock.org/EasyMock2_5_2_Documentation.html">EasyMock comparison sample</a>
       &lt;==>
       <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/easymock/test/org/easymock/samples/DocumentManager_JMockit_Test.java"
          >JMockit version</a>
    </li>
    <li>
-      <strong>EasyMock 2.4 Class Extension</strong> comparison sample: sample test sources can be
+      <strong>EasyMock Class Extension</strong> comparison sample: sample test sources can be
       found in the
       <a href="http://prdownloads.sourceforge.net/easymock/easymockclassextension2.4.zip"
          >distribution zip file</a>
@@ -87,21 +87,20 @@
 
 <h3>Test suites for third-party class libraries</h3>
 <p>
-   There are a couple samples which provide complete JUnit test suites for two third-party
-   frameworks.
-   (They are both from the same author, and originally implemented without any developer tests at
-   all, but still great pieces of work, as anyone can verify.)
+   There are two complete JUnit test suites for third-party frameworks.
+   The frameworks, described in the <a href="http://filthyrichclients.org">Filthy Rich Clients</a>
+   book, are both from the same author, and originally created without any developer tests at all
+   (but great pieces of work nevertheless).
    These test suites aim to achieve 100% line and branch coverage for the relevant production code:
 </p>
 <ol>
    <li>
       A complete suite with 150+ tests for the
-      <a href="https://timingframework.dev.java.net">Timing Framework</a>
-      (also found <a href="http://filthyrichclients.org">here</a>).
-      Demonstrates just about every feature of the two main JMockit testing
-      tools (<em>JMockit Annotations</em> and <em>JMockit Expectations</em>) by providing full
-      coverage for a real-world, professional quality, and well documented Java framework targeted
-      at rich <em>Swing</em> applications.
+      <a href="https://timingframework.dev.java.net">Timing Framework</a>.
+      Demonstrates just about every feature of the two main JMockit mocking APIs
+      (<em>JMockit Annotations</em> and <em>JMockit Expectations/Verifications</em>) by providing
+      full coverage for a real-world, professional quality, and well documented Java framework
+      targeted at rich <em>Swing</em> applications.
       ==> browse them
       <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/TimingFramework/test/org/jdesktop/animation/timing">here</a>.
    </li>
