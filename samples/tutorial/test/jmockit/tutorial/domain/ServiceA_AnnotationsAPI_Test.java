@@ -45,7 +45,7 @@ public final class ServiceA_AnnotationsAPI_Test
       {
          assertNotNull(ql);
          assertNotNull(arg1);
-         return Collections.EMPTY_LIST;
+         return Collections.emptyList();
       }
 
       @Mock(maxInvocations = 1)
