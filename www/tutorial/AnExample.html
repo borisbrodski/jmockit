@@ -22,7 +22,7 @@
    {
       public void doBusinessOperationXyz(EntityX data) throws InvalidItemStatus
       {
-(1)      List items = Database.find(
+(1)      List&lt;?> items = Database.find(
             "select item from EntityY item where item.someProperty=?",
             data.getSomeProperty());
 
@@ -35,7 +35,7 @@
 
    public final class ServiceB
    {
-      public BigDecimal computeTotal(List items) throws InvalidItemStatus
+      public BigDecimal computeTotal(List&lt;?> items) throws InvalidItemStatus
       {
          BigDecimal total = new BigDecimal(0);
          // compute total while iterating items, or throws InvalidItemStatus exception
@@ -51,9 +51,13 @@
 <p>
    So, how can we unit test the "doBusinessOperationXyz" method without making any changes to the
    existing application code?
-   JMockit actually provides three different APIs that can be used, each capable enough for our
-   needs. We will see how to use each one of them, starting with the most elegant.
-   In all three cases, a JUnit test case will mock out the three dependencies of the method under
+   JMockit actually provides four different APIs that can be used, each capable enough for our
+   needs.
+   (In practice, the first two APIs are just subsets of a larger <em>behavior-based</em> mocking
+   API, while one of the other two, which can be described as <em>state-based</em> mocking APIs, is
+   an older and more limited version of the other.)
+   We will see how to use each one of them in the following sections.
+   In all four cases, a JUnit test case will mock out the three dependencies of the method under
    test, that is, the method calls at <code>(1)</code>, <code>(2)</code>, and <code>(3)</code>.
 </p>
 
@@ -70,25 +74,22 @@
 <p>
    First, lets use the <strong>JMockit Expectations</strong> API.
 </p>
-<pre><code>   package jmockit.tutorial.domain;
+<pre><code>   package domain;
 
    import java.math.*;
    import java.util.*;
 
    import static org.junit.Assert.*;
    import org.junit.*;
-   import org.junit.runner.*;
 
    import mockit.*;
-   import mockit.integration.junit4.*;
 
-   import jmockit.tutorial.infrastructure.*;
+   import infrastructure.*;
 
-   @RunWith(JMockit.class)
    public final class ServiceA_ExpectationsAPI_Test
    {
-      @Mocked private final Database unused = null;
-      @Mocked private ServiceB serviceB;
+      @Mocked final Database unused = null;
+      @Mocked ServiceB serviceB;
 
       @Test
       public void doBusinessOperationXyz() throws Exception
@@ -130,54 +131,76 @@
       }
    }
 </code></pre>
-<p>
-   First of all, note that <em>what</em> gets mocked is specified through <em>mock fields</em>,
-   which are annotated as <code>@Mocked</code> (actually, all non-private fields
-   in a subclass of <code>Expectations</code> are considered for mocking).
-   <br/>
-   A mock field can be of any reference type: an interface, abstract class, final/non-final class,
-   or a class with private constructors only.
-   <br/>
-   By default, all members of a class or interface used as the type for a mock field will be mocked.
-   Specific methods and constructors can be selected to be mocked or not through regular
-   expressions provided as an attribute of the annotation. This annotation has a few other
-   attributes and capabilities which we won't discuss at this point. Check the Javadoc documentation
-   for more.
-   <br/>
+<div class="sidebar">
    Other mocking tools usually require a call to some mock creation method, which always returns a
    new object which later needs to be passed to the code under test. In JMockit, such instances may
    be passed to code under test, but don't have to be. In fact, no instance may be used at all, like
-   with the <code>final Database unused = null</code> mock field in the previous
-   tests.
-   For non-<code>final</code> mock fields, JMockit will create and assign an appropriate mock
-   instance.
+   with the <code>final Database unused = null;</code> mock field in the example tests.
+</div>
+<p>
+   First of all, note that <em>what</em> gets mocked is specified through <em>mock fields</em>,
+   which in this case are instance fields of the test class annotated as <code>@Mocked</code>.
+   A mock field can be of any reference type: an interface, an abstract class, a final/non-final
+   class, a class with private constructors only, an enum type, or even an annotation type.
+   We say that such a mock field has a <em>mocked type</em>. In truth, it is the type specified to
+   be mocked that truly matters; the field itself is not essential, although very useful when the
+   test needs a <em>mock object</em> to invoke instance methods on. Such a mock instance will be
+   automatically created and assigned to the field, so it will never be left with a
+   <code>null</code> reference.
+   It is possible to "take over" the value assigned to the mock field, though, by simply declaring
+   it as <code>final</code>.
 </p>
 <p>
+   By default, all methods of a class declared as a mocked type will be <em>mocked</em>, that is,
+   they will be modified so that the actual method implementation in production code is never
+   executed as long as the type stays mocked.
+   The same holds true for the constructors of a mocked class.
+   Notice that JMockit Expectations does not create any mock subclasses for concrete mocked classes;
+   instead, it directly modifies the actual implementation of the mocked class. 
+   On the other hand, methods of an interface and abstract methods do not contain any implementation
+   to be modified.
+   In such cases, an empty implementation body is provided in a concrete implementation class.
+   This is all done automatically by JMockit in a transparent way, with no additional effort on the
+   part of the developer.
+</p>
+<p>
+   In certain cases, it may be necessary to <em>partially mock</em> a type.
+   Specific methods and constructors can be selected to be mocked or not through filter expressions
+   provided as an attribute of the <code>@Mocked</code> annotation.
+   This annotation has a few other attributes and capabilities which we won't discuss at this point.
+   Check the <a href="../javadoc/mockit/Mocked.html">API documentation</a> for the complete
+   specification.
+</p>
+<div class="sidebar">
    JMockit switches automatically from the <em>expectations recording phase</em> to the
-   <em>replay phase</em> at the end of the <em>expectations block</em>.
+   <em>replay phase</em> of the test.
    In EasyMock, a call to <code>replay(mock)</code> is needed for each mock used in the test to make
    this switch.
    In jMock there is also a phase switching method, which takes the form of a call to the
-   <code>Mockery#checking(...)</code> method with a new instance of an anonymous
+   <code>Mockery#checking(...)</code> method with an instance of an
    <code>org.jmock.Expectations</code> subclass.
+</div>
+<p>
+   As the example tests show, <em>expected invocations</em> are specified through regular method
+   and constructor invocations on mocked types or mock fields, while inside an
+   <code>Expectations</code> block (which is an anonymous inner class containing an instance
+   initialization block).
+   Each such invocation partly defines an <em>expectation</em> for the test.
+   We say that such invocations/expectations are <em>recorded</em> during a <em>record phase</em>,
+   so that they can be <em>replayed</em> (and automatically verified) later, during a
+   <em>replay phase</em>.
+   This second phase of the test starts with the call that exercises the code under test, and lasts
+   until the test execution completes.
+   This is known as the <em>record-replay model</em> of test execution.
 </p>
 <p>
-   Expected invocations are recorded simply by calling the desired methods or constructors.
-   An expected return value can be specified through a call to <code>returns(...)</code>.
-   Similarly, an expected exception is recorded with <code>throwsException(...)</code>. (For errors,
-   it would be <code>throwsError(...)</code>.)
-</p>
-<p>
-   JMockit automatically verifies all <em>strict</em> expectations (those recorded inside an
-   <code>Expectations</code> block) before the end of the test.
-   (As we will see below, <em>non-strict</em> expectations recorded inside a
-   <code>NonStrictExpectations</code> block, on the other hand, must be verified
-   explicitly inside <code>Verifications</code> blocks.)
-   In EasyMock it is necessary to explicitly call <code>verify(mock)</code> for each mock used in
-   the test.
-   jMock also automatically performs an equivalent verification at the end of each test, as long as
-   you specify <code>@RunWith(JMock.class)</code> for the test class.
-   The similar <code>@RunWith(JMockit.class)</code> in JMockit isn't strictly required, though.
+   Additional behavior can and often is recorded for an expectation.
+   This is done by calling certain methods of the Expectations API <em>after</em> the recorded
+   method/constructor invocation of interest, and <em>before</em> the next expectation to appear in
+   the block. 
+   An <em>expected return value</em> can be specified through a call to <code>returns(...)</code>.
+   Similarly, an <em>expected exception</em> is recorded with <code>throwsException(...)</code>.
+   (For errors, it would be <code>throwsError(...)</code>.)
 </p>
 <p>
    The method calls <code>withXyz(...)</code>, as well as the field accesses <code>anyAbc</code> use
@@ -185,9 +208,29 @@
    Otherwise, an exact match is expected between recorded argument values and the corresponding
    values received in the replay phase.
 </p>
+<div class="sidebar">
+   JMockit automatically verifies all strict expectations before the end of the test, with no extra
+   input from the developer.
+   In EasyMock it is necessary to explicitly call <code>verify(mock)</code> for each mock used in
+   the test.
+   jMock also automatically performs an equivalent verification at the end of each test, as long as
+   you specify <code>@RunWith(JMock.class)</code> for the test class.
+</div>
 <p>
-   There is more to the Expectations API, about which you can find in the Javadoc documentation,
-   and also in the many additional sample tests inside the full distribution.
+   All expectations recorded inside <code>Expectations</code> blocks are <em>strictly verified</em>
+   before the end of the test (actually, this is only the <em>default</em> verification behavior, as
+   we see later).
+   A <code>java.lang.AssertionError</code> will be thrown for any expected invocation which did not
+   happen during the replay phase.
+   An error will also be thrown for any invocation to a mocked type that does occur during the
+   replay phase, but which was not expected (that is, no expectation was recorded for it).
+   Even more, the test will fail (again, with an <code>AssertionError</code>) if expected
+   invocations are replayed in a different order than they were recorded.
+   We say that expectations that exhibit these properties are <em>strict</em>.
+</p>
+<p>
+   There is more to the Expectations API, about which you can find in the API documentation, and
+   also in the many additional sample tests inside the full distribution.
 </p>
 
 <h3 id="verifications">
@@ -202,34 +245,33 @@
 </h3>
 <p>
    Up to this point we focused on <em>strict</em> expectations, that is, those that when recorded
-   <em>must</em> be executed by the code under test in the same order; additionally, only explicitly
-   recorded invocations are allowed to execute (any other invocation to a mock in the replay phase
-   will be considered <em>unexpected</em>, causing the test to fail).
+   <em>must</em> be executed by the code under test in the same order.
+   Additionally, only explicitly recorded invocations are allowed to execute; any other invocation
+   to a mock in the replay phase will be considered <em>unexpected</em>, causing the test to fail.
    Lets now consider testing with <em>non-strict</em> expectations, and the use of the
    <strong>JMockit Verifications</strong> API.
 </p>
-<pre><code>   package jmockit.tutorial.domain;
+<pre><code>   package domain;
 
    import java.util.*;
 
    import org.junit.*;
 
    import mockit.*;
-   import mockit.integration.junit4.*;
 
-   import jmockit.tutorial.infrastructure.*;
+   import infrastructure.*;
 
-   public final class ServiceA_VerificationsAPI_Test extends JMockitTest
+   public final class ServiceA_VerificationsAPI_Test
    {
-      @Mocked private final Database onlyStatics = null;
-      @Mocked private final ServiceB unused = null;
+      @Mocked final Database onlyStatics = null;
+      @Mocked ServiceB serviceB;
 
       @Test
       public void doBusinessOperationXyzSavesData() throws Exception
       {
          final EntityX data = new EntityX(5, "abc", "5453-1");
 
-         // No expectations in this case.
+         // No expectations recorded in this case.
 
          new ServiceA().doBusinessOperationXyz(data);
 
@@ -249,7 +291,7 @@
          new NonStrictExpectations()
          {
             {
-(1)            Database.find(withSubstring("select"), withAny("")); returns(items);
+(1)            Database.find(withSubstring("select"), null); returns(items);
             }
          };
 
@@ -258,7 +300,7 @@
          new Verifications()
          {
             {
-(2)            new ServiceB().computeTotal(items);
+(2)            serviceB.computeTotal(items);
             }
          };
       }
@@ -269,7 +311,7 @@
          new NonStrictExpectations()
          {
             {
-(2)            new ServiceB().computeTotal((List&lt;?>) withNotNull());
+(2)            serviceB.computeTotal((List&lt;?>) withNotNull());
                throwsException(new InvalidItemStatus());
             }
          };
@@ -289,43 +331,68 @@
 </p>
 <p>
    The example tests above show two ways to have non-strict expectations: first, by simply having
-   no expectations block at all; second, by specifying expectations inside a
+   no expectation block at all; second, by specifying expectations inside a
    <code>NonStrictExpectations</code> block.
    In the first case, all invocations to mocked types made in production code will be allowed
    without restrictions, but non-void mocked methods will always return a fixed default value
-   according to the method return type. Obviously, this often won't be appropriate, so an
-   expectations block of some kind containing recorded invocations will be needed.
+   according to the method return type. Obviously, this won't always be appropriate, so an
+   expectation block of some kind containing recorded invocations will be needed.
    It is also possible to mix strict and non-strict expectations, by using the
    <code>@NonStrict</code> annotation on mocked types, and/or by calling the
-   <code>notStrict()</code> method right after an expected invocation while inside an
+   <code>notStrict()</code> method right after a recorded invocation while inside an
    <code>Expectations</code> block.
 </p>
 <p>
    When we use non-strict expectations, invocations to mocked methods and constructors during the
-   replay phase are not immediately verified, except that those which were previously recorded do
-   produce the designated expected result (either an specific return value or an exception or
-   error that gets thrown).
-   The fact that an explicitly recorded non-strict expectation allows the test to pass is usually
-   enough evidence to demonstrate that the tested unit did the right thing.
-   In the second test above for example, if the line that records the <code>items</code> list as the
-   expected result from a call to <code>Database.find</code> is commented out,
-   the test will fail when another part of the code under test which depends on that returned value
-   is verified.
-   For constructors and methods of <code>void</code> return type (or even non-void methods whose
-   return values were not recorded), invocations can be explicitly verified inside a
-   <code>Verifications</code> block which runs <em>after</em> the code under test was exercised.
+   replay phase are not immediately verified (unless explicitly specified otherwise).
+   Those non-strict invocations which were recorded with an specific return value or with an
+   exception/error to be thrown will produce the expected result if and when replayed by production
+   code.
 </p>
 <p>
-   Syntactically, a <em>verifications code block</em> is just like a expectations code block.
+   The fact that an explicitly recorded non-strict expectation allows the test to pass is usually
+   enough evidence to demonstrate that the tested unit did the right thing.
+   In the second test above for example, suppose the line recording <code>items</code> as the
+   expected result from a call to <code>Database.find(...)</code> is commented out.
+   The test will likely fail when another part of the code under test which depends on that returned
+   value is executed, or when an expected invocation is verified in the test itself.
+   However, in some cases you may want to be sure that the invocation will occur at least once.
+   To achieve that, simply specify it with a regular <code>repeatsAtLeast(1);</code> call after the
+   recorded invocation in the non-strict expectation block.
+</p>
+<div class="sidebar">
+   Two other mocking toolkits which provide verification after the replay phase are
+   <strong>Mockito</strong> and <strong>Unitils Mock</strong>.
+   Besides significant differences in power and API style, they lack JMockit's ability to specify
+   invocation count constraints on recorded expectations, thereby forcing developers to explicitly
+   verify all expected invocations.
+   In addition, JMockit supports both kinds of expectations, not only the non-strict kind supported
+   exclusively in Mockito and Unitils.
+</div>
+<p>
+   Another big advantage of non-strict expectations is that they can be <em>explicitly verified</em>
+   in test code.
+   Such verifications are just like the recording of invocations: simply invoke the method or
+   constructor to be verified, but inside a <code>Verifications</code> block.
+   Such blocks must always be executed <em>after</em> the code under test was exercised, that is,
+   after the end of the replay phase.
+   Note that verification blocks will typically contain invocations to constructors and methods of
+   <code>void</code> return type.
+   Non-void methods can be explicitly verified as well (even if recorded previously in the test),
+   although as we saw before they will also be <em>implicitly verified</em> if an invocation count
+   constraint was specified in the record phase.
+</p>
+<p>
+   Syntactically, a <em>verification block</em> is just like an expectation block.
    Invocations to mocked types are immediately verified to match corresponding invocations made
    during the replay phase. Hamcrest matchers can be used so that a single invocation in a
    verification block verifies several invocations executed by the code under test.
    The invocation count for a particular method or constructor can be verified by specifying
    constraints through one of the <code>repeats</code>, <code>repeatsAtLeast</code>,
    <code>repeatsAtMost</code> methods, just like it can be done for expected invocations in the
-   recording phase (ie inside a expectations block).
-   In particular, it can be verified that a particular invocation never happened by calling
-   <code>repeats(0)</code> right after the invocation to verify inside the verification block.
+   recording phase.
+   In particular, it can be verified that an specific invocation never happened by verifying it with
+   a <code>repeats(0);</code> invocation count constraint.
 </p>
 
 <h3 id="annotations">
@@ -347,15 +414,13 @@
    import java.util.*;
 
    import org.junit.*;
-   import org.junit.runner.*;
    import static org.junit.Assert.*;
+
    import mockit.*;
    import static mockit.Mockit.*;
-   import mockit.integration.junit4.*;
 
    import infrastructure.*;
 
-   @RunWith(JMockit.class)
    public final class ServiceA_AnnotationsAPI_Test
    {
       @MockClass(realClass = Database.class)
@@ -366,7 +431,7 @@
          {
             assertNotNull(ql);
             assertNotNull(arg1);
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
          }
 
          @Mock(maxInvocations = 1)
@@ -387,7 +452,7 @@
          setUpMock(ServiceB.class, new Object()
          {
             @Mock(invocations = 1)
-(2)         public BigDecimal computeTotal(List<?> items)
+(2)         BigDecimal computeTotal(List<?> items)
             {
                assertNotNull(items);
                return total;
@@ -403,14 +468,14 @@
       @Test(expected = InvalidItemStatus.class)
       public void doBusinessOperationXyzWithInvalidItemStatus() throws Exception
       {
-         setUpMock(ServiceB.class, new Object()
+         new MockUp&lt;ServiceB>()
          {
             @Mock
-(2)         public BigDecimal computeTotal(List<?> items) throws InvalidItemStatus
+(2)         BigDecimal computeTotal(List<?> items) throws InvalidItemStatus
             {
                throw new InvalidItemStatus();
             }
-         });
+         };
 
          EntityX data = new EntityX(5, "abc", "5453-1");
          new ServiceA().doBusinessOperationXyz(data);
@@ -419,11 +484,15 @@
 </code></pre>
 <p>
    Here, instead of recording invocations, we directly specify the mock implementations for the
-   methods and constructors of interest. Such mocks must have the same signature as the "real"
-   methods and constructors, and be annotated with <code>@Mock</code> in a <em>mock class</em>,
-   which can be either a separate (nested or not) class annotated with <code>@MockClass</code> or
-   an anonymous inner class defined inside a test.
-   <br/>
+   methods and constructors of interest.
+   Such mocks must have the same signature as the "real" methods and constructors, and be annotated
+   with <code>@Mock</code> in a <em>mock class</em>, which can be either a separate class (nested or
+   not) annotated with <code>@MockClass</code> or an anonymous inner class defined inside a test.
+   The last test uses an inline <em>mock-up class</em> instead of using the
+   <code>Mockit.setUpMock</code> method. This is in fact the preferred way to define test-specific
+   mock classes.
+</p>
+<p>
    Constructors in a mock class (not shown above) can also be mocks, but it is usually better to
    use the special method name <code>$init</code> for that. A mock method named <code>$clinit</code>
    will provide a mock implementation for the static initialization block of the real class, if any.
@@ -434,7 +503,7 @@
    <br/>
    Another attribute of this annotation is <code>reentrant</code> (boolean with default of false),
    which allows a mock method to call back to the real method, causing its real implementation to
-   be then executed. For that, an instance field named <code>it</code> must be defined in the mock
+   be executed. For that, an instance field named <code>it</code> must be defined in the mock
    class, and have the same type as the real class. (This is a powerful AOP-like feature which
    should be used sparingly, though.)
 </p>
@@ -455,8 +524,7 @@
    few developers would actually need that, so it probably will be removed in a future version.
    <br/>
    The following test class uses JUnit 3.8 just for some variation. In reality, JUnit 3.8 and
-   JUnit 4.5+ (for Java SE 5+) can always be used. TestNG can also be used (tested with versions
-   5.8 and 5.9).
+   JUnit 4.5+ (for Java SE 5+) can always be used. TestNG 5.8+ can also be used.
 </p>
 <pre><code>   package domain;
 
@@ -466,11 +534,10 @@
    import junit.framework.*;
 
    import mockit.*;
-   import mockit.integration.junit3.*;
 
    import infrastructure.*;
 
-   public final class ServiceA_CoreAPI_Test extends JMockitTestCase
+   public final class ServiceA_CoreAPI_Test extends TestCase
    {
       private boolean serviceMethodCalled;
 

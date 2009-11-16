@@ -35,14 +35,14 @@ import mockit.*;
 public final class ServiceA_VerificationsAPI_Test
 {
    @Mocked final Database onlyStatics = null;
-   @Mocked final ServiceB unused = null;
+   @Mocked ServiceB serviceB;
 
    @Test
    public void doBusinessOperationXyzSavesData() throws Exception
    {
       final EntityX data = new EntityX(5, "abc", "5453-1");
 
-      // No expectations in this case.
+      // No expectations recorded in this case.
       
       new ServiceA().doBusinessOperationXyz(data);
 
@@ -62,7 +62,7 @@ public final class ServiceA_VerificationsAPI_Test
       new NonStrictExpectations()
       {
          {
-            Database.find(withSubstring("select"), withAny("")); returns(items);
+            Database.find(withSubstring("select"), null); returns(items);
          }
       };
 
@@ -71,7 +71,7 @@ public final class ServiceA_VerificationsAPI_Test
       new Verifications()
       {
          {
-            new ServiceB().computeTotal(items);
+            serviceB.computeTotal(items);
          }
       };
    }
@@ -82,7 +82,7 @@ public final class ServiceA_VerificationsAPI_Test
       new NonStrictExpectations()
       {
          {
-            new ServiceB().computeTotal((List<?>) withNotNull());
+            serviceB.computeTotal((List<?>) withNotNull());
             throwsException(new InvalidItemStatus());
          }
       };

@@ -66,7 +66,7 @@ public final class ServiceA_AnnotationsAPI_Test
       setUpMock(ServiceB.class, new Object()
       {
          @Mock(invocations = 1)
-         public BigDecimal computeTotal(List<?> items)
+         BigDecimal computeTotal(List<?> items)
          {
             assertNotNull(items);
             return total;
@@ -82,14 +82,14 @@ public final class ServiceA_AnnotationsAPI_Test
    @Test(expected = InvalidItemStatus.class)
    public void doBusinessOperationXyzWithInvalidItemStatus() throws Exception
    {
-      setUpMock(ServiceB.class, new Object()
+      new MockUp<ServiceB>()
       {
          @Mock
-         public BigDecimal computeTotal(List<?> items) throws InvalidItemStatus
+         BigDecimal computeTotal(List<?> items) throws InvalidItemStatus
          {
             throw new InvalidItemStatus();
          }
-      });
+      };
 
       EntityX data = new EntityX(5, "abc", "5453-1");
       new ServiceA().doBusinessOperationXyz(data);

@@ -256,8 +256,10 @@
       <words>
         <w>args</w>
         <w>arraycopy</w>
+        <w>blanchedalmond</w>
         <w>bytecode</w>
         <w>bytecodes</w>
+        <w>cadetblue</w>
         <w>cdata</w>
         <w>charset</w>
         <w>classfile</w>
@@ -266,6 +268,7 @@
         <w>clazz</w>
         <w>clinit</w>
         <w>covariant</w>
+        <w>darkcyan</w>
         <w>deencapsulation</w>
         <w>defs</w>
         <w>desc</w>
@@ -300,6 +303,7 @@
         <w>nano</w>
         <w>noninfringement</w>
         <w>nowrap</w>
+        <w>paleturquoise</w>
         <w>param</w>
         <w>parameterized</w>
         <w>params</w>
