@@ -9,6 +9,34 @@
 
 <h2>JMockit development history</h2>
 
+<h3>Next release</h3>
+
+<p>Release 0.994 (November 29, 2009):</p>
+<ul>
+   <li>
+      Multiple enhancements to <strong>JMockit Coverage</strong>:
+      <ul>
+         <li>
+            The <code>jmockit-coverage.jar</code> file now also refers to <code>jmockit.jar</code>
+            through the <code>Class-Path</code> property in <code>META-INF/MANIFEST.MF</code>.
+            This makes it possible to generate coverage reports by adding a single jar to the
+            classpath when running a test suite which makes no use of the JMockit mocking APIs.
+            All jar files of the JMockit toolkit must still be present in the same directory,
+            though.
+         </li>
+         <li>
+            The output directory for "coverage.xml" and "coverage.ser" files, as well as for the 
+            files of an XHTML report, can now be specified through the
+            <code>jmockit-coverage-outputDir</code> system property.
+            (When not specified, the current working dir is used.)
+            Note that the property can be defined by a
+            "-Djmockit-coverage-outputDir=myOutDir" JVM command line argument, or by a
+            <code>&lt;property></code> element in a Maven <code>pom.xml</code> file.
+         </li>
+      </ul>
+   </li>
+</ul>
+
 <h3>Current release</h3>
 
 <p>Release 0.993 (November 15, 2009):</p>

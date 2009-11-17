@@ -48,9 +48,10 @@
    There are two ways to control whether code coverage metrics are gathered or not for a given test
    run, and which kind of output should be generated at the end: through the classpath, and through
    JVM parameters.
-   In both cases, <code>jmockit.jar</code> (or an equivalent jar obtained from the
-   <a href="http://download.java.net/maven/2/mockit/jmockit/">Maven repository</a>) needs to be
-   present in the classpath.
+   In both cases, <code>jmockit.jar</code> (or a versioned jar obtained from the
+   <a href="http://download.java.net/maven/2/mockit/jmockit/">Maven repository</a>) does
+   <em>not</em> need to be present in the classpath, unless of course the suite contains tests which
+   use the JMockit API.
 </p>
 
 <h3 id="output">
@@ -98,6 +99,14 @@
    significantly larger output. On the other hand, it can be useful to know which lines of test code
    caused a given line of production code to be executed during the test run. The XHTML report, in
    particular, makes this information easily viewable, though hiding it at first.
+</p>
+<p>
+   If a different output directory is desired, it can be specified for a particular test run through
+   the <code>jmockit-coverage-outputDir</code> <em>system property</em>.
+   How this property is defined will depend on the mechanism used to run the test suite.
+   If using the command line or a Java IDE, it can be specified through the "-D" JVM parameter.
+   Inside an Ant or Maven build configuration file, a <code>&lt;property></code> element would be
+   used (for Maven 2, it would probably be specified in the "maven-surefire-plugin" configuration).
 </p>
 
 <h3 id="jars">

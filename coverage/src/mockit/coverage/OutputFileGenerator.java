@@ -38,7 +38,9 @@ final class OutputFileGenerator extends Thread
 
    OutputFileGenerator(String outputFormat, String outputDir, String[] sourceDirs)
    {
-      this.outputDir = outputDir;
+      this.outputDir =
+         outputDir.length() > 0 ? outputDir : System.getProperty("jmockit-coverage-outputDir", "");
+
       this.sourceDirs = sourceDirs;
 
       String format = outputFormat.length() > 0 ? outputFormat : outputFormatFromClasspath();
