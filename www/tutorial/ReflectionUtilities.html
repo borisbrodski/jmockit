@@ -13,7 +13,11 @@
 
 <p>
    The utility methods described in this chapter are all <code>static</code> and stateless.
-   They can be used in all kinds of tests, not just those which use the JMockit mocking APIs.
+   In the end, they simply wrap some of the standard functionality available in the Java
+   <a href="http://java.sun.com/javase/6/docs/api/java/lang/reflect/package-summary.html"
+      target="_blank">Reflection API</a> in a more convenient, higher-level API.
+   These methods can be used in all kinds of tests, not just those which use the JMockit mocking
+   APIs.
 </p>
 <div style="text-align: center;" title="Click for API documentation">
    <map name="figure1">
@@ -25,7 +29,14 @@
 <p>
 </p>
 
-<h3>Getting access to non-accessible members</h3>
+<h3 id="deencapsulation">
+   Getting access to non-accessible members
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#proxies"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
 <p>
    The methods described in this section are all from the <code>mockit.Deencapsulation</code> class.
    To avoid the need to separately import these methods when using the behavior-based mocking API,
@@ -36,8 +47,108 @@
    the <a href="StateBasedTesting.html">state-based mocking API</a>, or in "pure" JUnit/TestNG
    tests. 
 </p>
+<p>
+   The following test class will be used for example tests in the sub-sections that follow:
+</p>
+<pre><code>import static mockit.Deencapsulation.*;
+
+public final class DeencapsulationTest
+{
+   final Subclass anInstance = new Subclass();
+
+   static class BaseClass
+   {
+      protected int baseInt;
+      protected String baseString;
+      protected Set&lt;Boolean> baseSet;
+   }
+
+   static final class Subclass extends BaseClass
+   {
+      private static StringBuilder buffer;
+      private static char static1;
+      private static char static2;
+
+      private int intField;
+      private int intField2;
+      private String stringField;
+      private List&lt;String> listField;
+
+      private Subclass() { intField = -1; }
+      private Subclass(int a, String b) { intField = a; stringField = b; }
+      private Subclass(String... args) { listField = Arrays.asList(args); }
+
+      private long aMethod() { return 567L; }
+      private static Boolean anStaticMethod() { return true; }
+      private void instanceMethod(short s, String str, Boolean b) {}
+      private static void staticMethod(short s, String str, Boolean b) {}
+
+      private final class InnerClass
+      {
+         InnerClass() {}
+         InnerClass(boolean b, Long l, String s) {}
+      }
+   }
+
+   // example tests
+}
+</code></pre>
 
 <h4>Getting/setting non-accessible fields by name or type</h4>
+<p>
+   The <code>getField</code> and <code>setField</code> methods, for which there are several
+   overloads (variations with different parameters), can be used to access instance and static
+   fields.
+   The field to be read or assigned can be specified in two ways: by name or by type.
+   In the case of instance fields, the field may be declared in any class along the hierarchy, not
+   just in the concrete class of the given owner instance.
+   The following example tests should clarify the semantics of these methods and their variations.
+</p>
+<pre><code>   @Test
+   public void getSetFieldByName()
+   {
+      // Get instance fields:
+      Integer intValue = getField(anInstance, "intField");
+      List&lt;String> listValue = getField(anInstance, "listField");
+
+      // Get static fields:
+      StringBuilder b = getField(Subclass.class, "buffer");
+
+      // Set instance fields:
+      setField(anInstance, "intField2", 901);
+
+      // Set static fields:
+      setField(Subclass.class, "buffer", new StringBuilder());
+   }
+
+   @Test
+   public void getSetFieldByType()
+   {
+      // Get instance fields:
+      String stringValue = getField(anInstance, String.class);
+      List&lt;String> listValue = getField(anInstance, List.class);
+      Set&lt;Boolean> setValue = getField(anInstance, HashSet.class);
+      getField(anInstance, int.class); // ambiguous: will throw an IllegalArgumentException
+
+      // Get static fields:
+      StringBuilder b = getField(Subclass.class, StringBuilder.class);
+
+      // Set instance fields:
+      setField(anInstance, "Test"); // will set Subclass#stringField, not BaseClass#baseString
+      setField(anInstance, 901); // ambiguous: will throw an IllegalArgumentException
+
+      // Set static fields:
+      setField(Subclass.class, new StringBuilder());
+      setField(Subclass.class, 'A'); // ambiguous: will throw an IllegalArgumentException
+   }
+</code></pre>
+<p>
+   Access through fields by name is safe, as there is no possibility for ambiguity in the case of
+   instance fields declared in multiple classes related by inheritance.
+   The same doesn't apply for access by type, since different classes in the hierarchy may declare
+   fields of the same type but with different names.
+   If an attempt is made to access such a field by its type, an exception will be thrown.
+</p>
 
 <h4>Invoking non-accessible methods by name</h4>
 <p>
@@ -47,41 +158,63 @@
    The invocation arguments, one for each declared parameter of the target method, are passed
    through a "varargs" parameter of the utility method:
 </p>
-<pre><code>...
-import static mockit.Deencapsulation.*;
-
-public class AbcTest
-{
-   @Test
-   public void testSomething()
+<pre><code>   @Test
+   public void invokeMethod()
    {
-      UnitUnderTest testedUnit = new UnitUnderTest(...);
-      ...
+      // Instance methods:
+      Long l = invoke(anInstance, "aMethod");
+      String s = invoke(anInstance, "instanceMethod", (short) 7, "abc", true);
 
-      String result = <strong><em>invoke</em>(testedUnit, "instanceMethod", (short) 7, "abc", true)</strong>;
-
-      <strong><em>invoke</em>(UnitUnderTest.class, "staticMethod", Integer.class, "test")</strong>;
-
-      ...
+      // Static methods:
+      Boolean b = invoke(Subclass.class, "anStaticMethod");
+      Object result = invoke(Subclass.class, "staticMethod", (short) 7, "abc", true);
    }
-}
 </code></pre>
 <p>
-   The invocation of <code>String instanceMethod(short, String, boolean)</code>, a
-   <code>private</code> method of the <code>UnitUnderTest</code> class above should be clear enough.
-   The second call causes <code>UnitUnderTest.staticMethod(Integer, String)</code> to be invoked
-   with the value <code>null</code> as the first argument.
-   The reason we can't simply pass <code>null</code> directly is that the type of each argument
-   (ie, each value in the "varargs" parameter of the "invoke" method) is used to determine the type
-   of the corresponding parameter in the target method.
-   Instead, the <code>Class</code> object for the correct parameter type must be passed.
-   If the target class has multiple overloads for the same method name, then the best match will be
-   chosen based on the parameter types inferred from the given argument values.
+   The parameter types for a method are <em>not</em> explicitly specified.
+   Instead, they are inferred from the given argument values.
+   A <code>null</code> argument value, therefore, cannot be passed directly as it not allow the
+   correct parameter type to be inferred.
+   It <em>can</em> be specified indirectly, though, by passing the <code>Class</code> object for the
+   correct parameter type instead.
+   If the target class (or a super-class in the case of an instance method) has multiple overloads
+   for the same method name, then the best match will be chosen based on the parameter types
+   inferred from the given argument values.
 </p>
 
 <h4>Creating instances through non-accessible constructors</h4>
+<p>
+   Non-public classes, or classes with no accessible constructors, can be instantiated through
+   <code>newInstance</code> and <code>newInnerInstance</code> methods.
+   The constructor arguments are passed in the same way as we saw above for method invocations,
+   with the same parameter inference rules.
+</p>
+<pre><code>   @Test
+   public void newInstance()
+   {
+      // Instances of top-level or non-inner nested classes:
+      Subclass instance = newInstance(Subclass.class.getName());
+      Subclass instance2 = newInstance("DeencapsulationTest$Subclass", 1, "XYZ");
 
-<h3>Creating empty proxies</h3>
+      // Instances of inner classes:
+      Subclass.InnerClass innerInstance = newInnerInstance("InnerClass", anInstance);
+      Subclass.InnerClass innerInstance2 = newInnerInstance("InnerClass", anInstance, true, 5L, "");
+   }
+</code></pre>
+<p>
+   Note that to create an "inner instance" only the <em>simple name</em> of the inner class must be
+   specified.
+   The "outer" class is specified through the required owner instance (the second parameter).
+</p>
+
+<h3 id="proxies">
+   Creating empty proxies
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#deencapsulation"><img align="right" src="go-up.png" title="Previous section"></a>
+      <img align="right" src="blank.gif" width="22">
+   </div>
+</h3>
 <p>
    The methods described in this section are all from the <code>mockit.Mockit</code> class.
 </p>

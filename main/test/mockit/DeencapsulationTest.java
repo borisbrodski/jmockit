@@ -119,9 +119,11 @@ public final class DeencapsulationTest
 
       String stringValue = getField(anInstance, String.class);
       List<String> listValue = getField(anInstance, List.class);
+      List<String> listValue2 = getField(anInstance, ArrayList.class);
 
       assertEquals(anInstance.stringField, stringValue);
       assertSame(anInstance.listField, listValue);
+      assertSame(listValue, listValue2);
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -142,9 +144,11 @@ public final class DeencapsulationTest
       Set<Boolean> fieldValueOnInstance = new HashSet<Boolean>();
       anInstance.baseSet = fieldValueOnInstance;
 
-      Set<Boolean> listValue = getField(anInstance, fieldValueOnInstance.getClass());
+      Set<Boolean> setValue = getField(anInstance, fieldValueOnInstance.getClass());
+      Set<Boolean> setValue2 = getField(anInstance, HashSet.class);
 
-      assertSame(fieldValueOnInstance, listValue);
+      assertSame(fieldValueOnInstance, setValue);
+      assertSame(setValue, setValue2);
    }
 
    @Test
