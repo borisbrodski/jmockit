@@ -33,27 +33,38 @@ import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 /**
- * Provides static methods for the redefinition of methods in "real" classes, according to specified
- * mock classes. Such methods are intended to be called from inside test classes.
+ * Provides static methods for the mocking and stubbing of arbitrary classes from production code,
+ * according to specified <em>mock classes</em> defined in test code.
+ * Such methods are intended to be called from test code only.
  * <p/>
- * The behavior of a redefined "real" method is as if its code was replaced by a call to the
- * corresponding mock method in the mock class, returning whatever value this call returns, or
- * throwing whatever exception/error the call throws. That is, while redefined, the original code in
- * the real method is never executed.
+ * Once mocked, a "real" method defined in a production class will behave (during test execution) as
+ * if its implementation was replaced by a call to the corresponding <em>mock method</em> in the
+ * mock class.
+ * Whatever value this mock method returns will be the value returned by the call to the mocked
+ * method.
+ * The mock method can also throw an exception or error, which will then be propagated to the caller
+ * of the mocked "real" method.
+ * Therefore, while mocked the original code in the real method is never executed (actually, there's
+ * still a way to execute the real implementation, although not normally used for testing purposes).
+ * The same basic rules apply to constructors, which can be mocked by corresponding <em>mock
+ * constructors</em> or by special mock methods.
  * <p/>
  * The methods in this class can be divided in the following groups:
  * <ul>
  * <li>
- * <strong>Core API</strong>: {@linkplain #redefineMethods(Class, Class)} and its several overloads,
- * {@link #restoreAllOriginalDefinitions()} / {@link #restoreOriginalDefinition(Class...)}, and
- * {@link #stubOut(Class...)} / {@link #stubOutClass(Class, String...)} /
- * {@link #stubOutClass(Class, boolean, String...)}.
+ * <strong>Stubbing API</strong>: {@link #stubOut(Class...)},
+ * {@link #stubOutClass(Class, String...)}, and {@link #stubOutClass(Class, boolean, String...)}.
  * </li>
  * <li>
- * <strong>Annotations API</strong>: {@link #setUpMocks(Object...)},
- * {@link #setUpMock(Class, Class)} and its several overloads,
- * {@link #setUpStartupMocks(Object...)}, {@link #setUpMocksAndStubs(Class...)},
- * {@link #tearDownMocks(Class...)} / {@link #tearDownMocks()}, and {@link #assertExpectations()}.
+ * <strong>Annotations API</strong> for state-based mocking: {@link MockUp},
+ * {@link #setUpMocks(Object...)}, {@link #setUpMock(Class, Class)} and its several overloads,
+ * {@link #setUpStartupMocks(Object...)}, {@link #setUpMocksAndStubs(Class...)}, and
+ * {@link #tearDownMocks(Class...)} / {@link #tearDownMocks()}.
+ * </li>
+ * <li>
+ * <strong>Core API</strong> for state-based mocking on JDK 1.4, now obsolete: 
+ * {@linkplain #redefineMethods(Class, Class)} and its several overloads, and
+ * {@link #restoreAllOriginalDefinitions()} / {@link #restoreOriginalDefinition(Class...)}.
  * </li>
  * <li>
  * <strong>Proxy-based utilities</strong>:
@@ -312,11 +323,14 @@ public final class Mockit
    /**
     * Sets up the mocks defined in one or more {@linkplain MockClass mock classes}.
     * <p/>
-    * After this call, all such mocks are "in effect" until {@link #tearDownMocks()} is called.
-    * Expectations defined on the mocks are meant to be {@linkplain #assertExpectations() verified}
-    * after the code under test is executed.
-    * Both {@link #tearDownMocks()} and {@linkplain #assertExpectations()} will be automatically
-    * called at the end of the test, so in general you don't need to use them.
+    * After this call, all such mocks are "in effect" until the end of the test method inside which
+    * it appears, if this is the case.
+    * If the method is a "before"/"setUp" method which executes before all test methods, then the
+    * mocks will remain in effect until they are explicitly {@linkplain #tearDownMocks(Class...)
+    * torn down} in an "after"/"tearDown" method.
+    * <p/>
+    * Any invocation count constraints specified on the mocks will be automatically verified after
+    * the code under test is executed.
     * <p/>
     * For each given mock class or instance, method redefinition occurs as if
     * {@link #redefineMethods(Class, Class)} or {@link #redefineMethods(Class, Object)} was called,
