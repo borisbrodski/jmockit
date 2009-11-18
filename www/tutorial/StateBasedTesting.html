@@ -119,9 +119,9 @@
    with the <em>same signature</em> (name and parameters in the case of a mock method, or just the
    parameters in the case of a mock constructor) in the targeted real class.
    If the real method/constructor corresponding to a given mock method/constructor is missing from
-   the real class, an instance of <code>mockit.RealMethodNotFoundForMockException</code> will be
-   thrown when a test attempts to apply the mock class to the corresponding real class (the next
-   section discusses how exactly this is done).
+   the real class, an <code>IllegalArgumentException</code> will be thrown when a test attempts to
+   apply the mock class to the corresponding real class (the next section discusses how exactly this
+   is done).
    Notice this exception can be caused by a refactoring in the real class (such as renaming the
    real method), so it's important to understand why it happens.
 </p>

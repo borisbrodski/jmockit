@@ -190,9 +190,9 @@ public final class Mockit
     * @param mockClass the class containing the mock methods that will replace methods of same
     *                  signature in the real class
     *
-    * @throws IllegalArgumentException if the mock class is an inner (non static) class
-    * @throws RealMethodNotFoundForMockException if the mock class contains a public method for
-    * which no corresponding method is found in the real class
+    * @throws IllegalArgumentException if the mock class is an inner (non static) class, or if the
+    * mock class contains a public method for which no corresponding method is found in the real
+    * class
     *
     * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/test/jmockit/tutorial/domain/ServiceA_CoreAPI_Test.java">Example</a>
     */

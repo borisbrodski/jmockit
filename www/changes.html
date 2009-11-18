@@ -42,6 +42,14 @@
       invocation count constraints specified on <code>@Mock</code> methods is done automatically by
       JMockit.
    </li>
+   <li>
+      <strong>Removed</strong> the <code>mockit.RealMethodNotFoundForMockException</code> class.
+      This runtime exception was thrown when an attempt was made to apply a mock class (using either
+      the Core or Annotations API) to a production class, but there was at least one mock method in
+      the mock class for which no matching real method could be found in the production class.
+      Now an <code>IllegalArgumentException</code> will be thrown instead for the same situation,
+      with no loss of information (which is fully captured in the exception message).
+   </li>
 </ul>
 
 <h3>Current release</h3>
