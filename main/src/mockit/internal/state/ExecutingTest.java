@@ -82,6 +82,16 @@ public final class ExecutingTest
       captureOfNewInstancesForParameters = capture;
    }
 
+   public void addNonStrictMock(Class<?> mockedClass)
+   {
+      String mockedClassDesc = mockedClass.getName().replace('.', '/');
+      String uniqueClassDesc = mockedClassDesc.intern();
+
+      if (!containsNonStrictMock(null, uniqueClassDesc)) {
+         nonStrictMocks.add(uniqueClassDesc);
+      }
+   }
+
    public void addNonStrictMock(Object mock)
    {
       nonStrictMocks.add(mock);
@@ -95,13 +105,33 @@ public final class ExecutingTest
 
    public void addStrictMock(Object mock, String mockClassDesc)
    {
-      if (mock != null) {
-         strictMocks.add(mock);
-      }
+      addStrictMock(mock);
 
       if (mockClassDesc != null) {
-         strictMocks.add(mockClassDesc.intern());
+         String uniqueMockClassDesc = mockClassDesc.intern();
+
+         if (!containsStrictMock(uniqueMockClassDesc)) {
+            strictMocks.add(uniqueMockClassDesc);
+         }
       }
+   }
+
+   private void addStrictMock(Object mock)
+   {
+      if (mock != null && !containsStrictMock(mock)) {
+         strictMocks.add(mock);
+      }
+   }
+
+   private boolean containsStrictMock(Object mockOrClass)
+   {
+      for (Object strictMock : strictMocks) {
+         if (mockOrClass == strictMock) {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    public boolean containsNonStrictMock(Object mock, String mockClassDesc)
@@ -122,7 +152,7 @@ public final class ExecutingTest
             return true;
          }
          else if (strictMock == mockClassDesc) {
-            strictMocks.add(mock);
+            addStrictMock(mock);
             return true;
          }
       }
