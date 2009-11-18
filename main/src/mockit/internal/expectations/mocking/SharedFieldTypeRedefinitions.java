@@ -35,11 +35,13 @@ import mockit.*;
 public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
 {
    private final Map<MockedType, InstanceFactory> mockInstanceFactories;
+   private final List<MockedType> finalMockFields;
 
    public SharedFieldTypeRedefinitions(Object objectWithMockFields)
    {
       super(objectWithMockFields);
       mockInstanceFactories = new HashMap<MockedType, InstanceFactory>();
+      finalMockFields = new ArrayList<MockedType>();
    }
 
    public void redefineTypesForTestClass()
@@ -55,12 +57,16 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
 
       if (finalField) {
          typeRedefinition.redefineTypeForFinalField();
+         finalMockFields.add(typeMetadata);
       }
       else {
          InstanceFactory factory = (InstanceFactory) typeRedefinition.redefineType();
 
          if (factory != null) {
             mockInstanceFactories.put(typeMetadata, factory);
+         }
+         else {
+            finalMockFields.add(typeMetadata);
          }
       }
 
@@ -78,6 +84,12 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
          InstanceFactory instanceFactory = metadataAndFactory.getValue();
 
          assignNewInstanceToMockField(target, metadata, instanceFactory);
+      }
+
+      for (MockedType metadata : finalMockFields) {
+         if (metadata.nonStrict) {
+            TestRun.getExecutingTest().addNonStrictMock(metadata.getClassType());
+         }
       }
    }
 
