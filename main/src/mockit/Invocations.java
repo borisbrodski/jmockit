@@ -139,7 +139,7 @@ abstract class Invocations
     * @param argValue an arbitrary value of the proper type, necessary to provide a valid argument
     * to the invocation parameter
     *
-    * @return the given {@code argValue</code>
+    * @return the given {@code argValue}
     */
    protected final <T> T with(T argValue, Matcher<T> argumentMatcher)
    {
