@@ -643,13 +643,15 @@ public final class Mockit
 
    /**
     * Same as {@link #newEmptyProxy(ClassLoader, Class)}, but with the class loader obtained from
-    * the interface to be proxied. Note that this may lead to a NoClassDefFoundError if that
-    * interface was loaded by the boot class loader (usually, when it's a JRE class). Therefore, you
-    * should only use this method for application-defined interfaces.
+    * the interface to be proxied. Note that this may lead to a {@code NoClassDefFoundError} if that
+    * interface was loaded by the boot class loader (usually, when it's a JRE class).
+    * Therefore, you should only use this method for application-defined interfaces.
     * <p/>
-    * This method is just a convenience for some uses of the <em>Core/Annotations</em> API.
+    * This method is just a convenience for some uses of the <em>Annotations/Core</em> API.
     * In <em>JMockit Expectations</em> in particular, mock objects will be automatically created and
     * assigned to any mock fields or parameters.
+    * <p/>
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java">Example</a>
     */
    public static <E> E newEmptyProxy(Class<E> interfaceToBeProxied)
    {
@@ -657,33 +659,29 @@ public final class Mockit
    }
 
    /**
-    * Creates a {@link Proxy} implementation for a given interface where all methods are empty, with
-    * return values for non-void methods being the appropriate default value (0 for int, null for a
-    * reference type, and so on).
+    * Creates a {@link Proxy} implementation for a given interface, in which all methods are empty.
+    * Non-void methods will return a default value according to the return type: {@literal 0} for
+    * {@code int}, {@literal null} for a reference type, and so on.
     * <p/>
-    * The <code>equals</code>, <code>hashCode</code>, and <code>toString</code> methods inherited
-    * from <code>java.lang.Object</code> are overridden with an appropriate implementation in each
-    * case: <code>equals</code> is implemented by comparing the two object references (the proxy
-    * instance and the method argument) for equality; <code>hashCode</code> is implemented to return
-    * the identity hash code for the proxy instance; and <code>toString</code> returns the standard
-    * string representation that <code>Object#toString</code> would have returned.
+    * The {@code equals}, {@code hashCode}, and {@code toString} methods inherited from
+    * {@code java.lang.Object} are overridden with an appropriate implementation in each case:
+    * {@code equals} is implemented by comparing the two object references (the proxy instance and
+    * the method argument) for equality; {@code hashCode} is implemented to return the identity
+    * hash code for the proxy instance; and {@code toString} returns the standard string
+    * representation that {@code Object#toString} would have returned.
     * <p/>
-    * This is useful for creating stubs which can then be mocked through individual method
-    * redefinitions.
-    * <p/>
-    * This method is just a convenience for some uses of the <em>Core/Annotations</em> API.
+    * This method is just a convenience for some uses of the <em>Annotations/Core</em> API.
     * In <em>JMockit Expectations</em> in particular, mock objects will be automatically created and
-    * assigned to any mock fields.
+    * assigned to any mock fields or parameters.
     *
     * @param loader the class loader under which to define the proxy class; usually this would be
     * the application class loader, which can be obtained from any application class
-    * @param interfaceToBeProxied a Class object for an interface
+    * @param interfaceToBeProxied a {@code Class} object for an interface
     *
     * @return the created proxy instance
     *
     * @see #newEmptyProxy(Class)
     * @see #newEmptyProxy(Type...)
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java">Example</a>
     */
    public static <E> E newEmptyProxy(ClassLoader loader, Class<E> interfaceToBeProxied)
    {
@@ -699,24 +697,22 @@ public final class Mockit
    /**
     * Creates a {@link Proxy} implementation for a given set of interface types.
     * In this created class all methods will be empty, with return values for non-void methods being
-    * the appropriate default value (0 for int, null for a reference type, and so on).
+    * the appropriate default value ({@literal 0} for {@code int}, {@literal null} for a reference
+    * type, and so on).
     * <p/>
-    * The <code>equals</code>, <code>hashCode</code>, and <code>toString</code> methods inherited
-    * from <code>java.lang.Object</code> are overridden with an appropriate implementation in each
-    * case: <code>equals</code> is implemented by comparing the two object references (the proxy
-    * instance and the method argument) for equality; <code>hashCode</code> is implemented to return
-    * the identity hash code for the proxy instance; and <code>toString</code> returns the standard
-    * string representation that <code>Object#toString</code> would have returned.
+    * The {@code equals}, {@code hashCode}, and {@code toString} methods inherited from
+    * {@code java.lang.Object} are overridden with an appropriate implementation in each case:
+    * {@code equals} is implemented by comparing the two object references (the proxy instance and
+    * the method argument) for equality; {@code hashCode} is implemented to return the identity
+    * hash code for the proxy instance; and {@code toString} returns the standard string
+    * representation that {@code Object#toString} would have returned.
     * <p/>
-    * This is useful for creating stubs which can then be mocked through individual method
-    * redefinitions.
-    * <p/>
-    * This method is just a convenience for some uses of the <em>Core/Annotations</em> API.
+    * This method is just a convenience for some uses of the <em>Annotations/Core</em> API.
     * In <em>JMockit Expectations</em> in particular, mock objects will be automatically created and
     * assigned to any mock fields or parameters.
     *
-    * @param interfacesToBeProxied one or more <code>Type</code> objects, each of which can be a
-    * <code>Class</code> object for an interface, a {@link ParameterizedType} whose raw type is an
+    * @param interfacesToBeProxied one or more {@code Type} objects, each of which can be a
+    * {@code Class} object for an interface, a {@link ParameterizedType} whose raw type is an
     * interface, or a {@link TypeVariable} whose bounds are interfaces
     *
     * @return the created proxy instance
