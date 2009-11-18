@@ -35,6 +35,13 @@
          </li>
       </ul>
    </li>
+   <li>
+      <strong>Deprecated</strong> the method <code>Mockit.assertExpectations()</code>, which will be
+      removed in a later release.
+      Existing tests which happen to use it should simply remove any calls, since verification of
+      invocation count constraints specified on <code>@Mock</code> methods is done automatically by
+      JMockit.
+   </li>
 </ul>
 
 <h3>Current release</h3>

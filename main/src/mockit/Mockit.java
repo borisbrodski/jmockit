@@ -580,15 +580,7 @@ public final class Mockit
 
    /**
     * Verify that any and all expectations defined for the {@linkplain Mock mocks} which are in
-    * effect are satisfied at this moment (which normally is just after the execution of code under
-    * test), throwing an {@link AssertionError} for any violation.
-    * <p/>
-    * After verification the execution status for each mock (such as the invocation count, kept
-    * while the code under test is being executed) is reset. Therefore, mocks must be set up again
-    * before the next verification. (This in practice only means that a test should set up mocks,
-    * execute code under test, verify expectations, tear down mocks, and then be done.)
-    * <p/>
-    * This assert can safely be called even if no expectations were set for a particular test.
+    * effect are satisfied at this moment, throwing an {@link AssertionError} for any violation.
     * <p/>
     * <strong>This method will be called automatically</strong> at the end of each test execution,
     * so it normally does not need to be explicitly called in test code.
@@ -596,7 +588,10 @@ public final class Mockit
     * @see Mock#invocations()
     * @see Mock#minInvocations()
     * @see Mock#maxInvocations()
+    *
+    * @deprecated This method will soon be removed from the API, so remove any calls to it if any.
     */
+   @Deprecated
    public static void assertExpectations()
    {
       TestRun.verifyExpectationsOnAnnotatedMocks();
