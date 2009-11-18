@@ -24,10 +24,6 @@
  */
 package orderMngr.domain.order;
 
-public final class InvalidOrdemItem extends Exception
+public final class DuplicateOrderItem extends Exception
 {
-   public InvalidOrdemItem(String message)
-   {
-      super(message);
-   }
 }

@@ -26,25 +26,25 @@ package orderMngr.domain.customer;
 
 import java.util.*;
 
+import org.junit.*;
+
 import orderMngr.service.domain.*;
 import static orderMngr.service.persistence.Persistence.*;
 import static org.junit.Assert.*;
-import org.junit.*;
-import org.junit.runner.*;
-
-import mockit.integration.junit4.*;
 
 /**
- * These are integration tests which can optionally be run with Hibernate 3 Emulation, which is an
- * <strong>external mock</strong> (a <strong>fake implementation</strong> of the Hibernate API).
+ * These are integration tests which can optionally be run with Hibernate 3 Emulation, which
+ * contains an <em>external mock class</em> providing a <em>fake implementation</em> for the
+ * Hibernate 3 API.
  * <p/>
  * In order for the emulator to be used when running these tests, the usual "-javaagent" JVM
  * argument must be specified as <code>-javaagent:jmockit.jar=hibernate</code> (inserting the
  * correct path to jmockit.jar if necessary), when using a conventional Hibernate configuration
  * (that is, the <code>org.hibernate.Configuration</code> class).
- * Alternatively, if {@code jmockit-hibernate3emul.jar} is in the classpath (along with
- * {@code tools.jar} from JDK 1.6 in Mac OS X), then the emulator will be used automatically,
- * without the need for any JVM initialization parameter.
+ * Alternatively, when using JDK 1.6+, if {@code jmockit-hibernate3emul.jar} is in the classpath 
+ * then the emulator will be used automatically, without the need for any JVM initialization
+ * parameter (in a Mac OS X environment with the Apple JDK 1.6, {@code &lt;jdkDir>/lib/tools.jar}
+ * also needs to be in the classpath).
  * <p/>
  * If run without the emulator, the tests should still pass, as long as an appropriate Hibernate
  * session factory and the corresponding relational database are available. The use of the emulator
@@ -56,7 +56,6 @@ import mockit.integration.junit4.*;
  * class. Once the emulator is in use, the Hibernate API can be used from anywhere and all calls to
  * it are transparently redirected to the fake implementation.
  */
-@RunWith(JMockit.class)
 public final class CustomerTest extends DomainTest
 {
    private final CustomerManager manager = new CustomerManager();

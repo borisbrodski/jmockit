@@ -26,22 +26,22 @@ package orderMngr.domain.order;
 
 import java.math.*;
 
+import org.junit.*;
+
 import mockit.*;
-import mockit.integration.junit4.*;
 
 import orderMngr.service.*;
-import org.junit.*;
 
 /**
  * Unit tests for the OrderRepository class, which depends on the {@link Database} class.
  * The tests use expectations to simulate the interaction between OrderRepository and Database.
  */
-public final class OrderRepositoryTestUsingExpectations extends JMockitTest
+public final class OrderRepositoryTestUsingExpectations
 {
    @Mocked
-   private final Database db = null; // only contain static methods, so no instance is needed
+   final Database db = null; // only contain static methods, so no instance is needed
 
-   private Order order;
+   Order order;
 
    @Test
    public void createOrder()
@@ -54,6 +54,7 @@ public final class OrderRepositoryTestUsingExpectations extends JMockitTest
       new Expectations()
       {
          {
+            // TODO: it should be possible to avoid the various "withEqual" calls here...
             Database.executeInsertUpdateOrDelete(
                withPrefix("insert into order "),
                withEqual(order.getNumber()), withEqual(order.getCustomerId()));

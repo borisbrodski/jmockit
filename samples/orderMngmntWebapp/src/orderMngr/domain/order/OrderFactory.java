@@ -34,7 +34,7 @@ public final class OrderFactory
    private static int nextOrderNo = 1;
 
    public Order createOrder(String customerId, List<OrderItem> items)
-      throws MissingOrderItems, InvalidOrdemItem, DuplicateOrdemItem
+      throws MissingOrderItems, InvalidOrderItem, DuplicateOrderItem
    {
       if (items.isEmpty()) {
          throw new MissingOrderItems();
@@ -51,16 +51,16 @@ public final class OrderFactory
    }
 
    private void validateOrderItems(List<OrderItem> items)
-      throws InvalidOrdemItem, DuplicateOrdemItem
+      throws InvalidOrderItem, DuplicateOrderItem
    {
       for (OrderItem item : items) {
          if (item.getQuantity() <= 0 || item.getUnitPrice().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new InvalidOrdemItem(
+            throw new InvalidOrderItem(
                "Quantity=" + item.getQuantity() + ", Unit Price=" + item.getUnitPrice());
          }
 
          if (new HashSet<OrderItem>(items).size() < items.size()) {
-            throw new DuplicateOrdemItem();
+            throw new DuplicateOrderItem();
          }
       }
    }

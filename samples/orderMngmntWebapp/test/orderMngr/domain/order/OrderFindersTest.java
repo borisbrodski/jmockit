@@ -28,16 +28,18 @@ import java.math.*;
 import java.sql.*;
 import java.util.*;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-import orderMngr.service.*;
 import org.junit.*;
 
-public final class OrderFindersTest extends JMockitTest
+import mockit.*;
+
+import orderMngr.service.*;
+import static org.junit.Assert.*;
+
+public final class OrderFindersTest
 {
-   @Mocked private final Database db = null;
-   @Mocked private ResultSet result;
-   private Order order;
+   @NonStrict final Database db = null;
+   @Mocked ResultSet result;
+   Order order;
 
    @Test
    public void findOrderByNumber() throws Exception
@@ -47,10 +49,10 @@ public final class OrderFindersTest extends JMockitTest
       OrderItem orderItem = new OrderItem(order, "343443", "Some product", 3, new BigDecimal(5));
       order.getItems().add(orderItem);
 
-      // Set expectations:
+      // Record expectations:
       new Expectations()
       {
-         @Mocked private ResultSet result2;
+         ResultSet result2;
 
          {
             Database.executeQuery(
@@ -58,25 +60,19 @@ public final class OrderFindersTest extends JMockitTest
                withEqual(order.getNumber()));
             returns(result);
 
-            result.next();
-            returns(true);
-            result.getString(1);
-            returns(order.getCustomerId());
+            result.next(); returns(true);
+            result.getString(1); returns(order.getCustomerId());
 
             Database.executeQuery(
                withMatch("select .+ from order_item where .+"), withEqual(order.getNumber()));
             returns(result2);
-            result2.next();
-            returns(true);
+
+            result2.next(); returns(true);
             result2.getString(1);
             result2.getString(2);
             result2.getInt(3);
             result2.getBigDecimal(4);
-            result2.next();
-            returns(false);
-            Database.closeStatement(result2);
-
-            Database.closeStatement(result);
+            result2.next(); returns(false);
          }
       };
 
@@ -88,15 +84,14 @@ public final class OrderFindersTest extends JMockitTest
    }
 
    @Test
-   public void findOrderByCustomer() throws Exception
+   public void findOrderByCustomer(@Mocked("loadOrderItems") final OrderRepository repository)
+      throws Exception
    {
       final String customerId = "Cust";
       order = new Order(890, customerId);
 
       new Expectations()
       {
-         @Mocked(methods = "loadOrderItems") private OrderRepository repository;
-
          {
             Database.executeQuery(
                withMatch("select.+from\\s+order.*where.+customer_id\\s*=\\s*\\?"),
@@ -108,12 +103,17 @@ public final class OrderFindersTest extends JMockitTest
             invoke(repository, "loadOrderItems", order);
             result.next(); returns(false);
 
+         }
+      };
+
+      List<Order> found = repository.findByCustomer(customerId);
+
+      assertTrue("Order not found by customer id", found.contains(order));
+
+      new Verifications()
+      {
+         {
             Database.closeStatement(withSameInstance(result));
-            endRecording();
-
-            List<Order> found = repository.findByCustomer(customerId);
-
-            assertTrue("Order not found by customer id", found.contains(order));
          }
       };
    }

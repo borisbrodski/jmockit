@@ -26,16 +26,15 @@ package orderMngr.domain.order;
 
 import java.math.*;
 import java.util.ArrayList;
-import static java.util.Arrays.*;
 import java.util.*;
 
-import mockit.*;
-import mockit.integration.junit4.*;
 import org.junit.*;
-import org.junit.runner.*;
+
+import mockit.*;
+
+import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
-@RunWith(JMockit.class)
 public final class OrderFactoryTestUsingExpectations
 {
    @Test
@@ -50,14 +49,16 @@ public final class OrderFactoryTestUsingExpectations
       new Expectations()
       {
          @Mocked(methods = {"equals", "getNumber"}, inverse = true)
-         final Order order = new Order(withAny(0), withEqual(customerId));
+         final Order order = new Order(anyInt, customerId);
+
          {
             order.getItems(); returns(actualItems);
          }
 
          final OrderRepository orderRepository = new OrderRepository();
+
          {
-            orderRepository.create(withEqual(order));
+            orderRepository.create(order);
          }
       };
 

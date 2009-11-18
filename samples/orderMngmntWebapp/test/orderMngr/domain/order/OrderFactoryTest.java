@@ -26,17 +26,16 @@ package orderMngr.domain.order;
 
 import java.math.*;
 import java.util.ArrayList;
-import static java.util.Arrays.*;
 import java.util.*;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-import static mockit.Mockit.*;
 import org.junit.*;
-import org.junit.runner.*;
+
+import mockit.*;
+
+import static java.util.Arrays.*;
+import static mockit.Mockit.*;
 import static org.junit.Assert.*;
 
-@RunWith(JMockit.class)
 public final class OrderFactoryTest
 {
    @Test
@@ -48,15 +47,15 @@ public final class OrderFactoryTest
          new OrderItem("04940458", "JUnit Recipes", 1, new BigDecimal("49.95")));
 
       MockOrder mockOrder = new MockOrder(customerId);
-      setUpMock(mockOrder);
-      setUpMock(OrderRepository.class, new Object()
+
+      new MockUp<OrderRepository>()
       {
          @Mock(invocations = 1)
          void create(Order order)
          {
             assertNotNull(order);
          }
-      });
+      };
 
       Order order = new OrderFactory().createOrder(customerId, items);
 
@@ -65,16 +64,15 @@ public final class OrderFactoryTest
       assertExpectations();
    }
 
-   @MockClass(realClass = Order.class)
-   static class MockOrder
+   static final class MockOrder extends MockUp<Order>
    {
-      private static String expectedCustomerId;
-      private final Collection<OrderItem> items = new ArrayList<OrderItem>();
+      static String expectedCustomerId;
+      final Collection<OrderItem> items = new ArrayList<OrderItem>();
 
       MockOrder(String customerId) { expectedCustomerId = customerId; }
 
       @Mock(invocations = 1)
-      MockOrder(int number, String actualCustomerId)
+      void $init(int number, String actualCustomerId) // TODO: can't be a mock constructor; check it
       {
          assertTrue(number > 0);
          assertEquals(expectedCustomerId, actualCustomerId);
@@ -95,7 +93,7 @@ public final class OrderFactoryTest
       new OrderFactory().createOrder("45", Collections.<OrderItem>emptyList());
    }
 
-   @Test(expected = InvalidOrdemItem.class)
+   @Test(expected = InvalidOrderItem.class)
    public void createOrderWithInvalidItemQuantity() throws Exception
    {
       List<OrderItem> items = asList(
@@ -104,7 +102,7 @@ public final class OrderFactoryTest
       new OrderFactory().createOrder("45", items);
    }
 
-   @Test(expected = InvalidOrdemItem.class)
+   @Test(expected = InvalidOrderItem.class)
    public void createOrderWithInvalidItemUnitPrice() throws Exception
    {
       List<OrderItem> items = asList(
@@ -113,7 +111,7 @@ public final class OrderFactoryTest
       new OrderFactory().createOrder("45", items);
    }
 
-   @Test(expected = DuplicateOrdemItem.class)
+   @Test(expected = DuplicateOrderItem.class)
    public void createOrderWithDuplicateItem() throws Exception
    {
       List<OrderItem> items = asList(

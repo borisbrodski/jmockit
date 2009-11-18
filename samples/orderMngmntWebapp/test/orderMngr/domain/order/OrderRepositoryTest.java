@@ -28,22 +28,19 @@ import java.math.*;
 import java.sql.*;
 import java.util.*;
 
-import orderMngr.service.*;
-
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
+
 import static mockit.Mockit.*;
-import mockit.integration.junit4.*;
+import orderMngr.service.*;
+import static org.junit.Assert.*;
 
 /**
  * State-based unit tests for the OrderRepository class, which depends on the {@linkplain Database}
  * class.
  * The tests use mocks to simulate the interaction between OrderRepository and Database.
  */
-@RunWith(JMockit.class)
 public final class OrderRepositoryTest
 {
    private static PreparedStatement proxyStmt;

@@ -1,6 +1,6 @@
 /*
- * JMockit: a Java class library for developer testing with "mock methods"
- * Copyright (c) 2006, 2007 Rogério Liesenfeld
+ * JMockit Samples
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining

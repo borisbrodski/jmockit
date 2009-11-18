@@ -26,23 +26,22 @@ package orderMngr.domain.order;
 
 import java.math.*;
 import java.util.ArrayList;
-import static java.util.Arrays.*;
 import java.util.*;
 
-import mockit.*;
-import mockit.integration.junit4.*;
-import static org.junit.Assert.*;
-import org.junit.runner.*;
 import org.junit.*;
 
-@RunWith(JMockit.class)
+import mockit.*;
+
+import static java.util.Arrays.*;
+import static org.junit.Assert.*;
+
 public final class OrderFactoryTestUsingVerifications
 {
    @Mocked(methods = {"equals", "hashCode", "getNumber"}, inverse = true)
-   private Order order;
+   Order order;
 
    @Mocked
-   private OrderRepository orderRepository;
+   OrderRepository orderRepository;
 
    @Test
    public void createOrder() throws Exception
@@ -66,7 +65,7 @@ public final class OrderFactoryTestUsingVerifications
       // actually occurred:
       new Verifications()
       {{
-         new Order(withAny(0), withEqual(customerId));
+         new Order(anyInt, customerId);
          orderRepository.create(order);
       }};
 
