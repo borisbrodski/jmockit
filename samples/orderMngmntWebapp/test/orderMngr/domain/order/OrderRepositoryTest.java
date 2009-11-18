@@ -122,9 +122,6 @@ public final class OrderRepositoryTest
       new OrderRepository().remove(order);
    }
 
-   /**
-    * Demonstrates use of {@link Mockit#newEmptyProxy(ClassLoader, Class)}.
-    */
    @Test
    public void findOrderByNumber()
    {
@@ -133,77 +130,69 @@ public final class OrderRepositoryTest
       order.getItems().add(orderItem);
 
       setUpMocks(MockDatabase.class);
-      setUpMock(MockDatabase.connection().getClass(), MockConnection.class);
-      ClassLoader classLoader = OrderRepository.class.getClassLoader();
-      proxyStmt = newEmptyProxy(classLoader, PreparedStatement.class);
-      setUpMock(proxyStmt.getClass(), MockPreparedStatement.class);
-      proxyRS = newEmptyProxy(classLoader, ResultSet.class);
-      setUpMock(proxyRS.getClass(), new MockResultSet());
+
+      setUpMock(MockDatabase.connection().getClass(), new Object()
+      {
+         @Mock
+         PreparedStatement prepareStatement(String sql)
+         {
+            assertNotNull(sql);
+            return proxyStmt;
+         }
+      });
+
+      proxyStmt = new MockUp<PreparedStatement>()
+      {
+         @Mock
+         int executeUpdate() { return 1; }
+
+         @Mock
+         ResultSet executeQuery() { return proxyRS; }
+      }.getMockInstance();
+
+      proxyRS = new MockUp<ResultSet>()
+      {
+         int callNo;
+
+         @Mock
+         boolean next()
+         {
+            callNo++;
+            assertTrue("attempted to read more DB rows than expected", callNo <= 3);
+            return callNo < 3;
+         }
+
+         @Mock
+         String getString(int columnIndex)
+         {
+            if (callNo == 1) {
+               return order.getCustomerId();
+            }
+
+            return columnIndex == 1 ? orderItem.getProductId() : orderItem.getProductDescription();
+         }
+
+         @Mock
+         int getInt(int i)
+         {
+            assertEquals(3, i);
+            return orderItem.getQuantity();
+         }
+
+         @Mock
+         BigDecimal getBigDecimal(int i)
+         {
+            assertEquals(4, i);
+            return orderItem.getUnitPrice();
+         }
+
+         @Mock
+         Statement getStatement() { return proxyStmt; }
+      }.getMockInstance();
 
       Order found = new OrderRepository().findByNumber(order.getNumber());
 
       assertEquals(order, found);
-   }
-
-   public static class MockConnection
-   {
-      @Mock
-      public PreparedStatement prepareStatement(String sql)
-      {
-         assertNotNull(sql);
-         return proxyStmt;
-      }
-   }
-
-   public static class MockPreparedStatement
-   {
-      @Mock
-      public int executeUpdate() { return 1; }
-
-      @Mock
-      public ResultSet executeQuery() { return proxyRS; }
-   }
-
-   public class MockResultSet
-   {
-      int callNo;
-
-      MockResultSet() {}
-
-      @Mock
-      public boolean next()
-      {
-         callNo++;
-         assertTrue("attempted to read more DB rows than expected", callNo <= 3);
-         return callNo < 3;
-      }
-
-      @Mock
-      public String getString(int columnIndex)
-      {
-         if (callNo == 1) {
-            return order.getCustomerId();
-         }
-
-         return columnIndex == 1 ? orderItem.getProductId() : orderItem.getProductDescription();
-      }
-
-      @Mock
-      public int getInt(int i)
-      {
-         assertEquals(3, i);
-         return orderItem.getQuantity();
-      }
-
-      @Mock
-      public BigDecimal getBigDecimal(int i)
-      {
-         assertEquals(4, i);
-         return orderItem.getUnitPrice();
-      }
-
-      @Mock
-      public Statement getStatement() { return proxyStmt; }
    }
 
    @Test
