@@ -83,7 +83,9 @@ final class ReplayPhase extends Phase
    private boolean findNonStrictExpectation(
       Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
-      for (Expectation nonStrict : getNonStrictExpectations()) {
+      List<Expectation> nonStrictExpectations = getNonStrictExpectations();
+
+      for (Expectation nonStrict : nonStrictExpectations) {
          ExpectedInvocation invocation = nonStrict.expectedInvocation;
 
          if (
@@ -216,7 +218,9 @@ final class ReplayPhase extends Phase
          return strict.expectedInvocation.errorForMissingInvocation();
       }
 
-      for (Expectation nonStrict : getNonStrictExpectations()) {
+      List<Expectation> nonStrictExpectations = getNonStrictExpectations();
+
+      for (Expectation nonStrict : nonStrictExpectations) {
          InvocationConstraints constraints = nonStrict.constraints;
 
          if (constraints.isInvocationCountLessThanMinimumExpected()) {
