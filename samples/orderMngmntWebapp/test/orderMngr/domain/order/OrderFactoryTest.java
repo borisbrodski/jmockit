@@ -33,7 +33,6 @@ import org.junit.*;
 import mockit.*;
 
 import static java.util.Arrays.*;
-import static mockit.Mockit.*;
 import static org.junit.Assert.*;
 
 public final class OrderFactoryTest
@@ -61,7 +60,6 @@ public final class OrderFactoryTest
 
       assertNotNull(order);
       assertEquals(items, mockOrder.getItems());
-      assertExpectations();
    }
 
    static final class MockOrder extends MockUp<Order>
