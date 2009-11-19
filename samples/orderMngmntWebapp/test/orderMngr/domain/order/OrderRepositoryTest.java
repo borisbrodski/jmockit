@@ -195,6 +195,22 @@ public final class OrderRepositoryTest
       assertEquals(order, found);
    }
 
+   @MockClass(realClass = Database.class)
+   public static final class MockDatabase
+   {
+      static Connection connection;
+
+      @Mock
+      public static Connection connection()
+      {
+         if (connection == null) {
+            connection = newEmptyProxy(MockDatabase.class.getClassLoader(), Connection.class);
+         }
+
+         return connection;
+      }
+   }
+
    @Test
    public void findOrderByCustomer()
    {
