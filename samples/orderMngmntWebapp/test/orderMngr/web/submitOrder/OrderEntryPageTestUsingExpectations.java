@@ -26,16 +26,13 @@ package orderMngr.web.submitOrder;
 
 import java.math.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
 import orderMngr.domain.order.*;
+import static org.junit.Assert.*;
 
-@RunWith(JMockit.class)
 public final class OrderEntryPageTestUsingExpectations
 {
    @Test
