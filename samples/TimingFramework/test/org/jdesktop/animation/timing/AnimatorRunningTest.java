@@ -213,15 +213,10 @@ public final class AnimatorRunningTest
    @Test
    public void testClampedBetweenZeroAndOne()
    {
-      new Expectations()
-      {
-         {
-            Float minFraction = invoke(animator, "clampedBetweenZeroAndOne", -0.02f);
-            assertEquals(0.0, minFraction, 0.0);
+      Float minFraction = Deencapsulation.invoke(animator, "clampedBetweenZeroAndOne", -0.02f);
+      assertEquals(0.0, minFraction.doubleValue(), 0.0);
 
-            Float maxFraction = invoke(animator, "clampedBetweenZeroAndOne", 1.02f);
-            assertEquals(1.0, maxFraction, 0.0);
-         }
-      };
+      Float maxFraction = Deencapsulation.invoke(animator, "clampedBetweenZeroAndOne", 1.02f);
+      assertEquals(1.0, maxFraction.doubleValue(), 0.0);
    }
 }
