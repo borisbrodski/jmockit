@@ -217,6 +217,26 @@ public final class DeencapsulationTest
 </h3>
 <p>
    The methods described in this section are all from the <code>mockit.Mockit</code> class.
+   A <em>proxy</em> or <em>dynamic proxy</em> is an instance of a class created at runtime through
+   <code>java.lang.reflect.Proxy</code>, which implements a given set of interfaces.
+   For an <em>empty</em> proxy, the created implementation class will have all methods with empty
+   implementations, except for the non-void ones which will return a proper default value according
+   to the method return type (<code>0</code> for primitive integral types, <code>false</code> for
+   <code>boolean</code>, <code>null</code> for reference types, and so on).
+</p>
+<p>
+   There are three method overloads of name <code>newEmptyProxy</code> which take one or more
+   interface types and return a new instance of a newly created empty proxy class.
+   Most of the time, JMockit will provide better means to create interface implementations, though.
+   For each mocked interface type in an <em>Expectations</em> test, in particular, the proxy
+   instance will be created and assigned to the mock field/parameter transparently.
+   When using the Annotations API, on other hand, it sometimes may be necessary to use one of these
+   methods.
+   A proxy class (empty or not) can always be mocked/redefined later through one of the
+   <code>Mockit.setUpMock</code> methods.
+   An example is the <code>findOrderByNumber</code> test in the <code>OrderRepositoryTest</code>
+   sample test class, which can be seen
+   <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java">here</a>.
 </p>
 
 <script type="text/javascript" src="../prettify.js"></script>
