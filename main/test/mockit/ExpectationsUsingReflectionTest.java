@@ -26,14 +26,11 @@ package mockit;
 
 import java.util.*;
 
-import mockit.integration.junit4.*;
-
 import org.junit.*;
+
 import static org.junit.Assert.*;
-import org.junit.runner.*;
 
 @SuppressWarnings({"ClassWithTooManyMethods"})
-@RunWith(JMockit.class)
 public final class ExpectationsUsingReflectionTest
 {
    interface BusinessInterface

@@ -24,16 +24,14 @@
  */
 package integrationTests.serviceA;
 
-import integrationTests.serviceB.*;
 import org.junit.*;
-import static org.junit.Assert.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import static mockit.Mockit.*;
-import mockit.integration.junit4.*;
 
-@RunWith(JMockit.class)
+import integrationTests.serviceB.*;
+import static mockit.Mockit.*;
+import static org.junit.Assert.*;
+
 public final class ServiceATest
 {
    @Before

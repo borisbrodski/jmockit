@@ -27,13 +27,9 @@ package mockit;
 import java.util.*;
 
 import org.junit.*;
-import org.junit.runner.*;
-
-import mockit.integration.junit4.*;
 
 import static java.util.Arrays.*;
 
-@RunWith(JMockit.class)
 public final class VerificationsWithSomeArgumentMatchersTest
 {
    @SuppressWarnings({"UnusedDeclaration"})

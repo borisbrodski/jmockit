@@ -27,15 +27,10 @@ package mockit;
 import java.util.*;
 
 import org.junit.*;
-import org.junit.runner.*;
 
 import org.hamcrest.*;
-import org.hamcrest.Description;
 import org.hamcrest.core.*;
 
-import mockit.integration.junit4.*;
-
-@RunWith(JMockit.class)
 public final class ExpectationsWithArgMatchersTest
 {
    @SuppressWarnings({"UnusedDeclaration"})

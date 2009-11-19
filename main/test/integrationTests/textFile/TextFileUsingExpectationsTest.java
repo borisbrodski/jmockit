@@ -27,14 +27,13 @@ package integrationTests.textFile;
 import java.io.*;
 import java.util.*;
 
-import integrationTests.textFile.TextFile.*;
-import mockit.*;
-import mockit.integration.junit4.*;
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
+import mockit.*;
+
+import integrationTests.textFile.TextFile.*;
+import static org.junit.Assert.*;
+
 public final class TextFileUsingExpectationsTest
 {
    @Test

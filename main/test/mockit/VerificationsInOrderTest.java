@@ -25,12 +25,8 @@
 package mockit;
 
 import org.junit.*;
-import org.junit.runner.*;
-
-import mockit.integration.junit4.*;
 
 @SuppressWarnings({"UnusedDeclaration"})
-@RunWith(JMockit.class)
 public final class VerificationsInOrderTest
 {
    public static class Dependency

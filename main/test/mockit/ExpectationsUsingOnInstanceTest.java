@@ -24,12 +24,10 @@
  */
 package mockit;
 
-import mockit.integration.junit4.*;
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public final class ExpectationsUsingOnInstanceTest
 {
    static class Collaborator

@@ -26,13 +26,10 @@ package mockit;
 
 import java.io.*;
 
-import mockit.integration.junit4.*;
+import org.junit.*;
 
 import static org.junit.Assert.*;
-import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
 public final class ExpectationsTest
 {
    static class Collaborator

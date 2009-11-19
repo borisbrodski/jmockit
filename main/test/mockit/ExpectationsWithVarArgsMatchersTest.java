@@ -26,11 +26,8 @@ package mockit;
 
 import java.util.*;
 
-import mockit.integration.junit4.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-@RunWith(JMockit.class)
 public final class ExpectationsWithVarArgsMatchersTest
 {
    static class Collaborator

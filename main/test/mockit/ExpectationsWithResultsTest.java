@@ -24,16 +24,13 @@
  */
 package mockit;
 
-import static java.util.Arrays.*;
 import java.util.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-import mockit.integration.junit4.*;
+import static java.util.Arrays.*;
+import static org.junit.Assert.*;
 
-@RunWith(JMockit.class)
 public final class ExpectationsWithResultsTest
 {
    @SuppressWarnings({"ClassWithTooManyMethods"})

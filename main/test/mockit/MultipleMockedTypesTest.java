@@ -27,13 +27,10 @@ package mockit;
 import java.util.*;
 import java.util.concurrent.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-import mockit.integration.junit4.*;
+import static org.junit.Assert.*;
 
-@RunWith(JMockit.class)
 public final class MultipleMockedTypesTest
 {
    public static class FirstDependency

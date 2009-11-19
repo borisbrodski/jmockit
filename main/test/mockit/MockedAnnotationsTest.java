@@ -1,12 +1,9 @@
 package mockit;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-import mockit.integration.junit4.*;
+import static org.junit.Assert.*;
 
-@RunWith(JMockit.class)
 public final class MockedAnnotationsTest
 {
    @interface MyAnnotation

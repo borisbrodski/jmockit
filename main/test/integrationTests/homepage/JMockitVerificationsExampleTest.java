@@ -25,12 +25,9 @@
 package integrationTests.homepage;
 
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
-@RunWith(JMockit.class)
 public class JMockitVerificationsExampleTest
 {
    @Test // notice the "mock parameter", whose argument value will be created automatically
