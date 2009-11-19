@@ -26,14 +26,14 @@ package mockit.internal.expectations.mocking;
 
 import java.lang.annotation.*;
 import java.lang.reflect.*;
-
-import mockit.internal.state.*;
+import java.util.*;
 
 public final class ParameterTypeRedefinitions extends TypeRedefinitions
 {
    private final Type[] paramTypes;
    private final Annotation[][] paramAnnotations;
    private final Object[] paramValues;
+   private final List<Object> nonStrictMocks = new ArrayList<Object>();
 
    public ParameterTypeRedefinitions(Object objectWithInitializerMethods, Method testMethod)
    {
@@ -41,15 +41,10 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       paramTypes = testMethod.getGenericParameterTypes();
       paramAnnotations = testMethod.getParameterAnnotations();
       paramValues = new Object[paramTypes.length];
-   }
 
-   public Object[] redefineParameterTypes()
-   {
       for (int i = 0; i < paramTypes.length; i++) {
          redefineTypeForMockParameter(i);
       }
-
-      return paramValues;
    }
 
    private void redefineTypeForMockParameter(int paramIndex)
@@ -67,22 +62,22 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       typeMetadata.mockingCfg = typeRedefinition.mockingCfg;
 
       if (typeMetadata.nonStrict) {
-         TestRun.getExecutingTest().addNonStrictMock(mock);
+         nonStrictMocks.add(mock);
       }
 
       if (typeMetadata.getMaxInstancesToCapture() > 0) {
          registerCaptureOfNewInstances(typeMetadata);
       }
+
+      typesRedefined++;
    }
 
    private void registerCaptureOfNewInstances(MockedType typeMetadata)
    {
-      CaptureOfNewInstancesForParameters capture =
-         (CaptureOfNewInstancesForParameters) captureOfNewInstances;
+      CaptureOfNewInstancesForParameters capture = getCaptureOfNewInstances();
 
       if (capture == null) {
          capture = new CaptureOfNewInstancesForParameters();
-         TestRun.getExecutingTest().setCaptureOfNewInstancesForParameters(capture);
          captureOfNewInstances = capture;
       }
 
@@ -90,5 +85,21 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
 
       Class<?> paramClass = typeMetadata.getClassType();
       capture.makeSureAllSubtypesAreModified(paramClass, typeMetadata.capturing);
+   }
+
+   public Object[] getParameterValues()
+   {
+      return paramValues;
+   }
+
+   @Override
+   public CaptureOfNewInstancesForParameters getCaptureOfNewInstances()
+   {
+      return (CaptureOfNewInstancesForParameters) captureOfNewInstances;
+   }
+
+   public List<Object> getNonStrictMocks()
+   {
+      return nonStrictMocks;
    }
 }

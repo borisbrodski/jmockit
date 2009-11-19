@@ -40,7 +40,6 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
    protected MockedType typeMetadata;
    protected boolean finalField;
    private int fieldModifiers;
-   private int fieldsRedefined;
 
    protected FieldTypeRedefinitions(Object objectWithMockFields)
    {
@@ -80,7 +79,7 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
          TypeRedefinition typeRedefinition = redefineTypeForMockField();
          typeMetadata.mockingCfg = typeRedefinition.mockingCfg;
          typeMetadata.mockConstructorInfo = typeRedefinition.mockConstructorInfo;
-         fieldsRedefined++;
+         typesRedefined++;
 
          registerCaptureOfNewInstances();
       }
@@ -88,12 +87,8 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
 
    protected abstract TypeRedefinition redefineTypeForMockField();
 
-   public final int getFieldsRedefined()
-   {
-      return fieldsRedefined;
-   }
-
-   final CaptureOfNewInstancesForFields getCaptureOfNewInstances()
+   @Override
+   public final CaptureOfNewInstancesForFields getCaptureOfNewInstances()
    {
       return (CaptureOfNewInstancesForFields) captureOfNewInstances;
    }

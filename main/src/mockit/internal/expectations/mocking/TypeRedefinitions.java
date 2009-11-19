@@ -29,6 +29,7 @@ import mockit.internal.capturing.*;
 class TypeRedefinitions
 {
    protected final Object parentObject;
+   protected int typesRedefined;
    protected CaptureOfImplementations captureOfNewInstances;
 
    protected TypeRedefinitions(Object parentObject)
@@ -36,7 +37,17 @@ class TypeRedefinitions
       this.parentObject = parentObject;
    }
 
-   public void cleanUp()
+   public final int getTypesRedefined()
+   {
+      return typesRedefined;
+   }
+
+   public CaptureOfImplementations getCaptureOfNewInstances()
+   {
+      return captureOfNewInstances;
+   }
+
+   public final void cleanUp()
    {
       if (captureOfNewInstances != null) {
          captureOfNewInstances.cleanUp();

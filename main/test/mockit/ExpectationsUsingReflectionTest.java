@@ -78,6 +78,9 @@ public final class ExpectationsUsingReflectionTest
       }
    }
 
+   // Just to have a mock field so no empty expectation blocks exist.
+   @Mocked Runnable unused;
+
    @Test
    public void expectInstanceMethodInvocation(final Collaborator mock)
    {

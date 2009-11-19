@@ -35,17 +35,17 @@ import mockit.internal.util.*;
 
 public final class RecordAndReplayExecution
 {
-   private static final IsAnything MATCHES_ANYTHING = new IsAnything();
+   private static final IsAnything<?> MATCHES_ANYTHING = new IsAnything();
 
    private final LocalFieldTypeRedefinitions redefinitions;
    private final DynamicPartialMocking dynamicPartialMocking;
    final List<Expectation> expectations;
    final List<Expectation> nonStrictExpectations;
    final Map<Object, Object> recordToReplayInstanceMap;
+   final int lastExpectationIndexInPreviousReplayPhase;
    private RecordPhase recordPhase;
    private ReplayPhase replayPhase;
    private VerificationPhase verificationPhase;
-   int lastExpectationIndexInPreviousReplayPhase;
 
    /**
     * Holds an error associated to an ExpectedInvocation that is to be reported to the user.
@@ -58,6 +58,32 @@ public final class RecordAndReplayExecution
     * block already failed.
     */
    AssertionError errorThrown;
+
+   public RecordAndReplayExecution(RecordAndReplayExecution previous)
+   {
+      if (previous == null) {
+         expectations = new ArrayList<Expectation>();
+         nonStrictExpectations = new ArrayList<Expectation>();
+         recordToReplayInstanceMap = new IdentityHashMap<Object, Object>();
+         lastExpectationIndexInPreviousReplayPhase = 0;
+      }
+      else {
+         expectations = previous.expectations;
+         nonStrictExpectations = previous.nonStrictExpectations;
+         recordToReplayInstanceMap = previous.recordToReplayInstanceMap;
+         lastExpectationIndexInPreviousReplayPhase =
+            previous.getLastExpectationIndexInPreviousReplayPhase();
+      }
+
+      redefinitions = null;
+      dynamicPartialMocking = null;
+      replayPhase = new ReplayPhase(this);
+   }
+
+   private int getLastExpectationIndexInPreviousReplayPhase()
+   {
+      return replayPhase == null ? -1 : replayPhase.currentStrictExpectationIndex;
+   }
 
    public RecordAndReplayExecution(
       Object targetObject, Object... classesOrInstancesToBePartiallyMocked)
@@ -72,24 +98,30 @@ public final class RecordAndReplayExecution
             expectations = new ArrayList<Expectation>();
             nonStrictExpectations = new ArrayList<Expectation>();
             recordToReplayInstanceMap = new IdentityHashMap<Object, Object>();
+            lastExpectationIndexInPreviousReplayPhase = 0;
          }
          else {
             expectations = previous.expectations;
             nonStrictExpectations = previous.nonStrictExpectations;
             recordToReplayInstanceMap = previous.recordToReplayInstanceMap;
             lastExpectationIndexInPreviousReplayPhase =
-               previous.replayPhase == null ?
-                  -1 : previous.replayPhase.currentStrictExpectationIndex;
+               previous.getLastExpectationIndexInPreviousReplayPhase();
          }
 
          recordPhase = new RecordPhase(this, targetObject instanceof NonStrictExpectations);
-
          redefinitions =
-            enclosingClassForTargetObject == null ||
-            enclosingClassForTargetObject == TestRun.class ?
-               null : redefineFieldTypes(targetObject);
-
+            enclosingClassForTargetObject == null ? null : redefineFieldTypes(targetObject);
          dynamicPartialMocking = applyDynamicPartialMocking(classesOrInstancesToBePartiallyMocked);
+
+         if (
+            redefinitions == null && dynamicPartialMocking == null &&
+            TestRun.getSharedFieldTypeRedefinitions().getTypesRedefined() == 0 &&
+            TestRun.getExecutingTest().getMockParametersDeclared() == 0
+         ) {
+            throw new IllegalStateException(
+               "No mocked types in scope; " +
+               "please declare mock fields or parameters for the types you need mocked");
+         }
 
          TestRun.getExecutingTest().setRecordAndReplay(this);
       }
@@ -106,7 +138,7 @@ public final class RecordAndReplayExecution
       try {
          typeRedefinitions.redefineTypesForNestedClass();
 
-         return typeRedefinitions.getFieldsRedefined() == 0 ? null : typeRedefinitions;
+         return typeRedefinitions.getTypesRedefined() == 0 ? null : typeRedefinitions;
       }
       catch (Error e) {
          typeRedefinitions.cleanUp();
@@ -150,6 +182,10 @@ public final class RecordAndReplayExecution
       Object mock, int mockAccess, String classDesc, String mockDesc, Object... args)
       throws Throwable
    {
+      if (TestRun.getExecutingTest().isCreatingNewRecordAndReplayInstance()) {
+         return null;
+      }
+
       RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(true);
 
       if (mockDesc.startsWith("<init>") && handleCallToConstructor(instance, mock, classDesc)) {

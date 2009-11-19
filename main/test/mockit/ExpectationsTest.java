@@ -55,7 +55,16 @@ public final class ExpectationsTest
    {
       new Expectations()
       {
+         Collaborator mock;
       }.endRecording();
+   }
+
+   @Test(expected = IllegalStateException.class)
+   public void expectNothingWithNoMockedTypesInScope()
+   {
+      new Expectations()
+      {
+      };
    }
 
    @Test

@@ -50,6 +50,15 @@
       Now an <code>IllegalArgumentException</code> will be thrown instead for the same situation,
       with no loss of information (which is fully captured in the exception message).
    </li>
+   <li>
+      <strong>New validation for the Expectations API</strong>: new users often make the mistake of
+      not declaring any mocked types for a test.
+      To provide a helpful error message in such situations, the creation of an
+      <code>Expectations</code> block will now throw an <code>IllegalStateException</code> if there
+      are no mocked types in scope.
+      Note that this change may break existing tests, although it should be rare to have expectation
+      blocks for which no mocked type is available.
+   </li>
 </ul>
 
 <h3>Current release</h3>

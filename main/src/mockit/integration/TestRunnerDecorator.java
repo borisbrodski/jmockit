@@ -142,12 +142,17 @@ public class TestRunnerDecorator
    protected final Object[] createInstancesForMockParametersIfAny(
       Object target, Method testMethod, Object[] params)
    {
-      int numParameters = testMethod.getParameterTypes().length;
-
-      if (numParameters > 0) {
-         return new ParameterTypeRedefinitions(target, testMethod).redefineParameterTypes();
+      if (testMethod.getParameterTypes().length == 0) {
+         return params;
       }
 
-      return params;
+      ParameterTypeRedefinitions redefinitions = new ParameterTypeRedefinitions(target, testMethod);
+
+      ExecutingTest executingTest = TestRun.getExecutingTest();
+      executingTest.setMockParametersDeclared(redefinitions.getTypesRedefined());
+      executingTest.setCaptureOfNewInstancesForParameters(redefinitions.getCaptureOfNewInstances());
+      executingTest.addNonStrictMocks(redefinitions.getNonStrictMocks());
+
+      return redefinitions.getParameterValues();
    }
 }

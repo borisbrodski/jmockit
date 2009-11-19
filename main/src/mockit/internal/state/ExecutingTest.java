@@ -27,7 +27,6 @@ package mockit.internal.state;
 import java.lang.reflect.*;
 import java.util.*;
 
-import mockit.*;
 import mockit.internal.expectations.*;
 import mockit.internal.expectations.mocking.*;
 
@@ -35,17 +34,27 @@ public final class ExecutingTest
 {
    private RecordAndReplayExecution currentRecordAndReplay;
    private RecordAndReplayExecution recordAndReplayForLastTestMethod;
+   private boolean creatingNewRecordAndReplayInstance;
+
+   private int mockParametersDeclared;
    private CaptureOfNewInstancesForParameters captureOfNewInstancesForParameters;
+
    private final List<Object> nonStrictMocks = new ArrayList<Object>();
    private final List<Object> strictMocks = new ArrayList<Object>();
 
    RecordAndReplayExecution getRecordAndReplay(boolean createIfUndefined)
    {
       if (currentRecordAndReplay == null && createIfUndefined) {
-         new NonStrictExpectations() {}.endRecording();
+         setUpNewRecordAndReplay();
       }
 
       return currentRecordAndReplay;
+   }
+
+   private void setUpNewRecordAndReplay()
+   {
+      RecordAndReplayExecution previous = setRecordAndReplay(null);
+      setRecordAndReplay(new RecordAndReplayExecution(previous));
    }
 
    public RecordAndReplayExecution setRecordAndReplay(RecordAndReplayExecution newRecordAndReplay)
@@ -53,7 +62,13 @@ public final class ExecutingTest
       recordAndReplayForLastTestMethod = null;
       RecordAndReplayExecution previous = currentRecordAndReplay;
       currentRecordAndReplay = newRecordAndReplay;
+      creatingNewRecordAndReplayInstance = newRecordAndReplay == null;
       return previous;
+   }
+
+   public boolean isCreatingNewRecordAndReplayInstance()
+   {
+      return creatingNewRecordAndReplayInstance;
    }
 
    public RecordAndReplayExecution getRecordAndReplayForVerifications()
@@ -67,9 +82,19 @@ public final class ExecutingTest
       else {
          // This should only happen if no expectation at all were created by the whole test, but
          // there is a (probably empty) verification block.
-         new NonStrictExpectations() {}.endRecording();
+         setUpNewRecordAndReplay();
          return currentRecordAndReplay;
       }
+   }
+
+   public int getMockParametersDeclared()
+   {
+      return mockParametersDeclared;
+   }
+
+   public void setMockParametersDeclared(int mockParametersDeclared)
+   {
+      this.mockParametersDeclared = mockParametersDeclared;
    }
 
    public CaptureOfNewInstancesForParameters getCaptureOfNewInstancesForParameters()
@@ -100,6 +125,13 @@ public final class ExecutingTest
          Class<?> mockedClass = mock.getClass();
          String mockedClassDesc = mockedClass.getName().replace('.', '/');
          nonStrictMocks.add(mockedClassDesc.intern());
+      }
+   }
+
+   public void addNonStrictMocks(List<Object> mocks)
+   {
+      for (Object mock : mocks) {
+         addNonStrictMock(mock);
       }
    }
 
@@ -180,12 +212,14 @@ public final class ExecutingTest
    {
       recordAndReplayForLastTestMethod = currentRecordAndReplay;
       currentRecordAndReplay = null;
+      mockParametersDeclared = 0;
 
       if (captureOfNewInstancesForParameters != null) {
          captureOfNewInstancesForParameters.cleanUp();
          captureOfNewInstancesForParameters = null;
       }
 
+      nonStrictMocks.clear();
       strictMocks.clear();
    }
 }
