@@ -32,7 +32,6 @@ import mockit.*;
 import mockit.integration.junit4.*;
 import powermock.examples.bypassencapsulation.nontest.*;
 
-@RunWith(JMockit.class)
 public class ReportGenerator_JMockit_Test
 {
    @Test

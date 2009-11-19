@@ -24,14 +24,11 @@
  */
 package powermock.examples.suppress.constructor;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import static mockit.Mockit.*;
-import mockit.integration.junit4.*;
+import static org.junit.Assert.*;
 
-@RunWith(JMockit.class)
 public class ExampleWithEvilChild_JMockit_Test
 {
    @Test

@@ -27,13 +27,11 @@ package powermock.examples.simple;
 import java.io.*;
 
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
+
 import org.powermock.reflect.*;
 
-@RunWith(JMockit.class)
 public class Logger_JMockit_Test
 {
    @Test(expected = IllegalStateException.class)

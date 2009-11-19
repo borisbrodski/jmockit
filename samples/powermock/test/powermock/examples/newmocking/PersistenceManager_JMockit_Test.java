@@ -26,14 +26,12 @@ package powermock.examples.newmocking;
 
 import java.io.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public final class PersistenceManager_JMockit_Test
 {
    @Test

@@ -24,15 +24,13 @@
  */
 package powermock.examples.logging;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 import mockit.integration.logging.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 @UsingMocksAndStubs(Log4jMocks.class)
 public class Log4jUser_JMockit_Test
 {

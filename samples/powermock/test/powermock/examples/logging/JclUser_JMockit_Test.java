@@ -26,17 +26,14 @@ package powermock.examples.logging;
 
 import java.lang.reflect.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 import mockit.integration.logging.*;
-import org.apache.commons.logging.*;
-import powermock.examples.logging.*;
 
-@RunWith(JMockit.class)
+import org.apache.commons.logging.*;
+import static org.junit.Assert.*;
+
 @UsingMocksAndStubs(CommonsLoggingMocks.class)
 public class JclUser_JMockit_Test
 {

@@ -27,16 +27,14 @@ package powermock.examples;
 import java.util.*;
 
 import org.junit.*;
-import static org.junit.Assert.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
+
+import static org.junit.Assert.*;
 import powermock.examples.dependencymanagement.*;
 import powermock.examples.domain.*;
 import powermock.examples.service.*;
 
-@RunWith(JMockit.class)
 public class MyServiceUser_JMockit_Test
 {
    private MyServiceUser tested;

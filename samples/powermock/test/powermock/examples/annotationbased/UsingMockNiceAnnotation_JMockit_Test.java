@@ -24,15 +24,13 @@
  */
 package powermock.examples.annotationbased;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
+
+import static org.junit.Assert.*;
 import powermock.examples.annotationbased.dao.*;
 
-@RunWith(JMockit.class)
 public class UsingMockNiceAnnotation_JMockit_Test
 {
    @Mocked

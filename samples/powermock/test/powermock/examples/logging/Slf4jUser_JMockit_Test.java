@@ -26,16 +26,14 @@ package powermock.examples.logging;
 
 import java.lang.reflect.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 import mockit.integration.logging.*;
+
+import static org.junit.Assert.*;
 import org.slf4j.*;
 
-@RunWith(JMockit.class)
 @UsingMocksAndStubs(Slf4jMocks.class)
 public class Slf4jUser_JMockit_Test
 {

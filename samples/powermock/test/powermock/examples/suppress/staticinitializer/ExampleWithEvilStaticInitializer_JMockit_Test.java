@@ -24,15 +24,13 @@
  */
 package powermock.examples.suppress.staticinitializer;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
+
+import static org.junit.Assert.*;
 import powermock.examples.suppress.staticinitializer.ExampleWithEvilStaticInitializer_JMockit_Test.*;
 
-@RunWith(JMockit.class)
 @UsingMocksAndStubs(MockExampleWithStaticInitializer.class)
 public class ExampleWithEvilStaticInitializer_JMockit_Test
 {

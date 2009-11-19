@@ -24,16 +24,14 @@
  */
 package powermock.examples.mockpolicy;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-import mockit.integration.junit4.*;
 import mockit.*;
+
+import static org.junit.Assert.*;
 import powermock.examples.mockpolicy.nontest.domain.*;
 import powermock.examples.mockpolicy.policy.*;
 
-@RunWith(JMockit.class)
 @UsingMocksAndStubs(MyCustomMockClass.class)
 public class DependencyUser_JMockit_Test
 {

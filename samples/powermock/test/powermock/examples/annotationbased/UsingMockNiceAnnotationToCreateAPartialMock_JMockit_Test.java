@@ -24,19 +24,17 @@
  */
 package powermock.examples.annotationbased;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
+
+import static org.junit.Assert.*;
 import powermock.examples.annotationbased.dao.*;
 
 /**
  * In JMockit, there is also <em>dynamic partial mocking</em>, as demonstrated in
  * {@link powermock.examples.annotationbased.DynamicPartialMock_JMockit_Test}.
  */
-@RunWith(JMockit.class)
 public class UsingMockNiceAnnotationToCreateAPartialMock_JMockit_Test
 {
    @Mocked("getSomeData")

@@ -25,15 +25,13 @@
 package powermock.examples.dom4j;
 
 import org.junit.*;
-import static org.junit.Assert.*;
-import org.junit.runner.*;
 
-import org.dom4j.*;
-import org.dom4j.tree.AbstractNode;
-import mockit.integration.junit4.*;
 import mockit.*;
 
-@RunWith(JMockit.class)
+import org.dom4j.*;
+import org.dom4j.tree.*;
+import static org.junit.Assert.*;
+
 @UsingMocksAndStubs(AbstractNode.class)
 public class AbstractXMLRequestCreatorBase_JMockit_Test
 {

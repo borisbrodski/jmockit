@@ -25,13 +25,11 @@
 package powermock.examples.bypassencapsulation;
 
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
+
 import powermock.examples.bypassencapsulation.nontest.*;
 
-@RunWith(JMockit.class)
 public class ReportDao_JMockit_Test
 {
    @Test

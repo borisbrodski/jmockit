@@ -24,15 +24,13 @@
  */
 package powermock.examples.simple;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
+
+import mockit.*;
 
 import static mockit.Deencapsulation.*;
-import mockit.*;
-import mockit.integration.junit4.*;
+import static org.junit.Assert.*;
 
-@RunWith(JMockit.class)
 @UsingMocksAndStubs(SimpleConfig.class)
 public class Greeter_JMockit_Test
 {

@@ -24,15 +24,12 @@
  */
 package powermock.examples.privatemocking;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
-import mockit.integration.junit4.*;
 import mockit.*;
-import static org.powermock.api.easymock.PowerMock.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 public class DataService_JMockit_Test
 {
    @Test
