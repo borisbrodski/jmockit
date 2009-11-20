@@ -40,6 +40,18 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    }
 
    @Override
+   protected int getTotalSegments(String filePath)
+   {
+      return filesToFileData.get(filePath).getTotalSegments();
+   }
+
+   @Override
+   protected int getCoveredSegments(String filePath)
+   {
+      return filesToFileData.get(filePath).getCoveredSegments();
+   }
+
+   @Override
    protected int getCoveragePercentageForFile(String filePath)
    {
       return filesToFileData.get(filePath).getCoveragePercentage();

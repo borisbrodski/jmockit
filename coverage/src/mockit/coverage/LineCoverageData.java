@@ -28,28 +28,28 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Coverage data gathered for a single line of code in a source file.
+ * Coverage data gathered for a single executable line of code in a source file.
  */
 public final class LineCoverageData implements Serializable
 {
    private static final long serialVersionUID = -6233980722802474992L;
    
    private boolean unreachable;
-   private List<BranchCoverageData> branches;
+   private List<BranchCoverageData> segments;
    private transient List<String> sourceElements;
    private List<CallPoint> callPoints;
    private int executionCount;
 
    int addBranch(int jumpInsnIndex)
    {
-      if (branches == null) {
-         branches = new ArrayList<BranchCoverageData>(4);
+      if (segments == null) {
+         segments = new ArrayList<BranchCoverageData>(4);
       }
 
-      BranchCoverageData branchData = new BranchCoverageData(jumpInsnIndex);
-      branches.add(branchData);
+      BranchCoverageData data = new BranchCoverageData(jumpInsnIndex);
+      segments.add(data);
 
-      return branches.size() - 1;
+      return segments.size() - 1;
    }
 
    int addSourceElement(String sourceElement)
@@ -65,9 +65,9 @@ public final class LineCoverageData implements Serializable
       return sourceElements.size() - 1;
    }
 
-   BranchCoverageData getBranchData(int branchIndex)
+   BranchCoverageData getBranchData(int segmentIndex)
    {
-      return branches.get(branchIndex);
+      return segments.get(segmentIndex);
    }
 
    void registerExecution(CallPoint callPoint)
@@ -83,27 +83,27 @@ public final class LineCoverageData implements Serializable
       executionCount++;
    }
 
-   void registerExecution(int branchIndex, boolean jumped, CallPoint callPoint)
+   void registerExecution(int segmentIndex, boolean jumped, CallPoint callPoint)
    {
-      BranchCoverageData branchData = branches.get(branchIndex);
+      BranchCoverageData data = segments.get(segmentIndex);
 
       if (jumped) {
-         branchData.registerJumpExecution(callPoint);
+         data.registerJumpExecution(callPoint);
       }
       else {
-         branchData.registerNoJumpExecution(callPoint);
+         data.registerNoJumpExecution(callPoint);
       }
    }
 
    public boolean containsBranches()
    {
-      return branches != null;
+      return segments != null;
    }
 
    public List<BranchCoverageData> getBranches()
    {
-      return branches == null ?
-         Collections.<BranchCoverageData>emptyList() : Collections.unmodifiableList(branches);
+      return segments == null ?
+         Collections.<BranchCoverageData>emptyList() : Collections.unmodifiableList(segments);
    }
 
    public List<String> getSourceElements()
@@ -133,6 +133,41 @@ public final class LineCoverageData implements Serializable
       unreachable = true;
    }
 
+   public int getNumberOfSegments()
+   {
+      return segments == null ? 1 : segments.size();
+   }
+
+   public int getNumberOfCoveredSegments()
+   {
+      if (unreachable) {
+         return getNumberOfSegments();
+      }
+
+      if (executionCount == 0) {
+         return 0;
+      }
+
+      if (segments == null) {
+         return 1;
+      }
+
+      return segmentsCovered();
+   }
+
+   private int segmentsCovered()
+   {
+      int segmentsCovered = 0;
+
+      for (BranchCoverageData segment : segments) {
+         if (segment.isCovered()) {
+            segmentsCovered++;
+         }
+      }
+
+      return segmentsCovered;
+   }
+
    public int getCoveragePercentage()
    {
       if (unreachable) {
@@ -143,40 +178,34 @@ public final class LineCoverageData implements Serializable
          return 0;
       }
 
-      if (branches == null) {
+      if (segments == null) {
          return 100;
       }
 
-      int branchesCovered = 0;
+      int segmentsCovered = segmentsCovered();
 
-      for (BranchCoverageData branch : branches) {
-         if (branch.isCovered()) {
-            branchesCovered++;
-         }
-      }
-
-      return 100 * branchesCovered / branches.size();
+      return 100 * segmentsCovered / segments.size();
    }
 
-   void addCountsFromPreviousMeasurement(LineCoverageData previousData)
+   void addCountsFromPreviousMeasurement(LineCoverageData previousLineData)
    {
-      executionCount += previousData.executionCount;
+      executionCount += previousLineData.executionCount;
 
-      if (previousData.containsCallPoints()) {
+      if (previousLineData.containsCallPoints()) {
          if (containsCallPoints()) {
-            callPoints.addAll(0, previousData.callPoints);
+            callPoints.addAll(0, previousLineData.callPoints);
          }
          else {
-            callPoints = previousData.callPoints;
+            callPoints = previousLineData.callPoints;
          }
       }
 
       if (containsBranches()) {
-         for (int i = 0; i < branches.size(); i++) {
-            BranchCoverageData branchData = branches.get(i);
-            BranchCoverageData previousBranchData = previousData.branches.get(i);
+         for (int i = 0; i < segments.size(); i++) {
+            BranchCoverageData segmentData = segments.get(i);
+            BranchCoverageData previousSegmentData = previousLineData.segments.get(i);
 
-            branchData.addCountsFromPreviousMeasurement(previousBranchData);
+            segmentData.addCountsFromPreviousMeasurement(previousSegmentData);
          }
       }
    }

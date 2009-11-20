@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2007-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -54,6 +54,7 @@ final class IndexPage extends ListWithFilesAndPercentages
          List<String> packages = new ArrayList<String>(packagesToFiles.keySet());
          writeMetricForEachFile(packages);
 
+         writeLineWithTotalCoverage();
          writeFooter();
       }
       finally {
@@ -74,14 +75,30 @@ final class IndexPage extends ListWithFilesAndPercentages
       output.print(packagesToFiles.keySet().size());
       output.print(")</th><th>Files (");
 
+      int totalFileCount = computeTotalNumberOfSourceFiles();
+      output.print(totalFileCount);
+
+      output.println(")</th><th>Coverage</th></tr>");
+   }
+
+   private int computeTotalNumberOfSourceFiles()
+   {
       int totalFileCount = 0;
 
       for (List<String> files : packagesToFiles.values()) {
          totalFileCount += files.size();
       }
 
-      output.print(totalFileCount);
-      output.println(")</th><th>Coverage</th></tr>");
+      return totalFileCount;
+   }
+
+   private void writeLineWithTotalCoverage()
+   {
+      int totalPercentage = (int) (100.0 * coveredSegments / totalSegments + 0.5);
+
+      output.print("  <tr><td colspan='2' class='total'>Total</td>");
+      printCoveragePercentage(totalPercentage);
+      output.println("</tr>");
    }
 
    private void writeFooter()
@@ -95,9 +112,21 @@ final class IndexPage extends ListWithFilesAndPercentages
    }
 
    @Override
-   protected int getCoveragePercentageForFile(String filePath)
+   protected int getTotalSegments(String filePath)
    {
-      return packagesToPackagePercentages.get(filePath);
+      return 0;
+   }
+
+   @Override
+   protected int getCoveredSegments(String filePath)
+   {
+      return 0;
+   }
+
+   @Override
+   protected int getCoveragePercentageForFile(String packageName)
+   {
+      return packagesToPackagePercentages.get(packageName);
    }
 
    @Override
@@ -107,20 +136,23 @@ final class IndexPage extends ListWithFilesAndPercentages
    }
 
    @Override
-   protected String getFileNameForDisplay(String filePath)
+   protected String getFileNameForDisplay(String packageName)
    {
-      return filePath.replace('/', '.');
+      return packageName.replace('/', '.');
    }
 
    @Override
-   protected void writeInternalTableForChildren(String filePath)
+   protected void writeInternalTableForChildren(String packageName)
    {
       printIndent(3); output.println("<td>");
       printIndent(4); output.println("<table width='100%' cellpadding='1' cellspacing='1'>");
 
-      List<String> packageFiles = packagesToFiles.get(filePath);
+      List<String> packageFiles = packagesToFiles.get(packageName);
       int packagePercentage = packageReport.writeMetricForEachFile(packageFiles);
-      packagesToPackagePercentages.put(filePath, packagePercentage);
+      packagesToPackagePercentages.put(packageName, packagePercentage);
+
+      totalSegments += packageReport.totalSegments;
+      coveredSegments += packageReport.coveredSegments;
 
       printIndent(4); output.println("</table>");
       printIndent(3); output.println("</td>");

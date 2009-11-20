@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2007-2008 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -31,6 +31,8 @@ abstract class ListWithFilesAndPercentages
 {
    protected final PrintWriter output;
    private final int baseIndentationLevel;
+   int totalSegments;
+   int coveredSegments;
 
    protected ListWithFilesAndPercentages(PrintWriter output, int baseIndentationLevel)
    {
@@ -41,6 +43,8 @@ abstract class ListWithFilesAndPercentages
    protected abstract String getHRefToFile(String filePath);
    protected abstract String getFileNameForDisplay(String filePath);
    protected abstract void writeInternalTableForChildren(String filePath);
+   protected abstract int getTotalSegments(String filePath);
+   protected abstract int getCoveredSegments(String filePath);
    protected abstract int getCoveragePercentageForFile(String filePath);
 
    final int writeMetricForEachFile(List<String> filePaths)
@@ -51,7 +55,8 @@ abstract class ListWithFilesAndPercentages
 
       Collections.sort(filePaths);
 
-      int percentageSum = 0;
+      totalSegments = 0;
+      coveredSegments = 0;
 
       for (String filePath : filePaths) {
          printIndent(2); output.println("<tr>");
@@ -76,16 +81,25 @@ abstract class ListWithFilesAndPercentages
          writeInternalTableForChildren(filePath);
 
          int filePercentage = getCoveragePercentageForFile(filePath);
-         percentageSum += filePercentage;
-         printIndent(3); output.print("<td class='coverage' style='background-color:#");
-         output.print(percentageColor(filePercentage));
-         output.print("'>");
-         output.print(filePercentage);
-         output.println("%</td>");
+
+         totalSegments += getTotalSegments(filePath);
+         coveredSegments += getCoveredSegments(filePath);
+
+         printIndent(3);
+         printCoveragePercentage(filePercentage);
          printIndent(2); output.println("</tr>");
       }
 
-      return percentageSum / filePaths.size();
+      return (int) (100.0 * coveredSegments / totalSegments + 0.5);
+   }
+
+   final void printCoveragePercentage(int percentage)
+   {
+      output.print("<td class='coverage' style='background-color:#");
+      output.print(percentageColor(percentage));
+      output.print("'>");
+      output.print(percentage);
+      output.println("%</td>");
    }
 
    private String percentageColor(int percentage)
@@ -101,25 +115,23 @@ abstract class ListWithFilesAndPercentages
          int red = 0xFF - green;
 
          StringBuilder color = new StringBuilder(6);
-         String hex = Integer.toHexString(red);
-
-         if (hex.length() == 1) {
-            color.append('0');
-         }
-
-         color.append(hex);
-
-         hex = Integer.toHexString(green);
-
-         if (hex.length() == 1) {
-            color.append('0');
-         }
-
-         color.append(hex);
+         appendColorInHexadecimal(color, red);
+         appendColorInHexadecimal(color, green);
          color.append("00");
 
          return color.toString();
       }
+   }
+
+   private void appendColorInHexadecimal(StringBuilder colorInHexa, int rgb)
+   {
+      String hex = Integer.toHexString(rgb);
+
+      if (hex.length() == 1) {
+         colorInHexa.append('0');
+      }
+
+      colorInHexa.append(hex);
    }
 
    final void printIndent(int level)

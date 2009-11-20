@@ -28,5 +28,6 @@ td.coverage {
 }
 td.withBranches { background-color: #c8bb88; }
 td.withBranches pre { display: inline; margin-right: 2px; }
+td.total { text-align: right; font-weight: bold; background-color: #e0e0e0; }
 
 .withCallPoints { cursor: pointer; }

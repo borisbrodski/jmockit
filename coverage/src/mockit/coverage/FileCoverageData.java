@@ -34,9 +34,11 @@ public final class FileCoverageData implements Serializable
 {
    private static final long serialVersionUID = 3508592808457531011L;
 
-   long lastModified;
    private final SortedMap<Integer, LineCoverageData> lineToLineData =
       new TreeMap<Integer, LineCoverageData>();
+   long lastModified;
+   private int totalSegments;
+   private int coveredSegments;
 
    LineCoverageData addLine(int line)
    {
@@ -67,20 +69,34 @@ public final class FileCoverageData implements Serializable
       return Collections.unmodifiableSortedMap(lineToLineData);
    }
 
+   public int getTotalSegments()
+   {
+      return totalSegments;
+   }
+
+   public int getCoveredSegments()
+   {
+      return coveredSegments;
+   }
+
    public int getCoveragePercentage()
    {
       if (lineToLineData.isEmpty()) {
          return 100;
       }
 
-      Collection<LineCoverageData> lines = lineToLineData.values();
-      int result = 0;
+      if (totalSegments == 0) {
+         Collection<LineCoverageData> lines = lineToLineData.values();
 
-      for (LineCoverageData line : lines) {
-         result += line.getCoveragePercentage();
+         for (LineCoverageData line : lines) {
+            totalSegments += line.getNumberOfSegments();
+            coveredSegments += line.getNumberOfCoveredSegments();
+         }
       }
 
-      return (int) ((double) result / lines.size() + 0.5);
+      double result = 100.0 * coveredSegments / totalSegments + 0.5;
+      
+      return (int) result;
    }
 
    void addCountsFromPreviousMeasurement(FileCoverageData previousData)
