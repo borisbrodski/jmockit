@@ -89,6 +89,7 @@ public final class RecordAndReplayExecution
       Object targetObject, Object... classesOrInstancesToBePartiallyMocked)
    {
       TestRun.enterNoMockingZone();
+      TestRun.getExecutingTest().setCreatingNewRecordAndReplayInstance(true);
 
       try {
          RecordAndReplayExecution previous = TestRun.getExecutingTest().setRecordAndReplay(null);
@@ -126,6 +127,7 @@ public final class RecordAndReplayExecution
          TestRun.getExecutingTest().setRecordAndReplay(this);
       }
       finally {
+         TestRun.getExecutingTest().setCreatingNewRecordAndReplayInstance(false);
          TestRun.exitNoMockingZone();
       }
    }

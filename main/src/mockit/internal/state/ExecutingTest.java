@@ -62,13 +62,17 @@ public final class ExecutingTest
       recordAndReplayForLastTestMethod = null;
       RecordAndReplayExecution previous = currentRecordAndReplay;
       currentRecordAndReplay = newRecordAndReplay;
-      creatingNewRecordAndReplayInstance = newRecordAndReplay == null;
       return previous;
    }
 
    public boolean isCreatingNewRecordAndReplayInstance()
    {
       return creatingNewRecordAndReplayInstance;
+   }
+
+   public void setCreatingNewRecordAndReplayInstance(boolean flag)
+   {
+      creatingNewRecordAndReplayInstance = flag;
    }
 
    public RecordAndReplayExecution getRecordAndReplayForVerifications()
