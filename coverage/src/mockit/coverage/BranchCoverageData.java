@@ -99,6 +99,11 @@ public final class BranchCoverageData implements Serializable
       return noJumpTargetInsnIndex;
    }
 
+   public boolean isNonEmpty()
+   {
+      return jumpTargetInsnIndex >= 0 || noJumpTargetInsnIndex >= 0;
+   }
+
    public int getJumpExecutionCount()
    {
       return jumpExecutionCount;

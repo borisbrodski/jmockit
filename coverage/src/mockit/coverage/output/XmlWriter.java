@@ -33,10 +33,6 @@ import mockit.coverage.*;
 /**
  * Produces an xml file with all the coverage data gathered during a test run. If the file already
  * exists, it is overwritten.
- *
- * TODO: implement merge with previous xml file, in order to avoid losing coverage data for those
- * tests not run this time (either because the tests were simply not included in the test run, or
- * because they were ignored by the incremental test runner)
  */
 public abstract class XmlWriter
 {
@@ -66,7 +62,8 @@ public abstract class XmlWriter
       }
       finally {
          output.close();
-         System.out.println("\nJMockit: Coverage data written to " + outputFile.getCanonicalPath());
+         System.out.println();
+         System.out.println("JMockit: Coverage data written to " + outputFile.getCanonicalPath());
       }
    }
 
@@ -75,9 +72,14 @@ public abstract class XmlWriter
       writeLine("<?xml version='1.0' encoding='UTF-8'?>");
       writeLine("<coverage>");
 
-      Map<String,FileCoverageData> fileToFileData = coverageData.getFileToFileDataMap();
+      Map<String, FileCoverageData> fileToFileData = coverageData.getFileToFileDataMap();
+      boolean firstFile = true;
 
       for (Entry<String, FileCoverageData> lineCountEntry : fileToFileData.entrySet()) {
+         if (!firstFile) {
+            output.newLine();
+         }
+         
          output.write("  <file path='");
          output.write(lineCountEntry.getKey());
          writeLine("'>");
@@ -86,7 +88,7 @@ public abstract class XmlWriter
          writeCoverageDataForSourceFile(fileCoverageData);
 
          writeLine("  </file>");
-         output.newLine();
+         firstFile = false;
       }
 
       writeLine("</coverage>");
@@ -114,8 +116,7 @@ public abstract class XmlWriter
          boolean pendingEndTag = false;
 
          if (lineData.containsBranches()) {
-            writeChildElementsForBranches(lineData);
-            pendingEndTag = true;
+            pendingEndTag = writeChildElementsForSegments(lineData);
          }
          else if (writeChildElementsForLine(lineData)) {
             pendingEndTag = true;
@@ -128,43 +129,57 @@ public abstract class XmlWriter
    protected abstract boolean writeChildElementsForLine(LineCoverageData lineData)
       throws IOException;
 
-   private boolean writeChildElementsForBranches(LineCoverageData lineData) throws IOException
+   private boolean writeChildElementsForSegments(LineCoverageData lineData) throws IOException
    {
       writeAttributeWithSourceElements(lineData);
 
-      for (BranchCoverageData branchData : lineData.getBranches()) {
-         int jumpTargetInsnIndex = branchData.getJumpTargetInsnIndex();
-         int jumpCount = branchData.getJumpExecutionCount();
-         int noJumpTargetInsnIndex = branchData.getNoJumpTargetInsnIndex();
-         int noJumpCount = branchData.getNoJumpExecutionCount();
+      boolean nonEmptySegmentFound = false;
 
-         if (jumpTargetInsnIndex >= 0 || noJumpTargetInsnIndex >= 0) {
-            output.write("      <branch jumpInsn='");
-            output.write(String.valueOf(branchData.getJumpInsnIndex()));
-            output.write("'");
-
-            if (noJumpTargetInsnIndex >= 0) {
-               output.write(" noJumpTargetInsn='");
-               output.write(String.valueOf(noJumpTargetInsnIndex));
-               output.write("' noJumpCount='");
-               output.write(String.valueOf(noJumpCount));
-               output.write("'");
+      for (BranchCoverageData segmentData : lineData.getBranches()) {
+         if (segmentData.isNonEmpty()) {
+            if (!nonEmptySegmentFound) {
+               writeLine("'>");
+               nonEmptySegmentFound = true;
             }
 
-            if (jumpTargetInsnIndex >= 0) {
-               output.write(" jumpTargetInsn='");
-               output.write(String.valueOf(jumpTargetInsnIndex));
-               output.write("' jumpCount='");
-               output.write(String.valueOf(jumpCount));
-               output.write("'");
-            }
-
-            writeEndTagForBranch(branchData, jumpCount, noJumpCount);
+            writeChildElementForSegment(segmentData);
             output.newLine();
          }
       }
 
-      return true;
+      return nonEmptySegmentFound;
+   }
+
+   private void writeChildElementForSegment(BranchCoverageData segmentData)
+      throws IOException
+   {
+      output.write("      <branch jumpInsn='");
+      output.write(String.valueOf(segmentData.getJumpInsnIndex()));
+      output.write("'");
+
+      int noJumpTargetInsnIndex = segmentData.getNoJumpTargetInsnIndex();
+      int noJumpCount = segmentData.getNoJumpExecutionCount();
+
+      if (noJumpTargetInsnIndex >= 0) {
+         output.write(" noJumpTargetInsn='");
+         output.write(String.valueOf(noJumpTargetInsnIndex));
+         output.write("' noJumpCount='");
+         output.write(String.valueOf(noJumpCount));
+         output.write("'");
+      }
+
+      int jumpTargetInsnIndex = segmentData.getJumpTargetInsnIndex();
+      int jumpCount = segmentData.getJumpExecutionCount();
+
+      if (jumpTargetInsnIndex >= 0) {
+         output.write(" jumpTargetInsn='");
+         output.write(String.valueOf(jumpTargetInsnIndex));
+         output.write("' jumpCount='");
+         output.write(String.valueOf(jumpCount));
+         output.write("'");
+      }
+
+      writeEndTagForBranch(segmentData, jumpCount, noJumpCount);
    }
 
    private void writeAttributeWithSourceElements(LineCoverageData lineData) throws IOException
@@ -176,8 +191,6 @@ public abstract class XmlWriter
          output.write(sourceElement);
          sep = " ";
       }
-
-      writeLine("'>");
    }
 
    protected abstract void writeEndTagForBranch(

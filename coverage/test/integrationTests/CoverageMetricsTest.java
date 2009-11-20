@@ -32,6 +32,12 @@ public final class CoverageMetricsTest
    private final TestedClass tested = new TestedClass();
 
    @Test
+   public void simpleIf()
+   {
+      new AnotherTestedClass().simpleIf(true);
+   }
+
+   @Test
    public void evalOnlySomeCombinations()
    {
       assertTrue(tested.eval1(true, true, 0));

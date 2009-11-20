@@ -51,23 +51,28 @@ public final class FullXmlWriter extends XmlWriter
 
    @Override
    protected void writeEndTagForBranch(
-      BranchCoverageData branchData, int jumpCount, int noJumpCount) throws IOException
+      BranchCoverageData segmentData, int jumpCount, int noJumpCount) throws IOException
    {
+      if (jumpCount == 0 && noJumpCount == 0) {
+         output.write("/>");
+         return;
+      }
+
       output.write(">");
       output.newLine();
 
       if (jumpCount > 0) {
-         writeChildElementsForCallPoints(branchData.getJumpCallPoints(), "  ");
+         writeChildElementsForCallPoints(segmentData.getJumpCallPoints(), "  ");
       }
 
       if (noJumpCount > 0) {
-         writeChildElementsForCallPoints(branchData.getNoJumpCallPoints(), "  ");
+         writeChildElementsForCallPoints(segmentData.getNoJumpCallPoints(), "  ");
       }
 
       output.write("      </branch>");
    }
 
-   private boolean writeChildElementsForCallPoints(List<CallPoint> callPoints, String indent)
+   private void writeChildElementsForCallPoints(List<CallPoint> callPoints, String indent)
       throws IOException
    {
       for (CallPoint callPoint : callPoints) {
@@ -83,7 +88,5 @@ public final class FullXmlWriter extends XmlWriter
          output.write("'/>");
          output.newLine();
       }
-
-      return true;
    }
 }
