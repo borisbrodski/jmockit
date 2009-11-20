@@ -27,21 +27,26 @@
    Any line of code containing a logical condition will be divided in at least two segments, each
    belonging to a separate branch.
    Each branch contains a <em>basic block</em>, which is a sequence of statements which always runs
-   from first to last statement (ignoring exceptions or errors that may get thrown along the way, of
-   course).
+   from first to last statement (ignoring exceptions or errors that may get thrown along the way).
    Each <em>executable line</em> of source code contains one or more basic blocks <em>segments</em>.
    A segment simply is the part of the basic block that is confined to a single line.
 </p>
 <p>
    JMockit Coverage shows a line of source code as fully covered only if all of its basic block
    segments were executed at least once during the test run.
-   Lets say that <code>ns >= 1</code> is the number of segments belonging to different basic blocks
-   in a given executable line.
+   Lets say that <code>ns >= 1</code> is the number of segments belonging to the basic blocks on a
+   given executable line.
    If <code>ne</code> is the number of segments in that line which were executed at least once
-   during a test run, then we can calculate the <em>coverage percentage</em> for that line as
-   <code>ne / ns * 100</code>.
-   From this percentage obtained for each executable line of code, a coverage percentage for the
-   source file can also be calculated, and likewise for the whole Java package.
+   during a test run (ie, they are <em>covered segments</em>), then we can calculate the
+   <em>coverage percentage</em> for the line as <code>ne / ns * 100</code>.
+</p>
+<p>
+   Similarly, the coverage percentage for a <em>source file</em> is calculated from the total number
+   of line segments and the total number of covered segments, considering all executable lines in
+   the file.
+   The percentage for a <em>package</em>, in turn, is calculated from the total and covered numbers
+   of segments in the whole set of source files belonging to the package.
+   Finally, the <em>total code coverage</em> percentage is computed by the same formula.
 </p>
 <p>
    An example coverage report is shown <a href="../coverage-sample/index.html">here</a>.

@@ -5,16 +5,22 @@
   <title>JMockit Coverage Report</title>
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
+  <script type='text/javascript'>
+    function showHide(callPoints) {
+      var list = callPoints.nextSibling.nextSibling.style;
+      list.display = list.display == 'none' ? 'block' : 'none';
+    }
+  </script>
 </head>
 <body>
-  <table cellpadding='0' cellspacing='0'>
-    <caption><code>.\samples\orderMngmntWebapp\src\orderMngr\service\domain\DomainUtil.java</code></caption>
+  <table cellpadding='0' cellspacing='1'>
+    <caption><code>.\src\orderMngr\service\domain\DomainUtil.java</code></caption>
     <tr>
-      <td class='lineNo'>1</td><td/>
+      <td class='lineNo'>1</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='keyword'>package</span> orderMngr.service.domain;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>2</td><td/>
+      <td class='lineNo'>2</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
@@ -22,25 +28,51 @@
       <td class='uncovered'><pre><span class='keyword'>public</span> <span class='keyword'>final</span> <span class='keyword'>class</span> DomainUtil</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>4</td><td/>
+      <td class='lineNo'>4</td><td>&nbsp;</td>
       <td class='nonexec'><pre>{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>5</td><td/>
+      <td class='lineNo'>5</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>static</span> <span class='keyword'>void</span> validateRequiredData(Object... dataItems) <span class='keyword'>throws</span> MissingRequiredData</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>6</td><td/>
+      <td class='lineNo'>6</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>7</td><td class='count'>13</td>
-      <td><pre class='covered'>      <span class='keyword'>for</span> (Object dataItem : dataItems) {</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>for</span> (Object dataItem : dataItems) {</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithMissingName:107</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>8</td><td class='count'>9</td>
-      <td><pre class='covered'>         <span class='keyword'>if</span> (dataItem == <span class='keyword'>null</span>) {</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>if</span> (dataItem == <span class='keyword'>null</span>) {</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithMissingName:107</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -48,52 +80,94 @@
       <td class='uncovered'><pre>            <span class='keyword'>throw</span> <span class='keyword'>new</span> MissingRequiredData();</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>10</td><td/>
+      <td class='lineNo'>10</td><td>&nbsp;</td>
       <td class='nonexec'><pre>         }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>11</td><td class='count'>9</td>
-      <td><pre class='covered'>         <span class='keyword'>else</span> <span class='keyword'>if</span> (dataItem instanceof String) {</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>else</span> <span class='keyword'>if</span> (dataItem instanceof String) {</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithMissingName:107</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>12</td><td class='count'>9</td>
-      <td><pre class='covered'>            String itemText = (String) dataItem;</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            String itemText = (String) dataItem;</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithMissingName:107</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>13</td><td/>
+      <td class='lineNo'>13</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
       <td class='lineNo'>14</td><td class='count'>9</td>
-      <td><pre class='covered'>            <span class='keyword'>if</span> (itemText.trim().length() == 0) {</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            <span class='keyword'>if</span> (itemText.trim().length() == 0) {</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithMissingName:107</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>15</td><td class='count'>1</td>
-      <td><pre class='covered'>               <span class='keyword'>throw</span> <span class='keyword'>new</span> MissingRequiredData();</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>               <span class='keyword'>throw</span> <span class='keyword'>new</span> MissingRequiredData();</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithMissingName:107</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>16</td><td/>
+      <td class='lineNo'>16</td><td>&nbsp;</td>
       <td class='nonexec'><pre>            }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>17</td><td/>
+      <td class='lineNo'>17</td><td>&nbsp;</td>
       <td class='nonexec'><pre>         }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>18</td><td/>
+      <td class='lineNo'>18</td><td>&nbsp;</td>
       <td class='nonexec'><pre>      }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>19</td><td class='count'>4</td>
-      <td><pre class='covered'>   }</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>20</td><td/>
+      <td class='lineNo'>20</td><td>&nbsp;</td>
       <td class='nonexec'><pre>}</pre></td>
     </tr>
   </table>

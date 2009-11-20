@@ -5,293 +5,360 @@
   <title>JMockit Coverage Report</title>
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
+  <script type='text/javascript'>
+    function showHide(callPoints) {
+      var list = callPoints.nextSibling.nextSibling.style;
+      list.display = list.display == 'none' ? 'block' : 'none';
+    }
+  </script>
 </head>
 <body>
-  <table cellpadding='0' cellspacing='0'>
-    <caption><code>.\samples\orderMngmntWebapp\src\orderMngr\domain\order\OrderRepository.java</code></caption>
+  <table cellpadding='0' cellspacing='1'>
+    <caption><code>.\src\orderMngr\domain\order\OrderRepository.java</code></caption>
     <tr>
-      <td class='lineNo'>1</td><td/>
+      <td class='lineNo'>1</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'>/*</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>2</td><td/>
-      <td class='nonexec'><pre><span class='comment'> * JMockit: a class library for unit testing with "mock methods"</span></pre></td>
+      <td class='lineNo'>2</td><td>&nbsp;</td>
+      <td class='nonexec'><pre><span class='comment'> * JMockit Samples</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>3</td><td/>
-      <td class='nonexec'><pre><span class='comment'> * Copyright (c) 2006 Rogerio Liesenfeld</span></pre></td>
+      <td class='lineNo'>3</td><td>&nbsp;</td>
+      <td class='nonexec'><pre><span class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>4</td><td/>
+      <td class='lineNo'>4</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * All rights reserved.</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>5</td><td/>
+      <td class='lineNo'>5</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>6</td><td/>
+      <td class='lineNo'>6</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>7</td><td/>
+      <td class='lineNo'>7</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * a copy of this software and associated documentation files (the</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>8</td><td/>
+      <td class='lineNo'>8</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * "Software"), to deal in the Software without restriction, including</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>9</td><td/>
+      <td class='lineNo'>9</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>10</td><td/>
+      <td class='lineNo'>10</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>11</td><td/>
+      <td class='lineNo'>11</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * permit persons to whom the Software is furnished to do so, subject to</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>12</td><td/>
+      <td class='lineNo'>12</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * the following conditions:</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>13</td><td/>
+      <td class='lineNo'>13</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>14</td><td/>
+      <td class='lineNo'>14</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * The above copyright notice and this permission notice shall be</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>15</td><td/>
+      <td class='lineNo'>15</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * included in all copies or substantial portions of the Software.</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>16</td><td/>
+      <td class='lineNo'>16</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>17</td><td/>
+      <td class='lineNo'>17</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>18</td><td/>
+      <td class='lineNo'>18</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>19</td><td/>
+      <td class='lineNo'>19</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>20</td><td/>
+      <td class='lineNo'>20</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>21</td><td/>
+      <td class='lineNo'>21</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>22</td><td/>
+      <td class='lineNo'>22</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>23</td><td/>
+      <td class='lineNo'>23</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>24</td><td/>
+      <td class='lineNo'>24</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='comment'> */</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>25</td><td/>
+      <td class='lineNo'>25</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='keyword'>package</span> orderMngr.domain.order;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>26</td><td/>
+      <td class='lineNo'>26</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>27</td><td/>
+      <td class='lineNo'>27</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='keyword'>import</span> java.math.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>28</td><td/>
+      <td class='lineNo'>28</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='keyword'>import</span> java.sql.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>29</td><td/>
+      <td class='lineNo'>29</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='keyword'>import</span> java.util.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>30</td><td/>
+      <td class='lineNo'>30</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>31</td><td/>
+      <td class='lineNo'>31</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='keyword'>import</span> orderMngr.service.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>32</td><td/>
+      <td class='lineNo'>32</td><td>&nbsp;</td>
       <td class='nonexec'><pre><span class='keyword'>import</span> <span class='keyword'>static</span> orderMngr.service.Database.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>33</td><td/>
+      <td class='lineNo'>33</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>34</td><td class='count'>15</td>
-      <td><pre class='covered'><span class='keyword'>public</span> <span class='keyword'>final</span> <span class='keyword'>class</span> OrderRepository</pre>
+      <td class='lineNo'>34</td><td class='count'>11</td>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'><span class='keyword'>public</span> <span class='keyword'>final</span> <span class='keyword'>class</span> OrderRepository</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#updateOrder:86</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#removeOrder:102</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#updateOrder:104</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#removeOrder:122</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>35</td><td/>
+      <td class='lineNo'>35</td><td>&nbsp;</td>
       <td class='nonexec'><pre>{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>36</td><td/>
+      <td class='lineNo'>36</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>void</span> create(Order order)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>37</td><td/>
+      <td class='lineNo'>37</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>38</td><td class='count'>2</td>
-      <td><pre class='covered'>      String sql = "insert into order (number, customer_id) values (?, ?)";</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      String sql = "insert into order (number, customer_id) values (?, ?)";</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>39</td><td class='count'>2</td>
-      <td><pre class='covered'>      <span class='keyword'>int</span> orderNo = order.getNumber();</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>int</span> orderNo = order.getNumber();</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>40</td><td class='count'>2</td>
-      <td><pre class='covered'>      Database.executeInsertUpdateOrDelete(sql, orderNo, order.getCustomerId());</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      Database.executeInsertUpdateOrDelete(sql, orderNo, order.getCustomerId());</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>41</td><td/>
+      <td class='lineNo'>41</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>42</td><td class='count'>6</td>
-      <td><pre class='covered'>      <span class='keyword'>for</span> (OrderItem item : order.getItems()) {</pre>
+      <td class='lineNo'>42</td><td class='count'>2</td>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>for</span> (OrderItem item : order.getItems()) {</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>43</td><td class='count'>2</td>
-      <td><pre class='covered'>         Database.executeInsertUpdateOrDelete(</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         Database.executeInsertUpdateOrDelete(</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>44</td><td class='count'>2</td>
-      <td><pre class='covered'>            "insert into order_item (order_no, product_id, product_desc, quantity, unit_price) " +</pre>
-      </td>
+      <td class='lineNo'>44</td><td>&nbsp;</td>
+      <td class='nonexec'><pre>            "insert into order_item (order_no, product_id, product_desc, quantity, unit_price) " +</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>45</td><td/>
+      <td class='lineNo'>45</td><td>&nbsp;</td>
       <td class='nonexec'><pre>            "values (?, ?, ?, ?, ?)",</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>46</td><td class='count'>2</td>
-      <td><pre class='covered'>            orderNo, item.getProductId(), item.getProductDescription(), item.getQuantity(),</pre>
-      </td>
+      <td class='lineNo'>46</td><td>&nbsp;</td>
+      <td class='nonexec'><pre>            orderNo, item.getProductId(), item.getProductDescription(), item.getQuantity(),</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>47</td><td class='count'>2</td>
-      <td><pre class='covered'>            item.getUnitPrice());</pre>
-      </td>
+      <td class='lineNo'>47</td><td>&nbsp;</td>
+      <td class='nonexec'><pre>            item.getUnitPrice());</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>48</td><td/>
+      <td class='lineNo'>48</td><td>&nbsp;</td>
       <td class='nonexec'><pre>      }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>49</td><td class='count'>2</td>
-      <td><pre class='covered'>   }</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>50</td><td/>
+      <td class='lineNo'>50</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>51</td><td/>
+      <td class='lineNo'>51</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>void</span> update(Order order)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>52</td><td/>
+      <td class='lineNo'>52</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>53</td><td class='count'>2</td>
-      <td><pre class='covered'>      String sql = "update order set customer_id=? where number=?";</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      String sql = "update order set customer_id=? where number=?";</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#updateOrder:86</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#updateOrder:104</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>54</td><td class='count'>2</td>
-      <td><pre class='covered'>      Database.executeInsertUpdateOrDelete(sql, order.getCustomerId(), order.getNumber());</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      Database.executeInsertUpdateOrDelete(sql, order.getCustomerId(), order.getNumber());</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#updateOrder:86</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#updateOrder:104</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>55</td><td class='count'>2</td>
-      <td><pre class='covered'>   }</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#updateOrder:86</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#updateOrder:104</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>56</td><td/>
+      <td class='lineNo'>56</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>57</td><td/>
+      <td class='lineNo'>57</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>void</span> remove(Order order)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>58</td><td/>
+      <td class='lineNo'>58</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>59</td><td class='count'>2</td>
-      <td><pre class='covered'>      String sql = "delete from order where number=?";</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      String sql = "delete from order where number=?";</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#removeOrder:102</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#removeOrder:122</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>60</td><td class='count'>2</td>
-      <td><pre class='covered'>      Database.executeInsertUpdateOrDelete(sql, order.getNumber());</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      Database.executeInsertUpdateOrDelete(sql, order.getNumber());</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#removeOrder:102</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#removeOrder:122</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>61</td><td class='count'>2</td>
-      <td><pre class='covered'>   }</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#removeOrder:102</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#removeOrder:122</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>62</td><td/>
+      <td class='lineNo'>62</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>63</td><td/>
+      <td class='lineNo'>63</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   <span class='keyword'>public</span> Order findByNumber(<span class='keyword'>int</span> orderNumber)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>64</td><td/>
+      <td class='lineNo'>64</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>65</td><td/>
+      <td class='lineNo'>65</td><td>&nbsp;</td>
       <td class='nonexec'><pre>      <span class='keyword'>try</span> {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>66</td><td class='count'>2</td>
-      <td><pre class='covered'>         <span class='keyword'>return</span> loadOrder(orderNumber);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>return</span> loadOrder(orderNumber);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>67</td><td/>
+      <td class='lineNo'>67</td><td>&nbsp;</td>
       <td class='nonexec'><pre>      }</pre></td>
     </tr>
     <tr>
@@ -303,69 +370,93 @@
       <td class='uncovered'><pre>         <span class='keyword'>throw</span> <span class='keyword'>new</span> RuntimeException(e);</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>70</td><td/>
+      <td class='lineNo'>70</td><td>&nbsp;</td>
       <td class='nonexec'><pre>      }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>71</td><td/>
+      <td class='lineNo'>71</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>72</td><td/>
+      <td class='lineNo'>72</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>73</td><td/>
+      <td class='lineNo'>73</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   <span class='keyword'>private</span> Order loadOrder(<span class='keyword'>int</span> orderNumber) <span class='keyword'>throws</span> SQLException</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>74</td><td/>
+      <td class='lineNo'>74</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>75</td><td class='count'>2</td>
-      <td><pre class='covered'>      ResultSet result = executeQuery("select customer_id from order where number=?", orderNumber);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      ResultSet result = executeQuery("select customer_id from order where number=?", orderNumber);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>76</td><td/>
+      <td class='lineNo'>76</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>77</td><td/>
+      <td class='lineNo'>77</td><td>&nbsp;</td>
       <td class='nonexec'><pre>      <span class='keyword'>try</span> {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>78</td><td class='count'>2</td>
-      <td><pre class='covered'>         <span class='keyword'>if</span> (result.next()) {</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>if</span> (result.next()) {</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>79</td><td class='count'>2</td>
-      <td><pre class='covered'>            String customerId = result.getString(1);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            String customerId = result.getString(1);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>80</td><td class='count'>2</td>
-      <td><pre class='covered'>            Order order = <span class='keyword'>new</span> Order(orderNumber, customerId);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            Order order = <span class='keyword'>new</span> Order(orderNumber, customerId);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>81</td><td class='count'>2</td>
-      <td><pre class='covered'>            loadOrderItems(order);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            loadOrderItems(order);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>82</td><td class='count'>4</td>
-      <td><pre class='covered'>            <span class='keyword'>return</span> order;</pre>
+      <td class='lineNo'>82</td><td class='count'>2</td>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            <span class='keyword'>return</span> order;</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>83</td><td/>
+      <td class='lineNo'>83</td><td>&nbsp;</td>
       <td class='nonexec'><pre>         }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>84</td><td/>
+      <td class='lineNo'>84</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
@@ -373,219 +464,314 @@
       <td class='uncovered'><pre>         <span class='keyword'>return</span> <span class='keyword'>null</span>;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>86</td><td/>
+      <td class='lineNo'>86</td><td>&nbsp;</td>
       <td class='nonexec'><pre>      }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>87</td><td class='count'>0</td>
-      <td class='uncovered'><pre>      <span class='keyword'>finally</span> {</pre></td>
+      <td class='lineNo'>87</td><td>&nbsp;</td>
+      <td class='nonexec'><pre>      <span class='keyword'>finally</span> {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>88</td><td class='count'>2</td>
-      <td><pre class='covered'>         closeStatement(result);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         closeStatement(result);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>89</td><td class='count'>0</td>
-      <td class='uncovered'><pre>      }</pre></td>
+      <td class='lineNo'>89</td><td>&nbsp;</td>
+      <td class='nonexec'><pre>      }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>90</td><td/>
+      <td class='lineNo'>90</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>91</td><td/>
+      <td class='lineNo'>91</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>92</td><td/>
+      <td class='lineNo'>92</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   <span class='keyword'>private</span> <span class='keyword'>void</span> loadOrderItems(Order order) <span class='keyword'>throws</span> SQLException</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>93</td><td/>
+      <td class='lineNo'>93</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>94</td><td class='count'>2</td>
-      <td><pre class='covered'>      ResultSet result =</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      ResultSet result =</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>95</td><td class='count'>2</td>
-      <td><pre class='covered'>         executeQuery(</pre>
-      </td>
+      <td class='lineNo'>95</td><td>&nbsp;</td>
+      <td class='nonexec'><pre>         executeQuery(</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>96</td><td class='count'>2</td>
-      <td><pre class='covered'>            "select product_id, product_desc, quantity, unit_price from order_item " +</pre>
-      </td>
+      <td class='lineNo'>96</td><td>&nbsp;</td>
+      <td class='nonexec'><pre>            "select product_id, product_desc, quantity, unit_price from order_item " +</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>97</td><td class='count'>2</td>
-      <td><pre class='covered'>            "where order_number=?", order.getNumber());</pre>
-      </td>
+      <td class='lineNo'>97</td><td>&nbsp;</td>
+      <td class='nonexec'><pre>            "where order_number=?", order.getNumber());</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>98</td><td/>
+      <td class='lineNo'>98</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>99</td><td/>
+      <td class='lineNo'>99</td><td>&nbsp;</td>
       <td class='nonexec'><pre>      <span class='keyword'>try</span> {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>100</td><td class='count'>2</td>
-      <td><pre class='covered'>         Collection&lt;OrderItem> items = order.getItems();</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         Collection&lt;OrderItem> items = order.getItems();</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>101</td><td/>
+      <td class='lineNo'>101</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>102</td><td class='count'>6</td>
-      <td><pre class='covered'>         <span class='keyword'>while</span> (result.next()) {</pre>
+      <td class='lineNo'>102</td><td class='count'>4</td>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>while</span> (result.next()) {</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>103</td><td class='count'>2</td>
-      <td><pre class='covered'>            String productId = result.getString(1);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            String productId = result.getString(1);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>104</td><td class='count'>2</td>
-      <td><pre class='covered'>            String productDescription = result.getString(2);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            String productDescription = result.getString(2);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>105</td><td class='count'>2</td>
-      <td><pre class='covered'>            <span class='keyword'>int</span> quantity = result.getInt(3);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            <span class='keyword'>int</span> quantity = result.getInt(3);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>106</td><td class='count'>2</td>
-      <td><pre class='covered'>            BigDecimal unitPrice = result.getBigDecimal(4);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            BigDecimal unitPrice = result.getBigDecimal(4);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>107</td><td/>
+      <td class='lineNo'>107</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
       <td class='lineNo'>108</td><td class='count'>2</td>
-      <td><pre class='covered'>            OrderItem item =</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            OrderItem item =</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>109</td><td class='count'>2</td>
-      <td><pre class='covered'>               <span class='keyword'>new</span> OrderItem(order, productId, productDescription, quantity, unitPrice);</pre>
-      </td>
+      <td class='lineNo'>109</td><td>&nbsp;</td>
+      <td class='nonexec'><pre>               <span class='keyword'>new</span> OrderItem(order, productId, productDescription, quantity, unitPrice);</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>110</td><td class='count'>2</td>
-      <td><pre class='covered'>            items.add(item);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            items.add(item);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>111</td><td/>
-      <td class='nonexec'><pre>         }</pre></td>
+      <td class='lineNo'>111</td><td class='count'>2</td>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
+      </td>
     </tr>
     <tr>
-      <td class='lineNo'>112</td><td/>
+      <td class='lineNo'>112</td><td>&nbsp;</td>
       <td class='nonexec'><pre>      }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>113</td><td class='count'>0</td>
-      <td class='uncovered'><pre>      <span class='keyword'>finally</span> {</pre></td>
+      <td class='lineNo'>113</td><td>&nbsp;</td>
+      <td class='nonexec'><pre>      <span class='keyword'>finally</span> {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>114</td><td class='count'>2</td>
-      <td><pre class='covered'>         closeStatement(result);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         closeStatement(result);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>115</td><td class='count'>0</td>
-      <td class='uncovered'><pre>      }</pre></td>
+      <td class='lineNo'>115</td><td class='count'>2</td>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
+      </td>
     </tr>
     <tr>
       <td class='lineNo'>116</td><td class='count'>2</td>
-      <td><pre class='covered'>   }</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>117</td><td/>
+      <td class='lineNo'>117</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>118</td><td/>
+      <td class='lineNo'>118</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   <span class='keyword'>public</span> List&lt;Order> findByCustomer(String customerId)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>119</td><td/>
+      <td class='lineNo'>119</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>120</td><td class='count'>2</td>
-      <td><pre class='covered'>      ResultSet result = executeQuery("select number from order where customer_id=?", customerId);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      ResultSet result = executeQuery("select number from order where customer_id=?", customerId);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>121</td><td/>
+      <td class='lineNo'>121</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>122</td><td/>
+      <td class='lineNo'>122</td><td>&nbsp;</td>
       <td class='nonexec'><pre>      <span class='keyword'>try</span> {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>123</td><td class='count'>2</td>
-      <td><pre class='covered'>         List&lt;Order> orders = <span class='keyword'>new</span> ArrayList&lt;Order>();</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         List&lt;Order> orders = <span class='keyword'>new</span> ArrayList&lt;Order>();</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>124</td><td/>
+      <td class='lineNo'>124</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>125</td><td class='count'>6</td>
-      <td><pre class='covered'>         <span class='keyword'>while</span> (result.next()) {</pre>
+      <td class='lineNo'>125</td><td class='count'>4</td>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>while</span> (result.next()) {</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>126</td><td class='count'>2</td>
-      <td><pre class='covered'>            <span class='keyword'>int</span> orderNumber = result.getInt(1);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            <span class='keyword'>int</span> orderNumber = result.getInt(1);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>127</td><td class='count'>2</td>
-      <td><pre class='covered'>            Order order = <span class='keyword'>new</span> Order(orderNumber, customerId);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            Order order = <span class='keyword'>new</span> Order(orderNumber, customerId);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>128</td><td class='count'>2</td>
-      <td><pre class='covered'>            loadOrderItems(order);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            loadOrderItems(order);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>129</td><td class='count'>2</td>
-      <td><pre class='covered'>            orders.add(order);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>            orders.add(order);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>130</td><td/>
-      <td class='nonexec'><pre>         }</pre></td>
+      <td class='lineNo'>130</td><td class='count'>2</td>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+        </ol>
+      </td>
     </tr>
     <tr>
-      <td class='lineNo'>131</td><td/>
+      <td class='lineNo'>131</td><td>&nbsp;</td>
       <td/>
     </tr>
     <tr>
-      <td class='lineNo'>132</td><td class='count'>4</td>
-      <td><pre class='covered'>         <span class='keyword'>return</span> orders;</pre>
+      <td class='lineNo'>132</td><td class='count'>2</td>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>return</span> orders;</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>133</td><td/>
+      <td class='lineNo'>133</td><td>&nbsp;</td>
       <td class='nonexec'><pre>      }</pre></td>
     </tr>
     <tr>
@@ -597,28 +783,32 @@
       <td class='uncovered'><pre>         <span class='keyword'>throw</span> <span class='keyword'>new</span> RuntimeException(e);</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>136</td><td/>
+      <td class='lineNo'>136</td><td>&nbsp;</td>
       <td class='nonexec'><pre>      }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>137</td><td class='count'>0</td>
-      <td class='uncovered'><pre>      <span class='keyword'>finally</span> {</pre></td>
+      <td class='lineNo'>137</td><td>&nbsp;</td>
+      <td class='nonexec'><pre>      <span class='keyword'>finally</span> {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>138</td><td class='count'>2</td>
-      <td><pre class='covered'>         closeStatement(result);</pre>
+      <td><pre class='covered withCallPoints' onclick='showHide(this)'>         closeStatement(result);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>139</td><td class='count'>0</td>
-      <td class='uncovered'><pre>      }</pre></td>
+      <td class='lineNo'>139</td><td>&nbsp;</td>
+      <td class='nonexec'><pre>      }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>140</td><td/>
+      <td class='lineNo'>140</td><td>&nbsp;</td>
       <td class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>141</td><td/>
+      <td class='lineNo'>141</td><td>&nbsp;</td>
       <td class='nonexec'><pre>}</pre></td>
     </tr>
   </table>
