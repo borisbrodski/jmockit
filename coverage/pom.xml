@@ -44,7 +44,7 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId><artifactId>maven-jar-plugin</artifactId>
             <configuration>
-               <excludes><exclude>**/integrationTests/</exclude></excludes>
+               <excludes><exclude>integrationTests/</exclude></excludes>
             </configuration>
          </plugin>
       </plugins>
