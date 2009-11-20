@@ -227,12 +227,11 @@
 <pre><code>import mockit.*;
 ... other imports ...
 
-@RunWith(JMockit.class) // for integration with JUnit 4.5+, if it's the case
 public class SomeTest
 {
    // Zero or more "mock fields" common to all test methods in the class:
-   @Mocked private Collaborator mockCollaborator;
-   @NonStrict private AnotherDependency anotherDependency;
+   @Mocked Collaborator mockCollaborator;
+   @NonStrict AnotherDependency anotherDependency;
    ...
 
    @Test
@@ -381,10 +380,9 @@ public class SomeTest
    String doSomething(boolean b);
 }
 
-@RunWith(JMockit.class)
 public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runnable></strong>
 {
-   @Mocked private <strong>MultiMock multiMock</strong>;
+   @Mocked <strong>MultiMock multiMock</strong>;
 
    @Test
    public void mockFieldWithTwoInterfaces()
@@ -1352,11 +1350,10 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    names.
    The following example test shows several ways to use partial mocking.
 </p>
-<pre><code>@RunWith(JMockit.class)
-public class MyTestClass
+<pre><code>public class MyTestClass
 {
-   @Mocked(<strong>"nanoTime"</strong>) private final System system = null;
-   @Mocked(<strong>"print"</strong>) private final JComponent component = new JButton();
+   @Mocked(<strong>"nanoTime"</strong>) final System system = null;
+   @Mocked(<strong>"print"</strong>) final JComponent component = new JButton();
 
    @Test
    public void staticPartialMocking(@Mocked(<strong>methods = "()", inverse = true</strong>) final Graphics graphics)
@@ -1651,11 +1648,10 @@ public final class TestedUnit
    (The complete source code for this example can be found under "mockit/samples/LoginService", in
    the full distribution.)
 </p>
-<pre><code>@RunWith(JMockit.class)
-public final class LoginServiceTest
+<pre><code>public final class LoginServiceTest
 {
-   <strong>@Mocked private UserAccount account;</strong>
-   private LoginService service;
+   <strong>@Mocked UserAccount account;</strong>
+   LoginService service;
 
    @Before
    public void init()

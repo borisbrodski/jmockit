@@ -989,8 +989,7 @@
    For example, if we wanted to mock the <code>LoginContext</code> class with a mock-up class for a
    bunch of related tests, we would have the following methods in the test class:
 </p>
-<pre><code>@RunWith(JMockit.class)
-public class MyTestClass
+<pre><code>public class MyTestClass
 {
    @Before
    public void setUpSharedMocks()
@@ -1085,8 +1084,7 @@ public class MyTestClass
 <p>
    Some of the tests for the class above are as follows.
 </p>
-<pre><code>@RunWith(JMockit.class)
-public final class TextFileUsingMockUpsTest
+<pre><code>public final class TextFileUsingMockUpsTest
 {
    // A reusable mock-up class to be directly instantiated in specific tests.
    static final class <strong>MockTextReaderConstructor</strong> extends MockUp&lt;<strong>DefaultTextReader</strong>>
