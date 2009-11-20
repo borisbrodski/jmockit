@@ -22,22 +22,24 @@
    tests first, such as in the practice of TDD (Test Driven Development).
 </p>
 <p>
-   There are several ways in which specific code coverage metrics can be defined.
-   JMockit Coverage currently supports the two most well known metrics: <em>statement (or line)
-   coverage</em>, and <em>branch coverage</em>.
-   A <em>branch</em> exists wherever the program makes a decision between two possible execution
-   paths to follow. Any line of code containing a logical condition will be divided in at least two
-   segments, each belonging to a separate branch.
+   A <em>branching point</em> exists wherever the program makes a decision between two possible
+   execution paths to follow.
+   Any line of code containing a logical condition will be divided in at least two segments, each
+   belonging to a separate branch.
+   Each branch contains a <em>basic block</em>, which is a sequence of statements which always runs
+   from first to last statement (ignoring exceptions or errors that may get thrown along the way, of
+   course).
+   Each <em>executable line</em> of source code contains one or more basic blocks <em>segments</em>.
+   A segment simply is the part of the basic block that is confined to a single line.
 </p>
 <p>
-   JMockit Coverage combines statement and branch coverage, showing a line of source code as fully
-   covered only if all statements contained in all branch segments in it were executed at least
-   once.
-   Lets say that <code>ns >= 1</code> is the number of segments belonging to different branches in a
-   given line of source code which contains at least one executable statement.
-   If <code>ne</code> is the number of branch segments in that line which were executed at least
-   once during a test suite run, then we can calculate the <em>coverage percentage</em> for that
-   line as <code>(ne / ns) * 100</code>.
+   JMockit Coverage shows a line of source code as fully covered only if all of its basic block
+   segments were executed at least once during the test run.
+   Lets say that <code>ns >= 1</code> is the number of segments belonging to different basic blocks
+   in a given executable line.
+   If <code>ne</code> is the number of segments in that line which were executed at least once
+   during a test run, then we can calculate the <em>coverage percentage</em> for that line as
+   <code>ne / ns * 100</code>.
    From this percentage obtained for each executable line of code, a coverage percentage for the
    source file can also be calculated, and likewise for the whole Java package.
 </p>
@@ -45,10 +47,12 @@
    An example coverage report is shown <a href="../coverage-sample/index.html">here</a>.
 </p>
 <p>
-   There are two ways to control whether code coverage metrics are gathered or not for a given test
-   run, and which kind of output should be generated at the end: through the classpath, and through
-   JVM parameters.
-   In both cases, <code>jmockit.jar</code> (or a versioned jar obtained from the
+   There are three ways to control whether code coverage metrics are gathered or not for a given
+   test run, and which kind of output should be generated at the end: through the classpath, through
+   system properties, and through JVM parameters.
+   The three ways can be combined and used at the same time for a given test run, so there is a lot
+   of flexibility to configure what JMockit Coverage will do.
+   In any case, <code>jmockit.jar</code> (or a versioned jar obtained from the
    <a href="http://download.java.net/maven/2/mockit/jmockit/">Maven repository</a>) does
    <em>not</em> need to be present in the classpath, unless of course the suite contains tests which
    use the JMockit API.
