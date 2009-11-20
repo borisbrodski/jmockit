@@ -24,13 +24,12 @@
  */
 package mockit.integration.junit4;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
 
-@RunWith(JMockit.class)
+import static org.junit.Assert.*;
+
 @UsingMocksAndStubs(ThirdJUnit4DecoratorTest.MockClass4.class)
 public final class ThirdJUnit4DecoratorTest extends BaseJUnit4DecoratorTest
 {
