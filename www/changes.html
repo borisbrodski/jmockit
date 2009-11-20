@@ -51,6 +51,10 @@
             (When not specified, all classes from production code which are loaded during the test
             run and are not inside jar files will be considered.)
          </li>
+         <li>
+            The total coverage percentage is now calculated and shown in the XHTML report
+            (<a href="http://code.google.com/p/jmockit/issues/detail?id=7">issue 7</a>).
+         </li>
       </ul>
    </li>
    <li>
@@ -131,7 +135,8 @@
    <li>
       <strong>New feature in JMockit Coverage</strong>: the ability to merge coverage data from
       consecutive test runs was implemented. This allows the generation of a single aggregate report
-      from multiple test runs (for the same test suite or not). See issue 3.
+      from multiple test runs (for the same test suite or not).
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=3">issue 3</a>.
    </li>
    <li>
       Fixed an issue in the mocking of certain JRE classes (notably <code>java.io.File</code>) that
