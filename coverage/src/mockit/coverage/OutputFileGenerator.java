@@ -31,25 +31,49 @@ import mockit.coverage.output.*;
 
 final class OutputFileGenerator extends Thread
 {
+   private static final String COVERAGE_PREFIX = "jmockit-coverage-";
+
    private final String outputFormat;
    private final String outputDir;
    private final String[] sourceDirs;
    private String[] classPath;
 
-   OutputFileGenerator(String outputFormat, String outputDir, String[] sourceDirs)
+   OutputFileGenerator(String outputFormat, String outputDir, String[] srcDirs)
    {
-      this.outputDir =
-         outputDir.length() > 0 ? outputDir : System.getProperty("jmockit-coverage-outputDir", "");
+      this.outputFormat = getOutputFormat(outputFormat);
+      this.outputDir = outputDir.length() > 0 ? outputDir : getCoverageProperty("outputDir");
 
-      this.sourceDirs = sourceDirs;
+      if (srcDirs.length > 0) {
+         sourceDirs = srcDirs;
+      }
+      else {
+         String commaSeparatedDirs = getCoverageProperty("srcDirs");
+         sourceDirs = commaSeparatedDirs.length() == 0 ? srcDirs : commaSeparatedDirs.split(",");
+      }
+   }
 
-      String format = outputFormat.length() > 0 ? outputFormat : outputFormatFromClasspath();
+   private String getCoverageProperty(String suffix)
+   {
+      return System.getProperty(COVERAGE_PREFIX + suffix, "");
+   }
+
+   private String getOutputFormat(String specifiedFormat)
+   {
+      if (specifiedFormat.length() > 0) {
+         return specifiedFormat;
+      }
+
+      String format = getCoverageProperty("output");
+
+      if (format.length() == 0) {
+         format = outputFormatFromClasspath();
+      }
 
       if (format.length() == 0) {
          format = "html-nocp";
       }
 
-      this.outputFormat = format;
+      return format;
    }
 
    private String outputFormatFromClasspath()
@@ -57,34 +81,36 @@ final class OutputFileGenerator extends Thread
       classPath = System.getProperty("java.class.path").split(File.pathSeparator);
       String result = "";
 
-      if (availableInTheClasspath("xmlbasic")) {
+      if (isAvailableInTheClasspath("xmlbasic")) {
          result = "xml-nocp";
       }
-      else if (availableInTheClasspath("xmlfull")) {
+      else if (isAvailableInTheClasspath("xmlfull")) {
          result = "xml";
       }
 
-      if (availableInTheClasspath("htmlbasic")) {
+      if (isAvailableInTheClasspath("htmlbasic")) {
          result += " html-nocp";
       }
-      else if (availableInTheClasspath("htmlfull")) {
+      else if (isAvailableInTheClasspath("htmlfull")) {
          result += " html";
       }
 
-      if (availableInTheClasspath("merge")) {
+      if (isAvailableInTheClasspath("merge")) {
          result += " merge";
       }
 
       return result;
    }
 
-   private boolean availableInTheClasspath(String jarFileNameSuffix)
+   private boolean isAvailableInTheClasspath(String jarFileNameSuffix)
    {
-      String desiredJarFile = "jmockit-coverage-" + jarFileNameSuffix + ".jar";
-
       for (String cpEntry : classPath) {
-         if (cpEntry.endsWith(desiredJarFile)) {
-            return true;
+         if (cpEntry.endsWith(".jar")) {
+            int p = cpEntry.indexOf(COVERAGE_PREFIX);
+
+            if (p >= 0 && cpEntry.substring(p).contains(jarFileNameSuffix)) {
+               return true;
+            }
          }
       }
 

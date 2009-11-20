@@ -116,7 +116,7 @@
       <img align="right" src="blank.gif" width="22">
       <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#output"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#jvm"><img align="right" src="go-down.png" title="Next section"></a>
+      <a href="#systemProperties"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
@@ -171,18 +171,62 @@
    <code>jmockit-coverage.jar</code> is, then the "htmlbasic" report will be generated.
 </p>
 
-<h3 id="jvm">
-   Controlling coverage through JVM parameters
+<h3 id="systemProperties">
+   Controlling coverage through system properties
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#output"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#jars"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#jvmParameters"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
+<p>
+   To have control over all aspects of the code coverage tool, set one or more
+   <em>system properties</em> for the JVM instance that will run the test suite.
+   Note that you should be able to do this inside an Ant target, a Maven <code>surefire</code>
+   plugin configuration, or a test run configuration for your Java IDE of choice, using either
+   JUnit or TestNG.
+</p>
+<p>
+   The available system properties are:
+</p>
+<ol>
+   <li>
+      <code>jmockit-coverage-<strong>output</strong></code>: one or more comma-separated values
+      between <code>xml</code>, <code>xml-nocp</code>, <code>html</code>, <code>html-nocp</code>,
+      and <code>merge</code>.
+   </li>
+   <li>
+      <code>jmockit-coverage-<strong>outputDir</strong></code>: absolute or relative path to the
+      output directory, to be used for writing any "coverage.xml", "coverage.ser", and "index.html"
+      files (plus the remaining ".html" files of the XHTML report, in automatically created
+      sub-directories).
+   </li>
+   <li>
+      <code>jmockit-coverage-<strong>srcDirs</strong></code>: comma-separated list of Java source 
+      directories to be searched when generating an XHTML report.
+      Each directory is specified by an absolute or relative path.
+   </li>
+   <li>
+      <code>jmockit-coverage-<strong>classes</strong></code>:
+      a <code>java.util.regex</code>-conformable regular expression which will be used to select
+      the classes from production code which are considered for coverage.
+   </li>
+</ol>
+
+<h3 id="jvmParameters">
+   Controlling coverage through JVM parameters
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#output"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#systemProperties"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#merging"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
-   To have control over all aspects of the code coverage tool, use a JVM command line with
+   Another way to have full control over the code coverage tool is to use a JVM command line with
    <code>-javaagent:jmockit.jar=coverage=&lt;Coverage arguments></code> when running the test suite.
    Note that you should be able to do this inside an Ant target or in a test run configuration for
    your Java IDE of choice, using either JUnit or TestNG.
@@ -238,7 +282,7 @@
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#output"><img align="right" src="go-top.png" title="First section"></a>
       <img align="right" src="blank.gif" width="22">
-      <a href="#jvm"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#jvmParameters"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#maven"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>

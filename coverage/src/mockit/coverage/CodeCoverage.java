@@ -54,7 +54,13 @@ public final class CodeCoverage implements ClassFileTransformer
 
    private Pattern getClassNameRegex(String[] args)
    {
-      return args.length == 0 || args[0].length() == 0 ? null : Pattern.compile(args[0]);
+      String regex = args.length == 0 ? "" : args[0];
+
+      if (regex.length() == 0) {
+         regex = System.getProperty("jmockit-coverage-classes", "");
+      }
+
+      return regex.length() == 0 ? null : Pattern.compile(regex);
    }
 
    private void setUpOutputFileGenerators(String[] args)

@@ -25,13 +25,31 @@
             though.
          </li>
          <li>
+            The desired output formats can now be specified through the
+            <code>jmockit-coverage-output</code> system property.
+            (When not specified, the basic XHTML report will be generated.)
+            Note that the property can be defined by a
+            "-Djmockit-coverage-outputFormat=fmt1,fmt2,..." JVM command line argument, or by a
+            <code>&lt;property></code> element in a Maven <code>pom.xml</code> or Ant
+            <code>build.xml</code> file.
+         </li>
+         <li>
             The output directory for "coverage.xml" and "coverage.ser" files, as well as for the 
             files of an XHTML report, can now be specified through the
             <code>jmockit-coverage-outputDir</code> system property.
             (When not specified, the current working dir is used.)
-            Note that the property can be defined by a
-            "-Djmockit-coverage-outputDir=myOutDir" JVM command line argument, or by a
-            <code>&lt;property></code> element in a Maven <code>pom.xml</code> file.
+         </li>
+         <li>
+            The list of directories containing Java source files, needed for the XHTML report, can
+            now be specified through the <code>jmockit-coverage-srcDirs</code> system property.
+            (When not specified, all "src" directories under the current working dir are searched.)
+         </li>
+         <li>
+            A regular expression for selecting the Java classes which should be considered for
+            coverage can now be specified through the <code>jmockit-coverage-classes</code> system
+            property.
+            (When not specified, all classes from production code which are loaded during the test
+            run and are not inside jar files will be considered.)
          </li>
       </ul>
    </li>
