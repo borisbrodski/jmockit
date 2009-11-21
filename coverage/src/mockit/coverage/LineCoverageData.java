@@ -27,6 +27,8 @@ package mockit.coverage;
 import java.io.*;
 import java.util.*;
 
+import org.objectweb.asm2.*;
+
 /**
  * Coverage data gathered for a single executable line of code in a source file.
  */
@@ -42,13 +44,13 @@ public final class LineCoverageData implements Serializable
    private int executionCount;
    private List<CallPoint> callPoints;
 
-   int addSegment()
+   int addSegment(Label targetLabel)
    {
       if (segments == null) {
          segments = new ArrayList<BranchCoverageData>(4);
       }
 
-      BranchCoverageData data = new BranchCoverageData();
+      BranchCoverageData data = new BranchCoverageData(targetLabel);
       segments.add(data);
 
       return segments.size() - 1;

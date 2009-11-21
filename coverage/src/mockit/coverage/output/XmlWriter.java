@@ -29,6 +29,7 @@ import java.util.*;
 import java.util.Map.*;
 
 import mockit.coverage.*;
+import mockit.coverage.paths.*;
 
 /**
  * Produces an xml file with all the coverage data gathered during a test run. If the file already
@@ -82,16 +83,8 @@ public abstract class XmlWriter
          if (!firstFile) {
             output.newLine();
          }
-         
-         output.write("  <file path='");
-         filePath = lineCountEntry.getKey();
-         output.write(filePath);
-         writeLine("'>");
 
-         FileCoverageData fileCoverageData = lineCountEntry.getValue();
-         writeCoverageDataForSourceFile(fileCoverageData);
-
-         writeLine("  </file>");
+         writeFileElement(lineCountEntry);
          firstFile = false;
       }
 
@@ -102,6 +95,20 @@ public abstract class XmlWriter
    {
       output.write(line);
       output.newLine();
+   }
+
+   private void writeFileElement(Entry<String, FileCoverageData> lineCountEntry) throws IOException
+   {
+      output.write("  <file path='");
+      filePath = lineCountEntry.getKey();
+      output.write(filePath);
+      writeLine("'>");
+
+      FileCoverageData fileCoverageData = lineCountEntry.getValue();
+      writeCoverageDataForSourceFile(fileCoverageData);
+      writeBranchingPaths(fileCoverageData);
+
+      writeLine("  </file>");
    }
 
    private void writeCoverageDataForSourceFile(FileCoverageData fileData) throws IOException
@@ -190,4 +197,27 @@ public abstract class XmlWriter
 
    protected abstract void writeEndTagForSegment(
       BranchCoverageData data, int jumpCount, int noJumpCount) throws IOException;
+
+   private void writeBranchingPaths(FileCoverageData fileData) throws IOException
+   {
+      output.newLine();
+
+      PathCoverage pathCoverage = new PathCoverage(fileData);
+
+      for (MethodCoverageData methodData : fileData.getMethods()) {
+         output.write("    <paths method='");
+         output.write(methodData.methodNameAndDesc);
+         writeLine("'>");
+
+         List<Path> paths = pathCoverage.buildPaths(methodData);
+
+         for (Path path : paths) {
+            output.write("      <path>");
+            output.write(path.getListOfSourceLocations());
+            writeLine("</path>");
+         }
+
+         writeLine("    </paths>");
+      }
+   }
 }

@@ -36,9 +36,15 @@ public final class FileCoverageData implements Serializable
 
    private final SortedMap<Integer, LineCoverageData> lineToLineData =
       new TreeMap<Integer, LineCoverageData>();
+   final transient List<MethodCoverageData> methods = new ArrayList<MethodCoverageData>();
    long lastModified;
    private int totalSegments;
    private int coveredSegments;
+
+   public List<MethodCoverageData> getMethods()
+   {
+      return methods;
+   }
 
    LineCoverageData addLine(int line)
    {

@@ -73,46 +73,31 @@ final class CoverageModifier extends ClassWriter
          return mv;
       }
 
-      return new MethodModifier(mv, "<clinit>".equals(name));
+      return "<clinit>".equals(name) ?
+         new StaticBlockModifier(mv) : new MethodModifier(mv, name + desc);
    }
 
-   @SuppressWarnings({"ClassWithTooManyFields"})
-   private final class MethodModifier extends MethodAdapter
+   private class BaseMethodModifier extends MethodAdapter
    {
-      private final MethodWriter mw;
-      private boolean isTestMethod;
-      private int currentLine;
-      private LineCoverageData lineData;
-      private final List<Label> startLabelsForVisitedLines = new ArrayList<Label>();
-      private final List<Label> jumpTargetsForCurrentLine = new ArrayList<Label>();
-      private final Map<Integer, Boolean> pendingBranches = new HashMap<Integer, Boolean>();
-      private boolean assertFoundInCurrentLine;
-      private final boolean clinit;
-      private boolean nextLabelAfterConditionalJump;
-      private boolean potentialAssertFalseFound;
+      final MethodWriter mw;
+      int currentLine;
+      LineCoverageData lineData;
+      final List<Label> startLabelsForVisitedLines = new ArrayList<Label>();
+      final List<Label> jumpTargetsForCurrentLine = new ArrayList<Label>();
+      final Map<Integer, Boolean> pendingBranches = new HashMap<Integer, Boolean>();
+      boolean assertFoundInCurrentLine;
+      boolean nextLabelAfterConditionalJump;
+      boolean potentialAssertFalseFound;
 
-      private MethodModifier(MethodVisitor mv, boolean clinit)
+      BaseMethodModifier(MethodVisitor mv)
       {
          super(mv);
          mw = (MethodWriter) mv;
-         this.clinit = clinit;
-      }
-
-      @Override
-      public AnnotationVisitor visitAnnotation(String desc, boolean visible)
-      {
-         isTestMethod = desc.startsWith("Lorg/junit/") || desc.startsWith("Lorg/testng/");
-         return mw.visitAnnotation(desc, visible);
       }
 
       @Override
       public void visitLineNumber(int line, Label start)
       {
-         if (isTestMethod) {
-            mw.visitLineNumber(line, start);
-            return;
-         }
-
          if (!pendingBranches.isEmpty()) {
             pendingBranches.clear();
          }
@@ -149,13 +134,15 @@ final class CoverageModifier extends ClassWriter
       @Override
       public void visitJumpInsn(int opcode, Label label)
       {
-         if (isTestMethod || startLabelsForVisitedLines.contains(label)) {
-            assertFoundInCurrentLine = false;
-            mw.visitJumpInsn(opcode, label);
+         if (startLabelsForVisitedLines.contains(label)) {
+            visitJumpInsnWithoutModifications(opcode, label);
             return;
          }
 
          jumpTargetsForCurrentLine.add(label);
+
+         int branchIndex = lineData.addSegment(mw.currentBlock);
+         pendingBranches.put(branchIndex, false);
 
          mw.visitJumpInsn(opcode, label);
 
@@ -165,15 +152,18 @@ final class CoverageModifier extends ClassWriter
 
          generateCallToRegisterBranchTargetExecutionIfPending();
 
-         int branchIndex = lineData.addSegment();
-         pendingBranches.put(branchIndex, false);
-
          if (assertFoundInCurrentLine) {
             BranchCoverageData branchData = lineData.getSegmentData(branchIndex);
             branchData.markAsUnreachable();
          }
 
          nextLabelAfterConditionalJump = opcode != GOTO && opcode != JSR;
+      }
+
+      final void visitJumpInsnWithoutModifications(int opcode, Label label)
+      {
+         assertFoundInCurrentLine = false;
+         mw.visitJumpInsn(opcode, label);
       }
 
       private void generateCallToRegisterBranchTargetExecutionIfPending()
@@ -183,7 +173,7 @@ final class CoverageModifier extends ClassWriter
          if (pendingBranches.isEmpty()) {
             return;
          }
-         
+
          for (Integer branchIndex : pendingBranches.keySet()) {
             BranchCoverageData branchData = lineData.getSegmentData(branchIndex);
             Boolean firstInsnAfterJump = pendingBranches.get(branchIndex);
@@ -233,28 +223,32 @@ final class CoverageModifier extends ClassWriter
       }
 
       @Override
-      public void visitIntInsn(int opcode, int operand)
+      public final void visitIntInsn(int opcode, int operand)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitIntInsn(opcode, operand);
       }
 
       @Override
-      public void visitVarInsn(int opcode, int var)
+      public final void visitVarInsn(int opcode, int var)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitVarInsn(opcode, var);
+
+         if (opcode == RET) {
+            System.out.println("RET instruction found!");
+         }
       }
 
       @Override
-      public void visitTypeInsn(int opcode, String desc)
+      public final void visitTypeInsn(int opcode, String desc)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitTypeInsn(opcode, desc);
       }
 
       @Override
-      public void visitFieldInsn(int opcode, String owner, String name, String desc)
+      public final void visitFieldInsn(int opcode, String owner, String name, String desc)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitFieldInsn(opcode, owner, name, desc);
@@ -266,51 +260,126 @@ final class CoverageModifier extends ClassWriter
       @Override
       public void visitMethodInsn(int opcode, String owner, String name, String desc)
       {
-         // This is to ignore bytecode belonging to a static initialization block inserted in a
-         // regular line of code by the Java compiler when the class contains at least one "assert"
-         // statement. Otherwise, that line of code would always appear as partially covered when
-         // running with assertions enabled.
-         assertFoundInCurrentLine =
-            clinit && opcode == INVOKEVIRTUAL &&
-            "java/lang/Class".equals(owner) && "desiredAssertionStatus".equals(name);
-
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitMethodInsn(opcode, owner, name, desc);
       }
 
       @Override
-      public void visitLdcInsn(Object cst)
+      public final void visitLdcInsn(Object cst)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitLdcInsn(cst);
       }
 
       @Override
-      public void visitIincInsn(int var, int increment)
+      public final void visitIincInsn(int var, int increment)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitIincInsn(var, increment);
       }
 
       @Override
-      public void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels)
+      public final void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitTableSwitchInsn(min, max, dflt, labels);
       }
 
       @Override
-      public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels)
+      public final void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitLookupSwitchInsn(dflt, keys, labels);
       }
 
       @Override
-      public void visitMultiANewArrayInsn(String desc, int dims)
+      public final void visitMultiANewArrayInsn(String desc, int dims)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitMultiANewArrayInsn(desc, dims);
+      }
+   }
+
+   private final class MethodModifier extends BaseMethodModifier
+   {
+      final MethodCoverageData methodData;
+      boolean isTestMethod;
+
+      MethodModifier(MethodVisitor mv, String methodNameAndDesc)
+      {
+         super(mv);
+         methodData = new MethodCoverageData(methodNameAndDesc);
+         fileData.methods.add(methodData);
+      }
+
+      @Override
+      public AnnotationVisitor visitAnnotation(String desc, boolean visible)
+      {
+         isTestMethod = desc.startsWith("Lorg/junit/") || desc.startsWith("Lorg/testng/");
+         return mw.visitAnnotation(desc, visible);
+      }
+
+      @Override
+      public void visitLineNumber(int line, Label start)
+      {
+         if (isTestMethod) {
+            mw.visitLineNumber(line, start);
+            return;
+         }
+
+         super.visitLineNumber(line, start);
+      }
+
+      @Override
+      public void visitLabel(Label label)
+      {
+         super.visitLabel(label);
+
+         if (methodData.entryBlock == null) {
+            methodData.entryBlock = mw.currentBlock;
+         }
+      }
+
+      @Override
+      public void visitJumpInsn(int opcode, Label label)
+      {
+         if (isTestMethod) {
+            visitJumpInsnWithoutModifications(opcode, label);
+            return;
+         }
+
+         super.visitJumpInsn(opcode, label);
+      }
+
+      @Override
+      public void visitInsn(int opcode)
+      {
+         Label currentBlock = mw.currentBlock;
+
+         super.visitInsn(opcode);
+
+         if (mw.currentBlock == null) {
+            methodData.exitBlocks.add(currentBlock);
+         }
+      }
+   }
+
+   private final class StaticBlockModifier extends BaseMethodModifier
+   {
+      StaticBlockModifier(MethodVisitor mv) { super(mv); }
+
+      @Override
+      public void visitMethodInsn(int opcode, String owner, String name, String desc)
+      {
+         // This is to ignore bytecode belonging to a static initialization block inserted in a
+         // regular line of code by the Java compiler when the class contains at least one "assert"
+         // statement. Otherwise, that line of code would always appear as partially covered when
+         // running with assertions enabled.
+         assertFoundInCurrentLine =
+            opcode == INVOKEVIRTUAL &&
+            "java/lang/Class".equals(owner) && "desiredAssertionStatus".equals(name);
+
+         super.visitMethodInsn(opcode, owner, name, desc);
       }
    }
 }

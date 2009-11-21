@@ -27,6 +27,8 @@ package mockit.coverage;
 import java.io.*;
 import java.util.*;
 
+import org.objectweb.asm2.*;
+
 /**
  * Coverage data gathered for a branch inside a line of source code.
  */
@@ -35,6 +37,7 @@ public final class BranchCoverageData implements Serializable
    private static final long serialVersionUID = 1003335601845442606L;
 
    // Static data:
+   public final transient Label startLabel;
    private boolean unreachable;
 
    // Runtime data (and static if any execution count is -1, meaning lack of the jump target):
@@ -42,8 +45,9 @@ public final class BranchCoverageData implements Serializable
    private int noJumpExecutionCount;
    private List<CallPoint> callPoints;
 
-   BranchCoverageData()
+   BranchCoverageData(Label startLabel)
    {
+      this.startLabel = startLabel;
       jumpExecutionCount = -1;
       noJumpExecutionCount = -1;
    }

@@ -67,7 +67,7 @@ public final class FullXmlWriter extends XmlWriter
          writeChildElementsForCallPoints(callPoints, "  ");
       }
 
-      output.write("      </branch>");
+      output.write("      </segment>");
    }
 
    private void writeChildElementsForCallPoints(List<CallPoint> callPoints, String indent)
