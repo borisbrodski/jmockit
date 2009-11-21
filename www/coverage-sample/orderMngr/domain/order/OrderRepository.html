@@ -151,16 +151,16 @@
       <td class='lineNo'>34</td><td class='count'>11</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'><span class='keyword'>public</span> <span class='keyword'>final</span> <span class='keyword'>class</span> OrderRepository</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#updateOrder:86</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#removeOrder:102</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#updateOrder:104</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#removeOrder:122</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
         </ol>
       </td>
     </tr>
@@ -352,8 +352,8 @@
       <td class='lineNo'>66</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>return</span> loadOrder(orderNumber);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -393,8 +393,8 @@
       <td class='lineNo'>75</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>      ResultSet result = executeQuery("select customer_id from order where number=?", orderNumber);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -410,8 +410,8 @@
       <td class='lineNo'>78</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>if</span> (result.next()) {</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -419,8 +419,8 @@
       <td class='lineNo'>79</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            String customerId = result.getString(1);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -428,8 +428,8 @@
       <td class='lineNo'>80</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            Order order = <span class='keyword'>new</span> Order(orderNumber, customerId);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -437,8 +437,8 @@
       <td class='lineNo'>81</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            loadOrderItems(order);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -446,8 +446,8 @@
       <td class='lineNo'>82</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            <span class='keyword'>return</span> order;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -475,8 +475,8 @@
       <td class='lineNo'>88</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>         closeStatement(result);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -504,8 +504,8 @@
       <td class='lineNo'>94</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>      ResultSet result =</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -533,8 +533,8 @@
       <td class='lineNo'>100</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>         Collection&lt;OrderItem> items = order.getItems();</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -546,10 +546,10 @@
       <td class='lineNo'>102</td><td class='count'>4</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>while</span> (result.next()) {</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -557,8 +557,8 @@
       <td class='lineNo'>103</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            String productId = result.getString(1);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -566,8 +566,8 @@
       <td class='lineNo'>104</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            String productDescription = result.getString(2);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -575,8 +575,8 @@
       <td class='lineNo'>105</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            <span class='keyword'>int</span> quantity = result.getInt(3);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -584,8 +584,8 @@
       <td class='lineNo'>106</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            BigDecimal unitPrice = result.getBigDecimal(4);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -597,8 +597,8 @@
       <td class='lineNo'>108</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            OrderItem item =</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -610,8 +610,8 @@
       <td class='lineNo'>110</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            items.add(item);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -619,8 +619,8 @@
       <td class='lineNo'>111</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>         }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -636,8 +636,8 @@
       <td class='lineNo'>114</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>         closeStatement(result);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -645,8 +645,8 @@
       <td class='lineNo'>115</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>      }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -654,8 +654,8 @@
       <td class='lineNo'>116</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
         </ol>
       </td>
     </tr>
@@ -675,8 +675,8 @@
       <td class='lineNo'>120</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>      ResultSet result = executeQuery("select number from order where customer_id=?", customerId);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
         </ol>
       </td>
     </tr>
@@ -692,8 +692,8 @@
       <td class='lineNo'>123</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>         List&lt;Order> orders = <span class='keyword'>new</span> ArrayList&lt;Order>();</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
         </ol>
       </td>
     </tr>
@@ -705,10 +705,10 @@
       <td class='lineNo'>125</td><td class='count'>4</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>while</span> (result.next()) {</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
         </ol>
       </td>
     </tr>
@@ -716,8 +716,8 @@
       <td class='lineNo'>126</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            <span class='keyword'>int</span> orderNumber = result.getInt(1);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
         </ol>
       </td>
     </tr>
@@ -725,8 +725,8 @@
       <td class='lineNo'>127</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            Order order = <span class='keyword'>new</span> Order(orderNumber, customerId);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
         </ol>
       </td>
     </tr>
@@ -734,8 +734,8 @@
       <td class='lineNo'>128</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            loadOrderItems(order);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
         </ol>
       </td>
     </tr>
@@ -743,8 +743,8 @@
       <td class='lineNo'>129</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>            orders.add(order);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
         </ol>
       </td>
     </tr>
@@ -752,8 +752,8 @@
       <td class='lineNo'>130</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>         }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
         </ol>
       </td>
     </tr>
@@ -765,8 +765,8 @@
       <td class='lineNo'>132</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>return</span> orders;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
         </ol>
       </td>
     </tr>
@@ -794,8 +794,8 @@
       <td class='lineNo'>138</td><td class='count'>2</td>
       <td><pre class='covered withCallPoints' onclick='showHide(this)'>         closeStatement(result);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
+          <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
         </ol>
       </td>
     </tr>
