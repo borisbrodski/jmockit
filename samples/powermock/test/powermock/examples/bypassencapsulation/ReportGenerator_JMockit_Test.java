@@ -24,12 +24,11 @@
  */
 package powermock.examples.bypassencapsulation;
 
-import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.runner.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
+
+import static org.junit.Assert.*;
 import powermock.examples.bypassencapsulation.nontest.*;
 
 public class ReportGenerator_JMockit_Test
