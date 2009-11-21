@@ -61,13 +61,7 @@ public final class FullXmlWriter extends XmlWriter
       output.write(">");
       output.newLine();
 
-      if (jumpCount > 0) {
-         writeChildElementsForCallPoints(segmentData.getJumpCallPoints(), "  ");
-      }
-
-      if (noJumpCount > 0) {
-         writeChildElementsForCallPoints(segmentData.getNoJumpCallPoints(), "  ");
-      }
+      writeChildElementsForCallPoints(segmentData.getCallPoints(), "  ");
 
       output.write("      </branch>");
    }

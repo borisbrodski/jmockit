@@ -33,75 +33,69 @@ import java.util.*;
 public final class BranchCoverageData implements Serializable
 {
    private static final long serialVersionUID = 1003335601845442606L;
-   
+
+   // Static data:
    private boolean unreachable;
-   private final int jumpInsnIndex;
-   private int jumpTargetInsnIndex = -1;
-   private int noJumpTargetInsnIndex = -1;
-   private List<CallPoint> jumpCallPoints;
-   private List<CallPoint> noJumpCallPoints;
+
+   // Runtime data (and static if any execution count is -1, meaning lack of the jump target):
    private int jumpExecutionCount;
    private int noJumpExecutionCount;
+   private List<CallPoint> callPoints;
 
-   BranchCoverageData(int jumpInsnIndex)
+   BranchCoverageData()
    {
-      this.jumpInsnIndex = jumpInsnIndex;
+      jumpExecutionCount = -1;
+      noJumpExecutionCount = -1;
    }
 
-   void setJumpTargetInsnIndex(int jumpTargetInsnIndex)
+   void setHasJumpTarget()
    {
-      this.jumpTargetInsnIndex = jumpTargetInsnIndex;
+      jumpExecutionCount = 0;
    }
 
-   void setNoJumpTargetInsnIndex(int noJumpTargetInsnIndex)
+   void setHasNoJumpTarget()
    {
-      this.noJumpTargetInsnIndex = noJumpTargetInsnIndex;
+      noJumpExecutionCount = 0;
    }
 
    void registerJumpExecution(CallPoint callPoint)
    {
+      assert jumpExecutionCount >= 0 : "Illegal registerJumpExecution";
       jumpExecutionCount++;
+      addCallPointIfAny(callPoint);
+   }
 
+   private void addCallPointIfAny(CallPoint callPoint)
+   {
       if (callPoint != null) {
-         if (jumpCallPoints == null) {
-            jumpCallPoints = new ArrayList<CallPoint>();
+         if (callPoints == null) {
+            callPoints = new ArrayList<CallPoint>();
          }
 
-         jumpCallPoints.add(callPoint);
+         callPoints.add(callPoint);
       }
    }
 
    void registerNoJumpExecution(CallPoint callPoint)
    {
+      assert noJumpExecutionCount >= 0 : "Illegal registerNoJumpExecution";
       noJumpExecutionCount++;
-
-      if (callPoint != null) {
-         if (noJumpCallPoints == null) {
-            noJumpCallPoints = new ArrayList<CallPoint>();
-         }
-
-         noJumpCallPoints.add(callPoint);
-      }
+      addCallPointIfAny(callPoint);
    }
 
-   public int getJumpInsnIndex()
+   public boolean hasJumpTarget()
    {
-      return jumpInsnIndex;
+      return jumpExecutionCount >= 0;
    }
 
-   public int getJumpTargetInsnIndex()
+   public boolean hasNoJumpTarget()
    {
-      return jumpTargetInsnIndex;
-   }
-
-   public int getNoJumpTargetInsnIndex()
-   {
-      return noJumpTargetInsnIndex;
+      return noJumpExecutionCount >= 0;
    }
 
    public boolean isNonEmpty()
    {
-      return jumpTargetInsnIndex >= 0 || noJumpTargetInsnIndex >= 0;
+      return hasJumpTarget() || hasNoJumpTarget();
    }
 
    public int getJumpExecutionCount()
@@ -114,24 +108,14 @@ public final class BranchCoverageData implements Serializable
       return noJumpExecutionCount;
    }
 
-   public List<CallPoint> getJumpCallPoints()
+   public List<CallPoint> getCallPoints()
    {
-      return jumpCallPoints == null ?
-         Collections.<CallPoint>emptyList() : Collections.unmodifiableList(jumpCallPoints);
-   }
-
-   public List<CallPoint> getNoJumpCallPoints()
-   {
-      return noJumpCallPoints == null ?
-         Collections.<CallPoint>emptyList() : Collections.unmodifiableList(noJumpCallPoints);
+      return callPoints;
    }
 
    public boolean isCovered()
    {
-      return
-         unreachable ||
-         (jumpTargetInsnIndex < 0 || jumpExecutionCount > 0) &&
-         (noJumpTargetInsnIndex < 0 || noJumpExecutionCount > 0);
+      return unreachable || jumpExecutionCount != 0 && noJumpExecutionCount != 0;
    }
 
    public void markAsUnreachable()
@@ -142,10 +126,8 @@ public final class BranchCoverageData implements Serializable
    void addCountsFromPreviousMeasurement(BranchCoverageData previousData)
    {
       jumpExecutionCount += previousData.jumpExecutionCount;
-      jumpCallPoints = addPreviousCallPoints(jumpCallPoints, previousData.jumpCallPoints);
-
       noJumpExecutionCount += previousData.noJumpExecutionCount;
-      noJumpCallPoints = addPreviousCallPoints(noJumpCallPoints, previousData.noJumpCallPoints);
+      callPoints = addPreviousCallPoints(callPoints, previousData.callPoints);
    }
 
    private List<CallPoint> addPreviousCallPoints(List<CallPoint> current, List<CallPoint> previous)

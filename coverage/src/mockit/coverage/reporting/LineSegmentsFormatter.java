@@ -43,8 +43,9 @@ final class LineSegmentsFormatter
 
    void formatBranches(LineCoverageData lineData, LineSegment initialSegment)
    {
+      List<String> sourceElements = null;// lineData.getSourceElements();
       LineSegment[][] segmentPairs =
-         buildSegmentPairsForSourceElements(lineData.getSourceElements(), initialSegment);
+         buildSegmentPairsForSourceElements(sourceElements, initialSegment);
 
       List<BranchCoverageData> branches = lineData.getBranches();
       FormattedSegments formattedSegments =
@@ -113,22 +114,20 @@ final class LineSegmentsFormatter
          segmentPairs[0], lineData.getExecutionCount(), lineData.getCallPoints());
 
       for (BranchCoverageData branchData : branches) {
-         if (branchData.getJumpInsnIndex() > 0) {
-            LineSegment[] segmentPair = segmentPairs[branchData.getJumpInsnIndex()];
+         LineSegment[] segmentPair = segmentPairs[0];
+         formattedSegments.addSegment(
+            segmentPair, lineData.getExecutionCount(), lineData.getCallPoints());
+
+         if (branchData.hasNoJumpTarget()) {
+            segmentPair = null;//segmentPairs[branchData.getNoJumpTargetInsnIndex()];
             formattedSegments.addSegment(
-               segmentPair, lineData.getExecutionCount(), lineData.getCallPoints());
+               segmentPair, branchData.getNoJumpExecutionCount(), branchData.getCallPoints());
          }
 
-         if (branchData.getNoJumpTargetInsnIndex() >= 0) {
-            LineSegment[] segmentPair = segmentPairs[branchData.getNoJumpTargetInsnIndex()];
+         if (branchData.hasJumpTarget()) {
+            segmentPair = null;//segmentPairs[branchData.getJumpTargetInsnIndex()];
             formattedSegments.addSegment(
-               segmentPair, branchData.getNoJumpExecutionCount(), branchData.getNoJumpCallPoints());
-         }
-
-         if (branchData.getJumpTargetInsnIndex() >= 0) {
-            LineSegment[] segmentPair = segmentPairs[branchData.getJumpTargetInsnIndex()];
-            formattedSegments.addSegment(
-               segmentPair, branchData.getJumpExecutionCount(), branchData.getJumpCallPoints());
+               segmentPair, branchData.getJumpExecutionCount(), branchData.getCallPoints());
          }
       }
 

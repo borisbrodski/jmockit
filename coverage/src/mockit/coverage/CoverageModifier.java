@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2007-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -78,6 +78,7 @@ final class CoverageModifier extends ClassWriter
 
    private final class MethodModifier extends MethodAdapter
    {
+      private final MethodWriter mw;
       private boolean isTestMethod;
       private int currentLine;
       private LineCoverageData lineData;
@@ -90,6 +91,7 @@ final class CoverageModifier extends ClassWriter
       private MethodModifier(MethodVisitor mv, boolean clinit)
       {
          super(mv);
+         mw = (MethodWriter) mv;
          this.clinit = clinit;
       }
 
@@ -97,15 +99,19 @@ final class CoverageModifier extends ClassWriter
       public AnnotationVisitor visitAnnotation(String desc, boolean visible)
       {
          isTestMethod = desc.startsWith("Lorg/junit/") || desc.startsWith("Lorg/testng/");
-         return mv.visitAnnotation(desc, visible);
+         return mw.visitAnnotation(desc, visible);
       }
 
       @Override
       public void visitLineNumber(int line, Label start)
       {
          if (isTestMethod) {
-            mv.visitLineNumber(line, start);
+            mw.visitLineNumber(line, start);
             return;
+         }
+
+         if (!pendingBranches.isEmpty()) {
+            pendingBranches.clear();
          }
 
          lineData = fileData.addLine(line);
@@ -114,28 +120,27 @@ final class CoverageModifier extends ClassWriter
          currentLine = line;
          startLabelsForVisitedLines.add(start);
          jumpTargetsForCurrentLine.clear();
-         pendingBranches.clear();
 
          generateCallToRegisterLineExecution();
 
-         mv.visitLineNumber(line, start);
+         mw.visitLineNumber(line, start);
       }
 
       private void generateCallToRegisterLineExecution()
       {
-         mv.visitLdcInsn(sourceFileName);
+         mw.visitLdcInsn(sourceFileName);
          pushCurrentLineOnTheStack();
-         mv.visitMethodInsn(
+         mw.visitMethodInsn(
             INVOKESTATIC, "mockit/coverage/CoverageData", "lineExecuted", "(Ljava/lang/String;I)V");
       }
 
       private void pushCurrentLineOnTheStack()
       {
          if (currentLine <= Short.MAX_VALUE) {
-            mv.visitIntInsn(SIPUSH, currentLine);
+            mw.visitIntInsn(SIPUSH, currentLine);
          }
          else {
-            mv.visitLdcInsn(currentLine);
+            mw.visitLdcInsn(currentLine);
          }
       }
 
@@ -144,18 +149,15 @@ final class CoverageModifier extends ClassWriter
       {
          if (isTestMethod || startLabelsForVisitedLines.contains(label)) {
             assertFoundInCurrentLine = false;
-            mv.visitJumpInsn(opcode, label);
+            mw.visitJumpInsn(opcode, label);
             return;
          }
 
-         int jumpInsnIndex = lineData.addSourceElement("if");
+         generateCallToRegisterBranchTargetExecutionIfPending();
 
-         String jumpInsnSource = sourceForJumpInsn(opcode);
-         lineData.addSourceElement(jumpInsnSource);
-         generateCallToRegisterBranchTargetExecutionIfPending(jumpInsnSource);
-
-         int branchIndex = lineData.addBranch(jumpInsnIndex);
          jumpTargetsForCurrentLine.add(label);
+
+         int branchIndex = lineData.addBranch();
          pendingBranches.put(branchIndex, false);
 
          if (assertFoundInCurrentLine) {
@@ -163,70 +165,38 @@ final class CoverageModifier extends ClassWriter
             branchData.markAsUnreachable();
          }
 
-         mv.visitJumpInsn(opcode, label);
+         mw.visitJumpInsn(opcode, label);
 
          // TODO: capture if this this point is executed?
       }
 
-      private String sourceForJumpInsn(int opcode)
+      private void generateCallToRegisterBranchTargetExecutionIfPending()
       {
-         String source = "";
+         if (pendingBranches.isEmpty()) {
+            return;
+         }
+         
+         for (Integer branchIndex : pendingBranches.keySet()) {
+            BranchCoverageData branchData = lineData.getBranchData(branchIndex);
+            Boolean firstInsnAfterJump = pendingBranches.get(branchIndex);
 
-         if (opcode == IFEQ || opcode == IF_ICMPEQ || opcode == IFNULL) {
-            source = "==";
-         }
-         else if (opcode == IFNE || opcode == IF_ICMPNE || opcode == IFNONNULL) {
-            source = "!=";
-         }
-         else if (opcode == IFGE || opcode == IF_ICMPGE) {
-            source = ">=";
-         }
-         else if (opcode == IFGT || opcode == IF_ICMPGT) {
-            source = ">";
-         }
-         else if (opcode == IFLE || opcode == IF_ICMPLE) {
-            source = "<=";
-         }
-         else if (opcode == IFLT || opcode == IF_ICMPLT) {
-            source = "<";
-         }
-         if (opcode == IF_ACMPEQ) {
-            source = "==";
-         }
-         else if (opcode == IF_ACMPNE) {
-            source = "!=";
-         }
-
-         return source;
-      }
-
-      private void generateCallToRegisterBranchTargetExecutionIfPending(String targetInsnSource)
-      {
-         if (!pendingBranches.isEmpty()) {
-            int targetInsnSourceIndex = lineData.addSourceElement(targetInsnSource);
-
-            for (Integer branchIndex : pendingBranches.keySet()) {
-               BranchCoverageData branchData = lineData.getBranchData(branchIndex);
-               Boolean firstInsnAfterJump = pendingBranches.get(branchIndex);
-
-               if (firstInsnAfterJump) {
-                  branchData.setJumpTargetInsnIndex(targetInsnSourceIndex);
-                  generateCallToRegisterBranchTargetExecution("jumpTargetExecuted", branchIndex);
-               }
-               else {
-                  branchData.setNoJumpTargetInsnIndex(targetInsnSourceIndex);
-                  generateCallToRegisterBranchTargetExecution("noJumpTargetExecuted", branchIndex);
-               }
+            if (firstInsnAfterJump) {
+               branchData.setHasJumpTarget();
+               generateCallToRegisterBranchTargetExecution("jumpTargetExecuted", branchIndex);
             }
-
-            pendingBranches.clear();
+            else {
+               branchData.setHasNoJumpTarget();
+               generateCallToRegisterBranchTargetExecution("noJumpTargetExecuted", branchIndex);
+            }
          }
+
+         pendingBranches.clear();
       }
 
       @Override
       public void visitLabel(Label label)
       {
-         mv.visitLabel(label);
+         mw.visitLabel(label);
 
          int branchIndex = jumpTargetsForCurrentLine.indexOf(label);
 
@@ -238,75 +208,45 @@ final class CoverageModifier extends ClassWriter
 
       private void generateCallToRegisterBranchTargetExecution(String methodName, int branchIndex)
       {
-         mv.visitLdcInsn(sourceFileName);
+         mw.visitLdcInsn(sourceFileName);
          pushCurrentLineOnTheStack();
-         mv.visitIntInsn(SIPUSH, branchIndex);
-         mv.visitMethodInsn(
+         mw.visitIntInsn(SIPUSH, branchIndex);
+         mw.visitMethodInsn(
             INVOKESTATIC, "mockit/coverage/CoverageData", methodName, "(Ljava/lang/String;II)V");
       }
 
       @Override
       public void visitInsn(int opcode)
       {
-         String source;
-
-         if (opcode >= IRETURN && opcode <= RETURN) {
-            source = "return";
+         if (opcode > DCONST_1) {
+            generateCallToRegisterBranchTargetExecutionIfPending();
          }
          else {
-            source = "*";
+            assert pendingBranches.isEmpty();
          }
 
-         if (opcode > DCONST_1) {
-            generateCallToRegisterBranchTargetExecutionIfPending(source);
-         }
-
-         mv.visitInsn(opcode);
+         mw.visitInsn(opcode);
       }
 
       @Override
       public void visitIntInsn(int opcode, int operand)
       {
-         generateCallToRegisterBranchTargetExecutionIfPending("*");
-         mv.visitIntInsn(opcode, operand);
+         generateCallToRegisterBranchTargetExecutionIfPending();
+         mw.visitIntInsn(opcode, operand);
       }
 
       @Override
       public void visitVarInsn(int opcode, int var)
       {
-         String source = "";
-
-         if (opcode >= ILOAD && opcode <= ALOAD) {
-//            source = "=v" + var;
-         }
-         else if (opcode >= ISTORE && opcode <= ASTORE) {
-//            source = "v" + var + "=";
-         }
-         else {
-            source = "return";
-         }
-
-         generateCallToRegisterBranchTargetExecutionIfPending(source);
-         mv.visitVarInsn(opcode, var);
+         generateCallToRegisterBranchTargetExecutionIfPending();
+         mw.visitVarInsn(opcode, var);
       }
 
       @Override
       public void visitTypeInsn(int opcode, String desc)
       {
-         String source;
-
-         if (opcode == NEW || opcode == ANEWARRAY) {
-            source = "new";
-         }
-         else if (opcode == INSTANCEOF) {
-            source = "instanceof";
-         }
-         else {
-            source = "(" + desc + ")";
-         }
-
-         generateCallToRegisterBranchTargetExecutionIfPending(source);
-         mv.visitTypeInsn(opcode, desc);
+         generateCallToRegisterBranchTargetExecutionIfPending();
+         mw.visitTypeInsn(opcode, desc);
       }
 
       @Override
@@ -314,17 +254,8 @@ final class CoverageModifier extends ClassWriter
       {
          assertFoundInCurrentLine = opcode == GETSTATIC && "$assertionsDisabled".equals(name);
 
-         String source = owner + "." + name;
-
-         if (opcode == GETSTATIC || opcode == GETFIELD) {
-            source = "=" + source;
-         }
-         else {
-            source += "=";
-         }
-
-         generateCallToRegisterBranchTargetExecutionIfPending(source);
-         mv.visitFieldInsn(opcode, owner, name, desc);
+         generateCallToRegisterBranchTargetExecutionIfPending();
+         mw.visitFieldInsn(opcode, owner, name, desc);
       }
 
       @Override
@@ -338,52 +269,43 @@ final class CoverageModifier extends ClassWriter
             clinit && opcode == INVOKEVIRTUAL &&
             "java/lang/Class".equals(owner) && "desiredAssertionStatus".equals(name);
 
-         generateCallToRegisterBranchTargetExecutionIfPending(owner + "." + name + "()");
-         mv.visitMethodInsn(opcode, owner, name, desc);
+         generateCallToRegisterBranchTargetExecutionIfPending();
+         mw.visitMethodInsn(opcode, owner, name, desc);
       }
 
       @Override
       public void visitLdcInsn(Object cst)
       {
-         generateCallToRegisterBranchTargetExecutionIfPending(cst.toString());
-         mv.visitLdcInsn(cst);
+         generateCallToRegisterBranchTargetExecutionIfPending();
+         mw.visitLdcInsn(cst);
       }
 
       @Override
       public void visitIincInsn(int var, int increment)
       {
-         String source = "v" + var;
-
-         if (increment > 0) {
-            source += "+=" + increment;
-         }
-         else {
-            source += "-=" + -increment;
-         }
-
-         generateCallToRegisterBranchTargetExecutionIfPending(source);
-         mv.visitIincInsn(var, increment);
+         generateCallToRegisterBranchTargetExecutionIfPending();
+         mw.visitIincInsn(var, increment);
       }
 
       @Override
       public void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels)
       {
-         generateCallToRegisterBranchTargetExecutionIfPending("case");
-         mv.visitTableSwitchInsn(min, max, dflt, labels);
+         generateCallToRegisterBranchTargetExecutionIfPending();
+         mw.visitTableSwitchInsn(min, max, dflt, labels);
       }
 
       @Override
       public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels)
       {
-         generateCallToRegisterBranchTargetExecutionIfPending("case2");
-         mv.visitLookupSwitchInsn(dflt, keys, labels);
+         generateCallToRegisterBranchTargetExecutionIfPending();
+         mw.visitLookupSwitchInsn(dflt, keys, labels);
       }
 
       @Override
       public void visitMultiANewArrayInsn(String desc, int dims)
       {
-         generateCallToRegisterBranchTargetExecutionIfPending(desc + "[]" + dims);
-         mv.visitMultiANewArrayInsn(desc, dims);
+         generateCallToRegisterBranchTargetExecutionIfPending();
+         mw.visitMultiANewArrayInsn(desc, dims);
       }
    }
 }

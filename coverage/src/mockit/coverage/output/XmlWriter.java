@@ -38,6 +38,9 @@ public abstract class XmlWriter
 {
    private final CoverageData coverageData;
    protected BufferedWriter output;
+   private String filePath;
+   private int line;
+   private boolean pendingEndTag;
 
    protected XmlWriter(CoverageData coverageData)
    {
@@ -81,7 +84,8 @@ public abstract class XmlWriter
          }
          
          output.write("  <file path='");
-         output.write(lineCountEntry.getKey());
+         filePath = lineCountEntry.getKey();
+         output.write(filePath);
          writeLine("'>");
 
          FileCoverageData fileCoverageData = lineCountEntry.getValue();
@@ -105,21 +109,18 @@ public abstract class XmlWriter
       SortedMap<Integer, LineCoverageData> lineToLineData = fileData.getLineToLineData();
 
       for (Entry<Integer, LineCoverageData> lineAndLineData : lineToLineData.entrySet()) {
-         Integer line = lineAndLineData.getKey();
+         line = lineAndLineData.getKey();
          LineCoverageData lineData = lineAndLineData.getValue();
 
          output.write("    <line number='");
-         output.write(line.toString());
+         output.write(String.valueOf(line));
          output.write("' count='");
          output.write(String.valueOf(lineData.getExecutionCount()));
 
-         boolean pendingEndTag = false;
+         pendingEndTag = writeChildElementsForLine(lineData);
 
          if (lineData.containsBranches()) {
-            pendingEndTag = writeChildElementsForSegments(lineData);
-         }
-         else if (writeChildElementsForLine(lineData)) {
-            pendingEndTag = true;
+            pendingEndTag = writeChildElementsForSegments(lineData) || pendingEndTag;
          }
 
          writeLine(pendingEndTag ? "    </line>" : "'/>");
@@ -131,66 +132,50 @@ public abstract class XmlWriter
 
    private boolean writeChildElementsForSegments(LineCoverageData lineData) throws IOException
    {
-      writeAttributeWithSourceElements(lineData);
-
       boolean nonEmptySegmentFound = false;
 
       for (BranchCoverageData segmentData : lineData.getBranches()) {
          if (segmentData.isNonEmpty()) {
             if (!nonEmptySegmentFound) {
-               writeLine("'>");
+               if (!pendingEndTag) {
+                  writeLine("'>");
+               }
+
                nonEmptySegmentFound = true;
             }
 
             writeChildElementForSegment(segmentData);
             output.newLine();
          }
+         else {
+            System.out.println("Empty branch in " + filePath + ':' + line);
+         }
       }
 
       return nonEmptySegmentFound;
    }
 
-   private void writeChildElementForSegment(BranchCoverageData segmentData)
-      throws IOException
+   private void writeChildElementForSegment(BranchCoverageData segmentData) throws IOException
    {
-      output.write("      <branch jumpInsn='");
-      output.write(String.valueOf(segmentData.getJumpInsnIndex()));
-      output.write("'");
+      output.write("      <branch");
 
-      int noJumpTargetInsnIndex = segmentData.getNoJumpTargetInsnIndex();
       int noJumpCount = segmentData.getNoJumpExecutionCount();
 
-      if (noJumpTargetInsnIndex >= 0) {
-         output.write(" noJumpTargetInsn='");
-         output.write(String.valueOf(noJumpTargetInsnIndex));
-         output.write("' noJumpCount='");
+      if (segmentData.hasNoJumpTarget()) {
+         output.write(" noJumpCount='");
          output.write(String.valueOf(noJumpCount));
          output.write("'");
       }
 
-      int jumpTargetInsnIndex = segmentData.getJumpTargetInsnIndex();
       int jumpCount = segmentData.getJumpExecutionCount();
 
-      if (jumpTargetInsnIndex >= 0) {
-         output.write(" jumpTargetInsn='");
-         output.write(String.valueOf(jumpTargetInsnIndex));
-         output.write("' jumpCount='");
+      if (segmentData.hasJumpTarget()) {
+         output.write(" jumpCount='");
          output.write(String.valueOf(jumpCount));
          output.write("'");
       }
 
       writeEndTagForBranch(segmentData, jumpCount, noJumpCount);
-   }
-
-   private void writeAttributeWithSourceElements(LineCoverageData lineData) throws IOException
-   {
-      String sep = "' source='";
-
-      for (String sourceElement : lineData.getSourceElements()) {
-         output.write(sep);
-         output.write(sourceElement);
-         sep = " ";
-      }
    }
 
    protected abstract void writeEndTagForBranch(

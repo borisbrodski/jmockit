@@ -33,36 +33,25 @@ import java.util.*;
 public final class LineCoverageData implements Serializable
 {
    private static final long serialVersionUID = -6233980722802474992L;
-   
+
+   // Static data:
    private boolean unreachable;
    private List<BranchCoverageData> segments;
-   private transient List<String> sourceElements;
-   private List<CallPoint> callPoints;
-   private int executionCount;
 
-   int addBranch(int jumpInsnIndex)
+   // Runtime data:
+   private int executionCount;
+   private List<CallPoint> callPoints;
+
+   int addBranch()
    {
       if (segments == null) {
          segments = new ArrayList<BranchCoverageData>(4);
       }
 
-      BranchCoverageData data = new BranchCoverageData(jumpInsnIndex);
+      BranchCoverageData data = new BranchCoverageData();
       segments.add(data);
 
       return segments.size() - 1;
-   }
-
-   int addSourceElement(String sourceElement)
-   {
-      if (sourceElements == null) {
-         sourceElements = new ArrayList<String>(8);
-      }
-
-      if (sourceElement.length() > 0) {
-         sourceElements.add(sourceElement);
-      }
-
-      return sourceElements.size() - 1;
    }
 
    BranchCoverageData getBranchData(int segmentIndex)
@@ -102,14 +91,7 @@ public final class LineCoverageData implements Serializable
 
    public List<BranchCoverageData> getBranches()
    {
-      return segments == null ?
-         Collections.<BranchCoverageData>emptyList() : Collections.unmodifiableList(segments);
-   }
-
-   public List<String> getSourceElements()
-   {
-      return sourceElements == null ?
-         Collections.<String>emptyList() : Collections.unmodifiableList(sourceElements);
+      return segments;
    }
 
    public boolean containsCallPoints()
