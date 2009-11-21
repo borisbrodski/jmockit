@@ -34,7 +34,7 @@ package org.objectweb.asm2;
  * 
  * @author Eric Bruneton
  */
-class Edge {
+public class Edge {
 
     /**
      * The (relative) stack size in the basic block from which this edge
@@ -47,11 +47,11 @@ class Edge {
     /**
      * The successor block of the basic block from which this edge originates.
      */
-    Label successor;
+    public Label successor;
 
     /**
      * The next edge in the list of successors of the originating basic block.
      * See {@link Label#successors successors}.
      */
-    Edge next;
+    public Edge next;
 }

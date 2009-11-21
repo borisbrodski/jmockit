@@ -244,7 +244,7 @@ public class MethodWriter implements MethodVisitor {
      * The current basic block. This block is the basic block to which the next
      * instruction to be visited must be added.
      */
-    private Label currentBlock;
+    public Label currentBlock;
 
     /**
      * The basic block stack used by the control flow analysis algorithm. This

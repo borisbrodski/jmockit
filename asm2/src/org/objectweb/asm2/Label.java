@@ -40,7 +40,7 @@ public class Label {
     /**
      * The line number corresponding to this label, if known.
      */
-    int line;
+    public int line;
 
     /**
      * Indicates if the position of this label is known.
@@ -50,7 +50,7 @@ public class Label {
     /**
      * The position of this label in the code, if known.
      */
-    int position;
+    public int position;
 
     /**
      * If the label position has been updated, after instruction resizing.
@@ -63,7 +63,7 @@ public class Label {
     private int referenceCount;
 
     /**
-     * Informations about forward references. Each forward reference is
+     * Information about forward references. Each forward reference is
      * described by two consecutive integers in this array: the first one is the
      * position of the first byte of the bytecode instruction that contains the
      * forward reference, while the second is the position of the first byte of
@@ -103,7 +103,7 @@ public class Label {
      * are stored in a linked list of {@link Edge Edge} objects, linked to each
      * other by their {@link Edge#next} field.
      */
-    Edge successors;
+    public Edge successors;
 
     /**
      * The next basic block in the basic block stack. See
