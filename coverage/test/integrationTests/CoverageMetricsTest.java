@@ -30,11 +30,40 @@ import org.junit.*;
 public final class CoverageMetricsTest
 {
    private final TestedClass tested = new TestedClass();
+   private AnotherTestedClass tested2;
+
+   @Before
+   public void setUp()
+   {
+      tested2 = new AnotherTestedClass();
+   }
 
    @Test
    public void simpleIf()
    {
-      new AnotherTestedClass().simpleIf(true);
+      tested2.simpleIf(true);
+      tested2.simpleIf(false);
+   }
+
+   @Test
+   public void ifAndElse()
+   {
+      tested2.ifAndElse(true);
+      tested2.ifAndElse(false);
+   }
+
+   @Test
+   public void singleLineIf()
+   {
+      tested2.singleLineIf(true);
+      tested2.singleLineIf(false);
+   }
+
+   @Test
+   public void singleLineIfAndElse()
+   {
+      tested2.singleLineIfAndElse(true);
+      tested2.singleLineIfAndElse(false);
    }
 
    @Test

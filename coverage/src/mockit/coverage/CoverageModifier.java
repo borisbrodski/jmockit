@@ -87,6 +87,7 @@ final class CoverageModifier extends ClassWriter
       private final Map<Integer, Boolean> pendingBranches = new HashMap<Integer, Boolean>();
       private boolean assertFoundInCurrentLine;
       private final boolean clinit;
+      private boolean nextLabelAfterConditionalJump;
 
       private MethodModifier(MethodVisitor mv, boolean clinit)
       {
@@ -153,9 +154,11 @@ final class CoverageModifier extends ClassWriter
             return;
          }
 
-         generateCallToRegisterBranchTargetExecutionIfPending();
-
          jumpTargetsForCurrentLine.add(label);
+
+         mw.visitJumpInsn(opcode, label);
+
+         generateCallToRegisterBranchTargetExecutionIfPending();
 
          int branchIndex = lineData.addBranch();
          pendingBranches.put(branchIndex, false);
@@ -165,9 +168,7 @@ final class CoverageModifier extends ClassWriter
             branchData.markAsUnreachable();
          }
 
-         mw.visitJumpInsn(opcode, label);
-
-         // TODO: capture if this this point is executed?
+         nextLabelAfterConditionalJump = opcode != GOTO && opcode != JSR;
       }
 
       private void generateCallToRegisterBranchTargetExecutionIfPending()
@@ -198,11 +199,13 @@ final class CoverageModifier extends ClassWriter
       {
          mw.visitLabel(label);
 
-         int branchIndex = jumpTargetsForCurrentLine.indexOf(label);
+         if (nextLabelAfterConditionalJump) {
+            int branchIndex = jumpTargetsForCurrentLine.indexOf(label);
 
-         if (branchIndex >= 0) {
-            pendingBranches.put(branchIndex, true);
-            assertFoundInCurrentLine = false;
+            if (branchIndex >= 0) {
+               pendingBranches.put(branchIndex, true);
+               assertFoundInCurrentLine = false;
+            }
          }
       }
 
@@ -218,13 +221,7 @@ final class CoverageModifier extends ClassWriter
       @Override
       public void visitInsn(int opcode)
       {
-         if (opcode > DCONST_1) {
-            generateCallToRegisterBranchTargetExecutionIfPending();
-         }
-         else {
-            assert pendingBranches.isEmpty();
-         }
-
+         generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitInsn(opcode);
       }
 

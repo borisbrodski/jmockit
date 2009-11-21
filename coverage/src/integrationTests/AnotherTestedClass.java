@@ -6,27 +6,27 @@ public final class AnotherTestedClass
    void simpleIf(boolean b)
    {
       if (b) {
-         System.out.print("");
+         System.gc();
       }
    }
 
    void ifAndElse(boolean b)
    {
       if (b) {
-         System.out.print("");
+         System.gc();
       }
       else {
-         System.out.print("other");
+         System.runFinalization();
       }
    }
 
    void singleLineIf(boolean b)
    {
-      if (b) System.out.print("");
+      if (b) System.gc();
    }
 
    void singleLineIfAndElse(boolean b)
    {
-      if (b) System.out.print(""); else System.out.println("other");
+      if (b) System.gc(); else System.runFinalization();
    }
 }

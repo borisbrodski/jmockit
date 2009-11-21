@@ -158,9 +158,9 @@ public final class CoverageData implements Serializable
       StackTraceElement ste = stackTrace[1];
 
       assert file.endsWith(ste.getFileName()) :
-         "Found file " + ste.getFileName() + " instead of " + file;
+         "CoverageData#findCallPoint: found file " + ste.getFileName() + " instead of " + file;
       assert line == ste.getLineNumber() :
-         "Found line " + ste.getLineNumber() + " instead of " + line;
+         "CoverageData#findCallPoint: found line " + ste.getLineNumber() + " instead of " + line;
 
       for (int i = 2; i < stackTrace.length; i++) {
          ste = stackTrace[i];

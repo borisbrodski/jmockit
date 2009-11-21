@@ -148,7 +148,8 @@ public abstract class XmlWriter
             output.newLine();
          }
          else {
-            System.out.println("Empty branch in " + filePath + ':' + line);
+            assert true :
+               "XmlWriter#writeChildElementsForSegments: empty segment in " + filePath + ':' + line;
          }
       }
 

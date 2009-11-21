@@ -61,7 +61,11 @@ public final class FullXmlWriter extends XmlWriter
       output.write(">");
       output.newLine();
 
-      writeChildElementsForCallPoints(segmentData.getCallPoints(), "  ");
+      List<CallPoint> callPoints = segmentData.getCallPoints();
+
+      if (callPoints != null) {
+         writeChildElementsForCallPoints(callPoints, "  ");
+      }
 
       output.write("      </branch>");
    }
