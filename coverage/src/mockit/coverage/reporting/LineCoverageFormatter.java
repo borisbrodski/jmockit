@@ -42,7 +42,7 @@ final class LineCoverageFormatter
    {
       formattedLine.setLength(0);
 
-      if (lineData.containsBranches()) {
+      if (lineData.containsSegments()) {
          formatLineWithBranches(lineData, initialSegment);
       }
       else {

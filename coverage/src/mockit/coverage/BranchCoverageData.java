@@ -48,6 +48,16 @@ public final class BranchCoverageData implements Serializable
       noJumpExecutionCount = -1;
    }
 
+   public boolean isUnreachable()
+   {
+      return unreachable;
+   }
+
+   public void markAsUnreachable()
+   {
+      unreachable = true;
+   }
+
    void setHasJumpTarget()
    {
       jumpExecutionCount = 0;
@@ -116,11 +126,6 @@ public final class BranchCoverageData implements Serializable
    public boolean isCovered()
    {
       return unreachable || jumpExecutionCount != 0 && noJumpExecutionCount != 0;
-   }
-
-   public void markAsUnreachable()
-   {
-      unreachable = true;
    }
 
    void addCountsFromPreviousMeasurement(BranchCoverageData previousData)

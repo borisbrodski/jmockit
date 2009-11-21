@@ -50,7 +50,7 @@ public final class FullXmlWriter extends XmlWriter
    }
 
    @Override
-   protected void writeEndTagForBranch(
+   protected void writeEndTagForSegment(
       BranchCoverageData segmentData, int jumpCount, int noJumpCount) throws IOException
    {
       if (jumpCount == 0 && noJumpCount == 0) {

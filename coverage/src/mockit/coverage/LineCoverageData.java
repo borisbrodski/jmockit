@@ -42,7 +42,7 @@ public final class LineCoverageData implements Serializable
    private int executionCount;
    private List<CallPoint> callPoints;
 
-   int addBranch()
+   int addSegment()
    {
       if (segments == null) {
          segments = new ArrayList<BranchCoverageData>(4);
@@ -54,7 +54,7 @@ public final class LineCoverageData implements Serializable
       return segments.size() - 1;
    }
 
-   BranchCoverageData getBranchData(int segmentIndex)
+   BranchCoverageData getSegmentData(int segmentIndex)
    {
       return segments.get(segmentIndex);
    }
@@ -84,12 +84,12 @@ public final class LineCoverageData implements Serializable
       }
    }
 
-   public boolean containsBranches()
+   public boolean containsSegments()
    {
       return segments != null;
    }
 
-   public List<BranchCoverageData> getBranches()
+   public List<BranchCoverageData> getSegments()
    {
       return segments;
    }
@@ -108,6 +108,11 @@ public final class LineCoverageData implements Serializable
    public int getExecutionCount()
    {
       return executionCount;
+   }
+
+   public boolean isUnreachable()
+   {
+      return unreachable;
    }
 
    public void markAsUnreachable()
@@ -182,7 +187,7 @@ public final class LineCoverageData implements Serializable
          }
       }
 
-      if (containsBranches()) {
+      if (containsSegments()) {
          for (int i = 0; i < segments.size(); i++) {
             BranchCoverageData segmentData = segments.get(i);
             BranchCoverageData previousSegmentData = previousLineData.segments.get(i);

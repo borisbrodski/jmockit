@@ -22,29 +22,63 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage.output;
+package integrationTests;
 
-import java.io.*;
+import org.junit.*;
 
-import mockit.coverage.*;
-
-public final class BasicXmlWriter extends XmlWriter
+public final class AnotherTestedClassTest
 {
-   public BasicXmlWriter(CoverageData coverageData)
+   private AnotherTestedClass tested;
+
+   @Before
+   public void setUp()
    {
-      super(coverageData);
+      tested = new AnotherTestedClass();
    }
 
-   @Override
-   protected boolean writeChildElementsForLine(LineCoverageData lineData)
+   @Test
+   public void simpleIf()
    {
-      return false;
+      tested.simpleIf(true);
+      tested.simpleIf(false);
    }
 
-   @Override
-   protected void writeEndTagForSegment(
-      BranchCoverageData branchData, int jumpCount, int noJumpCount) throws IOException
+   @Test
+   public void ifAndElse()
    {
-      output.write("/>");
+      tested.ifAndElse(true);
+      tested.ifAndElse(false);
+   }
+
+   @Test
+   public void singleLineIf()
+   {
+      tested.singleLineIf(true);
+      tested.singleLineIf(false);
+   }
+
+   @Test
+   public void singleLineIfAndElse()
+   {
+      tested.singleLineIfAndElse(true);
+      tested.singleLineIfAndElse(false);
+   }
+
+   @Test(expected = AssertionError.class)
+   public void nonBranchingMethodWithUnreachableLines()
+   {
+      tested.nonBranchingMethodWithUnreachableLines();
+   }
+
+   @Test
+   public void branchingMethodWithUnreachableLines_avoidUnreachableCode()
+   {
+      tested.branchingMethodWithUnreachableLines(0);
+   }
+
+   @Test(expected = AssertionError.class)
+   public void branchingMethodWithUnreachableLines_hitUnreachableCode()
+   {
+      tested.branchingMethodWithUnreachableLines(1);
    }
 }

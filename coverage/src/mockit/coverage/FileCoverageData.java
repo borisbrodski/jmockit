@@ -42,14 +42,14 @@ public final class FileCoverageData implements Serializable
 
    LineCoverageData addLine(int line)
    {
-      if (lineToLineData.containsKey(line)) {
-         return lineToLineData.get(line);
-      }
-      else {
-         LineCoverageData lineData = new LineCoverageData();
+      LineCoverageData lineData = lineToLineData.get(line);
+
+      if (lineData == null) {
+         lineData = new LineCoverageData();
          lineToLineData.put(line, lineData);
-         return lineData;
       }
+
+      return lineData;
    }
 
    void incrementLineCount(int line, CallPoint callPoint)

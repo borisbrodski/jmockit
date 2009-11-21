@@ -76,6 +76,7 @@ final class CoverageModifier extends ClassWriter
       return new MethodModifier(mv, "<clinit>".equals(name));
    }
 
+   @SuppressWarnings({"ClassWithTooManyFields"})
    private final class MethodModifier extends MethodAdapter
    {
       private final MethodWriter mw;
@@ -88,6 +89,7 @@ final class CoverageModifier extends ClassWriter
       private boolean assertFoundInCurrentLine;
       private final boolean clinit;
       private boolean nextLabelAfterConditionalJump;
+      private boolean potentialAssertFalseFound;
 
       private MethodModifier(MethodVisitor mv, boolean clinit)
       {
@@ -116,9 +118,8 @@ final class CoverageModifier extends ClassWriter
          }
 
          lineData = fileData.addLine(line);
-         assert lineData != null;
-
          currentLine = line;
+
          startLabelsForVisitedLines.add(start);
          jumpTargetsForCurrentLine.clear();
 
@@ -158,13 +159,17 @@ final class CoverageModifier extends ClassWriter
 
          mw.visitJumpInsn(opcode, label);
 
+         if (potentialAssertFalseFound && opcode == IFNE) {
+            // TODO: what to do here, if anything?
+         }
+
          generateCallToRegisterBranchTargetExecutionIfPending();
 
-         int branchIndex = lineData.addBranch();
+         int branchIndex = lineData.addSegment();
          pendingBranches.put(branchIndex, false);
 
          if (assertFoundInCurrentLine) {
-            BranchCoverageData branchData = lineData.getBranchData(branchIndex);
+            BranchCoverageData branchData = lineData.getSegmentData(branchIndex);
             branchData.markAsUnreachable();
          }
 
@@ -173,12 +178,14 @@ final class CoverageModifier extends ClassWriter
 
       private void generateCallToRegisterBranchTargetExecutionIfPending()
       {
+         potentialAssertFalseFound = false;
+
          if (pendingBranches.isEmpty()) {
             return;
          }
          
          for (Integer branchIndex : pendingBranches.keySet()) {
-            BranchCoverageData branchData = lineData.getBranchData(branchIndex);
+            BranchCoverageData branchData = lineData.getSegmentData(branchIndex);
             Boolean firstInsnAfterJump = pendingBranches.get(branchIndex);
 
             if (firstInsnAfterJump) {
@@ -249,10 +256,11 @@ final class CoverageModifier extends ClassWriter
       @Override
       public void visitFieldInsn(int opcode, String owner, String name, String desc)
       {
-         assertFoundInCurrentLine = opcode == GETSTATIC && "$assertionsDisabled".equals(name);
-
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitFieldInsn(opcode, owner, name, desc);
+
+         assertFoundInCurrentLine = opcode == GETSTATIC && "$assertionsDisabled".equals(name);
+         potentialAssertFalseFound = true;
       }
 
       @Override

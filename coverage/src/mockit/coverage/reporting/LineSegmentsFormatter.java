@@ -47,7 +47,7 @@ final class LineSegmentsFormatter
       LineSegment[][] segmentPairs =
          buildSegmentPairsForSourceElements(sourceElements, initialSegment);
 
-      List<BranchCoverageData> branches = lineData.getBranches();
+      List<BranchCoverageData> branches = lineData.getSegments();
       FormattedSegments formattedSegments =
          buildFormattedSegments(lineData, branches, segmentPairs);
 

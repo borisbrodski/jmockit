@@ -114,12 +114,17 @@ public abstract class XmlWriter
 
          output.write("    <line number='");
          output.write(String.valueOf(line));
+
+         if (lineData.isUnreachable()) {
+            output.write("' unreachable='true");
+         }
+
          output.write("' count='");
          output.write(String.valueOf(lineData.getExecutionCount()));
 
          pendingEndTag = writeChildElementsForLine(lineData);
 
-         if (lineData.containsBranches()) {
+         if (lineData.containsSegments()) {
             pendingEndTag = writeChildElementsForSegments(lineData) || pendingEndTag;
          }
 
@@ -134,7 +139,7 @@ public abstract class XmlWriter
    {
       boolean nonEmptySegmentFound = false;
 
-      for (BranchCoverageData segmentData : lineData.getBranches()) {
+      for (BranchCoverageData segmentData : lineData.getSegments()) {
          if (segmentData.isNonEmpty()) {
             if (!nonEmptySegmentFound) {
                if (!pendingEndTag) {
@@ -156,29 +161,33 @@ public abstract class XmlWriter
       return nonEmptySegmentFound;
    }
 
-   private void writeChildElementForSegment(BranchCoverageData segmentData) throws IOException
+   private void writeChildElementForSegment(BranchCoverageData data) throws IOException
    {
-      output.write("      <branch");
+      output.write("      <segment");
 
-      int noJumpCount = segmentData.getNoJumpExecutionCount();
+      if (data.isUnreachable()) {
+         output.write(" unreachable='true'");
+      }
 
-      if (segmentData.hasNoJumpTarget()) {
+      int noJumpCount = data.getNoJumpExecutionCount();
+
+      if (data.hasNoJumpTarget()) {
          output.write(" noJumpCount='");
          output.write(String.valueOf(noJumpCount));
          output.write("'");
       }
 
-      int jumpCount = segmentData.getJumpExecutionCount();
+      int jumpCount = data.getJumpExecutionCount();
 
-      if (segmentData.hasJumpTarget()) {
+      if (data.hasJumpTarget()) {
          output.write(" jumpCount='");
          output.write(String.valueOf(jumpCount));
          output.write("'");
       }
 
-      writeEndTagForBranch(segmentData, jumpCount, noJumpCount);
+      writeEndTagForSegment(data, jumpCount, noJumpCount);
    }
 
-   protected abstract void writeEndTagForBranch(
-      BranchCoverageData branchData, int jumpCount, int noJumpCount) throws IOException;
+   protected abstract void writeEndTagForSegment(
+      BranchCoverageData data, int jumpCount, int noJumpCount) throws IOException;
 }
