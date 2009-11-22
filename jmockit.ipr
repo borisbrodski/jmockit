@@ -337,7 +337,6 @@
           <option name="m_ignoreInvisibleFields" value="true" />
         </inspection_tool>
         <inspection_tool class="InstanceofCatchParameter" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="InstanceofChain" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="InstanceofIncompatibleInterface" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="InstanceofThis" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="InstantiationOfUtilityClass" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -688,9 +687,6 @@
         </inspection_tool>
         <inspection_tool class="SynchronizeOnLock" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SynchronizeOnThis" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="SynchronizedMethod" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="m_includeNativeMethods" value="true" />
-        </inspection_tool>
         <inspection_tool class="SynchronizedOnLiteralObject" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SystemExit" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SystemGetenv" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -708,7 +704,6 @@
         <inspection_tool class="TestMethodIsPublicVoidNoArg" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="TestOnlyProblems" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="TextLabelInSwitchStatement" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ThisEscapedInConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ThreadDeathRethrown" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ThreadDumpStack" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ThreadPriority" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -734,7 +729,6 @@
           <option name="m_onlyLookAtBlocks" value="false" />
         </inspection_tool>
         <inspection_tool class="TransientFieldInNonSerializableClass" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="TrivialStringConcatenation" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="TypeParameterExtendsFinalClass" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="TypeParameterHidesVisibleType" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="TypeParameterNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
@@ -835,7 +829,6 @@
         <inspection_tool class="WhileLoopSpinsOnField" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreNonEmtpyLoops" value="false" />
         </inspection_tool>
-        <inspection_tool class="ZeroLengthArrayInitialization" enabled="true" level="WARNING" enabled_by_default="true" />
       </profile>
     </profiles>
     <option name="PROJECT_PROFILE" value="Project Default" />
@@ -891,6 +884,7 @@
         <w>args</w>
         <w>arraycopy</w>
         <w>blanchedalmond</w>
+        <w>booleans</w>
         <w>bytecode</w>
         <w>bytecodes</w>
         <w>cadetblue</w>
@@ -922,6 +916,7 @@
         <w>interp</w>
         <w>interpolator</w>
         <w>interpolators</w>
+        <w>ints</w>
         <w>jaas</w>
         <w>javaagent</w>
         <w>jmxri</w>

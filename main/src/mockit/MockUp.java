@@ -58,7 +58,7 @@ public class MockUp<T>
       Type typeToMock = paramType.getActualTypeArguments()[0];
       Class<?> classToMock;
 
-      if (typeToMock instanceof Class) {
+      if (typeToMock instanceof Class<?>) {
          classToMock = (Class<?>) typeToMock;
 
          if (classToMock.isInterface()) {

@@ -135,8 +135,7 @@ public final class Mockit
     * method is called instead. For an instance mock method, the mock class instance on which the
     * call is made is created with the default constructor for the mock class, <strong>every
     * time</strong> the mocked real method is called. If you want to reuse mock instances for all
-    * such calls you should pass an instance of the mock class instead of its <code>Class</code>
-    * object.
+    * such calls you should pass an instance of the mock class instead of its {@code Class} object.
     * <p/>
     * For a <strong>mock method</strong> to be considered as <strong>corresponding</strong> to a
     * given <strong>real method</strong>, it must have the same name, the exact same parameter types
@@ -147,16 +146,16 @@ public final class Mockit
     * A constructor in the real class can be mocked by a corresponding <strong>mock
     * constructor</strong> in the mock class, declared with the same signature.
     * However, since a constructor can only be called on a freshly created instance, it is generally
-    * recommended to declare a mock method of name <code>$init</code> instead (which can also be
-    * <code>static</code>). This method should have <code>void</code> return type and must have the
+    * recommended to declare a mock method of name {@code $init} instead (which can also be
+    * {@code static}). This method should have {@code void} return type and must have the
     * same declared parameters as the mocked constructor. It will be called for each new instance of
     * the real class that is created through a call to that constructor, with whatever arguments are
     * passed to it.
     * <p/>
-    * <strong>Class initializers</strong> of the real class (one or more <code>static</code>
-    * initialization blocks plus all assignments to <code>static</code> fields) can be mocked by
-    * providing a mock method named <code>$clinit</code> in the mock class.
-    * This method should return <code>void</code> and have no declared parameters.
+    * <strong>Class initializers</strong> of the real class (one or more {@code static}
+    * initialization blocks plus all assignments to {@code static} fields) can be mocked by
+    * providing a mock method named {@code $clinit} in the mock class.
+    * This method should return {@code void} and have no declared parameters.
     * It will called at most once, at the time the real class is initialized by the JVM (and since
     * all static initializers for that class are mocked, the initialization will have no effect).
     * <p/>
@@ -177,14 +176,14 @@ public final class Mockit
     * the corresponding real method or constructor was called. This requires that the mock class
     * defines an instance field with name <strong>"it"</strong> of the same type as the real class,
     * and accessible from that real class (in general, this means the field will have to be
-    * <code>public</code>). Such a field will always be set to the appropriate real class instance,
+    * {@code public}). Such a field will always be set to the appropriate real class instance,
     * whenever a mock method is called. Note that through this field the mock class will be able to
     * call any accessible instance method on the real class, including the real method corresponding
     * to the current mock method. In this case, however, such calls are not allowed because they
     * lead to infinite recursion, with the mock calling itself indirectly through the redefined real
     * method. If you really need to call the real method from its mock method, then you will have to
     * use the <em>JMockit Annotations</em> API, such as {@link #setUpMocks(Object...)}, using the
-    * {@link Mock} annotation with <code>reentrant = true</code>.
+    * {@link Mock} annotation with {@code reentrant = true}.
     *
     * @param realClass the class from production code to be mocked, which is used by code under test
     * @param mockClass the class containing the mock methods that will replace methods of same
@@ -217,9 +216,9 @@ public final class Mockit
     * The classes are stubbed out in the order they are given, so make sure any super-class comes
     * first.
     * <p/>
-    * Methods with non-<code>void</code> return type will return the default value for this type,
-    * that is, zero for a number or <code>char</code>, <code>false</code> for a boolean, empty for
-    * an array, or <code>null</code> for a reference type.
+    * Methods with non-{@code void} return type will return the default value for this type, that
+    * is, zero for a number or {@code char}, {@literal false} for a boolean, empty for an array, or
+    * {@literal null} for a reference type.
     * <p/>
     * If a different behavior is desired for any method or constructor, then
     * {@link #setUpMocks(Object...)} and the other similar methods can be used right after the call
@@ -338,14 +337,14 @@ public final class Mockit
     * (that is, in this case only methods or constructors annotated as mocks are considered to be
     * so).
     *
-    * @param mockClassesOrInstances one or more classes (<code>Class</code> objects) or instances of
+    * @param mockClassesOrInstances one or more classes ({@code Class} objects) or instances of
     * classes which define arbitrary methods and/or constructors, where the ones annotated as
     * {@linkplain Mock mocks} will be used to redefine corresponding real methods/constructors in a
     * designated {@linkplain MockClass#realClass() real class} (usually, a class on which the code
     * under test depends on)
     *
     * @throws IllegalArgumentException if any mock class fails to specify the corresponding real
-    * class using the <code>@MockClass(realClass = ...)</code> annotation
+    * class using the {@code @MockClass(realClass = ...)} annotation
     *
     * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/web/submitOrder/OrderEntryPageTest.java">Example</a>
     */
@@ -355,7 +354,7 @@ public final class Mockit
          Class<?> mockClass;
          Object mock;
 
-         if (mockClassOrInstance instanceof Class) {
+         if (mockClassOrInstance instanceof Class<?>) {
             mockClass = (Class<?>) mockClassOrInstance;
             mock = null;
          }
@@ -396,14 +395,14 @@ public final class Mockit
     * jmockit.jar, to have it loaded and applied automatically for any test suite execution, as
     * soon as JMockit itself is initialized.
     *
-    * @param mockClassesOrInstances one or more classes (<code>Class</code> objects) or instances of
+    * @param mockClassesOrInstances one or more classes ({@code Class} objects) or instances of
     * classes which define arbitrary methods and/or constructors, where the ones annotated as
     * {@linkplain Mock mocks} will be used to redefine corresponding real methods/constructors in a
     * designated {@linkplain MockClass#realClass() real class} (usually, a class on which the code
     * under test depends on)
     *
     * @throws IllegalArgumentException if any mock class fails to specify the corresponding real
-    * class using the <code>@MockClass(realClass = ...)</code> annotation
+    * class using the {@code @MockClass(realClass = ...)} annotation
     */
    public static void setUpStartupMocks(Object... mockClassesOrInstances)
    {
@@ -411,7 +410,7 @@ public final class Mockit
          Class<?> mockClass;
          Object mock;
 
-         if (mockClassOrInstance instanceof Class) {
+         if (mockClassOrInstance instanceof Class<?>) {
             mockClass = (Class<?>) mockClassOrInstance;
             mock = null;
          }
@@ -503,7 +502,7 @@ public final class Mockit
       Class<?> mockClass;
       Object mock;
 
-      if (mockClassOrInstance instanceof Class) {
+      if (mockClassOrInstance instanceof Class<?>) {
          mockClass = (Class<?>) mockClassOrInstance;
          mock = null;
       }
@@ -599,7 +598,7 @@ public final class Mockit
 
    /**
     * Restores a given set of classes to their original definitions. This is equivalent to calling
-    * <code>redefineMethods(realClass, realClass)</code>.
+    * {@code redefineMethods(realClass, realClass)}.
     * <p/>
     * In practice, this method should only be used inside "after" methods ({@code tearDown()} with
     * JUnit 3.8, {@code @After}-annotated with JUnit 4, and {@code @AfterMethod}-annotated with
@@ -627,8 +626,8 @@ public final class Mockit
     * In practice, this method should only be used if all mocked classes needs to be restored in the
     * middle of some test. Otherwise, it is unnecessary because JMockit will automatically restore
     * all classes mocked by a test at the end of that test, as well as all classes mocked for the
-    * test class as a whole (eg, in a <code>@BeforeClass</code> JUnit method) before the first test
-    * in the next test class is executed.
+    * test class as a whole (eg, in a {@code @BeforeClass} JUnit method) before the first test in
+    * the next test class is executed.
     */
    public static void restoreAllOriginalDefinitions()
    {
@@ -736,7 +735,7 @@ public final class Mockit
 
    private static void addInterface(List<Class<?>> interfaces, Type type)
    {
-      if (type instanceof Class) {
+      if (type instanceof Class<?>) {
          interfaces.add((Class<?>) type);
       }
       else if (type instanceof ParameterizedType) {
