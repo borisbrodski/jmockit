@@ -62,7 +62,8 @@
    </macrodef>
 
    <target name="buildASM"><build module="asm2"/></target>
-   <target name="buildMain" depends="buildASM">
+   <target name="buildHamcrest"><build module="hamcrest"/></target>
+   <target name="buildMain" depends="buildASM, buildHamcrest">
       <build module="main"/>
       <buildTests module="main"/>
    </target>
