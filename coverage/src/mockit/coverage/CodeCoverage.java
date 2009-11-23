@@ -91,7 +91,7 @@ public final class CodeCoverage implements ClassFileTransformer
       boolean modifyClassForCoverage = isToBeConsideredForCoverage(className, protectionDomain);
 
       if (modifyClassForCoverage) {
-         byte[] modifiedClassfile = readAndModifyClassForCoverage(originalClassfile);
+         byte[] modifiedClassfile = modifyClassForCoverage(new ClassReader(originalClassfile));
          registerClassAsModifiedForCoverage(className, modifiedClassfile);
          return modifiedClassfile;
       }
@@ -158,9 +158,7 @@ public final class CodeCoverage implements ClassFileTransformer
    {
       try {
          ClassReader cr = new ClassReader(loadedClass.getName());
-         CoverageModifier modifier = new CoverageModifier(cr);
-         cr.accept(modifier, false);
-         byte[] modifiedClassfile = modifier.toByteArray();
+         byte[] modifiedClassfile = modifyClassForCoverage(cr);
 
          ClassDefinition[] classDefs = { new ClassDefinition(loadedClass, modifiedClassfile) };
          Startup.instrumentation().redefineClasses(classDefs);
@@ -179,13 +177,10 @@ public final class CodeCoverage implements ClassFileTransformer
       }
    }
 
-   private byte[] readAndModifyClassForCoverage(byte[] classfileBuffer)
+   private byte[] modifyClassForCoverage(ClassReader cr)
    {
-      ClassReader cr = new ClassReader(classfileBuffer);
       CoverageModifier modifier = new CoverageModifier(cr);
-
       cr.accept(modifier, false);
-
       return modifier.toByteArray();
    }
 }

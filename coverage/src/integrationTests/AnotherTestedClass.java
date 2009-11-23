@@ -47,7 +47,7 @@ public final class AnotherTestedClass
       System.runFinalization();
    }
 
-   int methodWithFourDifferentPathsAndSimpleLines(boolean b, int i)
+   void methodWithFourDifferentPathsAndSimpleLines(boolean b, int i)
    {
       if (b) {
          System.gc();
@@ -59,11 +59,6 @@ public final class AnotherTestedClass
       if (i > 0) {
          System.gc();
       }
-      else {
-         System.runFinalization();
-      }
-
-      return i;
    }
 
    void methodWithFourDifferentPathsAndSegmentedLines(boolean b, int i)
@@ -76,6 +71,9 @@ public final class AnotherTestedClass
 
    boolean singleLineMethodWithMultiplePaths(boolean a, boolean b, boolean c)
    {
-      return a || b;
+      if (a || b)
+         return true;
+      else
+         return false;
    }
 }

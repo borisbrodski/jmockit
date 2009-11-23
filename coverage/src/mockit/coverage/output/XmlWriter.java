@@ -201,16 +201,12 @@ public abstract class XmlWriter
    {
       output.newLine();
 
-      PathCoverage pathCoverage = new PathCoverage(fileData);
-
       for (MethodCoverageData methodData : fileData.getMethods()) {
          output.write("    <paths method='");
          output.write(methodData.methodNameAndDesc);
          writeLine("'>");
 
-         List<Path> paths = pathCoverage.buildPaths(methodData);
-
-         for (Path path : paths) {
+         for (Path path : methodData.paths) {
             output.write("      <path>");
             output.write(path.getListOfSourceLocations());
             writeLine("</path>");

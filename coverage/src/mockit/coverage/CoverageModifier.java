@@ -26,6 +26,8 @@ package mockit.coverage;
 
 import java.util.*;
 
+import mockit.coverage.paths.*;
+
 import org.objectweb.asm2.*;
 import static org.objectweb.asm2.Opcodes.*;
 
@@ -232,7 +234,7 @@ final class CoverageModifier extends ClassWriter
       }
 
       @Override
-      public final void visitVarInsn(int opcode, int var)
+      public void visitVarInsn(int opcode, int var)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitVarInsn(opcode, var);
@@ -330,16 +332,15 @@ final class CoverageModifier extends ClassWriter
          }
 
          super.visitLineNumber(line, start);
+
+         methodData.handlePotentialNewBlock(start);
       }
 
       @Override
       public void visitLabel(Label label)
       {
          super.visitLabel(label);
-
-         if (methodData.entryBlock == null) {
-            methodData.entryBlock = mw.currentBlock;
-         }
+         methodData.handleJumpTarget(label);
       }
 
       @Override
@@ -351,6 +352,8 @@ final class CoverageModifier extends ClassWriter
          }
 
          super.visitJumpInsn(opcode, label);
+
+         methodData.handleJump(label, opcode != GOTO && opcode != JSR);
       }
 
       @Override
@@ -360,9 +363,25 @@ final class CoverageModifier extends ClassWriter
 
          super.visitInsn(opcode);
 
+         methodData.handleRegularInstruction(currentLine);
+         
          if (mw.currentBlock == null) {
-            methodData.exitBlocks.add(currentBlock);
+            methodData.handleExit(currentBlock);
          }
+      }
+
+      @Override
+      public void visitVarInsn(int opcode, int var)
+      {
+         super.visitVarInsn(opcode, var);
+         methodData.handleRegularInstruction(currentLine);
+      }
+
+      @Override
+      public void visitMethodInsn(int opcode, String owner, String name, String desc)
+      {
+         super.visitMethodInsn(opcode, owner, name, desc);
+         methodData.handleRegularInstruction(currentLine);
       }
    }
 

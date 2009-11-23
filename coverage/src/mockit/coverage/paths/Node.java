@@ -25,55 +25,59 @@
 package mockit.coverage.paths;
 
 import java.io.*;
-import java.util.*;
 
-import org.objectweb.asm2.*;
-
-public final class Path implements Serializable
+public class Node implements Serializable
 {
-   private static final long serialVersionUID = 8895491272907955543L;
+   private static final long serialVersionUID = 7521062699264845946L;
+   
+   final int line;
 
-   private final List<Node> nodes = new ArrayList<Node>(4);
-
-   Path(Label entryBlock)
+   Node(int line)
    {
-      addNode(new Node.Entry(entryBlock.line));
+      this.line = line;
    }
 
-   Path(Path sharedPrefix)
+   @Override
+   public String toString()
    {
-      nodes.addAll(sharedPrefix.nodes);
-      addNode(new Node.Fork());
+      return getClass().getSimpleName() + ':' + line;
    }
 
-   void addNode(Node node)
+   static final class Entry extends Node
    {
-      nodes.add(node);
+      private static final long serialVersionUID = -3065417917872259568L;
+
+      Entry(int entryLine) { super(entryLine); }
    }
 
-   void addExitNode(Label exitBlock)
+   static final class Exit extends Node
    {
-      Node lastNode = nodes.get(nodes.size() - 1);
+      private static final long serialVersionUID = -4801498566218642509L;
 
-      if (!(lastNode instanceof Node.Exit)) {
-         addNode(new Node.Exit(exitBlock.line));
-      }
+      Exit(int exitLine) { super(exitLine); }
    }
 
-   public String getListOfSourceLocations()
+   static final class BasicBlock extends Node
    {
-      StringBuilder sourceLocations = new StringBuilder();
-      Node previousNode = null;
+      private static final long serialVersionUID = 2637678937923952603L;
 
-      for (Node nextNode : nodes) {
-         if (previousNode != null) {
-            sourceLocations.append(' ');
-         }
+      BasicBlock(int startingLine) { super(startingLine); }
+   }
 
-         sourceLocations.append(nextNode);
-         previousNode = nextNode;
-      }
+   static final class Fork extends Node
+   {
+      private static final long serialVersionUID = 3299139260264263978L;
 
-      return sourceLocations.toString();
+      Fork() { super(0); }
+
+      @Override
+      public String toString() { return "jump"; }
+   }
+
+   static final class Join extends Node
+   {
+      private static final long serialVersionUID = -1983522899831071765L;
+
+      Join(int joiningLine) { super(joiningLine); }
    }
 }

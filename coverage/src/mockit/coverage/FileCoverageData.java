@@ -27,6 +27,8 @@ package mockit.coverage;
 import java.io.*;
 import java.util.*;
 
+import mockit.coverage.paths.*;
+
 /**
  * Coverage data gathered for the lines and branches of a single source file.
  */
@@ -36,7 +38,7 @@ public final class FileCoverageData implements Serializable
 
    private final SortedMap<Integer, LineCoverageData> lineToLineData =
       new TreeMap<Integer, LineCoverageData>();
-   final transient List<MethodCoverageData> methods = new ArrayList<MethodCoverageData>();
+   final List<MethodCoverageData> methods = new ArrayList<MethodCoverageData>();
    long lastModified;
    private int totalSegments;
    private int coveredSegments;
