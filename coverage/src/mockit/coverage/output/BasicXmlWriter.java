@@ -42,8 +42,7 @@ public final class BasicXmlWriter extends XmlWriter
    }
 
    @Override
-   protected void writeEndTagForSegment(
-      BranchCoverageData branchData, int jumpCount, int noJumpCount) throws IOException
+   protected void writeEndTagForSegment(BranchCoverageData data) throws IOException
    {
       output.write("/>");
    }

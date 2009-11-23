@@ -50,24 +50,19 @@ public final class FullXmlWriter extends XmlWriter
    }
 
    @Override
-   protected void writeEndTagForSegment(
-      BranchCoverageData segmentData, int jumpCount, int noJumpCount) throws IOException
+   protected void writeEndTagForSegment(BranchCoverageData data) throws IOException
    {
-      if (jumpCount == 0 && noJumpCount == 0) {
+      List<CallPoint> callPoints = data.getCallPoints();
+
+      if (callPoints == null) {
          output.write("/>");
-         return;
       }
-
-      output.write(">");
-      output.newLine();
-
-      List<CallPoint> callPoints = segmentData.getCallPoints();
-
-      if (callPoints != null) {
+      else {
+         output.write(">");
+         output.newLine();
          writeChildElementsForCallPoints(callPoints, "  ");
+         output.write("      </segment>");
       }
-
-      output.write("      </segment>");
    }
 
    private void writeChildElementsForCallPoints(List<CallPoint> callPoints, String indent)

@@ -178,7 +178,7 @@ public abstract class XmlWriter
 
       int noJumpCount = data.getNoJumpExecutionCount();
 
-      if (data.hasNoJumpTarget()) {
+      if (noJumpCount >= 0) {
          output.write(" noJumpCount='");
          output.write(String.valueOf(noJumpCount));
          output.write("'");
@@ -186,17 +186,16 @@ public abstract class XmlWriter
 
       int jumpCount = data.getJumpExecutionCount();
 
-      if (data.hasJumpTarget()) {
+      if (jumpCount >= 0) {
          output.write(" jumpCount='");
          output.write(String.valueOf(jumpCount));
          output.write("'");
       }
 
-      writeEndTagForSegment(data, jumpCount, noJumpCount);
+      writeEndTagForSegment(data);
    }
 
-   protected abstract void writeEndTagForSegment(
-      BranchCoverageData data, int jumpCount, int noJumpCount) throws IOException;
+   protected abstract void writeEndTagForSegment(BranchCoverageData data) throws IOException;
 
    private void writeExecutablePaths(FileCoverageData fileData) throws IOException
    {

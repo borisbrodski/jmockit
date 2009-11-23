@@ -141,8 +141,15 @@ final class CoverageModifier extends ClassWriter
 
          jumpTargetsForCurrentLine.add(label);
 
-         int branchIndex = lineData.addSegment(mw.currentBlock);
-         pendingBranches.put(branchIndex, false);
+         if (opcode != GOTO && opcode != JSR) {
+            int branchIndex = lineData.addSegment(mw.currentBlock);
+            pendingBranches.put(branchIndex, false);
+
+            if (assertFoundInCurrentLine) {
+               BranchCoverageData branchData = lineData.getSegmentData(branchIndex);
+               branchData.markAsUnreachable();
+            }
+         }
 
          mw.visitJumpInsn(opcode, label);
 
@@ -151,11 +158,6 @@ final class CoverageModifier extends ClassWriter
          }
 
          generateCallToRegisterBranchTargetExecutionIfPending();
-
-         if (assertFoundInCurrentLine) {
-            BranchCoverageData branchData = lineData.getSegmentData(branchIndex);
-            branchData.markAsUnreachable();
-         }
 
          nextLabelAfterConditionalJump = opcode != GOTO && opcode != JSR;
       }
