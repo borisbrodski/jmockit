@@ -51,15 +51,26 @@ public final class Path
    public String getListOfSourceLocations()
    {
       StringBuilder sourceLocations = new StringBuilder();
+      Label previousBlock = null;
 
-      for (int i = 0; i < basicBlocks.size(); i++) {
-         Label basicBlock = basicBlocks.get(i);
+      for (Label nextBlock : basicBlocks) {
+         int line = nextBlock.line;
 
-         if (i > 0) {
+         if (previousBlock != null) {
             sourceLocations.append(' ');
+
+            if (nextBlock != previousBlock.successors.successor) {
+               sourceLocations.append("jump ");
+
+            }
+
+            if (line == 0) {
+               line = previousBlock.line;
+            }
          }
 
-         sourceLocations.append(basicBlock.line).append(':').append(basicBlock.position);
+         sourceLocations.append(line);
+         previousBlock = nextBlock;
       }
 
       return sourceLocations.toString();

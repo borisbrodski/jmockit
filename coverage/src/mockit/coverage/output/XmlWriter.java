@@ -106,7 +106,7 @@ public abstract class XmlWriter
 
       FileCoverageData fileCoverageData = lineCountEntry.getValue();
       writeCoverageDataForSourceFile(fileCoverageData);
-      writeBranchingPaths(fileCoverageData);
+      writeExecutablePaths(fileCoverageData);
 
       writeLine("  </file>");
    }
@@ -198,7 +198,7 @@ public abstract class XmlWriter
    protected abstract void writeEndTagForSegment(
       BranchCoverageData data, int jumpCount, int noJumpCount) throws IOException;
 
-   private void writeBranchingPaths(FileCoverageData fileData) throws IOException
+   private void writeExecutablePaths(FileCoverageData fileData) throws IOException
    {
       output.newLine();
 

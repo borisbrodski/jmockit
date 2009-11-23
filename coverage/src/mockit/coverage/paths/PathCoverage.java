@@ -34,13 +34,14 @@ public final class PathCoverage
 {
    private final Map<Label, BranchCoverageData> forkToSegmentData;
    private final List<Path> paths;
+   private List<Label> exitNodes;
 
    public PathCoverage(FileCoverageData fileData)
    {
       forkToSegmentData = new LinkedHashMap<Label, BranchCoverageData>();
       paths = new LinkedList<Path>();
 
-      buildMapFromInternalCFGNodesToSegmentData(fileData.getLineToLineData().entrySet());
+//      buildMapFromInternalCFGNodesToSegmentData(fileData.getLineToLineData().entrySet());
    }
 
    private void buildMapFromInternalCFGNodesToSegmentData(
@@ -66,29 +67,33 @@ public final class PathCoverage
       paths.clear();
       paths.add(path);
 
-      addNodesByWalkingBreadthFirst(path, methodData.exitBlocks, entryBlock.successors);
+      exitNodes = methodData.exitBlocks;
+
+      addNodesByWalkingBreadthFirst(path, entryBlock);
 
       return paths;
    }
 
-   private void addNodesByWalkingBreadthFirst(Path path, List<Label> exitNodes, Edge firstSuccessor)
+   private void addNodesByWalkingBreadthFirst(Path path, Label currentNode)
    {
-      if (firstSuccessor == null) {
+      Edge successorsToCurrentNode = currentNode.successors;
+
+      if (successorsToCurrentNode == null) {
          return;
       }
 
-      if (firstSuccessor.next != null) {
-         Label siblingNode = firstSuccessor.next.successor;
+      if (successorsToCurrentNode.next != null) {
+         Label siblingNode = successorsToCurrentNode.next.successor;
          Path alternatePath = new Path(path, siblingNode);
          paths.add(alternatePath);
-         addNodesByWalkingBreadthFirst(alternatePath, exitNodes, siblingNode.successors);
+         addNodesByWalkingBreadthFirst(alternatePath, siblingNode);
       }
 
-      Label nextNode = firstSuccessor.successor;
+      Label nextNode = successorsToCurrentNode.successor;
       path.addNode(nextNode);
 
       if (!exitNodes.contains(nextNode)) {
-         addNodesByWalkingBreadthFirst(path, exitNodes, nextNode.successors);
+         addNodesByWalkingBreadthFirst(path, nextNode);
       }
    }
 }

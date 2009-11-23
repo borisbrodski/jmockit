@@ -46,4 +46,36 @@ public final class AnotherTestedClass
 
       System.runFinalization();
    }
+
+   int methodWithFourDifferentPathsAndSimpleLines(boolean b, int i)
+   {
+      if (b) {
+         System.gc();
+      }
+      else {
+         System.runFinalization();
+      }
+
+      if (i > 0) {
+         System.gc();
+      }
+      else {
+         System.runFinalization();
+      }
+
+      return i;
+   }
+
+   void methodWithFourDifferentPathsAndSegmentedLines(boolean b, int i)
+   {
+      if (b) { System.gc(); } else { System.runFinalization(); }
+
+      if (i > 0) { System.gc(); }
+      else { System.runFinalization(); }
+   }
+
+   boolean singleLineMethodWithMultiplePaths(boolean a, boolean b, boolean c)
+   {
+      return a || b;
+   }
 }
