@@ -33,19 +33,13 @@ public final class MethodCoverageData implements Serializable
 {
    private static final long serialVersionUID = -5073393714435522417L;
 
-   public final String methodNameAndDesc;
    public final List<Path> paths = new ArrayList<Path>();
 
-   // Helper fields:
+   // Helper fields used during path building:
    private transient boolean addNextBlockToActivePaths;
    private final transient Map<Label, List<Path>> jumpTargetToAlternatePaths =
       new HashMap<Label, List<Path>>();
    private final transient List<Path> activePaths = new ArrayList<Path>();
-
-   public MethodCoverageData(String methodNameAndDesc)
-   {
-      this.methodNameAndDesc = methodNameAndDesc;
-   }
 
    public void handlePotentialNewBlock(Label basicBlock)
    {
@@ -97,9 +91,11 @@ public final class MethodCoverageData implements Serializable
 
    private void addNewAlternatePath(List<Path> alternatePathsForThisTarget, Path regularPath)
    {
-      Path alternatePath = new Path(regularPath);
-      paths.add(alternatePath);
-      alternatePathsForThisTarget.add(alternatePath);
+      if (paths.size() < 20) {
+         Path alternatePath = new Path(regularPath);
+         paths.add(alternatePath);
+         alternatePathsForThisTarget.add(alternatePath);
+      }
    }
 
    public void handleJumpTarget(Label basicBlock)
@@ -137,5 +133,30 @@ public final class MethodCoverageData implements Serializable
       }
 
       activePaths.clear();
+   }
+
+   public void startNewExecution()
+   {
+      for (Path path : paths) {
+         path.startExecution();
+      }
+   }
+
+   public void markSubPathsAsExecuted(int line, int segment)
+   {
+      for (Path path : paths) {
+         path.markAsExecutedIfContainsNode(line, segment);
+      }
+   }
+
+   public int getExecutionCount()
+   {
+      int totalCount = 0;
+
+      for (Path path : paths) {
+         totalCount += path.executionCount;
+      }
+
+      return totalCount;
    }
 }

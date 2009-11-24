@@ -32,8 +32,11 @@ import org.objectweb.asm2.*;
 public final class Path implements Serializable
 {
    private static final long serialVersionUID = 8895491272907955543L;
-
+   private final transient ThreadLocal<Integer> activeNode = new ThreadLocal<Integer>();
+   
    private final List<Node> nodes = new ArrayList<Node>(4);
+   private transient int indexOfLastNonExitNode;
+   int executionCount;
 
    Path(Label entryBlock)
    {
@@ -53,27 +56,60 @@ public final class Path implements Serializable
 
    void addExitNode(Label exitBlock)
    {
-      Node lastNode = nodes.get(nodes.size() - 1);
+      int lastIndex = nodes.size() - 1;
+      Node lastNode = nodes.get(lastIndex);
 
-      if (!(lastNode instanceof Node.Exit)) {
-         addNode(new Node.Exit(exitBlock.line));
+      if (lastNode instanceof Node.Exit) {
+         throw new IllegalStateException("Duplicate exit node");
       }
+
+      addNode(new Node.Exit(exitBlock.line));
+      indexOfLastNonExitNode = lastIndex;
    }
 
-   public String getListOfSourceLocations()
+   void startExecution()
    {
-      StringBuilder sourceLocations = new StringBuilder();
-      Node previousNode = null;
+      activeNode.set(0);
+   }
 
-      for (Node nextNode : nodes) {
-         if (previousNode != null) {
-            sourceLocations.append(' ');
-         }
+   void markAsExecutedIfContainsNode(int line, int segment)
+   {
+      Integer activeNodeIndex = activeNode.get();
 
-         sourceLocations.append(nextNode);
-         previousNode = nextNode;
+      if (activeNodeIndex == null) {
+         return;
       }
 
-      return sourceLocations.toString();
+      Node currentNode = nodes.get(activeNodeIndex);
+
+      if (currentNode instanceof Node.Fork) {
+         activeNodeIndex++;
+         currentNode = nodes.get(activeNodeIndex);
+      }
+
+      if (currentNode.line == line) {
+         if (currentNode instanceof Node.Exit || activeNodeIndex == indexOfLastNonExitNode) {
+            executionCount++;
+            activeNodeIndex = null;
+         }
+         else {
+            activeNodeIndex++;
+         }
+      }
+      else {
+         activeNodeIndex = null;
+      }
+
+      activeNode.set(activeNodeIndex);
+   }
+
+   public int getExecutionCount()
+   {
+      return executionCount;
+   }
+
+   public List<Node> getNodes()
+   {
+      return nodes;
    }
 }

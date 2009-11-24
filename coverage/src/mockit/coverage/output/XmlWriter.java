@@ -120,14 +120,14 @@ public abstract class XmlWriter
          LineCoverageData lineData = lineAndLineData.getValue();
 
          output.write("    <line number='");
-         output.write(String.valueOf(line));
+         writeInt(line);
 
          if (lineData.isUnreachable()) {
             output.write("' unreachable='true");
          }
 
          output.write("' count='");
-         output.write(String.valueOf(lineData.getExecutionCount()));
+         writeInt(lineData.getExecutionCount());
 
          pendingEndTag = writeChildElementsForLine(lineData);
 
@@ -137,6 +137,11 @@ public abstract class XmlWriter
 
          writeLine(pendingEndTag ? "    </line>" : "'/>");
       }
+   }
+
+   final void writeInt(int value) throws IOException
+   {
+      output.write(String.valueOf(value));
    }
 
    protected abstract boolean writeChildElementsForLine(LineCoverageData lineData)
@@ -180,7 +185,7 @@ public abstract class XmlWriter
 
       if (noJumpCount >= 0) {
          output.write(" noJumpCount='");
-         output.write(String.valueOf(noJumpCount));
+         writeInt(noJumpCount);
          output.write("'");
       }
 
@@ -188,7 +193,7 @@ public abstract class XmlWriter
 
       if (jumpCount >= 0) {
          output.write(" jumpCount='");
-         output.write(String.valueOf(jumpCount));
+         writeInt(jumpCount);
          output.write("'");
       }
 
@@ -201,18 +206,42 @@ public abstract class XmlWriter
    {
       output.newLine();
 
-      for (MethodCoverageData methodData : fileData.getMethods()) {
+      for (Map.Entry<String, MethodCoverageData> methodAndData : fileData.methods.entrySet()) {
+         String methodNameAndDesc = methodAndData.getKey().replace("<init>", "");
+         MethodCoverageData methodData = methodAndData.getValue();
+
          output.write("    <paths method='");
-         output.write(methodData.methodNameAndDesc);
+         output.write(methodNameAndDesc);
+         output.write("' count='");
+         writeInt(methodData.getExecutionCount());
          writeLine("'>");
 
          for (Path path : methodData.paths) {
-            output.write("      <path>");
-            output.write(path.getListOfSourceLocations());
+            output.write("      <path count='");
+            writeInt(path.getExecutionCount());
+            output.write("'>");
+            output.write(getListOfSourceLocations(path));
             writeLine("</path>");
          }
 
          writeLine("    </paths>");
       }
+   }
+
+   private String getListOfSourceLocations(Path path)
+   {
+      StringBuilder sourceLocations = new StringBuilder();
+      Node previousNode = null;
+
+      for (Node nextNode : path.getNodes()) {
+         if (previousNode != null) {
+            sourceLocations.append(' ');
+         }
+
+         sourceLocations.append(nextNode);
+         previousNode = nextNode;
+      }
+
+      return sourceLocations.toString();
    }
 }

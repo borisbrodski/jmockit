@@ -81,4 +81,24 @@ public final class AnotherTestedClassTest
    {
       tested.branchingMethodWithUnreachableLines(1);
    }
+
+   @Test
+   public void methodWithFourDifferentPathsAndSimpleLines_exerciseTwoOppositePaths()
+   {
+      tested.methodWithFourDifferentPathsAndSimpleLines(true, 0);
+      tested.methodWithFourDifferentPathsAndSimpleLines(false, 1);
+   }
+
+   @Test
+   public void methodWithFourDifferentPathsAndSegmentedLines_exerciseTwoOppositePaths()
+   {
+      tested.methodWithFourDifferentPathsAndSegmentedLines(false, -1);
+      tested.methodWithFourDifferentPathsAndSegmentedLines(true, 1);
+   }
+
+   @Test
+   public void singleLineMethodWithMultiplePaths()
+   {
+      tested.singleLineMethodWithMultiplePaths(true, false);
+   }
 }

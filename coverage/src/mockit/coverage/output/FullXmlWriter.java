@@ -77,7 +77,7 @@ public final class FullXmlWriter extends XmlWriter
          output.write("' method='");
          output.write(ste.getMethodName());
          output.write("' line='");
-         output.write(String.valueOf(ste.getLineNumber()));
+         writeInt(ste.getLineNumber());
          output.write("'/>");
          output.newLine();
       }

@@ -69,7 +69,7 @@ public final class AnotherTestedClass
       else { System.runFinalization(); }
    }
 
-   boolean singleLineMethodWithMultiplePaths(boolean a, boolean b, boolean c)
+   boolean singleLineMethodWithMultiplePaths(boolean a, boolean b)
    {
       if (a || b)
          return true;

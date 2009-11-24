@@ -35,6 +35,7 @@ final class CoverageModifier extends ClassWriter
 {
    private final CoverageData coverageData;
    private String sourceFileName;
+   private String methodNameAndDesc;
    private FileCoverageData fileData;
    private boolean cannotModify;
 
@@ -75,12 +76,15 @@ final class CoverageModifier extends ClassWriter
          return mv;
       }
 
-      return "<clinit>".equals(name) ?
-         new StaticBlockModifier(mv) : new MethodModifier(mv, name + desc);
+      methodNameAndDesc = name + desc;
+
+      return "<clinit>".equals(name) ? new StaticBlockModifier(mv) : new MethodModifier(mv);
    }
 
    private class BaseMethodModifier extends MethodAdapter
    {
+      static final String DATA_RECORDING_CLASS = "mockit/coverage/TestRun";
+
       final MethodWriter mw;
       int currentLine;
       LineCoverageData lineData;
@@ -118,12 +122,14 @@ final class CoverageModifier extends ClassWriter
       private void generateCallToRegisterLineExecution()
       {
          mw.visitLdcInsn(sourceFileName);
+         mw.visitLdcInsn(methodNameAndDesc);
          pushCurrentLineOnTheStack();
          mw.visitMethodInsn(
-            INVOKESTATIC, "mockit/coverage/CoverageData", "lineExecuted", "(Ljava/lang/String;I)V");
+            INVOKESTATIC, DATA_RECORDING_CLASS, "lineExecuted",
+            "(Ljava/lang/String;Ljava/lang/String;I)V");
       }
 
-      private void pushCurrentLineOnTheStack()
+      final void pushCurrentLineOnTheStack()
       {
          if (currentLine <= Short.MAX_VALUE) {
             mw.visitIntInsn(SIPUSH, currentLine);
@@ -213,10 +219,12 @@ final class CoverageModifier extends ClassWriter
       private void generateCallToRegisterBranchTargetExecution(String methodName, int branchIndex)
       {
          mw.visitLdcInsn(sourceFileName);
+         mw.visitLdcInsn(methodNameAndDesc);
          pushCurrentLineOnTheStack();
          mw.visitIntInsn(SIPUSH, branchIndex);
          mw.visitMethodInsn(
-            INVOKESTATIC, "mockit/coverage/CoverageData", methodName, "(Ljava/lang/String;II)V");
+            INVOKESTATIC, DATA_RECORDING_CLASS, methodName,
+            "(Ljava/lang/String;Ljava/lang/String;II)V");
       }
 
       @Override
@@ -309,11 +317,21 @@ final class CoverageModifier extends ClassWriter
       final MethodCoverageData methodData;
       boolean isTestMethod;
 
-      MethodModifier(MethodVisitor mv, String methodNameAndDesc)
+      MethodModifier(MethodVisitor mv)
       {
          super(mv);
-         methodData = new MethodCoverageData(methodNameAndDesc);
-         fileData.methods.add(methodData);
+         methodData = new MethodCoverageData();
+         fileData.methods.put(methodNameAndDesc, methodData);
+      }
+
+      @Override
+      public void visitCode()
+      {
+         mw.visitLdcInsn(sourceFileName);
+         mw.visitLdcInsn(methodNameAndDesc);
+         mw.visitMethodInsn(
+            INVOKESTATIC, DATA_RECORDING_CLASS, "enterMethod",
+            "(Ljava/lang/String;Ljava/lang/String;)V");
       }
 
       @Override
