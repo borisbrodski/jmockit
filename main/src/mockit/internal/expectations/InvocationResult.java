@@ -34,8 +34,8 @@ import org.objectweb.asm2.Type;
 abstract class InvocationResult
 {
    InvocationResult next;
-
-   abstract Object produceResult(ExpectedInvocation invocation, Object[] args) throws Throwable;
+   
+   abstract Object produceResult(Expectation expectation, Object[] args) throws Throwable;
 
    static final class ReturnValueResult extends InvocationResult
    {
@@ -44,7 +44,7 @@ abstract class InvocationResult
       ReturnValueResult(Object returnValue) { this.returnValue = returnValue; }
 
       @Override
-      Object produceResult(ExpectedInvocation invocation, Object[] args) { return returnValue; }
+      Object produceResult(Expectation expectation, Object[] args) { return returnValue; }
    }
 
    static final class ThrowableResult extends InvocationResult
@@ -54,7 +54,7 @@ abstract class InvocationResult
       ThrowableResult(Throwable throwable) { this.throwable = throwable; }
 
       @Override
-      Object produceResult(ExpectedInvocation invocation, Object[] args) throws Throwable
+      Object produceResult(Expectation expectation, Object[] args) throws Throwable
       {
          throwable.fillInStackTrace();
          throw throwable;
@@ -75,25 +75,55 @@ abstract class InvocationResult
       }
 
       @Override
-      Object produceResult(ExpectedInvocation invocation, Object[] args) throws Throwable
+      Object produceResult(Expectation expectation, Object[] args) throws Throwable
       {
-         if (singleMethod != null) {
-            return Utilities.invoke(delegate, singleMethod, args);
-         }
-
-         String methodNameAndDesc = invocation.getMethodNameAndDescription();
+         String methodNameAndDesc = expectation.expectedInvocation.getMethodNameAndDescription();
          int leftParen = methodNameAndDesc.indexOf('(');
 
-         replaceNullArgumentsWithClassObjectsIfAny(args, methodNameAndDesc, leftParen);
-
+         if (singleMethod == null) {
+        	 replaceNullArgumentsWithClassObjectsIfAny(args, methodNameAndDesc, leftParen);
+         }
+         
          String methodName = methodNameAndDesc.substring(0, leftParen);
 
          if ("<init>".equals(methodName)) {
             methodName = "$init";
          }
 
-         return Utilities.invoke(delegate, methodName, args);
+ 		 Invocation invocation=getInvocationFromConstraints(expectation.constraints);
+    	 Object[] argsPlus=new Object[args.length+1];
+    	 argsPlus[0]=invocation;
+    	 System.arraycopy(args, 0, argsPlus, 1, args.length);
+    	 
+    	 Object result=null;
+    	 try {
+        	 try {
+                 if (singleMethod != null) {
+                	 result=Utilities.invoke(delegate, singleMethod, argsPlus);
+                 } else {
+                	 result=Utilities.invoke(delegate, methodName, argsPlus);            	 
+                 }
+        	 } catch (IllegalArgumentException iae){
+                 if (singleMethod != null) {
+                	 result=Utilities.invoke(delegate, singleMethod, args);
+                 } else {
+                	 result=Utilities.invoke(delegate, methodName, args);    		 
+                 }
+        	 }
+    	 } finally {
+    		 setConstraintsFromInvocation(invocation, expectation.constraints);
+    	 }
+    	 return result;
       }
+      
+      private Invocation getInvocationFromConstraints(InvocationConstraints constraints){
+  		 Invocation invocation=new Invocation(constraints.invocationCount, constraints.minInvocations, constraints.maxInvocations);
+    	 return invocation;
+      }
+
+      private void setConstraintsFromInvocation(Invocation invocation, InvocationConstraints constraints){
+    	 constraints.setLimits(invocation.getMinInvocation(), invocation.getMaxInvocation());
+       }
 
       private void replaceNullArgumentsWithClassObjectsIfAny(
          Object[] args, String methodNameAndDesc, int leftParen)
@@ -120,7 +150,7 @@ abstract class InvocationResult
       DeferredReturnValues(Iterator<?> values) { this.values = values; }
 
       @Override
-      Object produceResult(ExpectedInvocation invocation, Object[] args) throws Throwable
+      Object produceResult(Expectation expectation, Object[] args) throws Throwable
       {
          return values.hasNext() ? values.next() : null;
       }

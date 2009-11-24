@@ -93,6 +93,6 @@ public final class InvocationResults
          currentResult = nextResult;
       }
 
-      return resultToBeProduced.produceResult(expectation.expectedInvocation, invocationArgs);
+      return resultToBeProduced.produceResult(expectation, invocationArgs);
    }
 }
