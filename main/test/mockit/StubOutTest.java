@@ -94,6 +94,14 @@ public final class StubOutTest
       assertNull(new AnotherRealClass().getText(true));
    }
 
+   @Test
+   public void stubOutClassByName()
+   {
+      Mockit.stubOutClass(AnotherRealClass.class.getName());
+
+      assertNull(new AnotherRealClass().getText(true));
+   }
+
    static final class YetAnotherRealClass
    {
       private final int value;
@@ -119,10 +127,32 @@ public final class StubOutTest
    }
 
    @Test
+   public void stubOutClassUsingFiltersByName()
+   {
+      Mockit.stubOutClass(YetAnotherRealClass.class.getName(), "doSomething");
+
+      YetAnotherRealClass obj = new YetAnotherRealClass();
+      assertEquals(123, obj.value);
+      assertNull(obj.doSomething(null, null));
+   }
+
+   @Test
    public void stubOutClassUsingInverseFilters()
    {
       Mockit.stubOutClass(AnotherRealClass.class, true, "getText(boolean)");
       Mockit.stubOutClass(YetAnotherRealClass.class, false, "()", "(int)");
+
+      assertEquals(0, new YetAnotherRealClass(45).value);
+      YetAnotherRealClass obj = new YetAnotherRealClass();
+      assertEquals(0, obj.value);
+      assertEquals("false", obj.doSomething(new RealClass(), new AnotherRealClass()));
+   }
+   
+   @Test
+   public void stubOutClassUsingInverseFiltersByName()
+   {
+      Mockit.stubOutClass(AnotherRealClass.class.getName(), true, "getText(boolean)");
+      Mockit.stubOutClass(YetAnotherRealClass.class.getName(), false, "()", "(int)");
 
       assertEquals(0, new YetAnotherRealClass(45).value);
       YetAnotherRealClass obj = new YetAnotherRealClass();
