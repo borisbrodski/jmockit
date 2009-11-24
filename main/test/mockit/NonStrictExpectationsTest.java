@@ -26,10 +26,10 @@ package mockit;
 
 import org.junit.*;
 
-import mockit.integration.junit4.*;
+import static org.junit.Assert.*;
 
 @SuppressWarnings({"UnusedDeclaration"})
-public final class NonStrictExpectationsTest extends JMockitTest
+public final class NonStrictExpectationsTest
 {
    public static class Dependency
    {
@@ -39,9 +39,11 @@ public final class NonStrictExpectationsTest extends JMockitTest
       public boolean notifyBeforeSave() { return true; }
       public void prepare() {}
       public void save() {}
+
+      static int staticMethod(Object o, Exception e) { return -1; }
    }
 
-   @Mocked private Dependency mock;
+   @Mocked Dependency mock;
 
    private void exerciseCodeUnderTest()
    {
@@ -149,6 +151,62 @@ public final class NonStrictExpectationsTest extends JMockitTest
       }};
 
       exerciseCodeUnderTest();
+   }
+
+   @Test
+   public void recordWithMaxInvocationCountFollowedByReturnValue()
+   {
+      new NonStrictExpectations()
+      {{
+         Dependency.staticMethod(any, null);
+         repeatsAtMost(1);
+         returns(1);
+      }};
+
+      assertEquals(1, Dependency.staticMethod(new Object(), new Exception()));
+   }
+
+   @Test(expected = AssertionError.class)
+   public void recordWithMaxInvocationCountFollowedByReturnValueButReplayOneTimeBeyondMax()
+   {
+      new NonStrictExpectations()
+      {{
+         Dependency.staticMethod(any, null);
+         repeatsAtMost(1);
+         returns(1);
+      }};
+
+      Dependency.staticMethod(null, null);
+      Dependency.staticMethod(null, null);
+   }
+
+   @Test
+   public void recordWithReturnValueFollowedByExpectedInvocationCount()
+   {
+      new NonStrictExpectations()
+      {{
+         Dependency.staticMethod(any, null);
+         returns(1);
+         repeats(1);
+      }};
+
+      assertEquals(1, Dependency.staticMethod(null, null));
+   }
+
+   @Test
+   public void recordWithMinInvocationCountFollowedByReturnValueUsingDelegate()
+   {
+      new NonStrictExpectations()
+      {{
+         Dependency.staticMethod(any, null);
+         repeatsAtLeast(1);
+         returns(new Delegate()
+         {
+            int staticMethod(Object o, Exception e) { return 1; }
+         });
+      }};
+
+      assertEquals(1, Dependency.staticMethod(null, null));
    }
 
    @Test
