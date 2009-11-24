@@ -343,11 +343,6 @@
           <option name="m_minLength" value="12" />
           <option name="m_maxLength" value="64" />
         </inspection_tool>
-        <inspection_tool class="JUnitTestClassNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="m_regex" value="[A-Z][A-Za-z\d]*Test" />
-          <option name="m_minLength" value="8" />
-          <option name="m_maxLength" value="64" />
-        </inspection_tool>
         <inspection_tool class="JavaDoc" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="TOP_LEVEL_CLASS_OPTIONS">
             <value>

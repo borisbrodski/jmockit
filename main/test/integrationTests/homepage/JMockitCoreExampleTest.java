@@ -24,10 +24,11 @@
  */
 package integrationTests.homepage;
 
-import mockit.*;
-import mockit.integration.junit3.*;
+import junit.framework.*;
 
-public class JMockitCoreExampleTest extends JMockitTestCase
+import mockit.*;
+
+public class JMockitCoreExampleTest extends TestCase
 {
    public void testDoOperationAbc()
    {

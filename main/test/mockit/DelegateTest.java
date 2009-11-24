@@ -26,12 +26,12 @@ package mockit;
 
 import java.util.*;
 
+import junit.framework.*;
+
 import static org.junit.Assert.*;
 
-import mockit.integration.junit3.*;
-
 @SuppressWarnings({"UnusedDeclaration"})
-public final class DelegateTest extends JMockitTestCase
+public final class DelegateTest extends TestCase
 {
    static class Collaborator
    {
