@@ -26,10 +26,8 @@ package mockit;
 
 import org.junit.*;
 
-import mockit.integration.junit4.*;
-
 @SuppressWarnings({"UnusedDeclaration"})
-public final class FullVerificationsTest extends JMockitTest
+public final class FullVerificationsTest
 {
    public static class Dependency
    {

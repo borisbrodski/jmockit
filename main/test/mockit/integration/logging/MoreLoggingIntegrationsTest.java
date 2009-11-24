@@ -26,16 +26,17 @@ package mockit.integration.logging;
 
 import java.util.logging.Logger;
 
-import org.apache.commons.logging.*;
 import org.junit.*;
-import org.slf4j.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
+
+import org.apache.commons.logging.*;
+import static org.junit.Assert.*;
+import org.slf4j.*;
 
 @UsingMocksAndStubs(
    {JDKLoggingMocks.class, Log4jMocks.class, CommonsLoggingMocks.class, Slf4jMocks.class})
-public final class MoreLoggingIntegrationsTest extends JMockitTest
+public final class MoreLoggingIntegrationsTest
 {
    @Test
    public void jdkLoggingShouldLogNothing()

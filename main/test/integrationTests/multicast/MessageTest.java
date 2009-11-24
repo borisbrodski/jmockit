@@ -30,9 +30,10 @@ import java.net.*;
 import org.junit.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
-public final class MessageTest extends JMockitTest
+import static org.junit.Assert.*;
+
+public final class MessageTest
 {
    static final String testContents = "hello there";
 

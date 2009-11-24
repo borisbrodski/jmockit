@@ -28,10 +28,10 @@ import org.junit.*;
 
 import static mockit.Instantiation.*;
 import static mockit.Mockit.*;
-import mockit.integration.junit4.*;
+import static org.junit.Assert.*;
 
 @UsingMocksAndStubs(MockClassInstantiationPerSetupTest.MockClass1.class)
-public final class MockClassInstantiationPerSetupTest extends JMockitTest
+public final class MockClassInstantiationPerSetupTest
 {
    static final class RealClass1
    {

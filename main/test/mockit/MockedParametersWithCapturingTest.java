@@ -28,9 +28,9 @@ import java.lang.reflect.*;
 
 import org.junit.*;
 
-import mockit.integration.junit4.*;
+import static org.junit.Assert.*;
 
-public final class MockedParametersWithCapturingTest extends JMockitTest
+public final class MockedParametersWithCapturingTest
 {
    public interface Service
    {
@@ -42,8 +42,8 @@ public final class MockedParametersWithCapturingTest extends JMockitTest
    {
       final String str;
 
-      public ServiceImpl() { str = ""; }
-      public ServiceImpl(String str) { this.str = str; }
+      ServiceImpl() { str = ""; }
+      ServiceImpl(String str) { this.str = str; }
 
       public int doSomething() { return 1; }
       public void doSomethingElse(int i) { throw new IllegalMonitorStateException(); }
@@ -166,7 +166,7 @@ public final class MockedParametersWithCapturingTest extends JMockitTest
 
    @Test
    public void useSpecifiedConstructorToCallSuper(
-      @Mocked(methods = {"()"}, constructorArgsMethod = "valueForSuper") final DerivedClass mock)
+      @Mocked(methods = {"()"}, constructorArgsMethod = "valueForSuper") DerivedClass mock)
    {
       assertEquals("mock", mock.str);
       assertEquals("mock", new DerivedClass().str);
@@ -179,14 +179,14 @@ public final class MockedParametersWithCapturingTest extends JMockitTest
    }
 
    @Test
-   public void captureDerivedClass(@Capturing final BaseClass service)
+   public void captureDerivedClass(@Capturing BaseClass service)
    {
       assertNull(new DerivedClass("test").str);
    }
 
    @Test
    public void captureDerivedClassButWithoutMockingAnything(
-      @Mocked(methods = "", capture = 1) final BaseClass mock)
+      @Mocked(methods = "", capture = 1) BaseClass mock)
    {
       assertEquals("", mock.str);
       assertEquals("test", new DerivedClass("test").str);

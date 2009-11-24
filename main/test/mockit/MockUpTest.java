@@ -28,9 +28,9 @@ import java.sql.*;
 
 import org.junit.*;
 
-import mockit.integration.junit4.*;
+import static org.junit.Assert.*;
 
-public final class MockUpTest extends JMockitTest
+public final class MockUpTest
 {
    static final class Collaborator
    {

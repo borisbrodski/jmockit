@@ -27,10 +27,11 @@ package mockit;
 import org.junit.*;
 
 import mockit.CapturingImplementationsTest.*;
-import mockit.integration.junit4.*;
+
+import static org.junit.Assert.*;
 
 @Capturing(baseType = ServiceToBeStubbedOut.class)
-public final class CapturingImplementationsTest extends JMockitTest
+public final class CapturingImplementationsTest
 {
    interface ServiceToBeStubbedOut
    {

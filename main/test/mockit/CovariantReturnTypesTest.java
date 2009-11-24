@@ -4,9 +4,9 @@ import javax.swing.*;
 
 import org.junit.*;
 
-import mockit.integration.junit4.*;
+import static org.junit.Assert.*;
 
-public final class CovariantReturnTypesTest extends JMockitTest
+public final class CovariantReturnTypesTest
 {
    public static class SuperClass
    {

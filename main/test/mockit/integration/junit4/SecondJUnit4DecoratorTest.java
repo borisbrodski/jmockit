@@ -28,8 +28,10 @@ import org.junit.*;
 
 import mockit.*;
 
+import static org.junit.Assert.assertEquals;
+
 @UsingMocksAndStubs(SecondJUnit4DecoratorTest.MockClass3.class)
-public final class SecondJUnit4DecoratorTest extends JMockitTest
+public final class SecondJUnit4DecoratorTest
 {
    public static final class RealClass3
    {

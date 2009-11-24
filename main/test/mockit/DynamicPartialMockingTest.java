@@ -26,11 +26,11 @@ package mockit;
 
 import java.util.*;
 
-import mockit.integration.junit4.*;
-
 import org.junit.*;
 
-public final class DynamicPartialMockingTest extends JMockitTest
+import static org.junit.Assert.*;
+
+public final class DynamicPartialMockingTest
 {
    static class Collaborator
    {

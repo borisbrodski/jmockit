@@ -24,20 +24,22 @@
  */
 package mockit.integration.logging;
 
-import java.util.logging.*;
 import java.io.*;
+import java.util.logging.*;
+import java.util.logging.Logger;
 
 import org.junit.*;
 
-import mockit.integration.junit4.*;
 import mockit.*;
-import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.BasicMarkerFactory;
+
 import org.apache.commons.logging.*;
+import static org.junit.Assert.*;
+import org.slf4j.*;
+import org.slf4j.helpers.*;
 
 @UsingMocksAndStubs(
    {JDKLoggingMocks.class, Log4jMocks.class, CommonsLoggingMocks.class, Slf4jMocks.class})
-public final class LoggingIntegrationsTest extends JMockitTest
+public final class LoggingIntegrationsTest
 {
    private static PrintStream originalErr;
 

@@ -32,14 +32,14 @@ import javax.security.auth.spi.*;
 
 import org.junit.*;
 
-import static mockit.Deencapsulation.setField;
-import static mockit.Mockit.setUpMock;
-
-import mockit.integration.junit4.*;
 import mockit.internal.state.*;
 
+import static mockit.Deencapsulation.*;
+import static mockit.Mockit.*;
+import static org.junit.Assert.*;
+
 @SuppressWarnings({"JUnitTestMethodWithNoAssertions", "ClassWithTooManyMethods"})
-public final class MockAnnotationsTest extends JMockitTest
+public final class MockAnnotationsTest
 {
    // The "code under test" for the tests in this class -------------------------------------------
 

@@ -27,9 +27,10 @@ package integrationTests.homepage;
 import org.junit.*;
 
 import mockit.*;
-import mockit.integration.junit4.*;
 
-public class JMockitAnnotationsExampleTest extends JMockitTest
+import static org.junit.Assert.*;
+
+public class JMockitAnnotationsExampleTest
 {
    @Test
    public void testDoOperationAbc()

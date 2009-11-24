@@ -24,12 +24,14 @@
  */
 package integrationTests;
 
-import mockit.*;
-import static mockit.Mockit.*;
-import mockit.integration.junit4.*;
 import org.junit.*;
 
-public final class SubclassTest extends JMockitTest
+import mockit.*;
+
+import static mockit.Mockit.*;
+import static org.junit.Assert.*;
+
+public final class SubclassTest
 {
    private static boolean superClassConstructorCalled;
    private static boolean subClassConstructorCalled;

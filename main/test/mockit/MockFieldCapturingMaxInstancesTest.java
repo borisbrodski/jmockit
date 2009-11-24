@@ -28,9 +28,9 @@ import java.lang.reflect.*;
 
 import org.junit.*;
 
-import mockit.integration.junit4.*;
+import static org.junit.Assert.*;
 
-public final class MockFieldCapturingMaxInstancesTest extends JMockitTest
+public final class MockFieldCapturingMaxInstancesTest
 {
    public interface Service
    {

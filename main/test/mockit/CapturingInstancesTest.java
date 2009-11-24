@@ -24,14 +24,14 @@
  */
 package mockit;
 
-import mockit.integration.junit4.*;
+import java.util.*;
+import java.util.concurrent.*;
 
 import org.junit.*;
 
-import java.util.concurrent.*;
-import java.util.*;
+import static org.junit.Assert.*;
 
-public final class CapturingInstancesTest extends JMockitTest
+public final class CapturingInstancesTest
 {
    public interface Service
    {

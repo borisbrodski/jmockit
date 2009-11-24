@@ -26,11 +26,10 @@ package mockit;
 
 import org.junit.*;
 
-import mockit.integration.junit4.*;
-
 import static mockit.Mockit.*;
+import static org.junit.Assert.*;
 
-public final class MisusingAnnotationsAPITest extends JMockitTest
+public final class MisusingAnnotationsAPITest
 {
    @Test(expected = IllegalArgumentException.class)
    public void attemptToSetUpMockWithoutRealClass()

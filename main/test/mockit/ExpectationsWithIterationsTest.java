@@ -26,9 +26,7 @@ package mockit;
 
 import org.junit.*;
 
-import mockit.integration.junit4.*;
-
-public final class ExpectationsWithIterationsTest extends JMockitTest
+public final class ExpectationsWithIterationsTest
 {
    @SuppressWarnings({"UnusedDeclaration"})
    public static class Dependency

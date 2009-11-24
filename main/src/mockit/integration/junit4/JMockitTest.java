@@ -37,8 +37,8 @@ import mockit.internal.startup.*;
  * no effect since JMockit would already be initialized).
  * <p/>
  * Besides being annotated with {@code @RunWith(JMockit.class)}, the use of this base class for
- * your test classes has the advantage of inheriting {@link org.junit.Assert}, which eliminates the
- * need to statically import its methods.
+ * your test classes has the advantage of inheriting {@link Assert}, which eliminates the need to
+ * statically import its methods.
  * <p/>
  * If JMockit is not explicitly initialized before the first test executes, it will still get
  * initialized on the first call to a method in the API. However, this will probably cause the first
