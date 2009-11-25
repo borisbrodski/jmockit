@@ -41,42 +41,40 @@ public final class MethodCoverageData implements Serializable
       new LinkedHashMap<Label, List<Path>>();
    private final transient List<Path> activePaths = new ArrayList<Path>();
    private final transient List<Node> allNodes = new ArrayList<Node>();
-   private final transient List<Integer> newNodes = new ArrayList<Integer>();
 
-   public void handlePotentialNewBlock(int line)
+   public int handlePotentialNewBlock(int line)
    {
       if (paths.isEmpty()) {
          Node.Entry entryNode = new Node.Entry(line);
          Path path = new Path(entryNode);
          paths.add(path);
          activePaths.add(path);
-         addNode(entryNode);
+         allNodes.add(entryNode);
+         return 0;
       }
       else {
-         handleRegularInstruction(line);
+         return handleRegularInstruction(line);
       }
    }
 
-   private void addNode(Node newNode)
+   public int handleRegularInstruction(int line)
    {
-      newNodes.add(allNodes.size());
+      if (!addNextBlockToActivePaths) {
+         return -1;
+      }
+
+      assert !activePaths.isEmpty() : "No active paths for next block at line " + line;
+
+      Node.BasicBlock newNode = new Node.BasicBlock(line);
+      int newNodeIndex = allNodes.size();
       allNodes.add(newNode);
-   }
 
-   public void handleRegularInstruction(int line)
-   {
-      if (addNextBlockToActivePaths) {
-         assert !activePaths.isEmpty() : "No active paths for next block at line " + line;
-
-         Node.BasicBlock newNode = new Node.BasicBlock(line);
-         addNode(newNode);
-
-         for (Path path : activePaths) {
-            path.addNode(newNode);
-         }
-
-         addNextBlockToActivePaths = false;
+      for (Path path : activePaths) {
+         path.addNode(newNode);
       }
+
+      addNextBlockToActivePaths = false;
+      return newNodeIndex;
    }
 
    public void handleJump(Label targetBlock, boolean conditional)
@@ -113,17 +111,18 @@ public final class MethodCoverageData implements Serializable
       }
    }
 
-   public void handleJumpTarget(Label basicBlock, int line)
+   public int handleJumpTarget(Label basicBlock, int line)
    {
       // Will be null for visitLabel calls preceding visitLineNumber:
       List<Path> alternatePaths = jumpTargetToAlternatePaths.get(basicBlock);
 
       if (alternatePaths == null) {
-         return;
+         return -1;
       }
 
       Node.Join newNode = new Node.Join(line);
-      addNode(newNode);
+      int newNodeIndex = allNodes.size();
+      allNodes.add(newNode);
 
       for (Path alternatePath : alternatePaths) {
          assert !activePaths.contains(alternatePath) : "Alternate path already active";
@@ -131,14 +130,17 @@ public final class MethodCoverageData implements Serializable
       }
 
       activePaths.addAll(alternatePaths);
+      return newNodeIndex;
    }
 
-   public void handleExit(int exitLine)
+   public int handleExit(int exitLine)
    {
-      assert !activePaths.isEmpty() : "No active paths for exit at line " + exitLine;
+      // TODO: try...catch...finally aren't handled yet
+//      assert !activePaths.isEmpty() : "No active paths for exit at line " + exitLine;
 
       Node.Exit newNode = new Node.Exit(exitLine);
-      addNode(newNode);
+      int newNodeIndex = allNodes.size();
+      allNodes.add(newNode);
 
       for (Path path : activePaths) {
          path.addExitNode(newNode);
@@ -149,24 +151,7 @@ public final class MethodCoverageData implements Serializable
       }
 
       activePaths.clear();
-   }
-
-   public int[] getNewNodes()
-   {
-      int numNewNodes = newNodes.size();
-
-      if (numNewNodes == 0) {
-         return null;
-      }
-
-      int[] nodeIndexes = new int[numNewNodes];
-
-      for (int i = 0; i < numNewNodes; i++) {
-         nodeIndexes[i] = newNodes.get(i);
-      }
-
-      newNodes.clear();
-      return nodeIndexes;
+      return newNodeIndex;
    }
 
    public void markNodeAsReached(int nodeIndex)

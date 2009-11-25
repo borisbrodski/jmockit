@@ -63,6 +63,8 @@ final class CoverageModifier extends ClassWriter
       sourceFileName += file;
       fileData = coverageData.addFile(sourceFileName);
 
+//      System.out.println("Modifying: " + sourceFileName);
+
       super.visitSource(file, debug);
    }
 
@@ -129,7 +131,7 @@ final class CoverageModifier extends ClassWriter
             "(Ljava/lang/String;Ljava/lang/String;I)V");
       }
 
-      final void pushCurrentLineOnTheStack()
+      private void pushCurrentLineOnTheStack()
       {
          if (currentLine <= Short.MAX_VALUE) {
             mw.visitIntInsn(SIPUSH, currentLine);
@@ -230,7 +232,7 @@ final class CoverageModifier extends ClassWriter
       }
 
       @Override
-      public final void visitIntInsn(int opcode, int operand)
+      public void visitIntInsn(int opcode, int operand)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitIntInsn(opcode, operand);
@@ -248,14 +250,14 @@ final class CoverageModifier extends ClassWriter
       }
 
       @Override
-      public final void visitTypeInsn(int opcode, String desc)
+      public void visitTypeInsn(int opcode, String desc)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitTypeInsn(opcode, desc);
       }
 
       @Override
-      public final void visitFieldInsn(int opcode, String owner, String name, String desc)
+      public void visitFieldInsn(int opcode, String owner, String name, String desc)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitFieldInsn(opcode, owner, name, desc);
@@ -272,35 +274,42 @@ final class CoverageModifier extends ClassWriter
       }
 
       @Override
-      public final void visitLdcInsn(Object cst)
+      public void visitLdcInsn(Object cst)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitLdcInsn(cst);
       }
 
       @Override
-      public final void visitIincInsn(int var, int increment)
+      public void visitIincInsn(int var, int increment)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitIincInsn(var, increment);
       }
 
       @Override
-      public final void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels)
+      public void visitTryCatchBlock(Label start, Label end, Label handler, String type)
+      {
+         generateCallToRegisterBranchTargetExecutionIfPending();
+         mw.visitTryCatchBlock(start, end, handler, type);
+      }
+
+      @Override
+      public void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitTableSwitchInsn(min, max, dflt, labels);
       }
 
       @Override
-      public final void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels)
+      public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitLookupSwitchInsn(dflt, keys, labels);
       }
 
       @Override
-      public final void visitMultiANewArrayInsn(String desc, int dims)
+      public void visitMultiANewArrayInsn(String desc, int dims)
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitMultiANewArrayInsn(desc, dims);
@@ -334,37 +343,29 @@ final class CoverageModifier extends ClassWriter
       public void visitLineNumber(int line, Label start)
       {
          super.visitLineNumber(line, start);
-         methodData.handlePotentialNewBlock(line);
-         generateCallsToRegisterNodesReached();
-      }
 
-      private void generateCallsToRegisterNodesReached()
-      {
-         int[] newNodes = methodData.getNewNodes();
-
-         if (newNodes != null) {
-            for (int nodeIndex : newNodes) {
-               generateCallToRegisterNodeReached(nodeIndex);
-            }
-         }
+         int newNodeIndex = methodData.handlePotentialNewBlock(line);
+         generateCallToRegisterNodeReached(newNodeIndex);
       }
 
       private void generateCallToRegisterNodeReached(int nodeIndex)
       {
-         mw.visitLdcInsn(sourceFileName);
-         mw.visitLdcInsn(methodNameAndDesc);
-         mw.visitIntInsn(SIPUSH, nodeIndex);
-         mw.visitMethodInsn(
-            INVOKESTATIC, DATA_RECORDING_CLASS, "nodeReached",
-            "(Ljava/lang/String;Ljava/lang/String;I)V");
+         if (nodeIndex >= 0) {
+            mw.visitLdcInsn(sourceFileName);
+            mw.visitLdcInsn(methodNameAndDesc);
+            mw.visitIntInsn(SIPUSH, nodeIndex);
+            mw.visitMethodInsn(
+               INVOKESTATIC, DATA_RECORDING_CLASS, "nodeReached",
+               "(Ljava/lang/String;Ljava/lang/String;I)V");
+         }
       }
 
       @Override
       public void visitLabel(Label label)
       {
          super.visitLabel(label);
-         methodData.handleJumpTarget(label, label.line);
-         generateCallsToRegisterNodesReached();
+         int newNodeIndex = methodData.handleJumpTarget(label, label.line);
+         generateCallToRegisterNodeReached(newNodeIndex);
       }
 
       @Override
@@ -372,40 +373,102 @@ final class CoverageModifier extends ClassWriter
       {
          super.visitJumpInsn(opcode, label);
          methodData.handleJump(label, opcode != GOTO && opcode != JSR);
-         generateCallsToRegisterNodesReached();
       }
 
       @Override
       public void visitInsn(int opcode)
       {
-         Label currentBlock = mw.currentBlock;
-
-         methodData.handleRegularInstruction(currentLine);
-         generateCallsToRegisterNodesReached();
+         handleRegularInstruction();
 
          if (opcode >= IRETURN && opcode <= RETURN || opcode == ATHROW) {
-            assert currentLine == currentBlock.line;
-            methodData.handleExit(currentLine);
-            generateCallsToRegisterNodesReached();
+            int newNodeIndex = methodData.handleExit(currentLine);
+            generateCallToRegisterNodeReached(newNodeIndex);
          }
 
          super.visitInsn(opcode);
+      }
+
+      private void handleRegularInstruction()
+      {
+         int nodeIndex = methodData.handleRegularInstruction(currentLine);
+         generateCallToRegisterNodeReached(nodeIndex);
+      }
+
+      @Override
+      public void visitIntInsn(int opcode, int operand)
+      {
+         super.visitIntInsn(opcode, operand);
+         handleRegularInstruction();
+      }
+
+      @Override
+      public void visitIincInsn(int var, int increment)
+      {
+         super.visitIincInsn(var, increment);
+         handleRegularInstruction();
+      }
+
+      @Override
+      public void visitLdcInsn(Object cst)
+      {
+         super.visitLdcInsn(cst);
+         handleRegularInstruction();
+      }
+
+      @Override
+      public void visitTypeInsn(int opcode, String desc)
+      {
+         super.visitTypeInsn(opcode, desc);
+         handleRegularInstruction();
       }
 
       @Override
       public void visitVarInsn(int opcode, int var)
       {
          super.visitVarInsn(opcode, var);
-         methodData.handleRegularInstruction(currentLine);
-         generateCallsToRegisterNodesReached();
+         handleRegularInstruction();
+      }
+
+      @Override
+      public void visitFieldInsn(int opcode, String owner, String name, String desc)
+      {
+         super.visitFieldInsn(opcode, owner, name, desc);
+         handleRegularInstruction();
       }
 
       @Override
       public void visitMethodInsn(int opcode, String owner, String name, String desc)
       {
          super.visitMethodInsn(opcode, owner, name, desc);
-         methodData.handleRegularInstruction(currentLine);
-         generateCallsToRegisterNodesReached();
+         handleRegularInstruction();
+      }
+
+      @Override
+      public void visitTryCatchBlock(Label start, Label end, Label handler, String type)
+      {
+         super.visitTryCatchBlock(start, end, handler, type);
+         handleRegularInstruction();
+      }
+
+      @Override
+      public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels)
+      {
+         super.visitLookupSwitchInsn(dflt, keys, labels);
+         handleRegularInstruction();
+      }
+
+      @Override
+      public void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels)
+      {
+         super.visitTableSwitchInsn(min, max, dflt, labels);
+         handleRegularInstruction();
+      }
+
+      @Override
+      public void visitMultiANewArrayInsn(String desc, int dims)
+      {
+         super.visitMultiANewArrayInsn(desc, dims);
+         handleRegularInstruction();
       }
    }
 

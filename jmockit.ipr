@@ -245,7 +245,6 @@
           <option name="ignoreOnVolatileVariables" value="false" />
         </inspection_tool>
         <inspection_tool class="DoubleNegation" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="DriverManagerGetConnection" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="DuplicateBooleanBranch" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="DuplicateCondition" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreMethodCalls" value="false" />
@@ -332,7 +331,6 @@
         <inspection_tool class="IteratorHasNextCallsIteratorNext" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="IteratorNextDoesNotThrowNoSuchElementException" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="JDBCExecuteWithNonConstantString" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="JDBCPrepareStatementWithNonConstantString" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="JDBCResource" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="JNDIResource" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="JUnit4AnnotatedMethodInJUnit3TestCase" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -624,7 +622,6 @@
         <inspection_tool class="StringReplaceableByStringBuffer" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="onlyWarnOnLoop" value="true" />
         </inspection_tool>
-        <inspection_tool class="StringToUpperWithoutLocale" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="StringTokenizer" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SubstringZero" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SubtractionInCompareTo" enabled="true" level="WARNING" enabled_by_default="true" />
