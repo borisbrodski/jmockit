@@ -449,7 +449,6 @@
         <inspection_tool class="NegatedIfElse" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_ignoreNegatedNullComparison" value="true" />
         </inspection_tool>
-        <inspection_tool class="NestedConditionalExpression" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NestedSwitchStatement" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NestedSynchronizedStatement" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NestedTryStatement" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -881,6 +880,7 @@
         <w>mockit</w>
         <w>multi</w>
         <w>nano</w>
+        <w>nonexec</w>
         <w>noninfringement</w>
         <w>notimestamp</w>
         <w>nowrap</w>

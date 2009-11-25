@@ -34,6 +34,7 @@ import static org.objectweb.asm2.Opcodes.*;
 final class CoverageModifier extends ClassWriter
 {
    private final CoverageData coverageData;
+   private String simpleClassName;
    private String sourceFileName;
    private String methodNameAndDesc;
    private FileCoverageData fileData;
@@ -50,7 +51,15 @@ final class CoverageModifier extends ClassWriter
       int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       int p = name.lastIndexOf('/');
-      sourceFileName = p < 0 ? "" : name.substring(0, p + 1);
+
+      if (p < 0) {
+         simpleClassName = name;
+         sourceFileName = "";
+      }
+      else {
+         simpleClassName = name.substring(p + 1);
+         sourceFileName = name.substring(0, p + 1);
+      }
 
       cannotModify = name.startsWith("mockit/coverage/");
 
@@ -323,8 +332,18 @@ final class CoverageModifier extends ClassWriter
       MethodModifier(MethodVisitor mv)
       {
          super(mv);
-         methodData = new MethodCoverageData();
-         fileData.methods.put(methodNameAndDesc, methodData);
+
+         String methodName;
+
+         if (methodNameAndDesc.charAt(0) == '<') {
+            methodName = simpleClassName;
+         }
+         else {
+            int p = methodNameAndDesc.indexOf('(');
+            methodName = methodNameAndDesc.substring(0, p);
+         }
+
+         methodData = new MethodCoverageData(methodName);
       }
 
       @Override
@@ -469,6 +488,15 @@ final class CoverageModifier extends ClassWriter
       {
          super.visitMultiANewArrayInsn(desc, dims);
          handleRegularInstruction();
+      }
+
+      @Override
+      public void visitEnd()
+      {
+         if (methodData.paths.size() > 1) {
+            methodData.setLastLine(currentLine);
+            fileData.addMethod(methodNameAndDesc, methodData);
+         }
       }
    }
 

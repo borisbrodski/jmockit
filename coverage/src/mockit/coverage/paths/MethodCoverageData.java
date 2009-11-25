@@ -33,7 +33,10 @@ public final class MethodCoverageData implements Serializable
 {
    private static final long serialVersionUID = -5073393714435522417L;
 
+   public final String methodName;
    public final List<Path> paths = new ArrayList<Path>();
+   private int firstLine;
+   private int lastLine;
 
    // Helper fields used during path building:
    private transient boolean addNextBlockToActivePaths;
@@ -42,19 +45,33 @@ public final class MethodCoverageData implements Serializable
    private final transient List<Path> activePaths = new ArrayList<Path>();
    private final transient List<Node> allNodes = new ArrayList<Node>();
 
+   public MethodCoverageData(String methodName)
+   {
+      this.methodName = methodName;
+   }
+
    public int handlePotentialNewBlock(int line)
    {
       if (paths.isEmpty()) {
-         Node.Entry entryNode = new Node.Entry(line);
-         Path path = new Path(entryNode);
-         paths.add(path);
-         activePaths.add(path);
-         allNodes.add(entryNode);
+         createEntryNode(line);
          return 0;
       }
       else {
          return handleRegularInstruction(line);
       }
+   }
+
+   private void createEntryNode(int line)
+   {
+      firstLine = line;
+
+      Node.Entry entryNode = new Node.Entry(line);
+      allNodes.add(entryNode);
+
+      Path path = new Path(entryNode);
+      paths.add(path);
+
+      activePaths.add(path);
    }
 
    public int handleRegularInstruction(int line)
@@ -166,6 +183,21 @@ public final class MethodCoverageData implements Serializable
             }
          }
       }
+   }
+
+   public int getFirstLineOfImplementationBody()
+   {
+      return firstLine;
+   }
+
+   public int getLastLineOfImplementationBody()
+   {
+      return lastLine;
+   }
+
+   public void setLastLine(int lastLine)
+   {
+      this.lastLine = lastLine;
    }
 
    public int getExecutionCount()

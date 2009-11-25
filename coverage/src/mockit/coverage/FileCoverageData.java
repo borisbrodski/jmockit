@@ -44,6 +44,11 @@ public final class FileCoverageData implements Serializable
    private int totalSegments;
    private int coveredSegments;
 
+   void addMethod(String methodNameAndDesc, MethodCoverageData methodData)
+   {
+      methods.put(methodNameAndDesc, methodData);
+   }
+
    LineCoverageData addLine(int line)
    {
       LineCoverageData lineData = lineToLineData.get(line);
@@ -124,5 +129,10 @@ public final class FileCoverageData implements Serializable
             lineToLineData.put(line, lineAndData.getValue());
          }
       }
+   }
+
+   public Collection<MethodCoverageData> getMethods()
+   {
+      return methods.values();
    }
 }

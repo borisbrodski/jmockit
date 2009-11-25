@@ -105,7 +105,10 @@ public final class TestRun
       CoverageData coverageData = CoverageData.instance();
       FileCoverageData fileData = coverageData.getFileData(file);
       MethodCoverageData methodData = fileData.methods.get(method);
-      methodData.markNodeAsReached(node);
+
+      if (methodData != null) {
+         methodData.markNodeAsReached(node);
+      }
 
       executingCall.set(false);
    }
