@@ -29,12 +29,23 @@ import java.io.*;
 public class Node implements Serializable
 {
    private static final long serialVersionUID = 7521062699264845946L;
-   
+
+   private final transient ThreadLocal<Boolean> reached = new ThreadLocal<Boolean>();
    final int line;
 
-   Node(int line)
+   private Node(int line)
    {
       this.line = line;
+   }
+
+   final void setReached(Boolean reached)
+   {
+      this.reached.set(reached);
+   }
+
+   final boolean wasReached()
+   {
+      return reached.get() != null;
    }
 
    @Override
@@ -62,16 +73,6 @@ public class Node implements Serializable
       private static final long serialVersionUID = 2637678937923952603L;
 
       BasicBlock(int startingLine) { super(startingLine); }
-   }
-
-   static final class Fork extends Node
-   {
-      private static final long serialVersionUID = 3299139260264263978L;
-
-      Fork() { super(0); }
-
-      @Override
-      public String toString() { return "jump"; }
    }
 
    static final class Join extends Node

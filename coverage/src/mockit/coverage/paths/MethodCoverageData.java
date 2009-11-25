@@ -40,24 +40,39 @@ public final class MethodCoverageData implements Serializable
    private final transient Map<Label, List<Path>> jumpTargetToAlternatePaths =
       new HashMap<Label, List<Path>>();
    private final transient List<Path> activePaths = new ArrayList<Path>();
+   private final transient List<Node> allNodes = new ArrayList<Node>();
+   private final transient List<Integer> newNodes = new ArrayList<Integer>();
 
    public void handlePotentialNewBlock(Label basicBlock)
    {
       if (paths.isEmpty()) {
-         Path path = new Path(basicBlock);
+         Node.Entry entryNode = new Node.Entry(basicBlock.line);
+         Path path = new Path(entryNode);
          paths.add(path);
          activePaths.add(path);
+         addNode(entryNode);
       }
       else {
          handleRegularInstruction(basicBlock.line);
       }
    }
 
+   private void addNode(Node newNode)
+   {
+      newNodes.add(allNodes.size());
+      allNodes.add(newNode);
+   }
+
    public void handleRegularInstruction(int line)
    {
       if (addNextBlockToActivePaths) {
+         assert !activePaths.isEmpty() : "No active paths";
+
+         Node.BasicBlock newNode = new Node.BasicBlock(line);
+         addNode(newNode);
+
          for (Path path : activePaths) {
-            path.addNode(new Node.BasicBlock(line));
+            path.addNode(newNode);
          }
 
          addNextBlockToActivePaths = false;
@@ -108,11 +123,11 @@ public final class MethodCoverageData implements Serializable
       }
 
       for (Path alternatePath : alternatePaths) {
-         alternatePath.addNode(new Node.Join(basicBlock.line));
+         Node.Join newNode = new Node.Join(basicBlock.line);
+         alternatePath.addNode(newNode);
+         addNode(newNode);
 
-         if (activePaths.contains(alternatePath)) {
-            throw new IllegalStateException("Alternate path already active");
-         }
+         assert !activePaths.contains(alternatePath) : "Alternate path already active";
       }
 
       activePaths.addAll(alternatePaths);
@@ -120,12 +135,13 @@ public final class MethodCoverageData implements Serializable
 
    public void handleExit(Label exitBlock)
    {
-      if (activePaths.isEmpty()) {
-         throw new IllegalStateException("No active paths");
-      }
+      assert !activePaths.isEmpty() : "No active paths";
+
+      Node.Exit newNode = new Node.Exit(exitBlock.line);
+      addNode(newNode);
 
       for (Path path : activePaths) {
-         path.addExitNode(exitBlock);
+         path.addExitNode(newNode);
       }
 
       for (List<Path> alternatePaths : jumpTargetToAlternatePaths.values()) {
@@ -135,17 +151,35 @@ public final class MethodCoverageData implements Serializable
       activePaths.clear();
    }
 
-   public void startNewExecution()
+   public int[] getNewNodes()
    {
-      for (Path path : paths) {
-         path.startExecution();
+      int numNewNodes = newNodes.size();
+
+      if (numNewNodes == 0) {
+         return null;
       }
+
+      int[] nodeIndexes = new int[numNewNodes];
+
+      for (int i = 0; i < numNewNodes; i++) {
+         nodeIndexes[i] = newNodes.get(i);
+      }
+
+      newNodes.clear();
+      return nodeIndexes;
    }
 
-   public void markSubPathsAsExecuted(int line, int segment)
+   public void markNodeAsReached(int nodeIndex)
    {
-      for (Path path : paths) {
-         path.markAsExecutedIfContainsNode(line, segment);
+      Node node = allNodes.get(nodeIndex);
+      node.setReached(Boolean.TRUE);
+
+      if (node instanceof Node.Exit) {
+         for (Path path : paths) {
+            if (path.countExecutionIfAllNodesWereReached()) {
+               return;
+            }
+         }
       }
    }
 
@@ -154,7 +188,7 @@ public final class MethodCoverageData implements Serializable
       int totalCount = 0;
 
       for (Path path : paths) {
-         totalCount += path.executionCount;
+         totalCount += path.getExecutionCount();
       }
 
       return totalCount;

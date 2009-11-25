@@ -37,23 +37,7 @@ public final class TestRun
    private TestRun() {}
 
    @SuppressWarnings({"UnusedDeclaration"})
-   public static void enterMethod(String sourceFile, String method)
-   {
-      if (executingCall.get()) {
-         return;
-      }
-
-      executingCall.set(true);
-
-      FileCoverageData fileData = CoverageData.instance().getFileData(sourceFile);
-      MethodCoverageData methodData = fileData.methods.get(method);
-      methodData.startNewExecution();
-
-      executingCall.set(false);
-   }
-
-   @SuppressWarnings({"UnusedDeclaration"})
-   public static void lineExecuted(String sourceFile, String method, int line)
+   public static void lineExecuted(String file, String method, int line)
    {
       if (executingCall.get()) {
          return;
@@ -63,28 +47,16 @@ public final class TestRun
 
       CoverageData coverageData = CoverageData.instance();
       CallPoint callPoint =
-         coverageData.withCallPoints ? CallPoint.create(sourceFile, line, new Throwable()) : null;
+         coverageData.withCallPoints ? CallPoint.create(file, line, new Throwable()) : null;
 
-      FileCoverageData fileData = coverageData.getFileData(sourceFile);
+      FileCoverageData fileData = coverageData.getFileData(file);
       fileData.incrementLineCount(line, callPoint);
 
-      recordPathCoverage(fileData, method, line, 0);
-
       executingCall.set(false);
    }
 
-   private static void recordPathCoverage(
-      FileCoverageData fileData, String method, int line, int segment)
-   {
-      MethodCoverageData methodData = fileData.methods.get(method);
-
-      if (methodData != null) {
-         methodData.markSubPathsAsExecuted(line, segment);
-      }
-   }
-
    @SuppressWarnings({"UnusedDeclaration"})
-   public static void jumpTargetExecuted(String sourceFile, String method, int line, int segment)
+   public static void jumpTargetExecuted(String file, String method, int line, int segment)
    {
       if (executingCall.get()) {
          return;
@@ -94,18 +66,16 @@ public final class TestRun
 
       CoverageData coverageData = CoverageData.instance();
       CallPoint callPoint =
-         coverageData.withCallPoints ? CallPoint.create(sourceFile, line, new Throwable()) : null;
+         coverageData.withCallPoints ? CallPoint.create(file, line, new Throwable()) : null;
 
-      FileCoverageData fileData = coverageData.getFileData(sourceFile);
+      FileCoverageData fileData = coverageData.getFileData(file);
       fileData.registerBranchExecution(line, segment, true, callPoint);
 
-//      recordPathCoverage(fileData, method, line, segment);
-
       executingCall.set(false);
    }
 
    @SuppressWarnings({"UnusedDeclaration"})
-   public static void noJumpTargetExecuted(String sourceFile, String method, int line, int segment)
+   public static void noJumpTargetExecuted(String file, String method, int line, int segment)
    {
       if (executingCall.get()) {
          return;
@@ -115,12 +85,27 @@ public final class TestRun
 
       CoverageData coverageData = CoverageData.instance();
       CallPoint callPoint =
-         coverageData.withCallPoints ? CallPoint.create(sourceFile, line, new Throwable()) : null;
+         coverageData.withCallPoints ? CallPoint.create(file, line, new Throwable()) : null;
 
-      FileCoverageData fileData = coverageData.getFileData(sourceFile);
+      FileCoverageData fileData = coverageData.getFileData(file);
       fileData.registerBranchExecution(line, segment, false, callPoint);
 
-//      recordPathCoverage(fileData, method, line, segment);
+      executingCall.set(false);
+   }
+
+   @SuppressWarnings({"UnusedDeclaration"})
+   public static void nodeReached(String file, String method, int node)
+   {
+      if (executingCall.get()) {
+         return;
+      }
+
+      executingCall.set(true);
+
+      CoverageData coverageData = CoverageData.instance();
+      FileCoverageData fileData = coverageData.getFileData(file);
+      MethodCoverageData methodData = fileData.methods.get(method);
+      methodData.markNodeAsReached(node);
 
       executingCall.set(false);
    }

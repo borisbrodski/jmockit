@@ -26,27 +26,23 @@ package mockit.coverage.paths;
 
 import java.io.*;
 import java.util.*;
-
-import org.objectweb.asm2.*;
+import java.util.concurrent.atomic.*;
 
 public final class Path implements Serializable
 {
    private static final long serialVersionUID = 8895491272907955543L;
-   private final transient ThreadLocal<Integer> activeNode = new ThreadLocal<Integer>();
-   
-   private final List<Node> nodes = new ArrayList<Node>(4);
-   private transient int indexOfLastNonExitNode;
-   int executionCount;
 
-   Path(Label entryBlock)
+   private final List<Node> nodes = new ArrayList<Node>(4);
+   private final AtomicInteger executionCount = new AtomicInteger();
+
+   Path(Node.Entry entryNode)
    {
-      addNode(new Node.Entry(entryBlock.line));
+      addNode(entryNode);
    }
 
-   Path(Path sharedPrefix)
+   Path(Path sharedSubPath)
    {
-      nodes.addAll(sharedPrefix.nodes);
-      addNode(new Node.Fork());
+      nodes.addAll(sharedSubPath.nodes);
    }
 
    void addNode(Node node)
@@ -54,62 +50,39 @@ public final class Path implements Serializable
       nodes.add(node);
    }
 
-   void addExitNode(Label exitBlock)
+   void addExitNode(Node.Exit newNode)
    {
-      int lastIndex = nodes.size() - 1;
-      Node lastNode = nodes.get(lastIndex);
-
-      if (lastNode instanceof Node.Exit) {
-         throw new IllegalStateException("Duplicate exit node");
-      }
-
-      addNode(new Node.Exit(exitBlock.line));
-      indexOfLastNonExitNode = lastIndex;
+      assert !(nodes.get(nodes.size() - 1) instanceof Node.Exit) : "Duplicate exit node";
+      addNode(newNode);
    }
 
-   void startExecution()
+   boolean countExecutionIfAllNodesWereReached()
    {
-      activeNode.set(0);
-   }
-
-   void markAsExecutedIfContainsNode(int line, int segment)
-   {
-      Integer activeNodeIndex = activeNode.get();
-
-      if (activeNodeIndex == null) {
-         return;
-      }
-
-      Node currentNode = nodes.get(activeNodeIndex);
-
-      if (currentNode instanceof Node.Fork) {
-         activeNodeIndex++;
-         currentNode = nodes.get(activeNodeIndex);
-      }
-
-      if (currentNode.line == line) {
-         if (currentNode instanceof Node.Exit || activeNodeIndex == indexOfLastNonExitNode) {
-            executionCount++;
-            activeNodeIndex = null;
-         }
-         else {
-            activeNodeIndex++;
+      for (Node node : nodes) {
+         if (!node.wasReached()) {
+            return false;
          }
       }
-      else {
-         activeNodeIndex = null;
-      }
 
-      activeNode.set(activeNodeIndex);
+      clearNodes();
+      executionCount.getAndIncrement();
+      return true;
    }
 
-   public int getExecutionCount()
+   private void clearNodes()
    {
-      return executionCount;
+      for (Node node : nodes) {
+         node.setReached(null);
+      }
    }
 
    public List<Node> getNodes()
    {
       return nodes;
+   }
+
+   public int getExecutionCount()
+   {
+      return executionCount.get();
    }
 }

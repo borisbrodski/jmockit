@@ -257,7 +257,6 @@
           <option name="CHECK_DUPLICATE_KEYS" value="true" />
           <option name="CHECK_DUPLICATE_KEYS_WITH_DIFFERENT_VALUES" value="true" />
         </inspection_tool>
-        <inspection_tool class="EmptyClass" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="EmptyInitializer" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="EmptySynchronizedStatement" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="EnumSwitchStatementWhichMissesCases" enabled="true" level="WARNING" enabled_by_default="true">
@@ -277,7 +276,6 @@
         <inspection_tool class="EqualsCalledOnEnumConstant" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="EqualsHashCodeCalledOnUrl" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="EqualsUsesNonFinalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ErrorRethrown" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ExceptionFromCatchWhichDoesntWrap" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreGetMessage" value="false" />
         </inspection_tool>
@@ -716,7 +714,6 @@
           </option>
         </inspection_tool>
         <inspection_tool class="UnaryPlus" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="UncheckedExceptionClass" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnconditionalWait" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnconstructableTestCase" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UndeclaredTests" enabled="true" level="WARNING" enabled_by_default="true" />

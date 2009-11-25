@@ -30,13 +30,15 @@ import java.security.*;
 import java.util.*;
 import java.util.regex.*;
 
-import org.objectweb.asm2.*;
-
 import mockit.internal.startup.*;
-import mockit.internal.state.*;
+import mockit.internal.state.TestRun;
+
+import org.objectweb.asm2.*;
 
 public final class CodeCoverage implements ClassFileTransformer
 {
+   static final class VisitInterruptedException extends RuntimeException {}
+   static final VisitInterruptedException CLASS_IGNORED = new VisitInterruptedException();
    private static final String[] NO_ARGS = new String[0];
 
    private final Set<String> modifiedClasses = new HashSet<String>();
@@ -91,13 +93,23 @@ public final class CodeCoverage implements ClassFileTransformer
       boolean modifyClassForCoverage = isToBeConsideredForCoverage(className, protectionDomain);
 
       if (modifyClassForCoverage) {
-         byte[] modifiedClassfile = modifyClassForCoverage(new ClassReader(originalClassfile));
-         registerClassAsModifiedForCoverage(className, modifiedClassfile);
-         return modifiedClassfile;
+         try {
+            byte[] modifiedClassfile = modifyClassForCoverage(new ClassReader(originalClassfile));
+            registerClassAsModifiedForCoverage(className, modifiedClassfile);
+            return modifiedClassfile;
+         }
+         catch (VisitInterruptedException ignore) {
+            // Ignore the class if the modification was refused for some reason.
+         }
+         catch (RuntimeException e) {
+            e.printStackTrace();
+         }
+         catch (AssertionError e) {
+            e.printStackTrace();
+         }
       }
-      else {
-         return originalClassfile;
-      }
+
+      return originalClassfile;
    }
 
    private boolean isToBeConsideredForCoverage(String className, ProtectionDomain protectionDomain)
@@ -166,8 +178,10 @@ public final class CodeCoverage implements ClassFileTransformer
          return modifiedClassfile;
       }
       catch (IOException ignore) {
-         // Ignore class if the ".class" file can't be located.
-         return null;
+         // Ignore the class if the ".class" file can't be located.
+      }
+      catch (VisitInterruptedException ignore) {
+         // Ignore the class if the modification was refused for some reason.
       }
       catch (ClassNotFoundException e) {
          throw new RuntimeException(e);
@@ -175,6 +189,14 @@ public final class CodeCoverage implements ClassFileTransformer
       catch (UnmodifiableClassException e) {
          throw new RuntimeException(e);
       }
+      catch (RuntimeException e) {
+         e.printStackTrace();
+      }
+      catch (AssertionError e) {
+         e.printStackTrace();
+      }
+
+      return null;
    }
 
    private byte[] modifyClassForCoverage(ClassReader cr)

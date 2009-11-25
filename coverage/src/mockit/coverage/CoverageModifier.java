@@ -143,7 +143,8 @@ final class CoverageModifier extends ClassWriter
       public void visitJumpInsn(int opcode, Label label)
       {
          if (startLabelsForVisitedLines.contains(label)) {
-            visitJumpInsnWithoutModifications(opcode, label);
+            assertFoundInCurrentLine = false;
+            mw.visitJumpInsn(opcode, label);
             return;
          }
 
@@ -168,12 +169,6 @@ final class CoverageModifier extends ClassWriter
          generateCallToRegisterBranchTargetExecutionIfPending();
 
          nextLabelAfterConditionalJump = opcode != GOTO && opcode != JSR;
-      }
-
-      final void visitJumpInsnWithoutModifications(int opcode, Label label)
-      {
-         assertFoundInCurrentLine = false;
-         mw.visitJumpInsn(opcode, label);
       }
 
       private void generateCallToRegisterBranchTargetExecutionIfPending()
@@ -315,7 +310,6 @@ final class CoverageModifier extends ClassWriter
    private final class MethodModifier extends BaseMethodModifier
    {
       final MethodCoverageData methodData;
-      boolean isTestMethod;
 
       MethodModifier(MethodVisitor mv)
       {
@@ -325,33 +319,44 @@ final class CoverageModifier extends ClassWriter
       }
 
       @Override
-      public void visitCode()
-      {
-         mw.visitLdcInsn(sourceFileName);
-         mw.visitLdcInsn(methodNameAndDesc);
-         mw.visitMethodInsn(
-            INVOKESTATIC, DATA_RECORDING_CLASS, "enterMethod",
-            "(Ljava/lang/String;Ljava/lang/String;)V");
-      }
-
-      @Override
       public AnnotationVisitor visitAnnotation(String desc, boolean visible)
       {
-         isTestMethod = desc.startsWith("Lorg/junit/") || desc.startsWith("Lorg/testng/");
+         boolean isTestMethod = desc.startsWith("Lorg/junit/") || desc.startsWith("Lorg/testng/");
+
+         if (isTestMethod) {
+            throw CodeCoverage.CLASS_IGNORED;
+         }
+
          return mw.visitAnnotation(desc, visible);
       }
 
       @Override
       public void visitLineNumber(int line, Label start)
       {
-         if (isTestMethod) {
-            mw.visitLineNumber(line, start);
-            return;
-         }
-
          super.visitLineNumber(line, start);
-
          methodData.handlePotentialNewBlock(start);
+         generateCallsToRegisterNodesReached();
+      }
+
+      private void generateCallsToRegisterNodesReached()
+      {
+         int[] newNodes = methodData.getNewNodes();
+
+         if (newNodes != null) {
+            for (int nodeIndex : newNodes) {
+               generateCallToRegisterNodeReached(nodeIndex);
+            }
+         }
+      }
+
+      private void generateCallToRegisterNodeReached(int nodeIndex)
+      {
+         mw.visitLdcInsn(sourceFileName);
+         mw.visitLdcInsn(methodNameAndDesc);
+         mw.visitIntInsn(SIPUSH, nodeIndex);
+         mw.visitMethodInsn(
+            INVOKESTATIC, DATA_RECORDING_CLASS, "nodeReached",
+            "(Ljava/lang/String;Ljava/lang/String;I)V");
       }
 
       @Override
@@ -359,19 +364,15 @@ final class CoverageModifier extends ClassWriter
       {
          super.visitLabel(label);
          methodData.handleJumpTarget(label);
+         generateCallsToRegisterNodesReached();
       }
 
       @Override
       public void visitJumpInsn(int opcode, Label label)
       {
-         if (isTestMethod) {
-            visitJumpInsnWithoutModifications(opcode, label);
-            return;
-         }
-
          super.visitJumpInsn(opcode, label);
-
          methodData.handleJump(label, opcode != GOTO && opcode != JSR);
+         generateCallsToRegisterNodesReached();
       }
 
       @Override
@@ -379,13 +380,15 @@ final class CoverageModifier extends ClassWriter
       {
          Label currentBlock = mw.currentBlock;
 
-         super.visitInsn(opcode);
-
          methodData.handleRegularInstruction(currentLine);
-         
-         if (mw.currentBlock == null) {
+         generateCallsToRegisterNodesReached();
+
+         if (opcode >= IRETURN && opcode <= RETURN || opcode == ATHROW) {
             methodData.handleExit(currentBlock);
+            generateCallsToRegisterNodesReached();
          }
+
+         super.visitInsn(opcode);
       }
 
       @Override
@@ -393,6 +396,7 @@ final class CoverageModifier extends ClassWriter
       {
          super.visitVarInsn(opcode, var);
          methodData.handleRegularInstruction(currentLine);
+         generateCallsToRegisterNodesReached();
       }
 
       @Override
@@ -400,6 +404,7 @@ final class CoverageModifier extends ClassWriter
       {
          super.visitMethodInsn(opcode, owner, name, desc);
          methodData.handleRegularInstruction(currentLine);
+         generateCallsToRegisterNodesReached();
       }
    }
 
