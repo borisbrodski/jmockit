@@ -50,7 +50,7 @@ public class Label {
     /**
      * The position of this label in the code, if known.
      */
-    public int position;
+    int position;
 
     /**
      * If the label position has been updated, after instruction resizing.
@@ -103,7 +103,7 @@ public class Label {
      * are stored in a linked list of {@link Edge Edge} objects, linked to each
      * other by their {@link Edge#next} field.
      */
-    public Edge successors;
+    Edge successors;
 
     /**
      * The next basic block in the basic block stack. See
