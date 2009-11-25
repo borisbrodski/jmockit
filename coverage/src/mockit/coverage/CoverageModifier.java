@@ -334,7 +334,7 @@ final class CoverageModifier extends ClassWriter
       public void visitLineNumber(int line, Label start)
       {
          super.visitLineNumber(line, start);
-         methodData.handlePotentialNewBlock(start);
+         methodData.handlePotentialNewBlock(line);
          generateCallsToRegisterNodesReached();
       }
 
@@ -363,7 +363,7 @@ final class CoverageModifier extends ClassWriter
       public void visitLabel(Label label)
       {
          super.visitLabel(label);
-         methodData.handleJumpTarget(label);
+         methodData.handleJumpTarget(label, label.line);
          generateCallsToRegisterNodesReached();
       }
 
@@ -384,7 +384,8 @@ final class CoverageModifier extends ClassWriter
          generateCallsToRegisterNodesReached();
 
          if (opcode >= IRETURN && opcode <= RETURN || opcode == ATHROW) {
-            methodData.handleExit(currentBlock);
+            assert currentLine == currentBlock.line;
+            methodData.handleExit(currentLine);
             generateCallsToRegisterNodesReached();
          }
 

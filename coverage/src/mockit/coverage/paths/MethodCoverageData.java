@@ -38,22 +38,22 @@ public final class MethodCoverageData implements Serializable
    // Helper fields used during path building:
    private transient boolean addNextBlockToActivePaths;
    private final transient Map<Label, List<Path>> jumpTargetToAlternatePaths =
-      new HashMap<Label, List<Path>>();
+      new LinkedHashMap<Label, List<Path>>();
    private final transient List<Path> activePaths = new ArrayList<Path>();
    private final transient List<Node> allNodes = new ArrayList<Node>();
    private final transient List<Integer> newNodes = new ArrayList<Integer>();
 
-   public void handlePotentialNewBlock(Label basicBlock)
+   public void handlePotentialNewBlock(int line)
    {
       if (paths.isEmpty()) {
-         Node.Entry entryNode = new Node.Entry(basicBlock.line);
+         Node.Entry entryNode = new Node.Entry(line);
          Path path = new Path(entryNode);
          paths.add(path);
          activePaths.add(path);
          addNode(entryNode);
       }
       else {
-         handleRegularInstruction(basicBlock.line);
+         handleRegularInstruction(line);
       }
    }
 
@@ -113,7 +113,7 @@ public final class MethodCoverageData implements Serializable
       }
    }
 
-   public void handleJumpTarget(Label basicBlock)
+   public void handleJumpTarget(Label basicBlock, int line)
    {
       // Will be null for visitLabel calls preceding visitLineNumber:
       List<Path> alternatePaths = jumpTargetToAlternatePaths.get(basicBlock);
@@ -122,22 +122,22 @@ public final class MethodCoverageData implements Serializable
          return;
       }
 
-      for (Path alternatePath : alternatePaths) {
-         Node.Join newNode = new Node.Join(basicBlock.line);
-         alternatePath.addNode(newNode);
-         addNode(newNode);
+      Node.Join newNode = new Node.Join(line);
+      addNode(newNode);
 
+      for (Path alternatePath : alternatePaths) {
          assert !activePaths.contains(alternatePath) : "Alternate path already active";
+         alternatePath.addNode(newNode);
       }
 
       activePaths.addAll(alternatePaths);
    }
 
-   public void handleExit(Label exitBlock)
+   public void handleExit(int exitLine)
    {
       assert !activePaths.isEmpty() : "No active paths";
 
-      Node.Exit newNode = new Node.Exit(exitBlock.line);
+      Node.Exit newNode = new Node.Exit(exitLine);
       addNode(newNode);
 
       for (Path path : activePaths) {
