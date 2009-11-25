@@ -66,7 +66,7 @@ public final class MethodCoverageData implements Serializable
    public void handleRegularInstruction(int line)
    {
       if (addNextBlockToActivePaths) {
-         assert !activePaths.isEmpty() : "No active paths";
+         assert !activePaths.isEmpty() : "No active paths for next block at line " + line;
 
          Node.BasicBlock newNode = new Node.BasicBlock(line);
          addNode(newNode);
@@ -135,7 +135,7 @@ public final class MethodCoverageData implements Serializable
 
    public void handleExit(int exitLine)
    {
-      assert !activePaths.isEmpty() : "No active paths";
+      assert !activePaths.isEmpty() : "No active paths for exit at line " + exitLine;
 
       Node.Exit newNode = new Node.Exit(exitLine);
       addNode(newNode);
