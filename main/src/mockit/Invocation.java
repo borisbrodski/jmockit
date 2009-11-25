@@ -32,43 +32,43 @@ package mockit;
  */
 public class Invocation {
 	/** 
-	 * Current invocation count.
+	 * Current invocation count. The first invocation start at 1.
 	 */
 	final protected int currentInvocation;
 	
 	/**
 	 * Minimum invocation
 	 */
-	protected int minInvocation;
+	protected int minInvocations;
 	
 	/**
 	 * Maximum invocation (-1 indicates unlimited)
 	 */
-	protected int maxInvocation;
+	protected int maxInvocations;
 	
-	public Invocation(int currentInvocation, int minInvocation, int maxInvocation){
+	public Invocation(int currentInvocation, int minInvocations, int maxInvocations){
 		this.currentInvocation=currentInvocation;
-		this.minInvocation=minInvocation;
-		this.maxInvocation=maxInvocation;
+		this.minInvocations=minInvocations;
+		this.maxInvocations=maxInvocations;
 	}
 
 	public int getCurrentInvocation() {
 		return currentInvocation;
 	}
 	
-	public int getMinInvocation() {
-		return minInvocation;
+	public int getMinInvocations() {
+		return minInvocations;
 	}
 
-	public void setMinInvocation(int minInvocation) {
-		this.minInvocation = minInvocation;
+	public void setMinInvocations(int minInvocations) {
+		this.minInvocations = minInvocations;
 	}
 
-	public int getMaxInvocation() {
-		return maxInvocation;
+	public int getMaxInvocations() {
+		return maxInvocations;
 	}
 
-	public void setMaxInvocation(int maxInvocation) {
-		this.maxInvocation = maxInvocation;
+	public void setMaxInvocations(int maxInvocations) {
+		this.maxInvocations = maxInvocations;
 	}
 }

@@ -122,7 +122,7 @@ abstract class InvocationResult
       }
 
       private void setConstraintsFromInvocation(Invocation invocation, InvocationConstraints constraints){
-    	 constraints.setLimits(invocation.getMinInvocation(), invocation.getMaxInvocation());
+    	 constraints.setLimits(invocation.getMinInvocations(), invocation.getMaxInvocations());
        }
 
       private void replaceNullArgumentsWithClassObjectsIfAny(
