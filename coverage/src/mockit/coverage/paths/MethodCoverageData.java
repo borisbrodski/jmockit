@@ -210,4 +210,17 @@ public final class MethodCoverageData implements Serializable
 
       return totalCount;
    }
+
+   public int getCoveredPaths()
+   {
+      int coveredCount = 0;
+
+      for (Path path : paths) {
+         if (path.getExecutionCount() > 0) {
+            coveredCount++;
+         }
+      }
+
+      return coveredCount;
+   }
 }

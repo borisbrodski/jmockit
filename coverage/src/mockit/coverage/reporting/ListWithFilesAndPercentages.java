@@ -27,6 +27,8 @@ package mockit.coverage.reporting;
 import java.io.*;
 import java.util.*;
 
+import mockit.coverage.*;
+
 abstract class ListWithFilesAndPercentages
 {
    protected final PrintWriter output;
@@ -90,48 +92,16 @@ abstract class ListWithFilesAndPercentages
          printIndent(2); output.println("</tr>");
       }
 
-      return (int) (100.0 * coveredSegments / totalSegments + 0.5);
+      return CoveragePercentage.calculate(coveredSegments, totalSegments);
    }
 
    final void printCoveragePercentage(int percentage)
    {
       output.print("<td class='coverage' style='background-color:#");
-      output.print(percentageColor(percentage));
+      output.print(CoveragePercentage.percentageColor(percentage));
       output.print("'>");
       output.print(percentage);
       output.println("%</td>");
-   }
-
-   private String percentageColor(int percentage)
-   {
-      if (percentage == 0) {
-         return "ff0000";
-      }
-      else if (percentage == 100) {
-         return "00ff00";
-      }
-      else {
-         int green = 0xFF * percentage / 100;
-         int red = 0xFF - green;
-
-         StringBuilder color = new StringBuilder(6);
-         appendColorInHexadecimal(color, red);
-         appendColorInHexadecimal(color, green);
-         color.append("00");
-
-         return color.toString();
-      }
-   }
-
-   private void appendColorInHexadecimal(StringBuilder colorInHexa, int rgb)
-   {
-      String hex = Integer.toHexString(rgb);
-
-      if (hex.length() == 1) {
-         colorInHexa.append('0');
-      }
-
-      colorInHexa.append(hex);
    }
 
    final void printIndent(int level)

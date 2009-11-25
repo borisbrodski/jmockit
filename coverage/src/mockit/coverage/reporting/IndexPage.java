@@ -94,7 +94,7 @@ final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeLineWithTotalCoverage()
    {
-      int totalPercentage = (int) (100.0 * coveredSegments / totalSegments + 0.5);
+      int totalPercentage = CoveragePercentage.calculate (coveredSegments, totalSegments);
 
       output.print("  <tr><td colspan='2' class='total'>Total</td>");
       printCoveragePercentage(totalPercentage);

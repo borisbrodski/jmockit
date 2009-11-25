@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2007-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -28,10 +28,12 @@ import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
+import mockit.coverage.paths.*;
 
 /**
  * Generates an XHTML page containing line-by-line coverage information for a single source file.
  */
+@SuppressWarnings({"ClassWithTooManyFields"})
 final class FileCoverageReport
 {
    private final Map<Integer, LineCoverageData> lineToLineData;
@@ -41,10 +43,16 @@ final class FileCoverageReport
    private final PrintWriter output;
    private final boolean withCallPoints;
 
-   // Helper variables.
+   // Helper fields.
    private final LineParser lineParser = new LineParser();
    private final LineSyntaxFormatter lineSyntaxFormatter = new LineSyntaxFormatter();
    private final LineCoverageFormatter lineCoverageFormatter;
+
+   private final Iterator<MethodCoverageData> nextMethod;
+   private MethodCoverageData currentMethod;
+   private int previousMethodEndLine;
+
+   private int lineNo;
    private String line;
    private LineCoverageData lineData;
 
@@ -57,6 +65,12 @@ final class FileCoverageReport
       pathToOutputFile = filePath.replace(".java", ".html");
       this.withCallPoints = withCallPoints;
       lineCoverageFormatter = new LineCoverageFormatter(withCallPoints);
+
+      nextMethod = coverageData.getMethods().iterator();
+
+      if (nextMethod.hasNext()) {
+         currentMethod = nextMethod.next();
+      }
 
       if (inputFile == null) {
          input = null;
@@ -163,22 +177,103 @@ final class FileCoverageReport
 
    private void writeFormattedSourceLines() throws IOException
    {
-      int lineNo = 1;
+      lineNo = 1;
 
       while ((line = input.readLine()) != null) {
+         writePathCoverageInfoIfLineStartsANewMethodOrConstructor();
+         writeOpeningOfNewExecutableLine();
+
          lineData = lineToLineData.get(lineNo);
-
-         output.println("    <tr>");
-         output.print("      <td class='lineNo'>");
-         output.print(lineNo);
-         output.print("</td>");
-
          writeLineExecutionCountIfAny();
-         writeFormattedSourceLine();
+         writeExecutableLine();
 
          output.println("    </tr>");
          lineNo++;
       }
+   }
+
+   private void writePathCoverageInfoIfLineStartsANewMethodOrConstructor()
+   {
+      if (
+         currentMethod == null || lineNo <= previousMethodEndLine ||
+         lineNo > currentMethod.getFirstLineOfImplementationBody()
+      ) {
+         return;
+      }
+
+      int p = line.indexOf(currentMethod.methodName);
+
+      if (p < 0) {
+         return;
+      }
+
+      int q = p + currentMethod.methodName.length();
+
+      if (line.length() <= q || line.charAt(q) != '(') {
+         return;
+      }
+
+      writePathCoverageHeaderForMethod();
+
+      char pathId = 'A';
+
+      for (Path path : currentMethod.paths) {
+         writeCoverageInfoForIndividualPath(pathId, path);
+         pathId++;
+      }
+
+      writePathCoverageFooterForMethod();
+
+      previousMethodEndLine = currentMethod.getLastLineOfImplementationBody();
+      currentMethod = nextMethod.hasNext() ? nextMethod.next() : null;
+   }
+
+   private void writePathCoverageHeaderForMethod()
+   {
+      int coveredPaths = currentMethod.getCoveredPaths();
+      int totalPaths = currentMethod.paths.size();
+      int coveragePercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
+
+      output.println("    <tr>");
+      output.print("      <td></td><td class='count'>");
+      output.print(currentMethod.getExecutionCount());
+      output.println("</td>");
+      output.println("      <td class='paths'>");
+      output.print("        <span style='background-color:#");
+      output.print(CoveragePercentage.percentageColor(coveragePercentage));
+      output.print("'>Path coverage: ");
+      output.print(coveredPaths);
+      output.print('/');
+      output.print(totalPaths);
+      output.println("</span>");
+   }
+
+   private void writeCoverageInfoForIndividualPath(char pathId, Path path)
+   {
+      int executionCount = path.getExecutionCount();
+
+      output.print("        <span class='");
+      output.print(executionCount == 0 ? "uncovered" : "covered");
+      output.print("'>");
+      output.print(pathId);
+      output.print(": ");
+      output.print(executionCount);
+      output.println("</span>");
+   }
+
+   private void writePathCoverageFooterForMethod()
+   {
+      output.println();
+      output.println("      </td>");
+      output.println("    </tr>");
+   }
+
+   private void writeOpeningOfNewExecutableLine()
+   {
+      output.println("    <tr>");
+      output.print("      <td class='lineNo'>");
+      output.print(lineNo);
+      output.print("</td>");
    }
 
    private void writeLineExecutionCountIfAny()
@@ -193,7 +288,7 @@ final class FileCoverageReport
       }
    }
 
-   private void writeFormattedSourceLine()
+   private void writeExecutableLine()
    {
       if (line.trim().length() == 0) {
          output.println("      <td/>");

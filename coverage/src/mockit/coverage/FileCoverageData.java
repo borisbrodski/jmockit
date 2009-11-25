@@ -103,9 +103,7 @@ public final class FileCoverageData implements Serializable
          }
       }
 
-      double result = 100.0 * coveredSegments / totalSegments + 0.5;
-      
-      return (int) result;
+      return CoveragePercentage.calculate(coveredSegments, totalSegments);
    }
 
    void addCountsFromPreviousMeasurement(FileCoverageData previousData)
