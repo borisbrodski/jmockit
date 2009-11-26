@@ -1,22 +1,22 @@
-caption { background-color: darkslateblue; color: white; font-size: larger; }
-th { background-color: cornflowerblue; color: white; }
+caption { background-color: #483d8b; color: white; font-size: larger; }
+th { background-color: #6495ed; color: white; }
 td { font-family: monospace; }
 pre { margin: 0; }
 ol {
-   background-color: lightcyan;
+   background-color: #e0ffff;
    margin: 1ex 2em 1ex 4em;
 }
 
 span.comment { color: gray; }
-span.keyword { color: darkblue; font-weight: bolder; }
+span.keyword { color: #00008b; font-weight: bolder; }
 
 .lineNo { text-align: right; }
 .count { background-color: yellow; text-align: right; padding-left: 4px; padding-right: 2px; }
 
 .nonexec { background-color: white; }
-.covered { background-color: lightgreen; }
-.uncovered { background-color: lightcoral; }
-.partiallyCovered { background-color: goldenrod; }
+.covered { background-color: #90ee90; }
+.uncovered { background-color: #f08080; }
+.partiallyCovered { background-color: #daa520; }
 
 td.file {
    vertical-align: middle; background-color: #e0e0e0; padding: 2px;
