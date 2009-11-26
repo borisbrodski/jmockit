@@ -85,20 +85,20 @@ abstract class ListWithFilesAndPercentages
    private void writeTableCellWithFileName(String filePath)
    {
       printIndentOneLevelDeeper();
-      output.print("<td class='file'>");
+      output.write("<td class='file'>");
 
       String href = getHRefToFile(filePath);
 
       if (href != null) {
-         output.print("<a href='");
-         output.print(href);
-         output.print("'>");
+         output.write("<a href='");
+         output.write(href);
+         output.write("'>");
       }
 
-      output.print(getFileNameForDisplay(filePath));
+      output.write(getFileNameForDisplay(filePath));
 
       if (href != null) {
-         output.print("</a>");
+         output.write("</a>");
       }
 
       output.println("</td>");
@@ -128,9 +128,9 @@ abstract class ListWithFilesAndPercentages
 
    final void printCoveragePercentage(int percentage)
    {
-      output.print("<td class='coverage' style='background-color:#");
-      output.print(CoveragePercentage.percentageColor(percentage));
-      output.print("'>");
+      output.write("<td class='coverage' style='background-color:#");
+      output.write(CoveragePercentage.percentageColor(percentage));
+      output.write("'>");
       output.print(percentage);
       output.println("%</td>");
    }

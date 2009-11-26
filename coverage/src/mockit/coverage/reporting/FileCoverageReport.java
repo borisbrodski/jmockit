@@ -213,13 +213,13 @@ final class FileCoverageReport
       int coveragePercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
 
       output.println("    <tr>");
-      output.print("      <td></td><td class='count'>");
+      output.write("      <td></td><td class='count'>");
       output.print(currentMethod.getExecutionCount());
       output.println("</td>");
       output.println("      <td class='paths'>");
-      output.print("        <span style='cursor:default; background-color:#");
-      output.print(CoveragePercentage.percentageColor(coveragePercentage));
-      output.print("' onclick='hidePath()'>Path coverage: ");
+      output.write("        <span style='cursor:default; background-color:#");
+      output.write(CoveragePercentage.percentageColor(coveragePercentage));
+      output.write("' onclick='hidePath()'>Path coverage: ");
       output.print(coveredPaths);
       output.print('/');
       output.print(totalPaths);
@@ -239,15 +239,15 @@ final class FileCoverageReport
          }
       }
 
-      output.print("        <span class='");
-      output.print(executionCount == 0 ? "uncovered" : "covered");
-      output.print("' onclick=\"showPath('");
+      output.write("        <span class='");
+      output.write(executionCount == 0 ? "uncovered" : "covered");
+      output.write("' onclick=\"showPath('");
       output.print(pathId);
-      output.print("','");
-      output.print(lineIds.toString());
-      output.print("')\">");
+      output.write("','");
+      output.write(lineIds.toString());
+      output.write("')\">");
       output.print(pathId);
-      output.print(": ");
+      output.write(": ");
       output.print(executionCount);
       output.println("</span>");
    }
@@ -261,15 +261,15 @@ final class FileCoverageReport
    private void writeOpeningOfNewExecutableLine()
    {
       output.println("    <tr>");
-      output.print("      <td class='lineNo'>");
+      output.write("      <td class='lineNo'>");
       output.print(lineNo);
-      output.print("</td>");
+      output.write("</td>");
    }
 
    private void writeLineExecutionCountIfAny()
    {
       if (lineData != null) {
-         output.print("<td class='count'>");
+         output.write("<td class='count'>");
          output.print(lineData.getExecutionCount());
          output.println("</td>");
       }
@@ -292,17 +292,17 @@ final class FileCoverageReport
          lineData == null ? "nonexec" : lineData.getExecutionCount() == 0 ? "uncovered" : null;
 
       if (lineStatus != null) {
-         output.print("      <td id='");
+         output.write("      <td id='");
          output.print(lineNo);
-         output.print("' class='");
-         output.print(lineStatus);
-         output.print("'><pre>");
-         output.print(initialSegment.toString());
+         output.write("' class='");
+         output.write(lineStatus);
+         output.write("'><pre>");
+         output.write(initialSegment.toString());
          output.println("</pre></td>");
       }
       else {
          line = lineCoverageFormatter.format(lineNo, lineData, initialSegment);
-         output.print(line);
+         output.write(line);
       }
    }
 

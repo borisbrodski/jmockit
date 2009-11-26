@@ -73,9 +73,9 @@ final class IndexPage extends ListWithFilesAndPercentages
       output.println("  <h1>JMockit Coverage Report</h1>");
       output.println("  <table cellpadding='0' cellspacing='1'>");
       output.println("    <caption>All Packages and Files</caption>");
-      output.print("    <tr><th>Packages (");
+      output.write("    <tr><th>Packages (");
       output.print(packagesToFiles.keySet().size());
-      output.print(")</th><th>Files (");
+      output.write(")</th><th>Files (");
 
       int totalFileCount = computeTotalNumberOfSourceFiles();
       output.print(totalFileCount);
@@ -96,19 +96,21 @@ final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeLineWithCoverageTotals()
    {
-      int totalCodePercentage = CoveragePercentage.calculate(coveredSegments, totalSegments);
-      int totalPathPercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
+      output.write("  <tr><td colspan='2' class='total'>Total</td>");
 
-      output.print("  <tr><td colspan='2' class='total'>Total</td>");
+      int totalCodePercentage = CoveragePercentage.calculate(coveredSegments, totalSegments);
       printCoveragePercentage(totalCodePercentage);
+
+      int totalPathPercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
       printCoveragePercentage(totalPathPercentage);
+
       output.println("</tr>");
    }
 
    private void writeFooter()
    {
       output.println("  </table>");
-      output.print("<p>Generated on ");
+      output.write("<p>Generated on ");
       output.print(new Date());
       output.println("</p>");
       output.println("</body>");
