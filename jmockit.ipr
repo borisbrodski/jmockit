@@ -226,7 +226,6 @@
         <inspection_tool class="ConvertOldAnnotations" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CovariantCompareTo" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CovariantEquals" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="CssConvertColorToHexInspection" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CustomClassloader" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CustomSecurityManager" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CyclicClassDependency" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -763,6 +762,9 @@
         <inspection_tool class="UtilityClassWithPublicConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="VolatileArrayField" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="VolatileLongOrDoubleField" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="W3CssValidation" enabled="true" level="ERROR" enabled_by_default="true">
+          <option name="myCssVersion" value="css3" />
+        </inspection_tool>
         <inspection_tool class="WaitCalledOnCondition" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="WaitNotInLoop" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="WaitNotInSynchronizedContext" enabled="true" level="WARNING" enabled_by_default="true" />

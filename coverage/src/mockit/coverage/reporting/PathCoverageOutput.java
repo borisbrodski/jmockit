@@ -113,7 +113,7 @@ final class PathCoverageOutput
    {
       int executionCount = path.getExecutionCount();
       StringBuilder lineIds = new StringBuilder();
-      String sep = "";
+      String sep = "l";
       int previousLine = 0;
 
       for (Node node : path.getNodes()) {
@@ -122,7 +122,7 @@ final class PathCoverageOutput
          if (line > previousLine) {
             lineIds.append(sep).append(line);
             previousLine = line;
-            sep = " ";
+            sep = " l";
          }
       }
 

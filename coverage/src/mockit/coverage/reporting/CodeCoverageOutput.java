@@ -67,13 +67,13 @@ final class CodeCoverageOutput
 
    private void writeLineExecutionCountIfAny()
    {
-      if (lineData != null) {
+      if (lineData == null) {
+         output.println("<td></td>");
+      }
+      else {
          output.write("<td class='count'>");
          output.print(lineData.getExecutionCount());
          output.println("</td>");
-      }
-      else {
-         output.println("<td>&nbsp;</td>");
       }
    }
 
@@ -84,24 +84,24 @@ final class CodeCoverageOutput
          return;
       }
 
+      output.write("      <td id='l");
+      output.print(lineNo);
+
       LineSegment initialSegment = lineParser.parse(line);
       lineSyntaxFormatter.format(initialSegment);
 
-      String lineStatus =
-         lineData == null ? "nonexec" : lineData.getExecutionCount() == 0 ? "uncovered" : null;
-
-      if (lineStatus != null) {
-         output.write("      <td id='");
-         output.print(lineNo);
-         output.write("' class='");
-         output.write(lineStatus);
-         output.write("'><pre>");
-         output.write(initialSegment.toString());
-         output.println("</pre></td>");
-      }
-      else {
-         String formattedLine = lineCoverageFormatter.format(lineNo, lineData, initialSegment);
+      if (lineData != null && lineData.getExecutionCount() > 0) {
+         String formattedLine = lineCoverageFormatter.format(lineData, initialSegment);
          output.write(formattedLine);
+         return;
       }
+
+      String lineStatus = lineData == null ? "nonexec" : "uncovered";
+
+      output.write("' class='");
+      output.write(lineStatus);
+      output.write("'><pre>");
+      output.write(initialSegment.toString());
+      output.println("</pre></td>");
    }
 }

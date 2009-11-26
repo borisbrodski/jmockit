@@ -38,15 +38,15 @@ final class LineCoverageFormatter
       this.withCallPoints = withCallPoints;
    }
 
-   String format(int lineNo, LineCoverageData lineData, LineSegment initialSegment)
+   String format(LineCoverageData lineData, LineSegment initialSegment)
    {
       formattedLine.setLength(0);
 
       if (lineData.containsSegments()) {
-         formatLineWithBranches(lineNo, lineData, initialSegment);
+         formatLineWithBranches(lineData, initialSegment);
       }
       else {
-         formatLineWithoutBranches(lineNo, lineData, initialSegment);
+         formatLineWithoutBranches(lineData, initialSegment);
       }
 
       formattedLine.append("      </td>").append(EOL);
@@ -54,14 +54,13 @@ final class LineCoverageFormatter
       return formattedLine.toString();
    }
 
-   private void formatLineWithBranches(
-      int lineNo, LineCoverageData lineData, LineSegment initialSegment)
+   private void formatLineWithBranches(LineCoverageData lineData, LineSegment initialSegment)
    {
       // TODO: make line segment formatting work
 //         formattedLine.append("      <td class='withBranches'>").append(EOL);
 //         new LineSegmentsFormatter(withCallPoints, formattedLine).formatBranches(
 //            lineData, initialSegment);
-      formattedLine.append("      <td id='").append(lineNo).append("'><pre class='");
+      formattedLine.append("'><pre class='");
       formattedLine.append(lineData.isFullyCovered() ? "covered" : "partiallyCovered");
 
       if (withCallPoints) {
@@ -77,10 +76,9 @@ final class LineCoverageFormatter
       }
    }
 
-   private void formatLineWithoutBranches(
-      int lineNo, LineCoverageData lineData, LineSegment initialSegment)
+   private void formatLineWithoutBranches(LineCoverageData lineData, LineSegment initialSegment)
    {
-      formattedLine.append("      <td id='").append(lineNo).append("'><pre class='covered");
+      formattedLine.append("'><pre class='covered");
 
       if (withCallPoints) {
          formattedLine.append(" withCallPoints' onclick='showHide(this)");
