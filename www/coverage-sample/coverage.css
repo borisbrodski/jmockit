@@ -31,3 +31,13 @@ td.withBranches pre { display: inline; margin-right: 2px; }
 td.total { text-align: right; font-weight: bold; background-color: #e0e0e0; }
 
 .withCallPoints { cursor: pointer; }
+
+td.paths {
+   padding-left: 2em;
+   font-family: sans-serif; font-size: small;
+}
+.paths span {
+   outline: blue solid 1px;
+   padding-left: 2px; padding-right: 2px;
+   cursor: help;
+}

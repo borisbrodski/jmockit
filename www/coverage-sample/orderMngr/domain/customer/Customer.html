@@ -6,6 +6,27 @@
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
   <script type='text/javascript'>
+    var pathIdShown;
+    var lineIdsShown;
+    function hidePath(pathId) {
+      if (lineIdsShown) {
+        for (var i = 0; i < lineIdsShown.length; i++) {
+          var line = document.getElementById(lineIdsShown[i]);
+          line.style.outlineStyle = 'none';
+        }
+        lineIdsShown = null; return pathId == pathIdShown;
+      }
+      return false;
+    }
+    function showPath(pathId, lineIdsStr) {
+      if (hidePath(pathId)) return;
+      pathIdShown = pathId;
+      lineIdsShown = lineIdsStr.split(' ');
+      for (var i = 0; i < lineIdsShown.length; i++) {
+        var line = document.getElementById(lineIdsShown[i]);
+        line.style.outline = 'thin dashed #0000FF';
+      }
+    }
     function showHide(callPoints) {
       var list = callPoints.nextSibling.nextSibling.style;
       list.display = list.display == 'none' ? 'block' : 'none';
@@ -17,103 +38,103 @@
     <caption><code>.\src\orderMngr\domain\customer\Customer.java</code></caption>
     <tr>
       <td class='lineNo'>1</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'>/*</span></pre></td>
+      <td id='1' class='nonexec'><pre><span class='comment'>/*</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>2</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * JMockit Samples</span></pre></td>
+      <td id='2' class='nonexec'><pre><span class='comment'> * JMockit Samples</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>3</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</span></pre></td>
+      <td id='3' class='nonexec'><pre><span class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>4</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * All rights reserved.</span></pre></td>
+      <td id='4' class='nonexec'><pre><span class='comment'> * All rights reserved.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>5</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
+      <td id='5' class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>6</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</span></pre></td>
+      <td id='6' class='nonexec'><pre><span class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>7</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * a copy of this software and associated documentation files (the</span></pre></td>
+      <td id='7' class='nonexec'><pre><span class='comment'> * a copy of this software and associated documentation files (the</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>8</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * "Software"), to deal in the Software without restriction, including</span></pre></td>
+      <td id='8' class='nonexec'><pre><span class='comment'> * "Software"), to deal in the Software without restriction, including</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>9</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</span></pre></td>
+      <td id='9' class='nonexec'><pre><span class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>10</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</span></pre></td>
+      <td id='10' class='nonexec'><pre><span class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>11</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * permit persons to whom the Software is furnished to do so, subject to</span></pre></td>
+      <td id='11' class='nonexec'><pre><span class='comment'> * permit persons to whom the Software is furnished to do so, subject to</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>12</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * the following conditions:</span></pre></td>
+      <td id='12' class='nonexec'><pre><span class='comment'> * the following conditions:</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>13</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
+      <td id='13' class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>14</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * The above copyright notice and this permission notice shall be</span></pre></td>
+      <td id='14' class='nonexec'><pre><span class='comment'> * The above copyright notice and this permission notice shall be</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>15</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * included in all copies or substantial portions of the Software.</span></pre></td>
+      <td id='15' class='nonexec'><pre><span class='comment'> * included in all copies or substantial portions of the Software.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>16</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
+      <td id='16' class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>17</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span></pre></td>
+      <td id='17' class='nonexec'><pre><span class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>18</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span></pre></td>
+      <td id='18' class='nonexec'><pre><span class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>19</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span></pre></td>
+      <td id='19' class='nonexec'><pre><span class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>20</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span></pre></td>
+      <td id='20' class='nonexec'><pre><span class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>21</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span></pre></td>
+      <td id='21' class='nonexec'><pre><span class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>22</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span></pre></td>
+      <td id='22' class='nonexec'><pre><span class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>23</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span></pre></td>
+      <td id='23' class='nonexec'><pre><span class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>24</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> */</span></pre></td>
+      <td id='24' class='nonexec'><pre><span class='comment'> */</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>25</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='keyword'>package</span> orderMngr.domain.customer;</pre></td>
+      <td id='25' class='nonexec'><pre><span class='keyword'>package</span> orderMngr.domain.customer;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>26</td><td>&nbsp;</td>
@@ -121,7 +142,7 @@
     </tr>
     <tr>
       <td class='lineNo'>27</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='keyword'>import</span> javax.persistence.*;</pre></td>
+      <td id='27' class='nonexec'><pre><span class='keyword'>import</span> javax.persistence.*;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>28</td><td>&nbsp;</td>
@@ -129,23 +150,23 @@
     </tr>
     <tr>
       <td class='lineNo'>29</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>@Entity</pre></td>
+      <td id='29' class='nonexec'><pre>@Entity</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>30</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='keyword'>public</span> <span class='keyword'>class</span> Customer</pre></td>
+      <td id='30' class='nonexec'><pre><span class='keyword'>public</span> <span class='keyword'>class</span> Customer</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>31</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>{</pre></td>
+      <td id='31' class='nonexec'><pre>{</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>32</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   @Id</pre></td>
+      <td id='32' class='nonexec'><pre>   @Id</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>33</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>private</span> String id;</pre></td>
+      <td id='33' class='nonexec'><pre>   <span class='keyword'>private</span> String id;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>34</td><td>&nbsp;</td>
@@ -153,7 +174,7 @@
     </tr>
     <tr>
       <td class='lineNo'>35</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   String firstName;</pre></td>
+      <td id='35' class='nonexec'><pre>   String firstName;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>36</td><td>&nbsp;</td>
@@ -161,7 +182,7 @@
     </tr>
     <tr>
       <td class='lineNo'>37</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   String lastName;</pre></td>
+      <td id='37' class='nonexec'><pre>   String lastName;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>38</td><td>&nbsp;</td>
@@ -169,7 +190,7 @@
     </tr>
     <tr>
       <td class='lineNo'>39</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   String deliveryAddress;</pre></td>
+      <td id='39' class='nonexec'><pre>   String deliveryAddress;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>40</td><td>&nbsp;</td>
@@ -177,15 +198,15 @@
     </tr>
     <tr>
       <td class='lineNo'>41</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> Customer()</pre></td>
+      <td id='41' class='nonexec'><pre>   <span class='keyword'>public</span> Customer()</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>42</td><td class='count'>0</td>
-      <td class='uncovered'><pre>   {</pre></td>
+      <td id='42' class='uncovered'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>43</td><td class='count'>0</td>
-      <td class='uncovered'><pre>   }</pre></td>
+      <td id='43' class='uncovered'><pre>   }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>44</td><td>&nbsp;</td>
@@ -193,11 +214,11 @@
     </tr>
     <tr>
       <td class='lineNo'>45</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> Customer(String id, String firstName, String lastName, String deliveryAddress)</pre></td>
+      <td id='45' class='nonexec'><pre>   <span class='keyword'>public</span> Customer(String id, String firstName, String lastName, String deliveryAddress)</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>46</td><td class='count'>11</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>   {</pre>
+      <td id='46'><pre class='covered withCallPoints' onclick='showHide(this)'>   {</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:89</li>
@@ -215,7 +236,7 @@
     </tr>
     <tr>
       <td class='lineNo'>47</td><td class='count'>11</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.id = id;</pre>
+      <td id='47'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.id = id;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:89</li>
@@ -233,7 +254,7 @@
     </tr>
     <tr>
       <td class='lineNo'>48</td><td class='count'>11</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.firstName = firstName;</pre>
+      <td id='48'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.firstName = firstName;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:89</li>
@@ -251,7 +272,7 @@
     </tr>
     <tr>
       <td class='lineNo'>49</td><td class='count'>11</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.lastName = lastName;</pre>
+      <td id='49'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.lastName = lastName;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:89</li>
@@ -269,7 +290,7 @@
     </tr>
     <tr>
       <td class='lineNo'>50</td><td class='count'>11</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.deliveryAddress = deliveryAddress;</pre>
+      <td id='50'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.deliveryAddress = deliveryAddress;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:89</li>
@@ -287,7 +308,7 @@
     </tr>
     <tr>
       <td class='lineNo'>51</td><td class='count'>11</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td id='51'><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:89</li>
@@ -309,15 +330,15 @@
     </tr>
     <tr>
       <td class='lineNo'>53</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> String getId()</pre></td>
+      <td id='53' class='nonexec'><pre>   <span class='keyword'>public</span> String getId()</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>54</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   {</pre></td>
+      <td id='54' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>55</td><td class='count'>26</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> id;</pre>
+      <td id='55'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> id;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:67</li>
@@ -350,7 +371,7 @@
     </tr>
     <tr>
       <td class='lineNo'>56</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   }</pre></td>
+      <td id='56' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>57</td><td>&nbsp;</td>
@@ -358,15 +379,15 @@
     </tr>
     <tr>
       <td class='lineNo'>58</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> String getFirstName()</pre></td>
+      <td id='58' class='nonexec'><pre>   <span class='keyword'>public</span> String getFirstName()</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>59</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   {</pre></td>
+      <td id='59' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>60</td><td class='count'>17</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> firstName;</pre>
+      <td id='60'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> firstName;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
@@ -390,7 +411,7 @@
     </tr>
     <tr>
       <td class='lineNo'>61</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   }</pre></td>
+      <td id='61' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>62</td><td>&nbsp;</td>
@@ -398,15 +419,15 @@
     </tr>
     <tr>
       <td class='lineNo'>63</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> String getLastName()</pre></td>
+      <td id='63' class='nonexec'><pre>   <span class='keyword'>public</span> String getLastName()</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>64</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   {</pre></td>
+      <td id='64' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>65</td><td class='count'>16</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> lastName;</pre>
+      <td id='65'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> lastName;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
@@ -429,7 +450,7 @@
     </tr>
     <tr>
       <td class='lineNo'>66</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   }</pre></td>
+      <td id='66' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>67</td><td>&nbsp;</td>
@@ -437,15 +458,15 @@
     </tr>
     <tr>
       <td class='lineNo'>68</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> String getDeliveryAddress()</pre></td>
+      <td id='68' class='nonexec'><pre>   <span class='keyword'>public</span> String getDeliveryAddress()</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>69</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   {</pre></td>
+      <td id='69' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>70</td><td class='count'>1</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> deliveryAddress;</pre>
+      <td id='70'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> deliveryAddress;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#editCustomer:130</li>
         </ol>
@@ -453,7 +474,7 @@
     </tr>
     <tr>
       <td class='lineNo'>71</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   }</pre></td>
+      <td id='71' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>72</td><td>&nbsp;</td>
@@ -461,19 +482,29 @@
     </tr>
     <tr>
       <td class='lineNo'>73</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   @Override</pre></td>
+      <td id='73' class='nonexec'><pre>   @Override</pre></td>
+    </tr>
+    <tr>
+      <td></td><td class='count'>7</td>
+      <td class='paths'>
+        <span style='cursor:default; background-color:#c03f00' onclick='hidePath()'>Path coverage: 1/4</span>
+        <span class='covered' onclick="showPath('A','76 76 76')">A: 7</span>
+        <span class='uncovered' onclick="showPath('B','76 77 77 77 77')">B: 0</span>
+        <span class='uncovered' onclick="showPath('C','76 77 77 77')">C: 0</span>
+        <span class='uncovered' onclick="showPath('D','76 77 77 79 81')">D: 0</span>
+      </td>
     </tr>
     <tr>
       <td class='lineNo'>74</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>boolean</span> equals(Object o)</pre></td>
+      <td id='74' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>boolean</span> equals(Object o)</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>75</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   {</pre></td>
+      <td id='75' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>76</td><td class='count'>7</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>if</span> (<span class='keyword'>this</span> == o) <span class='keyword'>return</span> <span class='keyword'>true</span>;</pre>
+      <td id='76'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>if</span> (<span class='keyword'>this</span> == o) <span class='keyword'>return</span> <span class='keyword'>true</span>;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:71</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:93</li>
@@ -487,7 +518,7 @@
     </tr>
     <tr>
       <td class='lineNo'>77</td><td class='count'>0</td>
-      <td class='uncovered'><pre>      <span class='keyword'>if</span> (o == <span class='keyword'>null</span> || getClass() != o.getClass()) <span class='keyword'>return</span> <span class='keyword'>false</span>;</pre></td>
+      <td id='77' class='uncovered'><pre>      <span class='keyword'>if</span> (o == <span class='keyword'>null</span> || getClass() != o.getClass()) <span class='keyword'>return</span> <span class='keyword'>false</span>;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>78</td><td>&nbsp;</td>
@@ -495,7 +526,7 @@
     </tr>
     <tr>
       <td class='lineNo'>79</td><td class='count'>0</td>
-      <td class='uncovered'><pre>      Customer customer = (Customer) o;</pre></td>
+      <td id='79' class='uncovered'><pre>      Customer customer = (Customer) o;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>80</td><td>&nbsp;</td>
@@ -503,11 +534,11 @@
     </tr>
     <tr>
       <td class='lineNo'>81</td><td class='count'>0</td>
-      <td class='uncovered'><pre>      <span class='keyword'>return</span> id.equals(customer.id);</pre></td>
+      <td id='81' class='uncovered'><pre>      <span class='keyword'>return</span> id.equals(customer.id);</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>82</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   }</pre></td>
+      <td id='82' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>83</td><td>&nbsp;</td>
@@ -515,19 +546,19 @@
     </tr>
     <tr>
       <td class='lineNo'>84</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   @Override</pre></td>
+      <td id='84' class='nonexec'><pre>   @Override</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>85</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>int</span> hashCode()</pre></td>
+      <td id='85' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>int</span> hashCode()</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>86</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   {</pre></td>
+      <td id='86' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>87</td><td class='count'>1</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> id.hashCode();</pre>
+      <td id='87'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> id.hashCode();</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#removeCustomer:151</li>
         </ol>
@@ -535,11 +566,11 @@
     </tr>
     <tr>
       <td class='lineNo'>88</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   }</pre></td>
+      <td id='88' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>89</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>}</pre></td>
+      <td id='89' class='nonexec'><pre>}</pre></td>
     </tr>
   </table>
 </body>

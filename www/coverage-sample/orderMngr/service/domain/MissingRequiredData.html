@@ -6,6 +6,27 @@
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
   <script type='text/javascript'>
+    var pathIdShown;
+    var lineIdsShown;
+    function hidePath(pathId) {
+      if (lineIdsShown) {
+        for (var i = 0; i < lineIdsShown.length; i++) {
+          var line = document.getElementById(lineIdsShown[i]);
+          line.style.outlineStyle = 'none';
+        }
+        lineIdsShown = null; return pathId == pathIdShown;
+      }
+      return false;
+    }
+    function showPath(pathId, lineIdsStr) {
+      if (hidePath(pathId)) return;
+      pathIdShown = pathId;
+      lineIdsShown = lineIdsStr.split(' ');
+      for (var i = 0; i < lineIdsShown.length; i++) {
+        var line = document.getElementById(lineIdsShown[i]);
+        line.style.outline = 'thin dashed #0000FF';
+      }
+    }
     function showHide(callPoints) {
       var list = callPoints.nextSibling.nextSibling.style;
       list.display = list.display == 'none' ? 'block' : 'none';
@@ -17,7 +38,7 @@
     <caption><code>.\src\orderMngr\service\domain\MissingRequiredData.java</code></caption>
     <tr>
       <td class='lineNo'>1</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='keyword'>package</span> orderMngr.service.domain;</pre></td>
+      <td id='1' class='nonexec'><pre><span class='keyword'>package</span> orderMngr.service.domain;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>2</td><td>&nbsp;</td>
@@ -25,7 +46,7 @@
     </tr>
     <tr>
       <td class='lineNo'>3</td><td class='count'>1</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'><span class='keyword'>public</span> <span class='keyword'>final</span> <span class='keyword'>class</span> MissingRequiredData <span class='keyword'>extends</span> Exception</pre>
+      <td id='3'><pre class='covered withCallPoints' onclick='showHide(this)'><span class='keyword'>public</span> <span class='keyword'>final</span> <span class='keyword'>class</span> MissingRequiredData <span class='keyword'>extends</span> Exception</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithMissingName:107</li>
         </ol>
@@ -33,11 +54,11 @@
     </tr>
     <tr>
       <td class='lineNo'>4</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>{</pre></td>
+      <td id='4' class='nonexec'><pre>{</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>5</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>}</pre></td>
+      <td id='5' class='nonexec'><pre>}</pre></td>
     </tr>
   </table>
 </body>

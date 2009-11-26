@@ -6,6 +6,27 @@
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
   <script type='text/javascript'>
+    var pathIdShown;
+    var lineIdsShown;
+    function hidePath(pathId) {
+      if (lineIdsShown) {
+        for (var i = 0; i < lineIdsShown.length; i++) {
+          var line = document.getElementById(lineIdsShown[i]);
+          line.style.outlineStyle = 'none';
+        }
+        lineIdsShown = null; return pathId == pathIdShown;
+      }
+      return false;
+    }
+    function showPath(pathId, lineIdsStr) {
+      if (hidePath(pathId)) return;
+      pathIdShown = pathId;
+      lineIdsShown = lineIdsStr.split(' ');
+      for (var i = 0; i < lineIdsShown.length; i++) {
+        var line = document.getElementById(lineIdsShown[i]);
+        line.style.outline = 'thin dashed #0000FF';
+      }
+    }
     function showHide(callPoints) {
       var list = callPoints.nextSibling.nextSibling.style;
       list.display = list.display == 'none' ? 'block' : 'none';
@@ -17,103 +38,103 @@
     <caption><code>.\src\orderMngr\domain\order\Order.java</code></caption>
     <tr>
       <td class='lineNo'>1</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'>/*</span></pre></td>
+      <td id='1' class='nonexec'><pre><span class='comment'>/*</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>2</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * JMockit Samples</span></pre></td>
+      <td id='2' class='nonexec'><pre><span class='comment'> * JMockit Samples</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>3</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</span></pre></td>
+      <td id='3' class='nonexec'><pre><span class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>4</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * All rights reserved.</span></pre></td>
+      <td id='4' class='nonexec'><pre><span class='comment'> * All rights reserved.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>5</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
+      <td id='5' class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>6</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</span></pre></td>
+      <td id='6' class='nonexec'><pre><span class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>7</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * a copy of this software and associated documentation files (the</span></pre></td>
+      <td id='7' class='nonexec'><pre><span class='comment'> * a copy of this software and associated documentation files (the</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>8</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * "Software"), to deal in the Software without restriction, including</span></pre></td>
+      <td id='8' class='nonexec'><pre><span class='comment'> * "Software"), to deal in the Software without restriction, including</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>9</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</span></pre></td>
+      <td id='9' class='nonexec'><pre><span class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>10</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</span></pre></td>
+      <td id='10' class='nonexec'><pre><span class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>11</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * permit persons to whom the Software is furnished to do so, subject to</span></pre></td>
+      <td id='11' class='nonexec'><pre><span class='comment'> * permit persons to whom the Software is furnished to do so, subject to</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>12</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * the following conditions:</span></pre></td>
+      <td id='12' class='nonexec'><pre><span class='comment'> * the following conditions:</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>13</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
+      <td id='13' class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>14</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * The above copyright notice and this permission notice shall be</span></pre></td>
+      <td id='14' class='nonexec'><pre><span class='comment'> * The above copyright notice and this permission notice shall be</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>15</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * included in all copies or substantial portions of the Software.</span></pre></td>
+      <td id='15' class='nonexec'><pre><span class='comment'> * included in all copies or substantial portions of the Software.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>16</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
+      <td id='16' class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>17</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span></pre></td>
+      <td id='17' class='nonexec'><pre><span class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>18</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span></pre></td>
+      <td id='18' class='nonexec'><pre><span class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>19</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span></pre></td>
+      <td id='19' class='nonexec'><pre><span class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>20</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span></pre></td>
+      <td id='20' class='nonexec'><pre><span class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>21</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span></pre></td>
+      <td id='21' class='nonexec'><pre><span class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>22</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span></pre></td>
+      <td id='22' class='nonexec'><pre><span class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>23</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span></pre></td>
+      <td id='23' class='nonexec'><pre><span class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>24</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> */</span></pre></td>
+      <td id='24' class='nonexec'><pre><span class='comment'> */</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>25</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='keyword'>package</span> orderMngr.domain.order;</pre></td>
+      <td id='25' class='nonexec'><pre><span class='keyword'>package</span> orderMngr.domain.order;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>26</td><td>&nbsp;</td>
@@ -121,11 +142,11 @@
     </tr>
     <tr>
       <td class='lineNo'>27</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='keyword'>import</span> java.util.*;</pre></td>
+      <td id='27' class='nonexec'><pre><span class='keyword'>import</span> java.util.*;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>28</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='keyword'>import</span> javax.persistence.*;</pre></td>
+      <td id='28' class='nonexec'><pre><span class='keyword'>import</span> javax.persistence.*;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>29</td><td>&nbsp;</td>
@@ -133,35 +154,35 @@
     </tr>
     <tr>
       <td class='lineNo'>30</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'>/**</span></pre></td>
+      <td id='30' class='nonexec'><pre><span class='comment'>/**</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>31</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * A business order to buy products.</span></pre></td>
+      <td id='31' class='nonexec'><pre><span class='comment'> * A business order to buy products.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>32</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> */</span></pre></td>
+      <td id='32' class='nonexec'><pre><span class='comment'> */</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>33</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>@Entity</pre></td>
+      <td id='33' class='nonexec'><pre>@Entity</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>34</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='keyword'>public</span> <span class='keyword'>class</span> Order</pre></td>
+      <td id='34' class='nonexec'><pre><span class='keyword'>public</span> <span class='keyword'>class</span> Order</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>35</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>{</pre></td>
+      <td id='35' class='nonexec'><pre>{</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>36</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   @Id</pre></td>
+      <td id='36' class='nonexec'><pre>   @Id</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>37</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>private</span> <span class='keyword'>int</span> number;</pre></td>
+      <td id='37' class='nonexec'><pre>   <span class='keyword'>private</span> <span class='keyword'>int</span> number;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>38</td><td>&nbsp;</td>
@@ -169,7 +190,7 @@
     </tr>
     <tr>
       <td class='lineNo'>39</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>private</span> String customerId;</pre></td>
+      <td id='39' class='nonexec'><pre>   <span class='keyword'>private</span> String customerId;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>40</td><td>&nbsp;</td>
@@ -177,11 +198,11 @@
     </tr>
     <tr>
       <td class='lineNo'>41</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   @OneToMany</pre></td>
+      <td id='41' class='nonexec'><pre>   @OneToMany</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>42</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>private</span> Collection&lt;OrderItem> items;</pre></td>
+      <td id='42' class='nonexec'><pre>   <span class='keyword'>private</span> Collection&lt;OrderItem> items;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>43</td><td>&nbsp;</td>
@@ -189,7 +210,7 @@
     </tr>
     <tr>
       <td class='lineNo'>44</td><td class='count'>0</td>
-      <td class='uncovered'><pre>   <span class='keyword'>public</span> Order() {}</pre></td>
+      <td id='44' class='uncovered'><pre>   <span class='keyword'>public</span> Order() {}</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>45</td><td>&nbsp;</td>
@@ -197,20 +218,21 @@
     </tr>
     <tr>
       <td class='lineNo'>46</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> Order(<span class='keyword'>int</span> number, String customerId)</pre></td>
+      <td id='46' class='nonexec'><pre>   <span class='keyword'>public</span> Order(<span class='keyword'>int</span> number, String customerId)</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>47</td><td class='count'>16</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>   {</pre>
+      <td id='47'><pre class='covered withCallPoints' onclick='showHide(this)'>   {</pre>
         <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:49</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#updateOrder:75</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#removeOrder:92</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:51</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:48</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:91</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:51</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:54</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#updateOrder:89</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#removeOrder:110</li>
@@ -218,22 +240,22 @@
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:217</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>48</td><td class='count'>16</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.number = number;</pre>
+      <td id='48'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.number = number;</pre>
         <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:49</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#updateOrder:75</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#removeOrder:92</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:51</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:48</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:91</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:51</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:54</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#updateOrder:89</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#removeOrder:110</li>
@@ -241,22 +263,22 @@
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:217</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>49</td><td class='count'>16</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.customerId = customerId;</pre>
+      <td id='49'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.customerId = customerId;</pre>
         <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:49</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#updateOrder:75</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#removeOrder:92</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:51</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:48</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:91</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:51</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:54</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#updateOrder:89</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#removeOrder:110</li>
@@ -264,22 +286,22 @@
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:217</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>50</td><td class='count'>16</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      items = <span class='keyword'>new</span> LinkedList&lt;OrderItem>();</pre>
+      <td id='50'><pre class='covered withCallPoints' onclick='showHide(this)'>      items = <span class='keyword'>new</span> LinkedList&lt;OrderItem>();</pre>
         <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:49</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#updateOrder:75</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#removeOrder:92</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:51</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:48</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:91</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:51</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:54</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#updateOrder:89</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#removeOrder:110</li>
@@ -287,22 +309,22 @@
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:217</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>51</td><td class='count'>16</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td id='51'><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
         <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:49</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#updateOrder:75</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#removeOrder:92</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:51</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:48</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:91</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:51</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:54</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#updateOrder:89</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#removeOrder:110</li>
@@ -310,7 +332,6 @@
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:217</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
         </ol>
       </td>
     </tr>
@@ -320,16 +341,17 @@
     </tr>
     <tr>
       <td class='lineNo'>53</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>int</span> getNumber()</pre></td>
+      <td id='53' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>int</span> getNumber()</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>54</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   {</pre></td>
+      <td id='54' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>55</td><td class='count'>28</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> number;</pre>
+      <td id='55'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> number;</pre>
         <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:54</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:54</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
@@ -337,6 +359,7 @@
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#updateOrder:86</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#removeOrder:94</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#removeOrder:102</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:61</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:53</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:53</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
@@ -345,7 +368,6 @@
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:93</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:111</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:61</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
@@ -357,13 +379,12 @@
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:195</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:222</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByCustomer:224</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>56</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   }</pre></td>
+      <td id='56' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>57</td><td>&nbsp;</td>
@@ -371,15 +392,15 @@
     </tr>
     <tr>
       <td class='lineNo'>58</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> String getCustomerId()</pre></td>
+      <td id='58' class='nonexec'><pre>   <span class='keyword'>public</span> String getCustomerId()</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>59</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   {</pre></td>
+      <td id='59' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>60</td><td class='count'>10</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> customerId;</pre>
+      <td id='60'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> customerId;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:54</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
@@ -396,7 +417,7 @@
     </tr>
     <tr>
       <td class='lineNo'>61</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   }</pre></td>
+      <td id='61' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>62</td><td>&nbsp;</td>
@@ -404,15 +425,15 @@
     </tr>
     <tr>
       <td class='lineNo'>63</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> Collection&lt;OrderItem> getItems()</pre></td>
+      <td id='63' class='nonexec'><pre>   <span class='keyword'>public</span> Collection&lt;OrderItem> getItems()</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>64</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   {</pre></td>
+      <td id='64' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>65</td><td class='count'>8</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> items;</pre>
+      <td id='65'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> items;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:52</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
@@ -427,7 +448,7 @@
     </tr>
     <tr>
       <td class='lineNo'>66</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   }</pre></td>
+      <td id='66' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>67</td><td>&nbsp;</td>
@@ -435,15 +456,26 @@
     </tr>
     <tr>
       <td class='lineNo'>68</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   @Override</pre></td>
+      <td id='68' class='nonexec'><pre>   @Override</pre></td>
+    </tr>
+    <tr>
+      <td></td><td class='count'>5</td>
+      <td class='paths'>
+        <span style='cursor:default; background-color:#cc3300' onclick='hidePath()'>Path coverage: 1/5</span>
+        <span class='uncovered' onclick="showPath('A','71 71 71')">A: 0</span>
+        <span class='uncovered' onclick="showPath('B','71 72 72 72 72')">B: 0</span>
+        <span class='uncovered' onclick="showPath('C','71 72 72 72')">C: 0</span>
+        <span class='covered' onclick="showPath('D','71 72 72 74 76 76')">D: 5</span>
+        <span class='uncovered' onclick="showPath('E','71 72 72 74 76')">E: 0</span>
+      </td>
     </tr>
     <tr>
       <td class='lineNo'>69</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>boolean</span> equals(Object o)</pre></td>
+      <td id='69' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>boolean</span> equals(Object o)</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>70</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   {</pre></td>
+      <td id='70' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>71</td><td class='count'>5</td>
@@ -475,7 +507,7 @@
     </tr>
     <tr>
       <td class='lineNo'>74</td><td class='count'>5</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      Order order = (Order) o;</pre>
+      <td id='74'><pre class='covered withCallPoints' onclick='showHide(this)'>      Order order = (Order) o;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:83</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
@@ -491,7 +523,7 @@
     </tr>
     <tr>
       <td class='lineNo'>76</td><td class='count'>5</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> number == order.getNumber();</pre>
+      <td id='76'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> number == order.getNumber();</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:83</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:109</li>
@@ -503,7 +535,7 @@
     </tr>
     <tr>
       <td class='lineNo'>77</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   }</pre></td>
+      <td id='77' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>78</td><td>&nbsp;</td>
@@ -511,27 +543,27 @@
     </tr>
     <tr>
       <td class='lineNo'>79</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   @Override</pre></td>
+      <td id='79' class='nonexec'><pre>   @Override</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>80</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>int</span> hashCode()</pre></td>
+      <td id='80' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>int</span> hashCode()</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>81</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   {</pre></td>
+      <td id='81' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>82</td><td class='count'>0</td>
-      <td class='uncovered'><pre>      <span class='keyword'>return</span> number;</pre></td>
+      <td id='82' class='uncovered'><pre>      <span class='keyword'>return</span> number;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>83</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>   }</pre></td>
+      <td id='83' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>84</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>}</pre></td>
+      <td id='84' class='nonexec'><pre>}</pre></td>
     </tr>
   </table>
 </body>

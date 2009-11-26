@@ -6,6 +6,27 @@
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
   <script type='text/javascript'>
+    var pathIdShown;
+    var lineIdsShown;
+    function hidePath(pathId) {
+      if (lineIdsShown) {
+        for (var i = 0; i < lineIdsShown.length; i++) {
+          var line = document.getElementById(lineIdsShown[i]);
+          line.style.outlineStyle = 'none';
+        }
+        lineIdsShown = null; return pathId == pathIdShown;
+      }
+      return false;
+    }
+    function showPath(pathId, lineIdsStr) {
+      if (hidePath(pathId)) return;
+      pathIdShown = pathId;
+      lineIdsShown = lineIdsStr.split(' ');
+      for (var i = 0; i < lineIdsShown.length; i++) {
+        var line = document.getElementById(lineIdsShown[i]);
+        line.style.outline = 'thin dashed #0000FF';
+      }
+    }
     function showHide(callPoints) {
       var list = callPoints.nextSibling.nextSibling.style;
       list.display = list.display == 'none' ? 'block' : 'none';
@@ -17,103 +38,103 @@
     <caption><code>.\src\orderMngr\domain\customer\DuplicateCustomer.java</code></caption>
     <tr>
       <td class='lineNo'>1</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'>/*</span></pre></td>
+      <td id='1' class='nonexec'><pre><span class='comment'>/*</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>2</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * JMockit Samples</span></pre></td>
+      <td id='2' class='nonexec'><pre><span class='comment'> * JMockit Samples</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>3</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</span></pre></td>
+      <td id='3' class='nonexec'><pre><span class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>4</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * All rights reserved.</span></pre></td>
+      <td id='4' class='nonexec'><pre><span class='comment'> * All rights reserved.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>5</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
+      <td id='5' class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>6</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</span></pre></td>
+      <td id='6' class='nonexec'><pre><span class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>7</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * a copy of this software and associated documentation files (the</span></pre></td>
+      <td id='7' class='nonexec'><pre><span class='comment'> * a copy of this software and associated documentation files (the</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>8</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * "Software"), to deal in the Software without restriction, including</span></pre></td>
+      <td id='8' class='nonexec'><pre><span class='comment'> * "Software"), to deal in the Software without restriction, including</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>9</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</span></pre></td>
+      <td id='9' class='nonexec'><pre><span class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>10</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</span></pre></td>
+      <td id='10' class='nonexec'><pre><span class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>11</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * permit persons to whom the Software is furnished to do so, subject to</span></pre></td>
+      <td id='11' class='nonexec'><pre><span class='comment'> * permit persons to whom the Software is furnished to do so, subject to</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>12</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * the following conditions:</span></pre></td>
+      <td id='12' class='nonexec'><pre><span class='comment'> * the following conditions:</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>13</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
+      <td id='13' class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>14</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * The above copyright notice and this permission notice shall be</span></pre></td>
+      <td id='14' class='nonexec'><pre><span class='comment'> * The above copyright notice and this permission notice shall be</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>15</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * included in all copies or substantial portions of the Software.</span></pre></td>
+      <td id='15' class='nonexec'><pre><span class='comment'> * included in all copies or substantial portions of the Software.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>16</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> *</span></pre></td>
+      <td id='16' class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>17</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span></pre></td>
+      <td id='17' class='nonexec'><pre><span class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>18</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span></pre></td>
+      <td id='18' class='nonexec'><pre><span class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>19</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span></pre></td>
+      <td id='19' class='nonexec'><pre><span class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>20</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span></pre></td>
+      <td id='20' class='nonexec'><pre><span class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>21</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span></pre></td>
+      <td id='21' class='nonexec'><pre><span class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>22</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span></pre></td>
+      <td id='22' class='nonexec'><pre><span class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>23</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span></pre></td>
+      <td id='23' class='nonexec'><pre><span class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>24</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='comment'> */</span></pre></td>
+      <td id='24' class='nonexec'><pre><span class='comment'> */</span></pre></td>
     </tr>
     <tr>
       <td class='lineNo'>25</td><td>&nbsp;</td>
-      <td class='nonexec'><pre><span class='keyword'>package</span> orderMngr.domain.customer;</pre></td>
+      <td id='25' class='nonexec'><pre><span class='keyword'>package</span> orderMngr.domain.customer;</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>26</td><td>&nbsp;</td>
@@ -121,7 +142,7 @@
     </tr>
     <tr>
       <td class='lineNo'>27</td><td class='count'>2</td>
-      <td><pre class='covered withCallPoints' onclick='showHide(this)'><span class='keyword'>public</span> <span class='keyword'>final</span> <span class='keyword'>class</span> DuplicateCustomer <span class='keyword'>extends</span> Exception</pre>
+      <td id='27'><pre class='covered withCallPoints' onclick='showHide(this)'><span class='keyword'>public</span> <span class='keyword'>final</span> <span class='keyword'>class</span> DuplicateCustomer <span class='keyword'>extends</span> Exception</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
           <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
@@ -130,11 +151,11 @@
     </tr>
     <tr>
       <td class='lineNo'>28</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>{</pre></td>
+      <td id='28' class='nonexec'><pre>{</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>29</td><td>&nbsp;</td>
-      <td class='nonexec'><pre>}</pre></td>
+      <td id='29' class='nonexec'><pre>}</pre></td>
     </tr>
   </table>
 </body>
