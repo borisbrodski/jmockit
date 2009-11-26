@@ -28,15 +28,12 @@ import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
-import mockit.coverage.paths.*;
 
 /**
  * Generates an XHTML page containing line-by-line coverage information for a single source file.
  */
-@SuppressWarnings({"ClassWithTooManyFields"})
 final class FileCoverageReport
 {
-   private final boolean withCallPoints;
    private final Map<Integer, LineCoverageData> lineToLineData;
    final InputFile inputFile;
    private final OutputFile output;
@@ -46,41 +43,21 @@ final class FileCoverageReport
    private final LineSyntaxFormatter lineSyntaxFormatter = new LineSyntaxFormatter();
    private final LineCoverageFormatter lineCoverageFormatter;
 
-   private final Iterator<MethodCoverageData> nextMethod;
-   private MethodCoverageData currentMethod;
-   private int previousMethodEndLine;
+   private final PathCoverageOutput pathCoverage;
 
    private int lineNo;
    private String line;
    private LineCoverageData lineData;
 
    FileCoverageReport(
-      String outputDir, List<File> sourceDirs, String sourceFilePath, FileCoverageData coverageData,
+      String outputDir, InputFile inputFile, String sourceFilePath, FileCoverageData coverageData,
       boolean withCallPoints) throws IOException
    {
-      this.withCallPoints = withCallPoints;
+      this.inputFile = inputFile;
       lineToLineData = coverageData.getLineToLineData();
       lineCoverageFormatter = new LineCoverageFormatter(withCallPoints);
-      nextMethod = getCoverageDataForFirstMethod(coverageData);
-      inputFile = new InputFile(sourceDirs, sourceFilePath);
-
-      if (!inputFile.wasFileFound()) {
-         output = null;
-         return;
-      }
-
       output = new OutputFile(outputDir, sourceFilePath);
-   }
-
-   private Iterator<MethodCoverageData> getCoverageDataForFirstMethod(FileCoverageData coverageData)
-   {
-      Iterator<MethodCoverageData> itr = coverageData.getMethods().iterator();
-
-      if (itr.hasNext()) {
-         currentMethod = itr.next();
-      }
-
-      return itr;
+      pathCoverage = new PathCoverageOutput(coverageData.getMethods(), output);
    }
 
    void generate() throws IOException
@@ -99,14 +76,9 @@ final class FileCoverageReport
    private void writeHeader()
    {
       output.printCommonFileHeader();
-
       output.println("  <script type='text/javascript'>");
       writeJavaScriptFunctionsForPathViewing();
-
-      if (withCallPoints) {
-         writeJavaScriptFunctionForCallPointViewing();
-      }
-
+      writeJavaScriptFunctionForCallPointViewing();
       output.println("  </script>");
       output.println("</head>");
       output.println("<body>");
@@ -152,7 +124,7 @@ final class FileCoverageReport
       lineNo = 1;
 
       while ((line = inputFile.input.readLine()) != null) {
-         writePathCoverageInfoIfLineStartsANewMethodOrConstructor();
+         pathCoverage.writePathCoverageInfoIfLineStartsANewMethodOrConstructor(lineNo, line);
          writeOpeningOfNewExecutableLine();
 
          lineData = lineToLineData.get(lineNo);
@@ -162,100 +134,6 @@ final class FileCoverageReport
          output.println("    </tr>");
          lineNo++;
       }
-   }
-
-   private void writePathCoverageInfoIfLineStartsANewMethodOrConstructor()
-   {
-      if (
-         currentMethod == null || lineNo <= previousMethodEndLine ||
-         lineNo > currentMethod.getFirstLineOfImplementationBody()
-      ) {
-         return;
-      }
-
-      int p = line.indexOf(currentMethod.methodName);
-
-      if (p < 0) {
-         return;
-      }
-
-      int q = p + currentMethod.methodName.length();
-
-      if (
-         (line.length() == q || line.charAt(q) != '(') &&
-         (currentMethod.getFirstLineOfImplementationBody() > lineNo ||
-          currentMethod.getLastLineOfImplementationBody() > lineNo)
-      ) {
-         return;
-      }
-
-      if (currentMethod.paths.size() > 1) {
-         writePathCoverageHeaderForMethod();
-
-         char pathId = 'A';
-
-         for (Path path : currentMethod.paths) {
-            writeCoverageInfoForIndividualPath(pathId, path);
-            pathId++;
-         }
-
-         writePathCoverageFooterForMethod();
-      }
-
-      previousMethodEndLine = currentMethod.getLastLineOfImplementationBody();
-      currentMethod = nextMethod.hasNext() ? nextMethod.next() : null;
-   }
-
-   private void writePathCoverageHeaderForMethod()
-   {
-      int coveredPaths = currentMethod.getCoveredPaths();
-      int totalPaths = currentMethod.paths.size();
-      int coveragePercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
-
-      output.println("    <tr>");
-      output.write("      <td></td><td class='count'>");
-      output.print(currentMethod.getExecutionCount());
-      output.println("</td>");
-      output.println("      <td class='paths'>");
-      output.write("        <span style='cursor:default; background-color:#");
-      output.write(CoveragePercentage.percentageColor(coveragePercentage));
-      output.write("' onclick='hidePath()'>Path coverage: ");
-      output.print(coveredPaths);
-      output.print('/');
-      output.print(totalPaths);
-      output.println("</span>");
-   }
-
-   private void writeCoverageInfoForIndividualPath(char pathId, Path path)
-   {
-      int executionCount = path.getExecutionCount();
-      StringBuilder lineIds = new StringBuilder();
-      String sep = "";
-
-      for (Node node : path.getNodes()) {
-         if (node.line > 0) {
-            lineIds.append(sep).append(node.line);
-            sep = " ";
-         }
-      }
-
-      output.write("        <span class='");
-      output.write(executionCount == 0 ? "uncovered" : "covered");
-      output.write("' onclick=\"showPath('");
-      output.print(pathId);
-      output.write("','");
-      output.write(lineIds.toString());
-      output.write("')\">");
-      output.print(pathId);
-      output.write(": ");
-      output.print(executionCount);
-      output.println("</span>");
-   }
-
-   private void writePathCoverageFooterForMethod()
-   {
-      output.println("      </td>");
-      output.println("    </tr>");
    }
 
    private void writeOpeningOfNewExecutableLine()
