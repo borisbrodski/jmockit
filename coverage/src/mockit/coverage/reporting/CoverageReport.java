@@ -42,60 +42,10 @@ class CoverageReport
       String outputDir, String[] sourceDirs, CoverageData coverageData, boolean withCallPoints)
    {
       this.outputDir = outputDir.length() > 0 ? outputDir : "coverage-report";
-
-      boolean useSpecifiedSrcDirs = sourceDirs.length > 0;
-      this.sourceDirs = useSpecifiedSrcDirs ? asFiles(sourceDirs) : allSrcSubDirs();
-
-      if (this.sourceDirs.isEmpty()) {
-         if (useSpecifiedSrcDirs) {
-            throw new IllegalStateException("None of the specified source directories exist");
-         }
-         else {
-            throw new IllegalStateException(
-               "No \"src\" directories found under \"" + new File("").getAbsolutePath() + '\"');
-         }
-      }
-
+      this.sourceDirs = new SourceFiles().buildListOfSourceDirectories(sourceDirs);
       filesToFileData = coverageData.getFileToFileDataMap();
       packagesToFiles = new HashMap<String, List<String>>();
       this.withCallPoints = withCallPoints;
-   }
-
-   private List<File> asFiles(String[] dirs)
-   {
-      List<File> result = new ArrayList<File>(dirs.length);
-
-      for (String dir : dirs) {
-         File srcDir = new File(dir);
-
-         if (srcDir.isDirectory()) {
-            result.add(srcDir);
-         }
-      }
-
-      return result;
-   }
-
-   private List<File> allSrcSubDirs()
-   {
-      List<File> srcSubDirs = new ArrayList<File>();
-      addSrcSubDirs(new File("."), srcSubDirs);
-
-      return srcSubDirs;
-   }
-
-   private void addSrcSubDirs(File dir, List<File> srcSubDirs)
-   {
-      for (File subDir : dir.listFiles()) {
-         if (subDir.isDirectory()) {
-            if ("src".equals(subDir.getName())) {
-               srcSubDirs.add(subDir);
-            }
-            else {
-               addSrcSubDirs(subDir, srcSubDirs);
-            }
-         }
-      }
    }
 
    public final void generate() throws IOException
