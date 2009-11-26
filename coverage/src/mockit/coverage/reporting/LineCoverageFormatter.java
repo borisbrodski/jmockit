@@ -61,12 +61,8 @@ final class LineCoverageFormatter
 //         formattedLine.append("      <td class='withBranches'>").append(EOL);
 //         new LineSegmentsFormatter(withCallPoints, formattedLine).formatBranches(
 //            lineData, initialSegment);
-      if (lineData.getCoveragePercentage() == 100) {
-         formattedLine.append("      <td id='").append(lineNo).append("'><pre class='covered");
-      }
-      else {
-         formattedLine.append("      <td><pre class='partiallyCovered");
-      }
+      formattedLine.append("      <td id='").append(lineNo).append("'><pre class='");
+      formattedLine.append(lineData.isFullyCovered() ? "covered" : "partiallyCovered");
 
       if (withCallPoints) {
          formattedLine.append(" withCallPoints' onclick='showHide(this)");

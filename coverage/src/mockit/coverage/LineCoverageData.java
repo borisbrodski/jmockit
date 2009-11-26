@@ -157,23 +157,11 @@ public final class LineCoverageData implements Serializable
       return segmentsCovered;
    }
 
-   public int getCoveragePercentage()
+   public boolean isFullyCovered()
    {
-      if (unreachable) {
-         return 100;
-      }
-
-      if (executionCount == 0) {
-         return 0;
-      }
-
-      if (segments == null) {
-         return 100;
-      }
-
-      int segmentsCovered = segmentsCovered();
-
-      return 100 * segmentsCovered / segments.size();
+      return
+         unreachable ||
+         executionCount != 0 && (segments == null || segmentsCovered() == segments.size());
    }
 
    void addCountsFromPreviousMeasurement(LineCoverageData previousLineData)
