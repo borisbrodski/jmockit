@@ -60,7 +60,8 @@ final class SourceFiles
 
    private void buildListWithAllSrcSubDirectories()
    {
-      addSrcSubDirs(new File("."));
+      String curDirName = new File(System.getProperty("user.dir")).getName();
+      addSrcSubDirs(new File("../" + curDirName));
 
       if (srcDirs.isEmpty()) {
          String curDir = new File("").getAbsolutePath();

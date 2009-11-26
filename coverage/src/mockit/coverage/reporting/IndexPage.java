@@ -42,6 +42,7 @@ final class IndexPage extends ListWithFilesAndPercentages
    }
 
    void generate(
+      List<File> sourceDirs,
       Map<String, FileCoverageData> filesToFileData, Map<String, List<String>> packagesToFiles)
    {
       this.packagesToFiles = packagesToFiles;
@@ -51,7 +52,7 @@ final class IndexPage extends ListWithFilesAndPercentages
       packagesToPackagePathPercentages = new HashMap<String, Integer>();
 
       try {
-         writeHeader();
+         writeHeader(sourceDirs);
 
          List<String> packages = new ArrayList<String>(packagesToFiles.keySet());
          writeMetricForEachFile(packages);
@@ -64,13 +65,18 @@ final class IndexPage extends ListWithFilesAndPercentages
       }
    }
 
-   private void writeHeader()
+   private void writeHeader(List<File> sourceDirs)
    {
       output.printCommonHeader(false);
 
       output.println("  <h1>JMockit Coverage Report</h1>");
       output.println("  <table cellpadding='0' cellspacing='1'>");
-      output.println("    <caption>All Packages and Files</caption>");
+      output.write("    <caption>All Packages and Files<div style='font-size: smaller'>");
+
+      String commaSepDirs = sourceDirs.toString();
+      output.write(commaSepDirs.substring(1, commaSepDirs.length() - 1));
+
+      output.println("</div></caption>");
       output.write("    <tr><th>Packages (");
       output.print(packagesToFiles.keySet().size());
       output.write(")</th><th>Files (");

@@ -70,7 +70,7 @@ class CoverageReport
       }
 
       generateFileCoverageReportsWhileBuildingPackageLists();
-      new IndexPage(outputFile).generate(filesToFileData, packagesToFiles);
+      new IndexPage(outputFile).generate(sourceDirs, filesToFileData, packagesToFiles);
 
       OutputFile.copySharedReferencedFiles(outputDir);
 
