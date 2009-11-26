@@ -66,10 +66,8 @@ final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeHeader()
    {
-      output.printCommonFileHeader();
+      output.printCommonHeader(false);
 
-      output.println("</head>");
-      output.println("<body>");
       output.println("  <h1>JMockit Coverage Report</h1>");
       output.println("  <table cellpadding='0' cellspacing='1'>");
       output.println("    <caption>All Packages and Files</caption>");
@@ -96,25 +94,27 @@ final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeLineWithCoverageTotals()
    {
-      output.write("  <tr><td colspan='2' class='total'>Total</td>");
+      output.println("    <tr>");
+      output.println("      <td colspan='2' class='total'>Total</td>");
 
       int totalCodePercentage = CoveragePercentage.calculate(coveredSegments, totalSegments);
+      printIndent();
       printCoveragePercentage(totalCodePercentage);
 
       int totalPathPercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
+      printIndent();
       printCoveragePercentage(totalPathPercentage);
 
-      output.println("</tr>");
+      output.println("    </tr>");
    }
 
    private void writeFooter()
    {
       output.println("  </table>");
-      output.write("<p>Generated on ");
+      output.write("  <p>Generated on ");
       output.print(new Date());
       output.println("</p>");
-      output.println("</body>");
-      output.println("</html>");
+      output.writeCommonFooter();
    }
 
    @Override

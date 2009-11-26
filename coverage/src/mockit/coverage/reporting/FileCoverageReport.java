@@ -63,49 +63,9 @@ final class FileCoverageReport
 
    private void writeHeader()
    {
-      output.printCommonFileHeader();
-      output.println("  <script type='text/javascript'>");
-      writeJavaScriptFunctionsForPathViewing();
-      writeJavaScriptFunctionForCallPointViewing();
-      output.println("  </script>");
-      output.println("</head>");
-      output.println("<body>");
+      output.printCommonHeader(true);
       output.println("  <table cellpadding='0' cellspacing='1'>");
       output.println("    <caption><code>" + inputFile.sourceFile.getPath() + "</code></caption>");
-   }
-
-   private void writeJavaScriptFunctionsForPathViewing()
-   {
-      output.println("    var cellShown; var pathIdShown; var lineIdsShown;");
-      output.println("    function hidePath(pathId) {");
-      output.println("      if (lineIdsShown) {");
-      output.println("        for (var i = 0; i < lineIdsShown.length; i++) {");
-      output.println("          var line = document.getElementById(lineIdsShown[i]);");
-      output.println("          line.style.outlineStyle = 'none';");
-      output.println("        }");
-      output.println("        cellShown.style.outlineWidth = 'thin';");
-      output.println("        cellShown = lineIdsShown = null; return pathId == pathIdShown;");
-      output.println("      }");
-      output.println("      return false;");
-      output.println("    }");
-      output.println("    function showPath(cell, pathId, lineIdsStr) {");
-      output.println("      if (hidePath(pathId)) return;");
-      output.println("      cellShown = cell; pathIdShown = pathId;");
-      output.println("      lineIdsShown = lineIdsStr.split(' ');");
-      output.println("      for (var i = 0; i < lineIdsShown.length; i++) {");
-      output.println("        var line = document.getElementById(lineIdsShown[i]);");
-      output.println("        line.style.outline = 'thin dashed #0000FF';");
-      output.println("      }");
-      output.println("      cell.style.outlineWidth = 'medium';");
-      output.println("    }");
-   }
-
-   private void writeJavaScriptFunctionForCallPointViewing()
-   {
-      output.println("    function showHide(callPoints) {");
-      output.println("      var list = callPoints.nextSibling.nextSibling.style;");
-      output.println("      list.display = list.display == 'none' ? 'block' : 'none';");
-      output.println("    }");
    }
 
    private void writeFormattedSourceLines() throws IOException
@@ -123,7 +83,6 @@ final class FileCoverageReport
    private void writeFooter()
    {
       output.println("  </table>");
-      output.println("</body>");
-      output.println("</html>");
+      output.writeCommonFooter();
    }
 }

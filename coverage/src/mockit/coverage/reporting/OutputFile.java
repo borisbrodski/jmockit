@@ -29,27 +29,32 @@ import java.util.regex.*;
 
 final class OutputFile extends PrintWriter
 {
-   private static final String CSS_FILE_NAME = "coverage.css";
    private static final Pattern PATH_SEPARATOR = Pattern.compile("/");
 
-   static void copyCSSFile(String outputDir) throws IOException
+   static void copySharedReferencedFiles(String outputDir) throws IOException
    {
-      InputStream cssFileIn = OutputFile.class.getResourceAsStream(CSS_FILE_NAME);
-      FileOutputStream cssFileOut = new FileOutputStream(new File(outputDir, CSS_FILE_NAME));
+      copyFile(outputDir, "coverage.css");
+      copyFile(outputDir, "coverage.js");
+   }
+
+   private static void copyFile(String outputDir, String fileName) throws IOException
+   {
+      InputStream input = OutputFile.class.getResourceAsStream(fileName);
+      FileOutputStream output = new FileOutputStream(new File(outputDir, fileName));
 
       try {
          int b;
 
-         while ((b = cssFileIn.read()) != -1) {
-            cssFileOut.write(b);
+         while ((b = input.read()) != -1) {
+            output.write(b);
          }
       }
       finally {
          try {
-            cssFileIn.close();
+            input.close();
          }
          finally {
-            cssFileOut.close();
+            output.close();
          }
       }
    }
@@ -93,7 +98,7 @@ final class OutputFile extends PrintWriter
       return cssRelPath.toString();
    }
 
-   void printCommonFileHeader()
+   void printCommonHeader(boolean withJavaScript)
    {
       println("<?xml version='1.0' encoding='UTF-8'?>");
       println(
@@ -104,9 +109,22 @@ final class OutputFile extends PrintWriter
       println("  <title>JMockit Coverage Report</title>");
       println("  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>");
       print("  <link rel='stylesheet' type='text/css' href='");
+      print(relPathToOutDir);
+      println("coverage.css'/>");
 
-      print(relPathToOutDir + CSS_FILE_NAME);
+      if (withJavaScript) {
+         print("  <script type='text/javascript' src='");
+         print(relPathToOutDir);
+         println("coverage.js'></script>");
+      }
 
-      println("'/>");
+      println("</head>");
+      println("<body>");
+   }
+
+   void writeCommonFooter()
+   {
+      println("</body>");
+      println("</html>");
    }
 }

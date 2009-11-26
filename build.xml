@@ -46,7 +46,7 @@
          </javac>
 
          <copy todir="@{module}/@{outdir}">
-            <fileset dir="@{module}/@{srcdir}" includes="**/*.properties, **/*.css"/>
+            <fileset dir="@{module}/@{srcdir}" includes="**/*.properties, **/*.css, **/*.js"/>
          </copy>
       </sequential>
    </macrodef>

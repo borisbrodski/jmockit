@@ -71,7 +71,8 @@ class CoverageReport
 
       generateFileCoverageReportsWhileBuildingPackageLists();
       new IndexPage(outputFile).generate(filesToFileData, packagesToFiles);
-      OutputFile.copyCSSFile(outputDir);
+
+      OutputFile.copySharedReferencedFiles(outputDir);
 
       System.out.println(
          "JMockit: Coverage report written to " + new File(outputDir).getCanonicalPath());
