@@ -39,4 +39,5 @@ td.paths {
 .paths span {
    outline: blue solid 1px;
    padding-left: 2px; padding-right: 2px;
+   cursor: help;
 }

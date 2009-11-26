@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2007-2008 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -38,15 +38,15 @@ final class LineCoverageFormatter
       this.withCallPoints = withCallPoints;
    }
 
-   String format(LineCoverageData lineData, LineSegment initialSegment)
+   String format(int lineNo, LineCoverageData lineData, LineSegment initialSegment)
    {
       formattedLine.setLength(0);
 
       if (lineData.containsSegments()) {
-         formatLineWithBranches(lineData, initialSegment);
+         formatLineWithBranches(lineNo, lineData, initialSegment);
       }
       else {
-         formatLineWithoutBranches(lineData, initialSegment);
+         formatLineWithoutBranches(lineNo, lineData, initialSegment);
       }
 
       formattedLine.append("      </td>").append(EOL);
@@ -54,14 +54,15 @@ final class LineCoverageFormatter
       return formattedLine.toString();
    }
 
-   private void formatLineWithBranches(LineCoverageData lineData, LineSegment initialSegment)
+   private void formatLineWithBranches(
+      int lineNo, LineCoverageData lineData, LineSegment initialSegment)
    {
       // TODO: make line segment formatting work
 //         formattedLine.append("      <td class='withBranches'>").append(EOL);
 //         new LineSegmentsFormatter(withCallPoints, formattedLine).formatBranches(
 //            lineData, initialSegment);
       if (lineData.getCoveragePercentage() == 100) {
-         formattedLine.append("      <td><pre class='covered");
+         formattedLine.append("      <td id='").append(lineNo).append("'><pre class='covered");
       }
       else {
          formattedLine.append("      <td><pre class='partiallyCovered");
@@ -80,9 +81,10 @@ final class LineCoverageFormatter
       }
    }
 
-   private void formatLineWithoutBranches(LineCoverageData lineData, LineSegment initialSegment)
+   private void formatLineWithoutBranches(
+      int lineNo, LineCoverageData lineData, LineSegment initialSegment)
    {
-      formattedLine.append("      <td><pre class='covered");
+      formattedLine.append("      <td id='").append(lineNo).append("'><pre class='covered");
 
       if (withCallPoints) {
          formattedLine.append(" withCallPoints' onclick='showHide(this)");

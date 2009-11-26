@@ -31,7 +31,7 @@ public class Node implements Serializable
    private static final long serialVersionUID = 7521062699264845946L;
 
    private final transient ThreadLocal<Boolean> reached = new ThreadLocal<Boolean>();
-   final int line;
+   public final int line;
 
    private Node(int line)
    {

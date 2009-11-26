@@ -162,9 +162,27 @@ final class FileCoverageReport
 
       if (withCallPoints) {
          output.println("  <script type='text/javascript'>");
+         output.println("    var lineIdsShown;");
          output.println("    function showHide(callPoints) {");
          output.println("      var list = callPoints.nextSibling.nextSibling.style;");
          output.println("      list.display = list.display == 'none' ? 'block' : 'none';");
+         output.println("    }");
+         output.println("    function hidePath(lineIdsStr) {");
+         output.println("      if (lineIdsShown) {");
+         output.println("        for (var i = 0; i < lineIdsShown.length; i++) {");
+         output.println("          var line = document.getElementById(lineIdsShown[i]);");
+         output.println("          line.style.outlineStyle = 'none';");
+         output.println("        }");
+         output.println("        lineIdsShown = null;");
+         output.println("      }");
+         output.println("    }");
+         output.println("    function showPath(lineIdsStr) {");
+         output.println("      hidePath();");
+         output.println("      lineIdsShown = lineIdsStr.split(' ');");
+         output.println("      for (var i = 0; i < lineIdsShown.length; i++) {");
+         output.println("        var line = document.getElementById(lineIdsShown[i]);");
+         output.println("        line.style.outline = 'thin dashed #0000FF';");
+         output.println("      }");
          output.println("    }");
          output.println("  </script>");
       }
@@ -239,9 +257,9 @@ final class FileCoverageReport
       output.print(currentMethod.getExecutionCount());
       output.println("</td>");
       output.println("      <td class='paths'>");
-      output.print("        <span style='background-color:#");
+      output.print("        <span style='cursor:default; background-color:#");
       output.print(CoveragePercentage.percentageColor(coveragePercentage));
-      output.print("'>Path coverage: ");
+      output.print("' onclick='hidePath()'>Path coverage: ");
       output.print(coveredPaths);
       output.print('/');
       output.print(totalPaths);
@@ -251,10 +269,21 @@ final class FileCoverageReport
    private void writeCoverageInfoForIndividualPath(char pathId, Path path)
    {
       int executionCount = path.getExecutionCount();
+      StringBuilder lineIds = new StringBuilder();
+      String sep = "";
+
+      for (Node node : path.getNodes()) {
+         if (node.line > 0) {
+            lineIds.append(sep).append(node.line);
+            sep = " ";
+         }
+      }
 
       output.print("        <span class='");
       output.print(executionCount == 0 ? "uncovered" : "covered");
-      output.print("'>");
+      output.print("' onclick=\"showPath('");
+      output.print(lineIds.toString());
+      output.print("')\">");
       output.print(pathId);
       output.print(": ");
       output.print(executionCount);
@@ -263,7 +292,6 @@ final class FileCoverageReport
 
    private void writePathCoverageFooterForMethod()
    {
-      output.println();
       output.println("      </td>");
       output.println("    </tr>");
    }
@@ -302,14 +330,16 @@ final class FileCoverageReport
          lineData == null ? "nonexec" : lineData.getExecutionCount() == 0 ? "uncovered" : null;
 
       if (lineStatus != null) {
-         output.print("      <td class='");
+         output.print("      <td id='");
+         output.print(lineNo);
+         output.print("' class='");
          output.print(lineStatus);
          output.print("'><pre>");
          output.print(initialSegment.toString());
          output.println("</pre></td>");
       }
       else {
-         line = lineCoverageFormatter.format(lineData, initialSegment);
+         line = lineCoverageFormatter.format(lineNo, lineData, initialSegment);
          output.print(line);
       }
    }
