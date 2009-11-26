@@ -29,46 +29,75 @@ package mockit;
  * When setup as a first parameter on a {@linkplain Delegate} method, the method receives and able to 
  * manipulate the context.
  * 
+ * <br/>Sample tests:
+ * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/DelegateInvocationTest.java">DelegateInvocationTest</a>,
+ *
+ * @see Expectations
  */
 public class Invocation {
-	/** 
-	 * Current invocation count. The first invocation start at 1.
-	 */
-	final protected int currentInvocation;
-	
-	/**
-	 * Minimum invocation
-	 */
-	protected int minInvocations;
-	
-	/**
-	 * Maximum invocation (-1 indicates unlimited)
-	 */
-	protected int maxInvocations;
-	
-	public Invocation(int currentInvocation, int minInvocations, int maxInvocations){
-		this.currentInvocation=currentInvocation;
-		this.minInvocations=minInvocations;
-		this.maxInvocations=maxInvocations;
-	}
+   /** 
+   * Current invocation count. The first invocation start at 1.
+   */
+   protected int invocationCount;
+   
+   /**
+    * Minimum invocation count
+    */
+   protected int minInvocations;
+   
+   /**
+    * Maximum invocation count (-1 indicates unlimited)
+    */
+   protected int maxInvocations;
+   
+   /**
+    * Constructor intended for internal use
+    */
+   protected Invocation() {
+   }
 
-	public int getCurrentInvocation() {
-		return currentInvocation;
-	}
-	
-	public int getMinInvocations() {
-		return minInvocations;
-	}
+   /**
+    * Returns invocation count (non-modifiable)
+    * 
+    * @return invocation count
+    */
+   public int getInvocationCount() {
+      return invocationCount;
+   }
+   
+    /**
+     * Returns minimum invocation count
+     * 
+     * @return minimum invocation count
+     */
+   public int getMinInvocations() {
+      return minInvocations;
+   }
 
-	public void setMinInvocations(int minInvocations) {
-		this.minInvocations = minInvocations;
-	}
+    /**
+     * Sets minimum invocation count 
+     * 
+     * @param minInvocations new value for minimum invocation count
+     */
+   public void setMinInvocations(int minInvocations) {
+      this.minInvocations = minInvocations;
+   }
 
-	public int getMaxInvocations() {
-		return maxInvocations;
-	}
+   /**
+    * Returns maximum invocation count
+    * 
+    * @return maximum invocation count
+    */
+   public int getMaxInvocations() {
+      return maxInvocations;
+   }
 
-	public void setMaxInvocations(int maxInvocations) {
-		this.maxInvocations = maxInvocations;
-	}
+   /**
+    * Sets maximum invocation count 
+    * 
+    * @param maxInvocations new value for maximum invocation count
+    */
+   public void setMaxInvocations(int maxInvocations) {
+      this.maxInvocations = maxInvocations;
+   }
 }
