@@ -9,575 +9,573 @@
 </head>
 <body>
   <table cellpadding='0' cellspacing='1'>
-    <caption><code>.\src\orderMngr\domain\order\OrderItem.java</code></caption>
+    <caption><code>..\orderMngmntWebapp\src\orderMngr\domain\order\OrderItem.java</code></caption>
     <tr>
-      <td class='lineNo'>1</td><td>&nbsp;</td>
-      <td id='1' class='nonexec'><pre><span class='comment'>/*</span></pre></td>
+      <td class='lineNo'>1</td><td></td>
+      <td id='l1' class='nonexec'><pre><span class='comment'>/*</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>2</td><td>&nbsp;</td>
-      <td id='2' class='nonexec'><pre><span class='comment'> * JMockit Samples</span></pre></td>
+      <td class='lineNo'>2</td><td></td>
+      <td id='l2' class='nonexec'><pre><span class='comment'> * JMockit Samples</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>3</td><td>&nbsp;</td>
-      <td id='3' class='nonexec'><pre><span class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</span></pre></td>
+      <td class='lineNo'>3</td><td></td>
+      <td id='l3' class='nonexec'><pre><span class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>4</td><td>&nbsp;</td>
-      <td id='4' class='nonexec'><pre><span class='comment'> * All rights reserved.</span></pre></td>
+      <td class='lineNo'>4</td><td></td>
+      <td id='l4' class='nonexec'><pre><span class='comment'> * All rights reserved.</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>5</td><td>&nbsp;</td>
-      <td id='5' class='nonexec'><pre><span class='comment'> *</span></pre></td>
+      <td class='lineNo'>5</td><td></td>
+      <td id='l5' class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>6</td><td>&nbsp;</td>
-      <td id='6' class='nonexec'><pre><span class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</span></pre></td>
+      <td class='lineNo'>6</td><td></td>
+      <td id='l6' class='nonexec'><pre><span class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>7</td><td>&nbsp;</td>
-      <td id='7' class='nonexec'><pre><span class='comment'> * a copy of this software and associated documentation files (the</span></pre></td>
+      <td class='lineNo'>7</td><td></td>
+      <td id='l7' class='nonexec'><pre><span class='comment'> * a copy of this software and associated documentation files (the</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>8</td><td>&nbsp;</td>
-      <td id='8' class='nonexec'><pre><span class='comment'> * "Software"), to deal in the Software without restriction, including</span></pre></td>
+      <td class='lineNo'>8</td><td></td>
+      <td id='l8' class='nonexec'><pre><span class='comment'> * "Software"), to deal in the Software without restriction, including</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>9</td><td>&nbsp;</td>
-      <td id='9' class='nonexec'><pre><span class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</span></pre></td>
+      <td class='lineNo'>9</td><td></td>
+      <td id='l9' class='nonexec'><pre><span class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>10</td><td>&nbsp;</td>
-      <td id='10' class='nonexec'><pre><span class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</span></pre></td>
+      <td class='lineNo'>10</td><td></td>
+      <td id='l10' class='nonexec'><pre><span class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>11</td><td>&nbsp;</td>
-      <td id='11' class='nonexec'><pre><span class='comment'> * permit persons to whom the Software is furnished to do so, subject to</span></pre></td>
+      <td class='lineNo'>11</td><td></td>
+      <td id='l11' class='nonexec'><pre><span class='comment'> * permit persons to whom the Software is furnished to do so, subject to</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>12</td><td>&nbsp;</td>
-      <td id='12' class='nonexec'><pre><span class='comment'> * the following conditions:</span></pre></td>
+      <td class='lineNo'>12</td><td></td>
+      <td id='l12' class='nonexec'><pre><span class='comment'> * the following conditions:</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>13</td><td>&nbsp;</td>
-      <td id='13' class='nonexec'><pre><span class='comment'> *</span></pre></td>
+      <td class='lineNo'>13</td><td></td>
+      <td id='l13' class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>14</td><td>&nbsp;</td>
-      <td id='14' class='nonexec'><pre><span class='comment'> * The above copyright notice and this permission notice shall be</span></pre></td>
+      <td class='lineNo'>14</td><td></td>
+      <td id='l14' class='nonexec'><pre><span class='comment'> * The above copyright notice and this permission notice shall be</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>15</td><td>&nbsp;</td>
-      <td id='15' class='nonexec'><pre><span class='comment'> * included in all copies or substantial portions of the Software.</span></pre></td>
+      <td class='lineNo'>15</td><td></td>
+      <td id='l15' class='nonexec'><pre><span class='comment'> * included in all copies or substantial portions of the Software.</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>16</td><td>&nbsp;</td>
-      <td id='16' class='nonexec'><pre><span class='comment'> *</span></pre></td>
+      <td class='lineNo'>16</td><td></td>
+      <td id='l16' class='nonexec'><pre><span class='comment'> *</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>17</td><td>&nbsp;</td>
-      <td id='17' class='nonexec'><pre><span class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span></pre></td>
+      <td class='lineNo'>17</td><td></td>
+      <td id='l17' class='nonexec'><pre><span class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>18</td><td>&nbsp;</td>
-      <td id='18' class='nonexec'><pre><span class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span></pre></td>
+      <td class='lineNo'>18</td><td></td>
+      <td id='l18' class='nonexec'><pre><span class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>19</td><td>&nbsp;</td>
-      <td id='19' class='nonexec'><pre><span class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span></pre></td>
+      <td class='lineNo'>19</td><td></td>
+      <td id='l19' class='nonexec'><pre><span class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>20</td><td>&nbsp;</td>
-      <td id='20' class='nonexec'><pre><span class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span></pre></td>
+      <td class='lineNo'>20</td><td></td>
+      <td id='l20' class='nonexec'><pre><span class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>21</td><td>&nbsp;</td>
-      <td id='21' class='nonexec'><pre><span class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span></pre></td>
+      <td class='lineNo'>21</td><td></td>
+      <td id='l21' class='nonexec'><pre><span class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>22</td><td>&nbsp;</td>
-      <td id='22' class='nonexec'><pre><span class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span></pre></td>
+      <td class='lineNo'>22</td><td></td>
+      <td id='l22' class='nonexec'><pre><span class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>23</td><td>&nbsp;</td>
-      <td id='23' class='nonexec'><pre><span class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span></pre></td>
+      <td class='lineNo'>23</td><td></td>
+      <td id='l23' class='nonexec'><pre><span class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>24</td><td>&nbsp;</td>
-      <td id='24' class='nonexec'><pre><span class='comment'> */</span></pre></td>
+      <td class='lineNo'>24</td><td></td>
+      <td id='l24' class='nonexec'><pre><span class='comment'> */</span></pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>25</td><td>&nbsp;</td>
-      <td id='25' class='nonexec'><pre><span class='keyword'>package</span> orderMngr.domain.order;</pre></td>
+      <td class='lineNo'>25</td><td></td>
+      <td id='l25' class='nonexec'><pre><span class='keyword'>package</span> orderMngr.domain.order;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>26</td><td>&nbsp;</td>
+      <td class='lineNo'>26</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>27</td><td>&nbsp;</td>
-      <td id='27' class='nonexec'><pre><span class='keyword'>import</span> java.math.*;</pre></td>
+      <td class='lineNo'>27</td><td></td>
+      <td id='l27' class='nonexec'><pre><span class='keyword'>import</span> java.math.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>28</td><td>&nbsp;</td>
-      <td id='28' class='nonexec'><pre><span class='keyword'>import</span> javax.persistence.*;</pre></td>
+      <td class='lineNo'>28</td><td></td>
+      <td id='l28' class='nonexec'><pre><span class='keyword'>import</span> javax.persistence.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>29</td><td>&nbsp;</td>
+      <td class='lineNo'>29</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>30</td><td>&nbsp;</td>
-      <td id='30' class='nonexec'><pre>@Entity</pre></td>
+      <td class='lineNo'>30</td><td></td>
+      <td id='l30' class='nonexec'><pre>@Entity</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>31</td><td>&nbsp;</td>
-      <td id='31' class='nonexec'><pre><span class='keyword'>public</span> <span class='keyword'>class</span> OrderItem</pre></td>
+      <td class='lineNo'>31</td><td></td>
+      <td id='l31' class='nonexec'><pre><span class='keyword'>public</span> <span class='keyword'>class</span> OrderItem</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>32</td><td>&nbsp;</td>
-      <td id='32' class='nonexec'><pre>{</pre></td>
+      <td class='lineNo'>32</td><td></td>
+      <td id='l32' class='nonexec'><pre>{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>33</td><td>&nbsp;</td>
-      <td id='33' class='nonexec'><pre>   @Id @GeneratedValue</pre></td>
+      <td class='lineNo'>33</td><td></td>
+      <td id='l33' class='nonexec'><pre>   @Id @GeneratedValue</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>34</td><td>&nbsp;</td>
-      <td id='34' class='nonexec'><pre>   <span class='keyword'>private</span> <span class='keyword'>int</span> id;</pre></td>
+      <td class='lineNo'>34</td><td></td>
+      <td id='l34' class='nonexec'><pre>   <span class='keyword'>private</span> <span class='keyword'>int</span> id;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>35</td><td>&nbsp;</td>
+      <td class='lineNo'>35</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>36</td><td>&nbsp;</td>
-      <td id='36' class='nonexec'><pre>   @ManyToOne</pre></td>
+      <td class='lineNo'>36</td><td></td>
+      <td id='l36' class='nonexec'><pre>   @ManyToOne</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>37</td><td>&nbsp;</td>
-      <td id='37' class='nonexec'><pre>   <span class='keyword'>private</span> Order order;</pre></td>
+      <td class='lineNo'>37</td><td></td>
+      <td id='l37' class='nonexec'><pre>   <span class='keyword'>private</span> Order order;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>38</td><td>&nbsp;</td>
+      <td class='lineNo'>38</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>39</td><td>&nbsp;</td>
-      <td id='39' class='nonexec'><pre>   <span class='keyword'>private</span> String productId;</pre></td>
+      <td class='lineNo'>39</td><td></td>
+      <td id='l39' class='nonexec'><pre>   <span class='keyword'>private</span> String productId;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>40</td><td>&nbsp;</td>
+      <td class='lineNo'>40</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>41</td><td>&nbsp;</td>
-      <td id='41' class='nonexec'><pre>   <span class='keyword'>private</span> String productDescription;</pre></td>
+      <td class='lineNo'>41</td><td></td>
+      <td id='l41' class='nonexec'><pre>   <span class='keyword'>private</span> String productDescription;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>42</td><td>&nbsp;</td>
+      <td class='lineNo'>42</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>43</td><td>&nbsp;</td>
-      <td id='43' class='nonexec'><pre>   <span class='keyword'>private</span> <span class='keyword'>int</span> quantity;</pre></td>
+      <td class='lineNo'>43</td><td></td>
+      <td id='l43' class='nonexec'><pre>   <span class='keyword'>private</span> <span class='keyword'>int</span> quantity;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>44</td><td>&nbsp;</td>
+      <td class='lineNo'>44</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>45</td><td>&nbsp;</td>
-      <td id='45' class='nonexec'><pre>   <span class='keyword'>private</span> BigDecimal unitPrice;</pre></td>
+      <td class='lineNo'>45</td><td></td>
+      <td id='l45' class='nonexec'><pre>   <span class='keyword'>private</span> BigDecimal unitPrice;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>46</td><td>&nbsp;</td>
+      <td class='lineNo'>46</td><td></td>
       <td></td>
     </tr>
     <tr>
       <td class='lineNo'>47</td><td class='count'>0</td>
-      <td id='47' class='uncovered'><pre>   <span class='keyword'>public</span> OrderItem() {}</pre></td>
+      <td id='l47' class='uncovered'><pre>   <span class='keyword'>public</span> OrderItem() {}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>48</td><td>&nbsp;</td>
+      <td class='lineNo'>48</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>49</td><td>&nbsp;</td>
-      <td id='49' class='nonexec'><pre>   <span class='keyword'>public</span> OrderItem(String productId, String productDescription, <span class='keyword'>int</span> quantity, BigDecimal unitPrice)</pre></td>
+      <td class='lineNo'>49</td><td></td>
+      <td id='l49' class='nonexec'><pre>   <span class='keyword'>public</span> OrderItem(String productId, String productDescription, <span class='keyword'>int</span> quantity, BigDecimal unitPrice)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>50</td><td>&nbsp;</td>
-      <td id='50' class='nonexec'><pre>   {</pre></td>
+      <td class='lineNo'>50</td><td></td>
+      <td id='l50' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>51</td><td class='count'>15</td>
-      <td id='51'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>(<span class='keyword'>null</span>, productId, productDescription, quantity, unitPrice);</pre>
+      <td id='l51'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>(<span class='keyword'>null</span>, productId, productDescription, quantity, unitPrice);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:97</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:106</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:46</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:89</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:105</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:118</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>52</td><td class='count'>15</td>
-      <td id='52'><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td id='l52'><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:97</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:106</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:46</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:89</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:105</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:118</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>53</td><td>&nbsp;</td>
+      <td class='lineNo'>53</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>54</td><td>&nbsp;</td>
-      <td id='54' class='nonexec'><pre>   <span class='keyword'>public</span> OrderItem(</pre></td>
+      <td class='lineNo'>54</td><td></td>
+      <td id='l54' class='nonexec'><pre>   <span class='keyword'>public</span> OrderItem(</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>55</td><td>&nbsp;</td>
-      <td id='55' class='nonexec'><pre>      Order order, String productId, String productDescription, <span class='keyword'>int</span> quantity, BigDecimal unitPrice)</pre></td>
+      <td class='lineNo'>55</td><td></td>
+      <td id='l55' class='nonexec'><pre>      Order order, String productId, String productDescription, <span class='keyword'>int</span> quantity, BigDecimal unitPrice)</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>56</td><td class='count'>21</td>
-      <td id='56'><pre class='covered withCallPoints' onclick='showHide(this)'>   {</pre>
+      <td id='l56'><pre class='covered withCallPoints' onclick='showHide(this)'>   {</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:97</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:106</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:46</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:89</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:105</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:118</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:55</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:129</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>57</td><td class='count'>21</td>
-      <td id='57'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.order = order;</pre>
+      <td id='l57'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.order = order;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:97</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:106</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:46</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:89</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:105</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:118</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:55</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:129</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>58</td><td class='count'>21</td>
-      <td id='58'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.productId = productId;</pre>
+      <td id='l58'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.productId = productId;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:97</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:106</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:46</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:89</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:105</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:118</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:55</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:129</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>59</td><td class='count'>21</td>
-      <td id='59'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.productDescription = productDescription;</pre>
+      <td id='l59'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.productDescription = productDescription;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:97</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:106</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:46</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:89</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:105</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:118</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:55</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:129</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>60</td><td class='count'>21</td>
-      <td id='60'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.quantity = quantity;</pre>
+      <td id='l60'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.quantity = quantity;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:97</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:106</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:46</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:89</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:105</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:118</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:55</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:129</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>61</td><td class='count'>21</td>
-      <td id='61'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.unitPrice = unitPrice;</pre>
+      <td id='l61'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.unitPrice = unitPrice;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:97</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:106</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:46</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:89</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:105</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:118</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:55</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:129</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>62</td><td class='count'>21</td>
-      <td id='62'><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td id='l62'><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:44</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:97</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:106</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:115</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:46</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
+          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:50</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:89</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:105</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:118</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:44</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:55</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:129</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:50</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:49</li>
-          <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:80</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>63</td><td>&nbsp;</td>
+      <td class='lineNo'>63</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>64</td><td>&nbsp;</td>
-      <td id='64' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>int</span> getId()</pre></td>
+      <td class='lineNo'>64</td><td></td>
+      <td id='l64' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>int</span> getId()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>65</td><td>&nbsp;</td>
-      <td id='65' class='nonexec'><pre>   {</pre></td>
+      <td class='lineNo'>65</td><td></td>
+      <td id='l65' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>66</td><td class='count'>0</td>
-      <td id='66' class='uncovered'><pre>      <span class='keyword'>return</span> id;</pre></td>
+      <td id='l66' class='uncovered'><pre>      <span class='keyword'>return</span> id;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>67</td><td>&nbsp;</td>
-      <td id='67' class='nonexec'><pre>   }</pre></td>
+      <td class='lineNo'>67</td><td></td>
+      <td id='l67' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>68</td><td>&nbsp;</td>
+      <td class='lineNo'>68</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>69</td><td>&nbsp;</td>
-      <td id='69' class='nonexec'><pre>   <span class='keyword'>public</span> Order getOrder()</pre></td>
+      <td class='lineNo'>69</td><td></td>
+      <td id='l69' class='nonexec'><pre>   <span class='keyword'>public</span> Order getOrder()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>70</td><td>&nbsp;</td>
-      <td id='70' class='nonexec'><pre>   {</pre></td>
+      <td class='lineNo'>70</td><td></td>
+      <td id='l70' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>71</td><td class='count'>0</td>
-      <td id='71' class='uncovered'><pre>      <span class='keyword'>return</span> order;</pre></td>
+      <td id='l71' class='uncovered'><pre>      <span class='keyword'>return</span> order;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>72</td><td>&nbsp;</td>
-      <td id='72' class='nonexec'><pre>   }</pre></td>
+      <td class='lineNo'>72</td><td></td>
+      <td id='l72' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>73</td><td>&nbsp;</td>
+      <td class='lineNo'>73</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>74</td><td>&nbsp;</td>
-      <td id='74' class='nonexec'><pre>   <span class='keyword'>public</span> String getProductId()</pre></td>
+      <td class='lineNo'>74</td><td></td>
+      <td id='l74' class='nonexec'><pre>   <span class='keyword'>public</span> String getProductId()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>75</td><td>&nbsp;</td>
-      <td id='75' class='nonexec'><pre>   {</pre></td>
+      <td class='lineNo'>75</td><td></td>
+      <td id='l75' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>76</td><td class='count'>6</td>
-      <td id='76'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> productId;</pre>
+      <td id='l76'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> productId;</pre>
         <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:54</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:93</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:54</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>77</td><td>&nbsp;</td>
-      <td id='77' class='nonexec'><pre>   }</pre></td>
+      <td class='lineNo'>77</td><td></td>
+      <td id='l77' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>78</td><td>&nbsp;</td>
+      <td class='lineNo'>78</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>79</td><td>&nbsp;</td>
-      <td id='79' class='nonexec'><pre>   <span class='keyword'>public</span> String getProductDescription()</pre></td>
+      <td class='lineNo'>79</td><td></td>
+      <td id='l79' class='nonexec'><pre>   <span class='keyword'>public</span> String getProductDescription()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>80</td><td>&nbsp;</td>
-      <td id='80' class='nonexec'><pre>   {</pre></td>
+      <td class='lineNo'>80</td><td></td>
+      <td id='l80' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>81</td><td class='count'>6</td>
-      <td id='81'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> productDescription;</pre>
+      <td id='l81'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> productDescription;</pre>
         <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:54</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:94</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:54</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>82</td><td>&nbsp;</td>
-      <td id='82' class='nonexec'><pre>   }</pre></td>
+      <td class='lineNo'>82</td><td></td>
+      <td id='l82' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>83</td><td>&nbsp;</td>
+      <td class='lineNo'>83</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>84</td><td>&nbsp;</td>
-      <td id='84' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>int</span> getQuantity()</pre></td>
+      <td class='lineNo'>84</td><td></td>
+      <td id='l84' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>int</span> getQuantity()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>85</td><td>&nbsp;</td>
-      <td id='85' class='nonexec'><pre>   {</pre></td>
+      <td class='lineNo'>85</td><td></td>
+      <td id='l85' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>86</td><td class='count'>17</td>
-      <td id='86'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> quantity;</pre>
+      <td id='l86'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> quantity;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:100</li>
@@ -585,96 +583,98 @@
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:109</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:109</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:54</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:95</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:54</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>87</td><td>&nbsp;</td>
-      <td id='87' class='nonexec'><pre>   }</pre></td>
+      <td class='lineNo'>87</td><td></td>
+      <td id='l87' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>88</td><td>&nbsp;</td>
+      <td class='lineNo'>88</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>89</td><td>&nbsp;</td>
-      <td id='89' class='nonexec'><pre>   <span class='keyword'>public</span> BigDecimal getUnitPrice()</pre></td>
+      <td class='lineNo'>89</td><td></td>
+      <td id='l89' class='nonexec'><pre>   <span class='keyword'>public</span> BigDecimal getUnitPrice()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>90</td><td>&nbsp;</td>
-      <td id='90' class='nonexec'><pre>   {</pre></td>
+      <td class='lineNo'>90</td><td></td>
+      <td id='l90' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>91</td><td class='count'>16</td>
-      <td id='91'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> unitPrice;</pre>
+      <td id='l91'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> unitPrice;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:100</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:109</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:109</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:54</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:96</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:54</li>
-          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>92</td><td>&nbsp;</td>
-      <td id='92' class='nonexec'><pre>   }</pre></td>
+      <td class='lineNo'>92</td><td></td>
+      <td id='l92' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>93</td><td>&nbsp;</td>
+      <td class='lineNo'>93</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>94</td><td>&nbsp;</td>
-      <td id='94' class='nonexec'><pre>   @Override</pre></td>
+      <td class='lineNo'>94</td><td></td>
+      <td id='l94' class='nonexec'><pre>   @Override</pre></td>
     </tr>
     <tr>
       <td></td><td class='count'>7</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#996600' onclick='hidePath()'>Path coverage: 2/5</span>
-        <span class='covered' onclick="showPath(this,'A','97')">A: 6</span>
-        <span class='uncovered' onclick="showPath(this,'B','97 98')">B: 0</span>
-        <span class='uncovered' onclick="showPath(this,'C','97 98')">C: 0</span>
-        <span class='uncovered' onclick="showPath(this,'D','97 98 100 102')">D: 0</span>
-        <span class='covered' onclick="showPath(this,'E','97 98 100 104')">E: 1</span>
+        <span class='covered' onclick="showPath(this,'A','l97')">A: 6</span>
+        <span class='uncovered' onclick="showPath(this,'B','l97 l98')">B: 0</span>
+        <span class='uncovered' onclick="showPath(this,'C','l97 l98')">C: 0</span>
+        <span class='uncovered' onclick="showPath(this,'D','l97 l98 l100 l102')">D: 0</span>
+        <span class='covered' onclick="showPath(this,'E','l97 l98 l100 l104')">E: 1</span>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>95</td><td>&nbsp;</td>
-      <td id='95' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>boolean</span> equals(Object o)</pre></td>
+      <td class='lineNo'>95</td><td></td>
+      <td id='l95' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>boolean</span> equals(Object o)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>96</td><td>&nbsp;</td>
-      <td id='96' class='nonexec'><pre>   {</pre></td>
+      <td class='lineNo'>96</td><td></td>
+      <td id='l96' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>97</td><td class='count'>7</td>
-      <td id='97'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>if</span> (<span class='keyword'>this</span> == o) <span class='keyword'>return</span> <span class='keyword'>true</span>;</pre>
+      <td id='l97'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>if</span> (<span class='keyword'>this</span> == o) <span class='keyword'>return</span> <span class='keyword'>true</span>;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:74</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:74</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:62</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:62</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:74</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:74</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:68</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:68</li>
         </ol>
@@ -682,82 +682,82 @@
     </tr>
     <tr>
       <td class='lineNo'>98</td><td class='count'>1</td>
-      <td id='98'><pre class='partiallyCovered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>if</span> (o == <span class='keyword'>null</span> || getClass() != o.getClass()) <span class='keyword'>return</span> <span class='keyword'>false</span>;</pre>
+      <td id='l98'><pre class='partiallyCovered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>if</span> (o == <span class='keyword'>null</span> || getClass() != o.getClass()) <span class='keyword'>return</span> <span class='keyword'>false</span>;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>99</td><td>&nbsp;</td>
+      <td class='lineNo'>99</td><td></td>
       <td></td>
     </tr>
     <tr>
       <td class='lineNo'>100</td><td class='count'>1</td>
-      <td id='100'><pre class='covered withCallPoints' onclick='showHide(this)'>      OrderItem orderItem = (OrderItem) o;</pre>
+      <td id='l100'><pre class='covered withCallPoints' onclick='showHide(this)'>      OrderItem orderItem = (OrderItem) o;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>101</td><td>&nbsp;</td>
+      <td class='lineNo'>101</td><td></td>
       <td></td>
     </tr>
     <tr>
       <td class='lineNo'>102</td><td class='count'>1</td>
-      <td id='102'><pre class='partiallyCovered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>if</span> (!productId.equals(orderItem.productId)) <span class='keyword'>return</span> <span class='keyword'>false</span>;</pre>
+      <td id='l102'><pre class='partiallyCovered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>if</span> (!productId.equals(orderItem.productId)) <span class='keyword'>return</span> <span class='keyword'>false</span>;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>103</td><td>&nbsp;</td>
+      <td class='lineNo'>103</td><td></td>
       <td></td>
     </tr>
     <tr>
       <td class='lineNo'>104</td><td class='count'>1</td>
-      <td id='104'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> <span class='keyword'>true</span>;</pre>
+      <td id='l104'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> <span class='keyword'>true</span>;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>105</td><td>&nbsp;</td>
-      <td id='105' class='nonexec'><pre>   }</pre></td>
+      <td class='lineNo'>105</td><td></td>
+      <td id='l105' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>106</td><td>&nbsp;</td>
+      <td class='lineNo'>106</td><td></td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>107</td><td>&nbsp;</td>
-      <td id='107' class='nonexec'><pre>   @Override</pre></td>
+      <td class='lineNo'>107</td><td></td>
+      <td id='l107' class='nonexec'><pre>   @Override</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>108</td><td>&nbsp;</td>
-      <td id='108' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>int</span> hashCode()</pre></td>
+      <td class='lineNo'>108</td><td></td>
+      <td id='l108' class='nonexec'><pre>   <span class='keyword'>public</span> <span class='keyword'>int</span> hashCode()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>109</td><td>&nbsp;</td>
-      <td id='109' class='nonexec'><pre>   {</pre></td>
+      <td class='lineNo'>109</td><td></td>
+      <td id='l109' class='nonexec'><pre>   {</pre></td>
     </tr>
     <tr>
       <td class='lineNo'>110</td><td class='count'>14</td>
-      <td id='110'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> productId.hashCode();</pre>
+      <td id='l110'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> productId.hashCode();</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
@@ -766,12 +766,12 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>111</td><td>&nbsp;</td>
-      <td id='111' class='nonexec'><pre>   }</pre></td>
+      <td class='lineNo'>111</td><td></td>
+      <td id='l111' class='nonexec'><pre>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>112</td><td>&nbsp;</td>
-      <td id='112' class='nonexec'><pre>}</pre></td>
+      <td class='lineNo'>112</td><td></td>
+      <td id='l112' class='nonexec'><pre>}</pre></td>
     </tr>
   </table>
 </body>
