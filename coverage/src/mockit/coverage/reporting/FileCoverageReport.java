@@ -76,26 +76,27 @@ final class FileCoverageReport
 
    private void writeJavaScriptFunctionsForPathViewing()
    {
-      output.println("    var pathIdShown;");
-      output.println("    var lineIdsShown;");
+      output.println("    var cellShown; var pathIdShown; var lineIdsShown;");
       output.println("    function hidePath(pathId) {");
       output.println("      if (lineIdsShown) {");
       output.println("        for (var i = 0; i < lineIdsShown.length; i++) {");
       output.println("          var line = document.getElementById(lineIdsShown[i]);");
       output.println("          line.style.outlineStyle = 'none';");
       output.println("        }");
-      output.println("        lineIdsShown = null; return pathId == pathIdShown;");
+      output.println("        cellShown.style.outlineWidth = 'thin';");
+      output.println("        cellShown = lineIdsShown = null; return pathId == pathIdShown;");
       output.println("      }");
       output.println("      return false;");
       output.println("    }");
-      output.println("    function showPath(pathId, lineIdsStr) {");
+      output.println("    function showPath(cell, pathId, lineIdsStr) {");
       output.println("      if (hidePath(pathId)) return;");
-      output.println("      pathIdShown = pathId;");
+      output.println("      cellShown = cell; pathIdShown = pathId;");
       output.println("      lineIdsShown = lineIdsStr.split(' ');");
       output.println("      for (var i = 0; i < lineIdsShown.length; i++) {");
       output.println("        var line = document.getElementById(lineIdsShown[i]);");
       output.println("        line.style.outline = 'thin dashed #0000FF';");
       output.println("      }");
+      output.println("      cell.style.outlineWidth = 'medium';");
       output.println("    }");
    }
 

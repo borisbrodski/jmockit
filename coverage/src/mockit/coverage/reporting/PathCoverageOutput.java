@@ -124,7 +124,7 @@ final class PathCoverageOutput
 
       output.write("        <span class='");
       output.write(executionCount == 0 ? "uncovered" : "covered");
-      output.write("' onclick=\"showPath('");
+      output.write("' onclick=\"showPath(this,'");
       output.print(pathId);
       output.write("','");
       output.write(lineIds.toString());
