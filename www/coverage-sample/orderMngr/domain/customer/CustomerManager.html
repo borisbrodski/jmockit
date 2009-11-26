@@ -5,33 +5,7 @@
   <title>JMockit Coverage Report</title>
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
-  <script type='text/javascript'>
-    var pathIdShown;
-    var lineIdsShown;
-    function hidePath(pathId) {
-      if (lineIdsShown) {
-        for (var i = 0; i < lineIdsShown.length; i++) {
-          var line = document.getElementById(lineIdsShown[i]);
-          line.style.outlineStyle = 'none';
-        }
-        lineIdsShown = null; return pathId == pathIdShown;
-      }
-      return false;
-    }
-    function showPath(pathId, lineIdsStr) {
-      if (hidePath(pathId)) return;
-      pathIdShown = pathId;
-      lineIdsShown = lineIdsStr.split(' ');
-      for (var i = 0; i < lineIdsShown.length; i++) {
-        var line = document.getElementById(lineIdsShown[i]);
-        line.style.outline = 'thin dashed #0000FF';
-      }
-    }
-    function showHide(callPoints) {
-      var list = callPoints.nextSibling.nextSibling.style;
-      list.display = list.display == 'none' ? 'block' : 'none';
-    }
-  </script>
+  <script type='text/javascript' src='../../../coverage.js'></script>
 </head>
 <body>
   <table cellpadding='0' cellspacing='1'>
@@ -138,7 +112,7 @@
     </tr>
     <tr>
       <td class='lineNo'>26</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>27</td><td>&nbsp;</td>
@@ -146,7 +120,7 @@
     </tr>
     <tr>
       <td class='lineNo'>28</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>29</td><td>&nbsp;</td>
@@ -166,7 +140,7 @@
     </tr>
     <tr>
       <td class='lineNo'>33</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>34</td><td class='count'>9</td>
@@ -201,14 +175,14 @@
     </tr>
     <tr>
       <td class='lineNo'>40</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td></td><td class='count'>2</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#00ff00' onclick='hidePath()'>Path coverage: 2/2</span>
-        <span class='covered' onclick="showPath('A','43 44 44')">A: 1</span>
-        <span class='covered' onclick="showPath('B','43 47 51')">B: 1</span>
+        <span class='covered' onclick="showPath(this,'A','43 44')">A: 1</span>
+        <span class='covered' onclick="showPath(this,'B','43 47 51')">B: 1</span>
       </td>
     </tr>
     <tr>
@@ -244,7 +218,7 @@
     </tr>
     <tr>
       <td class='lineNo'>46</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>47</td><td class='count'>3</td>
@@ -267,7 +241,7 @@
     </tr>
     <tr>
       <td class='lineNo'>49</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>50</td><td class='count'>1</td>
@@ -287,14 +261,14 @@
     </tr>
     <tr>
       <td class='lineNo'>52</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td></td><td class='count'>4</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#00ff00' onclick='hidePath()'>Path coverage: 2/2</span>
-        <span class='covered' onclick="showPath('A','56 61 61')">A: 2</span>
-        <span class='covered' onclick="showPath('B','56 63 63')">B: 2</span>
+        <span class='covered' onclick="showPath(this,'A','56 61')">A: 2</span>
+        <span class='covered' onclick="showPath(this,'B','56 63')">B: 2</span>
       </td>
     </tr>
     <tr>
@@ -330,7 +304,7 @@
     </tr>
     <tr>
       <td class='lineNo'>59</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>60</td><td class='count'>4</td>
@@ -367,7 +341,7 @@
     </tr>
     <tr>
       <td class='lineNo'>64</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>65</td><td>&nbsp;</td>
@@ -401,7 +375,7 @@
     </tr>
     <tr>
       <td class='lineNo'>70</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>71</td><td class='count'>1</td>
@@ -437,7 +411,7 @@
     </tr>
     <tr>
       <td class='lineNo'>75</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>76</td><td>&nbsp;</td>
@@ -465,7 +439,7 @@
     </tr>
     <tr>
       <td class='lineNo'>80</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>81</td><td>&nbsp;</td>

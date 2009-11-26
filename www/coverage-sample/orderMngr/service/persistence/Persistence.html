@@ -5,33 +5,7 @@
   <title>JMockit Coverage Report</title>
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
-  <script type='text/javascript'>
-    var pathIdShown;
-    var lineIdsShown;
-    function hidePath(pathId) {
-      if (lineIdsShown) {
-        for (var i = 0; i < lineIdsShown.length; i++) {
-          var line = document.getElementById(lineIdsShown[i]);
-          line.style.outlineStyle = 'none';
-        }
-        lineIdsShown = null; return pathId == pathIdShown;
-      }
-      return false;
-    }
-    function showPath(pathId, lineIdsStr) {
-      if (hidePath(pathId)) return;
-      pathIdShown = pathId;
-      lineIdsShown = lineIdsStr.split(' ');
-      for (var i = 0; i < lineIdsShown.length; i++) {
-        var line = document.getElementById(lineIdsShown[i]);
-        line.style.outline = 'thin dashed #0000FF';
-      }
-    }
-    function showHide(callPoints) {
-      var list = callPoints.nextSibling.nextSibling.style;
-      list.display = list.display == 'none' ? 'block' : 'none';
-    }
-  </script>
+  <script type='text/javascript' src='../../../coverage.js'></script>
 </head>
 <body>
   <table cellpadding='0' cellspacing='1'>
@@ -138,7 +112,7 @@
     </tr>
     <tr>
       <td class='lineNo'>26</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>27</td><td>&nbsp;</td>
@@ -150,7 +124,7 @@
     </tr>
     <tr>
       <td class='lineNo'>29</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>30</td><td>&nbsp;</td>
@@ -162,7 +136,7 @@
     </tr>
     <tr>
       <td class='lineNo'>32</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>33</td><td class='count'>0</td>
@@ -186,7 +160,7 @@
     </tr>
     <tr>
       <td class='lineNo'>37</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>38</td><td>&nbsp;</td>
@@ -258,7 +232,7 @@
     </tr>
     <tr>
       <td class='lineNo'>52</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>53</td><td>&nbsp;</td>
@@ -266,7 +240,7 @@
     </tr>
     <tr>
       <td class='lineNo'>54</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>55</td><td>&nbsp;</td>
@@ -293,14 +267,14 @@
     </tr>
     <tr>
       <td class='lineNo'>59</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td></td><td class='count'>1</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#807f00' onclick='hidePath()'>Path coverage: 1/2</span>
-        <span class='uncovered' onclick="showPath('A','62 62 62')">A: 0</span>
-        <span class='covered' onclick="showPath('B','62 62')">B: 1</span>
+        <span class='uncovered' onclick="showPath(this,'A','62')">A: 0</span>
+        <span class='covered' onclick="showPath(this,'B','62')">B: 1</span>
       </td>
     </tr>
     <tr>
@@ -313,7 +287,7 @@
     </tr>
     <tr>
       <td class='lineNo'>62</td><td class='count'>1</td>
-      <td><pre class='partiallyCovered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> session().get(entityClass, entityId) != <span class='keyword'>null</span>;</pre>
+      <td id='62'><pre class='partiallyCovered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> session().get(entityClass, entityId) != <span class='keyword'>null</span>;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#removeCustomer:151</li>
         </ol>
@@ -325,7 +299,7 @@
     </tr>
     <tr>
       <td class='lineNo'>64</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>65</td><td>&nbsp;</td>
@@ -357,7 +331,7 @@
     </tr>
     <tr>
       <td class='lineNo'>69</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>70</td><td>&nbsp;</td>
@@ -399,7 +373,7 @@
     </tr>
     <tr>
       <td class='lineNo'>74</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>75</td><td>&nbsp;</td>
@@ -427,14 +401,14 @@
     </tr>
     <tr>
       <td class='lineNo'>79</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td></td><td class='count'>66</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#00ff00' onclick='hidePath()'>Path coverage: 2/2</span>
-        <span class='covered' onclick="showPath('A','82 85 89')">A: 9</span>
-        <span class='covered' onclick="showPath('B','82 89 89')">B: 57</span>
+        <span class='covered' onclick="showPath(this,'A','82 85 89')">A: 9</span>
+        <span class='covered' onclick="showPath(this,'B','82 89')">B: 57</span>
       </td>
     </tr>
     <tr>
@@ -520,7 +494,7 @@
     </tr>
     <tr>
       <td class='lineNo'>83</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>84</td><td class='count'>66</td>
@@ -633,7 +607,7 @@
     </tr>
     <tr>
       <td class='lineNo'>88</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>89</td><td class='count'>66</td>
@@ -714,7 +688,7 @@
     </tr>
     <tr>
       <td class='lineNo'>91</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>92</td><td>&nbsp;</td>
@@ -722,7 +696,7 @@
     </tr>
     <tr>
       <td class='lineNo'>93</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>94</td><td>&nbsp;</td>
@@ -762,14 +736,14 @@
     </tr>
     <tr>
       <td class='lineNo'>99</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td></td><td class='count'>9</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#807f00' onclick='hidePath()'>Path coverage: 1/2</span>
-        <span class='covered' onclick="showPath('A','102 105 108')">A: 9</span>
-        <span class='uncovered' onclick="showPath('B','102 108 108')">B: 0</span>
+        <span class='covered' onclick="showPath(this,'A','102 105 108')">A: 9</span>
+        <span class='uncovered' onclick="showPath(this,'B','102 108')">B: 0</span>
       </td>
     </tr>
     <tr>
@@ -798,7 +772,7 @@
     </tr>
     <tr>
       <td class='lineNo'>103</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>104</td><td class='count'>26</td>
@@ -863,7 +837,7 @@
     </tr>
     <tr>
       <td class='lineNo'>107</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>108</td><td class='count'>9</td>
@@ -887,7 +861,7 @@
     </tr>
     <tr>
       <td class='lineNo'>110</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>111</td><td>&nbsp;</td>
@@ -936,7 +910,7 @@
     </tr>
     <tr>
       <td class='lineNo'>117</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>118</td><td>&nbsp;</td>
@@ -944,7 +918,7 @@
     </tr>
     <tr>
       <td class='lineNo'>119</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>120</td><td>&nbsp;</td>
@@ -1007,7 +981,7 @@
     </tr>
     <tr>
       <td class='lineNo'>125</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>126</td><td>&nbsp;</td>
@@ -1027,14 +1001,14 @@
     </tr>
     <tr>
       <td class='lineNo'>130</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td></td><td class='count'>9</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#807f00' onclick='hidePath()'>Path coverage: 1/2</span>
-        <span class='covered' onclick="showPath('A','133 136 139')">A: 9</span>
-        <span class='uncovered' onclick="showPath('B','133 139 139')">B: 0</span>
+        <span class='covered' onclick="showPath(this,'A','133 136 139')">A: 9</span>
+        <span class='uncovered' onclick="showPath(this,'B','133 139')">B: 0</span>
       </td>
     </tr>
     <tr>
@@ -1063,7 +1037,7 @@
     </tr>
     <tr>
       <td class='lineNo'>134</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>135</td><td class='count'>9</td>
@@ -1135,7 +1109,7 @@
     </tr>
     <tr>
       <td class='lineNo'>140</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>141</td><td>&nbsp;</td>
@@ -1179,7 +1153,7 @@
     </tr>
     <tr>
       <td class='lineNo'>145</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>146</td><td>&nbsp;</td>
@@ -1223,7 +1197,7 @@
     </tr>
     <tr>
       <td class='lineNo'>150</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>151</td><td>&nbsp;</td>
@@ -1231,7 +1205,7 @@
     </tr>
     <tr>
       <td class='lineNo'>152</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>153</td><td>&nbsp;</td>

@@ -5,33 +5,7 @@
   <title>JMockit Coverage Report</title>
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
-  <script type='text/javascript'>
-    var pathIdShown;
-    var lineIdsShown;
-    function hidePath(pathId) {
-      if (lineIdsShown) {
-        for (var i = 0; i < lineIdsShown.length; i++) {
-          var line = document.getElementById(lineIdsShown[i]);
-          line.style.outlineStyle = 'none';
-        }
-        lineIdsShown = null; return pathId == pathIdShown;
-      }
-      return false;
-    }
-    function showPath(pathId, lineIdsStr) {
-      if (hidePath(pathId)) return;
-      pathIdShown = pathId;
-      lineIdsShown = lineIdsStr.split(' ');
-      for (var i = 0; i < lineIdsShown.length; i++) {
-        var line = document.getElementById(lineIdsShown[i]);
-        line.style.outline = 'thin dashed #0000FF';
-      }
-    }
-    function showHide(callPoints) {
-      var list = callPoints.nextSibling.nextSibling.style;
-      list.display = list.display == 'none' ? 'block' : 'none';
-    }
-  </script>
+  <script type='text/javascript' src='../../../coverage.js'></script>
 </head>
 <body>
   <table cellpadding='0' cellspacing='1'>
@@ -138,7 +112,7 @@
     </tr>
     <tr>
       <td class='lineNo'>26</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>27</td><td>&nbsp;</td>
@@ -150,7 +124,7 @@
     </tr>
     <tr>
       <td class='lineNo'>29</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>30</td><td>&nbsp;</td>
@@ -158,7 +132,7 @@
     </tr>
     <tr>
       <td class='lineNo'>31</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>32</td><td class='count'>6</td>
@@ -186,7 +160,7 @@
     </tr>
     <tr>
       <td class='lineNo'>37</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>38</td><td>&nbsp;</td>
@@ -210,7 +184,7 @@
     </tr>
     <tr>
       <td class='lineNo'>43</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>44</td><td>&nbsp;</td>
@@ -222,7 +196,7 @@
     </tr>
     <tr>
       <td class='lineNo'>46</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>47</td><td>&nbsp;</td>
@@ -234,7 +208,7 @@
     </tr>
     <tr>
       <td class='lineNo'>49</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>50</td><td>&nbsp;</td>
@@ -248,12 +222,12 @@
       <td class='lineNo'>52</td><td class='count'>6</td>
       <td id='52'><pre class='covered withCallPoints' onclick='showHide(this)'>      orderItems = <span class='keyword'>new</span> ArrayList&lt;OrderItem>(5);</pre>
         <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:42</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:60</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:88</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:104</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:117</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrderWithMissingData:127</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:42</li>
         </ol>
       </td>
     </tr>
@@ -269,18 +243,18 @@
       <td class='lineNo'>55</td><td class='count'>6</td>
       <td id='55'><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
         <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:42</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:60</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:88</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:104</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:117</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrderWithMissingData:127</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:42</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>56</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>57</td><td>&nbsp;</td>
@@ -294,8 +268,8 @@
       <td class='lineNo'>59</td><td class='count'>2</td>
       <td id='59'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>this</span>.customerId = customerId;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:61</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:45</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:61</li>
         </ol>
       </td>
     </tr>
@@ -303,14 +277,14 @@
       <td class='lineNo'>60</td><td class='count'>2</td>
       <td id='60'><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:61</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:45</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:61</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>61</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>62</td><td>&nbsp;</td>
@@ -324,6 +298,8 @@
       <td class='lineNo'>64</td><td class='count'>9</td>
       <td id='64'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> orderItems;</pre>
         <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:46</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:51</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:91</li>
@@ -331,8 +307,6 @@
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:105</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:109</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:118</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:46</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:51</li>
         </ol>
       </td>
     </tr>
@@ -342,7 +316,7 @@
     </tr>
     <tr>
       <td class='lineNo'>66</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>67</td><td>&nbsp;</td>
@@ -370,7 +344,7 @@
     </tr>
     <tr>
       <td class='lineNo'>71</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>72</td><td>&nbsp;</td>
@@ -398,7 +372,7 @@
     </tr>
     <tr>
       <td class='lineNo'>76</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>77</td><td>&nbsp;</td>
@@ -426,7 +400,7 @@
     </tr>
     <tr>
       <td class='lineNo'>81</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>82</td><td>&nbsp;</td>
@@ -454,7 +428,7 @@
     </tr>
     <tr>
       <td class='lineNo'>86</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>87</td><td>&nbsp;</td>
@@ -484,7 +458,7 @@
     </tr>
     <tr>
       <td class='lineNo'>91</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>92</td><td>&nbsp;</td>
@@ -498,11 +472,11 @@
       <td class='lineNo'>94</td><td class='count'>5</td>
       <td id='94'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> orderNo;</pre>
         <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:47</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:63</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:64</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:67</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrderWithMissingData:134</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:47</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:63</li>
         </ol>
       </td>
     </tr>
@@ -512,7 +486,7 @@
     </tr>
     <tr>
       <td class='lineNo'>96</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>97</td><td>&nbsp;</td>
@@ -548,7 +522,7 @@
     </tr>
     <tr>
       <td class='lineNo'>102</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>103</td><td>&nbsp;</td>
@@ -577,7 +551,7 @@
     </tr>
     <tr>
       <td class='lineNo'>107</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>108</td><td>&nbsp;</td>
@@ -591,9 +565,9 @@
       <td class='lineNo'>110</td><td class='count'>3</td>
       <td id='110'><pre class='covered withCallPoints' onclick='showHide(this)'>      Order order = <span class='keyword'>new</span> OrderFactory().createOrder(customerId, orderItems);</pre>
         <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:61</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrderWithMissingData:130</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:61</li>
         </ol>
       </td>
     </tr>
@@ -601,8 +575,8 @@
       <td class='lineNo'>111</td><td class='count'>2</td>
       <td id='111'><pre class='covered withCallPoints' onclick='showHide(this)'>      orderNo = order.getNumber();</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:61</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
         </ol>
       </td>
     </tr>
@@ -610,8 +584,8 @@
       <td class='lineNo'>112</td><td class='count'>2</td>
       <td id='112'><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:61</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
         </ol>
       </td>
     </tr>

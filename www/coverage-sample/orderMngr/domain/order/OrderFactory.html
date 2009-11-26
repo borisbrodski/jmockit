@@ -5,33 +5,7 @@
   <title>JMockit Coverage Report</title>
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
-  <script type='text/javascript'>
-    var pathIdShown;
-    var lineIdsShown;
-    function hidePath(pathId) {
-      if (lineIdsShown) {
-        for (var i = 0; i < lineIdsShown.length; i++) {
-          var line = document.getElementById(lineIdsShown[i]);
-          line.style.outlineStyle = 'none';
-        }
-        lineIdsShown = null; return pathId == pathIdShown;
-      }
-      return false;
-    }
-    function showPath(pathId, lineIdsStr) {
-      if (hidePath(pathId)) return;
-      pathIdShown = pathId;
-      lineIdsShown = lineIdsStr.split(' ');
-      for (var i = 0; i < lineIdsShown.length; i++) {
-        var line = document.getElementById(lineIdsShown[i]);
-        line.style.outline = 'thin dashed #0000FF';
-      }
-    }
-    function showHide(callPoints) {
-      var list = callPoints.nextSibling.nextSibling.style;
-      list.display = list.display == 'none' ? 'block' : 'none';
-    }
-  </script>
+  <script type='text/javascript' src='../../../coverage.js'></script>
 </head>
 <body>
   <table cellpadding='0' cellspacing='1'>
@@ -138,7 +112,7 @@
     </tr>
     <tr>
       <td class='lineNo'>26</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>27</td><td>&nbsp;</td>
@@ -150,21 +124,21 @@
     </tr>
     <tr>
       <td class='lineNo'>29</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>30</td><td class='count'>9</td>
       <td id='30'><pre class='covered withCallPoints' onclick='showHide(this)'><span class='keyword'>public</span> <span class='keyword'>final</span> <span class='keyword'>class</span> OrderFactory</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrderWithMissingData:130</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithEmptyItemList:91</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:100</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:109</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrderWithMissingData:130</li>
         </ol>
       </td>
     </tr>
@@ -190,14 +164,14 @@
     </tr>
     <tr>
       <td class='lineNo'>35</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td></td><td class='count'>5</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#00ff00' onclick='hidePath()'>Path coverage: 2/2</span>
-        <span class='covered' onclick="showPath('A','39 40 40')">A: 2</span>
-        <span class='covered' onclick="showPath('B','39 43 50')">B: 3</span>
+        <span class='covered' onclick="showPath(this,'A','39 40')">A: 2</span>
+        <span class='covered' onclick="showPath(this,'B','39 43 50')">B: 3</span>
       </td>
     </tr>
     <tr>
@@ -217,13 +191,13 @@
       <td id='39'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>if</span> (items.isEmpty()) {</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrderWithMissingData:130</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithEmptyItemList:91</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:100</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:109</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrderWithMissingData:130</li>
         </ol>
       </td>
     </tr>
@@ -231,8 +205,8 @@
       <td class='lineNo'>40</td><td class='count'>2</td>
       <td id='40'><pre class='covered withCallPoints' onclick='showHide(this)'>         <span class='keyword'>throw</span> <span class='keyword'>new</span> MissingOrderItems();</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrderWithMissingData:130</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithEmptyItemList:91</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrderWithMissingData:130</li>
         </ol>
       </td>
     </tr>
@@ -242,32 +216,32 @@
     </tr>
     <tr>
       <td class='lineNo'>42</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>43</td><td class='count'>6</td>
       <td id='43'><pre class='covered withCallPoints' onclick='showHide(this)'>      validateOrderItems(items);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:100</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:109</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>44</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>45</td><td class='count'>3</td>
       <td id='45'><pre class='covered withCallPoints' onclick='showHide(this)'>      Order order = <span class='keyword'>new</span> Order(nextOrderNo++, customerId);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
         </ol>
       </td>
     </tr>
@@ -276,36 +250,36 @@
       <td id='46'><pre class='covered withCallPoints' onclick='showHide(this)'>      order.getItems().addAll(items);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>47</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>48</td><td class='count'>3</td>
       <td id='48'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>new</span> OrderRepository().create(order);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
         </ol>
       </td>
     </tr>
     <tr>
       <td class='lineNo'>49</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>50</td><td class='count'>3</td>
       <td id='50'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>return</span> order;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
         </ol>
       </td>
     </tr>
@@ -315,17 +289,17 @@
     </tr>
     <tr>
       <td class='lineNo'>52</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td></td><td class='count'>6</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#669900' onclick='hidePath()'>Path coverage: 3/5</span>
-        <span class='covered' onclick="showPath('A','56 56 57 58 58')">A: 2</span>
-        <span class='covered' onclick="showPath('B','56 66 66')">B: 3</span>
-        <span class='uncovered' onclick="showPath('C','56 56 58 58 58')">C: 0</span>
-        <span class='covered' onclick="showPath('D','56 56 57 62 63 63')">D: 1</span>
-        <span class='uncovered' onclick="showPath('E','56 56 57 62 66')">E: 0</span>
+        <span class='covered' onclick="showPath(this,'A','56 57 58')">A: 2</span>
+        <span class='covered' onclick="showPath(this,'B','56 66')">B: 3</span>
+        <span class='uncovered' onclick="showPath(this,'C','56 58')">C: 0</span>
+        <span class='covered' onclick="showPath(this,'D','56 57 62 63')">D: 1</span>
+        <span class='uncovered' onclick="showPath(this,'E','56 57 62 66')">E: 0</span>
       </td>
     </tr>
     <tr>
@@ -345,11 +319,11 @@
       <td id='56'><pre class='covered withCallPoints' onclick='showHide(this)'>      <span class='keyword'>for</span> (OrderItem item : items) {</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:100</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:109</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
         </ol>
       </td>
     </tr>
@@ -359,13 +333,13 @@
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:100</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:109</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
         </ol>
       </td>
     </tr>
@@ -388,7 +362,7 @@
     </tr>
     <tr>
       <td class='lineNo'>61</td><td>&nbsp;</td>
-      <td/>
+      <td></td>
     </tr>
     <tr>
       <td class='lineNo'>62</td><td class='count'>7</td>
@@ -396,11 +370,11 @@
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
         </ol>
       </td>
     </tr>
@@ -425,8 +399,8 @@
       <td id='66'><pre class='covered withCallPoints' onclick='showHide(this)'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
-          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
         </ol>
       </td>
     </tr>
