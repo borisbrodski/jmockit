@@ -160,37 +160,49 @@ final class FileCoverageReport
    {
       CoverageReport.writeCommonFileHeader(output, pathToOutputFile);
 
+      output.println("  <script type='text/javascript'>");
+      writeJavaScriptFunctionsForPathViewing();
+
       if (withCallPoints) {
-         output.println("  <script type='text/javascript'>");
-         output.println("    var lineIdsShown;");
-         output.println("    function showHide(callPoints) {");
-         output.println("      var list = callPoints.nextSibling.nextSibling.style;");
-         output.println("      list.display = list.display == 'none' ? 'block' : 'none';");
-         output.println("    }");
-         output.println("    function hidePath(lineIdsStr) {");
-         output.println("      if (lineIdsShown) {");
-         output.println("        for (var i = 0; i < lineIdsShown.length; i++) {");
-         output.println("          var line = document.getElementById(lineIdsShown[i]);");
-         output.println("          line.style.outlineStyle = 'none';");
-         output.println("        }");
-         output.println("        lineIdsShown = null;");
-         output.println("      }");
-         output.println("    }");
-         output.println("    function showPath(lineIdsStr) {");
-         output.println("      hidePath();");
-         output.println("      lineIdsShown = lineIdsStr.split(' ');");
-         output.println("      for (var i = 0; i < lineIdsShown.length; i++) {");
-         output.println("        var line = document.getElementById(lineIdsShown[i]);");
-         output.println("        line.style.outline = 'thin dashed #0000FF';");
-         output.println("      }");
-         output.println("    }");
-         output.println("  </script>");
+         writeJavaScriptFunctionForCallPointViewing();
       }
 
+      output.println("  </script>");
       output.println("</head>");
       output.println("<body>");
       output.println("  <table cellpadding='0' cellspacing='1'>");
       output.println("    <caption><code>" + inputFile.getPath() + "</code></caption>");
+   }
+
+   private void writeJavaScriptFunctionsForPathViewing()
+   {
+      output.println("    var lineIdsShown;");
+      output.println("    function hidePath(lineIdsStr) {");
+      output.println("      if (lineIdsShown) {");
+      output.println("        for (var i = 0; i < lineIdsShown.length; i++) {");
+      output.println("          var line = document.getElementById(lineIdsShown[i]);");
+      output.println("          line.style.outlineStyle = 'none';");
+      output.println("        }");
+      output.println("        lineIdsShown = null; return true;");
+      output.println("      }");
+      output.println("      return false;");
+      output.println("    }");
+      output.println("    function showPath(lineIdsStr) {");
+      output.println("      if (hidePath()) return;");
+      output.println("      lineIdsShown = lineIdsStr.split(' ');");
+      output.println("      for (var i = 0; i < lineIdsShown.length; i++) {");
+      output.println("        var line = document.getElementById(lineIdsShown[i]);");
+      output.println("        line.style.outline = 'thin dashed #0000FF';");
+      output.println("      }");
+      output.println("    }");
+   }
+
+   private void writeJavaScriptFunctionForCallPointViewing()
+   {
+      output.println("    function showHide(callPoints) {");
+      output.println("      var list = callPoints.nextSibling.nextSibling.style;");
+      output.println("      list.display = list.display == 'none' ? 'block' : 'none';");
+      output.println("    }");
    }
 
    private void writeFormattedSourceLines() throws IOException
