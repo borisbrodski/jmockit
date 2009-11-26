@@ -26,7 +26,10 @@
       <resources>
          <resource>
             <directory>src</directory>
-            <includes><include>**/*.css</include></includes>
+            <includes>
+               <include>**/*.css</include>
+               <include>**/*.js</include>
+            </includes>
          </resource>
       </resources>
       <sourceDirectory>src</sourceDirectory>
