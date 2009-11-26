@@ -25,7 +25,6 @@
 package mockit.coverage.reporting;
 
 import java.io.*;
-import java.util.*;
 
 import mockit.coverage.*;
 
@@ -34,30 +33,19 @@ import mockit.coverage.*;
  */
 final class FileCoverageReport
 {
-   private final Map<Integer, LineCoverageData> lineToLineData;
-   final InputFile inputFile;
+   private final InputFile inputFile;
    private final OutputFile output;
-
-   // Helper fields.
-   private final LineParser lineParser = new LineParser();
-   private final LineSyntaxFormatter lineSyntaxFormatter = new LineSyntaxFormatter();
-   private final LineCoverageFormatter lineCoverageFormatter;
-
+   private final CodeCoverageOutput codeCoverage;
    private final PathCoverageOutput pathCoverage;
 
-   private int lineNo;
-   private String line;
-   private LineCoverageData lineData;
-
    FileCoverageReport(
-      String outputDir, InputFile inputFile, String sourceFilePath, FileCoverageData coverageData,
+      String outputDir, InputFile inputFile, String sourceFilePath, FileCoverageData fileData,
       boolean withCallPoints) throws IOException
    {
       this.inputFile = inputFile;
-      lineToLineData = coverageData.getLineToLineData();
-      lineCoverageFormatter = new LineCoverageFormatter(withCallPoints);
       output = new OutputFile(outputDir, sourceFilePath);
-      pathCoverage = new PathCoverageOutput(coverageData.getMethods(), output);
+      codeCoverage = new CodeCoverageOutput(output, fileData.getLineToLineData(), withCallPoints);
+      pathCoverage = new PathCoverageOutput(fileData.getMethods(), output);
    }
 
    void generate() throws IOException
@@ -121,66 +109,13 @@ final class FileCoverageReport
 
    private void writeFormattedSourceLines() throws IOException
    {
-      lineNo = 1;
+      int lineNo = 1;
+      String line;
 
       while ((line = inputFile.input.readLine()) != null) {
          pathCoverage.writePathCoverageInfoIfLineStartsANewMethodOrConstructor(lineNo, line);
-         writeOpeningOfNewExecutableLine();
-
-         lineData = lineToLineData.get(lineNo);
-         writeLineExecutionCountIfAny();
-         writeExecutableLine();
-
-         output.println("    </tr>");
+         codeCoverage.writeLineOfSourceCodeWithCoverageInfo(lineNo, line);
          lineNo++;
-      }
-   }
-
-   private void writeOpeningOfNewExecutableLine()
-   {
-      output.println("    <tr>");
-      output.write("      <td class='lineNo'>");
-      output.print(lineNo);
-      output.write("</td>");
-   }
-
-   private void writeLineExecutionCountIfAny()
-   {
-      if (lineData != null) {
-         output.write("<td class='count'>");
-         output.print(lineData.getExecutionCount());
-         output.println("</td>");
-      }
-      else {
-         output.println("<td>&nbsp;</td>");
-      }
-   }
-
-   private void writeExecutableLine()
-   {
-      if (line.trim().length() == 0) {
-         output.println("      <td/>");
-         return;
-      }
-
-      LineSegment initialSegment = lineParser.parse(line);
-      lineSyntaxFormatter.format(initialSegment);
-
-      String lineStatus =
-         lineData == null ? "nonexec" : lineData.getExecutionCount() == 0 ? "uncovered" : null;
-
-      if (lineStatus != null) {
-         output.write("      <td id='");
-         output.print(lineNo);
-         output.write("' class='");
-         output.write(lineStatus);
-         output.write("'><pre>");
-         output.write(initialSegment.toString());
-         output.println("</pre></td>");
-      }
-      else {
-         line = lineCoverageFormatter.format(lineNo, lineData, initialSegment);
-         output.write(line);
       }
    }
 
