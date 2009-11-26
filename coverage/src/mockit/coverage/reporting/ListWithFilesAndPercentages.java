@@ -24,21 +24,20 @@
  */
 package mockit.coverage.reporting;
 
-import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
 
 abstract class ListWithFilesAndPercentages
 {
-   protected final PrintWriter output;
+   protected final OutputFile output;
    private final int baseIndentationLevel;
    int totalSegments;
    int coveredSegments;
    int totalPaths;
    int coveredPaths;
 
-   protected ListWithFilesAndPercentages(PrintWriter output, int baseIndentationLevel)
+   protected ListWithFilesAndPercentages(OutputFile output, int baseIndentationLevel)
    {
       this.output = output;
       this.baseIndentationLevel = baseIndentationLevel;

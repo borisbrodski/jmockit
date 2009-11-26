@@ -38,7 +38,7 @@ final class IndexPage extends ListWithFilesAndPercentages
 
    IndexPage(File outputFile) throws IOException
    {
-      super(new PrintWriter(new FileWriter(outputFile)), 0);
+      super(new OutputFile(outputFile), 0);
    }
 
    void generate(
@@ -66,7 +66,7 @@ final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeHeader()
    {
-      CoverageReport.writeCommonFileHeader(output, "index.html");
+      output.printCommonFileHeader();
 
       output.println("</head>");
       output.println("<body>");

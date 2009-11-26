@@ -24,7 +24,6 @@
  */
 package mockit.coverage.reporting;
 
-import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
@@ -33,7 +32,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
 {
    private final Map<String, FileCoverageData> filesToFileData;
 
-   PackageCoverageReport(PrintWriter output, Map<String, FileCoverageData> filesToFileData)
+   PackageCoverageReport(OutputFile output, Map<String, FileCoverageData> filesToFileData)
    {
       super(output, 3);
       this.filesToFileData = filesToFileData;

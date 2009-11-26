@@ -36,12 +36,10 @@ import mockit.coverage.paths.*;
 @SuppressWarnings({"ClassWithTooManyFields"})
 final class FileCoverageReport
 {
-   private final Map<Integer, LineCoverageData> lineToLineData;
-   private final File inputFile;
-   private final BufferedReader input;
-   private final String pathToOutputFile;
-   private final PrintWriter output;
    private final boolean withCallPoints;
+   private final Map<Integer, LineCoverageData> lineToLineData;
+   final InputFile inputFile;
+   private final OutputFile output;
 
    // Helper fields.
    private final LineParser lineParser = new LineParser();
@@ -57,90 +55,32 @@ final class FileCoverageReport
    private LineCoverageData lineData;
 
    FileCoverageReport(
-      String outputDir, List<File> sourceDirs, String filePath, FileCoverageData coverageData,
+      String outputDir, List<File> sourceDirs, String sourceFilePath, FileCoverageData coverageData,
       boolean withCallPoints) throws IOException
    {
-      lineToLineData = coverageData.getLineToLineData();
-      inputFile = findSourceFile(sourceDirs, filePath);
-      pathToOutputFile = filePath.replace(".java", ".html");
       this.withCallPoints = withCallPoints;
+      lineToLineData = coverageData.getLineToLineData();
       lineCoverageFormatter = new LineCoverageFormatter(withCallPoints);
+      nextMethod = getCoverageDataForFirstMethod(coverageData);
+      inputFile = new InputFile(sourceDirs, sourceFilePath);
 
-      nextMethod = coverageData.getMethods().iterator();
-
-      if (nextMethod.hasNext()) {
-         currentMethod = nextMethod.next();
-      }
-
-      if (inputFile == null) {
-         input = null;
+      if (!inputFile.wasFileFound()) {
          output = null;
          return;
       }
 
-      input = new BufferedReader(new FileReader(inputFile));
-
-      File outputFile = getOutputFileCreatingOutputDirIfNonExisting(outputDir);
-      output = new PrintWriter(new FileWriter(outputFile));
+      output = new OutputFile(outputDir, sourceFilePath);
    }
 
-   private File findSourceFile(List<File> sourceDirs, String filePath)
+   private Iterator<MethodCoverageData> getCoverageDataForFirstMethod(FileCoverageData coverageData)
    {
-      int p = filePath.indexOf('/');
-      String topLevelPackage = p < 0 ? "" : filePath.substring(0, p);
+      Iterator<MethodCoverageData> itr = coverageData.getMethods().iterator();
 
-      for (File sourceDir : sourceDirs) {
-         File file = getSourceFile(sourceDir, topLevelPackage, filePath);
-
-         if (file != null) {
-            return file;
-         }
+      if (itr.hasNext()) {
+         currentMethod = itr.next();
       }
 
-      return null;
-   }
-
-   private File getSourceFile(File sourceDir, String topLevelPackage, String filePath)
-   {
-      File sourceFile = new File(sourceDir, filePath);
-
-      if (sourceFile.exists()) {
-         return sourceFile;
-      }
-
-      File[] subDirs = sourceDir.listFiles();
-
-      for (File subDir : subDirs) {
-         if (
-            subDir.isDirectory() && !subDir.isHidden() && !subDir.getName().equals(topLevelPackage)
-         ) {
-            sourceFile = getSourceFile(subDir, topLevelPackage, filePath);
-
-            if (sourceFile != null) {
-               return sourceFile;
-            }
-         }
-      }
-
-      return null;
-   }
-
-   private File getOutputFileCreatingOutputDirIfNonExisting(String outputDir)
-   {
-      File outputFile = new File(outputDir, pathToOutputFile);
-      File parentDir = outputFile.getParentFile();
-
-      if (!parentDir.exists()) {
-         boolean outputDirCreated = parentDir.mkdirs();
-         assert outputDirCreated : "Failed to create output dir: " + outputDir;
-      }
-
-      return outputFile;
-   }
-
-   boolean wasSourceFileFound()
-   {
-      return inputFile != null;
+      return itr;
    }
 
    void generate() throws IOException
@@ -151,14 +91,14 @@ final class FileCoverageReport
          writeFooter();
       }
       finally {
-         input.close();
+         inputFile.input.close();
          output.close();
       }
    }
 
    private void writeHeader()
    {
-      CoverageReport.writeCommonFileHeader(output, pathToOutputFile);
+      output.printCommonFileHeader();
 
       output.println("  <script type='text/javascript'>");
       writeJavaScriptFunctionsForPathViewing();
@@ -171,7 +111,7 @@ final class FileCoverageReport
       output.println("</head>");
       output.println("<body>");
       output.println("  <table cellpadding='0' cellspacing='1'>");
-      output.println("    <caption><code>" + inputFile.getPath() + "</code></caption>");
+      output.println("    <caption><code>" + inputFile.sourceFile.getPath() + "</code></caption>");
    }
 
    private void writeJavaScriptFunctionsForPathViewing()
@@ -211,7 +151,7 @@ final class FileCoverageReport
    {
       lineNo = 1;
 
-      while ((line = input.readLine()) != null) {
+      while ((line = inputFile.input.readLine()) != null) {
          writePathCoverageInfoIfLineStartsANewMethodOrConstructor();
          writeOpeningOfNewExecutableLine();
 

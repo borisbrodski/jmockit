@@ -26,16 +26,12 @@ package mockit.coverage.reporting;
 
 import java.io.*;
 import java.util.*;
-import java.util.regex.*;
 import java.util.Map.*;
 
 import mockit.coverage.*;
 
 class CoverageReport
 {
-   private static final String CSS_FILE_NAME = "coverage.css";
-   private static final Pattern PATH_SEPARATOR = Pattern.compile("/");
-
    private final String outputDir;
    private final List<File> sourceDirs;
    private final Map<String, FileCoverageData> filesToFileData;
@@ -125,7 +121,7 @@ class CoverageReport
 
       generateFileCoverageReportsWhileBuildingPackageLists();
       new IndexPage(outputFile).generate(filesToFileData, packagesToFiles);
-      copyCSSFile();
+      OutputFile.copyCSSFile(outputDir);
 
       System.out.println(
          "JMockit: Coverage report written to " + new File(outputDir).getCanonicalPath());
@@ -141,28 +137,6 @@ class CoverageReport
       }
    }
 
-   private void copyCSSFile() throws IOException
-   {
-      InputStream cssFileIn = getClass().getResourceAsStream(CSS_FILE_NAME);
-      FileOutputStream cssFileOut = new FileOutputStream(new File(outputDir, CSS_FILE_NAME));
-
-      try {
-         int b;
-
-         while ((b = cssFileIn.read()) != -1) {
-            cssFileOut.write(b);
-         }
-      }
-      finally {
-         try {
-            cssFileIn.close();
-         }
-         finally {
-            cssFileOut.close();
-         }
-      }
-   }
-
    private void generateFileCoverageReportsWhileBuildingPackageLists() throws IOException
    {
       Set<Entry<String, FileCoverageData>> files = filesToFileData.entrySet();
@@ -174,7 +148,7 @@ class CoverageReport
          FileCoverageReport fileReport =
             new FileCoverageReport(outputDir, sourceDirs, file, fileData, withCallPoints);
 
-         if (fileReport.wasSourceFileFound()) {
+         if (fileReport.inputFile.wasFileFound()) {
             fileReport.generate();
             addFileToPackageFileList(file);
          }
@@ -193,35 +167,5 @@ class CoverageReport
       }
 
       filesInPackage.add(file);
-   }
-
-   static void writeCommonFileHeader(PrintWriter output, String pathToFile)
-   {
-      output.println("<?xml version='1.0' encoding='UTF-8'?>");
-      output.println(
-         "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN'" +
-         " 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>");
-      output.println("<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>");
-      output.println("<head>");
-      output.println("  <title>JMockit Coverage Report</title>");
-      output.println("  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>");
-      output.print("  <link rel='stylesheet' type='text/css' href='");
-
-      String pathToCSSFile = getRelativePathToCSSFile(pathToFile);
-      output.print(pathToCSSFile);
-
-      output.println("'/>");
-   }
-
-   private static String getRelativePathToCSSFile(String filePath)
-   {
-      StringBuilder cssRelPath = new StringBuilder();
-      int n = PATH_SEPARATOR.split(filePath).length;
-
-      for (int i = 1; i < n; i++) {
-         cssRelPath.append("../");
-      }
-
-      return cssRelPath + CSS_FILE_NAME;
    }
 }
