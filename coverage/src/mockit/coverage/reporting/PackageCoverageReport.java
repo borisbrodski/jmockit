@@ -34,7 +34,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
 
    PackageCoverageReport(OutputFile output, Map<String, FileCoverageData> filesToFileData)
    {
-      super(output, 3);
+      super(output, "          ");
       this.filesToFileData = filesToFileData;
    }
 

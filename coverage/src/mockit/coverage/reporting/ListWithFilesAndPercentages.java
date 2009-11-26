@@ -31,16 +31,16 @@ import mockit.coverage.*;
 abstract class ListWithFilesAndPercentages
 {
    protected final OutputFile output;
-   private final int baseIndentationLevel;
+   private final String baseIndentation;
    int totalSegments;
    int coveredSegments;
    int totalPaths;
    int coveredPaths;
 
-   protected ListWithFilesAndPercentages(OutputFile output, int baseIndentationLevel)
+   protected ListWithFilesAndPercentages(OutputFile output, String baseIndentation)
    {
       this.output = output;
-      this.baseIndentationLevel = baseIndentationLevel;
+      this.baseIndentation = baseIndentation;
    }
 
    protected abstract String getHRefToFile(String filePath);
@@ -69,7 +69,7 @@ abstract class ListWithFilesAndPercentages
       coveredPaths = 0;
 
       for (String filePath : filePaths) {
-         printIndent(2);
+         printIndent();
          output.println("<tr>");
 
          writeTableCellWithFileName(filePath);
@@ -77,14 +77,14 @@ abstract class ListWithFilesAndPercentages
          writeCodeCoveragePercentageForFile(filePath);
          writePathCoveragePercentageForFile(filePath);
 
-         printIndent(2);
+         printIndent();
          output.println("</tr>");
       }
    }
 
    private void writeTableCellWithFileName(String filePath)
    {
-      printIndent(3);
+      printIndentOneLevelDeeper();
       output.print("<td class='file'>");
 
       String href = getHRefToFile(filePath);
@@ -111,7 +111,7 @@ abstract class ListWithFilesAndPercentages
       totalSegments += getTotalSegments(filePath);
       coveredSegments += getCoveredSegments(filePath);
 
-      printIndent(3);
+      printIndentOneLevelDeeper();
       printCoveragePercentage(fileCodePercentage);
    }
 
@@ -122,7 +122,7 @@ abstract class ListWithFilesAndPercentages
       totalPaths += getTotalPaths(filePath);
       coveredPaths += getCoveredPaths(filePath);
 
-      printIndent(3);
+      printIndentOneLevelDeeper();
       printCoveragePercentage(filePathPercentage);
    }
 
@@ -135,10 +135,14 @@ abstract class ListWithFilesAndPercentages
       output.println("%</td>");
    }
 
-   final void printIndent(int level)
+   final void printIndent()
    {
-      for (int i = 0; i < baseIndentationLevel + level; i++) {
-         output.write("  ");
-      }
+      output.write(baseIndentation);
+   }
+
+   final void printIndentOneLevelDeeper()
+   {
+      printIndent();
+      output.write("  ");
    }
 }

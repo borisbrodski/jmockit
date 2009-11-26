@@ -38,7 +38,7 @@ final class IndexPage extends ListWithFilesAndPercentages
 
    IndexPage(File outputFile) throws IOException
    {
-      super(new OutputFile(outputFile), 0);
+      super(new OutputFile(outputFile), "      ");
    }
 
    void generate(
@@ -166,8 +166,10 @@ final class IndexPage extends ListWithFilesAndPercentages
    @Override
    protected void writeInternalTableForChildren(String packageName)
    {
-      printIndent(3); output.println("<td>");
-      printIndent(4); output.println("<table width='100%' cellpadding='1' cellspacing='1'>");
+      printIndent();
+      output.println("<td>");
+      printIndentOneLevelDeeper();
+      output.println("<table width='100%' cellpadding='1' cellspacing='1'>");
 
       List<String> packageFiles = packagesToFiles.get(packageName);
       packageReport.writeMetricForEachFile(packageFiles);
@@ -184,7 +186,9 @@ final class IndexPage extends ListWithFilesAndPercentages
       totalPaths += packageReport.totalPaths;
       coveredPaths += packageReport.coveredPaths;
 
-      printIndent(4); output.println("</table>");
-      printIndent(3); output.println("</td>");
+      printIndentOneLevelDeeper();
+      output.println("</table>");
+      printIndent();
+      output.println("</td>");
    }
 }
