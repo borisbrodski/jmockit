@@ -32,7 +32,8 @@ import mockit.coverage.*;
 final class IndexPage extends ListWithFilesAndPercentages
 {
    private Map<String, List<String>> packagesToFiles;
-   private Map<String, Integer> packagesToPackagePercentages;
+   private Map<String, Integer> packagesToPackageCodePercentages;
+   private Map<String, Integer> packagesToPackagePathPercentages;
    private PackageCoverageReport packageReport;
 
    IndexPage(File outputFile) throws IOException
@@ -46,7 +47,8 @@ final class IndexPage extends ListWithFilesAndPercentages
       this.packagesToFiles = packagesToFiles;
 
       packageReport = new PackageCoverageReport(output, filesToFileData);
-      packagesToPackagePercentages = new HashMap<String, Integer>();
+      packagesToPackageCodePercentages = new HashMap<String, Integer>();
+      packagesToPackagePathPercentages = new HashMap<String, Integer>();
 
       try {
          writeHeader();
@@ -54,7 +56,7 @@ final class IndexPage extends ListWithFilesAndPercentages
          List<String> packages = new ArrayList<String>(packagesToFiles.keySet());
          writeMetricForEachFile(packages);
 
-         writeLineWithTotalCoverage();
+         writeLineWithCoverageTotals();
          writeFooter();
       }
       finally {
@@ -78,7 +80,7 @@ final class IndexPage extends ListWithFilesAndPercentages
       int totalFileCount = computeTotalNumberOfSourceFiles();
       output.print(totalFileCount);
 
-      output.println(")</th><th>Coverage</th></tr>");
+      output.println(")</th><th>Code Coverage</th><th>Path Coverage</th></tr>");
    }
 
    private int computeTotalNumberOfSourceFiles()
@@ -92,12 +94,14 @@ final class IndexPage extends ListWithFilesAndPercentages
       return totalFileCount;
    }
 
-   private void writeLineWithTotalCoverage()
+   private void writeLineWithCoverageTotals()
    {
-      int totalPercentage = CoveragePercentage.calculate (coveredSegments, totalSegments);
+      int totalCodePercentage = CoveragePercentage.calculate(coveredSegments, totalSegments);
+      int totalPathPercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
 
       output.print("  <tr><td colspan='2' class='total'>Total</td>");
-      printCoveragePercentage(totalPercentage);
+      printCoveragePercentage(totalCodePercentage);
+      printCoveragePercentage(totalPathPercentage);
       output.println("</tr>");
    }
 
@@ -112,21 +116,39 @@ final class IndexPage extends ListWithFilesAndPercentages
    }
 
    @Override
-   protected int getTotalSegments(String filePath)
+   protected int getTotalSegments(String packageName)
    {
       return 0;
    }
 
    @Override
-   protected int getCoveredSegments(String filePath)
+   protected int getCoveredSegments(String packageName)
    {
       return 0;
    }
 
    @Override
-   protected int getCoveragePercentageForFile(String packageName)
+   protected int getCodeCoveragePercentageForFile(String packageName)
    {
-      return packagesToPackagePercentages.get(packageName);
+      return packagesToPackageCodePercentages.get(packageName);
+   }
+
+   @Override
+   protected int getTotalPaths(String packageName)
+   {
+      return 0;
+   }
+
+   @Override
+   protected int getCoveredPaths(String packageName)
+   {
+      return 0;
+   }
+
+   @Override
+   protected int getPathCoveragePercentageForFile(String packageName)
+   {
+      return packagesToPackagePathPercentages.get(packageName);
    }
 
    @Override
@@ -148,11 +170,19 @@ final class IndexPage extends ListWithFilesAndPercentages
       printIndent(4); output.println("<table width='100%' cellpadding='1' cellspacing='1'>");
 
       List<String> packageFiles = packagesToFiles.get(packageName);
-      int packagePercentage = packageReport.writeMetricForEachFile(packageFiles);
-      packagesToPackagePercentages.put(packageName, packagePercentage);
+      packageReport.writeMetricForEachFile(packageFiles);
 
+      int packageCodePercentage =
+         CoveragePercentage.calculate(packageReport.coveredSegments, packageReport.totalSegments);
+      packagesToPackageCodePercentages.put(packageName, packageCodePercentage);
       totalSegments += packageReport.totalSegments;
       coveredSegments += packageReport.coveredSegments;
+
+      int packagePathPercentage =
+         CoveragePercentage.calculate(packageReport.coveredPaths, packageReport.totalPaths);
+      packagesToPackagePathPercentages.put(packageName, packagePathPercentage);
+      totalPaths += packageReport.totalPaths;
+      coveredPaths += packageReport.coveredPaths;
 
       printIndent(4); output.println("</table>");
       printIndent(3); output.println("</td>");

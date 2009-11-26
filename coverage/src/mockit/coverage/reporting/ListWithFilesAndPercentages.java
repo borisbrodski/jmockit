@@ -35,6 +35,8 @@ abstract class ListWithFilesAndPercentages
    private final int baseIndentationLevel;
    int totalSegments;
    int coveredSegments;
+   int totalPaths;
+   int coveredPaths;
 
    protected ListWithFilesAndPercentages(PrintWriter output, int baseIndentationLevel)
    {
@@ -45,54 +47,84 @@ abstract class ListWithFilesAndPercentages
    protected abstract String getHRefToFile(String filePath);
    protected abstract String getFileNameForDisplay(String filePath);
    protected abstract void writeInternalTableForChildren(String filePath);
+
    protected abstract int getTotalSegments(String filePath);
    protected abstract int getCoveredSegments(String filePath);
-   protected abstract int getCoveragePercentageForFile(String filePath);
+   protected abstract int getCodeCoveragePercentageForFile(String filePath);
 
-   final int writeMetricForEachFile(List<String> filePaths)
+   protected abstract int getTotalPaths(String filePath);
+   protected abstract int getCoveredPaths(String filePath);
+   protected abstract int getPathCoveragePercentageForFile(String filePath);
+
+   final void writeMetricForEachFile(List<String> filePaths)
    {
       if (filePaths.isEmpty()) {
-         return 0;
+         return;
       }
 
       Collections.sort(filePaths);
 
       totalSegments = 0;
       coveredSegments = 0;
+      totalPaths = 0;
+      coveredPaths = 0;
 
       for (String filePath : filePaths) {
-         printIndent(2); output.println("<tr>");
-         printIndent(3); output.print("<td class='file'>");
+         printIndent(2);
+         output.println("<tr>");
 
-         String href = getHRefToFile(filePath);
-
-         if (href != null) {
-            output.print("<a href='");
-            output.print(href);
-            output.print("'>");
-         }
-
-         output.print(getFileNameForDisplay(filePath));
-
-         if (href != null) {
-            output.print("</a>");
-         }
-
-         output.println("</td>");
-
+         writeTableCellWithFileName(filePath);
          writeInternalTableForChildren(filePath);
+         writeCodeCoveragePercentageForFile(filePath);
+         writePathCoveragePercentageForFile(filePath);
 
-         int filePercentage = getCoveragePercentageForFile(filePath);
+         printIndent(2);
+         output.println("</tr>");
+      }
+   }
 
-         totalSegments += getTotalSegments(filePath);
-         coveredSegments += getCoveredSegments(filePath);
+   private void writeTableCellWithFileName(String filePath)
+   {
+      printIndent(3);
+      output.print("<td class='file'>");
 
-         printIndent(3);
-         printCoveragePercentage(filePercentage);
-         printIndent(2); output.println("</tr>");
+      String href = getHRefToFile(filePath);
+
+      if (href != null) {
+         output.print("<a href='");
+         output.print(href);
+         output.print("'>");
       }
 
-      return CoveragePercentage.calculate(coveredSegments, totalSegments);
+      output.print(getFileNameForDisplay(filePath));
+
+      if (href != null) {
+         output.print("</a>");
+      }
+
+      output.println("</td>");
+   }
+
+   private void writeCodeCoveragePercentageForFile(String filePath)
+   {
+      int fileCodePercentage = getCodeCoveragePercentageForFile(filePath);
+
+      totalSegments += getTotalSegments(filePath);
+      coveredSegments += getCoveredSegments(filePath);
+
+      printIndent(3);
+      printCoveragePercentage(fileCodePercentage);
+   }
+
+   private void writePathCoveragePercentageForFile(String filePath)
+   {
+      int filePathPercentage = getPathCoveragePercentageForFile(filePath);
+
+      totalPaths += getTotalPaths(filePath);
+      coveredPaths += getCoveredPaths(filePath);
+
+      printIndent(3);
+      printCoveragePercentage(filePathPercentage);
    }
 
    final void printCoveragePercentage(int percentage)

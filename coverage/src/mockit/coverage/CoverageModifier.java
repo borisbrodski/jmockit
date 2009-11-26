@@ -493,10 +493,8 @@ final class CoverageModifier extends ClassWriter
       @Override
       public void visitEnd()
       {
-         if (methodData.paths.size() > 1) {
-            methodData.setLastLine(currentLine);
-            fileData.addMethod(methodNameAndDesc, methodData);
-         }
+         methodData.setLastLine(currentLine);
+         fileData.addMethod(methodNameAndDesc, methodData);
       }
    }
 

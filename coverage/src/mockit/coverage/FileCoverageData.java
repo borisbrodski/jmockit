@@ -43,6 +43,8 @@ public final class FileCoverageData implements Serializable
    long lastModified;
    private int totalSegments;
    private int coveredSegments;
+   private int totalPaths;
+   private int coveredPaths;
 
    void addMethod(String methodNameAndDesc, MethodCoverageData methodData)
    {
@@ -88,7 +90,17 @@ public final class FileCoverageData implements Serializable
       return coveredSegments;
    }
 
-   public int getCoveragePercentage()
+   public int getTotalPaths()
+   {
+      return totalPaths;
+   }
+
+   public int getCoveredPaths()
+   {
+      return coveredPaths;
+   }
+
+   public int getCodeCoveragePercentage()
    {
       if (lineToLineData.isEmpty()) {
          return 100;
@@ -104,6 +116,22 @@ public final class FileCoverageData implements Serializable
       }
 
       return CoveragePercentage.calculate(coveredSegments, totalSegments);
+   }
+
+   public int getPathCoveragePercentage()
+   {
+      if (methods.isEmpty()) {
+         return 100;
+      }
+
+      if (totalPaths == 0) {
+         for (MethodCoverageData method : methods.values()) {
+            totalPaths += method.paths.size();
+            coveredPaths += method.getCoveredPaths();
+         }
+      }
+
+      return CoveragePercentage.calculate(coveredPaths, totalPaths);
    }
 
    void addCountsFromPreviousMeasurement(FileCoverageData previousData)

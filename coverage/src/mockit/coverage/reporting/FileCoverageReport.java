@@ -176,19 +176,21 @@ final class FileCoverageReport
 
    private void writeJavaScriptFunctionsForPathViewing()
    {
+      output.println("    var pathIdShown;");
       output.println("    var lineIdsShown;");
-      output.println("    function hidePath(lineIdsStr) {");
+      output.println("    function hidePath(pathId) {");
       output.println("      if (lineIdsShown) {");
       output.println("        for (var i = 0; i < lineIdsShown.length; i++) {");
       output.println("          var line = document.getElementById(lineIdsShown[i]);");
       output.println("          line.style.outlineStyle = 'none';");
       output.println("        }");
-      output.println("        lineIdsShown = null; return true;");
+      output.println("        lineIdsShown = null; return pathId == pathIdShown;");
       output.println("      }");
       output.println("      return false;");
       output.println("    }");
-      output.println("    function showPath(lineIdsStr) {");
-      output.println("      if (hidePath()) return;");
+      output.println("    function showPath(pathId, lineIdsStr) {");
+      output.println("      if (hidePath(pathId)) return;");
+      output.println("      pathIdShown = pathId;");
       output.println("      lineIdsShown = lineIdsStr.split(' ');");
       output.println("      for (var i = 0; i < lineIdsShown.length; i++) {");
       output.println("        var line = document.getElementById(lineIdsShown[i]);");
@@ -239,20 +241,26 @@ final class FileCoverageReport
 
       int q = p + currentMethod.methodName.length();
 
-      if (line.length() <= q || line.charAt(q) != '(') {
+      if (
+         (line.length() == q || line.charAt(q) != '(') &&
+         (currentMethod.getFirstLineOfImplementationBody() > lineNo ||
+          currentMethod.getLastLineOfImplementationBody() > lineNo)
+      ) {
          return;
       }
 
-      writePathCoverageHeaderForMethod();
+      if (currentMethod.paths.size() > 1) {
+         writePathCoverageHeaderForMethod();
 
-      char pathId = 'A';
+         char pathId = 'A';
 
-      for (Path path : currentMethod.paths) {
-         writeCoverageInfoForIndividualPath(pathId, path);
-         pathId++;
+         for (Path path : currentMethod.paths) {
+            writeCoverageInfoForIndividualPath(pathId, path);
+            pathId++;
+         }
+
+         writePathCoverageFooterForMethod();
       }
-
-      writePathCoverageFooterForMethod();
 
       previousMethodEndLine = currentMethod.getLastLineOfImplementationBody();
       currentMethod = nextMethod.hasNext() ? nextMethod.next() : null;
@@ -294,6 +302,8 @@ final class FileCoverageReport
       output.print("        <span class='");
       output.print(executionCount == 0 ? "uncovered" : "covered");
       output.print("' onclick=\"showPath('");
+      output.print(pathId);
+      output.print("','");
       output.print(lineIds.toString());
       output.print("')\">");
       output.print(pathId);

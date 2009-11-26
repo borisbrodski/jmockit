@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2007 Rogério Liesenfeld
+ * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -52,9 +52,27 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    }
 
    @Override
-   protected int getCoveragePercentageForFile(String filePath)
+   protected int getCodeCoveragePercentageForFile(String filePath)
    {
-      return filesToFileData.get(filePath).getCoveragePercentage();
+      return filesToFileData.get(filePath).getCodeCoveragePercentage();
+   }
+
+   @Override
+   protected int getTotalPaths(String filePath)
+   {
+      return filesToFileData.get(filePath).getTotalPaths();
+   }
+
+   @Override
+   protected int getCoveredPaths(String filePath)
+   {
+      return filesToFileData.get(filePath).getCoveredPaths();
+   }
+
+   @Override
+   protected int getPathCoveragePercentageForFile(String filePath)
+   {
+      return filesToFileData.get(filePath).getPathCoveragePercentage();
    }
 
    @Override
