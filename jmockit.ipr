@@ -1001,7 +1001,9 @@
         <root url="jar://$PROJECT_DIR$/samples/jmock/lib/objenesis-1.0.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1.jar!/" />
+      </SOURCES>
     </library>
     <library name="Logging APIs">
       <CLASSES>

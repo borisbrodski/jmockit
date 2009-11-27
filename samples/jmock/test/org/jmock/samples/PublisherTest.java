@@ -25,7 +25,7 @@ public class PublisherTest
       context.checking(new Expectations()
       {
          {
-            one(subscriber).receive(message);
+            oneOf(subscriber).receive(message);
          }
       });
 

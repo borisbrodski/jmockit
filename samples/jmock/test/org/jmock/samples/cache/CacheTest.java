@@ -44,8 +44,8 @@ public final class CacheTest
       context.checking(new Expectations() // (this is "jMock Expectations", not JMockit's version)
       {
          {
-            one(clock).time(); will(returnValue(loadTime));
-            one(loader).load(KEY); will(returnValue(VALUE));
+            oneOf(clock).time(); will(returnValue(loadTime));
+            oneOf(loader).load(KEY); will(returnValue(VALUE));
          }
       });
 
@@ -56,7 +56,7 @@ public final class CacheTest
          final long fetchTime = 200;
 
          {
-            one(clock).time(); will(returnValue(fetchTime));
+            oneOf(clock).time(); will(returnValue(fetchTime));
             allowing(reloadPolicy).shouldReload(loadTime, fetchTime); will(returnValue(false));
          }
       });
@@ -76,8 +76,8 @@ public final class CacheTest
       context.checking(new Expectations()
       {
          {
-            one(clock).time(); will(returnValue(loadTime));
-            one(loader).load(KEY); will(returnValue(VALUE));
+            oneOf(clock).time(); will(returnValue(loadTime));
+            oneOf(loader).load(KEY); will(returnValue(VALUE));
          }
       });
 
@@ -86,7 +86,7 @@ public final class CacheTest
          final long fetchTime = 200;
 
          {
-            one(clock).time(); will(returnValue(fetchTime));
+            oneOf(clock).time(); will(returnValue(fetchTime));
             allowing(reloadPolicy).shouldReload(loadTime, fetchTime); will(returnValue(false));
          }
       });
@@ -109,15 +109,15 @@ public final class CacheTest
       {
          // For first cache lookup:
          {
-            one(clock).time(); will(returnValue(loadTime));
-            one(loader).load(KEY); will(returnValue(VALUE));
+            oneOf(clock).time(); will(returnValue(loadTime));
+            oneOf(loader).load(KEY); will(returnValue(VALUE));
          }
 
          // For second cache lookup:
          final long fetchTime = 200;
 
          {
-            one(clock).time(); will(returnValue(fetchTime));
+            oneOf(clock).time(); will(returnValue(fetchTime));
             allowing(reloadPolicy).shouldReload(loadTime, fetchTime); will(returnValue(false));
          }
       });
