@@ -24,11 +24,51 @@
  */
 package integrationTests;
 
+import java.util.*;
+
 import org.junit.*;
+
+import mockit.coverage.*;
+import mockit.coverage.paths.*;
+
+import static org.junit.Assert.*;
 
 public final class AnotherTestedClassTest
 {
-   private AnotherTestedClass tested;
+   static final Map<String, FileCoverageData> data = CoverageData.instance().getFileToFileDataMap();
+   MethodCoverageData methodData;
+   int currentPathIndex;
+
+   AnotherTestedClass tested;
+
+   private MethodCoverageData getMethodData(Class<?> testedClass, String methodNameAndDesc)
+   {
+      String classFilePath = testedClass.getName().replace('.', '/') + ".java";
+      FileCoverageData fileData = data.get(classFilePath);
+      return fileData.methods.get(methodNameAndDesc);
+   }
+
+   private void getMethodData(Object testedInstance, String methodNameAndDesc)
+   {
+      methodData = getMethodData(testedInstance.getClass(), methodNameAndDesc);
+   }
+
+   private void assertPath(int expectedNodeCount, int expectedExecutionCount)
+   {
+      Path path = methodData.paths.get(currentPathIndex++);
+      assertEquals("Path node count:", expectedNodeCount, path.getNodes().size());
+      assertEquals("Path execution count:", expectedExecutionCount, path.getExecutionCount());
+   }
+
+   @After
+   public void verifyThatAllPathsWereAccountedFor()
+   {
+      if (methodData != null) {
+         assertEquals(
+            "Path " + currentPathIndex + " was not verified;",
+            currentPathIndex, methodData.paths.size());
+      }
+   }
 
    @Before
    public void setUp()
@@ -41,6 +81,16 @@ public final class AnotherTestedClassTest
    {
       tested.simpleIf(true);
       tested.simpleIf(false);
+
+      getMethodData(tested, "simpleIf(Z)V");
+      assertEquals(2, methodData.paths.size());
+      assertEquals(2, methodData.getCoveredPaths());
+      assertEquals(2, methodData.getExecutionCount());
+      assertEquals(8, methodData.getFirstLineOfImplementationBody());
+      assertEquals(11, methodData.getLastLineOfImplementationBody());
+
+      assertPath(3, 1);
+      assertPath(3, 1);
    }
 
    @Test
@@ -48,6 +98,16 @@ public final class AnotherTestedClassTest
    {
       tested.ifAndElse(true);
       tested.ifAndElse(false);
+
+      getMethodData(tested, "ifAndElse(Z)V");
+      assertEquals(2, methodData.paths.size());
+      assertEquals(2, methodData.getCoveredPaths());
+      assertEquals(2, methodData.getExecutionCount());
+      assertEquals(15, methodData.getFirstLineOfImplementationBody());
+      assertEquals(21, methodData.getLastLineOfImplementationBody());
+
+      assertPath(3, 1);
+      assertPath(3, 1);
    }
 
    @Test
@@ -55,6 +115,16 @@ public final class AnotherTestedClassTest
    {
       tested.singleLineIf(true);
       tested.singleLineIf(false);
+
+      getMethodData(tested, "singleLineIf(Z)V");
+      assertEquals(2, methodData.paths.size());
+      assertEquals(2, methodData.getCoveredPaths());
+      assertEquals(2, methodData.getExecutionCount());
+      assertEquals(25, methodData.getFirstLineOfImplementationBody());
+      assertEquals(26, methodData.getLastLineOfImplementationBody());
+
+      assertPath(3, 1);
+      assertPath(3, 1);
    }
 
    @Test
@@ -62,6 +132,16 @@ public final class AnotherTestedClassTest
    {
       tested.singleLineIfAndElse(true);
       tested.singleLineIfAndElse(false);
+
+      getMethodData(tested, "singleLineIfAndElse(Z)V");
+      assertEquals(2, methodData.paths.size());
+      assertEquals(2, methodData.getCoveredPaths());
+      assertEquals(2, methodData.getExecutionCount());
+      assertEquals(30, methodData.getFirstLineOfImplementationBody());
+      assertEquals(31, methodData.getLastLineOfImplementationBody());
+
+      assertPath(3, 1);
+      assertPath(3, 1);
    }
 
    @Test(expected = AssertionError.class)
@@ -87,6 +167,18 @@ public final class AnotherTestedClassTest
    {
       tested.methodWithFourDifferentPathsAndSimpleLines(true, 0);
       tested.methodWithFourDifferentPathsAndSimpleLines(false, 1);
+
+      getMethodData(tested, "methodWithFourDifferentPathsAndSimpleLines(ZI)V");
+      assertEquals(4, methodData.paths.size());
+      assertEquals(2, methodData.getCoveredPaths());
+      assertEquals(2, methodData.getExecutionCount());
+      assertEquals(52, methodData.getFirstLineOfImplementationBody());
+      assertEquals(62, methodData.getLastLineOfImplementationBody());
+
+      assertPath(4, 0); // should there be 5 nodes?
+      assertPath(4, 1);
+      assertPath(4, 1);
+      assertPath(4, 0);
    }
 
    @Test
@@ -94,11 +186,34 @@ public final class AnotherTestedClassTest
    {
       tested.methodWithFourDifferentPathsAndSegmentedLines(false, -1);
       tested.methodWithFourDifferentPathsAndSegmentedLines(true, 1);
+
+      getMethodData(tested, "methodWithFourDifferentPathsAndSegmentedLines(ZI)V");
+      assertEquals(4, methodData.paths.size());
+      assertEquals(2, methodData.getCoveredPaths());
+      assertEquals(2, methodData.getExecutionCount());
+      assertEquals(66, methodData.getFirstLineOfImplementationBody());
+      assertEquals(70, methodData.getLastLineOfImplementationBody());
+
+      assertPath(4, 1);
+      assertPath(4, 0);
+      assertPath(4, 0);
+      assertPath(4, 1);
    }
 
    @Test
    public void singleLineMethodWithMultiplePaths()
    {
       tested.singleLineMethodWithMultiplePaths(true, false);
+
+      getMethodData(tested, "singleLineMethodWithMultiplePaths(ZZ)Z");
+      assertEquals(3, methodData.paths.size());
+      assertEquals(1, methodData.getCoveredPaths());
+      assertEquals(1, methodData.getExecutionCount());
+      assertEquals(74, methodData.getFirstLineOfImplementationBody());
+      assertEquals(77, methodData.getLastLineOfImplementationBody());
+
+      assertPath(4, 0);
+      assertPath(4, 1);
+      assertPath(4, 0);
    }
 }
