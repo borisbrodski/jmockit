@@ -61,7 +61,7 @@ final class CoverageModifier extends ClassWriter
          sourceFileName = name.substring(0, p + 1);
       }
 
-      cannotModify = name.startsWith("mockit/coverage/");
+      cannotModify = (access & ACC_INTERFACE) != 0 || name.startsWith("mockit/coverage/");
 
       super.visit(version, access, name, signature, superName, interfaces);
    }
@@ -72,7 +72,9 @@ final class CoverageModifier extends ClassWriter
       sourceFileName += file;
       fileData = coverageData.addFile(sourceFileName);
 
-//      System.out.println("Modifying: " + sourceFileName);
+      if (cannotModify) {
+         throw CodeCoverage.CLASS_IGNORED;
+      }
 
       super.visitSource(file, debug);
    }
@@ -82,11 +84,6 @@ final class CoverageModifier extends ClassWriter
       int access, String name, String desc, String signature, String[] exceptions)
    {
       MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
-
-      if (cannotModify) {
-         return mv;
-      }
-
       methodName = name;
 
       return "<clinit>".equals(name) ? new StaticBlockModifier(mv) : new MethodModifier(mv);
@@ -482,8 +479,10 @@ final class CoverageModifier extends ClassWriter
       @Override
       public void visitEnd()
       {
-         methodData.setLastLine(currentLine);
-         fileData.addMethod(methodData);
+         if (currentLine > 0) {
+            methodData.setLastLine(currentLine);
+            fileData.addMethod(methodData);
+         }
       }
    }
 
