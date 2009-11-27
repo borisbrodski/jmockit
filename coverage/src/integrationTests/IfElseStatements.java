@@ -1,7 +1,7 @@
 package integrationTests;
 
 @SuppressWarnings({"ControlFlowStatementWithoutBraces"})
-public final class AnotherTestedClass
+public final class IfElseStatements
 {
    void simpleIf(boolean b)
    {
@@ -30,23 +30,6 @@ public final class AnotherTestedClass
       if (b) System.gc(); else System.runFinalization();
    }
 
-   void nonBranchingMethodWithUnreachableLines()
-   {
-      int a = 1;
-      assert false;
-      System.gc();
-   }
-
-   void branchingMethodWithUnreachableLines(int a)
-   {
-      if (a > 0) {
-         assert a < 0;
-         System.gc();
-      }
-
-      System.runFinalization();
-   }
-
    void methodWithFourDifferentPathsAndSimpleLines(boolean b, int i)
    {
       if (b) {
@@ -71,9 +54,30 @@ public final class AnotherTestedClass
 
    boolean singleLineMethodWithMultiplePaths(boolean a, boolean b)
    {
+      //noinspection RedundantIfStatement
       if (a || b)
          return true;
       else
          return false;
+   }
+
+   // Must return the same value of x as it called with. Some paths will fail that requirement.
+   @SuppressWarnings({"AssignmentToMethodParameter"})
+   public int returnInput(int x, boolean a, boolean b, boolean c)
+   {
+      if (a) {
+         x++;
+      }
+
+      if (b) {
+         x--;
+      }
+
+      if (c) {
+         //noinspection SillyAssignment
+         x = x;
+      }
+
+      return x;
    }
 }

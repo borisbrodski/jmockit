@@ -26,48 +26,25 @@ package integrationTests;
 
 import org.junit.*;
 
-public final class TestedClassTest extends CoverageTest
+public final class UnreachableStatementsTest extends CoverageTest
 {
-   private final TestedClass tested = new TestedClass();
+   final UnreachableStatements tested = new UnreachableStatements();
 
-   @Test
-   public void evalOnlySomeCombinations()
+   @Test(expected = AssertionError.class)
+   public void nonBranchingMethodWithUnreachableLines()
    {
-      assertTrue(tested.eval1(true, true, 0));
-      assertFalse(tested.eval1(true, false, 0));
+      tested.nonBranchingMethodWithUnreachableLines();
    }
 
    @Test
-   public void evalBuggyCombination()
+   public void branchingMethodWithUnreachableLines_avoidUnreachableCode()
    {
-      // Only this combination will fail if the third condition in eval1 is changed to "z < 0",
-      // which demonstrates that a more sophisticated metric than branch coverage is needed.
-      assertTrue(tested.eval1(true, false, 1));
+      tested.branchingMethodWithUnreachableLines(0);
    }
 
-   @Test
-   public void evalAllCombinations()
+   @Test(expected = AssertionError.class)
+   public void branchingMethodWithUnreachableLines_hitUnreachableCode()
    {
-      assertTrue(tested.eval2(true, true, 0));
-      assertTrue(tested.eval2(true, false, 1));
-      assertFalse(tested.eval2(true, false, 0));
-      assertFalse(tested.eval2(false, true, 0));
-   }
-
-   @Test
-   public void evalOnlyFirstBranch()
-   {
-      assertFalse(tested.eval3(false, true, false));
-   }
-
-   @Test
-   public void evalOnlyFirstAndSecondBranches()
-   {
-      assertFalse(tested.eval4(false, true, false));
-      assertFalse(tested.eval4(false, false, false));
-      assertFalse(tested.eval4(false, true, true));
-      assertFalse(tested.eval4(false, false, true));
-      assertTrue(tested.eval4(true, true, false));
-      assertTrue(tested.eval4(true, true, true));
+      tested.branchingMethodWithUnreachableLines(1);
    }
 }

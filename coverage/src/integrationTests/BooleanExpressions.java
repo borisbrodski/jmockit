@@ -1,6 +1,6 @@
 package integrationTests;
 
-public final class TestedClass
+public final class BooleanExpressions
 {
    public boolean eval1(boolean x, boolean y, int z)
    {

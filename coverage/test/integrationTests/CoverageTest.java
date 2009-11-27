@@ -35,34 +35,53 @@ public class CoverageTest extends Assert
 {
    static final Map<String, FileCoverageData> data = CoverageData.instance().getFileToFileDataMap();
    protected MethodCoverageData methodData;
-   private int currentPathIndex;
+   private int currentPathIndex = -1;
 
-   protected final MethodCoverageData getMethodData(Class<?> testedClass, String methodNameAndDesc)
+   protected final void findMethodData(Class<?> testedClass, String methodName)
    {
       String classFilePath = testedClass.getName().replace('.', '/') + ".java";
       FileCoverageData fileData = data.get(classFilePath);
-      return fileData.methods.get(methodNameAndDesc);
+
+      for (Map.Entry<String, MethodCoverageData> nameAndData : fileData.methods.entrySet()) {
+         if (nameAndData.getKey().startsWith(methodName)) {
+            methodData = nameAndData.getValue();
+            return;
+         }
+      }
+
+      fail("No method with name \"" + methodName + "\" found in " + classFilePath);
    }
 
-   protected final void getMethodData(Object testedInstance, String methodNameAndDesc)
+   protected final void findMethodData(Object testedInstance, String methodName)
    {
-      methodData = getMethodData(testedInstance.getClass(), methodNameAndDesc);
+      findMethodData(testedInstance.getClass(), methodName);
+   }
+
+   protected final void assertMethodLines(int startingLine, int endingLine)
+   {
+      assertEquals(startingLine, methodData.getFirstLineOfImplementationBody());
+      assertEquals(endingLine, methodData.getLastLineOfImplementationBody());
    }
 
    protected final void assertPath(int expectedNodeCount, int expectedExecutionCount)
    {
-      Path path = methodData.paths.get(currentPathIndex++);
+      int i = currentPathIndex + 1;
+      currentPathIndex = -1;
+
+      Path path = methodData.paths.get(i);
       assertEquals("Path node count:", expectedNodeCount, path.getNodes().size());
       assertEquals("Path execution count:", expectedExecutionCount, path.getExecutionCount());
+
+      currentPathIndex = i;
    }
 
    @After
    public final void verifyThatAllPathsWereAccountedFor()
    {
-      if (methodData != null) {
+      if (methodData != null && currentPathIndex >= 0) {
          assertEquals(
             "Path " + currentPathIndex + " was not verified;",
-            currentPathIndex, methodData.paths.size());
+            currentPathIndex + 1, methodData.paths.size());
       }
    }
 }
