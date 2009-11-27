@@ -53,6 +53,32 @@ public final class ExpectationsUsingOnInstanceTest
       assertEquals(12, mock.getValue());
    }
 
+   @Test
+   public void matchRepeatOnMockInstance()
+   {
+      new Expectations(2)
+      {
+         {
+            onInstance(mock).getValue(); returns(12);
+         }
+      };
+
+      assertEquals(12, mock.getValue());
+      assertEquals(12, mock.getValue());
+   }
+
+   @Test(expected=NullPointerException.class)
+   public void exceptionOnNullMockInstance()
+   {
+      new Expectations()
+      {
+         Collaborator nullMock=null;
+         {
+            onInstance(nullMock).getValue(); returns(12);
+         }
+      };
+   }
+
    @Test(expected = AssertionError.class)
    public void recordOnMockInstanceButReplayOnDifferentInstance()
    {
