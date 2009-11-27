@@ -36,7 +36,7 @@ public final class FileCoverageData implements Serializable
 {
    private static final long serialVersionUID = 3508592808457531011L;
 
-   private final SortedMap<Integer, LineCoverageData> lineToLineData =
+   public final SortedMap<Integer, LineCoverageData> lineToLineData =
       new TreeMap<Integer, LineCoverageData>();
    public final Map<String, MethodCoverageData> methods =
       new LinkedHashMap<String, MethodCoverageData>();

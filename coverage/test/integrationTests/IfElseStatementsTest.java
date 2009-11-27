@@ -42,12 +42,15 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.simpleIf(true);
       tested.simpleIf(false);
 
-      findMethodData(tested, "simpleIf");
-      assertEquals(2, methodData.paths.size());
-      assertEquals(2, methodData.getCoveredPaths());
-      assertEquals(2, methodData.getExecutionCount());
-      assertMethodLines(8, 11);
+      assertLines(8, 11, 4);
+      assertLine(8, 1, 1, 2);
+      assertLine(9, 1, 1, 1);
+      assertLine(10, 1, 1, 2);
+      assertLine(11, 1, 1, 2);
 
+      findMethodData("simpleIf");
+      assertPaths(2, 2, 2);
+      assertMethodLines(8, 11);
       assertPath(3, 1);
       assertPath(3, 1);
    }
@@ -58,12 +61,9 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.ifAndElse(true);
       tested.ifAndElse(false);
 
-      findMethodData(tested, "ifAndElse");
-      assertEquals(2, methodData.paths.size());
-      assertEquals(2, methodData.getCoveredPaths());
-      assertEquals(2, methodData.getExecutionCount());
+      findMethodData("ifAndElse");
+      assertPaths(2, 2, 2);
       assertMethodLines(15, 21);
-
       assertPath(3, 1);
       assertPath(3, 1);
    }
@@ -74,12 +74,9 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.singleLineIf(true);
       tested.singleLineIf(false);
 
-      findMethodData(tested, "singleLineIf");
-      assertEquals(2, methodData.paths.size());
-      assertEquals(2, methodData.getCoveredPaths());
-      assertEquals(2, methodData.getExecutionCount());
+      findMethodData("singleLineIf");
+      assertPaths(2, 2, 2);
       assertMethodLines(25, 26);
-
       assertPath(3, 1);
       assertPath(3, 1);
    }
@@ -90,12 +87,9 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.singleLineIfAndElse(true);
       tested.singleLineIfAndElse(false);
 
-      findMethodData(tested, "singleLineIfAndElse");
-      assertEquals(2, methodData.paths.size());
-      assertEquals(2, methodData.getCoveredPaths());
-      assertEquals(2, methodData.getExecutionCount());
+      findMethodData("singleLineIfAndElse");
+      assertPaths(2, 2, 2);
       assertMethodLines(30, 31);
-
       assertPath(3, 1);
       assertPath(3, 1);
    }
@@ -106,12 +100,9 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.methodWithFourDifferentPathsAndSimpleLines(true, 0);
       tested.methodWithFourDifferentPathsAndSimpleLines(false, 1);
 
-      findMethodData(tested, "methodWithFourDifferentPathsAndSimpleLines");
-      assertEquals(4, methodData.paths.size());
-      assertEquals(2, methodData.getCoveredPaths());
-      assertEquals(2, methodData.getExecutionCount());
+      findMethodData("methodWithFourDifferentPathsAndSimpleLines");
+      assertPaths(4, 2, 2);
       assertMethodLines(35, 45);
-
       assertPath(4, 0); // should there be 5 nodes?
       assertPath(4, 1);
       assertPath(4, 1);
@@ -124,12 +115,9 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.methodWithFourDifferentPathsAndSegmentedLines(false, -1);
       tested.methodWithFourDifferentPathsAndSegmentedLines(true, 1);
 
-      findMethodData(tested, "methodWithFourDifferentPathsAndSegmentedLines");
-      assertEquals(4, methodData.paths.size());
-      assertEquals(2, methodData.getCoveredPaths());
-      assertEquals(2, methodData.getExecutionCount());
+      findMethodData("methodWithFourDifferentPathsAndSegmentedLines");
+      assertPaths(4, 2, 2);
       assertMethodLines(49, 53);
-
       assertPath(4, 1);
       assertPath(4, 0);
       assertPath(4, 0);
@@ -141,12 +129,9 @@ public final class IfElseStatementsTest extends CoverageTest
    {
       tested.singleLineMethodWithMultiplePaths(true, false);
 
-      findMethodData(tested, "singleLineMethodWithMultiplePaths");
-      assertEquals(3, methodData.paths.size());
-      assertEquals(1, methodData.getCoveredPaths());
-      assertEquals(1, methodData.getExecutionCount());
+      findMethodData("singleLineMethodWithMultiplePaths");
+      assertPaths(3, 1, 1);
       assertMethodLines(58, 61);
-
       assertPath(4, 0);
       assertPath(4, 1);
       assertPath(4, 0);
@@ -164,12 +149,9 @@ public final class IfElseStatementsTest extends CoverageTest
       assertEquals(7, tested.returnInput(7, true, true, true));
       assertEquals(9, tested.returnInput(8, true, false, true));
 
-      findMethodData(tested, "returnInput");
-      assertEquals(8, methodData.paths.size());
-      assertEquals(8, methodData.getCoveredPaths());
-      assertEquals(8, methodData.getExecutionCount());
+      findMethodData("returnInput");
+      assertPaths(8, 8, 8);
       assertMethodLines(68, 81);
-
       assertPath(5, 1);
       assertPath(5, 1);
       assertPath(5, 1);

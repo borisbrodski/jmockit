@@ -24,6 +24,7 @@
  */
 package integrationTests;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import org.junit.*;
@@ -34,14 +35,51 @@ import mockit.coverage.paths.*;
 public class CoverageTest extends Assert
 {
    static final Map<String, FileCoverageData> data = CoverageData.instance().getFileToFileDataMap();
+   protected FileCoverageData fileData;
    protected MethodCoverageData methodData;
    private int currentPathIndex = -1;
 
-   protected final void findMethodData(Class<?> testedClass, String methodName)
+   @Before
+   public void findCoverageData() throws Exception
    {
-      String classFilePath = testedClass.getName().replace('.', '/') + ".java";
-      FileCoverageData fileData = data.get(classFilePath);
+      Field testedField = getClass().getField("tested");
+      Class<?> testedClass = testedField.getType();
 
+      String classFilePath = testedClass.getName().replace('.', '/') + ".java";
+      fileData = data.get(classFilePath);
+      assertNotNull("FileCoverageData not found for " + classFilePath);
+   }
+
+   protected final void assertLines(int startingLine, int endingLine, int expectedLinesExecuted)
+   {
+      SortedMap<Integer, LineCoverageData> lineToLineData = fileData.lineToLineData;
+      assertTrue("starting line not found", lineToLineData.containsKey(startingLine));
+      assertTrue("ending line not found", lineToLineData.containsKey(endingLine));
+
+      int linesExecuted = 0;
+
+      for (int line = startingLine; line <= endingLine; line++) {
+         LineCoverageData lineData = lineToLineData.get(line);
+
+         if (lineData != null && lineData.getExecutionCount() > 0) {
+            linesExecuted++;
+         }
+      }
+
+      assertEquals("executed unexpected number of lines", expectedLinesExecuted, linesExecuted);
+   }
+
+   protected final void assertLine(
+      int line, int expectedSegments, int expectedCoveredSegments, int expectedExecutionCount)
+   {
+      LineCoverageData lineData = fileData.lineToLineData.get(line);
+      assertEquals(expectedSegments, lineData.getNumberOfSegments());
+      assertEquals(expectedCoveredSegments, lineData.getNumberOfCoveredSegments());
+      assertEquals(expectedExecutionCount, lineData.getExecutionCount());
+   }
+
+   protected final void findMethodData(String methodName)
+   {
       for (Map.Entry<String, MethodCoverageData> nameAndData : fileData.methods.entrySet()) {
          if (nameAndData.getKey().startsWith(methodName)) {
             methodData = nameAndData.getValue();
@@ -49,12 +87,16 @@ public class CoverageTest extends Assert
          }
       }
 
-      fail("No method with name \"" + methodName + "\" found in " + classFilePath);
+      fail("No method with name \"" + methodName + "\" found");
    }
 
-   protected final void findMethodData(Object testedInstance, String methodName)
+   protected final void assertPaths(
+      int expectedPaths, int expectedCoveredPaths, int expectedExecutionCount)
    {
-      findMethodData(testedInstance.getClass(), methodName);
+      assertEquals("number of paths:", expectedPaths, methodData.paths.size());
+      assertEquals("number of covered paths:", expectedCoveredPaths, methodData.getCoveredPaths());
+      assertEquals(
+         "execution count for all paths:", expectedExecutionCount, methodData.getExecutionCount());
    }
 
    protected final void assertMethodLines(int startingLine, int endingLine)
