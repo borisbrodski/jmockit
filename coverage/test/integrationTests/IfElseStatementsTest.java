@@ -42,10 +42,9 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.simpleIf(true);
       tested.simpleIf(false);
 
-      assertLines(8, 11, 4);
+      assertLines(8, 11, 3);
       assertLine(8, 1, 1, 2);
       assertLine(9, 1, 1, 1);
-      assertLine(10, 1, 1, 2);
       assertLine(11, 1, 1, 2);
 
       findMethodData("simpleIf");

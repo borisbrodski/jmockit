@@ -42,7 +42,7 @@ public class CoverageTest extends Assert
    @Before
    public void findCoverageData() throws Exception
    {
-      Field testedField = getClass().getField("tested");
+      Field testedField = getClass().getDeclaredField("tested");
       Class<?> testedClass = testedField.getType();
 
       String classFilePath = testedClass.getName().replace('.', '/') + ".java";
@@ -66,7 +66,7 @@ public class CoverageTest extends Assert
          }
       }
 
-      assertEquals("executed unexpected number of lines", expectedLinesExecuted, linesExecuted);
+      assertEquals("unexpected number of lines executed:", expectedLinesExecuted, linesExecuted);
    }
 
    protected final void assertLine(
