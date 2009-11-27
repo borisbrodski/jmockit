@@ -39,7 +39,7 @@ public class Invocation
    /**
     * Current invocation count. The first invocation start at 1.
     */
-   protected int invocationCount;
+   final protected int invocationCount;
 
    /**
     * Minimum invocation count
@@ -54,13 +54,14 @@ public class Invocation
    /**
     * Constructor intended for internal use.
     */
-   protected Invocation() {
+   protected Invocation(int invocationCount) {
+      this.invocationCount=invocationCount;
    }
 
    /**
     * Returns invocation count (non-modifiable). The first invocation start at 1.
     */
-   public int getInvocationCount()
+   final public int getInvocationCount()
    {
       return invocationCount;
    }
@@ -72,7 +73,7 @@ public class Invocation
     * with {@link Expectations#repeats(int)}, {@link Expectations#repeats(int, int)}
     * and {@link Expectations#repeatsAtLeast(int)} methods.
     */
-   public int getMinInvocations()
+   final public int getMinInvocations()
    {
       return minInvocations;
    }
@@ -83,7 +84,7 @@ public class Invocation
     * with {@link Expectations#repeats(int)}, {@link Expectations#repeats(int, int)}
     * and {@link Expectations#repeatsAtLeast(int)} methods.
     */
-   public void setMinInvocations(int minInvocations)
+   final public void setMinInvocations(int minInvocations)
    {
       this.minInvocations = minInvocations;
    }
@@ -95,7 +96,7 @@ public class Invocation
     * with {@link Expectations#repeats(int)}, {@link Expectations#repeats(int, int)}
     * and {@link Expectations#repeatsAtMost(int)} methods.
     */
-   public int getMaxInvocations()
+   final public int getMaxInvocations()
    {
       return maxInvocations;
    }
@@ -107,7 +108,7 @@ public class Invocation
     * with {@link Expectations#repeats(int)}, {@link Expectations#repeats(int, int)}
     * and {@link Expectations#repeatsAtMost(int)} methods.
     */
-   public void setMaxInvocations(int maxInvocations)
+   final public void setMaxInvocations(int maxInvocations)
    {
       this.maxInvocations = maxInvocations;
    }

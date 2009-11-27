@@ -26,13 +26,11 @@ package mockit.internal.expectations;
 
 import mockit.Invocation;
 
-public class DelegateInvocation extends Invocation
+final public class DelegateInvocation extends Invocation
 {
 
-   public DelegateInvocation(int invocationCount, int minInvocations,
-         int maxInvocations) {
-      super();
-      this.invocationCount = invocationCount;
+   public DelegateInvocation(int invocationCount, int minInvocations, int maxInvocations) {
+      super(invocationCount);
       this.minInvocations = minInvocations;
       this.maxInvocations = maxInvocations;
    }
