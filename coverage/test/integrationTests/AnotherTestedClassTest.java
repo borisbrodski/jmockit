@@ -24,51 +24,11 @@
  */
 package integrationTests;
 
-import java.util.*;
-
 import org.junit.*;
 
-import mockit.coverage.*;
-import mockit.coverage.paths.*;
-
-import static org.junit.Assert.*;
-
-public final class AnotherTestedClassTest
+public final class AnotherTestedClassTest extends CoverageTest
 {
-   static final Map<String, FileCoverageData> data = CoverageData.instance().getFileToFileDataMap();
-   MethodCoverageData methodData;
-   int currentPathIndex;
-
    AnotherTestedClass tested;
-
-   private MethodCoverageData getMethodData(Class<?> testedClass, String methodNameAndDesc)
-   {
-      String classFilePath = testedClass.getName().replace('.', '/') + ".java";
-      FileCoverageData fileData = data.get(classFilePath);
-      return fileData.methods.get(methodNameAndDesc);
-   }
-
-   private void getMethodData(Object testedInstance, String methodNameAndDesc)
-   {
-      methodData = getMethodData(testedInstance.getClass(), methodNameAndDesc);
-   }
-
-   private void assertPath(int expectedNodeCount, int expectedExecutionCount)
-   {
-      Path path = methodData.paths.get(currentPathIndex++);
-      assertEquals("Path node count:", expectedNodeCount, path.getNodes().size());
-      assertEquals("Path execution count:", expectedExecutionCount, path.getExecutionCount());
-   }
-
-   @After
-   public void verifyThatAllPathsWereAccountedFor()
-   {
-      if (methodData != null) {
-         assertEquals(
-            "Path " + currentPathIndex + " was not verified;",
-            currentPathIndex, methodData.paths.size());
-      }
-   }
 
    @Before
    public void setUp()

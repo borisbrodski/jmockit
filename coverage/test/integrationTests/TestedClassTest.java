@@ -24,10 +24,9 @@
  */
 package integrationTests;
 
-import static org.junit.Assert.*;
 import org.junit.*;
 
-public final class TestedClassTest
+public final class TestedClassTest extends CoverageTest
 {
    private final TestedClass tested = new TestedClass();
 
