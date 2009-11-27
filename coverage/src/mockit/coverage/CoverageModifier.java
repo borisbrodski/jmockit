@@ -36,7 +36,7 @@ final class CoverageModifier extends ClassWriter
    private final CoverageData coverageData;
    private String simpleClassName;
    private String sourceFileName;
-   private String methodNameAndDesc;
+   private String methodName;
    private FileCoverageData fileData;
    private boolean cannotModify;
 
@@ -87,7 +87,7 @@ final class CoverageModifier extends ClassWriter
          return mv;
       }
 
-      methodNameAndDesc = name + desc;
+      methodName = name;
 
       return "<clinit>".equals(name) ? new StaticBlockModifier(mv) : new MethodModifier(mv);
    }
@@ -133,11 +133,9 @@ final class CoverageModifier extends ClassWriter
       private void generateCallToRegisterLineExecution()
       {
          mw.visitLdcInsn(sourceFileName);
-         mw.visitLdcInsn(methodNameAndDesc);
          pushCurrentLineOnTheStack();
          mw.visitMethodInsn(
-            INVOKESTATIC, DATA_RECORDING_CLASS, "lineExecuted",
-            "(Ljava/lang/String;Ljava/lang/String;I)V");
+            INVOKESTATIC, DATA_RECORDING_CLASS, "lineExecuted", "(Ljava/lang/String;I)V");
       }
 
       private void pushCurrentLineOnTheStack()
@@ -225,12 +223,10 @@ final class CoverageModifier extends ClassWriter
       private void generateCallToRegisterBranchTargetExecution(String methodName, int branchIndex)
       {
          mw.visitLdcInsn(sourceFileName);
-         mw.visitLdcInsn(methodNameAndDesc);
          pushCurrentLineOnTheStack();
          mw.visitIntInsn(SIPUSH, branchIndex);
          mw.visitMethodInsn(
-            INVOKESTATIC, DATA_RECORDING_CLASS, methodName,
-            "(Ljava/lang/String;Ljava/lang/String;II)V");
+            INVOKESTATIC, DATA_RECORDING_CLASS, methodName, "(Ljava/lang/String;II)V");
       }
 
       @Override
@@ -333,14 +329,8 @@ final class CoverageModifier extends ClassWriter
       {
          super(mv);
 
-         String methodName;
-
-         if (methodNameAndDesc.charAt(0) == '<') {
+         if (methodName.charAt(0) == '<') {
             methodName = simpleClassName;
-         }
-         else {
-            int p = methodNameAndDesc.indexOf('(');
-            methodName = methodNameAndDesc.substring(0, p);
          }
 
          methodData = new MethodCoverageData(methodName);
@@ -371,11 +361,10 @@ final class CoverageModifier extends ClassWriter
       {
          if (nodeIndex >= 0) {
             mw.visitLdcInsn(sourceFileName);
-            mw.visitLdcInsn(methodNameAndDesc);
+            mw.visitLdcInsn(methodData.getFirstLineOfImplementationBody());
             mw.visitIntInsn(SIPUSH, nodeIndex);
             mw.visitMethodInsn(
-               INVOKESTATIC, DATA_RECORDING_CLASS, "nodeReached",
-               "(Ljava/lang/String;Ljava/lang/String;I)V");
+               INVOKESTATIC, DATA_RECORDING_CLASS, "nodeReached", "(Ljava/lang/String;II)V");
          }
       }
 
@@ -494,7 +483,7 @@ final class CoverageModifier extends ClassWriter
       public void visitEnd()
       {
          methodData.setLastLine(currentLine);
-         fileData.addMethod(methodNameAndDesc, methodData);
+         fileData.addMethod(methodData);
       }
    }
 

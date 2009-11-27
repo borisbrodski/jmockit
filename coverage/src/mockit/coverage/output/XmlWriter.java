@@ -206,12 +206,9 @@ public abstract class XmlWriter
    {
       output.newLine();
 
-      for (Map.Entry<String, MethodCoverageData> methodAndData : fileData.methods.entrySet()) {
-         String methodNameAndDesc = methodAndData.getKey().replace("<init>", "");
-         MethodCoverageData methodData = methodAndData.getValue();
-
-         output.write("    <paths method='");
-         output.write(methodNameAndDesc);
+      for (MethodCoverageData methodData : fileData.firstLineToMethodData.values()) {
+         output.write("    <paths firstLineInMethodBody='");
+         writeInt(methodData.getFirstLineOfImplementationBody());
          output.write("' count='");
          writeInt(methodData.getExecutionCount());
          writeLine("'>");

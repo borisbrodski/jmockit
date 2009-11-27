@@ -80,9 +80,9 @@ public class CoverageTest extends Assert
 
    protected final void findMethodData(String methodName)
    {
-      for (Map.Entry<String, MethodCoverageData> nameAndData : fileData.methods.entrySet()) {
-         if (nameAndData.getKey().startsWith(methodName)) {
-            methodData = nameAndData.getValue();
+      for (MethodCoverageData coverageData : fileData.firstLineToMethodData.values()) {
+         if (methodName.equals(coverageData.methodName)) {
+            methodData = coverageData;
             return;
          }
       }

@@ -38,17 +38,17 @@ public final class FileCoverageData implements Serializable
 
    public final SortedMap<Integer, LineCoverageData> lineToLineData =
       new TreeMap<Integer, LineCoverageData>();
-   public final Map<String, MethodCoverageData> methods =
-      new LinkedHashMap<String, MethodCoverageData>();
+   public final Map<Integer, MethodCoverageData> firstLineToMethodData =
+      new LinkedHashMap<Integer, MethodCoverageData>();
    long lastModified;
    private int totalSegments;
    private int coveredSegments;
    private int totalPaths;
    private int coveredPaths;
 
-   void addMethod(String methodNameAndDesc, MethodCoverageData methodData)
+   void addMethod(MethodCoverageData methodData)
    {
-      methods.put(methodNameAndDesc, methodData);
+      firstLineToMethodData.put(methodData.getFirstLineOfImplementationBody(), methodData);
    }
 
    LineCoverageData addLine(int line)
@@ -120,12 +120,12 @@ public final class FileCoverageData implements Serializable
 
    public int getPathCoveragePercentage()
    {
-      if (methods.isEmpty()) {
+      if (firstLineToMethodData.isEmpty()) {
          return 100;
       }
 
       if (totalPaths == 0) {
-         for (MethodCoverageData method : methods.values()) {
+         for (MethodCoverageData method : firstLineToMethodData.values()) {
             totalPaths += method.paths.size();
             coveredPaths += method.getCoveredPaths();
          }
@@ -159,6 +159,6 @@ public final class FileCoverageData implements Serializable
 
    public Collection<MethodCoverageData> getMethods()
    {
-      return methods.values();
+      return firstLineToMethodData.values();
    }
 }

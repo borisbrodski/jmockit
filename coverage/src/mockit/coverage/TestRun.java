@@ -37,7 +37,7 @@ public final class TestRun
    private TestRun() {}
 
    @SuppressWarnings({"UnusedDeclaration"})
-   public static void lineExecuted(String file, String method, int line)
+   public static void lineExecuted(String file, int line)
    {
       if (executingCall.get()) {
          return;
@@ -56,7 +56,7 @@ public final class TestRun
    }
 
    @SuppressWarnings({"UnusedDeclaration"})
-   public static void jumpTargetExecuted(String file, String method, int line, int segment)
+   public static void jumpTargetExecuted(String file, int line, int segment)
    {
       if (executingCall.get()) {
          return;
@@ -75,7 +75,7 @@ public final class TestRun
    }
 
    @SuppressWarnings({"UnusedDeclaration"})
-   public static void noJumpTargetExecuted(String file, String method, int line, int segment)
+   public static void noJumpTargetExecuted(String file, int line, int segment)
    {
       if (executingCall.get()) {
          return;
@@ -94,7 +94,7 @@ public final class TestRun
    }
 
    @SuppressWarnings({"UnusedDeclaration"})
-   public static void nodeReached(String file, String method, int node)
+   public static void nodeReached(String file, int firstLineInMethodBody, int node)
    {
       if (executingCall.get()) {
          return;
@@ -104,7 +104,7 @@ public final class TestRun
 
       CoverageData coverageData = CoverageData.instance();
       FileCoverageData fileData = coverageData.getFileData(file);
-      MethodCoverageData methodData = fileData.methods.get(method);
+      MethodCoverageData methodData = fileData.firstLineToMethodData.get(firstLineInMethodBody);
 
       if (methodData != null) {
          methodData.markNodeAsReached(node);
