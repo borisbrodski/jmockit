@@ -374,13 +374,16 @@ final class CoverageModifier extends ClassWriter
       @Override
       public final void visitJumpInsn(int opcode, Label label)
       {
-         if (isConditionalJump(opcode)) {
-            methodData.markCurrentLineAsStartingNewBlock();
-            handleRegularInstruction();
+         if (startLabelsForVisitedLines.contains(label)) {
+            super.visitJumpInsn(opcode, label);
+            return;
          }
-         
+
+         boolean conditional = isConditionalJump(opcode);
+         int nodeIndex = methodData.handleJump(label, currentLine, conditional);
+         generateCallToRegisterNodeReached(nodeIndex);
+
          super.visitJumpInsn(opcode, label);
-         methodData.handleJump(label, nextLabelAfterConditionalJump);
       }
 
       @Override

@@ -75,6 +75,13 @@ public class Node implements Serializable
       BasicBlock(int startingLine) { super(startingLine); }
    }
 
+   static final class Fork extends Node
+   {
+      private static final long serialVersionUID = -8266367107063017773L;
+
+      Fork(int line) { super(line); }
+   }
+
    static final class Join extends Node
    {
       private static final long serialVersionUID = -1983522899831071765L;

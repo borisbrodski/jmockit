@@ -83,7 +83,8 @@ public class CoverageTest extends Assert
       methodData = fileData.firstLineToMethodData.get(firstLineOfMethodBody);
       assertNotNull("Method not found with first line " + firstLineOfMethodBody, methodData);
       assertEquals(
-         "No method with name \"" + methodName + "\" found", methodName, methodData.methodName);
+         "No method with name \"" + methodName + "\" found with first line at " +
+         firstLineOfMethodBody, methodName, methodData.methodName);
    }
 
    protected final void assertPaths(

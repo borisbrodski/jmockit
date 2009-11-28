@@ -63,7 +63,7 @@ public final class IfElseStatements
 
    // Must return the same value of x as it was called with. Some paths will fail that requirement.
    @SuppressWarnings({"AssignmentToMethodParameter"})
-   public int returnInput(int x, boolean a, boolean b, boolean c)
+   int returnInput(int x, boolean a, boolean b, boolean c)
    {
       if (a) {
          x++;
@@ -79,5 +79,64 @@ public final class IfElseStatements
       }
 
       return x;
+   }
+
+   int nestedIf(boolean a, boolean b)
+   {
+      int i = 1;
+
+      if (a) {
+         if (b) {
+            i = 2;
+         }
+      }
+
+      return i;
+   }
+
+   int ifElseWithNestedIf(boolean a, boolean b)
+   {
+      int i = 1;
+
+      if (a) {
+         if (b) {
+            i = 2;
+         }
+      }
+      else {
+         return 3;
+      }
+
+      return i;
+   }
+
+   int nestedIfElse(boolean a, boolean b)
+   {
+      int i = 1;
+
+      if (a) {
+         if (b) {
+            i = 2;
+         }
+         else {
+            i = 3;
+         }
+      }
+      else if (b) {
+         i = 4;
+      }
+
+      return i;
+   }
+
+   void infeasiblePaths(boolean a)
+   {
+      if (a) {
+         System.gc();
+      }
+
+      if (a) {
+         System.runFinalization();
+      }
    }
 }

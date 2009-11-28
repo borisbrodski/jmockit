@@ -85,9 +85,16 @@ public final class MethodCoverageData implements Serializable
          return -1;
       }
 
+      addNextBlockToActivePaths = false;
       assert !activePaths.isEmpty() : "No active paths for next block at line " + line;
 
-      Node.BasicBlock newNode = new Node.BasicBlock(line);
+      Node newNode = new Node.BasicBlock(line);
+
+      return addNewNodeToActivePaths(newNode);
+   }
+
+   private int addNewNodeToActivePaths(Node newNode)
+   {
       int newNodeIndex = allNodes.size();
       allNodes.add(newNode);
 
@@ -95,18 +102,24 @@ public final class MethodCoverageData implements Serializable
          path.addNode(newNode);
       }
 
-      addNextBlockToActivePaths = false;
       return newNodeIndex;
    }
 
-   public void handleJump(Label targetBlock, boolean conditional)
+   public int handleJump(Label targetBlock, int line, boolean conditional)
    {
-      if (conditional) {
-         List<Path> alternatePathsForTarget = findOrCreateListOfAlternatePaths(targetBlock);
-         createAlternatePathsForActivePaths(alternatePathsForTarget);
+      if (!conditional) {
+         assert !addNextBlockToActivePaths;
+         return -1;
       }
 
-      addNextBlockToActivePaths = conditional;
+      Node newNode = new Node.Fork(line);
+      int nodeIndex = addNewNodeToActivePaths(newNode);
+
+      List<Path> alternatePathsForTarget = findOrCreateListOfAlternatePaths(targetBlock);
+      createAlternatePathsForActivePaths(alternatePathsForTarget);
+
+      addNextBlockToActivePaths = true;
+      return nodeIndex;
    }
 
    private void createAlternatePathsForActivePaths(List<Path> alternatePaths)
@@ -164,7 +177,7 @@ public final class MethodCoverageData implements Serializable
          return -1;
       }
 
-      Node.Join newNode = new Node.Join(line);
+      Node newNode = new Node.Join(line);
       int newNodeIndex = allNodes.size();
       allNodes.add(newNode);
 

@@ -160,4 +160,61 @@ public final class IfElseStatementsTest extends CoverageTest
       assertPath(8, 1);
       assertPath(8, 1);
    }
+
+   @Test
+   public void nestedIf()
+   {
+      assertEquals(1, tested.nestedIf(false, false));
+      assertEquals(2, tested.nestedIf(true, true));
+
+      findMethodData(86, "nestedIf");
+      assertPaths(3, 2, 2);
+      assertPath(6, 1);
+      assertPath(4, 1);
+      assertPath(6, 0);
+   }
+
+   @Test
+   public void ifElseWithNestedIf()
+   {
+      assertEquals(1, tested.ifElseWithNestedIf(true, false));
+      assertEquals(2, tested.ifElseWithNestedIf(true, true));
+      assertEquals(3, tested.ifElseWithNestedIf(false, false));
+
+      findMethodData(99, "ifElseWithNestedIf");
+      assertPaths(3, 2, 3);
+      assertPath(6, 1);
+      assertPath(4, 1);
+      assertPath(6, 1);
+   }
+
+   @Test
+   public void nestedIfElse()
+   {
+      assertEquals(1, tested.nestedIfElse(false, false));
+      assertEquals(2, tested.nestedIfElse(true, true));
+      assertEquals(3, tested.nestedIfElse(true, false));
+      assertEquals(4, tested.nestedIfElse(false, true));
+
+      findMethodData(115, "nestedIfElse");
+      assertPaths(4, 4, 4);
+      assertPath(6, 1);
+      assertPath(6, 1);
+      assertPath(6, 1);
+      assertPath(6, 1);
+   }
+
+   @Test
+   public void infeasiblePaths()
+   {
+      tested.infeasiblePaths(true);
+      tested.infeasiblePaths(false);
+
+      findMethodData(134, "infeasiblePaths");
+      assertPaths(4, 2, 2);
+      assertPath(6, 1);
+      assertPath(6, 0);
+      assertPath(6, 0);
+      assertPath(6, 1);
+   }
 }
