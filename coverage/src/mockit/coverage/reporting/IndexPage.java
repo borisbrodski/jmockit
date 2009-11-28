@@ -31,30 +31,29 @@ import mockit.coverage.*;
 
 final class IndexPage extends ListWithFilesAndPercentages
 {
-   private Map<String, List<String>> packagesToFiles;
-   private Map<String, Integer> packagesToPackageCodePercentages;
-   private Map<String, Integer> packagesToPackagePathPercentages;
-   private PackageCoverageReport packageReport;
+   private final Map<String, List<String>> packageToFiles;
+   private final Map<String, Integer> packageToPackageCodePercentages;
+   private final Map<String, Integer> packageToPackagePathPercentages;
+   private final PackageCoverageReport packageReport;
 
-   IndexPage(File outputFile) throws IOException
+   IndexPage(
+      File outputFile,
+      Map<String, List<String>> packageToFiles, Map<String, FileCoverageData> fileToFileData)
+      throws IOException
    {
-      super(new OutputFile(outputFile), "      ");
+      super(new OutputFile(outputFile), "    ");
+      this.packageToFiles = packageToFiles;
+      packageToPackageCodePercentages = new HashMap<String, Integer>();
+      packageToPackagePathPercentages = new HashMap<String, Integer>();
+      packageReport = new PackageCoverageReport(output, fileToFileData);
    }
 
-   void generate(
-      List<File> sourceDirs,
-      Map<String, FileCoverageData> filesToFileData, Map<String, List<String>> packagesToFiles)
+   void generate(List<File> sourceDirs)
    {
-      this.packagesToFiles = packagesToFiles;
-
-      packageReport = new PackageCoverageReport(output, filesToFileData);
-      packagesToPackageCodePercentages = new HashMap<String, Integer>();
-      packagesToPackagePathPercentages = new HashMap<String, Integer>();
-
       try {
          writeHeader(sourceDirs);
 
-         List<String> packages = new ArrayList<String>(packagesToFiles.keySet());
+         List<String> packages = new ArrayList<String>(packageToFiles.keySet());
          writeMetricForEachFile(packages);
 
          writeLineWithCoverageTotals();
@@ -78,7 +77,7 @@ final class IndexPage extends ListWithFilesAndPercentages
 
       output.println("</div></caption>");
       output.write("    <tr><th>Packages (");
-      output.print(packagesToFiles.keySet().size());
+      output.print(packageToFiles.keySet().size());
       output.write(")</th><th>Files (");
 
       int totalFileCount = computeTotalNumberOfSourceFiles();
@@ -91,7 +90,7 @@ final class IndexPage extends ListWithFilesAndPercentages
    {
       int totalFileCount = 0;
 
-      for (List<String> files : packagesToFiles.values()) {
+      for (List<String> files : packageToFiles.values()) {
          totalFileCount += files.size();
       }
 
@@ -138,7 +137,7 @@ final class IndexPage extends ListWithFilesAndPercentages
    @Override
    protected int getCodeCoveragePercentageForFile(String packageName)
    {
-      return packagesToPackageCodePercentages.get(packageName);
+      return packageToPackageCodePercentages.get(packageName);
    }
 
    @Override
@@ -156,7 +155,7 @@ final class IndexPage extends ListWithFilesAndPercentages
    @Override
    protected int getPathCoveragePercentageForFile(String packageName)
    {
-      return packagesToPackagePathPercentages.get(packageName);
+      return packageToPackagePathPercentages.get(packageName);
    }
 
    @Override
@@ -175,28 +174,37 @@ final class IndexPage extends ListWithFilesAndPercentages
    protected void writeInternalTableForChildren(String packageName)
    {
       printIndent();
-      output.println("<td>");
+      output.println("  <td>");
       printIndentOneLevelDeeper();
-      output.println("<table width='100%' cellpadding='1' cellspacing='1'>");
+      output.println("  <table width='100%' cellpadding='1' cellspacing='1'>");
 
-      List<String> packageFiles = packagesToFiles.get(packageName);
+      List<String> packageFiles = packageToFiles.get(packageName);
       packageReport.writeMetricForEachFile(packageFiles);
 
-      int packageCodePercentage =
-         CoveragePercentage.calculate(packageReport.coveredSegments, packageReport.totalSegments);
-      packagesToPackageCodePercentages.put(packageName, packageCodePercentage);
-      totalSegments += packageReport.totalSegments;
-      coveredSegments += packageReport.coveredSegments;
-
-      int packagePathPercentage =
-         CoveragePercentage.calculate(packageReport.coveredPaths, packageReport.totalPaths);
-      packagesToPackagePathPercentages.put(packageName, packagePathPercentage);
-      totalPaths += packageReport.totalPaths;
-      coveredPaths += packageReport.coveredPaths;
+      recordCodeCoverageInformationForPackage(packageName);
+      recordPathCoverageInformationForPackage(packageName);
 
       printIndentOneLevelDeeper();
-      output.println("</table>");
+      output.println("  </table>");
       printIndent();
-      output.println("</td>");
+      output.println("  </td>");
+   }
+
+   private void recordCodeCoverageInformationForPackage(String packageName)
+   {
+      int packageCodePercentage =
+         CoveragePercentage.calculate(packageReport.coveredSegments, packageReport.totalSegments);
+      packageToPackageCodePercentages.put(packageName, packageCodePercentage);
+      totalSegments += packageReport.totalSegments;
+      coveredSegments += packageReport.coveredSegments;
+   }
+
+   private void recordPathCoverageInformationForPackage(String packageName)
+   {
+      int packagePathPercentage =
+         CoveragePercentage.calculate(packageReport.coveredPaths, packageReport.totalPaths);
+      packageToPackagePathPercentages.put(packageName, packagePathPercentage);
+      totalPaths += packageReport.totalPaths;
+      coveredPaths += packageReport.coveredPaths;
    }
 }

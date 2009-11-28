@@ -34,8 +34,8 @@ class CoverageReport
 {
    private final String outputDir;
    private final List<File> sourceDirs;
-   private final Map<String, FileCoverageData> filesToFileData;
-   private final Map<String, List<String>> packagesToFiles;
+   private final Map<String, FileCoverageData> fileToFileData;
+   private final Map<String, List<String>> packageToFiles;
    private final boolean withCallPoints;
 
    protected CoverageReport(
@@ -43,14 +43,14 @@ class CoverageReport
    {
       this.outputDir = outputDir.length() > 0 ? outputDir : "coverage-report";
       this.sourceDirs = new SourceFiles().buildListOfSourceDirectories(sourceDirs);
-      filesToFileData = coverageData.getFileToFileDataMap();
-      packagesToFiles = new HashMap<String, List<String>>();
+      fileToFileData = coverageData.getFileToFileDataMap();
+      packageToFiles = new HashMap<String, List<String>>();
       this.withCallPoints = withCallPoints;
    }
 
    public final void generate() throws IOException
    {
-      if (filesToFileData.isEmpty()) {
+      if (fileToFileData.isEmpty()) {
          return;
       }
 
@@ -70,7 +70,7 @@ class CoverageReport
       }
 
       generateFileCoverageReportsWhileBuildingPackageLists();
-      new IndexPage(outputFile).generate(sourceDirs, filesToFileData, packagesToFiles);
+      new IndexPage(outputFile, packageToFiles, fileToFileData).generate(sourceDirs);
 
       OutputFile.copySharedReferencedFiles(outputDir);
 
@@ -90,7 +90,7 @@ class CoverageReport
 
    private void generateFileCoverageReportsWhileBuildingPackageLists() throws IOException
    {
-      Set<Entry<String, FileCoverageData>> files = filesToFileData.entrySet();
+      Set<Entry<String, FileCoverageData>> files = fileToFileData.entrySet();
 
       for (Entry<String, FileCoverageData> fileAndFileData : files) {
          String sourceFile = fileAndFileData.getKey();
@@ -112,11 +112,11 @@ class CoverageReport
    {
       int p = file.lastIndexOf('/');
       String filePackage = p < 0 ? "" : file.substring(0, p);
-      List<String> filesInPackage = packagesToFiles.get(filePackage);
+      List<String> filesInPackage = packageToFiles.get(filePackage);
 
       if (filesInPackage == null) {
          filesInPackage = new ArrayList<String>();
-         packagesToFiles.put(filePackage, filesInPackage);
+         packageToFiles.put(filePackage, filesInPackage);
       }
 
       filesInPackage.add(file);
