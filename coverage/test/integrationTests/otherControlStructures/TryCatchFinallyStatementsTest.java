@@ -22,39 +22,25 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package integrationTests;
+package integrationTests.otherControlStructures;
 
 import org.junit.*;
 
-public final class AbstractClassTest extends CoverageTest
-{
-   AbstractClassWithNoExecutableLines tested;
+import integrationTests.*;
 
-   @Before
-   public void setUp()
+public final class TryCatchFinallyStatementsTest extends CoverageTest
+{
+   final TryCatchFinallyStatements tested = new TryCatchFinallyStatements();
+
+   @Test
+   public void tryCatch()
    {
-      tested = new AbstractClassWithNoExecutableLines()
-      {
-         @Override void doSomething(String s, boolean b) {}
-         @Override int returnValue() { return 0; }
-      };
+      tested.tryCatch();
    }
 
    @Test
-   public void useAbstractClass()
+   public void tryCatchWhichThrowsAndCatchesException()
    {
-      tested.doSomething("test", true);
-      tested.returnValue();
-
-      assertEquals(1, fileData.lineToLineData.size());
-      assertLines(3, 3, 1);
-      assertEquals(100, fileData.getCodeCoveragePercentage());
-
-      assertEquals(1, fileData.firstLineToMethodData.size());
-      findMethodData(3, AbstractClassWithNoExecutableLines.class.getSimpleName());
-      assertMethodLines(3, 3);
-      assertPaths(1, 1, 1);
-      assertPath(2, 1);
-      assertEquals(100, fileData.getPathCoveragePercentage());
+      tested.tryCatchWhichThrowsAndCatchesException();
    }
 }

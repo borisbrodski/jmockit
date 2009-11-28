@@ -22,39 +22,49 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package integrationTests;
+package integrationTests.loops;
 
 import org.junit.*;
 
-public final class AbstractClassTest extends CoverageTest
-{
-   AbstractClassWithNoExecutableLines tested;
+import integrationTests.*;
 
-   @Before
-   public void setUp()
+public final class WhileStatementsTest extends CoverageTest
+{
+   WhileStatements tested = new WhileStatements();
+
+   @Test
+   public void whileBlockInSeparateLines()
    {
-      tested = new AbstractClassWithNoExecutableLines()
-      {
-         @Override void doSomething(String s, boolean b) {}
-         @Override int returnValue() { return 0; }
-      };
+      tested.whileBlockInSeparateLines();
+
+      assertLines(7, 12, 4);
+      assertLine(7, 1, 1, 1);
+      assertLine(9, 1, 1, 6);
+      assertLine(10, 1, 1, 5);
+      assertLine(12, 1, 1, 1);
+
+      findMethodData(7, "whileBlockInSeparateLines");
+      assertMethodLines(7, 12);
+      assertPaths(2, 1, 1);
+      assertPath(3, 1);
+      assertPath(3, 0);
    }
 
    @Test
-   public void useAbstractClass()
+   public void whileBlockInSingleLine()
    {
-      tested.doSomething("test", true);
-      tested.returnValue();
+      tested.whileBlockInSingleLine(0);
+      tested.whileBlockInSingleLine(1);
+      tested.whileBlockInSingleLine(2);
 
-      assertEquals(1, fileData.lineToLineData.size());
-      assertLines(3, 3, 1);
-      assertEquals(100, fileData.getCodeCoveragePercentage());
+      assertLines(15, 16, 2);
+//      assertLine(15, 2, 2, 6); TODO: fix
+      assertLine(16, 1, 1, 3);
 
-      assertEquals(1, fileData.firstLineToMethodData.size());
-      findMethodData(3, AbstractClassWithNoExecutableLines.class.getSimpleName());
-      assertMethodLines(3, 3);
-      assertPaths(1, 1, 1);
-      assertPath(2, 1);
-      assertEquals(100, fileData.getPathCoveragePercentage());
+      findMethodData(15, "whileBlockInSingleLine");
+      assertMethodLines(15, 16);
+      assertPaths(2, 2, 3);
+      assertPath(3, 2);
+      assertPath(3, 1);
    }
 }

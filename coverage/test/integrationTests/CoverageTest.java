@@ -53,8 +53,8 @@ public class CoverageTest extends Assert
    protected final void assertLines(int startingLine, int endingLine, int expectedLinesExecuted)
    {
       SortedMap<Integer, LineCoverageData> lineToLineData = fileData.lineToLineData;
-      assertTrue("starting line not found", lineToLineData.containsKey(startingLine));
-      assertTrue("ending line not found", lineToLineData.containsKey(endingLine));
+      assertTrue("Starting line not found", lineToLineData.containsKey(startingLine));
+      assertTrue("Ending line not found", lineToLineData.containsKey(endingLine));
 
       int linesExecuted = 0;
 
@@ -66,37 +66,33 @@ public class CoverageTest extends Assert
          }
       }
 
-      assertEquals("unexpected number of lines executed:", expectedLinesExecuted, linesExecuted);
+      assertEquals("Unexpected number of lines executed:", expectedLinesExecuted, linesExecuted);
    }
 
    protected final void assertLine(
       int line, int expectedSegments, int expectedCoveredSegments, int expectedExecutionCount)
    {
       LineCoverageData lineData = fileData.lineToLineData.get(line);
-      assertEquals(expectedSegments, lineData.getNumberOfSegments());
-      assertEquals(expectedCoveredSegments, lineData.getNumberOfCoveredSegments());
-      assertEquals(expectedExecutionCount, lineData.getExecutionCount());
+      assertEquals("Segments:", expectedSegments, lineData.getNumberOfSegments());
+      assertEquals("Covered segments:", expectedCoveredSegments, lineData.getNumberOfCoveredSegments());
+      assertEquals("Execution count:", expectedExecutionCount, lineData.getExecutionCount());
    }
 
-   protected final void findMethodData(String methodName)
+   protected final void findMethodData(int firstLineOfMethodBody, String methodName)
    {
-      for (MethodCoverageData coverageData : fileData.firstLineToMethodData.values()) {
-         if (methodName.equals(coverageData.methodName)) {
-            methodData = coverageData;
-            return;
-         }
-      }
-
-      fail("No method with name \"" + methodName + "\" found");
+      methodData = fileData.firstLineToMethodData.get(firstLineOfMethodBody);
+      assertNotNull("Method not found with first line " + firstLineOfMethodBody, methodData);
+      assertEquals(
+         "No method with name \"" + methodName + "\" found", methodName, methodData.methodName);
    }
 
    protected final void assertPaths(
       int expectedPaths, int expectedCoveredPaths, int expectedExecutionCount)
    {
-      assertEquals("number of paths:", expectedPaths, methodData.paths.size());
-      assertEquals("number of covered paths:", expectedCoveredPaths, methodData.getCoveredPaths());
+      assertEquals("Number of paths:", expectedPaths, methodData.paths.size());
+      assertEquals("Number of covered paths:", expectedCoveredPaths, methodData.getCoveredPaths());
       assertEquals(
-         "execution count for all paths:", expectedExecutionCount, methodData.getExecutionCount());
+         "Execution count for all paths:", expectedExecutionCount, methodData.getExecutionCount());
    }
 
    protected final void assertMethodLines(int startingLine, int endingLine)
@@ -120,10 +116,11 @@ public class CoverageTest extends Assert
    @After
    public final void verifyThatAllPathsWereAccountedFor()
    {
-      if (methodData != null && currentPathIndex >= 0) {
+      int nextPathIndex = currentPathIndex + 1;
+
+      if (methodData != null && nextPathIndex > 0) {
          assertEquals(
-            "Path " + currentPathIndex + " was not verified;",
-            currentPathIndex + 1, methodData.paths.size());
+            "Path " + nextPathIndex + " was not verified;", nextPathIndex, methodData.paths.size());
       }
    }
 }

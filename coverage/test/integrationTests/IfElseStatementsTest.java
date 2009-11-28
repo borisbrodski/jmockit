@@ -47,7 +47,7 @@ public final class IfElseStatementsTest extends CoverageTest
       assertLine(9, 1, 1, 1);
       assertLine(11, 1, 1, 2);
 
-      findMethodData("simpleIf");
+      findMethodData(8, "simpleIf");
       assertPaths(2, 2, 2);
       assertMethodLines(8, 11);
       assertPath(3, 1);
@@ -60,7 +60,7 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.ifAndElse(true);
       tested.ifAndElse(false);
 
-      findMethodData("ifAndElse");
+      findMethodData(15, "ifAndElse");
       assertPaths(2, 2, 2);
       assertMethodLines(15, 21);
       assertPath(3, 1);
@@ -73,7 +73,7 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.singleLineIf(true);
       tested.singleLineIf(false);
 
-      findMethodData("singleLineIf");
+      findMethodData(25, "singleLineIf");
       assertPaths(2, 2, 2);
       assertMethodLines(25, 26);
       assertPath(3, 1);
@@ -86,7 +86,7 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.singleLineIfAndElse(true);
       tested.singleLineIfAndElse(false);
 
-      findMethodData("singleLineIfAndElse");
+      findMethodData(30, "singleLineIfAndElse");
       assertPaths(2, 2, 2);
       assertMethodLines(30, 31);
       assertPath(3, 1);
@@ -99,7 +99,7 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.methodWithFourDifferentPathsAndSimpleLines(true, 0);
       tested.methodWithFourDifferentPathsAndSimpleLines(false, 1);
 
-      findMethodData("methodWithFourDifferentPathsAndSimpleLines");
+      findMethodData(35, "methodWithFourDifferentPathsAndSimpleLines");
       assertPaths(4, 2, 2);
       assertMethodLines(35, 45);
       assertPath(4, 0); // should there be 5 nodes?
@@ -114,7 +114,7 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.methodWithFourDifferentPathsAndSegmentedLines(false, -1);
       tested.methodWithFourDifferentPathsAndSegmentedLines(true, 1);
 
-      findMethodData("methodWithFourDifferentPathsAndSegmentedLines");
+      findMethodData(49, "methodWithFourDifferentPathsAndSegmentedLines");
       assertPaths(4, 2, 2);
       assertMethodLines(49, 53);
       assertPath(4, 1);
@@ -128,7 +128,7 @@ public final class IfElseStatementsTest extends CoverageTest
    {
       tested.singleLineMethodWithMultiplePaths(true, false);
 
-      findMethodData("singleLineMethodWithMultiplePaths");
+      findMethodData(58, "singleLineMethodWithMultiplePaths");
       assertPaths(3, 1, 1);
       assertMethodLines(58, 61);
       assertPath(4, 0);
@@ -148,7 +148,7 @@ public final class IfElseStatementsTest extends CoverageTest
       assertEquals(7, tested.returnInput(7, true, true, true));
       assertEquals(9, tested.returnInput(8, true, false, true));
 
-      findMethodData("returnInput");
+      findMethodData(68, "returnInput");
       assertPaths(8, 8, 8);
       assertMethodLines(68, 81);
       assertPath(5, 1);
