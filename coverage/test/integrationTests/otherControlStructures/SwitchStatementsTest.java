@@ -22,49 +22,50 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package integrationTests.loops;
+package integrationTests.otherControlStructures;
 
 import org.junit.*;
 
 import integrationTests.*;
 
-public final class WhileStatementsTest extends CoverageTest
+public final class SwitchStatementsTest extends CoverageTest
 {
-   WhileStatements tested = new WhileStatements();
+   final SwitchStatements tested = new SwitchStatements();
 
    @Test
-   public void whileBlockInSeparateLines()
+   public void switchStatementWithSparseCases()
    {
-      tested.whileBlockInSeparateLines();
-
-      assertLines(7, 12, 4);
-      assertLine(7, 1, 1, 1);
-      assertLine(9, 1, 1, 6);
-      assertLine(10, 1, 1, 5);
-      assertLine(12, 1, 1, 1);
-
-      findMethodData(7, "whileBlockInSeparateLines");
-      assertMethodLines(7, 12);
-      assertPaths(2, 1, 1);
-      assertPath(4, 1);
-      assertPath(4, 0);
+      tested.switchStatementWithSparseCases('A');
+      tested.switchStatementWithSparseCases('\0');
    }
 
    @Test
-   public void whileBlockInSingleLine()
+   public void switchStatementWithSparseCasesOnDefaultCase()
    {
-      tested.whileBlockInSingleLine(0);
-      tested.whileBlockInSingleLine(1);
-      tested.whileBlockInSingleLine(2);
+      try {
+         tested.switchStatementWithSparseCases('x');
+      }
+      catch (IllegalArgumentException e) {
+         // OK
+      }
+   }
 
-      assertLines(15, 16, 2);
-//      assertLine(15, 2, 2, 6); TODO: fix
-      assertLine(16, 1, 1, 3);
+   @Test
+   public void switchStatementWithCompactCases()
+   {
+      tested.switchStatementWithCompactCases(2);
+      tested.switchStatementWithCompactCases(4);
+   }
 
-      findMethodData(15, "whileBlockInSingleLine");
-      assertMethodLines(15, 16);
-//      assertPaths(2, 2, 3);
-//      assertPath(3, 2);
-//      assertPath(3, 1);
+   @Test
+   public void switchStatementWithCompactCasesOnDefaultCase()
+   {
+      try {
+         tested.switchStatementWithCompactCases(3);
+         tested.switchStatementWithCompactCases(5);
+      }
+      catch (IllegalArgumentException e) {
+         // OK
+      }
    }
 }

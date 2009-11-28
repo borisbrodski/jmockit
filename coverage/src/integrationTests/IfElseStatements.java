@@ -6,7 +6,7 @@ public final class IfElseStatements
    void simpleIf(boolean b)
    {
       if (b) {
-         System.gc();
+         System.gc(); System.runFinalization();
       }
    }
 
@@ -61,7 +61,7 @@ public final class IfElseStatements
          return false;
    }
 
-   // Must return the same value of x as it called with. Some paths will fail that requirement.
+   // Must return the same value of x as it was called with. Some paths will fail that requirement.
    @SuppressWarnings({"AssignmentToMethodParameter"})
    public int returnInput(int x, boolean a, boolean b, boolean c)
    {

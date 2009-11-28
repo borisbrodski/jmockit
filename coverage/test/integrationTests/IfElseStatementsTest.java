@@ -50,8 +50,8 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(8, "simpleIf");
       assertPaths(2, 2, 2);
       assertMethodLines(8, 11);
-      assertPath(3, 1);
-      assertPath(3, 1);
+      assertPath(4, 1);
+      assertPath(4, 1);
    }
 
    @Test
@@ -63,8 +63,8 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(15, "ifAndElse");
       assertPaths(2, 2, 2);
       assertMethodLines(15, 21);
-      assertPath(3, 1);
-      assertPath(3, 1);
+      assertPath(4, 1);
+      assertPath(4, 1);
    }
 
    @Test
@@ -76,8 +76,8 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(25, "singleLineIf");
       assertPaths(2, 2, 2);
       assertMethodLines(25, 26);
-      assertPath(3, 1);
-      assertPath(3, 1);
+      assertPath(4, 1);
+      assertPath(4, 1);
    }
 
    @Test
@@ -89,8 +89,8 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(30, "singleLineIfAndElse");
       assertPaths(2, 2, 2);
       assertMethodLines(30, 31);
-      assertPath(3, 1);
-      assertPath(3, 1);
+      assertPath(4, 1);
+      assertPath(4, 1);
    }
 
    @Test
@@ -102,10 +102,10 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(35, "methodWithFourDifferentPathsAndSimpleLines");
       assertPaths(4, 2, 2);
       assertMethodLines(35, 45);
-      assertPath(4, 0); // should there be 5 nodes?
-      assertPath(4, 1);
-      assertPath(4, 1);
-      assertPath(4, 0);
+      assertPath(6, 0);
+      assertPath(6, 1);
+      assertPath(6, 1);
+      assertPath(6, 0);
    }
 
    @Test
@@ -117,10 +117,10 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(49, "methodWithFourDifferentPathsAndSegmentedLines");
       assertPaths(4, 2, 2);
       assertMethodLines(49, 53);
-      assertPath(4, 1);
-      assertPath(4, 0);
-      assertPath(4, 0);
-      assertPath(4, 1);
+      assertPath(6, 1);
+      assertPath(6, 0);
+      assertPath(6, 0);
+      assertPath(6, 1);
    }
 
    @Test
@@ -131,9 +131,9 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(58, "singleLineMethodWithMultiplePaths");
       assertPaths(3, 1, 1);
       assertMethodLines(58, 61);
-      assertPath(4, 0);
-      assertPath(4, 1);
-      assertPath(4, 0);
+      assertPath(6, 0);
+      assertPath(5, 1);
+      assertPath(6, 0);
    }
 
    @Test
@@ -151,13 +151,13 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(68, "returnInput");
       assertPaths(8, 8, 8);
       assertMethodLines(68, 81);
-      assertPath(5, 1);
-      assertPath(5, 1);
-      assertPath(5, 1);
-      assertPath(5, 1);
-      assertPath(5, 1);
-      assertPath(5, 1);
-      assertPath(5, 1);
-      assertPath(5, 1);
+      assertPath(8, 1);
+      assertPath(8, 1);
+      assertPath(8, 1);
+      assertPath(8, 1);
+      assertPath(8, 1);
+      assertPath(8, 1);
+      assertPath(8, 1);
+      assertPath(8, 1);
    }
 }

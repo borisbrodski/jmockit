@@ -74,6 +74,11 @@ public final class MethodCoverageData implements Serializable
       activePaths.add(path);
    }
 
+   public void markCurrentLineAsStartingNewBlock()
+   {
+      addNextBlockToActivePaths = true;
+   }
+
    public int handleRegularInstruction(int line)
    {
       if (!addNextBlockToActivePaths) {
@@ -97,17 +102,21 @@ public final class MethodCoverageData implements Serializable
    public void handleJump(Label targetBlock, boolean conditional)
    {
       if (conditional) {
-         List<Path> alternatePathsForTarget = getAlternatePathsForTarget(targetBlock);
-
-         for (Path path : activePaths) {
-            addNewAlternatePath(alternatePathsForTarget, path);
-         }
+         List<Path> alternatePathsForTarget = findOrCreateListOfAlternatePaths(targetBlock);
+         createAlternatePathsForActivePaths(alternatePathsForTarget);
       }
 
       addNextBlockToActivePaths = conditional;
    }
 
-   private List<Path> getAlternatePathsForTarget(Label targetBlock)
+   private void createAlternatePathsForActivePaths(List<Path> alternatePaths)
+   {
+      for (Path path : activePaths) {
+         addNewAlternatePath(alternatePaths, path);
+      }
+   }
+
+   private List<Path> findOrCreateListOfAlternatePaths(Label targetBlock)
    {
       List<Path> alternatePaths = jumpTargetToAlternatePaths.get(targetBlock);
 
@@ -119,13 +128,31 @@ public final class MethodCoverageData implements Serializable
       return alternatePaths;
    }
 
-   private void addNewAlternatePath(List<Path> alternatePathsForThisTarget, Path regularPath)
+   private void addNewAlternatePath(List<Path> alternatePaths, Path sharedSubPath)
    {
-      if (paths.size() < 20) {
-         Path alternatePath = new Path(regularPath);
+      if (paths.size() < 40) {
+         Path alternatePath = new Path(sharedSubPath);
          paths.add(alternatePath);
-         alternatePathsForThisTarget.add(alternatePath);
+         alternatePaths.add(alternatePath);
       }
+   }
+
+   public void handleForwardJumpsToNewTargets(Label defaultBlock, Label[] caseBlocks)
+   {
+      for (Label targetBlock : caseBlocks) {
+         if (targetBlock != defaultBlock) {
+            handleForwardJumpToNewTarget(targetBlock);
+         }
+      }
+
+      handleForwardJumpToNewTarget(defaultBlock);
+   }
+
+   private void handleForwardJumpToNewTarget(Label targetBlock)
+   {
+      List<Path> alternatePathsForTarget = new LinkedList<Path>();
+      jumpTargetToAlternatePaths.put(targetBlock, alternatePathsForTarget);
+      createAlternatePathsForActivePaths(alternatePathsForTarget);
    }
 
    public int handleJumpTarget(Label basicBlock, int line)
