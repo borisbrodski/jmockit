@@ -52,7 +52,7 @@ public final class IfElseStatements
       else { System.runFinalization(); }
    }
 
-   boolean singleLineMethodWithMultiplePaths(boolean a, boolean b)
+   boolean ifElseWithComplexBooleanCondition(boolean a, boolean b)
    {
       //noinspection RedundantIfStatement
       if (a || b)

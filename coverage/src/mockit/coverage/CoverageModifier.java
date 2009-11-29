@@ -125,7 +125,7 @@ final class CoverageModifier extends ClassWriter
          lineData = fileData.addLine(line);
          currentLine = line;
 
-         startLabelsForVisitedLines.add(start);
+//         startLabelsForVisitedLines.add(start);
          jumpTargetsForCurrentLine.clear();
 
          generateCallToRegisterLineExecution();
@@ -216,6 +216,7 @@ final class CoverageModifier extends ClassWriter
       @Override
       public void visitLabel(Label label)
       {
+         startLabelsForVisitedLines.add(label);
          mw.visitLabel(label);
 
          if (nextLabelAfterConditionalJump) {
@@ -390,6 +391,7 @@ final class CoverageModifier extends ClassWriter
       public final void visitInsn(int opcode)
       {
          if (opcode >= IRETURN && opcode <= RETURN || opcode == ATHROW) {
+            handleRegularInstruction();
             int newNodeIndex = methodData.handleExit(currentLine);
             generateCallToRegisterNodeReached(newNodeIndex);
          }
@@ -467,9 +469,9 @@ final class CoverageModifier extends ClassWriter
       {
          super.visitLookupSwitchInsn(dflt, keys, labels);
 
-         methodData.markCurrentLineAsStartingNewBlock();
+//         methodData.markCurrentLineAsStartingNewBlock();
          handleRegularInstruction();
-         methodData.handleForwardJumpsToNewTargets(dflt, labels);
+//         methodData.handleForwardJumpsToNewTargets(dflt, labels);
       }
 
       @Override
@@ -477,9 +479,9 @@ final class CoverageModifier extends ClassWriter
       {
          super.visitTableSwitchInsn(min, max, dflt, labels);
 
-         methodData.markCurrentLineAsStartingNewBlock();
+//         methodData.markCurrentLineAsStartingNewBlock();
          handleRegularInstruction();
-         methodData.handleForwardJumpsToNewTargets(dflt, labels);
+//         methodData.handleForwardJumpsToNewTargets(dflt, labels);
       }
 
       @Override

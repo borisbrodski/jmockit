@@ -24,6 +24,7 @@
  */
 package mockit.coverage.paths;
 
+import java.util.*;
 import java.io.*;
 
 public class Node implements Serializable
@@ -57,34 +58,43 @@ public class Node implements Serializable
    static final class Entry extends Node
    {
       private static final long serialVersionUID = -3065417917872259568L;
+      Fork nextNode;
 
       Entry(int entryLine) { super(entryLine); }
    }
 
-   static final class Exit extends Node
+   interface Successor extends Serializable {}
+
+   static final class Exit extends Node implements Successor
    {
       private static final long serialVersionUID = -4801498566218642509L;
+      final List<Path> paths = new LinkedList<Path>();
 
       Exit(int exitLine) { super(exitLine); }
    }
 
-   static final class BasicBlock extends Node
+   static final class BasicBlock extends Node implements Successor
    {
       private static final long serialVersionUID = 2637678937923952603L;
+      Successor nextConsecutiveNode;
+      Join nextNodeAfterGoto;
 
       BasicBlock(int startingLine) { super(startingLine); }
    }
 
-   static final class Fork extends Node
+   static final class Fork extends Node implements Successor
    {
       private static final long serialVersionUID = -8266367107063017773L;
+      BasicBlock nextConsecutiveNode;
+      final List<Join> nextNodesAfterJump = new LinkedList<Join>();
 
       Fork(int line) { super(line); }
    }
 
-   static final class Join extends Node
+   static final class Join extends Node implements Successor
    {
       private static final long serialVersionUID = -1983522899831071765L;
+      Successor nextNode;
 
       Join(int joiningLine) { super(joiningLine); }
    }

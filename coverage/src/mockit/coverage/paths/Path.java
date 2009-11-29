@@ -32,7 +32,7 @@ public final class Path implements Serializable
 {
    private static final long serialVersionUID = 8895491272907955543L;
 
-   private final List<Node> nodes = new ArrayList<Node>(4);
+   final List<Node> nodes = new ArrayList<Node>(4);
    private final AtomicInteger executionCount = new AtomicInteger();
 
    Path(Node.Entry entryNode)
@@ -56,24 +56,20 @@ public final class Path implements Serializable
       addNode(newNode);
    }
 
-   boolean countExecutionIfAllNodesWereReached()
+   boolean countExecutionIfAllNodesWereReached(int currentNodesReached)
    {
+      if (currentNodesReached != nodes.size()) {
+         return false;
+      }
+
       for (Node node : nodes) {
          if (!node.wasReached()) {
             return false;
          }
       }
 
-      clearNodes();
       executionCount.getAndIncrement();
       return true;
-   }
-
-   private void clearNodes()
-   {
-      for (Node node : nodes) {
-         node.setReached(null);
-      }
    }
 
    public List<Node> getNodes()

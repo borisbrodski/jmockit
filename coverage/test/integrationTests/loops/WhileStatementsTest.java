@@ -46,24 +46,24 @@ public final class WhileStatementsTest extends CoverageTest
       findMethodData(7, "whileBlockInSeparateLines");
       assertMethodLines(7, 12);
       assertPaths(2, 1, 1);
-      assertPath(4, 1);
-      assertPath(4, 0);
+      assertPath(6, 1);
+      assertPath(5, 0);
    }
 
    @Test
    public void whileBlockInSingleLine()
    {
-      tested.whileBlockInSingleLine(0);
+//      tested.whileBlockInSingleLine(0);
       tested.whileBlockInSingleLine(1);
-      tested.whileBlockInSingleLine(2);
+//      tested.whileBlockInSingleLine(2);
 
       assertLines(15, 16, 2);
-//      assertLine(15, 2, 2, 6); TODO: fix
+//      assertLine(15, 2, 2, 6); // TODO: fix
       assertLine(16, 1, 1, 3);
 
       findMethodData(15, "whileBlockInSingleLine");
       assertMethodLines(15, 16);
-//      assertPaths(2, 2, 3);
+      assertPaths(2, 2, 3);
 //      assertPath(3, 2);
 //      assertPath(3, 1);
    }
