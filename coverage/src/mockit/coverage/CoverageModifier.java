@@ -102,7 +102,7 @@ final class CoverageModifier extends ClassWriter
       final MethodWriter mw;
       int currentLine;
       LineCoverageData lineData;
-      final List<Label> startLabelsForVisitedLines = new ArrayList<Label>();
+      final List<Label> visitedLabels = new ArrayList<Label>();
       final List<Label> jumpTargetsForCurrentLine = new ArrayList<Label>();
       final Map<Integer, Boolean> pendingBranches = new HashMap<Integer, Boolean>();
       boolean assertFoundInCurrentLine;
@@ -125,7 +125,6 @@ final class CoverageModifier extends ClassWriter
          lineData = fileData.addLine(line);
          currentLine = line;
 
-//         startLabelsForVisitedLines.add(start);
          jumpTargetsForCurrentLine.clear();
 
          generateCallToRegisterLineExecution();
@@ -154,7 +153,7 @@ final class CoverageModifier extends ClassWriter
       @Override
       public void visitJumpInsn(int opcode, Label label)
       {
-         if (startLabelsForVisitedLines.contains(label)) {
+         if (visitedLabels.contains(label)) {
             assertFoundInCurrentLine = false;
             mw.visitJumpInsn(opcode, label);
             return;
@@ -216,7 +215,7 @@ final class CoverageModifier extends ClassWriter
       @Override
       public void visitLabel(Label label)
       {
-         startLabelsForVisitedLines.add(label);
+         visitedLabels.add(label);
          mw.visitLabel(label);
 
          if (nextLabelAfterConditionalJump) {
@@ -335,11 +334,13 @@ final class CoverageModifier extends ClassWriter
    private class MethodOrConstructorModifier extends BaseMethodModifier
    {
       final MethodCoverageData methodData;
+      final NodeBuilder nodeBuilder;
 
       MethodOrConstructorModifier(MethodVisitor mv, String methodOrConstructorName)
       {
          super(mv);
          methodData = new MethodCoverageData(methodOrConstructorName);
+         nodeBuilder = new NodeBuilder();
       }
 
       @Override
@@ -347,7 +348,7 @@ final class CoverageModifier extends ClassWriter
       {
          super.visitLineNumber(line, start);
 
-         int newNodeIndex = methodData.handlePotentialNewBlock(line);
+         int newNodeIndex = nodeBuilder.handlePotentialNewBlock(line);
          generateCallToRegisterNodeReached(newNodeIndex);
       }
 
@@ -355,7 +356,7 @@ final class CoverageModifier extends ClassWriter
       {
          if (nodeIndex >= 0) {
             mw.visitLdcInsn(sourceFileName);
-            mw.visitLdcInsn(methodData.getFirstLineOfImplementationBody());
+            mw.visitLdcInsn(nodeBuilder.firstLine);
             mw.visitIntInsn(SIPUSH, nodeIndex);
             mw.visitMethodInsn(
                INVOKESTATIC, DATA_RECORDING_CLASS, "nodeReached", "(Ljava/lang/String;II)V");
@@ -368,20 +369,20 @@ final class CoverageModifier extends ClassWriter
          super.visitLabel(label);
 
          int line = label.line;
-         int newNodeIndex = methodData.handleJumpTarget(label, line > 0 ? line : currentLine);
+         int newNodeIndex = nodeBuilder.handleJumpTarget(label, line > 0 ? line : currentLine);
          generateCallToRegisterNodeReached(newNodeIndex);
       }
 
       @Override
       public final void visitJumpInsn(int opcode, Label label)
       {
-         if (startLabelsForVisitedLines.contains(label)) {
+         if (visitedLabels.contains(label)) {
             super.visitJumpInsn(opcode, label);
             return;
          }
 
          boolean conditional = isConditionalJump(opcode);
-         int nodeIndex = methodData.handleJump(label, currentLine, conditional);
+         int nodeIndex = nodeBuilder.handleJump(label, currentLine, conditional);
          generateCallToRegisterNodeReached(nodeIndex);
 
          super.visitJumpInsn(opcode, label);
@@ -392,7 +393,7 @@ final class CoverageModifier extends ClassWriter
       {
          if (opcode >= IRETURN && opcode <= RETURN || opcode == ATHROW) {
             handleRegularInstruction();
-            int newNodeIndex = methodData.handleExit(currentLine);
+            int newNodeIndex = nodeBuilder.handleExit(currentLine);
             generateCallToRegisterNodeReached(newNodeIndex);
          }
          else {
@@ -404,7 +405,7 @@ final class CoverageModifier extends ClassWriter
 
       private void handleRegularInstruction()
       {
-         int nodeIndex = methodData.handleRegularInstruction(currentLine);
+         int nodeIndex = nodeBuilder.handleRegularInstruction(currentLine);
          generateCallToRegisterNodeReached(nodeIndex);
       }
 
@@ -469,9 +470,8 @@ final class CoverageModifier extends ClassWriter
       {
          super.visitLookupSwitchInsn(dflt, keys, labels);
 
-//         methodData.markCurrentLineAsStartingNewBlock();
          handleRegularInstruction();
-//         methodData.handleForwardJumpsToNewTargets(dflt, labels);
+         nodeBuilder.handleForwardJumpsToNewTargets(dflt, labels);
       }
 
       @Override
@@ -479,9 +479,8 @@ final class CoverageModifier extends ClassWriter
       {
          super.visitTableSwitchInsn(min, max, dflt, labels);
 
-//         methodData.markCurrentLineAsStartingNewBlock();
          handleRegularInstruction();
-//         methodData.handleForwardJumpsToNewTargets(dflt, labels);
+         nodeBuilder.handleForwardJumpsToNewTargets(dflt, labels);
       }
 
       @Override
@@ -495,7 +494,7 @@ final class CoverageModifier extends ClassWriter
       public final void visitEnd()
       {
          if (currentLine > 0) {
-            methodData.setLastLine(currentLine);
+            methodData.buildPaths(currentLine, nodeBuilder);
             fileData.addMethod(methodData);
          }
       }

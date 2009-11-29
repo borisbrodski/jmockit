@@ -50,12 +50,6 @@ public final class Path implements Serializable
       nodes.add(node);
    }
 
-   void addExitNode(Node.Exit newNode)
-   {
-      assert !(nodes.get(nodes.size() - 1) instanceof Node.Exit) : "Duplicate exit node";
-      addNode(newNode);
-   }
-
    boolean countExecutionIfAllNodesWereReached(int currentNodesReached)
    {
       if (currentNodesReached != nodes.size()) {

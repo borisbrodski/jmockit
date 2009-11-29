@@ -63,9 +63,14 @@ public class Node implements Serializable
       Entry(int entryLine) { super(entryLine); }
    }
 
-   interface Successor extends Serializable {}
+   interface ConditionalSuccessor extends Serializable {}
 
-   static final class Exit extends Node implements Successor
+   interface GotoSuccessor extends Serializable
+   {
+      void setNextNodeAfterGoto(Join newJoin);
+   }
+
+   static final class Exit extends Node implements ConditionalSuccessor
    {
       private static final long serialVersionUID = -4801498566218642509L;
       final List<Path> paths = new LinkedList<Path>();
@@ -73,16 +78,18 @@ public class Node implements Serializable
       Exit(int exitLine) { super(exitLine); }
    }
 
-   static final class BasicBlock extends Node implements Successor
+   static final class BasicBlock extends Node implements ConditionalSuccessor, GotoSuccessor
    {
       private static final long serialVersionUID = 2637678937923952603L;
-      Successor nextConsecutiveNode;
+      ConditionalSuccessor nextConsecutiveNode;
       Join nextNodeAfterGoto;
 
       BasicBlock(int startingLine) { super(startingLine); }
+
+      public void setNextNodeAfterGoto(Join newJoin) { nextNodeAfterGoto = newJoin; }
    }
 
-   static final class Fork extends Node implements Successor
+   static final class Fork extends Node implements ConditionalSuccessor
    {
       private static final long serialVersionUID = -8266367107063017773L;
       BasicBlock nextConsecutiveNode;
@@ -91,11 +98,13 @@ public class Node implements Serializable
       Fork(int line) { super(line); }
    }
 
-   static final class Join extends Node implements Successor
+   static final class Join extends Node implements ConditionalSuccessor, GotoSuccessor
    {
       private static final long serialVersionUID = -1983522899831071765L;
-      Successor nextNode;
+      ConditionalSuccessor nextNode;
 
       Join(int joiningLine) { super(joiningLine); }
+
+      public void setNextNodeAfterGoto(Join newJoin) { nextNode = newJoin; }
    }
 }
