@@ -73,6 +73,7 @@ public class CoverageTest extends Assert
       int line, int expectedSegments, int expectedCoveredSegments, int expectedExecutionCount)
    {
       LineCoverageData lineData = fileData.lineToLineData.get(line);
+      assertNotNull("Not an executable line", lineData);
       assertEquals("Segments:", expectedSegments, lineData.getNumberOfSegments());
       assertEquals("Covered segments:", expectedCoveredSegments, lineData.getNumberOfCoveredSegments());
       assertEquals("Execution count:", expectedExecutionCount, lineData.getExecutionCount());
