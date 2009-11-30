@@ -21,7 +21,7 @@ import org.easymock.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-public final class DocumentManager_Support_Test extends EasyMockSupport
+public final class DocumentManager_EasyMockSupport_Test extends EasyMockSupport
 {
    private Collaborator firstCollaborator;
    private Collaborator secondCollaborator;
@@ -31,6 +31,12 @@ public final class DocumentManager_Support_Test extends EasyMockSupport
    public void setup()
    {
       classUnderTest = new DocumentManager();
+   }
+
+   @After
+   public void verifyExpectations()
+   {
+      verifyAll();
    }
 
    @Test
@@ -46,7 +52,6 @@ public final class DocumentManager_Support_Test extends EasyMockSupport
       replayAll();
 
       classUnderTest.addDocument("New Document", new byte[0]);
-      verifyAll();
    }
 
    @Test
@@ -71,7 +76,5 @@ public final class DocumentManager_Support_Test extends EasyMockSupport
 
       classUnderTest.addDocument("Document 1", new byte[0]);
       assertTrue(classUnderTest.removeDocuments("Document 1"));
-
-      verifyAll();
    }
 }
