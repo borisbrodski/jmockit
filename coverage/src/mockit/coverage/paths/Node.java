@@ -82,8 +82,8 @@ public class Node implements Serializable
 
       public void addToPath(PathBuilder pathBuilder, Path path)
       {
-         paths.add(path);
          path.addNode(this);
+         paths.add(path);
       }
    }
 
@@ -103,10 +103,10 @@ public class Node implements Serializable
 
          if (nextNodeAfterGoto != null) {
             nextNodeAfterGoto.addToPath(pathBuilder, path);
-            return;
          }
-
-         nextConsecutiveNode.addToPath(pathBuilder, path);
+         else {
+            nextConsecutiveNode.addToPath(pathBuilder, path);
+         }
       }
    }
 
@@ -115,6 +115,13 @@ public class Node implements Serializable
       Fork(int line) { super(line); }
 
       abstract void addNextNode(Join nextNode);
+
+      final void createAlternatePath(PathBuilder pathBuilder, Path parentPath, Join targetJoin)
+      {
+         Path alternatePath = new Path(parentPath);
+         pathBuilder.paths.add(alternatePath);
+         targetJoin.addToPath(pathBuilder, alternatePath);
+      }
    }
 
    static final class SimpleFork extends Fork
@@ -131,11 +138,7 @@ public class Node implements Serializable
       public void addToPath(PathBuilder pathBuilder, Path path)
       {
          path.addNode(this);
-
-         Path alternatePath = new Path(path);
-         pathBuilder.paths.add(alternatePath);
-         nextNodeAfterJump.addToPath(pathBuilder, alternatePath);
-
+         createAlternatePath(pathBuilder, path, nextNodeAfterJump);
          nextConsecutiveNode.addToPath(pathBuilder, path);
       }
    }
@@ -154,10 +157,8 @@ public class Node implements Serializable
       {
          path.addNode(this);
 
-         for (Join join : caseNodes) {
-            Path alternatePath = new Path(path);
-            pathBuilder.paths.add(alternatePath);
-            join.addToPath(pathBuilder, alternatePath);
+         for (Join caseJoin : caseNodes) {
+            createAlternatePath(pathBuilder, path, caseJoin);
          }
 
          pathBuilder.paths.remove(path);
