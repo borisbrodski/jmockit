@@ -40,7 +40,7 @@ public final class ForStatementsTest extends CoverageTest
 
       findMethodData(9, "forInSeparateLines");
       assertPaths(2, 1, 2);
-      assertPath(6, 2);
       assertPath(5, 0);
+      assertPath(6, 2);
    }
 }

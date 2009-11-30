@@ -33,12 +33,14 @@ public final class MethodCoverageData implements Serializable
 
    public final String methodName;
    private List<Node> nodes;
-   public List<Path> paths;
    private int firstLine;
    private int lastLine;
 
    // Helper fields used during node building and path execution:
    private transient ThreadLocal<Integer> nodesReached;
+
+   // TODO: eliminate this list in favor of a list of exit nodes?
+   public transient List<Path> paths;
 
    public MethodCoverageData(String methodName)
    {
@@ -51,7 +53,7 @@ public final class MethodCoverageData implements Serializable
       this.lastLine = lastLine;
 
       nodes = nodeBuilder.nodes;
-      paths = new PathBuilder(nodes).paths;
+      paths = new PathBuilder().buildPaths(nodes);
 
       nodesReached = new ThreadLocal<Integer>();
    }

@@ -46,8 +46,8 @@ public final class WhileStatementsTest extends CoverageTest
       findMethodData(7, "whileBlockInSeparateLines");
       assertMethodLines(7, 12);
       assertPaths(2, 1, 1);
-      assertPath(6, 1);
       assertPath(5, 0);
+      assertPath(6, 1);
    }
 
    @Ignore @Test

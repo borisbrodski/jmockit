@@ -28,22 +28,32 @@ import java.util.*;
 
 final class PathBuilder
 {
-   final List<Path> paths = new ArrayList<Path>();
-
-   PathBuilder(List<Node> allNodes)
+   List<Path> buildPaths(List<Node> nodes)
    {
-      Node.Entry entryNode = (Node.Entry) allNodes.get(0);
+      Node.Entry entryNode = (Node.Entry) nodes.get(0);
       Path path = new Path(entryNode);
-      paths.add(path);
 
-      Node.Fork fork = entryNode.nextNode;
+      Node.ConditionalSuccessor nextNode = entryNode.nextNode;
 
-      if (fork == null) {
-         Node.Exit exitNode = (Node.Exit) allNodes.get(1);
-         exitNode.addToPath(this, path);
-         return;
+      if (nextNode == null) {
+         nextNode = (Node.ConditionalSuccessor) nodes.get(1);
       }
 
-      fork.addToPath(this, path);
+      nextNode.addToPath(path);
+
+      return getAllPathsFromExitNodes(nodes);
+   }
+
+   private List<Path> getAllPathsFromExitNodes(List<Node> nodes)
+   {
+      List<Path> paths = new ArrayList<Path>();
+
+      for (Node node : nodes) {
+         if (node instanceof Node.Exit) {
+            paths.addAll(((Node.Exit) node).paths);
+         }
+      }
+
+      return paths;
    }
 }
