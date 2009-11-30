@@ -468,19 +468,19 @@ final class CoverageModifier extends ClassWriter
       @Override
       public final void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels)
       {
-         super.visitLookupSwitchInsn(dflt, keys, labels);
+         int nodeIndex = nodeBuilder.handleForwardJumpsToNewTargets(dflt, labels, currentLine);
+         generateCallToRegisterNodeReached(nodeIndex);
 
-         handleRegularInstruction();
-         nodeBuilder.handleForwardJumpsToNewTargets(dflt, labels);
+         super.visitLookupSwitchInsn(dflt, keys, labels);
       }
 
       @Override
       public final void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels)
       {
-         super.visitTableSwitchInsn(min, max, dflt, labels);
+         int nodeIndex = nodeBuilder.handleForwardJumpsToNewTargets(dflt, labels, currentLine);
+         generateCallToRegisterNodeReached(nodeIndex);
 
-         handleRegularInstruction();
-         nodeBuilder.handleForwardJumpsToNewTargets(dflt, labels);
+         super.visitTableSwitchInsn(min, max, dflt, labels);
       }
 
       @Override

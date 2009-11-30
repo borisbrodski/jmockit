@@ -50,7 +50,7 @@ public final class WhileStatementsTest extends CoverageTest
       assertPath(5, 0);
    }
 
-   @Test
+   @Ignore @Test
    public void whileBlockInSingleLine()
    {
 //      tested.whileBlockInSingleLine(0);

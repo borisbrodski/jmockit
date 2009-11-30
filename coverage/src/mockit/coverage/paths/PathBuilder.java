@@ -64,8 +64,14 @@ final class PathBuilder
          addJoinToPath(alternatePath, join);
       }
 
-      Node.BasicBlock basicBlock = fork.nextConsecutiveNode;
-      addBasicBlockToPath(path, basicBlock);
+      Node.BasicBlock nextNode = fork.nextConsecutiveNode;
+
+      if (nextNode == null) {
+         paths.remove(path);
+      }
+      else {
+         addBasicBlockToPath(path, nextNode);
+      }
    }
 
    private void addJoinToPath(Path path, Node.Join join)

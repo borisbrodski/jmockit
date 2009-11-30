@@ -46,19 +46,14 @@ public final class NodeBuilder
    {
       if (entryNode == null) {
          firstLine = line;
-         return addEntryNode(line);
+         entryNode = new Node.Entry(line);
+         return addNewNode(entryNode);
       }
 
       return handleRegularInstruction(line);
    }
 
-   int addEntryNode(int firstLine)
-   {
-      entryNode = new Node.Entry(firstLine);
-      return addNewNode(entryNode);
-   }
-
-   int addNewNode(Node newNode)
+   private int addNewNode(Node newNode)
    {
       int newNodeIndex = nodes.size();
       nodes.add(newNode);
@@ -129,7 +124,7 @@ public final class NodeBuilder
       currentBasicBlock = newBasicBlock;
    }
 
-   void connectNodes(Label targetBlock, Node.Fork newFork)
+   private void connectNodes(Label targetBlock, Node.Fork newFork)
    {
       if (entryNode.nextNode == null) {
          entryNode.nextNode = newFork;
@@ -152,7 +147,7 @@ public final class NodeBuilder
       forksWithSameTarget.add(newFork);
    }
 
-   void setUpMappingFromGotoTargetToCurrentGotoSuccessor(Label targetBlock)
+   private void setUpMappingFromGotoTargetToCurrentGotoSuccessor(Label targetBlock)
    {
       if (currentBasicBlock == null && currentJoin == null) {
          return;
@@ -176,7 +171,7 @@ public final class NodeBuilder
       }
    }
 
-   void connectNodes(Label basicBlock, Node.Join newJoin)
+   private void connectNodes(Label basicBlock, Node.Join newJoin)
    {
       connectNodes(newJoin);
       connectSourceForksToTargetedJoin(basicBlock, newJoin);
@@ -192,7 +187,7 @@ public final class NodeBuilder
       return addNewNode(newNode);
    }
 
-   void connectNodes(Node.ConditionalSuccessor newNode)
+   private void connectNodes(Node.ConditionalSuccessor newNode)
    {
       if (currentJoin != null) {
          currentJoin.nextNode = newNode;
@@ -231,21 +226,19 @@ public final class NodeBuilder
       }
    }
 
-   public void handleForwardJumpsToNewTargets(Label defaultBlock, Label[] caseBlocks)
+   public int handleForwardJumpsToNewTargets(Label defaultBlock, Label[] caseBlocks, int line)
    {
+      Node.Fork newJoin = new Node.Fork(line);
+
       for (Label targetBlock : caseBlocks) {
          if (targetBlock != defaultBlock) {
-            handleForwardJumpToNewTarget(targetBlock);
+            connectNodes(targetBlock, newJoin);
          }
       }
 
-      handleForwardJumpToNewTarget(defaultBlock);
-   }
+      connectNodes(defaultBlock, newJoin);
+      currentFork = null;
 
-   private void handleForwardJumpToNewTarget(Label targetBlock)
-   {
-//      List<Path> alternatePathsForTarget = new LinkedList<Path>();
-//      jumpTargetToAlternatePaths.put(targetBlock, alternatePathsForTarget);
-//      createAlternatePathsForActivePaths(alternatePathsForTarget);
+      return addNewNode(newJoin);
    }
 }
