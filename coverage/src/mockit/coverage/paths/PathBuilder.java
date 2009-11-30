@@ -39,74 +39,11 @@ final class PathBuilder
       Node.Fork fork = entryNode.nextNode;
 
       if (fork == null) {
-//         assert allNodes.size() == 2; // TODO: > 2 for switch and try
          Node.Exit exitNode = (Node.Exit) allNodes.get(1);
-         addExitToPath(path, exitNode);
+         exitNode.addToPath(this, path);
          return;
       }
 
-      addForkToPath(path, fork);
-   }
-
-   private void addExitToPath(Path path, Node.Exit exitNode)
-   {
-      exitNode.paths.add(path);
-      path.addNode(exitNode);
-   }
-
-   private void addForkToPath(Path path, Node.Fork fork)
-   {
-      path.addNode(fork);
-
-      for (Node.Join join : fork.nextNodesAfterJump) {
-         Path alternatePath = new Path(path);
-         paths.add(alternatePath);
-         addJoinToPath(alternatePath, join);
-      }
-
-      Node.BasicBlock nextNode = fork.nextConsecutiveNode;
-
-      if (nextNode == null) {
-         paths.remove(path);
-      }
-      else {
-         addBasicBlockToPath(path, nextNode);
-      }
-   }
-
-   private void addJoinToPath(Path path, Node.Join join)
-   {
-      path.addNode(join);
-      addSuccessorToPath(path, join.nextNode);
-   }
-
-   private void addSuccessorToPath(Path path, Node.ConditionalSuccessor successor)
-   {
-      if (successor instanceof Node.BasicBlock) {
-         addBasicBlockToPath(path, (Node.BasicBlock) successor);
-      }
-      else if (successor instanceof Node.Fork) {
-         addForkToPath(path, (Node.Fork) successor);
-      }
-      else if (successor instanceof Node.Join) {
-         addJoinToPath(path, (Node.Join) successor);
-      }
-      else {
-         addExitToPath(path, (Node.Exit) successor);
-      }
-   }
-
-   private void addBasicBlockToPath(Path path, Node.BasicBlock basicBlock)
-   {
-      path.addNode(basicBlock);
-
-      Node.Join nextNodeAfterGoto = basicBlock.nextNodeAfterGoto;
-
-      if (nextNodeAfterGoto != null) {
-         addJoinToPath(path, nextNodeAfterGoto);
-         return;
-      }
-
-      addSuccessorToPath(path, basicBlock.nextConsecutiveNode);
+      fork.addToPath(this, path);
    }
 }

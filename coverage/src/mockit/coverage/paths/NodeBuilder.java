@@ -34,7 +34,7 @@ public final class NodeBuilder
    final List<Node> nodes = new ArrayList<Node>();
 
    private Node.Entry entryNode;
-   private Node.Fork currentFork;
+   private Node.SimpleFork currentSimpleFork;
    private Node.BasicBlock currentBasicBlock;
    private Node.Join currentJoin;
    private final Map<Label, List<Node.Fork>> jumpTargetToForks =
@@ -62,7 +62,7 @@ public final class NodeBuilder
 
    public int handleRegularInstruction(int line)
    {
-      if (currentFork == null && currentJoin == null) {
+      if (currentSimpleFork == null && currentJoin == null) {
          return -1;
       }
 
@@ -80,9 +80,10 @@ public final class NodeBuilder
    public int handleJump(Label targetBlock, int line, boolean conditional)
    {
       if (conditional) {
-         Node.Fork newNode = new Node.Fork(line);
-         connectNodes(targetBlock, newNode);
-         return addNewNode(newNode);
+         Node.SimpleFork newFork = new Node.SimpleFork(line);
+         currentSimpleFork = newFork;
+         connectNodes(targetBlock, newFork);
+         return addNewNode(newFork);
       }
       else {
          setUpMappingFromGotoTargetToCurrentGotoSuccessor(targetBlock);
@@ -112,9 +113,9 @@ public final class NodeBuilder
 
    private void connectNodes(Node.BasicBlock newBasicBlock)
    {
-      if (currentFork != null) {
-         currentFork.nextConsecutiveNode = newBasicBlock;
-         currentFork = null;
+      if (currentSimpleFork != null) {
+         currentSimpleFork.nextConsecutiveNode = newBasicBlock;
+         currentSimpleFork = null;
       }
       else {
          currentJoin.nextNode = newBasicBlock;
@@ -130,7 +131,6 @@ public final class NodeBuilder
          entryNode.nextNode = newFork;
       }
 
-      currentFork = newFork;
       setUpMappingFromConditionalTargetToFork(targetBlock, newFork);
       connectNodes(newFork);
    }
@@ -206,7 +206,7 @@ public final class NodeBuilder
 
       if (forks != null) {
          for (Node.Fork fork : forks) {
-            fork.nextNodesAfterJump.add(newJoin);
+            fork.addNextNode(newJoin);
          }
 
          jumpTargetToForks.remove(targetBlock);
@@ -228,7 +228,7 @@ public final class NodeBuilder
 
    public int handleForwardJumpsToNewTargets(Label defaultBlock, Label[] caseBlocks, int line)
    {
-      Node.Fork newJoin = new Node.Fork(line);
+      Node.Fork newJoin = new Node.MultiFork(line);
 
       for (Label targetBlock : caseBlocks) {
          if (targetBlock != defaultBlock) {
@@ -237,7 +237,6 @@ public final class NodeBuilder
       }
 
       connectNodes(defaultBlock, newJoin);
-      currentFork = null;
 
       return addNewNode(newJoin);
    }

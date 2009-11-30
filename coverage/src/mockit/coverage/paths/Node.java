@@ -63,7 +63,10 @@ public class Node implements Serializable
       Entry(int entryLine) { super(entryLine); }
    }
 
-   interface ConditionalSuccessor extends Serializable {}
+   interface ConditionalSuccessor extends Serializable
+   {
+      void addToPath(PathBuilder pathBuilder, Path path);
+   }
 
    interface GotoSuccessor extends Serializable
    {
@@ -76,6 +79,12 @@ public class Node implements Serializable
       final List<Path> paths = new LinkedList<Path>();
 
       Exit(int exitLine) { super(exitLine); }
+
+      public void addToPath(PathBuilder pathBuilder, Path path)
+      {
+         paths.add(path);
+         path.addNode(this);
+      }
    }
 
    static final class BasicBlock extends Node implements ConditionalSuccessor, GotoSuccessor
@@ -87,15 +96,72 @@ public class Node implements Serializable
       BasicBlock(int startingLine) { super(startingLine); }
 
       public void setNextNodeAfterGoto(Join newJoin) { nextNodeAfterGoto = newJoin; }
+
+      public void addToPath(PathBuilder pathBuilder, Path path)
+      {
+         path.addNode(this);
+
+         if (nextNodeAfterGoto != null) {
+            nextNodeAfterGoto.addToPath(pathBuilder, path);
+            return;
+         }
+
+         nextConsecutiveNode.addToPath(pathBuilder, path);
+      }
    }
 
-   static final class Fork extends Node implements ConditionalSuccessor
+   abstract static class Fork extends Node implements ConditionalSuccessor
    {
-      private static final long serialVersionUID = -8266367107063017773L;
-      BasicBlock nextConsecutiveNode;
-      final List<Join> nextNodesAfterJump = new LinkedList<Join>();
-
       Fork(int line) { super(line); }
+
+      abstract void addNextNode(Join nextNode);
+   }
+
+   static final class SimpleFork extends Fork
+   {
+      private static final long serialVersionUID = -521666665272332763L;
+      BasicBlock nextConsecutiveNode;
+      Join nextNodeAfterJump;
+
+      SimpleFork(int line) { super(line); }
+
+      @Override
+      void addNextNode(Join nextNode) { nextNodeAfterJump = nextNode; }
+
+      public void addToPath(PathBuilder pathBuilder, Path path)
+      {
+         path.addNode(this);
+
+         Path alternatePath = new Path(path);
+         pathBuilder.paths.add(alternatePath);
+         nextNodeAfterJump.addToPath(pathBuilder, alternatePath);
+
+         nextConsecutiveNode.addToPath(pathBuilder, path);
+      }
+   }
+
+   static final class MultiFork extends Fork
+   {
+      private static final long serialVersionUID = 1220318686622690670L;
+      final List<Join> caseNodes = new LinkedList<Join>();
+
+      MultiFork(int line) { super(line); }
+
+      @Override
+      void addNextNode(Join nextNode) { caseNodes.add(nextNode); }
+
+      public void addToPath(PathBuilder pathBuilder, Path path)
+      {
+         path.addNode(this);
+
+         for (Join join : caseNodes) {
+            Path alternatePath = new Path(path);
+            pathBuilder.paths.add(alternatePath);
+            join.addToPath(pathBuilder, alternatePath);
+         }
+
+         pathBuilder.paths.remove(path);
+      }
    }
 
    static final class Join extends Node implements ConditionalSuccessor, GotoSuccessor
@@ -106,5 +172,11 @@ public class Node implements Serializable
       Join(int joiningLine) { super(joiningLine); }
 
       public void setNextNodeAfterGoto(Join newJoin) { nextNode = newJoin; }
+
+      public void addToPath(PathBuilder pathBuilder, Path path)
+      {
+         path.addNode(this);
+         nextNode.addToPath(pathBuilder, path);
+      }
    }
 }
