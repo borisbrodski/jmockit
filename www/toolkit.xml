@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
    <ModulePrefs title="JMockit APIs"/>
-   <Content>
-<![CDATA[
+   <Content type="html"><![CDATA[
 <div style="text-align: center;" title="Click on titles to open Tutorial/API">
    <map name="figure1">
       <area shape="rect" coords="10,10,160,32" href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html">
@@ -39,6 +38,6 @@
       <area shape="rect" coords="509,226,702,253" href="#hibernate">
    </map>
    <img src="http://jmockit.googlecode.com/svn/trunk/www/toolkit.png" usemap="#figure1">
-</div>]]>
-   </Content>
+</div>
+]]></Content>
 </Module>
