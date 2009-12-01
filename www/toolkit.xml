@@ -4,8 +4,10 @@
    <Content type="html"><![CDATA[
 <div style="text-align: center;" title="Click on titles to open Tutorial/API">
    <map name="figure1">
-      <area shape="rect" coords="10,10,160,32" href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html">
-      <area shape="rect" coords="37,87,158,114" href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Expectations.html">
+      <area shape="rect" coords="10,10,160,32" target="_blank"
+         href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html">
+      <area shape="rect" coords="37,87,158,114" target="_blank"
+         href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Expectations.html">
       <area shape="rect" coords="169,87,261,114" href="javadoc/mockit/Mocked.html">
       <area shape="rect" coords="271,87,371,114" href="javadoc/mockit/NonStrict.html">
       <area shape="rect" coords="10,163,184,190" href="javadoc/mockit/NonStrictExpectations.html">
