@@ -27,6 +27,8 @@ package mockit.coverage.reporting;
 import java.io.*;
 
 import mockit.coverage.*;
+import mockit.coverage.reporting.codeCoverage.*;
+import mockit.coverage.reporting.pathCoverage.*;
 
 /**
  * Generates an XHTML page containing line-by-line coverage information for a single source file.
@@ -45,7 +47,7 @@ final class FileCoverageReport
       this.inputFile = inputFile;
       output = new OutputFile(outputDir, sourceFilePath);
       codeCoverage = new CodeCoverageOutput(output, fileData.getLineToLineData(), withCallPoints);
-      pathCoverage = new PathCoverageOutput(fileData.getMethods(), output);
+      pathCoverage = new PathCoverageOutput(output, fileData.getMethods());
    }
 
    void generate() throws IOException

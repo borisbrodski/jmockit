@@ -22,11 +22,12 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage.reporting;
+package mockit.coverage.reporting.codeCoverage;
 
 import java.util.*;
 
 import mockit.coverage.*;
+import mockit.coverage.reporting.*;
 
 final class LineSegmentsFormatter
 {

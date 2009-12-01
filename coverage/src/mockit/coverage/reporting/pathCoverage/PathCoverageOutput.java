@@ -22,7 +22,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage.reporting;
+package mockit.coverage.reporting.pathCoverage;
 
 import java.io.*;
 import java.util.*;
@@ -30,14 +30,14 @@ import java.util.*;
 import mockit.coverage.*;
 import mockit.coverage.paths.*;
 
-final class PathCoverageOutput
+public final class PathCoverageOutput
 {
    private final PrintWriter output;
    private final Iterator<MethodCoverageData> nextMethod;
    private MethodCoverageData currentMethod;
    private int previousMethodEndLine;
 
-   PathCoverageOutput(Collection<MethodCoverageData> methods, PrintWriter output)
+   public PathCoverageOutput(PrintWriter output, Collection<MethodCoverageData> methods)
    {
       this.output = output;
       nextMethod = methods.iterator();
@@ -47,7 +47,7 @@ final class PathCoverageOutput
       }
    }
 
-   void writePathCoverageInfoIfLineStartsANewMethodOrConstructor(int lineNo, String line)
+   public void writePathCoverageInfoIfLineStartsANewMethodOrConstructor(int lineNo, String line)
    {
       if (
          currentMethod == null || lineNo <= previousMethodEndLine ||

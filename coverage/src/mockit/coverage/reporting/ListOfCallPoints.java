@@ -28,11 +28,11 @@ import java.util.*;
 
 import mockit.coverage.*;
 
-final class ListOfCallPoints
+public final class ListOfCallPoints
 {
    private static final String EOL = System.getProperty("line.separator");
 
-   void insertListOfCallPoints(StringBuilder formattedLine, List<CallPoint> callPoints)
+   public void insertListOfCallPoints(StringBuilder formattedLine, List<CallPoint> callPoints)
    {
       formattedLine.append("        <ol style='display: none;'>").append(EOL);
 
