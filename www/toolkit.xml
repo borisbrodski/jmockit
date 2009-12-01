@@ -6,10 +6,10 @@
    <map name="figure1">
       <area shape="rect" coords="10,10,160,32" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html">
-      <area shape="rect" coords="37,87,158,114" target="_blank"
+      <area shape="rect" coords="37,87,158,114" target="_top"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Expectations.html">
-      <area shape="rect" coords="169,87,261,114" href="javadoc/mockit/Mocked.html">
-      <area shape="rect" coords="271,87,371,114" href="javadoc/mockit/NonStrict.html">
+      <area shape="rect" coords="169,87,261,114" href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Mocked.html" target="_blank">
+      <area shape="rect" coords="271,87,371,114" href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/NonStrict.html" target="_parent">
       <area shape="rect" coords="10,163,184,190" href="javadoc/mockit/NonStrictExpectations.html">
       <area shape="rect" coords="382,87,502,114" href="javadoc/mockit/Verifications.html">
       <area shape="rect" coords="205,163,367,190" href="javadoc/mockit/VerificationsInOrder.html">
