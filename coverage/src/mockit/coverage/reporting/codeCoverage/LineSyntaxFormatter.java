@@ -26,6 +26,8 @@ package mockit.coverage.reporting.codeCoverage;
 
 import java.util.*;
 
+import mockit.coverage.reporting.parsing.*;
+
 final class LineSyntaxFormatter
 {
    private static final List<String> JAVA_KEYWORDS = Arrays.asList(

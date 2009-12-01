@@ -26,6 +26,7 @@ package mockit.coverage.reporting.codeCoverage;
 
 import mockit.coverage.*;
 import mockit.coverage.reporting.*;
+import mockit.coverage.reporting.parsing.LineSegment;
 
 final class LineCoverageFormatter
 {

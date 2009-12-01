@@ -22,12 +22,12 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage.reporting.codeCoverage;
+package mockit.coverage.reporting.parsing;
 
 import static java.util.Arrays.*;
 import java.util.*;
 
-final class LineSegment implements Iterable<LineSegment>
+public final class LineSegment implements Iterable<LineSegment>
 {
    private static final List<String> RELATIONAL_OPERATORS =
       asList("==", "!=", "<", ">", "<=", ">=", "equals");
@@ -55,16 +55,16 @@ final class LineSegment implements Iterable<LineSegment>
       containsConditionalInstruction = CONDITIONAL_INSTRUCTIONS.contains(trimmedText);
    }
 
-   boolean isCode() { return type == SegmentType.CODE; }
-   boolean isComment() { return type == SegmentType.COMMENT; }
+   public boolean isCode() { return type == SegmentType.CODE; }
+   public boolean isComment() { return type == SegmentType.COMMENT; }
    boolean isSeparator() { return type == SegmentType.SEPARATOR; }
 
-   boolean containsConditionalOperator()
+   public boolean containsConditionalOperator()
    {
       return containsConditionalOperator;
    }
 
-   static boolean isRelationalOperator(String source)
+   public static boolean isRelationalOperator(String source)
    {
       return RELATIONAL_OPERATORS.contains(source);
    }
@@ -94,23 +94,23 @@ final class LineSegment implements Iterable<LineSegment>
       return count;
    }
 
-   String getUnformattedText()
+   public String getUnformattedText()
    {
       return unformattedText;
    }
 
-   CharSequence getText()
+   public CharSequence getText()
    {
       return text;
    }
 
-   void wrapBetween(String before, String after)
+   public void wrapBetween(String before, String after)
    {
       text.insert(0, before);
       text.append(after);
    }
 
-   LineSegment getNext()
+   public LineSegment getNext()
    {
       return next;
    }
@@ -120,7 +120,7 @@ final class LineSegment implements Iterable<LineSegment>
       this.next = next;
    }
 
-   boolean before(LineSegment other)
+   public boolean before(LineSegment other)
    {
       for (LineSegment segmentAfter : this) {
          if (segmentAfter == other) {

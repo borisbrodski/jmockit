@@ -129,6 +129,9 @@ public final class IfElseStatements
       return i;
    }
 
+   /**
+    * Block comment with method signature: infeasiblePaths(boolean a).
+    */
    void infeasiblePaths(boolean a)
    {
       if (a) {

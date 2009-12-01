@@ -28,12 +28,12 @@ import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
+import mockit.coverage.reporting.parsing.*;
 
 public final class CodeCoverageOutput
 {
    private final PrintWriter output;
    private final Map<Integer, LineCoverageData> lineToLineData;
-   private final LineParser lineParser = new LineParser();
    private final LineSyntaxFormatter lineSyntaxFormatter = new LineSyntaxFormatter();
    private final LineCoverageFormatter lineCoverageFormatter;
    private LineCoverageData lineData;
@@ -46,13 +46,15 @@ public final class CodeCoverageOutput
       lineCoverageFormatter = new LineCoverageFormatter(withCallPoints);
    }
 
-   public void writeLineOfSourceCodeWithCoverageInfo(int lineNo, String line)
+   public void writeLineOfSourceCodeWithCoverageInfo(LineParser lineParser)
    {
+      int lineNo = lineParser.getLineNo();
+
       writeOpeningOfNewExecutableLine(lineNo);
 
       lineData = lineToLineData.get(lineNo);
       writeLineExecutionCountIfAny();
-      writeExecutableLine(lineNo, line);
+      writeExecutableLine(lineParser);
 
       output.println("    </tr>");
    }
@@ -77,17 +79,17 @@ public final class CodeCoverageOutput
       }
    }
 
-   private void writeExecutableLine(int lineNo, String line)
+   private void writeExecutableLine(LineParser lineParser)
    {
-      if (line.trim().length() == 0) {
+      if (lineParser.isBlankLine()) {
          output.println("      <td></td>");
          return;
       }
 
       output.write("      <td id='l");
-      output.print(lineNo);
+      output.print(lineParser.getLineNo());
 
-      LineSegment initialSegment = lineParser.parse(line);
+      LineSegment initialSegment = lineParser.getInitialSegment();
       lineSyntaxFormatter.format(initialSegment);
 
       if (lineData != null && lineData.getExecutionCount() > 0) {

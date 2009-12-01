@@ -210,7 +210,7 @@ public final class IfElseStatementsTest extends CoverageTest
       tested.infeasiblePaths(true);
       tested.infeasiblePaths(false);
 
-      findMethodData(134, "infeasiblePaths");
+      findMethodData(137, "infeasiblePaths");
       assertPaths(4, 2, 2);
       assertPath(8, 1);
       assertPath(9, 0);

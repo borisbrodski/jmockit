@@ -28,6 +28,7 @@ import java.util.*;
 
 import mockit.coverage.*;
 import mockit.coverage.reporting.*;
+import mockit.coverage.reporting.parsing.LineSegment;
 
 final class LineSegmentsFormatter
 {
@@ -148,7 +149,7 @@ final class LineSegmentsFormatter
          int i = 0;
 
          for (FormattedSegment segment : segments) {
-            LineSegment segmentStart = segment.segmentPair[0];
+            mockit.coverage.reporting.parsing.LineSegment segmentStart = segment.segmentPair[0];
 
             if (segmentStart == newSegmentStart) {
                return;

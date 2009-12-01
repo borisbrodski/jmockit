@@ -28,6 +28,7 @@ import java.io.*;
 
 import mockit.coverage.*;
 import mockit.coverage.reporting.codeCoverage.*;
+import mockit.coverage.reporting.parsing.*;
 import mockit.coverage.reporting.pathCoverage.*;
 
 /**
@@ -37,6 +38,7 @@ final class FileCoverageReport
 {
    private final InputFile inputFile;
    private final OutputFile output;
+   private final LineParser lineParser = new LineParser();
    private final CodeCoverageOutput codeCoverage;
    private final PathCoverageOutput pathCoverage;
 
@@ -72,13 +74,16 @@ final class FileCoverageReport
 
    private void writeFormattedSourceLines() throws IOException
    {
-      int lineNo = 1;
       String line;
 
       while ((line = inputFile.input.readLine()) != null) {
-         pathCoverage.writePathCoverageInfoIfLineStartsANewMethodOrConstructor(lineNo, line);
-         codeCoverage.writeLineOfSourceCodeWithCoverageInfo(lineNo, line);
-         lineNo++;
+         lineParser.parse(line);
+
+         if (!lineParser.isInComments()) {
+            pathCoverage.writePathCoverageInfoIfLineStartsANewMethodOrConstructor(lineParser);
+         }
+
+         codeCoverage.writeLineOfSourceCodeWithCoverageInfo(lineParser);
       }
    }
 

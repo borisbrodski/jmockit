@@ -29,6 +29,7 @@ import java.util.*;
 
 import mockit.coverage.*;
 import mockit.coverage.paths.*;
+import mockit.coverage.reporting.parsing.*;
 
 public final class PathCoverageOutput
 {
@@ -47,8 +48,11 @@ public final class PathCoverageOutput
       }
    }
 
-   public void writePathCoverageInfoIfLineStartsANewMethodOrConstructor(int lineNo, String line)
+   public void writePathCoverageInfoIfLineStartsANewMethodOrConstructor(LineParser lineParser)
    {
+      int lineNo = lineParser.getLineNo();
+      String line = lineParser.getLine();
+
       if (
          currentMethod == null || lineNo <= previousMethodEndLine ||
          lineNo > currentMethod.getFirstLineOfImplementationBody()

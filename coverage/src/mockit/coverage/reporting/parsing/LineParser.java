@@ -22,32 +22,61 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage.reporting.codeCoverage;
+package mockit.coverage.reporting.parsing;
 
-import mockit.coverage.reporting.codeCoverage.LineSegment.*;
+import mockit.coverage.reporting.parsing.LineSegment.*;
 
 /**
- * Parses a source line into one or more consecutive segments, identifying keywords, comments, and
- * the conditional operators which separate segments.
+ * Parses a source line into one or more consecutive segments, identifying which ones contain Java
+ * code and which ones contain only comments.
+ * Block comments initiated in a previous line are kept track of until the end of the block is
+ * reached.
  */
-final class LineParser
+public final class LineParser
 {
    private static final String SEPARATORS = ".,;:()";
 
+   private int lineNo;
+   private String line;
    private LineSegment initialSegment;
    private LineSegment currentSegment;
    private boolean inComments;
 
    // Helper variables:
-   private String line;
    private int lineLength;
    private int startPos;
    private boolean inCodeSegment;
    private int pos;
    private int currChar;
 
-   LineSegment parse(String line)
+   public int getLineNo()
    {
+      return lineNo;
+   }
+
+   public String getLine()
+   {
+      return line;
+   }
+
+   public boolean isBlankLine()
+   {
+      return line.trim().length() == 0;
+   }
+
+   public boolean isInComments()
+   {
+      return inComments;
+   }
+
+   public LineSegment getInitialSegment()
+   {
+      return initialSegment;
+   }
+
+   public void parse(String line)
+   {
+      lineNo++;
       initialSegment = null;
       currentSegment = null;
       this.line = line;
@@ -68,8 +97,6 @@ final class LineParser
       if (startPos >= 0) {
          addSegment(0);
       }
-
-      return initialSegment;
    }
 
    private void parseSeparatorsAndCode()
