@@ -1006,21 +1006,17 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="Unitils 3.0">
+    <library name="Unitils 3.1">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-mock-3.0.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-core-3.0.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/cglib-2.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/asm-3.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/asm-analysis-3.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/asm-tree-3.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/commons-lang-2.3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/objenesis-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-mock-3.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-core-3.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/main/lib/commons-logging-1.1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/commons-lang-2.3.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="file://C:/Java/unitils-3.0/unitils-mock/src/main/java" />
+        <root url="file://C:/Java/unitils-3.1/unitils-mock/src/main/java" />
+        <root url="file://C:/Java/unitils-3.1/unitils-core/src/main/java" />
       </SOURCES>
     </library>
     <library name="JMockit">

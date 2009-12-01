@@ -11,7 +11,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="JMockit" level="project" />
     <orderEntry type="library" name="JUnit 4.7" level="application" />
-    <orderEntry type="library" name="Unitils 3.0" level="project" />
+    <orderEntry type="library" name="Unitils 3.1" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
