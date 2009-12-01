@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+   <ModulePrefs title="JMockit APIs"/>
+   <Content type="html">
+      <![CDATA[
+      <div style="text-align: center;" title="Click on titles to open Tutorial/API">
+         <map name="figure1">
+            <area shape="rect" coords="10,10,160,32" href="tutorial/BehaviorBasedTesting.html">
+            <area shape="rect" coords="37,87,158,114" href="javadoc/mockit/Expectations.html">
+            <area shape="rect" coords="169,87,261,114" href="javadoc/mockit/Mocked.html">
+            <area shape="rect" coords="271,87,371,114" href="javadoc/mockit/NonStrict.html">
+            <area shape="rect" coords="10,163,184,190" href="javadoc/mockit/NonStrictExpectations.html">
+            <area shape="rect" coords="382,87,502,114" href="javadoc/mockit/Verifications.html">
+            <area shape="rect" coords="205,163,367,190" href="javadoc/mockit/VerificationsInOrder.html">
+            <area shape="rect" coords="374,163,512,190" href="javadoc/mockit/FullVerifications.html">
+            <area shape="rect" coords="519,163,700,190" href="javadoc/mockit/FullVerificationsInOrder.html">
+            <area shape="rect" coords="603,87,700,114" href="javadoc/mockit/Delegate.html">
+
+            <area shape="rect" coords="720,10,850,32" href="tutorial/StateBasedTesting.html">
+            <area shape="rect" coords="720,43,833,70" href="javadoc/mockit/MockUp.html">
+            <area shape="rect" coords="720,75,805,102" href="javadoc/mockit/Mockit.html">
+            <area shape="rect" coords="870,11,948,38" href="javadoc/mockit/Mock.html">
+            <area shape="rect" coords="838,43,948,70" href="javadoc/mockit/MockClass.html">
+            <area shape="rect" coords="831,75,948,102" href="javadoc/mockit/Instantiation.html">
+
+            <area shape="rect" coords="720,225,800,256" href="tutorial/ReflectionUtilities.html">
+            <area shape="rect" coords="807,226,949,253" href="javadoc/mockit/Deencapsulation.html">
+
+            <area shape="rect" coords="720,120,810,152" href="tutorial/CapturingImplementations.html">
+            <area shape="rect" coords="847,122,949,129" href="javadoc/mockit/Capturing.html">
+
+            <area shape="rect" coords="720,165,920,180" href="tutorial/UsingMocksAndStubs.html">
+            <area shape="rect" coords="778,183,949,210" href="javadoc/mockit/UsingMocksAndStubs.html">
+
+            <area shape="rect" coords="10,225,144,253" href="tutorial/RunningTests.html">
+
+            <area shape="rect" coords="223,226,349,253" href="tutorial/CodeCoverage.html">
+            <area shape="rect" coords="358,226,499,253" href="tutorial/IncrementalTests.html">
+            <area shape="rect" coords="509,226,702,253" href="#hibernate">
+         </map>
+         <img src="toolkit.png" usemap="#figure1">
+      </div>]]>
+   </Content>
+</Module>
