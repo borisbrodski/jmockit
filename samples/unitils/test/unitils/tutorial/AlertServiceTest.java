@@ -111,7 +111,6 @@ public final class AlertServiceTest extends UnitilsJUnit4
 
       alertService.sendScheduledAlerts();
 
-      // Test fails if these asserts are in reverse order: Unitils bug?
       mockMessageService.assertInvoked().sendMessage(alert2);
       mockMessageService.assertNotInvoked().sendMessage(alert1);
    }
