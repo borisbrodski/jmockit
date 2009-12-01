@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-   <ModulePrefs/>
+   <ModulePrefs title="JMockit APIs"/>
    <Content>
 <![CDATA[
 <div style="text-align: center;" title="Click on titles to open Tutorial/API">
