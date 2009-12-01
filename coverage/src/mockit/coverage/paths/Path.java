@@ -50,7 +50,6 @@ public final class Path implements Serializable
       nodes.add(node);
    }
 
-   // TODO: couldn't this be optimized away by incrementing the count when the exit node is reached?
    boolean countExecutionIfAllNodesWereReached(int currentNodesReached)
    {
       if (currentNodesReached != nodes.size()) {
