@@ -92,7 +92,7 @@
       <buildTests module="samples/mockito"/>
 
       <build module="samples/unitils"/>
-	  <buildTests module="samples/unitils"/>
+      <buildTests module="samples/unitils"/>
 
       <build module="samples/jbossaop"/>
       <buildTests module="samples/jbossaop"/>
@@ -213,15 +213,6 @@
 
    <target name="createjar-hibernate3emul">
       <jar destfile="jmockit-hibernate3emul.jar" basedir="hibernate3emul/classes"/>
-   </target>
-
-   <target name="createjar-aop">
-      <jar destfile="jmockit-aop.jar" manifest="aop/META-INF/MANIFEST.MF">
-         <fileset dir="aop/classes">
-            <exclude name="**/integrationTests/**/*"/>
-         </fileset>
-         <fileset dir="${ASM_CLASSES}"/>
-      </jar>
    </target>
 
    <target name="createzip">
