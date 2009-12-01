@@ -27,7 +27,8 @@ package mockit.coverage.reporting.codeCoverage;
 import mockit.coverage.reporting.codeCoverage.LineSegment.*;
 
 /**
- * Parses a source line into fragments, identifying keywords, comments and any branches.
+ * Parses a source line into one or more consecutive segments, identifying keywords, comments, and
+ * the conditional operators which separate segments.
  */
 final class LineParser
 {
@@ -178,10 +179,18 @@ final class LineParser
    private void addSegment(int p)
    {
       String segmentText = p > 0 ? line.substring(startPos, p) : line.substring(startPos);
-      SegmentType segmentType =
-         inComments ?
-            SegmentType.COMMENT :
-            inCodeSegment ? SegmentType.CODE : SegmentType.SEPARATOR;
+      SegmentType segmentType;
+
+      if (inComments) {
+         segmentType = SegmentType.COMMENT;
+      }
+      else if (inCodeSegment) {
+         segmentType = SegmentType.CODE;
+      }
+      else {
+         segmentType = SegmentType.SEPARATOR;
+      }
+
       LineSegment newSegment = new LineSegment(segmentType, segmentText);
 
       if (initialSegment == null) {

@@ -9,6 +9,7 @@ ol {
 
 span.comment { color: gray; }
 span.keyword { color: #00008b; font-weight: bolder; }
+span.annotation { color: #800000; }
 
 .lineNo { text-align: right; }
 .count { background-color: yellow; text-align: right; padding-left: 4px; padding-right: 2px; }

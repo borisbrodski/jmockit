@@ -50,8 +50,13 @@ final class LineSyntaxFormatter
 
    private void formatCodeSegment(LineSegment segment)
    {
-      if (JAVA_KEYWORDS.contains(segment.getText().toString())) {
+      String text = segment.getText().toString();
+
+      if (JAVA_KEYWORDS.contains(text)) {
          segment.wrapBetween("<span class='keyword'>", "</span>");
+      }
+      else if (text.charAt(0) == '@') {
+         segment.wrapBetween("<span class='annotation'>", "</span>");
       }
    }
 }
