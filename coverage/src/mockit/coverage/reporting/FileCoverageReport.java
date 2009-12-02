@@ -25,8 +25,10 @@
 package mockit.coverage.reporting;
 
 import java.io.*;
+import java.util.*;
 
 import mockit.coverage.*;
+import mockit.coverage.paths.*;
 import mockit.coverage.reporting.codeCoverage.*;
 import mockit.coverage.reporting.parsing.*;
 import mockit.coverage.reporting.pathCoverage.*;
@@ -49,7 +51,9 @@ final class FileCoverageReport
       this.inputFile = inputFile;
       output = new OutputFile(outputDir, sourceFilePath);
       codeCoverage = new CodeCoverageOutput(output, fileData.getLineToLineData(), withCallPoints);
-      pathCoverage = new PathCoverageOutput(output, fileData.getMethods());
+
+      Collection<MethodCoverageData> methods = fileData.getMethods();
+      pathCoverage = methods.isEmpty() ? null : new PathCoverageOutput(output, methods);
    }
 
    void generate() throws IOException
@@ -79,7 +83,7 @@ final class FileCoverageReport
       while ((line = inputFile.input.readLine()) != null) {
          lineParser.parse(line);
 
-         if (!lineParser.isInComments()) {
+         if (pathCoverage != null && !lineParser.isInComments()) {
             pathCoverage.writePathCoverageInfoIfLineStartsANewMethodOrConstructor(lineParser);
          }
 
