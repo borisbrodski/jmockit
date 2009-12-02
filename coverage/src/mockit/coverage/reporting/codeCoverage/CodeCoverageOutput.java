@@ -34,7 +34,6 @@ public final class CodeCoverageOutput
 {
    private final PrintWriter output;
    private final Map<Integer, LineCoverageData> lineToLineData;
-   private final LineSyntaxFormatter lineSyntaxFormatter = new LineSyntaxFormatter();
    private final LineCoverageFormatter lineCoverageFormatter;
    private LineCoverageData lineData;
 
@@ -90,7 +89,6 @@ public final class CodeCoverageOutput
       output.print(lineParser.getLineNo());
 
       LineSegment initialSegment = lineParser.getInitialSegment();
-      lineSyntaxFormatter.format(initialSegment);
 
       if (lineData != null && lineData.getExecutionCount() > 0) {
          String formattedLine = lineCoverageFormatter.format(lineData, initialSegment);
@@ -102,7 +100,7 @@ public final class CodeCoverageOutput
 
       output.write("' class='");
       output.write(lineStatus);
-      output.write("'><pre>");
+      output.write("'><pre class='prettyprint'>");
       output.write(initialSegment.toString());
       output.println("</pre></td>");
    }

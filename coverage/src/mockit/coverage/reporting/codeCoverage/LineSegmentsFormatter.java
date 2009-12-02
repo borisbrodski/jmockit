@@ -96,7 +96,7 @@ final class LineSegmentsFormatter
    {
       if (segment.isCode()) {
          if (
-            "*".equals(sourceElement) || segment.getUnformattedText().equals(sourceElement) ||
+            "*".equals(sourceElement) || segment.getText().equals(sourceElement) ||
             ("if".equals(sourceElement) || LineSegment.isRelationalOperator(sourceElement)) &&
             segment.containsConditionalOperator()
          ) {

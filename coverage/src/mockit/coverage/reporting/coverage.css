@@ -1,7 +1,6 @@
 caption { background-color: #483d8b; color: white; font-size: larger; }
 th { background-color: #6495ed; color: white; }
 td { font-family: monospace; }
-pre { margin: 0; }
 ol {
    background-color: #e0ffff;
    margin: 1ex 2em 1ex 4em;

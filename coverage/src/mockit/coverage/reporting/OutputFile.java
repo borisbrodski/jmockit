@@ -41,7 +41,9 @@ final class OutputFile extends PrintWriter
       copyFile(outputDir, "coverage.css", timeOfCoverageJar);
 
       if (forSourceFilePages) {
+         copyFile(outputDir, "prettify.css", timeOfCoverageJar);
          copyFile(outputDir, "coverage.js", timeOfCoverageJar);
+         copyFile(outputDir, "prettify.js", timeOfCoverageJar);
       }
    }
 
@@ -128,13 +130,27 @@ final class OutputFile extends PrintWriter
       println("coverage.css'/>");
 
       if (withJavaScript) {
+         print("  <link rel='stylesheet' type='text/css' href='");
+         print(relPathToOutDir);
+         println("prettify.css'/>");
+
          print("  <script type='text/javascript' src='");
          print(relPathToOutDir);
          println("coverage.js'></script>");
+
+         print("  <script type='text/javascript' src='");
+         print(relPathToOutDir);
+         println("prettify.js'></script>");
       }
 
       println("</head>");
-      println("<body>");
+
+      if (withJavaScript) {
+         println("<body onload='prettyPrint()'>");
+      }
+      else {
+         println("<body>");
+      }
    }
 
    void writeCommonFooter()

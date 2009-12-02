@@ -45,43 +45,29 @@ final class LineCoverageFormatter
       formattedLine.setLength(0);
 
       if (lineData.containsSegments()) {
-         formatLineWithBranches(lineData, initialSegment);
+         formatLineWithBranches(lineData);
       }
       else {
-         formatLineWithoutBranches(lineData, initialSegment);
+         formattedLine.append("'><pre class='prettyprint covered");
       }
 
-      formattedLine.append("      </td>").append(EOL);
+      appendClosingTags(lineData, initialSegment);
 
       return formattedLine.toString();
    }
 
-   private void formatLineWithBranches(LineCoverageData lineData, LineSegment initialSegment)
+   private void formatLineWithBranches(LineCoverageData lineData)
    {
       // TODO: make line segment formatting work
 //         formattedLine.append("      <td class='withBranches'>").append(EOL);
 //         new LineSegmentsFormatter(withCallPoints, formattedLine).formatBranches(
 //            lineData, initialSegment);
-      formattedLine.append("'><pre class='");
+      formattedLine.append("'><pre class='prettyprint ");
       formattedLine.append(lineData.isFullyCovered() ? "covered" : "partiallyCovered");
-
-      if (withCallPoints) {
-         formattedLine.append(" withCallPoints' onclick='showHide(this)");
-      }
-
-      formattedLine.append("'>");
-      formattedLine.append(initialSegment.toString());
-      formattedLine.append("</pre>").append(EOL);
-
-      if (withCallPoints) {
-         new ListOfCallPoints().insertListOfCallPoints(formattedLine, lineData.getCallPoints());
-      }
    }
 
-   private void formatLineWithoutBranches(LineCoverageData lineData, LineSegment initialSegment)
+   private void appendClosingTags(LineCoverageData lineData, LineSegment initialSegment)
    {
-      formattedLine.append("'><pre class='covered");
-
       if (withCallPoints) {
          formattedLine.append(" withCallPoints' onclick='showHide(this)");
       }
@@ -93,5 +79,7 @@ final class LineCoverageFormatter
       if (withCallPoints) {
          new ListOfCallPoints().insertListOfCallPoints(formattedLine, lineData.getCallPoints());
       }
+
+      formattedLine.append("      </td>").append(EOL);
    }
 }

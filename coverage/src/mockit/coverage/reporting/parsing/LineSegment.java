@@ -38,7 +38,6 @@ public final class LineSegment implements Iterable<LineSegment>
 
    private final SegmentType type;
    private final String unformattedText;
-   private final StringBuilder text;
    private final boolean containsConditionalOperator;
    private final boolean containsConditionalInstruction;
    private LineSegment next;
@@ -47,7 +46,6 @@ public final class LineSegment implements Iterable<LineSegment>
    {
       this.type = type;
       unformattedText = text.replaceAll("<", "&lt;");
-      this.text = new StringBuilder(unformattedText);
 
       String trimmedText = text.trim();
       containsConditionalOperator =
@@ -83,8 +81,8 @@ public final class LineSegment implements Iterable<LineSegment>
    {
       int count = 0;
 
-      for (int p = 0; p < text.length(); p++) {
-         char c = text.charAt(p);
+      for (int p = 0; p < unformattedText.length(); p++) {
+         char c = unformattedText.charAt(p);
 
          if (c == paren) {
             count++;
@@ -94,20 +92,9 @@ public final class LineSegment implements Iterable<LineSegment>
       return count;
    }
 
-   public String getUnformattedText()
-   {
-      return unformattedText;
-   }
-
    public CharSequence getText()
    {
-      return text;
-   }
-
-   public void wrapBetween(String before, String after)
-   {
-      text.insert(0, before);
-      text.append(after);
+      return unformattedText;
    }
 
    public LineSegment getNext()
@@ -164,7 +151,7 @@ public final class LineSegment implements Iterable<LineSegment>
       StringBuilder line = new StringBuilder(200);
 
       for (LineSegment segment : this) {
-         line.append(segment.text);
+         line.append(segment.unformattedText);
       }
 
       return line.toString();
