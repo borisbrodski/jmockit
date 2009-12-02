@@ -123,21 +123,29 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
          return false;
       }
 
-      int p = className.lastIndexOf('$');
-
-      if (className.endsWith("Test") || p > 0 && className.substring(0, p).endsWith("Test")) {
-         return false;
-      }
-
       if (classNameRegex != null) {
          return classNameRegex.matcher(className).matches();
       }
 
+      if (className.endsWith("Test") || className.startsWith("mockit.")) {
+         return false;
+      }
+
+      int p = className.lastIndexOf('$');
+
+      if (p > 0 && className.substring(0, p).endsWith("Test")) {
+         return false;
+      }
+
       CodeSource codeSource = protectionDomain.getCodeSource();
 
-      return
-         codeSource != null && !codeSource.getLocation().getPath().endsWith(".jar") &&
-         !className.startsWith("mockit.");
+      if (codeSource == null) {
+         return false;
+      }
+
+      String codeLocation = codeSource.getLocation().getPath();
+
+      return !codeLocation.endsWith(".jar") && !codeLocation.endsWith("/test-classes/");
    }
 
    private void registerClassAsModifiedForCoverage(String className, byte[] modifiedClassfile)
