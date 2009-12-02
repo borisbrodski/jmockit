@@ -35,20 +35,28 @@ public final class PathCoverageOutput
 {
    private final PrintWriter output;
    private final Iterator<MethodCoverageData> nextMethod;
+
+   // Helper fields:
    private MethodCoverageData currentMethod;
    private int previousMethodEndLine;
+   private int openingBraceCountForPreviousMethod;
 
    public PathCoverageOutput(PrintWriter output, Collection<MethodCoverageData> methods)
    {
       this.output = output;
       nextMethod = methods.iterator();
-
-      if (nextMethod.hasNext()) {
-         currentMethod = nextMethod.next();
-      }
+      currentMethod = nextMethod.next();
    }
 
    public void writePathCoverageInfoIfLineStartsANewMethodOrConstructor(LineParser lineParser)
+   {
+      if (currentMethod != null && isFirstDeclarationLineForMethodOrConstructor(lineParser)) {
+         writePathCoverageInformationForMethod();
+         moveToNextMethod();
+      }
+   }
+
+   private boolean isFirstDeclarationLineForMethodOrConstructor(LineParser lineParser)
    {
       int lineNo = lineParser.getLineNo();
       String line = lineParser.getLine();
@@ -57,13 +65,13 @@ public final class PathCoverageOutput
          currentMethod == null || lineNo <= previousMethodEndLine ||
          lineNo > currentMethod.getFirstLineOfImplementationBody()
       ) {
-         return;
+         return false;
       }
 
       int p = line.indexOf(currentMethod.methodName);
 
       if (p < 0) {
-         return;
+         return false;
       }
 
       int q = p + currentMethod.methodName.length();
@@ -73,9 +81,14 @@ public final class PathCoverageOutput
          (currentMethod.getFirstLineOfImplementationBody() > lineNo ||
           currentMethod.getLastLineOfImplementationBody() > lineNo)
       ) {
-         return;
+         return false;
       }
 
+      return true;
+   }
+
+   private void writePathCoverageInformationForMethod()
+   {
       if (currentMethod.paths.size() > 1) {
          writePathCoverageHeaderForMethod();
 
@@ -88,9 +101,6 @@ public final class PathCoverageOutput
 
          writePathCoverageFooterForMethod();
       }
-
-      previousMethodEndLine = currentMethod.getLastLineOfImplementationBody();
-      currentMethod = nextMethod.hasNext() ? nextMethod.next() : null;
    }
 
    private void writePathCoverageHeaderForMethod()
@@ -147,5 +157,12 @@ public final class PathCoverageOutput
    {
       output.println("      </td>");
       output.println("    </tr>");
+   }
+
+   private void moveToNextMethod()
+   {
+      previousMethodEndLine = currentMethod.getLastLineOfImplementationBody();
+//      openingBraceCountForPreviousMethod = 1;
+      currentMethod = nextMethod.hasNext() ? nextMethod.next() : null;
    }
 }

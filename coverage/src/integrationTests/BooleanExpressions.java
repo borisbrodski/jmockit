@@ -21,4 +21,22 @@ public final class BooleanExpressions
    {
       return x && (y || z);
    }
+
+   static boolean isSameTypeIgnoringAutoBoxing(Class<?> firstType, Class<?> secondType)
+   {
+      return
+         firstType == secondType ||
+         firstType.isPrimitive() && isWrapperOfPrimitiveType(firstType, secondType) ||
+         secondType.isPrimitive() && isWrapperOfPrimitiveType(secondType, firstType);
+   }
+
+   static boolean isWrapperOfPrimitiveType(Class<?> primitiveType, Class<?> otherType)
+   {
+      return
+//         primitiveType == int.class && otherType == Integer.class ||
+//         primitiveType == long.class && otherType == Long.class ||
+//         primitiveType == double.class && otherType == Double.class ||
+//         primitiveType == float.class && otherType == Float.class ||
+         primitiveType == boolean.class && otherType == Boolean.class;
+   }
 }

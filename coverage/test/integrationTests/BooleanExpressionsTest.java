@@ -70,4 +70,15 @@ public final class BooleanExpressionsTest extends CoverageTest
       assertTrue(tested.eval4(true, true, false));
       assertTrue(tested.eval4(true, true, true));
    }
+
+   @Test
+   public void methodWithComplexExpressionWhichCallsAnotherInSameClass()
+   {
+      BooleanExpressions.isSameTypeIgnoringAutoBoxing(int.class, Integer.class);
+
+      findMethodData(27, "isSameTypeIgnoringAutoBoxing");
+      assertPaths(8, 1, 1);
+
+      findMethodData(35, "isWrapperOfPrimitiveType");
+   }
 }
