@@ -33,7 +33,6 @@ import static org.objectweb.asm2.Opcodes.*;
 
 final class CoverageModifier extends ClassWriter
 {
-   private final CoverageData coverageData;
    private String simpleClassName;
    private String sourceFileName;
    private FileCoverageData fileData;
@@ -42,7 +41,6 @@ final class CoverageModifier extends ClassWriter
    CoverageModifier(ClassReader cr)
    {
       super(cr, true);
-      coverageData = CoverageData.instance();
    }
 
    @Override
@@ -69,7 +67,7 @@ final class CoverageModifier extends ClassWriter
    public void visitSource(String file, String debug)
    {
       sourceFileName += file;
-      fileData = coverageData.addFile(sourceFileName);
+      fileData = CoverageData.instance().addFile(sourceFileName);
 
       if (cannotModify) {
          throw CodeCoverage.CLASS_IGNORED;

@@ -45,11 +45,11 @@ final class FileCoverageReport
    private final PathCoverageOutput pathCoverage;
 
    FileCoverageReport(
-      String outputDir, InputFile inputFile, String sourceFilePath, FileCoverageData fileData,
-      boolean withCallPoints) throws IOException
+      String outputDir, InputFile inputFile, FileCoverageData fileData, boolean withCallPoints)
+      throws IOException
    {
       this.inputFile = inputFile;
-      output = new OutputFile(outputDir, sourceFilePath);
+      output = new OutputFile(outputDir, inputFile.getSourceFile());
       codeCoverage = new CodeCoverageOutput(output, fileData.getLineToLineData(), withCallPoints);
 
       Collection<MethodCoverageData> methods = fileData.getMethods();

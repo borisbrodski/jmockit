@@ -93,21 +93,23 @@ class CoverageReport
       Set<Entry<String, FileCoverageData>> files = fileToFileData.entrySet();
 
       for (Entry<String, FileCoverageData> fileAndFileData : files) {
-         String sourceFile = fileAndFileData.getKey();
+         generateFileCoverageReport(fileAndFileData.getKey(), fileAndFileData.getValue());
+      }
+   }
 
-         if (sourceDirs != null) {
-            InputFile inputFile = new InputFile(sourceDirs, sourceFile);
-
-            if (inputFile.wasFileFound()) {
-               FileCoverageData fileData = fileAndFileData.getValue();
-               FileCoverageReport fileReport =
-                  new FileCoverageReport(outputDir, inputFile, sourceFile, fileData, withCallPoints);
-
-               fileReport.generate();
-            }
-         }
-
+   private void generateFileCoverageReport(String sourceFile, FileCoverageData fileData)
+      throws IOException
+   {
+      if (sourceDirs == null) {
          addFileToPackageFileList(sourceFile);
+      }
+      else {
+         InputFile inputFile = new InputFile(sourceDirs, sourceFile);
+
+         if (inputFile.wasFileFound()) {
+            new FileCoverageReport(outputDir, inputFile, fileData, withCallPoints).generate();
+            addFileToPackageFileList(sourceFile);
+         }
       }
    }
 

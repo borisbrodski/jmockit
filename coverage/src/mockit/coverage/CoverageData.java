@@ -63,6 +63,8 @@ public final class CoverageData implements Serializable
    {
       FileCoverageData fileData = getFileData(file);
 
+      // For a class with nested/inner classes, a previous class in the same source file may
+      // already have been added.
       if (fileData == null) {
          fileData = new FileCoverageData();
          fileToFileData.put(file, fileData);

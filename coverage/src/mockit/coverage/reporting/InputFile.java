@@ -83,4 +83,9 @@ final class InputFile
    {
       return sourceFile != null;
    }
+
+   String getSourceFile()
+   {
+      return sourceFile.getName();
+   }
 }
