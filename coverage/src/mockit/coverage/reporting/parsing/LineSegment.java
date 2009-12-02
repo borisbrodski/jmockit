@@ -156,28 +156,4 @@ public final class LineSegment implements Iterable<LineSegment>
 
       return line.toString();
    }
-
-   int getBalanceBetweenOpeningAndClosingBraces()
-   {
-      // TODO: create a new segment type for string and character literals
-      if (type == SegmentType.COMMENT || type == SegmentType.SEPARATOR) {
-         return 0;
-      }
-
-      int balance = 0;
-      int n = unformattedText.length();
-
-      for (int i = 0; i < n; i++) {
-         char c = unformattedText.charAt(i);
-
-         if (c == '{') {
-            balance++;
-         }
-         else if (c == '}') {
-            balance--;
-         }
-      }
-
-      return balance;
-   }
 }

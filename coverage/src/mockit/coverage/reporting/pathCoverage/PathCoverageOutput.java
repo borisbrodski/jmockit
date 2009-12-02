@@ -38,49 +38,21 @@ public final class PathCoverageOutput
 
    // Helper fields:
    private MethodCoverageData currentMethod;
-   private MethodCoverageData previousMethod;
-   private int braceBalanceForPreviousMethod;
    private final StringBuilder lineIds = new StringBuilder(100);
 
    public PathCoverageOutput(PrintWriter output, Collection<MethodCoverageData> methods)
    {
       this.output = output;
       nextMethod = methods.iterator();
-      currentMethod = nextMethod.next();
+      moveToNextMethod();
    }
 
    public void writePathCoverageInfoIfLineStartsANewMethodOrConstructor(LineParser lineParser)
    {
-      if (currentMethod != null && isFirstDeclarationLineForMethodOrConstructor(lineParser)) {
+      if (currentMethod != null && lineParser.getLineNo() == currentMethod.getFirstLineInBody()) {
          writePathCoverageInformationForMethod();
          moveToNextMethod();
       }
-   }
-
-   private boolean isFirstDeclarationLineForMethodOrConstructor(LineParser lineParser)
-   {
-      int lineNo = lineParser.getLineNo();
-      int firstLineInBody = currentMethod.getFirstLineInBody();
-
-      if (previousMethod != null) {
-         if (lineNo == previousMethod.getFirstLineInBody()) {
-            braceBalanceForPreviousMethod = 1;
-         }
-
-         braceBalanceForPreviousMethod += lineParser.getBalanceBetweenOpeningAndClosingBraces();
-
-         if (braceBalanceForPreviousMethod > 0 || lineNo <= previousMethod.getLastLineInBody()) {
-            return false;
-         }
-      }
-
-      if (lineNo > firstLineInBody) {
-         return false;
-      }
-
-      String line = lineParser.getLine();
-
-      return currentMethod.isDefaultConstructorLine(lineNo, line);
    }
 
    private void writePathCoverageInformationForMethod()
@@ -165,8 +137,6 @@ public final class PathCoverageOutput
 
    private void moveToNextMethod()
    {
-      previousMethod = currentMethod;
       currentMethod = nextMethod.hasNext() ? nextMethod.next() : null;
-      braceBalanceForPreviousMethod = -1;
    }
 }

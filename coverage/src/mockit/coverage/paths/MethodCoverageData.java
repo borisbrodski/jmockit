@@ -68,7 +68,7 @@ public final class MethodCoverageData implements Serializable
       return lastLine;
    }
 
-   public boolean isDefaultConstructorLine(int lineNo, String line)
+   public boolean isInitialDeclarationLine(int lineNo, String line)
    {
       int p = line.indexOf(methodName);
 

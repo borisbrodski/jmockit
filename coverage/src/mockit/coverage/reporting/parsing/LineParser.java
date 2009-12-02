@@ -230,17 +230,4 @@ public final class LineParser
 
       currentSegment = newSegment;
    }
-
-   public int getBalanceBetweenOpeningAndClosingBraces()
-   {
-      int balance = 0;
-
-      if (initialSegment != null) {
-         for (LineSegment segment : initialSegment) {
-            balance += segment.getBalanceBetweenOpeningAndClosingBraces();
-         }
-      }
-
-      return balance;
-   }
 }
