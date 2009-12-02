@@ -49,7 +49,7 @@ final class FileCoverageReport
       throws IOException
    {
       this.inputFile = inputFile;
-      output = new OutputFile(outputDir, inputFile.getSourceFile());
+      output = new OutputFile(outputDir, inputFile.filePath);
       codeCoverage = new CodeCoverageOutput(output, fileData.getLineToLineData(), withCallPoints);
 
       Collection<MethodCoverageData> methods = fileData.getMethods();

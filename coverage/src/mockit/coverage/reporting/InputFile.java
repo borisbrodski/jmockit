@@ -29,11 +29,13 @@ import java.util.*;
 
 final class InputFile
 {
+   final String filePath;
    final File sourceFile;
    final BufferedReader input;
 
    InputFile(List<File> sourceDirs, String filePath) throws FileNotFoundException
    {
+      this.filePath = filePath;
       sourceFile = findSourceFile(sourceDirs, filePath);
       input = sourceFile == null ? null : new BufferedReader(new FileReader(sourceFile));
    }
@@ -82,10 +84,5 @@ final class InputFile
    boolean wasFileFound()
    {
       return sourceFile != null;
-   }
-
-   String getSourceFile()
-   {
-      return sourceFile.getName();
    }
 }
