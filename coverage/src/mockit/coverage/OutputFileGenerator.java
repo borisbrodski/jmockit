@@ -33,13 +33,15 @@ final class OutputFileGenerator extends Thread
 {
    private static final String COVERAGE_PREFIX = "jmockit-coverage-";
 
+   private final Runnable onRun;
    private final String outputFormat;
    private final String outputDir;
    private final String[] sourceDirs;
    private String[] classPath;
 
-   OutputFileGenerator(String outputFormat, String outputDir, String[] srcDirs)
+   OutputFileGenerator(Runnable onRun, String outputFormat, String outputDir, String[] srcDirs)
    {
+      this.onRun = onRun;
       this.outputFormat = getOutputFormat(outputFormat);
       this.outputDir = outputDir.length() > 0 ? outputDir : getCoverageProperty("outputDir");
 
@@ -47,8 +49,17 @@ final class OutputFileGenerator extends Thread
          sourceDirs = srcDirs;
       }
       else {
-         String commaSeparatedDirs = getCoverageProperty("srcDirs");
-         sourceDirs = commaSeparatedDirs.length() == 0 ? srcDirs : commaSeparatedDirs.split(",");
+         String commaSeparatedDirs = System.getProperty(COVERAGE_PREFIX + "srcDirs");
+
+         if (commaSeparatedDirs == null) {
+            sourceDirs = srcDirs;
+         }
+         else if (commaSeparatedDirs.length() == 0) {
+            sourceDirs = null;
+         }
+         else {
+            sourceDirs = commaSeparatedDirs.split(",");
+         }
       }
    }
 
@@ -132,6 +143,7 @@ final class OutputFileGenerator extends Thread
    @Override
    public void run()
    {
+      onRun.run();
       createOutputDirIfSpecifiedButNotExists();
 
       CoverageData coverageData = CoverageData.instance();

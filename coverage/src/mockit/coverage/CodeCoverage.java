@@ -35,7 +35,7 @@ import mockit.internal.state.TestRun;
 
 import org.objectweb.asm2.*;
 
-public final class CodeCoverage implements ClassFileTransformer
+public final class CodeCoverage implements ClassFileTransformer, Runnable
 {
    static final class VisitInterruptedException extends RuntimeException {}
    static final VisitInterruptedException CLASS_IGNORED = new VisitInterruptedException();
@@ -73,12 +73,17 @@ public final class CodeCoverage implements ClassFileTransformer
       String[] sourceDirs = argCount <= 3 ? NO_ARGS : args[3].split(",");
 
       OutputFileGenerator outputFileGenerator =
-         new OutputFileGenerator(outputFormat, outputDir, sourceDirs);
+         new OutputFileGenerator(this, outputFormat, outputDir, sourceDirs);
 
       if (outputFileGenerator.isOutputToBeGenerated()) {
          CoverageData.instance().setWithCallPoints(outputFileGenerator.isWithCallPoints());
          Runtime.getRuntime().addShutdownHook(outputFileGenerator);
       }
+   }
+
+   public void run()
+   {
+      Startup.instrumentation().removeTransformer(this);
    }
 
    public byte[] transform(
