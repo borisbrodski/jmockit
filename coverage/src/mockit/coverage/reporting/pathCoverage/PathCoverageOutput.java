@@ -38,8 +38,9 @@ public final class PathCoverageOutput
 
    // Helper fields:
    private MethodCoverageData currentMethod;
-   private int previousMethodEndLine;
-   private int openingBraceCountForPreviousMethod;
+   private MethodCoverageData previousMethod;
+   private int braceBalanceForPreviousMethod;
+   private final StringBuilder lineIds = new StringBuilder(100);
 
    public PathCoverageOutput(PrintWriter output, Collection<MethodCoverageData> methods)
    {
@@ -59,32 +60,27 @@ public final class PathCoverageOutput
    private boolean isFirstDeclarationLineForMethodOrConstructor(LineParser lineParser)
    {
       int lineNo = lineParser.getLineNo();
+      int firstLineInBody = currentMethod.getFirstLineInBody();
+
+      if (previousMethod != null) {
+         if (lineNo == previousMethod.getFirstLineInBody()) {
+            braceBalanceForPreviousMethod = 1;
+         }
+
+         braceBalanceForPreviousMethod += lineParser.getBalanceBetweenOpeningAndClosingBraces();
+
+         if (braceBalanceForPreviousMethod > 0 || lineNo <= previousMethod.getLastLineInBody()) {
+            return false;
+         }
+      }
+
+      if (lineNo > firstLineInBody) {
+         return false;
+      }
+
       String line = lineParser.getLine();
 
-      if (
-         currentMethod == null || lineNo <= previousMethodEndLine ||
-         lineNo > currentMethod.getFirstLineOfImplementationBody()
-      ) {
-         return false;
-      }
-
-      int p = line.indexOf(currentMethod.methodName);
-
-      if (p < 0) {
-         return false;
-      }
-
-      int q = p + currentMethod.methodName.length();
-
-      if (
-         (line.length() == q || line.charAt(q) != '(') &&
-         (currentMethod.getFirstLineOfImplementationBody() > lineNo ||
-          currentMethod.getLastLineOfImplementationBody() > lineNo)
-      ) {
-         return false;
-      }
-
-      return true;
+      return currentMethod.isDefaultConstructorLine(lineNo, line);
    }
 
    private void writePathCoverageInformationForMethod()
@@ -126,9 +122,27 @@ public final class PathCoverageOutput
    private void writeCoverageInfoForIndividualPath(char pathId, Path path)
    {
       int executionCount = path.getExecutionCount();
-      StringBuilder lineIds = new StringBuilder();
-      String sep = "l";
+      String lineIdsForPath = getIdsForLinesBelongingToThePath(path);
+
+      output.write("        <span class='");
+      output.write(executionCount == 0 ? "uncovered" : "covered");
+      output.write("' onclick=\"showPath(this,'");
+      output.print(pathId);
+      output.write("','");
+      output.write(lineIdsForPath);
+      output.write("')\">");
+      output.print(pathId);
+      output.write(": ");
+      output.print(executionCount);
+      output.println("</span>");
+   }
+
+   private String getIdsForLinesBelongingToThePath(Path path)
+   {
+      lineIds.setLength(0);
+
       int previousLine = 0;
+      String sep = "l";
 
       for (Node node : path.getNodes()) {
          int line = node.line;
@@ -140,17 +154,7 @@ public final class PathCoverageOutput
          }
       }
 
-      output.write("        <span class='");
-      output.write(executionCount == 0 ? "uncovered" : "covered");
-      output.write("' onclick=\"showPath(this,'");
-      output.print(pathId);
-      output.write("','");
-      output.write(lineIds.toString());
-      output.write("')\">");
-      output.print(pathId);
-      output.write(": ");
-      output.print(executionCount);
-      output.println("</span>");
+      return lineIds.toString();
    }
 
    private void writePathCoverageFooterForMethod()
@@ -161,8 +165,8 @@ public final class PathCoverageOutput
 
    private void moveToNextMethod()
    {
-      previousMethodEndLine = currentMethod.getLastLineOfImplementationBody();
-//      openingBraceCountForPreviousMethod = 1;
+      previousMethod = currentMethod;
       currentMethod = nextMethod.hasNext() ? nextMethod.next() : null;
+      braceBalanceForPreviousMethod = -1;
    }
 }

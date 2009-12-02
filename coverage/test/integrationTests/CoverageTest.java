@@ -99,8 +99,8 @@ public class CoverageTest extends Assert
 
    protected final void assertMethodLines(int startingLine, int endingLine)
    {
-      assertEquals(startingLine, methodData.getFirstLineOfImplementationBody());
-      assertEquals(endingLine, methodData.getLastLineOfImplementationBody());
+      assertEquals(startingLine, methodData.getFirstLineInBody());
+      assertEquals(endingLine, methodData.getLastLineInBody());
    }
 
    protected final void assertPath(int expectedNodeCount, int expectedExecutionCount)

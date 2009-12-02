@@ -58,14 +58,28 @@ public final class MethodCoverageData implements Serializable
       nodesReached = new ThreadLocal<Integer>();
    }
 
-   public int getFirstLineOfImplementationBody()
+   public int getFirstLineInBody()
    {
       return firstLine;
    }
 
-   public int getLastLineOfImplementationBody()
+   public int getLastLineInBody()
    {
       return lastLine;
+   }
+
+   public boolean isDefaultConstructorLine(int lineNo, String line)
+   {
+      int p = line.indexOf(methodName);
+
+      if (p < 0) {
+         return false;
+      }
+
+      int q = p + methodName.length();
+
+      return
+         line.length() > q && line.charAt(q) == '(' || lineNo == firstLine && firstLine == lastLine;
    }
 
    public void markNodeAsReached(int nodeIndex)

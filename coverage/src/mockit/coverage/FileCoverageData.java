@@ -48,7 +48,7 @@ public final class FileCoverageData implements Serializable
 
    void addMethod(MethodCoverageData methodData)
    {
-      firstLineToMethodData.put(methodData.getFirstLineOfImplementationBody(), methodData);
+      firstLineToMethodData.put(methodData.getFirstLineInBody(), methodData);
    }
 
    LineCoverageData addLine(int line)

@@ -208,7 +208,7 @@ public abstract class XmlWriter
 
       for (MethodCoverageData methodData : fileData.firstLineToMethodData.values()) {
          output.write("    <paths firstLineInMethodBody='");
-         writeInt(methodData.getFirstLineOfImplementationBody());
+         writeInt(methodData.getFirstLineInBody());
          output.write("' count='");
          writeInt(methodData.getExecutionCount());
          writeLine("'>");
