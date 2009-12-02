@@ -96,11 +96,16 @@ public final class CodeCoverageOutput
          return;
       }
 
-      String lineStatus = lineData == null ? "nonexec" : "uncovered";
-
       output.write("' class='");
-      output.write(lineStatus);
-      output.write("'><pre class='prettyprint'>");
+      output.write(lineData == null ? "nonexec'>" : "uncovered'>");
+
+      if (lineData == null && initialSegment.isComment()) {
+         output.write("<pre class='comment'>");
+      }
+      else {
+         output.write("<pre class='prettyprint'>");
+      }
+
       output.write(initialSegment.toString());
       output.println("</pre></td>");
    }

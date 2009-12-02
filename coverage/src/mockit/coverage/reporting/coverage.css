@@ -6,9 +6,7 @@ ol {
    margin: 1ex 2em 1ex 4em;
 }
 
-span.comment { color: gray; }
-span.keyword { color: #00008b; font-weight: bolder; }
-span.annotation { color: #800000; }
+pre.comment { margin: 0; color: gray; }
 
 .lineNo { text-align: right; }
 .count { background-color: yellow; text-align: right; padding-left: 4px; padding-right: 2px; }
