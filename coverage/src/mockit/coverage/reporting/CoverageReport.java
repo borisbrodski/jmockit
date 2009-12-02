@@ -39,10 +39,10 @@ class CoverageReport
    private final boolean withCallPoints;
 
    protected CoverageReport(
-      String outputDir, String[] sourceDirs, CoverageData coverageData, boolean withCallPoints)
+      String outputDir, String[] srcDirs, CoverageData coverageData, boolean withCallPoints)
    {
       this.outputDir = outputDir.length() > 0 ? outputDir : "coverage-report";
-      this.sourceDirs = new SourceFiles().buildListOfSourceDirectories(sourceDirs);
+      sourceDirs = srcDirs == null ? null : new SourceFiles().buildListOfSourceDirectories(srcDirs);
       fileToFileData = coverageData.getFileToFileDataMap();
       packageToFiles = new HashMap<String, List<String>>();
       this.withCallPoints = withCallPoints;
@@ -65,14 +65,14 @@ class CoverageReport
          return;
       }
 
-      if (sourceDirs.size() > 1) {
+      if (sourceDirs != null && sourceDirs.size() > 1) {
          System.out.println("JMockit: Coverage source dirs: " + sourceDirs);
       }
 
       generateFileCoverageReportsWhileBuildingPackageLists();
-      new IndexPage(outputFile, packageToFiles, fileToFileData).generate(sourceDirs);
+      new IndexPage(outputFile, sourceDirs, packageToFiles, fileToFileData).generate();
 
-      OutputFile.copySharedReferencedFiles(outputDir);
+      OutputFile.copySharedReferencedFiles(outputDir, sourceDirs != null);
 
       System.out.println(
          "JMockit: Coverage report written to " + new File(outputDir).getCanonicalPath());
@@ -94,17 +94,20 @@ class CoverageReport
 
       for (Entry<String, FileCoverageData> fileAndFileData : files) {
          String sourceFile = fileAndFileData.getKey();
-         FileCoverageData fileData = fileAndFileData.getValue();
 
-         InputFile inputFile = new InputFile(sourceDirs, sourceFile);
+         if (sourceDirs != null) {
+            InputFile inputFile = new InputFile(sourceDirs, sourceFile);
 
-         if (inputFile.wasFileFound()) {
-            FileCoverageReport fileReport =
-               new FileCoverageReport(outputDir, inputFile, sourceFile, fileData, withCallPoints);
+            if (inputFile.wasFileFound()) {
+               FileCoverageData fileData = fileAndFileData.getValue();
+               FileCoverageReport fileReport =
+                  new FileCoverageReport(outputDir, inputFile, sourceFile, fileData, withCallPoints);
 
-            fileReport.generate();
-            addFileToPackageFileList(sourceFile);
+               fileReport.generate();
+            }
          }
+
+         addFileToPackageFileList(sourceFile);
       }
    }
 

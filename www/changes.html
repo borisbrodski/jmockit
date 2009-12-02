@@ -43,6 +43,8 @@
             The list of directories containing Java source files, needed for the XHTML report, can
             now be specified through the <code>jmockit-coverage-srcDirs</code> system property.
             (When not specified, all "src" directories under the current working dir are searched.)
+            If the property is specified but with an empty value, then no source directories will be
+            searched and the report will only contain the index page.
          </li>
          <li>
             A regular expression for selecting the Java classes which should be considered for

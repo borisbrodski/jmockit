@@ -31,27 +31,29 @@ import mockit.coverage.*;
 
 final class IndexPage extends ListWithFilesAndPercentages
 {
+   private final List<File> sourceDirs;
    private final Map<String, List<String>> packageToFiles;
    private final Map<String, Integer> packageToPackageCodePercentages;
    private final Map<String, Integer> packageToPackagePathPercentages;
    private final PackageCoverageReport packageReport;
 
    IndexPage(
-      File outputFile,
+      File outputFile, List<File> sourceDirs,
       Map<String, List<String>> packageToFiles, Map<String, FileCoverageData> fileToFileData)
       throws IOException
    {
       super(new OutputFile(outputFile), "    ");
+      this.sourceDirs = sourceDirs;
       this.packageToFiles = packageToFiles;
       packageToPackageCodePercentages = new HashMap<String, Integer>();
       packageToPackagePathPercentages = new HashMap<String, Integer>();
-      packageReport = new PackageCoverageReport(output, fileToFileData);
+      packageReport = new PackageCoverageReport(output, fileToFileData, sourceDirs != null);
    }
 
-   void generate(List<File> sourceDirs)
+   void generate()
    {
       try {
-         writeHeader(sourceDirs);
+         writeHeader();
 
          List<String> packages = new ArrayList<String>(packageToFiles.keySet());
          writeMetricForEachFile(packages);
@@ -64,26 +66,31 @@ final class IndexPage extends ListWithFilesAndPercentages
       }
    }
 
-   private void writeHeader(List<File> sourceDirs)
+   private void writeHeader()
    {
       output.printCommonHeader(false);
 
       output.println("  <h1>JMockit Coverage Report</h1>");
       output.println("  <table cellpadding='0' cellspacing='1'>");
-      output.write("    <caption>All Packages and Files<div style='font-size: smaller'>");
 
-      String commaSepDirs = sourceDirs.toString();
-      output.write(commaSepDirs.substring(1, commaSepDirs.length() - 1));
+      if (sourceDirs == null) {
+         output.println("    <caption>All Packages and Files</caption>");
+      }
+      else {
+         output.write("    <caption>All Packages and Files<div style='font-size: smaller'>");
+         String commaSepDirs = sourceDirs.toString();
+         output.write(commaSepDirs.substring(1, commaSepDirs.length() - 1));
+         output.println("</div></caption>");
+      }
 
-      output.println("</div></caption>");
-      output.write("    <tr><th>Packages (");
+      output.write("    <tr><th>Packages: ");
       output.print(packageToFiles.keySet().size());
-      output.write(")</th><th>Files (");
+      output.write("</th><th>Files (.java): ");
 
       int totalFileCount = computeTotalNumberOfSourceFiles();
       output.print(totalFileCount);
 
-      output.println(")</th><th>Code Coverage</th><th>Path Coverage</th></tr>");
+      output.println("</th><th>Code Coverage</th><th>Path Coverage</th></tr>");
    }
 
    private int computeTotalNumberOfSourceFiles()

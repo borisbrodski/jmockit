@@ -31,11 +31,14 @@ import mockit.coverage.*;
 final class PackageCoverageReport extends ListWithFilesAndPercentages
 {
    private final Map<String, FileCoverageData> filesToFileData;
+   private final boolean withSourceFiles;
 
-   PackageCoverageReport(OutputFile output, Map<String, FileCoverageData> filesToFileData)
+   PackageCoverageReport(
+      OutputFile output, Map<String, FileCoverageData> filesToFileData, boolean withSourceFiles)
    {
       super(output, "          ");
       this.filesToFileData = filesToFileData;
+      this.withSourceFiles = withSourceFiles;
    }
 
    @Override
@@ -77,7 +80,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    @Override
    protected String getHRefToFile(String filePath)
    {
-      return filePath.replace(".java", ".html");
+      return withSourceFiles ? filePath.replace(".java", ".html") : null;
    }
 
    @Override
@@ -86,7 +89,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       int p1 = filePath.lastIndexOf('/') + 1;
       int p2 = filePath.lastIndexOf('.');
 
-      return (p2 > 0 ? filePath.substring(p1, p2) : filePath.substring(p1)) + ".java";
+      return filePath.substring(p1, p2);
    }
 
    @Override

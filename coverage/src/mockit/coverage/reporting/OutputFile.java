@@ -31,16 +31,31 @@ final class OutputFile extends PrintWriter
 {
    private static final Pattern PATH_SEPARATOR = Pattern.compile("/");
 
-   static void copySharedReferencedFiles(String outputDir) throws IOException
+   static void copySharedReferencedFiles(String outputDir, boolean forSourceFilePages)
+      throws IOException
    {
-      copyFile(outputDir, "coverage.css");
-      copyFile(outputDir, "coverage.js");
+      String pathToThisJar =
+         OutputFile.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+      long timeOfCoverageJar = new File(pathToThisJar).lastModified();
+      
+      copyFile(outputDir, "coverage.css", timeOfCoverageJar);
+
+      if (forSourceFilePages) {
+         copyFile(outputDir, "coverage.js", timeOfCoverageJar);
+      }
    }
 
-   private static void copyFile(String outputDir, String fileName) throws IOException
+   private static void copyFile(String outputDir, String fileName, long timeOfCoverageJar)
+      throws IOException
    {
+      File outputFile = new File(outputDir, fileName);
+
+      if (outputFile.exists() && timeOfCoverageJar < outputFile.lastModified()) {
+         return;
+      }
+
+      FileOutputStream output = new FileOutputStream(outputFile);
       InputStream input = OutputFile.class.getResourceAsStream(fileName);
-      FileOutputStream output = new FileOutputStream(new File(outputDir, fileName));
 
       try {
          int b;
