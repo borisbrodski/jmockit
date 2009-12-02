@@ -62,6 +62,16 @@
             (<a href="http://code.google.com/p/jmockit/issues/detail?id=7">issue 12</a>), which is
             completely separate from the current <em>code coverage</em> metric.
          </li>
+         <li>
+            The XHTML report now uses <code>prettify.js</code> (from the
+            <a href="http://code.google.com/p/google-code-prettify">Google Code Prettify project</a>)
+            for syntax coloring in Java source files.
+            This makes report generation faster and smaller, but requires a JavaScript-enabled
+            browser for the proper viewing of source file pages.
+            (JavaScript is also used for other features in such pages.)
+            The "index.html" page, on the other hand, makes no use of JavaScript so any XHTML+CSS
+            browser (such as the one embedded in Eclipse) can be used without any loss.
+         </li>
       </ul>
    </li>
    <li>
