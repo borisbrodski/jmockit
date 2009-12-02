@@ -1,14 +1,12 @@
 caption { background-color: #483d8b; color: white; font-size: larger; }
 th { background-color: #6495ed; color: white; }
 td { font-family: monospace; }
-pre { margin: 0; }
 ol {
    background-color: #e0ffff;
    margin: 1ex 2em 1ex 4em;
 }
 
-span.comment { color: gray; }
-span.keyword { color: #00008b; font-weight: bolder; }
+pre.comment { margin: 0; color: gray; }
 
 .lineNo { text-align: right; }
 .count { background-color: yellow; text-align: right; padding-left: 4px; padding-right: 2px; }
@@ -33,7 +31,7 @@ td.total { text-align: right; font-weight: bold; background-color: #e0e0e0; }
 .withCallPoints { cursor: pointer; }
 
 td.paths {
-   padding-left: 2em;
+   padding-left: 1px; padding-bottom: 2px;
    font-family: sans-serif; font-size: small;
 }
 .paths span {
