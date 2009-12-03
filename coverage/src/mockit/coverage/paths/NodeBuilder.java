@@ -50,7 +50,7 @@ public final class NodeBuilder
          return addNewNode(entryNode);
       }
 
-      return handleRegularInstruction(line);
+      return -1;
    }
 
    private int addNewNode(Node newNode)
@@ -75,15 +75,12 @@ public final class NodeBuilder
          return -1;
       }
 
-      if (currentBasicBlock == null) {
-         Node.BasicBlock newNode = new Node.BasicBlock(line);
-         connectNodes(newNode);
-         return addNewNode(newNode);
-      }
-      else {
-         connectNodes(currentBasicBlock);
-         return -1;
-      }
+      assert currentBasicBlock == null;
+
+      Node.BasicBlock newNode = new Node.BasicBlock(line);
+      connectNodes(newNode);
+
+      return addNewNode(newNode);
    }
 
    public int handleJump(Label targetBlock, int line, boolean conditional)

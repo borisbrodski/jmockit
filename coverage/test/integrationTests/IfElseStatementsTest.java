@@ -50,8 +50,8 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(8, "simpleIf");
       assertPaths(2, 2, 2);
       assertMethodLines(8, 11);
+      assertPath(4, 1);
       assertPath(5, 1);
-      assertPath(6, 1);
    }
 
    @Test
@@ -63,8 +63,8 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(15, "ifAndElse");
       assertPaths(2, 2, 2);
       assertMethodLines(15, 21);
-      assertPath(7, 1);
       assertPath(6, 1);
+      assertPath(5, 1);
    }
 
    @Test
@@ -76,8 +76,8 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(25, "singleLineIf");
       assertPaths(2, 2, 2);
       assertMethodLines(25, 26);
+      assertPath(4, 1);
       assertPath(5, 1);
-      assertPath(6, 1);
    }
 
    @Test
@@ -89,8 +89,8 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(30, "singleLineIfAndElse");
       assertPaths(2, 2, 2);
       assertMethodLines(30, 31);
-      assertPath(7, 1);
       assertPath(6, 1);
+      assertPath(5, 1);
    }
 
    @Test
@@ -102,10 +102,10 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(35, "methodWithFourDifferentPathsAndSimpleLines");
       assertPaths(4, 2, 2);
       assertMethodLines(35, 45);
-      assertPath(10, 0);
-      assertPath(11, 1);
-      assertPath(9, 1);
-      assertPath(10, 0);
+      assertPath(9, 0);
+      assertPath(10, 1);
+      assertPath(8, 1);
+      assertPath(9, 0);
    }
 
    @Test
@@ -117,10 +117,10 @@ public final class IfElseStatementsTest extends CoverageTest
       findMethodData(49, "methodWithFourDifferentPathsAndSegmentedLines");
       assertPaths(4, 2, 2);
       assertMethodLines(49, 53);
-      assertPath(12, 1);
-      assertPath(11, 0);
-      assertPath(11, 0);
-      assertPath(10, 1);
+      assertPath(11, 1);
+      assertPath(10, 0);
+      assertPath(10, 0);
+      assertPath(9, 1);
    }
 
    @Test
@@ -212,9 +212,9 @@ public final class IfElseStatementsTest extends CoverageTest
 
       findMethodData(137, "infeasiblePaths");
       assertPaths(4, 2, 2);
-      assertPath(8, 1);
-      assertPath(9, 0);
-      assertPath(9, 0);
-      assertPath(10, 1);
+      assertPath(7, 1);
+      assertPath(8, 0);
+      assertPath(8, 0);
+      assertPath(9, 1);
    }
 }

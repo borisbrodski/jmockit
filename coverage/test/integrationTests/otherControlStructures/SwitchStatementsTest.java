@@ -49,10 +49,10 @@ public final class SwitchStatementsTest extends CoverageTest
       findMethodData(7, "switchStatementWithSparseCasesAndDefault");
       assertMethodLines(7, 22);
       assertPaths(4, 2, 2);
-      assertPath(5, 1);
+      assertPath(4, 1);
       assertPath(5, 0);
-      assertPath(7, 1);
-      assertPath(7, 0);
+      assertPath(6, 1);
+      assertPath(6, 0);
    }
 
    @Test
@@ -77,10 +77,10 @@ public final class SwitchStatementsTest extends CoverageTest
 
       findMethodData(37, "switchStatementWithCompactCasesAndDefault");
       assertPaths(4, 2, 2);
-      assertPath(5, 1);
+      assertPath(4, 1);
       assertPath(5, 0);
-      assertPath(7, 0);
-      assertPath(7, 1);
+      assertPath(6, 0);
+      assertPath(6, 1);
    }
 
    @Test
@@ -106,9 +106,9 @@ public final class SwitchStatementsTest extends CoverageTest
 
       findMethodData(64, "switchStatementWithSparseCasesAndNoDefault");
       assertPaths(3, 2, 2);
-      assertPath(7, 0);
-      assertPath(7, 1);
-      assertPath(5, 1);
+      assertPath(6, 0);
+      assertPath(6, 1);
+      assertPath(4, 1);
    }
 
    @Test

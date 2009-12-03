@@ -391,7 +391,6 @@ final class CoverageModifier extends ClassWriter
       public final void visitInsn(int opcode)
       {
          if (opcode >= IRETURN && opcode <= RETURN || opcode == ATHROW) {
-            handleRegularInstruction();
             int newNodeIndex = nodeBuilder.handleExit(currentLine);
             generateCallToRegisterNodeReached(newNodeIndex);
          }
