@@ -98,6 +98,12 @@
       Note that this change may break existing tests, although it should be rare to have expectation
       blocks for which no mocked type is available.
    </li>
+   <li>
+      Fixed an issue in JUnit 3.8 integration: if a base test class did override the
+      <code>junit.framework.TestCase#runBare()</code> method, a duplicate execution of this
+      overridden method would occur. The integration was changed so that <code>runBare()</code> can
+      now safely be overridden.
+   </li>
 </ul>
 
 <h3>Current release</h3>
