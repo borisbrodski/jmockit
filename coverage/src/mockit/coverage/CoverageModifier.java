@@ -26,6 +26,7 @@ package mockit.coverage;
 
 import java.util.*;
 
+import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
 
 import org.objectweb.asm2.*;

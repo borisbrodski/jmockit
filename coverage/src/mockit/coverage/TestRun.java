@@ -24,6 +24,7 @@
  */
 package mockit.coverage;
 
+import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
 
 public final class TestRun
@@ -47,7 +48,7 @@ public final class TestRun
 
       CoverageData coverageData = CoverageData.instance();
       CallPoint callPoint =
-         coverageData.withCallPoints ? CallPoint.create(file, line, new Throwable()) : null;
+         coverageData.isWithCallPoints() ? CallPoint.create(file, line, new Throwable()) : null;
 
       FileCoverageData fileData = coverageData.getFileData(file);
       fileData.incrementLineCount(line, callPoint);
@@ -66,7 +67,7 @@ public final class TestRun
 
       CoverageData coverageData = CoverageData.instance();
       CallPoint callPoint =
-         coverageData.withCallPoints ? CallPoint.create(file, line, new Throwable()) : null;
+         coverageData.isWithCallPoints() ? CallPoint.create(file, line, new Throwable()) : null;
 
       FileCoverageData fileData = coverageData.getFileData(file);
       fileData.registerBranchExecution(line, segment, true, callPoint);
@@ -85,7 +86,7 @@ public final class TestRun
 
       CoverageData coverageData = CoverageData.instance();
       CallPoint callPoint =
-         coverageData.withCallPoints ? CallPoint.create(file, line, new Throwable()) : null;
+         coverageData.isWithCallPoints() ? CallPoint.create(file, line, new Throwable()) : null;
 
       FileCoverageData fileData = coverageData.getFileData(file);
       fileData.registerBranchExecution(line, segment, false, callPoint);

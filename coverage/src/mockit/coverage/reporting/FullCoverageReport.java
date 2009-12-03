@@ -24,7 +24,7 @@
  */
 package mockit.coverage.reporting;
 
-import mockit.coverage.*;
+import mockit.coverage.data.*;
 
 public final class FullCoverageReport extends CoverageReport
 {

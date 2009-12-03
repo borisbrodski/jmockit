@@ -26,7 +26,7 @@ package mockit.coverage.output;
 
 import java.io.*;
 
-import mockit.coverage.*;
+import mockit.coverage.data.*;
 
 public final class BasicXmlWriter extends XmlWriter
 {

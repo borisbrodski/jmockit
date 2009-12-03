@@ -22,10 +22,12 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage;
+package mockit.coverage.data;
 
 import java.io.*;
 import java.util.*;
+
+import mockit.coverage.*;
 
 import org.objectweb.asm2.*;
 
@@ -62,12 +64,12 @@ public final class BranchCoverageData implements Serializable
       unreachable = true;
    }
 
-   void setHasJumpTarget()
+   public void setHasJumpTarget()
    {
       jumpExecutionCount = 0;
    }
 
-   void setHasNoJumpTarget()
+   public void setHasNoJumpTarget()
    {
       noJumpExecutionCount = 0;
    }

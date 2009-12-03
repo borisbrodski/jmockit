@@ -27,7 +27,7 @@ package mockit.coverage.reporting.codeCoverage;
 import java.io.*;
 import java.util.*;
 
-import mockit.coverage.*;
+import mockit.coverage.data.*;
 import mockit.coverage.reporting.parsing.*;
 
 public final class CodeCoverageOutput

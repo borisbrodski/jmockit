@@ -22,7 +22,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage;
+package mockit.coverage.data;
 
 import java.io.*;
 import java.security.*;
@@ -40,14 +40,16 @@ public final class CoverageData implements Serializable
 
    private static final CoverageData instance = new CoverageData();
 
-   public static CoverageData instance()
-   {
-      return instance;
-   }
+   public static CoverageData instance() { return instance; }
 
-   boolean withCallPoints;
+   private boolean withCallPoints;
    private final Map<String, FileCoverageData> fileToFileData =
       new ConcurrentHashMap<String, FileCoverageData>();
+
+   public boolean isWithCallPoints()
+   {
+      return withCallPoints;
+   }
 
    public void setWithCallPoints(boolean withCallPoints)
    {
@@ -59,7 +61,7 @@ public final class CoverageData implements Serializable
       return Collections.unmodifiableMap(fileToFileData);
    }
 
-   FileCoverageData addFile(String file)
+   public FileCoverageData addFile(String file)
    {
       FileCoverageData fileData = getFileData(file);
 
@@ -73,12 +75,12 @@ public final class CoverageData implements Serializable
       return fileData;
    }
 
-   FileCoverageData getFileData(String file)
+   public FileCoverageData getFileData(String file)
    {
       return fileToFileData.get(file);
    }
 
-   void fillLastModifiedTimesForAllClassFiles()
+   public void fillLastModifiedTimesForAllClassFiles()
    {
       for (Map.Entry<String, FileCoverageData> fileAndFileData : fileToFileData.entrySet()) {
          File coveredClassFile = getClassFile(fileAndFileData.getKey());
@@ -96,7 +98,8 @@ public final class CoverageData implements Serializable
       return new File(pathToClassFile);
    }
 
-   static CoverageData readDataFromFile(File dataFile) throws IOException, ClassNotFoundException
+   public static CoverageData readDataFromFile(File dataFile)
+      throws IOException, ClassNotFoundException
    {
       ObjectInputStream input = new ObjectInputStream(new FileInputStream(dataFile));
 
@@ -108,7 +111,7 @@ public final class CoverageData implements Serializable
       }
    }
 
-   void writeDataToFile(File dataFile) throws IOException
+   public void writeDataToFile(File dataFile) throws IOException
    {
       ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(dataFile));
 
@@ -120,7 +123,7 @@ public final class CoverageData implements Serializable
       }
    }
 
-   void merge(CoverageData previousData)
+   public void merge(CoverageData previousData)
    {
       withCallPoints |= previousData.withCallPoints;
 

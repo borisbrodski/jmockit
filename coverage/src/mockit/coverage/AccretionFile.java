@@ -26,6 +26,8 @@ package mockit.coverage;
 
 import java.io.*;
 
+import mockit.coverage.data.*;
+
 final class AccretionFile
 {
    private final File dataFile;

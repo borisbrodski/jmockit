@@ -22,11 +22,12 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage;
+package mockit.coverage.data;
 
 import java.io.*;
 import java.util.*;
 
+import mockit.coverage.*;
 import mockit.coverage.paths.*;
 
 /**
@@ -46,12 +47,12 @@ public final class FileCoverageData implements Serializable
    private int totalPaths;
    private int coveredPaths;
 
-   void addMethod(MethodCoverageData methodData)
+   public void addMethod(MethodCoverageData methodData)
    {
       firstLineToMethodData.put(methodData.getFirstLineInBody(), methodData);
    }
 
-   LineCoverageData addLine(int line)
+   public LineCoverageData addLine(int line)
    {
       LineCoverageData lineData = lineToLineData.get(line);
 
@@ -63,13 +64,13 @@ public final class FileCoverageData implements Serializable
       return lineData;
    }
 
-   void incrementLineCount(int line, CallPoint callPoint)
+   public void incrementLineCount(int line, CallPoint callPoint)
    {
       LineCoverageData lineData = lineToLineData.get(line);
       lineData.registerExecution(callPoint);
    }
 
-   void registerBranchExecution(int line, int branchIndex, boolean jumped, CallPoint callPoint)
+   public void registerBranchExecution(int line, int branchIndex, boolean jumped, CallPoint callPoint)
    {
       LineCoverageData lineData = lineToLineData.get(line);
       lineData.registerExecution(branchIndex, jumped, callPoint);

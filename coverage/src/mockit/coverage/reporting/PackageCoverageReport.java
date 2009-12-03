@@ -26,7 +26,7 @@ package mockit.coverage.reporting;
 
 import java.util.*;
 
-import mockit.coverage.*;
+import mockit.coverage.data.*;
 
 final class PackageCoverageReport extends ListWithFilesAndPercentages
 {

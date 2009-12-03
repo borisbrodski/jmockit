@@ -28,6 +28,7 @@ import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
+import mockit.coverage.data.*;
 
 final class IndexPage extends ListWithFilesAndPercentages
 {

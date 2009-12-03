@@ -29,7 +29,7 @@ import java.util.*;
 
 import org.junit.*;
 
-import mockit.coverage.*;
+import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
 
 public class CoverageTest extends Assert

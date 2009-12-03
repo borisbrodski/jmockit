@@ -28,7 +28,7 @@ import java.io.*;
 import java.util.*;
 import java.util.Map.*;
 
-import mockit.coverage.*;
+import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
 
 /**

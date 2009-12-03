@@ -28,6 +28,7 @@ import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
+import mockit.coverage.data.*;
 
 public final class FullXmlWriter extends XmlWriter
 {

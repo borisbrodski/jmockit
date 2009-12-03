@@ -29,6 +29,7 @@ import java.util.Map.*;
 import java.util.*;
 
 import mockit.coverage.*;
+import mockit.coverage.data.*;
 
 public final class CoverageInfoFile
 {

@@ -30,6 +30,7 @@ import java.security.*;
 import java.util.*;
 import java.util.regex.*;
 
+import mockit.coverage.data.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.TestRun;
 

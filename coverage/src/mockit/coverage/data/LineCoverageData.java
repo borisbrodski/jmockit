@@ -22,10 +22,12 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage;
+package mockit.coverage.data;
 
 import java.io.*;
 import java.util.*;
+
+import mockit.coverage.*;
 
 import org.objectweb.asm2.*;
 
@@ -44,7 +46,7 @@ public final class LineCoverageData implements Serializable
    private int executionCount;
    private List<CallPoint> callPoints;
 
-   int addSegment(Label targetLabel)
+   public int addSegment(Label targetLabel)
    {
       if (segments == null) {
          segments = new ArrayList<BranchCoverageData>(4);
@@ -56,7 +58,7 @@ public final class LineCoverageData implements Serializable
       return segments.size() - 1;
    }
 
-   BranchCoverageData getSegmentData(int segmentIndex)
+   public BranchCoverageData getSegmentData(int segmentIndex)
    {
       return segments.get(segmentIndex);
    }

@@ -27,7 +27,7 @@ package mockit.coverage.reporting;
 import java.io.*;
 import java.util.*;
 
-import mockit.coverage.*;
+import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
 import mockit.coverage.reporting.codeCoverage.*;
 import mockit.coverage.reporting.parsing.*;
