@@ -68,20 +68,6 @@ public final class MethodCoverageData implements Serializable
       return lastLine;
    }
 
-   public boolean isInitialDeclarationLine(int lineNo, String line)
-   {
-      int p = line.indexOf(methodName);
-
-      if (p < 0) {
-         return false;
-      }
-
-      int q = p + methodName.length();
-
-      return
-         line.length() > q && line.charAt(q) == '(' || lineNo == firstLine && firstLine == lastLine;
-   }
-
    public void markNodeAsReached(int nodeIndex)
    {
       if (nodeIndex == 0) {
