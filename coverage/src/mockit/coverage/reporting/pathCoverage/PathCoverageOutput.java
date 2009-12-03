@@ -47,6 +47,11 @@ public final class PathCoverageOutput
       moveToNextMethod();
    }
 
+   private void moveToNextMethod()
+   {
+      currentMethod = nextMethod.hasNext() ? nextMethod.next() : null;
+   }
+
    public void writePathCoverageInfoIfLineStartsANewMethodOrConstructor(LineParser lineParser)
    {
       if (currentMethod != null && lineParser.getLineNo() == currentMethod.getFirstLineInBody()) {
@@ -60,11 +65,26 @@ public final class PathCoverageOutput
       if (currentMethod.paths.size() > 1) {
          writePathCoverageHeaderForMethod();
 
-         char pathId = 'A';
+         char pathId1 = 'A';
+         char pathId2 = '\0';
 
          for (Path path : currentMethod.paths) {
-            writeCoverageInfoForIndividualPath(pathId, path);
-            pathId++;
+            writeCoverageInfoForIndividualPath(pathId1, pathId2, path);
+
+            if (pathId2 == '\0' && pathId1 < 'Z') {
+               pathId1++;
+            }
+            else if (pathId2 == '\0') {
+               pathId1 = 'A';
+               pathId2 = 'A';
+            }
+            else if (pathId2 < 'Z') {
+               pathId2++;
+            }
+            else {
+               pathId1++;
+               pathId2 = 'A';
+            }
          }
 
          writePathCoverageFooterForMethod();
@@ -91,7 +111,7 @@ public final class PathCoverageOutput
       output.println("</span>");
    }
 
-   private void writeCoverageInfoForIndividualPath(char pathId, Path path)
+   private void writeCoverageInfoForIndividualPath(char pathId1, char pathId2, Path path)
    {
       int executionCount = path.getExecutionCount();
       String lineIdsForPath = getIdsForLinesBelongingToThePath(path);
@@ -99,14 +119,23 @@ public final class PathCoverageOutput
       output.write("        <span class='");
       output.write(executionCount == 0 ? "uncovered" : "covered");
       output.write("' onclick=\"showPath(this,'");
-      output.print(pathId);
+      writePathId(pathId1, pathId2);
       output.write("','");
       output.write(lineIdsForPath);
       output.write("')\">");
-      output.print(pathId);
+      writePathId(pathId1, pathId2);
       output.write(": ");
       output.print(executionCount);
       output.println("</span>");
+   }
+
+   private void writePathId(char pathId1, char pathId2)
+   {
+      output.write(pathId1);
+
+      if (pathId2 != '\0') {
+         output.write(pathId2);
+      }
    }
 
    private String getIdsForLinesBelongingToThePath(Path path)
@@ -133,10 +162,5 @@ public final class PathCoverageOutput
    {
       output.println("      </td>");
       output.println("    </tr>");
-   }
-
-   private void moveToNextMethod()
-   {
-      currentMethod = nextMethod.hasNext() ? nextMethod.next() : null;
    }
 }
