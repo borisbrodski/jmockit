@@ -85,4 +85,34 @@ public final class ClassLoadingAndJREMocksTest
       Foo foo = new Foo();
       assertTrue(foo.checkFile("filePath"));
    }
+
+   @Test
+   public void mockFileOutputStreamInstantiation() throws Exception
+   {
+      new Expectations()
+      {
+         @Mocked("helperMethod") TestedUnitUsingIO tested;
+         FileOutputStream mockOS;
+
+         {
+            invoke(tested, "helperMethod", withAny(FileOutputStream.class));
+         }
+      };
+
+      new TestedUnitUsingIO().doSomething();
+   }
+
+   static class TestedUnitUsingIO
+   {
+      void doSomething() throws FileNotFoundException
+      {
+         helperMethod(new FileOutputStream("test"));
+      }
+
+      private void helperMethod(OutputStream output)
+      {
+         // Won't happen:
+         throw new IllegalStateException(output.toString());
+      }
+   }
 }
