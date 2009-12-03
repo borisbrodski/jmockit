@@ -33,6 +33,7 @@ public class Node implements Serializable
 
    private final transient ThreadLocal<Boolean> reached = new ThreadLocal<Boolean>();
    public final int line;
+   int segment;
 
    private Node(int line)
    {
@@ -50,9 +51,9 @@ public class Node implements Serializable
    }
 
    @Override
-   public String toString()
+   public final String toString()
    {
-      return getClass().getSimpleName() + ':' + line;
+      return getClass().getSimpleName() + ':' + line + '-' + segment;
    }
 
    static final class Entry extends Node
@@ -102,6 +103,7 @@ public class Node implements Serializable
          path.addNode(this);
 
          if (nextNodeAfterGoto != null) {
+            assert nextConsecutiveNode == null;
             nextNodeAfterGoto.addToPath(path);
          }
          else {

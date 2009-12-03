@@ -57,6 +57,15 @@ public final class NodeBuilder
    {
       int newNodeIndex = nodes.size();
       nodes.add(newNode);
+
+      if (newNodeIndex > 0) {
+         Node precedingNode = nodes.get(newNodeIndex - 1);
+
+         if (precedingNode.line == newNode.line) {
+            newNode.segment = precedingNode.segment + 1;
+         }
+      }
+
       return newNodeIndex;
    }
 
