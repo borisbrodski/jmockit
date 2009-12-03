@@ -128,7 +128,7 @@ public class Node implements Serializable
    static final class SimpleFork extends Fork
    {
       private static final long serialVersionUID = -521666665272332763L;
-      BasicBlock nextConsecutiveNode;
+      ConditionalSuccessor nextConsecutiveNode;
       Join nextNodeAfterJump;
 
       SimpleFork(int line) { super(line); }

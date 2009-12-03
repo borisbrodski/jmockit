@@ -33,9 +33,9 @@ public final class BooleanExpressions
    static boolean isWrapperOfPrimitiveType(Class<?> primitiveType, Class<?> otherType)
    {
       return
-//         primitiveType == int.class && otherType == Integer.class ||
-//         primitiveType == long.class && otherType == Long.class ||
-//         primitiveType == double.class && otherType == Double.class ||
+         primitiveType == int.class && otherType == Integer.class ||
+         primitiveType == long.class && otherType == Long.class ||
+         primitiveType == double.class && otherType == Double.class ||
 //         primitiveType == float.class && otherType == Float.class ||
          primitiveType == boolean.class && otherType == Boolean.class;
    }

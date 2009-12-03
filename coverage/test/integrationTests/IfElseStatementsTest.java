@@ -132,7 +132,7 @@ public final class IfElseStatementsTest extends CoverageTest
       assertPaths(3, 1, 1);
       assertMethodLines(58, 61);
       assertPath(5, 1);
-      assertPath(6, 0);
+      assertPath(7, 0);
       assertPath(7, 0);
    }
 

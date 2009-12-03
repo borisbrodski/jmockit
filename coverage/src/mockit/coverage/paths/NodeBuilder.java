@@ -90,8 +90,9 @@ public final class NodeBuilder
    {
       if (conditional) {
          Node.SimpleFork newFork = new Node.SimpleFork(line);
-         currentSimpleFork = newFork;
+         assert currentSimpleFork == null;
          connectNodes(targetBlock, newFork);
+         currentSimpleFork = newFork;
          return addNewNode(newFork);
       }
       else {
@@ -198,9 +199,17 @@ public final class NodeBuilder
 
    private void connectNodes(Node.ConditionalSuccessor newNode)
    {
+      if (currentSimpleFork != null) {
+         currentSimpleFork.nextConsecutiveNode = newNode;
+         currentSimpleFork = null;
+         assert currentJoin == null;
+         assert currentBasicBlock == null;
+      }
+
       if (currentJoin != null) {
          currentJoin.nextNode = newNode;
          currentJoin = null;
+         assert currentBasicBlock == null;
       }
 
       if (currentBasicBlock != null) {

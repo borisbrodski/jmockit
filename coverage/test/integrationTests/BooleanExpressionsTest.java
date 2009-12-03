@@ -80,5 +80,6 @@ public final class BooleanExpressionsTest extends CoverageTest
       assertPaths(8, 1, 1);
 
       findMethodData(35, "isWrapperOfPrimitiveType");
+      assertPaths(31, 1, 1);
    }
 }

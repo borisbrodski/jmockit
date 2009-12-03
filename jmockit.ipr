@@ -468,7 +468,6 @@
         <inspection_tool class="NotifyNotInSynchronizedContext" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NotifyWithoutCorrespondingWait" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ObjectNotify" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ObjectToString" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ObsoleteCollection" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreLibraryArguments" value="false" />
         </inspection_tool>
