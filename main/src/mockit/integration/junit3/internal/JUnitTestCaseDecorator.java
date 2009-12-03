@@ -48,9 +48,33 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
 {
    private static final Object[] NO_ARGS = new Object[0];
 
+   private static final Method setUpMethod;
+   private static final Method tearDownMethod;
+
+   static
+   {
+      Method m1;
+      Method m2;
+
+      try {
+         m1 = TestCase.class.getDeclaredMethod("setUp");
+         m2 = TestCase.class.getDeclaredMethod("tearDown");
+      }
+      catch (NoSuchMethodException e) {
+         // OK, won't happen.
+         throw new RuntimeException(e);
+      }
+
+      setUpMethod = m1;
+      setUpMethod.setAccessible(true);
+
+      tearDownMethod = m2;
+      tearDownMethod.setAccessible(true);
+   }
+
    public TestCase it;
 
-   @Mock(reentrant = true)
+   @Mock
    public void runBare() throws Throwable
    {
       updateTestClassState(it, it.getClass());
@@ -59,7 +83,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       AssertionError error;
 
       try {
-         it.runBare();
+         originalRunBare();
 
          error = RecordAndReplayExecution.endCurrentReplayIfAny();
          TestRun.finishCurrentTestExecution();
@@ -83,6 +107,34 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       catch (AssertionError t) {
          Utilities.filterStackTrace(t);
          throw t;
+      }
+   }
+
+   private void originalRunBare() throws Throwable
+   {
+      setUpMethod.invoke(it);
+
+      Throwable exception = null;
+
+      try {
+         runTest();
+      }
+      catch (Throwable running) {
+         exception = running;
+      }
+      finally {
+         try {
+            tearDownMethod.invoke(it);
+         }
+         catch (Throwable tearingDown) {
+            if (exception == null) {
+               exception = tearingDown;
+            }
+         }
+      }
+
+      if (exception != null) {
+         throw exception;
       }
    }
 
