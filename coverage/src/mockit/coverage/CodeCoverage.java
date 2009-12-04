@@ -43,19 +43,21 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
    private static final String[] NO_ARGS = new String[0];
 
    private final Set<String> modifiedClasses = new HashSet<String>();
-   private final Pattern classNameRegex;
+   private final Pattern classesToInclude;
+   private final Pattern classesToExclude;
 
    public CodeCoverage(String argsSeparatedByColon)
    {
       String[] args = argsSeparatedByColon == null ? NO_ARGS : argsSeparatedByColon.split(":");
 
-      classNameRegex = getClassNameRegex(args);
+      classesToInclude = getClassNameRegexForClassesToInclude(args);
+      classesToExclude = getClassNameRegexForClassesToExclude();
 
       redefineClassesAlreadyLoadedForCoverage();
       setUpOutputFileGenerators(args);
    }
 
-   private Pattern getClassNameRegex(String[] args)
+   private Pattern getClassNameRegexForClassesToInclude(String[] args)
    {
       String regex = args.length == 0 ? "" : args[0];
 
@@ -63,7 +65,18 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
          regex = System.getProperty("jmockit-coverage-classes", "");
       }
 
+      return getClassNameRegex(regex);
+   }
+
+   private Pattern getClassNameRegex(String regex)
+   {
       return regex.length() == 0 ? null : Pattern.compile(regex);
+   }
+
+   private Pattern getClassNameRegexForClassesToExclude()
+   {
+      String regex = System.getProperty("jmockit-coverage-excludes", "mockit\\..+|.+Test(\\$.+)?");
+      return getClassNameRegex(regex);
    }
 
    private void setUpOutputFileGenerators(String[] args)
@@ -124,17 +137,12 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
          return false;
       }
 
-      if (classNameRegex != null) {
-         return classNameRegex.matcher(className).matches();
+      if (classesToInclude != null) {
+         return
+            classesToInclude.matcher(className).matches() &&
+            (classesToExclude == null || !classesToExclude.matcher(className).matches());
       }
-
-      if (className.endsWith("Test") || className.startsWith("mockit.")) {
-         return false;
-      }
-
-      int p = className.lastIndexOf('$');
-
-      if (p > 0 && className.substring(0, p).endsWith("Test")) {
+      else if (classesToExclude != null && classesToExclude.matcher(className).matches()) {
          return false;
       }
 

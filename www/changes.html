@@ -11,7 +11,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.994 (December ?, 2009):</p>
+<p>Release 0.994 (December 6, 2009):</p>
 <ul>
    <li>
       Multiple enhancements to <strong>JMockit Coverage</strong>:
@@ -26,7 +26,7 @@
          </li>
          <li>
             The desired output formats can now be specified through the
-            <code>jmockit-coverage-output</code> system property.
+            <strong><code>jmockit-coverage-output</code></strong> system property.
             (When not specified, the basic XHTML report will be generated.)
             Note that the property can be defined by a
             "-Djmockit-coverage-output=fmt1,fmt2,..." JVM command line argument, or by a
@@ -36,22 +36,35 @@
          <li>
             The output directory for "coverage.xml" and "coverage.ser" files, as well as for the 
             files of an XHTML report, can now be specified through the
-            <code>jmockit-coverage-outputDir</code> system property.
+            <strong><code>jmockit-coverage-outputDir</code></strong> system property.
             (When not specified, the current working dir is used.)
          </li>
          <li>
             The list of directories containing Java source files, needed for the XHTML report, can
-            now be specified through the <code>jmockit-coverage-srcDirs</code> system property.
+            now be specified through the <strong><code>jmockit-coverage-srcDirs</code></strong>
+            system property.
             (When not specified, all "src" directories under the current working dir are searched.)
             If the property is specified but with an empty value, then no source directories will be
             searched and the report will only contain the index page.
          </li>
          <li>
             A regular expression for selecting the Java classes which should be considered for
-            coverage can now be specified through the <code>jmockit-coverage-classes</code> system
-            property.
+            coverage can now be specified through the
+            <strong><code>jmockit-coverage-classes</code></strong> system property.
             (When not specified, all classes from production code which are loaded during the test
             run and are not inside jar files will be considered.)
+         </li>
+         <li>
+            Independently of <code>jmockit-coverage-classes</code> being specified or not, the
+            <strong><code>jmockit-coverage-excludes</code></strong> system property can be used to
+            specify a regular expression for class names which should be excluded from
+            consideration.
+         </li>
+         <li>
+            The automatic class selection mechanism, used when no classes to consider for coverage
+            are explicitly specified, will now also ignore class files from any directory whose name
+            ends in "<code>/test-classes</code>" (note that this is the default output directory for
+            test classes used by Maven 2).
          </li>
          <li>
             The total coverage percentage is now calculated and shown in the XHTML report
@@ -61,9 +74,11 @@
             A <strong><em>path coverage</em></strong> metric has been implemented
             (<a href="http://code.google.com/p/jmockit/issues/detail?id=7">issue 12</a>), which is
             completely separate from the current <em>code coverage</em> metric.
+            In this release, the implementation is still incomplete, lacking support for
+            "<code>try</code>" blocks.
          </li>
          <li>
-            The XHTML report now uses <code>prettify.js</code> (from the
+            The XHTML report now uses <strong><code>prettify.js</code></strong> (from the
             <a href="http://code.google.com/p/google-code-prettify">Google Code Prettify project</a>)
             for syntax coloring in Java source files.
             This makes report generation faster and smaller, but requires a JavaScript-enabled
