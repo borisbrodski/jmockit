@@ -271,6 +271,10 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 
       boolean classExtendsInvocationsClass(String classOfInterest)
       {
+         if ("java/lang/Object".equals(classOfInterest)) {
+            return false;
+         }
+
          String className = classOfInterest.replace('/', '.');
          ClassReader cr = ClassFile.createClassFileReader(className);
 
