@@ -50,8 +50,10 @@ public final class BankBusinessTest extends TestCase
    private Customer customer;
 
    @Override
-   public void setUp()
+   public void setUp() throws Exception
    {
+      super.setUp();
+
       account1 = new BankAccount(10);
       account1.setBalance(100);
 
