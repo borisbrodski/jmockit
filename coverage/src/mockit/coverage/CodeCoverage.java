@@ -43,8 +43,8 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
    private static final String[] NO_ARGS = new String[0];
 
    private final Set<String> modifiedClasses = new HashSet<String>();
-   private final Pattern classesToInclude;
-   private final Pattern classesToExclude;
+   private final Matcher classesToInclude;
+   private final Matcher classesToExclude;
 
    public CodeCoverage(String argsSeparatedByColon)
    {
@@ -57,7 +57,7 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
       setUpOutputFileGenerators(args);
    }
 
-   private Pattern getClassNameRegexForClassesToInclude(String[] args)
+   private Matcher getClassNameRegexForClassesToInclude(String[] args)
    {
       String regex = args.length == 0 ? "" : args[0];
 
@@ -68,12 +68,12 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
       return getClassNameRegex(regex);
    }
 
-   private Pattern getClassNameRegex(String regex)
+   private Matcher getClassNameRegex(String regex)
    {
-      return regex.length() == 0 ? null : Pattern.compile(regex);
+      return regex.length() == 0 ? null : Pattern.compile(regex).matcher("");
    }
 
-   private Pattern getClassNameRegexForClassesToExclude()
+   private Matcher getClassNameRegexForClassesToExclude()
    {
       String regex = System.getProperty("jmockit-coverage-excludes", "mockit\\..+|.+Test(\\$.+)?");
       return getClassNameRegex(regex);
@@ -139,10 +139,14 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
 
       if (classesToInclude != null) {
          return
-            classesToInclude.matcher(className).matches() &&
-            (classesToExclude == null || !classesToExclude.matcher(className).matches());
+            classesToInclude.reset(className).matches() &&
+            (classesToExclude == null || !classesToExclude.reset(className).matches());
       }
-      else if (classesToExclude != null && classesToExclude.matcher(className).matches()) {
+      else if (classesToExclude != null && classesToExclude.reset(className).matches()) {
+         return false;
+      }
+
+      if (protectionDomain == null) {
          return false;
       }
 

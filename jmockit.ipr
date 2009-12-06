@@ -861,6 +861,8 @@
         <w>notimestamp</w>
         <w>nowrap</w>
         <w>onclick</w>
+        <w>onfocus</w>
+        <w>onload</w>
         <w>paleturquoise</w>
         <w>param</w>
         <w>parameterized</w>
