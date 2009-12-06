@@ -539,8 +539,7 @@ public static void <B>redefineMethods</B>(<A HREF="http://java.sun.com/javase/6/
  method is called instead. For an instance mock method, the mock class instance on which the
  call is made is created with the default constructor for the mock class, <strong>every
  time</strong> the mocked real method is called. If you want to reuse mock instances for all
- such calls you should pass an instance of the mock class instead of its <code>Class</code>
- object.
+ such calls you should pass an instance of the mock class instead of its <code>Class</code> object.
  <p/>
  For a <strong>mock method</strong> to be considered as <strong>corresponding</strong> to a
  given <strong>real method</strong>, it must have the same name, the exact same parameter types
@@ -662,8 +661,8 @@ public static void <B>restoreAllOriginalDefinitions</B>()</PRE>
  In practice, this method should only be used if all mocked classes needs to be restored in the
  middle of some test. Otherwise, it is unnecessary because JMockit will automatically restore
  all classes mocked by a test at the end of that test, as well as all classes mocked for the
- test class as a whole (eg, in a <code>@BeforeClass</code> JUnit method) before the first test
- in the next test class is executed.
+ test class as a whole (eg, in a <code>@BeforeClass</code> JUnit method) before the first test in
+ the next test class is executed.
 <P>
 <DD><DL>
 </DL>
@@ -892,9 +891,9 @@ public static void <B>stubOut</B>(<A HREF="http://java.sun.com/javase/6/docs/api
  The classes are stubbed out in the order they are given, so make sure any super-class comes
  first.
  <p/>
- Methods with non-<code>void</code> return type will return the default value for this type,
- that is, zero for a number or <code>char</code>, <code>false</code> for a boolean, empty for
- an array, or <code>null</code> for a reference type.
+ Methods with non-<code>void</code> return type will return the default value for this type, that
+ is, zero for a number or <code>char</code>, false for a boolean, empty for an array, or
+ null for a reference type.
  <p/>
  If a different behavior is desired for any method or constructor, then
  <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>setUpMocks(Object...)</CODE></A> and the other similar methods can be used right after the call
