@@ -22,7 +22,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage.reporting.codeCoverage;
+package mockit.coverage.reporting.lineCoverage;
 
 import java.io.*;
 import java.util.*;
@@ -30,14 +30,14 @@ import java.util.*;
 import mockit.coverage.data.*;
 import mockit.coverage.reporting.parsing.*;
 
-public final class CodeCoverageOutput
+public final class LineCoverageOutput
 {
    private final PrintWriter output;
    private final Map<Integer, LineCoverageData> lineToLineData;
    private final LineCoverageFormatter lineCoverageFormatter;
    private LineCoverageData lineData;
 
-   public CodeCoverageOutput(
+   public LineCoverageOutput(
       PrintWriter output, Map<Integer, LineCoverageData> lineToLineData, boolean withCallPoints)
    {
       this.output = output;
