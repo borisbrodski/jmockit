@@ -7,13 +7,14 @@
 </head>
 <body>
 <h2>
-   Measuring code coverage with JMockit Coverage
+   Measuring line and path coverage with JMockit Coverage
    <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
 </h2>
 
 <p>
-   <a href="http://en.wikipedia.org/wiki/Code_coverage"><em>Code coverage</em></a> is a software
-   metric that can tell you how much of the production code is covered by a given test suite.
+   <a href="http://en.wikipedia.org/wiki/Code_coverage"><em>Code coverage</em></a> consists of a set
+   of software metrics that can tell you how much of the production code is covered by a given test
+   suite.
    It's purely quantitative, and does not say anything about the <em>quality</em> of either the
    production code or the test code. That said, the examination of code coverage reports will
    sometimes lead to the discovery of unreachable code which can be eliminated. But more
@@ -22,43 +23,108 @@
    tests first, such as in the practice of TDD (Test Driven Development).
 </p>
 <p>
+   JMockit Coverage provides two different and complementary code coverage metrics:
+   <em>line coverage</em> and <em>path coverage</em>.
+   An example coverage report showing both metrics can be found
+   <a href="../coverage-sample/index.html">here</a>.
+</p>
+
+<h3 id="line">
+   Line Coverage
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#path"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
+<p>
+   The <em>line coverage</em> metric tells us how much of the <em>executable code</em> in a source
+   file has been exercised by tests.
+   Each executable line of code can be <em>uncovered</em>, <em>covered</em>, or
+   <em>partially covered</em>.
+   In the first case, <em>none</em> of the executable code in it was executed at all.
+   In the second, <em>all</em> of the code was fully executed at least once.
+   In the third case, only <em>part</em> of the executable code in the line was executed.
+   This can happen, for example, with lines of code containing multiple logical conditions in a
+   complex boolean expression.
+   JMockit Coverage identifies all three cases, computing the <em>coverage percentage</em> for each
+   executable line of code accordingly: <strong>0%</strong> for an uncovered line,
+   <strong>100%</strong> for a covered line, or some value in between for a partially covered line.
+</p>
+<p>
    A <em>branching point</em> exists wherever the program makes a decision between two possible
    execution paths to follow.
-   Any line of code containing a logical condition will be divided in at least two segments, each
-   belonging to a separate branch.
-   Each branch contains a <em>basic block</em>, which is a sequence of statements which always runs
-   from first to last statement (ignoring exceptions or errors that may get thrown along the way).
-   Each <em>executable line</em> of source code contains one or more basic blocks <em>segments</em>.
-   A segment simply is the part of the basic block that is confined to a single line.
+   Any line of code containing a logical condition will be divided in at least two executable
+   <em>segments</em>, each belonging to a separate <em>branch</em>.
+   An executable line of source code with no branching points contains a single segment.
+   Lines with one or more branching points contain two or more executable segments, separated by
+   consecutive branching points in the line.
 </p>
 <p>
-   JMockit Coverage shows a line of source code as fully covered only if all of its basic block
-   segments were executed at least once during the test run.
-   Lets say that <code>ns >= 1</code> is the number of segments belonging to the basic blocks on a
-   given executable line.
-   If <code>ne</code> is the number of segments in that line which were executed at least once
-   during a test run (ie, they are <em>covered segments</em>), then we can calculate the
-   <em>coverage percentage</em> for the line as <code>ne / ns * 100</code>.
+   Lets say that <code><strong>NS</strong> >= 1</code> is the number of executable segments on a
+   given line.
+   If <code><strong>NE</strong></code> is the number of segments in that line which were executed at
+   least once during a test run (ie, they are <em>covered segments</em>), then we can calculate the
+   coverage percentage for the line as <strong><code>100 * NE / NS</code></strong>.
 </p>
 <p>
-   Similarly, the coverage percentage for a <em>source file</em> is calculated from the total number
-   of line segments and the total number of covered segments, considering all executable lines in
-   the file.
+   Similarly, the line coverage percentage for a whole source file is calculated from the total
+   number of executable segments and the total number of covered segments, considering all
+   executable lines of code in the file.
    The percentage for a <em>package</em>, in turn, is calculated from the total and covered numbers
    of segments in the whole set of source files belonging to the package.
-   Finally, the <em>total code coverage</em> percentage is computed by the same formula.
+   Finally, the <em>total code coverage</em> percentage is computed by the same formula on the
+   totals for all packages.
+</p>
+
+<h3 id="path">
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#line"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#output"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+   Path Coverage
+</h3>
+<p>
+   A completely different metric is <em>path coverage</em>, which is computed for method and
+   constructor bodies, not for lines or segments of code.
+   It tells us how many of the possible <em>execution paths</em> through a method or constructor,
+   from <em>entry</em> to <em>exit</em>, have been executed at least once during the test run.
 </p>
 <p>
-   An example coverage report is shown <a href="../coverage-sample/index.html">here</a>.
+   Note that each method or constructor has a single point of entry, but can have multiple exits.
+   An exit occurs when a <code>return</code> or <code>throw</code> statement is executed.
+   These are <em>normal exits</em>, of course. A method/constructor execution can also terminate
+   <em>abruptly</em>, by propagating an exception (or error) thrown as a result of a method call,
+   an attempt to access a <code>null</code> reference, or some other action which caused an
+   unintended program failure.
+</p>
+<p>
+   Each possible path can be either fully executed (covered) or not (uncovered).
+   Paths that execute only partially (ie, they were terminated abruptly) are simply considered as
+   uncovered.
+</p>
+<p>
+   The <em>path coverage percentage</em> for a method or constructor body is computed in a way
+   similar to the line coverage computation.
+   If <code><strong>NP</strong></code> is the number of possible paths through the implementation
+   body and <code><strong>NPE</strong></code> is the number of paths executed from entry to exit,
+   then the metric is computed as <strong><code>100 * NP / NPE</code></strong>.
+   Also in the same way as the line coverage metric, we extend this formula to the whole source
+   file, the whole package, and the whole set of packages touched by the test run.
 </p>
 
 <h3 id="output">
    Available types of coverage output
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
-      <img align="right" src="blank.gif" width="22">
+      <a href="#line"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
-      <img align="right" src="blank.gif" width="22">
+      <a href="#path"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#configuration"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
@@ -108,7 +174,7 @@
    Configuring the coverage tool
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
-      <img align="right" src="blank.gif" width="22">
+      <a href="#line"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#output"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#merging"><img align="right" src="go-down.png" title="Next section"></a>
@@ -355,7 +421,7 @@
    Using JMockit Coverage in a Maven project
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
-      <a href="#output"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#line"><img align="right" src="go-top.png" title="First section"></a>
       <img align="right" src="blank.gif" width="22">
       <a href="#merging"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#switching"><img align="right" src="go-down.png" title="Next section"></a>
@@ -413,7 +479,7 @@ coverage=:html:./target/coverage-report
    Turning coverage output on/off
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
-      <a href="#output"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#line"><img align="right" src="go-top.png" title="First section"></a>
       <img align="right" src="blank.gif" width="22">
       <a href="#maven"><img align="right" src="go-up.png" title="Previous section"></a>
       <img align="right" src="blank.gif" width="22">
