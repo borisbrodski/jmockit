@@ -29,7 +29,7 @@ import java.util.*;
 
 import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
-import mockit.coverage.reporting.codeCoverage.*;
+import mockit.coverage.reporting.lineCoverage.*;
 import mockit.coverage.reporting.parsing.*;
 import mockit.coverage.reporting.pathCoverage.*;
 
@@ -41,7 +41,7 @@ final class FileCoverageReport
    private final InputFile inputFile;
    private final OutputFile output;
    private final LineParser lineParser = new LineParser();
-   private final CodeCoverageOutput codeCoverage;
+   private final LineCoverageOutput lineCoverage;
    private final PathCoverageOutput pathCoverage;
 
    FileCoverageReport(
@@ -50,7 +50,7 @@ final class FileCoverageReport
    {
       this.inputFile = inputFile;
       output = new OutputFile(outputDir, inputFile.filePath);
-      codeCoverage = new CodeCoverageOutput(output, fileData.getLineToLineData(), withCallPoints);
+      lineCoverage = new LineCoverageOutput(output, fileData.getLineToLineData(), withCallPoints);
 
       Collection<MethodCoverageData> methods = fileData.getMethods();
       pathCoverage = methods.isEmpty() ? null : new PathCoverageOutput(output, methods);
@@ -87,7 +87,7 @@ final class FileCoverageReport
             pathCoverage.writePathCoverageInfoIfLineStartsANewMethodOrConstructor(lineParser);
          }
 
-         codeCoverage.writeLineOfSourceCodeWithCoverageInfo(lineParser);
+         lineCoverage.writeLineOfSourceCodeWithCoverageInfo(lineParser);
       }
    }
 

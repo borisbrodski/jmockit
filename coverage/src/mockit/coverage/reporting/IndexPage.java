@@ -91,7 +91,7 @@ final class IndexPage extends ListWithFilesAndPercentages
       int totalFileCount = computeTotalNumberOfSourceFiles();
       output.print(totalFileCount);
 
-      output.println("</th><th>Code Coverage</th><th>Path Coverage</th></tr>");
+      output.println("</th><th>Line Coverage</th><th>Path Coverage</th></tr>");
    }
 
    private int computeTotalNumberOfSourceFiles()
@@ -110,9 +110,9 @@ final class IndexPage extends ListWithFilesAndPercentages
       output.println("    <tr>");
       output.println("      <td colspan='2' class='total'>Total</td>");
 
-      int totalCodePercentage = CoveragePercentage.calculate(coveredSegments, totalSegments);
+      int totalLinePercentage = CoveragePercentage.calculate(coveredSegments, totalSegments);
       printIndent();
-      printCoveragePercentage(totalCodePercentage);
+      printCoveragePercentage(totalLinePercentage);
 
       int totalPathPercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
       printIndent();
