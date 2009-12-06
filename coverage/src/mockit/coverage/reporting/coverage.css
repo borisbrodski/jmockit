@@ -8,8 +8,15 @@ ol {
 
 pre.comment { margin: 0; color: gray; }
 
-.lineNo { text-align: right; }
-.count { background-color: yellow; text-align: right; padding-left: 4px; padding-right: 2px; }
+.lineNo {
+   background-color: #e0e0e0; text-align: right;
+   padding-left: 1px; padding-right: 1px;
+   border-right: #a0a0a0 solid 1px;
+}
+.count {
+   background-color: yellow; text-align: right; padding-left: 2px; padding-right: 1px;
+   border-right: #aaaa00 solid 1px;
+}
 
 .nonexec { background-color: white; }
 .covered { background-color: #90ee90; }
