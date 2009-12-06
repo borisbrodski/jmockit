@@ -1086,17 +1086,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/log4j/log4j/1.2.15/log4j-1.2.15-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: mockit:jmockit:0.993">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.993/jmockit-0.993.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.993/jmockit-0.993-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.993/jmockit-0.993-sources.jar!/" />
-      </SOURCES>
-    </library>
   </component>
 </project>
 

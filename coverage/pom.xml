@@ -61,7 +61,7 @@
 
    <dependencies>
       <dependency>
-         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>0.993</version>
+         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>0.994</version>
       </dependency>
    </dependencies>
 
