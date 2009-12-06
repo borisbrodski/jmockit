@@ -798,7 +798,7 @@
    <li>
       An XML output file and/or an XHTML report can be generated at the end of each test run with no
       extra configuration beyond adding the relevant jar files to the classpath
-      (<code>jmockit.jar</code> plus at least one <code>jmockit-coverage-xyz.jar</code> file).
+      (at least one <code>jmockit-coverage-xyz.jar</code> file).
       For the generation of the XHTML report, Java source files are automatically searched in all
       "src" directories under the working directory.
    </li>
@@ -808,12 +808,17 @@
       (This feature is optional, however, because of the higher runtime cost and the larger
       resulting XHTML report.)
    </li>
+   <li>
+      Besides a <em>line coverage</em> metric, a <em>path coverage</em> metric is also made
+      available. Both metrics are calculated and shown at the source file, package, and global
+      levels.
+      For path coverage, each possible path through a method or constructor can be interactively
+      displayed in the XHTML report.
+   </li>
 <!-- TODO: implement this feature
    <li>
       <strong>Intra-line</strong> coverage is provided, with the appropriate red/green coloring in
-      the XHTML report for each conditionally executed line segment. This effectively combines
-      <strong>line coverage</strong> and <strong>branch coverage</strong>, producing a single clear
-      and accurate code coverage metric.
+      the XHTML report for each conditionally executed line segment.
    </li>
 -->
    <li>
@@ -826,9 +831,8 @@
    <li>
       Additional features are planned: use of <code>assert</code> for marking blocks of unreachable
       code which cannot be removed (typically, <code>catch</code> blocks) and therefore should not
-      be considered in coverage measures; <em>intra-line coverage</em>, with red/green coloring in
-      each fragment of a line with conditional branches; and support for additional coverage
-      metrics, such as <em>basis path coverage</em> and <em>data flow coverage</em>.
+      be considered in coverage measures; and <em>intra-line coverage</em>, with red/green coloring
+      in each fragment of a line with conditional branches.
    </li>
 </ol>
 <hr/>
