@@ -5,7 +5,7 @@
    <groupId>mockit</groupId>
    <artifactId>jmockit</artifactId>
    <packaging>jar</packaging>
-   <version>0.993</version>
+   <version>0.994</version>
    <name>JMockit Testing Toolkit</name>
    <url>http://code.google.com/p/jmockit/</url>
    <description>

@@ -14,7 +14,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Asm2" />
     <orderEntry type="module" module-name="Main" />
-    <orderEntry type="module" module-name="jmockit" exported="" />
+    <orderEntry type="library" exported="" name="Maven: mockit:jmockit:0.993" level="project" />
   </component>
 </module>
 
