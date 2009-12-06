@@ -166,32 +166,6 @@ public final class NonStrictExpectationsTest
       assertEquals(1, Dependency.staticMethod(new Object(), new Exception()));
    }
 
-   @Test
-   public void recordWithMaxInvocationCountFollowedByReturnValuePartialObject()
-   {
-      new NonStrictExpectations()
-      {{
-         Dependency.staticMethod(any, null);
-         repeatsAtMost(1);
-         returns(1);
-      }};
-
-      assertEquals(1, Dependency.staticMethod(new Object(), null));
-   }
-
-   @Test
-   public void recordWithMaxInvocationCountFollowedByReturnValuePartialException()
-   {
-      new NonStrictExpectations()
-      {{
-         Dependency.staticMethod(any, null);
-         repeatsAtMost(1);
-         returns(1);
-      }};
-
-      assertEquals(1, Dependency.staticMethod(null, new Exception()));
-   }
-
    @Test(expected = AssertionError.class)
    public void recordWithMaxInvocationCountFollowedByReturnValueButReplayOneTimeBeyondMax()
    {
