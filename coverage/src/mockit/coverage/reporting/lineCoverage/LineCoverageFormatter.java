@@ -22,7 +22,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage.reporting.codeCoverage;
+package mockit.coverage.reporting.lineCoverage;
 
 import mockit.coverage.data.*;
 import mockit.coverage.reporting.*;
