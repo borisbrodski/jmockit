@@ -22,7 +22,9 @@
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/FullVerifications.html">
       <area shape="rect" coords="519,163,700,190" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/FullVerificationsInOrder.html">
-      <area shape="rect" coords="603,87,700,114" target="_blank"
+      <area shape="rect" coords="595,12,700,38" target="_blank"
+         href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Invocation.html">
+      <area shape="rect" coords="603,45,700,72" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Delegate.html">
 
       <area shape="rect" coords="720,10,850,32" target="_blank"
