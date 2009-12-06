@@ -31,59 +31,93 @@ import mockit.*;
 import mockit.internal.util.*;
 import org.objectweb.asm2.Type;
 
-abstract class InvocationResult {
+abstract class InvocationResult
+{
    InvocationResult next;
 
    abstract Object produceResult(Expectation expectation, Object[] args) throws Throwable;
 
-   static final class ReturnValueResult extends InvocationResult {
+   static final class ReturnValueResult extends InvocationResult
+   {
       private final Object returnValue;
 
-      ReturnValueResult(Object returnValue) {
-         this.returnValue = returnValue;
-      }
+      ReturnValueResult(Object returnValue) { this.returnValue = returnValue; }
 
       @Override
-      Object produceResult(Expectation expectation, Object[] args) {
-         return returnValue;
-      }
+      Object produceResult(Expectation expectation, Object[] args) { return returnValue; }
    }
 
-   static final class ThrowableResult extends InvocationResult {
+   static final class ThrowableResult extends InvocationResult
+   {
       private final Throwable throwable;
 
-      ThrowableResult(Throwable throwable) {
-         this.throwable = throwable;
-      }
+      ThrowableResult(Throwable throwable) { this.throwable = throwable; }
 
       @Override
-      Object produceResult(Expectation expectation, Object[] args)
-            throws Throwable {
+      Object produceResult(Expectation expectation, Object[] args) throws Throwable
+      {
          throwable.fillInStackTrace();
          throw throwable;
       }
    }
 
-   static final class DelegatedResult extends InvocationResult {
+   static final class DelegatedResult extends InvocationResult
+   {
       private final Delegate delegate;
-      private final Method singleMethod;
+      private Method delegateMethod;
+      private boolean hasInvocationParameter;
+      private Object[] args;
 
-      DelegatedResult(Delegate delegate) {
+      DelegatedResult(Delegate delegate)
+      {
          this.delegate = delegate;
 
          Method[] declaredMethods = delegate.getClass().getDeclaredMethods();
-         singleMethod = declaredMethods.length == 1 ? declaredMethods[0] : null;
+
+         if (declaredMethods.length == 1) {
+            delegateMethod = declaredMethods[0];
+            determineWhetherDelegateMethodHasInvocationParameter();
+         }
+         else {
+            delegateMethod = null;
+         }
+      }
+
+      private void determineWhetherDelegateMethodHasInvocationParameter()
+      {
+         Class<?>[] parameters = delegateMethod.getParameterTypes();
+         hasInvocationParameter = parameters.length > 0 && parameters[0] == Invocation.class;
       }
 
       @Override
-      Object produceResult(Expectation expectation, Object[] args) throws Throwable {
-         String methodNameAndDesc = expectation.expectedInvocation
-               .getMethodNameAndDescription();
+      Object produceResult(Expectation expectation, Object[] args) throws Throwable
+      {
+         this.args = args;
+
+         if (delegateMethod == null) {
+            String methodName = adaptNameAndArgumentsForDelegate(expectation.expectedInvocation);
+            delegateMethod = Utilities.findCompatibleMethod(delegate, methodName, args);
+            determineWhetherDelegateMethodHasInvocationParameter();
+         }
+
+         Object result;
+
+         if (hasInvocationParameter) {
+            result = executeDelegateWithInvocationContext(expectation.constraints, delegateMethod);
+         }
+         else {
+            result = Utilities.invoke(delegate, delegateMethod, args);
+         }
+
+         return result;
+      }
+
+      private String adaptNameAndArgumentsForDelegate(ExpectedInvocation invocation)
+      {
+         String methodNameAndDesc = invocation.getMethodNameAndDescription();
          int leftParen = methodNameAndDesc.indexOf('(');
 
-         if (singleMethod == null) {
-            replaceNullArgumentsWithClassObjectsIfAny(args, methodNameAndDesc, leftParen);
-         }
+         replaceNullArgumentsWithClassObjectsIfAny(methodNameAndDesc, leftParen);
 
          String methodName = methodNameAndDesc.substring(0, leftParen);
 
@@ -91,44 +125,12 @@ abstract class InvocationResult {
             methodName = "$init";
          }
 
-         Invocation invocation = getInvocationFromConstraints(expectation.constraints);
-         Object[] argsPlus = new Object[args.length + 1];
-         argsPlus[0] = invocation;
-         System.arraycopy(args, 0, argsPlus, 1, args.length);
-
-         Object result = null;
-         try {
-            try {
-               if (singleMethod != null) {
-                  result = Utilities.invoke(delegate, singleMethod, argsPlus);
-               } else {
-                  result = Utilities.invoke(delegate, methodName, argsPlus);
-               }
-            } catch (IllegalArgumentException iae) {
-               if (singleMethod != null) {
-                  result = Utilities.invoke(delegate, singleMethod, args);
-               } else {
-                  result = Utilities.invoke(delegate, methodName, args);
-               }
-            }
-         } finally {
-            setConstraintsFromInvocation(invocation, expectation.constraints);
-         }
-         return result;
+         return methodName;
       }
 
-      private Invocation getInvocationFromConstraints(InvocationConstraints constraints) {
-         Invocation invocation = new DelegateInvocation(constraints.invocationCount,
-               constraints.minInvocations, constraints.maxInvocations);
-         return invocation;
-      }
-
-      private void setConstraintsFromInvocation(Invocation invocation, InvocationConstraints constraints) {
-         constraints.setLimits(invocation.getMinInvocations(), invocation
-               .getMaxInvocations());
-      }
-
-      private void replaceNullArgumentsWithClassObjectsIfAny(Object[] args, String methodNameAndDesc, int leftParen) {
+      private void replaceNullArgumentsWithClassObjectsIfAny(
+         String methodNameAndDesc, int leftParen)
+      {
          Type[] argTypes = null;
 
          for (int i = 0; i < args.length; i++) {
@@ -142,17 +144,42 @@ abstract class InvocationResult {
             }
          }
       }
-   }
 
-   static final class DeferredReturnValues extends InvocationResult {
-      private final Iterator<?> values;
+      private Object executeDelegateWithInvocationContext(
+         InvocationConstraints constraints, Method delegateMethod)
+      {
+         Invocation invocation =
+            new DelegateInvocation(
+               constraints.invocationCount, constraints.minInvocations, constraints.maxInvocations);
+         Object[] delegateArgs =
+            getDelegateArgumentsWithExtraInvocationObject(invocation);
 
-      DeferredReturnValues(Iterator<?> values) {
-         this.values = values;
+         try {
+            return Utilities.invoke(delegate, delegateMethod, delegateArgs);
+         }
+         finally {
+            constraints.setLimits(invocation.getMinInvocations(), invocation.getMaxInvocations());
+         }
       }
 
+      private Object[] getDelegateArgumentsWithExtraInvocationObject(Invocation invocation)
+      {
+         Object[] delegateArgs = new Object[args.length + 1];
+         delegateArgs[0] = invocation;
+         System.arraycopy(args, 0, delegateArgs, 1, args.length);
+         return delegateArgs;
+      }
+   }
+
+   static final class DeferredReturnValues extends InvocationResult
+   {
+      private final Iterator<?> values;
+
+      DeferredReturnValues(Iterator<?> values) { this.values = values; }
+
       @Override
-      Object produceResult(Expectation expectation, Object[] args) throws Throwable {
+      Object produceResult(Expectation expectation, Object[] args) throws Throwable
+      {
          return values.hasNext() ? values.next() : null;
       }
    }

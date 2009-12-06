@@ -28,6 +28,8 @@ import java.lang.reflect.*;
 import static java.lang.reflect.Modifier.*;
 import java.util.*;
 
+import mockit.*;
+
 import org.objectweb.asm2.Type;
 
 /**
@@ -104,7 +106,7 @@ public final class Utilities
       return (T) newInstance(className, paramTypes, nonNullArgs);
    }
 
-   private static Class<?>[] getParameterTypesFromArguments(Object... args)
+   public static Class<?>[] getParameterTypesFromArguments(Object... args)
    {
       Class<?>[] paramTypes = new Class<?>[args.length];
 
@@ -181,7 +183,40 @@ public final class Utilities
       return result;
    }
 
+   public static Method findCompatibleMethod(
+      Object targetInstance, String methodName, Object[] args)
+   {
+      Class<?>[] paramTypes = getParameterTypesFromArguments(args);
+      return findCompatibleMethod(targetInstance.getClass(), methodName, paramTypes);
+   }
+
    private static Method findCompatibleMethod(
+      Class<?> theClass, String methodName, Class<?>[] argTypes)
+   {
+      while (true) {
+         Method methodFound = findCompatibleMethodInClass(theClass, methodName, argTypes);
+
+         if (methodFound != null) {
+            return methodFound;
+         }
+         
+         Class<?> superClass = theClass.getSuperclass();
+
+         if (superClass == null || superClass == Object.class) {
+            break;
+         }
+
+         //noinspection AssignmentToMethodParameter
+         theClass = superClass;
+      }
+
+      String argTypesDesc = getParameterTypesDescription(argTypes);
+
+      throw new IllegalArgumentException(
+         "No compatible method found: " + methodName + argTypesDesc);
+   }
+
+   private static Method findCompatibleMethodInClass(
       Class<?> theClass, String methodName, Class<?>[] argTypes)
    {
       for (Method declaredMethod : theClass.getDeclaredMethods()) {
@@ -197,28 +232,26 @@ public final class Utilities
          }
       }
 
-      Class<?> superClass = theClass.getSuperclass();
-
-      if (superClass != null && superClass != Object.class) {
-         return findCompatibleMethod(superClass, methodName, argTypes);
-      }
-
-      String argTypesDesc = getParameterTypesDescription(argTypes);
-
-      throw new IllegalArgumentException(
-         "No compatible method found: " + methodName + argTypesDesc);
+      return null;
    }
 
    private static boolean acceptsArgumentTypes(Class<?>[] paramTypes, Class<?>[] argTypes)
    {
+      int i0 = 0;
+
       if (paramTypes.length != argTypes.length)
       {
-         return false;
+         if (paramTypes.length > 0 && paramTypes[0] == Invocation.class) {
+            i0 = 1;
+         }
+         else {
+            return false;
+         }
       }
 
-      for (int i = 0; i < paramTypes.length; i++) {
+      for (int i = i0; i < paramTypes.length; i++) {
          Class<?> parType = paramTypes[i];
-         Class<?> argType = argTypes[i];
+         Class<?> argType = argTypes[i - i0];
 
          if (isSameTypeIgnoringAutoBoxing(parType, argType) || parType.isAssignableFrom(argType)) {
             // OK, move to next parameter.
@@ -300,14 +333,21 @@ public final class Utilities
 
    private static boolean matchesParameterTypes(Class<?>[] declaredTypes, Class<?>[] specifiedTypes)
    {
+      int i0 = 0;
+
       if (declaredTypes.length != specifiedTypes.length)
       {
-         return false;
+         if (declaredTypes.length > 0 && declaredTypes[0] == Invocation.class) {
+            i0 = 1;
+         }
+         else {
+            return false;
+         }
       }
 
-      for (int i = 0; i < declaredTypes.length; i++) {
+      for (int i = i0; i < declaredTypes.length; i++) {
          Class<?> declaredType = declaredTypes[i];
-         Class<?> specifiedType = specifiedTypes[i];
+         Class<?> specifiedType = specifiedTypes[i - i0];
 
          if (isSameTypeIgnoringAutoBoxing(declaredType, specifiedType)) {
             // OK, move to next parameter.

@@ -25,90 +25,86 @@
 package mockit;
 
 /**
- * This is a context object representing the current invocation. When setup as a
- * first parameter on a {@linkplain Delegate} method, the method receives and
- * able to manipulate the context.
+ * This is a context object representing the current invocation to a mocked method or constructor.
+ * When used as the type of the first parameter on a {@link Delegate} method, all invocations to the
+ * delegate method will receive an appropriate instance.
  * <p/>
- * Sample tests: <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/DelegateInvocationTest.java"
- * >DelegateInvocationTest</a>,
- * 
- * @see Expectations
+ * Sample tests:
+ * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/DelegateInvocationTest.java"
+ * >DelegateInvocationTest</a>
  */
 public class Invocation
 {
-   /**
-    * Current invocation count. The first invocation start at 1.
-    */
-   final protected int invocationCount;
+   private final int invocationCount;
+   private int minInvocations;
+   private int maxInvocations;
 
-   /**
-    * Minimum invocation count
-    */
-   protected int minInvocations;
-
-   /**
-    * Maximum invocation count (-1 indicates unlimited).
-    */
-   protected int maxInvocations;
-
-   /**
-    * Constructor intended for internal use.
-    */
-   protected Invocation(int invocationCount) {
-      this.invocationCount=invocationCount;
+   protected Invocation(int invocationCount, int minInvocations, int maxInvocations)
+   {
+      this.invocationCount = invocationCount;
+      this.minInvocations = minInvocations;
+      this.maxInvocations = maxInvocations;
    }
 
    /**
-    * Returns invocation count (non-modifiable). The first invocation start at 1.
+    * Returns the current invocation count. The first invocation starts at 1 (one).
     */
-   final public int getInvocationCount()
+   public final int getInvocationCount()
    {
       return invocationCount;
    }
 
    /**
-    * Returns minimum invocation count.
-    * <p/>
-    * This call returns value set
-    * with {@link Expectations#repeats(int)}, {@link Expectations#repeats(int, int)}
-    * and {@link Expectations#repeatsAtLeast(int)} methods.
+    * Returns the index for the current invocation. The first invocation starts at 0 (zero).
+    * Note that this is equivalent to {@link #getInvocationCount()} - 1.
     */
-   final public int getMinInvocations()
+   public final int getInvocationIndex()
+   {
+      return invocationCount - 1;
+   }
+
+   /**
+    * Returns the minimum invocation count for the current expectation.
+    * <p/>
+    * This call will return the value set with {@link Expectations#repeats(int)},
+    * {@link Expectations#repeats(int, int)} and {@link Expectations#repeatsAtLeast(int)}, if that
+    * was the case.
+    */
+   public final int getMinInvocations()
    {
       return minInvocations;
    }
 
    /**
-    * Sets minimum invocation count.
-    * This call can be used to override value set
-    * with {@link Expectations#repeats(int)}, {@link Expectations#repeats(int, int)}
-    * and {@link Expectations#repeatsAtLeast(int)} methods.
+    * Sets the minimum invocation count for the current expectation.
+    * <p/>
+    * This call can be used to override the value set with {@link Expectations#repeats(int)},
+    * {@link Expectations#repeats(int, int)} or {@link Expectations#repeatsAtLeast(int)}.
     */
-   final public void setMinInvocations(int minInvocations)
+   public final void setMinInvocations(int minInvocations)
    {
       this.minInvocations = minInvocations;
    }
 
    /**
-    * Returns maximum invocation count.
+    * Returns the maximum invocation count for the current expectation (-1 indicates unlimited).
     * <p/>
-    * This call returns value set
-    * with {@link Expectations#repeats(int)}, {@link Expectations#repeats(int, int)}
-    * and {@link Expectations#repeatsAtMost(int)} methods.
+    * This call will return the value set with {@link Expectations#repeats(int)},
+    * {@link Expectations#repeats(int, int)} or {@link Expectations#repeatsAtMost(int)}, if that was
+    * the case.
     */
-   final public int getMaxInvocations()
+   public final int getMaxInvocations()
    {
       return maxInvocations;
    }
 
    /**
-    * Sets maximum invocation count.
+    * Sets the maximum invocation count for the current expectation.
     * <p/>
-    * This call can be used to override value set
-    * with {@link Expectations#repeats(int)}, {@link Expectations#repeats(int, int)}
-    * and {@link Expectations#repeatsAtMost(int)} methods.
+    * This call can be used to override value set with {@link Expectations#repeats(int)},
+    * {@link Expectations#repeats(int, int)} or {@link Expectations#repeatsAtMost(int)}.
     */
-   final public void setMaxInvocations(int maxInvocations)
+   public final void setMaxInvocations(int maxInvocations)
    {
       this.maxInvocations = maxInvocations;
    }

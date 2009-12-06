@@ -24,81 +24,52 @@
  */
 package mockit;
 
-import java.util.Collection;
+import java.util.*;
 
-import org.junit.Test;
-
-import static org.hamcrest.core.IsEqual.*;
+import org.junit.*;
 
 import static org.junit.Assert.*;
 
-public class DelegateInvocationTest
+@SuppressWarnings({"UnusedDeclaration"})
+public final class DelegateInvocationTest
 {
    static class Collaborator
    {
-      Collaborator() {
-      }
+      Collaborator() {}
+      Collaborator(int i) {}
 
-      Collaborator(int i) {
-      }
-
-      int getValue()
-      {
-         return -1;
-      }
-
-      String doSomething(boolean b, int[] i, String s)
-      {
-         return s + b + i[0];
-      }
-
-      static boolean staticMethod()
-      {
-         return true;
-      }
-
-      static boolean staticMethod(int i)
-      {
-         return i > 0;
-      }
-
+      int getValue() { return -1; }
+      String doSomething(boolean b, int[] i, String s) { return s + b + i[0]; }
+      static boolean staticMethod() { return true; }
+      static boolean staticMethod(int i) { return i > 0; }
       native long nativeMethod(boolean b);
-
-      final char finalMethod()
-      {
-         return 's';
-      }
-
-      private float privateMethod()
-      {
-         return 1.2F;
-      }
-
-      void addElements(Collection<String> elements)
-      {
-         elements.add("one element");
-      }
+      final char finalMethod() { return 's'; }
+      private float privateMethod() { return 1.2F; }
+      void addElements(Collection<String> elements) { elements.add("one element"); }
    }
 
    @Test
-   public void testDelegateForStaticMethodWithContext()
+   public void delegateWithContextObject()
    {
-      new NonStrictExpectations() {
+      new NonStrictExpectations()
+      {
          final Collaborator unused = null;
 
          {
-            Collaborator.staticMethod(-1);
-            returns(new Delegate() {
-               boolean staticMethod(Invocation context, int i)
+            Collaborator.staticMethod();
+            returns(new Delegate()
+            {
+               boolean staticMethod(Invocation context)
                {
-                  return context.getInvocationCount() + i > 0;
+                  assertEquals(context.getInvocationCount() - 1, context.getInvocationIndex());
+                  return context.getInvocationCount() > 0;
                }
             });
          }
       };
 
-      assertFalse(Collaborator.staticMethod(-1));
-      assertTrue(Collaborator.staticMethod(-1));
+      assertTrue(Collaborator.staticMethod());
+      assertTrue(Collaborator.staticMethod());
    }
 
    static class ConstructorDelegate implements Delegate
@@ -112,16 +83,16 @@ public class DelegateInvocationTest
    }
 
    @Test
-   public void testDelegateForConstructorWithContext()
+   public void delegateForConstructorWithContext()
    {
       final ConstructorDelegate delegate = new ConstructorDelegate();
 
-      new Expectations() {
+      new Expectations()
+      {
          Collaborator mock;
 
          {
-            new Collaborator(withAny(0));
-            returns(delegate);
+            new Collaborator(anyInt); returns(delegate);
          }
       };
 
@@ -131,17 +102,22 @@ public class DelegateInvocationTest
    }
 
    @Test
-   public void testDelegateReceivingNullArguments()
+   public void delegateReceivingNullArguments()
    {
-      new NonStrictExpectations() {
+      new NonStrictExpectations()
+      {
          Collaborator collaborator;
 
          {
             collaborator.doSomething(true, null, null);
-            returns(new Delegate() {
-               void doSomething(Invocation invocation, boolean b, int[] i,
-                     String s)
+            returns(new Delegate()
+            {
+               void doSomething(Invocation invocation, Boolean b, int[] i, String s)
                {
+                  assertEquals(1, invocation.getInvocationCount());
+                  assertTrue(b);
+                  assertNull(i);
+                  assertNull(s);
                }
             });
          }
@@ -151,162 +127,199 @@ public class DelegateInvocationTest
    }
 
    @Test
-   public void testDelegateForStaticMethodMultiWithContext()
+   public void delegateWithAnotherMethodOnTheDelegateClass()
    {
-      new NonStrictExpectations() {
-         final Collaborator unused = null;
-
-         {
-            Collaborator.staticMethod(-1);
-            returns(new Delegate() {
-               boolean staticMethod(Invocation context, int i)
-               {
-                  return context.getInvocationCount() + i > 0;
-               }
-
-               boolean otherMethod(float f)
-               {
-                  return f > 0;
-               }
-            });
-         }
-      };
-
-      assertFalse(Collaborator.staticMethod(-1));
-      assertTrue(Collaborator.staticMethod(-1));
-   }
-
-   static class CollaboratorNew
-   {
-      CollaboratorNew() {
-      }
-
-      static int staticMethod1(Object o, Exception e)
+      new NonStrictExpectations()
       {
-         return -1;
-      }
-   }
-
-   @Test
-   public void testDelegateForStaticMethodWithObject()
-   {
-      new NonStrictExpectations() {
-         final CollaboratorNew unused = null;
+         Collaborator mock;
 
          {
-            CollaboratorNew.staticMethod1(any, null);
-            returns(new Delegate() {
-               int staticMethod1(Object o, Exception e)
+            mock.getValue();
+            returns(new Delegate()
+            {
+               int getValue(Invocation context)
                {
-                  return 1;
+                  return context.getInvocationCount();
+               }
+
+               void otherMethod(Invocation context)
+               {
+                  fail();
                }
             });
          }
       };
 
-      assertThat(CollaboratorNew.staticMethod1(new Object(), new Exception()),
-            equalTo(1));
-      assertThat(CollaboratorNew.staticMethod1(new Object(), new Exception()),
-            equalTo(1));
+      assertEquals(1, new Collaborator().getValue());
+      assertEquals(2, new Collaborator().getValue());
    }
 
    @Test
-   public void testDelegateForStaticMethodWithObjectAndContext()
+   public void delegateClassWithMultipleMethodsAndInexactButValidMatch()
    {
-      new NonStrictExpectations() {
-         final CollaboratorNew unused = null;
+      new NonStrictExpectations()
+      {
+         Collaborator mock;
 
          {
-            CollaboratorNew.staticMethod1(any, null);
-            repeatsAtMost(1);
-            returns(new Delegate() {
-               int staticMethod1(Invocation invocation, Object o, Exception e)
+            Collaborator.staticMethod(1);
+            returns(new Delegate()
+            {
+               void otherMethod(int i)
+               {
+                  fail();
+               }
+
+               boolean staticMethod(Invocation invocation, Number i)
+               {
+                  return i.intValue() > 0;
+               }
+            });
+         }
+      };
+
+      assertTrue(Collaborator.staticMethod(1));
+   }
+
+   @Test
+   public void delegateOverridingInvocationCountConstraints(final Collaborator mock)
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mock.finalMethod(); repeatsAtMost(1);
+            returns(new Delegate()
+            {
+               char finalMethod(Invocation invocation)
                {
                   invocation.setMinInvocations(2);
                   invocation.setMaxInvocations(2);
-                  return invocation.getInvocationCount();
+                  return 'a';
                }
             });
          }
       };
 
-      assertThat(CollaboratorNew.staticMethod1(null, null), equalTo(1));
-      assertThat(CollaboratorNew.staticMethod1(null, null), equalTo(2));
-
+      assertEquals('a', mock.finalMethod());
+      assertEquals('a', mock.finalMethod());
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testDelegateForStaticMethodSignatureMismatch()
+   public void delegateClassWithNoMethodMatchingTheExpectationSignature(final Collaborator mock)
    {
-      new NonStrictExpectations() {
-         final CollaboratorNew unused = null;
-
+      new Expectations()
+      {
          {
-            CollaboratorNew.staticMethod1(any, null);
-            repeatsAtMost(1);
-            returns(new Delegate() {
-               int staticMethod1(Invocation invocation, Object o)
-               {
-                  return 1;
-               }
-
-               int someOtherMethod(float f)
-               {
-                  return 2;
-               }
+            mock.privateMethod();
+            returns(new Delegate()
+            {
+               float someDelegate(Invocation invocation) { return 1.0F; }
+               void someOtherMethod() {}
             });
          }
       };
 
-      assertThat(CollaboratorNew.staticMethod1(null, null), equalTo(1));
+      assertEquals(1.0, mock.privateMethod(), 0.0);
    }
 
-   public void testDelegateForStaticMethodDifferentName()
+   @Test
+   public void delegateWithDifferentMethodName()
    {
-      new NonStrictExpectations() {
-         final CollaboratorNew unused = null;
+      new NonStrictExpectations()
+      {
+         Collaborator mock;
 
          {
-            CollaboratorNew.staticMethod1(any, null);
-            repeatsAtMost(1);
-            returns(new Delegate() {
-               int differentName(Invocation invocation, Object o, Exception e)
+            mock.nativeMethod(anyBoolean);
+            returns(new Delegate()
+            {
+               long differentName(Invocation invocation, boolean b)
                {
-                  return 3;
+                  assertEquals(1, invocation.getInvocationCount());
+                  assertTrue(b);
+                  return 3L;
                }
             });
          }
       };
 
-      assertThat(CollaboratorNew.staticMethod1(null, null), equalTo(3));
+      assertEquals(3L, new Collaborator().nativeMethod(true));
    }
 
-   public void testDelegateForStaticMethodDifferentNameTwoCalls()
+   @Test
+   public void delegatesForTwoSeparateExpectations(final Collaborator mock)
    {
-      new Expectations() {
-         final CollaboratorNew unused = null;
-
+      new Expectations()
+      {
          {
-            CollaboratorNew.staticMethod1(any, null);
-            repeatsAtMost(1);
-            returns(new Delegate() {
-               int differentName1(Invocation invocation, Object o, Exception e)
+            mock.addElements((Collection<String>) any);
+            returns(new Delegate()
+            {
+               void delegate1(Invocation invocation, Collection<String> elements)
                {
-                  return 3;
+                  assertEquals(1, invocation.getInvocationCount());
+                  assertNotNull(elements);
                }
             });
-            CollaboratorNew.staticMethod1(any, null);
-            repeatsAtMost(1);
-            returns(new Delegate() {
-               int differentName2(Invocation invocation, Object o, Exception e)
+
+            mock.addElements(null);
+            returns(new Delegate()
+            {
+               void delegate2(Invocation invocation, Collection<String> elements)
                {
-                  return 4;
+                  assertEquals(1, invocation.getInvocationCount());
+                  assertNull(elements);
                }
             });
          }
       };
 
-      assertThat(CollaboratorNew.staticMethod1(null, null), equalTo(3));
-      assertThat(CollaboratorNew.staticMethod1(null, null), equalTo(4));
+      mock.addElements(Collections.<String>emptyList());
+      mock.addElements(null);
+   }
+
+   @Test
+   public void consecutiveDelegatesForTheSameExpectation(final Collaborator mock)
+   {
+      new Expectations()
+      {
+         {
+            mock.getValue();
+            returns(
+               new Delegate()
+               {
+                  int delegate(Invocation invocation)
+                  {
+                     return invocation.getInvocationCount();
+                  }
+               },
+               new Delegate()
+               {
+                  int delegate(Invocation invocation)
+                  {
+                     return invocation.getInvocationCount();
+                  }
+               },
+               new Delegate()
+               {
+                  int delegate(Invocation invocation)
+                  {
+                     assertEquals(3, invocation.getInvocationCount());
+                     throw new SecurityException();
+                  }
+               });
+         }
+      };
+
+      assertEquals(1, mock.getValue());
+      assertEquals(2, mock.getValue());
+
+      try {
+         mock.getValue();
+         fail();
+      }
+      catch (SecurityException e) {
+         // OK
+      }
    }
 }
