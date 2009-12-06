@@ -74,14 +74,6 @@ public final class Expectation
       return constraints.verify(expectedInvocation);
    }
 
-   AssertionError errorForNeverHappened()
-   {
-      int invocationCount = constraints.invocationCount;
-
-      return invocationCount > 0 ?
-         expectedInvocation.errorForUnexpectedInvocations(invocationCount) : null;
-   }
-
    public boolean hasVoidReturnType()
    {
       return expectedInvocation.methodNameAndDesc.endsWith(")V");
