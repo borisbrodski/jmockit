@@ -199,7 +199,6 @@
         <inspection_tool class="ConfusingFloatingPointLiteral" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConfusingMainMethod" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConfusingOctalEscape" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ConnectionResource" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConstantDeclaredInAbstractClass" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConstantDeclaredInInterface" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConstantJUnitAssertArgument" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -420,9 +419,6 @@
         <inspection_tool class="MultipleDeclaration" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MultipleExceptionsDeclaredOnTestMethod" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MultipleTypedDeclaration" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="MultiplyOrDivideByPowerOfTwo" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="checkDivision" value="false" />
-        </inspection_tool>
         <inspection_tool class="NakedNotify" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NegatedConditional" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_ignoreNegatedNullComparison" value="true" />
@@ -517,7 +513,6 @@
         <inspection_tool class="ReadObjectAndWriteObjectPrivate" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ReadObjectInitialization" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ReadResolveAndWriteReplaceProtected" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="RecordStoreResource" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="RedundantFieldInitialization" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="RedundantImplements" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreSerializable" value="false" />
