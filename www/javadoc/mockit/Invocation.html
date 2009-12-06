@@ -97,12 +97,12 @@ Class Invocation</H2>
 </PRE>
 
 <P>
-This is a context object representing the current invocation to a mocked method or constructor.
+A context object representing the current invocation to a mocked method or constructor.
  When used as the type of the first parameter on a <A HREF="../mockit/Delegate.html" title="interface in mockit"><CODE>Delegate</CODE></A> method, all invocations to the
  delegate method will receive an appropriate instance.
  <p/>
  Sample tests:
- <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/DelegateInvocationTest.java"
+ <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/DelegateInvocationTest.java"
  >DelegateInvocationTest</a>
 <P>
 
@@ -127,7 +127,7 @@ This is a context object representing the current invocation to a mocked method 
            int&nbsp;maxInvocations)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For internal use only.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -217,6 +217,8 @@ protected <B>Invocation</B>(int&nbsp;invocationCount,
                      int&nbsp;minInvocations,
                      int&nbsp;maxInvocations)</PRE>
 <DL>
+<DD>For internal use only.
+<P>
 </DL>
 
 <!-- ============ METHOD DETAIL ========== -->

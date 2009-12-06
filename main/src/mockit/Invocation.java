@@ -25,12 +25,12 @@
 package mockit;
 
 /**
- * This is a context object representing the current invocation to a mocked method or constructor.
+ * A context object representing the current invocation to a mocked method or constructor.
  * When used as the type of the first parameter on a {@link Delegate} method, all invocations to the
  * delegate method will receive an appropriate instance.
  * <p/>
  * Sample tests:
- * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/DelegateInvocationTest.java"
+ * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/DelegateInvocationTest.java"
  * >DelegateInvocationTest</a>
  */
 public class Invocation
@@ -39,6 +39,9 @@ public class Invocation
    private int minInvocations;
    private int maxInvocations;
 
+   /**
+    * For internal use only.
+    */
    protected Invocation(int invocationCount, int minInvocations, int maxInvocations)
    {
       this.invocationCount = invocationCount;
