@@ -28,10 +28,10 @@ import java.lang.instrument.*;
 import java.security.*;
 import java.util.regex.*;
 
+import mockit.external.asm.*;
 import mockit.internal.*;
 import mockit.internal.annotations.*;
 import mockit.internal.core.*;
-import org.objectweb.asm2.*;
 
 final class ExternalMockTransformer implements ClassFileTransformer
 {

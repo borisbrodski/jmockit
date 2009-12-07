@@ -26,8 +26,7 @@ package mockit.internal.core;
 
 import static java.lang.reflect.Modifier.*;
 
-import org.objectweb.asm2.*;
-
+import mockit.external.asm.*;
 import mockit.internal.*;
 
 /**

@@ -27,7 +27,7 @@ package mockit.internal.filtering;
 import java.util.regex.*;
 import java.util.*;
 
-import org.objectweb.asm2.*;
+import mockit.external.asm.*;
 import mockit.internal.util.*;
 
 public final class MockingConfiguration

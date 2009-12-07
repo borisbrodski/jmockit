@@ -28,8 +28,7 @@ import java.io.*;
 import java.lang.instrument.*;
 import java.util.*;
 
-import org.objectweb.asm2.*;
-
+import mockit.external.asm.*;
 import mockit.integration.junit3.internal.*;
 import mockit.integration.junit4.internal.*;
 import mockit.integration.testng.internal.*;

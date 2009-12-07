@@ -29,13 +29,14 @@ import static java.lang.reflect.Modifier.isFinal;
 import java.security.*;
 import java.util.*;
 
+import mockit.external.asm.*;
+import mockit.external.asm.commons.*;
 import mockit.internal.state.*;
 import mockit.internal.*;
 import mockit.internal.util.*;
 import mockit.*;
-import org.objectweb.asm2.*;
-import org.objectweb.asm2.commons.*;
-import static org.objectweb.asm2.Opcodes.*;
+
+import static mockit.external.asm.Opcodes.*;
 
 public final class ExpectationsTransformer implements ClassFileTransformer
 {

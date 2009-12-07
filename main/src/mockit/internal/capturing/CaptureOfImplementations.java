@@ -27,10 +27,9 @@ package mockit.internal.capturing;
 import java.util.*;
 
 import mockit.*;
+import mockit.external.asm.*;
 import mockit.internal.*;
 import mockit.internal.startup.*;
-
-import org.objectweb.asm2.*;
 
 public abstract class CaptureOfImplementations implements ModifierFactory
 {

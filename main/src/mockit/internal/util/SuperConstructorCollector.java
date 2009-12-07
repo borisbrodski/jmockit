@@ -26,10 +26,9 @@ package mockit.internal.util;
 
 import java.io.*;
 
+import mockit.external.asm.*;
+import mockit.external.asm.commons.*;
 import mockit.internal.*;
-
-import org.objectweb.asm2.commons.*;
-import org.objectweb.asm2.*;
 
 public final class SuperConstructorCollector extends EmptyVisitor
 {

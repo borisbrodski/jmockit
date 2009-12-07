@@ -26,10 +26,9 @@ package mockit.internal.core;
 
 import java.lang.reflect.*;
 
-import org.objectweb.asm2.*;
-import static org.objectweb.asm2.Opcodes.*;
-import org.objectweb.asm2.Type;
+import static mockit.external.asm.Opcodes.*;
 
+import mockit.external.asm.*;
 import mockit.internal.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.*;
@@ -92,7 +91,7 @@ public class RealClassModifier extends BaseClassModifier
          realClass = realClass.getInterfaces()[0];
       }
 
-      return Type.getDescriptor(realClass);
+      return mockit.external.asm.Type.getDescriptor(realClass);
    }
 
    public RealClassModifier(
@@ -345,10 +344,10 @@ public class RealClassModifier extends BaseClassModifier
 
    private void generateItFieldSetting(String methodDesc)
    {
-      Type[] argTypes = Type.getArgumentTypes(methodDesc);
+      mockit.external.asm.Type[] argTypes = mockit.external.asm.Type.getArgumentTypes(methodDesc);
       int var = 1;
 
-      for (Type argType : argTypes) {
+      for (mockit.external.asm.Type argType : argTypes) {
          var += argType.getSize();
       }
 
@@ -368,10 +367,10 @@ public class RealClassModifier extends BaseClassModifier
 
    private void generateMethodOrConstructorArguments(String desc, int initialVar)
    {
-      Type[] argTypes = Type.getArgumentTypes(desc);
+      mockit.external.asm.Type[] argTypes = mockit.external.asm.Type.getArgumentTypes(desc);
       varIndex = initialVar;
 
-      for (Type argType : argTypes) {
+      for (mockit.external.asm.Type argType : argTypes) {
          int opcode = argType.getOpcode(ILOAD);
          mw.visitVarInsn(opcode, varIndex);
          varIndex += argType.getSize();
@@ -384,7 +383,7 @@ public class RealClassModifier extends BaseClassModifier
          generateReturnWithObjectAtTopOfTheStack(desc);
       }
       else {
-         Type returnType = Type.getReturnType(desc);
+         mockit.external.asm.Type returnType = mockit.external.asm.Type.getReturnType(desc);
          mw.visitInsn(returnType.getOpcode(IRETURN));
       }
    }

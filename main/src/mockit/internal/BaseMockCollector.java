@@ -24,10 +24,11 @@
  */
 package mockit.internal;
 
+import mockit.external.asm.*;
+import mockit.external.asm.commons.*;
 import mockit.internal.core.*;
-import org.objectweb.asm2.*;
-import static org.objectweb.asm2.Opcodes.*;
-import org.objectweb.asm2.commons.*;
+
+import static mockit.external.asm.Opcodes.*;
 
 public class BaseMockCollector extends EmptyVisitor
 {

@@ -27,7 +27,7 @@ package mockit.internal.expectations;
 import java.lang.reflect.*;
 import java.util.*;
 
-import org.objectweb.asm2.Type;
+import mockit.external.asm.Type;
 
 import mockit.internal.util.*;
 

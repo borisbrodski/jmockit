@@ -26,8 +26,7 @@ package mockit.internal.expectations.mocking;
 
 import java.util.*;
 
-import org.objectweb.asm2.*;
-
+import mockit.external.asm.*;
 import mockit.internal.capturing.*;
 import mockit.internal.filtering.*;
 import mockit.internal.util.*;

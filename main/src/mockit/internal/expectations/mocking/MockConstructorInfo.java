@@ -28,7 +28,7 @@ import java.lang.reflect.*;
 
 import mockit.internal.util.*;
 
-import org.objectweb.asm2.Type;
+import mockit.external.asm.Type;
 
 final class MockConstructorInfo
 {

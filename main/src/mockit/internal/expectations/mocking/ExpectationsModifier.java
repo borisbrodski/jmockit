@@ -28,11 +28,11 @@ import java.util.*;
 
 import static java.lang.reflect.Modifier.*;
 
-import org.objectweb.asm2.*;
-import static org.objectweb.asm2.Opcodes.*;
-import org.objectweb.asm2.Type;
-import org.objectweb.asm2.commons.*;
+import static mockit.external.asm.Opcodes.*;
+import mockit.external.asm.Type;
 
+import mockit.external.asm.*;
+import mockit.external.asm.commons.*;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
 import mockit.internal.startup.*;

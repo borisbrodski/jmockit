@@ -28,8 +28,10 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 import org.junit.*;
-import org.objectweb.asm2.*;
-import static org.objectweb.asm2.Opcodes.*;
+
+import mockit.external.asm.*;
+
+import static mockit.external.asm.Opcodes.*;
 
 public final class MockMethodCollectorTest
 {

@@ -24,7 +24,7 @@
  */
 package mockit.internal.capturing;
 
-import org.objectweb.asm2.*;
+import mockit.external.asm.*;
 import mockit.internal.*;
 
 public final class CaptureOfImplementationsForTestClass extends CaptureOfImplementations

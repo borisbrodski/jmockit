@@ -28,7 +28,7 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.Map.*;
 
-import org.objectweb.asm2.*;
+import mockit.external.asm.*;
 import mockit.internal.*;
 import mockit.internal.expectations.*;
 import mockit.internal.filtering.*;

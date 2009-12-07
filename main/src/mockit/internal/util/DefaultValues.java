@@ -26,9 +26,8 @@ package mockit.internal.util;
 
 import java.lang.reflect.*;
 import java.util.*;
-import static java.util.Collections.*;
 
-import org.objectweb.asm2.Type;
+import static java.util.Collections.*;
 
 /**
  * Provides default values for each type, typically used for returning default values according to
@@ -112,7 +111,7 @@ public final class DefaultValues
 
    private static Object newEmptyArray(String typeDesc)
    {
-      Type type = Type.getType(typeDesc);
+      mockit.external.asm.Type type = mockit.external.asm.Type.getType(typeDesc);
       Class<?> elementType = Utilities.getClassForType(type.getElementType());
 
       return Array.newInstance(elementType, new int[type.getDimensions()]);

@@ -26,10 +26,9 @@ package mockit.internal.annotations;
 
 import java.lang.reflect.*;
 
-import org.objectweb.asm2.*;
-import org.objectweb.asm2.commons.*;
-
 import mockit.*;
+import mockit.external.asm.*;
+import mockit.external.asm.commons.*;
 import mockit.internal.*;
 
 /**

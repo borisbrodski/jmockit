@@ -27,8 +27,8 @@ package mockit.internal;
 import java.io.*;
 import java.lang.reflect.*;
 
+import mockit.external.asm.*;
 import mockit.internal.state.*;
-import org.objectweb.asm2.*;
 
 public final class ClassFile
 {

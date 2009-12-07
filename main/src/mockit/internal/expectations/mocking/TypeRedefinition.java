@@ -27,9 +27,8 @@ package mockit.internal.expectations.mocking;
 import java.lang.reflect.*;
 import static java.lang.reflect.Modifier.*;
 
-import org.objectweb.asm2.*;
-
 import mockit.*;
+import mockit.external.asm.*;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
 import mockit.internal.state.*;

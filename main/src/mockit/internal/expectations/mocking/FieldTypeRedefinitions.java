@@ -27,7 +27,7 @@ package mockit.internal.expectations.mocking;
 import java.lang.reflect.*;
 import static java.lang.reflect.Modifier.*;
 
-import static org.objectweb.asm2.Opcodes.*;
+import static mockit.external.asm.Opcodes.*;
 
 public abstract class FieldTypeRedefinitions extends TypeRedefinitions
 {

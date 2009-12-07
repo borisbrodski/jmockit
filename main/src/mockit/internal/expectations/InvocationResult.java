@@ -29,7 +29,7 @@ import java.util.*;
 
 import mockit.*;
 import mockit.internal.util.*;
-import org.objectweb.asm2.Type;
+import mockit.external.asm.Type;
 
 abstract class InvocationResult
 {

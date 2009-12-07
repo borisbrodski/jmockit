@@ -27,11 +27,10 @@ package mockit.internal.capturing;
 import java.lang.instrument.*;
 import java.security.*;
 
+import mockit.external.asm.*;
+import mockit.external.asm.commons.*;
 import mockit.internal.*;
 import mockit.internal.state.*;
-
-import org.objectweb.asm2.*;
-import org.objectweb.asm2.commons.*;
 
 final class CaptureTransformer implements ClassFileTransformer
 {

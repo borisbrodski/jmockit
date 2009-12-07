@@ -26,11 +26,10 @@ package mockit.internal.util;
 
 import java.lang.reflect.*;
 import static java.lang.reflect.Modifier.*;
+
 import java.util.*;
 
 import mockit.*;
-
-import org.objectweb.asm2.Type;
 
 /**
  * Miscellaneous utility methods which don't fit into any other class, most of them related to the
@@ -590,7 +589,7 @@ public final class Utilities
 
    public static Class<?>[] getParameterTypes(String mockDesc)
    {
-      Type[] paramTypes = Type.getArgumentTypes(mockDesc);
+      mockit.external.asm.Type[] paramTypes = mockit.external.asm.Type.getArgumentTypes(mockDesc);
       Class<?>[] paramClasses = new Class<?>[paramTypes.length];
 
       for (int i = 0; i < paramTypes.length; i++) {
@@ -600,7 +599,7 @@ public final class Utilities
       return paramClasses;
    }
 
-   public static Class<?> getClassForType(Type type)
+   public static Class<?> getClassForType(mockit.external.asm.Type type)
    {
       int elementSort = type.getSort();
 
@@ -609,7 +608,7 @@ public final class Utilities
       }
 
       String className =
-         elementSort == Type.ARRAY ? type.getDescriptor().replace('/', '.') : type.getClassName();
+         elementSort == mockit.external.asm.Type.ARRAY ? type.getDescriptor().replace('/', '.') : type.getClassName();
 
       return loadClass(className);
    }

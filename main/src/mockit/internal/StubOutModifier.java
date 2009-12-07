@@ -26,11 +26,12 @@ package mockit.internal;
 
 import static java.lang.reflect.Modifier.*;
 
+import mockit.external.asm.*;
 import mockit.internal.filtering.*;
 import mockit.internal.util.*;
 import mockit.internal.startup.*;
-import org.objectweb.asm2.*;
-import static org.objectweb.asm2.Opcodes.*;
+
+import static mockit.external.asm.Opcodes.*;
 
 public final class StubOutModifier extends BaseClassModifier
 {

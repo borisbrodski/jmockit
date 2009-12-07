@@ -26,10 +26,9 @@ package mockit.internal;
 
 import java.lang.reflect.*;
 
-import org.objectweb.asm2.*;
-import static org.objectweb.asm2.Opcodes.*;
-import org.objectweb.asm2.Type;
+import static mockit.external.asm.Opcodes.*;
 
+import mockit.external.asm.*;
 import mockit.internal.state.*;
 
 @SuppressWarnings({"ClassWithTooManyMethods"})
@@ -44,7 +43,7 @@ public class BaseClassModifier extends ClassWriter
       null, "booleanValue", "charValue", "byteValue", "shortValue",
       "intValue", "floatValue", "longValue", "doubleValue"
    };
-   private static final Type[] NO_ARGS = new Type[0];
+   private static final mockit.external.asm.Type[] NO_ARGS = new mockit.external.asm.Type[0];
 
    protected MethodVisitor mw;
    protected boolean useMockingBridge;
@@ -101,7 +100,7 @@ public class BaseClassModifier extends ClassWriter
    }
 
    protected final void generateCodeToPassMethodArgumentsAsVarargs(
-      boolean isStatic, Type[] argTypes)
+      boolean isStatic, mockit.external.asm.Type[] argTypes)
    {
       generateCodeToCreateArrayOfObject(argTypes.length);
       generateCodeToPassMethodArgumentsAsVarargs(argTypes, 0, isStatic ? 0 : 1);
@@ -114,19 +113,19 @@ public class BaseClassModifier extends ClassWriter
    }
 
    private void generateCodeToPassMethodArgumentsAsVarargs(
-      Type[] argTypes, int initialArrayIndex, int initialParameterIndex)
+      mockit.external.asm.Type[] argTypes, int initialArrayIndex, int initialParameterIndex)
    {
       int i = initialArrayIndex;
       int j = initialParameterIndex;
 
-      for (Type argType : argTypes) {
+      for (mockit.external.asm.Type argType : argTypes) {
          mw.visitInsn(DUP);
          mw.visitIntInsn(BIPUSH, i++);
          mw.visitVarInsn(argType.getOpcode(ILOAD), j);
 
          int sort = argType.getSort();
 
-         if (sort < Type.ARRAY) {
+         if (sort < mockit.external.asm.Type.ARRAY) {
             String wrapperType = PRIMITIVE_WRAPPER_TYPE[sort];
             mw.visitMethodInsn(
                INVOKESTATIC, wrapperType, "valueOf", "(" + argType + ")L" + wrapperType + ';');
@@ -140,16 +139,16 @@ public class BaseClassModifier extends ClassWriter
 
    protected final void generateReturnWithObjectAtTopOfTheStack(String methodDesc)
    {
-      Type returnType = Type.getReturnType(methodDesc);
+      mockit.external.asm.Type returnType = mockit.external.asm.Type.getReturnType(methodDesc);
       int sort = returnType.getSort();
 
-      if (sort == Type.VOID) {
+      if (sort == mockit.external.asm.Type.VOID) {
          mw.visitInsn(POP);
       }
-      else if (sort == Type.ARRAY) {
+      else if (sort == mockit.external.asm.Type.ARRAY) {
          mw.visitTypeInsn(CHECKCAST, returnType.getDescriptor());
       }
-      else if (sort == Type.OBJECT) {
+      else if (sort == mockit.external.asm.Type.OBJECT) {
          mw.visitTypeInsn(CHECKCAST, returnType.getInternalName());
       }
       else {
@@ -177,7 +176,7 @@ public class BaseClassModifier extends ClassWriter
       mw.visitLdcInsn(name + desc);
 
       // Fifth argument: call arguments.
-      Type[] argTypes = Type.getArgumentTypes(desc);
+      mockit.external.asm.Type[] argTypes = mockit.external.asm.Type.getArgumentTypes(desc);
       generateCodeToPassMethodArgumentsAsVarargs(isStatic, argTypes);
 
       mw.visitMethodInsn(
@@ -197,7 +196,7 @@ public class BaseClassModifier extends ClassWriter
       mw.visitInsn(ACONST_NULL);
 
       // Create array for call arguments (third "invoke" argument):
-      Type[] argTypes = mockDesc == null ? NO_ARGS : Type.getArgumentTypes(mockDesc);
+      mockit.external.asm.Type[] argTypes = mockDesc == null ? NO_ARGS : mockit.external.asm.Type.getArgumentTypes(mockDesc);
       generateCodeToCreateArrayOfObject(5 + (extra == null ? 0 : 1) + argTypes.length);
 
       int i = 0;
@@ -254,7 +253,7 @@ public class BaseClassModifier extends ClassWriter
          "(Ljava/lang/Object;Ljava/lang/reflect/Method;[Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
-   protected final String generateSuperConstructorArguments(Type[] paramTypes)
+   protected final String generateSuperConstructorArguments(mockit.external.asm.Type[] paramTypes)
    {
       if (paramTypes == null || paramTypes.length == 0) {
          return "()V";
@@ -262,12 +261,12 @@ public class BaseClassModifier extends ClassWriter
 
       pushDefaultValuesForParameterTypes(paramTypes);
 
-      return Type.getMethodDescriptor(Type.VOID_TYPE, paramTypes);
+      return mockit.external.asm.Type.getMethodDescriptor(mockit.external.asm.Type.VOID_TYPE, paramTypes);
    }
 
-   private void pushDefaultValuesForParameterTypes(Type[] paramTypes)
+   private void pushDefaultValuesForParameterTypes(mockit.external.asm.Type[] paramTypes)
    {
-      for (Type paramType : paramTypes) {
+      for (mockit.external.asm.Type paramType : paramTypes) {
          pushDefaultValueForType(paramType);
       }
    }
@@ -275,28 +274,28 @@ public class BaseClassModifier extends ClassWriter
    protected final void pushDefaultValuesForParameterTypes(String methodOrConstructorDesc)
    {
       if (!"()V".equals(methodOrConstructorDesc)) {
-         pushDefaultValuesForParameterTypes(Type.getArgumentTypes(methodOrConstructorDesc));
+         pushDefaultValuesForParameterTypes(mockit.external.asm.Type.getArgumentTypes(methodOrConstructorDesc));
       }
    }
 
-   protected final void pushDefaultValueForType(Type type)
+   protected final void pushDefaultValueForType(mockit.external.asm.Type type)
    {
       switch (type.getSort()) {
-         case Type.VOID: break;
-         case Type.BOOLEAN:
-         case Type.CHAR:
-         case Type.BYTE:
-         case Type.SHORT:
-         case Type.INT:    mw.visitInsn(ICONST_0); break;
-         case Type.LONG:   mw.visitInsn(LCONST_0); break;
-         case Type.FLOAT:  mw.visitInsn(FCONST_0); break;
-         case Type.DOUBLE: mw.visitInsn(DCONST_0); break;
-         case Type.ARRAY:  generateCreationOfEmptyArray(type); break;
+         case mockit.external.asm.Type.VOID: break;
+         case mockit.external.asm.Type.BOOLEAN:
+         case mockit.external.asm.Type.CHAR:
+         case mockit.external.asm.Type.BYTE:
+         case mockit.external.asm.Type.SHORT:
+         case mockit.external.asm.Type.INT:    mw.visitInsn(ICONST_0); break;
+         case mockit.external.asm.Type.LONG:   mw.visitInsn(LCONST_0); break;
+         case mockit.external.asm.Type.FLOAT:  mw.visitInsn(FCONST_0); break;
+         case mockit.external.asm.Type.DOUBLE: mw.visitInsn(DCONST_0); break;
+         case mockit.external.asm.Type.ARRAY:  generateCreationOfEmptyArray(type); break;
          default:          mw.visitInsn(ACONST_NULL);
       }
    }
 
-   private void generateCreationOfEmptyArray(Type arrayType)
+   private void generateCreationOfEmptyArray(mockit.external.asm.Type arrayType)
    {
       int dimensions = arrayType.getDimensions();
 
@@ -309,10 +308,10 @@ public class BaseClassModifier extends ClassWriter
          return;
       }
 
-      Type elementType = arrayType.getElementType();
+      mockit.external.asm.Type elementType = arrayType.getElementType();
       int elementSort = elementType.getSort();
 
-      if (elementSort == Type.OBJECT) {
+      if (elementSort == mockit.external.asm.Type.OBJECT) {
          mw.visitTypeInsn(ANEWARRAY, elementType.getInternalName());
       }
       else {
@@ -324,20 +323,20 @@ public class BaseClassModifier extends ClassWriter
    private int getArrayElementTypeCode(int elementSort)
    {
       switch (elementSort) {
-          case Type.BOOLEAN: return T_BOOLEAN;
-          case Type.CHAR:    return T_CHAR;
-          case Type.BYTE:    return T_BYTE;
-          case Type.SHORT:   return T_SHORT;
-          case Type.INT:     return T_INT;
-          case Type.FLOAT:   return T_FLOAT;
-          case Type.LONG:    return T_LONG;
+          case mockit.external.asm.Type.BOOLEAN: return T_BOOLEAN;
+          case mockit.external.asm.Type.CHAR:    return T_CHAR;
+          case mockit.external.asm.Type.BYTE:    return T_BYTE;
+          case mockit.external.asm.Type.SHORT:   return T_SHORT;
+          case mockit.external.asm.Type.INT:     return T_INT;
+          case mockit.external.asm.Type.FLOAT:   return T_FLOAT;
+          case mockit.external.asm.Type.LONG:    return T_LONG;
           default:           return T_DOUBLE;
       }
    }
 
    protected final void generateEmptyImplementation(String desc)
    {
-      Type returnType = Type.getReturnType(desc);
+      mockit.external.asm.Type returnType = mockit.external.asm.Type.getReturnType(desc);
       pushDefaultValueForType(returnType);
       mw.visitInsn(returnType.getOpcode(IRETURN));
       mw.visitMaxs(1, 0);

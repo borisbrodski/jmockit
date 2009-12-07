@@ -24,7 +24,7 @@
  */
 package mockit.internal.capturing;
 
-import org.objectweb.asm2.*;
+import mockit.external.asm.*;
 
 public interface ModifierFactory
 {

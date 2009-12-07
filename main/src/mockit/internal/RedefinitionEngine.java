@@ -28,9 +28,8 @@ import java.lang.instrument.*;
 import java.util.*;
 import java.util.Map.*;
 
-import org.objectweb.asm2.*;
-
 import mockit.*;
+import mockit.external.asm.*;
 import mockit.internal.annotations.*;
 import mockit.internal.core.*;
 import mockit.internal.startup.*;

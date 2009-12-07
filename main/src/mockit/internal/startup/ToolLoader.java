@@ -26,10 +26,10 @@ package mockit.internal.startup;
 
 import java.lang.instrument.*;
 
+import mockit.external.asm.*;
+import mockit.external.asm.commons.*;
 import mockit.internal.*;
 import mockit.internal.util.*;
-import org.objectweb.asm2.*;
-import org.objectweb.asm2.commons.*;
 
 final class ToolLoader implements ClassVisitor
 {

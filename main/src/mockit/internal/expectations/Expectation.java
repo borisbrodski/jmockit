@@ -24,9 +24,8 @@
  */
 package mockit.internal.expectations;
 
+import mockit.external.asm.*;
 import mockit.internal.util.*;
-
-import org.objectweb.asm2.*;
 
 public final class Expectation
 {

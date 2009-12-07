@@ -26,10 +26,9 @@ package mockit.internal.annotations;
 
 import java.lang.reflect.*;
 
-import org.objectweb.asm2.*;
-import static org.objectweb.asm2.Opcodes.*;
-import org.objectweb.asm2.Type;
+import static mockit.external.asm.Opcodes.*;
 
+import mockit.external.asm.*;
 import mockit.internal.*;
 import mockit.internal.core.*;
 import mockit.internal.filtering.*;
@@ -44,7 +43,7 @@ public final class AnnotationsModifier extends RealClassModifier
 
    private boolean useMockingBridgeForUpdatingMockState;
    private boolean mockIsReentrant;
-   private Type mockClassType;
+   private mockit.external.asm.Type mockClassType;
 
    public AnnotationsModifier(
       ClassReader cr, Class<?> realClass, Object mock, AnnotatedMockMethods mockMethods,
@@ -78,7 +77,7 @@ public final class AnnotationsModifier extends RealClassModifier
 
    public void useOneMockInstancePerMockedInstance(Class<?> mockClass)
    {
-      mockClassType = Type.getType(mockClass);
+      mockClassType = mockit.external.asm.Type.getType(mockClass);
    }
 
    @Override
