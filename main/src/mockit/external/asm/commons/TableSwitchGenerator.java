@@ -1,4 +1,4 @@
-/***
+/*
  * ASM: a very small and fast Java bytecode manipulation framework
  * Copyright (c) 2000-2005 INRIA, France Telecom
  * All rights reserved.
@@ -27,44 +27,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.objectweb.asm2;
+package mockit.external.asm.commons;
+
+import mockit.external.asm.*;
 
 /**
- * Information about an exception handler block.
+ * A code generator for switch statements.
  * 
+ * @author Juozas Baliuka
+ * @author Chris Nokleberg
  * @author Eric Bruneton
  */
-class Handler {
+public interface TableSwitchGenerator {
 
     /**
-     * Beginning of the exception handler's scope (inclusive).
+     * Generates the code for a switch case.
+     * 
+     * @param key the switch case key.
+     * @param end a label that corresponds to the end of the switch statement.
      */
-    Label start;
+    void generateCase(int key, Label end);
 
     /**
-     * End of the exception handler's scope (exclusive).
+     * Generates the code for the default switch case.
      */
-    Label end;
-
-    /**
-     * Beginning of the exception handler's code.
-     */
-    Label handler;
-
-    /**
-     * Internal name of the type of exceptions handled by this handler, or
-     * <tt>null</tt> to catch any exceptions.
-     */
-    String desc;
-
-    /**
-     * Constant pool index of the internal name of the type of exceptions
-     * handled by this handler, or 0 to catch any exceptions.
-     */
-    int type;
-
-    /**
-     * Next exception handler block info.
-     */
-    Handler next;
+    void generateDefault();
 }

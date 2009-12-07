@@ -27,37 +27,44 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.objectweb.asm2;
+package mockit.external.asm;
 
 /**
- * A visitor to visit a Java field. The methods of this interface must be called
- * in the following order: ( <tt>visitAnnotation</tt> |
- * <tt>visitAttribute</tt> )* <tt>visitEnd</tt>.
+ * Information about an exception handler block.
  * 
  * @author Eric Bruneton
  */
-public interface FieldVisitor {
+class Handler {
 
     /**
-     * Visits an annotation of the field.
-     * 
-     * @param desc the class descriptor of the annotation class.
-     * @param visible <tt>true</tt> if the annotation is visible at runtime.
-     * @return a non null visitor to visit the annotation values.
+     * Beginning of the exception handler's scope (inclusive).
      */
-    AnnotationVisitor visitAnnotation(String desc, boolean visible);
+    Label start;
 
     /**
-     * Visits a non standard attribute of the field.
-     * 
-     * @param attr an attribute.
+     * End of the exception handler's scope (exclusive).
      */
-    void visitAttribute(Attribute attr);
+    Label end;
 
     /**
-     * Visits the end of the field. This method, which is the last one to be
-     * called, is used to inform the visitor that all the annotations and
-     * attributes of the field have been visited.
+     * Beginning of the exception handler's code.
      */
-    void visitEnd();
+    Label handler;
+
+    /**
+     * Internal name of the type of exceptions handled by this handler, or
+     * <tt>null</tt> to catch any exceptions.
+     */
+    String desc;
+
+    /**
+     * Constant pool index of the internal name of the type of exceptions
+     * handled by this handler, or 0 to catch any exceptions.
+     */
+    int type;
+
+    /**
+     * Next exception handler block info.
+     */
+    Handler next;
 }
