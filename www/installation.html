@@ -18,7 +18,9 @@
 </p>
 
 <h3>Using the JMockit full distribution</h3>
-<p>Follow these instructions to start using JMockit:</p>
+<p>
+   Follow these instructions to start using JMockit:
+</p>
 <ol>
    <li>
       Download the <a href="http://code.google.com/p/jmockit/downloads/list?q=label:Featured">full
@@ -36,13 +38,14 @@
       (this isn't required, but it will provide the greatest ease of use).
    </li>
    <li>
-      If you are using a JDK of version 1.6 or newer on <strong>Mac OS X</strong>, also add
-      <strong><code>&lt;jdkDir>/lib/tools.jar</code></strong> to the classpath
-      (<code>&lt;jdkDir></code> is the home directory for your local JDK installation).
+      If you are using a JDK of version 1.6 or newer on Mac OS X, or a non-Sun JDK such as the IBM
+      J9 JDK or the JRockit JDK, also add <strong><code>&lt;jdkDir>/lib/tools.jar</code></strong> to
+      the classpath (<code>&lt;jdkDir></code> is the home directory for your local JDK 1.6
+      installation).
       This second jar file isn't required, but it avoids the need to specify the initialization
       parameter <code>-javaagent:jmockit.jar</code> to the JVM when running tests.
       When using a Sun JDK 1.6+ on Windows or Linux, adding this extra jar file to the classpath is
-      optional.
+      unnecessary.
    </li>
    <li>
       Optionally, configure your IDE to find API source code (and consequently the associated
@@ -67,8 +70,8 @@
       &lt;/repository>
 </pre>
 <p>
-   For any project containing JMockit tests or making use of a separate JMockit tool (such as
-   JMockit Coverage), add the following dependency to the <code>pom.xml</code> file:
+   For any project containing JMockit tests, add the following dependency to the
+   <code>pom.xml</code> file:
 </p>
 <pre>
       &lt;dependency>
@@ -82,8 +85,8 @@
    This dependency should come <em>before</em> the <code>junit</code> dependency, if any.
 </p>
 <p>
-   If using JDK 1.6 on Mac OS X, you will probably also want to have the following dependency in
-   your project:
+   If using JDK 1.6 on Mac OS X or a non-Sun JDK 1.6, you will probably also want to have the
+   following dependency in your project:
 </p>
 <pre>
       &lt;dependency>
