@@ -1,7 +1,6 @@
 <project name="jmockit" basedir="." default="fullRebuildWithTests">
    <property file="build.properties"/>
    <property name="ASM_CLASSES" value="asm2/classes"/>
-   <property name="HAMCREST_CLASSES" value="hamcrest/classes"/>
    <loadfile property="version" srcFile="version.txt"/>
 
    <path id="common.classpath">
@@ -32,7 +31,6 @@
             debug="true" source="@{jdkVersion}" target="@{jdkVersion}" nowarn="true">
             <classpath refid="common.classpath"/>
             <classpath location="${ASM_CLASSES}"/>
-            <classpath location="${HAMCREST_CLASSES}"/>
             <classpath location="main/classes"/>
             <classpath location="@{module}/classes"/>
             <classpath location="@{module}/@{outdir}"/>
@@ -62,8 +60,7 @@
    </macrodef>
 
    <target name="buildASM"><build module="asm2"/></target>
-   <target name="buildHamcrest"><build module="hamcrest"/></target>
-   <target name="buildMain" depends="buildASM, buildHamcrest">
+   <target name="buildMain" depends="buildASM">
       <build module="main"/>
       <buildTests module="main"/>
    </target>

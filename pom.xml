@@ -72,10 +72,7 @@
                      <goal>add-resource</goal>
                   </goals>
                   <configuration>
-                     <sources>
-                        <source>asm2/src</source>
-                        <source>hamcrest/src</source>
-                     </sources>
+                     <sources><source>asm2/src</source></sources>
                      <resources>
                         <resource>
                            <directory>main/src</directory>
