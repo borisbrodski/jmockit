@@ -894,7 +894,6 @@
       <module fileurl="file://$PROJECT_DIR$/coverage/Coverage.iml" filepath="$PROJECT_DIR$/coverage/Coverage.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/easymock/EasyMock2.iml" filepath="$PROJECT_DIR$/samples/easymock/EasyMock2.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/easymockclassextension/EasyMockCE.iml" filepath="$PROJECT_DIR$/samples/easymockclassextension/EasyMockCE.iml" group="Samples" />
-      <module fileurl="file://$PROJECT_DIR$/hamcrest/Hamcrest.iml" filepath="$PROJECT_DIR$/hamcrest/Hamcrest.iml" />
       <module fileurl="file://$PROJECT_DIR$/hibernate3emul/Hibernate3emul.iml" filepath="$PROJECT_DIR$/hibernate3emul/Hibernate3emul.iml" />
       <module fileurl="file://$PROJECT_DIR$/incremental/Incremental.iml" filepath="$PROJECT_DIR$/incremental/Incremental.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/jbossaop/Jbossaop.iml" filepath="$PROJECT_DIR$/samples/jbossaop/Jbossaop.iml" group="Samples" />
