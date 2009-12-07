@@ -357,7 +357,7 @@ public final class ExpectationsWithArgMatchersTest
       new Expectations()
       {
          {
-            mock.setValue((Integer) with(IsEqual.equalTo(3)));
+            mock.setValue(with(IsEqual.equalTo(3)));
          }
       };
 

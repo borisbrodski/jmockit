@@ -26,7 +26,7 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
-import org.hamcrest.*;
+import mockit.external.hamcrest.*;
 
 public abstract class TestOnlyPhase extends Phase
 {

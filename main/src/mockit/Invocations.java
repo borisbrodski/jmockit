@@ -26,11 +26,10 @@ package mockit;
 
 import java.util.regex.*;
 
-import org.hamcrest.*;
-import org.hamcrest.Matcher;
-import org.hamcrest.core.*;
-import org.hamcrest.number.*;
-
+import mockit.external.hamcrest.*;
+import mockit.external.hamcrest.Matcher;
+import mockit.external.hamcrest.core.*;
+import mockit.external.hamcrest.number.*;
 import mockit.internal.expectations.*;
 import mockit.internal.util.*;
 
@@ -126,7 +125,7 @@ abstract class Invocations
       return getCurrentPhase().getCurrentExpectation();
    }
 
-   // Methods for argument matching (using Hamcrest matchers) /////////////////////////////////////
+   // Methods for argument matching ///////////////////////////////////////////////////////////////
 
    /**
     * Adds a custom argument matcher for a parameter in the current invocation.
@@ -141,15 +140,29 @@ abstract class Invocations
     *
     * @return the given {@code argValue}
     */
-   protected final <T> T with(T argValue, Matcher<T> argumentMatcher)
+   protected final <T> T with(T argValue, org.hamcrest.Matcher<T> argumentMatcher)
    {
       addMatcher(argumentMatcher);
       return argValue;
    }
 
-   private void addMatcher(Matcher<?> matcher)
+   private void addMatcher(final org.hamcrest.Matcher<?> matcher)
    {
-      getCurrentPhase().addArgMatcher(matcher);
+      addMatcher(new BaseMatcher<Object>()
+      {
+         public boolean matches(Object item)
+         {
+            return matcher.matches(item);
+         }
+
+         public void describeTo(Description description)
+         {
+            //noinspection UnnecessaryFullyQualifiedName
+            org.hamcrest.Description strDescription = new org.hamcrest.StringDescription();
+            matcher.describeTo(strDescription);
+            description.appendText(strDescription.toString());
+         }
+      });
    }
 
    /**
@@ -160,37 +173,47 @@ abstract class Invocations
     * @return the value recorded inside the given argument matcher, or {@code null} if no such value
     * could be determined
     */
-   protected final <T> T with(Matcher<T> argumentMatcher)
+   protected final <T> T with(org.hamcrest.Matcher<T> argumentMatcher)
    {
       addMatcher(argumentMatcher);
 
-      Matcher<T> argMatcher = getInnermostMatcher(argumentMatcher);
+      org.hamcrest.Matcher<T> argMatcher = getInnermostMatcher(argumentMatcher);
       @SuppressWarnings({"unchecked"})
       T argValue = (T) getArgumentValueFromMatcherIfAvailable(argMatcher);
 
       return argValue;
    }
 
-   private <T> Matcher<T> getInnermostMatcher(Matcher<T> argMatcher)
+   private <T> org.hamcrest.Matcher<T> getInnermostMatcher(org.hamcrest.Matcher<T> argMatcher)
    {
-      while (argMatcher instanceof Is || argMatcher instanceof IsNot) {
+      //noinspection UnnecessaryFullyQualifiedName
+      while (
+         argMatcher instanceof org.hamcrest.core.Is ||
+         argMatcher instanceof org.hamcrest.core.IsNot
+      ) {
          //noinspection AssignmentToMethodParameter,unchecked
-         argMatcher = getField(argMatcher, Matcher.class);
+         argMatcher = getField(argMatcher, org.hamcrest.Matcher.class);
       }
 
       return argMatcher;
    }
 
-   private Object getArgumentValueFromMatcherIfAvailable(Matcher<?> argMatcher)
+   private Object getArgumentValueFromMatcherIfAvailable(org.hamcrest.Matcher<?> argMatcher)
    {
       if (
-         argMatcher instanceof IsEqual || argMatcher instanceof IsSame ||
-         argMatcher instanceof OrderingComparison
+         argMatcher instanceof org.hamcrest.core.IsEqual ||
+         argMatcher instanceof org.hamcrest.core.IsSame ||
+         "org.hamcrest.number.OrderingComparison".equals(argMatcher.getClass().getName())
       ) {
          return getField(argMatcher, Object.class);
       }
 
       return null;
+   }
+
+   private void addMatcher(Matcher<?> matcher)
+   {
+      getCurrentPhase().addArgMatcher(matcher);
    }
 
    /**
@@ -255,23 +278,9 @@ abstract class Invocations
     * Same as {@link #withEqual(Object)}, but checking that a numeric invocation argument in the
     * replay phase is sufficiently close to the given value.
     */
-   protected final float withEqual(final float value, final double delta)
+   protected final float withEqual(float value, double delta)
    {
-      addMatcher(new TypeSafeMatcher<Float>()
-      {
-          @Override
-          public boolean matchesSafely(Float item)
-          {
-              return Math.abs(item - value) <= delta;
-          }
-
-          public void describeTo(Description description)
-          {
-              description.appendText("a numeric value within ").appendValue(delta)
-                 .appendText(" of ").appendValue(value);
-          }
-      });
-
+      addMatcher(new IsCloseTo(value, delta));
       return value;
    }
 
@@ -355,7 +364,7 @@ abstract class Invocations
     */
    protected final <T extends CharSequence> T withSubstring(T text)
    {
-      addMatcher(new StringContains(text.toString()));
+      addMatcher(new StringContains(text));
       return text;
    }
 
@@ -365,7 +374,7 @@ abstract class Invocations
     */
    protected final <T extends CharSequence> T withPrefix(T text)
    {
-      addMatcher(new StringStartsWith(text.toString()));
+      addMatcher(new StringStartsWith(text));
       return text;
    }
 
@@ -375,7 +384,7 @@ abstract class Invocations
     */
    protected final <T extends CharSequence> T withSuffix(T text)
    {
-      addMatcher(new StringEndsWith(text.toString()));
+      addMatcher(new StringEndsWith(text));
       return text;
    }
 

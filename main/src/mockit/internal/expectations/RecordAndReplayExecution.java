@@ -26,9 +26,8 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
-import org.hamcrest.core.*;
-
 import mockit.*;
+import mockit.external.hamcrest.core.*;
 import mockit.internal.expectations.mocking.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;

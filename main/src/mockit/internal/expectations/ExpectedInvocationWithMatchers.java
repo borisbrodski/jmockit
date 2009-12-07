@@ -26,8 +26,8 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
-import org.hamcrest.*;
-import org.hamcrest.core.*;
+import mockit.external.hamcrest.*;
+import mockit.external.hamcrest.core.*;
 
 final class ExpectedInvocationWithMatchers extends ExpectedInvocation
 {
