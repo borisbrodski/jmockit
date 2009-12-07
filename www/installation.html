@@ -106,12 +106,173 @@
    <a href="tutorial/CodeCoverage.html#maven">relevant section</a> in the JMockit Tutorial.
 </p>
 
-<h3>Learning the JMockit tools & APIs</h3>
+<h3>Using the mocking APIs</h3>
 <p>
-   From here, you should probably proceed to the <a href="tutorial.html">Tutorial</a>.
-   Check also the hundreds of JUnit <a href="samples.html">sample tests</a> available under the
-   <code>jmockit/samples</code> folder.
+   The JMockit mocking APIs can be used in tests written with any of the popular testing frameworks:
+   JUnit 3.8, JUnit 4 (version 4.5 or newer) and TestNG (version 5.8 or newer).
+   Lets now see how mocking is done with the available JMockit APIs, which are all imported from the
+   <code>mockit</code> package.
 </p>
 
+<h4>Creating a mock object</h4>
+<p>
+   In a test class, simply declare a <em>mock field</em> of the desired type, annotated as
+   <code>@Mocked</code>.
+</p>
+<pre><code>import org.junit.*;
+import mockit.*;
+
+public class MyFirstJMockitTest
+{
+   @Mocked Collaborator mock1;
+   @Mocked AnotherDependency anotherMock;
+
+   @Test
+   public void myFirstTestMethod()
+   {
+      // Mock objects that are in scope can be used here.
+   }
+
+   @Test
+   public void anotherTestMethod(YetAnotherDependency testSpecificMock)
+   {
+      ...
+   }
+
+   ...
+}
+</code></pre>
+<p>
+   The template test class above shows something unusual: the second test method actually declares a
+   parameter! Normally, JUnit (and TestNG) test methods are not allowed to have parameters.
+   When using JMockit, however, such <em>mock parameters</em> are allowed and quite useful.
+   In fact, it's best to use mock fields of the test class only when the mocked types are needed by
+   most or all tests in the class. Otherwise, mock parameters (or <em>local mock fields</em>, which
+   we introduce later) with scope limited to a single test are preferred.
+   JMockit will always take care of instantiating the mocked type and either assigning the instance
+   to the mock field (provided the field is not <code>final</code>) or passing it as an argument
+   when the test method is invoked by the test runner.
+</p>
+<p>
+   Although optional, mock parameters can also be annotated with <code>@Mocked</code>.
+   Instance fields of the test class which are <em>not</em> annotated, on the other hand, will not
+   be mocked. Therefore, the use of <code>@Mocked</code> for <em>mock</em> fields of the test class
+   is required.
+</p>
+
+<h4>What exactly goes inside a test method?</h4>
+<p>
+   The following template shows the basic structure of a JMockit test method, when using the
+   <em>Expectations & Verifications API</em> for <em>behavior-based</em> testing:
+</p>
+<pre><code>   @Test
+   public void aTestMethod()
+   {
+      // <em>Record phase</em>: expectations on mocks are recorded; this can actually be empty.
+
+      // <em>Replay phase</em>: invocations on mocks are "replayed"; here the code under test is exercised.
+
+      // <em>Verify phase</em>: expectations on mocks are verified; this also can be empty.
+   }
+</code></pre>
+<p>
+   Each test method can be divided in three <em>execution phases</em>.
+   First, one or more invocations on mock objects are <em>recorded</em>.
+   (In fact, it is perfectly valid to not record any invocation at all - more on this later.)
+   Second, the production code/class/unit which our test method is supposed to test is exercised,
+   typically with a call to a single tested method. Any invocations to mocks that were previously
+   recorded will now have a chance to be <em>replayed</em>.
+   Third, the test method can explicitly <em>verify</em> that specific invocations to mock objects
+   used in the test actually happened (or not) during replay. Again, it is perfectly valid for this
+   phase to be empty, with no explicit verifications (but with <em>implicit</em>, automatic,
+   verifications - otherwise no behavior would be tested).
+</p>
+
+<h4>Recording expectations</h4>
+<p>
+   In the record phase of a test, we write one or more <em>expectation blocks</em>, inside which
+   invocations to mocked types are recorded.
+</p>
+<p>
+<pre><code>   @Test
+   public void aTestMethod()
+   {
+      new NonStrictExpectations()
+      {
+         MyCollaborator mock;
+
+         {
+            mock.getData(); returns("my test data");
+            mock.doSomething(anyInt, "some expected value", anyString); repeats(1);
+         }
+      };
+
+      // In the replay phase, the tested method would somehow call the "getData" and "doSomething"
+      // methods on a "MyCollaborator" instance.
+      ...
+
+      // In the verify phase, we may optionally verify expected invocations to "MyCollaborator"
+      // objects.
+      ...
+   }
+</code></pre>
+<p>
+   There are two classes that can be used to define "expectation blocks": <code>Expectations</code>
+   and <code>NonStrictExpectations</code>.
+   The difference is only in the default behavior for the recorded expectations.
+   In the first case, all expectations associated to mocked types used in the block will be
+   <em>strict</em> by default, meaning that the invocations are <em>expected</em> to occur in the
+   replay phase in the same order as they were recorded, and that invocations not recorded are
+   <em>not expected</em> to occur.
+   In the second case, expectations are always <em>non-strict</em>, meaning that the invocations to
+   mocked types, whether recorded or not, are <em>allowed</em> to occur in any order and in any
+   number, including not at all.
+</p>
+
+<h4>Verifying expectations</h4>
+<p>
+   The smart reader probably already figured out why and when we would have a non-empty verification
+   phase in a test.
+   It boils down to the existence or not of non-strict expectations in the test.
+   If all mocked types used in the test have only strict expectations, then all invocations will be
+   implicitly and automatically verified at the end of the test. In this case, there will be no
+   explicit verify phase.
+   If there is at least one mocked type with non-strict expectations, then we can use one or more
+   <em>verification blocks</em> to make sure that the invocations we care about actually occurred
+   during the replay phase.
+</p>
+<pre><code>   @Test
+   public void aTestMethod(final MyCollaborator mock)
+   {
+      // Non-strict expectations were recorded, or perhaps there are no expectation blocks at all.
+
+      // Code under test is exercised:
+      ...
+
+      new Verifications()
+      {
+         {
+            // Here we verify that the "MyCollaborator#doSomething()" method was executed at least once:
+            mock.doSomething();
+
+            // Another verification, which must have occurred no more than three times:
+            mock.someOtherMethod(anyBoolean, any, withInstanceOf(Xyz.class)); repeatsAtMost(3);
+         }
+      };
+   }
+</code></pre>
+
+<h4>More information</h4>
+<p>
+   The examples above give only a brief overview of the available mocking APIs. There is much more.
+   The full <a href="tutorial.html">JMockit Tutorial</a> contains an extensive discussion of nearly
+   all methods, annotations, etc., with many examples.
+   The <a href="javadoc/overview-summary.html">API documentation</a> provides a detailed
+   specification for all elements of the mocking APIs.
+   Finally, there are hundreds of JUnit <a href="samples.html">sample tests</a> available under the
+   <code>jmockit/samples</code> folder, which use nearly everything that is available in the APIs.
+</p>
+
+<script type="text/javascript" src="prettify.js"></script>
 </body>
 </html>
