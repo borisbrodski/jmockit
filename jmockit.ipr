@@ -99,11 +99,6 @@
         </inspection_tool>
         <inspection_tool class="AccessToStaticFieldLockedOnInstance" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="AmbiguousMethodCall" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="AnnotationNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="m_regex" value="[A-Z][A-Za-z\d]*" />
-          <option name="m_minLength" value="8" />
-          <option name="m_maxLength" value="64" />
-        </inspection_tool>
         <inspection_tool class="AnonymousClassVariableHidesContainingMethodVariable" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ArchaicSystemPropertyAccess" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ArithmeticOnVolatileField" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -194,7 +189,6 @@
         <inspection_tool class="ConfusingMainMethod" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConfusingOctalEscape" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConstantDeclaredInAbstractClass" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ConstantDeclaredInInterface" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConstantJUnitAssertArgument" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConstantMathCall" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConstantOnLHSOfComparison" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -288,9 +282,6 @@
         </inspection_tool>
         <inspection_tool class="InconsistentLanguageLevel" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="IndexOfReplaceableByContains" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="InnerClassOnInterface" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="m_ignoreInnerInterfaces" value="false" />
-        </inspection_tool>
         <inspection_tool class="InnerClassVariableHidesOuterClassVariable" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_ignoreInvisibleFields" value="true" />
         </inspection_tool>
@@ -526,7 +517,6 @@
         </inspection_tool>
         <inspection_tool class="ResultSetIndexZero" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ReturnOfDateField" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ReturnThis" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ReuseOfLocalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="RuntimeExec" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="RuntimeExecWithNonConstantString" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -588,6 +578,9 @@
         <inspection_tool class="SubstringZero" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SubtractionInCompareTo" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SuspiciousIndentAfterControlStatement" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="SuspiciousMethodCalls" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="REPORT_CONVERTIBLE_METHOD_CALLS" value="false" />
+        </inspection_tool>
         <inspection_tool class="SwitchStatementDensity" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_limit" value="20" />
         </inspection_tool>
@@ -604,7 +597,6 @@
         <inspection_tool class="SynchronizeOnLock" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SynchronizeOnThis" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SynchronizedOnLiteralObject" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="SystemGetenv" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SystemRunFinalizersOnExit" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SystemSetSecurityManager" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="TailRecursion" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -691,7 +683,7 @@
           <option name="onlyWarnOnAbstractMethods" value="false" />
         </inspection_tool>
         <inspection_tool class="UnnecessaryFullyQualifiedName" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="m_ignoreJavadoc" value="false" />
+          <option name="m_ignoreJavadoc" value="true" />
         </inspection_tool>
         <inspection_tool class="UnnecessaryInheritDoc" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryInterfaceModifier" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -885,6 +877,7 @@
         <w>stubbings</w>
         <w>stylesheet</w>
         <w>sublicense</w>
+        <w>templated</w>
         <w>throwable</w>
         <w>unformatted</w>
         <w>unmocked</w>
@@ -955,6 +948,7 @@
         <root url="jar://$PROJECT_DIR$/samples/lib/dom4j-1.6.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/samples/lib/easymock-2.5.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/samples/lib/slf4j-nop-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-core-1.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
@@ -1022,15 +1016,6 @@
         <root url="jar://$PROJECT_DIR$/jmockit.jar!/" />
       </SOURCES>
     </library>
-    <library name="Mockito 1.8">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/lib/mockito-core-1.8.0.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://C:/Java/mockito-1.8.0/sources/mockito-core-1.8.0-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: org.testng:testng:jdk15:5.10">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.10/testng-5.10-jdk15.jar!/" />
@@ -1084,6 +1069,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.7/junit-4.7-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Hamcrest 1.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-library-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-core-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-library-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-core-1.2.jar!/" />
       </SOURCES>
     </library>
   </component>

@@ -10,6 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="JMockit" level="project" />
+    <orderEntry type="library" name="Hamcrest 1.2" level="project" />
     <orderEntry type="library" name="JUnit 4.8" level="application" />
     <orderEntry type="module-library">
       <library>
@@ -26,15 +27,6 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../lib/objenesis-1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/hamcrest-library-1.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
