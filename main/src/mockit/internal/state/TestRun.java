@@ -24,6 +24,7 @@
  */
 package mockit.internal.state;
 
+import java.net.*;
 import java.security.*;
 
 import mockit.internal.expectations.*;
@@ -83,9 +84,19 @@ public final class TestRun
          return protectionDomain == instance.currentTestClass.getProtectionDomain();
       }
 
-      return
-         protectionDomain != null &&
-         !protectionDomain.getCodeSource().getLocation().getPath().endsWith(".jar");
+      if (protectionDomain == null) {
+         return false;
+      }
+
+      CodeSource codeSource = protectionDomain.getCodeSource();
+
+      if (codeSource == null) {
+         return false;
+      }
+
+      URL location = codeSource.getLocation();
+
+      return location != null && !location.getPath().endsWith(".jar");
    }
 
    public static CaptureOfImplementationsForTestClass getCaptureOfSubtypes()
