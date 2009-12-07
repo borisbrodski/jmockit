@@ -15,7 +15,7 @@
     <orderEntry type="module" module-name="Asm2" />
     <orderEntry type="module" module-name="Hamcrest" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="JUnit 4.7" level="application" />
+    <orderEntry type="library" name="JUnit 4.8" level="application" />
   </component>
 </module>
 

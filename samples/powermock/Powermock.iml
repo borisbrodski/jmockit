@@ -10,7 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="JMockit" level="project" />
-    <orderEntry type="library" name="JUnit 4.7" level="application" />
+    <orderEntry type="library" name="JUnit 4.8" level="application" />
     <orderEntry type="library" name="Logging APIs" level="project" />
     <orderEntry type="module-library">
       <library>
