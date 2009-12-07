@@ -28,8 +28,7 @@ import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
-
-import org.objectweb.asm2.*;
+import mockit.external.asm.*;
 
 /**
  * Coverage data gathered for a branch inside a line of source code.

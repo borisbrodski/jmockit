@@ -1,6 +1,5 @@
 <project name="jmockit" basedir="." default="fullRebuildWithTests">
    <property file="build.properties"/>
-   <property name="ASM_CLASSES" value="asm2/classes"/>
    <loadfile property="version" srcFile="version.txt"/>
 
    <path id="common.classpath">
@@ -30,7 +29,6 @@
             srcdir="@{module}/@{srcdir}" destdir="@{module}/@{outdir}"
             debug="true" source="@{jdkVersion}" target="@{jdkVersion}" nowarn="true">
             <classpath refid="common.classpath"/>
-            <classpath location="${ASM_CLASSES}"/>
             <classpath location="main/classes"/>
             <classpath location="@{module}/classes"/>
             <classpath location="@{module}/@{outdir}"/>
@@ -59,8 +57,7 @@
       </sequential>
    </macrodef>
 
-   <target name="buildASM"><build module="asm2"/></target>
-   <target name="buildMain" depends="buildASM">
+   <target name="buildMain">
       <build module="main"/>
       <buildTests module="main"/>
    </target>
@@ -158,7 +155,6 @@
          <fileset
             dir="main/classes"
             includes="mockit/**/*.class **/attach/**/*.class org/junit/*/*.class junit/*/*.class"/>
-         <fileset dir="${ASM_CLASSES}" excludes="LICENSE.txt **/package.html"/>
          <manifest><attribute name="Implementation-Version" value="${version}"/></manifest>
       </jar>
    </target>

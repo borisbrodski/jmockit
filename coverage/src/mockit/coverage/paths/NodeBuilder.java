@@ -26,7 +26,7 @@ package mockit.coverage.paths;
 
 import java.util.*;
 
-import org.objectweb.asm2.*;
+import mockit.external.asm.*;
 
 public final class NodeBuilder
 {

@@ -31,10 +31,9 @@ import java.util.*;
 import java.util.regex.*;
 
 import mockit.coverage.data.*;
+import mockit.external.asm.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.TestRun;
-
-import org.objectweb.asm2.*;
 
 public final class CodeCoverage implements ClassFileTransformer, Runnable
 {

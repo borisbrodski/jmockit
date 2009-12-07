@@ -28,9 +28,9 @@ import java.util.*;
 
 import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
+import mockit.external.asm.*;
 
-import org.objectweb.asm2.*;
-import static org.objectweb.asm2.Opcodes.*;
+import static mockit.external.asm.Opcodes.*;
 
 final class CoverageModifier extends ClassWriter
 {
