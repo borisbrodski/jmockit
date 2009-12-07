@@ -57,6 +57,7 @@
       <entry name="?*.ftl" />
       <entry name="?*.css" />
       <entry name="?*.js" />
+      <entry name="?*.txt" />
     </wildcardResourcePatterns>
     <annotationProcessing enabled="false" useClasspath="true" />
   </component>
