@@ -25,7 +25,6 @@
 package org.jdesktop.animation.timing;
 
 import org.hamcrest.*;
-import static org.hamcrest.number.OrderingComparison.*;
 import static org.jdesktop.animation.timing.Animator.*;
 
 import org.junit.*;
@@ -214,7 +213,18 @@ public final class AnimatorTimingSourceTest
 
             timingTarget.begin();
             timingTarget.repeat();
-            timingTarget.timingEvent(with(0.2f, (Matcher<Float>) greaterThan(0.0f)));
+            timingTarget.timingEvent(with(0.2f, new BaseMatcher<Float>()
+            {
+               public boolean matches(Object item)
+               {
+                  return (Float) item > 0.0f;
+               }
+
+               public void describeTo(Description description)
+               {
+                  description.appendText("a value greater than 0");
+               }
+            }));
          }
       };
 
