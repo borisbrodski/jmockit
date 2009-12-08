@@ -35,8 +35,8 @@ package mockit.external.asm;
  * 
  * @author Eric Bruneton
  */
-public class Label {
-
+public final class Label
+{
     /**
      * The line number corresponding to this label, if known.
      */
@@ -93,8 +93,7 @@ public class Label {
     /**
      * The (relative) maximum stack size corresponding to this basic block. This
      * size is relative to the stack size at the beginning of the basic block,
-     * i.e., the true maximum stack size is equal to {@link #beginStackSize
-     * beginStackSize} + {@link #maxStackSize maxStackSize}.
+     * i.e., the true maximum stack size is equal to beginStackSize + maxStackSize.
      */
     int maxStackSize;
 
@@ -131,23 +130,7 @@ public class Label {
     // Methods to compute offsets and to manage forward references
     // ------------------------------------------------------------------------
 
-    /**
-     * Returns the offset corresponding to this label. This offset is computed
-     * from the start of the method's bytecode. <i>This method is intended for
-     * {@link Attribute} sub classes, and is normally not needed by class
-     * generators or adapters.</i>
-     * 
-     * @return the offset corresponding to this label.
-     * @throws IllegalStateException if this label is not resolved yet.
-     */
-    public int getOffset() {
-        if (!resolved) {
-            throw new IllegalStateException("Label offset position has not been resolved yet");
-        }
-        return position;
-    }
-
-    /**
+   /**
      * Puts a reference to this label in the bytecode of a method. If the
      * position of the label is known, the offset is computed and written
      * directly. Otherwise, a null offset is written and a new forward reference
@@ -162,11 +145,7 @@ public class Label {
      * @throws IllegalArgumentException if this label has not been created by
      *         the given code writer.
      */
-    void put(
-        final MethodWriter owner,
-        final ByteVector out,
-        final int source,
-        final boolean wideOffset)
+    void put(ByteVector out, int source, boolean wideOffset)
     {
         if (resolved) {
             if (wideOffset) {
@@ -197,9 +176,7 @@ public class Label {
      * @param referencePosition the position where the offset for this forward
      *        reference must be stored.
      */
-    private void addReference(
-        final int sourcePosition,
-        final int referencePosition)
+    private void addReference(int sourcePosition, int referencePosition)
     {
         if (srcAndRefPositions == null) {
             srcAndRefPositions = new int[6];
@@ -236,15 +213,13 @@ public class Label {
      * @throws IllegalArgumentException if this label has already been resolved,
      *         or if it has not been created by the given code writer.
      */
-    boolean resolve(
-        final MethodWriter owner,
-        final int position,
-        final byte[] data)
+    boolean resolve(int position, byte[] data)
     {
-        boolean needUpdate = false;
-        this.resolved = true;
+        resolved = true;
         this.position = position;
         int i = 0;
+        boolean needUpdate = false;
+
         while (i < referenceCount) {
             int source = srcAndRefPositions[i++];
             int reference = srcAndRefPositions[i++];

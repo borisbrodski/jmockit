@@ -35,8 +35,8 @@ package mockit.external.asm;
  * 
  * @author Eric Bruneton
  */
-final class Item {
-
+final class Item
+{
     /**
      * Index of this item in the constant pool.
      */
@@ -104,10 +104,9 @@ final class Item {
     Item next;
 
     /**
-     * Constructs an uninitialized {@link Item}.
+     * Constructs an uninitialized Item.
      */
-    Item() {
-    }
+    Item() {}
 
     Item(int index) {
         this.index = index;
@@ -119,7 +118,7 @@ final class Item {
      * @param index index of the item to be constructed.
      * @param i the item that must be copied into the item to be constructed.
      */
-    Item(final int index, final Item i) {
+    Item(int index, Item i) {
         this.index = index;
         type = i.type;
         intVal = i.intVal;
@@ -137,10 +136,10 @@ final class Item {
      * 
      * @param intVal the value of this item.
      */
-    void set(final int intVal) {
-        this.type = ClassWriter.INT;
+    void set(int intVal) {
+        type = ClassWriter.INT;
         this.intVal = intVal;
-        this.hashCode = 0x7FFFFFFF & (type + intVal);
+        hashCode = 0x7FFFFFFF & (type + intVal);
     }
 
     /**
@@ -148,10 +147,10 @@ final class Item {
      * 
      * @param longVal the value of this item.
      */
-    void set(final long longVal) {
-        this.type = ClassWriter.LONG;
+    void set(long longVal) {
+        type = ClassWriter.LONG;
         this.longVal = longVal;
-        this.hashCode = 0x7FFFFFFF & (type + (int) longVal);
+        hashCode = 0x7FFFFFFF & (type + (int) longVal);
     }
 
     /**
@@ -159,10 +158,10 @@ final class Item {
      * 
      * @param floatVal the value of this item.
      */
-    void set(final float floatVal) {
-        this.type = ClassWriter.FLOAT;
+    void set(float floatVal) {
+        type = ClassWriter.FLOAT;
         this.floatVal = floatVal;
-        this.hashCode = 0x7FFFFFFF & (type + (int) floatVal);
+        hashCode = 0x7FFFFFFF & (type + (int) floatVal);
     }
 
     /**
@@ -170,10 +169,10 @@ final class Item {
      * 
      * @param doubleVal the value of this item.
      */
-    void set(final double doubleVal) {
-        this.type = ClassWriter.DOUBLE;
+    void set(double doubleVal) {
+        type = ClassWriter.DOUBLE;
         this.doubleVal = doubleVal;
-        this.hashCode = 0x7FFFFFFF & (type + (int) doubleVal);
+        hashCode = 0x7FFFFFFF & (type + (int) doubleVal);
     }
 
     /**
@@ -184,11 +183,7 @@ final class Item {
      * @param strVal2 second part of the value of this item.
      * @param strVal3 third part of the value of this item.
      */
-    void set(
-        final int type,
-        final String strVal1,
-        final String strVal2,
-        final String strVal3)
+    void set(int type, String strVal1, String strVal2, String strVal3)
     {
         this.type = type;
         this.strVal1 = strVal1;
@@ -201,8 +196,7 @@ final class Item {
                 hashCode = 0x7FFFFFFF & (type + strVal1.hashCode());
                 return;
             case ClassWriter.NAME_TYPE:
-                hashCode = 0x7FFFFFFF & (type + strVal1.hashCode()
-                        * strVal2.hashCode());
+                hashCode = 0x7FFFFFFF & (type + strVal1.hashCode() * strVal2.hashCode());
                 return;
             // ClassWriter.FIELD:
             // ClassWriter.METH:
@@ -220,7 +214,7 @@ final class Item {
      * @return <tt>true</tt> if the given item if equal to this one,
      *         <tt>false</tt> otherwise.
      */
-    boolean isEqualTo(final Item i) {
+    boolean isEqualTo(Item i) {
         if (i.type == type) {
             switch (type) {
                 case ClassWriter.INT:

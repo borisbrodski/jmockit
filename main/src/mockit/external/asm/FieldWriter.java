@@ -34,8 +34,8 @@ package mockit.external.asm;
  * 
  * @author Eric Bruneton
  */
-final class FieldWriter implements FieldVisitor {
-
+final class FieldWriter implements FieldVisitor
+{
     /**
      * Next field writer (see {@link ClassWriter#firstField firstField}).
      */
@@ -44,24 +44,24 @@ final class FieldWriter implements FieldVisitor {
     /**
      * The class writer to which this field must be added.
      */
-    private ClassWriter cw;
+    private final ClassWriter cw;
 
     /**
      * Access flags of this field.
      */
-    private int access;
+    private final int access;
 
     /**
      * The index of the constant pool item that contains the name of this
      * method.
      */
-    private int name;
+    private final int name;
 
     /**
      * The index of the constant pool item that contains the descriptor of this
      * field.
      */
-    private int desc;
+    private final int desc;
 
     /**
      * The index of the constant pool item that contains the signature of this
@@ -95,7 +95,7 @@ final class FieldWriter implements FieldVisitor {
     // ------------------------------------------------------------------------
 
     /**
-     * Constructs a new {@link FieldWriter}.
+     * Constructs a new FieldWriter.
      * 
      * @param cw the class writer to which this field must be added.
      * @param access the field's access flags (see {@link Opcodes}).
@@ -104,13 +104,8 @@ final class FieldWriter implements FieldVisitor {
      * @param signature the field's signature. May be <tt>null</tt>.
      * @param value the field's constant value. May be <tt>null</tt>.
      */
-    protected FieldWriter(
-        final ClassWriter cw,
-        final int access,
-        final String name,
-        final String desc,
-        final String signature,
-        final Object value)
+    FieldWriter(
+       ClassWriter cw, int access, String name, String desc, String signature, Object value)
     {
         if (cw.firstField == null) {
             cw.firstField = this;
@@ -134,9 +129,7 @@ final class FieldWriter implements FieldVisitor {
     // Implementation of the FieldVisitor interface
     // ------------------------------------------------------------------------
 
-    public AnnotationVisitor visitAnnotation(
-        final String desc,
-        final boolean visible)
+    public AnnotationVisitor visitAnnotation(String desc, boolean visible)
     {
         ByteVector bv = new ByteVector();
         // write type, and reserve space for values count
@@ -152,7 +145,7 @@ final class FieldWriter implements FieldVisitor {
         return aw;
     }
 
-    public void visitAttribute(final Attribute attr) {
+    public void visitAttribute(Attribute attr) {
         attr.next = attrs;
         attrs = attr;
     }
@@ -202,7 +195,7 @@ final class FieldWriter implements FieldVisitor {
             size += 8 + ianns.getSize();
         }
         if (attrs != null) {
-            size += attrs.getSize(cw, null, 0, -1, -1);
+            size += attrs.getSize(cw);
         }
         return size;
     }
@@ -212,7 +205,7 @@ final class FieldWriter implements FieldVisitor {
      * 
      * @param out where the content of this field must be put.
      */
-    void put(final ByteVector out) {
+    void put(ByteVector out) {
         out.putShort(access).putShort(name).putShort(desc);
         int attributeCount = 0;
         if (value != 0) {
@@ -270,7 +263,7 @@ final class FieldWriter implements FieldVisitor {
             ianns.put(out);
         }
         if (attrs != null) {
-            attrs.put(cw, null, 0, -1, -1, out);
+            attrs.put(cw, out);
         }
     }
 }

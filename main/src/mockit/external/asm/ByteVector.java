@@ -35,8 +35,8 @@ package mockit.external.asm;
  * 
  * @author Eric Bruneton
  */
-public class ByteVector {
-
+public final class ByteVector
+{
     /**
      * The content of this vector.
      */
@@ -48,20 +48,18 @@ public class ByteVector {
     int length;
 
     /**
-     * Constructs a new {@link ByteVector ByteVector} with a default initial
-     * size.
+     * Constructs a new ByteVector with a default initial size.
      */
     public ByteVector() {
         data = new byte[64];
     }
 
     /**
-     * Constructs a new {@link ByteVector ByteVector} with the given initial
-     * size.
+     * Constructs a new ByteVector with the given initial size.
      * 
      * @param initialSize the initial size of the byte vector to be constructed.
      */
-    public ByteVector(final int initialSize) {
+    public ByteVector(int initialSize) {
         data = new byte[initialSize];
     }
 
@@ -72,7 +70,7 @@ public class ByteVector {
      * @param b a byte.
      * @return this byte vector.
      */
-    public ByteVector putByte(final int b) {
+    public ByteVector putByte(int b) {
         int length = this.length;
         if (length + 1 > data.length) {
             enlarge(1);
@@ -90,7 +88,7 @@ public class ByteVector {
      * @param b2 another byte.
      * @return this byte vector.
      */
-    ByteVector put11(final int b1, final int b2) {
+    ByteVector put11(int b1, int b2) {
         int length = this.length;
         if (length + 2 > data.length) {
             enlarge(2);
@@ -109,7 +107,7 @@ public class ByteVector {
      * @param s a short.
      * @return this byte vector.
      */
-    public ByteVector putShort(final int s) {
+    public ByteVector putShort(int s) {
         int length = this.length;
         if (length + 2 > data.length) {
             enlarge(2);
@@ -129,7 +127,7 @@ public class ByteVector {
      * @param s a short.
      * @return this byte vector.
      */
-    ByteVector put12(final int b, final int s) {
+    ByteVector put12(int b, int s) {
         int length = this.length;
         if (length + 3 > data.length) {
             enlarge(3);
@@ -149,7 +147,7 @@ public class ByteVector {
      * @param i an int.
      * @return this byte vector.
      */
-    public ByteVector putInt(final int i) {
+    public ByteVector putInt(int i) {
         int length = this.length;
         if (length + 4 > data.length) {
             enlarge(4);
@@ -170,7 +168,7 @@ public class ByteVector {
      * @param l a long.
      * @return this byte vector.
      */
-    public ByteVector putLong(final long l) {
+    public ByteVector putLong(long l) {
         int length = this.length;
         if (length + 8 > data.length) {
             enlarge(8);
@@ -197,7 +195,7 @@ public class ByteVector {
      * @param s a String.
      * @return this byte vector.
      */
-    public ByteVector putUTF8(final String s) {
+    public ByteVector putUTF8(String s) {
         int charLength = s.length();
         if (length + 2 + charLength > data.length) {
             enlarge(2 + charLength);
@@ -211,7 +209,7 @@ public class ByteVector {
         // if we find that this assumption is wrong, we continue with the
         // general method.
         data[len++] = (byte) (charLength >>> 8);
-        data[len++] = (byte) (charLength);
+        data[len++] = (byte) charLength;
         for (int i = 0; i < charLength; ++i) {
             char c = s.charAt(i);
             if (c >= '\001' && c <= '\177') {
@@ -229,7 +227,7 @@ public class ByteVector {
                     }
                 }
                 data[length] = (byte) (byteLength >>> 8);
-                data[length + 1] = (byte) (byteLength);
+                data[length + 1] = (byte) byteLength;
                 if (length + 2 + byteLength > data.length) {
                     length = len;
                     enlarge(2 + byteLength);
@@ -265,7 +263,7 @@ public class ByteVector {
      * @param len number of bytes of b that must be copied.
      * @return this byte vector.
      */
-    public ByteVector putByteArray(final byte[] b, final int off, final int len)
+    public ByteVector putByteArray(byte[] b, int off, int len)
     {
         if (length + len > data.length) {
             enlarge(len);
@@ -283,7 +281,7 @@ public class ByteVector {
      * @param size number of additional bytes that this byte vector should be
      *        able to receive.
      */
-    private void enlarge(final int size) {
+    private void enlarge(int size) {
         int length1 = 2 * data.length;
         int length2 = length + size;
         byte[] newData = new byte[length1 > length2 ? length1 : length2];

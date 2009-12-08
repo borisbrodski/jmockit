@@ -34,8 +34,8 @@ package mockit.external.asm;
  * 
  * @author Eric Bruneton
  */
-class Edge {
-
+final class Edge
+{
     /**
      * The (relative) stack size in the basic block from which this edge
      * originates. This size is equal to the stack size at the "jump"
