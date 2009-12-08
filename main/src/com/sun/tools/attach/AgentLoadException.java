@@ -22,41 +22,34 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.tools.attach;
 
 /**
- * The exception thrown when an agent cannot be loaded into the target
- * Java virtual machine.
- *
+ * The exception thrown when an agent cannot be loaded into the target Java virtual machine.
+ * <p/>
  * <p> This exception is thrown by {@link
  * VirtualMachine#loadAgent VirtualMachine.loadAgent} or
  * {@link VirtualMachine#loadAgentLibrary
- * VirtualMachine.loadAgentLibrary}, {@link
- * VirtualMachine#loadAgentPath loadAgentPath} methods
+ * VirtualMachine.loadAgentLibrary}, {@link VirtualMachine#loadAgentPath loadAgentPath} methods
  * if the agent, or agent library, cannot be loaded.
  */
-public class AgentLoadException extends Exception {
+public final class AgentLoadException extends Exception
+{
+   private static final long serialVersionUID = 688047862952114238L;
 
-    /** use serialVersionUID for interoperability */
-    static final long serialVersionUID = 688047862952114238L;
+   /**
+    * Constructs an <code>AgentLoadException</code> with
+    * no detail message.
+    */
+   public AgentLoadException()
+   {
+   }
 
-    /**
-     * Constructs an <code>AgentLoadException</code> with
-     * no detail message.
-     */
-    public AgentLoadException() {
-        super();
-    }
-
-    /**
-     * Constructs an <code>AgentLoadException</code> with
-     * the specified detail message.
-     *
-     * @param   s   the detail message.
-     */
-    public AgentLoadException(String s) {
-        super(s);
-    }
-
+   /**
+    * Constructs an <code>AgentLoadException</code> with the specified detail message.
+    */
+   public AgentLoadException(String s)
+   {
+      super(s);
+   }
 }

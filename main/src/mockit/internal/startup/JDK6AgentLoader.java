@@ -26,17 +26,13 @@ package mockit.internal.startup;
 
 import java.io.*;
 import java.lang.management.*;
-import java.util.*;
 
 import com.sun.tools.attach.*;
 import com.sun.tools.attach.spi.*;
 import sun.tools.attach.*;
 
-import mockit.internal.util.*;
-
 final class JDK6AgentLoader
 {
-   private static final Class<?>[] CONSTRUCTOR_PARAMS = {AttachProvider.class, String.class};
    private static final AttachProvider ATTACH_PROVIDER = new AttachProvider()
    {
       @Override
@@ -47,9 +43,6 @@ final class JDK6AgentLoader
 
       @Override
       public VirtualMachine attachVirtualMachine(String id) { return null; }
-
-      @Override
-      public List<VirtualMachineDescriptor> listVirtualMachines() { return null; }
    };
 
    private final String jarFilePath;
@@ -83,21 +76,25 @@ final class JDK6AgentLoader
       loadAgentAndDetachFromThisVM(vm);
    }
 
+   @SuppressWarnings({"UseOfSunClasses"})
    private VirtualMachine getVirtualMachineImplementationFromEmbeddedOnes()
    {
-      Class<? extends VirtualMachine> vmImplClass;
-
-      if (File.separatorChar == '\\') {
-         vmImplClass = WindowsVirtualMachine.class;
-      }
-      else {
-         vmImplClass = LinuxVirtualMachine.class;
-      }
-
       try {
-         return Utilities.newInstance(vmImplClass, CONSTRUCTOR_PARAMS, ATTACH_PROVIDER, pid);
+         if (File.separatorChar == '\\') {
+            return new WindowsVirtualMachine(ATTACH_PROVIDER, pid);
+         }
+         else {
+            return new LinuxVirtualMachine(ATTACH_PROVIDER, pid);
+         }
       }
-      catch (UnsatisfiedLinkError e) {
+      catch (AttachNotSupportedException e) {
+         throw new RuntimeException(e);
+      }
+      catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+      catch (UnsatisfiedLinkError ignore) {
+         //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
          throw new IllegalStateException(
             "Unable to load Java agent; please add lib/tools.jar from your JDK to the classpath");
       }

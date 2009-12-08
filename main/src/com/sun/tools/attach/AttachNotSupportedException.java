@@ -22,42 +22,28 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.tools.attach;
 
-import com.sun.tools.attach.spi.AttachProvider;         // for javadoc
-
 /**
- * Thrown by {@link VirtualMachine#attach
- * VirtalMachine.attach} when attempting to attach to a Java virtual machine
- * for which a compatible {@link com.sun.tools.attach.spi.AttachProvider
+ * Thrown by {@link VirtualMachine#attach VirtalMachine.attach} when attempting to attach to a Java
+ * virtual machine for which a compatible {@link com.sun.tools.attach.spi.AttachProvider
  * AttachProvider} does not exist. It is also thrown by {@link
  * com.sun.tools.attach.spi.AttachProvider#attachVirtualMachine
  * AttachProvider.attachVirtualMachine} if the provider attempts to
- * attach to a Java virtual machine with which it not comptatible.
+ * attach to a Java virtual machine with which it not compatible.
  */
-public class AttachNotSupportedException extends Exception {
+public final class AttachNotSupportedException extends Exception
+{
+   private static final long serialVersionUID = 3391824968260177264L;
 
-    /** use serialVersionUID for interoperability */
-    static final long serialVersionUID = 3391824968260177264L;
-
-    /**
-     * Constructs an <code>AttachNotSupportedException</code> with
-     * no detail message.
-     */
-    public AttachNotSupportedException() {
-        super();
-
-    }
-
-    /**
-     * Constructs an <code>AttachNotSupportedException</code> with
-     * the specified detail message.
-     *
-     * @param   s   the detail message.
-     */
-    public AttachNotSupportedException(String s) {
-        super(s);
-    }
-
+   /**
+    * Constructs an <code>AttachNotSupportedException</code> with
+    * the specified detail message.
+    *
+    * @param s the detail message.
+    */
+   public AttachNotSupportedException(String s)
+   {
+      super(s);
+   }
 }
