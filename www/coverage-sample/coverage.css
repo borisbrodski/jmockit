@@ -31,6 +31,7 @@ td.coverage {
    font-weight: bolder; width: 6em; text-align: right; vertical-align: middle;
    border-bottom: white solid 1px;
 }
+td.unknown { background-color: #daa520; text-align: center; }
 td.withBranches { background-color: #c8bb88; }
 td.withBranches pre { display: inline; margin-right: 2px; }
 td.total { text-align: right; font-weight: bold; background-color: #e0e0e0; }
