@@ -28,6 +28,10 @@
             Nested/inner classes which never get loaded during a test run are now properly handled.
             Before, the code in them simply wasn't considered at all in the line and path metrics.
          </li>
+         <li>
+            For packages containing at least one class exercised by the test run, the XHTML report
+            will now also show the sources files not exercised.
+         </li>
       </ul>
    </li>
 </ul>
