@@ -38,14 +38,29 @@
       (this isn't required, but it will provide the greatest ease of use).
    </li>
    <li>
-      If you are using a JDK of version 1.6 or newer on Mac OS X, or a non-Sun JDK such as the IBM
-      J9 JDK or the JRockit JDK, also add <strong><code>&lt;jdkDir>/lib/tools.jar</code></strong> to
-      the classpath (<code>&lt;jdkDir></code> is the home directory for your local JDK 1.6
-      installation).
-      This second jar file isn't required, but it avoids the need to specify the initialization
-      parameter <code>-javaagent:jmockit.jar</code> to the JVM when running tests.
-      When using a Sun JDK 1.6+ on Windows or Linux, adding this extra jar file to the classpath is
-      unnecessary.
+      Depending on your development environment, you <em>may</em> have to do one of two other
+      things:
+      <ul>
+         <li>
+            If you are developing on JDK 1.5, then make sure that
+            <code>-javaagent:jmockit.jar</code> (with the proper absolute or relative path to
+            <code>jmockit.jar</code>) is passed as an initialization parameter to the JVM when
+            running tests.
+            This standard JVM initialization parameter causes it to load on start-up the
+            "Java agent" that JMockit uses internally for bytecode instrumentation; this is required
+            to work in all standard JVMs since version 1.5, in all OSs.
+            You may also have to use this parameter on a newer JDK 1.6+, if for some reason the
+            second option described below doesn't work as expected (as is currently the case with
+            the IBM J9 JDK 1.6).
+         </li>
+         <li>
+            If you are developing on a JDK of version 1.6 or newer on Mac OS X, add
+            <strong><code>&lt;jdkDir>/lib/tools.jar</code></strong> to the classpath, where
+            <code>&lt;jdkDir></code> is the home directory for your local JDK 1.6 installation.
+         </li>
+      </ul>
+      When using a Sun HotSpot JDK 1.6+ or an Oracle JRockit JDK 1.6+ on Windows or Linux, neither
+      of the extra steps above is necessary.
    </li>
    <li>
       Optionally, configure your IDE to find API source code (and consequently the associated
@@ -85,8 +100,7 @@
    This dependency should come <em>before</em> the <code>junit</code> dependency, if any.
 </p>
 <p>
-   If using JDK 1.6 on Mac OS X or a non-Sun JDK 1.6, you will probably also want to have the
-   following dependency in your project:
+   If using JDK 1.6 on Mac OS X, you should also have the following dependency in your project:
 </p>
 <pre>
       &lt;dependency>
@@ -98,8 +112,8 @@
       &lt;/dependency>
 </pre>
 <p>
-   This dependency is <em>not</em> needed in a Windows or Linux environment when using a Sun JDK
-   1.6+.
+   This dependency is <em>not</em> needed in a Windows or Linux environment when using a Sun HotSpot
+   JDK 1.6+ or an Oracle JRockit JDK 1.6+.
 </p>
 <p>
    For information on using JMockit Coverage with Maven, see the
