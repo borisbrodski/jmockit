@@ -14,6 +14,14 @@
 <p>Release 0.995 (December ??, 2009):</p>
 <ul>
    <li>
+      <strong>Hamcrest 1.2</strong> classes are no longer included in <code>jmockit.jar</code>.
+      The "<code>withXyz(...)</code>" argument matching methods are unaffected, even the two of them
+      which accept a custom matcher as an implementation of <code>org.hamcrest.Matcher</code>;
+      notice however that to use one of these two in a test the proper Hamcrest classes will have to
+      be available in the classpath (for example, from <code>junit-4.8.jar</code>).
+      (See <a href="http://code.google.com/p/jmockit/issues/detail?id=13">issue 13</a>.)
+   </li>
+   <li>
       More fixes and enhancements to <strong>JMockit Coverage</strong>:
       <ul>
          <li>
