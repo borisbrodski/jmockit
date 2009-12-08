@@ -40,8 +40,8 @@ import mockit.external.asm.*;
  * @author Chris Nokleberg
  * @author Eric Bruneton
  */
-public class Method {
-
+public final class Method
+{
     /**
      * The method name.
      */
@@ -55,10 +55,10 @@ public class Method {
     /**
      * Maps primitive Java type names to their descriptors.
      */
-    private final static Map DESCRIPTORS;
+    private static final Map<String, String> DESCRIPTORS;
 
     static {
-        DESCRIPTORS = new HashMap();
+        DESCRIPTORS = new HashMap<String, String>();
         DESCRIPTORS.put("void", "V");
         DESCRIPTORS.put("byte", "B");
         DESCRIPTORS.put("char", "C");
@@ -71,45 +71,40 @@ public class Method {
     }
 
     /**
-     * Creates a new {@link Method}.
+     * Creates a new Method.
      * 
      * @param name the method's name.
      * @param desc the method's descriptor.
      */
-    public Method(final String name, final String desc) {
+    public Method(String name, String desc) {
         this.name = name;
         this.desc = desc;
     }
 
     /**
-     * Creates a new {@link Method}.
+     * Creates a new Method.
      * 
      * @param name the method's name.
      * @param returnType the method's return type.
      * @param argumentTypes the method's argument types.
      */
-    public Method(
-        final String name,
-        final Type returnType,
-        final Type[] argumentTypes)
+    public Method(String name, Type returnType, Type[] argumentTypes)
     {
         this(name, Type.getMethodDescriptor(returnType, argumentTypes));
     }
 
     /**
-     * Returns a {@link Method} corresponding to the given Java method
-     * declaration.
+     * Returns a Method corresponding to the given Java method declaration.
      * 
      * @param method a Java method declaration, without argument names, of the
      *        form "returnType name (argumentType1, ... argumentTypeN)", where
      *        the types are in plain Java (e.g. "int", "float",
      *        "java.util.List", ...).
-     * @return a {@link Method} corresponding to the given Java method
-     *         declaration.
+     * @return a Method corresponding to the given Java method declaration.
      * @throws IllegalArgumentException if <code>method</code> could not get
      *         parsed.
      */
-    public static Method getMethod(final String method)
+    public static Method getMethod(String method)
             throws IllegalArgumentException
     {
         int space = method.indexOf(' ');
@@ -121,7 +116,7 @@ public class Method {
 
         String returnType = method.substring(0, space);
         String methodName = method.substring(space + 1, start - 1).trim();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append('(');
         int p;
         do {
@@ -138,25 +133,25 @@ public class Method {
         return new Method(methodName, sb.toString());
     }
 
-    private static String map(final String type) {
-        if (type.equals("")) {
+    private static String map(String type) {
+        if (type.length() == 0) {
             return type;
         }
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int index = 0;
         while ((index = type.indexOf("[]", index) + 1) > 0) {
             sb.append('[');
         }
 
         String t = type.substring(0, type.length() - sb.length() * 2);
-        String desc = (String) DESCRIPTORS.get(t);
+        String desc = DESCRIPTORS.get(t);
         if (desc != null) {
             sb.append(desc);
         } else {
             sb.append('L');
             if (t.indexOf('.') < 0) {
-                sb.append("java/lang/" + t);
+                sb.append("java/lang/").append(t);
             } else {
                 sb.append(t.replace('.', '/'));
             }
@@ -205,7 +200,7 @@ public class Method {
         return name + desc;
     }
 
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof Method)) {
             return false;
         }

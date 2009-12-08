@@ -225,7 +225,7 @@ final class ExpectationsModifier extends BaseClassModifier
       Type[] paramTypes = mockConstructorInfo.getParameterTypesForSuperConstructor();
       Object[] args = mockConstructorInfo.getSuperConstructorArguments();
       String constructorDesc = Type.getMethodDescriptor(Type.VOID_TYPE, paramTypes);
-      GeneratorAdapter generator = new GeneratorAdapter(mw, 0, "<init>", constructorDesc);
+      GeneratorAdapter generator = new GeneratorAdapter(mw, 0, constructorDesc);
       int i = 0;
 
       for (Type paramType : paramTypes) {

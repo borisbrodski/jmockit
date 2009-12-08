@@ -41,8 +41,9 @@ package mockit.external.asm;
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
-public interface Opcodes {
-
+@SuppressWarnings({"UnusedDeclaration"})
+public interface Opcodes
+{
     // versions
 
     int V1_1 = 3 << 16 | 45;

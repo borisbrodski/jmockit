@@ -170,10 +170,6 @@
         </inspection_tool>
         <inspection_tool class="CloneCallsConstructors" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CloneInNonCloneableClass" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="CloneableClassInSecureContext" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="CloneableImplementsClone" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="m_ignoreCloneableDueToInheritance" value="false" />
-        </inspection_tool>
         <inspection_tool class="CollectionAddedToSelf" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CollectionContainsUrl" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CollectionsFieldAccessReplaceableByMethodCall" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -247,7 +243,6 @@
           <option name="ignoreGetMessage" value="false" />
         </inspection_tool>
         <inspection_tool class="ExceptionNameDoesntEndWithException" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ExtendsConcreteCollection" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ExternalizableWithSerializationMethods" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="FallthruInSwitchStatement" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="FieldAccessedSynchronizedAndUnsynchronized" enabled="true" level="WARNING" enabled_by_default="true">
@@ -525,7 +520,7 @@
         <inspection_tool class="SerialPersistentFieldsWithWrongSignature" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SerialVersionUIDNotStaticFinal" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SerializableHasSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="superClassString" value="java.awt.Component,java.lang.Exception" />
+          <option name="superClassString" value="java.awt.Component,java.lang.Exception,java.util.HashMap" />
         </inspection_tool>
         <inspection_tool class="SerializableInnerClassHasSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="superClassString" value="java.awt.Component" />
@@ -590,9 +585,6 @@
         </inspection_tool>
         <inspection_tool class="SwitchStatementWithTooManyBranches" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_limit" value="10" />
-        </inspection_tool>
-        <inspection_tool class="SwitchStatementsWithoutDefault" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="m_ignoreFullyCoveredEnums" value="true" />
         </inspection_tool>
         <inspection_tool class="SynchronizeOnLock" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SynchronizeOnThis" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -788,6 +780,7 @@
       <words>
         <w>args</w>
         <w>arraycopy</w>
+        <w>attr</w>
         <w>blanchedalmond</w>
         <w>booleans</w>
         <w>brst</w>
@@ -821,6 +814,7 @@
         <w>iinc</w>
         <w>initializer</w>
         <w>initializers</w>
+        <w>inria</w>
         <w>interp</w>
         <w>interpolator</w>
         <w>interpolators</w>
@@ -835,6 +829,7 @@
         <w>login</w>
         <w>logins</w>
         <w>logout</w>
+        <w>maxs</w>
         <w>metadata</w>
         <w>microsystems</w>
         <w>millis</w>
@@ -849,6 +844,7 @@
         <w>onclick</w>
         <w>onfocus</w>
         <w>onload</w>
+        <w>opcodes</w>
         <w>paleturquoise</w>
         <w>param</w>
         <w>parameterized</w>
@@ -877,8 +873,10 @@
         <w>stubbings</w>
         <w>stylesheet</w>
         <w>sublicense</w>
+        <w>telecom</w>
         <w>templated</w>
         <w>throwable</w>
+        <w>unbox</w>
         <w>unformatted</w>
         <w>unmocked</w>
         <w>versioned</w>

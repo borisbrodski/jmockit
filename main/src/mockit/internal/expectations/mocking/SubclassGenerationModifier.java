@@ -29,6 +29,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.external.asm.*;
+import mockit.external.asm.Type;
 import mockit.external.asm.commons.*;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
@@ -124,17 +125,17 @@ final class SubclassGenerationModifier extends BaseClassModifier
 
       mw.visitVarInsn(ALOAD, 1);
 
-      GeneratorAdapter generator = new GeneratorAdapter(mw, ACC_PUBLIC, "<init>", "()V");
-      mockit.external.asm.Type[] paramTypes = mockConstructorInfo.getParameterTypesForSuperConstructor();
+      GeneratorAdapter generator = new GeneratorAdapter(mw, ACC_PUBLIC, "()V");
+      Type[] paramTypes = mockConstructorInfo.getParameterTypesForSuperConstructor();
       int paramIndex = 0;
 
-      for (mockit.external.asm.Type paramType : paramTypes) {
+      for (Type paramType : paramTypes) {
          generator.push(paramIndex++);
          generator.arrayLoad(paramType);
          generator.unbox(paramType);
       }
 
-      return mockit.external.asm.Type.getMethodDescriptor(mockit.external.asm.Type.VOID_TYPE, paramTypes);
+      return Type.getMethodDescriptor(Type.VOID_TYPE, paramTypes);
    }
 
    private void generateImplementationIfAbstractMethod(

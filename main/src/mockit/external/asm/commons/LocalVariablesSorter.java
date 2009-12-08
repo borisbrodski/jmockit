@@ -39,8 +39,8 @@ import mockit.external.asm.*;
  * @author Chris Nokleberg
  * @author Eric Bruneton
  */
-public class LocalVariablesSorter extends MethodAdapter {
-
+public class LocalVariablesSorter extends MethodAdapter
+{
     /**
      * Mapping from old to new local variable indexes. A local variable at index
      * i of size 1 is remapped to 'mapping[2*i]', while a local variable at
@@ -52,21 +52,21 @@ public class LocalVariablesSorter extends MethodAdapter {
 
     private int nextLocal;
 
-    public LocalVariablesSorter(
-        final int access,
-        final String desc,
-        final MethodVisitor mv)
+    public LocalVariablesSorter(int access, String desc, MethodVisitor mv)
     {
         super(mv);
         Type[] args = Type.getArgumentTypes(desc);
-        nextLocal = ((Opcodes.ACC_STATIC & access) != 0) ? 0 : 1;
-        for (int i = 0; i < args.length; i++) {
-            nextLocal += args[i].getSize();
+        nextLocal = (Opcodes.ACC_STATIC & access) == 0 ? 1 : 0;
+
+        for (Type arg : args) {
+            nextLocal += arg.getSize();
         }
+
         firstLocal = nextLocal;
     }
 
-    public void visitVarInsn(final int opcode, final int var) {
+    @Override
+    public final void visitVarInsn(int opcode, int var) {
         int size;
         switch (opcode) {
             case Opcodes.LLOAD:
@@ -81,35 +81,36 @@ public class LocalVariablesSorter extends MethodAdapter {
         mv.visitVarInsn(opcode, remap(var, size));
     }
 
-    public void visitIincInsn(final int var, final int increment) {
+    @Override
+    public final void visitIincInsn(int var, int increment) {
         mv.visitIincInsn(remap(var, 1), increment);
     }
 
-    public void visitMaxs(final int maxStack, final int maxLocals) {
+    @Override
+    public final void visitMaxs(int maxStack, int maxLocals) {
         mv.visitMaxs(maxStack, nextLocal);
     }
 
-    public void visitLocalVariable(
-        final String name,
-        final String desc,
-        final String signature,
-        final Label start,
-        final Label end,
-        final int index)
+    @Override
+    public final void visitLocalVariable(
+        String name,
+        String desc,
+        String signature,
+        Label start,
+        Label end,
+        int index)
     {
         int size = "J".equals(desc) || "D".equals(desc) ? 2 : 1;
         mv.visitLocalVariable(name, desc, signature, start, end, remap(index, size));
     }
 
-    // -------------
-
-    protected int newLocal(final int size) {
+    protected final int newLocal(int size) {
         int var = nextLocal;
         nextLocal += size;
         return var;
     }
 
-    private int remap(final int var, final int size) {
+    private int remap(int var, int size) {
         if (var < firstLocal) {
             return var;
         }
@@ -128,5 +129,4 @@ public class LocalVariablesSorter extends MethodAdapter {
         }
         return value - 1;
     }
-    
 }

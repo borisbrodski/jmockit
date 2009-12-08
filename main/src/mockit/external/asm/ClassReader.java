@@ -41,8 +41,8 @@ import java.io.IOException;
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
-public class ClassReader {
-
+public class ClassReader
+{
     /**
      * The class to be parsed. <i>The content of this array must not be
      * modified. This field is intended for {@link Attribute} sub classes, and
@@ -919,10 +919,7 @@ public class ClassReader {
                             if (attrs[k].type.equals(attrName)) {
                                 attr = attrs[k].read(this,
                                         v + 6,
-                                        readInt(v + 2),
-                                        c,
-                                        codeStart - 8,
-                                        labels);
+                                        readInt(v + 2));
                                 if (attr != null) {
                                     attr.next = cattrs;
                                     cattrs = attr;
@@ -1398,10 +1395,10 @@ public class ClassReader {
     {
         for (int i = 0; i < attrs.length; ++i) {
             if (attrs[i].type.equals(type)) {
-                return attrs[i].read(this, off, len, buf, codeOff, labels);
+                return attrs[i].read(this, off, len);
             }
         }
-        return new Attribute(type).read(this, off, len, null, -1, null);
+        return new Attribute(type).read(this, off, len);
     }
 
     // ------------------------------------------------------------------------

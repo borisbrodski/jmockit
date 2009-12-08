@@ -35,8 +35,8 @@ package mockit.external.asm;
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
-public class Attribute {
-
+public final class Attribute
+{
     /**
      * The type of this attribute.
      */
@@ -57,21 +57,11 @@ public class Attribute {
      * 
      * @param type the type of the attribute.
      */
-    protected Attribute(final String type) {
+    Attribute(String type) {
         this.type = type;
     }
 
-    /**
-     * Returns <tt>true</tt> if this type of attribute is unknown. The default
-     * implementation of this method always returns <tt>true</tt>.
-     * 
-     * @return <tt>true</tt> if this type of attribute is unknown.
-     */
-    public boolean isUnknown() {
-        return true;
-    }
-
-    /**
+   /**
      * Returns <tt>true</tt> if this type of attribute is a code attribute.
      * 
      * @return <tt>true</tt> if this type of attribute is a code attribute.
@@ -86,13 +76,13 @@ public class Attribute {
      * @return the labels corresponding to this attribute, or <tt>null</tt> if
      *         this attribute is not a code attribute that contains labels.
      */
-    protected Label[] getLabels() {
+    Label[] getLabels() {
         return null;
     }
 
     /**
      * Reads a {@link #type type} attribute. This method must return a <i>new</i>
-     * {@link Attribute} object, of type {@link #type type}, corresponding to
+     * Attribute object, of type {@link #type type}, corresponding to
      * the <tt>len</tt> bytes starting at the given offset, in the given class
      * reader.
      * 
@@ -102,27 +92,10 @@ public class Attribute {
      *        type and the length of the attribute, are not taken into account
      *        here.
      * @param len the length of the attribute's content.
-     * @param buf buffer to be used to call
-     *        {@link ClassReader#readUTF8 readUTF8},
-     *        {@link ClassReader#readClass(int,char[]) readClass} or
-     *        {@link ClassReader#readConst readConst}.
-     * @param codeOff index of the first byte of code's attribute content in
-     *        {@link ClassReader#b cr.b}, or -1 if the attribute to be read is
-     *        not a code attribute. The 6 attribute header bytes, containing the
-     *        type and the length of the attribute, are not taken into account
-     *        here.
-     * @param labels the labels of the method's code, or <tt>null</tt> if the
-     *        attribute to be read is not a code attribute.
-     * @return a <i>new</i> {@link Attribute} object corresponding to the given
-     *         bytes.
+     * 
+     * @return a <i>new</i> Attribute object corresponding to the given bytes.
      */
-    protected Attribute read(
-        ClassReader cr,
-        int off,
-        int len,
-        char[] buf,
-        int codeOff,
-        Label[] labels)
+    Attribute read(ClassReader cr, int off, int len)
     {
         Attribute attr = new Attribute(type);
         attr.value = new byte[len];
@@ -150,12 +123,7 @@ public class Attribute {
      *        not a code attribute.
      * @return the byte array form of this attribute.
      */
-    protected ByteVector write(
-        ClassWriter cw,
-        byte[] code,
-        int len,
-        int maxStack,
-        int maxLocals)
+    private ByteVector write()
     {
         ByteVector v = new ByteVector();
         v.data = value;
@@ -168,7 +136,7 @@ public class Attribute {
      * 
      * @return the length of the attribute list that begins with this attribute.
      */
-    final int getCount() {
+    int getCount() {
         int count = 0;
         Attribute attr = this;
         while (attr != null) {
@@ -198,18 +166,18 @@ public class Attribute {
      * @return the size of all the attributes in this attribute list. This size
      *         includes the size of the attribute headers.
      */
-    final int getSize(
-        final ClassWriter cw,
-        final byte[] code,
-        final int len,
-        final int maxStack,
-        final int maxLocals)
+    int getSize(
+        ClassWriter cw,
+        byte[] code,
+        int len,
+        int maxStack,
+        int maxLocals)
     {
         Attribute attr = this;
         int size = 0;
         while (attr != null) {
             cw.newUTF8(attr.type);
-            size += attr.write(cw, code, len, maxStack, maxLocals).length + 6;
+            size += attr.write().length + 6;
             attr = attr.next;
         }
         return size;
@@ -235,17 +203,17 @@ public class Attribute {
      *        are not code attributes.
      * @param out where the attributes must be written.
      */
-    final void put(
-        final ClassWriter cw,
-        final byte[] code,
-        final int len,
-        final int maxStack,
-        final int maxLocals,
-        final ByteVector out)
+    void put(
+        ClassWriter cw,
+        byte[] code,
+        int len,
+        int maxStack,
+        int maxLocals,
+        ByteVector out)
     {
         Attribute attr = this;
         while (attr != null) {
-            ByteVector b = attr.write(cw, code, len, maxStack, maxLocals);
+            ByteVector b = attr.write();
             out.putShort(cw.newUTF8(attr.type)).putInt(b.length);
             out.putByteArray(b.data, 0, b.length);
             attr = attr.next;
