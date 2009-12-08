@@ -24,6 +24,7 @@
  */
 package mockit.coverage;
 
+import java.io.*;
 import java.util.*;
 
 import mockit.coverage.data.*;
@@ -34,32 +35,54 @@ import static mockit.external.asm.Opcodes.*;
 
 final class CoverageModifier extends ClassWriter
 {
+   private static final Map<String, CoverageModifier> INNER_CLASS_MODIFIERS =
+      new HashMap<String, CoverageModifier>();
+
+   static byte[] recoverModifiedByteCodeIfAvailable(String innerClassName)
+   {
+      CoverageModifier modifier = INNER_CLASS_MODIFIERS.remove(innerClassName);
+      return modifier == null ? null : modifier.toByteArray();
+   }
+
    private String simpleClassName;
    private String sourceFileName;
    private FileCoverageData fileData;
    private boolean cannotModify;
+   private final boolean forInnerClass;
 
    CoverageModifier(ClassReader cr)
    {
       super(cr, true);
+      forInnerClass = false;
+   }
+
+   private CoverageModifier(ClassReader cr, CoverageModifier other)
+   {
+      super(cr, true);
+      simpleClassName = other.simpleClassName;
+      sourceFileName = other.sourceFileName;
+      fileData = other.fileData;
+      forInnerClass = true;
    }
 
    @Override
    public void visit(
       int version, int access, String name, String signature, String superName, String[] interfaces)
    {
-      int p = name.lastIndexOf('/');
+      if (!forInnerClass) {
+         int p = name.lastIndexOf('/');
 
-      if (p < 0) {
-         simpleClassName = name;
-         sourceFileName = "";
-      }
-      else {
-         simpleClassName = name.substring(p + 1);
-         sourceFileName = name.substring(0, p + 1);
-      }
+         if (p < 0) {
+            simpleClassName = name;
+            sourceFileName = "";
+         }
+         else {
+            simpleClassName = name.substring(p + 1);
+            sourceFileName = name.substring(0, p + 1);
+         }
 
-      cannotModify = (access & ACC_INTERFACE) != 0 || name.startsWith("mockit/coverage/");
+         cannotModify = (access & ACC_INTERFACE) != 0 || name.startsWith("mockit/coverage/");
+      }
 
       super.visit(version, access, name, signature, superName, interfaces);
    }
@@ -67,14 +90,38 @@ final class CoverageModifier extends ClassWriter
    @Override
    public void visitSource(String file, String debug)
    {
-      sourceFileName += file;
-      fileData = CoverageData.instance().addFile(sourceFileName);
+      if (!forInnerClass) {
+         sourceFileName += file;
+         fileData = CoverageData.instance().addFile(sourceFileName);
 
-      if (cannotModify) {
-         throw CodeCoverage.CLASS_IGNORED;
+         if (cannotModify) {
+            throw CodeCoverage.CLASS_IGNORED;
+         }
       }
 
       super.visitSource(file, debug);
+   }
+
+   @Override
+   public void visitInnerClass(String internalName, String outerName, String innerName, int access)
+   {
+      super.visitInnerClass(internalName, outerName, innerName, access);
+
+      if (forInnerClass) {
+         return;
+      }
+
+      String innerClassName = internalName.replace('/', '.');
+
+      try {
+         ClassReader innerCR = new ClassReader(innerClassName);
+         CoverageModifier innerClassModifier = new CoverageModifier(innerCR, this);
+         innerCR.accept(innerClassModifier, false);
+         INNER_CLASS_MODIFIERS.put(innerClassName, innerClassModifier);
+      }
+      catch (IOException e) {
+         e.printStackTrace();
+      }
    }
 
    @Override
