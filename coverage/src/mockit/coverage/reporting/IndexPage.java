@@ -57,7 +57,7 @@ final class IndexPage extends ListWithFilesAndPercentages
          writeHeader();
 
          List<String> packages = new ArrayList<String>(packageToFiles.keySet());
-         writeMetricForEachFile(packages);
+         writeMetricsForEachFile(null, packages);
 
          writeLineWithCoverageTotals();
          writeFooter();
@@ -179,21 +179,29 @@ final class IndexPage extends ListWithFilesAndPercentages
    }
 
    @Override
-   protected void writeInternalTableForChildren(String packageName)
+   protected void writeMetricsForFile(String packageName, String fileName)
+   {
+      writeTableCellWithFileName(fileName);
+      writeInternalTableForChildren(fileName);
+      writeCodeCoveragePercentageForFile(fileName);
+      writePathCoveragePercentageForFile(fileName);
+   }
+
+   private void writeInternalTableForChildren(String packageName)
    {
       printIndent();
       output.println("  <td>");
-      printIndentOneLevelDeeper();
-      output.println("  <table width='100%' cellpadding='1' cellspacing='1'>");
+      printIndent();
+      output.println("    <table width='100%' cellpadding='1' cellspacing='1'>");
 
       List<String> packageFiles = packageToFiles.get(packageName);
-      packageReport.writeMetricForEachFile(packageFiles);
+      packageReport.writeMetricsForEachFile(packageName, packageFiles);
 
       recordCodeCoverageInformationForPackage(packageName);
       recordPathCoverageInformationForPackage(packageName);
 
-      printIndentOneLevelDeeper();
-      output.println("  </table>");
+      printIndent();
+      output.println("    </table>");
       printIndent();
       output.println("  </td>");
    }

@@ -43,9 +43,9 @@ abstract class ListWithFilesAndPercentages
       this.baseIndentation = baseIndentation;
    }
 
+   protected abstract void writeMetricsForFile(String packageName, String fileName);
    protected abstract String getHRefToFile(String filePath);
    protected abstract String getFileNameForDisplay(String filePath);
-   protected abstract void writeInternalTableForChildren(String filePath);
 
    protected abstract int getTotalSegments(String filePath);
    protected abstract int getCoveredSegments(String filePath);
@@ -55,37 +55,34 @@ abstract class ListWithFilesAndPercentages
    protected abstract int getCoveredPaths(String filePath);
    protected abstract int getPathCoveragePercentageForFile(String filePath);
 
-   final void writeMetricForEachFile(List<String> filePaths)
+   final void writeMetricsForEachFile(String packageName, List<String> fileNames)
    {
-      if (filePaths.isEmpty()) {
+      if (fileNames.isEmpty()) {
          return;
       }
 
-      Collections.sort(filePaths);
+      Collections.sort(fileNames);
 
       totalSegments = 0;
       coveredSegments = 0;
       totalPaths = 0;
       coveredPaths = 0;
 
-      for (String filePath : filePaths) {
+      for (String fileName : fileNames) {
          printIndent();
          output.println("<tr>");
 
-         writeTableCellWithFileName(filePath);
-         writeInternalTableForChildren(filePath);
-         writeCodeCoveragePercentageForFile(filePath);
-         writePathCoveragePercentageForFile(filePath);
+         writeMetricsForFile(packageName, fileName);
 
          printIndent();
          output.println("</tr>");
       }
    }
 
-   private void writeTableCellWithFileName(String filePath)
+   final void writeTableCellWithFileName(String filePath)
    {
-      printIndentOneLevelDeeper();
-      output.write("<td class='file'>");
+      printIndent();
+      output.write("  <td class='file'>");
 
       String href = getHRefToFile(filePath);
 
@@ -104,7 +101,7 @@ abstract class ListWithFilesAndPercentages
       output.println("</td>");
    }
 
-   private void writeCodeCoveragePercentageForFile(String filePath)
+   final void writeCodeCoveragePercentageForFile(String filePath)
    {
       int fileCodePercentage = getCodeCoveragePercentageForFile(filePath);
 
@@ -115,7 +112,7 @@ abstract class ListWithFilesAndPercentages
       printCoveragePercentage(fileCodePercentage);
    }
 
-   private void writePathCoveragePercentageForFile(String filePath)
+   final void writePathCoveragePercentageForFile(String filePath)
    {
       int filePathPercentage = getPathCoveragePercentageForFile(filePath);
 
@@ -140,7 +137,7 @@ abstract class ListWithFilesAndPercentages
       output.write(baseIndentation);
    }
 
-   final void printIndentOneLevelDeeper()
+   private void printIndentOneLevelDeeper()
    {
       printIndent();
       output.write("  ");

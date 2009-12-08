@@ -70,6 +70,8 @@ class CoverageReport
       }
 
       generateFileCoverageReportsWhileBuildingPackageLists();
+      addUncoveredSourceFilesToPackageLists();
+
       new IndexPage(outputFile, sourceDirs, packageToFiles, fileToFileData).generate();
 
       OutputFile.copySharedReferencedFiles(outputDir, sourceDirs != null);
@@ -124,6 +126,38 @@ class CoverageReport
          packageToFiles.put(filePackage, filesInPackage);
       }
 
-      filesInPackage.add(file);
+      filesInPackage.add(file.substring(p + 1));
+   }
+
+   private void addUncoveredSourceFilesToPackageLists()
+   {
+      for (Entry<String, List<String>> packageAndFiles : packageToFiles.entrySet()) {
+         String packageRelDir = packageAndFiles.getKey();
+         List<String> packageFiles = packageAndFiles.getValue();
+
+         for (File srcDir : sourceDirs) {
+            addMissingSourceFiles(packageFiles, srcDir, packageRelDir);
+         }
+      }
+   }
+
+   private void addMissingSourceFiles(
+      List<String> packageFilesToReport, File srcDir, String packageRelDir)
+   {
+      File packageDir = new File(srcDir, packageRelDir);
+      String[] allPackageFiles = packageDir.list();
+
+      if (allPackageFiles != null) {
+         addMissingSourceFiles(packageFilesToReport, allPackageFiles);
+      }
+   }
+
+   private void addMissingSourceFiles(List<String> packageFilesToReport, String[] allPackageFiles)
+   {
+      for (String packageFile : allPackageFiles) {
+         if (packageFile.endsWith(".java") && !packageFilesToReport.contains(packageFile)) {
+            packageFilesToReport.add(packageFile);
+         }
+      }
    }
 }

@@ -93,7 +93,23 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    }
 
    @Override
-   protected void writeInternalTableForChildren(String filePath)
+   protected void writeMetricsForFile(String packageName, String fileName)
    {
+      String filePath = packageName + '/' + fileName;
+
+      if (filesToFileData.containsKey(filePath)) {
+         writeTableCellWithFileName(filePath);
+         writeCodeCoveragePercentageForFile(filePath);
+         writePathCoveragePercentageForFile(filePath);
+      }
+      else {
+         printIndent();
+         output.write("  <td class='file'>");
+         output.write(fileName.substring(0, fileName.length() - 5));
+         output.println("</td>");
+
+         printIndent();
+         output.println("  <td colspan='2' class='coverage unknown'>?</td>");
+      }
    }
 }
