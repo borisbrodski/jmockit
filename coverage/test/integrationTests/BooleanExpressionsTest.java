@@ -35,6 +35,9 @@ public final class BooleanExpressionsTest extends CoverageTest
    {
       assertTrue(tested.eval1(true, true, 0));
       assertFalse(tested.eval1(true, false, 0));
+
+      findMethodData(7, "eval1");
+      assertPaths(4, 2, 2);
    }
 
    @Test
@@ -43,6 +46,9 @@ public final class BooleanExpressionsTest extends CoverageTest
       // Only this combination will fail if the third condition in eval1 is changed to "z < 0",
       // which demonstrates that a more sophisticated metric than branch coverage is needed.
       assertTrue(tested.eval1(true, false, 1));
+
+      findMethodData(7, "eval1");
+      assertPaths(4, 3, 3);
    }
 
    @Test
@@ -52,12 +58,30 @@ public final class BooleanExpressionsTest extends CoverageTest
       assertTrue(tested.eval2(true, false, 1));
       assertFalse(tested.eval2(true, false, 0));
       assertFalse(tested.eval2(false, true, 0));
+
+      findMethodData(12, "eval2");
+      assertPaths(4, 4, 4);
    }
 
    @Test
    public void evalOnlyFirstBranch()
    {
       assertFalse(tested.eval3(false, true, false));
+
+      findMethodData(17, "eval3");
+      assertPaths(4, 1, 1);
+   }
+
+   @Test
+   public void evalAllPaths()
+   {
+      assertFalse(tested.eval3(false, true, false));
+      assertTrue(tested.eval3(true, true, false));
+      assertTrue(tested.eval3(true, false, true));
+      assertFalse(tested.eval3(true, false, false));
+
+      findMethodData(17, "eval3");
+      assertPaths(4, 4, 5);
    }
 
    @Test
@@ -69,6 +93,9 @@ public final class BooleanExpressionsTest extends CoverageTest
       assertFalse(tested.eval4(false, false, true));
       assertTrue(tested.eval4(true, true, false));
       assertTrue(tested.eval4(true, true, true));
+
+      findMethodData(22, "eval4");
+      assertPaths(4, 2, 6);
    }
 
    @Test
