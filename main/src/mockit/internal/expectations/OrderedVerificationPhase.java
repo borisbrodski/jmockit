@@ -26,6 +26,8 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
+import mockit.internal.expectations.invocation.*;
+
 public final class OrderedVerificationPhase extends VerificationPhase
 {
    private final List<Expectation> expectationsInReplayOrder;
@@ -136,6 +138,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
       }
 
       if (maxInvocations >= 0) {
+         //noinspection ReuseOfLocalVariable
          n = currentExpectation.constraints.invocationCount - maxInvocations * numberOfIterations;
 
          if (n > 0) {

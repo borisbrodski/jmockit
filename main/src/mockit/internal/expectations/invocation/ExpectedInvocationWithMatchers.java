@@ -22,18 +22,18 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.internal.expectations;
+package mockit.internal.expectations.invocation;
 
 import java.util.*;
 
 import mockit.external.hamcrest.*;
 import mockit.external.hamcrest.core.*;
 
-final class ExpectedInvocationWithMatchers extends ExpectedInvocation
+public final class ExpectedInvocationWithMatchers extends ExpectedInvocation
 {
-   List<Matcher<?>> invocationArgMatchers;
+   public List<Matcher<?>> invocationArgMatchers;
 
-   ExpectedInvocationWithMatchers(
+   public ExpectedInvocationWithMatchers(
       Object recordedInstance, int methodAccess, String classDesc, String methodNameAndDesc,
       boolean matchInstance, Object[] recordedCallArgs, List<Matcher<?>> argMatchers,
       Map<Object, Object> recordToReplayInstanceMap)
@@ -44,7 +44,8 @@ final class ExpectedInvocationWithMatchers extends ExpectedInvocation
       invocationArgMatchers = argMatchers;
    }
 
-   Object[] prepareArgumentsForVerification(Object[] argsToVerify, List<Matcher<?>> argMatchers)
+   public Object[] prepareArgumentsForVerification(
+      Object[] argsToVerify, List<Matcher<?>> argMatchers)
    {
       Object[] replayArgs = invocationArgs;
       invocationArgs = argsToVerify;
@@ -53,7 +54,7 @@ final class ExpectedInvocationWithMatchers extends ExpectedInvocation
    }
 
    @Override
-   AssertionError assertThatInvocationArgumentsMatch(Object[] replayArgs)
+   public AssertionError assertThatInvocationArgumentsMatch(Object[] replayArgs)
    {
       if (invocationArgMatchers == null) {
          return super.assertThatInvocationArgumentsMatch(replayArgs);

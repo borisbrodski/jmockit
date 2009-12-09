@@ -26,6 +26,8 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
+import mockit.internal.expectations.invocation.*;
+
 public abstract class VerificationPhase extends TestOnlyPhase
 {
    private final List<Expectation> expectationsInReplayOrder;

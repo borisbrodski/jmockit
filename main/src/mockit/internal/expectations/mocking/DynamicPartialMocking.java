@@ -30,7 +30,7 @@ import java.util.Map.*;
 
 import mockit.external.asm.*;
 import mockit.internal.*;
-import mockit.internal.expectations.*;
+import mockit.internal.expectations.invocation.*;
 import mockit.internal.filtering.*;
 
 public final class DynamicPartialMocking

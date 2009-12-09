@@ -22,31 +22,31 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.internal.expectations;
+package mockit.internal.expectations.invocation;
 
-final class InvocationConstraints
+public final class InvocationConstraints
 {
    int minInvocations;
    int maxInvocations;
-   int invocationCount;
+   public int invocationCount;
 
-   InvocationConstraints(boolean nonStrictInvocation)
+   public InvocationConstraints(boolean nonStrictInvocation)
    {
       setDefaultLimits(nonStrictInvocation);
    }
 
-   InvocationConstraints(InvocationConstraints other)
+   public InvocationConstraints(InvocationConstraints other)
    {
       setLimits(other.minInvocations, other.maxInvocations);
       invocationCount = other.invocationCount;
    }
 
-   void setDefaultLimits(boolean nonStrictInvocation)
+   public void setDefaultLimits(boolean nonStrictInvocation)
    {
       setLimits(nonStrictInvocation ? 0 : 1, nonStrictInvocation ? -1 : 1);
    }
 
-   void setLimits(int minInvocations, int maxInvocations)
+   public void setLimits(int minInvocations, int maxInvocations)
    {
       this.minInvocations = minInvocations;
       this.maxInvocations = maxInvocations;
@@ -64,35 +64,35 @@ final class InvocationConstraints
       maxInvocations = -1;
    }
 
-   boolean incrementInvocationCount()
+   public boolean incrementInvocationCount()
    {
       invocationCount++;
       return invocationCount == maxInvocations;
    }
 
-   void addInvocationCount(InvocationConstraints other)
+   public void addInvocationCount(InvocationConstraints other)
    {
       invocationCount += other.invocationCount;
    }
 
-   boolean isInvocationCountLessThanMinimumExpected()
+   public boolean isInvocationCountLessThanMinimumExpected()
    {
       return invocationCount < minInvocations;
    }
 
-   boolean isInvocationCountMoreThanMaximumExpected()
+   public boolean isInvocationCountMoreThanMaximumExpected()
    {
       return maxInvocations >= 0 && invocationCount > maxInvocations;
    }
 
-   boolean isInvocationCountInExpectedRange()
+   public boolean isInvocationCountInExpectedRange()
    {
       return
          minInvocations <= invocationCount &&
          (invocationCount <= maxInvocations || maxInvocations < 0);
    }
 
-   AssertionError verify(ExpectedInvocation invocation)
+   public AssertionError verify(ExpectedInvocation invocation)
    {
       AssertionError error = verifyLowerLimit(invocation);
 
@@ -104,7 +104,7 @@ final class InvocationConstraints
       return invocationCount < minInvocations ? errorForMissingExpectations(invocation) : null;
    }
 
-   AssertionError errorForMissingExpectations(ExpectedInvocation invocation)
+   public AssertionError errorForMissingExpectations(ExpectedInvocation invocation)
    {
       return invocation.errorForMissingInvocations(minInvocations - invocationCount) ;
    }

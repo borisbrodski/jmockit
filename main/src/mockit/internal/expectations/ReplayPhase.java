@@ -26,6 +26,9 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
+import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.ExpectedInvocationWithMatchers;
+import mockit.internal.expectations.invocation.InvocationConstraints;
 import mockit.internal.state.*;
 
 final class ReplayPhase extends Phase

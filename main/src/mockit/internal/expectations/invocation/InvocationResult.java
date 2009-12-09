@@ -22,7 +22,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.internal.expectations;
+package mockit.internal.expectations.invocation;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -35,7 +35,9 @@ abstract class InvocationResult
 {
    InvocationResult next;
 
-   abstract Object produceResult(Expectation expectation, Object[] args) throws Throwable;
+   abstract Object produceResult(
+      ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
+      throws Throwable;
 
    static final class ReturnValueResult extends InvocationResult
    {
@@ -44,7 +46,11 @@ abstract class InvocationResult
       ReturnValueResult(Object returnValue) { this.returnValue = returnValue; }
 
       @Override
-      Object produceResult(Expectation expectation, Object[] args) { return returnValue; }
+      Object produceResult(
+         ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
+      {
+         return returnValue;
+      }
    }
 
    static final class ThrowableResult extends InvocationResult
@@ -54,7 +60,9 @@ abstract class InvocationResult
       ThrowableResult(Throwable throwable) { this.throwable = throwable; }
 
       @Override
-      Object produceResult(Expectation expectation, Object[] args) throws Throwable
+      Object produceResult(
+         ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
+         throws Throwable
       {
          throwable.fillInStackTrace();
          throw throwable;
@@ -90,12 +98,14 @@ abstract class InvocationResult
       }
 
       @Override
-      Object produceResult(Expectation expectation, Object[] args) throws Throwable
+      Object produceResult(
+         ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
+         throws Throwable
       {
          this.args = args;
 
          if (delegateMethod == null) {
-            String methodName = adaptNameAndArgumentsForDelegate(expectation.expectedInvocation);
+            String methodName = adaptNameAndArgumentsForDelegate(invocation);
             delegateMethod = Utilities.findCompatibleMethod(delegate, methodName, args);
             determineWhetherDelegateMethodHasInvocationParameter();
          }
@@ -103,7 +113,7 @@ abstract class InvocationResult
          Object result;
 
          if (hasInvocationParameter) {
-            result = executeDelegateWithInvocationContext(expectation.constraints, delegateMethod);
+            result = executeDelegateWithInvocationContext(constraints, delegateMethod);
          }
          else {
             result = Utilities.invoke(delegate, delegateMethod, args);
@@ -178,7 +188,9 @@ abstract class InvocationResult
       DeferredReturnValues(Iterator<?> values) { this.values = values; }
 
       @Override
-      Object produceResult(Expectation expectation, Object[] args) throws Throwable
+      Object produceResult(
+         ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
+         throws Throwable
       {
          return values.hasNext() ? values.next() : null;
       }

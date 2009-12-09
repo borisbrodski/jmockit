@@ -25,6 +25,8 @@
 package mockit.internal.expectations;
 
 import mockit.external.asm.*;
+import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.InvocationConstraints;
 import mockit.internal.util.*;
 
 public final class Expectation
@@ -53,7 +55,7 @@ public final class Expectation
    public InvocationResults getResults()
    {
       if (results == null) {
-         results = new InvocationResults(this);
+         results = new InvocationResults(expectedInvocation, constraints);
       }
 
       return results;

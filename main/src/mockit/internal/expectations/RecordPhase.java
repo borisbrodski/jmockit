@@ -24,6 +24,7 @@
  */
 package mockit.internal.expectations;
 
+import mockit.internal.expectations.invocation.*;
 import mockit.internal.state.*;
 
 public final class RecordPhase extends TestOnlyPhase

@@ -22,7 +22,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.internal.expectations;
+package mockit.internal.expectations.invocation;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -33,13 +33,13 @@ import mockit.internal.util.*;
 
 public class ExpectedInvocation
 {
-   final Object instance;
+   public final Object instance;
    final boolean methodWithVarargs;
-   final String classDesc;
-   final String methodNameAndDesc;
+   public final String classDesc;
+   public final String methodNameAndDesc;
    private final boolean isConstructor;
    private final boolean matchInstance;
-   protected Object[] invocationArgs;
+   public Object[] invocationArgs;
    private final Map<Object, Object> recordToReplayInstanceMap;
    private final ExpectationError invocationCause;
    private final Object defaultReturnValue;
@@ -68,7 +68,8 @@ public class ExpectedInvocation
       defaultReturnValue = DefaultValues.computeForReturnType(mockNameAndDesc);
    }
 
-   ExpectedInvocation(Object mock, String mockedClassDesc, String mockNameAndDesc, Object[] args)
+   public ExpectedInvocation(
+      Object mock, String mockedClassDesc, String mockNameAndDesc, Object[] args)
    {
       instance = mock;
       methodWithVarargs = false;
@@ -92,7 +93,8 @@ public class ExpectedInvocation
       return methodNameAndDesc;
    }
 
-   final boolean isMatch(Object replayInstance, String invokedClassDesc, String invokedMethod)
+   public final boolean isMatch(
+      Object replayInstance, String invokedClassDesc, String invokedMethod)
    {
       return
          invokedClassDesc.equals(classDesc) && isMatchingMethod(invokedMethod) &&
@@ -155,7 +157,7 @@ public class ExpectedInvocation
          replayInstance == recordToReplayInstanceMap.get(instance);
    }
 
-   final AssertionError errorForUnexpectedInvocation()
+   public final AssertionError errorForUnexpectedInvocation()
    {
       return newErrorWithCause("Unexpected invocation", "Unexpected invocation of");
    }
@@ -173,19 +175,19 @@ public class ExpectedInvocation
       return error;
    }
 
-   final AssertionError errorForMissingInvocation()
+   public final AssertionError errorForMissingInvocation()
    {
       return newErrorWithCause("Missing invocation",  "Missing invocation of");
    }
 
-   final AssertionError errorForMissingInvocations(int totalMissing)
+   public final AssertionError errorForMissingInvocations(int totalMissing)
    {
       String plural = totalMissing == 1 ? "" : "s";
       return newErrorWithCause(
          "Missing invocations", "Missing " + totalMissing + " invocation" + plural + " to");
    }
 
-   final AssertionError errorForUnexpectedInvocation(
+   public final AssertionError errorForUnexpectedInvocation(
       Object mock, String invokedClassDesc, String invokedMethod)
    {
       String instanceDescription = mock == null ? "" : "\non instance: " + objectIdentity(mock);
@@ -195,7 +197,7 @@ public class ExpectedInvocation
          instanceDescription + "\nwhen was expecting an invocation of");
    }
 
-   final AssertionError errorForUnexpectedInvocations(int totalUnexpected)
+   public final AssertionError errorForUnexpectedInvocations(int totalUnexpected)
    {
       String plural = totalUnexpected == 1 ? "" : "s";
       return newErrorWithCause(
@@ -237,7 +239,7 @@ public class ExpectedInvocation
       return new MethodFormatter(classDesc, methodNameAndDesc);
    }
 
-   AssertionError assertThatInvocationArgumentsMatch(Object[] replayArgs)
+   public AssertionError assertThatInvocationArgumentsMatch(Object[] replayArgs)
    {
       int argCount = replayArgs.length;
 
@@ -352,7 +354,7 @@ public class ExpectedInvocation
       return objectIdentity(parameterValue);
    }
 
-   final Object getDefaultValueForReturnType()
+   public final Object getDefaultValueForReturnType()
    {
       return defaultReturnValue;
    }

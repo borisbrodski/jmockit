@@ -22,23 +22,25 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.internal.expectations;
+package mockit.internal.expectations.invocation;
 
 import java.util.*;
 
 import mockit.*;
-import mockit.internal.expectations.InvocationResult.*;
+import mockit.internal.expectations.invocation.InvocationResult.*;
 
 public final class InvocationResults
 {
-   private final Expectation expectation;
+   private final ExpectedInvocation invocation;
+   private final InvocationConstraints constraints;
    private InvocationResult currentResult;
    private InvocationResult lastResult;
    private int resultCount;
 
-   InvocationResults(Expectation expectation)
+   public InvocationResults(ExpectedInvocation invocation, InvocationConstraints constraints)
    {
-      this.expectation = expectation;
+      this.invocation = invocation;
+      this.constraints = constraints;
    }
 
    public void addReturnValue(Object value)
@@ -61,7 +63,7 @@ public final class InvocationResults
    {
       InvocationResult result = new DeferredReturnValues(values);
       addResult(result);
-      expectation.constraints.setUnlimitedMaxInvocations();
+      constraints.setUnlimitedMaxInvocations();
    }
 
    public void addThrowable(Throwable t)
@@ -72,7 +74,7 @@ public final class InvocationResults
    private void addResult(InvocationResult result)
    {
       resultCount++;
-      expectation.constraints.adjustMaxInvocations(resultCount);
+      constraints.adjustMaxInvocations(resultCount);
 
       if (currentResult == null) {
          currentResult = result;
@@ -84,7 +86,7 @@ public final class InvocationResults
       }
    }
 
-   Object produceResult(Object[] invocationArgs) throws Throwable
+   public Object produceResult(Object[] invocationArgs) throws Throwable
    {
       InvocationResult resultToBeProduced = currentResult;
       InvocationResult nextResult = resultToBeProduced.next;
@@ -93,6 +95,8 @@ public final class InvocationResults
          currentResult = nextResult;
       }
 
-      return resultToBeProduced.produceResult(expectation, invocationArgs);
+      Object result = resultToBeProduced.produceResult(invocation, constraints, invocationArgs);
+
+      return result;
    }
 }
