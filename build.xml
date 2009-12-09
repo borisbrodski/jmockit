@@ -119,12 +119,12 @@
    <!-- Target for generating the Javadoc HTML documentation -->
 
    <target name="createjavadocs">
-      <delete dir="www/javadoc" includes="**/*.html"/>
+      <delete dir="www/javadoc" includes="**/*.html" excludes="overview.html"/>
       <javadoc
-         destdir="www/javadoc" overview="www/overview.html" excludepackagenames="mockit.internal.util"
-         nodeprecated="true" noindex="true" notree="true" nohelp="true"
-         breakiterator="true" source="1.5" windowtitle="JMockit Toolkit API Documentation"
-         encoding="UTF-8" charset="UTF-8" docencoding="UTF-8" classpathref="common.classpath">
+         destdir="www/javadoc" overview="www/javadoc/overview.html" classpathref="common.classpath"
+         nodeprecated="true" noindex="true" notree="true" nohelp="true" breakiterator="true"
+         source="1.5" windowtitle="JMockit Toolkit API Documentation"
+         encoding="UTF-8" charset="UTF-8" docencoding="UTF-8">
          <arg line="-notimestamp -quiet"/>
          <fileset dir="${basedir}/main/src">
             <include name="mockit/*.java"/>
