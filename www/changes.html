@@ -34,6 +34,11 @@
          </li>
       </ul>
    </li>
+   <li>
+      Fixed an issue in JUnit 3.8 integration, where a <code>TestCase</code> subclass overriding
+      the <code>getName()</code> method could cause JMockit to not find the test method
+      (<a href="http://code.google.com/p/jmockit/issues/detail?id=21">issue 21</a>).
+   </li>
 </ul>
 
 <h3>Current release</h3>
