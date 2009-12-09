@@ -50,26 +50,27 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
 
    private static final Method setUpMethod;
    private static final Method tearDownMethod;
+   private static final Field fName;
 
    static
    {
-      Method m1;
-      Method m2;
-
       try {
-         m1 = TestCase.class.getDeclaredMethod("setUp");
-         m2 = TestCase.class.getDeclaredMethod("tearDown");
+         setUpMethod = TestCase.class.getDeclaredMethod("setUp");
+         tearDownMethod = TestCase.class.getDeclaredMethod("tearDown");
+         fName = TestCase.class.getDeclaredField("fName");
       }
       catch (NoSuchMethodException e) {
          // OK, won't happen.
          throw new RuntimeException(e);
       }
+      catch (NoSuchFieldException e) {
+         // OK, won't happen.
+         throw new RuntimeException(e);
+      }
 
-      setUpMethod = m1;
       setUpMethod.setAccessible(true);
-
-      tearDownMethod = m2;
       tearDownMethod.setAccessible(true);
+      fName.setAccessible(true);
    }
 
    public TestCase it;
@@ -141,7 +142,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
    @Mock
    public void runTest() throws Throwable
    {
-      String testMethodName = it.getName();
+      String testMethodName = (String) fName.get(it);
       Method runMethod = findTestMethod(testMethodName);
 
       if (runMethod == null) {
