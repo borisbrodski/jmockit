@@ -32,12 +32,11 @@ import mockit.internal.util.*;
 public final class Expectation
 {
    final RecordPhase recordPhase;
-   final ExpectedInvocationWithMatchers expectedInvocation;
+   final ExpectedInvocation expectedInvocation;
    final InvocationConstraints constraints;
    private InvocationResults results;
 
-   Expectation(
-      RecordPhase recordPhase, ExpectedInvocationWithMatchers expectedInvocation, boolean nonStrict)
+   Expectation(RecordPhase recordPhase, ExpectedInvocation expectedInvocation, boolean nonStrict)
    {
       this.recordPhase = recordPhase;
       this.expectedInvocation = expectedInvocation;
@@ -77,12 +76,14 @@ public final class Expectation
 
    public boolean hasVoidReturnType()
    {
-      return expectedInvocation.methodNameAndDesc.endsWith(")V");
+      return expectedInvocation.getMethodNameAndDescription().endsWith(")V");
    }
 
    public boolean hasReturnValueOfType(Class<?> typeToBeReturned)
    {
-      Type invocationReturnType = Type.getReturnType(expectedInvocation.methodNameAndDesc);
+      Type invocationReturnType =
+         Type.getReturnType(expectedInvocation.getMethodNameAndDescription());
+
       Class<?> invocationReturnClass = Utilities.getClassForType(invocationReturnType);
 
       return invocationReturnClass.isAssignableFrom(typeToBeReturned);

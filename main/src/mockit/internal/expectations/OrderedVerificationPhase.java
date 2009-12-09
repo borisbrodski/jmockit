@@ -62,7 +62,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
             indexIncrement = 1;
 
             if (argMatchers != null) {
-               expectation.expectedInvocation.invocationArgMatchers = argMatchers;
+               expectation.expectedInvocation.arguments.setMatchers(argMatchers);
             }
 
             replayIndex = i;
@@ -100,12 +100,12 @@ public final class OrderedVerificationPhase extends VerificationPhase
    @Override
    public void handleInvocationCountConstraint(int minInvocations, int maxInvocations)
    {
-      ExpectedInvocationWithMatchers invocation = currentExpectation.expectedInvocation;
+      ExpectedInvocation invocation = currentExpectation.expectedInvocation;
       Object mock = invocation.instance;
-      String mockClassDesc = invocation.classDesc;
-      String mockNameAndDesc = invocation.methodNameAndDesc;
-      Object[] args = invocation.invocationArgs;
-      argMatchers = invocation.invocationArgMatchers;
+      String mockClassDesc = invocation.getClassDesc();
+      String mockNameAndDesc = invocation.getMethodNameAndDescription();
+      Object[] args = invocation.arguments.getValues();
+      argMatchers = invocation.arguments.getMatchers();
       int invocationCount = 1;
 
       while (replayIndex < expectationCount) {
@@ -192,12 +192,12 @@ public final class OrderedVerificationPhase extends VerificationPhase
    {
       for (int i = 0; i < n; i++) {
          Expectation verified = expectationsVerified.get(i);
-         ExpectedInvocationWithMatchers invocation = verified.expectedInvocation;
+         ExpectedInvocation invocation = verified.expectedInvocation;
 
-         argMatchers = invocation.invocationArgMatchers;
+         argMatchers = invocation.arguments.getMatchers();
          handleInvocation(
-            invocation.instance, 0, invocation.classDesc, invocation.methodNameAndDesc,
-            invocation.invocationArgs);
+            invocation.instance, 0, invocation.getClassDesc(),
+            invocation.getMethodNameAndDescription(), invocation.arguments.getValues());
 
          if (recordAndReplay.errorThrown != null) {
             return recordAndReplay.errorThrown;

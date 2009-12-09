@@ -41,7 +41,7 @@ public final class RecordAndReplayExecution
    private final DynamicPartialMocking dynamicPartialMocking;
    final List<Expectation> expectations;
    final List<Expectation> nonStrictExpectations;
-   final Map<Object, Object> recordToReplayInstanceMap;
+   final Map<Object, Object> instanceMap;
    final int lastExpectationIndexInPreviousReplayPhase;
    private RecordPhase recordPhase;
    private ReplayPhase replayPhase;
@@ -64,13 +64,13 @@ public final class RecordAndReplayExecution
       if (previous == null) {
          expectations = new ArrayList<Expectation>();
          nonStrictExpectations = new ArrayList<Expectation>();
-         recordToReplayInstanceMap = new IdentityHashMap<Object, Object>();
+         instanceMap = new IdentityHashMap<Object, Object>();
          lastExpectationIndexInPreviousReplayPhase = 0;
       }
       else {
          expectations = previous.expectations;
          nonStrictExpectations = previous.nonStrictExpectations;
-         recordToReplayInstanceMap = previous.recordToReplayInstanceMap;
+         instanceMap = previous.instanceMap;
          lastExpectationIndexInPreviousReplayPhase =
             previous.getLastExpectationIndexInPreviousReplayPhase();
       }
@@ -98,13 +98,13 @@ public final class RecordAndReplayExecution
          if (previous == null || enclosingClassForTargetObject == null) {
             expectations = new ArrayList<Expectation>();
             nonStrictExpectations = new ArrayList<Expectation>();
-            recordToReplayInstanceMap = new IdentityHashMap<Object, Object>();
+            instanceMap = new IdentityHashMap<Object, Object>();
             lastExpectationIndexInPreviousReplayPhase = 0;
          }
          else {
             expectations = previous.expectations;
             nonStrictExpectations = previous.nonStrictExpectations;
-            recordToReplayInstanceMap = previous.recordToReplayInstanceMap;
+            instanceMap = previous.instanceMap;
             lastExpectationIndexInPreviousReplayPhase =
                previous.getLastExpectationIndexInPreviousReplayPhase();
          }

@@ -27,8 +27,6 @@ package mockit.internal.expectations;
 import java.util.*;
 
 import mockit.internal.expectations.invocation.*;
-import mockit.internal.expectations.invocation.ExpectedInvocationWithMatchers;
-import mockit.internal.expectations.invocation.InvocationConstraints;
 import mockit.internal.state.*;
 
 final class ReplayPhase extends Phase
@@ -90,10 +88,11 @@ final class ReplayPhase extends Phase
 
       for (Expectation nonStrict : nonStrictExpectations) {
          ExpectedInvocation invocation = nonStrict.expectedInvocation;
+         Map<Object, Object> instanceMap = recordAndReplay.instanceMap;
 
          if (
-            invocation.isMatch(mock, mockClassDesc, mockNameAndDesc) &&
-            invocation.assertThatInvocationArgumentsMatch(args) == null
+            invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap) &&
+            invocation.arguments.assertMatch(args, instanceMap) == null
          ) {
             nonStrictExpectation = nonStrict;
             return true;
@@ -107,10 +106,8 @@ final class ReplayPhase extends Phase
       Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
       if (!TestRun.getExecutingTest().containsStrictMockForRunningTest(mock, mockClassDesc)) {
-         ExpectedInvocationWithMatchers invocation =
-            new ExpectedInvocationWithMatchers(
-               mock, mockAccess, mockClassDesc, mockNameAndDesc, false, args, null,
-               recordAndReplay.recordToReplayInstanceMap);
+         ExpectedInvocation invocation =
+            new ExpectedInvocation(mock, mockAccess, mockClassDesc, mockNameAndDesc, false, args);
 
          nonStrictExpectation = new Expectation(null, invocation, true);
 
@@ -144,13 +141,14 @@ final class ReplayPhase extends Phase
          }
 
          ExpectedInvocation invocation = currentExpectation.expectedInvocation;
+         Map<Object, Object> instanceMap = recordAndReplay.instanceMap;
 
-         if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc)) {
+         if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap)) {
             if (mock != invocation.instance) {
-               recordAndReplay.recordToReplayInstanceMap.put(invocation.instance, mock);
+               instanceMap.put(invocation.instance, mock);
             }
 
-            AssertionError error = invocation.assertThatInvocationArgumentsMatch(replayArgs);
+            AssertionError error = invocation.arguments.assertMatch(replayArgs, instanceMap);
 
             if (error != null) {
                if (currentExpectation.constraints.isInvocationCountInExpectedRange()) {

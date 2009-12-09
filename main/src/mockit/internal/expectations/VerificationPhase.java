@@ -69,10 +69,8 @@ public abstract class VerificationPhase extends TestOnlyPhase
       }
 
       if (currentExpectation == null) {
-         ExpectedInvocationWithMatchers invocation =
-            new ExpectedInvocationWithMatchers(
-               mock, mockAccess, mockClassDesc, mockNameAndDesc, false, args, null,
-               recordAndReplay.recordToReplayInstanceMap);
+         ExpectedInvocation invocation =
+            new ExpectedInvocation(mock, mockAccess, mockClassDesc, mockNameAndDesc, false, args);
 
          currentExpectation = new Expectation(null, invocation, true);
 
@@ -91,17 +89,18 @@ public abstract class VerificationPhase extends TestOnlyPhase
       Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args,
       Expectation expectation)
    {
-      ExpectedInvocationWithMatchers invocation = expectation.expectedInvocation;
+      ExpectedInvocation invocation = expectation.expectedInvocation;
+      Map<Object, Object> instanceMap = recordAndReplay.instanceMap;
 
-      if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc)) {
+      if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap)) {
          Object[] argsToVerify =
             argMatchers == null ?
-               args : invocation.prepareArgumentsForVerification(args, argMatchers);
+               args : invocation.arguments.prepareForVerification(args, argMatchers);
 
-         AssertionError error = invocation.assertThatInvocationArgumentsMatch(argsToVerify);
+         AssertionError error = invocation.arguments.assertMatch(argsToVerify, instanceMap);
 
          if (argMatchers != null) {
-            invocation.prepareArgumentsForVerification(argsToVerify, null);
+            invocation.arguments.setValuesWithNoMatchers(argsToVerify);
          }
 
          if (error == null) {

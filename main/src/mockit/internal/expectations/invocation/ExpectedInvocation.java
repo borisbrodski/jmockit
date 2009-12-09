@@ -24,90 +24,68 @@
  */
 package mockit.internal.expectations.invocation;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.external.asm.Type;
 
 import mockit.internal.util.*;
 
-public class ExpectedInvocation
+public final class ExpectedInvocation
 {
    public final Object instance;
-   final boolean methodWithVarargs;
-   public final String classDesc;
-   public final String methodNameAndDesc;
-   private final boolean isConstructor;
    private final boolean matchInstance;
-   public Object[] invocationArgs;
-   private final Map<Object, Object> recordToReplayInstanceMap;
+   public final InvocationArguments arguments;
    private final ExpectationError invocationCause;
    private final Object defaultReturnValue;
 
-   private static final class ExpectationError extends AssertionError
-   {
-      private String message;
-
-      @Override
-      public String toString() { return message; }
-   }
-
-   ExpectedInvocation(
+   public ExpectedInvocation(
       Object mock, int methodAccess, String mockedClassDesc, String mockNameAndDesc,
-      boolean matchInstance, Object[] args, Map<Object, Object> recordToReplayInstanceMap)
+      boolean matchInstance, Object[] args)
    {
       instance = mock;
-      methodWithVarargs = (methodAccess & 128) != 0;
-      classDesc = mockedClassDesc;
-      methodNameAndDesc = mockNameAndDesc;
-      isConstructor = mockNameAndDesc.startsWith("<init>");
       this.matchInstance = matchInstance;
-      invocationArgs = args;
-      this.recordToReplayInstanceMap = recordToReplayInstanceMap;
+      arguments = new InvocationArguments(methodAccess, mockedClassDesc, mockNameAndDesc, args);
       invocationCause = new ExpectationError();
       defaultReturnValue = DefaultValues.computeForReturnType(mockNameAndDesc);
    }
 
-   public ExpectedInvocation(
-      Object mock, String mockedClassDesc, String mockNameAndDesc, Object[] args)
+   // Simple getters //////////////////////////////////////////////////////////////////////////////
+
+   public String getClassDesc()
    {
-      instance = mock;
-      methodWithVarargs = false;
-      classDesc = mockedClassDesc;
-      methodNameAndDesc = mockNameAndDesc;
-      isConstructor = false;
-      matchInstance = false;
-      invocationArgs = args;
-      recordToReplayInstanceMap = null;
-      invocationCause = null;
-      defaultReturnValue = null;
+      return arguments.classDesc;
    }
 
    public String getClassName()
    {
-      return classDesc.replace('/', '.');
+      return arguments.classDesc.replace('/', '.');
    }
 
    public String getMethodNameAndDescription()
    {
-      return methodNameAndDesc;
+      return arguments.methodNameAndDesc;
    }
 
-   public final boolean isMatch(
-      Object replayInstance, String invokedClassDesc, String invokedMethod)
+   // Matching based on instance or mocked type ///////////////////////////////////////////////////
+
+   public boolean isMatch(
+      Object replayInstance, String invokedClassDesc, String invokedMethod,
+      Map<Object, Object> recordToReplayInstanceMap)
    {
       return
-         invokedClassDesc.equals(classDesc) && isMatchingMethod(invokedMethod) &&
-         (isConstructor || isEquivalentInstance(replayInstance));
+         invokedClassDesc.equals(arguments.classDesc) && isMatchingMethod(invokedMethod) &&
+         (arguments.methodNameAndDesc.charAt(0) == '<' ||
+          isEquivalentInstance(replayInstance, recordToReplayInstanceMap));
    }
 
    private boolean isMatchingMethod(String invokedMethod)
    {
+      String nameAndDesc = arguments.methodNameAndDesc;
       int i = 0;
 
       // Will return false if the method names or parameters are different:
       while (true) {
-         char c = methodNameAndDesc.charAt(i);
+         char c = nameAndDesc.charAt(i);
 
          if (c != invokedMethod.charAt(i)) {
             return false;
@@ -122,12 +100,12 @@ public class ExpectedInvocation
 
       int n = invokedMethod.length();
 
-      if (n == methodNameAndDesc.length()) {
+      if (n == nameAndDesc.length()) {
          int j = i;
 
          // Given return types of same length, will return true if they are identical:
          while (true) {
-            char c = methodNameAndDesc.charAt(j);
+            char c = nameAndDesc.charAt(j);
 
             if (c != invokedMethod.charAt(j)) {
                break;
@@ -143,13 +121,14 @@ public class ExpectedInvocation
 
       // At this point the methods are known to differ only in return type, so check if the return
       // type of the recorded one is assignable to the return type of the one invoked:
-      Type rt1 = Type.getType(methodNameAndDesc.substring(i));
+      Type rt1 = Type.getType(nameAndDesc.substring(i));
       Type rt2 = Type.getType(invokedMethod.substring(i));
 
       return Utilities.getClassForType(rt2).isAssignableFrom(Utilities.getClassForType(rt1));
    }
 
-   private boolean isEquivalentInstance(Object replayInstance)
+   private boolean isEquivalentInstance(
+      Object replayInstance, Map<Object, Object> recordToReplayInstanceMap)
    {
       return
          !matchInstance ||
@@ -157,204 +136,79 @@ public class ExpectedInvocation
          replayInstance == recordToReplayInstanceMap.get(instance);
    }
 
-   public final AssertionError errorForUnexpectedInvocation()
+   // Creation of AssertionError instances for invocation mismatch reporting //////////////////////
+
+   public ExpectedInvocation(Object mock, String classDesc, String methodNameAndDesc, Object[] args)
+   {
+      instance = mock;
+      matchInstance = false;
+      arguments = new InvocationArguments(0, classDesc, methodNameAndDesc, args);
+      invocationCause = null;
+      defaultReturnValue = null;
+   }
+
+   public AssertionError errorForUnexpectedInvocation()
    {
       return newErrorWithCause("Unexpected invocation", "Unexpected invocation of");
    }
 
    private AssertionError newErrorWithCause(String title, String message)
    {
-      AssertionError error = new AssertionError(message + this);
+      AssertionError error = new AssertionError(message + toString());
 
       if (invocationCause != null) {
-         invocationCause.message = title;
-         Utilities.filterStackTrace(invocationCause);
-         error.initCause(invocationCause);
+         invocationCause.defineCause(title, error);
       }
 
       return error;
    }
 
-   public final AssertionError errorForMissingInvocation()
+   public AssertionError errorForMissingInvocation()
    {
       return newErrorWithCause("Missing invocation",  "Missing invocation of");
    }
 
-   public final AssertionError errorForMissingInvocations(int totalMissing)
+   public AssertionError errorForMissingInvocations(int totalMissing)
    {
       String plural = totalMissing == 1 ? "" : "s";
       return newErrorWithCause(
          "Missing invocations", "Missing " + totalMissing + " invocation" + plural + " to");
    }
 
-   public final AssertionError errorForUnexpectedInvocation(
+   public AssertionError errorForUnexpectedInvocation(
       Object mock, String invokedClassDesc, String invokedMethod)
    {
-      String instanceDescription = mock == null ? "" : "\non instance: " + objectIdentity(mock);
+      String instanceDescription =
+         mock == null ? "" : "\non instance: " + Utilities.objectIdentity(mock);
+
       return newErrorWithCause(
          "Unexpected invocation",
          "Unexpected invocation of:\n" + new MethodFormatter(invokedClassDesc, invokedMethod) +
          instanceDescription + "\nwhen was expecting an invocation of");
    }
 
-   public final AssertionError errorForUnexpectedInvocations(int totalUnexpected)
+   public AssertionError errorForUnexpectedInvocations(int totalUnexpected)
    {
       String plural = totalUnexpected == 1 ? "" : "s";
       return newErrorWithCause(
          "Unexpected invocations", totalUnexpected + " unexpected invocation" + plural + " to");
    }
 
-   private String objectIdentity(Object mock)
-   {
-      return mock.getClass().getName() + '@' + Integer.toHexString(System.identityHashCode(mock));
-   }
-
    @Override
-   public final String toString()
+   public String toString()
    {
-      StringBuilder desc = new StringBuilder(30);
-
-      desc.append(":\n").append(invokedMethodSignature());
-
-      if (invocationArgs.length > 0) {
-         desc.append("\nwith arguments: ");
-         String sep = "";
-
-         for (Object arg : invocationArgs) {
-            desc.append(sep);
-            appendParameterValue(desc, arg);
-            sep = ", ";
-         }
-      }
+      String desc = arguments.toString();
 
       if (instance != null) {
-         desc.append("\non mock instance: ").append(objectIdentity(instance));
+         desc += "\non mock instance: " + Utilities.objectIdentity(instance);
       }
 
-      return desc.toString();
+      return desc;
    }
 
-   final MethodFormatter invokedMethodSignature()
-   {
-      return new MethodFormatter(classDesc, methodNameAndDesc);
-   }
+   // Default return value ////////////////////////////////////////////////////////////////////////
 
-   public AssertionError assertThatInvocationArgumentsMatch(Object[] replayArgs)
-   {
-      int argCount = replayArgs.length;
-
-      if (methodWithVarargs) {
-         AssertionError error = assertEquals(invocationArgs, replayArgs, argCount - 1);
-
-         if (error != null) {
-            return error;
-         }
-
-         Object[] expectedValues = getVarArgs(invocationArgs);
-         Object[] actualValues = getVarArgs(replayArgs);
-
-         if (expectedValues.length != actualValues.length) {
-            return new AssertionError(
-               "Expected " + expectedValues.length + " values for varargs parameter, got " +
-               actualValues.length);
-         }
-
-         error = assertEquals(expectedValues, actualValues, expectedValues.length);
-
-         if (error != null) {
-            return new AssertionError("Varargs " + error);
-         }
-
-         return null;
-      }
-      else {
-         return assertEquals(invocationArgs, replayArgs, argCount);
-      }
-   }
-
-   final Object[] getVarArgs(Object[] args)
-   {
-      Object lastArg = args[args.length - 1];
-
-      if (lastArg == null)
-      {
-         return new Object[1];
-      }
-      else if (lastArg instanceof Object[]) {
-         return (Object[]) lastArg;
-      }
-
-      int varArgsLength = Array.getLength(lastArg);
-      Object[] results = new Object[varArgsLength];
-
-      for (int i = 0; i < varArgsLength; i++)
-      {
-         results[i] = Array.get(lastArg, i);
-      }
-
-      return results;
-   }
-
-   private AssertionError assertEquals(Object[] expectedValues, Object[] actualValues, int count)
-   {
-      for (int i = 0; i < count; i++) {
-         Object expected = expectedValues[i];
-         Object actual = actualValues[i];
-
-         if (
-            actual == null && expected != null ||
-            actual != null && expected == null ||
-            actual != null && actual != expected &&
-            actual != recordToReplayInstanceMap.get(expected) && !actual.equals(expected)
-         ) {
-            return argumentMismatchErrorMessage(i, expected, actual);
-         }
-      }
-
-      return null;
-   }
-
-   final AssertionError argumentMismatchErrorMessage(int paramIndex, Object expected, Object actual)
-   {
-      StringBuilder message = new StringBuilder(50);
-
-      message.append("Parameter ").append(paramIndex);
-      message.append(" of ").append(invokedMethodSignature());
-      message.append(" expected ");
-      appendParameterValue(message, expected);
-      message.append(", got ");
-      appendParameterValue(message, actual);
-
-      return new AssertionError(message.toString());
-   }
-
-   private void appendParameterValue(StringBuilder message, Object parameterValue)
-   {
-      if (parameterValue == null) {
-         message.append("null");
-      }
-      else if (parameterValue instanceof CharSequence || parameterValue instanceof Appendable) {
-         message.append('"').append(parameterValue).append('"');
-      }
-      else if (parameterValue instanceof Character) {
-         message.append('\'').append(parameterValue).append('\'');
-      }
-      else {
-         message.append(getParameterValueAsString(parameterValue));
-      }
-   }
-
-   String getParameterValueAsString(Object parameterValue)
-   {
-      if (parameterValue instanceof Number || parameterValue instanceof Boolean) {
-         return parameterValue.toString();
-      }
-
-      // Other toString() implementations may result in an Error, so we take the safe path.
-      return objectIdentity(parameterValue);
-   }
-
-   public final Object getDefaultValueForReturnType()
+   public Object getDefaultValueForReturnType()
    {
       return defaultReturnValue;
    }

@@ -682,4 +682,9 @@ public final class Utilities
    {
       return c >= '1' && c <= '9';
    }
+
+   public static String objectIdentity(Object obj)
+   {
+      return obj.getClass().getName() + '@' + Integer.toHexString(System.identityHashCode(obj));
+   }
 }

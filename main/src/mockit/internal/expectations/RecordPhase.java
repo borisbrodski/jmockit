@@ -57,10 +57,8 @@ public final class RecordPhase extends TestOnlyPhase
       throws Throwable
    {
       boolean matchInstance = nextInstanceToMatch != null && mock == nextInstanceToMatch;
-      ExpectedInvocationWithMatchers invocation =
-         new ExpectedInvocationWithMatchers(
-            mock, mockAccess, classDesc, mockNameAndDesc, matchInstance, args, argMatchers,
-            recordAndReplay.recordToReplayInstanceMap);
+      ExpectedInvocation invocation =
+         new ExpectedInvocation(mock, mockAccess, classDesc, mockNameAndDesc, matchInstance, args);
       boolean nonStrictInvocation =
          nonStrict || TestRun.getExecutingTest().containsNonStrictMock(mock, classDesc);
 
@@ -75,7 +73,11 @@ public final class RecordPhase extends TestOnlyPhase
          nextInstanceToMatch = null;
       }
 
-      argMatchers = null;
+      if (argMatchers != null) {
+         invocation.arguments.setMatchers(argMatchers);
+         argMatchers = null;
+      }
+
       recordAndReplay.addExpectation(currentExpectation, nonStrictInvocation);
 
       return invocation.getDefaultValueForReturnType();
