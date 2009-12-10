@@ -135,7 +135,6 @@
         <inspection_tool class="CastConflictsWithInstanceof" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CastToIncompatibleInterface" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ChainedEquality" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ChannelResource" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CharUsedInArithmeticContext" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CheckImageSize" enabled="false" level="WARNING" enabled_by_default="false" />
         <inspection_tool class="ClassComplexity" enabled="true" level="WARNING" enabled_by_default="true">
@@ -147,7 +146,6 @@
           <option name="m_limit" value="15" />
         </inspection_tool>
         <inspection_tool class="ClassEscapesItsScope" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ClassLoaderInstantiation" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ClassMayBeInterface" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ClassNameSameAsAncestorName" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ClassNewInstance" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -199,7 +197,6 @@
         <inspection_tool class="ConvertOldAnnotations" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CovariantCompareTo" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CovariantEquals" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="CustomClassloader" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CustomSecurityManager" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CyclicClassDependency" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CyclicPackageDependency" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -415,7 +412,6 @@
         <inspection_tool class="NonCommentSourceStatements" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_limit" value="30" />
         </inspection_tool>
-        <inspection_tool class="NonExceptionNameEndsWithException" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NonFinalClone" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NonFinalFieldOfException" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NonFinalStaticVariableUsedInClassInitialization" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -582,7 +578,7 @@
           <option name="m_limit" value="2" />
         </inspection_tool>
         <inspection_tool class="SwitchStatementWithTooManyBranches" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="m_limit" value="10" />
+          <option name="m_limit" value="20" />
         </inspection_tool>
         <inspection_tool class="SynchronizeOnLock" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SynchronizedOnLiteralObject" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -717,7 +713,6 @@
         <inspection_tool class="UpperCaseFieldNameNotConstant" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UseOfAWTPeerClass" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UseOfJDBCDriverClass" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="UseOfProcessBuilder" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UseOfPropertiesAsHashtable" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UseOfSunClasses" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UtilityClassWithPublicConstructor" enabled="true" level="WARNING" enabled_by_default="true" />

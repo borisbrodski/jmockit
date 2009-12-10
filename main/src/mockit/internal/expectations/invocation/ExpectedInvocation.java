@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -28,15 +28,18 @@ import java.util.*;
 
 import mockit.external.asm.Type;
 
+import mockit.internal.expectations.*;
 import mockit.internal.util.*;
 
 public final class ExpectedInvocation
 {
+   private static final Object UNDEFINED_DEFAULT_RETURN = new Object();
+
    public final Object instance;
    private final boolean matchInstance;
    public final InvocationArguments arguments;
    private final ExpectationError invocationCause;
-   private final Object defaultReturnValue;
+   private Object defaultReturnValue;
 
    public ExpectedInvocation(
       Object mock, int methodAccess, String mockedClassDesc, String mockNameAndDesc,
@@ -46,7 +49,7 @@ public final class ExpectedInvocation
       this.matchInstance = matchInstance;
       arguments = new InvocationArguments(methodAccess, mockedClassDesc, mockNameAndDesc, args);
       invocationCause = new ExpectationError();
-      defaultReturnValue = DefaultValues.computeForReturnType(mockNameAndDesc);
+      defaultReturnValue = UNDEFINED_DEFAULT_RETURN;
    }
 
    // Simple getters //////////////////////////////////////////////////////////////////////////////
@@ -144,7 +147,6 @@ public final class ExpectedInvocation
       matchInstance = false;
       arguments = new InvocationArguments(0, classDesc, methodNameAndDesc, args);
       invocationCause = null;
-      defaultReturnValue = null;
    }
 
    public AssertionError errorForUnexpectedInvocation()
@@ -208,8 +210,27 @@ public final class ExpectedInvocation
 
    // Default return value ////////////////////////////////////////////////////////////////////////
 
-   public Object getDefaultValueForReturnType()
+   public Object getDefaultValueForReturnType(TestOnlyPhase phase)
    {
+      if (defaultReturnValue == UNDEFINED_DEFAULT_RETURN) {
+         String returnTypeDesc = DefaultValues.getReturnTypeDesc(getMethodNameAndDescription());
+         defaultReturnValue = DefaultValues.computeForType(returnTypeDesc);
+
+         if (defaultReturnValue == null && returnTypeDesc.charAt(0) == 'L') {
+            // TODO: handle different levels of the same mocked type on its inheritance hierarchy
+            String mockedTypeDesc = getClassDesc();
+            Object cascadedMock = MockedTypeCascade.getMock(mockedTypeDesc, returnTypeDesc);
+
+            if (cascadedMock != null) {
+               if (phase instanceof RecordPhase) {
+                  ((RecordPhase) phase).setNextInstanceToMatch(cascadedMock);
+               }
+
+               defaultReturnValue = cascadedMock;
+            }
+         }
+      }
+
       return defaultReturnValue;
    }
 }

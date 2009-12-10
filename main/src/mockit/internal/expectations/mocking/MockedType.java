@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -30,7 +30,9 @@ import static java.lang.reflect.Modifier.*;
 
 import mockit.*;
 import mockit.internal.filtering.*;
+import mockit.internal.state.*;
 
+@SuppressWarnings({"ClassWithTooManyFields"})
 final class MockedType
 {
    final Field field;
@@ -38,6 +40,7 @@ final class MockedType
    private final int accessModifiers;
    private final Mocked mocked;
    final Capturing capturing;
+   final Cascading cascading;
    final boolean nonStrict;
    final Type declaredType;
    final String mockId;
@@ -51,9 +54,19 @@ final class MockedType
       accessModifiers = field.getModifiers();
       mocked = field.getAnnotation(Mocked.class);
       capturing = field.getAnnotation(Capturing.class);
+      cascading = field.getAnnotation(Cascading.class);
       nonStrict = field.isAnnotationPresent(NonStrict.class);
       declaredType = field.getGenericType();
       mockId = field.getName();
+      registerCascadingIfSpecified();
+   }
+
+   private void registerCascadingIfSpecified()
+   {
+      if (cascading != null) {
+         String mockedTypeDesc = getClassType().getName().replace('.', '/');
+         TestRun.getExecutingTest().addCascadingType(mockedTypeDesc);
+      }
    }
 
    MockedType(int paramIndex, Type parameterType, Annotation[] annotationsOnParameter)
@@ -63,9 +76,11 @@ final class MockedType
       accessModifiers = 0;
       mocked = getAnnotation(annotationsOnParameter, Mocked.class);
       capturing = getAnnotation(annotationsOnParameter, Capturing.class);
+      cascading = getAnnotation(annotationsOnParameter, Cascading.class);
       nonStrict = getAnnotation(annotationsOnParameter, NonStrict.class) != null;
       declaredType = parameterType;
       mockId = "param" + paramIndex;
+      registerCascadingIfSpecified();
    }
 
    private <A extends Annotation> A getAnnotation(Annotation[] annotations, Class<A> annotation)
@@ -96,7 +111,7 @@ final class MockedType
 
    boolean isMockField()
    {
-      boolean mock = mocked != null || capturing != null || nonStrict;
+      boolean mock = mocked != null || capturing != null || cascading != null || nonStrict;
 
       return (mock || !fieldFromTestClass && !isPrivate(accessModifiers)) && isMockableType();
    }

@@ -27,6 +27,8 @@ package mockit.internal.util;
 import java.lang.reflect.*;
 import java.util.*;
 
+import mockit.external.asm.Type;
+
 import static java.util.Collections.*;
 
 /**
@@ -48,11 +50,11 @@ public final class DefaultValues
          put("F", 0.0F);
          put("J", 0L);
          put("D", 0.0);
-         put("Ljava/util/Collection;", EMPTY_LIST);
-         put("Ljava/util/List;", EMPTY_LIST);
-         put("Ljava/util/Set;", EMPTY_SET);
+         put("Ljava/util/Collection;", Collections.emptyList());
+         put("Ljava/util/List;", Collections.emptyList());
+         put("Ljava/util/Set;", Collections.emptySet());
          put("Ljava/util/SortedSet;", unmodifiableSortedSet(new TreeSet<Object>()));
-         put("Ljava/util/Map;", EMPTY_MAP);
+         put("Ljava/util/Map;", Collections.emptyMap());
          put("Ljava/util/SortedMap;", unmodifiableSortedMap(new TreeMap<Object, Object>()));
       }
    };
@@ -75,10 +77,14 @@ public final class DefaultValues
 
    public static Object computeForReturnType(String methodNameAndDesc)
    {
-      int rightParen = methodNameAndDesc.indexOf(')') + 1;
-      String typeDesc = methodNameAndDesc.substring(rightParen);
-
+      String typeDesc = getReturnTypeDesc(methodNameAndDesc);
       return computeForType(typeDesc);
+   }
+
+   public static String getReturnTypeDesc(String methodNameAndDesc)
+   {
+      int rightParen = methodNameAndDesc.indexOf(')') + 1;
+      return methodNameAndDesc.substring(rightParen);
    }
 
    public static Object computeForType(String typeDesc)
@@ -111,7 +117,7 @@ public final class DefaultValues
 
    private static Object newEmptyArray(String typeDesc)
    {
-      mockit.external.asm.Type type = mockit.external.asm.Type.getType(typeDesc);
+      Type type = Type.getType(typeDesc);
       Class<?> elementType = Utilities.getClassForType(type.getElementType());
 
       return Array.newInstance(elementType, new int[type.getDimensions()]);

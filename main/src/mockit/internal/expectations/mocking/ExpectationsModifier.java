@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -55,6 +55,7 @@ final class ExpectationsModifier extends BaseClassModifier
    private final MockingConfiguration mockingCfg;
    private final boolean mockingCfgNullOrEmpty;
    private final MockConstructorInfo mockConstructorInfo;
+   private final boolean ignoreStaticMethodsAndConstructors;
    private String redefinedConstructorDesc;
    private String superClassName;
    private String className;
@@ -70,6 +71,17 @@ final class ExpectationsModifier extends BaseClassModifier
       mockingCfg = mockingConfiguration;
       mockingCfgNullOrEmpty = mockingConfiguration == null || mockingConfiguration.isEmpty();
       this.mockConstructorInfo = mockConstructorInfo;
+      ignoreStaticMethodsAndConstructors = false;
+      setUseMockingBridge(classLoader);
+   }
+
+   ExpectationsModifier(ClassLoader classLoader, ClassReader classReader)
+   {
+      super(classReader);
+      mockingCfg = null;
+      mockingCfgNullOrEmpty = true;
+      mockConstructorInfo = null;
+      ignoreStaticMethodsAndConstructors = true;
       setUseMockingBridge(classLoader);
    }
 
@@ -190,6 +202,7 @@ final class ExpectationsModifier extends BaseClassModifier
    {
       return
          isMethodFromCapturedClassNotToBeMocked(access) ||
+         isStaticMethodOrConstructorToBeIgnored(access, name) ||
          defaultFilters != null && defaultFilters.contains(name);
    }
 
@@ -197,6 +210,11 @@ final class ExpectationsModifier extends BaseClassModifier
    {
       return
          baseClassNameForCapturedInstanceMethods != null && (isStatic(access) || isPrivate(access));
+   }
+
+   private boolean isStaticMethodOrConstructorToBeIgnored(int access, String name)
+   {
+      return ignoreStaticMethodsAndConstructors && (isStatic(access) || "<init>".equals(name));
    }
 
    private void generateCallToDefaultOrConfiguredSuperConstructor()

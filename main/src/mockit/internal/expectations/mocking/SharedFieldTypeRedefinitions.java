@@ -133,6 +133,4 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
 
       return getCaptureOfNewInstances().captureNewInstanceForApplicableMockField(fieldOwner, mock);
    }
-
-   interface InstanceFactory { Object create(); }
 }

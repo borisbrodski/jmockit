@@ -62,7 +62,7 @@ public final class Expectation
    Object produceResult(Object[] invocationArgs) throws Throwable
    {
       if (results == null) {
-         return expectedInvocation.getDefaultValueForReturnType();
+         return expectedInvocation.getDefaultValueForReturnType(null);
       }
 
       return results.produceResult(invocationArgs);

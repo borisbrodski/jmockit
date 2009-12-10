@@ -30,6 +30,7 @@ import static java.lang.reflect.Modifier.*;
 import java.util.*;
 
 import mockit.*;
+import mockit.external.asm.Type;
 
 /**
  * Miscellaneous utility methods which don't fit into any other class, most of them related to the
@@ -58,6 +59,7 @@ public final class Utilities
          throw e;
       }
       catch (ClassNotFoundException ignore) {
+         //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
          throw new IllegalArgumentException("No class with name \"" + className + "\" found");
       }
    }
@@ -459,6 +461,7 @@ public final class Utilities
             return getDeclaredField(superClass, fieldName);
          }
 
+         //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
          throw new IllegalArgumentException(
             "No instance field of name \"" + fieldName + "\" found in " + theClass);
       }
@@ -589,7 +592,7 @@ public final class Utilities
 
    public static Class<?>[] getParameterTypes(String mockDesc)
    {
-      mockit.external.asm.Type[] paramTypes = mockit.external.asm.Type.getArgumentTypes(mockDesc);
+      Type[] paramTypes = Type.getArgumentTypes(mockDesc);
       Class<?>[] paramClasses = new Class<?>[paramTypes.length];
 
       for (int i = 0; i < paramTypes.length; i++) {
@@ -599,7 +602,7 @@ public final class Utilities
       return paramClasses;
    }
 
-   public static Class<?> getClassForType(mockit.external.asm.Type type)
+   public static Class<?> getClassForType(Type type)
    {
       int elementSort = type.getSort();
 
@@ -608,7 +611,7 @@ public final class Utilities
       }
 
       String className =
-         elementSort == mockit.external.asm.Type.ARRAY ? type.getDescriptor().replace('/', '.') : type.getClassName();
+         elementSort == Type.ARRAY ? type.getDescriptor().replace('/', '.') : type.getClassName();
 
       return loadClass(className);
    }
@@ -643,6 +646,7 @@ public final class Utilities
          ThrowOfCheckedException.exceptionToThrow = exceptionToThrow;
 
          try {
+            //noinspection ClassNewInstance
             ThrowOfCheckedException.class.newInstance();
          }
          catch (InstantiationException ignore) {}

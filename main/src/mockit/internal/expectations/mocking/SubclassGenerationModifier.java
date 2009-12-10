@@ -105,24 +105,30 @@ final class SubclassGenerationModifier extends BaseClassModifier
 
    private void generateConstructor(String candidateSuperConstructor)
    {
-      String newConstructorDesc =
-         mockConstructorInfo.isWithSuperConstructor() ? "([Ljava/lang/Object;)V" : "()V";
+      boolean withSuperConstructor =
+         mockConstructorInfo != null && mockConstructorInfo.isWithSuperConstructor();
+      String newConstructorDesc = withSuperConstructor ? "([Ljava/lang/Object;)V" : "()V";
 
       mw = super.visitMethod(ACC_PUBLIC, "<init>", newConstructorDesc, null, null);
       mw.visitVarInsn(ALOAD, 0);
-      String superConstructorDesc = generateSuperConstructorArguments(candidateSuperConstructor);
+
+      String superConstructorDesc;
+
+      if (withSuperConstructor) {
+         superConstructorDesc = generateSuperConstructorArguments();
+      }
+      else {
+         pushDefaultValuesForParameterTypes(candidateSuperConstructor);
+         superConstructorDesc = candidateSuperConstructor;
+      }
+
       mw.visitMethodInsn(INVOKESPECIAL, superclassName, "<init>", superConstructorDesc);
       mw.visitInsn(RETURN);
       mw.visitMaxs(1, 0);
    }
 
-   private String generateSuperConstructorArguments(String superConstructorDesc)
+   private String generateSuperConstructorArguments()
    {
-      if (!mockConstructorInfo.isWithSuperConstructor()) {
-         pushDefaultValuesForParameterTypes(superConstructorDesc);
-         return superConstructorDesc;
-      }
-
       mw.visitVarInsn(ALOAD, 1);
 
       GeneratorAdapter generator = new GeneratorAdapter(mw, ACC_PUBLIC, "()V");
@@ -147,7 +153,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
          if (Modifier.isAbstract(access)) {
             mw = super.visitMethod(ACC_PUBLIC, name, desc, signature, exceptions);
 
-            if (mockingConfiguration.matchesFilters(name, desc)) {
+            if (mockingConfiguration == null || mockingConfiguration.matchesFilters(name, desc)) {
                generateDirectCallToRecordOrReplay(className, access, name, desc);
                generateReturnWithObjectAtTopOfTheStack(desc);
                mw.visitMaxs(1, 0);
@@ -177,6 +183,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
    private final class MethodModifierForSuperclass extends EmptyVisitor
    {
       private final String className;
+      private String superClassName;
       
       MethodModifierForSuperclass(String className)
       {
@@ -199,7 +206,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
          int version, int access, String name, String signature, String superName,
          String[] interfaces)
       {
-         generateImplementationsForInheritedAbstractMethods(superName);
+         superClassName = superName;
       }
 
       @Override
@@ -213,6 +220,12 @@ final class SubclassGenerationModifier extends BaseClassModifier
          generateImplementationIfAbstractMethod(
             className, access, name, desc, signature, exceptions);
          return null;
+      }
+
+      @Override
+      public void visitEnd()
+      {
+         generateImplementationsForInheritedAbstractMethods(superClassName);
       }
    }
 }

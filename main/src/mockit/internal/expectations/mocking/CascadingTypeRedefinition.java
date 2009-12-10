@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -25,95 +25,57 @@
 package mockit.internal.expectations.mocking;
 
 import java.lang.reflect.*;
-import static java.lang.reflect.Modifier.*;
 
 import mockit.*;
 import mockit.external.asm.*;
 import mockit.internal.*;
 import mockit.internal.expectations.mocking.InstanceFactory.*;
-import mockit.internal.filtering.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
-class TypeRedefinition
+import static java.lang.reflect.Modifier.*;
+
+public final class CascadingTypeRedefinition // TODO: extract new base subclass
 {
-   private final Object objectWithInitializerMethods;
-   private final MockedType typeMetadata;
-   MockingConfiguration mockingCfg;
-   MockConstructorInfo mockConstructorInfo;
-   protected Class<?> targetClass;
-   protected InstanceFactory instanceFactory;
+   private Class<?> targetClass;
+   private InstanceFactory instanceFactory;
 
-   TypeRedefinition(Object objectWithInitializerMethods, MockedType typeMetadata)
+   public CascadingTypeRedefinition(Class<?> mockedType)
    {
-      this.objectWithInitializerMethods = objectWithInitializerMethods;
-      this.typeMetadata = typeMetadata;
-      targetClass = typeMetadata.getClassType();
+      targetClass = mockedType;
    }
 
-   final void redefineTypeForFinalField()
+   public Object redefineType()
    {
-      buildMockingConfigurationFromSpecifiedMetadata();
-      adjustTargetClassIfRealClassNameSpecified();
-
-      if (targetClass == null || targetClass.isInterface()) {
-         throw new IllegalArgumentException(
-            "Final mock field must be of a class type, or otherwise the real class must be " +
-            "specified through the @Mocked annotation:\n" + typeMetadata.mockId);
-      }
-
-      redefineMethodsAndConstructorsInTargetType();
-   }
-
-   final Object redefineType()
-   {
-      buildMockingConfigurationFromSpecifiedMetadata();
-      adjustTargetClassIfRealClassNameSpecified();
-
+      TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(true);
       Object mock;
 
-      if (targetClass == null || targetClass.isInterface()) {
-         mock = newRedefinedEmptyProxy();
+      try {
+         if (targetClass.isInterface()) {
+            mock = newRedefinedEmptyProxy();
+         }
+         else {
+            mock = createNewInstanceOfTargetClass();
+         }
       }
-      else {
-         mock = createNewInstanceOfTargetClass();
+      finally {
+         TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(false);
       }
 
       TestRun.mockFixture().addInstanceForMockedType(targetClass, instanceFactory);
-      
+
       return mock;
-   }
-
-   private void buildMockingConfigurationFromSpecifiedMetadata()
-   {
-      boolean filterResultWhenMatching = !typeMetadata.hasInverseFilters();
-      mockingCfg = new MockingConfiguration(typeMetadata.getFilters(), filterResultWhenMatching);
-      mockConstructorInfo = new MockConstructorInfo(objectWithInitializerMethods, typeMetadata);
-   }
-
-   private void adjustTargetClassIfRealClassNameSpecified()
-   {
-      String realClassName = typeMetadata.getRealClassName();
-
-      if (realClassName.length() > 0) {
-         targetClass = Utilities.loadClass(realClassName);
-      }
    }
 
    private Object newRedefinedEmptyProxy()
    {
-      Object mock = Mockit.newEmptyProxy(typeMetadata.declaredType);
+      Object mock = Mockit.newEmptyProxy(targetClass);
       targetClass = mock.getClass();
 
       redefineMethodsAndConstructorsInTargetType();
 
       instanceFactory = new InterfaceInstanceFactory(mock);
 
-      return newInstanceOfInterface(mock);
-   }
-
-   Object newInstanceOfInterface(Object mock)
-   {
       return mock;
    }
 
@@ -136,13 +98,10 @@ class TypeRedefinition
 
    private ExpectationsModifier redefineClass(Class<?> realClass)
    {
-      MockConstructorInfo constructorInfoToUse =
-         isAbstract(targetClass.getModifiers()) ? null : mockConstructorInfo;
-
       ClassReader classReader = createClassReaderForFieldType(realClass);
       ExpectationsModifier modifier =
-         new ExpectationsModifier(
-            realClass.getClassLoader(), classReader, mockingCfg, constructorInfoToUse);
+         new ExpectationsModifier(realClass.getClassLoader(), classReader);
+
       classReader.accept(modifier, false);
       byte[] modifiedClass = modifier.toByteArray();
 
@@ -163,7 +122,7 @@ class TypeRedefinition
       try {
          if (isAbstract(targetClass.getModifiers())) {
             generateConcreteSubclassForAbstractType();
-            instanceFactory = new AbstractClassInstanceFactory(mockConstructorInfo, targetClass);
+            instanceFactory = new AbstractClassInstanceFactory(null, targetClass);
             return newInstanceOfAbstractClass();
          }
          else if (!targetClass.isEnum()) {
@@ -187,14 +146,11 @@ class TypeRedefinition
 
    private void generateConcreteSubclassForAbstractType()
    {
-      String subclassName =
-         objectWithInitializerMethods.getClass().getPackage().getName() + '.' +
-         Utilities.GENERATED_SUBCLASS_PREFIX + typeMetadata.mockId;
+      String subclassName = Utilities.GENERATED_SUBCLASS_PREFIX + targetClass.getSimpleName();
 
       ClassReader classReader = createClassReaderForFieldType(targetClass);
       SubclassGenerationModifier modifier =
-         new SubclassGenerationModifier(
-            mockConstructorInfo, mockingCfg, classReader, subclassName);
+         new SubclassGenerationModifier(null, null, classReader, subclassName);
       classReader.accept(modifier, false);
       final byte[] modifiedClass = modifier.toByteArray();
 
@@ -208,12 +164,13 @@ class TypeRedefinition
       }.findClass(subclassName);
    }
 
-   Object newInstanceOfAbstractClass()
+   private Object newInstanceOfAbstractClass()
    {
-      return mockConstructorInfo.newInstance(targetClass);
+      Constructor<?> constructor = targetClass.getDeclaredConstructors()[0];
+      return Utilities.invoke(constructor);
    }
 
-   Object newInstanceOfConcreteClass(String constructorDesc)
+   private Object newInstanceOfConcreteClass(String constructorDesc)
    {
       Object[] initArgs = null;
 

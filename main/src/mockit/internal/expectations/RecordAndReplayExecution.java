@@ -84,7 +84,7 @@ public final class RecordAndReplayExecution
       Object targetObject, Object... classesOrInstancesToBePartiallyMocked)
    {
       TestRun.enterNoMockingZone();
-      TestRun.getExecutingTest().setCreatingNewRecordAndReplayInstance(true);
+      TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(true);
 
       try {
          RecordAndReplayExecution previous = TestRun.getExecutingTest().setRecordAndReplay(null);
@@ -118,7 +118,7 @@ public final class RecordAndReplayExecution
          TestRun.getExecutingTest().setRecordAndReplay(this);
       }
       finally {
-         TestRun.getExecutingTest().setCreatingNewRecordAndReplayInstance(false);
+         TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(false);
          TestRun.exitNoMockingZone();
       }
    }
@@ -175,7 +175,7 @@ public final class RecordAndReplayExecution
       Object mock, int mockAccess, String classDesc, String mockDesc, Object... args)
       throws Throwable
    {
-      if (TestRun.getExecutingTest().isCreatingNewRecordAndReplayInstance()) {
+      if (TestRun.getExecutingTest().isShouldIgnoreMockingCallbacks()) {
          return null;
       }
 

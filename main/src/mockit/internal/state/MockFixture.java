@@ -29,6 +29,7 @@ import java.util.*;
 import java.util.Map.*;
 
 import mockit.internal.*;
+import mockit.internal.expectations.mocking.*;
 
 /**
  * Holds data about redefined real classes and their corresponding mock classes (if any), and
@@ -87,6 +88,9 @@ public final class MockFixture
     */
    private final Map<Class<?>, String> realClassesToMockClasses = new HashMap<Class<?>, String>(8);
 
+   private final Map<Class<?>, InstanceFactory> mockedTypesAndInstances =
+      new HashMap<Class<?>, InstanceFactory>();
+
    // Methods to add/remove redefined classes /////////////////////////////////////////////////////
 
    public void addFixedClass(String className, byte[] fixedClassfile)
@@ -116,6 +120,34 @@ public final class MockFixture
       // TODO: implement support for multiple simultaneous redefinitions for each class?
    }
 
+   public Map<Class<?>, InstanceFactory> getMockedTypesAndInstances()
+   {
+      return mockedTypesAndInstances;
+   }
+
+   public void addInstanceForMockedType(Class<?> mockedType, InstanceFactory mockInstanceFactory)
+   {
+      mockedTypesAndInstances.put(mockedType, mockInstanceFactory);
+   }
+
+   public Object getNewInstanceForMockedType(Class<?> mockedType)
+   {
+      InstanceFactory instanceFactory = mockedTypesAndInstances.get(mockedType);
+
+      if (instanceFactory == null) {
+         return null;
+      }
+
+      TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(true);
+
+      try {
+         return instanceFactory.create();
+      }
+      finally {
+         TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(false);
+      }
+   }
+
    public void restoreAndRemoveTransformedClasses(Set<String> transformedClassesToRestore)
    {
       RedefinitionEngine redefinitionEngine = new RedefinitionEngine();
@@ -143,6 +175,7 @@ public final class MockFixture
       }
 
       redefinedClasses.keySet().removeAll(redefinedClassesToRestore);
+      mockedTypesAndInstances.keySet().removeAll(redefinedClassesToRestore);
    }
 
    private void discardStateForCorrespondingMockClassIfAny(Class<?> redefinedClass)

@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations & Verifications
+ * JMockit Expectations
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -22,30 +22,21 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.internal.expectations.mocking;
+package mockit;
 
-final class SharedTypeRedefinition extends TypeRedefinition
+import java.lang.annotation.*;
+
+/**
+ * Indicates a {@linkplain Mocked mocked type} where the return types of non-{@code void} methods,
+ * excluding primitives, {@code String} and collection types, will also be mocked if and when a
+ * non-recorded invocation to the method occurs in the replay phase.
+ * Instead of returning the default {@code null} reference, such methods will return a mock
+ * instance on which further invocations can be made.
+ * This behavior automatically cascades to those mocked return types.
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER})
+public @interface Cascading
 {
-   SharedTypeRedefinition(Object objectWithInitializerMethods, MockedType typeMetadata)
-   {
-      super(objectWithInitializerMethods, typeMetadata);
-   }
-
-   @Override
-   Object newInstanceOfInterface(Object mock)
-   {
-      return instanceFactory;
-   }
-
-   @Override
-   Object newInstanceOfAbstractClass()
-   {
-      return instanceFactory;
-   }
-
-   @Override
-   Object newInstanceOfConcreteClass(String constructorDesc)
-   {
-      return instanceFactory;
-   }
 }

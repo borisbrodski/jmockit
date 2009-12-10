@@ -79,7 +79,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
                .errorForMissingInvocation();
       }
 
-      return currentExpectation.expectedInvocation.getDefaultValueForReturnType();
+      return currentExpectation.expectedInvocation.getDefaultValueForReturnType(this);
    }
 
    protected abstract void findNonStrictExpectation(

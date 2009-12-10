@@ -28,19 +28,23 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.internal.expectations.*;
+import mockit.internal.expectations.invocation.*;
 import mockit.internal.expectations.mocking.*;
 
 public final class ExecutingTest
 {
    private RecordAndReplayExecution currentRecordAndReplay;
    private RecordAndReplayExecution recordAndReplayForLastTestMethod;
-   private boolean creatingNewRecordAndReplayInstance;
+   private boolean shouldIgnoreMockingCallbacks;
 
    private int mockParametersDeclared;
    private CaptureOfNewInstancesForParameters captureOfNewInstancesForParameters;
 
    private final List<Object> nonStrictMocks = new ArrayList<Object>();
    private final List<Object> strictMocks = new ArrayList<Object>();
+
+   private final Map<String, MockedTypeCascade> cascadingTypes =
+      new HashMap<String, MockedTypeCascade>();
 
    RecordAndReplayExecution getRecordAndReplay(boolean createIfUndefined)
    {
@@ -65,14 +69,14 @@ public final class ExecutingTest
       return previous;
    }
 
-   public boolean isCreatingNewRecordAndReplayInstance()
+   public boolean isShouldIgnoreMockingCallbacks()
    {
-      return creatingNewRecordAndReplayInstance;
+      return shouldIgnoreMockingCallbacks;
    }
 
-   public void setCreatingNewRecordAndReplayInstance(boolean flag)
+   public void setShouldIgnoreMockingCallbacks(boolean flag)
    {
-      creatingNewRecordAndReplayInstance = flag;
+      shouldIgnoreMockingCallbacks = flag;
    }
 
    public RecordAndReplayExecution getRecordAndReplayForVerifications()
@@ -212,6 +216,23 @@ public final class ExecutingTest
       nonStrictMocks.clear();
    }
 
+   public Map<String, MockedTypeCascade> getCascadingMockedTypes()
+   {
+      return cascadingTypes;
+   }
+
+   public void addCascadingType(String mockedTypeDesc)
+   {
+      if (!cascadingTypes.containsKey(mockedTypeDesc)) {
+         cascadingTypes.put(mockedTypeDesc, new MockedTypeCascade());
+      }
+   }
+   
+   public MockedTypeCascade getMockedTypeCascade(String mockedTypeDesc)
+   {
+      return cascadingTypes.get(mockedTypeDesc);
+   }
+
    void finishExecution()
    {
       recordAndReplayForLastTestMethod = currentRecordAndReplay;
@@ -225,5 +246,6 @@ public final class ExecutingTest
 
       nonStrictMocks.clear();
       strictMocks.clear();
+      cascadingTypes.clear();
    }
 }
