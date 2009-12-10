@@ -26,7 +26,6 @@ package mockit.internal.expectations;
 
 import mockit.external.asm.*;
 import mockit.internal.expectations.invocation.*;
-import mockit.internal.expectations.invocation.InvocationConstraints;
 import mockit.internal.util.*;
 
 public final class Expectation
