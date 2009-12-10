@@ -26,41 +26,26 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
-public abstract class Phase
+final class PhasedExecutionState
 {
-   final RecordAndReplayExecution recordAndReplay;
-   Expectation currentExpectation;
+   final List<Expectation> expectations;
+   final List<Expectation> nonStrictExpectations;
+   final Map<Object, Object> instanceMap;
 
-   Phase(RecordAndReplayExecution recordAndReplay)
+   PhasedExecutionState()
    {
-      this.recordAndReplay = recordAndReplay;
+      expectations = new ArrayList<Expectation>();
+      nonStrictExpectations = new ArrayList<Expectation>();
+      instanceMap = new IdentityHashMap<Object, Object>();
    }
 
-   public final Expectation getCurrentExpectation()
+   void addExpectation(Expectation expectation, boolean nonStrict)
    {
-      if (currentExpectation == null) {
-         throw new IllegalStateException("No current invocation available");
+      if (nonStrict) {
+         nonStrictExpectations.add(expectation);
       }
-
-      return currentExpectation;
+      else {
+         expectations.add(expectation);
+      }
    }
-
-   final List<Expectation> getExpectations()
-   {
-      return recordAndReplay.executionState.expectations;
-   }
-
-   final List<Expectation> getNonStrictExpectations()
-   {
-      return recordAndReplay.executionState.nonStrictExpectations;
-   }
-
-   final Map<Object, Object> getInstanceMap()
-   {
-      return recordAndReplay.executionState.instanceMap;
-   }
-
-   abstract Object handleInvocation(
-      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, Object[] args)
-      throws Throwable;
 }

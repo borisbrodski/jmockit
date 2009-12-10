@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -90,7 +90,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
       Expectation expectation)
    {
       ExpectedInvocation invocation = expectation.expectedInvocation;
-      Map<Object, Object> instanceMap = recordAndReplay.instanceMap;
+      Map<Object, Object> instanceMap = getInstanceMap();
 
       if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap)) {
          Object[] argsToVerify =

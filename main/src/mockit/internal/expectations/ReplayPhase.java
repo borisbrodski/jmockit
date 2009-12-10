@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -88,7 +88,7 @@ final class ReplayPhase extends Phase
 
       for (Expectation nonStrict : nonStrictExpectations) {
          ExpectedInvocation invocation = nonStrict.expectedInvocation;
-         Map<Object, Object> instanceMap = recordAndReplay.instanceMap;
+         Map<Object, Object> instanceMap = getInstanceMap();
 
          if (
             invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap) &&
@@ -111,7 +111,7 @@ final class ReplayPhase extends Phase
 
          nonStrictExpectation = new Expectation(null, invocation, true);
 
-         recordAndReplay.nonStrictExpectations.add(nonStrictExpectation);
+         getNonStrictExpectations().add(nonStrictExpectation);
       }
    }
 
@@ -141,7 +141,7 @@ final class ReplayPhase extends Phase
          }
 
          ExpectedInvocation invocation = currentExpectation.expectedInvocation;
-         Map<Object, Object> instanceMap = recordAndReplay.instanceMap;
+         Map<Object, Object> instanceMap = getInstanceMap();
 
          if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap)) {
             if (mock != invocation.instance) {

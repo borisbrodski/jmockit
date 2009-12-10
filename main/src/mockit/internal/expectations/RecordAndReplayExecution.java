@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -28,7 +28,6 @@ import java.util.*;
 
 import mockit.*;
 import mockit.external.hamcrest.core.*;
-import mockit.internal.expectations.invocation.*;
 import mockit.internal.expectations.mocking.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
@@ -39,10 +38,10 @@ public final class RecordAndReplayExecution
 
    private final LocalFieldTypeRedefinitions redefinitions;
    private final DynamicPartialMocking dynamicPartialMocking;
-   final List<Expectation> expectations;
-   final List<Expectation> nonStrictExpectations;
-   final Map<Object, Object> instanceMap;
+
+   final PhasedExecutionState executionState;
    final int lastExpectationIndexInPreviousReplayPhase;
+
    private RecordPhase recordPhase;
    private ReplayPhase replayPhase;
    private VerificationPhase verificationPhase;
@@ -62,15 +61,11 @@ public final class RecordAndReplayExecution
    public RecordAndReplayExecution(RecordAndReplayExecution previous)
    {
       if (previous == null) {
-         expectations = new ArrayList<Expectation>();
-         nonStrictExpectations = new ArrayList<Expectation>();
-         instanceMap = new IdentityHashMap<Object, Object>();
+         executionState = new PhasedExecutionState();
          lastExpectationIndexInPreviousReplayPhase = 0;
       }
       else {
-         expectations = previous.expectations;
-         nonStrictExpectations = previous.nonStrictExpectations;
-         instanceMap = previous.instanceMap;
+         executionState = previous.executionState;
          lastExpectationIndexInPreviousReplayPhase =
             previous.getLastExpectationIndexInPreviousReplayPhase();
       }
@@ -96,15 +91,11 @@ public final class RecordAndReplayExecution
          Class<?> enclosingClassForTargetObject = targetObject.getClass().getEnclosingClass();
 
          if (previous == null || enclosingClassForTargetObject == null) {
-            expectations = new ArrayList<Expectation>();
-            nonStrictExpectations = new ArrayList<Expectation>();
-            instanceMap = new IdentityHashMap<Object, Object>();
+            executionState = new PhasedExecutionState();
             lastExpectationIndexInPreviousReplayPhase = 0;
          }
          else {
-            expectations = previous.expectations;
-            nonStrictExpectations = previous.nonStrictExpectations;
-            instanceMap = previous.instanceMap;
+            executionState = previous.executionState;
             lastExpectationIndexInPreviousReplayPhase =
                previous.getLastExpectationIndexInPreviousReplayPhase();
          }
@@ -287,17 +278,10 @@ public final class RecordAndReplayExecution
 
    void addExpectation(Expectation expectation, boolean nonStrictInvocation)
    {
-      ExpectedInvocation invocation = expectation.expectedInvocation;
-
-      if (nonStrictInvocation) {
-         nonStrictExpectations.add(expectation);
-      }
-      else {
-         expectations.add(expectation);
-      }
+      executionState.addExpectation(expectation, nonStrictInvocation);
 
       if (dynamicPartialMocking != null) {
-         dynamicPartialMocking.addRecordedInvocation(invocation);
+         dynamicPartialMocking.addRecordedInvocation(expectation.expectedInvocation);
       }
    }
 
