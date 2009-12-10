@@ -29,6 +29,7 @@ import java.lang.reflect.*;
 import static mockit.external.asm.Opcodes.*;
 
 import mockit.external.asm.*;
+import mockit.external.asm.Type;
 import mockit.internal.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.*;
@@ -91,7 +92,7 @@ public class RealClassModifier extends BaseClassModifier
          realClass = realClass.getInterfaces()[0];
       }
 
-      return mockit.external.asm.Type.getDescriptor(realClass);
+      return Type.getDescriptor(realClass);
    }
 
    public RealClassModifier(
@@ -296,7 +297,7 @@ public class RealClassModifier extends BaseClassModifier
 
    protected final int initialLocalVariableIndexForRealMethod(int access)
    {
-      return (access & ACC_STATIC) != 0 ? 0 : 1;
+      return (access & ACC_STATIC) == 0 ? 1 : 0;
    }
 
    private void generateInstanceMethodCall(int access, String desc)
@@ -344,10 +345,10 @@ public class RealClassModifier extends BaseClassModifier
 
    private void generateItFieldSetting(String methodDesc)
    {
-      mockit.external.asm.Type[] argTypes = mockit.external.asm.Type.getArgumentTypes(methodDesc);
+      Type[] argTypes = Type.getArgumentTypes(methodDesc);
       int var = 1;
 
-      for (mockit.external.asm.Type argType : argTypes) {
+      for (Type argType : argTypes) {
          var += argType.getSize();
       }
 
@@ -367,10 +368,10 @@ public class RealClassModifier extends BaseClassModifier
 
    private void generateMethodOrConstructorArguments(String desc, int initialVar)
    {
-      mockit.external.asm.Type[] argTypes = mockit.external.asm.Type.getArgumentTypes(desc);
+      Type[] argTypes = Type.getArgumentTypes(desc);
       varIndex = initialVar;
 
-      for (mockit.external.asm.Type argType : argTypes) {
+      for (Type argType : argTypes) {
          int opcode = argType.getOpcode(ILOAD);
          mw.visitVarInsn(opcode, varIndex);
          varIndex += argType.getSize();
@@ -383,7 +384,7 @@ public class RealClassModifier extends BaseClassModifier
          generateReturnWithObjectAtTopOfTheStack(desc);
       }
       else {
-         mockit.external.asm.Type returnType = mockit.external.asm.Type.getReturnType(desc);
+         Type returnType = Type.getReturnType(desc);
          mw.visitInsn(returnType.getOpcode(IRETURN));
       }
    }
