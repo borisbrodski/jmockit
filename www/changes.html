@@ -22,6 +22,19 @@
       (See <a href="http://code.google.com/p/jmockit/issues/detail?id=13">issue 13</a>.)
    </li>
    <li>
+      <strong>New feature</strong>: the <strong><code>@Cascading</code></strong> annotation was
+      created to enable automatic <em>cascading</em> of invocations to mocked types.
+      The cascade effect continues indefinitely for the return types of methods invoked on a
+      cascading mocked type; cascade return values will be mock instances created on demand.
+   </li>
+   <li>
+      <strong>New feature</strong>: code inside test classes now can safely use the
+      <code>assert</code> keyword, independently of assertions being enabled or not through the
+      "-ea"/"-enableassertions" JVM initialization parameter.
+      (This doesn't affect assertions in production code, though, which still should be enabled
+      manually if needed.)
+   </li>
+   <li>
       More fixes and enhancements to <strong>JMockit Coverage</strong>:
       <ul>
          <li>
