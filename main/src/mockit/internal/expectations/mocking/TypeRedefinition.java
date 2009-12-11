@@ -66,8 +66,7 @@ class TypeRedefinition extends BaseTypeRedefinition
 
       if (targetClass == null || targetClass.isInterface()) {
          createMockedInterfaceImplementation(typeMetadata.declaredType);
-         Object emptyProxy = instanceFactory.create();
-         mock = newInstanceOfInterface(emptyProxy);
+         mock = instanceFactory.create();
       }
       else {
          mock = createNewInstanceOfTargetClass();
@@ -92,11 +91,6 @@ class TypeRedefinition extends BaseTypeRedefinition
       if (realClassName.length() > 0) {
          targetClass = Utilities.loadClass(realClassName);
       }
-   }
-
-   Object newInstanceOfInterface(Object mock)
-   {
-      return mock;
    }
 
    @Override

@@ -53,7 +53,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
    @Override
    protected TypeRedefinition redefineTypeForMockField()
    {
-      TypeRedefinition typeRedefinition = new SharedTypeRedefinition(parentObject, typeMetadata);
+      TypeRedefinition typeRedefinition = new TypeRedefinition(parentObject, typeMetadata);
 
       if (finalField) {
          typeRedefinition.redefineTypeForFinalField();
