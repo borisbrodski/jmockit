@@ -117,7 +117,7 @@ public final class ExpectationsUsingResultFieldsTest
       new Expectations()
       {
          {
-            mock.provideSomeService(); throwsException(new ArithmeticException("test"));
+            mock.provideSomeService(); result = new ArithmeticException("test");
          }
       };
 
@@ -130,7 +130,7 @@ public final class ExpectationsUsingResultFieldsTest
       new Expectations()
       {
          {
-            mock.provideSomeService(); throwsError(new LinkageError("test"));
+            mock.provideSomeService(); result = new LinkageError("test");
          }
       };
 
@@ -405,7 +405,7 @@ public final class ExpectationsUsingResultFieldsTest
          {
             mock.provideSomeService();
             result = null;
-            throwsError(new UnknownError());
+            result = new UnknownError();
          }
       };
 
