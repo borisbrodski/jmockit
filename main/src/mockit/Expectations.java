@@ -27,7 +27,6 @@ package mockit;
 import java.util.*;
 
 import mockit.internal.expectations.*;
-import mockit.internal.expectations.invocation.*;
 import mockit.internal.startup.*;
 
 /**
