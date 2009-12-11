@@ -118,6 +118,26 @@ public class Expectations extends Invocations
    private final RecordAndReplayExecution execution;
 
    /**
+    * A value assigned to this field will be taken as the result for the current expectation.
+    * <p/>
+    * If the value is of type {@link Throwable} then the assignment is equivalent to a call to
+    * {@link #throwsException(Exception)} or {@link #throwsError(Error)} with the given
+    * exception/error instance.
+    * Otherwise, it's equivalent to a call to {@link #returns(Object)} with the given value.
+    * <p/>
+    * If the current expectation is for a method which actually <em>returns</em> an exception or
+    * error (as opposed to <em>throwing</em> one), then the {@link #returns(Object)} method should
+    * be used instead.
+    * <p/>
+    * If the value assigned to the field is of a type assignable to {@link java.util.Collection} or
+    * to {@link java.util.Iterator}, then it is taken as a sequence of consecutive results for the
+    * current expectation.
+    *
+    * @see #returns(Object, Object...)
+    */
+   protected static Object result;
+
+   /**
     * Initializes this set of expectations, entering the <em>record</em> phase.
     * <p/>
     * For each associated {@linkplain Mocked mocked type}, the following tasks are performed:
@@ -265,32 +285,7 @@ public class Expectations extends Invocations
     */
    protected final void returns(Object value)
    {
-      Expectation expectation = getCurrentExpectation();
-
-      if (expectation.hasVoidReturnType()) {
-         validateReturnValueForConstructorOrVoidMethod(value);
-      }
-
-      InvocationResults results = expectation.getResults();
-
-      if (value instanceof Iterator && !expectation.hasReturnValueOfType(value.getClass())) {
-         results.addDeferredReturnValues((Iterator<?>) value);
-      }
-      else if (value instanceof Collection && !expectation.hasReturnValueOfType(value.getClass())) {
-         Collection<?> values = (Collection<?>) value;
-         results.addReturnValues(values.toArray(new Object[values.size()]));
-      }
-      else {
-         results.addReturnValue(value);
-      }
-   }
-
-   private void validateReturnValueForConstructorOrVoidMethod(Object value)
-   {
-      if (value != null && !(value instanceof Delegate)) {
-         throw new IllegalArgumentException(
-            "Non-null return value specified for constructor or void method");
-      }
+      getCurrentExpectation().addReturnValueOrValues(value);
    }
 
    /**
@@ -310,20 +305,13 @@ public class Expectations extends Invocations
    protected final void returns(Object firstValue, Object... remainingValues)
    {
       Expectation expectation = getCurrentExpectation();
+      expectation.validateReturnValues(firstValue, remainingValues);
 
-      if (expectation.hasVoidReturnType()) {
-         validateReturnValueForConstructorOrVoidMethod(firstValue);
-
-         for (Object anotherValue : remainingValues) {
-            validateReturnValueForConstructorOrVoidMethod(anotherValue);
-         }
-      }
-
-      InvocationResults results = expectation.getResults();
-      results.addReturnValue(firstValue);
+      InvocationResults invocationResults = expectation.getResults();
+      invocationResults.addReturnValue(firstValue);
 
       if (remainingValues != null) {
-         results.addReturnValues(remainingValues);
+         invocationResults.addReturnValues(remainingValues);
       }
    }
 

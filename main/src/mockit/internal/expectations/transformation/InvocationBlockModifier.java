@@ -48,12 +48,23 @@ final class InvocationBlockModifier extends MethodAdapter
    @Override
    public void visitFieldInsn(int opcode, String owner, String name, String desc)
    {
-      mw.visitFieldInsn(opcode, owner, name, desc);
-
-      if (opcode == GETSTATIC && fieldOwner.equals(owner) && name.startsWith("any")) {
-         mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "addArgMatcher", "()V");
-         matcherStacks[matchers++] = mw.stackSize;
+      if (fieldOwner.equals(owner)) {
+         if (opcode == GETSTATIC && name.startsWith("any")) {
+            mw.visitFieldInsn(GETSTATIC, owner, name, desc);
+            mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "addArgMatcher", "()V");
+            matcherStacks[matchers++] = mw.stackSize;
+            return;
+         }
+         else if (opcode == PUTSTATIC) {
+            if ("result".equals(name)) {
+               mw.visitMethodInsn(
+                  INVOKESTATIC, CALLBACK_CLASS_DESC, "addResult", "(Ljava/lang/Object;)V");
+               return;
+            }
+         }
       }
+
+      mw.visitFieldInsn(opcode, owner, name, desc);
    }
 
    @Override

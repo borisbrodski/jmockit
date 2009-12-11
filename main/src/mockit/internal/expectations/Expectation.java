@@ -24,6 +24,9 @@
  */
 package mockit.internal.expectations;
 
+import java.util.*;
+
+import mockit.*;
 import mockit.external.asm.*;
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.util.*;
@@ -73,9 +76,46 @@ public final class Expectation
       return constraints.verify(expectedInvocation);
    }
 
-   public boolean hasVoidReturnType()
+   public void addReturnValueOrValues(Object value)
+   {
+      validateReturnValues(value);
+
+      InvocationResults invocationResults = getResults();
+
+      if (value instanceof Iterator<?> && !hasReturnValueOfType(value.getClass())) {
+         invocationResults.addDeferredReturnValues((Iterator<?>) value);
+      }
+      else if (value instanceof Collection<?> && !hasReturnValueOfType(value.getClass())) {
+         Collection<?> values = (Collection<?>) value;
+         invocationResults.addReturnValues(values.toArray(new Object[values.size()]));
+      }
+      else {
+         invocationResults.addReturnValue(value);
+      }
+   }
+
+   public void validateReturnValues(Object firstValue, Object... remainingValues)
+   {
+      if (hasVoidReturnType()) {
+         validateReturnValueForConstructorOrVoidMethod(firstValue);
+
+         for (Object anotherValue : remainingValues) {
+            validateReturnValueForConstructorOrVoidMethod(anotherValue);
+         }
+      }
+   }
+
+   private boolean hasVoidReturnType()
    {
       return expectedInvocation.getMethodNameAndDescription().endsWith(")V");
+   }
+
+   private void validateReturnValueForConstructorOrVoidMethod(Object value)
+   {
+      if (value != null && !(value instanceof Delegate)) {
+         throw new IllegalArgumentException(
+            "Non-null return value specified for constructor or void method");
+      }
    }
 
    public boolean hasReturnValueOfType(Class<?> typeToBeReturned)

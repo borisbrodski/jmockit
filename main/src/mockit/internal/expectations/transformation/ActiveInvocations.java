@@ -28,11 +28,11 @@ import mockit.external.hamcrest.core.*;
 import mockit.internal.expectations.*;
 import mockit.internal.state.*;
 
+@SuppressWarnings({"UnusedDeclaration"})
 public final class ActiveInvocations
 {
    private static final IsAnything<?> MATCHES_ANYTHING = new IsAnything();
 
-   @SuppressWarnings({"UnusedDeclaration"})
    public static void addArgMatcher()
    {
       RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
@@ -46,7 +46,6 @@ public final class ActiveInvocations
       }
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
    public static void moveArgMatcher(int originalMatcherIndex, int toIndex)
    {
       RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
@@ -60,7 +59,22 @@ public final class ActiveInvocations
       }
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
+   public static void addResult(Object result)
+   {
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+
+      if (instance != null) {
+         Expectation expectation = instance.getRecordPhase().getCurrentExpectation();
+
+         if (result instanceof Throwable) {
+            expectation.getResults().addThrowable((Throwable) result);
+         }
+         else {
+            expectation.addReturnValueOrValues(result);
+         }
+      }
+   }
+
    public static void endInvocations()
    {
       TestRun.enterNoMockingZone();
