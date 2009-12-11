@@ -81,7 +81,7 @@ final class CoverageModifier extends ClassWriter
             sourceFileName = name.substring(0, p + 1);
          }
 
-         cannotModify = (access & ACC_INTERFACE) != 0 || name.startsWith("mockit/coverage/");
+         cannotModify = (access & ACC_ANNOTATION) != 0 || name.startsWith("mockit/coverage/");
       }
 
       super.visit(version, access, name, signature, superName, interfaces);

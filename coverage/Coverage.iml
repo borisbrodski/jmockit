@@ -11,9 +11,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="JUnit 4.8" level="application" />
-    <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Main" />
-    <orderEntry type="module" module-name="jmockit" exported="" />
+    <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
 
