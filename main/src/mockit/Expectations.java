@@ -304,15 +304,7 @@ public class Expectations extends Invocations
     */
    protected final void returns(Object firstValue, Object... remainingValues)
    {
-      Expectation expectation = getCurrentExpectation();
-      expectation.validateReturnValues(firstValue, remainingValues);
-
-      InvocationResults invocationResults = expectation.getResults();
-      invocationResults.addReturnValue(firstValue);
-
-      if (remainingValues != null) {
-         invocationResults.addReturnValues(remainingValues);
-      }
+      getCurrentExpectation().addSequenceOfReturnValues(firstValue, remainingValues);
    }
 
    /**

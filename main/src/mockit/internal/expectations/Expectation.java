@@ -78,7 +78,7 @@ public final class Expectation
 
    public void addReturnValueOrValues(Object value)
    {
-      validateReturnValues(value);
+      validateReturnValues(value, (Object) null);
 
       InvocationResults invocationResults = getResults();
 
@@ -99,8 +99,10 @@ public final class Expectation
       if (hasVoidReturnType()) {
          validateReturnValueForConstructorOrVoidMethod(firstValue);
 
-         for (Object anotherValue : remainingValues) {
-            validateReturnValueForConstructorOrVoidMethod(anotherValue);
+         if (remainingValues != null) {
+            for (Object anotherValue : remainingValues) {
+               validateReturnValueForConstructorOrVoidMethod(anotherValue);
+            }
          }
       }
    }
@@ -118,7 +120,7 @@ public final class Expectation
       }
    }
 
-   public boolean hasReturnValueOfType(Class<?> typeToBeReturned)
+   private boolean hasReturnValueOfType(Class<?> typeToBeReturned)
    {
       Type invocationReturnType =
          Type.getReturnType(expectedInvocation.getMethodNameAndDescription());
@@ -126,5 +128,17 @@ public final class Expectation
       Class<?> invocationReturnClass = Utilities.getClassForType(invocationReturnType);
 
       return invocationReturnClass.isAssignableFrom(typeToBeReturned);
+   }
+
+   public void addSequenceOfReturnValues(Object firstValue, Object[] remainingValues)
+   {
+      validateReturnValues(firstValue, remainingValues);
+
+      InvocationResults invocationResults = getResults();
+      invocationResults.addReturnValue(firstValue);
+
+      if (remainingValues != null) {
+         invocationResults.addReturnValues(remainingValues);
+      }
    }
 }
