@@ -69,7 +69,7 @@ public final class LineCoverageOutput
    private void writeLineExecutionCountIfAny()
    {
       if (lineData == null) {
-         output.println("<td></td>");
+         output.println("<td>&nbsp;</td>");
       }
       else {
          output.write("<td class='count'>");
