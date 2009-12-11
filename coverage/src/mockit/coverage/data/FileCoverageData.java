@@ -104,7 +104,7 @@ public final class FileCoverageData implements Serializable
    public int getCodeCoveragePercentage()
    {
       if (lineToLineData.isEmpty()) {
-         return 100;
+         return -1;
       }
 
       if (totalSegments == 0) {
@@ -122,7 +122,7 @@ public final class FileCoverageData implements Serializable
    public int getPathCoveragePercentage()
    {
       if (firstLineToMethodData.isEmpty()) {
-         return 100;
+         return -1;
       }
 
       if (totalPaths == 0) {

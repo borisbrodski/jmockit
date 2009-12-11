@@ -112,11 +112,11 @@ final class IndexPage extends ListWithFilesAndPercentages
 
       int totalLinePercentage = CoveragePercentage.calculate(coveredSegments, totalSegments);
       printIndent();
-      printCoveragePercentage(totalLinePercentage);
+      printCoveragePercentage(true, totalLinePercentage);
 
       int totalPathPercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
       printIndent();
-      printCoveragePercentage(totalPathPercentage);
+      printCoveragePercentage(false, totalPathPercentage);
 
       output.println("    </tr>");
    }

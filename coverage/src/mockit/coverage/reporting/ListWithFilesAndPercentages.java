@@ -109,7 +109,7 @@ abstract class ListWithFilesAndPercentages
       coveredSegments += getCoveredSegments(filePath);
 
       printIndentOneLevelDeeper();
-      printCoveragePercentage(fileCodePercentage);
+      printCoveragePercentage(true, fileCodePercentage);
    }
 
    final void writePathCoveragePercentageForFile(String filePath)
@@ -120,16 +120,21 @@ abstract class ListWithFilesAndPercentages
       coveredPaths += getCoveredPaths(filePath);
 
       printIndentOneLevelDeeper();
-      printCoveragePercentage(filePathPercentage);
+      printCoveragePercentage(false, filePathPercentage);
    }
 
-   final void printCoveragePercentage(int percentage)
+   final void printCoveragePercentage(boolean firstColumn, int percentage)
    {
-      output.write("<td class='coverage' style='background-color:#");
-      output.write(CoveragePercentage.percentageColor(percentage));
-      output.write("'>");
-      output.print(percentage);
-      output.println("%</td>");
+      if (percentage >= 0) {
+         output.write("<td class='coverage' style='background-color:#");
+         output.write(CoveragePercentage.percentageColor(percentage));
+         output.write("'>");
+         output.print(percentage);
+         output.println("%</td>");
+      }
+      else if (firstColumn) {
+         output.println("<td colspan='2' class='coverage nocode'>N/A</td>");
+      }
    }
 
    final void printIndent()
