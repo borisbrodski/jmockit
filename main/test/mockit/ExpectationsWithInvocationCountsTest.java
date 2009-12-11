@@ -348,7 +348,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeats(0, 0);
+            mock.provideSomeService(); repeats(0, -1);
             mock.simpleOperation(1, "b", null);
          }
       };
