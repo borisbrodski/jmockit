@@ -1,5 +1,5 @@
 /*
- * JMockit Core
+ * JMockit
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -25,6 +25,7 @@
 package mockit.internal.startup;
 
 import java.lang.instrument.*;
+import java.net.*;
 import java.security.*;
 
 import mockit.internal.state.*;
@@ -37,18 +38,48 @@ final class ProxyRegistrationTransformer implements ClassFileTransformer
       ProtectionDomain protectionDomain, byte[] classfileBuffer)
    {
       if (classBeingRedefined == null) {
-         int p = className.indexOf("$Proxy");
-
-         if (p >= 0 && Utilities.isPositiveDigit(className.charAt(p + 6))) {
-            if (p == 0) {
-               TestRun.proxyClasses().add(className, classfileBuffer);
-            }
-            else if (className.charAt(p - 1) == '/') {
-               TestRun.proxyClasses().add(className.replace('/', '.'), classfileBuffer);
-            }
-         }
+         registerClassIfProxy(className, classfileBuffer);
+         enableAssertsIfTestClass(loader, protectionDomain, className);
       }
 
       return null;
+   }
+
+   private void registerClassIfProxy(String className, byte[] classfileBuffer)
+   {
+      int p = className.indexOf("$Proxy");
+
+      if (p >= 0 && Utilities.isPositiveDigit(className.charAt(p + 6))) {
+         if (p == 0) {
+            TestRun.proxyClasses().add(className, classfileBuffer);
+         }
+         else if (className.charAt(p - 1) == '/') {
+            TestRun.proxyClasses().add(className.replace('/', '.'), classfileBuffer);
+         }
+      }
+   }
+
+   private void enableAssertsIfTestClass(
+      ClassLoader loader, ProtectionDomain protectionDomain, String className)
+   {
+      if (
+         loader != null && protectionDomain != null &&
+         (className.endsWith("Test") || isFromTestClassesDirectory(protectionDomain))
+      ) {
+         loader.setClassAssertionStatus(className.replace('/', '.'), true);
+      }
+   }
+
+   private boolean isFromTestClassesDirectory(ProtectionDomain protectionDomain)
+   {
+      CodeSource codeSource = protectionDomain.getCodeSource();
+
+      if (codeSource == null) {
+         return false;
+      }
+
+      URL location = codeSource.getLocation();
+
+      return location != null && location.getPath().endsWith("/test-classes/");
    }
 }

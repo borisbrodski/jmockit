@@ -793,6 +793,7 @@
         <w>destfile</w>
         <w>djmockit</w>
         <w>doctype</w>
+        <w>enableassertions</w>
         <w>enqueue</w>
         <w>finalizers</w>
         <w>fixme</w>

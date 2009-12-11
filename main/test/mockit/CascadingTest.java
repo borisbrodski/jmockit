@@ -32,8 +32,6 @@ import org.junit.*;
 
 import mockit.internal.state.*;
 
-import static org.junit.Assert.*;
-
 public final class CascadingTest
 {
    static class Foo
@@ -59,24 +57,24 @@ public final class CascadingTest
       void runIt();
    }
 
-   @Before @After
+   @After
    public void verifyThereAreNoCascadingMockedTypesOutsideTestMethods()
    {
-      TestRun.getExecutingTest().getCascadingMockedTypes().isEmpty();
-      TestRun.mockFixture().getMockedTypesAndInstances().isEmpty();
+      assert TestRun.getExecutingTest().getCascadingMockedTypes().isEmpty();
+//      assert TestRun.mockFixture().getMockedTypesAndInstances().isEmpty();
    }
 
    @Test
    public void cascadeOneLevelDuringReplay(@Cascading Foo foo)
    {
-      assertEquals(0, foo.getBar().doSomething());
-      assertEquals(0, Foo.globalBar().doSomething());
-      assertNotSame(foo.getBar(), Foo.globalBar());
-      
+      assert foo.getBar().doSomething() == 0;
+      assert Foo.globalBar().doSomething() == 0;
+      assert foo.getBar() != Foo.globalBar();
+
       foo.doSomething("test");
-      assertEquals(0, foo.getIntValue());
-      assertNull(foo.getBooleanValue());
-      assertTrue(foo.getList().isEmpty());
+      assert foo.getIntValue() == 0;
+      assert foo.getBooleanValue() == null;
+      assert foo.getList().isEmpty();
    }
 
    @Test
@@ -100,12 +98,12 @@ public final class CascadingTest
 
       Foo foo = new Foo();
       foo.doSomething("1");
-      assertEquals(2, foo.getBar().doSomething());
+      assert foo.getBar().doSomething() == 2;
       foo.doSomething("2");
-      assertEquals(3, Foo.globalBar().doSomething());
-      assertTrue(foo.getBooleanValue());
-      assertEquals(-1, foo.getIntValue());
-      assertSame(list, foo.getList());
+      assert Foo.globalBar().doSomething() == 3;
+      assert foo.getBooleanValue();
+      assert foo.getIntValue() == -1;
+      assert list == foo.getList();
    }
 
    @Test
@@ -117,10 +115,10 @@ public final class CascadingTest
 
       Foo.globalBar().doSomething();
 
-      assertEquals(0, foo.getIntValue());
-      assertNull(foo.getBooleanValue());
+      assert foo.getIntValue() == 0;
+      assert foo.getBooleanValue() == null;
 
-      assertTrue(foo.getList().isEmpty());
+      assert foo.getList().isEmpty();
 
       new Verifications()
       {
@@ -160,8 +158,8 @@ public final class CascadingTest
       };
 
       Foo foo = new Foo();
-      assertEquals(1, foo.getBar().doSomething());
-      assertEquals(2, Foo.globalBar().doSomething());
+      assert foo.getBar().doSomething() == 1;
+      assert Foo.globalBar().doSomething() == 2;
 
       Baz baz = foo.getBar().getBaz();
       baz.runIt();
@@ -179,7 +177,7 @@ public final class CascadingTest
 
          {
             ProcessBuilder sameBuilder = pb.directory((File) any);
-            assertNotSame(pb, sameBuilder);
+            assert pb != sameBuilder;
 
             Process process = sameBuilder.start();
             process.getOutputStream().write(5);
@@ -190,7 +188,7 @@ public final class CascadingTest
       Process process = new ProcessBuilder("test").directory(new File("myDir")).start();
       process.getOutputStream().write(5);
       process.getOutputStream().flush();
-      assertEquals(1, process.exitValue());
+      assert process.exitValue() == 1;
    }
 
    // Tests using the java.net.Socket class ///////////////////////////////////////////////////////
@@ -216,8 +214,8 @@ public final class CascadingTest
          }
       };
 
-      assertNull(sf.createSocket("expected", 80));
-      assertNotNull(sf.createSocket("unexpected", 8080));
+      assert sf.createSocket("expected", 80) == null;
+      assert sf.createSocket("unexpected", 8080) != null;
    }
 
    @Test
@@ -232,7 +230,7 @@ public final class CascadingTest
          }
       };
 
-      assertSame(out, sf.createSocket().getOutputStream());
+      assert out == sf.createSocket().getOutputStream();
 
       new FullVerifications()
       {
@@ -257,8 +255,8 @@ public final class CascadingTest
          }
       };
 
-      assertSame(out1, sf1.createSocket().getOutputStream());
-      assertSame(out2, sf2.createSocket().getOutputStream());
+      assert out1 == sf1.createSocket().getOutputStream();
+      assert out2 == sf2.createSocket().getOutputStream();
 
       new FullVerificationsInOrder()
       {
@@ -283,10 +281,10 @@ public final class CascadingTest
          }
       };
 
-      assertEquals(1, sf.createSocket().getPort());
-      assertEquals(2, sf.createSocket("first", 80).getPort());
-      assertEquals(3, sf.createSocket("second", 80).getPort());
-      assertEquals(4, sf.createSocket("third", 81).getPort());
+      assert sf.createSocket().getPort() == 1;
+      assert sf.createSocket("first", 80).getPort() == 2;
+      assert sf.createSocket("second", 80).getPort() == 3;
+      assert sf.createSocket("third", 81).getPort() == 4;
 
       new Verifications()
       {
@@ -313,14 +311,14 @@ public final class CascadingTest
       };
 
       sf.createSocket("second", 80).getChannel().close();
-      assertTrue(sf.createSocket("first", 80).getKeepAlive());
+      assert sf.createSocket("first", 80).getKeepAlive();
 //      sf.createSocket("first", 8080).getChannel().provider().openPipe();
 
-      new Verifications()
-      {
-         {
+//      new Verifications()
+//      {
+//         {
 //            sf.createSocket("first", 8080).getChannel().provider().openPipe();
-         }
-      };
+//         }
+//      };
    }
 }
