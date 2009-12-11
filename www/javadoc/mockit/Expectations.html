@@ -269,6 +269,14 @@ Base class whose subclasses are defined in test code, and whose instances define
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Matches any <code>String</code> value for the relevant parameter.</TD>
 </TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#result">result</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A value assigned to this field will be taken as the result for the current expectation.</TD>
+</TR>
 </TABLE>
 &nbsp;
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -897,6 +905,31 @@ T</CODE></FONT></TD>
 <B>Field Detail</B></FONT></TH>
 </TR>
 </TABLE>
+
+<A NAME="result"><!-- --></A><H3>
+result</H3>
+<PRE>
+protected static <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A> <B>result</B></PRE>
+<DL>
+<DD>A value assigned to this field will be taken as the result for the current expectation.
+ <p/>
+ If the value is of type <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang"><CODE>Throwable</CODE></A> then the assignment is equivalent to a call to
+ <A HREF="../mockit/Expectations.html#throwsException(java.lang.Exception)"><CODE>throwsException(Exception)</CODE></A> or <A HREF="../mockit/Expectations.html#throwsError(java.lang.Error)"><CODE>throwsError(Error)</CODE></A> with the given
+ exception/error instance.
+ Otherwise, it's equivalent to a call to <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> with the given value.
+ <p/>
+ If the current expectation is for a method which actually <em>returns</em> an exception or
+ error (as opposed to <em>throwing</em> one), then the <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> method should
+ be used instead.
+ <p/>
+ If the value assigned to the field is of a type assignable to <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util"><CODE>Collection</CODE></A> or
+ to <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util"><CODE>Iterator</CODE></A>, then it is taken as a sequence of consecutive results for the
+ current expectation.
+<P>
+<DL>
+<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)"><CODE>returns(Object, Object...)</CODE></A></DL>
+</DL>
+<HR>
 
 <A NAME="any"><!-- --></A><H3>
 any</H3>
