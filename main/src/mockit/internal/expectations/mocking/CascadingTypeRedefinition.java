@@ -26,23 +26,15 @@ package mockit.internal.expectations.mocking;
 
 import java.lang.reflect.*;
 
-import mockit.*;
 import mockit.external.asm.*;
-import mockit.internal.*;
-import mockit.internal.expectations.mocking.InstanceFactory.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
-import static java.lang.reflect.Modifier.*;
-
-public final class CascadingTypeRedefinition // TODO: extract new base subclass
+public final class CascadingTypeRedefinition extends BaseTypeRedefinition
 {
-   private Class<?> targetClass;
-   private InstanceFactory instanceFactory;
-
    public CascadingTypeRedefinition(Class<?> mockedType)
    {
-      targetClass = mockedType;
+      super(mockedType);
    }
 
    public Object redefineType()
@@ -52,7 +44,7 @@ public final class CascadingTypeRedefinition // TODO: extract new base subclass
 
       try {
          if (targetClass.isInterface()) {
-            mock = newRedefinedEmptyProxy();
+            mock = newRedefinedEmptyProxy(targetClass);
          }
          else {
             mock = createNewInstanceOfTargetClass();
@@ -67,110 +59,27 @@ public final class CascadingTypeRedefinition // TODO: extract new base subclass
       return mock;
    }
 
-   private Object newRedefinedEmptyProxy()
+   @Override
+   ExpectationsModifier createModifier(Class<?> realClass, ClassReader classReader)
    {
-      Object mock = Mockit.newEmptyProxy(targetClass);
-      targetClass = mock.getClass();
-
-      redefineMethodsAndConstructorsInTargetType();
-
-      instanceFactory = new InterfaceInstanceFactory(mock);
-
-      return mock;
+      return new ExpectationsModifier(realClass.getClassLoader(), classReader);
    }
 
-   private ExpectationsModifier redefineMethodsAndConstructorsInTargetType()
+   @Override
+   String getNameForConcreteSubclassToCreate()
    {
-      return redefineClassAndItsSuperClasses(targetClass);
+      return Utilities.GENERATED_SUBCLASS_PREFIX + targetClass.getSimpleName();
    }
 
-   private ExpectationsModifier redefineClassAndItsSuperClasses(Class<?> realClass)
-   {
-      ExpectationsModifier modifier = redefineClass(realClass);
-      Class<?> superClass = realClass.getSuperclass();
-
-      if (superClass != Object.class && superClass != Proxy.class) {
-         redefineClassAndItsSuperClasses(superClass);
-      }
-
-      return modifier;
-   }
-
-   private ExpectationsModifier redefineClass(Class<?> realClass)
-   {
-      ClassReader classReader = createClassReaderForFieldType(realClass);
-      ExpectationsModifier modifier =
-         new ExpectationsModifier(realClass.getClassLoader(), classReader);
-
-      classReader.accept(modifier, false);
-      byte[] modifiedClass = modifier.toByteArray();
-
-      new RedefinitionEngine(realClass).redefineMethods(null, modifiedClass, true);
-      return modifier;
-   }
-
-   private ClassReader createClassReaderForFieldType(Class<?> realClass)
-   {
-      return new ClassFile(realClass, true).getReader();
-   }
-
-   private Object createNewInstanceOfTargetClass()
-   {
-      ExpectationsModifier modifier = redefineMethodsAndConstructorsInTargetType();
-      TestRun.exitNoMockingZone();
-
-      try {
-         if (isAbstract(targetClass.getModifiers())) {
-            generateConcreteSubclassForAbstractType();
-            instanceFactory = new AbstractClassInstanceFactory(null, targetClass);
-            return newInstanceOfAbstractClass();
-         }
-         else if (!targetClass.isEnum()) {
-            String constructorDesc = modifier.getRedefinedConstructorDesc();
-            instanceFactory = new ConcreteClassInstanceFactory(targetClass, constructorDesc);
-            return newInstanceOfConcreteClass(constructorDesc);
-         }
-      }
-      catch (ExceptionInInitializerError e) {
-         Utilities.filterStackTrace(e);
-         Utilities.filterStackTrace(e.getCause());
-         e.printStackTrace();
-         throw e;
-      }
-      finally {
-         TestRun.enterNoMockingZone();
-      }
-
-      return null;
-   }
-
-   private void generateConcreteSubclassForAbstractType()
-   {
-      String subclassName = Utilities.GENERATED_SUBCLASS_PREFIX + targetClass.getSimpleName();
-
-      ClassReader classReader = createClassReaderForFieldType(targetClass);
-      SubclassGenerationModifier modifier =
-         new SubclassGenerationModifier(null, null, classReader, subclassName);
-      classReader.accept(modifier, false);
-      final byte[] modifiedClass = modifier.toByteArray();
-
-      targetClass = new ClassLoader()
-      {
-         @Override
-         protected Class<?> findClass(String name)
-         {
-            return defineClass(name, modifiedClass, 0, modifiedClass.length);
-         }
-      }.findClass(subclassName);
-   }
-
-   private Object newInstanceOfAbstractClass()
+   @Override
+   Object newInstanceOfAbstractClass()
    {
       Constructor<?> constructor = targetClass.getDeclaredConstructors()[0];
       return Utilities.invoke(constructor);
    }
 
-   private Object newInstanceOfConcreteClass(String constructorDesc)
+   @Override
+   Object newInstanceOfConcreteClass(String constructorDesc)
    {
       Object[] initArgs = null;
 
