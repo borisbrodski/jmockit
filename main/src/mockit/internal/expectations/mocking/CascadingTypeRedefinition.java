@@ -25,7 +25,6 @@
 package mockit.internal.expectations.mocking;
 
 import mockit.external.asm.*;
-import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class CascadingTypeRedefinition extends BaseTypeRedefinition
@@ -37,26 +36,7 @@ public final class CascadingTypeRedefinition extends BaseTypeRedefinition
 
    public Object redefineType()
    {
-      TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(true);
-      Object mock;
-
-      try {
-         if (targetClass.isInterface()) {
-            createMockedInterfaceImplementation(targetClass);
-            mock = instanceFactory.create();
-         }
-         else {
-            createNewInstanceOfTargetClass();
-            mock = instanceFactory.create();
-         }
-      }
-      finally {
-         TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(false);
-      }
-
-      TestRun.mockFixture().addInstanceForMockedType(targetClass, instanceFactory);
-
-      return mock;
+      return redefineType(targetClass);
    }
 
    @Override

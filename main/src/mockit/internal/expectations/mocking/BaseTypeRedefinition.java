@@ -49,6 +49,30 @@ abstract class BaseTypeRedefinition
       targetClass = mockedType;
    }
 
+   final Object redefineType(Type typeToMock)
+   {
+      TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(true);
+
+      Object mock;
+
+      try {
+         if (targetClass == null || targetClass.isInterface()) {
+            createMockedInterfaceImplementation(typeToMock);
+            mock = instanceFactory.create();
+         }
+         else {
+            mock = createNewInstanceOfTargetClass();
+         }
+      }
+      finally {
+         TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(false);
+      }
+
+      TestRun.mockFixture().addInstanceForMockedType(targetClass, instanceFactory);
+
+      return mock;
+   }
+
    final void createMockedInterfaceImplementation(Type mockedInterface)
    {
       Object mock = Mockit.newEmptyProxy(mockedInterface);
@@ -97,23 +121,12 @@ abstract class BaseTypeRedefinition
 
    final Object createNewInstanceOfTargetClass()
    {
-      ExpectationsModifier modifier = redefineMethodsAndConstructorsInTargetType();
+      createInstanceFactoryForRedefinedClass();
+
       TestRun.exitNoMockingZone();
 
       try {
-         if (isAbstract(targetClass.getModifiers())) {
-            generateConcreteSubclassForAbstractType();
-            instanceFactory = new AbstractClassInstanceFactory(mockConstructorInfo, targetClass);
-            return instanceFactory.create();
-         }
-         else if (targetClass.isEnum()) {
-            // TODO: create InstanceFactory for enum
-         }
-         else {
-            String constructorDesc = modifier.getRedefinedConstructorDesc();
-            instanceFactory = new ConcreteClassInstanceFactory(targetClass, constructorDesc);
-            return instanceFactory.create();
-         }
+         return instanceFactory.create();
       }
       catch (ExceptionInInitializerError e) {
          Utilities.filterStackTrace(e);
@@ -124,8 +137,23 @@ abstract class BaseTypeRedefinition
       finally {
          TestRun.enterNoMockingZone();
       }
+   }
 
-      return null;
+   private void createInstanceFactoryForRedefinedClass()
+   {
+      ExpectationsModifier modifier = redefineMethodsAndConstructorsInTargetType();
+
+      if (isAbstract(targetClass.getModifiers())) {
+         generateConcreteSubclassForAbstractType();
+         instanceFactory = new AbstractClassInstanceFactory(mockConstructorInfo, targetClass);
+      }
+      else if (targetClass.isEnum()) {
+         // TODO: create InstanceFactory for enum
+      }
+      else {
+         String constructorDesc = modifier.getRedefinedConstructorDesc();
+         instanceFactory = new ConcreteClassInstanceFactory(targetClass, constructorDesc);
+      }
    }
 
    private void generateConcreteSubclassForAbstractType()

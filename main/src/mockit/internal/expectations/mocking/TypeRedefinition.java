@@ -28,10 +28,9 @@ import static java.lang.reflect.Modifier.*;
 
 import mockit.external.asm.*;
 import mockit.internal.filtering.*;
-import mockit.internal.state.*;
 import mockit.internal.util.*;
 
-class TypeRedefinition extends BaseTypeRedefinition
+final class TypeRedefinition extends BaseTypeRedefinition
 {
    private final Object objectWithInitializerMethods;
    private final MockedType typeMetadata;
@@ -43,7 +42,7 @@ class TypeRedefinition extends BaseTypeRedefinition
       this.typeMetadata = typeMetadata;
    }
 
-   final void redefineTypeForFinalField()
+   void redefineTypeForFinalField()
    {
       buildMockingConfigurationFromSpecifiedMetadata();
       adjustTargetClassIfRealClassNameSpecified();
@@ -57,24 +56,12 @@ class TypeRedefinition extends BaseTypeRedefinition
       redefineMethodsAndConstructorsInTargetType();
    }
 
-   final Object redefineType()
+   Object redefineType()
    {
       buildMockingConfigurationFromSpecifiedMetadata();
       adjustTargetClassIfRealClassNameSpecified();
 
-      Object mock;
-
-      if (targetClass == null || targetClass.isInterface()) {
-         createMockedInterfaceImplementation(typeMetadata.declaredType);
-         mock = instanceFactory.create();
-      }
-      else {
-         mock = createNewInstanceOfTargetClass();
-      }
-
-      TestRun.mockFixture().addInstanceForMockedType(targetClass, instanceFactory);
-      
-      return mock;
+      return redefineType(typeMetadata.declaredType);
    }
 
    private void buildMockingConfigurationFromSpecifiedMetadata()
@@ -94,7 +81,7 @@ class TypeRedefinition extends BaseTypeRedefinition
    }
 
    @Override
-   final ExpectationsModifier createModifier(Class<?> realClass, ClassReader classReader)
+   ExpectationsModifier createModifier(Class<?> realClass, ClassReader classReader)
    {
       MockConstructorInfo constructorInfoToUse =
          isAbstract(targetClass.getModifiers()) ? null : mockConstructorInfo;
@@ -104,7 +91,7 @@ class TypeRedefinition extends BaseTypeRedefinition
    }
 
    @Override
-   final String getNameForConcreteSubclassToCreate()
+   String getNameForConcreteSubclassToCreate()
    {
       return
          objectWithInitializerMethods.getClass().getPackage().getName() + '.' +
