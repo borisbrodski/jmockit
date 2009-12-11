@@ -28,9 +28,9 @@ import java.lang.annotation.*;
 
 /**
  * Indicates a {@linkplain Mocked mocked type} where the return types of non-{@code void} methods,
- * excluding primitives, {@code String} and collection types, will also be mocked if and when a
- * non-recorded invocation to the method occurs in the replay phase.
- * Instead of returning the default {@code null} reference, such methods will return a mock
+ * excluding primitives, {@code String}, and collection types, will be automatically mocked if and
+ * when a invocation to the method occurs.
+ * Instead of returning the default {@literal null} reference, such methods will return a mock
  * instance on which further invocations can be made.
  * This behavior automatically cascades to those mocked return types.
  */
