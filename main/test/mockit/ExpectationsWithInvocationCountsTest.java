@@ -190,7 +190,22 @@ public final class ExpectationsWithInvocationCountsTest
    }
 
    @Test(expected = AssertionError.class)
-   public void expectAtLeastTwiceButReplayOnce()
+   public void expectAtLeastTwiceButReplayOnceWithSingleExpectation()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); repeatsAtLeast(2);
+         }
+      };
+
+      codeUnderTest.doSomething();
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectAtLeastTwiceButReplayOnceWithTwoConsecutiveExpectations()
    {
       new Expectations()
       {
@@ -204,6 +219,23 @@ public final class ExpectationsWithInvocationCountsTest
 
       codeUnderTest.doSomething();
       codeUnderTest.doSomethingElse();
+   }
+
+   @Test
+   public void repeatsAtLeastOverwritingUpperLimit()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); repeatsAtMost(2); repeatsAtLeast(1);
+         }
+      };
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomething();
    }
 
    @Test
@@ -239,6 +271,21 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomething();
       codeUnderTest.doSomething();
       codeUnderTest.doSomethingElse();
+   }
+
+   @Test
+   public void repeatsAtMostOverwritingLowerLimit()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); repeatsAtLeast(2); repeatsAtMost(3);
+         }
+      };
+
+      codeUnderTest.doSomething();
    }
 
    @Test
