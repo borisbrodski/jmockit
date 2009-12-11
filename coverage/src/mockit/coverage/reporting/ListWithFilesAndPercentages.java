@@ -36,6 +36,7 @@ abstract class ListWithFilesAndPercentages
    int coveredSegments;
    int totalPaths;
    int coveredPaths;
+   private boolean firstColumnWithDoubleSpan;
 
    protected ListWithFilesAndPercentages(OutputFile output, String baseIndentation)
    {
@@ -134,6 +135,13 @@ abstract class ListWithFilesAndPercentages
       }
       else if (firstColumn) {
          output.println("<td colspan='2' class='coverage nocode'>N/A</td>");
+         firstColumnWithDoubleSpan = true;
+      }
+      else if (firstColumnWithDoubleSpan) {
+         firstColumnWithDoubleSpan = false;
+      }
+      else {
+         output.println("<td class='coverage nocode'>N/A</td>");
       }
    }
 
