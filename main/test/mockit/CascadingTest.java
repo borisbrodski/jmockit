@@ -61,7 +61,7 @@ public final class CascadingTest
    public void verifyThereAreNoCascadingMockedTypesOutsideTestMethods()
    {
       assert TestRun.getExecutingTest().getCascadingMockedTypes().isEmpty();
-//      assert TestRun.mockFixture().getMockedTypesAndInstances().isEmpty();
+      assert TestRun.mockFixture().getMockedTypesAndInstances().isEmpty();
    }
 
    @Test

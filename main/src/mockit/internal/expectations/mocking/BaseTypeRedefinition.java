@@ -73,7 +73,7 @@ abstract class BaseTypeRedefinition
       return mock;
    }
 
-   final void createMockedInterfaceImplementation(Type mockedInterface)
+   private void createMockedInterfaceImplementation(Type mockedInterface)
    {
       Object mock = Mockit.newEmptyProxy(mockedInterface);
       targetClass = mock.getClass();
@@ -119,7 +119,7 @@ abstract class BaseTypeRedefinition
       return new ClassFile(realClass, true).getReader();
    }
 
-   final Object createNewInstanceOfTargetClass()
+   private Object createNewInstanceOfTargetClass()
    {
       createInstanceFactoryForRedefinedClass();
 
@@ -144,8 +144,8 @@ abstract class BaseTypeRedefinition
       ExpectationsModifier modifier = redefineMethodsAndConstructorsInTargetType();
 
       if (isAbstract(targetClass.getModifiers())) {
-         generateConcreteSubclassForAbstractType();
-         instanceFactory = new AbstractClassInstanceFactory(mockConstructorInfo, targetClass);
+         Class<?> subclass = generateConcreteSubclassForAbstractType();
+         instanceFactory = new AbstractClassInstanceFactory(mockConstructorInfo, subclass);
       }
       else if (targetClass.isEnum()) {
          // TODO: create InstanceFactory for enum
@@ -156,7 +156,7 @@ abstract class BaseTypeRedefinition
       }
    }
 
-   private void generateConcreteSubclassForAbstractType()
+   private Class<?> generateConcreteSubclassForAbstractType()
    {
       String subclassName = getNameForConcreteSubclassToCreate();
 
@@ -166,7 +166,7 @@ abstract class BaseTypeRedefinition
       classReader.accept(modifier, false);
       final byte[] modifiedClass = modifier.toByteArray();
 
-      targetClass = new ClassLoader()
+      return new ClassLoader()
       {
          @Override
          protected Class<?> findClass(String name)
