@@ -24,8 +24,6 @@
  */
 package mockit.internal.expectations.mocking;
 
-import java.lang.reflect.*;
-
 import mockit.external.asm.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
@@ -44,10 +42,12 @@ public final class CascadingTypeRedefinition extends BaseTypeRedefinition
 
       try {
          if (targetClass.isInterface()) {
-            mock = newRedefinedEmptyProxy(targetClass);
+            createMockedInterfaceImplementation(targetClass);
+            mock = instanceFactory.create();
          }
          else {
-            mock = createNewInstanceOfTargetClass();
+            createNewInstanceOfTargetClass();
+            mock = instanceFactory.create();
          }
       }
       finally {
@@ -69,27 +69,5 @@ public final class CascadingTypeRedefinition extends BaseTypeRedefinition
    String getNameForConcreteSubclassToCreate()
    {
       return Utilities.GENERATED_SUBCLASS_PREFIX + targetClass.getSimpleName();
-   }
-
-   @Override
-   Object newInstanceOfAbstractClass()
-   {
-      Constructor<?> constructor = targetClass.getDeclaredConstructors()[0];
-      return Utilities.invoke(constructor);
-   }
-
-   @Override
-   Object newInstanceOfConcreteClass(String constructorDesc)
-   {
-      Object[] initArgs = null;
-
-      if (constructorDesc == null) {
-         Constructor<?> constructor = targetClass.getDeclaredConstructors()[0];
-         return Utilities.invoke(constructor, initArgs);
-      }
-      else {
-         Class<?>[] constructorParamTypes = Utilities.getParameterTypes(constructorDesc);
-         return Utilities.newInstance(targetClass, constructorParamTypes, initArgs);
-      }
    }
 }

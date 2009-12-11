@@ -36,16 +36,4 @@ final class SharedTypeRedefinition extends TypeRedefinition
    {
       return instanceFactory;
    }
-
-   @Override
-   Object newInstanceOfAbstractClass()
-   {
-      return instanceFactory;
-   }
-
-   @Override
-   Object newInstanceOfConcreteClass(String constructorDesc)
-   {
-      return instanceFactory;
-   }
 }

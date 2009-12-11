@@ -24,7 +24,6 @@
  */
 package mockit.internal.expectations.mocking;
 
-import java.lang.reflect.*;
 import static java.lang.reflect.Modifier.*;
 
 import mockit.external.asm.*;
@@ -66,7 +65,8 @@ class TypeRedefinition extends BaseTypeRedefinition
       Object mock;
 
       if (targetClass == null || targetClass.isInterface()) {
-         Object emptyProxy = newRedefinedEmptyProxy(typeMetadata.declaredType);
+         createMockedInterfaceImplementation(typeMetadata.declaredType);
+         Object emptyProxy = instanceFactory.create();
          mock = newInstanceOfInterface(emptyProxy);
       }
       else {
@@ -115,26 +115,5 @@ class TypeRedefinition extends BaseTypeRedefinition
       return
          objectWithInitializerMethods.getClass().getPackage().getName() + '.' +
          Utilities.GENERATED_SUBCLASS_PREFIX + typeMetadata.mockId;
-   }
-
-   @Override
-   Object newInstanceOfAbstractClass()
-   {
-      return mockConstructorInfo.newInstance(targetClass);
-   }
-
-   @Override
-   Object newInstanceOfConcreteClass(String constructorDesc)
-   {
-      Object[] initArgs = null;
-
-      if (constructorDesc == null) {
-         Constructor<?> constructor = targetClass.getDeclaredConstructors()[0];
-         return Utilities.invoke(constructor, initArgs);
-      }
-      else {
-         Class<?>[] constructorParamTypes = Utilities.getParameterTypes(constructorDesc);
-         return Utilities.newInstance(targetClass, constructorParamTypes, initArgs);
-      }
    }
 }

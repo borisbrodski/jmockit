@@ -60,7 +60,8 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
          finalMockFields.add(typeMetadata);
       }
       else {
-         InstanceFactory factory = (InstanceFactory) typeRedefinition.redefineType();
+         typeRedefinition.redefineType();
+         InstanceFactory factory = typeRedefinition.instanceFactory;
 
          if (factory != null) {
             mockInstanceFactories.put(typeMetadata, factory);

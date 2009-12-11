@@ -82,13 +82,15 @@ public interface InstanceFactory
 
       public Object create()
       {
+         Object[] initArgs = null;
+
          if (constructorDesc == null) {
             Constructor<?> constructor = concreteClass.getDeclaredConstructors()[0];
-            return Utilities.invoke(constructor, (Object[]) null);
+            return Utilities.invoke(constructor, initArgs);
          }
          else {
             Class<?>[] constructorParamTypes = Utilities.getParameterTypes(constructorDesc);
-            return Utilities.newInstance(concreteClass, constructorParamTypes, (Object[]) null);
+            return Utilities.newInstance(concreteClass, constructorParamTypes, initArgs);
          }
       }
    }

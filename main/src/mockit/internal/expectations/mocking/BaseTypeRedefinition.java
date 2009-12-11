@@ -49,7 +49,7 @@ abstract class BaseTypeRedefinition
       targetClass = mockedType;
    }
 
-   final Object newRedefinedEmptyProxy(Type mockedInterface)
+   final void createMockedInterfaceImplementation(Type mockedInterface)
    {
       Object mock = Mockit.newEmptyProxy(mockedInterface);
       targetClass = mock.getClass();
@@ -57,8 +57,6 @@ abstract class BaseTypeRedefinition
       redefineMethodsAndConstructorsInTargetType();
 
       instanceFactory = new InterfaceInstanceFactory(mock);
-
-      return mock;
    }
 
    final ExpectationsModifier redefineMethodsAndConstructorsInTargetType()
@@ -106,12 +104,15 @@ abstract class BaseTypeRedefinition
          if (isAbstract(targetClass.getModifiers())) {
             generateConcreteSubclassForAbstractType();
             instanceFactory = new AbstractClassInstanceFactory(mockConstructorInfo, targetClass);
-            return newInstanceOfAbstractClass();
+            return instanceFactory.create();
          }
-         else if (!targetClass.isEnum()) {
+         else if (targetClass.isEnum()) {
+            // TODO: create InstanceFactory for enum
+         }
+         else {
             String constructorDesc = modifier.getRedefinedConstructorDesc();
             instanceFactory = new ConcreteClassInstanceFactory(targetClass, constructorDesc);
-            return newInstanceOfConcreteClass(constructorDesc);
+            return instanceFactory.create();
          }
       }
       catch (ExceptionInInitializerError e) {
@@ -148,6 +149,4 @@ abstract class BaseTypeRedefinition
    }
 
    abstract String getNameForConcreteSubclassToCreate();
-   abstract Object newInstanceOfAbstractClass();
-   abstract Object newInstanceOfConcreteClass(String constructorDesc);
 }
