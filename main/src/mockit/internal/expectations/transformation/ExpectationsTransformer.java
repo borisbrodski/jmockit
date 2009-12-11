@@ -36,8 +36,6 @@ import mockit.internal.*;
 import mockit.internal.util.*;
 import mockit.*;
 
-import static mockit.external.asm.Opcodes.*;
-
 public final class ExpectationsTransformer implements ClassFileTransformer
 {
    private static final class VisitInterruptedException extends RuntimeException {}
@@ -163,106 +161,10 @@ public final class ExpectationsTransformer implements ClassFileTransformer
          mw = super.visitMethod(access, name, desc, signature, exceptions);
 
          if ("<init>".equals(name)) {
-            return new ConstructorModifier((MethodWriter) mw, classDesc);
+            return new InvocationBlockModifier((MethodWriter) mw, classDesc);
          }
 
          return mw;
-      }
-   }
-
-   private static final class ConstructorModifier extends MethodAdapter
-   {
-      static final String CALLBACK_CLASS_DESC = ActiveInvocations.class.getName().replace('.', '/');
-      final int[] matcherStacks = new int[20];
-      int matchers;
-      final MethodWriter mw;
-      final String fieldOwner;
-
-      ConstructorModifier(MethodWriter mw, String fieldOwner)
-      {
-         super(mw);
-         this.mw = mw;
-         this.fieldOwner = fieldOwner;
-      }
-
-      @Override
-      public void visitFieldInsn(int opcode, String owner, String name, String desc)
-      {
-         mw.visitFieldInsn(opcode, owner, name, desc);
-
-         if (opcode == GETSTATIC && fieldOwner.equals(owner) && name.startsWith("any")) {
-            mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "addArgMatcher", "()V");
-            matcherStacks[matchers++] = mw.stackSize;
-         }
-      }
-
-      @Override
-      public void visitMethodInsn(int opcode, String owner, String name, String desc)
-      {
-         if (opcode == INVOKEVIRTUAL && owner.equals(fieldOwner) && name.startsWith("with")) {
-            mw.visitMethodInsn(INVOKEVIRTUAL, owner, name, desc);
-            matcherStacks[matchers++] = mw.stackSize;
-            return;
-         }
-
-         if (matchers > 0) {
-            Type[] argTypes = Type.getArgumentTypes(desc);
-            int stackAfter = mw.stackSize - sumOfSizes(argTypes);
-
-            if (stackAfter < matcherStacks[0]) {
-               generateCallsToMoveArgMatchers(argTypes, stackAfter);
-               matchers = 0;
-            }
-         }
-
-         mw.visitMethodInsn(opcode, owner, name, desc);
-      }
-
-      private int sumOfSizes(Type[] argTypes)
-      {
-         int sum = 0;
-
-         for (Type argType : argTypes) {
-            sum += argType.getSize();
-         }
-
-         return sum;
-      }
-
-      private void generateCallsToMoveArgMatchers(Type[] argTypes, int initialStack)
-      {
-         int stack = initialStack;
-         int nextMatcher = 0;
-         int matcherStack = matcherStacks[0];
-
-         for (int i = 0; i < argTypes.length && nextMatcher < matchers; i++) {
-            stack += argTypes[i].getSize();
-
-            if (stack == matcherStack || stack == matcherStack + 1) {
-               if (nextMatcher < i) {
-                  generateCallToMoveArgMatcher(nextMatcher, i);
-               }
-
-               matcherStack = matcherStacks[++nextMatcher];
-            }
-         }
-      }
-
-      private void generateCallToMoveArgMatcher(int originalMatcherIndex, int toIndex)
-      {
-         mw.visitIntInsn(SIPUSH, originalMatcherIndex);
-         mw.visitIntInsn(SIPUSH, toIndex);
-         mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "moveArgMatcher", "(II)V");
-      }
-
-      @Override
-      public void visitInsn(int opcode)
-      {
-         if (opcode == RETURN) {
-            mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "endInvocations", "()V");
-         }
-
-         mw.visitInsn(opcode);
       }
    }
 
