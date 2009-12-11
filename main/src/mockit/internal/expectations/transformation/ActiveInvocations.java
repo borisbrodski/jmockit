@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -22,31 +22,45 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.internal.expectations;
+package mockit.internal.expectations.transformation;
 
+import mockit.external.hamcrest.core.*;
+import mockit.internal.expectations.*;
 import mockit.internal.state.*;
 
-@SuppressWarnings({"UnusedDeclaration"})
 public final class ActiveInvocations
 {
+   private static final IsAnything<?> MATCHES_ANYTHING = new IsAnything();
+
+   @SuppressWarnings({"UnusedDeclaration"})
    public static void addArgMatcher()
    {
       RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
 
       if (instance != null) {
-         instance.addArgMatcher();
+         TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+
+         if (currentPhase != null) {
+            currentPhase.addArgMatcher(MATCHES_ANYTHING);
+         }
       }
    }
 
+   @SuppressWarnings({"UnusedDeclaration"})
    public static void moveArgMatcher(int originalMatcherIndex, int toIndex)
    {
       RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
 
       if (instance != null) {
-         instance.moveArgMatcher(originalMatcherIndex, toIndex);
+         TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+
+         if (currentPhase != null) {
+            currentPhase.moveArgMatcher(originalMatcherIndex, toIndex);
+         }
       }
    }
 
+   @SuppressWarnings({"UnusedDeclaration"})
    public static void endInvocations()
    {
       TestRun.enterNoMockingZone();

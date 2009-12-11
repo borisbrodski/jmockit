@@ -57,18 +57,7 @@ public abstract class TestOnlyPhase extends Phase
       }
    }
 
-   final void addArgMatcher(int index, Matcher<?> matcher)
-   {
-      createArgMatchersListIfNeeded();
-
-      while (index > argMatchers.size()) {
-         argMatchers.add(null);
-      }
-
-      argMatchers.add(index, matcher);
-   }
-
-   final void moveArgMatcher(int originalMatcherIndex, int toIndex)
+   public final void moveArgMatcher(int originalMatcherIndex, int toIndex)
    {
       int i = 0;
 

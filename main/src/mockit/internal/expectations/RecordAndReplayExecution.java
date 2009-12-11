@@ -27,15 +27,12 @@ package mockit.internal.expectations;
 import java.util.*;
 
 import mockit.*;
-import mockit.external.hamcrest.core.*;
 import mockit.internal.expectations.mocking.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class RecordAndReplayExecution
 {
-   private static final IsAnything<?> MATCHES_ANYTHING = new IsAnything();
-
    private final LocalFieldTypeRedefinitions redefinitions;
    private final DynamicPartialMocking dynamicPartialMocking;
 
@@ -336,30 +333,12 @@ public final class RecordAndReplayExecution
       return error;
    }
 
-   void addArgMatcher()
-   {
-      TestOnlyPhase currentPhase = getCurrentTestOnlyPhase();
-
-      if (currentPhase != null) {
-         currentPhase.addArgMatcher(MATCHES_ANYTHING);
-      }
-   }
-
-   TestOnlyPhase getCurrentTestOnlyPhase()
+   public TestOnlyPhase getCurrentTestOnlyPhase()
    {
       return recordPhase != null ? recordPhase : verificationPhase;
    }
 
-   void moveArgMatcher(int originalMatcherIndex, int toIndex)
-   {
-      TestOnlyPhase currentPhase = getCurrentTestOnlyPhase();
-
-      if (currentPhase != null) {
-         currentPhase.moveArgMatcher(originalMatcherIndex, toIndex);
-      }
-   }
-
-   void endInvocations()
+   public void endInvocations()
    {
       if (verificationPhase == null) {
          endRecording();

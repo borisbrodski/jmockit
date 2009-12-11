@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -22,10 +22,10 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.internal.expectations;
+package mockit.internal.expectations.transformation;
 
 import java.lang.instrument.*;
-import static java.lang.reflect.Modifier.isFinal;
+import static java.lang.reflect.Modifier.*;
 import java.security.*;
 import java.util.*;
 
@@ -172,7 +172,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 
    private static final class ConstructorModifier extends MethodAdapter
    {
-      static final String CALLBACK_CLASS_DESC = "mockit/internal/expectations/ActiveInvocations";
+      static final String CALLBACK_CLASS_DESC = ActiveInvocations.class.getName().replace('.', '/');
       final int[] matcherStacks = new int[20];
       int matchers;
       final MethodWriter mw;
@@ -200,7 +200,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       public void visitMethodInsn(int opcode, String owner, String name, String desc)
       {
          if (opcode == INVOKEVIRTUAL && owner.equals(fieldOwner) && name.startsWith("with")) {
-            mw.visitMethodInsn(opcode, owner, name, desc);
+            mw.visitMethodInsn(INVOKEVIRTUAL, owner, name, desc);
             matcherStacks[matchers++] = mw.stackSize;
             return;
          }

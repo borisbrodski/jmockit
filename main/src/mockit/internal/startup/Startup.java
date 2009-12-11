@@ -33,7 +33,7 @@ import mockit.integration.junit3.internal.*;
 import mockit.integration.junit4.internal.*;
 import mockit.integration.testng.internal.*;
 import mockit.internal.*;
-import mockit.internal.expectations.*;
+import mockit.internal.expectations.transformation.*;
 import mockit.internal.state.*;
 
 /**
