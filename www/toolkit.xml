@@ -18,6 +18,11 @@ through one or more mock fields and/or mock parameters.">
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/NonStrict.html"
          title="For tests using Expectations, indicates a non-strict mocked type for an instance
 field or test method parameter.">
+      <area shape="rect" coords="154,122,262,149" target="_blank"
+         href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Cascading.html"
+         title="Indicates a mocked type where the return types of non-void methods, excluding
+primitives, String, and collection types, will be mocked automatically if and when an invocation
+to the method occurs.">
       <area shape="rect" coords="10,163,184,190" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/NonStrictExpectations.html"
          title="An Expectations subclass where all expectations are automatically non-strict.">
