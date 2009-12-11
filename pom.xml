@@ -5,7 +5,7 @@
    <groupId>mockit</groupId>
    <artifactId>jmockit</artifactId>
    <packaging>jar</packaging>
-   <version>0.994</version>
+   <version>0.995-SNAPSHOT</version>
    <name>JMockit Testing Toolkit</name>
    <url>http://code.google.com/p/jmockit/</url>
    <description>
@@ -41,7 +41,6 @@
    <properties><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
 
    <build>
-      <sourceDirectory>main/src</sourceDirectory>
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId><artifactId>maven-jar-plugin</artifactId>
@@ -72,6 +71,7 @@
                      <goal>add-resource</goal>
                   </goals>
                   <configuration>
+                     <sources><source>main/src</source></sources>
                      <resources>
                         <resource>
                            <directory>main/src</directory>

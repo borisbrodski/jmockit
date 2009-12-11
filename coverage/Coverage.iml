@@ -13,6 +13,7 @@
     <orderEntry type="library" name="JUnit 4.8" level="application" />
     <orderEntry type="module" module-name="Main" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="Maven: mockit:jmockit:0.994" level="project" />
   </component>
 </module>
 

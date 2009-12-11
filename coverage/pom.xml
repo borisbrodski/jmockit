@@ -4,7 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>mockit</groupId>
    <artifactId>jmockit-coverage</artifactId>
-   <version>0.994</version>
+   <version>0.995-SNAPSHOT</version>
    <name>JMockit Coverage</name>
    <url>http://code.google.com/p/jmockit/</url>
    <description>JMockit Coverage is the code coverage tool in the JMockit toolkit.</description>
