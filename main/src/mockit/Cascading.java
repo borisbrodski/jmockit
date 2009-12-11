@@ -33,6 +33,10 @@ import java.lang.annotation.*;
  * Instead of returning the default {@literal null} reference, such methods will return a mock
  * instance on which further invocations can be made.
  * This behavior automatically cascades to those mocked return types.
+ * <p/>
+ * Sample tests:
+ * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/CascadingTest.java"
+ * >CascadingTest</a>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
