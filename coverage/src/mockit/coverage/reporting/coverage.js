@@ -2,7 +2,7 @@ var cellShown;
 var pathIdShown;
 var lineIdsShown;
 
-function hidePath(pathId)
+function hidePath(cell)
 {
    if (lineIdsShown) {
       for (var i = 0; i < lineIdsShown.length; i++) {
@@ -10,16 +10,20 @@ function hidePath(pathId)
          line.style.outlineStyle = 'none';
       }
 
+      lineIdsShown = null;
       cellShown.style.outlineWidth = 'thin';
-      cellShown = lineIdsShown = null; return pathId == pathIdShown;
+
+      var sameCell = cell == cellShown;
+      cellShown = null;
+      return sameCell;
    }
 
    return false;
- }
+}
 
 function showPath(cell, pathId, lineIdsStr)
 {
-   if (hidePath(pathId)) return;
+   if (hidePath(cell)) return;
 
    cellShown = cell;
    pathIdShown = pathId;
