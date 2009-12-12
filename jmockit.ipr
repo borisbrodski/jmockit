@@ -191,7 +191,6 @@
         </inspection_tool>
         <inspection_tool class="ContinueStatementWithLabel" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ControlFlowStatementWithoutBraces" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ConvertAnnotations" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConvertJavadoc" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConvertOldAnnotations" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CovariantCompareTo" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -406,7 +405,7 @@
           <option name="m_limit" value="5" />
         </inspection_tool>
         <inspection_tool class="NonBooleanMethodNameMayNotStartWithQuestion" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="questionString" value="is,can,has,should,could,will,shall,check,contains,equals,startsWith,endsWith" />
+          <option name="questionString" value="is,can,has,should,could,shall,check,contains,equals,startsWith,endsWith" />
         </inspection_tool>
         <inspection_tool class="NonCommentSourceStatements" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_limit" value="30" />
@@ -649,7 +648,6 @@
         <inspection_tool class="UnaryPlus" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnconditionalWait" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnconstructableTestCase" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="UndeclaredTests" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessarilyQualifiedStaticUsage" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_ignoreStaticFieldAccesses" value="false" />
           <option name="m_ignoreStaticMethodCalls" value="false" />
@@ -756,8 +754,8 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/coverage/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
   </component>
@@ -794,6 +792,7 @@
         <w>doctype</w>
         <w>enableassertions</w>
         <w>enqueue</w>
+        <w>extraclasspath</w>
         <w>finalizers</w>
         <w>fixme</w>
         <w>formatter</w>
@@ -1017,6 +1016,28 @@
         <root url="jar://$PROJECT_DIR$/jmockit.jar!/" />
       </SOURCES>
     </library>
+    <library name="Hamcrest 1.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-library-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-core-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-library-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-core-1.2.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: mockit:jmockit:0.994">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.994/jmockit-0.994.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.994/jmockit-0.994-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.994/jmockit-0.994-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: org.testng:testng:jdk15:5.10">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.10/testng-5.10-jdk15.jar!/" />
@@ -1070,28 +1091,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.7/junit-4.7-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Hamcrest 1.2">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-library-1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-core-1.2.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-library-1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-core-1.2.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: mockit:jmockit:0.994">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.994/jmockit-0.994.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.994/jmockit-0.994-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.994/jmockit-0.994-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
