@@ -79,12 +79,18 @@ public final class ExecutingTest
       shouldIgnoreMockingCallbacks = flag;
    }
 
+   public void clearRecordAndReplayForVerifications()
+   {
+      recordAndReplayForLastTestMethod = null;
+   }
+
    public RecordAndReplayExecution getRecordAndReplayForVerifications()
    {
       if (currentRecordAndReplay != null) {
          return currentRecordAndReplay;
       }
       else if (recordAndReplayForLastTestMethod != null) {
+         currentRecordAndReplay = recordAndReplayForLastTestMethod;
          return recordAndReplayForLastTestMethod;
       }
       else {

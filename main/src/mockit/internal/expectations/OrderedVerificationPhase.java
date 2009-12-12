@@ -115,7 +115,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
             invocationCount++;
 
             if (invocationCount > maxInvocations) {
-               if (numberOfIterations == 1) {
+               if (maxInvocations >= 0 && numberOfIterations == 1) {
                   throw nextExpectation.expectedInvocation.errorForUnexpectedInvocation();
                }
 

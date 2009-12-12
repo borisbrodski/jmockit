@@ -165,6 +165,10 @@ final class ReplayPhase extends Phase
             if (expectation.constraints.incrementInvocationCount()) {
                moveToNextExpectation();
             }
+            else if (expectation.constraints.isInvocationCountMoreThanMaximumExpected()) {
+               recordAndReplay.errorThrown = invocation.errorForUnexpectedInvocations(1);
+               return null;
+            }
 
             return expectation.produceResult(replayArgs);
          }

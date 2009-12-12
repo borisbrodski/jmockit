@@ -75,6 +75,36 @@ public final class ActiveInvocations
       }
    }
 
+   public static void times(int n)
+   {
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+
+      if (instance != null) {
+         TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+         currentPhase.handleInvocationCountConstraint(n, n);
+      }
+   }
+
+   public static void minTimes(int n)
+   {
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+
+      if (instance != null) {
+         TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+         currentPhase.handleInvocationCountConstraint(n, -1);
+      }
+   }
+
+   public static void maxTimes(int n)
+   {
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+
+      if (instance != null) {
+         TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+         currentPhase.setMaxInvocationCount(n);
+      }
+   }
+
    public static void endInvocations()
    {
       TestRun.enterNoMockingZone();

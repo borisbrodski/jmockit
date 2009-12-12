@@ -26,7 +26,7 @@ package mockit.internal.expectations.invocation;
 
 public final class InvocationConstraints
 {
-   int minInvocations;
+   public int minInvocations;
    int maxInvocations;
    public int invocationCount;
 

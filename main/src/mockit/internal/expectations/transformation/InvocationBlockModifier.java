@@ -30,8 +30,7 @@ import static mockit.external.asm.Opcodes.*;
 
 final class InvocationBlockModifier extends MethodAdapter
 {
-   private static final String CALLBACK_CLASS_DESC =
-      ActiveInvocations.class.getName().replace('.', '/');
+   private static final String CLASS_DESC = ActiveInvocations.class.getName().replace('.', '/');
 
    private final int[] matcherStacks = new int[20];
    private final MethodWriter mw;
@@ -51,14 +50,17 @@ final class InvocationBlockModifier extends MethodAdapter
       if (fieldOwner.equals(owner)) {
          if (opcode == GETSTATIC && name.startsWith("any")) {
             mw.visitFieldInsn(GETSTATIC, owner, name, desc);
-            mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "addArgMatcher", "()V");
+            mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addArgMatcher", "()V");
             matcherStacks[matchers++] = mw.stackSize;
             return;
          }
          else if (opcode == PUTSTATIC) {
             if ("result".equals(name)) {
-               mw.visitMethodInsn(
-                  INVOKESTATIC, CALLBACK_CLASS_DESC, "addResult", "(Ljava/lang/Object;)V");
+               mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addResult", "(Ljava/lang/Object;)V");
+               return;
+            }
+            else if ("times".equals(name) || "minTimes".equals(name) || "maxTimes".equals(name)) {
+               mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, name, "(I)V");
                return;
             }
          }
@@ -123,14 +125,14 @@ final class InvocationBlockModifier extends MethodAdapter
    {
       mw.visitIntInsn(SIPUSH, originalMatcherIndex);
       mw.visitIntInsn(SIPUSH, toIndex);
-      mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "moveArgMatcher", "(II)V");
+      mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "moveArgMatcher", "(II)V");
    }
 
    @Override
    public void visitInsn(int opcode)
    {
       if (opcode == RETURN) {
-         mw.visitMethodInsn(INVOKESTATIC, CALLBACK_CLASS_DESC, "endInvocations", "()V");
+         mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "endInvocations", "()V");
       }
 
       mw.visitInsn(opcode);

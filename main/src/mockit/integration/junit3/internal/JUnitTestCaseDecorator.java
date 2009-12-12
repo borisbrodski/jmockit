@@ -115,6 +115,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
    {
       setUpMethod.invoke(it);
 
+      TestRun.setRunningTestMethod(true);
       Throwable exception = null;
 
       try {
@@ -124,6 +125,8 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
          exception = running;
       }
       finally {
+         TestRun.setRunningTestMethod(false);
+
          try {
             tearDownMethod.invoke(it);
          }

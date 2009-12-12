@@ -141,6 +141,10 @@ public final class TestRun
    public static void setRunningTestMethod(boolean runningTestMethod)
    {
       instance.runningTestMethod = runningTestMethod;
+
+      if (runningTestMethod) {
+         instance.executingTest.clearRecordAndReplayForVerifications();
+      }
    }
 
    public static void enterNoMockingZone()

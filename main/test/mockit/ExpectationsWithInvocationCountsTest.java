@@ -273,8 +273,8 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomethingElse();
    }
 
-   @Test
-   public void repeatsAtMostOverwritingLowerLimit()
+   @Test(expected = AssertionError.class)
+   public void repeatsAtMostDoesNotOverwriteLowerLimit()
    {
       new Expectations()
       {
