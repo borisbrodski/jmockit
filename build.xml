@@ -68,7 +68,6 @@
    <target name="buildHibernateEmulation">
       <build module="hibernate3emul"/><buildTests module="hibernate3emul"/>
    </target>
-   <target name="buildAOP"><build module="aop"/><buildTests module="aop"/></target>
    <target name="buildSamples">
       <build module="samples/easymock"/>
       <buildTests module="samples/easymock"/>
