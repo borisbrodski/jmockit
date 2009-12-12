@@ -1,5 +1,4 @@
 var cellShown;
-var pathIdShown;
 var lineIdsShown;
 
 function hidePath(cell)
@@ -26,7 +25,6 @@ function showPath(cell, pathId, lineIdsStr)
    if (hidePath(cell)) return;
 
    cellShown = cell;
-   pathIdShown = pathId;
    lineIdsShown = lineIdsStr.split(' ');
 
    for (var i = 0; i < lineIdsShown.length; i++) {
