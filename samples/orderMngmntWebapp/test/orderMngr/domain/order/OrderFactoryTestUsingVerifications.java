@@ -54,7 +54,7 @@ public final class OrderFactoryTestUsingVerifications
 
       new NonStrictExpectations()
       {{
-         order.getItems(); returns(actualItems);
+         order.getItems(); result = actualItems;
       }};
 
       // Exercises code under test:

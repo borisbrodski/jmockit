@@ -62,7 +62,7 @@ public final class ServiceA_VerificationsAPI_Test
       new NonStrictExpectations()
       {
          {
-            Database.find(withSubstring("select"), null); returns(items);
+            Database.find(withSubstring("select"), null); result = items;
          }
       };
 
@@ -82,8 +82,7 @@ public final class ServiceA_VerificationsAPI_Test
       new NonStrictExpectations()
       {
          {
-            serviceB.computeTotal((List<?>) withNotNull());
-            throwsException(new InvalidItemStatus());
+            serviceB.computeTotal((List<?>) withNotNull()); result = new InvalidItemStatus();
          }
       };
 

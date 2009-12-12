@@ -56,7 +56,7 @@ public final class AlertService_JMockit_Test
    {
       new NonStrictExpectations()
       {{
-         mockSchedulerService.getScheduledAlerts(null, 1, anyBoolean); returns(alerts);
+         mockSchedulerService.getScheduledAlerts(null, 1, anyBoolean); result = alerts;
       }};
 
       alertService.sendScheduledAlerts();
@@ -73,7 +73,7 @@ public final class AlertService_JMockit_Test
    {
       new NonStrictExpectations()
       {{
-         mockSchedulerService.getScheduledAlerts(null, 1, anyBoolean); returns(alerts);
+         mockSchedulerService.getScheduledAlerts(null, 1, anyBoolean); result = alerts;
       }};
 
       alertService.sendScheduledAlerts();
@@ -93,7 +93,7 @@ public final class AlertService_JMockit_Test
       new Verifications()
       {
          {
-            mockMessageService.sendMessage((Message) any); repeats(0);
+            mockMessageService.sendMessage((Message) any); times = 0;
          }
       };
    }
@@ -118,7 +118,7 @@ public final class AlertService_JMockit_Test
       {
          {
             mockSchedulerService.getScheduledAlerts("123", 1, true);
-            throwsException(new IllegalArgumentException());
+            result = new IllegalArgumentException();
          }
       };
 
@@ -131,8 +131,8 @@ public final class AlertService_JMockit_Test
       new Expectations()
       {
          {
-            mockSchedulerService.getScheduledAlerts(null, 0, true); returns(alerts);
-            mockSchedulerService.getScheduledAlerts(null, 0, true); throwsException(new Exception());
+            mockSchedulerService.getScheduledAlerts(null, 0, true); result = alerts;
+            mockSchedulerService.getScheduledAlerts(null, 0, true); result = new Exception();
          }
       };
 
@@ -147,17 +147,17 @@ public final class AlertService_JMockit_Test
       {
          {
             mockSchedulerService.getScheduledAlerts("123", 1, true);
-            returns(new Delegate()
+            result = new Delegate()
             {
                List<Message> getScheduledAlerts(Object arg0, int arg1, boolean arg2)
                {
-                  assertEquals("123", arg0);
-                  assertEquals(1, arg1);
-                  assertEquals(true, arg2);
+                  assert arg0 == "123";
+                  assert arg1 == 1;
+                  assert arg2;
 
                   return Arrays.asList(alert2);
                }
-            });
+            };
          }
       };
 
@@ -166,7 +166,7 @@ public final class AlertService_JMockit_Test
       new Verifications()
       {
          {
-            mockMessageService.sendMessage(alert1); repeats(0);
+            mockMessageService.sendMessage(alert1); times = 0;
             mockMessageService.sendMessage(alert2);
          }
       };

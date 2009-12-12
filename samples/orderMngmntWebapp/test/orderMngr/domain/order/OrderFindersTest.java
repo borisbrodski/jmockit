@@ -38,7 +38,7 @@ import static org.junit.Assert.*;
 public final class OrderFindersTest
 {
    @NonStrict final Database db = null;
-   @Mocked ResultSet result;
+   @Mocked ResultSet rs;
    Order order;
 
    @Test
@@ -52,27 +52,27 @@ public final class OrderFindersTest
       // Record expectations:
       new Expectations()
       {
-         ResultSet result2;
+         ResultSet rs2;
 
          {
             Database.executeQuery(
                withEqual("select customer_id from order where number=?"),
                withEqual(order.getNumber()));
-            returns(result);
+            result = rs;
 
-            result.next(); returns(true);
-            result.getString(1); returns(order.getCustomerId());
+            rs.next(); result = true;
+            rs.getString(1); result = order.getCustomerId();
 
             Database.executeQuery(
                withMatch("select .+ from order_item where .+"), withEqual(order.getNumber()));
-            returns(result2);
+            result = rs2;
 
-            result2.next(); returns(true);
-            result2.getString(1);
-            result2.getString(2);
-            result2.getInt(3);
-            result2.getBigDecimal(4);
-            result2.next(); returns(false);
+            rs2.next(); result = true;
+            rs2.getString(1);
+            rs2.getString(2);
+            rs2.getInt(3);
+            rs2.getBigDecimal(4);
+            rs2.next(); result = false;
          }
       };
 
@@ -96,24 +96,23 @@ public final class OrderFindersTest
             Database.executeQuery(
                withMatch("select.+from\\s+order.*where.+customer_id\\s*=\\s*\\?"),
                withEqual(customerId));
-            returns(result);
+            result = rs;
 
-            result.next(); returns(true);
-            result.getInt(1); returns(order.getNumber());
+            rs.next(); result = true;
+            rs.getInt(1); result = order.getNumber();
             invoke(repository, "loadOrderItems", order);
-            result.next(); returns(false);
-
+            rs.next(); result = false;
          }
       };
 
       List<Order> found = repository.findByCustomer(customerId);
 
-      assertTrue("Order not found by customer id", found.contains(order));
+      assert found.contains(order) : "Order not found by customer id";
 
       new Verifications()
       {
          {
-            Database.closeStatement(withSameInstance(result));
+            Database.closeStatement(rs);
          }
       };
    }

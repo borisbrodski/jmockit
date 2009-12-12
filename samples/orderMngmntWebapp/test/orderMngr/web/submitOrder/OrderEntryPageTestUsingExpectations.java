@@ -54,7 +54,7 @@ public final class OrderEntryPageTestUsingExpectations
 
          {
             new OrderFactory().createOrder(customerId, page.getOrderItems());
-            returns(new Order(orderNo, customerId));
+            result = new Order(orderNo, customerId);
          }
       };
 

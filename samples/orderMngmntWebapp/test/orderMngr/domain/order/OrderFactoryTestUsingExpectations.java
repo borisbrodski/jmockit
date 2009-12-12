@@ -52,7 +52,7 @@ public final class OrderFactoryTestUsingExpectations
          final Order order = new Order(anyInt, customerId);
 
          {
-            order.getItems(); returns(actualItems);
+            order.getItems(); result = actualItems;
          }
 
          final OrderRepository orderRepository = new OrderRepository();

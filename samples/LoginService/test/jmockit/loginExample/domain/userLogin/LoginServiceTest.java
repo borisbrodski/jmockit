@@ -42,7 +42,7 @@ public final class LoginServiceTest
 
       new NonStrictExpectations()
       {{
-         UserAccount.find("john"); returns(account);
+         UserAccount.find("john"); result = account;
       }};
    }
 
@@ -63,7 +63,7 @@ public final class LoginServiceTest
    {
       new NonStrictExpectations()
       {{
-         account.passwordMatches(anyString); returns(match);
+         account.passwordMatches(anyString); result = match;
       }};
    }
 
@@ -91,7 +91,7 @@ public final class LoginServiceTest
 
       new Verifications()
       {{
-         account.setLoggedIn(true); repeats(0);
+         account.setLoggedIn(true); times = 0;
       }};
    }
 
@@ -103,8 +103,8 @@ public final class LoginServiceTest
 
       new NonStrictExpectations()
       {{
-         UserAccount.find("roger"); returns(secondAccount);
-         secondAccount.passwordMatches(anyString); returns(false);
+         UserAccount.find("roger"); result = secondAccount;
+         secondAccount.passwordMatches(anyString); result = false;
       }};
 
       service.login("john", "password");
@@ -116,9 +116,9 @@ public final class LoginServiceTest
 
    private static final class AccountNotRevoked extends Verifications
    {
-      public AccountNotRevoked(UserAccount accountToVerify)
+      AccountNotRevoked(UserAccount accountToVerify)
       {
-         accountToVerify.setRevoked(true); repeats(0);
+         accountToVerify.setRevoked(true); times = 0;
       }
    }
 
@@ -129,7 +129,7 @@ public final class LoginServiceTest
 
       new NonStrictExpectations()
       {{
-         account.isLoggedIn(); returns(true);
+         account.isLoggedIn(); result = true;
       }};
 
       service.login("john", "password");
@@ -140,7 +140,7 @@ public final class LoginServiceTest
    {
       new NonStrictExpectations()
       {{
-         UserAccount.find("roger"); returns(null);
+         UserAccount.find("roger"); result = null;
       }};
 
       new LoginService().login("roger", "password");
@@ -153,7 +153,7 @@ public final class LoginServiceTest
 
       new NonStrictExpectations()
       {{
-         account.isRevoked(); returns(true);
+         account.isRevoked(); result = true;
       }};
 
       service.login("john", "password");
