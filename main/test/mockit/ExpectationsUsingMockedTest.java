@@ -25,7 +25,6 @@
 package mockit;
 
 import java.util.*;
-import java.io.*;
 
 import static org.junit.Assert.*;
 import org.junit.*;
@@ -35,10 +34,8 @@ interface Dependency
    String doSomething(boolean b);
 }
 
-public final class ExpectationsUsingMockedTest<MultiMock extends Dependency & Runnable>
+public final class ExpectationsUsingMockedTest
 {
-   @Mocked private MultiMock multiMock;
-
    static class Collaborator
    {
       private int value;
@@ -54,19 +51,19 @@ public final class ExpectationsUsingMockedTest<MultiMock extends Dependency & Ru
       final void simpleOperation(int a, String b, Date c) {}
    }
 
-   static final class DependencyImpl implements Dependency
-   {
-      public String doSomething(boolean b) { return ""; }
-   }
-
-   @Mocked("do.*") private DependencyImpl mockDependency;
-
    public abstract static class AbstractBase
    {
       protected abstract boolean add(Integer i);
    }
 
-   @NonStrict private AbstractBase base;
+   @NonStrict AbstractBase base;
+
+   static final class DependencyImpl implements Dependency
+   {
+      public String doSomething(boolean b) { return ""; }
+   }
+
+   @Mocked("do.*") DependencyImpl mockDependency;
 
    @Test
    public void annotatedField()
@@ -163,40 +160,6 @@ public final class ExpectationsUsingMockedTest<MultiMock extends Dependency & Ru
 
       assertEquals("1", dependency1.doSomething(true));
       assertEquals("2", dependency1.doSomething(false));
-   }
-
-   @Test
-   public void mockFieldWithTwoInterfaces()
-   {
-      new NonStrictExpectations()
-      {
-         {
-            multiMock.doSomething(false); returns("test");
-         }
-      };
-
-      multiMock.run();
-      assertEquals("test", multiMock.doSomething(false));
-
-      new Verifications()
-      {
-         {
-            multiMock.run();
-         }
-      };
-   }
-
-   @Test
-   public <M extends Dependency & Serializable> void mockParameterWithTwoInterfaces(final M mock)
-   {
-      new Expectations()
-      {
-         {
-            mock.doSomething(true); returns("");
-         }
-      };
-
-      assertEquals("", mock.doSomething(true));
    }
 
    @Test
