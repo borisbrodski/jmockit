@@ -20,7 +20,7 @@
       <attribute name="jdkVersion" default="1.5"/>
       <attribute name="srcdir" default="src"/>
       <attribute name="outdir" default="classes"/>
-      <attribute name="extraClasspath" default=""/>
+      <attribute name="extraclasspath" default=""/>
       <sequential>
          <delete dir="@{module}/@{outdir}" includes="**/*"/>
          <mkdir dir="@{module}/@{outdir}"/>
@@ -32,7 +32,7 @@
             <classpath location="main/classes"/>
             <classpath location="@{module}/classes"/>
             <classpath location="@{module}/@{outdir}"/>
-            <classpath location="@{extraClasspath}"/>
+            <classpath location="@{extraclasspath}"/>
             <classpath>
                <fileset dir="@{module}/lib" includes="*.jar" erroronmissingdir="false"/>
             </classpath>
@@ -49,11 +49,11 @@
    <macrodef name="buildTests">
       <attribute name="module"/>
       <attribute name="jdkVersion" default="1.5"/>
-      <attribute name="extraClasspath" default=""/>
+      <attribute name="extraclasspath" default=""/>
       <sequential>
          <build
             module="@{module}" jdkversion="@{jdkVersion}" srcdir="test" outdir="test-classes"
-            extraclasspath="@{extraClasspath}"/>
+            extraclasspath="@{extraclasspath}"/>
       </sequential>
    </macrodef>
 
