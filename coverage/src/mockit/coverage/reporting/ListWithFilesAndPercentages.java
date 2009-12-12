@@ -31,17 +31,17 @@ import mockit.coverage.*;
 abstract class ListWithFilesAndPercentages
 {
    protected final OutputFile output;
-   private final String baseIndentation;
+   private final String baseIndent;
    int totalSegments;
    int coveredSegments;
    int totalPaths;
    int coveredPaths;
    private boolean firstColumnWithDoubleSpan;
 
-   protected ListWithFilesAndPercentages(OutputFile output, String baseIndentation)
+   protected ListWithFilesAndPercentages(OutputFile output, String baseIndent)
    {
       this.output = output;
-      this.baseIndentation = baseIndentation;
+      this.baseIndent = baseIndent;
    }
 
    protected abstract void writeMetricsForFile(String packageName, String fileName);
@@ -109,7 +109,6 @@ abstract class ListWithFilesAndPercentages
       totalSegments += getTotalSegments(filePath);
       coveredSegments += getCoveredSegments(filePath);
 
-      printIndentOneLevelDeeper();
       printCoveragePercentage(true, fileCodePercentage);
    }
 
@@ -120,39 +119,35 @@ abstract class ListWithFilesAndPercentages
       totalPaths += getTotalPaths(filePath);
       coveredPaths += getCoveredPaths(filePath);
 
-      printIndentOneLevelDeeper();
       printCoveragePercentage(false, filePathPercentage);
    }
 
    final void printCoveragePercentage(boolean firstColumn, int percentage)
    {
       if (percentage >= 0) {
-         output.write("<td class='coverage' style='background-color:#");
+         printIndent();
+         output.write("  <td class='coverage' style='background-color:#");
          output.write(CoveragePercentage.percentageColor(percentage));
          output.write("'>");
          output.print(percentage);
          output.println("%</td>");
       }
       else if (firstColumn) {
-         output.println("<td colspan='2' class='coverage nocode'>N/A</td>");
+         printIndent();
+         output.println("  <td colspan='2' class='coverage nocode'>N/A</td>");
          firstColumnWithDoubleSpan = true;
       }
       else if (firstColumnWithDoubleSpan) {
          firstColumnWithDoubleSpan = false;
       }
       else {
-         output.println("<td class='coverage nocode'>N/A</td>");
+         printIndent();
+         output.println("  <td class='coverage nocode'>N/A</td>");
       }
    }
 
    final void printIndent()
    {
-      output.write(baseIndentation);
-   }
-
-   private void printIndentOneLevelDeeper()
-   {
-      printIndent();
-      output.write("  ");
+      output.write(baseIndent);
    }
 }

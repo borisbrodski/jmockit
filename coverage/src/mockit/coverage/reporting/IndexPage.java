@@ -111,11 +111,9 @@ final class IndexPage extends ListWithFilesAndPercentages
       output.println("      <td colspan='2' class='total'>Total</td>");
 
       int totalLinePercentage = CoveragePercentage.calculate(coveredSegments, totalSegments);
-      printIndent();
       printCoveragePercentage(true, totalLinePercentage);
 
       int totalPathPercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
-      printIndent();
       printCoveragePercentage(false, totalPathPercentage);
 
       output.println("    </tr>");
