@@ -9,6 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
     </content>
     <orderEntry type="inheritedJdk" />
+    <orderEntry type="library" scope="TEST" name="JMockit" level="project" />
     <orderEntry type="library" scope="TEST" name="JUnit 4.8" level="application" />
     <orderEntry type="module-library" scope="TEST">
       <library>
@@ -21,7 +22,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="library" scope="TEST" name="JMockit" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
