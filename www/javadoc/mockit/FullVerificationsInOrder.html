@@ -199,6 +199,33 @@ A combination of <A HREF="../mockit/FullVerifications.html" title="class in mock
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Matches any <code>String</code> value for the relevant parameter.</TD>
 </TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#maxTimes">maxTimes</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the maximum number of times that
+ invocations matching the current expectation should occur during replay.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#minTimes">minTimes</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the minimum number of times that
+ invocations matching the current expectation should occur during replay.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#times">times</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the exact number of times that
+ invocations matching the current expectation should occur during replay.</TD>
+</TR>
 </TABLE>
 &nbsp;
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -393,10 +420,10 @@ A combination of <A HREF="../mockit/FullVerifications.html" title="class in mock
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#repeats(int)">repeats</A></B>(int&nbsp;expectedInvocationCount)</CODE>
+<TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#repeats(int)">repeats</A></B>(int&nbsp;exactInvocationCount)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defines the expected number of invocations for the current expectation.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies the exact number of invocations for the current expectation.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -405,7 +432,7 @@ A combination of <A HREF="../mockit/FullVerifications.html" title="class in mock
         int&nbsp;maxInvocations)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defines a range for the expected number of invocations of the current expectation.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies a range for the number of invocations of the current expectation.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -413,7 +440,7 @@ A combination of <A HREF="../mockit/FullVerifications.html" title="class in mock
 <TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#repeatsAtLeast(int)">repeatsAtLeast</A></B>(int&nbsp;minInvocations)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defines a lower limit for the expected number of invocations of the current expectation.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies a lower limit for the number of invocations of the current expectation.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -421,7 +448,7 @@ A combination of <A HREF="../mockit/FullVerifications.html" title="class in mock
 <TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#repeatsAtMost(int)">repeatsAtMost</A></B>(int&nbsp;maxInvocations)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defines an upper limit for the expected number of invocations of the current expectation.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an upper limit for the number of invocations of the current expectation.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -879,6 +906,55 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A></DL>
 </DL>
+<HR>
+
+<A NAME="maxTimes"><!-- --></A><H3>
+maxTimes</H3>
+<PRE>
+protected static int <B>maxTimes</B></PRE>
+<DL>
+<DD>A non-negative value assigned to this field will be taken as the maximum number of times that
+ invocations matching the current expectation should occur during replay.
+ A <em>negative</em> value implies there is no upper limit.
+ Each assignment to this field is equivalent to calling <A HREF="../mockit/FullVerificationsInOrder.html#repeatsAtMost(int)"><CODE>repeatsAtMost(int)</CODE></A> with the
+ assigned value.
+<P>
+<DL>
+<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#times"><CODE>times</CODE></A>, 
+<A HREF="../mockit/FullVerificationsInOrder.html#minTimes"><CODE>minTimes</CODE></A></DL>
+</DL>
+<HR>
+
+<A NAME="minTimes"><!-- --></A><H3>
+minTimes</H3>
+<PRE>
+protected static int <B>minTimes</B></PRE>
+<DL>
+<DD>A non-negative value assigned to this field will be taken as the minimum number of times that
+ invocations matching the current expectation should occur during replay.
+ Each assignment to this field is equivalent to calling <A HREF="../mockit/FullVerificationsInOrder.html#repeatsAtLeast(int)"><CODE>repeatsAtLeast(int)</CODE></A> with the
+ assigned value.
+<P>
+<DL>
+<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#times"><CODE>times</CODE></A>, 
+<A HREF="../mockit/FullVerificationsInOrder.html#maxTimes"><CODE>maxTimes</CODE></A></DL>
+</DL>
+<HR>
+
+<A NAME="times"><!-- --></A><H3>
+times</H3>
+<PRE>
+protected static int <B>times</B></PRE>
+<DL>
+<DD>A non-negative value assigned to this field will be taken as the exact number of times that
+ invocations matching the current expectation should occur during replay.
+ Each assignment to this field is equivalent to calling <A HREF="../mockit/FullVerificationsInOrder.html#repeats(int)"><CODE>repeats(int)</CODE></A> with the assigned
+ value.
+<P>
+<DL>
+<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#minTimes"><CODE>minTimes</CODE></A>, 
+<A HREF="../mockit/FullVerificationsInOrder.html#maxTimes"><CODE>maxTimes</CODE></A></DL>
+</DL>
 
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 
@@ -1114,13 +1190,15 @@ protected final &lt;T&gt; T <B>newInstance</B>(<A HREF="http://java.sun.com/java
 <A NAME="repeats(int)"><!-- --></A><H3>
 repeats</H3>
 <PRE>
-protected final void <B>repeats</B>(int&nbsp;expectedInvocationCount)</PRE>
+protected final void <B>repeats</B>(int&nbsp;exactInvocationCount)</PRE>
 <DL>
-<DD>Defines the expected number of invocations for the current expectation.
+<DD>Specifies the exact number of invocations for the current expectation.
+ <p/>
+ As an alternative, consider using the <A HREF="../mockit/FullVerificationsInOrder.html#times"><CODE>times</CODE></A> field.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>expectedInvocationCount</CODE> - exact number of times the invocation is expected to occur
- during the replay phase<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#repeats(int, int)"><CODE>repeats(int, int)</CODE></A>, 
+<DT><B>Parameters:</B><DD><CODE>exactInvocationCount</CODE> - exact number of times the invocation is expected to occur during
+ the replay phase<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#repeats(int, int)"><CODE>repeats(int, int)</CODE></A>, 
 <A HREF="../mockit/FullVerificationsInOrder.html#repeatsAtLeast(int)"><CODE>repeatsAtLeast(int)</CODE></A>, 
 <A HREF="../mockit/FullVerificationsInOrder.html#repeatsAtMost(int)"><CODE>repeatsAtMost(int)</CODE></A></DL>
 </DD>
@@ -1133,12 +1211,14 @@ repeats</H3>
 protected final void <B>repeats</B>(int&nbsp;minInvocations,
                              int&nbsp;maxInvocations)</PRE>
 <DL>
-<DD>Defines a range for the expected number of invocations of the current expectation.
+<DD>Specifies a range for the number of invocations of the current expectation.
+ <p/>
+ As an alternative, consider using the <A HREF="../mockit/FullVerificationsInOrder.html#minTimes"><CODE>minTimes</CODE></A> and <A HREF="../mockit/FullVerificationsInOrder.html#maxTimes"><CODE>maxTimes</CODE></A> fields.
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>minInvocations</CODE> - minimum number of times the invocation is expected to occur during the
- replay phase<DD><CODE>maxInvocations</CODE> - maximum number of times the invocation is expected to occur during the
- replay phase<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#repeats(int)"><CODE>repeats(int)</CODE></A>, 
+ replay phase<DD><CODE>maxInvocations</CODE> - maximum number of times the invocation is allowed to occur during the
+ replay phase, or -1 for no upper limit<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#repeats(int)"><CODE>repeats(int)</CODE></A>, 
 <A HREF="../mockit/FullVerificationsInOrder.html#repeatsAtLeast(int)"><CODE>repeatsAtLeast(int)</CODE></A>, 
 <A HREF="../mockit/FullVerificationsInOrder.html#repeatsAtMost(int)"><CODE>repeatsAtMost(int)</CODE></A></DL>
 </DD>
@@ -1150,7 +1230,13 @@ repeatsAtLeast</H3>
 <PRE>
 protected final void <B>repeatsAtLeast</B>(int&nbsp;minInvocations)</PRE>
 <DL>
-<DD>Defines a lower limit for the expected number of invocations of the current expectation.
+<DD>Specifies a lower limit for the number of invocations of the current expectation.
+ <p/>
+ The upper limit is automatically adjusted so that any number of invocations beyond the
+ specified minimum is allowed. The upper limit can still be specified for the same expectation,
+ but consider instead using <A HREF="../mockit/FullVerificationsInOrder.html#repeats(int, int)"><CODE>repeats(int, int)</CODE></A> to specify both limits at the same time.
+ <p/>
+ As an alternative, consider using the <A HREF="../mockit/FullVerificationsInOrder.html#minTimes"><CODE>minTimes</CODE></A> field.
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>minInvocations</CODE> - minimum number of times the invocation is expected to occur during the
@@ -1166,11 +1252,16 @@ repeatsAtMost</H3>
 <PRE>
 protected final void <B>repeatsAtMost</B>(int&nbsp;maxInvocations)</PRE>
 <DL>
-<DD>Defines an upper limit for the expected number of invocations of the current expectation.
+<DD>Specifies an upper limit for the number of invocations of the current expectation.
+ <p/>
+ The lower limit is automatically adjusted, if needed, to be no more than the specified
+ maximum.
+ <p/>
+ As an alternative, consider using the <A HREF="../mockit/FullVerificationsInOrder.html#maxTimes"><CODE>maxTimes</CODE></A> field.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>maxInvocations</CODE> - maximum number of times the invocation is expected to occur during the
- replay phase<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#repeats(int)"><CODE>repeats(int)</CODE></A>, 
+<DT><B>Parameters:</B><DD><CODE>maxInvocations</CODE> - maximum number of times the invocation is allowed to occur during the
+ replay phase, or -1 for no upper limit<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#repeats(int)"><CODE>repeats(int)</CODE></A>, 
 <A HREF="../mockit/FullVerificationsInOrder.html#repeats(int, int)"><CODE>repeats(int, int)</CODE></A>, 
 <A HREF="../mockit/FullVerificationsInOrder.html#repeatsAtLeast(int)"><CODE>repeatsAtLeast(int)</CODE></A></DL>
 </DD>
