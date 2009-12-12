@@ -30,6 +30,7 @@ import java.util.Map.*;
 
 import mockit.internal.*;
 import mockit.internal.expectations.mocking.*;
+import mockit.internal.util.*;
 
 /**
  * Holds data about redefined real classes and their corresponding mock classes (if any), and
@@ -132,6 +133,11 @@ public final class MockFixture
 
    public Object getNewInstanceForMockedType(Class<?> mockedType)
    {
+      if (mockedType.getName().contains(Utilities.GENERATED_SUBCLASS_PREFIX)) {
+         //noinspection AssignmentToMethodParameter
+         mockedType = mockedType.getSuperclass();
+      }
+
       InstanceFactory instanceFactory = mockedTypesAndInstances.get(mockedType);
 
       if (instanceFactory == null) {

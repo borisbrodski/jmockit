@@ -234,9 +234,43 @@ public final class ExecutingTest
       }
    }
    
-   public MockedTypeCascade getMockedTypeCascade(String mockedTypeDesc)
+   public MockedTypeCascade getMockedTypeCascade(String mockedTypeDesc, Object mockInstance)
    {
-      return cascadingTypes.get(mockedTypeDesc);
+      if (cascadingTypes.isEmpty()) {
+         return null;
+      }
+
+      MockedTypeCascade cascade = cascadingTypes.get(mockedTypeDesc);
+
+      if (cascade != null || mockInstance == null) {
+         return cascade;
+      }
+
+      return getMockedTypeCascade(mockedTypeDesc, mockInstance.getClass());
+   }
+
+   private MockedTypeCascade getMockedTypeCascade(String invokedTypeDesc, Class<?> mockedType)
+   {
+      Class<?> typeToLookFor = mockedType;
+
+      do {
+         String typeDesc = typeToLookFor.getName().replace('.', '/');
+
+         if (invokedTypeDesc.equals(typeDesc)) {
+            return null;
+         }
+
+         MockedTypeCascade cascade = cascadingTypes.get(typeDesc);
+
+         if (cascade != null) {
+            return cascade;
+         }
+
+         typeToLookFor = typeToLookFor.getSuperclass();
+      }
+      while (typeToLookFor != Object.class);
+      
+      return null;
    }
 
    void finishExecution()

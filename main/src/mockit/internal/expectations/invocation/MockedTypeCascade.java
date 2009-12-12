@@ -34,34 +34,46 @@ public final class MockedTypeCascade
 {
    private final Map<String, Object> cascadedTypesAndMocks = new HashMap<String, Object>(4);
 
-   static Object getMock(String mockedTypeDesc, String returnTypeDesc)
+   static Object getMock(String mockedTypeDesc, Object mockInstance, String returnTypeDesc)
    {
-      String typeDesc = returnTypeDesc.substring(1, returnTypeDesc.length() - 1);
+      String returnTypeName = getReturnTypeNameIfCascadingSupportedForIt(returnTypeDesc);
 
-      if (typeDesc.startsWith("java/lang/") && !typeDesc.contains("/Process")) {
+      if (returnTypeName == null) {
          return null;
       }
 
-      MockedTypeCascade cascade = TestRun.getExecutingTest().getMockedTypeCascade(mockedTypeDesc);
+      MockedTypeCascade cascade =
+         TestRun.getExecutingTest().getMockedTypeCascade(mockedTypeDesc, mockInstance);
 
-      return cascade == null ? null : cascade.getCascadedMock(typeDesc);
+      return cascade == null ? null : cascade.getCascadedMock(returnTypeName);
    }
 
-   private Object getCascadedMock(String typeDesc)
+   private static String getReturnTypeNameIfCascadingSupportedForIt(String typeDesc)
    {
-      Object mock = cascadedTypesAndMocks.get(typeDesc);
+      String typeName = typeDesc.substring(1, typeDesc.length() - 1);
+
+      if (typeName.startsWith("java/lang/") && !typeName.contains("/Process")) {
+         return null;
+      }
+      
+      return typeName;
+   }
+
+   private Object getCascadedMock(String returnTypeName)
+   {
+      Object mock = cascadedTypesAndMocks.get(returnTypeName);
 
       if (mock == null) {
-         Class<?> mockedType = Utilities.loadClass(typeDesc.replace('/', '.'));
+         Class<?> returnType = Utilities.loadClass(returnTypeName.replace('/', '.'));
 
-         mock = TestRun.mockFixture().getNewInstanceForMockedType(mockedType);
+         mock = TestRun.mockFixture().getNewInstanceForMockedType(returnType);
 
          if (mock == null) {
-            mock = new CascadingTypeRedefinition(mockedType).redefineType();
+            mock = new CascadingTypeRedefinition(returnType).redefineType();
          }
 
-         cascadedTypesAndMocks.put(typeDesc, mock);
-         TestRun.getExecutingTest().addCascadingType(typeDesc);
+         cascadedTypesAndMocks.put(returnTypeName, mock);
+         TestRun.getExecutingTest().addCascadingType(returnTypeName);
       }
       else {
          mock = TestRun.mockFixture().getNewInstanceForMockedType(mock.getClass());

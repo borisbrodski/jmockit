@@ -217,9 +217,9 @@ public final class ExpectedInvocation
          defaultReturnValue = DefaultValues.computeForType(returnTypeDesc);
 
          if (defaultReturnValue == null && returnTypeDesc.charAt(0) == 'L') {
-            // TODO: handle different levels of the same mocked type on its inheritance hierarchy
             String mockedTypeDesc = getClassDesc();
-            Object cascadedMock = MockedTypeCascade.getMock(mockedTypeDesc, returnTypeDesc);
+            Object cascadedMock = 
+               MockedTypeCascade.getMock(mockedTypeDesc, instance, returnTypeDesc);
 
             if (cascadedMock != null) {
                if (phase instanceof RecordPhase) {

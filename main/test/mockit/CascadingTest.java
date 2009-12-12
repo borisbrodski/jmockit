@@ -26,6 +26,7 @@ package mockit;
 
 import java.io.*;
 import java.net.*;
+import java.nio.channels.*;
 import java.util.*;
 
 import org.junit.*;
@@ -87,12 +88,12 @@ public final class CascadingTest
          @Cascading Foo foo;
 
          {
-            foo.doSomething(anyString); repeatsAtLeast(2);
-            foo.getBar().doSomething(); returns(2);
-            Foo.globalBar().doSomething(); returns(3);
-            foo.getBooleanValue(); returns(true);
-            foo.getIntValue(); returns(-1);
-            foo.getList(); returns(list);
+            foo.doSomething(anyString); minTimes = 2;
+            foo.getBar().doSomething(); result = 2;
+            Foo.globalBar().doSomething(); result = 3;
+            foo.getBooleanValue(); result = true;
+            foo.getIntValue(); result = -1;
+            foo.getList(); result = list;
          }
       };
 
@@ -123,7 +124,7 @@ public final class CascadingTest
       new Verifications()
       {
          {
-            foo.getBar().doSomething(); repeatsAtLeast(3);
+            foo.getBar().doSomething(); minTimes = 3;
          }
       };
 
@@ -150,10 +151,10 @@ public final class CascadingTest
          @Cascading @Mocked final Foo foo = new Foo();
 
          {
-            foo.getBar().doSomething(); returns(1);
-            Foo.globalBar().doSomething(); returns(2);
+            foo.getBar().doSomething(); result = 1;
+            Foo.globalBar().doSomething(); result = 2;
 
-            foo.getBar().getBaz().runIt(); repeats(2);
+            foo.getBar().getBaz().runIt(); times = 2;
          }
       };
 
@@ -181,7 +182,7 @@ public final class CascadingTest
 
             Process process = sameBuilder.start();
             process.getOutputStream().write(5);
-            process.exitValue(); returns(1);
+            process.exitValue(); result = 1;
          }
       };
 
@@ -191,7 +192,7 @@ public final class CascadingTest
       assert process.exitValue() == 1;
    }
 
-   // Tests using the java.net.Socket class ///////////////////////////////////////////////////////
+   // Tests using java.net classes ////////////////////////////////////////////////////////////////
 
    static final class SocketFactory
    {
@@ -210,7 +211,7 @@ public final class CascadingTest
       new NonStrictExpectations()
       {
          {
-            sf.createSocket(anyString, 80); returns(null);
+            sf.createSocket(anyString, 80); result = null;
          }
       };
 
@@ -226,7 +227,7 @@ public final class CascadingTest
       new NonStrictExpectations()
       {
          {
-            sf.createSocket().getOutputStream(); returns(out);
+            sf.createSocket().getOutputStream(); result = out;
          }
       };
 
@@ -250,8 +251,8 @@ public final class CascadingTest
       new NonStrictExpectations()
       {
          {
-            onInstance(sf1).createSocket().getOutputStream(); returns(out1);
-            onInstance(sf2).createSocket().getOutputStream(); returns(out2);
+            onInstance(sf1).createSocket().getOutputStream(); result = out1;
+            onInstance(sf2).createSocket().getOutputStream(); result = out2;
          }
       };
 
@@ -274,10 +275,10 @@ public final class CascadingTest
       new NonStrictExpectations()
       {
          {
-            sf.createSocket().getPort(); returns(1);
-            sf.createSocket("first", 80).getPort(); returns(2);
-            sf.createSocket("second", 80).getPort(); returns(3);
-            sf.createSocket(anyString, 81).getPort(); returns(4);
+            sf.createSocket().getPort(); result = 1;
+            sf.createSocket("first", 80).getPort(); result = 2;
+            sf.createSocket("second", 80).getPort(); result = 3;
+            sf.createSocket(anyString, 81).getPort(); result = 4;
          }
       };
 
@@ -290,12 +291,18 @@ public final class CascadingTest
       {
          {
             sf.createSocket("first", 80).getPort();
-            sf.createSocket().getPort(); repeats(1);
-            sf.createSocket(anyString, 81).getPort(); repeatsAtMost(1);
+            sf.createSocket().getPort(); times = 1;
+            sf.createSocket(anyString, 81).getPort(); maxTimes = 1;
             sf.createSocket("second", 80).getPort();
-            sf.createSocket("fourth", -1); repeats(0);
+            sf.createSocket("fourth", -1); times = 0;
          }
       };
+   }
+
+   @Test
+   public void cascadeOnInheritedMethod(@Cascading SocketChannel sc)
+   {
+      assert sc.provider() != null;
    }
 
    @Test
@@ -305,20 +312,20 @@ public final class CascadingTest
       new NonStrictExpectations()
       {
          {
-            sf.createSocket("first", 80).getKeepAlive(); returns(true);
-            sf.createSocket("second", anyInt).getChannel().close(); repeats(1);
+            sf.createSocket("first", 80).getKeepAlive(); result = true;
+            sf.createSocket("second", anyInt).getChannel().close(); times = 1;
          }
       };
 
       sf.createSocket("second", 80).getChannel().close();
       assert sf.createSocket("first", 80).getKeepAlive();
-//      sf.createSocket("first", 8080).getChannel().provider().openPipe();
+      sf.createSocket("first", 8080).getChannel().provider().openPipe();
 
-//      new Verifications()
-//      {
-//         {
-//            sf.createSocket("first", 8080).getChannel().provider().openPipe();
-//         }
-//      };
+      new Verifications()
+      {
+         {
+            sf.createSocket("first", 8080).getChannel().provider().openPipe();
+         }
+      };
    }
 }
