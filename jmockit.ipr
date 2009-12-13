@@ -1098,7 +1098,7 @@
         <root url="jar://$PROJECT_DIR$/main/../lib/log4j-1.2.15-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: mockit:jmockit:1">
+    <library name="Maven: mockit:jmockit:0">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/tutorial/../../jmockit.jar!/" />
       </CLASSES>
