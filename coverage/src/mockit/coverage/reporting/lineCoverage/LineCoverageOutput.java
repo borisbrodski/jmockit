@@ -47,7 +47,7 @@ public final class LineCoverageOutput
 
    public void writeLineOfSourceCodeWithCoverageInfo(LineParser lineParser)
    {
-      int lineNo = lineParser.getLineNo();
+      int lineNo = lineParser.getLineNumber();
 
       writeOpeningOfNewExecutableLine(lineNo);
 
@@ -58,11 +58,11 @@ public final class LineCoverageOutput
       output.println("    </tr>");
    }
 
-   private void writeOpeningOfNewExecutableLine(int lineNo)
+   private void writeOpeningOfNewExecutableLine(int line)
    {
       output.println("    <tr>");
-      output.write("      <td class='lineNo'>");
-      output.print(lineNo);
+      output.write("      <td class='line'>");
+      output.print(line);
       output.write("</td>");
    }
 
@@ -85,28 +85,28 @@ public final class LineCoverageOutput
          return;
       }
 
-      output.write("      <td id='l");
-      output.print(lineParser.getLineNo());
+      output.write("      <td");
 
-      LineSegment initialSegment = lineParser.getInitialSegment();
+      LineElement initialElement = lineParser.getInitialElement();
 
       if (lineData != null && lineData.getExecutionCount() > 0) {
-         String formattedLine = lineCoverageFormatter.format(lineData, initialSegment);
+         int line = lineParser.getLineNumber();
+         String formattedLine = lineCoverageFormatter.format(line, lineData, initialElement);
          output.write(formattedLine);
          return;
       }
 
-      output.write("' class='");
+      output.write(" class='");
       output.write(lineData == null ? "nonexec'>" : "uncovered'>");
 
-      if (lineData == null && initialSegment.isComment()) {
+      if (lineData == null && initialElement.isComment()) {
          output.write("<pre class='comment'>");
       }
       else {
          output.write("<pre class='prettyprint'>");
       }
 
-      output.write(initialSegment.toString());
+      output.write(initialElement.toString());
       output.println("</pre></td>");
    }
 }

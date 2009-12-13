@@ -8,7 +8,7 @@ ol {
 
 pre.comment { margin: 0; color: gray; }
 
-.lineNo {
+.line {
    background-color: #e0e0e0; text-align: right;
    padding-left: 1px; padding-right: 1px;
    border-right: #a0a0a0 solid 1px;
@@ -33,8 +33,9 @@ td.coverage {
 }
 td.unknown { background-color: #daa520; text-align: center; }
 td.nocode { background-color: #999999; text-align: center; }
-td.withBranches { background-color: #c8bb88; }
-td.withBranches pre { display: inline; margin-right: 2px; }
+
+.withBranches { background-color: #f8ebb8; }
+
 td.total { text-align: right; font-weight: bold; background-color: #e0e0e0; }
 
 .withCallPoints { cursor: pointer; }

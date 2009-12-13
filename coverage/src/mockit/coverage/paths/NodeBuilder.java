@@ -62,7 +62,7 @@ public final class NodeBuilder
          Node precedingNode = nodes.get(newNodeIndex - 1);
 
          if (precedingNode.line == newNode.line) {
-            newNode.segment = precedingNode.segment + 1;
+            newNode.setSegmentAccordingToPrecedingNode(precedingNode);
          }
       }
 

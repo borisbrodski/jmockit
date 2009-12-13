@@ -38,7 +38,7 @@ public final class PathCoverageOutput
 
    // Helper fields:
    private MethodCoverageData currentMethod;
-   private final StringBuilder lineIds = new StringBuilder(100);
+   private final StringBuilder lineSegmentIds = new StringBuilder(100);
 
    public PathCoverageOutput(PrintWriter output, Collection<MethodCoverageData> methods)
    {
@@ -54,7 +54,7 @@ public final class PathCoverageOutput
 
    public void writePathCoverageInfoIfLineStartsANewMethodOrConstructor(LineParser lineParser)
    {
-      if (currentMethod != null && lineParser.getLineNo() == currentMethod.getFirstLineInBody()) {
+      if (currentMethod != null && lineParser.getLineNumber() == currentMethod.getFirstLineInBody()) {
          writePathCoverageInformationForMethod();
          moveToNextMethod();
       }
@@ -114,14 +114,12 @@ public final class PathCoverageOutput
    private void writeCoverageInfoForIndividualPath(char pathId1, char pathId2, Path path)
    {
       int executionCount = path.getExecutionCount();
-      String lineIdsForPath = getIdsForLinesBelongingToThePath(path);
+      String lineSegmentIdsForPath = getIdsForLineSegmentsBelongingToThePath(path);
 
       output.write("        <span class='");
       output.write(executionCount == 0 ? "uncovered" : "covered");
       output.write("' onclick=\"showPath(this,'");
-      writePathId(pathId1, pathId2);
-      output.write("','");
-      output.write(lineIdsForPath);
+      output.write(lineSegmentIdsForPath);
       output.write("')\">");
       writePathId(pathId1, pathId2);
       output.write(": ");
@@ -138,24 +136,32 @@ public final class PathCoverageOutput
       }
    }
 
-   private String getIdsForLinesBelongingToThePath(Path path)
+   private String getIdsForLineSegmentsBelongingToThePath(Path path)
    {
-      lineIds.setLength(0);
+      lineSegmentIds.setLength(0);
 
       int previousLine = 0;
-      String sep = "l";
+      int lineSegment = 0;
 
       for (Node node : path.getNodes()) {
          int line = node.line;
 
-         if (line > previousLine) {
-            lineIds.append(sep).append(line);
+         if (previousLine == 0) {
+            lineSegmentIds.append('l').append(line).append("s0");
             previousLine = line;
-            sep = " l";
+         }
+         else if (line > previousLine) {
+            lineSegmentIds.append(" l").append(line).append("s0");
+            previousLine = line;
+            lineSegment = 0;
+         }
+         else if (node instanceof Node.Fork) {
+            lineSegment++;
+            lineSegmentIds.append(" l").append(line).append('s').append(lineSegment);
          }
       }
 
-      return lineIds.toString();
+      return lineSegmentIds.toString();
    }
 
    private void writePathCoverageFooterForMethod()

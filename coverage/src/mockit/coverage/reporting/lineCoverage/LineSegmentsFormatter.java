@@ -26,223 +26,132 @@ package mockit.coverage.reporting.lineCoverage;
 
 import java.util.*;
 
-import mockit.coverage.*;
 import mockit.coverage.data.*;
 import mockit.coverage.reporting.*;
-import mockit.coverage.reporting.parsing.LineSegment;
+import mockit.coverage.reporting.parsing.LineElement;
 
 final class LineSegmentsFormatter
 {
-   private static final String EOL = System.getProperty("line.separator");
-
    private final boolean withCallPoints;
+   private final int line;
    private final StringBuilder formattedLine;
+   private BranchCoverageData segmentData;
+   private LineElement element;
+   private int segmentIndex;
 
-   LineSegmentsFormatter(boolean withCallPoints, StringBuilder formattedLine)
+   LineSegmentsFormatter(boolean withCallPoints, int line, StringBuilder formattedLine)
    {
       this.withCallPoints = withCallPoints;
+      this.line = line;
       this.formattedLine = formattedLine;
    }
 
-   void formatBranches(LineCoverageData lineData, LineSegment initialSegment)
+   void formatBranches(List<BranchCoverageData> segmentedData, LineElement initialElement)
    {
-      List<String> sourceElements = null;// lineData.getSourceElements();
-      LineSegment[][] segmentPairs =
-         buildSegmentPairsForSourceElements(sourceElements, initialSegment);
+      element = initialElement;
+      int numSegments = segmentedData.size();
 
-      List<BranchCoverageData> branches = lineData.getSegments();
-      FormattedSegments formattedSegments =
-         buildFormattedSegments(lineData, branches, segmentPairs);
+      for (segmentIndex = 0; segmentIndex < numSegments; segmentIndex++) {
+         segmentData = segmentedData.get(segmentIndex);
 
-      formattedSegments.appendToFormattedLine();
-   }
+         while (!element.isCode()) {
+            formattedLine.append(element.getText());
+            element = element.getNext();
 
-   private LineSegment[][] buildSegmentPairsForSourceElements(
-      List<String> sourceElements, LineSegment initialSegment)
-   {
-      int pairCount = sourceElements.size();
-      LineSegment[][] segmentPairs = new LineSegment[pairCount][2];
-      LineSegment segment = initialSegment;
-
-      for (int i = 0; segment != null && i < pairCount; i++) {
-         String sourceElement = sourceElements.get(i);
-
-         while (!sameSourceElement(segment, sourceElement)) {
-            if (i > 0) {
-               segmentPairs[i - 1][1] = segment;
-            }
-
-            segment = segment.getNext();
-
-            if (segment == null) {
-               if (i < pairCount - 1) {
-                  throw new IllegalStateException("Missing line segment for pair " + i);
-               }
-
-               return segmentPairs;
-            }
-         }
-
-         segmentPairs[i][0] = segment;
-         segment = segment.getNext();
-      }
-
-      segmentPairs[0][0] = initialSegment;
-      segmentPairs[pairCount - 1][1] = null;
-
-      return segmentPairs;
-   }
-
-   private boolean sameSourceElement(LineSegment segment, String sourceElement)
-   {
-      if (segment.isCode()) {
-         if (
-            "*".equals(sourceElement) || segment.getText().equals(sourceElement) ||
-            ("if".equals(sourceElement) || LineSegment.isRelationalOperator(sourceElement)) &&
-            segment.containsConditionalOperator()
-         ) {
-            return true;
-         }
-      }
-
-      return false;
-   }
-
-   private FormattedSegments buildFormattedSegments(
-      LineCoverageData lineData, List<BranchCoverageData> branches, LineSegment[][] segmentPairs)
-   {
-      FormattedSegments formattedSegments = new FormattedSegments();
-
-      formattedSegments.addSegment(
-         segmentPairs[0], lineData.getExecutionCount(), lineData.getCallPoints());
-
-      for (BranchCoverageData branchData : branches) {
-         LineSegment[] segmentPair = segmentPairs[0];
-         formattedSegments.addSegment(
-            segmentPair, lineData.getExecutionCount(), lineData.getCallPoints());
-
-         if (branchData.hasNoJumpTarget()) {
-            segmentPair = null;//segmentPairs[branchData.getNoJumpTargetInsnIndex()];
-            formattedSegments.addSegment(
-               segmentPair, branchData.getNoJumpExecutionCount(), branchData.getCallPoints());
-         }
-
-         if (branchData.hasJumpTarget()) {
-            segmentPair = null;//segmentPairs[branchData.getJumpTargetInsnIndex()];
-            formattedSegments.addSegment(
-               segmentPair, branchData.getJumpExecutionCount(), branchData.getCallPoints());
-         }
-      }
-
-      formattedSegments.adjustPairsToIncludeAllLineSegments();
-
-      return formattedSegments;
-   }
-
-   private final class FormattedSegments
-   {
-      final List<FormattedSegment> segments = new ArrayList<FormattedSegment>();
-
-      void addSegment(LineSegment[] segmentPair, int executionCount, List<CallPoint> callPoints)
-      {
-         LineSegment newSegmentStart = segmentPair[0];
-         int newSegmentIndex = segments.size();
-         int i = 0;
-
-         for (FormattedSegment segment : segments) {
-            mockit.coverage.reporting.parsing.LineSegment segmentStart = segment.segmentPair[0];
-
-            if (segmentStart == newSegmentStart) {
+            if (element == null) {
                return;
             }
-            else if (newSegmentStart.before(segmentStart)) {
-               newSegmentIndex = i;
-               break;
-            }
-
-            i++;
          }
 
-         FormattedSegment segment = new FormattedSegment(segmentPair, executionCount, callPoints);
-         segments.add(newSegmentIndex, segment);
-      }
+         LineElement firstElement = element;
 
-      void appendToFormattedLine()
-      {
-         for (FormattedSegment segment : segments) {
-            segment.appendToFormattedLine();
+         while (element != null && !element.isBranchingPoint()) {
+            element = element.getNext();
          }
-      }
 
-      void adjustPairsToIncludeAllLineSegments()
-      {
-         int segmentCount = segments.size();
+         appendToFormattedLine(firstElement);
 
-         for (int i = 0; i < segmentCount - 1; i++) {
-            LineSegment[] pair = segments.get(i).segmentPair;
-            LineSegment[] nextPair = segments.get(i + 1).segmentPair;
+         if (element != null) {
+            formattedLine.append(element.getText());
+            element = element.getNext();
+         }
 
-            while (pair[1].getNext() != nextPair[0]) {
-               pair[1] = pair[1].getNext();
-            }
+         if (element == null) {
+            return;
          }
       }
    }
 
-   private final class FormattedSegment
+   private void appendToFormattedLine(LineElement firstElement)
    {
-      final LineSegment[] segmentPair;
-      final int executionCount;
-      final List<CallPoint> callPoints;
-
-      FormattedSegment(LineSegment[] segmentPair, int executionCount, List<CallPoint> callPoints)
-      {
-         this.segmentPair = segmentPair;
-         this.executionCount = executionCount;
-         this.callPoints = callPoints;
+      if (firstElement == element) {
+         return;
       }
 
-      void appendToFormattedLine()
-      {
-         appendStartTag();
+      appendStartTag();
 
-         for (LineSegment segment : segmentPair[0]) {
-            formattedLine.append(segment.getText());
+      LineElement elementToPrint = firstElement;
 
-            if (segment == segmentPair[1]) {
-               break;
-            }
+      while (true) {
+         LineElement nextElement = elementToPrint.getNext();
+
+         if (nextElement == element) {
+            break;
          }
 
-         appendEndTag();
+         formattedLine.append(elementToPrint.getText());
+         elementToPrint = nextElement;
       }
 
-      private void appendStartTag()
-      {
-         formattedLine.append("        <pre ");
+      appendEndTag();
+      formattedLine.append(elementToPrint.getText());
+   }
 
-         String startTagAttributes;
+   private void appendStartTag()
+   {
+      formattedLine.append("<span id='l").append(line);
+      formattedLine.append('s').append(segmentIndex).append("' ");
 
-         if (withCallPoints && executionCount > 0) {
-            startTagAttributes = "onclick='showHide(this)' class='covered withCallPoints'>";
-         }
-         else if (executionCount > 0) {
-            startTagAttributes = "class='covered'>";
-         }
-         else {
-            startTagAttributes = "class='uncovered'>";
+      appendTooltipWithExecutionCounts();
+
+      if (segmentData.isCovered()) {
+         formattedLine.append("class='covered");
+
+         if (withCallPoints) {
+            formattedLine.append(" withCallPoints' onclick='showHide(this)");
          }
 
-         formattedLine.append(startTagAttributes);
+         formattedLine.append("'>");
       }
+      else {
+         formattedLine.append("class='uncovered'>");
+      }
+   }
 
-      private void appendEndTag()
-      {
-         formattedLine.append("</pre>").append(EOL);
+   private void appendTooltipWithExecutionCounts()
+   {
+      int noJumpCount = segmentData.getNoJumpExecutionCount();
+      int jumpCount = segmentData.getJumpExecutionCount();
 
-         if (withCallPoints && executionCount > 0) {
-            new ListOfCallPoints().insertListOfCallPoints(formattedLine, callPoints);
-         }
+      if (noJumpCount >= 0 && jumpCount >= 0) {
+         formattedLine.append("title='Executions: ").append(noJumpCount + jumpCount);
+         formattedLine.append("\r\nJumps: ").append(jumpCount).append("' ");
+      }
+      else if (noJumpCount > 0) {
+         formattedLine.append("title='Executions: ").append(noJumpCount);
+         formattedLine.append("\r\nNo jumps' ");
+      }
+      else if (jumpCount > 0) {
+         formattedLine.append("title='Jumps: ").append(jumpCount).append("' ");
+      }
+   }
+
+   private void appendEndTag()
+   {
+      formattedLine.append("</span>");
+
+      if (withCallPoints && segmentData.isNonEmpty()) {
+         new ListOfCallPoints().insertListOfCallPoints(formattedLine, segmentData.getCallPoints());
       }
    }
 }

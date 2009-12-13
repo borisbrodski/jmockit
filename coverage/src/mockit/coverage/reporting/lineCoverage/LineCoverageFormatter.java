@@ -26,7 +26,7 @@ package mockit.coverage.reporting.lineCoverage;
 
 import mockit.coverage.data.*;
 import mockit.coverage.reporting.*;
-import mockit.coverage.reporting.parsing.LineSegment;
+import mockit.coverage.reporting.parsing.LineElement;
 
 final class LineCoverageFormatter
 {
@@ -34,52 +34,61 @@ final class LineCoverageFormatter
 
    private final boolean withCallPoints;
    private final StringBuilder formattedLine = new StringBuilder(200);
+   private LineCoverageData lineData;
 
    LineCoverageFormatter(boolean withCallPoints)
    {
       this.withCallPoints = withCallPoints;
    }
 
-   String format(LineCoverageData lineData, LineSegment initialSegment)
+   String format(int line, LineCoverageData lineData, LineElement initialElement)
    {
+      this.lineData = lineData;
+
       formattedLine.setLength(0);
+      formattedLine.append("><pre class='prettyprint");
 
       if (lineData.containsSegments()) {
-         formatLineWithBranches(lineData);
+         formatLineWithMultipleSegments(line, initialElement);
       }
       else {
-         formattedLine.append("'><pre class='prettyprint covered");
+         formatLineWithSingleSegment(line, initialElement);
       }
 
-      appendClosingTags(lineData, initialSegment);
+      appendClosingTags();
 
       return formattedLine.toString();
    }
 
-   private void formatLineWithBranches(LineCoverageData lineData)
+   private void formatLineWithMultipleSegments(int line, LineElement initialElement)
    {
-      // TODO: make line segment formatting work
-//         formattedLine.append("      <td class='withBranches'>").append(EOL);
-//         new LineSegmentsFormatter(withCallPoints, formattedLine).formatBranches(
-//            lineData, initialSegment);
-      formattedLine.append("'><pre class='prettyprint ");
-      formattedLine.append(lineData.isFullyCovered() ? "covered" : "partiallyCovered");
+      formattedLine.append(" withBranches'>");
+
+      new LineSegmentsFormatter(withCallPoints, line, formattedLine).formatBranches(
+         lineData.getSegments(), initialElement);
    }
 
-   private void appendClosingTags(LineCoverageData lineData, LineSegment initialSegment)
+   private void formatLineWithSingleSegment(int line, LineElement initialElement)
    {
+      formattedLine.append(" covered");
+
       if (withCallPoints) {
          formattedLine.append(" withCallPoints' onclick='showHide(this)");
       }
 
-      formattedLine.append("'>");
-      formattedLine.append(initialSegment.toString());
-      formattedLine.append("</pre>").append(EOL);
+      formattedLine.append("' id='l").append(line).append("s0'>").append(initialElement.toString());
+   }
+
+   private void appendClosingTags()
+   {
+      formattedLine.append("</pre>");
 
       if (withCallPoints) {
+         formattedLine.append(EOL);
          new ListOfCallPoints().insertListOfCallPoints(formattedLine, lineData.getCallPoints());
+         formattedLine.append("      ");
       }
 
-      formattedLine.append("      </td>").append(EOL);
+      formattedLine.append("</td>").append(EOL);
    }
 }

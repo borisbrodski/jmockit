@@ -24,7 +24,7 @@
  */
 package mockit.coverage.reporting.parsing;
 
-import mockit.coverage.reporting.parsing.LineSegment.*;
+import mockit.coverage.reporting.parsing.LineElement.*;
 
 /**
  * Parses a source line into one or more consecutive segments, identifying which ones contain Java
@@ -36,27 +36,22 @@ public final class LineParser
 {
    private static final String SEPARATORS = ".,;:()";
 
-   private int lineNo;
+   private int lineNum;
    private String line;
-   private LineSegment initialSegment;
-   private LineSegment currentSegment;
+   private LineElement initialElement;
+   private LineElement currentElement;
    private boolean inComments;
 
    // Helper variables:
    private int lineLength;
    private int startPos;
-   private boolean inCodeSegment;
+   private boolean inCodeElement;
    private int pos;
    private int currChar;
 
-   public int getLineNo()
+   public int getLineNumber()
    {
-      return lineNo;
-   }
-
-   public String getLine()
-   {
-      return line;
+      return lineNum;
    }
 
    public boolean isBlankLine()
@@ -69,20 +64,20 @@ public final class LineParser
       return inComments;
    }
 
-   public LineSegment getInitialSegment()
+   public LineElement getInitialElement()
    {
-      return initialSegment;
+      return initialElement;
    }
 
    public void parse(String line)
    {
-      lineNo++;
-      initialSegment = null;
-      currentSegment = null;
+      lineNum++;
+      initialElement = null;
+      currentElement = null;
       this.line = line;
       lineLength = line.length();
       startPos = inComments ? 0 : -1;
-      inCodeSegment = false;
+      inCodeElement = false;
 
       for (pos = 0; pos < lineLength; pos++) {
          currChar = line.codePointAt(pos);
@@ -95,7 +90,7 @@ public final class LineParser
       }
 
       if (startPos >= 0) {
-         addSegment(0);
+         addElement(0);
       }
    }
 
@@ -103,20 +98,20 @@ public final class LineParser
    {
       boolean separator = isSeparator();
 
-      if (!inCodeSegment && separator) {
-         startNewSegmentIfNotYetStarted();
+      if (!inCodeElement && separator) {
+         startNewElementIfNotYetStarted();
       }
-      else if (!inCodeSegment && !separator) {
+      else if (!inCodeElement && !separator) {
          if (startPos >= 0) {
-            addSegment(pos);
+            addElement(pos);
          }
 
-         inCodeSegment = true;
+         inCodeElement = true;
          startPos = pos;
       }
       else if (separator) {
-         addSegment(pos);
-         inCodeSegment = false;
+         addElement(pos);
+         inCodeElement = false;
          startPos = pos;
       }
    }
@@ -126,7 +121,7 @@ public final class LineParser
       return Character.isWhitespace(currChar) || SEPARATORS.indexOf(currChar) >= 0;
    }
 
-   private void startNewSegmentIfNotYetStarted()
+   private void startNewElementIfNotYetStarted()
    {
       if (startPos < 0) {
          startPos = pos;
@@ -143,17 +138,17 @@ public final class LineParser
          int c2 = line.codePointAt(pos + 1);
 
          if (c2 == '/') {
-            endCodeSegmentIfPending();
-            startNewSegmentIfNotYetStarted();
+            endCodeElementIfPending();
+            startNewElementIfNotYetStarted();
             inComments = true;
-            addSegment(0);
+            addElement(0);
             inComments = false;
             startPos = -1;
             return true;
          }
          else if (c2 == '*') {
-            endCodeSegmentIfPending();
-            startNewSegmentIfNotYetStarted();
+            endCodeElementIfPending();
+            startNewElementIfNotYetStarted();
             inComments = true;
             pos += 2;
 
@@ -169,12 +164,12 @@ public final class LineParser
       return false;
    }
 
-   private void endCodeSegmentIfPending()
+   private void endCodeElementIfPending()
    {
-      if (inCodeSegment) {
-         addSegment(pos);
+      if (inCodeElement) {
+         addElement(pos);
          startPos = pos;
-         inCodeSegment = false;
+         inCodeElement = false;
       }
    }
 
@@ -185,7 +180,7 @@ public final class LineParser
 
          if (currChar == '*' && pos < lineLength - 1 && line.codePointAt(pos + 1) == '/') {
             pos += 2;
-            addSegment(pos);
+            addElement(pos);
             startPos = -1;
             inComments = false;
             break;
@@ -203,31 +198,31 @@ public final class LineParser
       }
    }
 
-   private void addSegment(int p)
+   private void addElement(int p)
    {
-      String segmentText = p > 0 ? line.substring(startPos, p) : line.substring(startPos);
-      SegmentType segmentType;
+      String text = p > 0 ? line.substring(startPos, p) : line.substring(startPos);
+      ElementType type;
 
       if (inComments) {
-         segmentType = SegmentType.COMMENT;
+         type = ElementType.COMMENT;
       }
-      else if (inCodeSegment) {
-         segmentType = SegmentType.CODE;
-      }
-      else {
-         segmentType = SegmentType.SEPARATOR;
-      }
-
-      LineSegment newSegment = new LineSegment(segmentType, segmentText);
-
-      if (initialSegment == null) {
-         initialSegment = newSegment;
-         currentSegment = newSegment;
+      else if (inCodeElement) {
+         type = ElementType.CODE;
       }
       else {
-         currentSegment.setNext(newSegment);
+         type = ElementType.SEPARATOR;
       }
 
-      currentSegment = newSegment;
+      LineElement newElement = new LineElement(type, text);
+
+      if (initialElement == null) {
+         initialElement = newElement;
+         currentElement = newElement;
+      }
+      else {
+         currentElement.setNext(newElement);
+      }
+
+      currentElement = newElement;
    }
 }

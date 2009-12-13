@@ -33,11 +33,21 @@ public class Node implements Serializable
 
    private final transient ThreadLocal<Boolean> reached = new ThreadLocal<Boolean>();
    public final int line;
-   int segment;
+   private int segment;
 
    private Node(int line)
    {
       this.line = line;
+   }
+
+   void setSegmentAccordingToPrecedingNode(Node precedingNode)
+   {
+      segment = precedingNode.segment + 1;
+   }
+
+   public int getSegment()
+   {
+      return segment;
    }
 
    final void setReached(Boolean reached)
@@ -112,7 +122,7 @@ public class Node implements Serializable
       }
    }
 
-   abstract static class Fork extends Node implements ConditionalSuccessor
+   public abstract static class Fork extends Node implements ConditionalSuccessor
    {
       Fork(int line) { super(line); }
 
