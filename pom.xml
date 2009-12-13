@@ -1,0 +1,77 @@
+<project
+   xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <groupId>mockit</groupId>
+   <artifactId>mockit</artifactId>
+   <version>0.995</version>
+   <packaging>pom</packaging>
+
+   <modules>
+      <module>coverage</module>
+      <module>samples/tutorial</module>
+   </modules>
+
+   <name>The JMockit Testing Toolkit</name>
+   <url>http://code.google.com/p/jmockit/</url>
+   <description>
+      JMockit is a Java toolkit for developer (unit/integration) testing.
+      It contains mocking APIs and other tools, supporting both JUnit and TestNG.
+      The mocking APIs allow all kinds of Java code, without testability restrictions, to be tested
+      in isolation from selected dependencies.
+   </description>
+   <licenses>
+      <license>
+         <name>MIT LICENSE</name>
+         <url>http://www.opensource.org/licenses/mit-license.php</url>
+         <distribution>repo</distribution>
+      </license>
+   </licenses>
+   <developers>
+      <developer><name>Rogério Liesenfeld</name><email>javamockit@yahoo.com</email></developer>
+   </developers>
+
+   <issueManagement><url>http://code.google.com/p/jmockit/issues/list</url></issueManagement>
+   <mailingLists>
+      <mailingList>
+         <name>JMockit Users</name>
+         <archive>http://groups.google.com/group/jmockit-users</archive>
+         <post>jmockit-users@googlegroups.com</post>
+      </mailingList>
+   </mailingLists>
+   <scm>
+      <url>http://code.google.com/p/jmockit/source/browse/trunk</url>
+      <connection>scm:http://jmockit.googlecode.com/svn/trunk/ jmockit-read-only</connection>
+   </scm>
+
+   <properties><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
+
+   <build>
+      <sourceDirectory>src</sourceDirectory>
+      <testSourceDirectory>test</testSourceDirectory>
+      <outputDirectory>classes</outputDirectory>
+      <testOutputDirectory>test-classes</testOutputDirectory>
+      <plugins>
+         <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+               <source>1.5</source><target>1.5</target>
+            </configuration>
+         </plugin>
+      </plugins>
+      <extensions>
+         <extension>
+            <groupId>org.jvnet.wagon-svn</groupId><artifactId>wagon-svn</artifactId>
+            <version>1.9</version>
+         </extension>
+      </extensions>
+   </build>
+
+   <distributionManagement>
+      <repository>
+         <id>java.net-m2-repository</id>
+         <url>java-net:/maven2-repository/trunk/repository/</url>
+      </repository>
+   </distributionManagement>
+</project>
