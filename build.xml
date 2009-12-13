@@ -3,9 +3,10 @@
    <loadfile property="version" srcFile="version.txt"/>
 
    <path id="common.classpath">
-      <pathelement location="main/lib/commons-logging-1.1.1.jar"/>
-      <pathelement location="main/lib/log4j-1.2.15.jar"/>
-      <pathelement location="main/lib/slf4j-api-1.5.8.jar"/>
+      <pathelement location="lib/hamcrest-core-1.2.jar"/>
+      <pathelement location="lib/commons-logging-1.1.1.jar"/>
+      <pathelement location="lib/log4j-1.2.15.jar"/>
+      <pathelement location="lib/slf4j-api-1.5.8.jar"/>
       <fileset file="${JUNIT_JAR}"/>
       <fileset file="${TESTNG_JAR}"/>
       <fileset file="${JAVAEE_JAR}" erroronmissingdir="false"/>
@@ -17,28 +18,23 @@
 
    <macrodef name="build">
       <attribute name="module"/>
-      <attribute name="jdkVersion" default="1.5"/>
       <attribute name="srcdir" default="src"/>
       <attribute name="outdir" default="classes"/>
-      <attribute name="extraclasspath" default=""/>
+      <attribute name="extraclasspathLocation" default=""/>
+      <attribute name="extraclasspath" default="none"/>
       <sequential>
          <delete dir="@{module}/@{outdir}" includes="**/*"/>
          <mkdir dir="@{module}/@{outdir}"/>
 
          <javac
             srcdir="@{module}/@{srcdir}" destdir="@{module}/@{outdir}"
-            debug="true" source="@{jdkVersion}" target="@{jdkVersion}" nowarn="true">
+            source="1.5" target="1.5" debug="true" nowarn="true">
             <classpath refid="common.classpath"/>
             <classpath location="main/classes"/>
             <classpath location="@{module}/classes"/>
             <classpath location="@{module}/@{outdir}"/>
-            <classpath location="@{extraclasspath}"/>
-            <classpath>
-               <fileset dir="@{module}/lib" includes="*.jar" erroronmissingdir="false"/>
-            </classpath>
-            <classpath>
-               <fileset dir="@{module}/../lib" includes="*.jar" erroronmissingdir="false"/>
-            </classpath>
+            <classpath location="@{extraclasspathLocation}"/>
+            <classpath><fileset dir="." includes="@{extraclasspath}"/></classpath>
          </javac>
 
          <copy todir="@{module}/@{outdir}">
@@ -48,69 +44,102 @@
    </macrodef>
    <macrodef name="buildTests">
       <attribute name="module"/>
-      <attribute name="jdkVersion" default="1.5"/>
+      <attribute name="extraclasspathLocation" default=""/>
       <attribute name="extraclasspath" default=""/>
       <sequential>
          <build
-            module="@{module}" jdkversion="@{jdkVersion}" srcdir="test" outdir="test-classes"
-            extraclasspath="@{extraclasspath}"/>
+            module="@{module}" srcdir="test" outdir="test-classes"
+            extraclasspathlocation="@{extraclasspathLocation}" extraclasspath="@{extraclasspath}"/>
       </sequential>
    </macrodef>
 
    <target name="buildMain">
-      <build module="main"/>
-      <buildTests module="main"/>
+      <build module="main"/><buildTests module="main"/>
    </target>
-   <target name="buildCoverage"><build module="coverage"/></target>
+   <target name="buildCoverage">
+      <build module="coverage"/><buildTests module="coverage"/>
+   </target>
    <target name="buildIncremental">
-      <build module="incremental" extraclasspath="coverage/classes"/>
+      <build module="incremental" extraclasspathlocation="coverage/classes"/>
    </target>
    <target name="buildHibernateEmulation">
-      <build module="hibernate3emul"/><buildTests module="hibernate3emul"/>
+      <build module="hibernate3emul" extraclasspath="hibernate3emul/lib/*.jar"/>
+      <buildTests module="hibernate3emul"/>
    </target>
-   <target name="buildSamples">
-      <build module="samples/easymock"/>
-      <buildTests module="samples/easymock"/>
 
-      <build module="samples/easymockclassextension"/>
-      <buildTests module="samples/easymockclassextension"/>
+   <macrodef name="buildSample">
+      <attribute name="module"/>
+      <attribute name="jdkVersion" default="1.5"/>
+      <attribute name="outdir" default="classes"/>
+      <attribute name="testLibrary" default="${JUNIT_JAR}"/>
+      <attribute name="extraclasspathLocation" default=""/>
+      <attribute name="extraclasspath" default="none"/>
+      <sequential>
+         <delete dir="samples/@{module}/classes" includes="**/*.class"/>
+         <javac
+            srcdir="samples/@{module}/src" destdir="samples/@{module}/@{outdir}"
+            source="@{jdkVersion}" target="@{jdkVersion}" debug="true" nowarn="true">
+            <classpath location="@{extraclasspathLocation}"/>
+            <classpath><fileset dir="." includes="@{extraclasspath}"/></classpath>
+         </javac>
 
-      <build module="samples/jmock"/>
-      <buildTests module="samples/jmock"/>
+         <delete dir="samples/@{module}/test-classes" includes="**/*.class"/>
+         <javac
+            srcdir="samples/@{module}/test" destdir="samples/@{module}/test-classes"
+            source="@{jdkVersion}" target="@{jdkVersion}" debug="true" nowarn="true">
+            <classpath location="jmockit.jar"/>
+            <classpath location="@{testLibrary}"/>
+            <classpath>
+               <fileset dir="samples/@{module}/lib" includes="*.jar" erroronmissingdir="false"/>
+            </classpath>
+            <classpath location="samples/@{module}/@{outdir}"/>
+            <classpath location="@{extraclasspathLocation}"/>
+            <classpath><fileset dir="." includes="@{extraclasspath}"/></classpath>
+         </javac>
+      </sequential>
+   </macrodef>
 
-      <build module="samples/powermock"/>
-      <buildTests module="samples/powermock"/>
-
-      <build module="samples/mockito"/>
-      <buildTests module="samples/mockito"/>
-
-      <build module="samples/unitils"/>
-      <buildTests module="samples/unitils"/>
-
-      <build module="samples/jbossaop"/>
-      <buildTests module="samples/jbossaop"/>
-
-      <build
-         module="samples/orderMngmntWebapp" outdir="WEB-INF/classes"
+   <target name="buildEasyMock">
+      <buildSample module="easymock" extraclasspath="samples/lib/easymock-*.jar"/>
+   </target>
+   <target name="buildEasyMockCE">
+      <buildSample module="easymockclassextension" extraclasspath="samples/lib/easymock*.jar"/>
+   </target>
+   <target name="buildJMock">
+      <buildSample module="jmock" extraclasspath="lib/hamcrest-*.jar"/>
+   </target>
+   <target name="buildMockito">
+      <buildSample module="mockito" extraclasspath="lib/hamcrest-*.jar samples/lib/hamcrest-*.jar"/>
+   </target>
+   <target name="buildUnitils"><buildSample module="unitils"/></target>
+   <target name="buildPowerMock">
+      <buildSample
+         module="powermock"
+         extraclasspath="lib/*.jar samples/lib/dom4j-*.jar samples/lib/easymock*.jar"/>
+   </target>
+   <target name="buildJBossAOP"><buildSample module="jbossaop"/></target>
+   <target name="buildLoginService">
+      <buildSample module="LoginService" testlibrary="${TESTNG_JAR}"/>
+   </target>
+   <target name="buildTutorial"><buildSample module="tutorial"/></target>
+   <target name="buildOrderManagement">
+      <buildSample
+         module="orderMngmntWebapp" outdir="WEB-INF/classes"
          extraclasspath="hibernate3emul/lib/hibernate3.jar"/>
-      <buildTests
-         module="samples/orderMngmntWebapp"
-         extraclasspath="samples/orderMngmntWebapp/WEB-INF/classes"/>
-
-      <build module="samples/tutorial"/>
-      <buildTests module="samples/tutorial"/>
-
-      <build module="samples/TimingFramework"/>
-      <buildTests module="samples/TimingFramework"/>
-
-      <build
-         module="samples/AnimatedTransitions" extraclasspath="samples/TimingFramework/classes"/>
-      <buildTests
-         module="samples/AnimatedTransitions" extraclasspath="samples/TimingFramework/classes"/>
-
-      <build module="samples/LoginService"/>
-      <buildTests module="samples/LoginService"/>
    </target>
+   <target name="buildTimingFramework">
+      <buildSample module="TimingFramework" extraclasspath="lib/hamcrest-*.jar"/>
+   </target>
+   <target name="buildAnimatedTransitions">
+      <buildSample
+         module="AnimatedTransitions" extraclasspathLocation="samples/TimingFramework/classes"/>
+   </target>
+
+   <target
+      name="buildSamples"
+      depends="buildEasyMock, buildEasyMockCE, buildJMock, buildMockito, buildUnitils,
+               buildPowerMock, buildLoginService, buildJBossAOP, buildTutorial,
+               buildOrderManagement, buildTimingFramework, buildAnimatedTransitions"/>
    <target
       name="buildAll"
       depends="buildMain, buildCoverage, buildIncremental, buildHibernateEmulation, buildSamples"/>

@@ -72,6 +72,9 @@
     <option name="ADDITIONAL_OPTIONS_STRING" value="-source 1.5 -target 1.5" />
   </component>
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/lib/commons-logging-1.1.1.jar" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lib/log4j-1.2.15.jar" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lib/slf4j-api-1.5.8.jar" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/main" charset="UTF-8" />
   </component>
   <component name="FireworksProject">
@@ -793,6 +796,8 @@
         <w>destfile</w>
         <w>djmockit</w>
         <w>doctype</w>
+        <w>easymock</w>
+        <w>easymockclassextension</w>
         <w>enableassertions</w>
         <w>enqueue</w>
         <w>extraclasspath</w>
@@ -814,6 +819,8 @@
         <w>ints</w>
         <w>jaas</w>
         <w>javaagent</w>
+        <w>jbossaop</w>
+        <w>jmock</w>
         <w>jmxri</w>
         <w>jmxtools</w>
         <w>jplis</w>
@@ -826,6 +833,7 @@
         <w>metadata</w>
         <w>microsystems</w>
         <w>millis</w>
+        <w>mngmnt</w>
         <w>mockit</w>
         <w>multi</w>
         <w>nano</w>
@@ -874,6 +882,7 @@
         <w>unformatted</w>
         <w>unmocked</w>
         <w>versioned</w>
+        <w>webapp</w>
         <w>xmlbasic</w>
         <w>xmlfull</w>
       </words>
