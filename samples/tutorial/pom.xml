@@ -10,10 +10,11 @@
       <relativePath>../../pom.xml</relativePath>
    </parent>
    <artifactId>tutorial</artifactId>
+   <name>Tutorial Sample</name>
 
    <dependencies>
       <dependency>
-         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>1</version>
+         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>0</version>
          <scope>system</scope><systemPath>${basedir}/../../jmockit.jar</systemPath>
       </dependency>
       <dependency>

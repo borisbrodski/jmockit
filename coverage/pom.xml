@@ -9,6 +9,7 @@
       <version>0.995</version>
    </parent>
    <artifactId>jmockit-coverage</artifactId>
+   <name>JMockit Coverage</name>
 
    <build>
       <finalName>${artifactId}</finalName>

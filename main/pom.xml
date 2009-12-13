@@ -9,6 +9,7 @@
       <version>0.995</version>
    </parent>
    <artifactId>jmockit</artifactId>
+   <name>Main</name>
 
    <build>
       <plugins>
