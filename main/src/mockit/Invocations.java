@@ -37,7 +37,6 @@ import mockit.internal.util.*;
  * Provides common user API for both the {@linkplain Expectations record} and
  * {@linkplain Verifications verification} phases of a test.
  */
-@SuppressWarnings({"ClassWithTooManyMethods"})
 abstract class Invocations
 {
    /**
@@ -163,86 +162,43 @@ abstract class Invocations
 
    /**
     * Adds a custom argument matcher for a parameter in the current invocation.
-    * The given matcher can be any existing Hamcrest matcher or a user provided one (note that
-    * jmockit.jar already integrates all the matchers from hamcrest-core-1.1.jar and from
-    * hamcrest-library-1.1.jar).
+    * The given matcher can be any existing Hamcrest matcher or a user provided one.
     * <p/>
     * For additional details, refer to {@link #withEqual(Object)}.
     *
     * @param argValue an arbitrary value of the proper type, necessary to provide a valid argument
     * to the invocation parameter
+    * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher}
+    * interface
     *
     * @return the given {@code argValue}
     */
-   protected final <T> T with(T argValue, org.hamcrest.Matcher<T> argumentMatcher)
+   protected final <T> T with(T argValue, Object argumentMatcher)
    {
-      addMatcher(argumentMatcher);
+      addMatcher(new HamcrestAdapter<T>(argumentMatcher));
       return argValue;
-   }
-
-   private void addMatcher(final org.hamcrest.Matcher<?> matcher)
-   {
-      addMatcher(new BaseMatcher<Object>()
-      {
-         public boolean matches(Object item)
-         {
-            return matcher.matches(item);
-         }
-
-         public void describeTo(Description description)
-         {
-            //noinspection UnnecessaryFullyQualifiedName
-            org.hamcrest.Description strDescription = new org.hamcrest.StringDescription();
-            matcher.describeTo(strDescription);
-            description.appendText(strDescription.toString());
-         }
-      });
    }
 
    /**
     * Adds a custom argument matcher for a parameter in the current invocation.
-    * This works like {@link #with(Object, org.hamcrest.Matcher)}, but attempting to extract the
-    * argument value from the supplied argument matcher.
+    * This works like {@link #with(Object, Object)}, but attempting to extract the argument value
+    * from the supplied argument matcher.
+    *
+    * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher}
+    * interface
     *
     * @return the value recorded inside the given argument matcher, or {@code null} if no such value
     * could be determined
     */
-   protected final <T> T with(org.hamcrest.Matcher<T> argumentMatcher)
+   protected final <T> T with(Object argumentMatcher)
    {
-      addMatcher(argumentMatcher);
+      HamcrestAdapter<T> adapter = new HamcrestAdapter<T>(argumentMatcher);
+      addMatcher(adapter);
 
-      org.hamcrest.Matcher<T> argMatcher = getInnermostMatcher(argumentMatcher);
-      @SuppressWarnings({"unchecked"})
-      T argValue = (T) getArgumentValueFromMatcherIfAvailable(argMatcher);
-
-      return argValue;
-   }
-
-   private <T> org.hamcrest.Matcher<T> getInnermostMatcher(org.hamcrest.Matcher<T> argMatcher)
-   {
-      //noinspection UnnecessaryFullyQualifiedName
-      while (
-         argMatcher instanceof org.hamcrest.core.Is ||
-         argMatcher instanceof org.hamcrest.core.IsNot
-      ) {
-         //noinspection AssignmentToMethodParameter,unchecked
-         argMatcher = getField(argMatcher, org.hamcrest.Matcher.class);
-      }
-
-      return argMatcher;
-   }
-
-   private Object getArgumentValueFromMatcherIfAvailable(org.hamcrest.Matcher<?> argMatcher)
-   {
-      if (
-         argMatcher instanceof org.hamcrest.core.IsEqual ||
-         argMatcher instanceof org.hamcrest.core.IsSame ||
-         "org.hamcrest.number.OrderingComparison".equals(argMatcher.getClass().getName())
-      ) {
-         return getField(argMatcher, Object.class);
-      }
-
-      return null;
+      Object argValue = adapter.getInnerValue();
+      
+      //noinspection unchecked
+      return (T) argValue;
    }
 
    private void addMatcher(Matcher<?> matcher)
@@ -679,7 +635,7 @@ abstract class Invocations
    protected final <T> T getField(Object objectWithField, Class<T> fieldType)
    {
       //noinspection unchecked
-      return (T) Utilities.getField(objectWithField.getClass(), fieldType, objectWithField);
+      return Utilities.getField(objectWithField.getClass(), fieldType, objectWithField);
    }
 
    /**
@@ -713,7 +669,7 @@ abstract class Invocations
    protected final <T> T getField(Class<?> realClass, Class<T> fieldType)
    {
       //noinspection unchecked
-      return (T) Utilities.getField(realClass, fieldType, null);
+      return Utilities.getField(realClass, fieldType, null);
    }
 
    /**

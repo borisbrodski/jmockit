@@ -467,10 +467,10 @@ public final class Utilities
       }
    }
 
-   public static Object getField(Class<?> theClass, Class<?> fieldType, Object targetObject)
+   public static <T> T getField(Class<?> theClass, Class<T> fieldType, Object targetObject)
    {
       Field field = getDeclaredField(theClass, fieldType, targetObject != null, false);
-      return getFieldValue(field, targetObject);
+      return (T) getFieldValue(field, targetObject);
    }
 
    private static Field getDeclaredField(
