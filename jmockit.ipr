@@ -762,6 +762,9 @@
       <list>
         <option value="$PROJECT_DIR$/coverage/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/main/pom.xml" />
+        <option value="$PROJECT_DIR$/samples/tutorial/pom.xml" />
+        <option value="$PROJECT_DIR$/ParentPOM/pom.xml" />
       </list>
     </option>
   </component>
@@ -906,7 +909,7 @@
       <module fileurl="file://$PROJECT_DIR$/samples/tutorial/Tutorial.iml" filepath="$PROJECT_DIR$/samples/tutorial/Tutorial.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/unitils/Unitils.iml" filepath="$PROJECT_DIR$/samples/unitils/Unitils.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/jmock/jMock2.iml" filepath="$PROJECT_DIR$/samples/jmock/jMock2.iml" group="Samples" />
-      <module fileurl="file://$PROJECT_DIR$/jmockit.iml" filepath="$PROJECT_DIR$/jmockit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mockit.iml" filepath="$PROJECT_DIR$/mockit.iml" />
       <module fileurl="file://$PROJECT_DIR$/www/www.iml" filepath="$PROJECT_DIR$/www/www.iml" />
     </modules>
   </component>
@@ -961,7 +964,6 @@
         <root url="jar://$PROJECT_DIR$/samples/lib/dom4j-1.6.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/samples/lib/easymock-2.5.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/samples/lib/slf4j-nop-1.5.8.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-core-1.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
@@ -991,9 +993,9 @@
     </library>
     <library name="Logging APIs">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/main/lib/commons-logging-1.1.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/main/lib/log4j-1.2.15.jar!/" />
-        <root url="jar://$PROJECT_DIR$/main/lib/slf4j-api-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.5.8.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -1011,8 +1013,8 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-mock-3.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-core-3.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/main/lib/commons-logging-1.1.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/samples/lib/commons-lang-2.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
@@ -1032,23 +1034,24 @@
     <library name="Hamcrest 1.2">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-library-1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-core-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/hamcrest-core-1.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-library-1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-core-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/hamcrest-core-1.2.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: mockit:jmockit:0.994">
+    <library name="Maven: junit:junit:4.7">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.994/jmockit-0.994.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.7/junit-4.7.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.994/jmockit-0.994-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.7/junit-4.7-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.994/jmockit-0.994-sources.jar!/" />
+        <root url="jar://C:/Java/junit4.7/junit-4.7-src.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.7/junit-4.7-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.testng:testng:jdk15:5.10">
@@ -1064,46 +1067,46 @@
     </library>
     <library name="Maven: commons-logging:commons-logging:1.1.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/main/../lib/commons-logging-1.1.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/main/../lib/commons-logging-1.1.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/main/../lib/commons-logging-1.1.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.slf4j:slf4j-api:1.5.8">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/main/../lib/slf4j-api-1.5.8.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/main/../lib/slf4j-api-1.5.8-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/main/../lib/slf4j-api-1.5.8-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: log4j:log4j:1.2.15">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/log4j/log4j/1.2.15/log4j-1.2.15.jar!/" />
+        <root url="jar://$PROJECT_DIR$/main/../lib/log4j-1.2.15.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/log4j/log4j/1.2.15/log4j-1.2.15-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/main/../lib/log4j-1.2.15-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/log4j/log4j/1.2.15/log4j-1.2.15-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/main/../lib/log4j-1.2.15-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: junit:junit:4.7">
+    <library name="Maven: mockit:jmockit:1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.7/junit-4.7.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../jmockit.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.7/junit-4.7-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../jmockit-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.7/junit-4.7-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../jmockit-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
