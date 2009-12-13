@@ -15,10 +15,13 @@
 <ul>
    <li>
       <strong>Hamcrest 1.2</strong> classes are no longer included in <code>jmockit.jar</code>.
-      The "<code>withXyz(...)</code>" argument matching methods are unaffected, even the two of them
-      which accept a custom matcher as an implementation of <code>org.hamcrest.Matcher</code>;
-      notice however that to use one of these two in a test the proper Hamcrest classes will have to
-      be available in the classpath (for example, from <code>junit-4.8.jar</code>).
+      The "<code>withXyz(...)</code>" argument matching methods are unaffected, except for the two
+      of them which accepted a custom matcher as an implementation of
+      <code>org.hamcrest.Matcher</code>: they still exist and work the same, but the parameter type
+      has been changed to <code>Object</code>.
+      Tests using any of these two methods will need to be recompiled.
+      Note also that to use one of these two methods the proper Hamcrest classes will have to be
+      available in the classpath (for example, from <code>junit-4.8.jar</code>).
       (See <a href="http://code.google.com/p/jmockit/issues/detail?id=13">issue 13</a>.)
    </li>
    <li>
@@ -38,12 +41,17 @@
       <strong>New feature</strong>: the <strong><code>result</code></strong> field was added to the
       <code>Expectations</code> base class, as an alternative to the <code>returns</code> and
       <code>throwsException/throwsError</code> methods.
+      Note that this new field will cause compilation errors in tests that already use a field of
+      the same name inside an expectation block; such tests will need to be changed to use a
+      different field name.
    </li>
    <li>
       <strong>New feature</strong>: the <strong><code>times</code></strong>,
       <strong><code>minTimes</code></strong> and <strong><code>maxTimes</code></strong> fields were
       added to the <code>Invocations</code> base class, as an alternative to the
       <code>repeats/repeatsAtLeast/repeatsAtMost</code> methods.
+      The same warning in the previous item about potential conflicts with existing fields applies
+      here.
    </li>
    <li>
       More fixes and enhancements to <strong>JMockit Coverage</strong>:
