@@ -102,7 +102,7 @@ public final class MessageTest
    // Waits a fixed time for all threads to finish - not elegant, but easy.
    private void allowSomeTimeForAllEventsToBeReceived() throws InterruptedException
    {
-      Thread.sleep(100);
+      Thread.sleep(150);
    }
 
    @Test
