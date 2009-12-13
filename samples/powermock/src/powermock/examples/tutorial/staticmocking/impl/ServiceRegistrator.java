@@ -18,7 +18,6 @@ package powermock.examples.tutorial.staticmocking.impl;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import powermock.examples.tutorial.common.annotation.Inject;
 import powermock.examples.tutorial.staticmocking.IServiceRegistrator;
 import powermock.examples.tutorial.staticmocking.osgi.BundleContext;
 import powermock.examples.tutorial.staticmocking.osgi.ServiceRegistration;
@@ -30,7 +29,6 @@ import powermock.examples.tutorial.staticmocking.osgi.ServiceRegistration;
  */
 public final class ServiceRegistrator implements IServiceRegistrator
 {
-   @Inject
    private BundleContext bundleContext;
 
    /**

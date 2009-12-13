@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import powermock.examples.tutorial.common.annotation.Inject;
 import powermock.examples.tutorial.partialmocking.dao.ProviderDao;
 import powermock.examples.tutorial.partialmocking.dao.domain.impl.ServiceArtifact;
 import powermock.examples.tutorial.partialmocking.domain.ServiceProducer;
@@ -34,12 +33,11 @@ import powermock.examples.tutorial.partialmocking.service.ProviderService;
  */
 public final class ProviderServiceImpl implements ProviderService
 {
-   @Inject
    private ProviderDao providerDao;
 
    public Set<ServiceProducer> getAllServiceProviders()
    {
-      final Set<ServiceProducer> serviceProducers = getAllServiceProducers();
+      Set<ServiceProducer> serviceProducers = getAllServiceProducers();
 
       if (serviceProducers == null) {
          return Collections.emptySet();
