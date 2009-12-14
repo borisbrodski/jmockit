@@ -1,0 +1,36 @@
+<project
+   xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>mockit</groupId>
+      <artifactId>mockit</artifactId>
+      <version>0.995</version>
+      <relativePath>../../pom.xml</relativePath>
+   </parent>
+   <artifactId>easymockCE</artifactId>
+   <name>EasyMock 2 Class Extension Comparison Sample</name>
+
+   <dependencies>
+      <dependency>
+         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../../jmockit.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId><artifactId>junit</artifactId><version>4.7</version>
+      </dependency>
+      <dependency>
+         <groupId>easymock</groupId><artifactId>easymock</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../lib/easymock-2.5.2.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>easymock</groupId><artifactId>easymockclassextension</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../lib/easymockclassextension.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>cglib</groupId><artifactId>cglib-nodep</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../lib/cglib-nodep-2.1_3.jar</systemPath>
+      </dependency>
+   </dependencies>
+</project>

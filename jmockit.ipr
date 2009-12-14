@@ -765,6 +765,11 @@
         <option value="$PROJECT_DIR$/main/pom.xml" />
         <option value="$PROJECT_DIR$/samples/tutorial/pom.xml" />
         <option value="$PROJECT_DIR$/ParentPOM/pom.xml" />
+        <option value="$PROJECT_DIR$/samples/easymock/pom.xml" />
+        <option value="$PROJECT_DIR$/samples/easymockclassextension/pom.xml" />
+        <option value="$PROJECT_DIR$/samples/jmock/pom.xml" />
+        <option value="$PROJECT_DIR$/samples/unitils/pom.xml" />
+        <option value="$PROJECT_DIR$/samples/mockito/pom.xml" />
       </list>
     </option>
   </component>
@@ -845,6 +850,7 @@
         <w>noninfringement</w>
         <w>notimestamp</w>
         <w>nowrap</w>
+        <w>objenesis</w>
         <w>onclick</w>
         <w>onfocus</w>
         <w>onload</w>
@@ -884,6 +890,7 @@
         <w>unbox</w>
         <w>unformatted</w>
         <w>unmocked</w>
+        <w>usedbypico</w>
         <w>versioned</w>
         <w>webapp</w>
         <w>xmlbasic</w>
@@ -1100,13 +1107,189 @@
     </library>
     <library name="Maven: mockit:jmockit:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../jmockit.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../../jmockit.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../jmockit-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../../jmockit-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../jmockit-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../../jmockit-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: easymock:easymock:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymock-2.5.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymock-2.5.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymock-2.5.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: easymock:easymockclassextension:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: cglib:cglib-nodep:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/cglib-nodep-2.1_3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/cglib-nodep-2.1_3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/cglib-nodep-2.1_3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: jmock:jmock:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: jmock:jmock:junit4:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-junit4-2.5.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-junit4-2.5.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-junit4-2.5.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: jmock:jmock:legacy:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-legacy-2.5.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-legacy-2.5.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-legacy-2.5.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: cglib:cglib:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/cglib-2.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/cglib-2.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/cglib-2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: asm:asm:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/asm-3.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/asm-3.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/asm-3.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.hamcrest:hamcrest-core:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.hamcrest:hamcrest-library:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.objenesis:objenesis:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/objenesis-1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/objenesis-1.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/objenesis-1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.unitils:unitils-core:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-core-3.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-core-3.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-core-3.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.unitils:unitils-mock:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-mock-3.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-mock-3.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-mock-3.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.mockito:mockito-core:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/mockito/lib/mockito-core-1.8.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/mockito/lib/mockito-core-1.8.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/mockito/lib/mockito-core-1.8.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: commons-logging:commons-logging:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/../../lib/commons-logging-1.1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/../../lib/commons-logging-1.1.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/../../lib/commons-logging-1.1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: commons-lang:commons-lang:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/../lib/commons-lang-2.3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/../lib/commons-lang-2.3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/../lib/commons-lang-2.3-sources.jar!/" />
       </SOURCES>
     </library>
   </component>

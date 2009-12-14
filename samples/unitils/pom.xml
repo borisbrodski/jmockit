@@ -1,0 +1,40 @@
+<project
+   xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>mockit</groupId>
+      <artifactId>mockit</artifactId>
+      <version>0.995</version>
+      <relativePath>../../pom.xml</relativePath>
+   </parent>
+   <artifactId>unitils</artifactId>
+   <name>Unitils Mock Comparison Sample</name>
+
+   <dependencies>
+      <dependency>
+         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../../jmockit.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId><artifactId>junit</artifactId><version>4.7</version>
+      </dependency>
+      <dependency>
+         <groupId>org.unitils</groupId><artifactId>unitils-core</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/lib/unitils-core-3.1.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>org.unitils</groupId><artifactId>unitils-mock</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/lib/unitils-mock-3.1.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>commons-logging</groupId><artifactId>commons-logging</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../../lib/commons-logging-1.1.1.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>commons-lang</groupId><artifactId>commons-lang</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../lib/commons-lang-2.3.jar</systemPath>
+      </dependency>
+   </dependencies>
+</project>
