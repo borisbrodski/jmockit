@@ -9,8 +9,18 @@
    <packaging>pom</packaging>
 
    <modules>
+      <module>main</module>
       <module>coverage</module>
       <module>samples/tutorial</module>
+      <module>samples/easymock</module>
+      <module>samples/easymockclassextension</module>
+      <module>samples/jmock</module>
+      <module>samples/jbossaop</module>
+      <module>samples/mockito</module>
+      <module>samples/unitils</module>
+      <module>samples/powermock</module>
+      <module>samples/TimingFramework</module>
+      <module>samples/AnimatedTransitions</module>
    </modules>
 
    <name>The JMockit Testing Toolkit</name>

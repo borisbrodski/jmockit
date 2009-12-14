@@ -1,0 +1,77 @@
+<project
+   xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>mockit</groupId>
+      <artifactId>mockit</artifactId>
+      <version>0.995</version>
+      <relativePath>../../pom.xml</relativePath>
+   </parent>
+   <artifactId>powermock</artifactId>
+   <name>PowerMock Comparison Sample</name>
+
+   <dependencies>
+      <dependency>
+         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../../jmockit.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId><artifactId>junit</artifactId><version>4.7</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>powermock</groupId><artifactId>powermock</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/lib/powermock-1.2.5-full.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>javassist</groupId><artifactId>javassist</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/lib/javassist-3.9.0.GA.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>jaxen</groupId><artifactId>jaxen</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/lib/jaxen-1.1-beta-6.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>org.objenesis</groupId><artifactId>objenesis</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../lib/objenesis-1.1.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>dom4j</groupId><artifactId>dom4j</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../lib/dom4j-1.6.1.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>org.hamcrest</groupId><artifactId>hamcrest-core</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../../lib/hamcrest-core-1.2.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>commons-logging</groupId><artifactId>commons-logging</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../../lib/commons-logging-1.1.1.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>log4j</groupId><artifactId>log4j</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../../lib/log4j-1.2.15.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../../lib/slf4j-api-1.5.8.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId><artifactId>slf4j-nop</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../lib/slf4j-nop-1.5.8.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>easymock</groupId><artifactId>easymock</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../lib/easymock-2.5.2.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>easymock</groupId><artifactId>easymockclassextension</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../lib/easymockclassextension.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>cglib</groupId><artifactId>cglib-nodep</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/../lib/cglib-nodep-2.1_3.jar</systemPath>
+      </dependency>
+   </dependencies>
+</project>
