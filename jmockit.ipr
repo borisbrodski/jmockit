@@ -776,6 +776,7 @@
         <option value="$PROJECT_DIR$/samples/powermock/pom.xml" />
         <option value="$PROJECT_DIR$/samples/orderMngmntWebapp/pom.xml" />
         <option value="$PROJECT_DIR$/samples/LoginService/pom.xml" />
+        <option value="$PROJECT_DIR$/hibernate3emul/pom.xml" />
       </list>
     </option>
   </component>
@@ -1117,46 +1118,46 @@
     </library>
     <library name="Maven: mockit:jmockit:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/jbossaop/../../jmockit.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/AnimatedTransitions/../../jmockit.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/jbossaop/../../jmockit-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/AnimatedTransitions/../../jmockit-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/jbossaop/../../jmockit-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/AnimatedTransitions/../../jmockit-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: easymock:easymock:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/easymock-2.5.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymock-2.5.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/easymock-2.5.2-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymock-2.5.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/easymock-2.5.2-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymock-2.5.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: easymock:easymockclassextension:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/easymockclassextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/easymockclassextension-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/easymockclassextension-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: cglib:cglib-nodep:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/cglib-nodep-2.1_3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/cglib-nodep-2.1_3.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/cglib-nodep-2.1_3-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/cglib-nodep-2.1_3-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/cglib-nodep-2.1_3-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/cglib-nodep-2.1_3-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: jmock:jmock:0">
@@ -1388,6 +1389,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: hibernate:hibernate:3.0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/hibernate3emul/lib/hibernate3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/hibernate3emul/lib/hibernate3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/hibernate3emul/lib/hibernate3-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
