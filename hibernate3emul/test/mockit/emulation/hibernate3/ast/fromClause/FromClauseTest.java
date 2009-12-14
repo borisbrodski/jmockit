@@ -108,7 +108,7 @@ public final class FromClauseTest
       assertEquals(2, tuples.get(0).length);
    }
 
-   @Test
+   @Ignore @Test
    public void parseAndMatchWithTwoRanges()
    {
       String hql = "from Entity e1, java.lang.Object e2";
