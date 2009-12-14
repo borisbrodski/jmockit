@@ -9,8 +9,8 @@
       <version>0.995</version>
       <relativePath>../../pom.xml</relativePath>
    </parent>
-   <artifactId>tutorial</artifactId>
-   <name>Tutorial Sample</name>
+   <artifactId>jbossaop</artifactId>
+   <name>JBoss AOP Testing Sample</name>
 
    <dependencies>
       <dependency>

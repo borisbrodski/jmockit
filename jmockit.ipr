@@ -770,6 +770,9 @@
         <option value="$PROJECT_DIR$/samples/jmock/pom.xml" />
         <option value="$PROJECT_DIR$/samples/unitils/pom.xml" />
         <option value="$PROJECT_DIR$/samples/mockito/pom.xml" />
+        <option value="$PROJECT_DIR$/samples/jbossaop/pom.xml" />
+        <option value="$PROJECT_DIR$/samples/TimingFramework/pom.xml" />
+        <option value="$PROJECT_DIR$/samples/AnimatedTransitions/pom.xml" />
       </list>
     </option>
   </component>
@@ -779,6 +782,7 @@
   <component name="ProjectDictionaryState">
     <dictionary name="Administrator">
       <words>
+        <w>animatedtransitions</w>
         <w>args</w>
         <w>arraycopy</w>
         <w>attr</w>
@@ -886,6 +890,7 @@
         <w>telecom</w>
         <w>templated</w>
         <w>throwable</w>
+        <w>timingframework</w>
         <w>tooltip</w>
         <w>unbox</w>
         <w>unformatted</w>

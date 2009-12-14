@@ -26,7 +26,7 @@
     </orderEntry>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: mockit:jmockit:0" level="project" />
-    <orderEntry type="library" exported="" name="Maven: junit:junit:4.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.7" level="project" />
     <orderEntry type="library" name="Maven: jmock:jmock:0" level="project" />
     <orderEntry type="library" name="Maven: jmock:jmock:junit4:0" level="project" />
     <orderEntry type="library" name="Maven: jmock:jmock:legacy:0" level="project" />

@@ -16,7 +16,7 @@
     <orderEntry type="library" name="Common samples lib" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: mockit:jmockit:0" level="project" />
-    <orderEntry type="library" exported="" name="Maven: junit:junit:4.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.7" level="project" />
     <orderEntry type="library" name="Maven: easymock:easymock:0" level="project" />
     <orderEntry type="library" name="Maven: easymock:easymockclassextension:0" level="project" />
     <orderEntry type="library" name="Maven: cglib:cglib-nodep:0" level="project" />

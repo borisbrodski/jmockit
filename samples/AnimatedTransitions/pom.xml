@@ -9,8 +9,8 @@
       <version>0.995</version>
       <relativePath>../../pom.xml</relativePath>
    </parent>
-   <artifactId>tutorial</artifactId>
-   <name>Tutorial Sample</name>
+   <artifactId>animatedtransitions</artifactId>
+   <name>Animated Transitions Sample</name>
 
    <dependencies>
       <dependency>
@@ -20,6 +20,10 @@
       <dependency>
          <groupId>junit</groupId><artifactId>junit</artifactId><version>4.7</version>
          <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>mockit</groupId><artifactId>timingframework</artifactId><version>0.995</version>
+         <scope>system</scope><systemPath>${basedir}/../TimingFramework/target/timingframework-0.995.jar</systemPath>
       </dependency>
    </dependencies>
 </project>
