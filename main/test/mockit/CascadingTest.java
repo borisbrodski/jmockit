@@ -167,6 +167,35 @@ public final class CascadingTest
       baz.runIt();
    }
 
+   @Test
+   public void cascadeTwoLevelsWithInvocationRecordedOnLastMockOnly(@Cascading Foo foo)
+   {
+      new Expectations()
+      {
+         Baz baz;
+
+         {
+            baz.runIt();
+         }
+      };
+
+      // Intermediate mocked type Bar is never mentioned above.
+      foo.getBar().getBaz().runIt();
+   }
+
+   @Test
+   public void cascadeTwoLevelsAndVerifyInvocationOnLastMockOnly(@Cascading Foo foo, final Baz baz)
+   {
+      foo.getBar().getBaz().runIt();
+
+      new Verifications()
+      {
+         {
+            baz.runIt();
+         }
+      };
+   }
+
    // Tests using the java.lang.Process and java.lang.ProcessBuilder classes //////////////////////
 
    @Test
