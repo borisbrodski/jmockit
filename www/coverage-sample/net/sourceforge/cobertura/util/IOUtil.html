@@ -13,262 +13,262 @@
   <table cellpadding='0' cellspacing='1'>
     <caption><code>..\orderMngmntWebapp\src\net\sourceforge\cobertura\util\IOUtil.java</code></caption>
     <tr>
-      <td class='lineNo'>1</td><td>&nbsp;</td>
-      <td id='l1' class='nonexec'><pre class='comment'>/*</pre></td>
+      <td class='line'>1</td><td>&nbsp;</td>
+      <td><pre class='comment'>/*</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>2</td><td>&nbsp;</td>
-      <td id='l2' class='nonexec'><pre class='comment'> * Cobertura - http://cobertura.sourceforge.net/</pre></td>
+      <td class='line'>2</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Cobertura - http://cobertura.sourceforge.net/</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>3</td><td>&nbsp;</td>
-      <td id='l3' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>3</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>4</td><td>&nbsp;</td>
-      <td id='l4' class='nonexec'><pre class='comment'> * Copyright (C) 2005 Grzegorz Lukasik</pre></td>
+      <td class='line'>4</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Copyright (C) 2005 Grzegorz Lukasik</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>5</td><td>&nbsp;</td>
-      <td id='l5' class='nonexec'><pre class='comment'> * Copyright (C) 2006 John Lewis</pre></td>
+      <td class='line'>5</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Copyright (C) 2006 John Lewis</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>6</td><td>&nbsp;</td>
-      <td id='l6' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>6</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>7</td><td>&nbsp;</td>
-      <td id='l7' class='nonexec'><pre class='comment'> * Note: This file is dual licensed under the GPL and the Apache</pre></td>
+      <td class='line'>7</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Note: This file is dual licensed under the GPL and the Apache</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>8</td><td>&nbsp;</td>
-      <td id='l8' class='nonexec'><pre class='comment'> * Source License (so that it can be used from both the main</pre></td>
+      <td class='line'>8</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Source License (so that it can be used from both the main</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>9</td><td>&nbsp;</td>
-      <td id='l9' class='nonexec'><pre class='comment'> * Cobertura classes and the ant tasks).</pre></td>
+      <td class='line'>9</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Cobertura classes and the ant tasks).</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>10</td><td>&nbsp;</td>
-      <td id='l10' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>10</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>11</td><td>&nbsp;</td>
-      <td id='l11' class='nonexec'><pre class='comment'> * Cobertura is free software; you can redistribute it and/or modify</pre></td>
+      <td class='line'>11</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Cobertura is free software; you can redistribute it and/or modify</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>12</td><td>&nbsp;</td>
-      <td id='l12' class='nonexec'><pre class='comment'> * it under the terms of the GNU General Public License as published</pre></td>
+      <td class='line'>12</td><td>&nbsp;</td>
+      <td><pre class='comment'> * it under the terms of the GNU General Public License as published</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>13</td><td>&nbsp;</td>
-      <td id='l13' class='nonexec'><pre class='comment'> * by the Free Software Foundation; either version 2 of the License,</pre></td>
+      <td class='line'>13</td><td>&nbsp;</td>
+      <td><pre class='comment'> * by the Free Software Foundation; either version 2 of the License,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>14</td><td>&nbsp;</td>
-      <td id='l14' class='nonexec'><pre class='comment'> * or (at your option) any later version.</pre></td>
+      <td class='line'>14</td><td>&nbsp;</td>
+      <td><pre class='comment'> * or (at your option) any later version.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>15</td><td>&nbsp;</td>
-      <td id='l15' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>15</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>16</td><td>&nbsp;</td>
-      <td id='l16' class='nonexec'><pre class='comment'> * Cobertura is distributed in the hope that it will be useful, but</pre></td>
+      <td class='line'>16</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Cobertura is distributed in the hope that it will be useful, but</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>17</td><td>&nbsp;</td>
-      <td id='l17' class='nonexec'><pre class='comment'> * WITHOUT ANY WARRANTY; without even the implied warranty of</pre></td>
+      <td class='line'>17</td><td>&nbsp;</td>
+      <td><pre class='comment'> * WITHOUT ANY WARRANTY; without even the implied warranty of</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>18</td><td>&nbsp;</td>
-      <td id='l18' class='nonexec'><pre class='comment'> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU</pre></td>
+      <td class='line'>18</td><td>&nbsp;</td>
+      <td><pre class='comment'> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>19</td><td>&nbsp;</td>
-      <td id='l19' class='nonexec'><pre class='comment'> * General Public License for more details.</pre></td>
+      <td class='line'>19</td><td>&nbsp;</td>
+      <td><pre class='comment'> * General Public License for more details.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>20</td><td>&nbsp;</td>
-      <td id='l20' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>20</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>21</td><td>&nbsp;</td>
-      <td id='l21' class='nonexec'><pre class='comment'> * You should have received a copy of the GNU General Public License</pre></td>
+      <td class='line'>21</td><td>&nbsp;</td>
+      <td><pre class='comment'> * You should have received a copy of the GNU General Public License</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>22</td><td>&nbsp;</td>
-      <td id='l22' class='nonexec'><pre class='comment'> * along with Cobertura; if not, write to the Free Software</pre></td>
+      <td class='line'>22</td><td>&nbsp;</td>
+      <td><pre class='comment'> * along with Cobertura; if not, write to the Free Software</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>23</td><td>&nbsp;</td>
-      <td id='l23' class='nonexec'><pre class='comment'> * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307</pre></td>
+      <td class='line'>23</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>24</td><td>&nbsp;</td>
-      <td id='l24' class='nonexec'><pre class='comment'> * USA</pre></td>
+      <td class='line'>24</td><td>&nbsp;</td>
+      <td><pre class='comment'> * USA</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>25</td><td>&nbsp;</td>
-      <td id='l25' class='nonexec'><pre class='comment'> */</pre></td>
+      <td class='line'>25</td><td>&nbsp;</td>
+      <td><pre class='comment'> */</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>26</td><td>&nbsp;</td>
-      <td id='l26' class='nonexec'><pre class='prettyprint'>package net.sourceforge.cobertura.util;</pre></td>
+      <td class='line'>26</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>package net.sourceforge.cobertura.util;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>27</td><td>&nbsp;</td>
+      <td class='line'>27</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>28</td><td>&nbsp;</td>
-      <td id='l28' class='nonexec'><pre class='prettyprint'>import java.io.ByteArrayOutputStream;</pre></td>
+      <td class='line'>28</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.ByteArrayOutputStream;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>29</td><td>&nbsp;</td>
-      <td id='l29' class='nonexec'><pre class='prettyprint'>import java.io.File;</pre></td>
+      <td class='line'>29</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.File;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>30</td><td>&nbsp;</td>
-      <td id='l30' class='nonexec'><pre class='prettyprint'>import java.io.FileInputStream;</pre></td>
+      <td class='line'>30</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.FileInputStream;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>31</td><td>&nbsp;</td>
-      <td id='l31' class='nonexec'><pre class='prettyprint'>import java.io.FileNotFoundException;</pre></td>
+      <td class='line'>31</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.FileNotFoundException;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>32</td><td>&nbsp;</td>
-      <td id='l32' class='nonexec'><pre class='prettyprint'>import java.io.FileOutputStream;</pre></td>
+      <td class='line'>32</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.FileOutputStream;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>33</td><td>&nbsp;</td>
-      <td id='l33' class='nonexec'><pre class='prettyprint'>import java.io.IOException;</pre></td>
+      <td class='line'>33</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.IOException;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>34</td><td>&nbsp;</td>
-      <td id='l34' class='nonexec'><pre class='prettyprint'>import java.io.InputStream;</pre></td>
+      <td class='line'>34</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.InputStream;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>35</td><td>&nbsp;</td>
-      <td id='l35' class='nonexec'><pre class='prettyprint'>import java.io.OutputStream;</pre></td>
+      <td class='line'>35</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.OutputStream;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>36</td><td>&nbsp;</td>
-      <td id='l36' class='nonexec'><pre class='prettyprint'>import java.io.OutputStreamWriter;</pre></td>
+      <td class='line'>36</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.OutputStreamWriter;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>37</td><td>&nbsp;</td>
-      <td id='l37' class='nonexec'><pre class='prettyprint'>import java.io.PrintWriter;</pre></td>
+      <td class='line'>37</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.PrintWriter;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>38</td><td>&nbsp;</td>
-      <td id='l38' class='nonexec'><pre class='prettyprint'>import java.io.UnsupportedEncodingException;</pre></td>
+      <td class='line'>38</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.UnsupportedEncodingException;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>39</td><td>&nbsp;</td>
-      <td id='l39' class='nonexec'><pre class='prettyprint'>import java.io.Writer;</pre></td>
+      <td class='line'>39</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.Writer;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>40</td><td>&nbsp;</td>
+      <td class='line'>40</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>41</td><td>&nbsp;</td>
-      <td id='l41' class='nonexec'><pre class='comment'>/**</pre></td>
+      <td class='line'>41</td><td>&nbsp;</td>
+      <td><pre class='comment'>/**</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>42</td><td>&nbsp;</td>
-      <td id='l42' class='nonexec'><pre class='comment'> * Helper class with useful I/O operations.</pre></td>
+      <td class='line'>42</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Helper class with useful I/O operations.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>43</td><td>&nbsp;</td>
-      <td id='l43' class='nonexec'><pre class='comment'> * </pre></td>
+      <td class='line'>43</td><td>&nbsp;</td>
+      <td><pre class='comment'> * </pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>44</td><td>&nbsp;</td>
-      <td id='l44' class='nonexec'><pre class='comment'> * @author Grzegorz Lukasik</pre></td>
+      <td class='line'>44</td><td>&nbsp;</td>
+      <td><pre class='comment'> * @author Grzegorz Lukasik</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>45</td><td>&nbsp;</td>
-      <td id='l45' class='nonexec'><pre class='comment'> * Compare to the original: http://cobertura.sourceforge.net/sample/net.sourceforge.cobertura.util.IOUtil.html</pre></td>
+      <td class='line'>45</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Compare to the original: http://cobertura.sourceforge.net/sample/net.sourceforge.cobertura.util.IOUtil.html</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>46</td><td>&nbsp;</td>
-      <td id='l46' class='nonexec'><pre class='comment'> */</pre></td>
+      <td class='line'>46</td><td>&nbsp;</td>
+      <td><pre class='comment'> */</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>47</td><td class='count'>0</td>
-      <td id='l47' class='uncovered'><pre class='prettyprint'>public abstract class IOUtil</pre></td>
+      <td class='line'>47</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>public abstract class IOUtil</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>48</td><td>&nbsp;</td>
-      <td id='l48' class='nonexec'><pre class='prettyprint'>{</pre></td>
+      <td class='line'>48</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>49</td><td>&nbsp;</td>
+      <td class='line'>49</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>50</td><td>&nbsp;</td>
-      <td id='l50' class='nonexec'><pre class='comment'>	/**</pre></td>
+      <td class='line'>50</td><td>&nbsp;</td>
+      <td><pre class='comment'>	/**</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>51</td><td>&nbsp;</td>
-      <td id='l51' class='nonexec'><pre class='comment'>	 * Copies bytes from input stream into the output stream.  Stops</pre></td>
+      <td class='line'>51</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * Copies bytes from input stream into the output stream.  Stops</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>52</td><td>&nbsp;</td>
-      <td id='l52' class='nonexec'><pre class='comment'>	 * when the input stream read method returns -1.  Does not close</pre></td>
+      <td class='line'>52</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * when the input stream read method returns -1.  Does not close</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>53</td><td>&nbsp;</td>
-      <td id='l53' class='nonexec'><pre class='comment'>	 * the streams.</pre></td>
+      <td class='line'>53</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * the streams.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>54</td><td>&nbsp;</td>
-      <td id='l54' class='nonexec'><pre class='comment'>	 * </pre></td>
+      <td class='line'>54</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * </pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>55</td><td>&nbsp;</td>
-      <td id='l55' class='nonexec'><pre class='comment'>	 * @throws IOException If either passed stream will throw IOException.</pre></td>
+      <td class='line'>55</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * @throws IOException If either passed stream will throw IOException.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>56</td><td>&nbsp;</td>
-      <td id='l56' class='nonexec'><pre class='comment'>	 * @throws NullPointerException If either passed stream is null.</pre></td>
+      <td class='line'>56</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * @throws NullPointerException If either passed stream is null.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>57</td><td>&nbsp;</td>
-      <td id='l57' class='nonexec'><pre class='comment'>	 */</pre></td>
+      <td class='line'>57</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 */</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>58</td><td>&nbsp;</td>
-      <td id='l58' class='nonexec'><pre class='prettyprint'>	public static void copyStream(InputStream in, OutputStream out)</pre></td>
+      <td class='line'>58</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public static void copyStream(InputStream in, OutputStream out)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>59</td><td>&nbsp;</td>
-      <td id='l59' class='nonexec'><pre class='prettyprint'>			throws IOException</pre></td>
+      <td class='line'>59</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			throws IOException</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>60</td><td>&nbsp;</td>
-      <td id='l60' class='nonexec'><pre class='prettyprint'>	{</pre></td>
+      <td class='line'>60</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>61</td><td>&nbsp;</td>
-      <td id='l61' class='nonexec'><pre class='comment'>		// NullPointerException is explicity thrown to guarantee expected behaviour</pre></td>
+      <td class='line'>61</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// NullPointerException is explicity thrown to guarantee expected behaviour</pre></td>
     </tr>
     <tr>
       <td></td><td class='count'>11</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#00ff00' onclick='hidePath()'>Path coverage: 4/4</span>
-        <span class='covered' onclick="showPath(this,'A','l62 l63')">A: 2</span>
-        <span class='covered' onclick="showPath(this,'B','l62 l63')">B: 1</span>
-        <span class='covered' onclick="showPath(this,'C','l62 l66 l67 l71')">C: 2</span>
-        <span class='covered' onclick="showPath(this,'D','l62 l66 l67 l69 l71')">D: 6</span>
+        <span class='covered' onclick="showPath(this,'l62s0 l62s1 l63s0')">A: 2</span>
+        <span class='covered' onclick="showPath(this,'l62s0 l62s1 l62s2 l63s0')">B: 1</span>
+        <span class='covered' onclick="showPath(this,'l62s0 l62s1 l62s2 l66s0 l67s0 l71s0')">C: 2</span>
+        <span class='covered' onclick="showPath(this,'l62s0 l62s1 l62s2 l66s0 l67s0 l69s0 l71s0')">D: 6</span>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>62</td><td class='count'>11</td>
-      <td id='l62'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		if (in == null || out == null)</pre>
+      <td class='line'>62</td><td class='count'>11</td>
+      <td><pre class='prettyprint jmp'>		<span id='l62s0' title='Executions: 11' class='covered cp' onclick='showHide(this,0)'>if (in == null </span>|| <span id='l62s1' title='Executions: 9 No jumps' class='covered cp' onclick='showHide(this,1)'>out == null)</span></pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:102</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:107</li>
@@ -282,11 +282,22 @@
           <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream:150</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream:154</li>
         </ol>
+        <ol style='display: none;'>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:102</li>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:107</li>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:112</li>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:118</li>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:130</li>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream:140</li>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream:143</li>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream:146</li>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream:150</li>
+        </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>63</td><td class='count'>3</td>
-      <td id='l63'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>			throw new NullPointerException();</pre>
+      <td class='line'>63</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l63s0'>			throw new NullPointerException();</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:122</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:130</li>
@@ -295,16 +306,16 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>64</td><td>&nbsp;</td>
+      <td class='line'>64</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>65</td><td>&nbsp;</td>
-      <td id='l65' class='nonexec'><pre class='prettyprint'>		int el;</pre></td>
+      <td class='line'>65</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		int el;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>66</td><td class='count'>8</td>
-      <td id='l66'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		byte[] buffer = new byte[1 &lt;&lt; 15];</pre>
+      <td class='line'>66</td><td class='count'>8</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l66s0'>		byte[] buffer = new byte[1 &lt;&lt; 15];</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:102</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:107</li>
@@ -318,8 +329,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>67</td><td class='count'>74</td>
-      <td id='l67'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		while ((el = in.read(buffer)) != -1)</pre>
+      <td class='line'>67</td><td class='count'>74</td>
+      <td><pre class='prettyprint jmp'>		<span id='l67s0' title='Executions: 74' class='covered cp' onclick='showHide(this,0)'>while ((el = in.read(buffer)) != -1)</span></pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:102</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:102</li>
@@ -399,12 +410,12 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>68</td><td>&nbsp;</td>
-      <td id='l68' class='nonexec'><pre class='prettyprint'>		{</pre></td>
+      <td class='line'>68</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>69</td><td class='count'>66</td>
-      <td id='l69'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>			out.write(buffer, 0, el);</pre>
+      <td class='line'>69</td><td class='count'>66</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l69s0'>			out.write(buffer, 0, el);</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:102</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:107</li>
@@ -476,12 +487,12 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>70</td><td>&nbsp;</td>
-      <td id='l70' class='nonexec'><pre class='prettyprint'>		}</pre></td>
+      <td class='line'>70</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>71</td><td class='count'>8</td>
-      <td id='l71'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>	}</pre>
+      <td class='line'>71</td><td class='count'>8</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l71s0'>	}</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:102</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream:107</li>
@@ -495,48 +506,48 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>72</td><td>&nbsp;</td>
+      <td class='line'>72</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>73</td><td>&nbsp;</td>
-      <td id='l73' class='nonexec'><pre class='comment'>	/**</pre></td>
+      <td class='line'>73</td><td>&nbsp;</td>
+      <td><pre class='comment'>	/**</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>74</td><td>&nbsp;</td>
-      <td id='l74' class='nonexec'><pre class='comment'>	 * Returns an array that contains values read from the</pre></td>
+      <td class='line'>74</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * Returns an array that contains values read from the</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>75</td><td>&nbsp;</td>
-      <td id='l75' class='nonexec'><pre class='comment'>	 * given input stream.</pre></td>
+      <td class='line'>75</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * given input stream.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>76</td><td>&nbsp;</td>
-      <td id='l76' class='nonexec'><pre class='comment'>	 * </pre></td>
+      <td class='line'>76</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * </pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>77</td><td>&nbsp;</td>
-      <td id='l77' class='nonexec'><pre class='comment'>	 * @throws NullPointerException If null stream is passed.</pre></td>
+      <td class='line'>77</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * @throws NullPointerException If null stream is passed.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>78</td><td>&nbsp;</td>
-      <td id='l78' class='nonexec'><pre class='comment'>	 */</pre></td>
+      <td class='line'>78</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 */</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>79</td><td>&nbsp;</td>
-      <td id='l79' class='nonexec'><pre class='prettyprint'>	public static byte[] createByteArrayFromInputStream(InputStream in)</pre></td>
+      <td class='line'>79</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public static byte[] createByteArrayFromInputStream(InputStream in)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>80</td><td>&nbsp;</td>
-      <td id='l80' class='nonexec'><pre class='prettyprint'>			throws IOException</pre></td>
+      <td class='line'>80</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			throws IOException</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>81</td><td>&nbsp;</td>
-      <td id='l81' class='nonexec'><pre class='prettyprint'>	{</pre></td>
+      <td class='line'>81</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>82</td><td class='count'>5</td>
-      <td id='l82'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		ByteArrayOutputStream byteArray = new ByteArrayOutputStream();</pre>
+      <td class='line'>82</td><td class='count'>5</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l82s0'>		ByteArrayOutputStream byteArray = new ByteArrayOutputStream();</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream:140</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream:143</li>
@@ -547,8 +558,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>83</td><td class='count'>5</td>
-      <td id='l83'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		copyStream(in, byteArray);</pre>
+      <td class='line'>83</td><td class='count'>5</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l83s0'>		copyStream(in, byteArray);</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream:140</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream:143</li>
@@ -559,8 +570,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>84</td><td class='count'>4</td>
-      <td id='l84'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		return byteArray.toByteArray();</pre>
+      <td class='line'>84</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l84s0'>		return byteArray.toByteArray();</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream:140</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream:143</li>
@@ -570,62 +581,62 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>85</td><td>&nbsp;</td>
-      <td id='l85' class='nonexec'><pre class='prettyprint'>	}</pre></td>
+      <td class='line'>85</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>86</td><td>&nbsp;</td>
+      <td class='line'>86</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>87</td><td>&nbsp;</td>
-      <td id='l87' class='nonexec'><pre class='comment'>	/**</pre></td>
+      <td class='line'>87</td><td>&nbsp;</td>
+      <td><pre class='comment'>	/**</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>88</td><td>&nbsp;</td>
-      <td id='l88' class='nonexec'><pre class='comment'>	 * Moves a file from one location to other.</pre></td>
+      <td class='line'>88</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * Moves a file from one location to other.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>89</td><td>&nbsp;</td>
-      <td id='l89' class='nonexec'><pre class='comment'>	 *</pre></td>
+      <td class='line'>89</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>90</td><td>&nbsp;</td>
-      <td id='l90' class='nonexec'><pre class='comment'>	 * @throws IOException If IO exception occur during moving.</pre></td>
+      <td class='line'>90</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * @throws IOException If IO exception occur during moving.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>91</td><td>&nbsp;</td>
-      <td id='l91' class='nonexec'><pre class='comment'>	 * @throws NullPointerException If either passed file is null.</pre></td>
+      <td class='line'>91</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * @throws NullPointerException If either passed file is null.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>92</td><td>&nbsp;</td>
-      <td id='l92' class='nonexec'><pre class='comment'>	 */</pre></td>
+      <td class='line'>92</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 */</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>93</td><td>&nbsp;</td>
-      <td id='l93' class='nonexec'><pre class='prettyprint'>	public static void moveFile(File sourceFile, File destinationFile)</pre></td>
+      <td class='line'>93</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public static void moveFile(File sourceFile, File destinationFile)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>94</td><td>&nbsp;</td>
-      <td id='l94' class='nonexec'><pre class='prettyprint'>			throws IOException</pre></td>
+      <td class='line'>94</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			throws IOException</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>95</td><td>&nbsp;</td>
-      <td id='l95' class='nonexec'><pre class='prettyprint'>	{</pre></td>
+      <td class='line'>95</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	{</pre></td>
     </tr>
     <tr>
       <td></td><td class='count'>2</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#807f00' onclick='hidePath()'>Path coverage: 2/4</span>
-        <span class='covered' onclick="showPath(this,'A','l96 l102 l103 l104')">A: 1</span>
-        <span class='covered' onclick="showPath(this,'B','l96 l98 l102 l103 l104')">B: 1</span>
-        <span class='uncovered' onclick="showPath(this,'C','l96 l102 l103 l107 l122 l123')">C: 0</span>
-        <span class='uncovered' onclick="showPath(this,'D','l96 l98 l102 l103 l107 l122 l123')">D: 0</span>
+        <span class='covered' onclick="showPath(this,'l96s0 l96s1 l102s0 l103s0 l104s0')">A: 1</span>
+        <span class='covered' onclick="showPath(this,'l96s0 l96s1 l98s0 l102s0 l103s0 l104s0')">B: 1</span>
+        <span class='uncovered' onclick="showPath(this,'l96s0 l96s1 l102s0 l103s0 l107s0 l122s0 l123s0')">C: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l96s0 l96s1 l98s0 l102s0 l103s0 l107s0 l122s0 l123s0')">D: 0</span>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>96</td><td class='count'>4</td>
-      <td id='l96'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		if (destinationFile.exists())</pre>
+      <td class='line'>96</td><td class='count'>4</td>
+      <td><pre class='prettyprint jmp'>		<span id='l96s0' title='Executions: 4' class='covered cp' onclick='showHide(this,0)'>if (destinationFile.exists())</span></pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile:53</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile:67</li>
@@ -635,12 +646,12 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>97</td><td>&nbsp;</td>
-      <td id='l97' class='nonexec'><pre class='prettyprint'>		{</pre></td>
+      <td class='line'>97</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>98</td><td class='count'>2</td>
-      <td id='l98'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>			destinationFile.delete();</pre>
+      <td class='line'>98</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l98s0'>			destinationFile.delete();</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile:67</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile:91</li>
@@ -648,20 +659,20 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>99</td><td>&nbsp;</td>
-      <td id='l99' class='nonexec'><pre class='prettyprint'>		}</pre></td>
+      <td class='line'>99</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>100</td><td>&nbsp;</td>
+      <td class='line'>100</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>101</td><td>&nbsp;</td>
-      <td id='l101' class='nonexec'><pre class='comment'>		// Move file using File method if possible</pre></td>
+      <td class='line'>101</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// Move file using File method if possible</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>102</td><td class='count'>3</td>
-      <td id='l102'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		boolean succesfulMove = sourceFile.renameTo(destinationFile);</pre>
+      <td class='line'>102</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l102s0'>		boolean succesfulMove = sourceFile.renameTo(destinationFile);</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile:53</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile:67</li>
@@ -670,8 +681,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>103</td><td class='count'>2</td>
-      <td id='l103'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		if (succesfulMove)</pre>
+      <td class='line'>103</td><td class='count'>2</td>
+      <td><pre class='prettyprint jmp'>		<span id='l103s0' title='Executions: 2' class='covered cp' onclick='showHide(this,0)'>if (succesfulMove)</span></pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile:53</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile:67</li>
@@ -679,8 +690,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>104</td><td class='count'>2</td>
-      <td id='l104'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>			return;</pre>
+      <td class='line'>104</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l104s0'>			return;</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile:53</li>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile:67</li>
@@ -688,384 +699,384 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>105</td><td>&nbsp;</td>
+      <td class='line'>105</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>106</td><td>&nbsp;</td>
-      <td id='l106' class='nonexec'><pre class='comment'>		// Copy file from source to destination</pre></td>
+      <td class='line'>106</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// Copy file from source to destination</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>107</td><td class='count'>0</td>
-      <td id='l107' class='uncovered'><pre class='prettyprint'>		InputStream in = null;</pre></td>
+      <td class='line'>107</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>		InputStream in = null;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>108</td><td class='count'>0</td>
-      <td id='l108' class='uncovered'><pre class='prettyprint'>		OutputStream out = null;</pre></td>
+      <td class='line'>108</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>		OutputStream out = null;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>109</td><td>&nbsp;</td>
-      <td id='l109' class='nonexec'><pre class='prettyprint'>		try</pre></td>
+      <td class='line'>109</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		try</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>110</td><td>&nbsp;</td>
-      <td id='l110' class='nonexec'><pre class='prettyprint'>		{</pre></td>
+      <td class='line'>110</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>111</td><td class='count'>0</td>
-      <td id='l111' class='uncovered'><pre class='prettyprint'>			in = new FileInputStream(sourceFile);</pre></td>
+      <td class='line'>111</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>			in = new FileInputStream(sourceFile);</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>112</td><td class='count'>0</td>
-      <td id='l112' class='uncovered'><pre class='prettyprint'>			out = new FileOutputStream(destinationFile);</pre></td>
+      <td class='line'>112</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>			out = new FileOutputStream(destinationFile);</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>113</td><td class='count'>0</td>
-      <td id='l113' class='uncovered'><pre class='prettyprint'>			copyStream(in, out);</pre></td>
+      <td class='line'>113</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>			copyStream(in, out);</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>114</td><td>&nbsp;</td>
-      <td id='l114' class='nonexec'><pre class='prettyprint'>		}</pre></td>
+      <td class='line'>114</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>115</td><td>&nbsp;</td>
-      <td id='l115' class='nonexec'><pre class='prettyprint'>		finally</pre></td>
+      <td class='line'>115</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		finally</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>116</td><td>&nbsp;</td>
-      <td id='l116' class='nonexec'><pre class='prettyprint'>		{</pre></td>
+      <td class='line'>116</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>117</td><td class='count'>0</td>
-      <td id='l117' class='uncovered'><pre class='prettyprint'>			in = closeInputStream(in);</pre></td>
+      <td class='line'>117</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>			in = closeInputStream(in);</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>118</td><td class='count'>0</td>
-      <td id='l118' class='uncovered'><pre class='prettyprint'>			out = closeOutputStream(out);</pre></td>
+      <td class='line'>118</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>			out = closeOutputStream(out);</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>119</td><td class='count'>0</td>
-      <td id='l119' class='uncovered'><pre class='prettyprint'>		}</pre></td>
+      <td class='line'>119</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>		}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>120</td><td>&nbsp;</td>
+      <td class='line'>120</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>121</td><td>&nbsp;</td>
-      <td id='l121' class='nonexec'><pre class='comment'>		// Remove source file</pre></td>
+      <td class='line'>121</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// Remove source file</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>122</td><td class='count'>0</td>
-      <td id='l122' class='uncovered'><pre class='prettyprint'>		sourceFile.delete();</pre></td>
+      <td class='line'>122</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>		sourceFile.delete();</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>123</td><td class='count'>0</td>
-      <td id='l123' class='uncovered'><pre class='prettyprint'>	}</pre></td>
+      <td class='line'>123</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>	}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>124</td><td>&nbsp;</td>
+      <td class='line'>124</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>125</td><td>&nbsp;</td>
-      <td id='l125' class='nonexec'><pre class='comment'>	/**</pre></td>
+      <td class='line'>125</td><td>&nbsp;</td>
+      <td><pre class='comment'>	/**</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>126</td><td>&nbsp;</td>
-      <td id='l126' class='nonexec'><pre class='comment'>	 * Closes an input stream.</pre></td>
+      <td class='line'>126</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * Closes an input stream.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>127</td><td>&nbsp;</td>
-      <td id='l127' class='nonexec'><pre class='comment'>	 * </pre></td>
+      <td class='line'>127</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * </pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>128</td><td>&nbsp;</td>
-      <td id='l128' class='nonexec'><pre class='comment'>	 * @param in The stream to close.</pre></td>
+      <td class='line'>128</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * @param in The stream to close.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>129</td><td>&nbsp;</td>
-      <td id='l129' class='nonexec'><pre class='comment'>	 * @return null unless an exception was thrown while closing, else</pre></td>
+      <td class='line'>129</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * @return null unless an exception was thrown while closing, else</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>130</td><td>&nbsp;</td>
-      <td id='l130' class='nonexec'><pre class='comment'>	 *         returns the stream</pre></td>
+      <td class='line'>130</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 *         returns the stream</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>131</td><td>&nbsp;</td>
-      <td id='l131' class='nonexec'><pre class='comment'>	 */</pre></td>
+      <td class='line'>131</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 */</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>132</td><td>&nbsp;</td>
-      <td id='l132' class='nonexec'><pre class='prettyprint'>	public static InputStream closeInputStream(InputStream in)</pre></td>
+      <td class='line'>132</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public static InputStream closeInputStream(InputStream in)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>133</td><td>&nbsp;</td>
-      <td id='l133' class='nonexec'><pre class='prettyprint'>	{</pre></td>
+      <td class='line'>133</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	{</pre></td>
     </tr>
     <tr>
       <td></td><td class='count'>1</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#807f00' onclick='hidePath()'>Path coverage: 1/2</span>
-        <span class='uncovered' onclick="showPath(this,'A','l134 l147')">A: 0</span>
-        <span class='covered' onclick="showPath(this,'B','l134 l138 l147')">B: 1</span>
+        <span class='uncovered' onclick="showPath(this,'l134s0 l134s1 l147s0')">A: 0</span>
+        <span class='covered' onclick="showPath(this,'l134s0 l134s1 l138s0 l147s0')">B: 1</span>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>134</td><td class='count'>1</td>
-      <td id='l134'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		if (in != null)</pre>
+      <td class='line'>134</td><td class='count'>1</td>
+      <td><pre class='prettyprint jmp'>		<span id='l134s0' title='Executions: 1' class='covered cp' onclick='showHide(this,0)'>if (in != null)</span></pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream:184</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>135</td><td>&nbsp;</td>
-      <td id='l135' class='nonexec'><pre class='prettyprint'>		{</pre></td>
+      <td class='line'>135</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>136</td><td>&nbsp;</td>
-      <td id='l136' class='nonexec'><pre class='prettyprint'>			try</pre></td>
+      <td class='line'>136</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			try</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>137</td><td>&nbsp;</td>
-      <td id='l137' class='nonexec'><pre class='prettyprint'>			{</pre></td>
+      <td class='line'>137</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>138</td><td class='count'>1</td>
-      <td id='l138'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>				in.close();</pre>
+      <td class='line'>138</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l138s0'>				in.close();</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream:184</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>139</td><td class='count'>1</td>
-      <td id='l139'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>				in = null;</pre>
+      <td class='line'>139</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l139s0'>				in = null;</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream:184</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>140</td><td>&nbsp;</td>
-      <td id='l140' class='nonexec'><pre class='prettyprint'>			}</pre></td>
+      <td class='line'>140</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>141</td><td class='count'>0</td>
-      <td id='l141' class='uncovered'><pre class='prettyprint'>			catch (IOException e)</pre></td>
+      <td class='line'>141</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>			catch (IOException e)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>142</td><td>&nbsp;</td>
-      <td id='l142' class='nonexec'><pre class='prettyprint'>			{</pre></td>
+      <td class='line'>142</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>143</td><td class='count'>0</td>
-      <td id='l143' class='uncovered'><pre class='prettyprint'>				System.err.println("Cobertura: Error closing input stream.");</pre></td>
+      <td class='line'>143</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>				System.err.println("Cobertura: Error closing input stream.");</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>144</td><td class='count'>0</td>
-      <td id='l144' class='uncovered'><pre class='prettyprint'>				e.printStackTrace();</pre></td>
+      <td class='line'>144</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>				e.printStackTrace();</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>145</td><td class='count'>1</td>
-      <td id='l145'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>			}</pre>
+      <td class='line'>145</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l145s0'>			}</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream:184</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>146</td><td>&nbsp;</td>
-      <td id='l146' class='nonexec'><pre class='prettyprint'>		}</pre></td>
+      <td class='line'>146</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>147</td><td class='count'>1</td>
-      <td id='l147'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		return in;</pre>
+      <td class='line'>147</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l147s0'>		return in;</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream:184</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>148</td><td>&nbsp;</td>
-      <td id='l148' class='nonexec'><pre class='prettyprint'>	}</pre></td>
+      <td class='line'>148</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>149</td><td>&nbsp;</td>
+      <td class='line'>149</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>150</td><td>&nbsp;</td>
-      <td id='l150' class='nonexec'><pre class='comment'>	/**</pre></td>
+      <td class='line'>150</td><td>&nbsp;</td>
+      <td><pre class='comment'>	/**</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>151</td><td>&nbsp;</td>
-      <td id='l151' class='nonexec'><pre class='comment'>	 * Closes an output stream.</pre></td>
+      <td class='line'>151</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * Closes an output stream.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>152</td><td>&nbsp;</td>
-      <td id='l152' class='nonexec'><pre class='comment'>	 * </pre></td>
+      <td class='line'>152</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * </pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>153</td><td>&nbsp;</td>
-      <td id='l153' class='nonexec'><pre class='comment'>	 * @param out The stream to close.</pre></td>
+      <td class='line'>153</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * @param out The stream to close.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>154</td><td>&nbsp;</td>
-      <td id='l154' class='nonexec'><pre class='comment'>	 * @return null unless an exception was thrown while closing, else</pre></td>
+      <td class='line'>154</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 * @return null unless an exception was thrown while closing, else</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>155</td><td>&nbsp;</td>
-      <td id='l155' class='nonexec'><pre class='comment'>	 *         returns the stream.</pre></td>
+      <td class='line'>155</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 *         returns the stream.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>156</td><td>&nbsp;</td>
-      <td id='l156' class='nonexec'><pre class='comment'>	 */</pre></td>
+      <td class='line'>156</td><td>&nbsp;</td>
+      <td><pre class='comment'>	 */</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>157</td><td>&nbsp;</td>
-      <td id='l157' class='nonexec'><pre class='prettyprint'>	public static OutputStream closeOutputStream(OutputStream out)</pre></td>
+      <td class='line'>157</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public static OutputStream closeOutputStream(OutputStream out)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>158</td><td>&nbsp;</td>
-      <td id='l158' class='nonexec'><pre class='prettyprint'>	{</pre></td>
+      <td class='line'>158</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	{</pre></td>
     </tr>
     <tr>
       <td></td><td class='count'>1</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#807f00' onclick='hidePath()'>Path coverage: 1/2</span>
-        <span class='uncovered' onclick="showPath(this,'A','l159 l172')">A: 0</span>
-        <span class='covered' onclick="showPath(this,'B','l159 l163 l172')">B: 1</span>
+        <span class='uncovered' onclick="showPath(this,'l159s0 l159s1 l172s0')">A: 0</span>
+        <span class='covered' onclick="showPath(this,'l159s0 l159s1 l163s0 l172s0')">B: 1</span>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>159</td><td class='count'>1</td>
-      <td id='l159'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		if (out != null)</pre>
+      <td class='line'>159</td><td class='count'>1</td>
+      <td><pre class='prettyprint jmp'>		<span id='l159s0' title='Executions: 1' class='covered cp' onclick='showHide(this,0)'>if (out != null)</span></pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream:189</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>160</td><td>&nbsp;</td>
-      <td id='l160' class='nonexec'><pre class='prettyprint'>		{</pre></td>
+      <td class='line'>160</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>161</td><td>&nbsp;</td>
-      <td id='l161' class='nonexec'><pre class='prettyprint'>			try</pre></td>
+      <td class='line'>161</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			try</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>162</td><td>&nbsp;</td>
-      <td id='l162' class='nonexec'><pre class='prettyprint'>			{</pre></td>
+      <td class='line'>162</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>163</td><td class='count'>1</td>
-      <td id='l163'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>				out.close();</pre>
+      <td class='line'>163</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l163s0'>				out.close();</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream:189</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>164</td><td class='count'>1</td>
-      <td id='l164'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>				out = null;</pre>
+      <td class='line'>164</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l164s0'>				out = null;</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream:189</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>165</td><td>&nbsp;</td>
-      <td id='l165' class='nonexec'><pre class='prettyprint'>			}</pre></td>
+      <td class='line'>165</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>166</td><td class='count'>0</td>
-      <td id='l166' class='uncovered'><pre class='prettyprint'>			catch (IOException e)</pre></td>
+      <td class='line'>166</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>			catch (IOException e)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>167</td><td>&nbsp;</td>
-      <td id='l167' class='nonexec'><pre class='prettyprint'>			{</pre></td>
+      <td class='line'>167</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>168</td><td class='count'>0</td>
-      <td id='l168' class='uncovered'><pre class='prettyprint'>				System.err.println("Cobertura: Error closing output stream.");</pre></td>
+      <td class='line'>168</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>				System.err.println("Cobertura: Error closing output stream.");</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>169</td><td class='count'>0</td>
-      <td id='l169' class='uncovered'><pre class='prettyprint'>				e.printStackTrace();</pre></td>
+      <td class='line'>169</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>				e.printStackTrace();</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>170</td><td class='count'>1</td>
-      <td id='l170'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>			}</pre>
+      <td class='line'>170</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l170s0'>			}</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream:189</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>171</td><td>&nbsp;</td>
-      <td id='l171' class='nonexec'><pre class='prettyprint'>		}</pre></td>
+      <td class='line'>171</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>172</td><td class='count'>1</td>
-      <td id='l172'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		return out;</pre>
+      <td class='line'>172</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l172s0'>		return out;</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream:189</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>173</td><td>&nbsp;</td>
-      <td id='l173' class='nonexec'><pre class='prettyprint'>	}</pre></td>
+      <td class='line'>173</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>174</td><td>&nbsp;</td>
+      <td class='line'>174</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>175</td><td>&nbsp;</td>
-      <td id='l175' class='nonexec'><pre class='prettyprint'>	public static PrintWriter getPrintWriter(File file) throws UnsupportedEncodingException, FileNotFoundException</pre></td>
+      <td class='line'>175</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public static PrintWriter getPrintWriter(File file) throws UnsupportedEncodingException, FileNotFoundException</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>176</td><td>&nbsp;</td>
-      <td id='l176' class='nonexec'><pre class='prettyprint'>	{</pre></td>
+      <td class='line'>176</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>177</td><td class='count'>1</td>
-      <td id='l177'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		Writer osWriter = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");</pre>
+      <td class='line'>177</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l177s0'>		Writer osWriter = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testGetPrintWriter:194</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>178</td><td class='count'>1</td>
-      <td id='l178'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		PrintWriter pw = new PrintWriter(osWriter, false);</pre>
+      <td class='line'>178</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l178s0'>		PrintWriter pw = new PrintWriter(osWriter, false);</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testGetPrintWriter:194</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>179</td><td class='count'>1</td>
-      <td id='l179'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>		return pw;</pre>
+      <td class='line'>179</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l179s0'>		return pw;</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testGetPrintWriter:194</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>180</td><td>&nbsp;</td>
-      <td id='l180' class='nonexec'><pre class='prettyprint'>	}</pre></td>
+      <td class='line'>180</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	}</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>181</td><td>&nbsp;</td>
+      <td class='line'>181</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>182</td><td>&nbsp;</td>
-      <td id='l182' class='nonexec'><pre class='prettyprint'>}</pre></td>
+      <td class='line'>182</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>}</pre></td>
     </tr>
   </table>
 </body>

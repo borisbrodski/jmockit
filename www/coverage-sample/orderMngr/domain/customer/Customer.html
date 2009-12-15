@@ -13,188 +13,188 @@
   <table cellpadding='0' cellspacing='1'>
     <caption><code>..\orderMngmntWebapp\src\orderMngr\domain\customer\Customer.java</code></caption>
     <tr>
-      <td class='lineNo'>1</td><td>&nbsp;</td>
-      <td id='l1' class='nonexec'><pre class='comment'>/*</pre></td>
+      <td class='line'>1</td><td>&nbsp;</td>
+      <td><pre class='comment'>/*</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>2</td><td>&nbsp;</td>
-      <td id='l2' class='nonexec'><pre class='comment'> * JMockit Samples</pre></td>
+      <td class='line'>2</td><td>&nbsp;</td>
+      <td><pre class='comment'> * JMockit Samples</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>3</td><td>&nbsp;</td>
-      <td id='l3' class='nonexec'><pre class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</pre></td>
+      <td class='line'>3</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>4</td><td>&nbsp;</td>
-      <td id='l4' class='nonexec'><pre class='comment'> * All rights reserved.</pre></td>
+      <td class='line'>4</td><td>&nbsp;</td>
+      <td><pre class='comment'> * All rights reserved.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>5</td><td>&nbsp;</td>
-      <td id='l5' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>5</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>6</td><td>&nbsp;</td>
-      <td id='l6' class='nonexec'><pre class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</pre></td>
+      <td class='line'>6</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>7</td><td>&nbsp;</td>
-      <td id='l7' class='nonexec'><pre class='comment'> * a copy of this software and associated documentation files (the</pre></td>
+      <td class='line'>7</td><td>&nbsp;</td>
+      <td><pre class='comment'> * a copy of this software and associated documentation files (the</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>8</td><td>&nbsp;</td>
-      <td id='l8' class='nonexec'><pre class='comment'> * "Software"), to deal in the Software without restriction, including</pre></td>
+      <td class='line'>8</td><td>&nbsp;</td>
+      <td><pre class='comment'> * "Software"), to deal in the Software without restriction, including</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>9</td><td>&nbsp;</td>
-      <td id='l9' class='nonexec'><pre class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</pre></td>
+      <td class='line'>9</td><td>&nbsp;</td>
+      <td><pre class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>10</td><td>&nbsp;</td>
-      <td id='l10' class='nonexec'><pre class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</pre></td>
+      <td class='line'>10</td><td>&nbsp;</td>
+      <td><pre class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>11</td><td>&nbsp;</td>
-      <td id='l11' class='nonexec'><pre class='comment'> * permit persons to whom the Software is furnished to do so, subject to</pre></td>
+      <td class='line'>11</td><td>&nbsp;</td>
+      <td><pre class='comment'> * permit persons to whom the Software is furnished to do so, subject to</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>12</td><td>&nbsp;</td>
-      <td id='l12' class='nonexec'><pre class='comment'> * the following conditions:</pre></td>
+      <td class='line'>12</td><td>&nbsp;</td>
+      <td><pre class='comment'> * the following conditions:</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>13</td><td>&nbsp;</td>
-      <td id='l13' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>13</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>14</td><td>&nbsp;</td>
-      <td id='l14' class='nonexec'><pre class='comment'> * The above copyright notice and this permission notice shall be</pre></td>
+      <td class='line'>14</td><td>&nbsp;</td>
+      <td><pre class='comment'> * The above copyright notice and this permission notice shall be</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>15</td><td>&nbsp;</td>
-      <td id='l15' class='nonexec'><pre class='comment'> * included in all copies or substantial portions of the Software.</pre></td>
+      <td class='line'>15</td><td>&nbsp;</td>
+      <td><pre class='comment'> * included in all copies or substantial portions of the Software.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>16</td><td>&nbsp;</td>
-      <td id='l16' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>16</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>17</td><td>&nbsp;</td>
-      <td id='l17' class='nonexec'><pre class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</pre></td>
+      <td class='line'>17</td><td>&nbsp;</td>
+      <td><pre class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>18</td><td>&nbsp;</td>
-      <td id='l18' class='nonexec'><pre class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</pre></td>
+      <td class='line'>18</td><td>&nbsp;</td>
+      <td><pre class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>19</td><td>&nbsp;</td>
-      <td id='l19' class='nonexec'><pre class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre></td>
+      <td class='line'>19</td><td>&nbsp;</td>
+      <td><pre class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>20</td><td>&nbsp;</td>
-      <td id='l20' class='nonexec'><pre class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</pre></td>
+      <td class='line'>20</td><td>&nbsp;</td>
+      <td><pre class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>21</td><td>&nbsp;</td>
-      <td id='l21' class='nonexec'><pre class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</pre></td>
+      <td class='line'>21</td><td>&nbsp;</td>
+      <td><pre class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>22</td><td>&nbsp;</td>
-      <td id='l22' class='nonexec'><pre class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</pre></td>
+      <td class='line'>22</td><td>&nbsp;</td>
+      <td><pre class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>23</td><td>&nbsp;</td>
-      <td id='l23' class='nonexec'><pre class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre></td>
+      <td class='line'>23</td><td>&nbsp;</td>
+      <td><pre class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>24</td><td>&nbsp;</td>
-      <td id='l24' class='nonexec'><pre class='comment'> */</pre></td>
+      <td class='line'>24</td><td>&nbsp;</td>
+      <td><pre class='comment'> */</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>25</td><td>&nbsp;</td>
-      <td id='l25' class='nonexec'><pre class='prettyprint'>package orderMngr.domain.customer;</pre></td>
+      <td class='line'>25</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>package orderMngr.domain.customer;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>26</td><td>&nbsp;</td>
+      <td class='line'>26</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>27</td><td>&nbsp;</td>
-      <td id='l27' class='nonexec'><pre class='prettyprint'>import javax.persistence.*;</pre></td>
+      <td class='line'>27</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import javax.persistence.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>28</td><td>&nbsp;</td>
+      <td class='line'>28</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>29</td><td>&nbsp;</td>
-      <td id='l29' class='nonexec'><pre class='prettyprint'>@Entity</pre></td>
+      <td class='line'>29</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>@Entity</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>30</td><td>&nbsp;</td>
-      <td id='l30' class='nonexec'><pre class='prettyprint'>public class Customer</pre></td>
+      <td class='line'>30</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>public class Customer</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>31</td><td>&nbsp;</td>
-      <td id='l31' class='nonexec'><pre class='prettyprint'>{</pre></td>
+      <td class='line'>31</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>32</td><td>&nbsp;</td>
-      <td id='l32' class='nonexec'><pre class='prettyprint'>   @Id</pre></td>
+      <td class='line'>32</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   @Id</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>33</td><td>&nbsp;</td>
-      <td id='l33' class='nonexec'><pre class='prettyprint'>   private String id;</pre></td>
+      <td class='line'>33</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private String id;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>34</td><td>&nbsp;</td>
+      <td class='line'>34</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>35</td><td>&nbsp;</td>
-      <td id='l35' class='nonexec'><pre class='prettyprint'>   String firstName;</pre></td>
+      <td class='line'>35</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   String firstName;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>36</td><td>&nbsp;</td>
+      <td class='line'>36</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>37</td><td>&nbsp;</td>
-      <td id='l37' class='nonexec'><pre class='prettyprint'>   String lastName;</pre></td>
+      <td class='line'>37</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   String lastName;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>38</td><td>&nbsp;</td>
+      <td class='line'>38</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>39</td><td>&nbsp;</td>
-      <td id='l39' class='nonexec'><pre class='prettyprint'>   String deliveryAddress;</pre></td>
+      <td class='line'>39</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   String deliveryAddress;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>40</td><td>&nbsp;</td>
+      <td class='line'>40</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>41</td><td>&nbsp;</td>
-      <td id='l41' class='nonexec'><pre class='prettyprint'>   public Customer()</pre></td>
+      <td class='line'>41</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public Customer()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>42</td><td class='count'>0</td>
-      <td id='l42' class='uncovered'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>42</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>43</td><td class='count'>0</td>
-      <td id='l43' class='uncovered'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>43</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>44</td><td>&nbsp;</td>
+      <td class='line'>44</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>45</td><td>&nbsp;</td>
-      <td id='l45' class='nonexec'><pre class='prettyprint'>   public Customer(String id, String firstName, String lastName, String deliveryAddress)</pre></td>
+      <td class='line'>45</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public Customer(String id, String firstName, String lastName, String deliveryAddress)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>46</td><td class='count'>11</td>
-      <td id='l46'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   {</pre>
+      <td class='line'>46</td><td class='count'>11</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l46s0'>   {</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:89</li>
@@ -211,8 +211,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>47</td><td class='count'>11</td>
-      <td id='l47'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      this.id = id;</pre>
+      <td class='line'>47</td><td class='count'>11</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l47s0'>      this.id = id;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:89</li>
@@ -229,8 +229,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>48</td><td class='count'>11</td>
-      <td id='l48'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      this.firstName = firstName;</pre>
+      <td class='line'>48</td><td class='count'>11</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l48s0'>      this.firstName = firstName;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:89</li>
@@ -247,8 +247,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>49</td><td class='count'>11</td>
-      <td id='l49'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      this.lastName = lastName;</pre>
+      <td class='line'>49</td><td class='count'>11</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l49s0'>      this.lastName = lastName;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:89</li>
@@ -265,8 +265,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>50</td><td class='count'>11</td>
-      <td id='l50'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      this.deliveryAddress = deliveryAddress;</pre>
+      <td class='line'>50</td><td class='count'>11</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l50s0'>      this.deliveryAddress = deliveryAddress;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:89</li>
@@ -283,8 +283,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>51</td><td class='count'>11</td>
-      <td id='l51'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>51</td><td class='count'>11</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l51s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:89</li>
@@ -301,20 +301,20 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>52</td><td>&nbsp;</td>
+      <td class='line'>52</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>53</td><td>&nbsp;</td>
-      <td id='l53' class='nonexec'><pre class='prettyprint'>   public String getId()</pre></td>
+      <td class='line'>53</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public String getId()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>54</td><td>&nbsp;</td>
-      <td id='l54' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>54</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>55</td><td class='count'>26</td>
-      <td id='l55'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return id;</pre>
+      <td class='line'>55</td><td class='count'>26</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l55s0'>      return id;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:67</li>
@@ -346,24 +346,24 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>56</td><td>&nbsp;</td>
-      <td id='l56' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>56</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>57</td><td>&nbsp;</td>
+      <td class='line'>57</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>58</td><td>&nbsp;</td>
-      <td id='l58' class='nonexec'><pre class='prettyprint'>   public String getFirstName()</pre></td>
+      <td class='line'>58</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public String getFirstName()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>59</td><td>&nbsp;</td>
-      <td id='l59' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>59</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>60</td><td class='count'>17</td>
-      <td id='l60'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return firstName;</pre>
+      <td class='line'>60</td><td class='count'>17</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l60s0'>      return firstName;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
@@ -386,24 +386,24 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>61</td><td>&nbsp;</td>
-      <td id='l61' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>61</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>62</td><td>&nbsp;</td>
+      <td class='line'>62</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>63</td><td>&nbsp;</td>
-      <td id='l63' class='nonexec'><pre class='prettyprint'>   public String getLastName()</pre></td>
+      <td class='line'>63</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public String getLastName()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>64</td><td>&nbsp;</td>
-      <td id='l64' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>64</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>65</td><td class='count'>16</td>
-      <td id='l65'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return lastName;</pre>
+      <td class='line'>65</td><td class='count'>16</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l65s0'>      return lastName;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
@@ -425,62 +425,71 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>66</td><td>&nbsp;</td>
-      <td id='l66' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>66</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>67</td><td>&nbsp;</td>
+      <td class='line'>67</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>68</td><td>&nbsp;</td>
-      <td id='l68' class='nonexec'><pre class='prettyprint'>   public String getDeliveryAddress()</pre></td>
+      <td class='line'>68</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public String getDeliveryAddress()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>69</td><td>&nbsp;</td>
-      <td id='l69' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>69</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>70</td><td class='count'>1</td>
-      <td id='l70'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return deliveryAddress;</pre>
+      <td class='line'>70</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l70s0'>      return deliveryAddress;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#editCustomer:130</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>71</td><td>&nbsp;</td>
-      <td id='l71' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>71</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>72</td><td>&nbsp;</td>
+      <td class='line'>72</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>73</td><td>&nbsp;</td>
-      <td id='l73' class='nonexec'><pre class='prettyprint'>   @Override</pre></td>
+      <td class='line'>73</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   @Override</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>74</td><td>&nbsp;</td>
-      <td id='l74' class='nonexec'><pre class='prettyprint'>   public boolean equals(Object o)</pre></td>
+      <td class='line'>74</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public boolean equals(Object o)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>75</td><td>&nbsp;</td>
-      <td id='l75' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>75</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
       <td></td><td class='count'>7</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#c03f00' onclick='hidePath()'>Path coverage: 1/4</span>
-        <span class='covered' onclick="showPath(this,'A','l76')">A: 7</span>
-        <span class='uncovered' onclick="showPath(this,'B','l76 l77')">B: 0</span>
-        <span class='uncovered' onclick="showPath(this,'C','l76 l77')">C: 0</span>
-        <span class='uncovered' onclick="showPath(this,'D','l76 l77 l79 l81')">D: 0</span>
+        <span class='covered' onclick="showPath(this,'l76s0 l76s1')">A: 7</span>
+        <span class='uncovered' onclick="showPath(this,'l76s0 l76s1 l77s0 l77s1')">B: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l76s0 l76s1 l77s0 l77s1 l77s2')">C: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l76s0 l76s1 l77s0 l77s1 l77s2 l79s0 l81s0')">D: 0</span>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>76</td><td class='count'>7</td>
-      <td id='l76'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      if (this == o) return true;</pre>
+      <td class='line'>76</td><td class='count'>7</td>
+      <td><pre class='prettyprint jmp'>      <span id='l76s0' title='Executions: 7' class='covered cp' onclick='showHide(this,0)'>if (this == o) </span><span id='l76s1' title='Executions: 7 No jumps' class='covered cp' onclick='showHide(this,1)'>return true;</span></pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomerById:71</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:93</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:129</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:163</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:166</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:169</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:172</li>
+        </ol>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:71</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:93</li>
@@ -493,60 +502,60 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>77</td><td class='count'>0</td>
-      <td id='l77' class='uncovered'><pre class='prettyprint'>      if (o == null || getClass() != o.getClass()) return false;</pre></td>
+      <td class='line'>77</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>      if (o == null || getClass() != o.getClass()) return false;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>78</td><td>&nbsp;</td>
+      <td class='line'>78</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>79</td><td class='count'>0</td>
-      <td id='l79' class='uncovered'><pre class='prettyprint'>      Customer customer = (Customer) o;</pre></td>
+      <td class='line'>79</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>      Customer customer = (Customer) o;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>80</td><td>&nbsp;</td>
+      <td class='line'>80</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>81</td><td class='count'>0</td>
-      <td id='l81' class='uncovered'><pre class='prettyprint'>      return id.equals(customer.id);</pre></td>
+      <td class='line'>81</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>      return id.equals(customer.id);</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>82</td><td>&nbsp;</td>
-      <td id='l82' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>82</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>83</td><td>&nbsp;</td>
+      <td class='line'>83</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>84</td><td>&nbsp;</td>
-      <td id='l84' class='nonexec'><pre class='prettyprint'>   @Override</pre></td>
+      <td class='line'>84</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   @Override</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>85</td><td>&nbsp;</td>
-      <td id='l85' class='nonexec'><pre class='prettyprint'>   public int hashCode()</pre></td>
+      <td class='line'>85</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public int hashCode()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>86</td><td>&nbsp;</td>
-      <td id='l86' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>86</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>87</td><td class='count'>1</td>
-      <td id='l87'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return id.hashCode();</pre>
+      <td class='line'>87</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l87s0'>      return id.hashCode();</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#removeCustomer:151</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>88</td><td>&nbsp;</td>
-      <td id='l88' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>88</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>89</td><td>&nbsp;</td>
-      <td id='l89' class='nonexec'><pre class='prettyprint'>}</pre></td>
+      <td class='line'>89</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>}</pre></td>
     </tr>
   </table>
 </body>

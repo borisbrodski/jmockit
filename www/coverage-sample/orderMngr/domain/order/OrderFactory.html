@@ -13,124 +13,124 @@
   <table cellpadding='0' cellspacing='1'>
     <caption><code>..\orderMngmntWebapp\src\orderMngr\domain\order\OrderFactory.java</code></caption>
     <tr>
-      <td class='lineNo'>1</td><td>&nbsp;</td>
-      <td id='l1' class='nonexec'><pre class='comment'>/*</pre></td>
+      <td class='line'>1</td><td>&nbsp;</td>
+      <td><pre class='comment'>/*</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>2</td><td>&nbsp;</td>
-      <td id='l2' class='nonexec'><pre class='comment'> * JMockit Samples</pre></td>
+      <td class='line'>2</td><td>&nbsp;</td>
+      <td><pre class='comment'> * JMockit Samples</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>3</td><td>&nbsp;</td>
-      <td id='l3' class='nonexec'><pre class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</pre></td>
+      <td class='line'>3</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>4</td><td>&nbsp;</td>
-      <td id='l4' class='nonexec'><pre class='comment'> * All rights reserved.</pre></td>
+      <td class='line'>4</td><td>&nbsp;</td>
+      <td><pre class='comment'> * All rights reserved.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>5</td><td>&nbsp;</td>
-      <td id='l5' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>5</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>6</td><td>&nbsp;</td>
-      <td id='l6' class='nonexec'><pre class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</pre></td>
+      <td class='line'>6</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>7</td><td>&nbsp;</td>
-      <td id='l7' class='nonexec'><pre class='comment'> * a copy of this software and associated documentation files (the</pre></td>
+      <td class='line'>7</td><td>&nbsp;</td>
+      <td><pre class='comment'> * a copy of this software and associated documentation files (the</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>8</td><td>&nbsp;</td>
-      <td id='l8' class='nonexec'><pre class='comment'> * "Software"), to deal in the Software without restriction, including</pre></td>
+      <td class='line'>8</td><td>&nbsp;</td>
+      <td><pre class='comment'> * "Software"), to deal in the Software without restriction, including</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>9</td><td>&nbsp;</td>
-      <td id='l9' class='nonexec'><pre class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</pre></td>
+      <td class='line'>9</td><td>&nbsp;</td>
+      <td><pre class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>10</td><td>&nbsp;</td>
-      <td id='l10' class='nonexec'><pre class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</pre></td>
+      <td class='line'>10</td><td>&nbsp;</td>
+      <td><pre class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>11</td><td>&nbsp;</td>
-      <td id='l11' class='nonexec'><pre class='comment'> * permit persons to whom the Software is furnished to do so, subject to</pre></td>
+      <td class='line'>11</td><td>&nbsp;</td>
+      <td><pre class='comment'> * permit persons to whom the Software is furnished to do so, subject to</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>12</td><td>&nbsp;</td>
-      <td id='l12' class='nonexec'><pre class='comment'> * the following conditions:</pre></td>
+      <td class='line'>12</td><td>&nbsp;</td>
+      <td><pre class='comment'> * the following conditions:</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>13</td><td>&nbsp;</td>
-      <td id='l13' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>13</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>14</td><td>&nbsp;</td>
-      <td id='l14' class='nonexec'><pre class='comment'> * The above copyright notice and this permission notice shall be</pre></td>
+      <td class='line'>14</td><td>&nbsp;</td>
+      <td><pre class='comment'> * The above copyright notice and this permission notice shall be</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>15</td><td>&nbsp;</td>
-      <td id='l15' class='nonexec'><pre class='comment'> * included in all copies or substantial portions of the Software.</pre></td>
+      <td class='line'>15</td><td>&nbsp;</td>
+      <td><pre class='comment'> * included in all copies or substantial portions of the Software.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>16</td><td>&nbsp;</td>
-      <td id='l16' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>16</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>17</td><td>&nbsp;</td>
-      <td id='l17' class='nonexec'><pre class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</pre></td>
+      <td class='line'>17</td><td>&nbsp;</td>
+      <td><pre class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>18</td><td>&nbsp;</td>
-      <td id='l18' class='nonexec'><pre class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</pre></td>
+      <td class='line'>18</td><td>&nbsp;</td>
+      <td><pre class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>19</td><td>&nbsp;</td>
-      <td id='l19' class='nonexec'><pre class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre></td>
+      <td class='line'>19</td><td>&nbsp;</td>
+      <td><pre class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>20</td><td>&nbsp;</td>
-      <td id='l20' class='nonexec'><pre class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</pre></td>
+      <td class='line'>20</td><td>&nbsp;</td>
+      <td><pre class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>21</td><td>&nbsp;</td>
-      <td id='l21' class='nonexec'><pre class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</pre></td>
+      <td class='line'>21</td><td>&nbsp;</td>
+      <td><pre class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>22</td><td>&nbsp;</td>
-      <td id='l22' class='nonexec'><pre class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</pre></td>
+      <td class='line'>22</td><td>&nbsp;</td>
+      <td><pre class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>23</td><td>&nbsp;</td>
-      <td id='l23' class='nonexec'><pre class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre></td>
+      <td class='line'>23</td><td>&nbsp;</td>
+      <td><pre class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>24</td><td>&nbsp;</td>
-      <td id='l24' class='nonexec'><pre class='comment'> */</pre></td>
+      <td class='line'>24</td><td>&nbsp;</td>
+      <td><pre class='comment'> */</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>25</td><td>&nbsp;</td>
-      <td id='l25' class='nonexec'><pre class='prettyprint'>package orderMngr.domain.order;</pre></td>
+      <td class='line'>25</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>package orderMngr.domain.order;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>26</td><td>&nbsp;</td>
+      <td class='line'>26</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>27</td><td>&nbsp;</td>
-      <td id='l27' class='nonexec'><pre class='prettyprint'>import java.math.*;</pre></td>
+      <td class='line'>27</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.math.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>28</td><td>&nbsp;</td>
-      <td id='l28' class='nonexec'><pre class='prettyprint'>import java.util.*;</pre></td>
+      <td class='line'>28</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.util.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>29</td><td>&nbsp;</td>
+      <td class='line'>29</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>30</td><td class='count'>9</td>
-      <td id='l30'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>public final class OrderFactory</pre>
+      <td class='line'>30</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l30s0'>public final class OrderFactory</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithEmptyItemList:91</li>
@@ -145,52 +145,52 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>31</td><td>&nbsp;</td>
-      <td id='l31' class='nonexec'><pre class='prettyprint'>{</pre></td>
+      <td class='line'>31</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>32</td><td>&nbsp;</td>
-      <td id='l32' class='nonexec'><pre class='comment'>   // Just for simplicity. In a real application, a more robust mechanism would be used for</pre></td>
+      <td class='line'>32</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // Just for simplicity. In a real application, a more robust mechanism would be used for</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>33</td><td>&nbsp;</td>
-      <td id='l33' class='nonexec'><pre class='comment'>   // generating sequential order numbers, such as a database sequence or identity column.</pre></td>
+      <td class='line'>33</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // generating sequential order numbers, such as a database sequence or identity column.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>34</td><td class='count'>1</td>
-      <td id='l34'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   private static int nextOrderNo = 1;</pre>
+      <td class='line'>34</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l34s0'>   private static int nextOrderNo = 1;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>35</td><td>&nbsp;</td>
+      <td class='line'>35</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>36</td><td>&nbsp;</td>
-      <td id='l36' class='nonexec'><pre class='prettyprint'>   public Order createOrder(String customerId, List&lt;OrderItem> items)</pre></td>
+      <td class='line'>36</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public Order createOrder(String customerId, List&lt;OrderItem> items)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>37</td><td>&nbsp;</td>
-      <td id='l37' class='nonexec'><pre class='prettyprint'>      throws MissingOrderItems, InvalidOrderItem, DuplicateOrderItem</pre></td>
+      <td class='line'>37</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>      throws MissingOrderItems, InvalidOrderItem, DuplicateOrderItem</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>38</td><td>&nbsp;</td>
-      <td id='l38' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>38</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
       <td></td><td class='count'>5</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#00ff00' onclick='hidePath()'>Path coverage: 2/2</span>
-        <span class='covered' onclick="showPath(this,'A','l39 l40')">A: 2</span>
-        <span class='covered' onclick="showPath(this,'B','l39 l43 l50')">B: 3</span>
+        <span class='covered' onclick="showPath(this,'l39s0 l39s1 l40s0')">A: 2</span>
+        <span class='covered' onclick="showPath(this,'l39s0 l39s1 l43s0 l50s0')">B: 3</span>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>39</td><td class='count'>8</td>
-      <td id='l39'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      if (items.isEmpty()) {</pre>
+      <td class='line'>39</td><td class='count'>8</td>
+      <td><pre class='prettyprint jmp'>      <span id='l39s0' title='Executions: 8' class='covered cp' onclick='showHide(this,0)'>if (items.isEmpty()) {</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithEmptyItemList:91</li>
@@ -204,8 +204,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>40</td><td class='count'>2</td>
-      <td id='l40'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>         throw new MissingOrderItems();</pre>
+      <td class='line'>40</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l40s0'>         throw new MissingOrderItems();</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithEmptyItemList:91</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrderWithMissingData:130</li>
@@ -213,16 +213,16 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>41</td><td>&nbsp;</td>
-      <td id='l41' class='nonexec'><pre class='prettyprint'>      }</pre></td>
+      <td class='line'>41</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>      }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>42</td><td>&nbsp;</td>
+      <td class='line'>42</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>43</td><td class='count'>6</td>
-      <td id='l43'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      validateOrderItems(items);</pre>
+      <td class='line'>43</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l43s0'>      validateOrderItems(items);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:100</li>
@@ -234,12 +234,12 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>44</td><td>&nbsp;</td>
+      <td class='line'>44</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>45</td><td class='count'>3</td>
-      <td id='l45'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      Order order = new Order(nextOrderNo++, customerId);</pre>
+      <td class='line'>45</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l45s0'>      Order order = new Order(nextOrderNo++, customerId);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
@@ -248,8 +248,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>46</td><td class='count'>3</td>
-      <td id='l46'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      order.getItems().addAll(items);</pre>
+      <td class='line'>46</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l46s0'>      order.getItems().addAll(items);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
@@ -258,12 +258,12 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>47</td><td>&nbsp;</td>
+      <td class='line'>47</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>48</td><td class='count'>3</td>
-      <td id='l48'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      new OrderRepository().create(order);</pre>
+      <td class='line'>48</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l48s0'>      new OrderRepository().create(order);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
@@ -272,12 +272,12 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>49</td><td>&nbsp;</td>
+      <td class='line'>49</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>50</td><td class='count'>3</td>
-      <td id='l50'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return order;</pre>
+      <td class='line'>50</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l50s0'>      return order;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
@@ -286,39 +286,39 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>51</td><td>&nbsp;</td>
-      <td id='l51' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>51</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>52</td><td>&nbsp;</td>
+      <td class='line'>52</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>53</td><td>&nbsp;</td>
-      <td id='l53' class='nonexec'><pre class='prettyprint'>   private void validateOrderItems(List&lt;OrderItem> items)</pre></td>
+      <td class='line'>53</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private void validateOrderItems(List&lt;OrderItem> items)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>54</td><td>&nbsp;</td>
-      <td id='l54' class='nonexec'><pre class='prettyprint'>      throws InvalidOrderItem, DuplicateOrderItem</pre></td>
+      <td class='line'>54</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>      throws InvalidOrderItem, DuplicateOrderItem</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>55</td><td>&nbsp;</td>
-      <td id='l55' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>55</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
       <td></td><td class='count'>6</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#33cc00' onclick='hidePath()'>Path coverage: 4/5</span>
-        <span class='covered' onclick="showPath(this,'A','l56 l57 l58')">A: 1</span>
-        <span class='covered' onclick="showPath(this,'B','l56 l57 l58')">B: 1</span>
-        <span class='covered' onclick="showPath(this,'C','l56 l57 l62 l63')">C: 1</span>
-        <span class='uncovered' onclick="showPath(this,'D','l56 l66')">D: 0</span>
-        <span class='covered' onclick="showPath(this,'E','l56 l57 l62 l63 l66')">E: 3</span>
+        <span class='covered' onclick="showPath(this,'l56s0 l56s1 l57s0 l58s0')">A: 1</span>
+        <span class='covered' onclick="showPath(this,'l56s0 l56s1 l57s0 l57s1 l58s0')">B: 1</span>
+        <span class='covered' onclick="showPath(this,'l56s0 l56s1 l57s0 l57s1 l62s0 l62s1 l63s0')">C: 1</span>
+        <span class='uncovered' onclick="showPath(this,'l56s0 l56s1 l66s0')">D: 0</span>
+        <span class='covered' onclick="showPath(this,'l56s0 l56s1 l57s0 l57s1 l62s0 l62s1 l63s0 l66s0')">E: 3</span>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>56</td><td class='count'>6</td>
-      <td id='l56'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      for (OrderItem item : items) {</pre>
+      <td class='line'>56</td><td class='count'>6</td>
+      <td><pre class='prettyprint jmp'>      <span id='l56s0' title='Executions: 6' class='covered cp' onclick='showHide(this,0)'>for (OrderItem item : items) </span><span id='l56s1' title='Executions: 9 No jumps' class='covered cp' onclick='showHide(this,1)'>{</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:100</li>
@@ -327,11 +327,6 @@
           <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
         </ol>
-      </td>
-    </tr>
-    <tr>
-      <td class='lineNo'>57</td><td class='count'>9</td>
-      <td id='l57'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>         if (item.getQuantity() &lt;= 0 || item.getUnitPrice().compareTo(BigDecimal.ZERO) &lt;= 0) {</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
@@ -346,8 +341,34 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>58</td><td class='count'>2</td>
-      <td id='l58'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>            throw new InvalidOrderItem(</pre>
+      <td class='line'>57</td><td class='count'>9</td>
+      <td><pre class='prettyprint jmp'>         <span id='l57s0' title='Executions: 9' class='covered cp' onclick='showHide(this,0)'>if (item.getQuantity() &lt;= 0 </span>|| <span id='l57s1' title='Executions: 8 No jumps' class='covered cp' onclick='showHide(this,1)'>item.getUnitPrice().compareTo(BigDecimal.ZERO) &lt;= 0) {</span></pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
+          <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
+          <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:100</li>
+          <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:109</li>
+          <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
+        </ol>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
+          <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
+          <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:109</li>
+          <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
+          <li>orderMngr.domain.order.OrderFactoryTestUsingVerifications#createOrder:62</li>
+        </ol>
+      </td>
+    </tr>
+    <tr>
+      <td class='line'>58</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l58s0'>            throw new InvalidOrderItem(</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:100</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemUnitPrice:109</li>
@@ -355,20 +376,20 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>59</td><td>&nbsp;</td>
-      <td id='l59' class='nonexec'><pre class='prettyprint'>               "Quantity=" + item.getQuantity() + ", Unit Price=" + item.getUnitPrice());</pre></td>
+      <td class='line'>59</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>               "Quantity=" + item.getQuantity() + ", Unit Price=" + item.getUnitPrice());</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>60</td><td>&nbsp;</td>
-      <td id='l60' class='nonexec'><pre class='prettyprint'>         }</pre></td>
+      <td class='line'>60</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>         }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>61</td><td>&nbsp;</td>
+      <td class='line'>61</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>62</td><td class='count'>7</td>
-      <td id='l62'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>         if (new HashSet&lt;OrderItem>(items).size() &lt; items.size()) {</pre>
+      <td class='line'>62</td><td class='count'>7</td>
+      <td><pre class='prettyprint jmp'>         <span id='l62s0' title='Executions: 7' class='covered cp' onclick='showHide(this,0)'>if (new HashSet&lt;OrderItem>(items).size() &lt; items.size()) {</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
@@ -381,24 +402,24 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>63</td><td class='count'>1</td>
-      <td id='l63'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>            throw new DuplicateOrderItem();</pre>
+      <td class='line'>63</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l63s0'>            throw new DuplicateOrderItem();</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>64</td><td>&nbsp;</td>
-      <td id='l64' class='nonexec'><pre class='prettyprint'>         }</pre></td>
+      <td class='line'>64</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>         }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>65</td><td>&nbsp;</td>
-      <td id='l65' class='nonexec'><pre class='prettyprint'>      }</pre></td>
+      <td class='line'>65</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>      }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>66</td><td class='count'>3</td>
-      <td id='l66'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>66</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l66s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTestUsingExpectations#createOrder:65</li>
@@ -407,8 +428,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>67</td><td>&nbsp;</td>
-      <td id='l67' class='nonexec'><pre class='prettyprint'>}</pre></td>
+      <td class='line'>67</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>}</pre></td>
     </tr>
   </table>
 </body>

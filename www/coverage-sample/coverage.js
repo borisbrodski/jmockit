@@ -1,40 +1,50 @@
 var cellShown;
-var pathIdShown;
-var lineIdsShown;
+var lineSegmentIdsShown;
 
-function hidePath(pathId)
+function hidePath(cell)
 {
-   if (lineIdsShown) {
-      for (var i = 0; i < lineIdsShown.length; i++) {
-         var line = document.getElementById(lineIdsShown[i]);
-         line.style.outlineStyle = 'none';
-      }
-
+   if (lineSegmentIdsShown) {
+      setOutlines('none');
       cellShown.style.outlineWidth = 'thin';
-      cellShown = lineIdsShown = null; return pathId == pathIdShown;
+      lineSegmentIdsShown = null;
+
+      var sameCell = cell == cellShown;
+      cellShown = null;
+      return sameCell;
    }
 
    return false;
- }
-
-function showPath(cell, pathId, lineIdsStr)
-{
-   if (hidePath(pathId)) return;
-
-   cellShown = cell;
-   pathIdShown = pathId;
-   lineIdsShown = lineIdsStr.split(' ');
-
-   for (var i = 0; i < lineIdsShown.length; i++) {
-      var line = document.getElementById(lineIdsShown[i]);
-      line.style.outline = 'thin dashed #0000FF';
-   }
-
-   cell.style.outlineWidth = 'medium';
 }
 
-function showHide(callPoints)
+function setOutlines(outlineStyle)
 {
-   var list = callPoints.nextSibling.nextSibling.style;
+   for (var i = 0; i < lineSegmentIdsShown.length; i++) {
+      var item = document.getElementById(lineSegmentIdsShown[i]);
+      if (item) item.style.outline = outlineStyle;
+   }
+}
+
+function showPath(cell, lineSegmentIdsStr)
+{
+   if (hidePath(cell)) return;
+
+   lineSegmentIdsShown = lineSegmentIdsStr.split(' ');
+   setOutlines('thin dashed #0000FF');
+   cell.style.outlineWidth = 'medium';
+   cellShown = cell;
+}
+
+function showHide(callPoints, listIndex)
+{
+   var tableCell = callPoints.parentNode;
+
+   if (listIndex >= 0) {
+      tableCell = tableCell.parentNode;
+   }
+   else {
+      listIndex = 0;
+   }
+
+   var list = tableCell.getElementsByTagName('ol')[listIndex].style;
    list.display = list.display == 'none' ? 'block' : 'none';
 }

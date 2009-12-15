@@ -13,248 +13,248 @@
   <table cellpadding='0' cellspacing='1'>
     <caption><code>..\orderMngmntWebapp\src\orderMngr\service\persistence\Persistence.java</code></caption>
     <tr>
-      <td class='lineNo'>1</td><td>&nbsp;</td>
-      <td id='l1' class='nonexec'><pre class='comment'>/*</pre></td>
+      <td class='line'>1</td><td>&nbsp;</td>
+      <td><pre class='comment'>/*</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>2</td><td>&nbsp;</td>
-      <td id='l2' class='nonexec'><pre class='comment'> * JMockit Samples</pre></td>
+      <td class='line'>2</td><td>&nbsp;</td>
+      <td><pre class='comment'> * JMockit Samples</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>3</td><td>&nbsp;</td>
-      <td id='l3' class='nonexec'><pre class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</pre></td>
+      <td class='line'>3</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>4</td><td>&nbsp;</td>
-      <td id='l4' class='nonexec'><pre class='comment'> * All rights reserved.</pre></td>
+      <td class='line'>4</td><td>&nbsp;</td>
+      <td><pre class='comment'> * All rights reserved.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>5</td><td>&nbsp;</td>
-      <td id='l5' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>5</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>6</td><td>&nbsp;</td>
-      <td id='l6' class='nonexec'><pre class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</pre></td>
+      <td class='line'>6</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>7</td><td>&nbsp;</td>
-      <td id='l7' class='nonexec'><pre class='comment'> * a copy of this software and associated documentation files (the</pre></td>
+      <td class='line'>7</td><td>&nbsp;</td>
+      <td><pre class='comment'> * a copy of this software and associated documentation files (the</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>8</td><td>&nbsp;</td>
-      <td id='l8' class='nonexec'><pre class='comment'> * "Software"), to deal in the Software without restriction, including</pre></td>
+      <td class='line'>8</td><td>&nbsp;</td>
+      <td><pre class='comment'> * "Software"), to deal in the Software without restriction, including</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>9</td><td>&nbsp;</td>
-      <td id='l9' class='nonexec'><pre class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</pre></td>
+      <td class='line'>9</td><td>&nbsp;</td>
+      <td><pre class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>10</td><td>&nbsp;</td>
-      <td id='l10' class='nonexec'><pre class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</pre></td>
+      <td class='line'>10</td><td>&nbsp;</td>
+      <td><pre class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>11</td><td>&nbsp;</td>
-      <td id='l11' class='nonexec'><pre class='comment'> * permit persons to whom the Software is furnished to do so, subject to</pre></td>
+      <td class='line'>11</td><td>&nbsp;</td>
+      <td><pre class='comment'> * permit persons to whom the Software is furnished to do so, subject to</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>12</td><td>&nbsp;</td>
-      <td id='l12' class='nonexec'><pre class='comment'> * the following conditions:</pre></td>
+      <td class='line'>12</td><td>&nbsp;</td>
+      <td><pre class='comment'> * the following conditions:</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>13</td><td>&nbsp;</td>
-      <td id='l13' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>13</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>14</td><td>&nbsp;</td>
-      <td id='l14' class='nonexec'><pre class='comment'> * The above copyright notice and this permission notice shall be</pre></td>
+      <td class='line'>14</td><td>&nbsp;</td>
+      <td><pre class='comment'> * The above copyright notice and this permission notice shall be</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>15</td><td>&nbsp;</td>
-      <td id='l15' class='nonexec'><pre class='comment'> * included in all copies or substantial portions of the Software.</pre></td>
+      <td class='line'>15</td><td>&nbsp;</td>
+      <td><pre class='comment'> * included in all copies or substantial portions of the Software.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>16</td><td>&nbsp;</td>
-      <td id='l16' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>16</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>17</td><td>&nbsp;</td>
-      <td id='l17' class='nonexec'><pre class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</pre></td>
+      <td class='line'>17</td><td>&nbsp;</td>
+      <td><pre class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>18</td><td>&nbsp;</td>
-      <td id='l18' class='nonexec'><pre class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</pre></td>
+      <td class='line'>18</td><td>&nbsp;</td>
+      <td><pre class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>19</td><td>&nbsp;</td>
-      <td id='l19' class='nonexec'><pre class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre></td>
+      <td class='line'>19</td><td>&nbsp;</td>
+      <td><pre class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>20</td><td>&nbsp;</td>
-      <td id='l20' class='nonexec'><pre class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</pre></td>
+      <td class='line'>20</td><td>&nbsp;</td>
+      <td><pre class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>21</td><td>&nbsp;</td>
-      <td id='l21' class='nonexec'><pre class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</pre></td>
+      <td class='line'>21</td><td>&nbsp;</td>
+      <td><pre class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>22</td><td>&nbsp;</td>
-      <td id='l22' class='nonexec'><pre class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</pre></td>
+      <td class='line'>22</td><td>&nbsp;</td>
+      <td><pre class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>23</td><td>&nbsp;</td>
-      <td id='l23' class='nonexec'><pre class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre></td>
+      <td class='line'>23</td><td>&nbsp;</td>
+      <td><pre class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>24</td><td>&nbsp;</td>
-      <td id='l24' class='nonexec'><pre class='comment'> */</pre></td>
+      <td class='line'>24</td><td>&nbsp;</td>
+      <td><pre class='comment'> */</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>25</td><td>&nbsp;</td>
-      <td id='l25' class='nonexec'><pre class='prettyprint'>package orderMngr.service.persistence;</pre></td>
+      <td class='line'>25</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>package orderMngr.service.persistence;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>26</td><td>&nbsp;</td>
+      <td class='line'>26</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>27</td><td>&nbsp;</td>
-      <td id='l27' class='nonexec'><pre class='prettyprint'>import java.io.*;</pre></td>
+      <td class='line'>27</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.io.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>28</td><td>&nbsp;</td>
-      <td id='l28' class='nonexec'><pre class='prettyprint'>import java.util.*;</pre></td>
+      <td class='line'>28</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.util.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>29</td><td>&nbsp;</td>
+      <td class='line'>29</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>30</td><td>&nbsp;</td>
-      <td id='l30' class='nonexec'><pre class='prettyprint'>import org.hibernate.*;</pre></td>
+      <td class='line'>30</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import org.hibernate.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>31</td><td>&nbsp;</td>
-      <td id='l31' class='nonexec'><pre class='prettyprint'>import org.hibernate.cfg.*;</pre></td>
+      <td class='line'>31</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import org.hibernate.cfg.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>32</td><td>&nbsp;</td>
+      <td class='line'>32</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>33</td><td class='count'>0</td>
-      <td id='l33' class='uncovered'><pre class='prettyprint'>public final class Persistence</pre></td>
+      <td class='line'>33</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>public final class Persistence</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>34</td><td>&nbsp;</td>
-      <td id='l34' class='nonexec'><pre class='prettyprint'>{</pre></td>
+      <td class='line'>34</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>35</td><td class='count'>1</td>
-      <td id='l35'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   private static final ThreadLocal&lt;Session> currentSession = new ThreadLocal&lt;Session>();</pre>
+      <td class='line'>35</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l35s0'>   private static final ThreadLocal&lt;Session> currentSession = new ThreadLocal&lt;Session>();</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#setUp:38</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>36</td><td>&nbsp;</td>
-      <td id='l36' class='nonexec'><pre class='prettyprint'>   private static final SessionFactory sessionFactory;</pre></td>
+      <td class='line'>36</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private static final SessionFactory sessionFactory;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>37</td><td>&nbsp;</td>
+      <td class='line'>37</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>38</td><td>&nbsp;</td>
-      <td id='l38' class='nonexec'><pre class='prettyprint'>   static {</pre></td>
+      <td class='line'>38</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   static {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>39</td><td>&nbsp;</td>
-      <td id='l39' class='nonexec'><pre class='comment'>      //noinspection CatchGenericClass,OverlyBroadCatchBlock</pre></td>
+      <td class='line'>39</td><td>&nbsp;</td>
+      <td><pre class='comment'>      //noinspection CatchGenericClass,OverlyBroadCatchBlock</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>40</td><td>&nbsp;</td>
-      <td id='l40' class='nonexec'><pre class='prettyprint'>      try {</pre></td>
+      <td class='line'>40</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>      try {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>41</td><td class='count'>1</td>
-      <td id='l41'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>         sessionFactory = new Configuration().configure().buildSessionFactory();</pre>
+      <td class='line'>41</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l41s0'>         sessionFactory = new Configuration().configure().buildSessionFactory();</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#setUp:38</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>42</td><td>&nbsp;</td>
-      <td id='l42' class='nonexec'><pre class='prettyprint'>      }</pre></td>
+      <td class='line'>42</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>      }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>43</td><td class='count'>0</td>
-      <td id='l43' class='uncovered'><pre class='prettyprint'>      catch (Error e) {</pre></td>
+      <td class='line'>43</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>      catch (Error e) {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>44</td><td class='count'>0</td>
-      <td id='l44' class='uncovered'><pre class='prettyprint'>         System.err.println(e);</pre></td>
+      <td class='line'>44</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>         System.err.println(e);</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>45</td><td class='count'>0</td>
-      <td id='l45' class='uncovered'><pre class='prettyprint'>         throw e;</pre></td>
+      <td class='line'>45</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>         throw e;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>46</td><td>&nbsp;</td>
-      <td id='l46' class='nonexec'><pre class='prettyprint'>      }</pre></td>
+      <td class='line'>46</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>      }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>47</td><td class='count'>0</td>
-      <td id='l47' class='uncovered'><pre class='prettyprint'>      catch (RuntimeException e) {</pre></td>
+      <td class='line'>47</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>      catch (RuntimeException e) {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>48</td><td class='count'>0</td>
-      <td id='l48' class='uncovered'><pre class='prettyprint'>         System.err.println(e);</pre></td>
+      <td class='line'>48</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>         System.err.println(e);</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>49</td><td class='count'>0</td>
-      <td id='l49' class='uncovered'><pre class='prettyprint'>         throw e;</pre></td>
+      <td class='line'>49</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>         throw e;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>50</td><td class='count'>1</td>
-      <td id='l50'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      }</pre>
+      <td class='line'>50</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l50s0'>      }</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#setUp:38</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>51</td><td class='count'>1</td>
-      <td id='l51'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>51</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l51s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#setUp:38</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>52</td><td>&nbsp;</td>
+      <td class='line'>52</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>53</td><td>&nbsp;</td>
-      <td id='l53' class='nonexec'><pre class='comment'>   // Entity life-cycle methods -------------------------------------------------------------------</pre></td>
+      <td class='line'>53</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // Entity life-cycle methods -------------------------------------------------------------------</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>54</td><td>&nbsp;</td>
+      <td class='line'>54</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>55</td><td>&nbsp;</td>
-      <td id='l55' class='nonexec'><pre class='prettyprint'>   public static &lt;T> T load(Class&lt;T> entityClass, Serializable entityId)</pre></td>
+      <td class='line'>55</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static &lt;T> T load(Class&lt;T> entityClass, Serializable entityId)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>56</td><td>&nbsp;</td>
-      <td id='l56' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>56</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>57</td><td class='count'>4</td>
-      <td id='l57'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return (T) session().load(entityClass, entityId);</pre>
+      <td class='line'>57</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l57s0'>      return (T) session().load(entityClass, entityId);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:69</li>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:71</li>
@@ -264,56 +264,56 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>58</td><td>&nbsp;</td>
-      <td id='l58' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>58</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>59</td><td>&nbsp;</td>
+      <td class='line'>59</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>60</td><td>&nbsp;</td>
-      <td id='l60' class='nonexec'><pre class='prettyprint'>   public static boolean exists(Class&lt;?> entityClass, Serializable entityId)</pre></td>
+      <td class='line'>60</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static boolean exists(Class&lt;?> entityClass, Serializable entityId)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>61</td><td>&nbsp;</td>
-      <td id='l61' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>61</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
       <td></td><td class='count'>1</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#807f00' onclick='hidePath()'>Path coverage: 1/2</span>
-        <span class='covered' onclick="showPath(this,'A','l62')">A: 1</span>
-        <span class='uncovered' onclick="showPath(this,'B','l62')">B: 0</span>
+        <span class='covered' onclick="showPath(this,'l62s0 l62s1')">A: 1</span>
+        <span class='uncovered' onclick="showPath(this,'l62s0 l62s1')">B: 0</span>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>62</td><td class='count'>1</td>
-      <td id='l62'><pre class='prettyprint partiallyCovered withCallPoints' onclick='showHide(this)'>      return session().get(entityClass, entityId) != null;</pre>
+      <td class='line'>62</td><td class='count'>1</td>
+      <td><pre class='prettyprint jmp'>      <span id='l62s0' title='Executions: 1' class='covered cp' onclick='showHide(this,0)'>return session().get(entityClass, entityId) != null;</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#removeCustomer:151</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>63</td><td>&nbsp;</td>
-      <td id='l63' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>63</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>64</td><td>&nbsp;</td>
+      <td class='line'>64</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>65</td><td>&nbsp;</td>
-      <td id='l65' class='nonexec'><pre class='prettyprint'>   public static void unload(Object entity)</pre></td>
+      <td class='line'>65</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static void unload(Object entity)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>66</td><td>&nbsp;</td>
-      <td id='l66' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>66</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>67</td><td class='count'>3</td>
-      <td id='l67'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      session().evict(entity);</pre>
+      <td class='line'>67</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l67s0'>      session().evict(entity);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:71</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:93</li>
@@ -322,8 +322,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>68</td><td class='count'>3</td>
-      <td id='l68'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>68</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l68s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:71</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:93</li>
@@ -332,20 +332,20 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>69</td><td>&nbsp;</td>
+      <td class='line'>69</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>70</td><td>&nbsp;</td>
-      <td id='l70' class='nonexec'><pre class='prettyprint'>   public static void persist(Object entityData)</pre></td>
+      <td class='line'>70</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static void persist(Object entityData)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>71</td><td>&nbsp;</td>
-      <td id='l71' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>71</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>72</td><td class='count'>8</td>
-      <td id='l72'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      session().save(entityData);</pre>
+      <td class='line'>72</td><td class='count'>8</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l72s0'>      session().save(entityData);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
@@ -359,8 +359,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>73</td><td class='count'>8</td>
-      <td id='l73'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>73</td><td class='count'>8</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l73s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
@@ -374,56 +374,56 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>74</td><td>&nbsp;</td>
+      <td class='line'>74</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>75</td><td>&nbsp;</td>
-      <td id='l75' class='nonexec'><pre class='prettyprint'>   public static void delete(Object entity)</pre></td>
+      <td class='line'>75</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static void delete(Object entity)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>76</td><td>&nbsp;</td>
-      <td id='l76' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>76</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>77</td><td class='count'>1</td>
-      <td id='l77'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      session().delete(entity);</pre>
+      <td class='line'>77</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l77s0'>      session().delete(entity);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#removeCustomer:149</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>78</td><td class='count'>1</td>
-      <td id='l78'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>78</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l78s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#removeCustomer:149</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>79</td><td>&nbsp;</td>
+      <td class='line'>79</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>80</td><td>&nbsp;</td>
-      <td id='l80' class='nonexec'><pre class='prettyprint'>   private static Session session()</pre></td>
+      <td class='line'>80</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private static Session session()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>81</td><td>&nbsp;</td>
-      <td id='l81' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>81</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
       <td></td><td class='count'>66</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#00ff00' onclick='hidePath()'>Path coverage: 2/2</span>
-        <span class='covered' onclick="showPath(this,'A','l82 l84 l89')">A: 57</span>
-        <span class='covered' onclick="showPath(this,'B','l82 l84 l85 l89')">B: 9</span>
+        <span class='covered' onclick="showPath(this,'l82s0 l84s0 l89s0')">A: 57</span>
+        <span class='covered' onclick="showPath(this,'l82s0 l84s0 l85s0 l89s0')">B: 9</span>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>82</td><td class='count'>66</td>
-      <td id='l82'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      Session session = currentSession.get();</pre>
+      <td class='line'>82</td><td class='count'>66</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l82s0'>      Session session = currentSession.get();</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#setUp:38</li>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
@@ -495,12 +495,136 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>83</td><td>&nbsp;</td>
+      <td class='line'>83</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>84</td><td class='count'>66</td>
-      <td id='l84'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      if (session == null) {</pre>
+      <td class='line'>84</td><td class='count'>66</td>
+      <td><pre class='prettyprint jmp'>      <span id='l84s0' title='Executions: 66' class='covered cp' onclick='showHide(this,0)'>if (session == null) </span><span id='l84s1' title='Executions: 9 No jumps' class='covered cp' onclick='showHide(this,1)'>{</span></pre>
+        <ol style='display: none;'>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomerById:69</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomerById:71</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomerById:71</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:93</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:93</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:113</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:124</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:129</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:129</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:129</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:129</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:129</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:136</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:138</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.domain.customer.CustomerTest#removeCustomer:147</li>
+          <li>orderMngr.domain.customer.CustomerTest#removeCustomer:149</li>
+          <li>orderMngr.domain.customer.CustomerTest#removeCustomer:151</li>
+          <li>orderMngr.domain.customer.CustomerTest#removeCustomer:151</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:157</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:160</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:162</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:165</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:168</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:171</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
+        </ol>
+        <ol style='display: none;'>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+        </ol>
+      </td>
+    </tr>
+    <tr>
+      <td class='line'>85</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l85s0'>         session = sessionFactory.openSession();</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+        </ol>
+      </td>
+    </tr>
+    <tr>
+      <td class='line'>86</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l86s0'>         currentSession.set(session);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
+        </ol>
+      </td>
+    </tr>
+    <tr>
+      <td class='line'>87</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>88</td><td>&nbsp;</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class='line'>89</td><td class='count'>66</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l89s0'>      return session;</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#setUp:38</li>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
@@ -572,145 +696,32 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>85</td><td class='count'>9</td>
-      <td id='l85'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>         session = sessionFactory.openSession();</pre>
-        <ol style='display: none;'>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-        </ol>
-      </td>
+      <td class='line'>90</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>86</td><td class='count'>9</td>
-      <td id='l86'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>         currentSession.set(session);</pre>
-        <ol style='display: none;'>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-        </ol>
-      </td>
-    </tr>
-    <tr>
-      <td class='lineNo'>87</td><td>&nbsp;</td>
-      <td id='l87' class='nonexec'><pre class='prettyprint'>      }</pre></td>
-    </tr>
-    <tr>
-      <td class='lineNo'>88</td><td>&nbsp;</td>
+      <td class='line'>91</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>89</td><td class='count'>66</td>
-      <td id='l89'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return session;</pre>
-        <ol style='display: none;'>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.domain.customer.CustomerTest#findCustomerById:66</li>
-          <li>orderMngr.domain.customer.CustomerTest#findCustomerById:69</li>
-          <li>orderMngr.domain.customer.CustomerTest#findCustomerById:71</li>
-          <li>orderMngr.domain.customer.CustomerTest#findCustomerById:71</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
-          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
-          <li>orderMngr.domain.customer.CustomerTest#createCustomer:93</li>
-          <li>orderMngr.domain.customer.CustomerTest#createCustomer:93</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:113</li>
-          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.domain.customer.CustomerTest#editCustomer:124</li>
-          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
-          <li>orderMngr.domain.customer.CustomerTest#editCustomer:129</li>
-          <li>orderMngr.domain.customer.CustomerTest#editCustomer:129</li>
-          <li>orderMngr.domain.customer.CustomerTest#editCustomer:129</li>
-          <li>orderMngr.domain.customer.CustomerTest#editCustomer:129</li>
-          <li>orderMngr.domain.customer.CustomerTest#editCustomer:129</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:136</li>
-          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:138</li>
-          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.domain.customer.CustomerTest#removeCustomer:147</li>
-          <li>orderMngr.domain.customer.CustomerTest#removeCustomer:149</li>
-          <li>orderMngr.domain.customer.CustomerTest#removeCustomer:151</li>
-          <li>orderMngr.domain.customer.CustomerTest#removeCustomer:151</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
-          <li>orderMngr.service.domain.DomainTest#setUp:38</li>
-          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:157</li>
-          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:160</li>
-          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:162</li>
-          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:165</li>
-          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:168</li>
-          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:171</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
-          <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
-        </ol>
-      </td>
+      <td class='line'>92</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // Query methods -------------------------------------------------------------------------------</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>90</td><td>&nbsp;</td>
-      <td id='l90' class='nonexec'><pre class='prettyprint'>   }</pre></td>
-    </tr>
-    <tr>
-      <td class='lineNo'>91</td><td>&nbsp;</td>
+      <td class='line'>93</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>92</td><td>&nbsp;</td>
-      <td id='l92' class='nonexec'><pre class='comment'>   // Query methods -------------------------------------------------------------------------------</pre></td>
+      <td class='line'>94</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static &lt;E> List&lt;E> find(String ql, Object... args)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>93</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>95</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>94</td><td>&nbsp;</td>
-      <td id='l94' class='nonexec'><pre class='prettyprint'>   public static &lt;E> List&lt;E> find(String ql, Object... args)</pre></td>
-    </tr>
-    <tr>
-      <td class='lineNo'>95</td><td>&nbsp;</td>
-      <td id='l95' class='nonexec'><pre class='prettyprint'>   {</pre></td>
-    </tr>
-    <tr>
-      <td class='lineNo'>96</td><td class='count'>5</td>
-      <td id='l96'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      Query query = newQuery(ql, args);</pre>
+      <td class='line'>96</td><td class='count'>5</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l96s0'>      Query query = newQuery(ql, args);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:157</li>
           <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:162</li>
@@ -721,8 +732,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>97</td><td class='count'>5</td>
-      <td id='l97'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return query.list();</pre>
+      <td class='line'>97</td><td class='count'>5</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l97s0'>      return query.list();</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:157</li>
           <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:162</li>
@@ -733,32 +744,32 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>98</td><td>&nbsp;</td>
-      <td id='l98' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>98</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>99</td><td>&nbsp;</td>
+      <td class='line'>99</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>100</td><td>&nbsp;</td>
-      <td id='l100' class='nonexec'><pre class='prettyprint'>   private static Query newQuery(String ql, Object... args)</pre></td>
+      <td class='line'>100</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private static Query newQuery(String ql, Object... args)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>101</td><td>&nbsp;</td>
-      <td id='l101' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>101</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
       <td></td><td class='count'>9</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#807f00' onclick='hidePath()'>Path coverage: 1/2</span>
-        <span class='uncovered' onclick="showPath(this,'A','l102 l104 l108')">A: 0</span>
-        <span class='covered' onclick="showPath(this,'B','l102 l104 l105 l108')">B: 9</span>
+        <span class='uncovered' onclick="showPath(this,'l102s0 l104s0 l108s0')">A: 0</span>
+        <span class='covered' onclick="showPath(this,'l102s0 l104s0 l105s0 l108s0')">B: 9</span>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>102</td><td class='count'>9</td>
-      <td id='l102'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      Query query = session().createQuery(ql);</pre>
+      <td class='line'>102</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l102s0'>      Query query = session().createQuery(ql);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
@@ -773,12 +784,12 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>103</td><td>&nbsp;</td>
+      <td class='line'>103</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>104</td><td class='count'>26</td>
-      <td id='l104'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      for (int i = 0; i &lt; args.length; i++) {</pre>
+      <td class='line'>104</td><td class='count'>26</td>
+      <td><pre class='prettyprint jmp'>      <span id='l104s0' title='Executions: 26' class='covered cp' onclick='showHide(this,0)'>for (int i = 0; i &lt; args.length; i++) </span><span id='l104s1' title='Executions: 17 No jumps' class='covered cp' onclick='showHide(this,1)'>{</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
@@ -807,11 +818,6 @@
           <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:171</li>
           <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:171</li>
         </ol>
-      </td>
-    </tr>
-    <tr>
-      <td class='lineNo'>105</td><td class='count'>17</td>
-      <td id='l105'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>         query.setParameter(i, args[i]);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
@@ -834,16 +840,40 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>106</td><td>&nbsp;</td>
-      <td id='l106' class='nonexec'><pre class='prettyprint'>      }</pre></td>
+      <td class='line'>105</td><td class='count'>17</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l105s0'>         query.setParameter(i, args[i]);</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomer:127</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+          <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName:140</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:157</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:162</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:165</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:168</li>
+          <li>orderMngr.domain.customer.CustomerTest#findCustomersByName:171</li>
+        </ol>
+      </td>
     </tr>
     <tr>
-      <td class='lineNo'>107</td><td>&nbsp;</td>
+      <td class='line'>106</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>      }</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>107</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>108</td><td class='count'>9</td>
-      <td id='l108'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return query;</pre>
+      <td class='line'>108</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l108s0'>      return query;</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
@@ -858,24 +888,24 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>109</td><td>&nbsp;</td>
-      <td id='l109' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>109</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>110</td><td>&nbsp;</td>
+      <td class='line'>110</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>111</td><td>&nbsp;</td>
-      <td id='l111' class='nonexec'><pre class='prettyprint'>   public static boolean exists(String ql, Object... args)</pre></td>
+      <td class='line'>111</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static boolean exists(String ql, Object... args)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>112</td><td>&nbsp;</td>
-      <td id='l112' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>112</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>113</td><td class='count'>4</td>
-      <td id='l113'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      Query query = newQuery(ql, args);</pre>
+      <td class='line'>113</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l113s0'>      Query query = newQuery(ql, args);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
@@ -885,8 +915,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>114</td><td class='count'>4</td>
-      <td id='l114'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      query.setMaxResults(1);</pre>
+      <td class='line'>114</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l114s0'>      query.setMaxResults(1);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
@@ -896,8 +926,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>115</td><td class='count'>4</td>
-      <td id='l115'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return query.iterate().hasNext();</pre>
+      <td class='line'>115</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l115s0'>      return query.iterate().hasNext();</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer:91</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName:118</li>
@@ -907,32 +937,32 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>116</td><td>&nbsp;</td>
-      <td id='l116' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>116</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>117</td><td>&nbsp;</td>
+      <td class='line'>117</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>118</td><td>&nbsp;</td>
-      <td id='l118' class='nonexec'><pre class='comment'>   // Methods related to the Unit of Work and the Transaction -------------------------------------</pre></td>
+      <td class='line'>118</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // Methods related to the Unit of Work and the Transaction -------------------------------------</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>119</td><td>&nbsp;</td>
+      <td class='line'>119</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>120</td><td>&nbsp;</td>
-      <td id='l120' class='nonexec'><pre class='prettyprint'>   public static void persistPendingChanges()</pre></td>
+      <td class='line'>120</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static void persistPendingChanges()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>121</td><td>&nbsp;</td>
-      <td id='l121' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>121</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>122</td><td class='count'>10</td>
-      <td id='l122'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      session().flush();</pre>
+      <td class='line'>122</td><td class='count'>10</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l122s0'>      session().flush();</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
           <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
@@ -948,8 +978,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>123</td><td class='count'>10</td>
-      <td id='l123'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      session().beginTransaction();</pre>
+      <td class='line'>123</td><td class='count'>10</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l123s0'>      session().beginTransaction();</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
           <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
@@ -965,8 +995,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>124</td><td class='count'>10</td>
-      <td id='l124'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>124</td><td class='count'>10</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l124s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
           <li>orderMngr.service.domain.DomainTest#tearDown:44</li>
@@ -982,48 +1012,48 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>125</td><td>&nbsp;</td>
+      <td class='line'>125</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>126</td><td>&nbsp;</td>
-      <td id='l126' class='nonexec'><pre class='prettyprint'>   public static void clearUnitOfWork()</pre></td>
+      <td class='line'>126</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static void clearUnitOfWork()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>127</td><td>&nbsp;</td>
-      <td id='l127' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>127</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>128</td><td class='count'>0</td>
-      <td id='l128' class='uncovered'><pre class='prettyprint'>      session().clear();</pre></td>
+      <td class='line'>128</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>      session().clear();</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>129</td><td class='count'>0</td>
-      <td id='l129' class='uncovered'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>129</td><td class='count'>0</td>
+      <td class='uncovered'><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>130</td><td>&nbsp;</td>
+      <td class='line'>130</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>131</td><td>&nbsp;</td>
-      <td id='l131' class='nonexec'><pre class='prettyprint'>   public static void closeUnitOfWork()</pre></td>
+      <td class='line'>131</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static void closeUnitOfWork()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>132</td><td>&nbsp;</td>
-      <td id='l132' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>132</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
       <td></td><td class='count'>9</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#807f00' onclick='hidePath()'>Path coverage: 1/2</span>
-        <span class='uncovered' onclick="showPath(this,'A','l133 l135 l139')">A: 0</span>
-        <span class='covered' onclick="showPath(this,'B','l133 l135 l136 l139')">B: 9</span>
+        <span class='uncovered' onclick="showPath(this,'l133s0 l135s0 l139s0')">A: 0</span>
+        <span class='covered' onclick="showPath(this,'l133s0 l135s0 l136s0 l139s0')">B: 9</span>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>133</td><td class='count'>9</td>
-      <td id='l133'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      Session session = currentSession.get();</pre>
+      <td class='line'>133</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l133s0'>      Session session = currentSession.get();</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
           <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
@@ -1038,12 +1068,23 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>134</td><td>&nbsp;</td>
+      <td class='line'>134</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>135</td><td class='count'>9</td>
-      <td id='l135'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      if (session != null) {</pre>
+      <td class='line'>135</td><td class='count'>9</td>
+      <td><pre class='prettyprint jmp'>      <span id='l135s0' title='Executions: 9' class='covered cp' onclick='showHide(this,0)'>if (session != null) </span><span id='l135s1' title='Executions: 9 No jumps' class='covered cp' onclick='showHide(this,1)'>{</span></pre>
+        <ol style='display: none;'>
+          <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
+          <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
+        </ol>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
           <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
@@ -1058,8 +1099,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>136</td><td class='count'>9</td>
-      <td id='l136'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>         session.close();</pre>
+      <td class='line'>136</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l136s0'>         session.close();</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
           <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
@@ -1074,8 +1115,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>137</td><td class='count'>9</td>
-      <td id='l137'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>         currentSession.set(null);</pre>
+      <td class='line'>137</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l137s0'>         currentSession.set(null);</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
           <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
@@ -1090,12 +1131,12 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>138</td><td>&nbsp;</td>
-      <td id='l138' class='nonexec'><pre class='prettyprint'>      }</pre></td>
+      <td class='line'>138</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>      }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>139</td><td class='count'>9</td>
-      <td id='l139'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>139</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l139s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
           <li>orderMngr.service.domain.DomainTest#tearDown:46</li>
@@ -1110,20 +1151,20 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>140</td><td>&nbsp;</td>
+      <td class='line'>140</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>141</td><td>&nbsp;</td>
-      <td id='l141' class='nonexec'><pre class='prettyprint'>   public static void beginTransaction()</pre></td>
+      <td class='line'>141</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static void beginTransaction()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>142</td><td>&nbsp;</td>
-      <td id='l142' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>142</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>143</td><td class='count'>9</td>
-      <td id='l143'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      session().beginTransaction();</pre>
+      <td class='line'>143</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l143s0'>      session().beginTransaction();</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#setUp:38</li>
           <li>orderMngr.service.domain.DomainTest#setUp:38</li>
@@ -1138,8 +1179,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>144</td><td class='count'>9</td>
-      <td id='l144'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>144</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l144s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#setUp:38</li>
           <li>orderMngr.service.domain.DomainTest#setUp:38</li>
@@ -1154,20 +1195,20 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>145</td><td>&nbsp;</td>
+      <td class='line'>145</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>146</td><td>&nbsp;</td>
-      <td id='l146' class='nonexec'><pre class='prettyprint'>   public static void rollbackTransaction()</pre></td>
+      <td class='line'>146</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static void rollbackTransaction()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>147</td><td>&nbsp;</td>
-      <td id='l147' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>147</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>148</td><td class='count'>9</td>
-      <td id='l148'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      session().getTransaction().rollback();</pre>
+      <td class='line'>148</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l148s0'>      session().getTransaction().rollback();</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
           <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
@@ -1182,8 +1223,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>149</td><td class='count'>9</td>
-      <td id='l149'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>149</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l149s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
           <li>orderMngr.service.domain.DomainTest#tearDown:45</li>
@@ -1198,28 +1239,28 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>150</td><td>&nbsp;</td>
+      <td class='line'>150</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>151</td><td>&nbsp;</td>
-      <td id='l151' class='nonexec'><pre class='comment'>   // Miscelaneous methods ------------------------------------------------------------------------</pre></td>
+      <td class='line'>151</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // Miscelaneous methods ------------------------------------------------------------------------</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>152</td><td>&nbsp;</td>
+      <td class='line'>152</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>153</td><td>&nbsp;</td>
-      <td id='l153' class='nonexec'><pre class='prettyprint'>   public static Serializable entityId(Object entity)</pre></td>
+      <td class='line'>153</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public static Serializable entityId(Object entity)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>154</td><td>&nbsp;</td>
-      <td id='l154' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>154</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>155</td><td class='count'>2</td>
-      <td id='l155'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return session().getIdentifier(entity);</pre>
+      <td class='line'>155</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l155s0'>      return session().getIdentifier(entity);</pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.customer.CustomerTest#editCustomer:129</li>
           <li>orderMngr.domain.customer.CustomerTest#removeCustomer:151</li>
@@ -1227,12 +1268,12 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>156</td><td>&nbsp;</td>
-      <td id='l156' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>156</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>157</td><td>&nbsp;</td>
-      <td id='l157' class='nonexec'><pre class='prettyprint'>}</pre></td>
+      <td class='line'>157</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>}</pre></td>
     </tr>
   </table>
 </body>

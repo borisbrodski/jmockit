@@ -13,216 +13,216 @@
   <table cellpadding='0' cellspacing='1'>
     <caption><code>..\orderMngmntWebapp\src\orderMngr\web\submitOrder\OrderEntryPage.java</code></caption>
     <tr>
-      <td class='lineNo'>1</td><td>&nbsp;</td>
-      <td id='l1' class='nonexec'><pre class='comment'>/*</pre></td>
+      <td class='line'>1</td><td>&nbsp;</td>
+      <td><pre class='comment'>/*</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>2</td><td>&nbsp;</td>
-      <td id='l2' class='nonexec'><pre class='comment'> * JMockit Samples</pre></td>
+      <td class='line'>2</td><td>&nbsp;</td>
+      <td><pre class='comment'> * JMockit Samples</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>3</td><td>&nbsp;</td>
-      <td id='l3' class='nonexec'><pre class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</pre></td>
+      <td class='line'>3</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Copyright (c) 2006-2009 Rogério Liesenfeld</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>4</td><td>&nbsp;</td>
-      <td id='l4' class='nonexec'><pre class='comment'> * All rights reserved.</pre></td>
+      <td class='line'>4</td><td>&nbsp;</td>
+      <td><pre class='comment'> * All rights reserved.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>5</td><td>&nbsp;</td>
-      <td id='l5' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>5</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>6</td><td>&nbsp;</td>
-      <td id='l6' class='nonexec'><pre class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</pre></td>
+      <td class='line'>6</td><td>&nbsp;</td>
+      <td><pre class='comment'> * Permission is hereby granted, free of charge, to any person obtaining</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>7</td><td>&nbsp;</td>
-      <td id='l7' class='nonexec'><pre class='comment'> * a copy of this software and associated documentation files (the</pre></td>
+      <td class='line'>7</td><td>&nbsp;</td>
+      <td><pre class='comment'> * a copy of this software and associated documentation files (the</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>8</td><td>&nbsp;</td>
-      <td id='l8' class='nonexec'><pre class='comment'> * "Software"), to deal in the Software without restriction, including</pre></td>
+      <td class='line'>8</td><td>&nbsp;</td>
+      <td><pre class='comment'> * "Software"), to deal in the Software without restriction, including</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>9</td><td>&nbsp;</td>
-      <td id='l9' class='nonexec'><pre class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</pre></td>
+      <td class='line'>9</td><td>&nbsp;</td>
+      <td><pre class='comment'> * without limitation the rights to use, copy, modify, merge, publish,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>10</td><td>&nbsp;</td>
-      <td id='l10' class='nonexec'><pre class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</pre></td>
+      <td class='line'>10</td><td>&nbsp;</td>
+      <td><pre class='comment'> * distribute, sublicense, and/or sell copies of the Software, and to</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>11</td><td>&nbsp;</td>
-      <td id='l11' class='nonexec'><pre class='comment'> * permit persons to whom the Software is furnished to do so, subject to</pre></td>
+      <td class='line'>11</td><td>&nbsp;</td>
+      <td><pre class='comment'> * permit persons to whom the Software is furnished to do so, subject to</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>12</td><td>&nbsp;</td>
-      <td id='l12' class='nonexec'><pre class='comment'> * the following conditions:</pre></td>
+      <td class='line'>12</td><td>&nbsp;</td>
+      <td><pre class='comment'> * the following conditions:</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>13</td><td>&nbsp;</td>
-      <td id='l13' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>13</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>14</td><td>&nbsp;</td>
-      <td id='l14' class='nonexec'><pre class='comment'> * The above copyright notice and this permission notice shall be</pre></td>
+      <td class='line'>14</td><td>&nbsp;</td>
+      <td><pre class='comment'> * The above copyright notice and this permission notice shall be</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>15</td><td>&nbsp;</td>
-      <td id='l15' class='nonexec'><pre class='comment'> * included in all copies or substantial portions of the Software.</pre></td>
+      <td class='line'>15</td><td>&nbsp;</td>
+      <td><pre class='comment'> * included in all copies or substantial portions of the Software.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>16</td><td>&nbsp;</td>
-      <td id='l16' class='nonexec'><pre class='comment'> *</pre></td>
+      <td class='line'>16</td><td>&nbsp;</td>
+      <td><pre class='comment'> *</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>17</td><td>&nbsp;</td>
-      <td id='l17' class='nonexec'><pre class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</pre></td>
+      <td class='line'>17</td><td>&nbsp;</td>
+      <td><pre class='comment'> * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>18</td><td>&nbsp;</td>
-      <td id='l18' class='nonexec'><pre class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</pre></td>
+      <td class='line'>18</td><td>&nbsp;</td>
+      <td><pre class='comment'> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>19</td><td>&nbsp;</td>
-      <td id='l19' class='nonexec'><pre class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre></td>
+      <td class='line'>19</td><td>&nbsp;</td>
+      <td><pre class='comment'> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>20</td><td>&nbsp;</td>
-      <td id='l20' class='nonexec'><pre class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</pre></td>
+      <td class='line'>20</td><td>&nbsp;</td>
+      <td><pre class='comment'> * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>21</td><td>&nbsp;</td>
-      <td id='l21' class='nonexec'><pre class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</pre></td>
+      <td class='line'>21</td><td>&nbsp;</td>
+      <td><pre class='comment'> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>22</td><td>&nbsp;</td>
-      <td id='l22' class='nonexec'><pre class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</pre></td>
+      <td class='line'>22</td><td>&nbsp;</td>
+      <td><pre class='comment'> * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>23</td><td>&nbsp;</td>
-      <td id='l23' class='nonexec'><pre class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre></td>
+      <td class='line'>23</td><td>&nbsp;</td>
+      <td><pre class='comment'> * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>24</td><td>&nbsp;</td>
-      <td id='l24' class='nonexec'><pre class='comment'> */</pre></td>
+      <td class='line'>24</td><td>&nbsp;</td>
+      <td><pre class='comment'> */</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>25</td><td>&nbsp;</td>
-      <td id='l25' class='nonexec'><pre class='prettyprint'>package orderMngr.web.submitOrder;</pre></td>
+      <td class='line'>25</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>package orderMngr.web.submitOrder;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>26</td><td>&nbsp;</td>
+      <td class='line'>26</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>27</td><td>&nbsp;</td>
-      <td id='l27' class='nonexec'><pre class='prettyprint'>import java.math.*;</pre></td>
+      <td class='line'>27</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.math.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>28</td><td>&nbsp;</td>
-      <td id='l28' class='nonexec'><pre class='prettyprint'>import java.util.*;</pre></td>
+      <td class='line'>28</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.util.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>29</td><td>&nbsp;</td>
+      <td class='line'>29</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>30</td><td>&nbsp;</td>
-      <td id='l30' class='nonexec'><pre class='prettyprint'>import orderMngr.domain.order.*;</pre></td>
+      <td class='line'>30</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import orderMngr.domain.order.*;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>31</td><td>&nbsp;</td>
+      <td class='line'>31</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>32</td><td class='count'>6</td>
-      <td id='l32'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>public final class OrderEntryPage</pre>
+      <td class='line'>32</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l32s0'>public final class OrderEntryPage</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:41</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>33</td><td>&nbsp;</td>
-      <td id='l33' class='nonexec'><pre class='prettyprint'>{</pre></td>
+      <td class='line'>33</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>{</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>34</td><td>&nbsp;</td>
-      <td id='l34' class='nonexec'><pre class='comment'>   // Data accumulated before submitting the order:</pre></td>
+      <td class='line'>34</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // Data accumulated before submitting the order:</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>35</td><td>&nbsp;</td>
-      <td id='l35' class='nonexec'><pre class='prettyprint'>   private String customerId;</pre></td>
+      <td class='line'>35</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private String customerId;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>36</td><td>&nbsp;</td>
-      <td id='l36' class='nonexec'><pre class='prettyprint'>   private List&lt;OrderItem> orderItems;</pre></td>
+      <td class='line'>36</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private List&lt;OrderItem> orderItems;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>37</td><td>&nbsp;</td>
+      <td class='line'>37</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>38</td><td>&nbsp;</td>
-      <td id='l38' class='nonexec'><pre class='comment'>   // Parameters for adding an order item:</pre></td>
+      <td class='line'>38</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // Parameters for adding an order item:</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>39</td><td>&nbsp;</td>
-      <td id='l39' class='nonexec'><pre class='prettyprint'>   private String productId;</pre></td>
+      <td class='line'>39</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private String productId;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>40</td><td>&nbsp;</td>
-      <td id='l40' class='nonexec'><pre class='prettyprint'>   private String productDescription;</pre></td>
+      <td class='line'>40</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private String productDescription;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>41</td><td>&nbsp;</td>
-      <td id='l41' class='nonexec'><pre class='prettyprint'>   private int quantity;</pre></td>
+      <td class='line'>41</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private int quantity;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>42</td><td>&nbsp;</td>
-      <td id='l42' class='nonexec'><pre class='prettyprint'>   private BigDecimal unitPrice;</pre></td>
+      <td class='line'>42</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private BigDecimal unitPrice;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>43</td><td>&nbsp;</td>
+      <td class='line'>43</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>44</td><td>&nbsp;</td>
-      <td id='l44' class='nonexec'><pre class='comment'>   // Item index for removing an item:</pre></td>
+      <td class='line'>44</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // Item index for removing an item:</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>45</td><td>&nbsp;</td>
-      <td id='l45' class='nonexec'><pre class='prettyprint'>   private int itemToRemove;</pre></td>
+      <td class='line'>45</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private int itemToRemove;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>46</td><td>&nbsp;</td>
+      <td class='line'>46</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>47</td><td>&nbsp;</td>
-      <td id='l47' class='nonexec'><pre class='comment'>   // Resulting data when the order is submitted:</pre></td>
+      <td class='line'>47</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // Resulting data when the order is submitted:</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>48</td><td>&nbsp;</td>
-      <td id='l48' class='nonexec'><pre class='prettyprint'>   private int orderNo;</pre></td>
+      <td class='line'>48</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private int orderNo;</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>49</td><td>&nbsp;</td>
+      <td class='line'>49</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>50</td><td>&nbsp;</td>
-      <td id='l50' class='nonexec'><pre class='prettyprint'>   public void load()</pre></td>
+      <td class='line'>50</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public void load()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>51</td><td>&nbsp;</td>
-      <td id='l51' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>51</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>52</td><td class='count'>6</td>
-      <td id='l52'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      orderItems = new ArrayList&lt;OrderItem>(5);</pre>
+      <td class='line'>52</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l52s0'>      orderItems = new ArrayList&lt;OrderItem>(5);</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:60</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:88</li>
@@ -234,16 +234,16 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>53</td><td>&nbsp;</td>
-      <td id='l53' class='nonexec'><pre class='comment'>      // use some web MVC framework service to retrieve item data, either from request parameters</pre></td>
+      <td class='line'>53</td><td>&nbsp;</td>
+      <td><pre class='comment'>      // use some web MVC framework service to retrieve item data, either from request parameters</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>54</td><td>&nbsp;</td>
-      <td id='l54' class='nonexec'><pre class='comment'>      // or from the HTTPSession</pre></td>
+      <td class='line'>54</td><td>&nbsp;</td>
+      <td><pre class='comment'>      // or from the HTTPSession</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>55</td><td class='count'>6</td>
-      <td id='l55'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>55</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l55s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:60</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:88</li>
@@ -255,20 +255,20 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>56</td><td>&nbsp;</td>
+      <td class='line'>56</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>57</td><td>&nbsp;</td>
-      <td id='l57' class='nonexec'><pre class='prettyprint'>   public void setCustomerId(String customerId)</pre></td>
+      <td class='line'>57</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public void setCustomerId(String customerId)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>58</td><td>&nbsp;</td>
-      <td id='l58' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>58</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>59</td><td class='count'>2</td>
-      <td id='l59'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      this.customerId = customerId;</pre>
+      <td class='line'>59</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l59s0'>      this.customerId = customerId;</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:61</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:45</li>
@@ -276,8 +276,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>60</td><td class='count'>2</td>
-      <td id='l60'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>60</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l60s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:61</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:45</li>
@@ -285,20 +285,20 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>61</td><td>&nbsp;</td>
+      <td class='line'>61</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>62</td><td>&nbsp;</td>
-      <td id='l62' class='nonexec'><pre class='prettyprint'>   public List&lt;OrderItem> getOrderItems()</pre></td>
+      <td class='line'>62</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public List&lt;OrderItem> getOrderItems()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>63</td><td>&nbsp;</td>
-      <td id='l63' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>63</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>64</td><td class='count'>9</td>
-      <td id='l64'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return orderItems;</pre>
+      <td class='line'>64</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l64s0'>      return orderItems;</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:62</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
@@ -313,136 +313,136 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>65</td><td>&nbsp;</td>
-      <td id='l65' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>65</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>66</td><td>&nbsp;</td>
+      <td class='line'>66</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>67</td><td>&nbsp;</td>
-      <td id='l67' class='nonexec'><pre class='prettyprint'>   public void setProductId(String productId)</pre></td>
+      <td class='line'>67</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public void setProductId(String productId)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>68</td><td>&nbsp;</td>
-      <td id='l68' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>68</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>69</td><td class='count'>1</td>
-      <td id='l69'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      this.productId = productId;</pre>
+      <td class='line'>69</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l69s0'>      this.productId = productId;</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:80</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>70</td><td class='count'>1</td>
-      <td id='l70'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>70</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l70s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:80</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>71</td><td>&nbsp;</td>
+      <td class='line'>71</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>72</td><td>&nbsp;</td>
-      <td id='l72' class='nonexec'><pre class='prettyprint'>   public void setProductDescription(String productDescription)</pre></td>
+      <td class='line'>72</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public void setProductDescription(String productDescription)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>73</td><td>&nbsp;</td>
-      <td id='l73' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>73</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>74</td><td class='count'>1</td>
-      <td id='l74'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      this.productDescription = productDescription;</pre>
+      <td class='line'>74</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l74s0'>      this.productDescription = productDescription;</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:82</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>75</td><td class='count'>1</td>
-      <td id='l75'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>75</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l75s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:82</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>76</td><td>&nbsp;</td>
+      <td class='line'>76</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>77</td><td>&nbsp;</td>
-      <td id='l77' class='nonexec'><pre class='prettyprint'>   public void setQuantity(int quantity)</pre></td>
+      <td class='line'>77</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public void setQuantity(int quantity)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>78</td><td>&nbsp;</td>
-      <td id='l78' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>78</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>79</td><td class='count'>1</td>
-      <td id='l79'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      this.quantity = quantity;</pre>
+      <td class='line'>79</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l79s0'>      this.quantity = quantity;</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:84</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>80</td><td class='count'>1</td>
-      <td id='l80'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>80</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l80s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:84</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>81</td><td>&nbsp;</td>
+      <td class='line'>81</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>82</td><td>&nbsp;</td>
-      <td id='l82' class='nonexec'><pre class='prettyprint'>   public void setUnitPrice(BigDecimal unitPrice)</pre></td>
+      <td class='line'>82</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public void setUnitPrice(BigDecimal unitPrice)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>83</td><td>&nbsp;</td>
-      <td id='l83' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>83</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>84</td><td class='count'>1</td>
-      <td id='l84'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      this.unitPrice = unitPrice;</pre>
+      <td class='line'>84</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l84s0'>      this.unitPrice = unitPrice;</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:86</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>85</td><td class='count'>1</td>
-      <td id='l85'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>85</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l85s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:86</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>86</td><td>&nbsp;</td>
+      <td class='line'>86</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>87</td><td>&nbsp;</td>
-      <td id='l87' class='nonexec'><pre class='prettyprint'>   public void setItemToRemove(int itemToRemove)</pre></td>
+      <td class='line'>87</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public void setItemToRemove(int itemToRemove)</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>88</td><td>&nbsp;</td>
-      <td id='l88' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>88</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>89</td><td class='count'>2</td>
-      <td id='l89'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      this.itemToRemove = itemToRemove;</pre>
+      <td class='line'>89</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l89s0'>      this.itemToRemove = itemToRemove;</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:103</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:116</li>
@@ -450,8 +450,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>90</td><td class='count'>2</td>
-      <td id='l90'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>90</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l90s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:103</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:116</li>
@@ -459,20 +459,20 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>91</td><td>&nbsp;</td>
+      <td class='line'>91</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>92</td><td>&nbsp;</td>
-      <td id='l92' class='nonexec'><pre class='prettyprint'>   public int getOrderNo()</pre></td>
+      <td class='line'>92</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public int getOrderNo()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>93</td><td>&nbsp;</td>
-      <td id='l93' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>93</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>94</td><td class='count'>5</td>
-      <td id='l94'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      return orderNo;</pre>
+      <td class='line'>94</td><td class='count'>5</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l94s0'>      return orderNo;</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:64</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:67</li>
@@ -483,60 +483,60 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>95</td><td>&nbsp;</td>
-      <td id='l95' class='nonexec'><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>95</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>96</td><td>&nbsp;</td>
+      <td class='line'>96</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>97</td><td>&nbsp;</td>
-      <td id='l97' class='nonexec'><pre class='prettyprint'>   public void addItem()</pre></td>
+      <td class='line'>97</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public void addItem()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>98</td><td>&nbsp;</td>
-      <td id='l98' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>98</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>99</td><td class='count'>1</td>
-      <td id='l99'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      OrderItem item = new OrderItem(productId, productDescription, quantity, unitPrice);</pre>
+      <td class='line'>99</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l99s0'>      OrderItem item = new OrderItem(productId, productDescription, quantity, unitPrice);</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:89</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>100</td><td class='count'>1</td>
-      <td id='l100'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      orderItems.add(item);</pre>
+      <td class='line'>100</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l100s0'>      orderItems.add(item);</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:89</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>101</td><td class='count'>1</td>
-      <td id='l101'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>101</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l101s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#addItemToEmptyList:89</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>102</td><td>&nbsp;</td>
+      <td class='line'>102</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>103</td><td>&nbsp;</td>
-      <td id='l103' class='nonexec'><pre class='prettyprint'>   public void removeItem()</pre></td>
+      <td class='line'>103</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public void removeItem()</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>104</td><td>&nbsp;</td>
-      <td id='l104' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>104</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>105</td><td class='count'>2</td>
-      <td id='l105'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      orderItems.remove(itemToRemove);</pre>
+      <td class='line'>105</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l105s0'>      orderItems.remove(itemToRemove);</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:107</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeItemWithInvalidIndex:120</li>
@@ -544,28 +544,28 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>106</td><td class='count'>1</td>
-      <td id='l106'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>106</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l106s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#removeOnlyItem:107</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>107</td><td>&nbsp;</td>
+      <td class='line'>107</td><td>&nbsp;</td>
       <td></td>
     </tr>
     <tr>
-      <td class='lineNo'>108</td><td>&nbsp;</td>
-      <td id='l108' class='nonexec'><pre class='prettyprint'>   public void submitOrder() throws Exception</pre></td>
+      <td class='line'>108</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public void submitOrder() throws Exception</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>109</td><td>&nbsp;</td>
-      <td id='l109' class='nonexec'><pre class='prettyprint'>   {</pre></td>
+      <td class='line'>109</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='lineNo'>110</td><td class='count'>3</td>
-      <td id='l110'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      Order order = new OrderFactory().createOrder(customerId, orderItems);</pre>
+      <td class='line'>110</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l110s0'>      Order order = new OrderFactory().createOrder(customerId, orderItems);</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrderWithMissingData:130</li>
@@ -574,8 +574,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>111</td><td class='count'>2</td>
-      <td id='l111'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>      orderNo = order.getNumber();</pre>
+      <td class='line'>111</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l111s0'>      orderNo = order.getNumber();</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:61</li>
@@ -583,8 +583,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>112</td><td class='count'>2</td>
-      <td id='l112'><pre class='prettyprint covered withCallPoints' onclick='showHide(this)'>   }</pre>
+      <td class='line'>112</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l112s0'>   }</pre>
         <ol style='display: none;'>
           <li>orderMngr.web.submitOrder.OrderEntryPageTest#submitOrder:65</li>
           <li>orderMngr.web.submitOrder.OrderEntryPageTestUsingExpectations#submitOrder:61</li>
@@ -592,8 +592,8 @@
       </td>
     </tr>
     <tr>
-      <td class='lineNo'>113</td><td>&nbsp;</td>
-      <td id='l113' class='nonexec'><pre class='prettyprint'>}</pre></td>
+      <td class='line'>113</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>}</pre></td>
     </tr>
   </table>
 </body>
