@@ -22,18 +22,18 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage.reporting;
+package mockit.coverage.reporting.sourceFiles;
 
 import java.io.*;
 import java.util.*;
 
-final class InputFile
+public final class InputFile
 {
    final String filePath;
    final File sourceFile;
    final BufferedReader input;
 
-   InputFile(List<File> sourceDirs, String filePath) throws FileNotFoundException
+   public InputFile(List<File> sourceDirs, String filePath) throws FileNotFoundException
    {
       this.filePath = filePath;
       sourceFile = findSourceFile(sourceDirs, filePath);
@@ -81,7 +81,7 @@ final class InputFile
       return null;
    }
 
-   boolean wasFileFound()
+   public boolean wasFileFound()
    {
       return sourceFile != null;
    }

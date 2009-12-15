@@ -22,15 +22,16 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage.reporting;
+package mockit.coverage.reporting.packages;
 
+import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
 
 abstract class ListWithFilesAndPercentages
 {
-   protected final OutputFile output;
+   protected final PrintWriter output;
    private final String baseIndent;
    int totalSegments;
    int coveredSegments;
@@ -38,7 +39,7 @@ abstract class ListWithFilesAndPercentages
    int coveredPaths;
    private boolean firstColumnWithDoubleSpan;
 
-   protected ListWithFilesAndPercentages(OutputFile output, String baseIndent)
+   protected ListWithFilesAndPercentages(PrintWriter output, String baseIndent)
    {
       this.output = output;
       this.baseIndent = baseIndent;

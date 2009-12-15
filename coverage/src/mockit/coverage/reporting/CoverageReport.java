@@ -29,6 +29,8 @@ import java.util.*;
 import java.util.Map.*;
 
 import mockit.coverage.data.*;
+import mockit.coverage.reporting.packages.*;
+import mockit.coverage.reporting.sourceFiles.*;
 
 class CoverageReport
 {
@@ -74,7 +76,7 @@ class CoverageReport
 
       new IndexPage(outputFile, sourceDirs, packageToFiles, fileToFileData).generate();
 
-      OutputFile.copySharedReferencedFiles(outputDir, sourceDirs != null);
+      new StaticFiles().copyToOutputDir(outputDir, sourceDirs != null);
 
       System.out.println(
          "JMockit: Coverage report written to " + new File(outputDir).getCanonicalPath());

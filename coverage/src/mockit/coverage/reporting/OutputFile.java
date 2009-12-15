@@ -27,67 +27,25 @@ package mockit.coverage.reporting;
 import java.io.*;
 import java.util.regex.*;
 
-final class OutputFile extends PrintWriter
+public final class OutputFile extends PrintWriter
 {
    private static final Pattern PATH_SEPARATOR = Pattern.compile("/");
 
-   static void copySharedReferencedFiles(String outputDir, boolean forSourceFilePages)
-      throws IOException
-   {
-      String pathToThisJar =
-         OutputFile.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-      long timeOfCoverageJar = new File(pathToThisJar).lastModified();
-      
-      copyFile(outputDir, "coverage.css", timeOfCoverageJar);
-
-      if (forSourceFilePages) {
-         copyFile(outputDir, "prettify.css", timeOfCoverageJar);
-         copyFile(outputDir, "coverage.js", timeOfCoverageJar);
-         copyFile(outputDir, "prettify.js", timeOfCoverageJar);
-      }
-   }
-
-   private static void copyFile(String outputDir, String fileName, long timeOfCoverageJar)
-      throws IOException
-   {
-      File outputFile = new File(outputDir, fileName);
-
-      if (outputFile.exists() && timeOfCoverageJar < outputFile.lastModified()) {
-         return;
-      }
-
-      FileOutputStream output = new FileOutputStream(outputFile);
-      InputStream input = OutputFile.class.getResourceAsStream(fileName);
-
-      try {
-         int b;
-
-         while ((b = input.read()) != -1) {
-            output.write(b);
-         }
-      }
-      finally {
-         try {
-            input.close();
-         }
-         finally {
-            output.close();
-         }
-      }
-   }
-
    private final String relPathToOutDir;
+   private final boolean withJavaScript;
 
-   OutputFile(File file) throws IOException
+   public OutputFile(File file) throws IOException
    {
       super(new FileWriter(file));
       relPathToOutDir = "";
+      withJavaScript = false;
    }
 
-   OutputFile(String outputDir, String sourceFilePath) throws IOException
+   public OutputFile(String outputDir, String sourceFilePath) throws IOException
    {
       super(new FileWriter(getOutputFileCreatingDirIfNeeded(outputDir, sourceFilePath)));
       relPathToOutDir = getRelativeSubPathToOutputDir(sourceFilePath);
+      withJavaScript = true;
    }
 
    private static File getOutputFileCreatingDirIfNeeded(String outputDir, String sourceFilePath)
@@ -115,7 +73,7 @@ final class OutputFile extends PrintWriter
       return cssRelPath.toString();
    }
 
-   void printCommonHeader(boolean withJavaScript)
+   public void writeCommonHeader()
    {
       println("<?xml version='1.0' encoding='UTF-8'?>");
       println(
@@ -153,7 +111,7 @@ final class OutputFile extends PrintWriter
       }
    }
 
-   void writeCommonFooter()
+   public void writeCommonFooter()
    {
       println("</body>");
       println("</html>");

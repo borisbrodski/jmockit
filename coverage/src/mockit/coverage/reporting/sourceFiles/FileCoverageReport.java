@@ -22,13 +22,14 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage.reporting;
+package mockit.coverage.reporting.sourceFiles;
 
 import java.io.*;
 import java.util.*;
 
 import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
+import mockit.coverage.reporting.OutputFile;
 import mockit.coverage.reporting.lineCoverage.*;
 import mockit.coverage.reporting.parsing.*;
 import mockit.coverage.reporting.pathCoverage.*;
@@ -36,7 +37,7 @@ import mockit.coverage.reporting.pathCoverage.*;
 /**
  * Generates an XHTML page containing line-by-line coverage information for a single source file.
  */
-final class FileCoverageReport
+public final class FileCoverageReport
 {
    private final InputFile inputFile;
    private final OutputFile output;
@@ -44,7 +45,7 @@ final class FileCoverageReport
    private final LineCoverageOutput lineCoverage;
    private final PathCoverageOutput pathCoverage;
 
-   FileCoverageReport(
+   public FileCoverageReport(
       String outputDir, InputFile inputFile, FileCoverageData fileData, boolean withCallPoints)
       throws IOException
    {
@@ -56,7 +57,7 @@ final class FileCoverageReport
       pathCoverage = methods.isEmpty() ? null : new PathCoverageOutput(output, methods);
    }
 
-   void generate() throws IOException
+   public void generate() throws IOException
    {
       try {
          writeHeader();
@@ -71,7 +72,7 @@ final class FileCoverageReport
 
    private void writeHeader()
    {
-      output.printCommonHeader(true);
+      output.writeCommonHeader();
       output.println("  <table cellpadding='0' cellspacing='1'>");
       output.println("    <caption><code>" + inputFile.sourceFile.getPath() + "</code></caption>");
    }

@@ -22,15 +22,16 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage.reporting;
+package mockit.coverage.reporting.packages;
 
 import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
 import mockit.coverage.data.*;
+import mockit.coverage.reporting.OutputFile;
 
-final class IndexPage extends ListWithFilesAndPercentages
+public final class IndexPage extends ListWithFilesAndPercentages
 {
    private final List<File> sourceDirs;
    private final Map<String, List<String>> packageToFiles;
@@ -38,7 +39,7 @@ final class IndexPage extends ListWithFilesAndPercentages
    private final Map<String, Integer> packageToPackagePathPercentages;
    private final PackageCoverageReport packageReport;
 
-   IndexPage(
+   public IndexPage(
       File outputFile, List<File> sourceDirs,
       Map<String, List<String>> packageToFiles, Map<String, FileCoverageData> fileToFileData)
       throws IOException
@@ -51,7 +52,7 @@ final class IndexPage extends ListWithFilesAndPercentages
       packageReport = new PackageCoverageReport(output, fileToFileData, sourceDirs != null);
    }
 
-   void generate()
+   public void generate()
    {
       try {
          writeHeader();
@@ -69,8 +70,7 @@ final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeHeader()
    {
-      output.printCommonHeader(false);
-
+      ((OutputFile) output).writeCommonHeader();
       output.println("  <h1>JMockit Coverage Report</h1>");
       output.println("  <table cellpadding='0' cellspacing='1'>");
 
@@ -125,7 +125,7 @@ final class IndexPage extends ListWithFilesAndPercentages
       output.write("  <p>Generated on ");
       output.print(new Date());
       output.println("</p>");
-      output.writeCommonFooter();
+      ((OutputFile) output).writeCommonFooter();
    }
 
    @Override

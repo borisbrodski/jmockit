@@ -22,8 +22,9 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.coverage.reporting;
+package mockit.coverage.reporting.packages;
 
+import java.io.*;
 import java.util.*;
 
 import mockit.coverage.data.*;
@@ -34,7 +35,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    private final boolean withSourceFiles;
 
    PackageCoverageReport(
-      OutputFile output, Map<String, FileCoverageData> filesToFileData, boolean withSourceFiles)
+      PrintWriter output, Map<String, FileCoverageData> filesToFileData, boolean withSourceFiles)
    {
       super(output, "          ");
       this.filesToFileData = filesToFileData;
