@@ -31,11 +31,10 @@ import java.lang.annotation.*;
  * Such fields or parameters can be of any type, except for primitive and array types.
  * For the duration of each test where such a <em>mocked type</em> is in scope, all new instances of
  * that type, as well as those previously existing, will be mocks.
- * Static methods and constructors belonging to a mocked class type (unless specifically excluded)
- * will also be mocked.
+ * Static methods and constructors belonging to a mocked class type will also be mocked.
  * <p/>
  * In the case of an instance field, it can be declared in a test class, in a super-class of a test
- * class, or in a {@link Expectations} subclass.
+ * class, or in an {@link Expectations} subclass.
  * In the case of a parameter, it can only be declared in a test method.
  * <p/>
  * Notice that not only a concrete {@code Expectations} subclass used in specific tests can
@@ -51,7 +50,7 @@ import java.lang.annotation.*;
  * The same applies to mock parameters declared for the test method.
  * <p/>
  * In conclusion, there are three possible scopes for mocked types, from larger to smaller: the
- * whole test class, the test method, and the expectations block inside the test method.
+ * whole test class, the test method, and the expectation block inside the test method.
  * Some tests will use only one or two of these scopes, while others can take advantage of all
  * three.
  * <p/>
@@ -60,16 +59,27 @@ import java.lang.annotation.*;
  * It is also possible, however, for the test itself to provide this instance, by declaring the
  * field as {@code final} and assigning to it the desired instance.
  * If no mock instance is necessary because only static methods or constructors will be called, then
- * this final field can receive the value {@literal null}.
+ * this final field can receive the {@literal null} reference.
  * Mock parameters, on the other hand, will always receive a mock argument whenever the test method
  * is executed by the test runner.
  * <p/>
  * For each mocked type there is at least one <em>target class for mocking</em>, which is derived
- * from the declared type or specified through an annotation attribute.
- * By default, all methods (including static ones) and constructors in the target classes will be
- * mocked so that calls to them will not result in the execution of the original code, but only in a
- * call back to JMockit; according to the current phase of execution for the test - record, replay,
- * or verification - JMockit will then take the appropriate actions.
+ * from the declared type of the mock field or parameter, or specified through an annotation
+ * attribute.
+ * By default, all methods (including those which are {@code static}, {@code final},
+ * {@code private}, {@code abstract}, or {@code native}) and constructors in the target classes will
+ * be mocked.
+ * The only exceptions are the overrides (if any) for the following {@code java.lang.Object}
+ * methods: {@code equals(Object)}, {@code hashCode()}, {@code toString()}, and {@code finalize()}.
+ * For reasons of safety and also because mocking such methods isn't typically needed in real tests,
+ * they are not mocked by default.
+ * However, it is still possible to mock these methods by explicitly including them through one or
+ * more {@linkplain #methods mock filters}.
+ * <p/>
+ * When a method or constructor is mocked, any invocations will not result in the execution of the
+ * original code, but only in a call back to JMockit; according to the current phase of execution
+ * for the test - <em>record</em>, <em>replay</em>, or <em>verify</em> - JMockit will then take the
+ * appropriate actions.
  * <p/>
  * There are three rules that are applied when deriving the target classes from the mocked type:
  * <ol>
