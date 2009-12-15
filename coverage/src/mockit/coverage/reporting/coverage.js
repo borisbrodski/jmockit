@@ -34,8 +34,17 @@ function showPath(cell, lineSegmentIdsStr)
    cellShown = cell;
 }
 
-function showHide(callPoints)
+function showHide(callPoints, listIndex)
 {
-   var list = callPoints.nextSibling.nextSibling.style;
+   var tableCell = callPoints.parentNode;
+
+   if (listIndex >= 0) {
+      tableCell = tableCell.parentNode;
+   }
+   else {
+      listIndex = 0;
+   }
+
+   var list = tableCell.getElementsByTagName('ol')[listIndex].style;
    list.display = list.display == 'none' ? 'block' : 'none';
 }

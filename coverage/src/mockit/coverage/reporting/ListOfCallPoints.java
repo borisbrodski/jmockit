@@ -32,20 +32,39 @@ public final class ListOfCallPoints
 {
    private static final String EOL = System.getProperty("line.separator");
 
-   public void insertListOfCallPoints(StringBuilder formattedLine, List<CallPoint> callPoints)
+   private final StringBuilder content;
+
+   public ListOfCallPoints()
    {
-      formattedLine.append("        <ol style='display: none;'>").append(EOL);
+      content = new StringBuilder(100);
+   }
+
+   public void insertListOfCallPoints(List<CallPoint> callPoints)
+   {
+      if (content.length() == 0) {
+         content.append(EOL).append("      ");
+      }
+
+      content.append("  <ol style='display: none;'>").append(EOL);
 
       for (CallPoint callPoint : callPoints) {
          StackTraceElement ste = callPoint.getStackTraceElement();
 
-         formattedLine.append("          <li>");
-         formattedLine.append(ste.getClassName()).append('#');
-         formattedLine.append(ste.getMethodName().replaceFirst("<", "&lt;")).append(':');
-         formattedLine.append(ste.getLineNumber());
-         formattedLine.append("</li>").append(EOL);
+         content.append("          <li>");
+         content.append(ste.getClassName()).append('#');
+         content.append(ste.getMethodName().replaceFirst("<", "&lt;")).append(':');
+         content.append(ste.getLineNumber());
+         content.append("</li>").append(EOL);
       }
 
-      formattedLine.append("        </ol>").append(EOL);
+      content.append("        </ol>").append(EOL);
+      content.append("      ");
+   }
+
+   public String getContents()
+   {
+      String result = content.toString();
+      content.setLength(0);
+      return result;
    }
 }

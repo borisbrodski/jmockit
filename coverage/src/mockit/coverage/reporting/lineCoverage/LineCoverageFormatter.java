@@ -30,15 +30,15 @@ import mockit.coverage.reporting.parsing.LineElement;
 
 final class LineCoverageFormatter
 {
-   private static final String EOL = System.getProperty("line.separator");
-
    private final boolean withCallPoints;
    private final StringBuilder formattedLine = new StringBuilder(200);
+   private final ListOfCallPoints listOfCallPoints;
    private LineCoverageData lineData;
 
    LineCoverageFormatter(boolean withCallPoints)
    {
       this.withCallPoints = withCallPoints;
+      listOfCallPoints = withCallPoints ? new ListOfCallPoints() : null;
    }
 
    String format(int line, LineCoverageData lineData, LineElement initialElement)
@@ -55,14 +55,12 @@ final class LineCoverageFormatter
          formatLineWithSingleSegment(line, initialElement);
       }
 
-      appendClosingTags();
-
       return formattedLine.toString();
    }
 
    private void formatLineWithMultipleSegments(int line, LineElement initialElement)
    {
-      formattedLine.append(" withBranches'>");
+      formattedLine.append(" jmp'>");
 
       new LineSegmentsFormatter(withCallPoints, line, formattedLine).formatSegments(
          lineData, initialElement);
@@ -73,20 +71,15 @@ final class LineCoverageFormatter
       formattedLine.append(" covered");
 
       if (withCallPoints) {
-         formattedLine.append(" withCallPoints' onclick='showHide(this)");
+         formattedLine.append(" cp' onclick='showHide(this)");
       }
 
       formattedLine.append("' id='l").append(line).append("s0'>").append(initialElement.toString());
-   }
-
-   private void appendClosingTags()
-   {
       formattedLine.append("</pre>");
 
       if (withCallPoints) {
-         formattedLine.append(EOL);
-         new ListOfCallPoints().insertListOfCallPoints(formattedLine, lineData.getCallPoints());
-         formattedLine.append("      ");
+         listOfCallPoints.insertListOfCallPoints(lineData.getCallPoints());
+         formattedLine.append(listOfCallPoints.getContents());
       }
    }
 }

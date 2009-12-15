@@ -32,9 +32,9 @@ import mockit.coverage.reporting.parsing.LineElement;
 
 final class LineSegmentsFormatter
 {
-   private final boolean withCallPoints;
-   private final int lineNum;
+   private final ListOfCallPoints listOfCallPoints;
    private final StringBuilder formattedLine;
+   private final int lineNum;
 
    // Helper fields:
    private LineElement element;
@@ -43,9 +43,9 @@ final class LineSegmentsFormatter
 
    LineSegmentsFormatter(boolean withCallPoints, int lineNum, StringBuilder formattedLine)
    {
-      this.withCallPoints = withCallPoints;
-      this.lineNum = lineNum;
+      listOfCallPoints = withCallPoints ? new ListOfCallPoints() : null;
       this.formattedLine = formattedLine;
+      this.lineNum = lineNum;
    }
 
    void formatSegments(LineCoverageData lineData, LineElement initialElement)
@@ -67,6 +67,12 @@ final class LineSegmentsFormatter
          if (element != null) {
             appendUntilFirstElementAfterNextBranchingPoint();
          }
+      }
+
+      formattedLine.append("</pre>");
+
+      if (listOfCallPoints != null) {
+         formattedLine.append(listOfCallPoints.getContents());
       }
    }
 
@@ -112,8 +118,8 @@ final class LineSegmentsFormatter
       if (segmentData.isCovered()) {
          formattedLine.append("class='covered");
 
-         if (withCallPoints) {
-            formattedLine.append(" withCallPoints' onclick='showHide(this)");
+         if (listOfCallPoints != null) {
+            formattedLine.append(" cp' onclick='showHide(this,").append(segmentIndex).append(')');
          }
 
          formattedLine.append("'>");
@@ -134,11 +140,11 @@ final class LineSegmentsFormatter
 
          if (noJumpCount >= 0 && jumpCount >= 0) {
             formattedLine.append(noJumpCount + jumpCount);
-            formattedLine.append("\r\nJumps: ").append(jumpCount);
+            formattedLine.append(" Jumps: ").append(jumpCount);
          }
          else if (noJumpCount > 0) {
             formattedLine.append(noJumpCount);
-            formattedLine.append("\r\nNo jumps");
+            formattedLine.append(" No jumps");
          }
          else if (jumpCount > 0) {
             formattedLine.append("title='Jumps: ").append(jumpCount);
@@ -158,8 +164,8 @@ final class LineSegmentsFormatter
    {
       formattedLine.append("</span>");
 
-      if (withCallPoints && !segmentData.getCallPoints().isEmpty()) {
-         new ListOfCallPoints().insertListOfCallPoints(formattedLine, segmentData.getCallPoints());
+      if (listOfCallPoints != null && !segmentData.getCallPoints().isEmpty()) {
+         listOfCallPoints.insertListOfCallPoints(segmentData.getCallPoints());
       }
    }
 }

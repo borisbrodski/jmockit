@@ -9,18 +9,22 @@ ol {
 pre.comment { margin: 0; color: gray; }
 
 .line {
-   background-color: #e0e0e0; text-align: right;
+   background-color: #e0e0e0;
+   min-width: 1em;
+   text-align: right;
    padding-left: 1px; padding-right: 1px;
    border-right: #a0a0a0 solid 1px;
 }
 .count {
-   background-color: yellow; text-align: right; padding-left: 2px; padding-right: 1px;
+   background-color: yellow;
+   min-width: 1em;
+   text-align: right;
+   padding-left: 2px; padding-right: 1px;
    border-right: #aaaa00 solid 1px;
 }
 
 .covered { background-color: #90ee90; }
 .uncovered { background-color: #f08080; }
-.partiallyCovered { background-color: #daa520; }
 
 td.file {
    vertical-align: middle; background-color: #e0e0e0; padding: 2px;
@@ -33,12 +37,12 @@ td.coverage {
 td.unknown { background-color: #daa520; text-align: center; }
 td.nocode { background-color: #999999; text-align: center; }
 
-pre.withBranches { background-color: #f8ebb8; }
-pre.withBranches span { margin-right: 1px; }
+pre.jmp { background-color: #f8ebb8; }
+pre.jmp span { margin-right: 1px; }
 
 td.total { text-align: right; font-weight: bold; background-color: #e0e0e0; }
 
-.withCallPoints { cursor: pointer; }
+.cp { cursor: pointer; }
 
 td.paths {
    padding-left: 1px; padding-bottom: 2px;
