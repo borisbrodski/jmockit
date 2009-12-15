@@ -34,15 +34,16 @@ import mockit.coverage.reporting.parsing.*;
 public final class PathCoverageOutput
 {
    private final PrintWriter output;
+   private final PathCoverageFormatter pathFormatter;
    private final Iterator<MethodCoverageData> nextMethod;
 
    // Helper fields:
    private MethodCoverageData currentMethod;
-   private final StringBuilder lineSegmentIds = new StringBuilder(100);
 
    public PathCoverageOutput(PrintWriter output, Collection<MethodCoverageData> methods)
    {
       this.output = output;
+      pathFormatter = new PathCoverageFormatter(output);
       nextMethod = methods.iterator();
       moveToNextMethod();
    }
@@ -54,7 +55,7 @@ public final class PathCoverageOutput
 
    public void writePathCoverageInfoIfLineStartsANewMethodOrConstructor(LineParser lineParser)
    {
-      if (currentMethod != null && lineParser.getLineNumber() == currentMethod.getFirstLineInBody()) {
+      if (currentMethod != null && lineParser.getNumber() == currentMethod.getFirstLineInBody()) {
          writePathCoverageInformationForMethod();
          moveToNextMethod();
       }
@@ -63,35 +64,13 @@ public final class PathCoverageOutput
    private void writePathCoverageInformationForMethod()
    {
       if (currentMethod.paths.size() > 1) {
-         writePathCoverageHeaderForMethod();
-
-         char pathId1 = 'A';
-         char pathId2 = '\0';
-
-         for (Path path : currentMethod.paths) {
-            writeCoverageInfoForIndividualPath(pathId1, pathId2, path);
-
-            if (pathId2 == '\0' && pathId1 < 'Z') {
-               pathId1++;
-            }
-            else if (pathId2 == '\0') {
-               pathId1 = 'A';
-               pathId2 = 'A';
-            }
-            else if (pathId2 < 'Z') {
-               pathId2++;
-            }
-            else {
-               pathId1++;
-               pathId2 = 'A';
-            }
-         }
-
-         writePathCoverageFooterForMethod();
+         writeHeaderForAllPaths();
+         pathFormatter.writeInformationForEachPath(currentMethod.paths);
+         writeFooterForAllPaths();
       }
    }
 
-   private void writePathCoverageHeaderForMethod()
+   private void writeHeaderForAllPaths()
    {
       int coveredPaths = currentMethod.getCoveredPaths();
       int totalPaths = currentMethod.paths.size();
@@ -111,60 +90,7 @@ public final class PathCoverageOutput
       output.println("</span>");
    }
 
-   private void writeCoverageInfoForIndividualPath(char pathId1, char pathId2, Path path)
-   {
-      int executionCount = path.getExecutionCount();
-      String lineSegmentIdsForPath = getIdsForLineSegmentsBelongingToThePath(path);
-
-      output.write("        <span class='");
-      output.write(executionCount == 0 ? "uncovered" : "covered");
-      output.write("' onclick=\"showPath(this,'");
-      output.write(lineSegmentIdsForPath);
-      output.write("')\">");
-      writePathId(pathId1, pathId2);
-      output.write(": ");
-      output.print(executionCount);
-      output.println("</span>");
-   }
-
-   private void writePathId(char pathId1, char pathId2)
-   {
-      output.write(pathId1);
-
-      if (pathId2 != '\0') {
-         output.write(pathId2);
-      }
-   }
-
-   private String getIdsForLineSegmentsBelongingToThePath(Path path)
-   {
-      lineSegmentIds.setLength(0);
-
-      int previousLine = 0;
-      int lineSegment = 0;
-
-      for (Node node : path.getNodes()) {
-         int line = node.line;
-
-         if (previousLine == 0) {
-            lineSegmentIds.append('l').append(line).append("s0");
-            previousLine = line;
-         }
-         else if (line > previousLine) {
-            lineSegmentIds.append(" l").append(line).append("s0");
-            previousLine = line;
-            lineSegment = 0;
-         }
-         else if (node instanceof Node.Fork) {
-            lineSegment++;
-            lineSegmentIds.append(" l").append(line).append('s').append(lineSegment);
-         }
-      }
-
-      return lineSegmentIds.toString();
-   }
-
-   private void writePathCoverageFooterForMethod()
+   private void writeFooterForAllPaths()
    {
       output.println("      </td>");
       output.println("    </tr>");

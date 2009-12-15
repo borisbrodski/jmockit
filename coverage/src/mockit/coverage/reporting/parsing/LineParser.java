@@ -49,7 +49,7 @@ public final class LineParser
    private int pos;
    private int currChar;
 
-   public int getLineNumber()
+   public int getNumber()
    {
       return lineNum;
    }

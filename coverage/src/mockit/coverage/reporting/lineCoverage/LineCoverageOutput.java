@@ -47,11 +47,11 @@ public final class LineCoverageOutput
 
    public void writeLineOfSourceCodeWithCoverageInfo(LineParser lineParser)
    {
-      int lineNo = lineParser.getLineNumber();
+      int lineNum = lineParser.getNumber();
 
-      writeOpeningOfNewExecutableLine(lineNo);
+      writeOpeningOfNewExecutableLine(lineNum);
 
-      lineData = lineToLineData.get(lineNo);
+      lineData = lineToLineData.get(lineNum);
       writeLineExecutionCountIfAny();
       writeExecutableLine(lineParser);
 
@@ -90,7 +90,7 @@ public final class LineCoverageOutput
       LineElement initialElement = lineParser.getInitialElement();
 
       if (lineData != null && lineData.getExecutionCount() > 0) {
-         int line = lineParser.getLineNumber();
+         int line = lineParser.getNumber();
          String formattedLine = lineCoverageFormatter.format(line, lineData, initialElement);
          output.write(formattedLine);
          return;
