@@ -834,6 +834,7 @@
         <w>ints</w>
         <w>jaas</w>
         <w>javaagent</w>
+        <w>javac</w>
         <w>javassist</w>
         <w>jaxen</w>
         <w>jbossaop</w>

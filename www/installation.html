@@ -100,7 +100,27 @@
    This dependency should come <em>before</em> the <code>junit</code> dependency, if any.
 </p>
 <p>
-   If using JDK 1.6 on Mac OS X, you should also have the following dependency in your project:
+   To run tests with JDK 1.5, you will need to make sure the JVM is started with the
+   <code>-javaagent</code> initialization parameter. This can be done in the Maven Surefire plug-in
+   as follows:
+</p>
+<pre>
+      &lt;plugin>
+         &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
+         &lt;configuration>
+            &lt;argLine>-javaagent:"${settings.localRepository}"/mockit/jmockit/0.994/jmockit-0.994.jar&lt;/argLine>
+         &lt;/configuration>
+      &lt;/plugin>
+</pre>
+<p>
+   Note that the above JVM parameter is not required when using JDK 1.6 (or newer) to run tests.
+   Even if you have to deploy production code in a JDK 1.5 environment, consider using JDK 1.6 in
+   your local development environment; with the proper build/IDE configuration, a JDK 1.6 Java
+   compiler (either "javac" or the Eclipse compiler) can safely be used to compile Java 1.5 code
+   while generating Java 1.5-compliant class files.
+</p>
+<p>
+   If using JDK 1.6 on Mac OS X, you should have the following extra dependency in your project:
 </p>
 <pre>
       &lt;dependency>
