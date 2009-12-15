@@ -63,6 +63,11 @@ final class InvocationBlockModifier extends MethodAdapter
                mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, name, "(I)V");
                return;
             }
+            else if ("$".equals(name)) {
+               mw.visitMethodInsn(
+                  INVOKESTATIC, CLASS_DESC, "setErrorMessage", "(Ljava/lang/CharSequence;)V");
+               return;
+            }
          }
       }
 

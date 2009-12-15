@@ -105,6 +105,15 @@ public final class ActiveInvocations
       }
    }
 
+   public static void setErrorMessage(CharSequence customMessage)
+   {
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+
+      if (instance != null) {
+         instance.getCurrentTestOnlyPhase().setCustomErrorMessage(customMessage);
+      }
+   }
+
    public static void endInvocations()
    {
       TestRun.enterNoMockingZone();

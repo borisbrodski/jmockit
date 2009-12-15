@@ -143,11 +143,26 @@ abstract class Invocations
     * A <em>negative</em> value implies there is no upper limit.
     * Each assignment to this field is equivalent to calling {@link #repeatsAtMost(int)} with the
     * assigned value.
-    *
+    * <p/>
+    * Both {@code minTimes} and {@code maxTimes} can be specified for the same expectation, as long
+    * as {@code minTimes} is assigned first.
     * @see #times
     * @see #minTimes
     */
    protected static int maxTimes;
+
+   /**
+    * A value assigned to this field will be used as a prefix for the error message to be reported
+    * if and when the current expectation is violated.
+    * <p/>
+    * Inside an <em>expectation</em>/<em>verification</em> block, the assignment must follow the
+    * invocation which records/verifies the expectation; if there is no current expectation at the
+    * point the assignment appears, an {@code IllegalStateException} is thrown.
+    * <p/>
+    * Notice there are only two different ways in which an expectation can be violated: either an
+    * <em>unexpected</em> invocation occurs, or a <em>missing</em> invocation is detected.
+    */
+   protected static CharSequence $;
 
    protected Invocations() {}
 

@@ -68,7 +68,7 @@ final class UnorderedVerificationPhase extends VerificationPhase
       AssertionError error = expectation.verifyConstraints();
 
       if (error != null) {
-         throw error;
+         pendingError = error;
       }
    }
 }

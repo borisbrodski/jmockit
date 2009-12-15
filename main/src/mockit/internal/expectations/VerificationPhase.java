@@ -69,14 +69,13 @@ public abstract class VerificationPhase extends TestOnlyPhase
       }
 
       if (currentExpectation == null) {
-         ExpectedInvocation invocation =
+         ExpectedInvocation currentInvocation =
             new ExpectedInvocation(mock, mockAccess, mockClassDesc, mockNameAndDesc, false, args);
+         currentExpectation = new Expectation(null, currentInvocation, true);
 
-         currentExpectation = new Expectation(null, invocation, true);
-
-         pendingError =
-            new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, args)
-               .errorForMissingInvocation();
+         ExpectedInvocation missingInvocation =
+            new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, args);
+         pendingError = missingInvocation.errorForMissingInvocation();
       }
 
       return currentExpectation.expectedInvocation.getDefaultValueForReturnType(this);
@@ -125,6 +124,29 @@ public abstract class VerificationPhase extends TestOnlyPhase
       }
 
       aggregate.constraints.addInvocationCount(found.constraints);
+   }
+
+   @Override
+   public void setMaxInvocationCount(int maxInvocations)
+   {
+      if (maxInvocations == 0 || pendingError == null) {
+         super.setMaxInvocationCount(maxInvocations);
+      }
+   }
+
+   @Override
+   public void setCustomErrorMessage(CharSequence customMessage)
+   {
+      Expectation expectation = getCurrentExpectation();
+
+      if (pendingError == null) {
+         expectation.setCustomErrorMessage(customMessage);
+      }
+      else if (customMessage != null) {
+         StackTraceElement[] previousStackTrace = pendingError.getStackTrace();
+         pendingError = new AssertionError(customMessage + "\n" + pendingError.getMessage());
+         pendingError.setStackTrace(previousStackTrace);
+      }
    }
 
    protected AssertionError endVerification()

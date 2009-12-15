@@ -72,7 +72,7 @@ public abstract class TestOnlyPhase extends Phase
       }
    }
 
-   public final void setMaxInvocationCount(int maxInvocations)
+   public void setMaxInvocationCount(int maxInvocations)
    {
       int currentMinimum = getCurrentExpectation().constraints.minInvocations;
       int minInvocations = Math.min(currentMinimum, maxInvocations);
@@ -81,4 +81,6 @@ public abstract class TestOnlyPhase extends Phase
    }
 
    public abstract void handleInvocationCountConstraint(int minInvocations, int maxInvocations);
+
+   public abstract void setCustomErrorMessage(CharSequence customMessage);
 }

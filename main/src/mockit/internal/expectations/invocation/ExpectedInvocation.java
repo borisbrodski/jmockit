@@ -38,6 +38,7 @@ public final class ExpectedInvocation
    public final Object instance;
    private final boolean matchInstance;
    public final InvocationArguments arguments;
+   public CharSequence customErrorMessage;
    private final ExpectationError invocationCause;
    private Object defaultReturnValue;
 
@@ -156,7 +157,13 @@ public final class ExpectedInvocation
 
    private AssertionError newErrorWithCause(String title, String message)
    {
-      AssertionError error = new AssertionError(message + toString());
+      String errorMessage = message + toString();
+
+      if (customErrorMessage != null) {
+         errorMessage = customErrorMessage + "\n" + errorMessage;
+      }
+
+      AssertionError error = new AssertionError(errorMessage);
 
       if (invocationCause != null) {
          invocationCause.defineCause(title, error);

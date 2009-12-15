@@ -141,4 +141,9 @@ public final class Expectation
          invocationResults.addReturnValues(remainingValues);
       }
    }
+
+   public void setCustomErrorMessage(CharSequence message)
+   {
+      expectedInvocation.customErrorMessage = message;
+   }
 }

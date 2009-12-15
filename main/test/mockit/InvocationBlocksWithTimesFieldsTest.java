@@ -576,7 +576,7 @@ public final class InvocationBlocksWithTimesFieldsTest
       };
    }
 
-   @Test(expected = AssertionError.class)
+   @Test
    public void ordered_minTimesAndMaxTimesOutOfOrder(final Collaborator mock)
    {
       codeUnderTest.doSomething();
@@ -773,7 +773,7 @@ public final class InvocationBlocksWithTimesFieldsTest
       };
    }
 
-   @Test(expected = AssertionError.class)
+   @Test
    public void unordered_minTimesAndMaxTimesOutOfOrder(final Collaborator mock)
    {
       codeUnderTest.doSomething();
