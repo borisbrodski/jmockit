@@ -98,7 +98,7 @@ public final class LineCoverageOutput
       else {
          int line = lineParser.getNumber();
          String formattedLine = lineCoverageFormatter.format(line, lineData, initialElement);
-         output.write("      <td" + formattedLine);
+         output.println("      <td>" + formattedLine + "</td>");
       }
    }
 

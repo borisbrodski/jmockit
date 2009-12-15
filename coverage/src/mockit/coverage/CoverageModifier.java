@@ -210,11 +210,11 @@ final class CoverageModifier extends ClassWriter
          nextLabelAfterConditionalJump = isConditionalJump(opcode);
 
          if (nextLabelAfterConditionalJump) {
-            int branchIndex = lineData.addSegment(mw.currentBlock);
+            int branchIndex = lineData.addBranch(mw.currentBlock);
             pendingBranches.put(branchIndex, false);
 
             if (assertFoundInCurrentLine) {
-               BranchCoverageData branchData = lineData.getSegmentData(branchIndex);
+               BranchCoverageData branchData = lineData.getBranchData(branchIndex);
                branchData.markAsUnreachable();
             }
          }
@@ -242,7 +242,7 @@ final class CoverageModifier extends ClassWriter
          }
 
          for (Integer branchIndex : pendingBranches.keySet()) {
-            BranchCoverageData branchData = lineData.getSegmentData(branchIndex);
+            BranchCoverageData branchData = lineData.getBranchData(branchIndex);
             Boolean firstInsnAfterJump = pendingBranches.get(branchIndex);
 
             if (firstInsnAfterJump) {

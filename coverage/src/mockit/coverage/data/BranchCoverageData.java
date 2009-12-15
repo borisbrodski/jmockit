@@ -24,43 +24,27 @@
  */
 package mockit.coverage.data;
 
-import java.io.*;
-import java.util.*;
-
 import mockit.coverage.*;
 import mockit.external.asm.*;
 
 /**
  * Coverage data gathered for a branch inside a line of source code.
  */
-public final class BranchCoverageData implements Serializable
+public final class BranchCoverageData extends LineSegmentData
 {
    private static final long serialVersionUID = 1003335601845442606L;
 
    // Static data:
    public final transient Label startLabel;
-   private boolean unreachable;
 
    // Runtime data (and static if any execution count is -1, meaning lack of the jump target):
    private int jumpExecutionCount;
-   private int noJumpExecutionCount;
-   private List<CallPoint> callPoints;
 
    BranchCoverageData(Label startLabel)
    {
       this.startLabel = startLabel;
       jumpExecutionCount = -1;
-      noJumpExecutionCount = -1;
-   }
-
-   public boolean isUnreachable()
-   {
-      return unreachable;
-   }
-
-   public void markAsUnreachable()
-   {
-      unreachable = true;
+      executionCount = -1;
    }
 
    public void setHasJumpTarget()
@@ -70,7 +54,7 @@ public final class BranchCoverageData implements Serializable
 
    public void setHasNoJumpTarget()
    {
-      noJumpExecutionCount = 0;
+      executionCount = 0;
    }
 
    void registerJumpExecution(CallPoint callPoint)
@@ -80,21 +64,10 @@ public final class BranchCoverageData implements Serializable
       addCallPointIfAny(callPoint);
    }
 
-   private void addCallPointIfAny(CallPoint callPoint)
-   {
-      if (callPoint != null) {
-         if (callPoints == null) {
-            callPoints = new ArrayList<CallPoint>();
-         }
-
-         callPoints.add(callPoint);
-      }
-   }
-
    void registerNoJumpExecution(CallPoint callPoint)
    {
-      assert noJumpExecutionCount >= 0 : "Illegal registerNoJumpExecution";
-      noJumpExecutionCount++;
+      assert executionCount >= 0 : "Illegal registerNoJumpExecution";
+      executionCount++;
       addCallPointIfAny(callPoint);
    }
 
@@ -105,7 +78,7 @@ public final class BranchCoverageData implements Serializable
 
    public boolean hasNoJumpTarget()
    {
-      return noJumpExecutionCount >= 0;
+      return executionCount >= 0;
    }
 
    public boolean isNonEmpty()
@@ -120,37 +93,12 @@ public final class BranchCoverageData implements Serializable
 
    public int getNoJumpExecutionCount()
    {
-      return noJumpExecutionCount;
-   }
-
-   public List<CallPoint> getCallPoints()
-   {
-      return callPoints;
-   }
-
-   public boolean isCovered()
-   {
-      return unreachable || jumpExecutionCount != 0 && noJumpExecutionCount != 0;
+      return executionCount;
    }
 
    void addCountsFromPreviousMeasurement(BranchCoverageData previousData)
    {
+      addExecutionCountAndCallPointsFromPreviousTestRun(previousData);
       jumpExecutionCount += previousData.jumpExecutionCount;
-      noJumpExecutionCount += previousData.noJumpExecutionCount;
-      callPoints = addPreviousCallPoints(callPoints, previousData.callPoints);
-   }
-
-   private List<CallPoint> addPreviousCallPoints(List<CallPoint> current, List<CallPoint> previous)
-   {
-      if (previous != null) {
-         if (current != null) {
-            current.addAll(0, previous);
-         }
-         else {
-            return previous;
-         }
-      }
-
-      return current;
    }
 }

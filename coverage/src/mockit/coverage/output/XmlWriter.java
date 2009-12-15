@@ -131,7 +131,7 @@ public abstract class XmlWriter
 
          pendingEndTag = writeChildElementsForLine(lineData);
 
-         if (lineData.containsSegments()) {
+         if (lineData.containsBranches()) {
             pendingEndTag = writeChildElementsForSegments(lineData) || pendingEndTag;
          }
 
@@ -151,8 +151,8 @@ public abstract class XmlWriter
    {
       boolean nonEmptySegmentFound = false;
 
-      for (BranchCoverageData segmentData : lineData.getSegments()) {
-         if (segmentData.isNonEmpty()) {
+      for (BranchCoverageData branchData : lineData.getBranches()) {
+         if (branchData.isNonEmpty()) {
             if (!nonEmptySegmentFound) {
                if (!pendingEndTag) {
                   writeLine("'>");
@@ -161,7 +161,7 @@ public abstract class XmlWriter
                nonEmptySegmentFound = true;
             }
 
-            writeChildElementForSegment(segmentData);
+            writeChildElementForSegment(branchData);
             output.newLine();
          }
          else {

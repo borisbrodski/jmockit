@@ -46,9 +46,9 @@ final class LineCoverageFormatter
       this.lineData = lineData;
 
       formattedLine.setLength(0);
-      formattedLine.append("><pre class='prettyprint");
+      formattedLine.append("<pre class='prettyprint");
 
-      if (lineData.containsSegments()) {
+      if (lineData.containsBranches()) {
          formatLineWithMultipleSegments(line, initialElement);
       }
       else {
@@ -64,8 +64,8 @@ final class LineCoverageFormatter
    {
       formattedLine.append(" withBranches'>");
 
-      new LineSegmentsFormatter(withCallPoints, line, formattedLine).formatBranches(
-         lineData.getSegments(), initialElement);
+      new LineSegmentsFormatter(withCallPoints, line, formattedLine).formatSegments(
+         lineData, initialElement);
    }
 
    private void formatLineWithSingleSegment(int line, LineElement initialElement)
@@ -88,7 +88,5 @@ final class LineCoverageFormatter
          new ListOfCallPoints().insertListOfCallPoints(formattedLine, lineData.getCallPoints());
          formattedLine.append("      ");
       }
-
-      formattedLine.append("</td>").append(EOL);
    }
 }

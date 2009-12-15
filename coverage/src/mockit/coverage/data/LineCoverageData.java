@@ -24,7 +24,6 @@
  */
 package mockit.coverage.data;
 
-import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
@@ -33,51 +32,33 @@ import mockit.external.asm.*;
 /**
  * Coverage data gathered for a single executable line of code in a source file.
  */
-public final class LineCoverageData implements Serializable
+public final class LineCoverageData extends LineSegmentData
 {
    private static final long serialVersionUID = -6233980722802474992L;
 
    // Static data:
-   private boolean unreachable;
-   private List<BranchCoverageData> segments;
+   private List<BranchCoverageData> branches;
 
-   // Runtime data:
-   private int executionCount;
-   private List<CallPoint> callPoints;
-
-   public int addSegment(Label targetLabel)
+   public int addBranch(Label targetLabel)
    {
-      if (segments == null) {
-         segments = new ArrayList<BranchCoverageData>(4);
+      if (branches == null) {
+         branches = new ArrayList<BranchCoverageData>(4);
       }
 
       BranchCoverageData data = new BranchCoverageData(targetLabel);
-      segments.add(data);
+      branches.add(data);
 
-      return segments.size() - 1;
+      return branches.size() - 1;
    }
 
-   public BranchCoverageData getSegmentData(int segmentIndex)
+   public BranchCoverageData getBranchData(int index)
    {
-      return segments.get(segmentIndex);
+      return branches.get(index);
    }
 
-   void registerExecution(CallPoint callPoint)
+   void registerExecution(int branchIndex, boolean jumped, CallPoint callPoint)
    {
-      if (callPoint != null) {
-         if (callPoints == null) {
-            callPoints = new ArrayList<CallPoint>();
-         }
-
-         callPoints.add(callPoint);
-      }
-
-      executionCount++;
-   }
-
-   void registerExecution(int segmentIndex, boolean jumped, CallPoint callPoint)
-   {
-      BranchCoverageData data = segments.get(segmentIndex);
+      BranchCoverageData data = branches.get(branchIndex);
 
       if (jumped) {
          data.registerJumpExecution(callPoint);
@@ -87,45 +68,19 @@ public final class LineCoverageData implements Serializable
       }
    }
 
-   public boolean containsSegments()
+   public boolean containsBranches()
    {
-      return segments != null;
+      return branches != null;
    }
 
-   public List<BranchCoverageData> getSegments()
+   public List<BranchCoverageData> getBranches()
    {
-      return segments;
-   }
-
-   public boolean containsCallPoints()
-   {
-      return callPoints != null;
-   }
-
-   public List<CallPoint> getCallPoints()
-   {
-      return callPoints == null ?
-         Collections.<CallPoint>emptyList() : Collections.unmodifiableList(callPoints);
-   }
-
-   public int getExecutionCount()
-   {
-      return executionCount;
-   }
-
-   public boolean isUnreachable()
-   {
-      return unreachable;
-   }
-
-   public void markAsUnreachable()
-   {
-      unreachable = true;
+      return branches;
    }
 
    public int getNumberOfSegments()
    {
-      return segments == null ? 1 : segments.size();
+      return branches == null ? 1 : 1 + branches.size();
    }
 
    public int getNumberOfCoveredSegments()
@@ -138,19 +93,19 @@ public final class LineCoverageData implements Serializable
          return 0;
       }
 
-      if (segments == null) {
+      if (branches == null) {
          return 1;
       }
 
-      return segmentsCovered();
+      return getSegmentsCovered();
    }
 
-   private int segmentsCovered()
+   private int getSegmentsCovered()
    {
-      int segmentsCovered = 0;
+      int segmentsCovered = 1;
 
-      for (BranchCoverageData segment : segments) {
-         if (segment.isCovered()) {
+      for (BranchCoverageData branch : branches) {
+         if (branch.isCovered()) {
             segmentsCovered++;
          }
       }
@@ -158,30 +113,14 @@ public final class LineCoverageData implements Serializable
       return segmentsCovered;
    }
 
-   public boolean isFullyCovered()
+   void addCountsFromPreviousMeasurement(LineCoverageData previousData)
    {
-      return
-         unreachable ||
-         executionCount != 0 && (segments == null || segmentsCovered() == segments.size());
-   }
+      addExecutionCountAndCallPointsFromPreviousTestRun(previousData);
 
-   void addCountsFromPreviousMeasurement(LineCoverageData previousLineData)
-   {
-      executionCount += previousLineData.executionCount;
-
-      if (previousLineData.containsCallPoints()) {
-         if (containsCallPoints()) {
-            callPoints.addAll(0, previousLineData.callPoints);
-         }
-         else {
-            callPoints = previousLineData.callPoints;
-         }
-      }
-
-      if (containsSegments()) {
-         for (int i = 0; i < segments.size(); i++) {
-            BranchCoverageData segmentData = segments.get(i);
-            BranchCoverageData previousSegmentData = previousLineData.segments.get(i);
+      if (containsBranches()) {
+         for (int i = 0; i < branches.size(); i++) {
+            BranchCoverageData segmentData = branches.get(i);
+            BranchCoverageData previousSegmentData = previousData.branches.get(i);
 
             segmentData.addCountsFromPreviousMeasurement(previousSegmentData);
          }

@@ -33,7 +33,8 @@ td.coverage {
 td.unknown { background-color: #daa520; text-align: center; }
 td.nocode { background-color: #999999; text-align: center; }
 
-.withBranches { background-color: #f8ebb8; }
+pre.withBranches { background-color: #f8ebb8; }
+pre.withBranches span { margin-right: 1px; }
 
 td.total { text-align: right; font-weight: bold; background-color: #e0e0e0; }
 

@@ -47,11 +47,6 @@ public final class LineElement implements Iterable<LineElement>
    public boolean isCode() { return type == ElementType.CODE; }
    public boolean isComment() { return type == ElementType.COMMENT; }
 
-   public boolean isBranchingPoint()
-   {
-      return "else".equals(text) || CONDITIONAL_OPERATORS.contains(text);
-   }
-
    public CharSequence getText()
    {
       return text;
@@ -65,6 +60,71 @@ public final class LineElement implements Iterable<LineElement>
    void setNext(LineElement next)
    {
       this.next = next;
+   }
+
+   public LineElement appendUntilNextCodeElement(StringBuilder line)
+   {
+      LineElement element = this;
+
+      while (element != null && !element.isCode()) {
+         line.append(element.text);
+         element = element.next;
+      }
+
+      return element;
+   }
+
+   public LineElement findNextBranchingPoint()
+   {
+      boolean underConditionalStatement = false;
+      int parenthesesBalance = -1;
+      LineElement element = this;
+
+      while (element != null) {
+         if (!underConditionalStatement) {
+            underConditionalStatement = isConditionalStatement();
+            parenthesesBalance = 0;
+         }
+
+         if (element.isBranchingElement()) {
+            break;
+         }
+
+         if (underConditionalStatement) {
+            int balance = element.getParenthesisBalance();
+            parenthesesBalance += balance;
+
+            if (balance != 0 && parenthesesBalance == 0) {
+               return element.next;
+            }
+         }
+
+         element = element.next;
+      }
+
+      return element;
+   }
+
+   private boolean isConditionalStatement()
+   {
+      return CONDITIONAL_INSTRUCTIONS.contains(text);
+   }
+
+   public boolean isBranchingElement()
+   {
+      return "else".equals(text) || CONDITIONAL_OPERATORS.contains(text);
+   }
+
+   private int getParenthesisBalance()
+   {
+      if (text.indexOf('(') >= 0) {
+         return 1;
+      }
+      else if (text.indexOf(')') >= 0) {
+         return -1;
+      }
+
+      return 0;
    }
 
    public Iterator<LineElement> iterator()

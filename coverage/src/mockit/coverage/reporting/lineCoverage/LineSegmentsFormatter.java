@@ -33,52 +33,53 @@ import mockit.coverage.reporting.parsing.LineElement;
 final class LineSegmentsFormatter
 {
    private final boolean withCallPoints;
-   private final int line;
+   private final int lineNum;
    private final StringBuilder formattedLine;
-   private BranchCoverageData segmentData;
+
+   // Helper fields:
    private LineElement element;
    private int segmentIndex;
+   private LineSegmentData segmentData;
 
-   LineSegmentsFormatter(boolean withCallPoints, int line, StringBuilder formattedLine)
+   LineSegmentsFormatter(boolean withCallPoints, int lineNum, StringBuilder formattedLine)
    {
       this.withCallPoints = withCallPoints;
-      this.line = line;
+      this.lineNum = lineNum;
       this.formattedLine = formattedLine;
    }
 
-   void formatBranches(List<BranchCoverageData> segmentedData, LineElement initialElement)
+   void formatSegments(LineCoverageData lineData, LineElement initialElement)
    {
-      element = initialElement;
-      int numSegments = segmentedData.size();
+      List<BranchCoverageData> branchData = lineData.getBranches();
+      int numSegments = 1 + branchData.size();
 
-      for (segmentIndex = 0; segmentIndex < numSegments; segmentIndex++) {
-         segmentData = segmentedData.get(segmentIndex);
+      element = initialElement.appendUntilNextCodeElement(formattedLine);
 
-         while (!element.isCode()) {
-            formattedLine.append(element.getText());
-            element = element.getNext();
+      segmentIndex = 0;
+      segmentData = lineData;
+      appendUntilFirstElementAfterNextBranchingPoint();
 
-            if (element == null) {
-               return;
-            }
-         }
+      for (segmentIndex = 1; element != null && segmentIndex < numSegments; segmentIndex++) {
+         segmentData = branchData.get(segmentIndex - 1);
 
-         LineElement firstElement = element;
-
-         while (element != null && !element.isBranchingPoint()) {
-            element = element.getNext();
-         }
-
-         appendToFormattedLine(firstElement);
+         element = element.appendUntilNextCodeElement(formattedLine);
 
          if (element != null) {
-            formattedLine.append(element.getText());
-            element = element.getNext();
+            appendUntilFirstElementAfterNextBranchingPoint();
          }
+      }
+   }
 
-         if (element == null) {
-            return;
-         }
+   private void appendUntilFirstElementAfterNextBranchingPoint()
+   {
+      LineElement firstElement = element;
+      element = element.findNextBranchingPoint();
+
+      appendToFormattedLine(firstElement);
+
+      if (element != null && element.isBranchingElement()) {
+         formattedLine.append(element.getText());
+         element = element.getNext();
       }
    }
 
@@ -92,24 +93,18 @@ final class LineSegmentsFormatter
 
       LineElement elementToPrint = firstElement;
 
-      while (true) {
-         LineElement nextElement = elementToPrint.getNext();
-
-         if (nextElement == element) {
-            break;
-         }
-
+      do {
          formattedLine.append(elementToPrint.getText());
-         elementToPrint = nextElement;
+         elementToPrint = elementToPrint.getNext();
       }
+      while (elementToPrint != element);
 
       appendEndTag();
-      formattedLine.append(elementToPrint.getText());
    }
 
    private void appendStartTag()
    {
-      formattedLine.append("<span id='l").append(line);
+      formattedLine.append("<span id='l").append(lineNum);
       formattedLine.append('s').append(segmentIndex).append("' ");
 
       appendTooltipWithExecutionCounts();
@@ -130,27 +125,40 @@ final class LineSegmentsFormatter
 
    private void appendTooltipWithExecutionCounts()
    {
-      int noJumpCount = segmentData.getNoJumpExecutionCount();
-      int jumpCount = segmentData.getJumpExecutionCount();
+      formattedLine.append("title='Executions: ");
 
-      if (noJumpCount >= 0 && jumpCount >= 0) {
-         formattedLine.append("title='Executions: ").append(noJumpCount + jumpCount);
-         formattedLine.append("\r\nJumps: ").append(jumpCount).append("' ");
+      int noJumpCount = segmentData.getExecutionCount();
+
+      if (segmentData instanceof BranchCoverageData) {
+         int jumpCount = ((BranchCoverageData) segmentData).getJumpExecutionCount();
+
+         if (noJumpCount >= 0 && jumpCount >= 0) {
+            formattedLine.append(noJumpCount + jumpCount);
+            formattedLine.append("\r\nJumps: ").append(jumpCount);
+         }
+         else if (noJumpCount > 0) {
+            formattedLine.append(noJumpCount);
+            formattedLine.append("\r\nNo jumps");
+         }
+         else if (jumpCount > 0) {
+            formattedLine.append("title='Jumps: ").append(jumpCount);
+         }
+         else {
+            formattedLine.append('0');
+         }
       }
-      else if (noJumpCount > 0) {
-         formattedLine.append("title='Executions: ").append(noJumpCount);
-         formattedLine.append("\r\nNo jumps' ");
+      else {
+         formattedLine.append(noJumpCount);
       }
-      else if (jumpCount > 0) {
-         formattedLine.append("title='Jumps: ").append(jumpCount).append("' ");
-      }
+
+      formattedLine.append("' ");
    }
 
    private void appendEndTag()
    {
       formattedLine.append("</span>");
 
-      if (withCallPoints && segmentData.isNonEmpty()) {
+      if (withCallPoints && !segmentData.getCallPoints().isEmpty()) {
          new ListOfCallPoints().insertListOfCallPoints(formattedLine, segmentData.getCallPoints());
       }
    }
