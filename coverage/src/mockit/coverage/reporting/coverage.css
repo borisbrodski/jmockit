@@ -18,7 +18,6 @@ pre.comment { margin: 0; color: gray; }
    border-right: #aaaa00 solid 1px;
 }
 
-.nonexec { background-color: white; }
 .covered { background-color: #90ee90; }
 .uncovered { background-color: #f08080; }
 .partiallyCovered { background-color: #daa520; }

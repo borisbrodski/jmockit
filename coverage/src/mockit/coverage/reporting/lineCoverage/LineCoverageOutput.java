@@ -85,20 +85,25 @@ public final class LineCoverageOutput
          return;
       }
 
-      output.write("      <td");
-
       LineElement initialElement = lineParser.getInitialElement();
 
-      if (lineData != null && lineData.getExecutionCount() > 0) {
+      if (lineData == null) {
+         output.write("      <td>");
+         writeLineContent(initialElement);
+      }
+      else if (lineData.getExecutionCount() == 0) {
+         output.write("      <td class='uncovered'>");
+         writeLineContent(initialElement);
+      }
+      else {
          int line = lineParser.getNumber();
          String formattedLine = lineCoverageFormatter.format(line, lineData, initialElement);
-         output.write(formattedLine);
-         return;
+         output.write("      <td" + formattedLine);
       }
+   }
 
-      output.write(" class='");
-      output.write(lineData == null ? "nonexec'>" : "uncovered'>");
-
+   private void writeLineContent(LineElement initialElement)
+   {
       if (lineData == null && initialElement.isComment()) {
          output.write("<pre class='comment'>");
       }
