@@ -128,6 +128,15 @@ Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Ver
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/FullVerifications.html#$">$</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A value assigned to this field will be used as a prefix for the error message to be reported
+ if and when the current expectation is violated.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/FullVerifications.html#any">any</A></B></CODE>
 
@@ -507,7 +516,7 @@ Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Ver
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/FullVerifications.html#with(org.hamcrest.Matcher)">with</A></B>(org.hamcrest.Matcher&lt;T&gt;&nbsp;argumentMatcher)</CODE>
+<TD><CODE><B><A HREF="../mockit/FullVerifications.html#with(java.lang.Object)">with</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a custom argument matcher for a parameter in the current invocation.</TD>
@@ -522,8 +531,8 @@ Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Ver
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/FullVerifications.html#with(T, org.hamcrest.Matcher)">with</A></B>(T&nbsp;argValue,
-     org.hamcrest.Matcher&lt;T&gt;&nbsp;argumentMatcher)</CODE>
+<TD><CODE><B><A HREF="../mockit/FullVerifications.html#with(T, java.lang.Object)">with</A></B>(T&nbsp;argValue,
+     <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a custom argument matcher for a parameter in the current invocation.</TD>
@@ -787,6 +796,26 @@ T</CODE></FONT></TD>
 </TR>
 </TABLE>
 
+<A NAME="$"><!-- --></A><H3>
+$</H3>
+<PRE>
+protected static <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A> <B>$</B></PRE>
+<DL>
+<DD>A value assigned to this field will be used as a prefix for the error message to be reported
+ if and when the current expectation is violated.
+ <p/>
+ Inside an <em>expectation</em>/<em>verification</em> block, the assignment must follow the
+ invocation which records/verifies the expectation; if there is no current expectation at the
+ point the assignment appears, an <code>IllegalStateException</code> is thrown.
+ <p/>
+ Notice there are only two different ways in which an expectation can be violated: either an
+ <em>unexpected</em> invocation occurs, or a <em>missing</em> invocation is detected.
+<P>
+<DL>
+</DL>
+</DL>
+<HR>
+
 <A NAME="any"><!-- --></A><H3>
 any</H3>
 <PRE>
@@ -925,6 +954,9 @@ protected static int <B>maxTimes</B></PRE>
  A <em>negative</em> value implies there is no upper limit.
  Each assignment to this field is equivalent to calling <A HREF="../mockit/FullVerifications.html#repeatsAtMost(int)"><CODE>repeatsAtMost(int)</CODE></A> with the
  assigned value.
+ <p/>
+ Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long
+ as <code>minTimes</code> is assigned first.
 <P>
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/FullVerifications.html#times"><CODE>times</CODE></A>, 
@@ -1345,39 +1377,39 @@ protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/
 </DL>
 <HR>
 
-<A NAME="with(org.hamcrest.Matcher)"><!-- --></A><H3>
+<A NAME="with(java.lang.Object)"><!-- --></A><H3>
 with</H3>
 <PRE>
-protected final &lt;T&gt; T <B>with</B>(org.hamcrest.Matcher&lt;T&gt;&nbsp;argumentMatcher)</PRE>
+protected final &lt;T&gt; T <B>with</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</PRE>
 <DL>
 <DD>Adds a custom argument matcher for a parameter in the current invocation.
- This works like <A HREF="../mockit/FullVerifications.html#with(T, org.hamcrest.Matcher)"><CODE>with(Object, org.hamcrest.Matcher)</CODE></A>, but attempting to extract the
- argument value from the supplied argument matcher.
+ This works like <A HREF="../mockit/FullVerifications.html#with(T, java.lang.Object)"><CODE>with(Object, Object)</CODE></A>, but attempting to extract the argument value
+ from the supplied argument matcher.
 <P>
 <DD><DL>
-
+<DT><B>Parameters:</B><DD><CODE>argumentMatcher</CODE> - an instance of a class implementing the <code>org.hamcrest.Matcher</code>
+ interface
 <DT><B>Returns:</B><DD>the value recorded inside the given argument matcher, or <code>null</code> if no such value
  could be determined</DL>
 </DD>
 </DL>
 <HR>
 
-<A NAME="with(java.lang.Object,org.hamcrest.Matcher)"><!-- --></A><A NAME="with(T, org.hamcrest.Matcher)"><!-- --></A><H3>
+<A NAME="with(java.lang.Object,java.lang.Object)"><!-- --></A><A NAME="with(T, java.lang.Object)"><!-- --></A><H3>
 with</H3>
 <PRE>
 protected final &lt;T&gt; T <B>with</B>(T&nbsp;argValue,
-                           org.hamcrest.Matcher&lt;T&gt;&nbsp;argumentMatcher)</PRE>
+                           <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</PRE>
 <DL>
 <DD>Adds a custom argument matcher for a parameter in the current invocation.
- The given matcher can be any existing Hamcrest matcher or a user provided one (note that
- jmockit.jar already integrates all the matchers from hamcrest-core-1.1.jar and from
- hamcrest-library-1.1.jar).
+ The given matcher can be any existing Hamcrest matcher or a user provided one.
  <p/>
  For additional details, refer to <A HREF="../mockit/FullVerifications.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>.
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>argValue</CODE> - an arbitrary value of the proper type, necessary to provide a valid argument
- to the invocation parameter
+ to the invocation parameter<DD><CODE>argumentMatcher</CODE> - an instance of a class implementing the <code>org.hamcrest.Matcher</code>
+ interface
 <DT><B>Returns:</B><DD>the given <code>argValue</code></DL>
 </DD>
 </DL>
