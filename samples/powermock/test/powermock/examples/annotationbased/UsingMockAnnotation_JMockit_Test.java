@@ -31,7 +31,10 @@ import mockit.*;
 import static org.junit.Assert.*;
 import powermock.examples.annotationbased.dao.*;
 
-public class UsingMockAnnotation_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/annotationbased/UsingMockAnnotationTest.java">PowerMock version</a>
+ */
+public final class UsingMockAnnotation_JMockit_Test
 {
    @Mocked
    private SomeDao someDaoMock;
@@ -52,7 +55,7 @@ public class UsingMockAnnotation_JMockit_Test
       new Expectations()
       {
          {
-            someDaoMock.getSomeData(); returns(data);
+            someDaoMock.getSomeData(); result = data;
          }
       };
 

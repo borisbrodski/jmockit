@@ -34,8 +34,11 @@ import mockit.integration.logging.*;
 import org.apache.commons.logging.*;
 import static org.junit.Assert.*;
 
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/jcl/src/test/java/org/powermock/examples/JclUserTest.java">PowerMock version</a>
+ */
 @UsingMocksAndStubs(CommonsLoggingMocks.class)
-public class JclUser_JMockit_Test
+public final class JclUser_JMockit_Test
 {
    @Test
    public void assertJclMockingWorks()

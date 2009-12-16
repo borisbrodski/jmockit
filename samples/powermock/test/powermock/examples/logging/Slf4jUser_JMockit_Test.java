@@ -34,8 +34,11 @@ import mockit.integration.logging.*;
 import static org.junit.Assert.*;
 import org.slf4j.*;
 
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/slf4j/src/test/java/demo/org/powermock/examples/Slf4jUserTest.java">PowerMock version</a>
+ */
 @UsingMocksAndStubs(Slf4jMocks.class)
-public class Slf4jUser_JMockit_Test
+public final class Slf4jUser_JMockit_Test
 {
    @Test
    public void assertSlf4jMockingWorks() throws Exception

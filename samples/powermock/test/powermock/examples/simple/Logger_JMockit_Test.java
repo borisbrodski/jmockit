@@ -30,9 +30,10 @@ import org.junit.*;
 
 import mockit.*;
 
-import org.powermock.reflect.*;
-
-public class Logger_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/simple/src/test/java/demo/org/powermock/examples/simple/LoggerTest.java">PowerMock version</a>
+ */
+public final class Logger_JMockit_Test
 {
    @Test(expected = IllegalStateException.class)
    public void testException() throws Exception
@@ -42,7 +43,7 @@ public class Logger_JMockit_Test
          final FileWriter fileWriter;
 
          {
-            fileWriter = new FileWriter("target/logger.log"); throwsException(new IOException());
+            fileWriter = new FileWriter("target/logger.log"); result = new IOException();
          }
       };
 
@@ -74,7 +75,7 @@ public class Logger_JMockit_Test
          PrintWriter printWriter;
 
          {
-            Whitebox.setInternalState(logger, printWriter);
+            setField(logger, printWriter);
 
             printWriter.println("qwe");
          }

@@ -29,7 +29,10 @@ import org.junit.*;
 import static mockit.Mockit.*;
 import static org.junit.Assert.*;
 
-public class ExampleWithEvilChildAndEvilGrandChild_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/suppress/constructorhierarchy/ExampleWithEvilParentAndEvilGrandParentTest.java">PowerMock version</a>
+ */
+public final class ExampleWithEvilChildAndEvilGrandChild_JMockit_Test
 {
    @Test
    public void testSuppressConstructorHierarchy()

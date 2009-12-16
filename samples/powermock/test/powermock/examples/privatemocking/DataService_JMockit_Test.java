@@ -30,7 +30,10 @@ import mockit.*;
 
 import static org.junit.Assert.*;
 
-public class DataService_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/privatemocking/DataServiceTest.java">PowerMock version</a>
+ */
+public final class DataService_JMockit_Test
 {
    @Test
    public void testReplaceData()
@@ -45,7 +48,7 @@ public class DataService_JMockit_Test
       {
          {
             invoke(tested, "modifyData", expectedDataId, expectedBinaryData);
-            returns(true);
+            result = true;
          }
       };
 
@@ -64,7 +67,7 @@ public class DataService_JMockit_Test
       {
          {
             invoke(tested, "modifyData", expectedDataId, byte[].class);
-            returns(true);
+            result = true;
          }
       };
 

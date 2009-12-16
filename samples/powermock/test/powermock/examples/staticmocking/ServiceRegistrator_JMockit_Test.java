@@ -30,7 +30,10 @@ import mockit.*;
 
 import static org.junit.Assert.*;
 
-public class ServiceRegistrator_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/staticmocking/ServiceRegistratorTest.java">PowerMock version</a>
+ */
+public final class ServiceRegistrator_JMockit_Test
 {
    @Test
    public void testRegisterService()
@@ -41,7 +44,7 @@ public class ServiceRegistrator_JMockit_Test
       new Expectations(IdGenerator.class) // could also have declared a mock field or parameter
       {
          {
-            IdGenerator.generateNewId(); returns(expectedId);
+            IdGenerator.generateNewId(); result = expectedId;
          }
       };
 

@@ -35,11 +35,14 @@ import powermock.examples.dependencymanagement.*;
 import powermock.examples.domain.*;
 import powermock.examples.service.*;
 
-public class MyServiceUser_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/AbstractFactory/src/test/java/powermock/examples/MyServiceUserTest.java">PowerMock version</a>
+ */
+public final class MyServiceUser_JMockit_Test
 {
    private MyServiceUser tested;
 
-   @Mocked private DependencyManager dependencyManagerMock;
+   @Cascading private DependencyManager dependencyManagerMock;
    @Mocked private MyService myServiceMock;
 
    @Before
@@ -48,28 +51,17 @@ public class MyServiceUser_JMockit_Test
       tested = new MyServiceUser();
    }
 
-   @After // this method does nothing useful...
-   public void tearDown()
-   {
-      tested = null;
-      dependencyManagerMock = null;
-   }
-
    @Test
-   public void testGetNumberOfPersons() throws Exception
+   public void testGetNumberOfPersons()
    {
+      final Set<Person> persons = new HashSet<Person>();
+      persons.add(new Person("Rogério", "Liesenfeld", "MockStreet"));
+      persons.add(new Person("John", "Doe", "MockStreet2"));
+
       new Expectations()
       {
          {
-            DependencyManager.getInstance(); returns(dependencyManagerMock);
-
-            dependencyManagerMock.getMyService(); returns(myServiceMock);
-
-            Set<Person> persons = new HashSet<Person>();
-            persons.add(new Person("Rogério", "Liesenfeld", "MockStreet"));
-            persons.add(new Person("John", "Doe", "MockStreet2"));
-
-            myServiceMock.getAllPersons(); returns(persons);
+            DependencyManager.getInstance().getMyService().getAllPersons(); result = persons;
          }
       };
 

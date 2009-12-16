@@ -30,7 +30,10 @@ import mockit.*;
 
 import static org.junit.Assert.*;
 
-public class StateFormatter_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/finalmocking/StateFormatterTest.java">PowerMock version</a>
+ */
+public final class StateFormatter_JMockit_Test
 {
    @Test
    public void testGetFormattedState_actualStateExists(final StateHolder stateHolderMock)
@@ -41,7 +44,7 @@ public class StateFormatter_JMockit_Test
       new Expectations()
       {
          {
-            stateHolderMock.getState(); returns(expectedState);
+            stateHolderMock.getState(); result = expectedState;
          }
       };
 
@@ -58,7 +61,7 @@ public class StateFormatter_JMockit_Test
       new Expectations()
       {
          {
-            stateHolderMock.getState(); returns(null);
+            stateHolderMock.getState(); result = null;
          }
       };
 

@@ -24,25 +24,27 @@
  */
 package powermock.examples.tutorial.staticmocking.impl;
 
-import powermock.examples.tutorial.staticmocking.osgi.*;
-
 import java.util.*;
 
-import mockit.*;
-import static mockit.Deencapsulation.getField;
-import mockit.integration.junit4.*;
-
 import org.junit.*;
+
+import mockit.*;
+
+import static mockit.Deencapsulation.*;
+import static org.junit.Assert.*;
+import powermock.examples.tutorial.staticmocking.osgi.*;
 
 /**
  * Unit tests using the JMockit API for the
  * {@link powermock.examples.tutorial.staticmocking.impl.ServiceRegistrator} class.
+ * <p/>
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/tutorial/src/solution/java/demo/org/powermock/examples/tutorial/staticmocking/impl/ServiceRegistratorTest.java">PowerMock version</a>
  */
-public final class ServiceRegistrator_JMockit_Test extends JMockitTest
+public final class ServiceRegistrator_JMockit_Test
 {
    private ServiceRegistrator tested;
-   @Mocked private ServiceRegistration serviceRegistrationMock;
-   @Mocked private final IdGenerator unused = null;
+   @Mocked ServiceRegistration serviceRegistrationMock;
+   @Mocked final IdGenerator unused = null;
 
    @Before
    public void setUp()
@@ -65,9 +67,9 @@ public final class ServiceRegistrator_JMockit_Test extends JMockitTest
             setField(tested, bundleContextMock);
 
             bundleContextMock.registerService(name, serviceImpl, null);
-            returns(serviceRegistrationMock);
+            result = serviceRegistrationMock;
 
-            IdGenerator.generateNewId(); returns(expectedId);
+            IdGenerator.generateNewId(); result = expectedId;
          }
       };
 

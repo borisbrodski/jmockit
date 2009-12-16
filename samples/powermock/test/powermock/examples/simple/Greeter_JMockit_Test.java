@@ -31,19 +31,22 @@ import mockit.*;
 import static mockit.Deencapsulation.*;
 import static org.junit.Assert.*;
 
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/simple/src/test/java/demo/org/powermock/examples/simple/GreeterTest.java">PowerMock version</a>
+ */
 @UsingMocksAndStubs(SimpleConfig.class)
-public class Greeter_JMockit_Test
+public final class Greeter_JMockit_Test
 {
    @Test
-   public void testGetMessage() throws Exception
+   public void testGetMessage()
    {
       new Expectations()
       {
          final SimpleConfig unused = null;
 
          {
-            SimpleConfig.getGreeting(); returns("Hi");
-            SimpleConfig.getTarget(); returns("All");
+            SimpleConfig.getGreeting(); result = "Hi";
+            SimpleConfig.getTarget(); result = "All";
          }
       };
 
@@ -52,7 +55,7 @@ public class Greeter_JMockit_Test
    }
 
    @Test
-   public void testRun() throws Exception
+   public void testRun()
    {
       new Expectations()
       {
@@ -60,7 +63,7 @@ public class Greeter_JMockit_Test
 
          {
             new Logger();
-            logger.log("Hello"); repeats(10);
+            logger.log("Hello"); times = 10;
          }
       };
 
@@ -68,14 +71,14 @@ public class Greeter_JMockit_Test
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testRunWhenLoggerThrowsUnexpectedRuntimeException() throws Exception
+   public void testRunWhenLoggerThrowsUnexpectedRuntimeException()
    {
       new Expectations()
       {
          Logger mock;
 
          {
-            new Logger(); throwsException(new IllegalArgumentException("Unexpected exception"));
+            new Logger(); result = new IllegalArgumentException("Unexpected exception");
          }
       };
 

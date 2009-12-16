@@ -32,10 +32,14 @@ import mockit.*;
 
 import static org.junit.Assert.*;
 
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/newmocking/PersistenceManagerTest.java">PowerMock version</a>
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/newmocking/PersistenceManagerWithReplayAllAndVerifyAllTest.java">PowerMock version</a>
+ */
 public final class PersistenceManager_JMockit_Test
 {
    @Test
-   public void testCreateDirectoryStructure_ok()
+   public void testCreateDirectoryStructure_usingDynamicPartialMocking()
    {
       final String path = "directoryPath";
       PersistenceManager tested = new PersistenceManager();
@@ -44,8 +48,8 @@ public final class PersistenceManager_JMockit_Test
       {
          {
             File fileMock = new File(path);
-            fileMock.exists(); returns(false);
-            fileMock.mkdirs(); returns(true);
+            fileMock.exists(); result = false;
+            fileMock.mkdirs(); result = true;
          }
       };
 
@@ -53,7 +57,7 @@ public final class PersistenceManager_JMockit_Test
    }
 
    @Test
-   public void testCreateDirectoryStructure_usingCreateMockAndExpectNew()
+   public void testCreateDirectoryStructure_usingRegularMocking()
    {
       final String path = "directoryPath";
       PersistenceManager tested = new PersistenceManager();
@@ -63,8 +67,8 @@ public final class PersistenceManager_JMockit_Test
          final File fileMock = new File(path);
 
          {
-            fileMock.exists(); returns(false);
-            fileMock.mkdirs(); returns(true);
+            fileMock.exists(); result = false;
+            fileMock.mkdirs(); result = true;
          }
       };
 
@@ -83,7 +87,7 @@ public final class PersistenceManager_JMockit_Test
 
          {
             new File(path);
-            fileMock.exists(); returns(true);
+            fileMock.exists(); result = true;
          }
       };
 

@@ -29,7 +29,10 @@ import org.junit.*;
 import static mockit.Mockit.*;
 import static org.junit.Assert.*;
 
-public class ExampleWithEvilMethod_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/suppress/method/ExampleWithEvilMethodTest.java">PowerMock version</a>
+ */
+public final class ExampleWithEvilMethod_JMockit_Test
 {
    @Test
    public void testSuppressMethod()

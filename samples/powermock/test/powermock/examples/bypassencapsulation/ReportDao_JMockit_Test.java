@@ -30,7 +30,10 @@ import mockit.*;
 
 import powermock.examples.bypassencapsulation.nontest.*;
 
-public class ReportDao_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/bypassencapsulation/ReportDaoTest.java">PowerMock version</a>
+ */
+public final class ReportDao_JMockit_Test
 {
    @Test
    public void testDeleteReport()
@@ -50,7 +53,7 @@ public class ReportDao_JMockit_Test
             setField(tested, cacheMock);
 
             // Record an expectation for the private method.
-            invoke(tested, "getReportFromTargetName", reportName); returns(report);
+            invoke(tested, "getReportFromTargetName", reportName); result = report;
 
             // Expect the call to invalidate cache.
             cacheMock.invalidateCache(report);

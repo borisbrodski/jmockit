@@ -31,7 +31,10 @@ import mockit.*;
 import static org.junit.Assert.*;
 import powermock.examples.annotationbased.dao.*;
 
-public class UsingMockStrictAnnotation_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/annotationbased/UsingMockStrictAnnotationTest.java">PowerMock version</a>
+ */
+public final class UsingMockStrictAnnotation_JMockit_Test
 {
    @Mocked
    private SomeDao someDaoMock;
@@ -53,8 +56,8 @@ public class UsingMockStrictAnnotation_JMockit_Test
       new Expectations()
       {
          {
-            someDaoMock.getSomeData(); returns(dataObject);
-            someDaoMock.getSomeOtherData(); returns(otherDataObject);
+            someDaoMock.getSomeData(); result = dataObject;
+            someDaoMock.getSomeOtherData(); result = otherDataObject;
          }
       };
 
@@ -71,8 +74,8 @@ public class UsingMockStrictAnnotation_JMockit_Test
       new Expectations()
       {
          {
-            someDaoMock.getSomeOtherData(); returns(otherDataObject);
-            someDaoMock.getSomeData(); returns(dataObject);
+            someDaoMock.getSomeOtherData(); result = otherDataObject;
+            someDaoMock.getSomeData(); result = dataObject;
          }
       };
 

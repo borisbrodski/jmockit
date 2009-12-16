@@ -31,7 +31,7 @@ import mockit.*;
 import static org.junit.Assert.*;
 import powermock.examples.annotationbased.dao.*;
 
-public class DynamicPartialMock_JMockit_Test
+public final class DynamicPartialMock_JMockit_Test
 {
    @Mocked
    private SomeDao someDaoMock;

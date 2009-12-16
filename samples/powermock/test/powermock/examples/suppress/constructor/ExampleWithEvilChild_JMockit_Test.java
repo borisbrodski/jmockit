@@ -29,7 +29,7 @@ import org.junit.*;
 import static mockit.Mockit.*;
 import static org.junit.Assert.*;
 
-public class ExampleWithEvilChild_JMockit_Test
+public final class ExampleWithEvilChild_JMockit_Test
 {
    @Test
    public void testSuppressConstructorOfEvilChild()

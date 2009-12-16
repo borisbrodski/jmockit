@@ -30,6 +30,9 @@ import mockit.*;
 
 import static org.junit.Assert.*;
 
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/tutorial/src/solution/java/demo/org/powermock/examples/tutorial/hellopower/HelloWorldTest.java">PowerMock version</a>
+ */
 public final class HelloWorld_JMockit_Test
 {
    @Test
@@ -40,8 +43,8 @@ public final class HelloWorld_JMockit_Test
          final SimpleConfig mock = null;
 
          {
-            SimpleConfig.getGreeting(); returns("Hello");
-            SimpleConfig.getTarget(); returns("world");
+            SimpleConfig.getGreeting(); result = "Hello";
+            SimpleConfig.getTarget(); result = "world";
          }
       };
 

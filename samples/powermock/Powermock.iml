@@ -11,82 +11,14 @@
       <excludeFolder url="file://$MODULE_DIR$/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" name="JMockit" level="project" />
-    <orderEntry type="library" name="JUnit 4.8" level="application" />
-    <orderEntry type="library" name="Logging APIs" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/slf4j-nop-1.5.8.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/objenesis-1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jaxen-1.1-beta-6.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/javassist-3.9.0.GA.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/cglib-nodep-2.1_3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/dom4j-1.6.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="EasyMock 2.5" level="application" />
-    <orderEntry type="library" name="EasyMock Class Extension 2.4" level="application" />
-    <orderEntry type="library" name="PowerMock 1.2.5" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: mockit:jmockit:0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.7" level="project" />
-    <orderEntry type="library" name="Maven: powermock:powermock:0" level="project" />
-    <orderEntry type="library" name="Maven: javassist:javassist:0" level="project" />
-    <orderEntry type="library" name="Maven: jaxen:jaxen:0" level="project" />
-    <orderEntry type="library" name="Maven: org.objenesis:objenesis:0" level="project" />
     <orderEntry type="library" name="Maven: dom4j:dom4j:0" level="project" />
-    <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:0" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:0" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-nop:0" level="project" />
-    <orderEntry type="library" name="Maven: easymock:easymock:0" level="project" />
-    <orderEntry type="library" name="Maven: easymock:easymockclassextension:0" level="project" />
-    <orderEntry type="library" name="Maven: cglib:cglib-nodep:0" level="project" />
   </component>
 </module>
 

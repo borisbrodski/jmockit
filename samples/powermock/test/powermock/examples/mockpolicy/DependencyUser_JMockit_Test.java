@@ -32,8 +32,11 @@ import static org.junit.Assert.*;
 import powermock.examples.mockpolicy.nontest.domain.*;
 import powermock.examples.mockpolicy.policy.*;
 
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/mockpolicy/DependencyUserTest.java">PowerMock version</a>
+ */
 @UsingMocksAndStubs(MyCustomMockClass.class)
-public class DependencyUser_JMockit_Test
+public final class DependencyUser_JMockit_Test
 {
    @Test
    public void assertThatMyFirstMockClassWork()

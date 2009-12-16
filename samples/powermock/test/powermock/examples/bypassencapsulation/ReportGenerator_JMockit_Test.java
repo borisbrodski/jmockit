@@ -31,7 +31,10 @@ import mockit.*;
 import static org.junit.Assert.*;
 import powermock.examples.bypassencapsulation.nontest.*;
 
-public class ReportGenerator_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/bypassencapsulation/ReportGeneratorTest.java">PowerMock version</a>
+ */
+public final class ReportGenerator_JMockit_Test
 {
    @Test
    public void testGenerateReport()
@@ -46,7 +49,7 @@ public class ReportGenerator_JMockit_Test
          {
             setField(tested, reportTemplateServiceMock);
 
-            reportTemplateServiceMock.getTemplateId(reportId); returns("templateId");
+            reportTemplateServiceMock.getTemplateId(reportId); result = "templateId";
          }
       };
 

@@ -22,28 +22,8 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>powermock</groupId><artifactId>powermock</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/lib/powermock-1.2.5-full.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>javassist</groupId><artifactId>javassist</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/lib/javassist-3.9.0.GA.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>jaxen</groupId><artifactId>jaxen</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/lib/jaxen-1.1-beta-6.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>org.objenesis</groupId><artifactId>objenesis</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/objenesis-1.1.jar</systemPath>
-      </dependency>
-      <dependency>
          <groupId>dom4j</groupId><artifactId>dom4j</artifactId><version>0</version>
          <scope>system</scope><systemPath>${basedir}/../lib/dom4j-1.6.1.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>org.hamcrest</groupId><artifactId>hamcrest-core</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../../lib/hamcrest-core-1.2.jar</systemPath>
       </dependency>
       <dependency>
          <groupId>commons-logging</groupId><artifactId>commons-logging</artifactId><version>0</version>
@@ -60,18 +40,6 @@
       <dependency>
          <groupId>org.slf4j</groupId><artifactId>slf4j-nop</artifactId><version>0</version>
          <scope>system</scope><systemPath>${basedir}/../lib/slf4j-nop-1.5.8.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>easymock</groupId><artifactId>easymock</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/easymock-2.5.2.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>easymock</groupId><artifactId>easymockclassextension</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/easymockclassextension.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>cglib</groupId><artifactId>cglib-nodep</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/cglib-nodep-2.1_3.jar</systemPath>
       </dependency>
    </dependencies>
 </project>

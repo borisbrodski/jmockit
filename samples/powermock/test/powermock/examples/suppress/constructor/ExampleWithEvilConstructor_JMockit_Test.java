@@ -30,7 +30,10 @@ import org.junit.*;
 
 import mockit.*;
 
-public class ExampleWithEvilConstructor_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/suppress/constructor/ExampleWithEvilConstructorTest.java">PowerMock version</a>
+ */
+public final class ExampleWithEvilConstructor_JMockit_Test
 {
    @Test
    public void testSuppressOwnConstructor()

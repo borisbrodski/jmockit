@@ -31,6 +31,9 @@ import org.junit.*;
 import static mockit.Deencapsulation.*;
 import static org.junit.Assert.*;
 
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/bypassencapsulation/ServiceHolderTest.java">PowerMock version</a>
+ */
 public final class ServiceHolder_JMockit_Test
 {
    @Test

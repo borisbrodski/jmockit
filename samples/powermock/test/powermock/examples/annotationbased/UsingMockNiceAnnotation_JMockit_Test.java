@@ -31,7 +31,10 @@ import mockit.*;
 import static org.junit.Assert.*;
 import powermock.examples.annotationbased.dao.*;
 
-public class UsingMockNiceAnnotation_JMockit_Test
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/DocumentationExamples/src/test/java/powermock/examples/annotationbased/UsingMockNiceAnnotationTest.java">PowerMock version</a>
+ */
+public final class UsingMockNiceAnnotation_JMockit_Test
 {
    @Mocked
    private SomeDao someDaoMock;

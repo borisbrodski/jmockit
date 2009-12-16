@@ -32,8 +32,11 @@ import org.dom4j.*;
 import org.dom4j.tree.*;
 import static org.junit.Assert.*;
 
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/dom4j/src/test/java/org/powermock/examples/dom4j/AbstractXMLRequestCreatorBaseTest.java">PowerMock version</a>
+ */
 @UsingMocksAndStubs(AbstractNode.class)
-public class AbstractXMLRequestCreatorBase_JMockit_Test
+public final class AbstractXMLRequestCreatorBase_JMockit_Test
 {
    private AbstractXMLRequestCreatorBase tested;
 
@@ -78,18 +81,18 @@ public class AbstractXMLRequestCreatorBase_JMockit_Test
          final DocumentHelper unused = null;
 
          {
-            DocumentHelper.createDocument(); returns(documentMock);
-            documentMock.addElement(XMLProtocol.ENCODE_ELEMENT); returns(rootElementMock);
+            DocumentHelper.createDocument(); result = documentMock;
+            documentMock.addElement(XMLProtocol.ENCODE_ELEMENT); result = rootElementMock;
 
-            rootElementMock.addElement(XMLProtocol.HEADER_ELEMENT); returns(headerElementMock);
+            rootElementMock.addElement(XMLProtocol.HEADER_ELEMENT); result = headerElementMock;
             tested.generateRandomId();
-            String id = "213"; returns(id);
+            String id = "213"; result = id;
             headerElementMock.addAttribute(XMLProtocol.HEADER_MSG_ID_ATTRIBUTE, id);
 
-            rootElementMock.addElement(XMLProtocol.BODY_ELEMENT); returns(bodyElementMock);
+            rootElementMock.addElement(XMLProtocol.BODY_ELEMENT); result = bodyElementMock;
             tested.createBody(bodyElementMock, params);
 
-            tested.convertDocumentToByteArray(documentMock); returns(expected);
+            tested.convertDocumentToByteArray(documentMock); result = expected;
          }
       };
 

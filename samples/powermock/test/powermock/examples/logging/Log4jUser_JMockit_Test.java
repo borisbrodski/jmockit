@@ -31,8 +31,11 @@ import mockit.integration.logging.*;
 
 import static org.junit.Assert.*;
 
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/log4j/src/test/java/demo/org/powermock/examples/Log4jUserTest.java">PowerMock version</a>
+ */
 @UsingMocksAndStubs(Log4jMocks.class)
-public class Log4jUser_JMockit_Test
+public final class Log4jUser_JMockit_Test
 {
    @Test
    public void assertThatLog4jMockingWorks()
@@ -40,7 +43,9 @@ public class Log4jUser_JMockit_Test
       final Log4jUser tested = new Log4jUser();
       final String firstMessage = "first message and ";
 
-      new Expectations(tested) {{ tested.getMessage(); returns(firstMessage); }};
+      new Expectations(tested) {{
+         tested.getMessage(); result = firstMessage;
+      }};
 
       String otherMessage = "other message";
       String actual = tested.mergeMessageWith(otherMessage);

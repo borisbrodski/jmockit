@@ -24,17 +24,22 @@
  */
 package powermock.examples.tutorial.domainmocking.impl;
 
-import powermock.examples.tutorial.domainmocking.*;
-import powermock.examples.tutorial.domainmocking.domain.*;
-import mockit.*;
-import mockit.integration.junit4.*;
 import org.junit.*;
 
-public final class SampleServiceImpl_JMockit_Test extends JMockitTest
+import mockit.*;
+
+import static org.junit.Assert.*;
+import powermock.examples.tutorial.domainmocking.*;
+import powermock.examples.tutorial.domainmocking.domain.*;
+
+/**
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/tutorial/src/solution/java/demo/org/powermock/examples/tutorial/domainmocking/impl/SampleServiceImplTest.java">PowerMock version</a>
+ */
+public final class SampleServiceImpl_JMockit_Test
 {
-   @Mocked private PersonService personService;
-   @Mocked private EventService eventService;
-   private SampleServiceImpl tested;
+   @Mocked PersonService personService;
+   @Mocked EventService eventService;
+   SampleServiceImpl tested;
 
    @Before
    public void setUp()
@@ -59,7 +64,7 @@ public final class SampleServiceImpl_JMockit_Test extends JMockitTest
             person = new Person(firstName, lastName);
 
             personService.create(person, businessMessages);
-            businessMessages.hasErrors(); returns(false);
+            businessMessages.hasErrors(); result = false;
          }
       };
 
@@ -81,7 +86,7 @@ public final class SampleServiceImpl_JMockit_Test extends JMockitTest
          {
             // The following mocks are strict, so the order of invocation for them does matter:
             personService.create(person, businessMessages);
-            businessMessages.hasErrors(); returns(true);
+            businessMessages.hasErrors(); result = true;
             eventService.sendErrorEvent(person, businessMessages);
          }
       };
@@ -101,7 +106,7 @@ public final class SampleServiceImpl_JMockit_Test extends JMockitTest
          Person person;
 
          {
-            new Person(firstName, lastName); throwsException(new IllegalArgumentException("test"));
+            new Person(firstName, lastName); result = new IllegalArgumentException("test");
          }
       };
 

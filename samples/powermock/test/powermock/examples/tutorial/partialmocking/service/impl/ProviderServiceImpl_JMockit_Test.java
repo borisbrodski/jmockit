@@ -26,13 +26,15 @@ package powermock.examples.tutorial.partialmocking.service.impl;
 
 import java.util.*;
 
+import org.junit.*;
+
+import mockit.*;
+
+import static org.junit.Assert.*;
 import powermock.examples.tutorial.partialmocking.dao.*;
 import powermock.examples.tutorial.partialmocking.dao.domain.impl.*;
 import powermock.examples.tutorial.partialmocking.domain.*;
 import powermock.examples.tutorial.partialmocking.service.*;
-import mockit.*;
-import mockit.integration.junit4.*;
-import org.junit.*;
 
 /**
  * Demonstrates <em>dynamic partial mocking</em>, where the methods to mock are determined from
@@ -42,8 +44,10 @@ import org.junit.*;
  * The first four tests mock a private method defined in the class under test, while the last two
  * tests directly exercise this private method. This is not recommended, though. Instead, unit tests
  * should be created only for the non-private methods in the class under test.
+ * <p/>
+ * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/tutorial/src/solution/java/demo/org/powermock/examples/tutorial/partialmocking/service/impl/ProviderServiceImplTest.java">PowerMock version</a>
  */
-public final class ProviderServiceImpl_JMockit_Test extends JMockitTest
+public final class ProviderServiceImpl_JMockit_Test
 {
    @Test
    public void testGetAllServiceProviders()
@@ -56,7 +60,7 @@ public final class ProviderServiceImpl_JMockit_Test extends JMockitTest
       new Expectations(tested)
       {
          {
-            invoke(tested, "getAllServiceProducers"); returns(expectedServiceProducers);
+            invoke(tested, "getAllServiceProducers"); result = expectedServiceProducers;
          }
       };
 
@@ -74,7 +78,7 @@ public final class ProviderServiceImpl_JMockit_Test extends JMockitTest
       new Expectations(tested)
       {
          {
-            invoke(tested, "getAllServiceProducers"); returns(null);
+            invoke(tested, "getAllServiceProducers"); result = null;
          }
       };
 
@@ -98,7 +102,7 @@ public final class ProviderServiceImpl_JMockit_Test extends JMockitTest
       new Expectations(tested)
       {
          {
-            invoke(tested, "getAllServiceProducers"); returns(serviceProducers);
+            invoke(tested, "getAllServiceProducers"); result = serviceProducers;
          }
       };
 
@@ -160,7 +164,7 @@ public final class ProviderServiceImpl_JMockit_Test extends JMockitTest
       ExpectationsWithRealProviderService expectations = new ExpectationsWithRealProviderService()
       {
          {
-            providerDao.getAllServiceProducers(); returns(serviceArtifacts);
+            providerDao.getAllServiceProducers(); result = serviceArtifacts;
          }
       };
 
@@ -176,7 +180,7 @@ public final class ProviderServiceImpl_JMockit_Test extends JMockitTest
       ExpectationsWithRealProviderService expectations = new ExpectationsWithRealProviderService()
       {
          {
-            providerDao.getAllServiceProducers(); returns(new HashSet<ServiceArtifact>());
+            providerDao.getAllServiceProducers(); result = new HashSet<ServiceArtifact>();
          }
       };
 
