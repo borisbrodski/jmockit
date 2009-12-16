@@ -47,7 +47,7 @@ public final class LineElement implements Iterable<LineElement>
    public boolean isCode() { return type == ElementType.CODE; }
    public boolean isComment() { return type == ElementType.COMMENT; }
 
-   public CharSequence getText()
+   public String getText()
    {
       return text;
    }
@@ -125,6 +125,17 @@ public final class LineElement implements Iterable<LineElement>
       }
 
       return 0;
+   }
+
+   public void appendAllBefore(StringBuilder line, LineElement elementToStopBefore)
+   {
+      LineElement elementToPrint = this;
+
+      do {
+         line.append(elementToPrint.text);
+         elementToPrint = elementToPrint.next;
+      }
+      while (elementToPrint != elementToStopBefore);
    }
 
    public Iterator<LineElement> iterator()

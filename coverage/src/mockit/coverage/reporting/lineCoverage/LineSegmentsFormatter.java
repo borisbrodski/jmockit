@@ -33,7 +33,7 @@ import mockit.coverage.reporting.parsing.LineElement;
 final class LineSegmentsFormatter
 {
    private final ListOfCallPoints listOfCallPoints;
-   private final StringBuilder formattedLine;
+   private final StringBuilder line;
    private final int lineNum;
 
    // Helper fields:
@@ -41,10 +41,10 @@ final class LineSegmentsFormatter
    private int segmentIndex;
    private LineSegmentData segmentData;
 
-   LineSegmentsFormatter(boolean withCallPoints, int lineNum, StringBuilder formattedLine)
+   LineSegmentsFormatter(boolean withCallPoints, int lineNum, StringBuilder line)
    {
       listOfCallPoints = withCallPoints ? new ListOfCallPoints() : null;
-      this.formattedLine = formattedLine;
+      this.line = line;
       this.lineNum = lineNum;
    }
 
@@ -53,7 +53,7 @@ final class LineSegmentsFormatter
       List<BranchCoverageData> branchData = lineData.getBranches();
       int numSegments = 1 + branchData.size();
 
-      element = initialElement.appendUntilNextCodeElement(formattedLine);
+      element = initialElement.appendUntilNextCodeElement(line);
 
       segmentIndex = 0;
       segmentData = lineData;
@@ -62,17 +62,17 @@ final class LineSegmentsFormatter
       for (segmentIndex = 1; element != null && segmentIndex < numSegments; segmentIndex++) {
          segmentData = branchData.get(segmentIndex - 1);
 
-         element = element.appendUntilNextCodeElement(formattedLine);
+         element = element.appendUntilNextCodeElement(line);
 
          if (element != null) {
             appendUntilFirstElementAfterNextBranchingPoint();
          }
       }
 
-      formattedLine.append("</pre>");
+      line.append("</pre>");
 
       if (listOfCallPoints != null) {
-         formattedLine.append(listOfCallPoints.getContents());
+         line.append(listOfCallPoints.getContents());
       }
    }
 
@@ -84,7 +84,7 @@ final class LineSegmentsFormatter
       appendToFormattedLine(firstElement);
 
       if (element != null && element.isBranchingElement()) {
-         formattedLine.append(element.getText());
+         line.append(element.getText());
          element = element.getNext();
       }
    }
@@ -96,42 +96,34 @@ final class LineSegmentsFormatter
       }
 
       appendStartTag();
-
-      LineElement elementToPrint = firstElement;
-
-      do {
-         formattedLine.append(elementToPrint.getText());
-         elementToPrint = elementToPrint.getNext();
-      }
-      while (elementToPrint != element);
-
+      firstElement.appendAllBefore(line, element);
       appendEndTag();
    }
 
    private void appendStartTag()
    {
-      formattedLine.append("<span id='l").append(lineNum);
-      formattedLine.append('s').append(segmentIndex).append("' ");
+      line.append("<span id='l").append(lineNum);
+      line.append('s').append(segmentIndex).append("' ");
 
       appendTooltipWithExecutionCounts();
 
       if (segmentData.isCovered()) {
-         formattedLine.append("class='covered");
+         line.append("class='covered");
 
          if (listOfCallPoints != null) {
-            formattedLine.append(" cp' onclick='showHide(this,").append(segmentIndex).append(')');
+            line.append(" cp' onclick='showHide(this,").append(segmentIndex).append(')');
          }
 
-         formattedLine.append("'>");
+         line.append("'>");
       }
       else {
-         formattedLine.append("class='uncovered'>");
+         line.append("class='uncovered'>");
       }
    }
 
    private void appendTooltipWithExecutionCounts()
    {
-      formattedLine.append("title='Executions: ");
+      line.append("title='Executions: ");
 
       int noJumpCount = segmentData.getExecutionCount();
 
@@ -139,30 +131,36 @@ final class LineSegmentsFormatter
          int jumpCount = ((BranchCoverageData) segmentData).getJumpExecutionCount();
 
          if (noJumpCount >= 0 && jumpCount >= 0) {
-            formattedLine.append(noJumpCount + jumpCount);
-            formattedLine.append(" Jumps: ").append(jumpCount);
+            line.append(noJumpCount + jumpCount);
+            line.append(" Jumps: ").append(jumpCount);
          }
          else if (noJumpCount > 0) {
-            formattedLine.append(noJumpCount);
-            formattedLine.append(" No jumps");
+            line.append(noJumpCount);
+            line.append(" No jumps");
          }
          else if (jumpCount > 0) {
-            formattedLine.append("title='Jumps: ").append(jumpCount);
+            line.append("title='Jumps: ").append(jumpCount);
          }
          else {
-            formattedLine.append('0');
+            line.append('0');
          }
       }
       else {
-         formattedLine.append(noJumpCount);
+         line.append(noJumpCount);
       }
 
-      formattedLine.append("' ");
+      line.append("' ");
    }
 
    private void appendEndTag()
    {
-      formattedLine.append("</span>");
+      int i = line.length() - 1;
+
+      while (Character.isWhitespace(line.charAt(i))) {
+         i--;
+      }
+      
+      line.insert(i + 1, "</span>");
 
       if (listOfCallPoints != null && !segmentData.getCallPoints().isEmpty()) {
          listOfCallPoints.insertListOfCallPoints(segmentData.getCallPoints());
