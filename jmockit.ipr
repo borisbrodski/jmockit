@@ -1003,7 +1003,6 @@
         <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-legacy-2.5.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-junit4-2.5.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/objenesis-1.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
@@ -1015,15 +1014,6 @@
         <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.5.8.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="PowerMock 1.2.5">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/lib/jaxen-1.1-beta-6.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/powermock/lib/javassist-3.9.0.GA.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/powermock/lib/powermock-1.2.5-full.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -1209,12 +1199,8 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/asm-3.1.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/asm-3.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/asm-3.1-sources.jar!/" />
-      </SOURCES>
+      <JAVADOC />
+      <SOURCES />
     </library>
     <library name="Maven: org.hamcrest:hamcrest-core:0">
       <CLASSES>
@@ -1319,12 +1305,8 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1-sources.jar!/" />
-      </SOURCES>
+      <JAVADOC />
+      <SOURCES />
     </library>
     <library name="Maven: log4j:log4j:0">
       <CLASSES>
