@@ -50,7 +50,7 @@ public class LineSegmentData implements Serializable
       unreachable = true;
    }
 
-   void registerExecution(CallPoint callPoint)
+   final void registerExecution(CallPoint callPoint)
    {
       addCallPointIfAny(callPoint);
       executionCount++;
@@ -67,7 +67,7 @@ public class LineSegmentData implements Serializable
       }
    }
 
-   public final int getExecutionCount()
+   public int getExecutionCount()
    {
       return executionCount;
    }
@@ -82,7 +82,7 @@ public class LineSegmentData implements Serializable
       return callPoints == null ? Collections.<CallPoint>emptyList() : callPoints;
    }
 
-   public final boolean isCovered()
+   public boolean isCovered()
    {
       return unreachable || executionCount > 0;
    }

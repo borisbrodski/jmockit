@@ -154,6 +154,7 @@ final class CoverageModifier extends ClassWriter
       boolean assertFoundInCurrentLine;
       boolean nextLabelAfterConditionalJump;
       boolean potentialAssertFalseFound;
+      private Label unconditionalJump;
 
       BaseMethodModifier(MethodVisitor mv)
       {
@@ -172,6 +173,8 @@ final class CoverageModifier extends ClassWriter
          currentLine = line;
 
          jumpTargetsForCurrentLine.clear();
+         nextLabelAfterConditionalJump = false;
+         unconditionalJump = null;
 
          generateCallToRegisterLineExecution();
 
@@ -206,24 +209,26 @@ final class CoverageModifier extends ClassWriter
          }
 
          jumpTargetsForCurrentLine.add(label);
-
          nextLabelAfterConditionalJump = isConditionalJump(opcode);
 
-         int branchIndex = lineData.addBranch(mw.currentBlock);
-         pendingBranches.put(branchIndex, false);
+         if (nextLabelAfterConditionalJump) {
+            int branchIndex = lineData.addBranch(mw.currentBlock);
+            pendingBranches.put(branchIndex, false);
 
-         if (assertFoundInCurrentLine) {
-            BranchCoverageData branchData = lineData.getBranchData(branchIndex);
-            branchData.markAsUnreachable();
+            if (assertFoundInCurrentLine) {
+               BranchCoverageData branchData = lineData.getBranchData(branchIndex);
+               branchData.markAsUnreachable();
+            }
+         }
+         else {
+            unconditionalJump = mw.currentBlock;
          }
 
          mw.visitJumpInsn(opcode, label);
 
-         if (potentialAssertFalseFound && opcode == IFNE) {
-            // TODO: what to do here, if anything?
+         if (nextLabelAfterConditionalJump) {
+            generateCallToRegisterBranchTargetExecutionIfPending();
          }
-
-         generateCallToRegisterBranchTargetExecutionIfPending();
       }
 
       protected final boolean isConditionalJump(int opcode)
@@ -271,6 +276,13 @@ final class CoverageModifier extends ClassWriter
             }
 
             nextLabelAfterConditionalJump = false;
+         }
+
+         if (unconditionalJump != null && label.line == 0) {
+            int branchIndex = lineData.addBranch(unconditionalJump);
+            BranchCoverageData branchData = lineData.getBranchData(branchIndex);
+            branchData.setHasJumpTarget();
+            generateCallToRegisterBranchTargetExecution("jumpTargetExecuted", branchIndex);
          }
       }
 

@@ -96,6 +96,18 @@ public final class BranchCoverageData extends LineSegmentData
       return executionCount;
    }
 
+   @Override
+   public boolean isCovered()
+   {
+      return super.isCovered() || jumpExecutionCount > 0;
+   }
+
+   @Override
+   public int getExecutionCount()
+   {
+      return executionCount >= 0 ? executionCount : jumpExecutionCount;
+   }
+
    void addCountsFromPreviousTestRun(BranchCoverageData previousData)
    {
       addExecutionCountAndCallPointsFromPreviousTestRun(previousData);
