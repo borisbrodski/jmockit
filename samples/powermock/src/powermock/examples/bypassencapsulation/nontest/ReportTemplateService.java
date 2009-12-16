@@ -18,17 +18,16 @@ package powermock.examples.bypassencapsulation.nontest;
 /**
  * A stub service used to demonstrate test key-points.
  */
-public class ReportTemplateService {
-
-	/**
-	 * Get a template id from a report id.
-	 * 
-	 * @param reportId
-	 *            The id of the report whose template to get.
-	 * @return The Id of the template associated with the report.
-	 */
-	public String getTemplateId(String reportId) {
-		return null;
-	}
-
+public class ReportTemplateService
+{
+   /**
+    * Get a template id from a report id.
+    *
+    * @param reportId The id of the report whose template to get.
+    * @return The Id of the template associated with the report.
+    */
+   public String getTemplateId(String reportId)
+   {
+      return null;
+   }
 }

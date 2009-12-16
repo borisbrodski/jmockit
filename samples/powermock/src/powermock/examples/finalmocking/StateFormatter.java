@@ -21,20 +21,24 @@ package powermock.examples.finalmocking;
  * to create a mock of the collaborator even though it's final and to expect the
  * method calls even though they're also final.
  */
-public class StateFormatter {
+public class StateFormatter
+{
+   private final StateHolder stateHolder;
 
-	private final StateHolder stateHolder;
+   public StateFormatter(StateHolder stateHolder)
+   {
+      this.stateHolder = stateHolder;
+   }
 
-	public StateFormatter(StateHolder stateHolder) {
-		this.stateHolder = stateHolder;
-	}
+   public String getFormattedState()
+   {
+      String safeState = "State information is missing";
+      String actualState = stateHolder.getState();
 
-	public String getFormattedState() {
-		String safeState = "State information is missing";
-		final String actualState = stateHolder.getState();
-		if (actualState != null) {
-			safeState = actualState;
-		}
-		return safeState;
-	}
+      if (actualState != null) {
+         safeState = actualState;
+      }
+      
+      return safeState;
+   }
 }

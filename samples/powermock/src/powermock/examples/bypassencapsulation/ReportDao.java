@@ -15,9 +15,7 @@
  */
 package powermock.examples.bypassencapsulation;
 
-import powermock.examples.bypassencapsulation.nontest.Cache;
-import powermock.examples.bypassencapsulation.nontest.Injectable;
-import powermock.examples.bypassencapsulation.nontest.Report;
+import powermock.examples.bypassencapsulation.nontest.*;
 
 /**
  * A class used to demonstrate how it's possible for PowerMock to set internal state for a class
@@ -25,17 +23,16 @@ import powermock.examples.bypassencapsulation.nontest.Report;
  */
 public class ReportDao
 {
-   @Injectable
    private Cache cache;
 
-   public void deleteReport(final String reportName)
+   public void deleteReport(String reportName)
    {
       Report report = getReportFromTargetName(reportName);
       cache.invalidateCache(report);
       // Imagine that we delete the report from some persistence storage.
    }
 
-   private Report getReportFromTargetName(final String reportName)
+   private Report getReportFromTargetName(String reportName)
    {
       /* Imagine that this method does something that many methods share */
       return null;

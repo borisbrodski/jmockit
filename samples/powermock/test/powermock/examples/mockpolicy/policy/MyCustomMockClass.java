@@ -33,7 +33,7 @@ import powermock.examples.mockpolicy.nontest.domain.*;
  * value.
  */
 @MockClass(realClass = Dependency.class)
-public class MyCustomMockClass
+public final class MyCustomMockClass
 {
    @Mock
    public DataObject getData()

@@ -15,14 +15,11 @@
  */
 package powermock.examples.bypassencapsulation;
 
-import powermock.examples.bypassencapsulation.nontest.Injectable;
 import powermock.examples.bypassencapsulation.nontest.Report;
 import powermock.examples.bypassencapsulation.nontest.ReportTemplateService;
 
-@SuppressWarnings("unused")
 public class ReportGenerator
 {
-   @Injectable
    private ReportTemplateService reportTemplateService;
 
    public Report generateReport(String reportId)

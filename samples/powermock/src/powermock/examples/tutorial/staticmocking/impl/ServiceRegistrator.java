@@ -32,8 +32,7 @@ public final class ServiceRegistrator implements IServiceRegistrator
    private BundleContext bundleContext;
 
    /**
-    * Holds all services registrations that has been registered by this service
-    * registrator.
+    * Holds all services registrations that has been registered by this service registrator.
     */
    private final Map<Long, ServiceRegistration> serviceRegistrations;
 
@@ -45,26 +44,20 @@ public final class ServiceRegistrator implements IServiceRegistrator
       serviceRegistrations = new ConcurrentHashMap<Long, ServiceRegistration>();
    }
 
-   /**
-    * {@inheritDoc}
-    */
    public long registerService(String name, Object serviceImplementation)
    {
       ServiceRegistration registerService =
          bundleContext.registerService(name, serviceImplementation, null);
-      final long id = IdGenerator.generateNewId();
+      long id = IdGenerator.generateNewId();
       
       serviceRegistrations.put(id, registerService);
 
       return id;
    }
 
-   /**
-    * {@inheritDoc}
-    */
    public void unregisterService(long id)
    {
-      final ServiceRegistration registration = serviceRegistrations.remove(id);
+      ServiceRegistration registration = serviceRegistrations.remove(id);
 
       if (registration == null) {
          throw new IllegalStateException(

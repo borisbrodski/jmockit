@@ -18,9 +18,10 @@ package powermock.examples.bypassencapsulation.nontest;
 /**
  * A made-up class used to demonstrate some PowerMock functionality.
  */
-public class Cache {
-
-	public void invalidateCache(final Report report) {
-		// Imagine something useful happening here.
-	}
+public class Cache
+{
+   public void invalidateCache(Report report)
+   {
+      // Imagine something useful happening here.
+   }
 }
