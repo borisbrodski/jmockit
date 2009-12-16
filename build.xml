@@ -239,9 +239,8 @@
       <zip
          destfile="jmockit-${version}.zip" basedir=".." includes="${ant.project.name}/**"
          excludes="**/*.i*, **/*.zip, **/*.ser, **/Temp.java,
-                   jmockit/samples/*/coverage-report/**,
-                   jmockit/target/**,
-                   **/classes/**, **/test-classes/**,
+                   **/target/**, **/classes/**, **/test-classes/**, jmockit/samples/test-output/**,
+                   jmockit/coverage/coverage-report/**, jmockit/samples/*/coverage-report/**,
                    jmockit/coverage-report/**, **/coverage*.xml, **/testRun.properties"
          encoding="UTF-8"/>
    </target>
