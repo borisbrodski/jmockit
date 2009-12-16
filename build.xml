@@ -113,9 +113,7 @@
    </target>
    <target name="buildUnitils"><buildSample module="unitils"/></target>
    <target name="buildPowerMock">
-      <buildSample
-         module="powermock"
-         extraclasspath="lib/*.jar samples/lib/dom4j-*.jar samples/lib/easymock*.jar"/>
+      <buildSample module="powermock" extraclasspath="lib/*.jar samples/lib/dom4j-*.jar"/>
    </target>
    <target name="buildJBossAOP"><buildSample module="jbossaop"/></target>
    <target name="buildLoginService">
@@ -341,6 +339,7 @@
             <fileset dir="samples/jmock/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/mockito/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/unitils/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/powermock/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/orderMngmntWebapp/test-classes">
                <include name="**/*Test.class"/>
                <include name="**/*TestUsingExpectations.class"/>
@@ -349,9 +348,6 @@
             <fileset dir="samples/tutorial/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/TimingFramework/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/AnimatedTransitions/test-classes" includes="**/*Test.class"/>
-         </batchtest>
-         <batchtest>
-            <fileset dir="samples/powermock/test-classes" includes="**/*Test.class"/>
          </batchtest>
          <formatter type="xml"/>
       </junit>
