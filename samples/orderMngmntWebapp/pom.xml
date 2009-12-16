@@ -4,9 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>mockit</groupId>
-      <artifactId>mockit</artifactId>
-      <version>0.995</version>
+      <groupId>mockit</groupId><artifactId>mockit</artifactId><version>0.995</version>
       <relativePath>../../pom.xml</relativePath>
    </parent>
    <artifactId>orderManagement</artifactId>
@@ -39,7 +37,7 @@
       </dependency>
       <dependency>
          <groupId>hibernate</groupId><artifactId>hibernate</artifactId><version>3.0</version>
-         <scope>system</scope><systemPath>${basedir}/../../hibernate3emul/lib/hibernate3.jar</systemPath>
+         <scope>system</scope><systemPath>C:/Java/hibernate-distribution-3.3.1.GA/hibernate3.jar</systemPath>
       </dependency>
       <dependency>
          <groupId>dom4j</groupId><artifactId>dom4j</artifactId><version>0</version>

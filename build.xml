@@ -63,8 +63,8 @@
       <build module="incremental" extraclasspathlocation="coverage/classes"/>
    </target>
    <target name="buildHibernateEmulation">
-      <build module="hibernate3emul" extraclasspath="hibernate3emul/lib/*.jar"/>
-      <buildTests module="hibernate3emul"/>
+      <build module="hibernate3emul" extraclasspathlocation="${HIBERNATE_JAR}"/>
+      <buildTests module="hibernate3emul" extraclasspathlocation="${HIBERNATE_JAR}"/>
    </target>
 
    <macrodef name="buildSample">
@@ -123,7 +123,7 @@
    <target name="buildOrderManagement">
       <buildSample
          module="orderMngmntWebapp" outdir="WEB-INF/classes"
-         extraclasspath="hibernate3emul/lib/hibernate3.jar"/>
+         extraclasspathlocation="${HIBERNATE_JAR}"/>
    </target>
    <target name="buildTimingFramework">
       <buildSample module="TimingFramework" extraclasspath="lib/hamcrest-*.jar"/>
@@ -318,7 +318,7 @@
             <pathelement location="samples/unitils/test-classes"/>
 
             <pathelement location="jmockit-hibernate3emul.jar"/>
-            <pathelement location="hibernate3emul/lib/hibernate3.jar"/>
+            <pathelement location="${HIBERNATE_JAR}"/>
             <pathelement location="samples/orderMngmntWebapp/WEB-INF/classes"/>
             <pathelement location="samples/orderMngmntWebapp/test-classes"/>
 

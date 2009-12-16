@@ -814,6 +814,7 @@
         <w>doctype</w>
         <w>easymock</w>
         <w>easymockclassextension</w>
+        <w>emul</w>
         <w>enableassertions</w>
         <w>enqueue</w>
         <w>extraclasspath</w>
@@ -835,6 +836,7 @@
         <w>interpolators</w>
         <w>ints</w>
         <w>jaas</w>
+        <w>jacc</w>
         <w>javaagent</w>
         <w>javac</w>
         <w>javassist</w>
@@ -991,14 +993,6 @@
         <root url="jar://C:/Java/easymockclassextension2.4/src.zip!/" />
       </SOURCES>
     </library>
-    <library name="Hibernate 3 + JTA">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/hibernate3emul/lib/jta.jar!/" />
-        <root url="jar://$PROJECT_DIR$/hibernate3emul/lib/hibernate3.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="JMock 2.5.1">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-legacy-2.5.1.jar!/" />
@@ -1110,46 +1104,46 @@
     </library>
     <library name="Maven: mockit:jmockit:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../jmockit.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/LoginService/../../jmockit.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../jmockit-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/LoginService/../../jmockit-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../jmockit-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/LoginService/../../jmockit-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: easymock:easymock:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/easymock-2.5.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymock/../lib/easymock-2.5.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/easymock-2.5.2-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymock/../lib/easymock-2.5.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/easymock-2.5.2-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymock/../lib/easymock-2.5.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: easymock:easymockclassextension:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/easymockclassextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/easymockclassextension-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/easymockclassextension-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: cglib:cglib-nodep:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/cglib-nodep-2.1_3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/cglib-nodep-2.1_3.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/cglib-nodep-2.1_3-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/cglib-nodep-2.1_3-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/cglib-nodep-2.1_3-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/cglib-nodep-2.1_3-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: jmock:jmock:0">
@@ -1200,40 +1194,44 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/asm-3.1.jar!/" />
       </CLASSES>
-      <JAVADOC />
-      <SOURCES />
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/asm-3.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/asm-3.1-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Maven: org.hamcrest:hamcrest-core:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/hamcrest-core-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/hamcrest-core-1.2-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/hamcrest-core-1.2-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.hamcrest:hamcrest-library:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.objenesis:objenesis:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/objenesis-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/objenesis-1.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/objenesis-1.1-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/objenesis-1.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/objenesis-1.1-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/objenesis-1.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.unitils:unitils-core:0">
@@ -1306,8 +1304,12 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1.jar!/" />
       </CLASSES>
-      <JAVADOC />
-      <SOURCES />
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Maven: log4j:log4j:0">
       <CLASSES>
@@ -1344,13 +1346,13 @@
     </library>
     <library name="Maven: hibernate:hibernate:3.0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../hibernate3emul/lib/hibernate3.jar!/" />
+        <root url="jar://C:/Java/hibernate-distribution-3.3.1.GA/hibernate3.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../hibernate3emul/lib/hibernate3-javadoc.jar!/" />
+        <root url="jar://C:/Java/hibernate-distribution-3.3.1.GA/hibernate3-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../hibernate3emul/lib/hibernate3-sources.jar!/" />
+        <root url="jar://C:/Java/hibernate-distribution-3.3.1.GA/hibernate3-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: mockit:jmockit-hibernate3emul:0">
@@ -1362,6 +1364,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../jmockit-hibernate3emul-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: jta:jta:1.0.1b">
+      <CLASSES>
+        <root url="jar://C:/Java/JavaEE/lib/javaee.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://C:/Java/JavaEE/lib/javaee-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://C:/Java/JavaEE/lib/javaee-sources.jar!/" />
       </SOURCES>
     </library>
   </component>

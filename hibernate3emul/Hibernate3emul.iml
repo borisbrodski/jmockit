@@ -11,11 +11,10 @@
       <excludeFolder url="file://$MODULE_DIR$/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" name="JUnit 4.8" level="application" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Hibernate 3 + JTA" level="project" />
-    <orderEntry type="module" module-name="Main" exported="" />
+    <orderEntry type="library" name="Maven: mockit:jmockit:0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.7" level="project" />
+    <orderEntry type="library" name="Maven: jta:jta:1.0.1b" level="project" />
     <orderEntry type="library" name="Maven: hibernate:hibernate:3.0" level="project" />
   </component>
 </module>
