@@ -96,7 +96,7 @@ public final class BranchCoverageData extends LineSegmentData
       return executionCount;
    }
 
-   void addCountsFromPreviousMeasurement(BranchCoverageData previousData)
+   void addCountsFromPreviousTestRun(BranchCoverageData previousData)
    {
       addExecutionCountAndCallPointsFromPreviousTestRun(previousData);
       jumpExecutionCount += previousData.jumpExecutionCount;

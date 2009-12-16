@@ -113,7 +113,7 @@ public final class LineCoverageData extends LineSegmentData
       return segmentsCovered;
    }
 
-   void addCountsFromPreviousMeasurement(LineCoverageData previousData)
+   void addCountsFromPreviousTestRun(LineCoverageData previousData)
    {
       addExecutionCountAndCallPointsFromPreviousTestRun(previousData);
 
@@ -122,7 +122,7 @@ public final class LineCoverageData extends LineSegmentData
             BranchCoverageData segmentData = branches.get(i);
             BranchCoverageData previousSegmentData = previousData.branches.get(i);
 
-            segmentData.addCountsFromPreviousMeasurement(previousSegmentData);
+            segmentData.addCountsFromPreviousTestRun(previousSegmentData);
          }
       }
    }

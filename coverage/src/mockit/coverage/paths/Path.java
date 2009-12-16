@@ -75,4 +75,9 @@ public final class Path implements Serializable
    {
       return executionCount.get();
    }
+
+   void setExecutionCount(int count)
+   {
+      executionCount.set(count);
+   }
 }

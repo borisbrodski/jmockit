@@ -26,6 +26,7 @@ package mockit.coverage.data;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.*;
 
 import mockit.coverage.*;
 import mockit.coverage.paths.*;
@@ -41,11 +42,15 @@ public final class FileCoverageData implements Serializable
       new TreeMap<Integer, LineCoverageData>();
    public final Map<Integer, MethodCoverageData> firstLineToMethodData =
       new LinkedHashMap<Integer, MethodCoverageData>();
+
+   // Used to track the last time the ".class" file was modified, to decide if merging can be done:
    long lastModified;
-   private int totalSegments;
-   private int coveredSegments;
-   private int totalPaths;
-   private int coveredPaths;
+
+   // Computed on demand, the first time the coverage percentage is requested:
+   private transient int totalSegments;
+   private transient int coveredSegments;
+   private transient int totalPaths;
+   private transient int coveredPaths;
 
    public void addMethod(MethodCoverageData methodData)
    {
@@ -78,7 +83,12 @@ public final class FileCoverageData implements Serializable
 
    public SortedMap<Integer, LineCoverageData> getLineToLineData()
    {
-      return Collections.unmodifiableSortedMap(lineToLineData);
+      return lineToLineData;
+   }
+
+   public Collection<MethodCoverageData> getMethods()
+   {
+      return firstLineToMethodData.values();
    }
 
    public int getTotalSegments()
@@ -135,21 +145,25 @@ public final class FileCoverageData implements Serializable
       return CoveragePercentage.calculate(coveredPaths, totalPaths);
    }
 
-   void addCountsFromPreviousMeasurement(FileCoverageData previousData)
+   void mergeWithDataFromPreviousTestRun(FileCoverageData previousData)
    {
-      SortedMap<Integer, LineCoverageData> previousLineToLineData = previousData.lineToLineData;
+      mergeLineCoverageData(previousData.lineToLineData);
+      mergePathCoverageData(previousData.firstLineToMethodData);
+   }
 
-      for (Map.Entry<Integer, LineCoverageData> lineAndData : lineToLineData.entrySet()) {
+   private void mergeLineCoverageData(Map<Integer, LineCoverageData> previousData)
+   {
+      for (Entry<Integer, LineCoverageData> lineAndData : lineToLineData.entrySet()) {
          Integer line = lineAndData.getKey();
-         LineCoverageData previousLineData = previousLineToLineData.get(line);
+         LineCoverageData previousLineData = previousData.get(line);
 
          if (previousLineData != null) {
             LineCoverageData lineData = lineAndData.getValue();
-            lineData.addCountsFromPreviousMeasurement(previousLineData);
+            lineData.addCountsFromPreviousTestRun(previousLineData);
          }
       }
 
-      for (Map.Entry<Integer, LineCoverageData> lineAndData : previousLineToLineData.entrySet()) {
+      for (Entry<Integer, LineCoverageData> lineAndData : previousData.entrySet()) {
          Integer line = lineAndData.getKey();
 
          if (!lineToLineData.containsKey(line)) {
@@ -158,8 +172,24 @@ public final class FileCoverageData implements Serializable
       }
    }
 
-   public Collection<MethodCoverageData> getMethods()
+   private void mergePathCoverageData(Map<Integer, MethodCoverageData> previousData)
    {
-      return firstLineToMethodData.values();
+      for (Entry<Integer, MethodCoverageData> firstLineAndData : firstLineToMethodData.entrySet()) {
+         Integer firstLine = firstLineAndData.getKey();
+         MethodCoverageData previousPathData = previousData.get(firstLine);
+
+         if (previousPathData != null) {
+            MethodCoverageData pathData = firstLineAndData.getValue();
+            pathData.addCountsFromPreviousTestRun(previousPathData);
+         }
+      }
+
+      for (Entry<Integer, MethodCoverageData> firstLineAndData : previousData.entrySet()) {
+         Integer firstLine = firstLineAndData.getKey();
+
+         if (!firstLineToMethodData.containsKey(firstLine)) {
+            firstLineToMethodData.put(firstLine, firstLineAndData.getValue());
+         }
+      }
    }
 }

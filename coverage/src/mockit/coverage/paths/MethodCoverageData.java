@@ -40,7 +40,7 @@ public final class MethodCoverageData implements Serializable
    private transient ThreadLocal<Integer> nodesReached;
 
    // TODO: eliminate this list in favor of a list of exit nodes?
-   public transient List<Path> paths;
+   public List<Path> paths;
 
    public MethodCoverageData(String methodName)
    {
@@ -125,5 +125,14 @@ public final class MethodCoverageData implements Serializable
       }
 
       return coveredCount;
+   }
+
+   public void addCountsFromPreviousTestRun(MethodCoverageData previousData)
+   {
+      for (int i = 0; i < paths.size(); i++) {
+         Path path = paths.get(i);
+         Path previousPath = previousData.paths.get(i);
+         path.setExecutionCount(previousPath.getExecutionCount());
+      }
    }
 }

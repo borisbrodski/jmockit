@@ -139,7 +139,7 @@ public final class CoverageData implements Serializable
             fileToFileData.put(previousFile, previousFileData);
          }
          else if (previousFileData.lastModified == fileData.lastModified) {
-            fileData.addCountsFromPreviousMeasurement(previousFileData);
+            fileData.mergeWithDataFromPreviousTestRun(previousFileData);
          }
       }
    }
