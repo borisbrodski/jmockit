@@ -209,14 +209,12 @@ final class CoverageModifier extends ClassWriter
 
          nextLabelAfterConditionalJump = isConditionalJump(opcode);
 
-         if (nextLabelAfterConditionalJump) {
-            int branchIndex = lineData.addBranch(mw.currentBlock);
-            pendingBranches.put(branchIndex, false);
+         int branchIndex = lineData.addBranch(mw.currentBlock);
+         pendingBranches.put(branchIndex, false);
 
-            if (assertFoundInCurrentLine) {
-               BranchCoverageData branchData = lineData.getBranchData(branchIndex);
-               branchData.markAsUnreachable();
-            }
+         if (assertFoundInCurrentLine) {
+            BranchCoverageData branchData = lineData.getBranchData(branchIndex);
+            branchData.markAsUnreachable();
          }
 
          mw.visitJumpInsn(opcode, label);
