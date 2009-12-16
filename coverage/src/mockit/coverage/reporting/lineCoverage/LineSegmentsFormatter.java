@@ -123,33 +123,7 @@ final class LineSegmentsFormatter
 
    private void appendTooltipWithExecutionCounts()
    {
-      line.append("title='Executions: ");
-
-      int noJumpCount = segmentData.getExecutionCount();
-
-      if (segmentData instanceof BranchCoverageData) {
-         int jumpCount = ((BranchCoverageData) segmentData).getJumpExecutionCount();
-
-         if (noJumpCount >= 0 && jumpCount >= 0) {
-            line.append(noJumpCount + jumpCount);
-            line.append(" Jumps: ").append(jumpCount);
-         }
-         else if (noJumpCount > 0) {
-            line.append(noJumpCount);
-            line.append(" No jumps");
-         }
-         else if (jumpCount > 0) {
-            line.append("title='Jumps: ").append(jumpCount);
-         }
-         else {
-            line.append('0');
-         }
-      }
-      else {
-         line.append(noJumpCount);
-      }
-
-      line.append("' ");
+      line.append("title='Executions: ").append(segmentData.getExecutionCount()).append("' ");
    }
 
    private void appendEndTag()
