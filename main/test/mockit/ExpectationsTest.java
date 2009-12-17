@@ -138,19 +138,69 @@ public final class ExpectationsTest
       Dummy(int i) {}
    }
 
+   static final class SubCollaborator extends Collaborator
+   {
+      @Override
+      int getValue()
+      {
+         return 1 + super.getValue();
+      }
+
+      int getValue(int i)
+      {
+         return i + super.getValue();
+      }
+   }
+
    @Test
    public void mockSubclass()
    {
       new Expectations()
       {
-         SubCollaborator mock = new SubCollaborator();
+         final SubCollaborator mock = new SubCollaborator();
+
+         {
+            mock.provideSomeService();
+            mock.getValue(); result = 1;
+         }
       };
 
-      new SubCollaborator();
+      SubCollaborator subCollaborator = new SubCollaborator();
+      subCollaborator.provideSomeService();
+      assertEquals(1, subCollaborator.getValue());
    }
 
-   static final class SubCollaborator extends Collaborator
+   @Test
+   public void mockSuperClassUsingLocalMockField()
    {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.getValue(); result = 1;
+            mock.getValue(); result = 2;
+         }
+      };
+
+      SubCollaborator collaborator = new SubCollaborator();
+      assertEquals(2, collaborator.getValue());
+      assertEquals(3, collaborator.getValue(1));
+   }
+
+   @Test
+   public void mockSuperClassUsingMockParameter(@NonStrict final Collaborator mock)
+   {
+      new Expectations()
+      {
+         {
+            mock.getValue(); returns(1, 2);
+         }
+      };
+
+      SubCollaborator collaborator = new SubCollaborator();
+      assertEquals(2, collaborator.getValue());
+      assertEquals(3, collaborator.getValue(1));
    }
 
    @Test(expected = IllegalStateException.class)
