@@ -31,7 +31,7 @@ td.file {
    border-bottom: white solid 1px;
 }
 td.coverage {
-   font-weight: bolder; width: 6em; text-align: right; vertical-align: middle;
+   font-weight: bolder; width: 4em; text-align: right; vertical-align: middle;
    border-bottom: white solid 1px;
 }
 td.unknown { background-color: #daa520; text-align: center; }
