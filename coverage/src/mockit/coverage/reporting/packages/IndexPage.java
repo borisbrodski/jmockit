@@ -71,9 +71,16 @@ public final class IndexPage extends ListWithFilesAndPercentages
    private void writeHeader()
    {
       ((OutputFile) output).writeCommonHeader();
+
       output.println("  <h1>JMockit Coverage Report</h1>");
       output.println("  <table cellpadding='0' cellspacing='1'>");
 
+      writeTableCaption();
+      writeTableFirstRowWithColumnTitles();
+   }
+
+   private void writeTableCaption()
+   {
       if (sourceDirs == null) {
          output.println("    <caption>All Packages and Files</caption>");
       }
@@ -83,15 +90,19 @@ public final class IndexPage extends ListWithFilesAndPercentages
          output.write(commaSepDirs.substring(1, commaSepDirs.length() - 1));
          output.println("</div></caption>");
       }
+   }
 
-      output.write("    <tr><th>Packages: ");
+   private void writeTableFirstRowWithColumnTitles()
+   {
+      output.write("    <tr><th rowspan='2'>Packages: ");
       output.print(packageToFiles.keySet().size());
-      output.write("</th><th>Files (.java): ");
+      output.write("</th><th rowspan='2'>Files (.java): ");
 
       int totalFileCount = computeTotalNumberOfSourceFiles();
       output.print(totalFileCount);
+      output.println("</th><th colspan='2'>Coverage</th></tr>");
 
-      output.println("</th><th>Line Coverage</th><th>Path Coverage</th></tr>");
+      output.println("    <tr><th>Line</th><th>Path</th></tr>");
    }
 
    private int computeTotalNumberOfSourceFiles()
