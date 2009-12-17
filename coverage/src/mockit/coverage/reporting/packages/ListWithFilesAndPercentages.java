@@ -45,18 +45,6 @@ abstract class ListWithFilesAndPercentages
       this.baseIndent = baseIndent;
    }
 
-   protected abstract void writeMetricsForFile(String packageName, String fileName);
-   protected abstract String getHRefToFile(String filePath);
-   protected abstract String getFileNameForDisplay(String filePath);
-
-   protected abstract int getTotalSegments(String filePath);
-   protected abstract int getCoveredSegments(String filePath);
-   protected abstract int getCodeCoveragePercentageForFile(String filePath);
-
-   protected abstract int getTotalPaths(String filePath);
-   protected abstract int getCoveredPaths(String filePath);
-   protected abstract int getPathCoveragePercentageForFile(String filePath);
-
    final void writeMetricsForEachFile(String packageName, List<String> fileNames)
    {
       if (fileNames.isEmpty()) {
@@ -81,6 +69,13 @@ abstract class ListWithFilesAndPercentages
       }
    }
 
+   final void printIndent()
+   {
+      output.write(baseIndent);
+   }
+
+   protected abstract void writeMetricsForFile(String packageName, String fileName);
+
    final void writeTableCellWithFileName(String filePath)
    {
       printIndent();
@@ -103,25 +98,8 @@ abstract class ListWithFilesAndPercentages
       output.println("</td>");
    }
 
-   final void writeCodeCoveragePercentageForFile(String filePath)
-   {
-      int fileCodePercentage = getCodeCoveragePercentageForFile(filePath);
-
-      totalSegments += getTotalSegments(filePath);
-      coveredSegments += getCoveredSegments(filePath);
-
-      printCoveragePercentage(true, fileCodePercentage);
-   }
-
-   final void writePathCoveragePercentageForFile(String filePath)
-   {
-      int filePathPercentage = getPathCoveragePercentageForFile(filePath);
-
-      totalPaths += getTotalPaths(filePath);
-      coveredPaths += getCoveredPaths(filePath);
-
-      printCoveragePercentage(false, filePathPercentage);
-   }
+   protected abstract String getHRefToFile(String filePath);
+   protected abstract String getFileNameForDisplay(String filePath);
 
    final void printCoveragePercentage(boolean firstColumn, int percentage)
    {
@@ -145,10 +123,5 @@ abstract class ListWithFilesAndPercentages
          printIndent();
          output.println("  <td class='coverage nocode'>N/A</td>");
       }
-   }
-
-   final void printIndent()
-   {
-      output.write(baseIndent);
    }
 }

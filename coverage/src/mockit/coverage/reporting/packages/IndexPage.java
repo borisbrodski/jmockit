@@ -129,42 +129,6 @@ public final class IndexPage extends ListWithFilesAndPercentages
    }
 
    @Override
-   protected int getTotalSegments(String packageName)
-   {
-      return 0;
-   }
-
-   @Override
-   protected int getCoveredSegments(String packageName)
-   {
-      return 0;
-   }
-
-   @Override
-   protected int getCodeCoveragePercentageForFile(String packageName)
-   {
-      return packageToPackageCodePercentages.get(packageName);
-   }
-
-   @Override
-   protected int getTotalPaths(String packageName)
-   {
-      return 0;
-   }
-
-   @Override
-   protected int getCoveredPaths(String packageName)
-   {
-      return 0;
-   }
-
-   @Override
-   protected int getPathCoveragePercentageForFile(String packageName)
-   {
-      return packageToPackagePathPercentages.get(packageName);
-   }
-
-   @Override
    protected String getHRefToFile(String filePath)
    {
       return null;
@@ -220,5 +184,19 @@ public final class IndexPage extends ListWithFilesAndPercentages
       packageToPackagePathPercentages.put(packageName, packagePathPercentage);
       totalPaths += packageReport.totalPaths;
       coveredPaths += packageReport.coveredPaths;
+   }
+
+   private void writeCodeCoveragePercentageForFile(String packageName)
+   {
+      int fileCodePercentage = packageToPackageCodePercentages.get(packageName);
+
+      printCoveragePercentage(true, fileCodePercentage);
+   }
+
+   private void writePathCoveragePercentageForFile(String packageName)
+   {
+      int filePathPercentage = packageToPackagePathPercentages.get(packageName);
+
+      printCoveragePercentage(false, filePathPercentage);
    }
 }

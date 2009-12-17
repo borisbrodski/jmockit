@@ -43,42 +43,6 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    }
 
    @Override
-   protected int getTotalSegments(String filePath)
-   {
-      return filesToFileData.get(filePath).getTotalSegments();
-   }
-
-   @Override
-   protected int getCoveredSegments(String filePath)
-   {
-      return filesToFileData.get(filePath).getCoveredSegments();
-   }
-
-   @Override
-   protected int getCodeCoveragePercentageForFile(String filePath)
-   {
-      return filesToFileData.get(filePath).getCodeCoveragePercentage();
-   }
-
-   @Override
-   protected int getTotalPaths(String filePath)
-   {
-      return filesToFileData.get(filePath).getTotalPaths();
-   }
-
-   @Override
-   protected int getCoveredPaths(String filePath)
-   {
-      return filesToFileData.get(filePath).getCoveredPaths();
-   }
-
-   @Override
-   protected int getPathCoveragePercentageForFile(String filePath)
-   {
-      return filesToFileData.get(filePath).getPathCoveragePercentage();
-   }
-
-   @Override
    protected String getHRefToFile(String filePath)
    {
       return withSourceFiles ? filePath.replace(".java", ".html") : null;
@@ -112,5 +76,27 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
          printIndent();
          output.println("  <td colspan='2' class='coverage unknown'>?</td>");
       }
+   }
+
+   private void writeCodeCoveragePercentageForFile(String filePath)
+   {
+      FileCoverageData fileData = filesToFileData.get(filePath);
+      int percentage = fileData.getCodeCoveragePercentage();
+
+      coveredSegments += fileData.getCoveredSegments();
+      totalSegments += fileData.getTotalSegments();
+
+      printCoveragePercentage(true, percentage);
+   }
+
+   private void writePathCoveragePercentageForFile(String filePath)
+   {
+      FileCoverageData fileData = filesToFileData.get(filePath);
+      int percentage = fileData.getPathCoveragePercentage();
+
+      coveredPaths += fileData.getCoveredPaths();
+      totalPaths += fileData.getTotalPaths();
+
+      printCoveragePercentage(false, percentage);
    }
 }
