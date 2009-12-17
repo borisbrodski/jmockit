@@ -34,7 +34,7 @@ import mockit.coverage.reporting.parsing.LineElement.*;
  */
 public final class LineParser
 {
-   private static final String SEPARATORS = ".,;:()";
+   private static final String SEPARATORS = ".,;()";
 
    private int lineNum;
    private String line;

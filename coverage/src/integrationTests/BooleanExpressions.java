@@ -4,7 +4,7 @@ public final class BooleanExpressions
 {
    public boolean eval1(boolean x, boolean y, int z)
    {
-      return x && (y || z > 0);
+      return x && (y || z > 0) ? true : false;
    }
 
    public boolean eval2(boolean x, boolean y, int z)

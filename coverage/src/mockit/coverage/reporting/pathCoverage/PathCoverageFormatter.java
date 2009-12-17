@@ -64,27 +64,33 @@ final class PathCoverageFormatter
       lineSegmentIds.setLength(0);
 
       int previousLine = 0;
-      int lineSegment = 0;
+      int previousSegment = 0;
 
       for (Node node : path.getNodes()) {
          int line = node.line;
+         int segment = node.getSegment();
 
-         if (previousLine == 0) {
-            lineSegmentIds.append('l').append(line).append("s0");
+         if (line > previousLine) {
+            appendSegmentId(line, segment);
             previousLine = line;
          }
-         else if (line > previousLine) {
-            lineSegmentIds.append(" l").append(line).append("s0");
-            previousLine = line;
-            lineSegment = 0;
+         else if (segment > previousSegment) {
+            appendSegmentId(line, segment);
          }
-         else if (node instanceof Node.Fork) {
-            lineSegment++;
-            lineSegmentIds.append(" l").append(line).append('s').append(lineSegment);
-         }
+
+         previousSegment = segment;
       }
 
       return lineSegmentIds.toString();
+   }
+
+   private void appendSegmentId(int line, int segment)
+   {
+      if (lineSegmentIds.length() > 0) {
+         lineSegmentIds.append(' ');
+      }
+      
+      lineSegmentIds.append('l').append(line).append('s').append(segment);
    }
 
    private void writePathId()

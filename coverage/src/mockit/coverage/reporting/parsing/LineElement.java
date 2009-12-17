@@ -29,7 +29,7 @@ import java.util.*;
 
 public final class LineElement implements Iterable<LineElement>
 {
-   private static final List<String> CONDITIONAL_OPERATORS = asList("||", "&&");
+   private static final List<String> CONDITIONAL_OPERATORS = asList("||", "&&", ":");
    private static final List<String> CONDITIONAL_INSTRUCTIONS = asList("if", "for", "while");
 
    enum ElementType { CODE, COMMENT, SEPARATOR }

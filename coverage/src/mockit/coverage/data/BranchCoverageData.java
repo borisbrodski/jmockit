@@ -105,7 +105,7 @@ public final class BranchCoverageData extends LineSegmentData
    @Override
    public int getExecutionCount()
    {
-      return executionCount >= 0 ? executionCount : jumpExecutionCount;
+      return executionCount > 0 ? executionCount : jumpExecutionCount > 0 ? jumpExecutionCount : 0;
    }
 
    void addCountsFromPreviousTestRun(BranchCoverageData previousData)

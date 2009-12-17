@@ -33,7 +33,7 @@ public class Node implements Serializable
 
    private final transient ThreadLocal<Boolean> reached = new ThreadLocal<Boolean>();
    public final int line;
-   private int segment;
+   protected int segment;
 
    private Node(int line)
    {
@@ -42,10 +42,17 @@ public class Node implements Serializable
 
    void setSegmentAccordingToPrecedingNode(Node precedingNode)
    {
-      segment = precedingNode.segment + 1;
+      int currentSegment = precedingNode.segment;
+
+      if (precedingNode instanceof Fork) {
+         segment = currentSegment + 1;
+      }
+      else {
+         segment = currentSegment;
+      }
    }
 
-   public int getSegment()
+   public final int getSegment()
    {
       return segment;
    }
@@ -187,6 +194,12 @@ public class Node implements Serializable
       {
          path.addNode(this);
          nextNode.addToPath(path);
+      }
+
+      @Override
+      void setSegmentAccordingToPrecedingNode(Node precedingNode)
+      {
+         segment = precedingNode.segment + 1;
       }
    }
 }
