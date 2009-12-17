@@ -662,15 +662,15 @@
       <td class='paths'>
         <span style='cursor:default; background-color:#996600' onclick='hidePath()'>Path coverage: 2/5</span>
         <span class='covered' onclick="showPath(this,'l97s0 l97s1')">A: 6</span>
-        <span class='uncovered' onclick="showPath(this,'l97s0 l97s1 l98s0 l98s1')">B: 0</span>
-        <span class='uncovered' onclick="showPath(this,'l97s0 l97s1 l98s0 l98s1 l98s2')">C: 0</span>
-        <span class='uncovered' onclick="showPath(this,'l97s0 l97s1 l98s0 l98s1 l98s2 l100s0 l102s0')">D: 0</span>
-        <span class='covered' onclick="showPath(this,'l97s0 l97s1 l98s0 l98s1 l98s2 l100s0 l102s0 l104s0')">E: 1</span>
+        <span class='uncovered' onclick="showPath(this,'l97s0 l98s0 l98s2')">B: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l97s0 l98s0 l98s1 l98s2')">C: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l97s0 l98s0 l98s1 l100s0 l102s0 l102s1')">D: 0</span>
+        <span class='covered' onclick="showPath(this,'l97s0 l98s0 l98s1 l100s0 l102s0 l104s0')">E: 1</span>
       </td>
     </tr>
     <tr>
       <td class='line'>97</td><td class='count'>7</td>
-      <td><pre class='prettyprint jmp'>      <span id='l97s0' title='Executions: 7' class='covered cp' onclick='showHide(this,0)'>if (this == o) </span><span id='l97s1' title='Executions: 6 No jumps' class='covered cp' onclick='showHide(this,1)'>return true;</span></pre>
+      <td><pre class='prettyprint jmp'>      <span id='l97s0' title='Executions: 7' class='covered cp' onclick='showHide(this,0)'>if (this == o)</span> <span id='l97s1' title='Executions: 6' class='covered cp' onclick='showHide(this,1)'>return true;</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:62</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:62</li>
@@ -692,7 +692,7 @@
     </tr>
     <tr>
       <td class='line'>98</td><td class='count'>1</td>
-      <td><pre class='prettyprint jmp'>      <span id='l98s0' title='Executions: 1' class='covered cp' onclick='showHide(this,0)'>if (o == null </span>|| <span id='l98s1' title='Executions: 1 Jumps: 0' class='covered cp' onclick='showHide(this,1)'>getClass() != o.getClass()) return false;</span></pre>
+      <td><pre class='prettyprint jmp'>      <span id='l98s0' title='Executions: 1' class='covered cp' onclick='showHide(this,0)'>if (o == null</span> || <span id='l98s1' title='Executions: 1' class='covered cp' onclick='showHide(this,1)'>getClass() != o.getClass()) return false;</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithDuplicateItem:119</li>
         </ol>

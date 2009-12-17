@@ -184,8 +184,8 @@
       <td></td><td class='count'>5</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#00ff00' onclick='hidePath()'>Path coverage: 2/2</span>
-        <span class='covered' onclick="showPath(this,'l39s0 l39s1 l40s0')">A: 2</span>
-        <span class='covered' onclick="showPath(this,'l39s0 l39s1 l43s0 l50s0')">B: 3</span>
+        <span class='covered' onclick="showPath(this,'l39s0 l40s0')">A: 2</span>
+        <span class='covered' onclick="showPath(this,'l39s0 l43s0 l50s0')">B: 3</span>
       </td>
     </tr>
     <tr>
@@ -311,14 +311,14 @@
         <span style='cursor:default; background-color:#33cc00' onclick='hidePath()'>Path coverage: 4/5</span>
         <span class='covered' onclick="showPath(this,'l56s0 l56s1 l57s0 l58s0')">A: 1</span>
         <span class='covered' onclick="showPath(this,'l56s0 l56s1 l57s0 l57s1 l58s0')">B: 1</span>
-        <span class='covered' onclick="showPath(this,'l56s0 l56s1 l57s0 l57s1 l62s0 l62s1 l63s0')">C: 1</span>
-        <span class='uncovered' onclick="showPath(this,'l56s0 l56s1 l66s0')">D: 0</span>
-        <span class='covered' onclick="showPath(this,'l56s0 l56s1 l57s0 l57s1 l62s0 l62s1 l63s0 l66s0')">E: 3</span>
+        <span class='covered' onclick="showPath(this,'l56s0 l56s1 l57s0 l57s1 l62s0 l63s0')">C: 1</span>
+        <span class='uncovered' onclick="showPath(this,'l56s0 l66s0')">D: 0</span>
+        <span class='covered' onclick="showPath(this,'l56s0 l56s1 l57s0 l57s1 l62s0 l63s1 l66s0')">E: 3</span>
       </td>
     </tr>
     <tr>
       <td class='line'>56</td><td class='count'>6</td>
-      <td><pre class='prettyprint jmp'>      <span id='l56s0' title='Executions: 6' class='covered cp' onclick='showHide(this,0)'>for (OrderItem item : items) </span><span id='l56s1' title='Executions: 9 No jumps' class='covered cp' onclick='showHide(this,1)'>{</span></pre>
+      <td><pre class='prettyprint jmp'>      <span id='l56s0' title='Executions: 6' class='covered cp' onclick='showHide(this,0)'>for (OrderItem item</span> : <span id='l56s1' title='Executions: 9' class='covered cp' onclick='showHide(this,1)'>items) {</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrderWithInvalidItemQuantity:100</li>
@@ -342,7 +342,7 @@
     </tr>
     <tr>
       <td class='line'>57</td><td class='count'>9</td>
-      <td><pre class='prettyprint jmp'>         <span id='l57s0' title='Executions: 9' class='covered cp' onclick='showHide(this,0)'>if (item.getQuantity() &lt;= 0 </span>|| <span id='l57s1' title='Executions: 8 No jumps' class='covered cp' onclick='showHide(this,1)'>item.getUnitPrice().compareTo(BigDecimal.ZERO) &lt;= 0) {</span></pre>
+      <td><pre class='prettyprint jmp'>         <span id='l57s0' title='Executions: 9' class='covered cp' onclick='showHide(this,0)'>if (item.getQuantity() &lt;= 0</span> || <span id='l57s1' title='Executions: 8' class='covered cp' onclick='showHide(this,1)'>item.getUnitPrice().compareTo(BigDecimal.ZERO) &lt;= 0) {</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>
           <li>orderMngr.domain.order.OrderFactoryTest#createOrder:59</li>

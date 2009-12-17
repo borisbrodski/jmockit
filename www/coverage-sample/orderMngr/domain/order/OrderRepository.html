@@ -178,7 +178,7 @@
       <td class='paths'>
         <span style='cursor:default; background-color:#807f00' onclick='hidePath()'>Path coverage: 1/2</span>
         <span class='uncovered' onclick="showPath(this,'l38s0 l42s0 l49s0')">A: 0</span>
-        <span class='covered' onclick="showPath(this,'l38s0 l42s0 l49s0')">B: 2</span>
+        <span class='covered' onclick="showPath(this,'l38s0 l42s0 l42s1 l49s0')">B: 2</span>
       </td>
     </tr>
     <tr>
@@ -214,7 +214,11 @@
     </tr>
     <tr>
       <td class='line'>42</td><td class='count'>2</td>
-      <td><pre class='prettyprint jmp'>      <span id='l42s0' title='Executions: 2' class='covered cp' onclick='showHide(this,0)'>for (OrderItem item : order.getItems()) {</span></pre>
+      <td><pre class='prettyprint jmp'>      <span id='l42s0' title='Executions: 2' class='covered cp' onclick='showHide(this,0)'>for (OrderItem item</span> : <span id='l42s1' title='Executions: 2' class='covered cp' onclick='showHide(this,1)'>order.getItems()) {</span></pre>
+        <ol style='display: none;'>
+          <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
+          <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>
+        </ol>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderRepositoryTest#createOrder:83</li>
           <li>orderMngr.domain.order.OrderRepositoryTestUsingExpectations#createOrder:69</li>

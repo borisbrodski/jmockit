@@ -447,15 +447,15 @@
       <td class='paths'>
         <span style='cursor:default; background-color:#cc3300' onclick='hidePath()'>Path coverage: 1/5</span>
         <span class='uncovered' onclick="showPath(this,'l71s0 l71s1')">A: 0</span>
-        <span class='uncovered' onclick="showPath(this,'l71s0 l71s1 l72s0 l72s1')">B: 0</span>
-        <span class='uncovered' onclick="showPath(this,'l71s0 l71s1 l72s0 l72s1 l72s2')">C: 0</span>
-        <span class='uncovered' onclick="showPath(this,'l71s0 l71s1 l72s0 l72s1 l72s2 l74s0 l76s0')">D: 0</span>
-        <span class='covered' onclick="showPath(this,'l71s0 l71s1 l72s0 l72s1 l72s2 l74s0 l76s0')">E: 5</span>
+        <span class='uncovered' onclick="showPath(this,'l71s0 l72s0 l72s2')">B: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l71s0 l72s0 l72s1 l72s2')">C: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l71s0 l72s0 l72s1 l74s0 l76s0 l76s2 l76s3')">D: 0</span>
+        <span class='covered' onclick="showPath(this,'l71s0 l72s0 l72s1 l74s0 l76s0 l76s1 l76s3')">E: 5</span>
       </td>
     </tr>
     <tr>
       <td class='line'>71</td><td class='count'>5</td>
-      <td><pre class='prettyprint jmp'>      <span id='l71s0' title='Executions: 5' class='covered cp' onclick='showHide(this,0)'>if (this == o) </span><span id='l71s1' title='Executions: 0' class='uncovered'>return true;</span></pre>
+      <td><pre class='prettyprint jmp'>      <span id='l71s0' title='Executions: 5' class='covered cp' onclick='showHide(this,0)'>if (this == o)</span> <span id='l71s1' title='Executions: 0' class='uncovered'>return true;</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:83</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:108</li>
@@ -467,7 +467,7 @@
     </tr>
     <tr>
       <td class='line'>72</td><td class='count'>5</td>
-      <td><pre class='prettyprint jmp'>      <span id='l72s0' title='Executions: 5' class='covered cp' onclick='showHide(this,0)'>if (o == null </span>|| <span id='l72s1' title='Executions: 5 Jumps: 0' class='covered cp' onclick='showHide(this,1)'>getClass() != o.getClass()) return false;</span></pre>
+      <td><pre class='prettyprint jmp'>      <span id='l72s0' title='Executions: 5' class='covered cp' onclick='showHide(this,0)'>if (o == null</span> || <span id='l72s1' title='Executions: 5' class='covered cp' onclick='showHide(this,1)'>getClass() != o.getClass()) return false;</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByNumber:83</li>
           <li>orderMngr.domain.order.OrderFindersTest#findOrderByCustomer:108</li>

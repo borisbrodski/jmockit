@@ -172,8 +172,8 @@
       <td></td><td class='count'>0</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#ff0000' onclick='hidePath()'>Path coverage: 0/2</span>
-        <span class='uncovered' onclick="showPath(this,'l40s0 l40s1 l49s0')">A: 0</span>
-        <span class='uncovered' onclick="showPath(this,'l40s0 l40s1 l42s0 l49s0')">B: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l40s0 l49s0')">A: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l40s0 l42s0 l49s0')">B: 0</span>
       </td>
     </tr>
     <tr>
@@ -301,7 +301,7 @@
       <td class='paths'>
         <span style='cursor:default; background-color:#807f00' onclick='hidePath()'>Path coverage: 1/2</span>
         <span class='uncovered' onclick="showPath(this,'l70s0 l73s0 l78s0')">A: 0</span>
-        <span class='covered' onclick="showPath(this,'l70s0 l73s0 l78s0')">B: 2</span>
+        <span class='covered' onclick="showPath(this,'l70s0 l73s0 l73s1 l78s0')">B: 2</span>
       </td>
     </tr>
     <tr>
@@ -328,7 +328,7 @@
     </tr>
     <tr>
       <td class='line'>73</td><td class='count'>4</td>
-      <td><pre class='prettyprint jmp'>      <span id='l73s0' title='Executions: 4' class='covered cp' onclick='showHide(this,0)'>for (Object arg : args) </span><span id='l73s1' title='Executions: 2 No jumps' class='covered cp' onclick='showHide(this,1)'>{</span></pre>
+      <td><pre class='prettyprint jmp'>      <span id='l73s0' title='Executions: 4' class='covered cp' onclick='showHide(this,0)'>for (Object arg</span> : <span id='l73s1' title='Executions: 2' class='covered cp' onclick='showHide(this,1)'>args) {</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
@@ -396,8 +396,8 @@
       <td></td><td class='count'>0</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#ff0000' onclick='hidePath()'>Path coverage: 0/2</span>
-        <span class='uncovered' onclick="showPath(this,'l83s0 l83s1 l91s0')">A: 0</span>
-        <span class='uncovered' onclick="showPath(this,'l83s0 l83s1 l85s0 l91s0')">B: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l83s0 l91s0')">A: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l83s0 l85s0 l91s0')">B: 0</span>
       </td>
     </tr>
     <tr>
@@ -452,13 +452,13 @@
       <td></td><td class='count'>2</td>
       <td class='paths'>
         <span style='cursor:default; background-color:#807f00' onclick='hidePath()'>Path coverage: 1/2</span>
-        <span class='uncovered' onclick="showPath(this,'l95s0 l95s1 l103s0')">A: 0</span>
-        <span class='covered' onclick="showPath(this,'l95s0 l95s1 l97s0 l103s0')">B: 2</span>
+        <span class='uncovered' onclick="showPath(this,'l95s0 l103s0')">A: 0</span>
+        <span class='covered' onclick="showPath(this,'l95s0 l97s0 l103s0')">B: 2</span>
       </td>
     </tr>
     <tr>
       <td class='line'>95</td><td class='count'>2</td>
-      <td><pre class='prettyprint jmp'>      <span id='l95s0' title='Executions: 2' class='covered cp' onclick='showHide(this,0)'>if (result != null) </span><span id='l95s1' title='Executions: 2 No jumps' class='covered cp' onclick='showHide(this,1)'>{</span></pre>
+      <td><pre class='prettyprint jmp'>      <span id='l95s0' title='Executions: 2' class='covered cp' onclick='showHide(this,0)'>if (result != null)</span> <span id='l95s1' title='Executions: 2' class='covered cp' onclick='showHide(this,1)'>{</span></pre>
         <ol style='display: none;'>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
           <li>orderMngr.domain.order.OrderRepositoryTest#findOrderByNumber:193</li>
