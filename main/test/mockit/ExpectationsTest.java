@@ -165,9 +165,9 @@ public final class ExpectationsTest
          }
       };
 
-      SubCollaborator subCollaborator = new SubCollaborator();
-      subCollaborator.provideSomeService();
-      assertEquals(1, subCollaborator.getValue());
+      SubCollaborator collaborator = new SubCollaborator();
+      collaborator.provideSomeService();
+      assertEquals(1, collaborator.getValue());
    }
 
    @Test
@@ -194,7 +194,7 @@ public final class ExpectationsTest
       new Expectations()
       {
          {
-            mock.getValue(); returns(1, 2);
+            mock.getValue(); times = 2; returns(1, 2);
          }
       };
 
