@@ -73,7 +73,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
       ((OutputFile) output).writeCommonHeader();
 
       output.println("  <h1>JMockit Coverage Report</h1>");
-      output.println("  <table cellpadding='0' cellspacing='1'>");
+      output.println("  <table>");
 
       writeTableCaption();
       writeTableFirstRowWithColumnTitles();
@@ -165,7 +165,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
       printIndent();
       output.println("  <td>");
       printIndent();
-      output.println("    <table width='100%' cellpadding='1' cellspacing='1'>");
+      output.println("    <table>");
 
       List<String> packageFiles = packageToFiles.get(packageName);
       packageReport.writeMetricsForEachFile(packageName, packageFiles);
