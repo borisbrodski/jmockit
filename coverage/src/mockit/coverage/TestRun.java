@@ -121,8 +121,7 @@ public final class TestRun
    public static void fieldRead(String file, String classAndFieldNames)
    {
       FileCoverageData fileData = CoverageData.instance().getFileData(file);
-      Boolean wasAssigned = fileData.staticFieldsData.put(classAndFieldNames, null);
-      assert wasAssigned;
+      fileData.staticFieldsData.put(classAndFieldNames, null);
    }
 
    public static void fieldAssigned(Object instance, String file, String classAndFieldNames)
@@ -141,7 +140,6 @@ public final class TestRun
       FileCoverageData fileData = CoverageData.instance().getFileData(file);
       List<Integer> fieldData = fileData.instanceFieldsData.get(classAndFieldNames);
       Integer instanceId = 0;//System.identityHashCode(instance);
-      boolean removed = fieldData.remove(instanceId);
-      assert removed;
+      fieldData.remove(instanceId);
    }
 }
