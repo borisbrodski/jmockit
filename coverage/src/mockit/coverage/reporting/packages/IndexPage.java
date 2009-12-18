@@ -37,6 +37,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
    private final Map<String, List<String>> packageToFiles;
    private final Map<String, Integer> packageToPackageCodePercentages;
    private final Map<String, Integer> packageToPackagePathPercentages;
+   private final Map<String, Integer> packageToPackageDataPercentages;
    private final PackageCoverageReport packageReport;
 
    public IndexPage(
@@ -49,6 +50,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
       this.packageToFiles = packageToFiles;
       packageToPackageCodePercentages = new HashMap<String, Integer>();
       packageToPackagePathPercentages = new HashMap<String, Integer>();
+      packageToPackageDataPercentages = new HashMap<String, Integer>();
       packageReport = new PackageCoverageReport(output, fileToFileData, sourceDirs != null);
    }
 
@@ -100,9 +102,9 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
       int totalFileCount = computeTotalNumberOfSourceFiles();
       output.print(totalFileCount);
-      output.println("</th><th colspan='2'>Coverage</th></tr>");
+      output.println("</th><th colspan='3'>Coverage</th></tr>");
 
-      output.println("    <tr><th>Line</th><th>Path</th></tr>");
+      output.println("    <tr><th>Line</th><th>Path</th><th>Data</th></tr>");
    }
 
    private int computeTotalNumberOfSourceFiles()
@@ -126,6 +128,9 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
       int totalPathPercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
       printCoveragePercentage(false, totalPathPercentage);
+
+      int totalDataPercentage = CoveragePercentage.calculate(coveredDataItems, totalDataItems);
+      printCoveragePercentage(false, totalDataPercentage);
 
       output.println("    </tr>");
    }
@@ -158,6 +163,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
       writeInternalTableForChildren(fileName);
       writeCodeCoveragePercentageForFile(fileName);
       writePathCoveragePercentageForFile(fileName);
+      writeDataCoveragePercentageForFile(fileName);
    }
 
    private void writeInternalTableForChildren(String packageName)
@@ -172,6 +178,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
       recordCodeCoverageInformationForPackage(packageName);
       recordPathCoverageInformationForPackage(packageName);
+      recordDataCoverageInformationForPackage(packageName);
 
       printIndent();
       output.println("    </table>");
@@ -181,33 +188,46 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void recordCodeCoverageInformationForPackage(String packageName)
    {
-      int packageCodePercentage =
+      int packagePercentage =
          CoveragePercentage.calculate(packageReport.coveredSegments, packageReport.totalSegments);
-      packageToPackageCodePercentages.put(packageName, packageCodePercentage);
+      packageToPackageCodePercentages.put(packageName, packagePercentage);
       totalSegments += packageReport.totalSegments;
       coveredSegments += packageReport.coveredSegments;
    }
 
    private void recordPathCoverageInformationForPackage(String packageName)
    {
-      int packagePathPercentage =
+      int packagePercentage =
          CoveragePercentage.calculate(packageReport.coveredPaths, packageReport.totalPaths);
-      packageToPackagePathPercentages.put(packageName, packagePathPercentage);
+      packageToPackagePathPercentages.put(packageName, packagePercentage);
       totalPaths += packageReport.totalPaths;
       coveredPaths += packageReport.coveredPaths;
    }
 
+   private void recordDataCoverageInformationForPackage(String packageName)
+   {
+      int packagePercentage =
+         CoveragePercentage.calculate(packageReport.coveredDataItems, packageReport.totalDataItems);
+      packageToPackageDataPercentages.put(packageName, packagePercentage);
+      totalDataItems += packageReport.totalDataItems;
+      coveredDataItems += packageReport.coveredDataItems;
+   }
+
    private void writeCodeCoveragePercentageForFile(String packageName)
    {
-      int fileCodePercentage = packageToPackageCodePercentages.get(packageName);
-
-      printCoveragePercentage(true, fileCodePercentage);
+      int filePercentage = packageToPackageCodePercentages.get(packageName);
+      printCoveragePercentage(true, filePercentage);
    }
 
    private void writePathCoveragePercentageForFile(String packageName)
    {
-      int filePathPercentage = packageToPackagePathPercentages.get(packageName);
+      int filePercentage = packageToPackagePathPercentages.get(packageName);
+      printCoveragePercentage(false, filePercentage);
+   }
 
-      printCoveragePercentage(false, filePathPercentage);
+   private void writeDataCoveragePercentageForFile(String packageName)
+   {
+      int filePercentage = packageToPackageDataPercentages.get(packageName);
+      printCoveragePercentage(false, filePercentage);
    }
 }

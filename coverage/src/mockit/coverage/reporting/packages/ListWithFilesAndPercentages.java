@@ -37,6 +37,8 @@ abstract class ListWithFilesAndPercentages
    int coveredSegments;
    int totalPaths;
    int coveredPaths;
+   int totalDataItems;
+   int coveredDataItems;
    private boolean firstColumnWithDoubleSpan;
 
    protected ListWithFilesAndPercentages(PrintWriter output, String baseIndent)
@@ -57,6 +59,8 @@ abstract class ListWithFilesAndPercentages
       coveredSegments = 0;
       totalPaths = 0;
       coveredPaths = 0;
+      totalDataItems = 0;
+      coveredDataItems = 0;
 
       for (String fileName : fileNames) {
          printIndent();

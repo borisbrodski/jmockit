@@ -66,6 +66,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
          writeTableCellWithFileName(filePath);
          writeCodeCoveragePercentageForFile(filePath);
          writePathCoveragePercentageForFile(filePath);
+         writeDataCoveragePercentageForFile(filePath);
       }
       else {
          printIndent();
@@ -74,7 +75,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
          output.println("</td>");
 
          printIndent();
-         output.println("  <td colspan='2' class='coverage unknown'>?</td>");
+         output.println("  <td colspan='3' class='coverage unknown'>?</td>");
       }
    }
 
@@ -96,6 +97,18 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
 
       coveredPaths += fileData.getCoveredPaths();
       totalPaths += fileData.getTotalPaths();
+
+      printCoveragePercentage(false, percentage);
+   }
+
+   private void writeDataCoveragePercentageForFile(String filePath)
+   {
+      FileCoverageData fileData = filesToFileData.get(filePath);
+
+      coveredDataItems += fileData.getCoveredDataItems();
+      totalDataItems += fileData.getTotalDataItems();
+
+      int percentage = fileData.getDataCoveragePercentage();
 
       printCoveragePercentage(false, percentage);
    }

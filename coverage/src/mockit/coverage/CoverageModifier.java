@@ -37,6 +37,7 @@ final class CoverageModifier extends ClassWriter
 {
    private static final Map<String, CoverageModifier> INNER_CLASS_MODIFIERS =
       new HashMap<String, CoverageModifier>();
+   private static final int FIELD_MODIFIERS_TO_IGNORE = ACC_FINAL + ACC_SYNTHETIC;
 
    static byte[] recoverModifiedByteCodeIfAvailable(String innerClassName)
    {
@@ -91,12 +92,12 @@ final class CoverageModifier extends ClassWriter
    public void visitSource(String file, String debug)
    {
       if (!forInnerClass) {
-         sourceFileName += file;
-         fileData = CoverageData.instance().addFile(sourceFileName);
-
          if (cannotModify) {
             throw CodeCoverage.CLASS_IGNORED;
          }
+
+         sourceFileName += file;
+         fileData = CoverageData.instance().addFile(sourceFileName);
       }
 
       super.visitSource(file, debug);
@@ -122,6 +123,17 @@ final class CoverageModifier extends ClassWriter
       catch (IOException e) {
          e.printStackTrace();
       }
+   }
+
+   @Override
+   public FieldVisitor visitField(
+      int access, String name, String desc, String signature, Object value)
+   {
+      if ((access & FIELD_MODIFIERS_TO_IGNORE) == 0) {
+         fileData.addField(simpleClassName, name, (access & ACC_STATIC) != 0);
+      }
+
+      return super.visitField(access, name, desc, signature, value);
    }
 
    @Override
@@ -502,8 +514,49 @@ final class CoverageModifier extends ClassWriter
       @Override
       public final void visitFieldInsn(int opcode, String owner, String name, String desc)
       {
+         boolean fieldHasData = false;
+         String classAndFieldNames = null;
+         String methodDesc = null;
+         boolean isStatic = opcode == PUTSTATIC || opcode == GETSTATIC;
+         boolean isPutField = opcode == PUTSTATIC || opcode == PUTFIELD;
+
+         if (!owner.startsWith("java/")) {
+            int p = owner.lastIndexOf('/');
+            classAndFieldNames = owner.substring(p + 1) + '.' + name;
+            fieldHasData =
+               isStatic ?
+                  fileData.staticFieldsData.containsKey(classAndFieldNames) :
+                  fileData.instanceFieldsData.containsKey(classAndFieldNames);
+            methodDesc = "(Ljava/lang/String;Ljava/lang/String;)V";
+
+            if (fieldHasData && !isStatic) {
+               methodDesc = "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V";
+
+   //            if (isPutField) {
+   //               mw.visitInsn(DUP);
+   //               mw.visitInsn(DUP);
+   //            }
+   //            else {
+   //               mw.visitInsn(DUP);
+   //            }
+            }
+         }
+
          super.visitFieldInsn(opcode, owner, name, desc);
          handleRegularInstruction();
+
+         if (fieldHasData) {
+            if (!isStatic) {
+               mw.visitInsn(ACONST_NULL);
+            }
+
+            mw.visitLdcInsn(sourceFileName);
+            mw.visitLdcInsn(classAndFieldNames);
+
+            String methodToCall = isPutField ? "fieldAssigned" : "fieldRead";
+
+            mw.visitMethodInsn(INVOKESTATIC, DATA_RECORDING_CLASS, methodToCall, methodDesc);
+         }
       }
 
       @Override

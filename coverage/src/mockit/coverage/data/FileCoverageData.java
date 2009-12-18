@@ -42,6 +42,9 @@ public final class FileCoverageData implements Serializable
       new TreeMap<Integer, LineCoverageData>();
    public final Map<Integer, MethodCoverageData> firstLineToMethodData =
       new LinkedHashMap<Integer, MethodCoverageData>();
+   public final Map<String, Boolean> staticFieldsData = new LinkedHashMap<String, Boolean>();
+   public final Map<String, List<Integer>> instanceFieldsData =
+      new LinkedHashMap<String, List<Integer>>();
 
    // Used to track the last time the ".class" file was modified, to decide if merging can be done:
    long lastModified;
@@ -51,6 +54,19 @@ public final class FileCoverageData implements Serializable
    private transient int coveredSegments;
    private transient int totalPaths;
    private transient int coveredPaths;
+   private transient int coveredDataItems = -1;
+
+   public void addField(String className, String fieldName, boolean isStatic)
+   {
+      String classAndFieldNames = className + '.' + fieldName;
+
+      if (isStatic) {
+         staticFieldsData.put(classAndFieldNames, null);
+      }
+      else {
+         instanceFieldsData.put(classAndFieldNames, new LinkedList<Integer>());
+      }
+   }
 
    public void addMethod(MethodCoverageData methodData)
    {
@@ -69,16 +85,16 @@ public final class FileCoverageData implements Serializable
       return lineData;
    }
 
-   public void incrementLineCount(int line, CallPoint callPoint)
+   public void incrementLineCount(int line, CallPoint cp)
    {
       LineCoverageData lineData = lineToLineData.get(line);
-      lineData.registerExecution(callPoint);
+      lineData.registerExecution(cp);
    }
 
-   public void registerBranchExecution(int line, int branchIndex, boolean jumped, CallPoint callPoint)
+   public void registerBranchExecution(int line, int branchIndex, boolean jumped, CallPoint cp)
    {
       LineCoverageData lineData = lineToLineData.get(line);
-      lineData.registerExecution(branchIndex, jumped, callPoint);
+      lineData.registerExecution(branchIndex, jumped, cp);
    }
 
    public SortedMap<Integer, LineCoverageData> getLineToLineData()
@@ -143,6 +159,43 @@ public final class FileCoverageData implements Serializable
       }
 
       return CoveragePercentage.calculate(coveredPaths, totalPaths);
+   }
+
+   public int getTotalDataItems()
+   {
+      return staticFieldsData.size() + instanceFieldsData.size();
+   }
+
+   public int getCoveredDataItems()
+   {
+      if (coveredDataItems >= 0) {
+         return coveredDataItems;
+      }
+
+      coveredDataItems = 0;
+
+      for (Boolean withUnreadValue : staticFieldsData.values()) {
+         if (withUnreadValue == Boolean.TRUE) {
+            coveredDataItems++;
+         }
+      }
+
+      for (List<Integer> instancesWithUnreadValue : instanceFieldsData.values()) {
+         coveredDataItems += instancesWithUnreadValue.size();
+      }
+
+      return coveredDataItems;
+   }
+
+   public int getDataCoveragePercentage()
+   {
+      int totalFields = getTotalDataItems();
+
+      if (totalFields == 0) {
+         return -1;
+      }
+
+      return CoveragePercentage.calculate(coveredDataItems, totalFields);
    }
 
    void mergeWithDataFromPreviousTestRun(FileCoverageData previousData)

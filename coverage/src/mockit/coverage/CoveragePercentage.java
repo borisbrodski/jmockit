@@ -28,6 +28,10 @@ public final class CoveragePercentage
 {
    public static int calculate(int coveredCount, int totalCount)
    {
+      if (totalCount <= 0) {
+         return -1;
+      }
+
       return (int) (100.0 * coveredCount / totalCount + 0.5);
    }
 

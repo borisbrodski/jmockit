@@ -24,9 +24,12 @@
  */
 package mockit.coverage;
 
+import java.util.*;
+
 import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
 
+@SuppressWarnings({"UnusedDeclaration"})
 public final class TestRun
 {
    private static final ThreadLocal<Boolean> executingCall = new ThreadLocal<Boolean>()
@@ -37,7 +40,6 @@ public final class TestRun
 
    private TestRun() {}
 
-   @SuppressWarnings({"UnusedDeclaration"})
    public static void lineExecuted(String file, int line)
    {
       if (executingCall.get()) {
@@ -56,7 +58,6 @@ public final class TestRun
       executingCall.set(false);
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
    public static void jumpTargetExecuted(String file, int line, int segment)
    {
       if (executingCall.get()) {
@@ -75,7 +76,6 @@ public final class TestRun
       executingCall.set(false);
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
    public static void noJumpTargetExecuted(String file, int line, int segment)
    {
       if (executingCall.get()) {
@@ -94,7 +94,6 @@ public final class TestRun
       executingCall.set(false);
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
    public static void nodeReached(String file, int firstLineInMethodBody, int node)
    {
       if (executingCall.get()) {
@@ -103,8 +102,7 @@ public final class TestRun
 
       executingCall.set(true);
 
-      CoverageData coverageData = CoverageData.instance();
-      FileCoverageData fileData = coverageData.getFileData(file);
+      FileCoverageData fileData = CoverageData.instance().getFileData(file);
       MethodCoverageData methodData = fileData.firstLineToMethodData.get(firstLineInMethodBody);
 
       if (methodData != null) {
@@ -112,5 +110,38 @@ public final class TestRun
       }
 
       executingCall.set(false);
+   }
+
+   public static void fieldAssigned(String file, String classAndFieldNames)
+   {
+      FileCoverageData fileData = CoverageData.instance().getFileData(file);
+      fileData.staticFieldsData.put(classAndFieldNames, Boolean.TRUE);
+   }
+
+   public static void fieldRead(String file, String classAndFieldNames)
+   {
+      FileCoverageData fileData = CoverageData.instance().getFileData(file);
+      Boolean wasAssigned = fileData.staticFieldsData.put(classAndFieldNames, null);
+      assert wasAssigned;
+   }
+
+   public static void fieldAssigned(Object instance, String file, String classAndFieldNames)
+   {
+      FileCoverageData fileData = CoverageData.instance().getFileData(file);
+      List<Integer> fieldData = fileData.instanceFieldsData.get(classAndFieldNames);
+      Integer instanceId = 0;//System.identityHashCode(instance);
+
+      if (!fieldData.contains(instanceId)) {
+         fieldData.add(instanceId);
+      }
+   }
+
+   public static void fieldRead(Object instance, String file, String classAndFieldNames)
+   {
+      FileCoverageData fileData = CoverageData.instance().getFileData(file);
+      List<Integer> fieldData = fileData.instanceFieldsData.get(classAndFieldNames);
+      Integer instanceId = 0;//System.identityHashCode(instance);
+      boolean removed = fieldData.remove(instanceId);
+      assert removed;
    }
 }
