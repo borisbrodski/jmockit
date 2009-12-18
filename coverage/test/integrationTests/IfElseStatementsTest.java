@@ -30,12 +30,6 @@ public final class IfElseStatementsTest extends CoverageTest
 {
    IfElseStatements tested;
 
-   @Before
-   public void setUp()
-   {
-      tested = new IfElseStatements();
-   }
-
    @Test
    public void simpleIf()
    {

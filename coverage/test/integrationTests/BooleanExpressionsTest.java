@@ -28,7 +28,7 @@ import org.junit.*;
 
 public final class BooleanExpressionsTest extends CoverageTest
 {
-   final BooleanExpressions tested = new BooleanExpressions();
+   BooleanExpressions tested;
 
    @Test
    public void evalOnlySomeCombinations()

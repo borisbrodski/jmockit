@@ -30,7 +30,7 @@ import integrationTests.*;
 
 public final class WhileStatementsTest extends CoverageTest
 {
-   WhileStatements tested = new WhileStatements();
+   WhileStatements tested;
 
    @Test
    public void whileBlockInSeparateLines()

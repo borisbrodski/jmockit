@@ -32,12 +32,15 @@ import org.junit.*;
 import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
 
+import static java.lang.reflect.Modifier.*;
+
 public class CoverageTest extends Assert
 {
    static final Map<String, FileCoverageData> data = CoverageData.instance().getFileToFileDataMap();
-   protected FileCoverageData fileData;
+   protected static FileCoverageData fileData;
    protected MethodCoverageData methodData;
    private int currentPathIndex = -1;
+   private String testedClassSimpleName;
 
    @Before
    public void findCoverageData() throws Exception
@@ -48,6 +51,19 @@ public class CoverageTest extends Assert
       String classFilePath = testedClass.getName().replace('.', '/') + ".java";
       fileData = data.get(classFilePath);
       assertNotNull("FileCoverageData not found for " + classFilePath);
+
+      if (!testedClass.isEnum() && !isAbstract(testedClass.getModifiers())) {
+         testedField.setAccessible(true);
+
+         if (testedField.get(this) == null) {
+            //noinspection ClassNewInstance
+            Object newTestedInstance = testedClass.newInstance();
+
+            testedField.set(this, newTestedInstance);
+         }
+      }
+
+      testedClassSimpleName = testedClass.getSimpleName();
    }
 
    protected final void assertLines(int startingLine, int endingLine, int expectedLinesExecuted)
@@ -124,5 +140,48 @@ public class CoverageTest extends Assert
          assertEquals(
             "Path " + nextPathIndex + " was not verified;", nextPathIndex, methodData.paths.size());
       }
+   }
+
+   protected final void assertFieldCovered(String fieldName)
+   {
+      assertNull("Static field " + fieldName + " should be covered", getStaticFieldData(fieldName));
+   }
+
+   private Boolean getStaticFieldData(String fieldName)
+   {
+      return fileData.staticFieldsData.get(testedClassSimpleName + '.' + fieldName);
+   }
+
+   protected final void assertFieldNotCovered(String fieldName)
+   {
+      assertNotNull(
+         "Static field " + fieldName + " should not be covered", getStaticFieldData(fieldName));
+   }
+
+   protected final void assertFieldCovered(String fieldName, Object... instances)
+   {
+      assertTrue(
+         "Instance field " + fieldName + " should be covered",
+         getInstanceFieldData(fieldName).isEmpty());
+   }
+
+   private List<Integer> getInstanceFieldData(String fieldName)
+   {
+      return fileData.instanceFieldsData.get(testedClassSimpleName + '.' + fieldName);
+   }
+
+   protected final void assertFieldNotCovered(String fieldName, Object... instances)
+   {
+      assertFalse(
+         "Instance field " + fieldName + " should not be covered",
+         getInstanceFieldData(fieldName).isEmpty());
+   }
+
+   protected static void verifyDataCoverage(
+      int expectedItems, int expectedCoveredItems, int expectedCoverage)
+   {
+      assertEquals("Total data items:", expectedItems, fileData.getTotalDataItems());
+      assertEquals("Covered data items:", expectedCoveredItems, fileData.getCoveredDataItems());
+      assertEquals("Data coverage:", expectedCoverage, fileData.getDataCoveragePercentage());
    }
 }

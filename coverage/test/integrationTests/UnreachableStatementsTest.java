@@ -28,7 +28,7 @@ import org.junit.*;
 
 public final class UnreachableStatementsTest extends CoverageTest
 {
-   final UnreachableStatements tested = new UnreachableStatements();
+   UnreachableStatements tested;
 
    @Test(expected = AssertionError.class)
    public void nonBranchingMethodWithUnreachableLines()
