@@ -10,6 +10,8 @@ caption div { text-shadow: 0 0 0; }
 
 th { background-color: #6495ed; color: white; }
 td { padding: 0; font-family: monospace; }
+table table td { border-right: 1px solid white; }
+
 ol {
    background-color: #e0ffff;
    margin: 1ex 2em 1ex 4em;
