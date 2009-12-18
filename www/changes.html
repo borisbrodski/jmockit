@@ -11,7 +11,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.995 (December ??, 2009):</p>
+<p>Release 0.995 (December 2?, 2009):</p>
 <ul>
    <li>
       <strong>Hamcrest 1.2</strong> classes are no longer included in <code>jmockit.jar</code>.
@@ -77,6 +77,14 @@
             For packages containing at least one class exercised by the test run, the XHTML report
             will now also show the sources files not exercised.
          </li>
+         <li>
+            <strong>New feature</strong>: individual <em>line segments</em> are now shown in the
+            report, with the execution count for each segment shown in a tooltip.
+            This significantly improves the display of both line and path coverage inside a source
+            file. In this release, however, the implementation is still incomplete, with certain
+            cases not properly handled. (See issue 8.)
+         </li>
+         <li>Several other small improvements.</li>
       </ul>
    </li>
    <li>
