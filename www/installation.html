@@ -236,8 +236,8 @@ public class MyFirstJMockitTest
          MyCollaborator mock;
 
          {
-            mock.getData(); returns("my test data");
-            mock.doSomething(anyInt, "some expected value", anyString); repeats(1);
+            mock.getData(); <em>result</em> = "my test data";
+            mock.doSomething(<em>anyInt</em>, "some expected value", <em>anyString</em>); <em>times</em> = 1;
          }
       };
 
@@ -261,6 +261,17 @@ public class MyFirstJMockitTest
    In the second case, expectations are always <em>non-strict</em>, meaning that the invocations to
    mocked types, whether recorded or not, are <em>allowed</em> to occur in any order and in any
    number, including not at all.
+</p>
+<p>
+   You may be wondering what are those field assignments doing there.
+   The <code>result</code> field takes the desired return value for the preceding invocation, while
+   <code>times</code> takes the number of times the preceding invocation is allowed and expected to
+   occur. (There is also a <code>minTimes</code> and a <code>maxTimes</code> field.)
+   The <code>result</code> field also accepts a <code>Throwable</code> instance, which would cause
+   the corresponding invocation in the replay phase to throw the specified exception or error.
+   Each of these special fields has an equivalent method that could be used instead:
+   <code>returns(...)</code>, <code>repeats(n)</code>, <code>throwsException(...)</code>, etc;
+   but the fields are nicer.
 </p>
 
 <h4>Verifying expectations</h4>
@@ -290,11 +301,51 @@ public class MyFirstJMockitTest
             mock.doSomething();
 
             // Another verification, which must have occurred no more than three times:
-            mock.someOtherMethod(anyBoolean, any, withInstanceOf(Xyz.class)); repeatsAtMost(3);
+            mock.someOtherMethod(<em>anyBoolean</em>, <em>any</em>, withInstanceOf(Xyz.class)); <em>maxTimes</em> = 3;
          }
       };
    }
 </code></pre>
+
+<h4>State-oriented mocking</h4>
+<p>
+   Sometimes you are more interested in checking the argument values passed to a mocked
+   collaborator, instead of checking that the invocation to the collaborator was made from the
+   client/tested method.
+   Of course, you <em>can</em> check argument values through a recorded or verified expectation, but
+   it becomes more difficult when those values are complex.
+   In such cases it may be easier to use the <code>mockit.MockUp&lt;T></code> generic class, as the
+   next test shows.
+</p>
+<pre><code>   @Test
+   public void stateBasedTestMethod()
+   {
+      new MockUp&lt;MyCollaborator>()
+      {
+         @Mock(invocations = 1) // (the invocation count constraint is optional)
+         boolean doSomething(int n, String s, ComplexData otherData)
+         {
+            assertEquals(1, n);
+            assertNotNull(otherData);
+            ...
+            // Return (if non-void) or throw the desired result the invocation to
+            // the mocked method should produce:
+            return otherData.isValid();
+         }
+   
+         // Other mock or regular methods...
+      };
+
+      // Exercise the code under test normally; calls to MyCollaborator#doSomething will execute
+      // the mock method above; if more or less than one such invocation occurs, the test fails.
+      ...
+   }
+</code></pre>
+<p>
+   The <code>@Mock</code> annotation marks those methods in the <em>mock-up class</em> which are
+   supposed to provide mock/stub implementations for the corresponding methods (of the same
+   signature) in the mocked class.
+</p>
 
 <h4>More information</h4>
 <p>
