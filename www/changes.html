@@ -59,6 +59,14 @@
       allow the specification of custom error messages for specific expectations.
    </li>
    <li>
+      <strong>New feature</strong>: the <strong><code>jmockit-tools</code></strong> system property
+      can now be used to specify which external tools JMockit should load at startup.
+      More than one tool can be specified, by separating the tool names with commas.
+      A tool name must be the fully qualified name of a mock class, or a "startup tool" mnemonic
+      configured in the <code>jmockit.properties</code> file.
+      For example, "coverage" stands for JMockit Coverage. (See issue 22.)
+   </li>
+   <li>
       More fixes and enhancements to <strong>JMockit Coverage</strong>:
       <ul>
          <li>

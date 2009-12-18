@@ -67,7 +67,16 @@ public final class Startup
          try { properties.close(); } catch (IOException ignore) {}
       }
 
-      String[] defaultToolsArray = startupTools.getProperty("defaultTools", "").split("\\s+");
+      String[] defaultToolsArray;
+      String specifiedTools = System.getProperty("jmockit-tools");
+
+      if (specifiedTools != null) {
+         defaultToolsArray = specifiedTools.split(",");
+      }
+      else {
+         defaultToolsArray = startupTools.getProperty("defaultTools", "").split("\\s+");
+      }
+
       Collections.addAll(defaultTools, defaultToolsArray);
    }
 

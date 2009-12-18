@@ -506,5 +506,14 @@ coverage=:html:./target/coverage-report
    file opened in the editor. In Eclipse there is a "Read only" check box in the "Properties" screen
    for the text file selected in the editor; this screen can be opened by typing "Alt + Enter".
 </p>
+
+<h4>Using the <code>jmockit-tools</code> system property</h4>
+<p>
+   Another way to switch coverage on/off is to use the <strong><code>jmockit-tools</code></strong>
+   system property, which can specify the "startup tools", between those available in the classpath
+   (if any), to be loaded by JMockit at startup.
+   For the coverage tool, the word <strong>"coverage"</strong> must be present in the value
+   specified for the property (which can contain two or more tool names separated by commas).
+</p>
 </body>
 </html>
