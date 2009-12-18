@@ -313,6 +313,12 @@
       a <code>java.util.regex</code>-conformable regular expression which will be used to select
       the classes from production code which are considered for coverage.
    </li>
+   <li>
+      <code>jmockit-coverage-<strong>excludes</strong></code>:
+      a <code>java.util.regex</code>-conformable regular expression for class names which should be
+      excluded from consideration when deciding which classes will be modified to gather coverage.
+      This property can be used together with <code>jmockit-coverage-classes</code> or on its own.
+   </li>
 </ol>
 
 <h4>Configuration through <code>-javaagent</code></h4>
