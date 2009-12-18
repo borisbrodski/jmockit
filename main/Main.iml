@@ -13,7 +13,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="Logging APIs" level="project" />
-    <orderEntry type="library" name="TestNG 5.10" level="application" />
+    <orderEntry type="library" name="TestNG 5.11" level="application" />
     <orderEntry type="library" name="JUnit 4.8" level="application" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: junit:junit:4.7" level="project" />
