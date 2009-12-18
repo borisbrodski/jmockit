@@ -4,9 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>mockit</groupId>
-      <artifactId>mockit</artifactId>
-      <version>0.995</version>
+      <groupId>mockit</groupId><artifactId>mockit</artifactId><version>0.995</version>
    </parent>
    <artifactId>jmockit</artifactId>
    <name>Main</name>
@@ -16,10 +14,7 @@
          <plugin>
             <artifactId>maven-jar-plugin</artifactId>
             <configuration>
-               <archive>
-                  <forced/>
-                  <manifestFile>META-INF/MANIFEST.MF</manifestFile>
-               </archive>
+               <archive><forced/><manifestFile>META-INF/MANIFEST.MF</manifestFile></archive>
                <excludes><exclude>Temp.class</exclude></excludes>
             </configuration>
          </plugin>
