@@ -68,16 +68,18 @@ final class LineCoverageFormatter
 
    private void formatLineWithSingleSegment(int line, LineElement initialElement)
    {
-      formattedLine.append(" covered");
+      formattedLine.append(lineData.isCovered() ? " covered" : " uncovered");
 
-      if (withCallPoints) {
+      boolean lineWithCallPoints = withCallPoints && lineData.getExecutionCount() > 0;
+
+      if (lineWithCallPoints) {
          formattedLine.append(" cp' onclick='showHide(this)");
       }
 
       formattedLine.append("' id='l").append(line).append("s0'>").append(initialElement.toString());
       formattedLine.append("</pre>");
 
-      if (withCallPoints) {
+      if (lineWithCallPoints) {
          listOfCallPoints.insertListOfCallPoints(lineData.getCallPoints());
          formattedLine.append(listOfCallPoints.getContents());
       }

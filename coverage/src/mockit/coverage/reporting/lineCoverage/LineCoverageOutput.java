@@ -80,38 +80,24 @@ public final class LineCoverageOutput
 
    private void writeExecutableLine(LineParser lineParser)
    {
-      if (lineParser.isBlankLine()) {
-         output.println("      <td></td>");
-         return;
+      output.write("      <td>");
+
+      if (!lineParser.isBlankLine()) {
+         LineElement initialElement = lineParser.getInitialElement();
+
+         if (lineData == null) {
+            output.write("<pre class='");
+            output.write(initialElement.isComment() ? "comment'>" : "prettyprint'>");
+            output.write(initialElement.toString());
+            output.write("</pre>");
+         }
+         else {
+            int line = lineParser.getNumber();
+            String formattedLine = lineCoverageFormatter.format(line, lineData, initialElement);
+            output.write(formattedLine);
+         }
       }
 
-      LineElement initialElement = lineParser.getInitialElement();
-
-      if (lineData == null) {
-         output.write("      <td>");
-         writeLineContent(initialElement);
-      }
-      else if (lineData.getExecutionCount() == 0) {
-         output.write("      <td class='uncovered'>");
-         writeLineContent(initialElement);
-      }
-      else {
-         int line = lineParser.getNumber();
-         String formattedLine = lineCoverageFormatter.format(line, lineData, initialElement);
-         output.println("      <td>" + formattedLine + "</td>");
-      }
-   }
-
-   private void writeLineContent(LineElement initialElement)
-   {
-      if (lineData == null && initialElement.isComment()) {
-         output.write("<pre class='comment'>");
-      }
-      else {
-         output.write("<pre class='prettyprint'>");
-      }
-
-      output.write(initialElement.toString());
-      output.println("</pre></td>");
+      output.println("</td>");
    }
 }

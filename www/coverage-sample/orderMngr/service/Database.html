@@ -146,7 +146,7 @@
     </tr>
     <tr>
       <td class='line'>34</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>public final class Database</pre></td>
+      <td><pre class='prettyprint uncovered' id='l34s0'>public final class Database</pre></td>
     </tr>
     <tr>
       <td class='line'>35</td><td>&nbsp;</td>
@@ -178,7 +178,7 @@
     </tr>
     <tr>
       <td class='line'>40</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>      if (connection == null) {</pre></td>
+      <td><pre class='prettyprint jmp'>      <span id='l40s0' title='Executions: 0' class='uncovered'>if (connection == null)</span> <span id='l40s1' title='Executions: 0' class='uncovered'>{</span></pre></td>
     </tr>
     <tr>
       <td class='line'>41</td><td>&nbsp;</td>
@@ -186,7 +186,7 @@
     </tr>
     <tr>
       <td class='line'>42</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>            connection = DriverManager.getConnection("jdbc:test:ordersDB");</pre></td>
+      <td><pre class='prettyprint uncovered' id='l42s0'>            connection = DriverManager.getConnection("jdbc:test:ordersDB");</pre></td>
     </tr>
     <tr>
       <td class='line'>43</td><td>&nbsp;</td>
@@ -194,15 +194,15 @@
     </tr>
     <tr>
       <td class='line'>44</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>         catch (SQLException e) {</pre></td>
+      <td><pre class='prettyprint uncovered' id='l44s0'>         catch (SQLException e) {</pre></td>
     </tr>
     <tr>
       <td class='line'>45</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>            throw new RuntimeException(e);</pre></td>
+      <td><pre class='prettyprint uncovered' id='l45s0'>            throw new RuntimeException(e);</pre></td>
     </tr>
     <tr>
       <td class='line'>46</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>         }</pre></td>
+      <td><pre class='prettyprint uncovered' id='l46s0'>         }</pre></td>
     </tr>
     <tr>
       <td class='line'>47</td><td>&nbsp;</td>
@@ -214,7 +214,7 @@
     </tr>
     <tr>
       <td class='line'>49</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>      return connection;</pre></td>
+      <td><pre class='prettyprint uncovered' id='l49s0'>      return connection;</pre></td>
     </tr>
     <tr>
       <td class='line'>50</td><td>&nbsp;</td>
@@ -234,7 +234,7 @@
     </tr>
     <tr>
       <td class='line'>54</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>      PreparedStatement stmt = null;</pre></td>
+      <td><pre class='prettyprint uncovered' id='l54s0'>      PreparedStatement stmt = null;</pre></td>
     </tr>
     <tr>
       <td class='line'>55</td><td>&nbsp;</td>
@@ -246,11 +246,11 @@
     </tr>
     <tr>
       <td class='line'>57</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>         stmt = createStatement(sql, args);</pre></td>
+      <td><pre class='prettyprint uncovered' id='l57s0'>         stmt = createStatement(sql, args);</pre></td>
     </tr>
     <tr>
       <td class='line'>58</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>         stmt.executeUpdate();</pre></td>
+      <td><pre class='prettyprint uncovered' id='l58s0'>         stmt.executeUpdate();</pre></td>
     </tr>
     <tr>
       <td class='line'>59</td><td>&nbsp;</td>
@@ -258,11 +258,11 @@
     </tr>
     <tr>
       <td class='line'>60</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>      catch (SQLException e) {</pre></td>
+      <td><pre class='prettyprint uncovered' id='l60s0'>      catch (SQLException e) {</pre></td>
     </tr>
     <tr>
       <td class='line'>61</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>         throw new RuntimeException(e);</pre></td>
+      <td><pre class='prettyprint uncovered' id='l61s0'>         throw new RuntimeException(e);</pre></td>
     </tr>
     <tr>
       <td class='line'>62</td><td>&nbsp;</td>
@@ -274,15 +274,15 @@
     </tr>
     <tr>
       <td class='line'>64</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>         closeStatement(stmt);</pre></td>
+      <td><pre class='prettyprint uncovered' id='l64s0'>         closeStatement(stmt);</pre></td>
     </tr>
     <tr>
       <td class='line'>65</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>      }</pre></td>
+      <td><pre class='prettyprint uncovered' id='l65s0'>      }</pre></td>
     </tr>
     <tr>
       <td class='line'>66</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>   }</pre></td>
+      <td><pre class='prettyprint uncovered' id='l66s0'>   }</pre></td>
     </tr>
     <tr>
       <td class='line'>67</td><td>&nbsp;</td>
@@ -402,7 +402,7 @@
     </tr>
     <tr>
       <td class='line'>83</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>      if (stmt != null) {</pre></td>
+      <td><pre class='prettyprint jmp'>      <span id='l83s0' title='Executions: 0' class='uncovered'>if (stmt != null)</span> <span id='l83s1' title='Executions: 0' class='uncovered'>{</span></pre></td>
     </tr>
     <tr>
       <td class='line'>84</td><td>&nbsp;</td>
@@ -410,7 +410,7 @@
     </tr>
     <tr>
       <td class='line'>85</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>            stmt.close();</pre></td>
+      <td><pre class='prettyprint uncovered' id='l85s0'>            stmt.close();</pre></td>
     </tr>
     <tr>
       <td class='line'>86</td><td>&nbsp;</td>
@@ -418,15 +418,15 @@
     </tr>
     <tr>
       <td class='line'>87</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>         catch (SQLException e) {</pre></td>
+      <td><pre class='prettyprint uncovered' id='l87s0'>         catch (SQLException e) {</pre></td>
     </tr>
     <tr>
       <td class='line'>88</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>            throw new RuntimeException(e);</pre></td>
+      <td><pre class='prettyprint uncovered' id='l88s0'>            throw new RuntimeException(e);</pre></td>
     </tr>
     <tr>
       <td class='line'>89</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>         }</pre></td>
+      <td><pre class='prettyprint uncovered' id='l89s0'>         }</pre></td>
     </tr>
     <tr>
       <td class='line'>90</td><td>&nbsp;</td>
@@ -434,7 +434,7 @@
     </tr>
     <tr>
       <td class='line'>91</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>   }</pre></td>
+      <td><pre class='prettyprint uncovered' id='l91s0'>   }</pre></td>
     </tr>
     <tr>
       <td class='line'>92</td><td>&nbsp;</td>
@@ -488,11 +488,11 @@
     </tr>
     <tr>
       <td class='line'>99</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>         catch (SQLException e) {</pre></td>
+      <td><pre class='prettyprint uncovered' id='l99s0'>         catch (SQLException e) {</pre></td>
     </tr>
     <tr>
       <td class='line'>100</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>            throw new RuntimeException(e);</pre></td>
+      <td><pre class='prettyprint uncovered' id='l100s0'>            throw new RuntimeException(e);</pre></td>
     </tr>
     <tr>
       <td class='line'>101</td><td class='count'>2</td>
@@ -556,11 +556,11 @@
     </tr>
     <tr>
       <td class='line'>111</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>      catch (SQLException e) {</pre></td>
+      <td><pre class='prettyprint uncovered' id='l111s0'>      catch (SQLException e) {</pre></td>
     </tr>
     <tr>
       <td class='line'>112</td><td class='count'>0</td>
-      <td class='uncovered'><pre class='prettyprint'>         throw new RuntimeException(e);</pre></td>
+      <td><pre class='prettyprint uncovered' id='l112s0'>         throw new RuntimeException(e);</pre></td>
     </tr>
     <tr>
       <td class='line'>113</td><td>&nbsp;</td>
