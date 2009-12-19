@@ -33,6 +33,7 @@ public final class ListOfCallPoints
    private static final String EOL = System.getProperty("line.separator");
 
    private final StringBuilder content;
+   private int n;
 
    public ListOfCallPoints()
    {
@@ -46,19 +47,57 @@ public final class ListOfCallPoints
       }
 
       content.append("  <ol style='display: none;'>").append(EOL);
+      n = 1;
+
+      StackTraceElement previous = null;
 
       for (CallPoint callPoint : callPoints) {
-         StackTraceElement ste = callPoint.getStackTraceElement();
+         StackTraceElement current = callPoint.getStackTraceElement();
 
-         content.append("          <li>");
-         content.append(ste.getClassName()).append('#');
-         content.append(ste.getMethodName().replaceFirst("<", "&lt;")).append(':');
-         content.append(ste.getLineNumber());
-         content.append("</li>").append(EOL);
+         if (previous == null) {
+            appendTestMethod(current);
+         }
+         else if (!isSameTestMethod(current, previous)) {
+            appendRepetitionCountIfAny();
+            content.append("</li>").append(EOL);
+            appendTestMethod(current);
+         }
+         else if (current.getLineNumber() == previous.getLineNumber()) {
+            n++;
+         }
+         else {
+            appendRepetitionCountIfAny();
+            content.append(", ").append(current.getLineNumber());
+         }
+
+         previous = current;
       }
 
-      content.append("        </ol>").append(EOL);
-      content.append("      ");
+      content.append("        </ol>").append(EOL).append("      ");
+   }
+
+   private void appendTestMethod(StackTraceElement current)
+   {
+      content.append("          <li>");
+      content.append(current.getClassName()).append('#');
+      content.append(current.getMethodName().replaceFirst("<", "&lt;")).append(": ");
+      content.append(current.getLineNumber());
+   }
+
+   private void appendRepetitionCountIfAny()
+   {
+      if (n > 1) {
+         content.append('x').append(n);
+         n = 1;
+      }
+   }
+
+   private boolean isSameTestMethod(StackTraceElement ste1, StackTraceElement ste2)
+   {
+      return
+         ste1 == ste2 ||
+         ste1.getClassName().equals(ste2.getClassName()) &&
+         ste1.getMethodName().equals(ste2.getMethodName());
    }
 
    public String getContents()
