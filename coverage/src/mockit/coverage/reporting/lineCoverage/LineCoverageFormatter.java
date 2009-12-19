@@ -30,18 +30,19 @@ import mockit.coverage.reporting.parsing.LineElement;
 
 final class LineCoverageFormatter
 {
-   private final boolean withCallPoints;
-   private final StringBuilder formattedLine = new StringBuilder(200);
+   private final StringBuilder formattedLine;
+   private final LineSegmentsFormatter segmentsFormatter;
    private final ListOfCallPoints listOfCallPoints;
    private LineCoverageData lineData;
 
    LineCoverageFormatter(boolean withCallPoints)
    {
-      this.withCallPoints = withCallPoints;
+      formattedLine = new StringBuilder(200);
+      segmentsFormatter = new LineSegmentsFormatter(withCallPoints, formattedLine);
       listOfCallPoints = withCallPoints ? new ListOfCallPoints() : null;
    }
 
-   String format(int line, LineCoverageData lineData, LineElement initialElement)
+   String format(int lineNum, LineCoverageData lineData, LineElement initialElement)
    {
       this.lineData = lineData;
 
@@ -49,28 +50,26 @@ final class LineCoverageFormatter
       formattedLine.append("<pre class='prettyprint");
 
       if (lineData.containsBranches()) {
-         formatLineWithMultipleSegments(line, initialElement);
+         formatLineWithMultipleSegments(lineNum, initialElement);
       }
       else {
-         formatLineWithSingleSegment(line, initialElement);
+         formatLineWithSingleSegment(lineNum, initialElement);
       }
 
       return formattedLine.toString();
    }
 
-   private void formatLineWithMultipleSegments(int line, LineElement initialElement)
+   private void formatLineWithMultipleSegments(int lineNum, LineElement initialElement)
    {
       formattedLine.append(" jmp'>");
-
-      new LineSegmentsFormatter(withCallPoints, line, formattedLine).formatSegments(
-         lineData, initialElement);
+      segmentsFormatter.formatSegments(lineNum, lineData, initialElement);
    }
 
    private void formatLineWithSingleSegment(int line, LineElement initialElement)
    {
       formattedLine.append(lineData.isCovered() ? " covered" : " uncovered");
 
-      boolean lineWithCallPoints = withCallPoints && lineData.getExecutionCount() > 0;
+      boolean lineWithCallPoints = listOfCallPoints != null && lineData.getExecutionCount() > 0;
 
       if (lineWithCallPoints) {
          formattedLine.append(" cp' onclick='showHide(this)");

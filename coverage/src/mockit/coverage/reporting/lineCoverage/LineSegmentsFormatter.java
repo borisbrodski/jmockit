@@ -34,22 +34,23 @@ final class LineSegmentsFormatter
 {
    private final ListOfCallPoints listOfCallPoints;
    private final StringBuilder line;
-   private final int lineNum;
+   private int lineNum;
 
    // Helper fields:
    private LineElement element;
    private int segmentIndex;
    private LineSegmentData segmentData;
 
-   LineSegmentsFormatter(boolean withCallPoints, int lineNum, StringBuilder line)
+   LineSegmentsFormatter(boolean withCallPoints, StringBuilder line)
    {
       listOfCallPoints = withCallPoints ? new ListOfCallPoints() : null;
       this.line = line;
-      this.lineNum = lineNum;
    }
 
-   void formatSegments(LineCoverageData lineData, LineElement initialElement)
+   void formatSegments(int lineNum, LineCoverageData lineData, LineElement initialElement)
    {
+      this.lineNum = lineNum;
+
       List<BranchCoverageData> branchData = lineData.getBranches();
       int numSegments = 1 + branchData.size();
 
