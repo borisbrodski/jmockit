@@ -142,6 +142,17 @@ public class CoverageTest extends Assert
       }
    }
 
+   protected final void assertFieldIgnored(String fieldName)
+   {
+      String fieldId = testedClassSimpleName + '.' + fieldName;
+      assertFalse(
+         "Field " + fieldName + " should not have static coverage data",
+         fileData.staticFieldsData.containsKey(fieldId));
+      assertFalse(
+         "Field " + fieldName + " should not have instance coverage data", 
+         fileData.instanceFieldsData.containsKey(fieldId));
+   }
+
    protected final void assertFieldCovered(String fieldName)
    {
       assertNull("Static field " + fieldName + " should be covered", getStaticFieldData(fieldName));
@@ -152,7 +163,7 @@ public class CoverageTest extends Assert
       return fileData.staticFieldsData.get(testedClassSimpleName + '.' + fieldName);
    }
 
-   protected final void assertFieldNotCovered(String fieldName)
+   protected final void assertFieldUncovered(String fieldName)
    {
       assertNotNull(
          "Static field " + fieldName + " should not be covered", getStaticFieldData(fieldName));
@@ -170,7 +181,7 @@ public class CoverageTest extends Assert
       return fileData.instanceFieldsData.get(testedClassSimpleName + '.' + fieldName);
    }
 
-   protected final void assertFieldNotCovered(String fieldName, Object... instances)
+   protected final void assertFieldUncovered(String fieldName, Object... instances)
    {
       assertFalse(
          "Instance field " + fieldName + " should not be covered",
