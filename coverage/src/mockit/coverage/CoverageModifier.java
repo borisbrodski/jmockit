@@ -514,49 +514,76 @@ final class CoverageModifier extends ClassWriter
       @Override
       public final void visitFieldInsn(int opcode, String owner, String name, String desc)
       {
-         boolean fieldHasData = false;
-         String classAndFieldNames = null;
-         String methodDesc = null;
+         boolean getField = opcode == GETSTATIC || opcode == GETFIELD;
          boolean isStatic = opcode == PUTSTATIC || opcode == GETSTATIC;
-         boolean isPutField = opcode == PUTSTATIC || opcode == PUTFIELD;
+         char fieldType = desc.charAt(0);
+         boolean size2 = fieldType == 'J' || fieldType == 'D';
+         String classAndFieldNames = null;
+         boolean fieldHasData = false;
 
          if (!owner.startsWith("java/")) {
-            int p = owner.lastIndexOf('/');
-            classAndFieldNames = owner.substring(p + 1) + '.' + name;
-            fieldHasData =
-               isStatic ?
-                  fileData.staticFieldsData.containsKey(classAndFieldNames) :
-                  fileData.instanceFieldsData.containsKey(classAndFieldNames);
-            methodDesc = "(Ljava/lang/String;Ljava/lang/String;)V";
+            classAndFieldNames = owner.substring(owner.lastIndexOf('/') + 1) + '.' + name;
+            fieldHasData = fileData.isFieldWithCoverageData(classAndFieldNames);
 
             if (fieldHasData && !isStatic) {
-               methodDesc = "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V";
-
-   //            if (isPutField) {
-   //               mw.visitInsn(DUP);
-   //               mw.visitInsn(DUP);
-   //            }
-   //            else {
-   //               mw.visitInsn(DUP);
-   //            }
+               generateCodeToSaveInstanceReferenceOnTheStack(getField, size2);
             }
          }
 
          super.visitFieldInsn(opcode, owner, name, desc);
-         handleRegularInstruction();
 
          if (fieldHasData) {
-            if (!isStatic) {
-               mw.visitInsn(ACONST_NULL);
-            }
-
-            mw.visitLdcInsn(sourceFileName);
-            mw.visitLdcInsn(classAndFieldNames);
-
-            String methodToCall = isPutField ? "fieldAssigned" : "fieldRead";
-
-            mw.visitMethodInsn(INVOKESTATIC, DATA_RECORDING_CLASS, methodToCall, methodDesc);
+            generateCallToRegisterFieldCoverage(getField, isStatic, size2, classAndFieldNames);
          }
+
+         handleRegularInstruction();
+      }
+
+      private void generateCodeToSaveInstanceReferenceOnTheStack(boolean getField, boolean size2)
+      {
+         if (getField) {
+            mw.visitInsn(DUP);
+         }
+         else if (size2) {
+            mw.visitInsn(DUP2_X1);
+            mw.visitInsn(POP2);
+            mw.visitInsn(DUP_X2);
+            mw.visitInsn(DUP_X2);
+            mw.visitInsn(POP);
+         }
+         else {
+            mw.visitInsn(DUP_X1);
+            mw.visitInsn(POP);
+            mw.visitInsn(DUP_X1);
+            mw.visitInsn(DUP_X1);
+            mw.visitInsn(POP);
+         }
+      }
+
+      private void generateCallToRegisterFieldCoverage(
+         boolean getField, boolean isStatic, boolean size2, String classAndFieldNames)
+      {
+         if (!isStatic && getField) {
+            if (size2) {
+               mw.visitInsn(DUP2_X1);
+               mw.visitInsn(POP2);
+            }
+            else {
+               mw.visitInsn(DUP_X1);
+               mw.visitInsn(POP);
+            }
+         }
+
+         mw.visitLdcInsn(sourceFileName);
+         mw.visitLdcInsn(classAndFieldNames);
+
+         String methodToCall = getField ? "fieldRead" : "fieldAssigned";
+         String methodDesc =
+            isStatic ?
+               "(Ljava/lang/String;Ljava/lang/String;)V" : 
+               "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V";
+
+         mw.visitMethodInsn(INVOKESTATIC, DATA_RECORDING_CLASS, methodToCall, methodDesc);
       }
 
       @Override

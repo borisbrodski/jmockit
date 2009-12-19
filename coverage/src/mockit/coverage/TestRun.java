@@ -128,7 +128,7 @@ public final class TestRun
    {
       FileCoverageData fileData = CoverageData.instance().getFileData(file);
       List<Integer> fieldData = fileData.instanceFieldsData.get(classAndFieldNames);
-      Integer instanceId = 0;//System.identityHashCode(instance);
+      Integer instanceId = System.identityHashCode(instance);
 
       if (!fieldData.contains(instanceId)) {
          fieldData.add(instanceId);
@@ -139,7 +139,7 @@ public final class TestRun
    {
       FileCoverageData fileData = CoverageData.instance().getFileData(file);
       List<Integer> fieldData = fileData.instanceFieldsData.get(classAndFieldNames);
-      Integer instanceId = 0;//System.identityHashCode(instance);
+      Integer instanceId = System.identityHashCode(instance);
       fieldData.remove(instanceId);
    }
 }

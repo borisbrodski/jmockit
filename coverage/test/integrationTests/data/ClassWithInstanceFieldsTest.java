@@ -17,18 +17,6 @@ public final class ClassWithInstanceFieldsTest extends CoverageTest
    }
 
    @Test
-   public void uncoveredNonPrivateFieldOnMultipleInstances()
-   {
-      tested.nonPrivateField = "A";
-      tested.nonPrivateField += 'a';
-
-      ClassWithInstanceFields tested2 = new ClassWithInstanceFields();
-      tested2.nonPrivateField = "A";
-
-      assertFieldUncovered("nonPrivateField", tested, tested2);
-   }
-
-   @Test
    public void coveredBooleanFieldOnMultipleInstances()
    {
       tested.setBooleanField(true);
@@ -36,9 +24,9 @@ public final class ClassWithInstanceFieldsTest extends CoverageTest
 
       ClassWithInstanceFields tested2 = new ClassWithInstanceFields();
       tested2.setBooleanField(false);
-      assert tested2.isBooleanField();
+      assert !tested2.isBooleanField();
 
-      assertFieldCovered("booleanField", tested, tested2);
+      assertInstanceFieldCovered("booleanField");
    }
 
    @Test
@@ -53,9 +41,8 @@ public final class ClassWithInstanceFieldsTest extends CoverageTest
 
       ClassWithInstanceFields tested3 = new ClassWithInstanceFields();
       tested3.setByteField((byte) 3);
-      assert tested3.getByteField() == 3;
 
-      assertFieldUncovered("byteField", tested, tested2, tested3);
+      assertInstanceFieldUncovered("byteField", tested3);
    }
 
    @Test
@@ -65,7 +52,7 @@ public final class ClassWithInstanceFieldsTest extends CoverageTest
       assert tested.getCharField() == 'c';
       assert tested.getCharField() != 'd';
 
-      assertFieldCovered("charField", tested);
+      assertInstanceFieldCovered("charField");
    }
 
    @Test
@@ -76,7 +63,7 @@ public final class ClassWithInstanceFieldsTest extends CoverageTest
       ClassWithInstanceFields tested2 = new ClassWithInstanceFields();
       tested2.setShortField((short) 2);
 
-      assertFieldUncovered("shortField", tested, tested2);
+      assertInstanceFieldUncovered("shortField", tested, tested2);
    }
 
    @Test
@@ -90,7 +77,7 @@ public final class ClassWithInstanceFieldsTest extends CoverageTest
       assert tested2.getIntField() == -1;
       assert tested.getIntField() == 1;
 
-      assertFieldCovered("intField", tested2, tested);
+      assertInstanceFieldCovered("intField");
    }
 
    @Test
@@ -103,7 +90,7 @@ public final class ClassWithInstanceFieldsTest extends CoverageTest
       tested2.setLongField(2);
       assert tested2.getLongField() == 2;
 
-      assertFieldCovered("shortField", tested, tested2);
+      assertInstanceFieldCovered("longField");
    }
 
    @Test
@@ -115,7 +102,7 @@ public final class ClassWithInstanceFieldsTest extends CoverageTest
       tested2.setFloatField(2.0F);
       assert tested2.getFloatField() >= 2.0F;
 
-      assertFieldUncovered("floatField", tested2, tested);
+      assertInstanceFieldUncovered("floatField", tested);
    }
 
    @Test
@@ -128,7 +115,7 @@ public final class ClassWithInstanceFieldsTest extends CoverageTest
       tested2.setDoubleField(2);
       assert tested2.getDoubleField() <= 2;
 
-      assertFieldCovered("doubleField", tested, tested2);
+      assertInstanceFieldCovered("doubleField");
    }
 
    @Test
@@ -141,12 +128,12 @@ public final class ClassWithInstanceFieldsTest extends CoverageTest
       tested2.setArrayField(new int[0]);
       assert tested2.getArrayField().length == 0;
 
-      assertFieldCovered("arrayField", tested, tested2);
+      assertInstanceFieldCovered("arrayField");
    }
 
    @AfterClass
    public static void verifyDataCoverage()
    {
-      verifyDataCoverage(6, 4, 67);
+      verifyDataCoverage(9, 6, 67);
    }
 }

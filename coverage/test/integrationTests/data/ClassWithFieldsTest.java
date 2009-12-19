@@ -15,7 +15,7 @@ public final class ClassWithFieldsTest extends CoverageTest
       ClassWithFields.setStatic1(2);
       assert ClassWithFields.getStatic1() == 2;
 
-      assertFieldCovered("static1");
+      assertStaticFieldCovered("static1");
    }
 
    @Test
@@ -23,7 +23,7 @@ public final class ClassWithFieldsTest extends CoverageTest
    {
       ClassWithFields.setStatic2("test");
 
-      assertFieldUncovered("static2");
+      assertStaticFieldUncovered("static2");
    }
 
    @Test
@@ -33,7 +33,7 @@ public final class ClassWithFieldsTest extends CoverageTest
       assert ClassWithFields.getStatic3() == 1;
       ClassWithFields.setStatic3(2);
 
-      assertFieldUncovered("static3");
+      assertStaticFieldUncovered("static3");
    }
 
    @Test
@@ -42,7 +42,7 @@ public final class ClassWithFieldsTest extends CoverageTest
       tested.setInstance1(true);
       assert tested.isInstance1();
 
-      assertFieldCovered("instance1", tested);
+      assertInstanceFieldCovered("instance1");
    }
 
    @Test
@@ -50,7 +50,7 @@ public final class ClassWithFieldsTest extends CoverageTest
    {
       tested.setInstance2(false);
 
-      assertFieldUncovered("instance2", tested);
+      assertInstanceFieldUncovered("instance2", tested);
    }
 
    @Test
@@ -60,12 +60,12 @@ public final class ClassWithFieldsTest extends CoverageTest
       assert tested.getInstance3() >= 2.5;
       tested.setInstance3(-0.9);
 
-      assertFieldUncovered("instance3", tested);
+      assertInstanceFieldUncovered("instance3", tested);
    }
 
    @AfterClass
    public static void verifyDataCoverage()
    {
-      verifyDataCoverage(6, 4, 67);
+      verifyDataCoverage(6, 2, 33);
    }
 }

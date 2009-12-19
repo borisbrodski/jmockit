@@ -68,6 +68,13 @@ public final class FileCoverageData implements Serializable
       }
    }
 
+   public boolean isFieldWithCoverageData(String classAndFieldNames)
+   {
+      return
+         instanceFieldsData.containsKey(classAndFieldNames) ||
+         staticFieldsData.containsKey(classAndFieldNames);
+   }
+
    public void addMethod(MethodCoverageData methodData)
    {
       firstLineToMethodData.put(methodData.getFirstLineInBody(), methodData);
@@ -175,13 +182,15 @@ public final class FileCoverageData implements Serializable
       coveredDataItems = 0;
 
       for (Boolean withUnreadValue : staticFieldsData.values()) {
-         if (withUnreadValue == Boolean.TRUE) {
+         if (withUnreadValue == null) {
             coveredDataItems++;
          }
       }
 
       for (List<Integer> instancesWithUnreadValue : instanceFieldsData.values()) {
-         coveredDataItems += instancesWithUnreadValue.size();
+         if (instancesWithUnreadValue.isEmpty()) {
+            coveredDataItems++;
+         }
       }
 
       return coveredDataItems;

@@ -5,8 +5,6 @@ public final class ClassWithInstanceFields
 {
    private final int finalField;
 
-   String nonPrivateField;
-
    private boolean booleanField;
    private byte byteField;
    private char charField;

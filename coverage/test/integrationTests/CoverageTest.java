@@ -153,7 +153,7 @@ public class CoverageTest extends Assert
          fileData.instanceFieldsData.containsKey(fieldId));
    }
 
-   protected final void assertFieldCovered(String fieldName)
+   protected final void assertStaticFieldCovered(String fieldName)
    {
       assertNull("Static field " + fieldName + " should be covered", getStaticFieldData(fieldName));
    }
@@ -163,13 +163,13 @@ public class CoverageTest extends Assert
       return fileData.staticFieldsData.get(testedClassSimpleName + '.' + fieldName);
    }
 
-   protected final void assertFieldUncovered(String fieldName)
+   protected final void assertStaticFieldUncovered(String fieldName)
    {
       assertNotNull(
          "Static field " + fieldName + " should not be covered", getStaticFieldData(fieldName));
    }
 
-   protected final void assertFieldCovered(String fieldName, Object... instances)
+   protected final void assertInstanceFieldCovered(String fieldName)
    {
       assertTrue(
          "Instance field " + fieldName + " should be covered",
@@ -181,11 +181,17 @@ public class CoverageTest extends Assert
       return fileData.instanceFieldsData.get(testedClassSimpleName + '.' + fieldName);
    }
 
-   protected final void assertFieldUncovered(String fieldName, Object... instances)
+   protected final void assertInstanceFieldUncovered(String fieldName, Object... uncoveredInstances)
    {
-      assertFalse(
-         "Instance field " + fieldName + " should not be covered",
-         getInstanceFieldData(fieldName).isEmpty());
+      String msg = "Instance field " + fieldName + " should not be covered";
+      List<Integer> actualUncoveredInstances = getInstanceFieldData(fieldName);
+
+      assertEquals(msg, uncoveredInstances.length, actualUncoveredInstances.size());
+
+      for (Object uncoveredInstance : uncoveredInstances) {
+         Integer instanceId = System.identityHashCode(uncoveredInstance);
+         assertTrue(msg, actualUncoveredInstances.contains(instanceId));
+      }
    }
 
    protected static void verifyDataCoverage(
