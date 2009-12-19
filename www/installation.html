@@ -71,6 +71,17 @@
    </li>
 </ol>
 
+<h4>Running tests in Eclipse with the JUnit plug-in</h4>
+<p>
+   The JUnit 4 plug-in available in the Eclipse Java IDE does not work with JMockit.
+   The problem is that, contrary to the
+   <a href="http://github.com/KentBeck/junit/downloads">official JUnit jars</a>, the
+   <code>junit.jar</code> file that comes with the Eclipse installation is
+   <a href="http://wiki.eclipse.org/JAR_Signing#Should_third_party_JARs_be_signed.3F">signed</a>.
+   This prevents JMockit from starting itself up correctly. The only workaround is to use a regular
+   (non-signed) jar file instead.
+</p>
+
 <h3>Using JMockit in a Maven project</h3>
 <p>
    The JMockit artifacts, including a binary jar and a sources jar for each release, are located in
