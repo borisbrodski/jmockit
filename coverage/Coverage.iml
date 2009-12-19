@@ -11,10 +11,9 @@
       <excludeFolder url="file://$MODULE_DIR$/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" name="JUnit 4.8" level="application" />
+    <orderEntry type="library" name="JMockit" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.7" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="Main" exported="" />
-    <orderEntry type="library" exported="" name="Maven: junit:junit:4.7" level="project" />
   </component>
 </module>
 
