@@ -89,7 +89,7 @@ public final class TestNGTestRunnerDecorator extends TestRunnerDecorator
          parameters = createInstancesForMockParametersIfAny(this, method, parameters);
       }
 
-      TestRun.setRunningIndividualTest(this);
+      TestRun.setRunningIndividualTest(instance);
       TestRun.setRunningTestMethod(true);
 
       try {
