@@ -11,7 +11,6 @@
       <excludeFolder url="file://$MODULE_DIR$/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -28,6 +27,8 @@
     <orderEntry type="library" name="Maven: dom4j:dom4j:0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-nop:0" level="project" />
+    <orderEntry type="library" name="Java EE 5" level="application" />
+    <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
 

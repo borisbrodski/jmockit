@@ -69,6 +69,9 @@ public final class CustomerTest extends DomainTest
       Customer found = manager.findById(id);
 
       assertPersisted(id, found);
+      assertEquals(customer.getFirstName(), found.getFirstName());
+      assertEquals(customer.getLastName(), found.getLastName());
+      assertEquals(customer.getDeliveryAddress(), found.getDeliveryAddress());
    }
 
    private Customer newCustomer()
@@ -113,7 +116,7 @@ public final class CustomerTest extends DomainTest
       Customer customer = newCustomer();
       Customer data =
          new Customer(
-            customer.getId() + "X", customer.getFirstName(), customer.getLastName(), null);
+            customer.getId() + 'X', customer.getFirstName(), customer.getLastName(), null);
 
       manager.create(data);
    }
@@ -158,17 +161,15 @@ public final class CustomerTest extends DomainTest
       assertTrue("found when shouldn't", found.isEmpty());
 
       Customer customer = newCustomer();
-
-      found = manager.findByName(customer.getLastName());
-      assertTrue("not found by last name", found.contains(customer));
-
-      found = manager.findByName(customer.getFirstName());
-      assertTrue("not found by first name", found.contains(customer));
-
-      found = manager.findByName(customer.getFirstName() + " " + customer.getLastName());
-      assertTrue("not found by full name", found.contains(customer));
-
-      found = manager.findByName("");
-      assertTrue("not found by any name", found.contains(customer));
+      assertFoundByName(customer, customer.getLastName(), "last");
+      assertFoundByName(customer, customer.getFirstName(), "first");
+      assertFoundByName(customer, customer.getFirstName() + ' ' + customer.getLastName(), "full");
+      assertFoundByName(customer, "", "any");
+   }
+   
+   private void assertFoundByName(Customer customer, String fullOrPartialName, String nameDesc)
+   {
+      List<Customer> found = manager.findByName(fullOrPartialName);
+      assertTrue("not found by " + nameDesc + " name", found.contains(customer));
    }
 }
