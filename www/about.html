@@ -679,21 +679,23 @@
 
 <h3 id="annotations">JMockit Annotations</h3>
 <p>
-   While the <a href="#core">JMockit Core</a> mock creation mechanism relies on coding conventions
-   for determining which methods/constructors in a mock class are actually mocks,
-   <em>JMockit Annotations</em> provides a Java 5 annotation for that purpose.
+   This is a different kind of mocking API, which can be seen as complementary to the Expectations
+   & Verifications API.
+   Instead of specifying expectations on the invocations made from code under test to its
+   collaborators, <em>mock classes</em> are defined and applied for the scope of a single test
+   method or a whole test class.
+   Inside these mock classes, <em>mock methods</em> (indicated as such with the <code>@Mock</code>
+   annotation), are directly implemented with code that will be executed instead of the original
+   code for the corresponding <em>mocked method/constructor</em>.
    In addition, constraints on the number of expected invocations for each mock can be specified,
    and mock methods can be <em>re-entrant</em>.
-</p>
-<p>
-   New users interested in state-based testing should use this API instead of the old-fashioned and
-   more limited Core API.
 </p>
 <pre><code>public class JMockitAnnotationsExampleTest
 {
    @Test
    public void testDoOperationAbc()
    {
+      // A "mock-up" class, defined and applied at the same time:
       new MockUp&lt;DependencyXyz>()
       {
          @Mock(invocations = 1)
@@ -722,10 +724,14 @@
    The <em>JMockit Core</em> API consists of a single class with a small set of static methods,
    which allow arbitrary methods and constructors of any other class to be replaced with mock
    implementations at runtime.
+   It relies on coding conventions to determine which methods/constructors in a mock class are
+   actually mocks (while the Annotations API provides a Java 5 annotation for that purpose).
 </p>
 <p>
    Although it is the easiest API to learn, it falls short in actually helping write complex tests,
    so at this point it can be considered a "legacy" API in the JMockit Toolkit.
+   New users interested in state-based testing should use the Annotations API instead of this
+   old-fashioned and more limited API.
 </p>
 <pre><code>public class JMockitCoreExampleTest extends TestCase
 {
