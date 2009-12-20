@@ -81,6 +81,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       updateTestClassState(it, it.getClass());
 
       TestRun.setRunningIndividualTest(it);
+      TestRun.generateIdForNextTest();
       AssertionError error;
 
       try {
@@ -115,7 +116,6 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
    {
       setUpMethod.invoke(it);
 
-      TestRun.setRunningTestMethod(true);
       Throwable exception = null;
 
       try {
@@ -125,7 +125,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
          exception = running;
       }
       finally {
-         TestRun.setRunningTestMethod(false);
+         TestRun.setRunningTestMethod(null);
 
          try {
             tearDownMethod.invoke(it);
@@ -146,17 +146,18 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
    public void runTest() throws Throwable
    {
       String testMethodName = (String) fName.get(it);
-      Method runMethod = findTestMethod(testMethodName);
+      Method testMethod = findTestMethod(testMethodName);
 
-      if (runMethod == null) {
+      if (testMethod == null) {
          Assert.fail("Method \"" + testMethodName + "\" not found");
       }
 
+      TestRun.setRunningTestMethod(testMethod);
       SavePoint savePoint = new SavePoint();
-      Object[] args = createInstancesForMockParametersIfAny(it, runMethod, NO_ARGS);
+      Object[] args = createInstancesForMockParametersIfAny(it, testMethod, NO_ARGS);
 
       try {
-         runMethod.invoke(it, args);
+         testMethod.invoke(it, args);
       }
       catch (InvocationTargetException e) {
          e.fillInStackTrace();

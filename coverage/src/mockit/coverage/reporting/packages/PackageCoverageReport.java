@@ -105,10 +105,10 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    {
       FileCoverageData fileData = filesToFileData.get(filePath);
 
-      coveredDataItems += fileData.getCoveredDataItems();
-      totalDataItems += fileData.getTotalDataItems();
+      coveredDataItems += fileData.dataCoverageInfo.getCoveredItems();
+      totalDataItems += fileData.dataCoverageInfo.getTotalItems();
 
-      int percentage = fileData.getDataCoveragePercentage();
+      int percentage = fileData.dataCoverageInfo.getCoveragePercentage();
 
       printCoveragePercentage(false, percentage);
    }

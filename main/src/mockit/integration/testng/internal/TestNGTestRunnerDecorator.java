@@ -49,6 +49,7 @@ import mockit.internal.util.*;
 public final class TestNGTestRunnerDecorator extends TestRunnerDecorator
 {
    private final ThreadLocal<SavePoint> savePoint = new ThreadLocal<SavePoint>();
+   private boolean generateTestIdForNextBeforeMethod;
 
    public TestNGTestRunnerDecorator()
    {
@@ -65,8 +66,13 @@ public final class TestNGTestRunnerDecorator extends TestRunnerDecorator
 
       // In case it isn't a test method, but a before/after method:
       if (!isTestMethod(testClass, method)) {
+         if (generateTestIdForNextBeforeMethod && method.isAnnotationPresent(BeforeMethod.class)) {
+            TestRun.generateIdForNextTest();
+            generateTestIdForNextBeforeMethod = false;
+         }
+
          TestRun.setRunningIndividualTest(instance);
-         TestRun.setRunningTestMethod(false);
+         TestRun.setRunningTestMethod(null);
 
          try {
             return MethodHelper.invokeMethod(method, instance, parameters);
@@ -89,8 +95,13 @@ public final class TestNGTestRunnerDecorator extends TestRunnerDecorator
          parameters = createInstancesForMockParametersIfAny(this, method, parameters);
       }
 
+      if (generateTestIdForNextBeforeMethod) {
+         TestRun.generateIdForNextTest();
+      }
+
       TestRun.setRunningIndividualTest(instance);
-      TestRun.setRunningTestMethod(true);
+      TestRun.setRunningTestMethod(method);
+      generateTestIdForNextBeforeMethod = true;
 
       try {
          Object result = MethodHelper.invokeMethod(method, instance, parameters);

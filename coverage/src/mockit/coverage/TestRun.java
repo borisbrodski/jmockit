@@ -24,8 +24,6 @@
  */
 package mockit.coverage;
 
-import java.util.*;
-
 import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
 
@@ -115,31 +113,24 @@ public final class TestRun
    public static void fieldAssigned(String file, String classAndFieldNames)
    {
       FileCoverageData fileData = CoverageData.instance().getFileData(file);
-      fileData.staticFieldsData.put(classAndFieldNames, Boolean.TRUE);
+      fileData.dataCoverageInfo.registerAssignmentToStaticField(classAndFieldNames);
    }
 
    public static void fieldRead(String file, String classAndFieldNames)
    {
       FileCoverageData fileData = CoverageData.instance().getFileData(file);
-      fileData.staticFieldsData.put(classAndFieldNames, null);
+      fileData.dataCoverageInfo.registerReadOfStaticField(classAndFieldNames);
    }
 
    public static void fieldAssigned(Object instance, String file, String classAndFieldNames)
    {
       FileCoverageData fileData = CoverageData.instance().getFileData(file);
-      List<Integer> fieldData = fileData.instanceFieldsData.get(classAndFieldNames);
-      Integer instanceId = System.identityHashCode(instance);
-
-      if (!fieldData.contains(instanceId)) {
-         fieldData.add(instanceId);
-      }
+      fileData.dataCoverageInfo.registerAssignmentToInstanceField(instance, classAndFieldNames);
    }
 
    public static void fieldRead(Object instance, String file, String classAndFieldNames)
    {
       FileCoverageData fileData = CoverageData.instance().getFileData(file);
-      List<Integer> fieldData = fileData.instanceFieldsData.get(classAndFieldNames);
-      Integer instanceId = System.identityHashCode(instance);
-      fieldData.remove(instanceId);
+      fileData.dataCoverageInfo.registerReadOfInstanceField(instance, classAndFieldNames);
    }
 }

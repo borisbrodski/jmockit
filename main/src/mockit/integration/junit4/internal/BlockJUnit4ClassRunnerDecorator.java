@@ -24,6 +24,7 @@
  */
 package mockit.integration.junit4.internal;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import org.junit.*;
@@ -53,11 +54,13 @@ import mockit.internal.util.*;
 public final class BlockJUnit4ClassRunnerDecorator extends TestRunnerDecorator
 {
    public FrameworkMethod it;
+   private boolean generateTestIdForNextBeforeMethod;
 
    @Mock(reentrant = true)
    public Object invokeExplosively(Object target, Object... params) throws Throwable
    {
-      Class<?> testClass = target == null ? it.getMethod().getDeclaringClass() : target.getClass();
+      Method method = it.getMethod();
+      Class<?> testClass = target == null ? method.getDeclaringClass() : target.getClass();
 
       if (testClass.isAnnotationPresent(SuiteClasses.class)) {
          setUpClassLevelMocksAndStubs(testClass);
@@ -68,8 +71,13 @@ public final class BlockJUnit4ClassRunnerDecorator extends TestRunnerDecorator
 
       // In case it isn't a test method, but a before/after method:
       if (it.getAnnotation(Test.class) == null) {
+         if (generateTestIdForNextBeforeMethod && it.getAnnotation(Before.class) != null) {
+            TestRun.generateIdForNextTest();
+            generateTestIdForNextBeforeMethod = false;
+         }
+
          TestRun.setRunningIndividualTest(target);
-         TestRun.setRunningTestMethod(false);
+         TestRun.setRunningTestMethod(null);
 
          try {
             return it.invokeExplosively(target, params);
@@ -85,7 +93,12 @@ public final class BlockJUnit4ClassRunnerDecorator extends TestRunnerDecorator
          }
       }
 
-      TestRun.setRunningTestMethod(true);
+      if (generateTestIdForNextBeforeMethod) {
+         TestRun.generateIdForNextTest();
+      }
+
+      TestRun.setRunningTestMethod(method);
+      generateTestIdForNextBeforeMethod = true;
 
       try {
          executeTest(target, params);

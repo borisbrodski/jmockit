@@ -24,6 +24,7 @@
  */
 package mockit.internal.state;
 
+import java.lang.reflect.*;
 import java.net.*;
 import java.security.*;
 
@@ -45,7 +46,9 @@ public final class TestRun
 
    private Class<?> currentTestClass;
    private Object currentTestInstance;
-   private boolean runningTestMethod;
+   private int testId;
+   private Method runningTestMethod;
+
    private final ThreadLocal<Integer> noMockingCount = new ThreadLocal<Integer>()
    {
       @Override
@@ -72,6 +75,10 @@ public final class TestRun
    public static Class<?> getCurrentTestClass() { return instance.currentTestClass; }
 
    public static Object getCurrentTestInstance() { return instance.currentTestInstance; }
+
+   public static int getTestId() { return instance.testId; }
+
+   public static Method getRunningTestMethod() { return instance.runningTestMethod; }
 
    public static boolean isInsideNoMockingZone()
    {
@@ -121,7 +128,7 @@ public final class TestRun
          return null;
       }
 
-      return getExecutingTest().getRecordAndReplay(instance.runningTestMethod && create);
+      return getExecutingTest().getRecordAndReplay(instance.runningTestMethod != null && create);
    }
 
    public static MockClasses getMockClasses() { return instance.mockClasses; }
@@ -138,11 +145,16 @@ public final class TestRun
       instance.currentTestClass = testClass;
    }
 
-   public static void setRunningTestMethod(boolean runningTestMethod)
+   public static void generateIdForNextTest()
+   {
+      instance.testId++;
+   }
+
+   public static void setRunningTestMethod(Method runningTestMethod)
    {
       instance.runningTestMethod = runningTestMethod;
 
-      if (runningTestMethod) {
+      if (runningTestMethod != null) {
          instance.executingTest.clearRecordAndReplayForVerifications();
       }
    }
@@ -175,7 +187,7 @@ public final class TestRun
    public static void finishCurrentTestExecution()
    {
       instance.currentTestInstance = null;
-      instance.runningTestMethod = false;
+      instance.runningTestMethod = null;
       instance.executingTest.finishExecution();
    }
 

@@ -130,7 +130,7 @@ final class CoverageModifier extends ClassWriter
       int access, String name, String desc, String signature, Object value)
    {
       if ((access & FIELD_MODIFIERS_TO_IGNORE) == 0) {
-         fileData.addField(simpleClassName, name, (access & ACC_STATIC) != 0);
+         fileData.dataCoverageInfo.addField(simpleClassName, name, (access & ACC_STATIC) != 0);
       }
 
       return super.visitField(access, name, desc, signature, value);
@@ -523,7 +523,7 @@ final class CoverageModifier extends ClassWriter
 
          if (!owner.startsWith("java/")) {
             classAndFieldNames = owner.substring(owner.lastIndexOf('/') + 1) + '.' + name;
-            fieldHasData = fileData.isFieldWithCoverageData(classAndFieldNames);
+            fieldHasData = fileData.dataCoverageInfo.isFieldWithCoverageData(classAndFieldNames);
 
             if (fieldHasData && !isStatic) {
                generateCodeToSaveInstanceReferenceOnTheStack(getField, size2);
