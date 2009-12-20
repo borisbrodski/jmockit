@@ -530,42 +530,35 @@
 
 <h3 id="expectations">JMockit Expectations</h3>
 <p>
-   The approaches to define mocks provided by <a href="#core">JMockit Core</a> and
-   <a href="#annotations">JMockit Annotations</a>
-   are both powerful and simple (in terms of a small user API). However, because of the need to
-   write separate classes and methods to define mocks, tests tend to be longer than similar tests
-   written with EasyMock or jMock would be.
-</p>
-<p>
-   <em>JMockit Expectations</em> therefore provides a <em>record-replay</em> model for writing
-   tests, which allows for more succinct tests. In this model, a test begins by setting one or more
-   <em>expectations</em> on the invocations made from code under test to its collaborators
-   (dependencies).
+   The <em>JMockit Expectations</em> mocking API provides a <em>record-replay</em> model for writing
+   <em>behavior-based</em> tests.
+   In this model, a test begins by setting one or more <em>expectations</em> on the invocations made
+   from code under test to its collaborators (dependencies).
    The classes and instances for such dependencies are established through the declaration of one or
-   more <em>mocked types</em> inside the test class.
+   more <em>mocked types</em> inside the test class/method.
    Such mocked types can be declared through instance fields of the test class or of an
    <code>Expectations</code> anonymous subclass inside a test method, and also through parameters
-   of test methods (even though JUnit doesn't normally allow test methods to have parameters).
+   of test methods (even though JUnit and TestNG don't normally allow test methods to have
+   parameters).
    After all expectations are defined in this <em>recording phase</em>, the test transitions to the
-   <em>replay phase</em>, when the code under test is exercised, and the invocations that actually
-   are made on the mocked collaborators are handled according to those expectations.
-   At the end of the replay phase, the expectations are verified for any missing invocations.
+   <em>replay phase</em>, when the code under test is exercised. The invocations that actually occur
+   on the mocked collaborators are handled according to the mocked type declarations and the
+   corresponding expectations recorded on them (if any).
+   At the end of the replay phase, expectations are verified so that missing invocations can be
+   detected.
 </p>
 <p>
-   Naturally, the JMockit Expectations API allows expectations to be set on any kind of method
-   invocation (on interfaces, abstract classes, concrete final or non final classes, and on static
-   methods), as well as on class instantiation through any constructors.
-   Even private methods/constructors can have expectations defined, although at the cost of using
-   strings for their names. (Other tools also allow a private method to be identified by its
-   parameters. However, changing parameters can occur just as often as renaming methods, and when it
-   happens the resulting error message won't be as easy to understand as one that indicates the old
-   method by name.)
+   Expectations can be specified on any kind of method invocation (on interfaces, abstract classes,
+   concrete final or non-final classes, and on static methods), as well as on class instantiation
+   through any constructors. Even private methods/constructors can have expectations defined.
 </p>
 <p>
-   This API allows the use of <a href="http://code.google.com/p/hamcrest">Hamcrest matchers</a> for
-   flexible argument matching, and provides methods to record expected return values and thrown
-   errors/exceptions, as well as to specify lower and/or upper limits on the number of expected
-   invocations for a given expectation.
+   This API provides several ways to specify argument matching constraints on invocations, including
+   the use of custom <a href="http://code.google.com/p/hamcrest">Hamcrest matchers</a>.
+   There are special methods and <em>fields</em> through which <em>values to return</em> or
+   <em>exceptions to throw</em> can be specified for all kinds of mock invocations.
+   Other API methods/fields can be used to specify lower and/or upper limits on the number of
+   expected and/or allowed invocations, respectively, for a given expectation.
 </p>
 <pre><code>public class JMockitExpectationsExampleTest
 {
@@ -580,7 +573,7 @@
          final DependencyXyz mock = new DependencyXyz();
 
          {
-            mock.doSomething("test"); returns(123);
+            mock.doSomething("test"); result = 123;
          }
       };
 
@@ -644,7 +637,7 @@
    This is done in the <em>verification</em> phase of the test, which is demarcated by a
    <code>Verifications</code> block (or a variant, such as <code>VerificationsInOrder</code>).
    It's also possible to have <em>no</em> expectations recorded for a given test, in which case
-   there will be no expectations block in the test method, but only the verifications block.
+   there will be no expectation block in the test method, but only the verification block.
 </p>
 <pre><code>public class JMockitVerificationsExampleTest
 {
@@ -656,7 +649,7 @@
          DependencyXyz mock; // mock instance created and assigned automatically
 
          {
-            mock.doSomething("test"); returns(123);
+            mock.doSomething("test"); <em>result</em> = 123; <em>times</em> = 1;
          }
       };
 
@@ -688,7 +681,7 @@
 <p>
    While the <a href="#core">JMockit Core</a> mock creation mechanism relies on coding conventions
    for determining which methods/constructors in a mock class are actually mocks,
-   <em>JMockit Annotations</em> provides a pair of Java 5 annotations for that purpose.
+   <em>JMockit Annotations</em> provides a Java 5 annotation for that purpose.
    In addition, constraints on the number of expected invocations for each mock can be specified,
    and mock methods can be <em>re-entrant</em>.
 </p>
@@ -701,23 +694,20 @@
    @Test
    public void testDoOperationAbc()
    {
-      Mockit.setUpMocks(MockDependencyXyz.class);
+      new MockUp&lt;DependencyXyz>()
+      {
+         @Mock(invocations = 1)
+         int doSomething(String value)
+         {
+            assertEquals("test", value);
+            return 123;
+         }
+      };
 
       // In ServiceAbc#doOperationAbc(String s): "new DependencyXyz().doSomething(s);"
       Object result = new ServiceAbc().doOperationAbc("test");
 
       assertNotNull(result);
-   }
-
-   @MockClass(realClass = DependencyXyz.class)
-   public static class MockDependencyXyz
-   {
-      @Mock(invocations = 1)
-      public int doSomething(String value)
-      {
-         assertEquals("test", value);
-         return 123;
-      }
    }
 }
 </code></pre>
