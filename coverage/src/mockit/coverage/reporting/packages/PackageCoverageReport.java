@@ -45,7 +45,12 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    @Override
    protected String getHRefToFile(String filePath)
    {
-      return withSourceFiles ? filePath.replace(".java", ".html") : null;
+      if (withSourceFiles) {
+         int p = filePath.lastIndexOf('.');
+         return filePath.substring(0, p) + ".html";
+      }
+
+      return null;
    }
 
    @Override
@@ -66,7 +71,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
          writeTableCellWithFileName(filePath);
          writeCodeCoveragePercentageForFile(filePath);
          writePathCoveragePercentageForFile(filePath);
-         writeDataCoveragePercentageForFile(filePath);
+//         writeDataCoveragePercentageForFile(filePath);
       }
       else {
          printIndent();
@@ -75,7 +80,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
          output.println("</td>");
 
          printIndent();
-         output.println("  <td colspan='3' class='coverage unknown'>?</td>");
+         output.println("  <td colspan='2' class='coverage unknown'>?</td>");
       }
    }
 

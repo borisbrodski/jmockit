@@ -102,9 +102,10 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
       int totalFileCount = computeTotalNumberOfSourceFiles();
       output.print(totalFileCount);
-      output.println("</th><th colspan='3'>Coverage</th></tr>");
+      output.println("</th><th colspan='2'>Coverage</th></tr>");
 
-      output.println("    <tr><th>Line</th><th>Path</th><th>Data</th></tr>");
+      output.println("    <tr><th>Line</th><th>Path</th></tr>");
+//      output.println("    <tr><th>Line</th><th>Path</th><th>Data</th></tr>");
    }
 
    private int computeTotalNumberOfSourceFiles()
@@ -129,8 +130,8 @@ public final class IndexPage extends ListWithFilesAndPercentages
       int totalPathPercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
       printCoveragePercentage(false, totalPathPercentage);
 
-      int totalDataPercentage = CoveragePercentage.calculate(coveredDataItems, totalDataItems);
-      printCoveragePercentage(false, totalDataPercentage);
+//      int totalDataPercentage = CoveragePercentage.calculate(coveredDataItems, totalDataItems);
+//      printCoveragePercentage(false, totalDataPercentage);
 
       output.println("    </tr>");
    }
@@ -163,7 +164,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
       writeInternalTableForChildren(fileName);
       writeCodeCoveragePercentageForFile(fileName);
       writePathCoveragePercentageForFile(fileName);
-      writeDataCoveragePercentageForFile(fileName);
+//      writeDataCoveragePercentageForFile(fileName);
    }
 
    private void writeInternalTableForChildren(String packageName)
@@ -178,7 +179,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
       recordCodeCoverageInformationForPackage(packageName);
       recordPathCoverageInformationForPackage(packageName);
-      recordDataCoverageInformationForPackage(packageName);
+//      recordDataCoverageInformationForPackage(packageName);
 
       printIndent();
       output.println("    </table>");
