@@ -145,11 +145,6 @@
       searched.
    </li>
    <li>
-      <strong>XML files</strong>: a single XML output file of name "coverage.xml" is written under
-      the current working directory or under an specified output directory.
-      If the file already exists it is overwritten.
-   </li>
-   <li>
       <strong>Coverage data files</strong>: a single serialized file of name "coverage.ser" is
       written under the current working directory or under an specified output directory.
       Differently from the other cases, however, if the file already exists its contents are first
@@ -201,8 +196,8 @@
 </p>
 <ol>
    <li>
-      The <strong>output format</strong> desired: XML output, XHTML report, or data file for merging
-      of multiple test runs. Any combination of these three can be selected for the same test run.
+      The <strong>output format</strong> desired: an XHTML report, or a data file for merging of
+      multiple test runs. Any combination of these three can be selected for the same test run.
       The default if none is specified is to generate a basic XHTML report.
    </li>
    <li>
@@ -211,7 +206,7 @@
    </li>
    <li>
       The list of <strong>source directories</strong> for the XHTML report.
-      (This is not relevant for the XML and data file output formats.)
+      (This is not relevant for the serialized data file.)
       If no such directory is specified, all "src" directories under the current working directory
       will be considered.
    </li>
@@ -242,25 +237,16 @@
       generates an XHTML report <em>with</em> call points.
    </li>
    <li>
-      <code>jmockit-coverage-<strong>xmlbasic</strong>.jar</code>:
-      generates an XML output file of name "coverage.xml", <em>without</em> call points.
-   </li>
-   <li>
-      <code>jmockit-coverage-<strong>xmlfull</strong>.jar</code>:
-      generates an XML output file of name "coverage.xml", <em>with</em> call points.
-   </li>
-   <li>
       <code>jmockit-coverage-<strong>merge</strong>.jar</code>:
       generates a merged data file of name "coverage.ser".
    </li>
 </ul>
 <p>
-   The "htmlbasic" and "htmlfull" jars are mutually exclusive, and the same holds for "xmlbasic" and
-   "xmlfull".
-   However, it <em>is</em> valid to have one of each pair in the classpath at the same time.
-   For example, if "htmlbasic" and "xmlfull" are both added to the classpath, at the end of the test
-   run both a "coverage.xml" file and a "coverage-report" directory (unless another is specified)
-   will be written.
+   The "htmlbasic" and "htmlfull" jars are mutually exclusive.
+   However, it <em>is</em> valid to have both <code>jmockit-coverage-merge.jar</code> and one of the
+   two "html" jars in the classpath at the same time.
+   In such a case, at the end of the test run both a "coverage.ser" file and a "coverage-report" 
+   directory (unless another is specified) will be written.
 </p>
 <p>
    Each one of these <em>output specification jars</em> is empty except for the standard
@@ -290,8 +276,7 @@
 <ol>
    <li>
       <code>jmockit-coverage-<strong>output</strong></code>: one or more comma-separated values
-      between <strong><code>xml</code></strong>, <strong><code>xml-nocp</code></strong>,
-      <strong><code>html</code></strong>, <strong><code>html-nocp</code></strong>,
+      between <strong><code>html</code></strong>, <strong><code>html-nocp</code></strong>,
       and <strong><code>merge</code></strong>.
       The "nocp" suffix stands for "no call points".
       The use of this system property takes precedence over the presence of coverage jars in the
@@ -299,9 +284,8 @@
    </li>
    <li>
       <code>jmockit-coverage-<strong>outputDir</strong></code>: absolute or relative path to the
-      output directory, to be used for writing any "coverage.xml", "coverage.ser", and "index.html"
-      files (plus the remaining ".html" files of the XHTML report, in automatically created
-      sub-directories).
+      output directory, to be used for writing any "coverage.ser" or "index.html" files (plus the
+      remaining ".html" files of the XHTML report, in automatically created sub-directories).
    </li>
    <li>
       <code>jmockit-coverage-<strong>srcDirs</strong></code>: comma-separated list of Java source 
@@ -342,8 +326,7 @@
    </li>
    <li>
       <code>outputFormat</code> specifies the format for the coverage output, and should be
-      one or more of: <strong><code>xml</code></strong>, <strong><code>xml-nocp</code></strong>,
-      <strong><code>html</code></strong>, <strong><code>html-nocp</code></strong>,
+      one or more of: <strong><code>html</code></strong>, <strong><code>html-nocp</code></strong>,
       <strong><code>merge</code></strong> ("nocp" stands for "no call points"); more than one value
       can be specified by separating them with a comma; if no value is specified,
       <code>html-nocp</code> is assumed by default.
@@ -368,9 +351,8 @@
    package as well as in any sub-packages.
 </p>
 <p>
-   Note that both types (XML and XHTML) of output can be specified; if both variants for the same
-   type are specified, for example "<code>xml,xml-nocp</code>", then the first occurrence will take
-   precedence.
+   Note that both types ("merge" and XHTML) of output can be specified; if both "<code>html</code>"
+   and "<code>html-nocp</code>" are specified, the first occurrence will take precedence.
 </p>
 <p>
    When one of these four arguments is left unspecified, the equivalent
@@ -404,19 +386,19 @@
    "<code>-javaagent:jmockit.jar=coverage=:html,merge</code>".
 </p>
 <p>
-   At the end of any test run, and <em>before</em> any XML output file or XHTML report is generated,
-   an existing "coverage.ser" file in the current working dir will be read, with the coverage data
-   in it merged with the current in-memory coverage data.
-   The modified in-memory data is then used in the generation of any XML/XHTML output, according to
-   the output types which were specified for the test run.
+   At the end of any test run, and <em>before</em> any XHTML report is generated, an existing
+   "coverage.ser" file in the current working dir will be read, with the coverage data in it merged
+   with the current in-memory coverage data.
+   The modified in-memory data is then used in the generation of the XHTML report, if it is enabled
+   for the test run.
 </p>
 <p>
    Note that these separate test runs may be for the <em>same</em> test suite, or for
    <em>different</em> test suites.
-   The only thing in common between all test runs, if a single XHTML report or XML file is
-   desired from them, is that the working directory should be the same.
-   Otherwise, the shared "coverage.ser" file won't be found and a new "coverage.xml" file or
-   "coverage-report" directory will be created.
+   The only thing in common between all test runs, if a single XHTML report is desired from them, is
+   that the working directory should be the same.
+   Otherwise, the shared "coverage.ser" file won't be found and a new "coverage-report" directory
+   will be created.
    If different test runs <em>must</em> use different working dirs (perhaps because the source
    directories are not all under the same top-level directory, or for some other reason), then the
    "coverage.ser" file will have to be provided in each working dir by whatever means are available
@@ -469,9 +451,9 @@ coverage=:html:./target/coverage-report
 </code></pre>
 <p>
    A more convenient way to specify the output directory for files generated by JMockit Coverage
-   ("coverage.xml", "coverage.ser", "index.html" and other XHTML pages) is to configure
-   <code>surefire</code> with the <code>jmockit-coverage-outputDir</code> <em>system property</em>
-   (which goes inside the <code>configuration</code> element shown above):
+   ("coverage.ser", "index.html" and other XHTML pages) is to configure <code>surefire</code> with
+   the <code>jmockit-coverage-outputDir</code> <em>system property</em> (which goes inside the
+   <code>configuration</code> element shown above):
 </p>
 <pre><code>      &lt;systemProperties>
          &lt;property>
@@ -494,7 +476,7 @@ coverage=:html:./target/coverage-report
 <p>
    To facilitate switching on/off the generation of code coverage output, the
    <em>read-only status</em> of the relevant file is checked by JMockit at startup.
-   The relevant file, always in the working directory, is "coverage.xml" for XML output and
+   The relevant file, always in the working directory, is "coverage.ser" for serialized output and
    "coverage-report/index.html" for XHTML output. (Note that the working directory can usually be
    selected separately for each test run configuration in the Java IDE.)
    If said file is currently marked as read-only in the OS, then the corresponding output is not

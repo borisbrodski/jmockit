@@ -797,8 +797,8 @@
       to libraries used by code under test).
    </li>
    <li>
-      An XML output file and/or an XHTML report can be generated at the end of each test run with no
-      extra configuration beyond adding the relevant jar files to the classpath
+      A serialized output file and/or an XHTML report can be generated at the end of each test run
+      with no extra configuration beyond adding the relevant jar files to the classpath
       (at least one <code>jmockit-coverage-xyz.jar</code> file).
       For the generation of the XHTML report, Java source files are automatically searched in all
       "src" directories under the working directory.
@@ -816,24 +816,16 @@
       For path coverage, each possible path through a method or constructor can be interactively
       displayed in the XHTML report.
    </li>
-<!-- TODO: implement this feature
    <li>
       <strong>Intra-line</strong> coverage is provided, with the appropriate red/green coloring in
       the XHTML report for each conditionally executed line segment.
    </li>
--->
    <li>
       An <strong>incremental test runner</strong> (actually, an automatic modification to the
       JUnit 4.x standard test runner) is provided.
       When using this modified runner, only the individual tests which cover locally modified code
       are re-executed.
       Any other tests included in the suite are ignored for that particular test run.
-   </li>
-   <li>
-      Additional features are planned: use of <code>assert</code> for marking blocks of unreachable
-      code which cannot be removed (typically, <code>catch</code> blocks) and therefore should not
-      be considered in coverage measures; and <em>intra-line coverage</em>, with red/green coloring
-      in each fragment of a line with conditional branches.
    </li>
 </ol>
 <hr/>

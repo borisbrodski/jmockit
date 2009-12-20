@@ -28,7 +28,6 @@ import java.io.*;
 
 import mockit.coverage.data.*;
 import mockit.coverage.reporting.*;
-import mockit.coverage.output.*;
 
 final class OutputFileGenerator extends Thread
 {
@@ -93,13 +92,6 @@ final class OutputFileGenerator extends Thread
       classPath = System.getProperty("java.class.path").split(File.pathSeparator);
       String result = "";
 
-      if (isAvailableInTheClasspath("xmlbasic")) {
-         result = "xml-nocp";
-      }
-      else if (isAvailableInTheClasspath("xmlfull")) {
-         result = "xml";
-      }
-
       if (isAvailableInTheClasspath("htmlbasic")) {
          result += " html-nocp";
       }
@@ -136,9 +128,7 @@ final class OutputFileGenerator extends Thread
 
    boolean isWithCallPoints()
    {
-      return
-         outputFormat.contains("xml") && !outputFormat.contains("xml-nocp") ||
-         outputFormat.contains("html") && !outputFormat.contains("html-nocp");
+      return outputFormat.contains("html") && !outputFormat.contains("html-nocp");
    }
 
    @Override
@@ -151,7 +141,6 @@ final class OutputFileGenerator extends Thread
 
       try {
          generateAccretionDataFileIfRequested(coverageData);
-         generateXMLOutputFileIfRequested(coverageData);
          generateHTMLReportIfRequested(coverageData);
       }
       catch (IOException e) {
@@ -182,23 +171,13 @@ final class OutputFileGenerator extends Thread
       }
    }
 
-   private void generateXMLOutputFileIfRequested(CoverageData coverageData) throws IOException
-   {
-      if (outputFormat.contains("xml-nocp")) {
-         new BasicXmlWriter(coverageData).writeToXmlFile(outputDir);
-      }
-      else if (outputFormat.contains("xml")) {
-         new FullXmlWriter(coverageData).writeToXmlFile(outputDir);
-      }
-   }
-
    private void generateHTMLReportIfRequested(CoverageData coverageData) throws IOException
    {
-      if (outputFormat.contains("html-nocp")) {
-         new BasicCoverageReport(outputDir, sourceDirs, coverageData).generate();
-      }
-      else if (outputFormat.contains("html")) {
+      if (isWithCallPoints()) {
          new FullCoverageReport(outputDir, sourceDirs, coverageData).generate();
+      }
+      else {
+         new BasicCoverageReport(outputDir, sourceDirs, coverageData).generate();
       }
    }
 }
