@@ -72,7 +72,10 @@ class CoverageReport
       }
 
       generateFileCoverageReportsWhileBuildingPackageLists();
-      addUncoveredSourceFilesToPackageLists();
+
+      if (sourceDirs != null) {
+         addUncoveredSourceFilesToPackageLists();
+      }
 
       new IndexPage(outputFile, sourceDirs, packageToFiles, fileToFileData).generate();
 
