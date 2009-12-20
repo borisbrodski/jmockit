@@ -540,25 +540,25 @@
    <code>Expectations</code> anonymous subclass inside a test method, and also through parameters
    of test methods (even though JUnit and TestNG don't normally allow test methods to have
    parameters).
-   After all expectations are defined in this <em>recording phase</em>, the test transitions to the
+   After expectations are defined in this <em>recording phase</em>, the test transitions to the
    <em>replay phase</em>, when the code under test is exercised. The invocations that actually occur
    on the mocked collaborators are handled according to the mocked type declarations and the
    corresponding expectations recorded on them (if any).
-   At the end of the replay phase, expectations are verified so that missing invocations can be
-   detected.
+   At the end of the replay phase, those expectations for which one or more invocations were
+   expected are automatically verified so that missing invocations can be detected.
 </p>
 <p>
    Expectations can be specified on any kind of method invocation (on interfaces, abstract classes,
    concrete final or non-final classes, and on static methods), as well as on class instantiation
-   through any constructors. Even private methods/constructors can have expectations defined.
+   through any constructors. Private methods/constructors can also have expectations defined.
 </p>
 <p>
-   This API provides several ways to specify argument matching constraints on invocations, including
-   the use of custom <a href="http://code.google.com/p/hamcrest">Hamcrest matchers</a>.
+   This API provides several ways to specify <em>argument matching</em> constraints on invocations,
+   including the use of custom <a href="http://code.google.com/p/hamcrest">Hamcrest matchers</a>.
    There are special methods and <em>fields</em> through which <em>values to return</em> or
    <em>exceptions to throw</em> can be specified for all kinds of mock invocations.
-   Other API methods/fields can be used to specify lower and/or upper limits on the number of
-   expected and/or allowed invocations, respectively, for a given expectation.
+   Other API methods/fields can be used to specify lower and/or upper limits on the <em>number</em>
+   of expected and/or allowed invocations, respectively, for a given expectation.
 </p>
 <pre><code>public class JMockitExpectationsExampleTest
 {
@@ -573,7 +573,7 @@
          final DependencyXyz mock = new DependencyXyz();
 
          {
-            mock.doSomething("test"); result = 123;
+            mock.doSomething("test"); <em>result</em> = 123;
          }
       };
 
@@ -582,7 +582,7 @@
 
       assertNotNull(result);
 
-      // That all expectations recorded were actually executed in the replay phase is automatically
+      // That all expected invocations were actually executed in the replay phase is automatically
       // verified at this point, through transparent integration with the JUnit/TestNG test runner.
    }
 }
