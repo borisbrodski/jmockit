@@ -241,6 +241,7 @@ public final class Startup
 
    public static Instrumentation instrumentation()
    {
+      verifyInitialization();
       return instrumentation;
    }
 
