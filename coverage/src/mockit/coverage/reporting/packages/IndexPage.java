@@ -96,16 +96,22 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeTableFirstRowWithColumnTitles()
    {
-      output.write("    <tr><th rowspan='2'>Packages: ");
-      output.print(packageToFiles.keySet().size());
-      output.write("</th><th rowspan='2' onclick='showHideAllFiles(this)'>Files (.java): ");
-
       int totalFileCount = computeTotalNumberOfSourceFiles();
-      output.print(totalFileCount);
-      output.println("</th><th colspan='2'>Coverage</th></tr>");
 
-      output.println("    <tr><th>Line</th><th>Path</th></tr>");
-//      output.println("    <tr><th>Line</th><th>Path</th><th>Data</th></tr>");
+      output.println("    <tr>");
+      output.write("      <th onclick='showHideAllFiles(this)'>Packages: ");
+      output.print(packageToFiles.keySet().size());
+      output.println("</th>");
+      output.write("      <th>Files (.java): ");
+      output.print(totalFileCount);
+      output.println("</th>");
+      output.println("      <th colspan='2'><table>");
+      output.println(
+         "        <tr><th colspan='2' style='border-bottom: 1px solid white'>Coverage</th></tr>");
+      output.println(
+         "        <tr><th style='border-right: 1px solid white'>Line</th><th>Path</th></tr>");
+      output.println("      </table></th>");
+      output.println("    </tr>");
    }
 
    private int computeTotalNumberOfSourceFiles()
@@ -160,7 +166,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
    @Override
    protected void writeMetricsForFile(String packageName, String fileName)
    {
-      writeTableCellWithFileName(fileName);
+      writeTableCellWithFileName(fileName, true);
       writeInternalTableForChildren(fileName);
       writeCodeCoveragePercentageForFile(fileName);
       writePathCoveragePercentageForFile(fileName);
@@ -169,14 +175,12 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeInternalTableForChildren(String packageName)
    {
-      List<String> packageFiles = packageToFiles.get(packageName);
-
       printIndent();
-      output.println(packageFiles.size() > 1 ? "  <td onclick='showHideFiles(this)'>" : "  <td>");
+      output.println("  <td>");
       printIndent();
       output.println("    <table width='100%'>");
 
-      packageReport.writeMetricsForEachFile(packageName, packageFiles);
+      packageReport.writeMetricsForEachFile(packageName, packageToFiles.get(packageName));
 
       recordCodeCoverageInformationForPackage(packageName);
       recordPathCoverageInformationForPackage(packageName);

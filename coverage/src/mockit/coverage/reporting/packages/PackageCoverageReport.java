@@ -68,7 +68,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       String filePath = packageName + '/' + fileName;
 
       if (filesToFileData.containsKey(filePath)) {
-         writeTableCellWithFileName(filePath);
+         writeTableCellWithFileName(filePath, false);
          writeCodeCoveragePercentageForFile(filePath);
          writePathCoveragePercentageForFile(filePath);
 //         writeDataCoveragePercentageForFile(filePath);

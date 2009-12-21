@@ -52,18 +52,21 @@ function showHide(callPoints, listIndex)
 var filesShown = true;
 function showHideAllFiles(header)
 {
-   var tables = header.parentNode.parentNode.getElementsByTagName('table');
+   var table = header.parentNode.parentNode;
    filesShown = !filesShown;
+   var newDisplay = filesShown ? 'block' : 'none';
+   var rows = table.rows;
+   rows[0].cells[1].style.display = newDisplay;
 
-   for (var i = 0; i < tables.length; i++) {
-      var body = tables[i].tBodies[0].style;
-      body.display = filesShown ? 'block' : 'none';
+   for (var i = 1; i < rows.length; i++) {
+      rows[i].cells[1].style.display = newDisplay;
    }
 }
 
 function showHideFiles(files)
 {
-   var table = files.getElementsByTagName('table')[0];
-   var body = table.tBodies[0].style;
-   body.display = body.display == 'none' ? 'block' : 'none';
+   var table = files.parentNode.cells[1].getElementsByTagName('table')[0];
+   var body = table.style;
+   var wasHidden = body.display == 'none';
+   body.display = wasHidden ? 'block' : 'none';
 }
