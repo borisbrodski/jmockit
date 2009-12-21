@@ -270,18 +270,20 @@ public class MyFirstJMockitTest
    In the first case, all expectations associated to mocked types used in the block will be
    <em>strict</em> by default, meaning that the invocations are <em>expected</em> to occur in the
    replay phase in the same order as they were recorded, and that invocations not recorded are
-   <em>not expected</em> to occur.
+   expected to <em>not</em> occur.
    In the second case, expectations are always <em>non-strict</em>, meaning that the invocations to
    mocked types, whether recorded or not, are <em>allowed</em> to occur in any order and in any
    number, including not at all.
 </p>
 <p>
    You may be wondering what are those field assignments doing there.
-   The <code>result</code> field takes the desired return value for the preceding invocation, while
-   <code>times</code> takes the number of times the preceding invocation is allowed and expected to
-   occur. (There is also a <code>minTimes</code> and a <code>maxTimes</code> field.)
-   The <code>result</code> field also accepts a <code>Throwable</code> instance, which would cause
-   the corresponding invocation in the replay phase to throw the specified exception or error.
+   The <em><code>result</code></em> field takes the desired return value for the preceding
+   invocation, while <em><code>times</code></em> takes the number of times the preceding invocation
+   is allowed and expected to occur.
+   (There is also a <em><code>minTimes</code></em> and a <em><code>maxTimes</code></em> field.)
+   The <em><code>result</code></em> field also accepts a <code>Throwable</code> instance, which
+   would cause the corresponding invocation in the replay phase to throw the specified exception or
+   error.
    Each of these special fields has an equivalent method that could be used instead:
    <code>returns(...)</code>, <code>repeats(n)</code>, <code>throwsException(...)</code>, etc;
    but the fields are nicer.
