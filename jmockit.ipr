@@ -1105,13 +1105,13 @@
     </library>
     <library name="Maven: mockit:jmockit:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/LoginService/../../jmockit.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/TimingFramework/../../jmockit.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/LoginService/../../jmockit-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/TimingFramework/../../jmockit-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/LoginService/../../jmockit-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/TimingFramework/../../jmockit-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: easymock:easymock:0">
