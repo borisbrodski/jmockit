@@ -17,7 +17,7 @@
    The toolkit is documented through a tutorial, API documentation, and several sample test suites.
 </p>
 
-<h3>Using the JMockit full distribution</h3>
+<h3 id="fullDistribution">Using the JMockit full distribution</h3>
 <p>
    Follow these instructions to start using JMockit:
 </p>
@@ -71,7 +71,7 @@
    </li>
 </ol>
 
-<h4>Running tests in Eclipse with the JUnit plug-in</h4>
+<h4 id="eclipse">Running tests in Eclipse with the JUnit plug-in</h4>
 <p>
    The JUnit plug-in available in the Eclipse Java IDE provides a version of <code>junit.jar</code>
    which does not work with JMockit (the plug-in itself does work).
@@ -84,7 +84,7 @@
    as part of a "User Library".
 </p>
 
-<h3>Using JMockit in a Maven project</h3>
+<h3 id="maven">Using JMockit in a Maven project</h3>
 <p>
    The JMockit artifacts, including a binary jar and a sources jar for each release, are located in
    the <a href="http://download.java.net/maven/2/">Java.net Maven 2 Repository</a>.
@@ -153,7 +153,7 @@
    <a href="tutorial/CodeCoverage.html#maven">relevant section</a> in the JMockit Tutorial.
 </p>
 
-<h3>Using the mocking APIs</h3>
+<h3 id="mockingAPIs">Using the mocking APIs</h3>
 <p>
    The JMockit mocking APIs can be used in tests written with any of the popular testing frameworks:
    JUnit 3.8, JUnit 4 (version 4.5 or newer) and TestNG (version 5.8 or newer).
@@ -161,7 +161,7 @@
    <code>mockit</code> package.
 </p>
 
-<h4>Creating a mock object</h4>
+<h4 id="mockObject">Creating a mock object</h4>
 <p>
    In a test class, simply declare a <em>mock field</em> of the desired type, annotated as
    <code>@Mocked</code>.
@@ -207,7 +207,7 @@ public class MyFirstJMockitTest
    is required.
 </p>
 
-<h4>What exactly goes inside a test method?</h4>
+<h4 id="testMethod">What exactly goes inside a test method?</h4>
 <p>
    The following template shows the basic structure of a JMockit test method, when using the
    <em>Expectations & Verifications API</em> for <em>behavior-based</em> testing:
@@ -235,7 +235,7 @@ public class MyFirstJMockitTest
    verifications - otherwise no behavior would be tested).
 </p>
 
-<h4>Recording expectations</h4>
+<h4 id="record">Recording expectations</h4>
 <p>
    In the record phase of a test, we write one or more <em>expectation blocks</em>, inside which
    invocations to mocked types are recorded.
@@ -246,6 +246,7 @@ public class MyFirstJMockitTest
    {
       new NonStrictExpectations()
       {
+         // A "local" mock field (could also be annotated with @Mocked):
          MyCollaborator mock;
 
          {
@@ -289,14 +290,14 @@ public class MyFirstJMockitTest
    but the fields are nicer.
 </p>
 
-<h4>Verifying expectations</h4>
+<h4 id="verify">Verifying expectations</h4>
 <p>
    The smart reader probably already figured out why and when we would have a non-empty verification
    phase in a test.
    It boils down to the existence or not of non-strict expectations in the test.
    If all mocked types used in the test have only strict expectations, then all invocations will be
    implicitly and automatically verified at the end of the test. In this case, there will be no
-   explicit verify phase.
+   explicit <em>verify</em> phase.
    If there is at least one mocked type with non-strict expectations, then we can use one or more
    <em>verification blocks</em> to make sure that the invocations we care about actually occurred
    during the replay phase.
@@ -304,7 +305,7 @@ public class MyFirstJMockitTest
 <pre><code>   @Test
    public void aTestMethod(final MyCollaborator mock)
    {
-      // Non-strict expectations were recorded, or perhaps there are no expectation blocks at all.
+      // Non-strict expectations are recorded, or perhaps there are no expectation blocks at all.
 
       // Code under test is exercised:
       ...
@@ -322,7 +323,7 @@ public class MyFirstJMockitTest
    }
 </code></pre>
 
-<h4>State-oriented mocking</h4>
+<h4 id="stateOriented">State-oriented mocking</h4>
 <p>
    Sometimes you are more interested in checking the argument values passed to a mocked
    collaborator, instead of checking that the invocation to the collaborator was made from the
@@ -343,8 +344,8 @@ public class MyFirstJMockitTest
             assertEquals(1, n);
             assertNotNull(otherData);
             ...
-            // Return (if non-void) or throw the desired result the invocation to
-            // the mocked method should produce:
+            // Return (if non-void) or throw the result we want to produce for the
+            // invocation to the mocked method:
             return otherData.isValid();
          }
    
@@ -360,9 +361,11 @@ public class MyFirstJMockitTest
    The <code>@Mock</code> annotation marks those methods in the <em>mock-up class</em> which are
    supposed to provide mock/stub implementations for the corresponding methods (of the same
    signature) in the mocked class.
+   If no invocation count constraint is specified through attributes of the <code>@Mock</code>
+   annotation, then any number (including zero) of invocations will be allowed.
 </p>
 
-<h4>More information</h4>
+<h4 id="moreInfo">More information</h4>
 <p>
    The examples above give only a brief overview of the available mocking APIs. There is much more.
    The full <a href="tutorial.html">JMockit Tutorial</a> contains an extensive discussion of nearly
