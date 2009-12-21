@@ -185,7 +185,7 @@
    corresponding real class, as we'll now see.
 </p>
 
-<h4>Setting up mocks for a real class chosen at setup time</h4>
+<h4 id="setupTime">Setting up mocks for a real class chosen at setup time</h4>
 <p>
    For the <code>MockLoginContext</code> mock class above, the corresponding real class is
    <code>javax.security.auth.login.LoginContext</code>.
@@ -279,7 +279,7 @@
    instance is created for them.
 </p>
 
-<h4>Which kinds of methods can have mocks?</h4>
+<h4 id="mockableMethods">Which kinds of methods can have mocks?</h4>
 <p>
    So far, we have only mocked public instance methods with public instance mock methods.
    In reality, any other kind of method in a real class can be mocked: methods with
@@ -709,7 +709,7 @@
    Notice this is applicable only to situation 2 above.
 </p>
 
-<h4>Instantiation per Mock Setup</h4>
+<h4 id="PerMockSetup">Instantiation per Mock Setup</h4>
 <p>
    For a mock class annotated as
    <code>@MockClass(realClass = ..., <strong>instantiation = PerMockSetup</strong>)</code>, a call
@@ -724,7 +724,7 @@
    calls.
 </p>
 
-<h4>Instantiation per Mock Invocation</h4>
+<h4 id="PerMockInvocation">Instantiation per Mock Invocation</h4>
 <p>
    For a mock class annotated as
    <code>@MockClass(realClass = ..., <strong>instantiation = PerMockInvocation</strong>)</code>, a
@@ -740,7 +740,7 @@
    a mock setup call, and the <code>instantiation</code> attribute isn't specified.
 </p>
 
-<h4>Instantiation per Mocked Instance</h4>
+<h4 id="PerMockedInstance">Instantiation per Mocked Instance</h4>
 <p>
    For a mock class annotated as
    <code>@MockClass(realClass = ..., <strong>instantiation = PerMockedInstance</strong>)</code>, a
@@ -962,7 +962,7 @@
    well as ways to define reusable mock classes.
 </p>
 
-<h4>Using before/after methods</h4>
+<h4 id="beforeAfter">Using before/after methods</h4>
 <p>
    In a given test class, we can define instance methods that will run <em>before</em> and
    <em>after</em> each test method (even when the test throws an error or exception).
@@ -1024,7 +1024,7 @@
    "after" methods containing calls to the Annotations API.
 </p>
 
-<h4>Reusable mock classes</h4>
+<h4 id="reusableMocks">Reusable mock classes</h4>
 <p>
    Named mock classes of all kinds (annotated with <code>@MockClass</code> or not, mock-up classes)
    can be designed as concrete (and optionally <code>final</code>) classes that are then used in

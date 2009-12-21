@@ -94,7 +94,7 @@ public final class DeencapsulationTest
 }
 </code></pre>
 
-<h4>Getting/setting non-accessible fields by name or type</h4>
+<h4 id="deencapsulatingFields">Getting/setting non-accessible fields by name or type</h4>
 <p>
    The <code>getField</code> and <code>setField</code> methods, for which there are several
    overloads (variations with different parameters), can be used to access instance and static
@@ -150,7 +150,7 @@ public final class DeencapsulationTest
    If an attempt is made to access such a field by its type, an exception will be thrown.
 </p>
 
-<h4>Invoking non-accessible methods by name</h4>
+<h4 id="deencapsulatingMethods">Invoking non-accessible methods by name</h4>
 <p>
    There are only two utility methods for invoking non-accessible methods: one for instance methods
    and another for <code>static</code> methods.
@@ -182,7 +182,7 @@ public final class DeencapsulationTest
    inferred from the given argument values.
 </p>
 
-<h4>Creating instances through non-accessible constructors</h4>
+<h4 id="deencapsulatingConstructors">Creating instances through non-accessible constructors</h4>
 <p>
    Non-public classes, or classes with no accessible constructors, can be instantiated through
    <code>newInstance</code> and <code>newInnerInstance</code> methods.

@@ -364,7 +364,7 @@ public class SomeTest
    The classes instantiated must be covered by mocked types declared in test code, that's all.
 </p>
 
-<h4>Mocking multiple interfaces at the same time</h4>
+<h4 id="multipleInterfaces">Mocking multiple interfaces at the same time</h4>
 <p>
    Suppose the unit under test needs to be given an object which implements two or more interfaces.
    Can we create a mock object which satisfies this requirement?
@@ -618,7 +618,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    <a href="http://code.google.com/p/hamcrest">Hamcrest</a> library, which is bundled with JUnit 4.
 </p>
 
-<h4>Argument matching <em>fields</em>: a succinct alternative</h4>
+<h4 id="matcherFields">Argument matching <em>fields</em>: a succinct alternative</h4>
 <p>
    For the <code>withAny(?)</code> methods that take no arguments or take one only to designate
    the parameter type, there is a set of special <em>argument matching fields</em> that are
@@ -659,7 +659,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    more details on argument matching fields.
 </p>
 
-<h4>Using the <code>null</code> value to match any object reference</h4>
+<h4 id="nullAsMatcher">Using the <code>null</code> value to match any object reference</h4>
 <p>
    When using at least one argument matching method or field for a given expectation, we can specify
    that any object reference be accepted for a parameter of reference type by simply passing the
@@ -870,7 +870,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    the <code>repeatsXyz(...)</code> invocation count constraint methods.
 </p>
 
-<h4>Verifying that an invocation never happened</h4>
+<h4 id="neverHappened">Verifying that an invocation never happened</h4>
 <p>
    To do this inside a verification block, add a call to <code>repeats(0)</code> right after the
    invocation that is expected to not have happened during the replay phase.
@@ -906,7 +906,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    Naturally, argument matchers and invocation count constraints can be freely used.
 </p>
 
-<h4>Partially ordered verification</h4>
+<h4 id="partiallyOrdered">Partially ordered verification</h4>
 <p>
    Suppose you want to verify that a particular method (or constructor) was called <em>before</em>
    (or <em>after</em>) all other invocations to mocked types in the replay phase, while at the same
@@ -1050,7 +1050,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    occurred in the expected order, as specified inside the verification block).
 </p>
 
-<h4>Verifying unspecified invocations that should not happen</h4>
+<h4 id="unspecifiedInvocations">Verifying unspecified invocations that should not happen</h4>
 <p>
    A full verification block (ordered or not) also allows us to verify that certain methods and/or
    constructors never get invoked, without having to specify each one of them with a corresponding
@@ -1083,7 +1083,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    verification block at all.
 </p>
 
-<h4>Verifying iterations</h4>
+<h4 id="iterations">Verifying iterations</h4>
 <p>
    There is one last thing about verification blocks we need to examine: the ability to easily
    verify invocations that occur inside loops, for an specified number of iterations of the loop.
@@ -1338,7 +1338,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    method/constructor body will be executed.
 </p>
 
-<h4>Static partial mocking</h4>
+<h4 id="staticPartial">Static partial mocking</h4>
 <p>
    Methods and constructors to be mocked can be explicitly specified through the
    <code>@Mocked(<strong>methods</strong> = {"filter1", "filter2", ...})</code> annotation
@@ -1408,7 +1408,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    <code>Object</code> (not itself included).
 </p>
 
-<h4>Dynamic partial mocking</h4>
+<h4 id="dynamicPartial">Dynamic partial mocking</h4>
 <p>
    Static partial mocking has the inconvenience that we need to explicitly specify the
    methods/constructors to be mocked or not mocked, and do so inside strings instead of in Java

@@ -153,7 +153,7 @@
    </li>
 </ol>
 
-<h4>Call points</h4>
+<h4 id="callPoints">Call points</h4>
 <p>
    For the first two types of output, there is optional "call point" information which may be
    included or not, as selected by the user.
@@ -217,7 +217,7 @@
    </li>
 </ol>
 
-<h4>Selecting the desired output through classpath configuration</h4>
+<h4 id="classpathConfiguration">Selecting the desired output through classpath configuration</h4>
 <p>
    This mechanism applies when the <code>-javaagent:jmockit.jar</code> JVM parameter is <em>not</em>
    used for running tests with JMockit. As such, it's only valid when running on JDK 1.6. (See the
@@ -262,7 +262,7 @@
    <code>jmockit-coverage.jar</code> is, then the "htmlbasic" report will be generated.
 </p>
 
-<h4>Configuration through system properties</h4>
+<h4 id="propertyConfiguration">Configuration through system properties</h4>
 <p>
    To have control over all aspects of the code coverage tool, set one or more
    <em>system properties</em> for the JVM instance that will run the test suite.
@@ -305,7 +305,7 @@
    </li>
 </ol>
 
-<h4>Configuration through <code>-javaagent</code></h4>
+<h4 id="javaagentConfiguration">Configuration through <code>-javaagent</code></h4>
 <p>
    Another way to have full control over the code coverage tool is to use a JVM command line with
    <code>-javaagent:jmockit.jar=coverage=&lt;Coverage arguments></code> when running the test suite.
@@ -489,7 +489,7 @@ coverage=:html:./target/coverage-report
    for the text file selected in the editor; this screen can be opened by typing "Alt + Enter".
 </p>
 
-<h4>Using the <code>jmockit-tools</code> system property</h4>
+<h4 id="jmockit-tools">Using the <code>jmockit-tools</code> system property</h4>
 <p>
    Another way to switch coverage on/off is to use the <strong><code>jmockit-tools</code></strong>
    system property, which can specify the "startup tools", between those available in the classpath
