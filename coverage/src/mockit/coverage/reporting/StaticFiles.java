@@ -35,10 +35,10 @@ final class StaticFiles
       long timeOfCoverageJar = new File(pathToThisJar).lastModified();
 
       copyFile(outputDir, "coverage.css", timeOfCoverageJar);
+      copyFile(outputDir, "coverage.js", timeOfCoverageJar);
 
       if (forSourceFilePages) {
          copyFile(outputDir, "prettify.css", timeOfCoverageJar);
-         copyFile(outputDir, "coverage.js", timeOfCoverageJar);
          copyFile(outputDir, "prettify.js", timeOfCoverageJar);
       }
    }

@@ -32,20 +32,20 @@ public final class OutputFile extends PrintWriter
    private static final Pattern PATH_SEPARATOR = Pattern.compile("/");
 
    private final String relPathToOutDir;
-   private final boolean withJavaScript;
+   private final boolean withPrettyPrint;
 
    public OutputFile(File file) throws IOException
    {
       super(new FileWriter(file));
       relPathToOutDir = "";
-      withJavaScript = false;
+      withPrettyPrint = false;
    }
 
    public OutputFile(String outputDir, String sourceFilePath) throws IOException
    {
       super(new FileWriter(getOutputFileCreatingDirIfNeeded(outputDir, sourceFilePath)));
       relPathToOutDir = getRelativeSubPathToOutputDir(sourceFilePath);
-      withJavaScript = true;
+      withPrettyPrint = true;
    }
 
    private static File getOutputFileCreatingDirIfNeeded(String outputDir, String sourceFilePath)
@@ -86,16 +86,14 @@ public final class OutputFile extends PrintWriter
       print("  <link rel='stylesheet' type='text/css' href='");
       print(relPathToOutDir);
       println("coverage.css'/>");
+      print("  <script type='text/javascript' src='");
+      print(relPathToOutDir);
+      println("coverage.js'></script>");
 
-      if (withJavaScript) {
+      if (withPrettyPrint) {
          print("  <link rel='stylesheet' type='text/css' href='");
          print(relPathToOutDir);
          println("prettify.css'/>");
-
-         print("  <script type='text/javascript' src='");
-         print(relPathToOutDir);
-         println("coverage.js'></script>");
-
          print("  <script type='text/javascript' src='");
          print(relPathToOutDir);
          println("prettify.js'></script>");
@@ -103,7 +101,7 @@ public final class OutputFile extends PrintWriter
 
       println("</head>");
 
-      if (withJavaScript) {
+      if (withPrettyPrint) {
          println("<body onload='prettyPrint()'>");
       }
       else {

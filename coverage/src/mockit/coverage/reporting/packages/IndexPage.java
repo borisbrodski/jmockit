@@ -98,7 +98,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
    {
       output.write("    <tr><th rowspan='2'>Packages: ");
       output.print(packageToFiles.keySet().size());
-      output.write("</th><th rowspan='2'>Files (.java): ");
+      output.write("</th><th rowspan='2' onclick='showHideAllFiles(this)'>Files (.java): ");
 
       int totalFileCount = computeTotalNumberOfSourceFiles();
       output.print(totalFileCount);
@@ -169,12 +169,13 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeInternalTableForChildren(String packageName)
    {
-      printIndent();
-      output.println("  <td>");
-      printIndent();
-      output.println("    <table>");
-
       List<String> packageFiles = packageToFiles.get(packageName);
+
+      printIndent();
+      output.println(packageFiles.size() > 1 ? "  <td onclick='showHideFiles(this)'>" : "  <td>");
+      printIndent();
+      output.println("    <table width='100%'>");
+
       packageReport.writeMetricsForEachFile(packageName, packageFiles);
 
       recordCodeCoverageInformationForPackage(packageName);

@@ -48,3 +48,22 @@ function showHide(callPoints, listIndex)
    var list = tableCell.getElementsByTagName('ol')[listIndex].style;
    list.display = list.display == 'none' ? 'block' : 'none';
 }
+
+var filesShown = true;
+function showHideAllFiles(header)
+{
+   var tables = header.parentNode.parentNode.getElementsByTagName('table');
+   filesShown = !filesShown;
+
+   for (var i = 0; i < tables.length; i++) {
+      var body = tables[i].tBodies[0].style;
+      body.display = filesShown ? 'block' : 'none';
+   }
+}
+
+function showHideFiles(files)
+{
+   var table = files.getElementsByTagName('table')[0];
+   var body = table.tBodies[0].style;
+   body.display = body.display == 'none' ? 'block' : 'none';
+}
