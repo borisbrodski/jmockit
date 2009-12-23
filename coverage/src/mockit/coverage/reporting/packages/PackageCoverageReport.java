@@ -56,10 +56,10 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       printIndent();
       output.write("  <td class='file'>");
 
-      buildFileNameWithoutExtensionButCompletedWithSpaces(fileName);
+      int fileNameLength = buildFileNameWithoutExtensionButCompletedWithSpaces(fileName);
 
       if (filesToFileData.containsKey(filePath)) {
-         writeTableCellWithFileName();
+         writeTableCellWithFileName(fileNameLength);
          writeCodeCoveragePercentageForFile();
          writePathCoveragePercentageForFile();
          writeDataCoveragePercentageForFile();
@@ -69,13 +69,15 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       }
    }
 
-   private void buildFileNameWithoutExtensionButCompletedWithSpaces(String fileName)
+   private int buildFileNameWithoutExtensionButCompletedWithSpaces(String fileName)
    {
       int p = fileName.lastIndexOf('.');
 
       for (int i = 0; i < fileNameWithSpaces.length; i++) {
          fileNameWithSpaces[i] = i < p ? fileName.charAt(i) : ' ';
       }
+
+      return p;
    }
 
    private void writeTableCellsWithFileNameAndUnknownCoverageMetrics()
@@ -87,19 +89,19 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       output.println("  <td colspan='3' class='coverage unknown'>?</td>");
    }
 
-   private void writeTableCellWithFileName()
+   private void writeTableCellWithFileName(int fileNameLen)
    {
       if (withSourceFiles) {
          output.write("<a href='");
          int p = filePath.lastIndexOf('.');
          output.write(filePath.substring(0, p));
          output.write(".html'>");
-      }
-
-      output.write(fileNameWithSpaces);
-
-      if (withSourceFiles) {
+         output.write(fileNameWithSpaces, 0, fileNameLen);
          output.write("</a>");
+         output.write(fileNameWithSpaces, fileNameLen, fileNameWithSpaces.length - fileNameLen);
+      }
+      else {
+         output.write(fileNameWithSpaces);
       }
 
       output.println("</td>");
