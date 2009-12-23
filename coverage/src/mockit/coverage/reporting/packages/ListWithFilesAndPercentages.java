@@ -80,33 +80,6 @@ abstract class ListWithFilesAndPercentages
 
    protected abstract void writeMetricsForFile(String packageName, String fileName);
 
-   final void writeTableCellWithFileName(String filePath, boolean withShowHideFiles)
-   {
-      printIndent();
-      output.write(
-         withShowHideFiles ?
-            "  <td class='file' onclick='showHideFiles(this)'>" : "  <td class='file'>");
-
-      String href = getHRefToFile(filePath);
-
-      if (href != null) {
-         output.write("<a href='");
-         output.write(href);
-         output.write("'>");
-      }
-
-      output.write(getFileNameForDisplay(filePath));
-
-      if (href != null) {
-         output.write("</a>");
-      }
-
-      output.println("</td>");
-   }
-
-   protected abstract String getHRefToFile(String filePath);
-   protected abstract String getFileNameForDisplay(String filePath);
-
    final void printCoveragePercentage(boolean firstColumn, int percentage)
    {
       if (percentage >= 0) {

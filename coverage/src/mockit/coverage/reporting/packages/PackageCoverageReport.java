@@ -33,6 +33,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
 {
    private final Map<String, FileCoverageData> filesToFileData;
    private final boolean withSourceFiles;
+   private String filePath;
 
    PackageCoverageReport(
       PrintWriter output, Map<String, FileCoverageData> filesToFileData, boolean withSourceFiles)
@@ -43,48 +44,58 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    }
 
    @Override
-   protected String getHRefToFile(String filePath)
-   {
-      if (withSourceFiles) {
-         int p = filePath.lastIndexOf('.');
-         return filePath.substring(0, p) + ".html";
-      }
-
-      return null;
-   }
-
-   @Override
-   protected String getFileNameForDisplay(String filePath)
-   {
-      int p1 = filePath.lastIndexOf('/') + 1;
-      int p2 = filePath.lastIndexOf('.');
-
-      return filePath.substring(p1, p2);
-   }
-
-   @Override
    protected void writeMetricsForFile(String packageName, String fileName)
    {
-      String filePath = packageName + '/' + fileName;
+      filePath = packageName + '/' + fileName;
 
       if (filesToFileData.containsKey(filePath)) {
-         writeTableCellWithFileName(filePath, false);
-         writeCodeCoveragePercentageForFile(filePath);
-         writePathCoveragePercentageForFile(filePath);
-//         writeDataCoveragePercentageForFile(filePath);
+         writeTableCellWithFileName();
+         writeCodeCoveragePercentageForFile();
+         writePathCoveragePercentageForFile();
+         writeDataCoveragePercentageForFile();
       }
       else {
-         printIndent();
-         output.write("  <td class='file'>");
-         output.write(fileName.substring(0, fileName.length() - 5));
-         output.println("</td>");
-
-         printIndent();
-         output.println("  <td colspan='2' class='coverage unknown'>?</td>");
+         writeTableCellsWithFileNameAndUnknownCoverageMetrics(fileName);
       }
    }
 
-   private void writeCodeCoveragePercentageForFile(String filePath)
+   private void writeTableCellsWithFileNameAndUnknownCoverageMetrics(String fileName)
+   {
+      printIndent();
+      output.write("  <td class='file'>");
+
+      int p = fileName.lastIndexOf('.');
+      output.write(fileName.substring(0, p));
+      output.println("</td>");
+
+      printIndent();
+      output.println("  <td colspan='3' class='coverage unknown'>?</td>");
+   }
+
+   private void writeTableCellWithFileName()
+   {
+      printIndent();
+      output.write("  <td class='file'>");
+
+      int p = filePath.lastIndexOf('.');
+
+      if (withSourceFiles) {
+         output.write("<a href='");
+         output.write(filePath.substring(0, p));
+         output.write(".html'>");
+      }
+
+      int q = filePath.lastIndexOf('/') + 1;
+      output.write(filePath.substring(q, p));
+
+      if (withSourceFiles) {
+         output.write("</a>");
+      }
+
+      output.println("</td>");
+   }
+
+   private void writeCodeCoveragePercentageForFile()
    {
       FileCoverageData fileData = filesToFileData.get(filePath);
       int percentage = fileData.getCodeCoveragePercentage();
@@ -95,7 +106,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       printCoveragePercentage(true, percentage);
    }
 
-   private void writePathCoveragePercentageForFile(String filePath)
+   private void writePathCoveragePercentageForFile()
    {
       FileCoverageData fileData = filesToFileData.get(filePath);
       int percentage = fileData.getPathCoveragePercentage();
@@ -106,7 +117,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       printCoveragePercentage(false, percentage);
    }
 
-   private void writeDataCoveragePercentageForFile(String filePath)
+   private void writeDataCoveragePercentageForFile()
    {
       FileCoverageData fileData = filesToFileData.get(filePath);
 
