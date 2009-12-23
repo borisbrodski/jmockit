@@ -33,6 +33,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
 {
    private final Map<String, FileCoverageData> filesToFileData;
    private final boolean withSourceFiles;
+   private char[] fileNameWithSpaces;
    private String filePath;
 
    PackageCoverageReport(
@@ -43,10 +44,19 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       this.withSourceFiles = withSourceFiles;
    }
 
+   void setMaxFileNameLength(int maxLength)
+   {
+      fileNameWithSpaces = new char[maxLength];
+   }
+
    @Override
    protected void writeMetricsForFile(String packageName, String fileName)
    {
       filePath = packageName + '/' + fileName;
+      printIndent();
+      output.write("  <td class='file'>");
+
+      buildFileNameWithoutExtensionButCompletedWithSpaces(fileName);
 
       if (filesToFileData.containsKey(filePath)) {
          writeTableCellWithFileName();
@@ -55,17 +65,22 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
          writeDataCoveragePercentageForFile();
       }
       else {
-         writeTableCellsWithFileNameAndUnknownCoverageMetrics(fileName);
+         writeTableCellsWithFileNameAndUnknownCoverageMetrics();
       }
    }
 
-   private void writeTableCellsWithFileNameAndUnknownCoverageMetrics(String fileName)
+   private void buildFileNameWithoutExtensionButCompletedWithSpaces(String fileName)
    {
-      printIndent();
-      output.write("  <td class='file'>");
-
       int p = fileName.lastIndexOf('.');
-      output.write(fileName.substring(0, p));
+
+      for (int i = 0; i < fileNameWithSpaces.length; i++) {
+         fileNameWithSpaces[i] = i < p ? fileName.charAt(i) : ' ';
+      }
+   }
+
+   private void writeTableCellsWithFileNameAndUnknownCoverageMetrics()
+   {
+      output.write(fileNameWithSpaces);
       output.println("</td>");
 
       printIndent();
@@ -74,19 +89,14 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
 
    private void writeTableCellWithFileName()
    {
-      printIndent();
-      output.write("  <td class='file'>");
-
-      int p = filePath.lastIndexOf('.');
-
       if (withSourceFiles) {
          output.write("<a href='");
+         int p = filePath.lastIndexOf('.');
          output.write(filePath.substring(0, p));
          output.write(".html'>");
       }
 
-      int q = filePath.lastIndexOf('/') + 1;
-      output.write(filePath.substring(q, p));
+      output.write(fileNameWithSpaces);
 
       if (withSourceFiles) {
          output.write("</a>");

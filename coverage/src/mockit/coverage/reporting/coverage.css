@@ -42,6 +42,8 @@ td.package, td.file {
    border-bottom: white solid 1px;
 }
 td.package { cursor: pointer; }
+td.file { white-space: pre; }
+
 td.coverage {
    font-weight: bolder; width: 3em; text-align: right; vertical-align: middle;
    border-bottom: white solid 1px;

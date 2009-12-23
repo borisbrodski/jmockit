@@ -97,7 +97,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeTableFirstRowWithColumnTitles()
    {
-      int totalFileCount = computeTotalNumberOfSourceFiles();
+      int totalFileCount = computeTotalNumberOfSourceFilesAndMaximumFileNameLength();
 
       output.println("    <tr>");
       output.write("      <th style='cursor: pointer' onclick='showHideAllFiles(this)'>Packages: ");
@@ -109,14 +109,24 @@ public final class IndexPage extends ListWithFilesAndPercentages
       output.println("    </tr>");
    }
 
-   private int computeTotalNumberOfSourceFiles()
+   private int computeTotalNumberOfSourceFilesAndMaximumFileNameLength()
    {
       int totalFileCount = 0;
+      int maxFileNameLength = 0;
 
       for (List<String> files : packageToFiles.values()) {
          totalFileCount += files.size();
+
+         for (String fileName : files) {
+            int n = fileName.lastIndexOf('.');
+            
+            if (n > maxFileNameLength) {
+               maxFileNameLength = n;
+            }
+         }
       }
 
+      packageReport.setMaxFileNameLength(maxFileNameLength);
       return totalFileCount;
    }
 
@@ -162,7 +172,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
       printIndent();
       output.write("  <td class='package' onclick='showHideFiles(this)'>");
       output.write(packageName.replace('/', '.'));
-      output.println("  </td>");
+      output.println("</td>");
    }
 
    private void writeInternalTableForSourceFiles()
