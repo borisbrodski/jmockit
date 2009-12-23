@@ -38,14 +38,13 @@ pre.comment { margin: 0; color: gray; }
 .uncovered { background-color: #f08080; }
 
 td.package, td.file {
-   vertical-align: middle; background-color: #e0e0e0; padding: 2px;
-   border-bottom: white solid 1px;
+   background-color: #e0e0e0; padding: 2px; border-bottom: white solid 1px;
 }
-td.package { cursor: pointer; }
+td.click { cursor: pointer; }
 td.file { white-space: pre; }
 
 td.coverage {
-   font-weight: bolder; width: 3em; text-align: right; vertical-align: middle;
+   font-weight: bolder; width: 3em; text-align: right;
    border-bottom: white solid 1px;
 }
 td.unknown { background-color: #daa520; text-align: center; }
