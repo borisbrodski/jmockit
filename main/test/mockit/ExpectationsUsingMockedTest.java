@@ -29,13 +29,13 @@ import java.util.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-interface Dependency
-{
-   String doSomething(boolean b);
-}
-
 public final class ExpectationsUsingMockedTest
 {
+   interface Dependency
+   {
+      String doSomething(boolean b);
+   }
+
    static class Collaborator
    {
       private int value;

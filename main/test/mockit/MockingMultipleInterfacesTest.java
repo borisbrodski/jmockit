@@ -30,8 +30,15 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
+import mockit.MockingMultipleInterfacesTest.Dependency;
+
 public final class MockingMultipleInterfacesTest<MultiMock extends Dependency & Runnable>
 {
+   interface Dependency
+   {
+      String doSomething(boolean b);
+   }
+
    @Mocked MultiMock multiMock;
 
    @Test
