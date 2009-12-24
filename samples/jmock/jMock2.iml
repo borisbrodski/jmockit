@@ -12,20 +12,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="JMockit" level="project" />
-    <orderEntry type="library" name="Hamcrest 1.2" level="project" />
-    <orderEntry type="library" name="JUnit 4.8" level="application" />
-    <orderEntry type="library" name="JMock 2.5.1" level="project" />
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/cglib-nodep-2.1_3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: mockit:jmockit:0" level="project" />
+    <orderEntry type="module" module-name="Main" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.7" level="project" />
     <orderEntry type="library" name="Maven: jmock:jmock:0" level="project" />
     <orderEntry type="library" name="Maven: jmock:jmock:junit4:0" level="project" />

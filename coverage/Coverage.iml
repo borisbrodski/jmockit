@@ -11,9 +11,9 @@
       <excludeFolder url="file://$MODULE_DIR$/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="module" module-name="Main" />
-    <orderEntry type="library" name="Maven: junit:junit:4.7" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="Main" exported="" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.7" level="project" />
   </component>
 </module>
 

@@ -31,15 +31,22 @@
             <artifactId>maven-jar-plugin</artifactId>
             <configuration><excludes><exclude>integrationTests/</exclude></excludes></configuration>
          </plugin>
+         <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <excludes><exclude>**/CoverageTest.class</exclude></excludes>
+            </configuration>
+         </plugin>
       </plugins>
    </build>
 
    <dependencies>
       <dependency>
-         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>0.995</version>
+         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>${version}</version>
       </dependency>
       <dependency>
          <groupId>junit</groupId><artifactId>junit</artifactId><version>4.7</version>
+         <scope>test</scope>
       </dependency>
    </dependencies>
 </project>

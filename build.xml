@@ -301,9 +301,13 @@
             <pathelement location="samples/powermock/classes"/>
             <pathelement location="samples/powermock/test-classes"/>
 
+            <pathelement location="${MOCKITO_JAR}"/>
             <pathelement location="samples/mockito/classes"/>
             <pathelement location="samples/mockito/test-classes"/>
 
+            <pathelement location="${UNITILS_HOME}/unitils-core/unitils-core-3.1.jar"/>
+            <pathelement location="${UNITILS_HOME}/unitils-mock/unitils-mock-3.1.jar"/>
+            <pathelement location="${UNITILS_HOME}/unitils-inject/unitils-inject-3.1.jar"/>
             <pathelement location="samples/unitils/classes"/>
             <pathelement location="samples/unitils/test-classes"/>
 
