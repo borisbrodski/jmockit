@@ -24,6 +24,7 @@
  */
 package mockit.internal.expectations;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.*;
@@ -34,6 +35,7 @@ import mockit.internal.util.*;
 public final class RecordAndReplayExecution
 {
    private final LocalFieldTypeRedefinitions redefinitions;
+   private final Map<Type, Object> typesAndTargetObjects;
    private final DynamicPartialMocking dynamicPartialMocking;
 
    final PhasedExecutionState executionState;
@@ -68,6 +70,7 @@ public final class RecordAndReplayExecution
       }
 
       redefinitions = null;
+      typesAndTargetObjects = Collections.emptyMap();
       dynamicPartialMocking = null;
       replayPhase = new ReplayPhase(this);
    }
@@ -98,8 +101,19 @@ public final class RecordAndReplayExecution
          }
 
          recordPhase = new RecordPhase(this, targetObject instanceof NonStrictExpectations);
-         redefinitions =
-            enclosingClassForTargetObject == null ? null : redefineFieldTypes(targetObject);
+
+         if (enclosingClassForTargetObject == null) {
+            redefinitions = null;
+            typesAndTargetObjects = Collections.emptyMap();
+         }
+         else {
+            LocalFieldTypeRedefinitions redefs = new LocalFieldTypeRedefinitions(targetObject);
+            typesAndTargetObjects =
+               previous == null ? new HashMap<Type, Object>(2) : previous.typesAndTargetObjects;
+            redefineFieldTypes(redefs);
+            redefinitions = redefs.getTypesRedefined() == 0 ? null : redefs;
+         }
+
          dynamicPartialMocking = applyDynamicPartialMocking(classesOrInstancesToBePartiallyMocked);
 
          if (
@@ -120,26 +134,27 @@ public final class RecordAndReplayExecution
       }
    }
 
-   private LocalFieldTypeRedefinitions redefineFieldTypes(Object targetObject)
+   private void redefineFieldTypes(LocalFieldTypeRedefinitions redefs)
    {
-      LocalFieldTypeRedefinitions typeRedefinitions = new LocalFieldTypeRedefinitions(targetObject);
-
       //noinspection CatchGenericClass
       try {
-         typeRedefinitions.redefineTypesForNestedClass();
-
-         return typeRedefinitions.getTypesRedefined() == 0 ? null : typeRedefinitions;
+         redefs.redefineTypesForNestedClass(typesAndTargetObjects);
       }
       catch (Error e) {
-         typeRedefinitions.cleanUp();
+         redefs.cleanUp();
          Utilities.filterStackTrace(e);
          throw e;
       }
       catch (RuntimeException e) {
-         typeRedefinitions.cleanUp();
+         redefs.cleanUp();
          Utilities.filterStackTrace(e);
          throw e;
       }
+   }
+
+   public Map<Type, Object> getLocalMocks()
+   {
+      return typesAndTargetObjects;
    }
 
    private DynamicPartialMocking applyDynamicPartialMocking(Object... classesOrInstances)

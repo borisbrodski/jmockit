@@ -30,7 +30,6 @@ import static java.lang.reflect.Modifier.*;
 import java.util.*;
 
 import mockit.*;
-import mockit.external.asm.Type;
 
 /**
  * Miscellaneous utility methods which don't fit into any other class, most of them related to the
@@ -473,8 +472,14 @@ public final class Utilities
       return (T) getFieldValue(field, targetObject);
    }
 
+   public static <T> T getField(Class<?> theClass, Type fieldType, Object targetObject)
+   {
+      Field field = getDeclaredField(theClass, fieldType, targetObject != null, false);
+      return (T) getFieldValue(field, targetObject);
+   }
+
    private static Field getDeclaredField(
-      Class<?> theClass, Class<?> desiredType, boolean instanceField, boolean forAssignment)
+      Class<?> theClass, Type desiredType, boolean instanceField, boolean forAssignment)
    {
       Field found =
          getDeclaredFieldInSingleClass(theClass, desiredType, instanceField, forAssignment);
@@ -487,7 +492,7 @@ public final class Utilities
          }
          
          throw new IllegalArgumentException(
-            (instanceField ? "Instance" : "Static") + " field of type " + desiredType.getName() +
+            (instanceField ? "Instance" : "Static") + " field of " + desiredType +
             " not found in " + theClass);
       }
 
@@ -495,26 +500,28 @@ public final class Utilities
    }
 
    private static Field getDeclaredFieldInSingleClass(
-      Class<?> theClass, Class<?> desiredType, boolean instanceField, boolean forAssignment)
+      Class<?> theClass, Type desiredType, boolean instanceField, boolean forAssignment)
    {
       Field found = null;
 
       for (Field field : theClass.getDeclaredFields()) {
-         Class<?> fieldType = field.getType();
+         if (!field.isSynthetic()) {
+            Type fieldType = field.getGenericType();
 
-         if (
-            instanceField != isStatic(field.getModifiers()) &&
-            isCompatibleFieldType(fieldType, desiredType, forAssignment)
-         ) {
-            if (found != null) {
-               String message =
-                  errorMessageForMoreThanOneFieldFound(
-                     desiredType, instanceField, forAssignment, found, field);
+            if (
+               instanceField != isStatic(field.getModifiers()) &&
+               isCompatibleFieldType(fieldType, desiredType, forAssignment)
+            ) {
+               if (found != null) {
+                  String message =
+                     errorMessageForMoreThanOneFieldFound(
+                        desiredType, instanceField, forAssignment, found, field);
 
-               throw new IllegalArgumentException(message);
+                  throw new IllegalArgumentException(message);
+               }
+
+               found = field;
             }
-
-            found = field;
          }
       }
 
@@ -522,14 +529,14 @@ public final class Utilities
    }
 
    private static String errorMessageForMoreThanOneFieldFound(
-      Class<?> desiredFieldType, boolean instanceField, boolean forAssignment,
+      Type desiredFieldType, boolean instanceField, boolean forAssignment,
       Field firstField, Field secondField)
    {
       StringBuilder message = new StringBuilder("More than one ");
       message.append(instanceField ? "instance" : "static").append(" field ");
 
-      message.append(forAssignment ? "to which a value of type " : "from which a value of type ");
-      message.append(desiredFieldType.getName());
+      message.append(forAssignment ? "to which a value of " : "from which a value of ");
+      message.append(desiredFieldType);
       message.append(forAssignment ? " can be assigned" : " can be read");
 
       message.append(" exists in ").append(secondField.getDeclaringClass()).append(": ");
@@ -539,17 +546,28 @@ public final class Utilities
    }
 
    private static boolean isCompatibleFieldType(
-      Class<?> fieldType, Class<?> desiredType, boolean forAssignment)
+      Type fieldType, Type desiredType, boolean forAssignment)
    {
-      if (isSameTypeIgnoringAutoBoxing(desiredType, fieldType)) {
+      Class<?> fieldClass = getClassType(fieldType);
+      Class<?> desiredClass = getClassType(desiredType);
+
+      if (isSameTypeIgnoringAutoBoxing(desiredClass, fieldClass)) {
          return true;
       }
       else if (forAssignment) {
-         return fieldType.isAssignableFrom(desiredType);
+         return fieldClass.isAssignableFrom(desiredClass);
       }
-      else {
-         return desiredType.isAssignableFrom(fieldType) || fieldType.isAssignableFrom(desiredType);
+
+      return desiredClass.isAssignableFrom(fieldClass) || fieldClass.isAssignableFrom(desiredClass);
+   }
+
+   private static Class<?> getClassType(Type declaredType)
+   {
+      if (declaredType instanceof ParameterizedType) {
+         return (Class<?>) ((ParameterizedType) declaredType).getRawType();
       }
+
+      return (Class<?>) declaredType;
    }
 
    public static Object getFieldValue(Field field, Object targetObject)
@@ -592,7 +610,7 @@ public final class Utilities
 
    public static Class<?>[] getParameterTypes(String mockDesc)
    {
-      Type[] paramTypes = Type.getArgumentTypes(mockDesc);
+      mockit.external.asm.Type[] paramTypes = mockit.external.asm.Type.getArgumentTypes(mockDesc);
       Class<?>[] paramClasses = new Class<?>[paramTypes.length];
 
       for (int i = 0; i < paramTypes.length; i++) {
@@ -602,7 +620,7 @@ public final class Utilities
       return paramClasses;
    }
 
-   public static Class<?> getClassForType(Type type)
+   public static Class<?> getClassForType(mockit.external.asm.Type type)
    {
       int elementSort = type.getSort();
 
@@ -611,7 +629,8 @@ public final class Utilities
       }
 
       String className =
-         elementSort == Type.ARRAY ? type.getDescriptor().replace('/', '.') : type.getClassName();
+         elementSort == mockit.external.asm.Type.ARRAY ?
+            type.getDescriptor().replace('/', '.') : type.getClassName();
 
       return loadClass(className);
    }

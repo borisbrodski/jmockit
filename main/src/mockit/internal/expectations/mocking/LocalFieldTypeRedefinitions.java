@@ -24,19 +24,27 @@
  */
 package mockit.internal.expectations.mocking;
 
+import java.lang.reflect.*;
+import java.util.*;
+
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
 {
+   private Map<Type, Object> typesAndTargetObjects;
+
    public LocalFieldTypeRedefinitions(Object objectWithMockFields)
    {
       super(objectWithMockFields);
+      typesAndTargetObjects = new HashMap<Type, Object>(2);
    }
 
-   public void redefineTypesForNestedClass()
+   public void redefineTypesForNestedClass(Map<Type, Object> typesAndTargetObjects)
    {
+      this.typesAndTargetObjects = typesAndTargetObjects;
       redefineFieldTypes(parentObject.getClass(), false);
+      this.typesAndTargetObjects = null;
    }
 
    @Override
@@ -58,6 +66,8 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
          }
       }
 
+      typesAndTargetObjects.put(typeMetadata.declaredType, parentObject);
+      
       return typeRedefinition;
    }
 

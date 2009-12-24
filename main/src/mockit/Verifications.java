@@ -24,8 +24,12 @@
  */
 package mockit;
 
+import java.lang.reflect.*;
+import java.util.*;
+
 import mockit.internal.state.*;
 import mockit.internal.expectations.*;
+import mockit.internal.util.*;
 
 /**
  * Base class whose subclasses are defined in test code, and whose instances define a set of
@@ -98,7 +102,44 @@ public class Verifications extends Invocations
       RecordAndReplayExecution instance =
          TestRun.getExecutingTest().getRecordAndReplayForVerifications();
 
+      Map<Type,Object> availableLocalMocks = instance.getLocalMocks();
+
+      if (!availableLocalMocks.isEmpty()) {
+         importMocksIntoLocalFields(getClass(), availableLocalMocks);
+      }
+
       verificationPhase = instance.startVerifications(inOrder);
+   }
+
+   private void importMocksIntoLocalFields(Class<?> ownerClass, Map<Type, Object> localMocks)
+   {
+      Field[] fields = ownerClass.getDeclaredFields();
+
+      for (Field fieldToImport : fields) {
+         if (!Modifier.isFinal(fieldToImport.getModifiers())) {
+            importMockIntoLocalField(localMocks, fieldToImport);
+         }
+      }
+
+      Class<?> superClass = ownerClass.getSuperclass();
+
+      if (
+         superClass != Verifications.class && superClass != VerificationsInOrder.class &&
+         superClass != FullVerifications.class && superClass != FullVerificationsInOrder.class
+      ) {
+         importMocksIntoLocalFields(superClass, localMocks);
+      }
+   }
+
+   private void importMockIntoLocalField(Map<Type, Object> localMocks, Field field)
+   {
+      Type mockedType = field.getGenericType();
+      Object owner = localMocks.get(mockedType);
+
+      if (owner != null) {
+         Object mock = Utilities.getField(owner.getClass(), mockedType, owner);
+         Utilities.setFieldValue(field, this, mock);
+      }
    }
 
    @Override

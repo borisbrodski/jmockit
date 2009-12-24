@@ -14,7 +14,18 @@
 <p>Release 0.996 (January ??, 2010):</p>
 <ul>
    <li>
-      More fixes and enhancements to <strong>JMockit Coverage</strong>:
+      Enhancements to the <strong>Verifications API</strong>:
+      <ul>
+         <li>
+            Verification blocks now can "import" mocks from local fields declared in expectation
+            blocks used in the same test, by declaring local fields of their own with the same
+            mocked type.
+            (See <a href="http://code.google.com/p/jmockit/issues/detail?id=4">issue 4</a>.)
+         </li>
+      </ul>
+   </li>
+   <li>
+      Enhancements to <strong>JMockit Coverage</strong>:
       <ul>
          <li>
             In the XHTML report, information on source files can now be interactively hidden and
@@ -24,6 +35,10 @@
             (Requires a JavaScript-enabled browser, though.)
          </li>
       </ul>
+   </li>
+   <li>
+      Fixed a bug in the capture of fields whose mocked type is an interface (a NPE would occur
+      when the constructor of a captured implementation class was transformed).
    </li>
 </ul>
 
