@@ -151,7 +151,7 @@ final class ExpectationsModifier extends BaseClassModifier
 
       boolean visitingConstructor = "<init>".equals(name);
 
-      if (superClassName != null && visitingConstructor) {
+      if (visitingConstructor && superClassName != null) {
          redefinedConstructorDesc = desc;
          generateCallToDefaultOrConfiguredSuperConstructor();
       }
@@ -225,6 +225,9 @@ final class ExpectationsModifier extends BaseClassModifier
 
       if (mockConstructorInfo != null && mockConstructorInfo.isWithSuperConstructor()) {
          constructorDesc = generateCallToSuperConstructorUsingTestProvidedArguments();
+      }
+      else if ("java/lang/Object".equals(superClassName)) {
+         constructorDesc = "()V";
       }
       else if (mockingCfg != null) {
          Type[] paramTypes = mockingCfg.getSuperConstructorParameterTypes();
