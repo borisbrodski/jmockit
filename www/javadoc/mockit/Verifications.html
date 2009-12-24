@@ -124,6 +124,12 @@ Base class whose subclasses are defined in test code, and whose instances define
  corresponding invocation must have occurred during the replay phase of the test, at least once.
  Such an invocation may or may not have been previously recorded in an expectation block.
  <p/>
+ The mocked types used inside the verification block can be all the ones that are in scope: mock
+ fields of the test class, and mock parameters of the test method. In addition, local mock fields
+ declared inside expectation blocks can be <em>imported</em> into the verification block by
+ declaring a field of the desired mocked type inside this block (not necessarily with the same
+ name as the imported mock field, although that is recommended for clarity).
+ <p/>
  Just like it is valid to have multiple expectation blocks in a test, it is also valid to have
  multiple (non-nested) verification blocks. The relative order of the blocks is not relevant.
  Such blocks can be of different types. (Typically, when using multiple verification blocks there
