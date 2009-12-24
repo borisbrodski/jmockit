@@ -30,11 +30,11 @@ import mockit.*;
 
 import static java.util.Arrays.*;
 
-public class ArticleManager_JMockit_Test
+public final class ArticleManager_JMockit_Test
 {
-   @NonStrict private ArticleCalculator mockCalculator;
-   @NonStrict private ArticleDatabase mockDatabase;
-   private ArticleManager articleManager;
+   @NonStrict ArticleCalculator mockCalculator;
+   @NonStrict ArticleDatabase mockDatabase;
+   ArticleManager articleManager;
 
    @Before
    public void setup()
@@ -48,8 +48,8 @@ public class ArticleManager_JMockit_Test
       new Expectations()
       {
          {
-            mockCalculator.countArticles("Guardian"); returns(12);
-            mockCalculator.countArticlesInPolish(anyString); returns(5);
+            mockCalculator.countArticles("Guardian"); result = 12;
+            mockCalculator.countArticlesInPolish(anyString); result = 5;
          }
       };
 
@@ -104,12 +104,12 @@ public class ArticleManager_JMockit_Test
       new Expectations()
       {
          {
-            mockCalculator.countNumberOfRelatedArticles(articleOne); returns(1);
-            mockCalculator.countNumberOfRelatedArticles(articleTwo); returns(12);
-            mockCalculator.countNumberOfRelatedArticles(articleThree); returns(0);
+            mockCalculator.countNumberOfRelatedArticles(articleOne); result = 1;
+            mockCalculator.countNumberOfRelatedArticles(articleTwo); result = 12;
+            mockCalculator.countNumberOfRelatedArticles(articleThree); result = 0;
 
             mockDatabase.getArticlesFor("Guardian");
-            returns(asList(articleOne, articleTwo, articleThree));
+            result = asList(articleOne, articleTwo, articleThree);
          }
       };
 
@@ -134,9 +134,9 @@ public class ArticleManager_JMockit_Test
       new Expectations()
       {
          {
-            mockCalculator.countNumberOfRelatedArticles(articleOne); returns(1);
-            mockCalculator.countNumberOfRelatedArticles(articleTwo); returns(12);
-            mockDatabase.getArticlesFor("Guardian"); returns(asList(articleOne, articleTwo));
+            mockCalculator.countNumberOfRelatedArticles(articleOne); result = 1;
+            mockCalculator.countNumberOfRelatedArticles(articleTwo); result = 12;
+            mockDatabase.getArticlesFor("Guardian"); result = asList(articleOne, articleTwo);
          }
       };
 

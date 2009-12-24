@@ -33,9 +33,9 @@ import mockit.*;
 import org.hamcrest.beans.*;
 import static org.junit.Assert.*;
 
-public class JavadocExamples_JMockit_Test
+public final class JavadocExamples_JMockit_Test
 {
-   @Mocked private List<String> mockedList;
+   @Mocked List<String> mockedList;
 
    @Test
    public void verifyBehavior()
@@ -60,8 +60,8 @@ public class JavadocExamples_JMockit_Test
       new NonStrictExpectations()
       {
          {
-            mockedList.get(0); returns("first");
-            mockedList.get(1); throwsException(new RuntimeException());
+            mockedList.get(0); result = "first";
+            mockedList.get(1); result = new RuntimeException();
          }
       };
 
@@ -83,7 +83,7 @@ public class JavadocExamples_JMockit_Test
       new NonStrictExpectations()
       {
          {
-            mockedList.get(0); returns("first");
+            mockedList.get(0); result = "first";
          }
       };
 
@@ -109,7 +109,7 @@ public class JavadocExamples_JMockit_Test
          {
             // Notice that this can't be done in Mockito, which requires the repetition of
             // "mockedList.get(0);" in the verification phase.
-            mockedList.get(0); returns("first"); repeats(1);
+            mockedList.get(0); result = "first"; times = 1;
 
             // Notice also that if the expectation above was strict (ie, recorded inside an
             // "Expectations" block) then the call "repeats(1);" could be removed.
@@ -125,8 +125,8 @@ public class JavadocExamples_JMockit_Test
       new NonStrictExpectations()
       {
          {
-            mockedList.get(anyInt); returns("element");
-            mockedList.contains(with(new HasProperty<String>("abc"))); returns(true);
+            mockedList.get(anyInt); result = "element";
+            mockedList.contains(with(new HasProperty<String>("abc"))); result = true;
          }
       };
 
@@ -157,20 +157,20 @@ public class JavadocExamples_JMockit_Test
       {
          {
             // Following two verifications work exactly the same:
-            mockedList.add("once"); // repeatsAtLeast(1) is the default
-            mockedList.add("once"); repeats(1);
+            mockedList.add("once"); // minTimes == 1 is the default
+            mockedList.add("once"); times = 1;
 
             // Verifies exact number of invocations:
-            mockedList.add("twice"); repeats(2);
-            mockedList.add("three times"); repeats(3);
+            mockedList.add("twice"); times = 2;
+            mockedList.add("three times"); times = 3;
 
             // Verifies no invocations occurred:
-            mockedList.add("never happened"); repeats(0);
+            mockedList.add("never happened"); times = 0;
 
             // Verifies min/max number of invocations:
-            mockedList.add("three times"); repeatsAtLeast(1);
-            mockedList.add("three times"); repeatsAtLeast(2);
-            mockedList.add("three times"); repeatsAtMost(5);
+            mockedList.add("three times"); minTimes = 1;
+            mockedList.add("three times"); minTimes = 2;
+            mockedList.add("three times"); maxTimes = 5;
          }
       };
    }
@@ -182,7 +182,7 @@ public class JavadocExamples_JMockit_Test
       {
          {
             // void/non-void methods are handled the same way:
-            mockedList.clear(); throwsException(new RuntimeException());
+            mockedList.clear(); result = new RuntimeException();
          }
       };
 
@@ -221,7 +221,7 @@ public class JavadocExamples_JMockit_Test
             mockedList.add("one");
 
             // Verify that method was never called on a mock:
-            mockedList.add("two"); repeats(0);
+            mockedList.add("two"); times = 0;
          }
       };
    }
@@ -330,8 +330,7 @@ public class JavadocExamples_JMockit_Test
       new Expectations()
       {
          {
-            mock.next(); throwsException(new IllegalStateException()); returns("foo");
-            repeatsAtLeast(1);
+            mock.next(); result = new IllegalStateException(); result = "foo"; minTimes = 1;
          }
       };
 
@@ -362,7 +361,7 @@ public class JavadocExamples_JMockit_Test
       new NonStrictExpectations()
       {
          {
-            mock.next(); throwsException(new IllegalStateException()); returns("foo");
+            mock.next(); result = new IllegalStateException(); result = "foo";
          }
       };
 
@@ -376,13 +375,13 @@ public class JavadocExamples_JMockit_Test
       {
          {
             mock.someMethod(anyString);
-            returns(new Delegate()
+            result = new Delegate()
             {
                String delegate(String s)
                {
                   return "called with arguments: " + s;
                }
-            });
+            };
          }
       };
 
@@ -423,12 +422,12 @@ public class JavadocExamples_JMockit_Test
       new NonStrictExpectations(partialMock)
       {
          {
-            partialMock.size(); returns(100);
+            partialMock.size(); result = 100;
 
             // When recording invocations, real methods are never called, so this would not throw an
             // IndexOutOfBoundsException, but it would prevent the real "get" method from being
             // executed in the replay phase:
-            // partialMock.get(1); returns("an item");
+            // partialMock.get(1); result = "an item";
             // TODO: allow execution of a mocked method when no matching invocation was recorded
          }
       };
@@ -445,7 +444,7 @@ public class JavadocExamples_JMockit_Test
       new Verifications()
       {
          {
-            // This works, but adding a call to "repeats(1);" when recording the invocation would
+            // This works, but adding a "times = 1;" assignment when recording the invocation would
             // have been simpler:
             partialMock.size();
 

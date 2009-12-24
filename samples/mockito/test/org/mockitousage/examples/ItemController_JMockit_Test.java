@@ -32,11 +32,11 @@ import mockit.*;
 
 import static org.junit.Assert.*;
 
-public class ItemController_JMockit_Test
+public final class ItemController_JMockit_Test
 {
-   private ItemController itemController;
-   @NonStrict private ItemService itemService;
-   private Map<String, Object> modelMap;
+   ItemController itemController;
+   @NonStrict ItemService itemService;
+   Map<String, Object> modelMap;
 
    @Before
    public void setUp()
@@ -53,7 +53,7 @@ public class ItemController_JMockit_Test
       new Expectations()
       {
          {
-            itemService.getItem(item.getId()); returns(item);
+            itemService.getItem(item.getId()); result = item;
          }
       };
 
@@ -71,7 +71,7 @@ public class ItemController_JMockit_Test
       new Expectations()
       {
          {
-            itemService.getItem(5); throwsException(exception);
+            itemService.getItem(5); result = exception;
          }
       };
 
