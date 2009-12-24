@@ -867,6 +867,7 @@
         <w>notimestamp</w>
         <w>nowrap</w>
         <w>objenesis</w>
+        <w>ognl</w>
         <w>onclick</w>
         <w>onfocus</w>
         <w>onload</w>
@@ -910,6 +911,7 @@
         <w>usedbypico</w>
         <w>versioned</w>
         <w>webapp</w>
+        <w>wiki</w>
         <w>xmlbasic</w>
         <w>xmlfull</w>
       </words>
@@ -1021,11 +1023,14 @@
         <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-core-3.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/samples/lib/commons-lang-2.3.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-inject-3.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/ognl-2.6.9.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
         <root url="file://C:/Java/unitils-3.1/unitils-mock/src/main/java" />
         <root url="file://C:/Java/unitils-3.1/unitils-core/src/main/java" />
+        <root url="file://C:/Java/unitils-3.1/unitils-inject/src/main/java" />
       </SOURCES>
     </library>
     <library name="JMockit">
@@ -1106,13 +1111,13 @@
     </library>
     <library name="Maven: mockit:jmockit:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/TimingFramework/../../jmockit.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/../../jmockit.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/TimingFramework/../../jmockit-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/../../jmockit-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/TimingFramework/../../jmockit-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/../../jmockit-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: easymock:easymock:0">
@@ -1240,22 +1245,18 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-core-3.1.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-core-3.1-javadoc.jar!/" />
-      </JAVADOC>
+      <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-core-3.1-sources.jar!/" />
+        <root url="file://C:/Java/unitils-3.1/unitils-core/src/main/java" />
       </SOURCES>
     </library>
     <library name="Maven: org.unitils:unitils-mock:0">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-mock-3.1.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-mock-3.1-javadoc.jar!/" />
-      </JAVADOC>
+      <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-mock-3.1-sources.jar!/" />
+        <root url="file://C:/Java/unitils-3.1/unitils-mock/src/main/java" />
       </SOURCES>
     </library>
     <library name="Maven: org.mockito:mockito-core:0">
@@ -1271,13 +1272,13 @@
     </library>
     <library name="Maven: commons-logging:commons-logging:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/commons-logging-1.1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/../../lib/commons-logging-1.1.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/commons-logging-1.1.1-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/../../lib/commons-logging-1.1.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/commons-logging-1.1.1-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/unitils/../../lib/commons-logging-1.1.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: commons-lang:commons-lang:0">
@@ -1377,6 +1378,26 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://C:/Java/JavaEE/lib/javaee-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.unitils:unitils-inject:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/unitils-inject-3.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="file://C:/Java/unitils-3.1/unitils-inject/src/main/java" />
+      </SOURCES>
+    </library>
+    <library name="Maven: ognl:ognl:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/ognl-2.6.9.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/ognl-2.6.9-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/unitils/lib/ognl-2.6.9-sources.jar!/" />
       </SOURCES>
     </library>
   </component>

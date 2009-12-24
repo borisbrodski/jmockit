@@ -28,6 +28,14 @@
          <scope>system</scope><systemPath>${basedir}/lib/unitils-mock-3.1.jar</systemPath>
       </dependency>
       <dependency>
+         <groupId>org.unitils</groupId><artifactId>unitils-inject</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/lib/unitils-inject-3.1.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>ognl</groupId><artifactId>ognl</artifactId><version>0</version>
+         <scope>system</scope><systemPath>${basedir}/lib/ognl-2.6.9.jar</systemPath>
+      </dependency>
+      <dependency>
          <groupId>commons-logging</groupId><artifactId>commons-logging</artifactId><version>0</version>
          <scope>system</scope><systemPath>${basedir}/../../lib/commons-logging-1.1.1.jar</systemPath>
       </dependency>

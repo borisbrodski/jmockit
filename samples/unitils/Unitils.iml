@@ -11,14 +11,13 @@
       <excludeFolder url="file://$MODULE_DIR$/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" name="JMockit" level="project" />
-    <orderEntry type="library" name="JUnit 4.8" level="application" />
-    <orderEntry type="library" name="Unitils 3.1" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: mockit:jmockit:0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.7" level="project" />
     <orderEntry type="library" name="Maven: org.unitils:unitils-core:0" level="project" />
     <orderEntry type="library" name="Maven: org.unitils:unitils-mock:0" level="project" />
+    <orderEntry type="library" name="Maven: org.unitils:unitils-inject:0" level="project" />
+    <orderEntry type="library" name="Maven: ognl:ognl:0" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:0" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:0" level="project" />
   </component>
