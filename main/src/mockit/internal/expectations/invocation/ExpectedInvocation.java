@@ -36,7 +36,7 @@ public final class ExpectedInvocation
    private static final Object UNDEFINED_DEFAULT_RETURN = new Object();
 
    public final Object instance;
-   private final boolean matchInstance;
+   public final boolean matchInstance;
    public final InvocationArguments arguments;
    public CharSequence customErrorMessage;
    private final ExpectationError invocationCause;

@@ -263,6 +263,25 @@ A combination of <A HREF="../mockit/FullVerifications.html" title="class in mock
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Begins <em>in-order</em> verification for <em>all</em> mocks invoked during the replay phase
  of the test, considering that such invocations occurred in a given number of iterations.</TD>
 </TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected </CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(int, java.lang.Object...)">FullVerificationsInOrder</A></B>(int&nbsp;numberOfIterations,
+                         <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;mockedTypesAndInstancesToVerify)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(int)"><CODE>FullVerificationsInOrder(int)</CODE></A>, but restricting the verification to the
+ specified mocked types and/or mock instances.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected </CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(java.lang.Object...)">FullVerificationsInOrder</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;mockedTypesAndInstancesToVerify)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder()"><CODE>FullVerificationsInOrder()</CODE></A>, but restricting the verification to the specified
+ mocked types and/or mock instances.</TD>
+</TR>
 </TABLE>
 &nbsp;
 <!-- ========== METHOD SUMMARY =========== -->
@@ -1023,6 +1042,37 @@ protected <B>FullVerificationsInOrder</B>(int&nbsp;numberOfIterations)</PRE>
 <DL>
 <DT><B>Parameters:</B><DD><CODE>numberOfIterations</CODE> - the positive number of iterations for the whole set of invocations
  verified inside the block; when not specified, 1 (one) iteration is assumed</DL>
+</DL>
+<HR>
+
+<A NAME="FullVerificationsInOrder(int, java.lang.Object...)"><!-- --></A><H3>
+FullVerificationsInOrder</H3>
+<PRE>
+protected <B>FullVerificationsInOrder</B>(int&nbsp;numberOfIterations,
+                                   <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;mockedTypesAndInstancesToVerify)</PRE>
+<DL>
+<DD>Same as <A HREF="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(int)"><CODE>FullVerificationsInOrder(int)</CODE></A>, but restricting the verification to the
+ specified mocked types and/or mock instances.
+<P>
+<DL>
+<DT><B>Parameters:</B><DD><CODE>mockedTypesAndInstancesToVerify</CODE> - one or more of the mocked types and/or mock objects
+ that are in scope for the test; for a given mock <em>instance</em>, all classes up to (but not
+ including) <code>java.lang.Object</code> are considered</DL>
+</DL>
+<HR>
+
+<A NAME="FullVerificationsInOrder(java.lang.Object...)"><!-- --></A><H3>
+FullVerificationsInOrder</H3>
+<PRE>
+protected <B>FullVerificationsInOrder</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;mockedTypesAndInstancesToVerify)</PRE>
+<DL>
+<DD>Same as <A HREF="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder()"><CODE>FullVerificationsInOrder()</CODE></A>, but restricting the verification to the specified
+ mocked types and/or mock instances.
+<P>
+<DL>
+<DT><B>Parameters:</B><DD><CODE>mockedTypesAndInstancesToVerify</CODE> - one or more of the mocked types and/or mock objects
+ that are in scope for the test; for a given mock <em>instance</em>, all classes up to (but not
+ including) <code>java.lang.Object</code> are considered</DL>
 </DL>
 
 <!-- ============ METHOD DETAIL ========== -->

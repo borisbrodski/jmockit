@@ -27,12 +27,14 @@ package mockit.internal.expectations;
 import java.util.*;
 
 import mockit.internal.expectations.invocation.*;
+import mockit.internal.util.*;
 
 public abstract class VerificationPhase extends TestOnlyPhase
 {
    private final List<Expectation> expectationsInReplayOrder;
    protected final List<Expectation> expectationsVerified;
    private boolean allInvocationsDuringReplayMustBeVerified;
+   private Object[] mockedTypesAndInstancesToFullyVerify;
    protected AssertionError pendingError;
 
    protected VerificationPhase(
@@ -46,6 +48,11 @@ public abstract class VerificationPhase extends TestOnlyPhase
    public final void setAllInvocationsMustBeVerified()
    {
       allInvocationsDuringReplayMustBeVerified = true;
+   }
+
+   public final void setMockedTypesToFullyVerify(Object[] mockedTypesAndInstancesToFullyVerify)
+   {
+      this.mockedTypesAndInstancesToFullyVerify = mockedTypesAndInstancesToFullyVerify;
    }
 
    @Override
@@ -76,7 +83,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
          pendingError = missingInvocation.errorForMissingInvocation();
       }
 
-      return currentExpectation.expectedInvocation.getDefaultValueForReturnType(this);
+      return currentExpectation.invocation.getDefaultValueForReturnType(this);
    }
 
    abstract void findNonStrictExpectation(
@@ -86,7 +93,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
       Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args,
       Expectation expectation)
    {
-      ExpectedInvocation invocation = expectation.expectedInvocation;
+      ExpectedInvocation invocation = expectation.invocation;
       Map<Object, Object> instanceMap = getInstanceMap();
 
       if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap)) {
@@ -139,15 +146,72 @@ public abstract class VerificationPhase extends TestOnlyPhase
       }
 
       if (allInvocationsDuringReplayMustBeVerified) {
-         List<Expectation> notVerified = new ArrayList<Expectation>(expectationsInReplayOrder);
-         notVerified.removeAll(expectationsVerified);
+         return validateThatAllInvocationsWereVerified();
+      }
 
-         if (!notVerified.isEmpty()) {
+      return null;
+   }
+
+   private AssertionError validateThatAllInvocationsWereVerified()
+   {
+      List<Expectation> notVerified = new ArrayList<Expectation>(expectationsInReplayOrder);
+      notVerified.removeAll(expectationsVerified);
+
+      if (!notVerified.isEmpty()) {
+         if (mockedTypesAndInstancesToFullyVerify == null) {
             Expectation firstUnexpected = notVerified.get(0);
-            return firstUnexpected.expectedInvocation.errorForUnexpectedInvocation();
+            return firstUnexpected.invocation.errorForUnexpectedInvocation();
+         }
+
+         return validateThatUnverifiedInvocationsAreAllowed(notVerified);
+      }
+
+      return null;
+   }
+
+   private AssertionError validateThatUnverifiedInvocationsAreAllowed(List<Expectation> unverified)
+   {
+      for (Expectation expectation : unverified) {
+         ExpectedInvocation invocation = expectation.invocation;
+
+         if (isInvocationToBeVerified(invocation)) {
+            return invocation.errorForUnexpectedInvocation();
          }
       }
 
       return null;
+   }
+
+   private boolean isInvocationToBeVerified(ExpectedInvocation unverifiedInvocation)
+   {
+      String invokedClassName = unverifiedInvocation.getClassName();
+      Object invokedInstance = unverifiedInvocation.instance;
+
+      for (Object mockedTypeOrInstance : mockedTypesAndInstancesToFullyVerify) {
+         if (mockedTypeOrInstance instanceof Class) {
+            Class<?> mockedType = (Class<?>) mockedTypeOrInstance;
+
+            if (invokedClassName.equals(mockedType.getName())) {
+               return true;
+            }
+         }
+         else if (invokedInstance == null) {
+            Class<?> invokedClass = Utilities.loadClass(invokedClassName);
+
+            if (invokedClass.isInstance(mockedTypeOrInstance)) {
+               return true;
+            }
+         }
+         else if (unverifiedInvocation.matchInstance) {
+            if (mockedTypeOrInstance == invokedInstance) {
+               return true;
+            }
+         }
+         else if (invokedInstance.getClass().isInstance(mockedTypeOrInstance)) {
+            return true;
+         }
+      }
+
+      return false;
    }
 }

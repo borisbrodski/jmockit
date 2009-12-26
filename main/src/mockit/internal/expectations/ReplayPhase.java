@@ -87,7 +87,7 @@ final class ReplayPhase extends Phase
       List<Expectation> nonStrictExpectations = getNonStrictExpectations();
 
       for (Expectation nonStrict : nonStrictExpectations) {
-         ExpectedInvocation invocation = nonStrict.expectedInvocation;
+         ExpectedInvocation invocation = nonStrict.invocation;
          Map<Object, Object> instanceMap = getInstanceMap();
 
          if (
@@ -121,7 +121,7 @@ final class ReplayPhase extends Phase
 
       if (nonStrictExpectation.constraints.isInvocationCountMoreThanMaximumExpected()) {
          recordAndReplay.errorThrown =
-            nonStrictExpectation.expectedInvocation.errorForUnexpectedInvocations(1);
+            nonStrictExpectation.invocation.errorForUnexpectedInvocations(1);
          return null;
       }
 
@@ -140,7 +140,7 @@ final class ReplayPhase extends Phase
             return null;
          }
 
-         ExpectedInvocation invocation = currentExpectation.expectedInvocation;
+         ExpectedInvocation invocation = currentExpectation.invocation;
          Map<Object, Object> instanceMap = getInstanceMap();
 
          if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap)) {
@@ -220,7 +220,7 @@ final class ReplayPhase extends Phase
       currentExpectation = null;
 
       if (strict != null && strict.constraints.isInvocationCountLessThanMinimumExpected()) {
-         return strict.expectedInvocation.errorForMissingInvocation();
+         return strict.invocation.errorForMissingInvocation();
       }
 
       List<Expectation> nonStrictExpectations = getNonStrictExpectations();
@@ -229,7 +229,7 @@ final class ReplayPhase extends Phase
          InvocationConstraints constraints = nonStrict.constraints;
 
          if (constraints.isInvocationCountLessThanMinimumExpected()) {
-            return constraints.errorForMissingExpectations(nonStrict.expectedInvocation);
+            return constraints.errorForMissingExpectations(nonStrict.invocation);
          }
       }
 

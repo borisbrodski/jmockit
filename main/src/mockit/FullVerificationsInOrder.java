@@ -61,4 +61,33 @@ public class FullVerificationsInOrder extends Verifications
       verificationPhase.setAllInvocationsMustBeVerified();
       verificationPhase.setNumberOfIterations(numberOfIterations);
    }
+
+   /**
+    * Same as {@link #FullVerificationsInOrder()}, but restricting the verification to the specified
+    * mocked types and/or mock instances.
+    *
+    * @param mockedTypesAndInstancesToVerify one or more of the mocked types and/or mock objects
+    * that are in scope for the test; for a given mock <em>instance</em>, all classes up to (but not
+    * including) {@code java.lang.Object} are considered
+    */
+   protected FullVerificationsInOrder(Object... mockedTypesAndInstancesToVerify)
+   {
+      this();
+      verificationPhase.setMockedTypesToFullyVerify(mockedTypesAndInstancesToVerify);
+   }
+
+   /**
+    * Same as {@link #FullVerificationsInOrder(int)}, but restricting the verification to the
+    * specified mocked types and/or mock instances.
+    *
+    * @param mockedTypesAndInstancesToVerify one or more of the mocked types and/or mock objects
+    * that are in scope for the test; for a given mock <em>instance</em>, all classes up to (but not
+    * including) {@code java.lang.Object} are considered
+    */
+   protected FullVerificationsInOrder(
+      int numberOfIterations, Object... mockedTypesAndInstancesToVerify)
+   {
+      this(numberOfIterations);
+      verificationPhase.setMockedTypesToFullyVerify(mockedTypesAndInstancesToVerify);
+   }
 }

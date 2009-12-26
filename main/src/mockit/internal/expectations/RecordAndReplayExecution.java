@@ -293,7 +293,7 @@ public final class RecordAndReplayExecution
       executionState.addExpectation(expectation, nonStrictInvocation);
 
       if (dynamicPartialMocking != null) {
-         dynamicPartialMocking.addRecordedInvocation(expectation.expectedInvocation);
+         dynamicPartialMocking.addRecordedInvocation(expectation.invocation);
       }
    }
 

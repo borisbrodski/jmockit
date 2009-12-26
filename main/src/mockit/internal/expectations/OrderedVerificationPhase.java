@@ -62,7 +62,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
             indexIncrement = 1;
 
             if (argMatchers != null) {
-               expectation.expectedInvocation.arguments.setMatchers(argMatchers);
+               expectation.invocation.arguments.setMatchers(argMatchers);
             }
 
             replayIndex = i;
@@ -73,8 +73,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
             unverifiedExpectationsLeftBehind = true;
          }
          else if (indexIncrement > 0) {
-            recordAndReplay.errorThrown =
-               expectation.expectedInvocation.errorForUnexpectedInvocation();
+            recordAndReplay.errorThrown = expectation.invocation.errorForUnexpectedInvocation();
             replayIndex = i;
             break;
          }
@@ -84,8 +83,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
    public void fixPositionOfUnverifiedExpectations()
    {
       if (unverifiedExpectationsLeftBehind) {
-         throw new AssertionError(
-            "Unexpected invocations before" + currentExpectation.expectedInvocation);
+         throw new AssertionError("Unexpected invocations before" + currentExpectation.invocation);
       }
 
       if (replayIndex >= expectationCount) {
@@ -100,7 +98,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
    @Override
    public void handleInvocationCountConstraint(int minInvocations, int maxInvocations)
    {
-      ExpectedInvocation invocation = currentExpectation.expectedInvocation;
+      ExpectedInvocation invocation = currentExpectation.invocation;
       Object mock = invocation.instance;
       String mockClassDesc = invocation.getClassDesc();
       String mockNameAndDesc = invocation.getMethodNameAndDescription();
@@ -116,7 +114,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
 
             if (invocationCount > maxInvocations) {
                if (maxInvocations >= 0 && numberOfIterations == 1) {
-                  pendingError = nextExpectation.expectedInvocation.errorForUnexpectedInvocation();
+                  pendingError = nextExpectation.invocation.errorForUnexpectedInvocation();
                   return;
                }
 
@@ -163,8 +161,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
          unverifiedExpectationsFixed && indexIncrement > 0 && replayIndex < expectationCount &&
          currentExpectation != null
       ) {
-         return new AssertionError(
-            "Unexpected invocations after" + currentExpectation.expectedInvocation);
+         return new AssertionError("Unexpected invocations after" + currentExpectation.invocation);
       }
 
       AssertionError error = verifyMultipleIterations();
@@ -195,7 +192,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
    {
       for (int i = 0; i < n; i++) {
          Expectation verified = expectationsVerified.get(i);
-         ExpectedInvocation invocation = verified.expectedInvocation;
+         ExpectedInvocation invocation = verified.invocation;
 
          argMatchers = invocation.arguments.getMatchers();
          handleInvocation(

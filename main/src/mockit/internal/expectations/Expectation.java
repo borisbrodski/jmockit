@@ -34,21 +34,21 @@ import mockit.internal.util.*;
 public final class Expectation
 {
    final RecordPhase recordPhase;
-   final ExpectedInvocation expectedInvocation;
+   final ExpectedInvocation invocation;
    final InvocationConstraints constraints;
    private InvocationResults results;
 
-   Expectation(RecordPhase recordPhase, ExpectedInvocation expectedInvocation, boolean nonStrict)
+   Expectation(RecordPhase recordPhase, ExpectedInvocation invocation, boolean nonStrict)
    {
       this.recordPhase = recordPhase;
-      this.expectedInvocation = expectedInvocation;
+      this.invocation = invocation;
       constraints = new InvocationConstraints(nonStrict);
    }
 
    Expectation(Expectation other)
    {
       recordPhase = other.recordPhase;
-      expectedInvocation = other.expectedInvocation;
+      invocation = other.invocation;
       constraints = new InvocationConstraints(other.constraints);
       results = other.results;
    }
@@ -56,7 +56,7 @@ public final class Expectation
    public InvocationResults getResults()
    {
       if (results == null) {
-         results = new InvocationResults(expectedInvocation, constraints);
+         results = new InvocationResults(invocation, constraints);
       }
 
       return results;
@@ -65,7 +65,7 @@ public final class Expectation
    Object produceResult(Object[] invocationArgs) throws Throwable
    {
       if (results == null) {
-         return expectedInvocation.getDefaultValueForReturnType(null);
+         return invocation.getDefaultValueForReturnType(null);
       }
 
       return results.produceResult(invocationArgs);
@@ -73,7 +73,7 @@ public final class Expectation
 
    AssertionError verifyConstraints()
    {
-      return constraints.verify(expectedInvocation);
+      return constraints.verify(invocation);
    }
 
    public void addReturnValueOrValues(Object value)
@@ -109,7 +109,7 @@ public final class Expectation
 
    private boolean hasVoidReturnType()
    {
-      return expectedInvocation.getMethodNameAndDescription().endsWith(")V");
+      return invocation.getMethodNameAndDescription().endsWith(")V");
    }
 
    private void validateReturnValueForConstructorOrVoidMethod(Object value)
@@ -122,8 +122,7 @@ public final class Expectation
 
    private boolean hasReturnValueOfType(Class<?> typeToBeReturned)
    {
-      Type invocationReturnType =
-         Type.getReturnType(expectedInvocation.getMethodNameAndDescription());
+      Type invocationReturnType = Type.getReturnType(invocation.getMethodNameAndDescription());
 
       Class<?> invocationReturnClass = Utilities.getClassForType(invocationReturnType);
 
@@ -144,6 +143,6 @@ public final class Expectation
 
    public void setCustomErrorMessage(CharSequence message)
    {
-      expectedInvocation.customErrorMessage = message;
+      invocation.customErrorMessage = message;
    }
 }
