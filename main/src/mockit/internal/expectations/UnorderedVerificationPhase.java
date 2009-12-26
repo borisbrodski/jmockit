@@ -28,6 +28,8 @@ import java.util.*;
 
 final class UnorderedVerificationPhase extends VerificationPhase
 {
+   private Expectation aggregate;
+
    UnorderedVerificationPhase(
       RecordAndReplayExecution recordAndReplay, List<Expectation> expectationsInReplayOrder)
    {
@@ -38,6 +40,7 @@ final class UnorderedVerificationPhase extends VerificationPhase
    protected void findNonStrictExpectation(
       Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
+      aggregate = null;
       List<Expectation> expectations = getNonStrictExpectations();
 
       for (Expectation expectation : expectations) {
@@ -55,6 +58,21 @@ final class UnorderedVerificationPhase extends VerificationPhase
          currentExpectation.constraints.setLimits(numberOfIterations, -1);
          pendingError = currentExpectation.verifyConstraints();
       }
+   }
+
+   private void aggregateMatchingExpectations(Expectation found)
+   {
+      if (currentExpectation == null) {
+         currentExpectation = found;
+         return;
+      }
+
+      if (aggregate == null) {
+         aggregate = new Expectation(currentExpectation);
+         currentExpectation = aggregate;
+      }
+
+      aggregate.constraints.addInvocationCount(found.constraints);
    }
 
    @Override

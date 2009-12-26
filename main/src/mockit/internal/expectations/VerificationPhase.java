@@ -34,7 +34,6 @@ public abstract class VerificationPhase extends TestOnlyPhase
    protected final List<Expectation> expectationsVerified;
    private boolean allInvocationsDuringReplayMustBeVerified;
    protected AssertionError pendingError;
-   private Expectation aggregate;
 
    protected VerificationPhase(
       RecordAndReplayExecution recordAndReplay, List<Expectation> expectationsInReplayOrder)
@@ -60,7 +59,6 @@ public abstract class VerificationPhase extends TestOnlyPhase
       }
 
       currentExpectation = null;
-      aggregate = null;
       findNonStrictExpectation(mock, mockClassDesc, mockNameAndDesc, args);
       argMatchers = null;
 
@@ -81,10 +79,10 @@ public abstract class VerificationPhase extends TestOnlyPhase
       return currentExpectation.expectedInvocation.getDefaultValueForReturnType(this);
    }
 
-   protected abstract void findNonStrictExpectation(
+   abstract void findNonStrictExpectation(
       Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args);
 
-   protected final boolean matches(
+   final boolean matches(
       Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args,
       Expectation expectation)
    {
@@ -111,23 +109,8 @@ public abstract class VerificationPhase extends TestOnlyPhase
       return false;
    }
 
-   protected final void aggregateMatchingExpectations(Expectation found)
-   {
-      if (currentExpectation == null) {
-         currentExpectation = found;
-         return;
-      }
-
-      if (aggregate == null) {
-         aggregate = new Expectation(currentExpectation);
-         currentExpectation = aggregate;
-      }
-
-      aggregate.constraints.addInvocationCount(found.constraints);
-   }
-
    @Override
-   public void setMaxInvocationCount(int maxInvocations)
+   public final void setMaxInvocationCount(int maxInvocations)
    {
       if (maxInvocations == 0 || pendingError == null) {
          super.setMaxInvocationCount(maxInvocations);
@@ -135,7 +118,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
    }
 
    @Override
-   public void setCustomErrorMessage(CharSequence customMessage)
+   public final void setCustomErrorMessage(CharSequence customMessage)
    {
       Expectation expectation = getCurrentExpectation();
 
