@@ -264,7 +264,7 @@
           <option name="m_ignoreLoopsWithoutConditions" value="false" />
         </inspection_tool>
         <inspection_tool class="ForLoopWithMissingComponent" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="ignoreCollectionLoops" value="false" />
+          <option name="ignoreCollectionLoops" value="true" />
         </inspection_tool>
         <inspection_tool class="HashCodeUsesNonFinalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="HibernateResource" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -365,7 +365,6 @@
           <option name="m_limit" value="10" />
         </inspection_tool>
         <inspection_tool class="MethodNameSameAsParentName" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="MethodNamesDifferOnlyByCase" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MethodOnlyUsedFromInnerClass" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreMethodsAccessedFromAnonymousClass" value="false" />
         </inspection_tool>
@@ -408,7 +407,7 @@
         <inspection_tool class="NestingDepth" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_limit" value="5" />
         </inspection_tool>
-        <inspection_tool class="NonBooleanMethodNameMayNotStartWithQuestion" enabled="true" level="WARNING" enabled_by_default="true">
+        <inspection_tool class="NonBooleanMethodNameMayNotStartWithQuestion" enabled="false" level="WARNING" enabled_by_default="false">
           <option name="questionString" value="is,can,has,should,could,shall,check,contains,equals,startsWith,endsWith" />
         </inspection_tool>
         <inspection_tool class="NonCommentSourceStatements" enabled="true" level="WARNING" enabled_by_default="true">
@@ -810,6 +809,7 @@
         <w>desc</w>
         <w>dest</w>
         <w>destfile</w>
+        <w>disconnector</w>
         <w>djmockit</w>
         <w>doctype</w>
         <w>easymock</w>
@@ -908,17 +908,20 @@
         <w>unformatted</w>
         <w>unmocked</w>
         <w>usedbypico</w>
+        <w>username</w>
         <w>versioned</w>
         <w>webapp</w>
         <w>wiki</w>
         <w>xmlbasic</w>
         <w>xmlfull</w>
+        <w>xmpp</w>
       </words>
     </dictionary>
   </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/samples/AnimatedTransitions/AnimatedTransitions.iml" filepath="$PROJECT_DIR$/samples/AnimatedTransitions/AnimatedTransitions.iml" group="Samples" />
+      <module fileurl="file://$PROJECT_DIR$/samples/AuctionSniper/AuctionSniper.iml" filepath="$PROJECT_DIR$/samples/AuctionSniper/AuctionSniper.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/coverage/Coverage.iml" filepath="$PROJECT_DIR$/coverage/Coverage.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/easymock/EasyMock2.iml" filepath="$PROJECT_DIR$/samples/easymock/EasyMock2.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/easymockclassextension/EasyMockCE.iml" filepath="$PROJECT_DIR$/samples/easymockclassextension/EasyMockCE.iml" group="Samples" />
