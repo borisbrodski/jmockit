@@ -90,7 +90,7 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Ignore @Test
+   @Test
    public void verifyAllInvocationsWithThoseRecordedAsExpectedToOccurVerifiedImplicitly()
    {
       new NonStrictExpectations()
@@ -101,7 +101,6 @@ public final class FullVerificationsTest
 
       exerciseCodeUnderTest();
 
-      // TODO: review documentation (API and tutorial) once this redundant verification is fixed
       new FullVerifications()
       {{
          mock.prepare();

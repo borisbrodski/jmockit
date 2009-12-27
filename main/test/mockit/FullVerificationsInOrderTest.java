@@ -95,6 +95,27 @@ public final class FullVerificationsInOrderTest
    }
 
    @Test
+   public void verifyAllInvocationsWithThoseRecordedAsExpectedToOccurVerifiedImplicitly()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.setSomething(45); repeats(1);
+         mock.editABunchMoreStuff(); returns(5); repeatsAtLeast(1);
+      }};
+
+      exerciseCodeUnderTest();
+
+      new FullVerificationsInOrder()
+      {{
+         mock.prepare();
+         mock.setSomething(123);
+         mock.setSomethingElse(anyChar);
+         mock.notifyBeforeSave();
+         mock.save();
+      }};
+   }
+
+   @Test
    public void verifyInvocationsWithOneRecordedButNotReplayed()
    {
       new NonStrictExpectations()

@@ -26,7 +26,8 @@ package mockit;
 
 /**
  * Same as {@link Verifications}, but checking that all invocations in the replay phase are
- * explicitly verified in this verification block.
+ * explicitly verified in this verification block, except for those with an specified number of
+ * <em>expected</em> invocations (the minimum invocation count).
  * This way, the verification block represents a full set of verifications for the mocked types
  * used in the test.
  * <p/>

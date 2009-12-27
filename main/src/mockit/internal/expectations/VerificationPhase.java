@@ -156,6 +156,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
    {
       List<Expectation> notVerified = new ArrayList<Expectation>(expectationsInReplayOrder);
       notVerified.removeAll(expectationsVerified);
+      discardExpectationsThatWillBeVerifiedImplicitly(notVerified);
 
       if (!notVerified.isEmpty()) {
          if (mockedTypesAndInstancesToFullyVerify == null) {
@@ -167,6 +168,17 @@ public abstract class VerificationPhase extends TestOnlyPhase
       }
 
       return null;
+   }
+
+   private void discardExpectationsThatWillBeVerifiedImplicitly(List<Expectation> unverified)
+   {
+      for (Iterator<Expectation> itr = unverified.iterator(); itr.hasNext(); ) {
+         Expectation expectation = itr.next();
+
+         if (expectation.constraints.minInvocations > 0) {
+            itr.remove();
+         }
+      }
    }
 
    private AssertionError validateThatUnverifiedInvocationsAreAllowed(List<Expectation> unverified)
