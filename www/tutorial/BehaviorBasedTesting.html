@@ -438,24 +438,31 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </h3>
 <p>
    For a given method with non-<code>void</code> return type, a return value can be recorded through
-   the <code>Expectations#returns(...)</code> method.
+   the <code>Expectations#returns(...)</code> method or through the <code>Expectations#result</code>
+   field.
    When the method gets called in the replay phase, the specified return value will be returned to
    the caller (which normally is the unit under test).
 </p>
 <p>
    If the test instead needs an exception or error to be thrown when the method is invoked, then
    the <code>Expectations#throwsException(...)</code> or <code>Expectations#throwsError(...)</code>
-   method should be used to record the desired exception/error to be thrown.
+   method can be used to record the desired exception/error to be thrown.
+   Alternatively (and preferably, since it's simpler), the <code>result</code> field can be assigned
+   the exception or error instance to be thrown.
    Recording exceptions/errors to be thrown is applicable to mocked methods as well as to mocked
    constructors.
 </p>
 <p>
    Multiple consecutive results (return values and throwables) can be recorded for the same
-   expectation, by simply calling those API methods multiple times after the mock invocation that
-   creates the expectation. The recording of multiple return values and/or exceptions/errors to be
-   thrown can be freely mixed for the same expectation.
+   expectation, by simply calling those API methods or assigning the <code>result</code> field
+   multiple times after the mock invocation that creates the expectation.
+   The recording of multiple return values and/or exceptions/errors to be thrown can be freely mixed
+   for the same expectation.
    In the case of recording multiple consecutive return values for a given expectation, a single
    call to the <code>returns(...)</code> method can be made to specify more than one return value.
+   This is the only situation where the <code>result</code> field cannot be used; the
+   <code>returns</code> method used here actually is an overload which takes a <em>varargs</em>
+   argument for consecutive values after the first one.
    For more details about this ability, see the corresponding
    <a href="../javadoc/mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">API
       documentation</a>.
@@ -478,10 +485,12 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
          final DependencyAbc abc = new DependencyAbc();
 
          {
-            abc.intReturningMethod(); <strong>returns(5);</strong>
+            abc.intReturningMethod(); <strong><em>result</em> = 5;</strong>
 
             abc.stringReturningMethod(); <strong>returns("str1", "str2");</strong>
-            <strong>throwsException(new IllegalStateException());</strong>
+            <em>result</em> = new IllegalStateException();
+            // The previous field assignment could instead be written as:
+            // <strong>throwsException(new IllegalStateException());</strong>
          }
       };
 
@@ -525,7 +534,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       new Expectations()
       {
          {
-            <strong>onInstance(mock)</strong>.getValue(); returns(12);
+            <strong>onInstance(mock)</strong>.getValue(); <em>result</em> = 12;
          }
       };
 
@@ -728,12 +737,13 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    Yet another way, particularly useful for <code>void</code> methods or when the test doesn't care
    about specific return values, is to specify an <em>invocation count constraint</em> for a given
    expectation.
-   There are several methods just for that: <code>repeats(int expectedNoOfInvocations)</code>,
+   The API has several fields and methods just for that: <code>times</code>, <code>minTimes</code>,
+   <code>maxTimes</code>, <code>repeats(int expectedNoOfInvocations)</code>,
    <code>repeats(int minInvocations, int maxInvocations)</code>,
    <code>repeatsAtLeast(int minInvocations)</code>, and
    <code>repeatsAtMost(int maxInvocations)</code>.
-   These methods belong to the <code>mockit.Invocations</code> class, the non-public base class for
-   both <code>mockit.Expectations</code> and <code>mockit.Verifications</code>.
+   These fields and methods belong to the <code>mockit.Invocations</code> class, the non-public base
+   class for both <code>mockit.Expectations</code> and <code>mockit.Verifications</code>.
    Therefore, an invocation count constraint can be specified either when recording or when
    verifying invocations.
    In either case, the method or constructor associated with the expectation will be constrained to
@@ -747,9 +757,14 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       new Expectations()
       {
          {
-            new DependencyAbc(); // by default, one invocation is expected, ie "repeats(1);"
-            abc.voidMethod(); <strong>repeatsAtLeast(2);</strong> // at least two invocations are expected
-            abc.stringReturningMethod(); <strong>repeats(1, 5);</strong> // 1 to 5 invocations are expected
+            // By default, one invocation is expected, ie "times = 1;" or "repeats(1);":
+            new DependencyAbc();
+
+            // At least two invocations are expected (equivalent to <strong>repeatsAtLeast(2)</strong>):
+            abc.voidMethod(); <strong><em>minTimes</em> = 2;</strong>
+
+            // 1 to 5 invocations are expected (equivalent to <strong>repeats(1, 5)</strong>):
+            abc.stringReturningMethod(); <strong><em>minTimes</em> = 1; <em>maxTimes</em> = 5;</strong>
          }
       };
 
@@ -765,10 +780,10 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       {
          {
             // Verifies that zero or one invocations occurred, with the specified argument value:
-            abc.anotherVoidMethod(3); <strong>repeatsAtMost(1);</strong>
+            abc.anotherVoidMethod(3); <strong><em>maxTimes</em> = 1;</strong> // or <strong>repeatsAtMost(1);</strong>
 
             // Verifies the occurrence of at least one invocation with the specified arguments:
-            DependencyAbc.someStaticMethod("test", false); // "repeatsAtLeast(1);" is implied
+            DependencyAbc.someStaticMethod("test", false); // "minTimes = 1"/"repeatsAtLeast(1)" is implied
          }
       };
    }
@@ -982,7 +997,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    This is automatically the case when recording strict expectations, since any unexpected
    invocation causes the test to fail.
    When non-strict expectations are explicitly verified, though, a
-   <code>new FullVerifications() {...}</code> block is used to make sure that no invocations are
+   <code>new FullVerifications() {...}</code> block can be used to make sure that no invocations are
    left unverified.
 </p>
 <pre><code>   @Test
@@ -997,12 +1012,18 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       <strong>new FullVerifications()</strong>
       {{
          // Verifications here are unordered, so the following invocations could be in any order.
-         mock.setSomething(withAny(1)); // verifies two actual invocations
-         mock.setSomethingElse(withAny(""));
+         mock.setSomething(<em>anyInt</em>); // verifies two actual invocations
+         mock.setSomethingElse(<em>anyString</em>);
          mock.save(); // if this verification (or any other above) is removed the test will fail
       }};
    }
 </code></pre>
+<p>
+   Note that if a lower limit or minimum invocation count is specified for an otherwise non-strict
+   expectation, then this constraint will always be implicitly verified at the end of the test.
+   Therefore, explicitly verifying such an expectation inside the full verification block is not
+   necessary.
+</p>
 
 <h4 id="FullVerificationInOrder">Full verification in order</h4>
 <p>
@@ -1022,9 +1043,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 
       <strong>new FullVerificationsInOrder()</strong>
       {{
-         mock.setSomething(withAny(1));
-         mock.setSomethingElse(withAny(""));
-         mock.setSomething(withAny(1));
+         mock.setSomething(<em>anyInt</em>);
+         mock.setSomethingElse(<em>anyString</em>);
+         mock.setSomething(<em>anyInt</em>);
          mock.save();
       }};
    }
@@ -1042,9 +1063,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    You may now be thinking that writing a <code>FullVerificationsInOrder</code> block ends up being
    the same as writing an <code>Expectations</code> block where all expectations are strict.
    So, have we come full circle? Almost, but not quite.
-   For non-strict expectations, the default invocation count constraint corresponds to
-   <code>repeatsAtLeast(1)</code>, which leaves room for multiple invocations to the same method or
-   constructor in the replay phase.
+   For non-strict expectations, the default invocation count constraint corresponds to a call to
+   <code>repeatsAtLeast(1)</code> or a <code><em>minTimes</em> = 1</code> assignment, which leaves
+   room for multiple invocations to the same method or constructor in the replay phase.
    So, in the above test for example, if the <code>setSomethingElse(...)</code> method was invoked
    a second time during the replay phase, the test would still pass (provided the second invocation
    occurred in the expected order, as specified inside the verification block).
@@ -1054,14 +1075,15 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <p>
    A full verification block (ordered or not) also allows us to verify that certain methods and/or
    constructors never get invoked, without having to specify each one of them with a corresponding
-   call to <code>repeats(0)</code>. The following test provides an example.
+   call to <code>repeats(0)</code> or a <code><em>times</em> = 0</code> assignment.
+   The following test provides an example.
 </p>
 <pre><code>   @Test
    public void readOnlyOperation(final Dependency mock)
    {
       new NonStrictExpectations()
       {{
-         mock.getData(); returns("test data");
+         mock.getData(); <em>result</em> = "test data";
       }};
 
       // Code under test:
@@ -1071,7 +1093,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 
       <strong>new FullVerifications()</strong>
       {{
-         mock.getData(); <strong>repeatsAtLeast(0); // calls to getData are allowed</strong>
+         mock.getData(); <strong><em>minTimes</em> = 0; // calls to getData are allowed</strong>
       }};
    }
 </code></pre>
@@ -1145,10 +1167,11 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   We have seen how to record results for invocations through the <code>returns(...)</code>,
+   We have seen how to record results for invocations through assignments to the
+   <code><em>result</em></code> field or calls to the <code>returns(...)</code>,
    <code>throwsException(...)</code> and <code>throwsError(...)</code> methods.
    We have also seen how to match invocation arguments flexibly with the <code>withXyz(...)</code>
-   group of methods.
+   group of methods and the various <code><em>any</em></code> fields.
    But what if a test needs to decide the result of a recorded invocation based on the arguments it
    will receive at replay time?
    Or if the test simply wants to capture invocation argument values for use in "asserts"?
@@ -1162,8 +1185,8 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
          @NonStrict DependencyAbc abc;
 
          {
-            abc.intReturningMethod(withAny(0), withAny(""));
-            returns(<strong>new Delegate()
+            abc.intReturningMethod(<em>anyInt</em>, null);
+            <em>result</em> = <strong>new Delegate()
             {
                // The name of this method can actually be anything.
                int intReturningMethod(int i, String s)
@@ -1172,7 +1195,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
                   assertEqual(i == 1 ? "one" : "other", s);
                   return i + 1;
                }
-            }</strong>);
+            }</strong>;
          }
       };
 
@@ -1180,9 +1203,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   The <code>Delegate</code> interface is empty, being used simply to tell the <code>returns</code>
-   method that actual invocations at replay time should be delegated to the corresponding methods in
-   the delegate object.
+   The <code>Delegate</code> interface is empty, being used simply to tell JMockit that actual
+   invocations at replay time should be delegated to the corresponding methods in the delegate
+   object.
 </p>
 <p>
    A corresponding method in the delegate implementation must have parameters matching the method
@@ -1211,7 +1234,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
          Collaborator mock;
 
          {
-            new Collaborator(withAny(0)); returns(<strong>delegate</strong>);
+            new Collaborator(<em>anyInt</em>); <em>result</em> = <strong>delegate</strong>;
          }
       };
 
@@ -1282,7 +1305,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 
             // Expectations recorded (even if the invocations are done through Reflection):
             <strong>newInstance("some.package.AnotherDependency", true, "test");</strong> repeatsAtMost(1);
-            <strong>invoke(tested, "intReturningMethod", 45, "");</strong> returns(1);
+            <strong>invoke(tested, "intReturningMethod", 45, "");</strong> <em>result</em> = 1;
             // other expectations recorded...
          }
       };
@@ -1441,7 +1464,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    {
       new Expectations(<strong>Collaborator.class</strong>)
       {{
-         new Collaborator().getValue(); returns(123);
+         new Collaborator().getValue(); <em>result</em> = 123;
       }};
 
       // Mocked:
@@ -1460,7 +1483,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 
       new NonStrictExpectations(<strong>collaborator</strong>)
       {{
-         collaborator.simpleOperation(1, "", null); returns(false);
+         collaborator.simpleOperation(1, "", null); <em>result</em> = false;
          Collaborator.doSomething(true, "test");
       }};
 
@@ -1658,7 +1681,7 @@ public final class TestedUnit
 
       new NonStrictExpectations()
       {{
-         UserAccount.find("john"); returns(<strong>account</strong>);
+         UserAccount.find("john"); <em>result</em> = <strong>account</strong>;
       }};
    }
 
@@ -1679,7 +1702,7 @@ public final class TestedUnit
    {
       new NonStrictExpectations()
       {{
-         <strong>account</strong>.passwordMatches(withAny("")); returns(match);
+         <strong>account</strong>.passwordMatches(<em>anyString</em>); <em>result</em> = match;
       }};
    }
 
@@ -1692,7 +1715,7 @@ public final class TestedUnit
 
       new Verifications()
       {{
-         <strong>account</strong>.setLoggedIn(true); repeats(0);
+         <strong>account</strong>.setLoggedIn(true); <em>times</em> = 0;
       }};
    }
 
@@ -1743,7 +1766,7 @@ public final class TestedUnit
    {
       PasswordMatching(boolean match)
       {
-         account.passwordMatches(withAny("")); returns(match);
+         account.passwordMatches(<em>anyString</em>); <em>result</em> = match;
       }
    }
 
