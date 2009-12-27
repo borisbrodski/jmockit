@@ -11,6 +11,52 @@
    <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
 </h2>
 
+<ol style="border: medium ridge; background-color: beige;">
+   <li><a href="#mocked">Mocked types</a></li>
+   <li><a href="#expectation">Expectations</a></li>
+   <li><a href="#model">The <em>record-replay-verify</em> model</a></li>
+   <li>
+      <a href="#declaration">Declaring and using mocked types</a>
+      <ol>
+         <li><a href="#multipleInterfaces">Mocking multiple interfaces at the same time</a></li>
+      </ol>
+   </li>
+   <li><a href="#results">Recording results for an expectation</a></li>
+   <li><a href="#onInstance">Matching invocations to specific mock objects</a></li>
+   <li>
+      <a href="#hamcrest">Constraint-based matching of argument values</a>
+      <ol>
+         <li><a href="#matcherFields">Argument matching <em>fields</em>: a succinct alternative</a></li>
+         <li><a href="#nullAsMatcher">Using the <code>null</code> value to match any object reference</a></li>
+      </ol>
+   </li>
+   <li><a href="#constraints">Specifying invocation count constraints</a></li>
+   <li><a href="#strictness"><em>Strict</em> and <em>non-strict</em> expectations</a></li>
+   <li>
+      <a href="#verification">Explicit verification</a>
+      <ol>
+         <li><a href="#neverHappened">Verifying that an invocation never happened</a></li>
+         <li><a href="#VerificationInOrder">Verification in order</a></li>
+         <li><a href="#partiallyOrdered">Partially ordered verification</a></li>
+         <li><a href="#FullVerification">Full verification</a></li>
+         <li><a href="#FullVerificationInOrder">Full verification in order</a></li>
+         <li><a href="#unspecifiedInvocations">Verifying unspecified invocations that should not happen</a></li>
+         <li><a href="#iterations">Verifying iterations</a></li>
+      </ol>
+   </li>
+   <li><a href="#delegates">Delegates: specifying custom results and capturing arguments</a></li>
+   <li><a href="#deencapsulation">Accessing private fields, methods and constructors</a></li>
+   <li>
+      <a href="#partial">Partial mocking</a>
+      <ol>
+         <li><a href="#staticPartial">Static partial mocking</a></li>
+         <li><a href="#dynamicPartial">Dynamic partial mocking</a></li>
+      </ol>
+   </li>
+   <li><a href="#capturing">Capturing internal instances of mocked types</a></li>
+   <li><a href="#reuse">Reusing expectation and verification blocks</a></li>
+</ol>
+
 <p>
    In the JMockit toolkit, the <code>Expectations & Verifications</code> APIs provide rich support
    for the creation of <em>behavior-based</em> unit tests.
