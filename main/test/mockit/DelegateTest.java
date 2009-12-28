@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2009 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -89,8 +89,8 @@ public final class DelegateTest extends TestCase
 
          {
             mock.getValue();
-            returns(new Delegate() { int getValue() { return 1; } });
-            returns(new Delegate() { int getValue() { return 2; } });
+            result = new Delegate() { int getValue() { return 1; } };
+            result = new Delegate() { int getValue() { return 2; } };
          }
       };
 
@@ -142,12 +142,12 @@ public final class DelegateTest extends TestCase
       {
          {
             collaborator.getValue();
-            returns(new Delegate()
+            result = new Delegate()
             {
                int i = 1;
 
                int getValue() { return i++; }
-            });
+            };
          }
       };
 
@@ -165,7 +165,7 @@ public final class DelegateTest extends TestCase
          Collaborator mock;
 
          {
-            new Collaborator(withAny(0)); returns(delegate);
+            new Collaborator(anyInt); result = delegate;
          }
       };
 
@@ -189,7 +189,7 @@ public final class DelegateTest extends TestCase
 
          {
             Collaborator.staticMethod();
-            returns(new Delegate() { boolean staticMethod() { return false; } });
+            result = new Delegate() { boolean staticMethod() { return false; } };
          }
       };
 
@@ -203,11 +203,9 @@ public final class DelegateTest extends TestCase
          Collaborator mock;
 
          {
-            Collaborator.staticMethod(withAny(1));
-            returns(new StaticDelegate());
+            Collaborator.staticMethod(anyInt); result = new StaticDelegate();
 
-            mock.doSomething(anyBoolean, null, null);
-            returns(new StaticDelegate());
+            mock.doSomething(anyBoolean, null, null); result = new StaticDelegate();
          }
       };
 
@@ -239,11 +237,11 @@ public final class DelegateTest extends TestCase
          @NonStrict Collaborator mock;
 
          {
-            mock.nativeMethod(withAny(false));
-            returns(new Delegate()
+            mock.nativeMethod(anyBoolean);
+            result = new Delegate()
             {
                Long nativeMethod(boolean b) { assertTrue(b); return 0L; }
-            });
+            };
          }
       };
 
@@ -258,7 +256,7 @@ public final class DelegateTest extends TestCase
 
          {
             mock.finalMethod();
-            returns(new Delegate() { char finalMethod() { return 'M'; } });
+            result = new Delegate() { char finalMethod() { return 'M'; } };
          }
       };
 
@@ -271,7 +269,7 @@ public final class DelegateTest extends TestCase
       {
          {
             invoke(collaborator, "privateMethod");
-            returns(new Delegate() { float privateMethod() { return 0.5F; } });
+            result = new Delegate() { float privateMethod() { return 0.5F; } };
          }
       };
 
@@ -286,10 +284,10 @@ public final class DelegateTest extends TestCase
 
          {
             collaborator.addElements(this.<Collection<String>> withNotNull());
-            returns(new Delegate()
+            result = new Delegate()
             {
                void addElements(Collection<String> elements) { elements.add("test"); }
-            });
+            };
          }
       };
 
@@ -323,11 +321,11 @@ public final class DelegateTest extends TestCase
       {
          {
             collaborator.doSomething(true, null, "str");
-            returns(new Delegate()
+            result = new Delegate()
             {
                String someOther() { return ""; }
                void doSomething(boolean b, int[] i, String s) {}
-            });
+            };
          }
       };
 
@@ -342,7 +340,7 @@ public final class DelegateTest extends TestCase
 
          {
             collaborator.doSomething(true, null, "str");
-            returns(new Delegate()
+            result = new Delegate()
             {
                void onReplay(boolean b, int[] i, String s)
                {
@@ -350,7 +348,7 @@ public final class DelegateTest extends TestCase
                   assertNull(i);
                   assertEquals("str", s);
                }
-            });
+            };
          }
       };
 
@@ -363,11 +361,11 @@ public final class DelegateTest extends TestCase
       {
          {
             collaborator.doSomething(true, null, "str");
-            returns(new Delegate()
+            result = new Delegate()
             {
                String someOther() { return ""; }
                void doSomethingElse(boolean b, int[] i, String s) {}
-            });
+            };
          }
       };
 
