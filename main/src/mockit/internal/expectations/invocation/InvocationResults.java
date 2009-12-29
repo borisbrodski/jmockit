@@ -71,7 +71,7 @@ public final class InvocationResults
       addResult(new ThrowableResult(t));
    }
 
-   private void addResult(InvocationResult result)
+   public void addResult(InvocationResult result)
    {
       resultCount++;
       constraints.adjustMaxInvocations(resultCount);

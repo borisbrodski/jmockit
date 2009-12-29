@@ -116,6 +116,40 @@ abstract class Invocations
    protected static final Float anyFloat = 0.0F;
 
    /**
+    * An object assigned to this field will be taken as a handler for each invocation matching the
+    * current expectation, with the purpose of validating invocation arguments.
+    * Note that for a <em>recorded</em> expectation such invocations are the ones that will be
+    * executed during the <em>replay</em> phase, while for a <em>verified</em> expectation they are
+    * the ones actually executed during that phase.
+    * <p/>
+    * The object assigned can be of any type, but its class should have a single non-private method
+    * (therefore, additional methods are allowed and ignored, as long as they are {@code private}).
+    * This <em>handler method</em> can have any name, but it should have parameters that match the
+    * ones defined in the mocked method or constructor associated to the expectation.
+    * Corresponding parameters don't need to have the exact same declared type, though, as long as
+    * each possible invocation argument can be passed to the corresponding parameter in the handler
+    * method.
+    * <p/>
+    * In the case of an expectation recorded for a non-{@code void} method, the handler method is
+    * also responsible for returning appropriate values to be used by the caller (which normally
+    * belongs to the code under test). That is, the {@code result} field or the {@code returns(...)}
+    * method should <em>not</em> be used together with an assignment to this field.
+    * The same observation applies to the throwing of exceptions/errors from a recorded expectation
+    * (which can also be done for constructors and {@code void} methods).
+    * <p/>
+    * When used for an expectation inside a <em>verification</em> block, on the other hand, the
+    * handler method should normally have a {@code void} return type. Any value eventually returned
+    * by the method will be silently ignored in this case. Note that a handler method for a verified
+    * expectation also shouldn't intentionally throw exceptions or errors, since the verified
+    * invocation(s) already happened in the replay phase; any exception/error actually thrown will
+    * simply propagate back to the test method.
+    * <p/>
+    * Just like with {@linkplain mockit.Delegate delegate classes}, the handler method can declare
+    * its first parameter as being of type {@link mockit.Invocation}.
+    */
+   protected static Object forEachInvocation;
+
+   /**
     * A non-negative value assigned to this field will be taken as the exact number of times that
     * invocations matching the current expectation should occur during replay.
     * Each assignment to this field is equivalent to calling {@link #repeats(int)} with the assigned

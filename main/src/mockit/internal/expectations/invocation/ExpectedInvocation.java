@@ -70,6 +70,11 @@ public final class ExpectedInvocation
       return arguments.methodNameAndDesc;
    }
 
+   public Object[] getArgumentValues()
+   {
+      return arguments.getValues();
+   }
+
    // Matching based on instance or mocked type ///////////////////////////////////////////////////
 
    public boolean isMatch(

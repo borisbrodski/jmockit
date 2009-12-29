@@ -139,6 +139,23 @@ public abstract class VerificationPhase extends TestOnlyPhase
       }
    }
 
+   final boolean evaluateInvocationHandlerIfExpectationMatchesCurrent(
+      Expectation expectation, InvocationHandler handler)
+   {
+      ExpectedInvocation invocation = expectation.invocation;
+      Object mock = invocation.instance;
+      String mockClassDesc = invocation.getClassDesc();
+      String mockNameAndDesc = invocation.getMethodNameAndDescription();
+      Object[] args = invocation.getArgumentValues();
+
+      if (matches(mock, mockClassDesc, mockNameAndDesc, args, currentExpectation)) {
+         handler.evaluateInvocation(expectation);
+         return true;
+      }
+
+      return false;
+   }
+
    protected AssertionError endVerification()
    {
       if (pendingError != null) {

@@ -59,6 +59,10 @@ final class InvocationBlockModifier extends MethodAdapter
                mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addResult", "(Ljava/lang/Object;)V");
                return;
             }
+            else if ("forEachInvocation".equals(name)) {
+               mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "setHandler", "(Ljava/lang/Object;)V");
+               return;
+            }
             else if ("times".equals(name) || "minTimes".equals(name) || "maxTimes".equals(name)) {
                mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, name, "(I)V");
                return;

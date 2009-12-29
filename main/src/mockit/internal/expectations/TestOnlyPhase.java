@@ -83,4 +83,6 @@ public abstract class TestOnlyPhase extends Phase
    public abstract void handleInvocationCountConstraint(int minInvocations, int maxInvocations);
 
    public abstract void setCustomErrorMessage(CharSequence customMessage);
+
+   public abstract void applyHandlerForEachInvocation(Object invocationHandler);
 }

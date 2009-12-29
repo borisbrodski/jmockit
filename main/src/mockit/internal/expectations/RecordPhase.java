@@ -102,4 +102,10 @@ public final class RecordPhase extends TestOnlyPhase
    {
       getCurrentExpectation().setCustomErrorMessage(customMessage);
    }
+
+   @Override
+   public void applyHandlerForEachInvocation(Object invocationHandler)
+   {
+      getCurrentExpectation().getResults().addResult(new InvocationHandler(invocationHandler));
+   }
 }

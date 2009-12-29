@@ -34,8 +34,8 @@ import mockit.internal.util.*;
 public final class Expectation
 {
    final RecordPhase recordPhase;
-   final ExpectedInvocation invocation;
-   final InvocationConstraints constraints;
+   public final ExpectedInvocation invocation;
+   public final InvocationConstraints constraints;
    private InvocationResults results;
 
    Expectation(RecordPhase recordPhase, ExpectedInvocation invocation, boolean nonStrict)

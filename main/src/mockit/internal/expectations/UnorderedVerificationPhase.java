@@ -26,6 +26,8 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
+import mockit.internal.expectations.invocation.*;
+
 final class UnorderedVerificationPhase extends VerificationPhase
 {
    private Expectation aggregate;
@@ -63,6 +65,7 @@ final class UnorderedVerificationPhase extends VerificationPhase
    private void aggregateMatchingExpectations(Expectation found)
    {
       if (currentExpectation == null) {
+         found.invocation.arguments.setMatchers(argMatchers);
          currentExpectation = found;
          return;
       }
@@ -87,6 +90,22 @@ final class UnorderedVerificationPhase extends VerificationPhase
 
       if (error != null) {
          pendingError = error;
+      }
+   }
+
+   @Override
+   public void applyHandlerForEachInvocation(Object invocationHandler)
+   {
+      if (pendingError != null) {
+         return;
+      }
+
+      getCurrentExpectation();
+      InvocationHandler handler = new InvocationHandler(invocationHandler);
+      List<Expectation> expectations = getNonStrictExpectations();
+
+      for (Expectation expectation : expectations) {
+         evaluateInvocationHandlerIfExpectationMatchesCurrent(expectation, handler);
       }
    }
 }

@@ -24,12 +24,7 @@
  */
 package mockit.internal.expectations.invocation;
 
-import java.lang.reflect.*;
 import java.util.*;
-
-import mockit.*;
-import mockit.internal.util.*;
-import mockit.external.asm.Type;
 
 abstract class InvocationResult
 {
@@ -66,118 +61,6 @@ abstract class InvocationResult
       {
          throwable.fillInStackTrace();
          throw throwable;
-      }
-   }
-
-   static final class DelegatedResult extends InvocationResult
-   {
-      private final Delegate delegate;
-      private Method delegateMethod;
-      private boolean hasInvocationParameter;
-      private Object[] args;
-
-      DelegatedResult(Delegate delegate)
-      {
-         this.delegate = delegate;
-
-         Method[] declaredMethods = delegate.getClass().getDeclaredMethods();
-
-         if (declaredMethods.length == 1) {
-            delegateMethod = declaredMethods[0];
-            determineWhetherDelegateMethodHasInvocationParameter();
-         }
-         else {
-            delegateMethod = null;
-         }
-      }
-
-      private void determineWhetherDelegateMethodHasInvocationParameter()
-      {
-         Class<?>[] parameters = delegateMethod.getParameterTypes();
-         hasInvocationParameter = parameters.length > 0 && parameters[0] == Invocation.class;
-      }
-
-      @Override
-      Object produceResult(
-         ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
-         throws Throwable
-      {
-         this.args = args;
-
-         if (delegateMethod == null) {
-            String methodName = adaptNameAndArgumentsForDelegate(invocation);
-            delegateMethod = Utilities.findCompatibleMethod(delegate, methodName, args);
-            determineWhetherDelegateMethodHasInvocationParameter();
-         }
-
-         Object result;
-
-         if (hasInvocationParameter) {
-            result = executeDelegateWithInvocationContext(constraints, delegateMethod);
-         }
-         else {
-            result = Utilities.invoke(delegate, delegateMethod, args);
-         }
-
-         return result;
-      }
-
-      private String adaptNameAndArgumentsForDelegate(ExpectedInvocation invocation)
-      {
-         String methodNameAndDesc = invocation.getMethodNameAndDescription();
-         int leftParen = methodNameAndDesc.indexOf('(');
-
-         replaceNullArgumentsWithClassObjectsIfAny(methodNameAndDesc, leftParen);
-
-         String methodName = methodNameAndDesc.substring(0, leftParen);
-
-         if ("<init>".equals(methodName)) {
-            methodName = "$init";
-         }
-
-         return methodName;
-      }
-
-      private void replaceNullArgumentsWithClassObjectsIfAny(
-         String methodNameAndDesc, int leftParen)
-      {
-         Type[] argTypes = null;
-
-         for (int i = 0; i < args.length; i++) {
-            if (args[i] == null) {
-               if (argTypes == null) {
-                  String methodDesc = methodNameAndDesc.substring(leftParen);
-                  argTypes = Type.getArgumentTypes(methodDesc);
-               }
-
-               args[i] = Utilities.getClassForType(argTypes[i]);
-            }
-         }
-      }
-
-      private Object executeDelegateWithInvocationContext(
-         InvocationConstraints constraints, Method delegateMethod)
-      {
-         Invocation invocation =
-            new DelegateInvocation(
-               constraints.invocationCount, constraints.minInvocations, constraints.maxInvocations);
-         Object[] delegateArgs =
-            getDelegateArgumentsWithExtraInvocationObject(invocation);
-
-         try {
-            return Utilities.invoke(delegate, delegateMethod, delegateArgs);
-         }
-         finally {
-            constraints.setLimits(invocation.getMinInvocations(), invocation.getMaxInvocations());
-         }
-      }
-
-      private Object[] getDelegateArgumentsWithExtraInvocationObject(Invocation invocation)
-      {
-         Object[] delegateArgs = new Object[args.length + 1];
-         delegateArgs[0] = invocation;
-         System.arraycopy(args, 0, delegateArgs, 1, args.length);
-         return delegateArgs;
       }
    }
 

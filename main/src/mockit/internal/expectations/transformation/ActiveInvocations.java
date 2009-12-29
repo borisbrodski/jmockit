@@ -75,6 +75,16 @@ public final class ActiveInvocations
       }
    }
 
+   public static void setHandler(Object handler)
+   {
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+
+      if (instance != null) {
+         TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+         currentPhase.applyHandlerForEachInvocation(handler);
+      }
+   }
+
    public static void times(int n)
    {
       RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);

@@ -151,6 +151,28 @@ public final class OrderedVerificationPhase extends VerificationPhase
    }
 
    @Override
+   public void applyHandlerForEachInvocation(Object invocationHandler)
+   {
+      if (pendingError != null) {
+         return;
+      }
+
+      getCurrentExpectation();
+      InvocationHandler handler = new InvocationHandler(invocationHandler);
+      int i = expectationsInReplayOrder.indexOf(currentExpectation);
+
+      while (i < expectationCount) {
+         Expectation expectation = expectationsInReplayOrder.get(i);
+
+         if (!evaluateInvocationHandlerIfExpectationMatchesCurrent(expectation, handler)) {
+            break;
+         }
+
+         i++;
+      }
+   }
+
+   @Override
    protected AssertionError endVerification()
    {
       if (pendingError != null) {
