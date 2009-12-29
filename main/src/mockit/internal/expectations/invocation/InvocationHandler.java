@@ -26,25 +26,16 @@ package mockit.internal.expectations.invocation;
 
 import java.lang.reflect.*;
 
-import mockit.*;
 import mockit.internal.expectations.*;
-import mockit.internal.util.*;
 
-public final class InvocationHandler extends InvocationResult
+public final class InvocationHandler extends DynamicInvocationResult
 {
-   private final Object handler;
-   private final Method handlerMethod;
-   private boolean hasInvocationParameter;
-   private Object[] args;
-
    public InvocationHandler(Object handler)
    {
-      this.handler = handler;
-      handlerMethod = findNonPrivateHandlerMethod();
-      determineWhetherMethodHasInvocationParameter();
+      super(handler, findNonPrivateHandlerMethod(handler));
    }
 
-   private Method findNonPrivateHandlerMethod()
+   private static Method findNonPrivateHandlerMethod(Object handler)
    {
       Method[] declaredMethods = handler.getClass().getDeclaredMethods();
       Method nonPrivateMethod = null;
@@ -67,22 +58,10 @@ public final class InvocationHandler extends InvocationResult
       return nonPrivateMethod;
    }
 
-   private void determineWhetherMethodHasInvocationParameter()
-   {
-      Class<?>[] parameters = handlerMethod.getParameterTypes();
-      hasInvocationParameter = parameters.length > 0 && parameters[0] == Invocation.class;
-   }
-
    public void evaluateInvocation(Expectation expectation)
    {
-      args = expectation.invocation.getArgumentValues();
-
-      if (hasInvocationParameter) {
-         executeDelegateWithInvocationContext(expectation.constraints);
-      }
-      else {
-         Utilities.invoke(handler, handlerMethod, args);
-      }
+      Object[] args = expectation.invocation.getArgumentValues();
+      invokeMethodOnTargetObject(expectation.constraints, args);
    }
 
    @Override
@@ -90,40 +69,6 @@ public final class InvocationHandler extends InvocationResult
       ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
       throws Throwable
    {
-      this.args = args;
-
-      Object result;
-
-      if (hasInvocationParameter) {
-         result = executeDelegateWithInvocationContext(constraints);
-      }
-      else {
-         result = Utilities.invoke(handler, handlerMethod, args);
-      }
-
-      return result;
-   }
-
-   private Object executeDelegateWithInvocationContext(InvocationConstraints constraints)
-   {
-      Invocation invocation =
-         new DelegateInvocation(
-            constraints.invocationCount, constraints.minInvocations, constraints.maxInvocations);
-      Object[] delegateArgs = getDelegateArgumentsWithExtraInvocationObject(invocation);
-
-      try {
-         return Utilities.invoke(handler, handlerMethod, delegateArgs);
-      }
-      finally {
-         constraints.setLimits(invocation.getMinInvocations(), invocation.getMaxInvocations());
-      }
-   }
-
-   private Object[] getDelegateArgumentsWithExtraInvocationObject(Invocation invocation)
-   {
-      Object[] delegateArgs = new Object[args.length + 1];
-      delegateArgs[0] = invocation;
-      System.arraycopy(args, 0, delegateArgs, 1, args.length);
-      return delegateArgs;
+      return invokeMethodOnTargetObject(constraints, args);
    }
 }

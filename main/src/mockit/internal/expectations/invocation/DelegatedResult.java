@@ -30,32 +30,17 @@ import mockit.*;
 import mockit.external.asm.Type;
 import mockit.internal.util.*;
 
-final class DelegatedResult extends InvocationResult
+final class DelegatedResult extends DynamicInvocationResult
 {
-   private final Delegate delegate;
-   private Method delegateMethod;
-   private boolean hasInvocationParameter;
-   private Object[] args;
-
    DelegatedResult(Delegate delegate)
    {
-      this.delegate = delegate;
-
-      Method[] declaredMethods = delegate.getClass().getDeclaredMethods();
-
-      if (declaredMethods.length == 1) {
-         delegateMethod = declaredMethods[0];
-         determineWhetherDelegateMethodHasInvocationParameter();
-      }
-      else {
-         delegateMethod = null;
-      }
+      super(delegate, findDelegateMethodIfSingle(delegate));
    }
 
-   private void determineWhetherDelegateMethodHasInvocationParameter()
+   private static Method findDelegateMethodIfSingle(Delegate delegate)
    {
-      Class<?>[] parameters = delegateMethod.getParameterTypes();
-      hasInvocationParameter = parameters.length > 0 && parameters[0] == Invocation.class;
+      Method[] declaredMethods = delegate.getClass().getDeclaredMethods();
+      return declaredMethods.length == 1 ? declaredMethods[0] : null;
    }
 
    @Override
@@ -63,32 +48,21 @@ final class DelegatedResult extends InvocationResult
       ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
       throws Throwable
    {
-      this.args = args;
-
-      if (delegateMethod == null) {
-         String methodName = adaptNameAndArgumentsForDelegate(invocation);
-         delegateMethod = Utilities.findCompatibleMethod(delegate, methodName, args);
-         determineWhetherDelegateMethodHasInvocationParameter();
+      if (methodToInvoke == null) {
+         String methodName = adaptNameAndArgumentsForDelegate(invocation, args);
+         methodToInvoke = Utilities.findCompatibleMethod(targetObject, methodName, args);
+         determineWhetherMethodToInvokeHasInvocationParameter();
       }
 
-      Object result;
-
-      if (hasInvocationParameter) {
-         result = executeDelegateWithInvocationContext(constraints);
-      }
-      else {
-         result = Utilities.invoke(delegate, delegateMethod, args);
-      }
-
-      return result;
+      return invokeMethodOnTargetObject(constraints, args);
    }
 
-   private String adaptNameAndArgumentsForDelegate(ExpectedInvocation invocation)
+   private String adaptNameAndArgumentsForDelegate(ExpectedInvocation invocation, Object[] args)
    {
       String methodNameAndDesc = invocation.getMethodNameAndDescription();
       int leftParen = methodNameAndDesc.indexOf('(');
 
-      replaceNullArgumentsWithClassObjectsIfAny(methodNameAndDesc, leftParen);
+      replaceNullArgumentsWithClassObjectsIfAny(methodNameAndDesc, leftParen, args);
 
       String methodName = methodNameAndDesc.substring(0, leftParen);
 
@@ -99,7 +73,8 @@ final class DelegatedResult extends InvocationResult
       return methodName;
    }
 
-   private void replaceNullArgumentsWithClassObjectsIfAny(String methodNameAndDesc, int leftParen)
+   private void replaceNullArgumentsWithClassObjectsIfAny(
+      String methodNameAndDesc, int leftParen, Object[] args)
    {
       Type[] argTypes = null;
 
@@ -113,28 +88,5 @@ final class DelegatedResult extends InvocationResult
             args[i] = Utilities.getClassForType(argTypes[i]);
          }
       }
-   }
-
-   private Object executeDelegateWithInvocationContext(InvocationConstraints constraints)
-   {
-      Invocation invocation =
-         new DelegateInvocation(
-            constraints.invocationCount, constraints.minInvocations, constraints.maxInvocations);
-      Object[] delegateArgs = getDelegateArgumentsWithExtraInvocationObject(invocation);
-
-      try {
-         return Utilities.invoke(delegate, delegateMethod, delegateArgs);
-      }
-      finally {
-         constraints.setLimits(invocation.getMinInvocations(), invocation.getMaxInvocations());
-      }
-   }
-
-   private Object[] getDelegateArgumentsWithExtraInvocationObject(Invocation invocation)
-   {
-      Object[] delegateArgs = new Object[args.length + 1];
-      delegateArgs[0] = invocation;
-      System.arraycopy(args, 0, delegateArgs, 1, args.length);
-      return delegateArgs;
    }
 }
