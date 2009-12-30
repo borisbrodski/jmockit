@@ -50,7 +50,7 @@ public final class ConstructorCalledMock_JMockit_Test
       new Expectations()
       {
          {
-            tc.rate(); returns(new BigDecimal("0.20"));
+            tc.rate(); result = new BigDecimal("0.20");
          }
       };
 
@@ -63,7 +63,7 @@ public final class ConstructorCalledMock_JMockit_Test
       new Expectations()
       {
          {
-            tc.rate(); returns(BigDecimal.ZERO);
+            tc.rate(); result = BigDecimal.ZERO;
          }
       };
 

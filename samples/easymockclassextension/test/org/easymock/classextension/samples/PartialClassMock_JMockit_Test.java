@@ -40,8 +40,8 @@ public final class PartialClassMock_JMockit_Test
       new Expectations(rect)
       {
          {
-            rect.getX(); returns(4);
-            rect.getY(); returns(5);
+            rect.getX(); result = 4;
+            rect.getY(); result = 5;
          }
       };
 
