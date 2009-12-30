@@ -73,7 +73,7 @@ public final class DocumentManager_JMockit_Test
       {
          {
             mock.documentAdded("Document");
-            mock.documentChanged("Document"); repeats(3);
+            mock.documentChanged("Document"); times = 3;
          }
       };
 
@@ -92,7 +92,7 @@ public final class DocumentManager_JMockit_Test
             // Expect document addition.
             mock.documentAdded("Document");
             // Expect to be asked to vote, and vote for it.
-            mock.voteForRemoval("Document"); returns(42);
+            mock.voteForRemoval("Document"); result = 42;
             // Expect document removal.
             mock.documentRemoved("Document");
          }
@@ -111,7 +111,7 @@ public final class DocumentManager_JMockit_Test
             // Expect document addition.
             mock.documentAdded("Document");
             // Expect to be asked to vote, and vote against it.
-            mock.voteForRemoval("Document"); returns(-42);
+            mock.voteForRemoval("Document"); result = -42;
             // Document removal is *not* expected.
          }
       };
@@ -129,7 +129,7 @@ public final class DocumentManager_JMockit_Test
             mock.documentAdded("Document 1");
             mock.documentAdded("Document 2");
             String[] documents = {"Document 1", "Document 2"};
-            mock.voteForRemovals(withEqual(documents)); returns(42);
+            mock.voteForRemovals(withEqual(documents)); result = 42;
             mock.documentRemoved("Document 1");
             mock.documentRemoved("Document 2");
          }
@@ -149,7 +149,7 @@ public final class DocumentManager_JMockit_Test
             mock.documentAdded("Document 1");
             mock.documentAdded("Document 2");
             String[] documents = {"Document 1", "Document 2"};
-            mock.voteForRemovals(withEqual(documents)); returns(-42);
+            mock.voteForRemovals(withEqual(documents)); result = -42;
          }
       };
 
@@ -165,10 +165,10 @@ public final class DocumentManager_JMockit_Test
       {
          {
             l.remove(10);
-            returns(new Delegate()
+            result = new Delegate()
             {
                String remove(int index) { return String.valueOf(index); }
-            });
+            };
          }
       };
 

@@ -42,11 +42,11 @@ public final class DocumentationExamples_JMockit_Test
       {
          {
             mock.voteForRemoval(title);
-            returns(42, 42, 42); repeats(3);
+            returns(42, 42, 42); times = 3;
             // TODO: change repeats(n) so that it stores a repeatCount in the current
             // InvocationResult? may break existing tests, so I am not sure, but seems worth a try
-            throwsException(new RuntimeException());
-            returns(-42);
+            result = new RuntimeException();
+            result = -42;
          }
       };
 
