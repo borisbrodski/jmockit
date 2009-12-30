@@ -70,19 +70,21 @@ public final class BankBusinessTest extends TestCase
       new Expectations()
       {
          // Mock fields (which could also have been annotated with @Mocked):
+         @Cascading // causes BankAccountDAOFactory.getBankAccountDAOSerializer() to return a mock
          final BankAccountDAOFactory daoFactory = null; // no instance needed
-         BankAccountDAO dao; // Proxy class created and instantiated by JMockit
 
-         // Expected method (including static) invocations:
+         // Proxy class created and instantiated by JMockit; this also is the "cascaded mock" that
+         // will be returned from calls to BankAccountDAOFactory.getBankAccountDAOSerializer():
+         BankAccountDAO dao;
+
+         // Expected method invocations:
          {
-            BankAccountDAOFactory.getBankAccountDAOSerializer(); returns(dao);
-            dao.getBankAccount(10); returns(account1);
-            dao.getBankAccount(11); returns(account2);
+            dao.getBankAccount(10); result = account1;
+            dao.getBankAccount(11); result = account2;
          }
       };
 
-      BankBusiness business = new BankBusiness();
-      double sum = business.getSumOfAllAccounts(customer);
+      double sum = new BankBusiness().getSumOfAllAccounts(customer);
       assertEquals(600, sum, 0);
 
       // Note that all expected invocations are verified to have actually occurred at this point.
