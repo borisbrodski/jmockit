@@ -280,6 +280,15 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#forEachInvocation">forEachInvocation</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An object assigned to this field will be taken as a handler for each invocation matching the
+ current expectation, with the purpose of validating invocation arguments.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected static&nbsp;int</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#maxTimes">maxTimes</A></B></CODE>
 
@@ -1112,6 +1121,47 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
 <P>
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#anyInt"><CODE>anyInt</CODE></A></DL>
+</DL>
+<HR>
+
+<A NAME="forEachInvocation"><!-- --></A><H3>
+forEachInvocation</H3>
+<PRE>
+protected static <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A> <B>forEachInvocation</B></PRE>
+<DL>
+<DD>An object assigned to this field will be taken as a handler for each invocation matching the
+ current expectation, with the purpose of validating invocation arguments.
+ Note that for a <em>recorded</em> expectation such invocations are the ones that will be
+ executed during the <em>replay</em> phase, while for a <em>verified</em> expectation they are
+ the ones actually executed during that phase.
+ <p/>
+ The object assigned can be of any type, but its class should have a single non-private method
+ (therefore, additional methods are allowed and ignored, as long as they are <code>private</code>).
+ This <em>handler method</em> can have any name, but it should have parameters that match the
+ ones defined in the mocked method or constructor associated to the expectation.
+ Corresponding parameters don't need to have the exact same declared type, though, as long as
+ each possible invocation argument can be passed to the corresponding parameter in the handler
+ method.
+ <p/>
+ In the case of an expectation recorded for a non-<code>void</code> method, the handler method is
+ also responsible for returning appropriate values to be used by the caller (which normally
+ belongs to the code under test). That is, the <code>result</code> field or the <code>returns(...)</code>
+ method should <em>not</em> be used together with an assignment to this field.
+ The same observation applies to the throwing of exceptions/errors from a recorded expectation
+ (which can also be done for constructors and <code>void</code> methods).
+ <p/>
+ When used for an expectation inside a <em>verification</em> block, on the other hand, the
+ handler method should normally have a <code>void</code> return type. Any value eventually returned
+ by the method will be silently ignored in this case. Note that a handler method for a verified
+ expectation also shouldn't intentionally throw exceptions or errors, since the verified
+ invocation(s) already happened in the replay phase; any exception/error actually thrown will
+ simply propagate back to the test method.
+ <p/>
+ Just like with <A HREF="../mockit/Delegate.html" title="interface in mockit">delegate classes</A>, the handler method can declare
+ its first parameter as being of type <A HREF="../mockit/Invocation.html" title="class in mockit"><CODE>Invocation</CODE></A>.
+<P>
+<DL>
+</DL>
 </DL>
 <HR>
 

@@ -14,6 +14,13 @@
 <p>Release 0.996 (January ??, 2010):</p>
 <ul>
    <li>
+      <strong>New feature</strong>: the <code>forEachInvocation</code> field was created, for use
+      both in expectation and verification blocks. It's similar to <code>Delegate</code> objects,
+      but more convenient and capable (since delegates can only be used in expectation blocks).
+      The focus is on <em>invocation argument validation</em> rather than on making invocations
+      produce expected results.
+   </li>
+   <li>
       Enhancements to the <strong>Verifications API</strong>:
       <ul>
          <li>
