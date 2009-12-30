@@ -31,7 +31,7 @@ import mockit.internal.util.*;
 
 public abstract class VerificationPhase extends TestOnlyPhase
 {
-   private final List<Expectation> expectationsInReplayOrder;
+   final List<Expectation> expectationsInReplayOrder;
    protected final List<Expectation> expectationsVerified;
    private boolean allInvocationsDuringReplayMustBeVerified;
    private Object[] mockedTypesAndInstancesToFullyVerify;
@@ -140,16 +140,26 @@ public abstract class VerificationPhase extends TestOnlyPhase
    }
 
    final boolean evaluateInvocationHandlerIfExpectationMatchesCurrent(
-      Expectation expectation, InvocationHandler handler)
+      Expectation expectation, InvocationHandler handler, int invocationIndex)
    {
       ExpectedInvocation invocation = expectation.invocation;
       Object mock = invocation.instance;
       String mockClassDesc = invocation.getClassDesc();
       String mockNameAndDesc = invocation.getMethodNameAndDescription();
       Object[] args = invocation.getArgumentValues();
+      InvocationConstraints constraints = expectation.constraints;
 
       if (matches(mock, mockClassDesc, mockNameAndDesc, args, currentExpectation)) {
-         handler.evaluateInvocation(expectation);
+         int originalCount = constraints.invocationCount;
+         constraints.invocationCount = invocationIndex + 1;
+
+         try {
+            handler.evaluateInvocation(expectation);
+         }
+         finally {
+            constraints.invocationCount = originalCount;
+         }
+
          return true;
       }
 

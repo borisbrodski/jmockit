@@ -102,10 +102,13 @@ final class UnorderedVerificationPhase extends VerificationPhase
 
       getCurrentExpectation();
       InvocationHandler handler = new InvocationHandler(invocationHandler);
-      List<Expectation> expectations = getNonStrictExpectations();
+      List<Expectation> expectations = expectationsInReplayOrder;
+      int i = 0;
 
       for (Expectation expectation : expectations) {
-         evaluateInvocationHandlerIfExpectationMatchesCurrent(expectation, handler);
+         if (evaluateInvocationHandlerIfExpectationMatchesCurrent(expectation, handler, i)) {
+            i++;
+         }
       }
    }
 }

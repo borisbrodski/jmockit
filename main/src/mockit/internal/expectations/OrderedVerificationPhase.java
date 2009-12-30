@@ -30,7 +30,6 @@ import mockit.internal.expectations.invocation.*;
 
 public final class OrderedVerificationPhase extends VerificationPhase
 {
-   private final List<Expectation> expectationsInReplayOrder;
    private final int expectationCount;
    private boolean unverifiedExpectationsLeftBehind;
    private boolean unverifiedExpectationsFixed;
@@ -41,7 +40,6 @@ public final class OrderedVerificationPhase extends VerificationPhase
       RecordAndReplayExecution recordAndReplay, List<Expectation> expectationsInReplayOrder)
    {
       super(recordAndReplay, expectationsInReplayOrder);
-      this.expectationsInReplayOrder = expectationsInReplayOrder;
       expectationCount = expectationsInReplayOrder.size();
       indexIncrement = 1;
    }
@@ -164,7 +162,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
       while (i < expectationCount) {
          Expectation expectation = expectationsInReplayOrder.get(i);
 
-         if (!evaluateInvocationHandlerIfExpectationMatchesCurrent(expectation, handler)) {
+         if (!evaluateInvocationHandlerIfExpectationMatchesCurrent(expectation, handler, i)) {
             break;
          }
 

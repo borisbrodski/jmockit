@@ -488,19 +488,33 @@ public final class ForEachInvocationTest
    public void verifyExpectationWithHandlerWhichDefinesInvocationParameter(final Collaborator mock)
    {
       mock.doSomething(1);
+      mock.doSomething();
       mock.doSomething(2);
+      mock.doSomething(3);
+      mock.finalMethod();
+      mock.doSomething(4);
+
+      final Object handler = new Object()
+      {
+         void verify(Invocation invocation, int i)
+         {
+            assert i == invocation.getInvocationCount();
+         }
+      };
+
+      new VerificationsInOrder()
+      {
+         {
+            mock.doSomething(anyInt);
+            forEachInvocation = handler;
+         }
+      };
 
       new Verifications()
       {
          {
             mock.doSomething(anyInt);
-            forEachInvocation = new Object()
-            {
-               void verify(Invocation invocation, int i)
-               {
-                  assert i == invocation.getInvocationCount();
-               }
-            };
+            forEachInvocation = handler;
          }
       };
    }
