@@ -86,7 +86,7 @@ public final class InvocationResults
       }
    }
 
-   public Object produceResult(Object[] invocationArgs) throws Throwable
+   public Object produceResult(Object invokedObject, Object[] invocationArgs) throws Throwable
    {
       InvocationResult resultToBeProduced = currentResult;
       InvocationResult nextResult = resultToBeProduced.next;
@@ -95,7 +95,8 @@ public final class InvocationResults
          currentResult = nextResult;
       }
 
-      Object result = resultToBeProduced.produceResult(invocation, constraints, invocationArgs);
+      Object result =
+         resultToBeProduced.produceResult(invokedObject, invocation, constraints, invocationArgs);
 
       return result;
    }

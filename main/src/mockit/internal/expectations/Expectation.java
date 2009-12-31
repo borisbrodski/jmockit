@@ -62,13 +62,13 @@ public final class Expectation
       return results;
    }
 
-   Object produceResult(Object[] invocationArgs) throws Throwable
+   Object produceResult(Object invokedObject, Object[] invocationArgs) throws Throwable
    {
       if (results == null) {
          return invocation.getDefaultValueForReturnType(null);
       }
 
-      return results.produceResult(invocationArgs);
+      return results.produceResult(invokedObject, invocationArgs);
    }
 
    AssertionError verifyConstraints()

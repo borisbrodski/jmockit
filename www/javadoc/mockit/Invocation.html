@@ -98,8 +98,11 @@ Class Invocation</H2>
 
 <P>
 A context object representing the current invocation to a mocked method or constructor.
+ <p/>
  When used as the type of the first parameter on a <A HREF="../mockit/Delegate.html" title="interface in mockit"><CODE>Delegate</CODE></A> method, all invocations to the
  delegate method will receive an appropriate instance.
+ Similarly, it can be used in the handler method of an instance assigned to the
+ forEachInvocation field.
  <p/>
  Sample tests:
  <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/DelegateInvocationTest.java"
@@ -122,7 +125,8 @@ A context object representing the current invocation to a mocked method or const
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Invocation.html#Invocation(int, int, int)">Invocation</A></B>(int&nbsp;invocationCount,
+<TD><CODE><B><A HREF="../mockit/Invocation.html#Invocation(java.lang.Object, int, int, int)">Invocation</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;targetInstance,
+           int&nbsp;invocationCount,
            int&nbsp;minInvocations,
            int&nbsp;maxInvocations)</CODE>
 
@@ -173,6 +177,15 @@ A context object representing the current invocation to a mocked method or const
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/Invocation.html#getTargetInstance()">getTargetInstance</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the target instance on which the current invocation was made, if any (if the method
+ invoked is <code>static</code> then there is no instance and null is returned).</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>&nbsp;void</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Invocation.html#setMaxInvocations(int)">setMaxInvocations</A></B>(int&nbsp;maxInvocations)</CODE>
 
@@ -210,10 +223,11 @@ A context object representing the current invocation to a mocked method or const
 </TR>
 </TABLE>
 
-<A NAME="Invocation(int, int, int)"><!-- --></A><H3>
+<A NAME="Invocation(java.lang.Object, int, int, int)"><!-- --></A><H3>
 Invocation</H3>
 <PRE>
-protected <B>Invocation</B>(int&nbsp;invocationCount,
+protected <B>Invocation</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;targetInstance,
+                     int&nbsp;invocationCount,
                      int&nbsp;minInvocations,
                      int&nbsp;maxInvocations)</PRE>
 <DL>
@@ -285,6 +299,24 @@ public final int <B>getMinInvocations</B>()</PRE>
  This call will return the value set with <CODE>Invocations.repeats(int)</CODE>,
  <CODE>Invocations.repeats(int, int)</CODE> and <CODE>Invocations.repeatsAtLeast(int)</CODE>, if that
  was the case.
+<P>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getTargetInstance()"><!-- --></A><H3>
+getTargetInstance</H3>
+<PRE>
+public final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A> <B>getTargetInstance</B>()</PRE>
+<DL>
+<DD>Returns the target instance on which the current invocation was made, if any (if the method
+ invoked is <code>static</code> then there is no instance and null is returned).
+ <p/>
+ Note that this instance can either be a mock instance (for example, the instance automatically
+ created by JMockit and assigned to a mock field or passed as the argument value for a mock
+ parameter), or a "real" instance created by code under test for a mocked type.
 <P>
 <DD><DL>
 </DL>

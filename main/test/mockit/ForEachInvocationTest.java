@@ -170,9 +170,8 @@ public final class ForEachInvocationTest
    @Test
    public void verifyExpectationWithHandlerForEachInvocationOfConstructor(Collaborator mock)
    {
-      new Collaborator(5);
-      new Collaborator(4);
-      new Collaborator(1024);
+      final Collaborator[] collaborators =
+         {new Collaborator(5), new Collaborator(4), new Collaborator(1024)};
 
       new FullVerifications()
       {
@@ -180,7 +179,12 @@ public final class ForEachInvocationTest
             new Collaborator(anyInt);
             forEachInvocation = new Object()
             {
-               void checkIt(int i) { assert i > 0; }
+               void checkIt(Invocation invocation, int i)
+               {
+                  assert i > 0;
+                  Collaborator collaborator = collaborators[invocation.getInvocationIndex()];
+                  assert collaborator == invocation.getInvokedInstance();
+               }
             };
          }
       };
@@ -498,6 +502,7 @@ public final class ForEachInvocationTest
       {
          void verify(Invocation invocation, int i)
          {
+            assert mock == invocation.getInvokedInstance();
             assert i == invocation.getInvocationCount();
          }
       };

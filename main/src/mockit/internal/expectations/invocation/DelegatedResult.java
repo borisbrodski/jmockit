@@ -45,7 +45,8 @@ final class DelegatedResult extends DynamicInvocationResult
 
    @Override
    Object produceResult(
-      ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
+      Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints, 
+      Object[] args)
       throws Throwable
    {
       if (methodToInvoke == null) {
@@ -54,7 +55,7 @@ final class DelegatedResult extends DynamicInvocationResult
          determineWhetherMethodToInvokeHasInvocationParameter();
       }
 
-      return invokeMethodOnTargetObject(constraints, args);
+      return invokeMethodOnTargetObject(invokedObject, constraints, args);
    }
 
    private String adaptNameAndArgumentsForDelegate(ExpectedInvocation invocation, Object[] args)

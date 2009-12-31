@@ -28,8 +28,9 @@ import mockit.Invocation;
 
 final class DelegateInvocation extends Invocation
 {
-   DelegateInvocation(int invocationCount, int minInvocations, int maxInvocations)
+   DelegateInvocation(
+      Object invokedInstance, int invocationCount, int minInvocations, int maxInvocations)
    {
-      super(invocationCount, minInvocations, maxInvocations);
+      super(invokedInstance, invocationCount, minInvocations, maxInvocations);
    }
 }

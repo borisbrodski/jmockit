@@ -61,6 +61,7 @@ public final class DelegateInvocationTest
             {
                boolean staticMethod(Invocation context)
                {
+                  assertNull(context.getInvokedInstance());
                   assertEquals(context.getInvocationCount() - 1, context.getInvocationIndex());
                   return context.getInvocationCount() > 0;
                }
@@ -78,6 +79,7 @@ public final class DelegateInvocationTest
 
       void $init(Invocation context, int i)
       {
+         assertNotNull(context.getInvokedInstance());
          capturedArgument = i + context.getInvocationCount();
       }
    }
@@ -92,7 +94,7 @@ public final class DelegateInvocationTest
          Collaborator mock;
 
          {
-            new Collaborator(anyInt); returns(delegate);
+            new Collaborator(anyInt); result = delegate;
          }
       };
 
@@ -104,26 +106,29 @@ public final class DelegateInvocationTest
    @Test
    public void delegateReceivingNullArguments()
    {
+      final Collaborator collaborator = new Collaborator();
+
       new NonStrictExpectations()
       {
-         Collaborator collaborator;
+         Collaborator mock;
 
          {
-            collaborator.doSomething(true, null, null);
-            returns(new Delegate()
+            mock.doSomething(true, null, null);
+            result = new Delegate()
             {
                void doSomething(Invocation invocation, Boolean b, int[] i, String s)
                {
+                  assertSame(collaborator, invocation.getInvokedInstance());
                   assertEquals(1, invocation.getInvocationCount());
                   assertTrue(b);
                   assertNull(i);
                   assertNull(s);
                }
-            });
+            };
          }
       };
 
-      assertNull(new Collaborator().doSomething(true, null, null));
+      assertNull(collaborator.doSomething(true, null, null));
    }
 
    @Test
@@ -135,7 +140,7 @@ public final class DelegateInvocationTest
 
          {
             mock.getValue();
-            returns(new Delegate()
+            result = new Delegate()
             {
                int getValue(Invocation context)
                {
@@ -146,7 +151,7 @@ public final class DelegateInvocationTest
                {
                   fail();
                }
-            });
+            };
          }
       };
 
@@ -163,7 +168,7 @@ public final class DelegateInvocationTest
 
          {
             Collaborator.staticMethod(1);
-            returns(new Delegate()
+            result = new Delegate()
             {
                void otherMethod(int i)
                {
@@ -174,7 +179,7 @@ public final class DelegateInvocationTest
                {
                   return i.intValue() > 0;
                }
-            });
+            };
          }
       };
 
@@ -188,7 +193,7 @@ public final class DelegateInvocationTest
       {
          {
             mock.finalMethod(); repeatsAtMost(1);
-            returns(new Delegate()
+            result = new Delegate()
             {
                char finalMethod(Invocation invocation)
                {
@@ -196,7 +201,7 @@ public final class DelegateInvocationTest
                   invocation.setMaxInvocations(2);
                   return 'a';
                }
-            });
+            };
          }
       };
 
@@ -211,11 +216,11 @@ public final class DelegateInvocationTest
       {
          {
             mock.privateMethod();
-            returns(new Delegate()
+            result = new Delegate()
             {
                float someDelegate(Invocation invocation) { return 1.0F; }
                void someOtherMethod() {}
-            });
+            };
          }
       };
 
@@ -231,7 +236,7 @@ public final class DelegateInvocationTest
 
          {
             mock.nativeMethod(anyBoolean);
-            returns(new Delegate()
+            result = new Delegate()
             {
                long differentName(Invocation invocation, boolean b)
                {
@@ -239,7 +244,7 @@ public final class DelegateInvocationTest
                   assertTrue(b);
                   return 3L;
                }
-            });
+            };
          }
       };
 
@@ -253,24 +258,26 @@ public final class DelegateInvocationTest
       {
          {
             mock.addElements((Collection<String>) any);
-            returns(new Delegate()
+            forEachInvocation = new Object()
             {
                void delegate1(Invocation invocation, Collection<String> elements)
                {
+                  assertSame(mock, invocation.getInvokedInstance());
                   assertEquals(1, invocation.getInvocationCount());
                   assertNotNull(elements);
                }
-            });
+            };
 
             mock.addElements(null);
-            returns(new Delegate()
+            forEachInvocation = new Object()
             {
                void delegate2(Invocation invocation, Collection<String> elements)
                {
+                  assertSame(mock, invocation.getInvokedInstance());
                   assertEquals(1, invocation.getInvocationCount());
                   assertNull(elements);
                }
-            });
+            };
          }
       };
 

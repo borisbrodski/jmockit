@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit
  * Copyright (c) 2009 JMockit Developers
  * All rights reserved.
  *
@@ -26,8 +26,11 @@ package mockit;
 
 /**
  * A context object representing the current invocation to a mocked method or constructor.
+ * <p/>
  * When used as the type of the first parameter on a {@link Delegate} method, all invocations to the
  * delegate method will receive an appropriate instance.
+ * Similarly, it can be used in the handler method of an instance assigned to the
+ * {@linkplain mockit.Invocations#forEachInvocation forEachInvocation} field.
  * <p/>
  * Sample tests:
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/DelegateInvocationTest.java"
@@ -35,6 +38,7 @@ package mockit;
  */
 public class Invocation
 {
+   private final Object invokedInstance;
    private final int invocationCount;
    private int minInvocations;
    private int maxInvocations;
@@ -42,11 +46,26 @@ public class Invocation
    /**
     * For internal use only.
     */
-   protected Invocation(int invocationCount, int minInvocations, int maxInvocations)
+   protected Invocation(
+      Object invokedInstance, int invocationCount, int minInvocations, int maxInvocations)
    {
+      this.invokedInstance = invokedInstance;
       this.invocationCount = invocationCount;
       this.minInvocations = minInvocations;
       this.maxInvocations = maxInvocations;
+   }
+
+   /**
+    * Returns the target instance on which the current invocation was made, if any (if the method
+    * invoked is {@code static} then there is no instance and {@literal null} is returned).
+    * <p/>
+    * Note that this instance can either be a mock instance (for example, the instance automatically
+    * created by JMockit and assigned to a mock field or passed as the argument value for a mock
+    * parameter), or a "real" instance created by code under test for a mocked type.
+    */
+   public final Object getInvokedInstance()
+   {
+      return invokedInstance;
    }
 
    /**

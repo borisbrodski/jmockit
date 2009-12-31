@@ -60,15 +60,17 @@ public final class InvocationHandler extends DynamicInvocationResult
 
    public void evaluateInvocation(Expectation expectation)
    {
-      Object[] args = expectation.invocation.getArgumentValues();
-      invokeMethodOnTargetObject(expectation.constraints, args);
+      ExpectedInvocation invocation = expectation.invocation;
+      Object[] args = invocation.getArgumentValues();
+      invokeMethodOnTargetObject(invocation.instance, expectation.constraints, args);
    }
 
    @Override
    Object produceResult(
-      ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
+      Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints,
+      Object[] args)
       throws Throwable
    {
-      return invokeMethodOnTargetObject(constraints, args);
+      return invokeMethodOnTargetObject(invokedObject, constraints, args);
    }
 }

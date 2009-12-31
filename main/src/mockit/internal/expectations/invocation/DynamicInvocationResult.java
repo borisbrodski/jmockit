@@ -51,11 +51,28 @@ abstract class DynamicInvocationResult extends InvocationResult
       hasInvocationParameter = parameters.length > 0 && parameters[0] == Invocation.class;
    }
 
-   private Object invokeMethodWithContext(InvocationConstraints constraints, Object[] args)
+   final Object invokeMethodOnTargetObject(
+      Object mockOrRealObject, InvocationConstraints constraints, Object[] args)
+   {
+      Object result;
+
+      if (hasInvocationParameter) {
+         result = invokeMethodWithContext(mockOrRealObject, constraints, args);
+      }
+      else {
+         result = Utilities.invoke(targetObject, methodToInvoke, args);
+      }
+
+      return result;
+   }
+
+   private Object invokeMethodWithContext(
+      Object mockOrRealObject, InvocationConstraints constraints, Object[] args)
    {
       Invocation invocation =
          new DelegateInvocation(
-            constraints.invocationCount, constraints.minInvocations, constraints.maxInvocations);
+            mockOrRealObject, constraints.invocationCount,
+            constraints.minInvocations, constraints.maxInvocations);
       Object[] delegateArgs = getArgumentsWithExtraInvocationObject(invocation, args);
 
       try {
@@ -72,19 +89,5 @@ abstract class DynamicInvocationResult extends InvocationResult
       delegateArgs[0] = invocation;
       System.arraycopy(args, 0, delegateArgs, 1, args.length);
       return delegateArgs;
-   }
-
-   final Object invokeMethodOnTargetObject(InvocationConstraints constraints, Object[] args)
-   {
-      Object result;
-
-      if (hasInvocationParameter) {
-         result = invokeMethodWithContext(constraints, args);
-      }
-      else {
-         result = Utilities.invoke(targetObject, methodToInvoke, args);
-      }
-
-      return result;
    }
 }

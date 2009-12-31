@@ -31,7 +31,8 @@ abstract class InvocationResult
    InvocationResult next;
 
    abstract Object produceResult(
-      ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
+      Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints,
+      Object[] args)
       throws Throwable;
 
    static final class ReturnValueResult extends InvocationResult
@@ -42,7 +43,8 @@ abstract class InvocationResult
 
       @Override
       Object produceResult(
-         ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
+         Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints,
+         Object[] args)
       {
          return returnValue;
       }
@@ -56,7 +58,8 @@ abstract class InvocationResult
 
       @Override
       Object produceResult(
-         ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
+         Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints,
+         Object[] args)
          throws Throwable
       {
          throwable.fillInStackTrace();
@@ -72,7 +75,8 @@ abstract class InvocationResult
 
       @Override
       Object produceResult(
-         ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
+         Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints,
+         Object[] args)
          throws Throwable
       {
          return values.hasNext() ? values.next() : null;

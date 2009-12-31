@@ -75,7 +75,7 @@ final class ReplayPhase extends Phase
 
       if (nonStrictExpectation != null) {
          nonStrictInvocations.add(nonStrictExpectation);
-         return updateConstraintsAndProduceResult(args);
+         return updateConstraintsAndProduceResult(mock, args);
       }
 
       return handleStrictInvocation(mock, mockClassDesc, mockNameAndDesc, args);
@@ -115,7 +115,7 @@ final class ReplayPhase extends Phase
       }
    }
 
-   private Object updateConstraintsAndProduceResult(Object[] args) throws Throwable
+   private Object updateConstraintsAndProduceResult(Object object, Object[] args) throws Throwable
    {
       nonStrictExpectation.constraints.incrementInvocationCount();
 
@@ -125,7 +125,7 @@ final class ReplayPhase extends Phase
          return null;
       }
 
-      return nonStrictExpectation.produceResult(args);
+      return nonStrictExpectation.produceResult(object, args);
    }
 
    private Object handleStrictInvocation(
@@ -170,7 +170,7 @@ final class ReplayPhase extends Phase
                return null;
             }
 
-            return expectation.produceResult(replayArgs);
+            return expectation.produceResult(mock, replayArgs);
          }
          else if (currentExpectation.constraints.isInvocationCountInExpectedRange()) {
             moveToNextExpectation();
