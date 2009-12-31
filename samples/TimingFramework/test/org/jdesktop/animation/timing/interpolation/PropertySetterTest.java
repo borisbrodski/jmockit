@@ -114,8 +114,8 @@ public final class PropertySetterTest
       new Expectations(KeyValues.class, Animated.class)
       {
          {
-            keyValues.isToAnimation(); returns(true);
-            animated.getValue(); returns(startValue);
+            keyValues.isToAnimation(); result = true;
+            animated.getValue(); result = startValue;
             keyValues.setStartValue(startValue);
          }
       };
@@ -129,7 +129,7 @@ public final class PropertySetterTest
       new Expectations()
       {
          {
-            animated.getValue(); throwsException(new IllegalStateException("test"));
+            animated.getValue(); result = new IllegalStateException("test");
          }
       };
 
@@ -151,7 +151,7 @@ public final class PropertySetterTest
       new Expectations()
       {
          {
-            animated.setValue(anyInt); throwsException(new IllegalStateException("test"));
+            animated.setValue(anyInt); result = new IllegalStateException("test");
          }
       };
 

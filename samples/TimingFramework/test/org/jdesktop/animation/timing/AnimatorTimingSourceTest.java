@@ -24,7 +24,6 @@
  */
 package org.jdesktop.animation.timing;
 
-import org.hamcrest.*;
 import static org.jdesktop.animation.timing.Animator.*;
 
 import org.junit.*;
@@ -130,7 +129,7 @@ public final class AnimatorTimingSourceTest
 
             // Expectations:
             timingTarget.timingEvent(0.0f);
-            repeats(0); // Animator is not running, so no timing event is expected.
+            times = 0; // Animator is not running, so no timing event is expected.
          }
       };
 
@@ -178,10 +177,10 @@ public final class AnimatorTimingSourceTest
             animator.addTarget(timingTarget);
 
             // For the call to animator.start():
-            System.nanoTime(); returns(0L);
+            System.nanoTime(); result = 0L;
 
             // For the call to timingSource.timingEvent():
-            System.nanoTime(); returns(50L * 1000000);
+            System.nanoTime(); result = 50L * 1000000;
 
             // Resulting expected interactions:
             timingTarget.begin();
@@ -213,18 +212,14 @@ public final class AnimatorTimingSourceTest
 
             timingTarget.begin();
             timingTarget.repeat();
-            timingTarget.timingEvent(with(0.2f, new BaseMatcher<Float>()
+            timingTarget.timingEvent(anyFloat);
+            forEachInvocation = new Object()
             {
-               public boolean matches(Object item)
+               void validate(float item)
                {
-                  return (Float) item > 0.0f;
+                  assert item > 0.0f;
                }
-
-               public void describeTo(Description description)
-               {
-                  description.appendText("a value greater than 0");
-               }
-            }));
+            };
          }
       };
 

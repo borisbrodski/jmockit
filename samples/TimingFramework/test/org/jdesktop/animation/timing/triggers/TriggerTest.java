@@ -42,7 +42,7 @@ public final class TriggerTest
       new Expectations()
       {
          {
-            animator.isRunning(); returns(false);
+            animator.isRunning(); result = false;
             animator.start();
          }
       };
@@ -58,7 +58,7 @@ public final class TriggerTest
       new Expectations()
       {
          {
-            animator.isRunning(); returns(true);
+            animator.isRunning(); result = true;
             animator.stop();
             animator.start();
          }
@@ -89,7 +89,7 @@ public final class TriggerTest
       new Expectations()
       {
          {
-            animator.isRunning(); returns(false);
+            animator.isRunning(); result = false;
             animator.setStartDirection(Animator.Direction.FORWARD);
 
             // The original Timing Framework "fire(event)" method did an inappropriate call to
@@ -112,7 +112,7 @@ public final class TriggerTest
       new Expectations()
       {
          {
-            animator.isRunning(); returns(true);
+            animator.isRunning(); result = true;
             animator.stop();
             animator.setStartDirection(Animator.Direction.FORWARD);
             animator.start();
@@ -131,9 +131,9 @@ public final class TriggerTest
       new Expectations()
       {
          {
-            animator.isRunning(); returns(false);
+            animator.isRunning(); result = false;
             animator.setStartFraction(0.0f);
-            animator.isRunning(); returns(false);
+            animator.isRunning(); result = false;
             animator.setStartDirection(Animator.Direction.FORWARD);
             animator.start();
          }
@@ -151,15 +151,15 @@ public final class TriggerTest
       new Expectations()
       {
          {
-            animator.isRunning(); returns(true);
+            animator.isRunning(); result = true;
 
             animator.getTimingFraction();
             float timingFraction = 0.2f;
-            returns(timingFraction);
+            result = timingFraction;
 
             animator.stop();
             animator.setStartFraction(timingFraction);
-            animator.isRunning(); returns(false);
+            animator.isRunning(); result = false;
             animator.setStartDirection(Animator.Direction.FORWARD);
             animator.start();
          }
@@ -188,7 +188,7 @@ public final class TriggerTest
       new Expectations()
       {
          {
-            animator.isRunning(); returns(false);
+            animator.isRunning(); result = false;
             animator.setStartFraction(1.0f - animator.getStartFraction());
             animator.setStartDirection(Animator.Direction.BACKWARD);
             animator.start();
@@ -207,8 +207,8 @@ public final class TriggerTest
       new Expectations()
       {
          {
-            animator.isRunning(); returns(true);
-            animator.getTimingFraction(); float timingFraction = 0.2f; returns(timingFraction);
+            animator.isRunning(); result = true;
+            animator.getTimingFraction(); float timingFraction = 0.2f; result = timingFraction;
             animator.stop();
             animator.setStartFraction(timingFraction);
             animator.setStartDirection(Animator.Direction.BACKWARD);

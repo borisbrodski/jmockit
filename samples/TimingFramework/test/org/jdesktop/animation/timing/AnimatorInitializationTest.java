@@ -303,7 +303,7 @@ public final class AnimatorInitializationTest
          {
             animator.addTarget(target);
             animator.removeTarget(target);
-            target.end(); repeats(0);
+            target.end(); times = 0;
          }
       };
 

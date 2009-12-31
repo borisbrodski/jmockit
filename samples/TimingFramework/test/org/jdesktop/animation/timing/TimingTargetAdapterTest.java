@@ -32,29 +32,29 @@ import org.junit.*;
  */
 public final class TimingTargetAdapterTest
 {
-    private final TimingTarget adapter = new TimingTargetAdapter();
+   private final TimingTarget adapter = new TimingTargetAdapter();
 
-    @Test
-    public void testTimingEvent()
-    {
-        adapter.timingEvent(0.5f);
-    }
+   @Test
+   public void testTimingEvent()
+   {
+      adapter.timingEvent(0.5f);
+   }
 
-    @Test
-    public void testBegin()
-    {
-        adapter.begin();
-    }
+   @Test
+   public void testBegin()
+   {
+      adapter.begin();
+   }
 
-    @Test
-    public void testEnd()
-    {
-        adapter.end();
-    }
+   @Test
+   public void testEnd()
+   {
+      adapter.end();
+   }
 
-    @Test
-    public void testRepeat()
-    {
-        adapter.repeat();
-    }
+   @Test
+   public void testRepeat()
+   {
+      adapter.repeat();
+   }
 }
