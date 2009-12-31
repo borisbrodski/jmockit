@@ -112,7 +112,7 @@ public final class JavadocExamples_JMockit_Test
             mockedList.get(0); result = "first"; times = 1;
 
             // Notice also that if the expectation above was strict (ie, recorded inside an
-            // "Expectations" block) then the call "repeats(1);" could be removed.
+            // "Expectations" block) then the "times = 1;" constraint could be removed.
          }
       };
 
