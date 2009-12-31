@@ -45,14 +45,14 @@ public final class FruitPicker_JMockit_Test
       {
          {
             mangoTree.pickFruit((Collection<Fruit>) any);
-            returns(new Delegate()
+            forEachInvocation = new Object()
             {
                void pickFruit(Collection<Fruit> fruits)
                {
                   fruits.add(mango1);
                   fruits.add(mango2);
                }
-            });
+            };
          }
       };
 

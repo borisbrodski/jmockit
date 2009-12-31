@@ -62,8 +62,8 @@ public final class Cache_JMockit_Test
       new Expectations() // (this is "JMockit Expectations", not the jMock version)
       {
          {
-            clock.time(); returns(loadTime);
-            loader.load(KEY); returns(VALUE);
+            clock.time(); result = loadTime;
+            loader.load(KEY); result = VALUE;
          }
       };
 
@@ -74,8 +74,8 @@ public final class Cache_JMockit_Test
          final long fetchTime = 200;
 
          {
-            clock.time(); returns(fetchTime);
-            reloadPolicy.shouldReload(loadTime, fetchTime); returns(false);
+            clock.time(); result = fetchTime;
+            reloadPolicy.shouldReload(loadTime, fetchTime); result = false;
          }
       };
 
@@ -94,8 +94,8 @@ public final class Cache_JMockit_Test
       new Expectations()
       {
          {
-            clock.time(); returns(loadTime);
-            loader.load(KEY); returns(VALUE);
+            clock.time(); result = loadTime;
+            loader.load(KEY); result = VALUE;
          }
       };
 
@@ -104,8 +104,8 @@ public final class Cache_JMockit_Test
          final long fetchTime = 200;
 
          {
-            clock.time(); returns(fetchTime);
-            reloadPolicy.shouldReload(loadTime, fetchTime); returns(false);
+            clock.time(); result = fetchTime;
+            reloadPolicy.shouldReload(loadTime, fetchTime); result = false;
          }
       };
 
@@ -127,16 +127,16 @@ public final class Cache_JMockit_Test
       {
          // For first cache lookup:
          {
-            clock.time(); returns(loadTime);
-            loader.load(KEY); returns(VALUE);
+            clock.time(); result = loadTime;
+            loader.load(KEY); result = VALUE;
          }
 
          // For second cache lookup:
          final long fetchTime = 200;
 
          {
-            clock.time(); returns(fetchTime);
-            reloadPolicy.shouldReload(loadTime, fetchTime); returns(false);
+            clock.time(); result = fetchTime;
+            reloadPolicy.shouldReload(loadTime, fetchTime); result = false;
          }
       };
 

@@ -30,7 +30,6 @@ public final class FruitPickerTest
       context.checking(new Expectations()
       {
          {
-            //noinspection unchecked
             oneOf(mangoTree).pickFruit(with(any(Collection.class)));
             will(new VoidAction()
             {
