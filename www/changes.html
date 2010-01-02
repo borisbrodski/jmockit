@@ -45,6 +45,15 @@
       invocation occurred (except, naturally, for <code>static</code> methods).
    </li>
    <li>
+      <strong>Enhancement</strong>: the <code>with(matcher)</code> and <code>with(T, matcher)</code>
+      methods of the base <code>Invocations</code> class now accept arbitrary <em>invocation
+      handler</em> objects in addition to <code>org.hamcrest.Matcher</code> implementations.
+      Such objects are easier to create (they do not require the implementation of a method that
+      generates failure messages, nor the addition of Hamcrest classes to the classpath) and allow
+      the use of <code>assert</code> statements or <code>assertXyz(...)</code> calls instead of
+      returning a <code>boolean</code> value.
+   </li>
+   <li>
       Enhancements to <strong>JMockit Coverage</strong>:
       <ul>
          <li>
