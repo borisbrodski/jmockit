@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations & Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -211,20 +211,32 @@ abstract class Invocations
 
    /**
     * Adds a custom argument matcher for a parameter in the current invocation.
-    * The given matcher can be any existing Hamcrest matcher or a user provided one.
+    * <p/>
+    * The given matcher can be any existing <strong>Hamcrest</strong> matcher or a user provided
+    * one.
+    * Additionally, it can be an instance of an arbitrary <em>invocation handler</em> class, similar
+    * to those used with the {@link #forEachInvocation} field.
+    * In this case, the non-{@code private} <em>handler method</em> must have a single parameter of
+    * a type capable of receiving the relevant argument values.
+    * The name of this handler method does not matter. Its return type, on the other hand, should
+    * either be {@code boolean} or {@code void}. In the first case, a return value of
+    * {@code true} will indicate a successful match for the actual invocation argument at replay
+    * time, while a return of {@code false} will cause the test to fail. In the second case, instead
+    * of returning a value the invocation handler method should validate the actual invocation 
+    * argument through an {@code assert} statement or a JUnit/TestNG assertion.
     * <p/>
     * For additional details, refer to {@link #withEqual(Object)}.
     *
     * @param argValue an arbitrary value of the proper type, necessary to provide a valid argument
     * to the invocation parameter
     * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher}
-    * interface
+    * interface, or any other instance with an appropriate invocation handler method
     *
     * @return the given {@code argValue}
     */
    protected final <T> T with(T argValue, Object argumentMatcher)
    {
-      addMatcher(new HamcrestAdapter<T>(argumentMatcher));
+      addMatcher(HamcrestAdapter.create(argumentMatcher));
       return argValue;
    }
 
@@ -234,14 +246,14 @@ abstract class Invocations
     * from the supplied argument matcher.
     *
     * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher}
-    * interface
+    * interface, or any other instance with an appropriate invocation handler method
     *
     * @return the value recorded inside the given argument matcher, or {@code null} if no such value
     * could be determined
     */
    protected final <T> T with(Object argumentMatcher)
    {
-      HamcrestAdapter<T> adapter = new HamcrestAdapter<T>(argumentMatcher);
+      HamcrestAdapter<T> adapter = HamcrestAdapter.create(argumentMatcher);
       addMatcher(adapter);
 
       Object argValue = adapter.getInnerValue();

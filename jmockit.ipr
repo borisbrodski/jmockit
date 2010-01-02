@@ -136,7 +136,6 @@
           <option name="ignoreSetterCallsOnOtherObjects" value="false" />
         </inspection_tool>
         <inspection_tool class="CallToStringConcatCanBeReplacedByOperator" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="CastConflictsWithInstanceof" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CastToIncompatibleInterface" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ChainedEquality" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CharUsedInArithmeticContext" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -905,6 +904,7 @@
         <w>throwable</w>
         <w>timingframework</w>
         <w>tooltip</w>
+        <w>tremblay</w>
         <w>unbox</w>
         <w>unformatted</w>
         <w>unmocked</w>
@@ -983,34 +983,6 @@
     <mapping directory="" vcs="svn" />
   </component>
   <component name="libraryTable">
-    <library name="Common samples lib">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/lib/commons-lang-2.3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/cglib-nodep-2.1_3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-library-1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/objenesis-1.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/easymockclassextension.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/dom4j-1.6.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/easymock-2.5.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/lib/slf4j-nop-1.5.8.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://C:/Java/easymock-2.5.2/easymock-2.5.2-sources.jar!/" />
-        <root url="jar://C:/Java/easymockclassextension2.4/src.zip!/" />
-      </SOURCES>
-    </library>
-    <library name="JMock 2.5.1">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-legacy-2.5.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-junit4-2.5.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Logging APIs">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15.jar!/" />
@@ -1027,17 +999,6 @@
       <JAVADOC />
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/jmockit.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Hamcrest 1.2">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-library-1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/hamcrest-core-1.2.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/lib/hamcrest-library-1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/hamcrest-core-1.2.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: junit:junit:4.7">

@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -262,6 +262,29 @@ public final class Utilities
       }
 
       return true;
+   }
+
+   public static Method findNonPrivateHandlerMethod(Object handler)
+   {
+      Method[] declaredMethods = handler.getClass().getDeclaredMethods();
+      Method nonPrivateMethod = null;
+
+      for (Method declaredMethod : declaredMethods) {
+         if (!Modifier.isPrivate(declaredMethod.getModifiers())) {
+            if (nonPrivateMethod != null) {
+               throw new IllegalArgumentException(
+                  "More than one non-private invocation handler method found");
+            }
+
+            nonPrivateMethod = declaredMethod;
+         }
+      }
+
+      if (nonPrivateMethod == null) {
+         throw new IllegalArgumentException("No non-private invocation handler method found");
+      }
+
+      return nonPrivateMethod;
    }
 
    public static <T> T invoke(

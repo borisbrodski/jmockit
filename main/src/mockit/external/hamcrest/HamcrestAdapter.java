@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,6 +24,10 @@
  */
 package mockit.external.hamcrest;
 
+import java.lang.reflect.*;
+
+import mockit.internal.util.*;
+
 import static mockit.internal.util.Utilities.*;
 
 /**
@@ -34,10 +38,42 @@ public final class HamcrestAdapter<T> extends BaseMatcher<T>
 {
    private final org.hamcrest.Matcher<T> hamcrestMatcher;
 
-   public HamcrestAdapter(Object hamcrestMatcher)
+   public static <T> HamcrestAdapter<T> create(final Object matcher)
    {
-      //noinspection unchecked
-      this.hamcrestMatcher = (org.hamcrest.Matcher<T>) hamcrestMatcher;
+      org.hamcrest.Matcher<T> hamcrestMatcher;
+
+      if (matcher instanceof org.hamcrest.Matcher<?>) {
+         //noinspection unchecked
+         hamcrestMatcher = (org.hamcrest.Matcher<T>) matcher;
+      }
+      else {
+         hamcrestMatcher = new org.hamcrest.BaseMatcher<T>()
+         {
+            Method handler;
+
+            public boolean matches(Object value)
+            {
+               if (handler == null) {
+                  handler = Utilities.findNonPrivateHandlerMethod(matcher);
+               }
+
+               Boolean result = Utilities.invoke(matcher, handler, value);
+
+               return result == null || result;
+            }
+
+            public void describeTo(org.hamcrest.Description description)
+            {
+            }
+         };
+      }
+
+      return new HamcrestAdapter<T>(hamcrestMatcher);
+   }
+
+   private HamcrestAdapter(org.hamcrest.Matcher<T> matcher)
+   {
+      hamcrestMatcher = matcher;
    }
 
    public boolean matches(Object item)

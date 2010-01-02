@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,38 +24,14 @@
  */
 package mockit.internal.expectations.invocation;
 
-import java.lang.reflect.*;
-
 import mockit.internal.expectations.*;
+import mockit.internal.util.*;
 
 public final class InvocationHandler extends DynamicInvocationResult
 {
    public InvocationHandler(Object handler)
    {
-      super(handler, findNonPrivateHandlerMethod(handler));
-   }
-
-   private static Method findNonPrivateHandlerMethod(Object handler)
-   {
-      Method[] declaredMethods = handler.getClass().getDeclaredMethods();
-      Method nonPrivateMethod = null;
-
-      for (Method declaredMethod : declaredMethods) {
-         if (!Modifier.isPrivate(declaredMethod.getModifiers())) {
-            if (nonPrivateMethod != null) {
-               throw new IllegalArgumentException(
-                  "More than one non-private invocation handler method found");
-            }
-
-            nonPrivateMethod = declaredMethod;
-         }
-      }
-
-      if (nonPrivateMethod == null) {
-         throw new IllegalArgumentException("No non-private invocation handler method found");
-      }
-
-      return nonPrivateMethod;
+      super(handler, Utilities.findNonPrivateHandlerMethod(handler));
    }
 
    public void evaluateInvocation(Expectation expectation)

@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -326,11 +326,19 @@ public final class ExpectationsWithArgMatchersTest
       new Expectations()
       {
          {
-            // Another of the Hamcrest matchers, not exposed in the Expectations class but
-            // available in jmockit.jar.
             mock.setValue(with(1, new IsEqual<Integer>(3)));
+         }
+      };
 
-            // A custom user-implemented matcher.
+      mock.setValue(3);
+   }
+
+   @Test
+   public void expectInvocationWithUserImplementedMatcherUsingHamcrestAPI()
+   {
+      new Expectations()
+      {
+         {
             mock.complexOperation(with(new BaseMatcher<Integer>()
             {
                public boolean matches(Object item)
@@ -347,8 +355,35 @@ public final class ExpectationsWithArgMatchersTest
          }
       };
 
-      mock.setValue(3);
       mock.complexOperation(28);
+   }
+
+   @Test
+   public void expectInvocationsWithUserImplementedReflectionBasedMatchers()
+   {
+      new Expectations()
+      {
+         {
+            mock.setValue(with(0, new Object()
+            {
+               boolean matches(int value)
+               {
+                  return value >= 10 && value <= 100;
+               }
+            }));
+
+            mock.setValue(with(0.0, new Object()
+            {
+               void validate(double value)
+               {
+                  assert value >= 20.0 && value <= 80.0 : "value outside of 20-80 range";
+               }
+            }));
+         }
+      };
+
+      mock.setValue(28);
+      mock.setValue(20.0);
    }
 
    @Test

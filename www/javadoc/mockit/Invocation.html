@@ -125,7 +125,7 @@ A context object representing the current invocation to a mocked method or const
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Invocation.html#Invocation(java.lang.Object, int, int, int)">Invocation</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;targetInstance,
+<TD><CODE><B><A HREF="../mockit/Invocation.html#Invocation(java.lang.Object, int, int, int)">Invocation</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;invokedInstance,
            int&nbsp;invocationCount,
            int&nbsp;minInvocations,
            int&nbsp;maxInvocations)</CODE>
@@ -161,6 +161,15 @@ A context object representing the current invocation to a mocked method or const
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/Invocation.html#getInvokedInstance()">getInvokedInstance</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the target instance on which the current invocation was made, if any (if the method
+ invoked is <code>static</code> then there is no instance and null is returned).</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>&nbsp;int</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Invocation.html#getMaxInvocations()">getMaxInvocations</A></B>()</CODE>
 
@@ -174,15 +183,6 @@ A context object representing the current invocation to a mocked method or const
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the minimum invocation count for the current expectation.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Invocation.html#getTargetInstance()">getTargetInstance</A></B>()</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the target instance on which the current invocation was made, if any (if the method
- invoked is <code>static</code> then there is no instance and null is returned).</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -226,7 +226,7 @@ A context object representing the current invocation to a mocked method or const
 <A NAME="Invocation(java.lang.Object, int, int, int)"><!-- --></A><H3>
 Invocation</H3>
 <PRE>
-protected <B>Invocation</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;targetInstance,
+protected <B>Invocation</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;invokedInstance,
                      int&nbsp;invocationCount,
                      int&nbsp;minInvocations,
                      int&nbsp;maxInvocations)</PRE>
@@ -272,6 +272,24 @@ public final int <B>getInvocationIndex</B>()</PRE>
 </DL>
 <HR>
 
+<A NAME="getInvokedInstance()"><!-- --></A><H3>
+getInvokedInstance</H3>
+<PRE>
+public final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A> <B>getInvokedInstance</B>()</PRE>
+<DL>
+<DD>Returns the target instance on which the current invocation was made, if any (if the method
+ invoked is <code>static</code> then there is no instance and null is returned).
+ <p/>
+ Note that this instance can either be a mock instance (for example, the instance automatically
+ created by JMockit and assigned to a mock field or passed as the argument value for a mock
+ parameter), or a "real" instance created by code under test for a mocked type.
+<P>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
 <A NAME="getMaxInvocations()"><!-- --></A><H3>
 getMaxInvocations</H3>
 <PRE>
@@ -299,24 +317,6 @@ public final int <B>getMinInvocations</B>()</PRE>
  This call will return the value set with <CODE>Invocations.repeats(int)</CODE>,
  <CODE>Invocations.repeats(int, int)</CODE> and <CODE>Invocations.repeatsAtLeast(int)</CODE>, if that
  was the case.
-<P>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="getTargetInstance()"><!-- --></A><H3>
-getTargetInstance</H3>
-<PRE>
-public final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A> <B>getTargetInstance</B>()</PRE>
-<DL>
-<DD>Returns the target instance on which the current invocation was made, if any (if the method
- invoked is <code>static</code> then there is no instance and null is returned).
- <p/>
- Note that this instance can either be a mock instance (for example, the instance automatically
- created by JMockit and assigned to a mock field or passed as the argument value for a mock
- parameter), or a "real" instance created by code under test for a mocked type.
 <P>
 <DD><DL>
 </DL>

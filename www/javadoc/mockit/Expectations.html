@@ -1837,7 +1837,7 @@ protected final &lt;T&gt; T <B>with</B>(<A HREF="http://java.sun.com/javase/6/do
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>argumentMatcher</CODE> - an instance of a class implementing the <code>org.hamcrest.Matcher</code>
- interface
+ interface, or any other instance with an appropriate invocation handler method
 <DT><B>Returns:</B><DD>the value recorded inside the given argument matcher, or <code>null</code> if no such value
  could be determined</DL>
 </DD>
@@ -1851,14 +1851,26 @@ protected final &lt;T&gt; T <B>with</B>(T&nbsp;argValue,
                            <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</PRE>
 <DL>
 <DD>Adds a custom argument matcher for a parameter in the current invocation.
- The given matcher can be any existing Hamcrest matcher or a user provided one.
+ <p/>
+ The given matcher can be any existing <strong>Hamcrest</strong> matcher or a user provided
+ one.
+ Additionally, it can be an instance of an arbitrary <em>invocation handler</em> class, similar
+ to those used with the <A HREF="../mockit/Expectations.html#forEachInvocation"><CODE>forEachInvocation</CODE></A> field.
+ In this case, the non-<code>private</code> <em>handler method</em> must have a single parameter of
+ a type capable of receiving the relevant argument values.
+ The name of this handler method does not matter. Its return type, on the other hand, should
+ either be <code>boolean</code> or <code>void</code>. In the first case, a return value of
+ <code>true</code> will indicate a successful match for the actual invocation argument at replay
+ time, while a return of <code>false</code> will cause the test to fail. In the second case, instead
+ of returning a value the invocation handler method should validate the actual invocation 
+ argument through an <code>assert</code> statement or a JUnit/TestNG assertion.
  <p/>
  For additional details, refer to <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>.
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>argValue</CODE> - an arbitrary value of the proper type, necessary to provide a valid argument
  to the invocation parameter<DD><CODE>argumentMatcher</CODE> - an instance of a class implementing the <code>org.hamcrest.Matcher</code>
- interface
+ interface, or any other instance with an appropriate invocation handler method
 <DT><B>Returns:</B><DD>the given <code>argValue</code></DL>
 </DD>
 </DL>
