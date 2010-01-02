@@ -214,7 +214,7 @@ public final class CovariantReturnTypesTest
    @Test
    public void methodInSubInterfaceUsingStrictExpectations(final SubInterface mock)
    {
-      final SuperInterface base = mock;
+      @SuppressWarnings({"UnnecessaryLocalVariable"}) final SuperInterface base = mock;
       final Object value = new Object();
       final String specificValue = "test";
 
@@ -239,7 +239,7 @@ public final class CovariantReturnTypesTest
    @Test
    public void methodInSubInterfaceUsingNonStrictExpectations(@NonStrict final SubInterface mock)
    {
-      final SuperInterface base = mock;
+      @SuppressWarnings({"UnnecessaryLocalVariable"}) final SuperInterface base = mock;
       final Object value = new Object();
       final String specificValue1 = "test1";
       final String specificValue2 = "test2";
@@ -257,5 +257,37 @@ public final class CovariantReturnTypesTest
       assertSame(value, base.getValue());
 
       assertSame(specificValue2, mock.getValue());
+   }
+
+   @Test
+   public void methodInSubInterfaceReplayedThroughSuperInterfaceUsingStrictExpectations(
+      final SubInterface mock)
+   {
+      final String specificValue = "test";
+
+      new Expectations()
+      {
+         {
+            mock.getValue(); result = specificValue;
+         }
+      };
+
+      assertSame(specificValue, ((SuperInterface) mock).getValue());
+   }
+
+   @Test
+   public void methodInSubInterfaceReplayedThroughSuperInterfaceUsingNonStrictExpectations(
+      @NonStrict final SubInterface mock)
+   {
+      final String specificValue = "test";
+
+      new Expectations()
+      {
+         {
+            mock.getValue(); result = specificValue;
+         }
+      };
+
+      assertSame(specificValue, ((SuperInterface) mock).getValue());
    }
 }
