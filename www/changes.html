@@ -38,6 +38,13 @@
       </ul>
    </li>
    <li>
+      <strong>Enhancement</strong>: the <code>mockit.Invocation</code> class (optionally used as
+      the first parameter in <em>delegate</em> or <code>forEachInvocation</code>-<em>handler</em>
+      methods) now has a new read-only property, <strong><code>invokedInstance</code></strong>.
+      The getter will return the mock or real object on which the corresponding method/constructor
+      invocation occurred (except, naturally, for <code>static</code> methods).
+   </li>
+   <li>
       Enhancements to <strong>JMockit Coverage</strong>:
       <ul>
          <li>
