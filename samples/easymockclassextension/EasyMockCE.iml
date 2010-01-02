@@ -18,6 +18,7 @@
     <orderEntry type="library" name="Maven: easymock:easymock:0" level="project" />
     <orderEntry type="library" name="Maven: easymock:easymockclassextension:0" level="project" />
     <orderEntry type="library" name="Maven: cglib:cglib-nodep:0" level="project" />
+    <orderEntry type="library" name="Maven: org.objenesis:objenesis:0" level="project" />
   </component>
 </module>
 

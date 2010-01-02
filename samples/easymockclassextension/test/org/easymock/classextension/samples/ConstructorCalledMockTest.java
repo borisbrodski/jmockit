@@ -1,45 +1,56 @@
 /*
- * Copyright (c) 2003-2007 OFFIS, Henri Tremblay.
- * This program is made available under the terms of the MIT License.
+ * Copyright 2003-2009 OFFIS, Henri Tremblay
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.easymock.classextension.samples;
 
-import java.lang.reflect.*;
 import java.math.*;
 
 import org.junit.*;
+
+import static org.easymock.EasyMock.*;
+import org.easymock.classextension.*;
 import static org.junit.Assert.*;
 
-import org.easymock.classextension.*;
-import static org.easymock.classextension.EasyMock.*;
-
-public final class ConstructorCalledMockTest
+/**
+ * Example of how to partial mock with actually calling a constructor.
+ */
+public final class ConstructorCalledMockTest extends EasyMockSupport
 {
    private TaxCalculator tc;
 
    @Before
    public void setUp()
    {
-      // Get the one and only constructor:
-      Constructor<?> constructor = TaxCalculator.class.getDeclaredConstructors()[0];
       BigDecimal[] taxValues = {new BigDecimal("5"), new BigDecimal("15")};
-      ConstructorArgs constructorArgs = new ConstructorArgs(constructor, (Object) taxValues);
 
-      // No need to specify any methods, abstract ones are mocked by default:
-      tc = createMock(TaxCalculator.class, constructorArgs);
+      // No need to mock any methods, abstract ones are mocked by default:
+      tc = createMockBuilder(TaxCalculator.class).withConstructor(BigDecimal[].class).withArgs(
+         (Object) taxValues).createMock();
    }
 
    @After
    public void tearDown()
    {
-      verify(tc);
+      verifyAll();
    }
 
    @Test
    public void testTax()
    {
       expect(tc.rate()).andStubReturn(new BigDecimal("0.20"));
-      replay(tc);
+      replayAll();
 
       assertEquals(new BigDecimal("4.00"), tc.tax());
    }
@@ -48,7 +59,7 @@ public final class ConstructorCalledMockTest
    public void testTax_ZeroRate()
    {
       expect(tc.rate()).andStubReturn(BigDecimal.ZERO);
-      replay(tc);
+      replayAll();
 
       assertEquals(BigDecimal.ZERO, tc.tax());
    }

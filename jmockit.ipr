@@ -1070,13 +1070,13 @@
     </library>
     <library name="Maven: easymock:easymockclassextension:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-2.5.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-2.5.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-2.5.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: cglib:cglib-nodep:0">
@@ -1169,13 +1169,13 @@
     </library>
     <library name="Maven: org.objenesis:objenesis:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/objenesis-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/objenesis-1.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/objenesis-1.1-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/objenesis-1.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/objenesis-1.1-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/objenesis-1.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: commons-logging:commons-logging:0">

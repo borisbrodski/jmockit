@@ -1,16 +1,29 @@
 /*
- * Copyright (c) 2003-2007 OFFIS, Henri Tremblay.
- * This program is made available under the terms of the MIT License.
+ * Copyright 2003-2009 OFFIS, Henri Tremblay
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.easymock.classextension.samples;
 
-import static org.easymock.classextension.EasyMock.*;
 import org.junit.*;
 
+import static org.easymock.classextension.EasyMock.*;
+import org.easymock.classextension.*;
+
 /**
- * Example of how to use <code>MockClassControl</code>.
+ * Example of how to use <code>org.easymock.classextension.EasyMock</code>.
  */
-public final class BasicClassMockTest
+public final class BasicClassMockTest extends EasyMockSupport
 {
    private Printer printer;
    private Document document;
@@ -31,18 +44,18 @@ public final class BasicClassMockTest
       document.setContent("Hello world");
       document.print();
 
-      verify(printer); // make sure Printer.print was called
+      verifyAll(); // make sure Printer.print was called
    }
 
    @Test
    public void testPrintEmptyContent()
    {
       printer.print("");
-      replay(printer);
+      replayAll();
 
       document.setContent("");
       document.print();
 
-      verify(printer); // make sure Printer.print was called
+      verifyAll(); // make sure Printer.print was called
    }
 }

@@ -1,24 +1,37 @@
 /*
- * Copyright (c) 2003-2007 OFFIS, Henri Tremblay.
- * This program is made available under the terms of the MIT License.
+ * Copyright 2003-2009 OFFIS, Henri Tremblay
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.easymock.classextension.samples;
 
-import static org.easymock.classextension.EasyMock.*;
 import org.junit.*;
+
+import static org.easymock.EasyMock.*;
+import org.easymock.classextension.*;
 import static org.junit.Assert.*;
 
 /**
- * @author Henri Tremblay
+ * Example of how to perform partial mocking.
  */
-public final class PartialClassMockTest
+public final class PartialClassMockTest extends EasyMockSupport
 {
    private Rect rect;
 
    @Before
    public void setUp() throws Exception
    {
-      rect = createMock(Rect.class, Rect.class.getMethod("getX"), Rect.class.getMethod("getY"));
+      rect = createMockBuilder(Rect.class).addMockedMethods("getX", "getY").createMock();
    }
 
    @Test
@@ -26,9 +39,8 @@ public final class PartialClassMockTest
    {
       expect(rect.getX()).andReturn(4);
       expect(rect.getY()).andReturn(5);
-      replay(rect);
-
+      replayAll();
       assertEquals(20, rect.getArea());
-      verify(rect);
+      verifyAll();
    }
 }
