@@ -33,8 +33,7 @@ import mockit.*;
 
 import jmockit.tutorial.infrastructure.*;
 
-@UsingMocksAndStubs(Database.class) // TODO: stub out static blocks by default in @Mocked classes
-public final class ServiceA_ExpectationsAPI_Test
+public final class MyBusinessService_ExpectationsAPI_Test
 {
    @Mocked final Database unused = null;
    @NonStrict SimpleEmail email; // calls to setters are irrelevant, so we make it non-strict

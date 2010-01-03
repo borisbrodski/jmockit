@@ -33,8 +33,7 @@ import org.junit.*;
 
 import mockit.*;
 
-@UsingMocksAndStubs(Database.class)
-public final class ServiceA_VerificationsAPI_Test
+public final class MyBusinessService_VerificationsAPI_Test
 {
    @Mocked Database onlyStatics;
    @Capturing Email email; // concrete subclass mocked on demand, when loaded
