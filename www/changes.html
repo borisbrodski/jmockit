@@ -38,9 +38,9 @@
       </ul>
    </li>
    <li>
-      <strong>Enhancement</strong>: the <code>mockit.Invocation</code> class (optionally used as
-      the first parameter in <em>delegate</em> or <code>forEachInvocation</code>-<em>handler</em>
-      methods) now has a new read-only property, <strong><code>invokedInstance</code></strong>.
+      Enhancement: the <code>mockit.Invocation</code> class (optionally used as the first parameter
+      in <em>delegate</em> or <code>forEachInvocation</code>-<em>handler</em> methods) now has a new
+      read-only property, <strong><code>invokedInstance</code></strong>.
       The getter will return the mock or real object on which the corresponding method/constructor
       invocation occurred (except, naturally, for <code>static</code> methods).
    </li>
@@ -52,6 +52,11 @@
       generates failure messages, nor the addition of Hamcrest classes to the classpath) and allow
       the use of <code>assert</code> statements or <code>assertXyz(...)</code> calls instead of
       returning a <code>boolean</code> value.
+   </li>
+   <li>
+      Enhancement: static initializers in classes mocked with the Expectations API now are stubbed
+      out by default (they were left unchanged before, requiring the user to explicitly stub them
+      out when needed).
    </li>
    <li>
       Enhancements to <strong>JMockit Coverage</strong>:
