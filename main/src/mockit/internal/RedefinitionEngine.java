@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -32,19 +32,17 @@ import mockit.*;
 import mockit.external.asm.*;
 import mockit.internal.annotations.*;
 import mockit.internal.core.*;
+import mockit.internal.filtering.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class RedefinitionEngine
 {
-   private static final String[] NO_STUBBING_FILTERS = new String[0];
-
    private Class<?> realClass;
    private final Class<?> mockClass;
    private final Instantiation instantiation;
-   private final String[] stubbingFilters;
-   private final boolean filtersNotInverted;
+   private final MockingConfiguration mockingConfiguration;
    private final MockMethods mockMethods;
    private Object mock;
 
@@ -61,16 +59,14 @@ public final class RedefinitionEngine
          realClass = realOrMockClass;
          mockClass = null;
          instantiation = Instantiation.PerMockInvocation;
-         stubbingFilters = NO_STUBBING_FILTERS;
-         filtersNotInverted = true;
+         mockingConfiguration = null;
          mockMethods = null;
       }
       else {
          realClass = metadata.realClass();
          mockClass = realOrMockClass;
          instantiation = metadata.instantiation();
-         stubbingFilters = metadata.stubs();
-         filtersNotInverted = !metadata.inverse();
+         mockingConfiguration = createMockingConfiguration(metadata);
 
          AnnotatedMockMethods annotatedMocks = new AnnotatedMockMethods(realClass);
          new AnnotatedMockMethodCollector(annotatedMocks).collectMockMethods(mockClass);
@@ -78,6 +74,16 @@ public final class RedefinitionEngine
 
          createMockInstanceAccordingToInstantiation();
       }
+   }
+
+   private MockingConfiguration createMockingConfiguration(MockClass metadata)
+   {
+      return createMockingConfiguration(metadata.stubs(), !metadata.inverse());
+   }
+
+   private MockingConfiguration createMockingConfiguration(String[] filters, boolean notInverted)
+   {
+      return filters.length == 0 ? null : new MockingConfiguration(filters, notInverted);
    }
 
    private void createMockInstanceAccordingToInstantiation()
@@ -94,8 +100,7 @@ public final class RedefinitionEngine
       mockClass = null;
       instantiation = Instantiation.PerMockInvocation;
       mockMethods = null;
-      this.stubbingFilters = stubbingFilters;
-      this.filtersNotInverted = filtersNotInverted;
+      mockingConfiguration = createMockingConfiguration(stubbingFilters, filtersNotInverted);
    }
 
    public RedefinitionEngine(Class<?> realClass, Object mock, Class<?> mockClass)
@@ -115,15 +120,13 @@ public final class RedefinitionEngine
 
       if (mockClass == null || !mockClass.isAnnotationPresent(MockClass.class)) {
          instantiation = Instantiation.PerMockInvocation;
-         stubbingFilters = NO_STUBBING_FILTERS;
-         filtersNotInverted = true;
+         mockingConfiguration = null;
       }
       else {
          MockClass metadata = mockClass.getAnnotation(MockClass.class);
          instantiation = metadata.instantiation();
          createMockInstanceAccordingToInstantiation();
-         stubbingFilters = metadata.stubs();
-         filtersNotInverted = !metadata.inverse();
+         mockingConfiguration = createMockingConfiguration(metadata);
       }
    }
 
@@ -186,7 +189,7 @@ public final class RedefinitionEngine
    public void stubOut()
    {
       ClassReader rcReader = createClassReaderForRealClass();
-      ClassWriter rcWriter = new StubOutModifier(rcReader, stubbingFilters, filtersNotInverted);
+      ClassWriter rcWriter = new StubOutModifier(rcReader, mockingConfiguration);
 
       rcReader.accept(rcWriter, false);
       byte[] modifiedClassFile = rcWriter.toByteArray();
@@ -202,7 +205,7 @@ public final class RedefinitionEngine
 
    private void redefineMethods(boolean forStartupMock)
    {
-      if (mockMethods.getMethodCount() > 0 || stubbingFilters.length > 0) {
+      if (mockMethods.getMethodCount() > 0 || mockingConfiguration != null) {
          byte[] modifiedClassFile = modifyRealClass(forStartupMock);
          redefineMethods(
             mockMethods.getMockClassInternalName(), modifiedClassFile, !forStartupMock);
@@ -216,8 +219,8 @@ public final class RedefinitionEngine
 
       if (mockMethods instanceof AnnotatedMockMethods) {
          AnnotationsModifier modifier = new AnnotationsModifier(
-            rcReader, realClass, mock, (AnnotatedMockMethods) mockMethods, stubbingFilters,
-            filtersNotInverted, forStartupMock);
+            rcReader, realClass, mock, (AnnotatedMockMethods) mockMethods, mockingConfiguration,
+            forStartupMock);
 
          if (mock == null && instantiation == Instantiation.PerMockedInstance) {
             modifier.useOneMockInstancePerMockedInstance(mockClass);

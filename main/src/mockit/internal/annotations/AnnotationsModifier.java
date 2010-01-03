@@ -1,6 +1,6 @@
 /*
  * JMockit Annotations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -29,6 +29,7 @@ import java.lang.reflect.*;
 import static mockit.external.asm.Opcodes.*;
 
 import mockit.external.asm.*;
+import mockit.external.asm.Type;
 import mockit.internal.*;
 import mockit.internal.core.*;
 import mockit.internal.filtering.*;
@@ -43,15 +44,16 @@ public final class AnnotationsModifier extends RealClassModifier
 
    private boolean useMockingBridgeForUpdatingMockState;
    private boolean mockIsReentrant;
-   private mockit.external.asm.Type mockClassType;
+   private Type mockClassType;
 
    public AnnotationsModifier(
       ClassReader cr, Class<?> realClass, Object mock, AnnotatedMockMethods mockMethods,
-      String[] stubbingFilters, boolean filtersNotInverted, boolean forStartupMock)
+      MockingConfiguration mockingConfiguration, boolean forStartupMock)
    {
-      this(
-         cr, getItFieldDescriptor(realClass), mock, mockMethods,
-         stubbingFilters, filtersNotInverted, forStartupMock);
+      super(cr, getItFieldDescriptor(realClass), mock, mockMethods, forStartupMock);
+
+      annotatedMocks = mockMethods;
+      mockingCfg = mockingConfiguration;
 
       setUseMockingBridge(realClass.getClassLoader());
       useMockingBridgeForUpdatingMockState = useMockingBridge;
@@ -64,20 +66,16 @@ public final class AnnotationsModifier extends RealClassModifier
       }
    }
 
-   public AnnotationsModifier(
-      ClassReader cr, String realClassDescriptor, Object mock, AnnotatedMockMethods mockMethods,
-      String[] stubbingFilters, boolean filtersNotInverted, boolean forStartupMock)
+   public AnnotationsModifier(ClassReader cr, String realClassDesc, AnnotatedMockMethods mocks)
    {
-      super(cr, realClassDescriptor, mock, mockMethods, forStartupMock);
-      annotatedMocks = mockMethods;
-      mockingCfg =
-         stubbingFilters == null || stubbingFilters.length == 0 ?
-            null : new MockingConfiguration(stubbingFilters, filtersNotInverted);
+      super(cr, realClassDesc, null, mocks, true);
+      annotatedMocks = mocks;
+      mockingCfg = null ;
    }
 
    public void useOneMockInstancePerMockedInstance(Class<?> mockClass)
    {
-      mockClassType = mockit.external.asm.Type.getType(mockClass);
+      mockClassType = Type.getType(mockClass);
    }
 
    @Override

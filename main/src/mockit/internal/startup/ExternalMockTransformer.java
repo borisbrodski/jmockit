@@ -1,6 +1,6 @@
 /*
- * JMockit Core
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -105,8 +105,7 @@ final class ExternalMockTransformer implements ClassFileTransformer
 
       if (mocks instanceof AnnotatedMockMethods) {
          rcWriter =
-            new AnnotationsModifier(
-               rcReader, realClassDescriptor, null, (AnnotatedMockMethods) mocks, null, true, true);
+            new AnnotationsModifier(rcReader, realClassDescriptor, (AnnotatedMockMethods) mocks);
       }
       else {
          rcWriter = new RealClassModifier(rcReader, realClassDescriptor, null, mocks, true);
