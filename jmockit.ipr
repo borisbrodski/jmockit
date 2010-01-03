@@ -26,6 +26,15 @@
           <option name="LABEL_INDENT_SIZE" value="0" />
           <option name="LABEL_INDENT_ABSOLUTE" value="false" />
         </ADDITIONAL_INDENT_OPTIONS>
+        <ADDITIONAL_INDENT_OPTIONS fileType="jsp">
+          <option name="INDENT_SIZE" value="4" />
+          <option name="CONTINUATION_INDENT_SIZE" value="8" />
+          <option name="TAB_SIZE" value="4" />
+          <option name="USE_TAB_CHARACTER" value="false" />
+          <option name="SMART_TABS" value="false" />
+          <option name="LABEL_INDENT_SIZE" value="0" />
+          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+        </ADDITIONAL_INDENT_OPTIONS>
         <ADDITIONAL_INDENT_OPTIONS fileType="xml">
           <option name="INDENT_SIZE" value="4" />
           <option name="CONTINUATION_INDENT_SIZE" value="8" />
@@ -76,6 +85,15 @@
     <file url="file://$PROJECT_DIR$/lib/log4j-1.2.15.jar" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lib/slf4j-api-1.5.8.jar" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/main" charset="UTF-8" />
+  </component>
+  <component name="FacetAutodetectingManager">
+    <autodetection-disabled>
+      <facet-type id="web">
+        <modules>
+          <module name="OrderMngmntWebapp" />
+        </modules>
+      </facet-type>
+    </autodetection-disabled>
   </component>
   <component name="FireworksProject">
     <option name="expectedTestCaseNameRegex" />
@@ -239,7 +257,6 @@
         <inspection_tool class="ExceptionFromCatchWhichDoesntWrap" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreGetMessage" value="false" />
         </inspection_tool>
-        <inspection_tool class="ExceptionNameDoesntEndWithException" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ExternalizableWithSerializationMethods" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="FallthruInSwitchStatement" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="FieldAccessedSynchronizedAndUnsynchronized" enabled="true" level="WARNING" enabled_by_default="true">
@@ -702,6 +719,7 @@
               <list size="0" />
             </value>
           </option>
+          <option name="ADD_EJB_TO_ENTRIES" value="true" />
           <option name="ADD_TESTNG_TO_ENTRIES" value="true" />
           <option name="ADD_JUNIT_TO_ENTRIES" value="true" />
         </inspection_tool>
@@ -839,6 +857,7 @@
         <w>jacc</w>
         <w>javaagent</w>
         <w>javac</w>
+        <w>javamail</w>
         <w>javassist</w>
         <w>jaxen</w>
         <w>jbossaop</w>
@@ -1348,6 +1367,39 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/unitils/unitils-inject/3.1/unitils-inject-3.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: commons-email:commons-email:0">
+      <CLASSES>
+        <root url="jar://C:/Java/commons-email-1.2/commons-email-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://C:/Java/commons-email-1.2/commons-email-1.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://C:/Java/commons-email-1.2/commons-email-1.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.persistence:persistence-api:1.0">
+      <CLASSES>
+        <root url="jar://C:/Java/JavaEE/lib/javaee.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://C:/Java/JavaEE/lib/javaee-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://C:/Java/JavaEE/lib/javaee-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javamail:javamail:1.3.3">
+      <CLASSES>
+        <root url="jar://C:/Java/JavaEE/lib/javaee.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://C:/Java/JavaEE/lib/javaee-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://C:/Java/JavaEE/lib/javaee-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
