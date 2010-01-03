@@ -343,4 +343,10 @@ public class BaseClassModifier extends ClassWriter
       mw.visitInsn(returnType.getOpcode(IRETURN));
       mw.visitMaxs(1, 0);
    }
+
+   protected final void generateEmptyImplementation()
+   {
+      mw.visitInsn(RETURN);
+      mw.visitMaxs(1, 0);
+   }
 }

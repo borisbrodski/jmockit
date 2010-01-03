@@ -118,14 +118,20 @@ final class ExpectationsModifier extends BaseClassModifier
    public MethodVisitor visitMethod(
       int access, String name, String desc, String signature, String[] exceptions)
    {
+      if ("<clinit>".equals(name)) {
+         // Stub out any class initialization block, to avoid potential side effects in tests.
+         mw = super.visitMethod(access, name, desc, signature, exceptions);
+         generateEmptyImplementation();
+         return null;
+      }
+
       if (
-         (access & METHOD_ACCESS_MASK) != 0 || "<clinit>".equals(name) ||
+         (access & METHOD_ACCESS_MASK) != 0 ||
          isProxy && isConstructorOrSystemMethodNotToBeMocked(name, desc) ||
          isMethodOrConstructorNotToBeMocked(access, name)
       ) {
-         // Copies original without modifications when it's synthetic, abstract, a class
-         // initialization block, belongs to a Proxy subclass, or is a static or private method in
-         // a captured implementation class.
+         // Copies original without modifications when it's synthetic or abstract, belongs to a
+         // Proxy subclass, or is a static or private method in a captured implementation class.
          return super.visitMethod(access, name, desc, signature, exceptions);
       }
 
@@ -138,15 +144,9 @@ final class ExpectationsModifier extends BaseClassModifier
          return super.visitMethod(access, name, desc, signature, exceptions);
       }
 
-      boolean visitingNativeMethod = isNative(access);
-
-      if (visitingNativeMethod && !Startup.isJava6OrLater()) {
-         throw new IllegalArgumentException(
-            "Mocking of native methods not supported under JDK 1.5; please filter out method \"" +
-            name + "\", or run under JDK 1.6+");
-      }
-
       // Otherwise, replace original implementation.
+      boolean visitingNativeMethod = validateModificationOfNativeMethod(access, name);
+
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
 
       boolean visitingConstructor = "<init>".equals(name);
@@ -215,6 +215,19 @@ final class ExpectationsModifier extends BaseClassModifier
    private boolean isStaticMethodOrConstructorToBeIgnored(int access, String name)
    {
       return ignoreStaticMethodsAndConstructors && (isStatic(access) || "<init>".equals(name));
+   }
+
+   private boolean validateModificationOfNativeMethod(int access, String name)
+   {
+      boolean nativeMethod = isNative(access);
+
+      if (nativeMethod && !Startup.isJava6OrLater()) {
+         throw new IllegalArgumentException(
+            "Mocking of native methods not supported under JDK 1.5; please filter out method \"" +
+            name + "\", or run under JDK 1.6+");
+      }
+
+      return nativeMethod;
    }
 
    private void generateCallToDefaultOrConfiguredSuperConstructor()
