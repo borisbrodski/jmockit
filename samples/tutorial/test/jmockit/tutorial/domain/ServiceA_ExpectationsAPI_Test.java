@@ -37,7 +37,7 @@ import jmockit.tutorial.infrastructure.*;
 public final class ServiceA_ExpectationsAPI_Test
 {
    @Mocked final Database unused = null;
-   @NonStrict SimpleEmail email;
+   @NonStrict SimpleEmail email; // calls to setters are irrelevant, so we make it non-strict
 
    @Test
    public void doBusinessOperationXyz() throws Exception
@@ -49,9 +49,12 @@ public final class ServiceA_ExpectationsAPI_Test
       new Expectations()
       {
          {
+            // "Database" is mocked strictly, therefore the order of these invocations does matter:
             Database.find(withSubstring("select"), (Object[]) null); result = items;
             Database.persist(data);
-            email.send();
+
+            // Since "email" is a non-strict mock, this invocation can be replayed in any order:
+            email.send(); times = 1; // a non-strict invocation requires a constraint if expected
          }
       };
 
