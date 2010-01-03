@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -25,17 +25,60 @@
 package jmockit.tutorial.infrastructure;
 
 import java.util.*;
+import javax.persistence.*;
 
 public final class Database
 {
+   private static final EntityManagerFactory entityManagerFactory =
+      Persistence.createEntityManagerFactory("AppPersistenceUnit");
+   private static final ThreadLocal<EntityManager> workUnit = new ThreadLocal<EntityManager>();
+
    private Database() {}
 
-   public static List<?> find(String ql, Object arg1)
+   public static <E> E find(Class<E> entityClass, Object entityId)
    {
-      return null;
+      E entity = workUnit().find(entityClass, entityId);
+      return entity;
    }
 
-   public static void save(Object data)
+   public static <E> List<E> find(String ql, Object... args)
    {
+      Query query = workUnit().createQuery(ql);
+      int position = 1;
+
+      for (Object arg : args) {
+         query.setParameter(position, arg);
+         position++;
+      }
+
+      List<E> result = query.getResultList();
+
+      return result;
+   }
+
+   public static void persist(Object data)
+   {
+      // Persist the data of a given transient domain entity object, using JPA.
+      // (In a web app, this could be scoped to the HTTP request/response cycle, which normally runs
+      // entirely in a single thread - a custom javax.servlet.Filter could close the thread-bound
+      // EntityManager.)
+      workUnit().persist(data);
+   }
+
+   public static void remove(Object persistentEntity)
+   {
+      workUnit().remove(persistentEntity);
+   }
+
+   private static EntityManager workUnit()
+   {
+      EntityManager wu = workUnit.get();
+
+      if (wu == null) {
+         wu = entityManagerFactory.createEntityManager();
+         workUnit.set(wu);
+      }
+
+      return wu;
    }
 }

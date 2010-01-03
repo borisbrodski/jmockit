@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,57 +24,51 @@
  */
 package jmockit.tutorial.domain;
 
-import java.math.*;
 import java.util.*;
 
-import static org.junit.Assert.*;
+import org.apache.commons.mail.*;
 import org.junit.*;
 
 import mockit.*;
 
 import jmockit.tutorial.infrastructure.*;
 
+@UsingMocksAndStubs(Database.class) // TODO: stub out static blocks by default in @Mocked classes
 public final class ServiceA_ExpectationsAPI_Test
 {
    @Mocked final Database unused = null;
-   @Mocked ServiceB serviceB;
+   @NonStrict SimpleEmail email;
 
    @Test
    public void doBusinessOperationXyz() throws Exception
    {
       final EntityX data = new EntityX(5, "abc", "5453-1");
-      final BigDecimal total = new BigDecimal("125.40");
+      final List<EntityX> items = new ArrayList<EntityX>();
+      items.add(new EntityX(1, "AX5", "someone@somewhere.com"));
 
       new Expectations()
       {
          {
-            List<?> items = new ArrayList<Object>();
-            Database.find(withSubstring("select"), null); result = items;
-
-            new ServiceB().computeTotal(items); result = total;
-            Database.save(data);
+            Database.find(withSubstring("select"), (Object[]) null); result = items;
+            Database.persist(data);
+            email.send();
          }
       };
 
-      new ServiceA().doBusinessOperationXyz(data);
-
-      assertEquals(total, data.getTotal());
+      new MyBusinessService().doBusinessOperationXyz(data);
    }
 
-   @Test(expected = InvalidItemStatus.class)
-   public void doBusinessOperationXyzWithInvalidItemStatus() throws Exception
+   @Test(expected = EmailException.class)
+   public void doBusinessOperationXyzWithInvalidEmailAddress() throws Exception
    {
-      new Expectations()
+      new NonStrictExpectations()
       {
          {
-            Database.find(anyString, anyString);
-
-            new ServiceB().computeTotal((List<?>) withNotNull());
-            result = new InvalidItemStatus();
+            email.addTo((String) withNotNull()); result = new EmailException();
          }
       };
 
       EntityX data = new EntityX(5, "abc", "5453-1");
-      new ServiceA().doBusinessOperationXyz(data);
+      new MyBusinessService().doBusinessOperationXyz(data);
    }
 }

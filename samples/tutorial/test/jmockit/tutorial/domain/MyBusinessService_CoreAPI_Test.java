@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,36 +24,36 @@
  */
 package jmockit.tutorial.domain;
 
-import java.math.*;
 import java.util.*;
 
 import jmockit.tutorial.infrastructure.*;
+import org.apache.commons.mail.*;
 
 import junit.framework.*;
 
 import mockit.*;
 
-public final class ServiceA_CoreAPI_Test extends TestCase
+public final class MyBusinessService_CoreAPI_Test extends TestCase
 {
-   private boolean serviceMethodCalled;
+   private boolean emailSent;
 
    public static class MockDatabase
    {
       static int findMethodCallCount;
-      static int saveMethodCallCount;
+      static int persistMethodCallCount;
 
-      public static List<?> find(String ql, Object arg1)
+      public static List<EntityX> find(String ql, Object... args)
       {
          assertNotNull(ql);
-         assertNotNull(arg1);
+         assertTrue(args.length > 0);
          findMethodCallCount++;
-         return Collections.EMPTY_LIST;
+         return Arrays.asList(new EntityX(1, "AX5", "someone@somewhere.com"));
       }
 
-      public static void save(Object o)
+      public static void persist(Object o)
       {
          assertNotNull(o);
-         saveMethodCallCount++;
+         persistMethodCallCount++;
       }
    }
 
@@ -61,8 +61,11 @@ public final class ServiceA_CoreAPI_Test extends TestCase
    protected void setUp() throws Exception
    {
       super.setUp();
+
+      Mockit.stubOut(Database.class, Email.class);
+
       MockDatabase.findMethodCallCount = 0;
-      MockDatabase.saveMethodCallCount = 0;
+      MockDatabase.persistMethodCallCount = 0;
       Mockit.redefineMethods(Database.class, MockDatabase.class);
    }
 
@@ -75,49 +78,56 @@ public final class ServiceA_CoreAPI_Test extends TestCase
 
    public void testDoBusinessOperationXyz() throws Exception
    {
-      final BigDecimal total = new BigDecimal("125.40");
-
-      Mockit.redefineMethods(ServiceB.class, new Object()
-      {
-         public BigDecimal computeTotal(List<?> items)
-         {
-            assertNotNull(items);
-            serviceMethodCalled = true;
-            return total;
-         }
-      });
+      Mockit.redefineMethods(Email.class, new MockEmail(true));
 
       EntityX data = new EntityX(5, "abc", "5453-1");
-      new ServiceA().doBusinessOperationXyz(data);
 
-      assertEquals(total, data.getTotal());
-      assertTrue(serviceMethodCalled);
+      new MyBusinessService().doBusinessOperationXyz(data);
+
       assertEquals(1, MockDatabase.findMethodCallCount);
-      assertEquals(1, MockDatabase.saveMethodCallCount);
+      assertEquals(1, MockDatabase.persistMethodCallCount);
+      assertTrue(emailSent);
    }
 
-   public void testDoBusinessOperationXyzWithInvalidItemStatus()
+   public class MockEmail
    {
-      Mockit.redefineMethods(ServiceB.class, new Object()
+      final boolean addToShouldSucceed;
+      public Email it;
+
+      MockEmail(boolean addToShouldSucceed) { this.addToShouldSucceed = addToShouldSucceed; }
+
+      public Email addTo(String emailAddress) throws EmailException
       {
-         public BigDecimal computeTotal(List<?> items) throws InvalidItemStatus
-         {
-            assertNotNull(items);
-            throw new InvalidItemStatus();
+         assertNotNull(emailAddress);
+
+         if (addToShouldSucceed) {
+            return it;
          }
-      });
+         else {
+            throw new EmailException();
+         }
+      }
+
+      public String send()
+      {
+         emailSent = true;
+         return "";
+      }
+   }
+
+   public void testDoBusinessOperationXyzWithInvalidCustomerEmailAddress() throws Exception
+   {
+      Mockit.redefineMethods(Email.class, new MockEmail(false));
 
       EntityX data = new EntityX(5, "abc", "5453-1");
 
       try {
-         new ServiceA().doBusinessOperationXyz(data);
-         fail(InvalidItemStatus.class + " was expected");
+         new MyBusinessService().doBusinessOperationXyz(data);
+         fail(EmailException.class + " was expected");
       }
-      catch (InvalidItemStatus ignore) {
+      catch (EmailException ignore) {
          // OK, test passed
-         assertNull(data.getTotal());
-         assertEquals(1, MockDatabase.findMethodCallCount);
-         assertEquals(0, MockDatabase.saveMethodCallCount);
+         assertFalse(emailSent);
       }
    }
 }

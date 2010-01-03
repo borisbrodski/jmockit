@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -27,67 +27,69 @@ package jmockit.tutorial.domain;
 import java.util.*;
 
 import jmockit.tutorial.infrastructure.*;
+import org.apache.commons.mail.*;
 
 import org.junit.*;
 
 import mockit.*;
 
+@UsingMocksAndStubs(Database.class)
 public final class ServiceA_VerificationsAPI_Test
 {
-   @Mocked final Database onlyStatics = null;
-   @Mocked ServiceB serviceB;
+   @Mocked Database onlyStatics;
+   @Capturing Email email; // concrete subclass mocked on demand, when loaded
 
    @Test
-   public void doBusinessOperationXyzSavesData() throws Exception
+   public void doBusinessOperationXyzPersistsData() throws Exception
    {
       final EntityX data = new EntityX(5, "abc", "5453-1");
 
       // No expectations recorded in this case.
       
-      new ServiceA().doBusinessOperationXyz(data);
+      new MyBusinessService().doBusinessOperationXyz(data);
 
       new Verifications()
       {
-         { Database.save(data); }
+         { Database.persist(data); }
       };
    }
 
    @Test
-   public void doBusinessOperationXyzFindsItemsAndComputesTotal() throws Exception
+   public void doBusinessOperationXyzFindsItemsAndSendsNotificationEmail() throws Exception
    {
       EntityX data = new EntityX(5, "abc", "5453-1");
-      final List<?> items = Arrays.asList(1, 2, 3);
+      final List<EntityX> items = Arrays.asList(new EntityX(1, "AX5", "someone@somewhere.com"));
 
       // Invocations that produce a result are recorded, but only those we care about.
       new NonStrictExpectations()
       {
          {
-            Database.find(withSubstring("select"), null); result = items;
+            Database.find(withSubstring("select"), (Object[]) null); result = items;
          }
       };
 
-      new ServiceA().doBusinessOperationXyz(data);
+      new MyBusinessService().doBusinessOperationXyz(data);
 
       new Verifications()
       {
          {
-            serviceB.computeTotal(items);
+            email.send();
          }
       };
    }
 
-   @Test(expected = InvalidItemStatus.class)
+   @Test(expected = EmailException.class)
    public void doBusinessOperationXyzWithInvalidItemStatus() throws Exception
    {
       new NonStrictExpectations()
       {
          {
-            serviceB.computeTotal((List<?>) withNotNull()); result = new InvalidItemStatus();
+            email.addTo((String) withNotNull()); result = new EmailException();
          }
       };
 
       EntityX data = new EntityX(5, "abc", "5453-1");
-      new ServiceA().doBusinessOperationXyz(data);
+      new MyBusinessService().doBusinessOperationXyz(data);
 
       // Nothing left to verify at this point.
    }

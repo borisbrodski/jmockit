@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,74 +24,63 @@
  */
 package jmockit.tutorial.domain;
 
-import java.math.*;
 import java.util.*;
 
 import org.junit.*;
+
+import jmockit.tutorial.domain.ServiceA_AnnotationsAPI_Test.*;
+import org.apache.commons.mail.*;
 import static org.junit.Assert.*;
 
 import mockit.*;
-import static mockit.Mockit.*;
 
 import jmockit.tutorial.infrastructure.*;
 
+@UsingMocksAndStubs({MockDatabase.class, Email.class})
 public final class ServiceA_AnnotationsAPI_Test
 {
-   @MockClass(realClass = Database.class)
+   @MockClass(realClass = Database.class, stubs = "<clinit>")
    public static class MockDatabase
    {
       @Mock(invocations = 1)
-      public static List<?> find(String ql, Object arg1)
+      public static List<EntityX> find(String ql, Object... args)
       {
          assertNotNull(ql);
-         assertNotNull(arg1);
-         return Collections.emptyList();
+         assertTrue(args.length > 0);
+         return Arrays.asList(new EntityX(1, "AX5", "someone@somewhere.com"));
       }
 
       @Mock(maxInvocations = 1)
-      public static void save(Object o) { assertNotNull(o); }
+      public static void persist(Object o) { assertNotNull(o); }
    }
 
-   @Before
-   public void setUp() { setUpMocks(MockDatabase.class); }
-
-   @After
-   public void tearDown() { tearDownMocks(); }
+   final EntityX data = new EntityX(5, "abc", "5453-1");
 
    @Test
    public void doBusinessOperationXyz() throws Exception
    {
-      final BigDecimal total = new BigDecimal("125.40");
-
-      setUpMock(ServiceB.class, new Object()
+      new MockUp<Email>()
       {
          @Mock(invocations = 1)
-         BigDecimal computeTotal(List<?> items)
-         {
-            assertNotNull(items);
-            return total;
-         }
-      });
+         String send() { return ""; }
+      };
 
-      EntityX data = new EntityX(5, "abc", "5453-1");
-      new ServiceA().doBusinessOperationXyz(data);
-
-      assertEquals(total, data.getTotal());
+      new MyBusinessService().doBusinessOperationXyz(data);
    }
 
-   @Test(expected = InvalidItemStatus.class)
-   public void doBusinessOperationXyzWithInvalidItemStatus() throws Exception
+   @Test(expected = EmailException.class)
+   public void doBusinessOperationXyzWithInvalidEmailAddress() throws Exception
    {
-      new MockUp<ServiceB>()
+      new MockUp<Email>()
       {
          @Mock
-         BigDecimal computeTotal(List<?> items) throws InvalidItemStatus
+         Email addTo(String emailAddress) throws EmailException
          {
-            throw new InvalidItemStatus();
+            assertNotNull(emailAddress);
+            throw new EmailException();
          }
       };
 
-      EntityX data = new EntityX(5, "abc", "5453-1");
-      new ServiceA().doBusinessOperationXyz(data);
+      new MyBusinessService().doBusinessOperationXyz(data);
    }
 }

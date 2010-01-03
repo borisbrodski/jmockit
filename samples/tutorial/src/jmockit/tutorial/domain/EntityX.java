@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -25,18 +25,36 @@
 package jmockit.tutorial.domain;
 
 import java.math.*;
+import javax.persistence.*;
 
-public final class EntityX
+@Entity
+public class EntityX
 {
+   private String customerEmail;
    private BigDecimal total;
 
-   public EntityX(int type, String name, String code)
+   public EntityX()
    {
+   }
+
+   public EntityX(int type, String code, String customerEmail)
+   {
+      this.customerEmail = customerEmail;
    }
 
    public String getSomeProperty()
    {
       return "abc";
+   }
+
+   public String getCustomerEmail()
+   {
+      return customerEmail;
+   }
+
+   public void setCustomerEmail(String customerEmail)
+   {
+      this.customerEmail = customerEmail;
    }
 
    public BigDecimal getTotal()
