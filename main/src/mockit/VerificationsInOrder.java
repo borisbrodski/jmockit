@@ -1,6 +1,6 @@
 /*
  * JMockit Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -65,13 +65,13 @@ public class VerificationsInOrder extends Verifications
 
    /**
     * Accounts for a sequence of invocations executed in the replay phase that are not explicitly
-    * verified in this block. Which invocations belong or not in this sequence depends on the
-    * relative position of the call to this method with respect to the explicitly verified
-    * invocations in the same block.
+    * verified in this block, nor implicitly verified.
+    * Which invocations belong or not in this sequence depends on the relative position of the call
+    * to this method with respect to the explicitly verified invocations in the same block.
     * <p/>
     * This can be used to verify that one or more consecutive invocations occurred <em>before</em>
-    * all others, and conversely to verify that one or more consecutive invocations occurred
-    * <em>after</em> all others.
+    * others, and conversely to verify that one or more consecutive invocations occurred
+    * <em>after</em> others.
     * The call to this method marks the position where the unverified invocations are expected to
     * have occurred, relative to the explicitly verified ones.
     * <p/>

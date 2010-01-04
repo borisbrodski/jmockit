@@ -516,7 +516,7 @@ Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Ver
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Accounts for a sequence of invocations executed in the replay phase that are not explicitly
- verified in this block.</TD>
+ verified in this block, nor implicitly verified.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -1101,13 +1101,13 @@ unverifiedInvocations</H3>
 protected final void <B>unverifiedInvocations</B>()</PRE>
 <DL>
 <DD>Accounts for a sequence of invocations executed in the replay phase that are not explicitly
- verified in this block. Which invocations belong or not in this sequence depends on the
- relative position of the call to this method with respect to the explicitly verified
- invocations in the same block.
+ verified in this block, nor implicitly verified.
+ Which invocations belong or not in this sequence depends on the relative position of the call
+ to this method with respect to the explicitly verified invocations in the same block.
  <p/>
  This can be used to verify that one or more consecutive invocations occurred <em>before</em>
- all others, and conversely to verify that one or more consecutive invocations occurred
- <em>after</em> all others.
+ others, and conversely to verify that one or more consecutive invocations occurred
+ <em>after</em> others.
  The call to this method marks the position where the unverified invocations are expected to
  have occurred, relative to the explicitly verified ones.
  <p/>
