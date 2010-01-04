@@ -64,8 +64,13 @@ public class VerificationsInOrder extends Verifications
    }
 
    /**
-    * Accounts for a sequence of invocations executed in the replay phase that are not explicitly
-    * verified in this block, nor implicitly verified.
+    * Accounts for a sequence of non-strict invocations executed in the replay phase that are not
+    * explicitly verified in this block.
+    * Note that even the invocations that are implicitly verified (due to a minimum invocation count
+    * specified in the <em>record</em> phase) will be accounted for (if any), since their replay
+    * order cannot be verified otherwise. (Obviously, this doesn't apply to <em>strict</em>
+    * invocations, whose replay order is always verified implicitly.)
+    * <p/>
     * Which invocations belong or not in this sequence depends on the relative position of the call
     * to this method with respect to the explicitly verified invocations in the same block.
     * <p/>

@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -234,6 +234,28 @@ public final class VerificationsWithPartialOrderingTest
    }
 
    @Test(expected = AssertionError.class)
+   public void verifyFirstAndLastInvocationsWithSomeInvocationsInBetweenImplicitlyVerified()
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mock.setSomething(anyInt); minTimes = 1;
+         }
+      };
+
+      exerciseCodeUnderTest();
+
+      new VerificationsInOrder()
+      {{
+         mock.prepare();
+         // unverifiedInvocations() should be called here, even if verification occurs implicitly.
+         mock.setSomethingElse(anyString);
+         unverifiedInvocations();
+         mock.save();
+      }};
+   }
+
+   @Test(expected = AssertionError.class)
    public void verifyFirstAndLastCallsWithLastOutOfOrder()
    {
       mock.prepare();
@@ -327,7 +349,6 @@ public final class VerificationsWithPartialOrderingTest
          unverifiedInvocations();
       }};
    }
-
 
    @Test
    public void verifyConsecutiveInvocationsInTwoSequences()

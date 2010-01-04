@@ -972,10 +972,12 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <h4 id="partiallyOrdered">Partially ordered verification</h4>
 <p>
    Suppose you want to verify that a particular method (or constructor) was called <em>before</em>
-   (or <em>after</em>) all other invocations to mocked types in the replay phase, while at the same
-   time you don't care about the order in which those other invocations happened.
+   (or <em>after</em>) other invocations to mocked types in the replay phase, but you don't care
+   about the order in which those other invocations occurred.
    Inside an ordered verification block (<code>VerificationsInOrder</code>), this can be achieved by
-   simply calling the <code>unverifiedInvocations()</code> method at the appropriate place(s).
+   simply calling the
+   <a href="../javadoc/mockit/VerificationsInOrder.html#unverifiedInvocations()">unverifiedInvocations()</a>
+   method at the appropriate place(s).
    The following test snippet demonstrates it.
 </p>
 <pre><code>   @Test
@@ -997,16 +999,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   The example above is quite sophisticated, actually: it verifies a) a method that must be called
-   before all others, b) a method that must be called after all others, and c) that
-   <code>AnotherDependency#method1()</code> must be called just before
+   The example above is actually quite sophisticated, as it verifies several things: a) a method
+   that must be called <em>before</em> others; b) a method that must be called <em>after</em>
+   others; and c) that <code>AnotherDependency#method1()</code> must be called just before
    <code>DependencyAbc#method2()</code>.
    In most tests, we will probably only do one of these different kinds of order-related
    verifications. But the power is there to make all kinds of complex verifications quite easily.
 </p>
 <p>
    Another situation not covered by the examples above is one where we want to verify that certain
-   invocations happened in a given relative order, while also verifying the other invocations
+   invocations occurred in a given relative order, while also verifying the other invocations
    (in a given order or in any order).
    For this, we need to write two separate verification blocks, as illustrated below (where
    <code>mock</code> is a mock field of the test class).
