@@ -41,7 +41,7 @@ public final class MyBusinessService
       // a DSL for querying persistent domain entities, written in terms of the domain, not in terms
       // of relational tables and columns):
       List<EntityX> items =
-         find("select item from EntityY item where item.someProperty=?", data.getSomeProperty());
+         find("select item from EntityX item where item.someProperty=?1", data.getSomeProperty());
 
       // Compute or obtain from another service a total value for the new persistent entity:
       BigDecimal total = new BigDecimal("12.30");

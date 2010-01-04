@@ -1397,15 +1397,25 @@
         <root url="jar://C:/Java/JavaEE/lib/javaee-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: javax.persistence:persistence-api:1.0">
+    <library name="Java EE 6">
       <CLASSES>
-        <root url="jar://C:/Java/JavaEE/lib/javaee.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/javax.ejb.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/javax.persistence.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://C:/Java/JavaEE/lib/javaee-javadoc.jar!/" />
+        <root url="http://java.sun.com/javaee/6/docs/api/" />
+      </JAVADOC>
+      <SOURCES />
+    </library>
+    <library name="Maven: javax.persistence:persistence-api:2.0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../lib/javax.persistence.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../lib/javax.persistence-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://C:/Java/JavaEE/lib/javaee-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../lib/javax.persistence-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
