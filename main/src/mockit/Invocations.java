@@ -31,6 +31,7 @@ import mockit.external.hamcrest.Matcher;
 import mockit.external.hamcrest.core.*;
 import mockit.external.hamcrest.number.*;
 import mockit.internal.expectations.*;
+import mockit.internal.startup.*;
 import mockit.internal.util.*;
 
 /**
@@ -39,6 +40,11 @@ import mockit.internal.util.*;
  */
 abstract class Invocations
 {
+   static
+   {
+      Startup.verifyInitialization();
+   }
+
    /**
     * Matches any {@code Object} reference for the relevant parameter.
     * Note that the use of this field will usually require a cast to the specific parameter type.
@@ -198,13 +204,32 @@ abstract class Invocations
     */
    protected static CharSequence $;
 
-   protected Invocations() {}
+   Invocations() {}
 
    abstract TestOnlyPhase getCurrentPhase();
 
    final Expectation getCurrentExpectation()
    {
       return getCurrentPhase().getCurrentExpectation();
+   }
+
+   /**
+    * Specify that the next invocation on the given mock instance must match a corresponding
+    * invocation on the <em>same</em> instance in the replay phase.
+    * <p/>
+    * By default, such instances can be different between the replay phase and the record or verify
+    * phase, even though the method or constructor invoked is the same, and the invocation arguments
+    * all match.
+    * The use of this method allows the invocation(s) to also be matched on the instance invoked.
+    */
+   protected final <T> T onInstance(T mock)
+   {
+      if (mock == null) {
+         throw new NullPointerException("Missing mock instance to match");
+      }
+
+      getCurrentPhase().setNextInstanceToMatch(mock);
+      return mock;
    }
 
    // Methods for argument matching ///////////////////////////////////////////////////////////////

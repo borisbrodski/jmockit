@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -36,6 +36,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
    private boolean allInvocationsDuringReplayMustBeVerified;
    private Object[] mockedTypesAndInstancesToFullyVerify;
    protected AssertionError pendingError;
+   private boolean matchInstance;
 
    protected VerificationPhase(
       RecordAndReplayExecution recordAndReplay, List<Expectation> expectationsInReplayOrder)
@@ -65,9 +66,15 @@ public abstract class VerificationPhase extends TestOnlyPhase
          return null;
       }
 
+      matchInstance = nextInstanceToMatch != null && mock == nextInstanceToMatch;
+
       currentExpectation = null;
       findNonStrictExpectation(mock, mockClassDesc, mockNameAndDesc, args);
       argMatchers = null;
+
+      if (matchInstance) {
+         nextInstanceToMatch = null;
+      }
 
       if (recordAndReplay.errorThrown != null) {
          return null;
@@ -96,7 +103,10 @@ public abstract class VerificationPhase extends TestOnlyPhase
       ExpectedInvocation invocation = expectation.invocation;
       Map<Object, Object> instanceMap = getInstanceMap();
 
-      if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap)) {
+      if (
+         invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap) &&
+         (!matchInstance || invocation.isEquivalentInstance(mock, instanceMap))
+      ) {
          Object[] argsToVerify =
             argMatchers == null ?
                args : invocation.arguments.prepareForVerification(args, argMatchers);

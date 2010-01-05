@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -30,17 +30,11 @@ import mockit.internal.state.*;
 public final class RecordPhase extends TestOnlyPhase
 {
    private final boolean nonStrict;
-   private Object nextInstanceToMatch;
 
    RecordPhase(RecordAndReplayExecution recordAndReplay, boolean nonStrict)
    {
       super(recordAndReplay);
       this.nonStrict = nonStrict;
-   }
-
-   public void setNextInstanceToMatch(Object nextInstanceToMatch)
-   {
-      this.nextInstanceToMatch = nextInstanceToMatch;
    }
 
    public void setNotStrict()

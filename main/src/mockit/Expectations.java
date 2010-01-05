@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -27,7 +27,6 @@ package mockit;
 import java.util.*;
 
 import mockit.internal.expectations.*;
-import mockit.internal.startup.*;
 
 /**
  * Base class whose subclasses are defined in test code, and whose instances define a set of
@@ -109,11 +108,6 @@ import mockit.internal.startup.*;
  */
 public class Expectations extends Invocations
 {
-   static
-   {
-      Startup.verifyInitialization();
-   }
-
    private final RecordAndReplayExecution execution;
 
    /**
@@ -212,24 +206,6 @@ public class Expectations extends Invocations
    final RecordPhase getCurrentPhase()
    {
       return execution.getRecordPhase();
-   }
-
-   /**
-    * Specify that the next invocation recorded on the given mock instance must be matched by a
-    * corresponding invocation on the <em>same</em> instance in the replay phase.
-    * <p/>
-    * By default, such instances can be different between the record and replay phases, even though
-    * the method or constructor invoked will be the same, and the invocation arguments will match.
-    * The use of this method allows the test to also match on the instance invoked.
-    */
-   protected final <T> T onInstance(T mock)
-   {
-      if (mock == null) {
-         throw new NullPointerException("Missing mock instance to match");
-      }
-
-      getCurrentPhase().setNextInstanceToMatch(mock);
-      return mock;
    }
 
    // Methods for setting expected return values and thrown exceptions ////////////////////////////

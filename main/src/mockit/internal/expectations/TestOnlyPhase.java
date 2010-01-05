@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations & Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -31,6 +31,7 @@ import mockit.external.hamcrest.*;
 public abstract class TestOnlyPhase extends Phase
 {
    protected int numberOfIterations;
+   protected Object nextInstanceToMatch;
    protected List<Matcher<?>> argMatchers;
 
    TestOnlyPhase(RecordAndReplayExecution recordAndReplay)
@@ -42,6 +43,11 @@ public abstract class TestOnlyPhase extends Phase
    public final void setNumberOfIterations(int numberOfIterations)
    {
       this.numberOfIterations = numberOfIterations;
+   }
+
+   public final void setNextInstanceToMatch(Object nextInstanceToMatch)
+   {
+      this.nextInstanceToMatch = nextInstanceToMatch;
    }
 
    public final void addArgMatcher(Matcher<?> matcher)

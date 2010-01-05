@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -79,12 +79,12 @@ public final class ExpectedInvocation
 
    public boolean isMatch(
       Object replayInstance, String invokedClassDesc, String invokedMethod,
-      Map<Object, Object> recordToReplayInstanceMap)
+      Map<Object, Object> instanceMap)
    {
       return
          invokedClassDesc.equals(arguments.classDesc) && isMatchingMethod(invokedMethod) &&
          (arguments.methodNameAndDesc.charAt(0) == '<' ||
-          isEquivalentInstance(replayInstance, recordToReplayInstanceMap));
+          !matchInstance || isEquivalentInstance(replayInstance, instanceMap));
    }
 
    private boolean isMatchingMethod(String invokedMethod)
@@ -136,13 +136,9 @@ public final class ExpectedInvocation
       return Utilities.getClassForType(rt2).isAssignableFrom(Utilities.getClassForType(rt1));
    }
 
-   private boolean isEquivalentInstance(
-      Object replayInstance, Map<Object, Object> recordToReplayInstanceMap)
+   public boolean isEquivalentInstance(Object mock, Map<Object, Object> instanceMap)
    {
-      return
-         !matchInstance ||
-         replayInstance == instance ||
-         replayInstance == recordToReplayInstanceMap.get(instance);
+      return mock == instance || mock == instanceMap.get(instance);
    }
 
    // Creation of AssertionError instances for invocation mismatch reporting //////////////////////
@@ -234,8 +230,8 @@ public final class ExpectedInvocation
                MockedTypeCascade.getMock(mockedTypeDesc, instance, returnTypeDesc);
 
             if (cascadedMock != null) {
-               if (phase instanceof RecordPhase) {
-                  ((RecordPhase) phase).setNextInstanceToMatch(cascadedMock);
+               if (phase != null) {
+                  phase.setNextInstanceToMatch(cascadedMock);
                }
 
                defaultReturnValue = cascadedMock;

@@ -456,6 +456,22 @@ An <A HREF="../mockit/Expectations.html" title="class in mockit"><CODE>Expectati
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected 
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
+<TR ALIGN="right" VALIGN="">
+<TD NOWRAP><FONT SIZE="-1">
+<CODE>&lt;T&gt; T</CODE></FONT></TD>
+</TR>
+</TABLE>
+</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/NonStrictExpectations.html#onInstance(T)">onInstance</A></B>(T&nbsp;mock)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specify that the next invocation on the given mock instance must match a corresponding
+ invocation on the <em>same</em> instance in the replay phase.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/NonStrictExpectations.html#repeats(int)">repeats</A></B>(int&nbsp;exactInvocationCount)</CODE>
 
@@ -801,7 +817,7 @@ T</CODE></FONT></TD>
 <TH ALIGN="left"><B>Methods inherited from class mockit.<A HREF="../mockit/Expectations.html" title="class in mockit">Expectations</A></B></TH>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD><CODE><A HREF="../mockit/Expectations.html#endRecording()">endRecording</A>, <A HREF="../mockit/Expectations.html#notStrict()">notStrict</A>, <A HREF="../mockit/Expectations.html#onInstance(T)">onInstance</A>, <A HREF="../mockit/Expectations.html#returns(java.lang.Object)">returns</A>, <A HREF="../mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">returns</A>, <A HREF="../mockit/Expectations.html#throwsError(java.lang.Error)">throwsError</A>, <A HREF="../mockit/Expectations.html#throwsException(java.lang.Exception)">throwsException</A></CODE></TD>
+<TD><CODE><A HREF="../mockit/Expectations.html#endRecording()">endRecording</A>, <A HREF="../mockit/Expectations.html#notStrict()">notStrict</A>, <A HREF="../mockit/Expectations.html#returns(java.lang.Object)">returns</A>, <A HREF="../mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">returns</A>, <A HREF="../mockit/Expectations.html#throwsError(java.lang.Error)">throwsError</A>, <A HREF="../mockit/Expectations.html#throwsException(java.lang.Exception)">throwsException</A></CODE></TD>
 </TR>
 </TABLE>
 &nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
@@ -1309,6 +1325,25 @@ protected final &lt;T&gt; T <B>newInstance</B>(<A HREF="http://java.sun.com/java
 
 <DT><B>Throws:</B>
 <DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if one of the given arguments is <code>null</code></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="onInstance(java.lang.Object)"><!-- --></A><A NAME="onInstance(T)"><!-- --></A><H3>
+onInstance</H3>
+<PRE>
+protected final &lt;T&gt; T <B>onInstance</B>(T&nbsp;mock)</PRE>
+<DL>
+<DD>Specify that the next invocation on the given mock instance must match a corresponding
+ invocation on the <em>same</em> instance in the replay phase.
+ <p/>
+ By default, such instances can be different between the replay phase and the record or verify
+ phase, even though the method or constructor invoked is the same, and the invocation arguments
+ all match.
+ The use of this method allows the invocation(s) to also be matched on the instance invoked.
+<P>
+<DD><DL>
+</DL>
 </DD>
 </DL>
 <HR>
