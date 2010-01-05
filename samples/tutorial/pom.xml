@@ -4,8 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>mockit</groupId><artifactId>mockit</artifactId><version>0.995</version>
-      <relativePath>../../pom.xml</relativePath>
+      <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.995</version>
    </parent>
    <artifactId>tutorial</artifactId>
    <name>Tutorial Sample</name>

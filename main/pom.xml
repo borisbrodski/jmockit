@@ -10,11 +10,20 @@
    <name>Main</name>
 
    <build>
+      <resources>
+         <resource>
+            <directory>src</directory>
+            <includes><include>jmockit.properties</include></includes>
+         </resource>
+      </resources>
       <plugins>
          <plugin>
             <artifactId>maven-jar-plugin</artifactId>
             <configuration>
-               <archive><forced/><manifestFile>META-INF/MANIFEST.MF</manifestFile></archive>
+               <archive>
+                  <addMavenDescriptor>false</addMavenDescriptor>
+                  <forced/><manifestFile>META-INF/MANIFEST.MF</manifestFile>
+               </archive>
                <excludes><exclude>Temp.class</exclude></excludes>
             </configuration>
          </plugin>

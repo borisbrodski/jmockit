@@ -3,24 +3,26 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-   <groupId>mockit</groupId>
-   <artifactId>mockit</artifactId>
-   <version>0.995</version>
+   <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.995</version>
    <packaging>pom</packaging>
 
    <modules>
-      <module>main</module>
-      <module>coverage</module>
+      <module>tutorial</module>
+      <module>easymock</module>
+      <module>easymockclassextension</module>
+      <module>jmock</module>
+      <module>jbossaop</module>
+      <module>mockito</module>
+      <module>unitils</module>
+      <module>powermock</module>
+      <module>TimingFramework</module>
+      <module>AnimatedTransitions</module>
+      <module>orderMngmntWebapp</module>
    </modules>
 
-   <name>The JMockit Testing Toolkit</name>
+   <name>The JMockit Testing Toolkit Samples</name>
    <url>http://code.google.com/p/jmockit/</url>
-   <description>
-      JMockit is a Java toolkit for developer (unit/integration) testing.
-      It contains mocking APIs and other tools, supporting both JUnit and TestNG.
-      The mocking APIs allow all kinds of Java code, without testability restrictions, to be tested
-      in isolation from selected dependencies.
-   </description>
+   <description>Sample test suites for the toolkit</description>
    <licenses>
       <license>
          <name>MIT LICENSE</name>
@@ -31,21 +33,19 @@
    <developers>
       <developer><name>Rogério Liesenfeld</name><email>javamockit@yahoo.com</email></developer>
    </developers>
-
-   <issueManagement><url>http://code.google.com/p/jmockit/issues/list</url></issueManagement>
-   <mailingLists>
-      <mailingList>
-         <name>JMockit Users</name>
-         <archive>http://groups.google.com/group/jmockit-users</archive>
-         <post>jmockit-users@googlegroups.com</post>
-      </mailingList>
-   </mailingLists>
    <scm>
       <url>http://code.google.com/p/jmockit/source/browse/trunk</url>
       <connection>scm:http://jmockit.googlecode.com/svn/trunk/ jmockit-read-only</connection>
    </scm>
 
    <properties><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
+   <repositories>
+      <repository>
+         <id>maven2-repository.dev.java.net</id>
+         <name>Java.net Repository for Maven</name>
+         <url>http://download.java.net/maven/2/</url>
+      </repository>
+   </repositories>
 
    <build>
       <sourceDirectory>src</sourceDirectory>
@@ -66,18 +66,5 @@
             </configuration>
          </plugin>
       </plugins>
-      <extensions>
-         <extension>
-            <groupId>org.jvnet.wagon-svn</groupId><artifactId>wagon-svn</artifactId>
-            <version>1.9</version>
-         </extension>
-      </extensions>
    </build>
-
-   <distributionManagement>
-      <repository>
-         <id>java.net-m2-repository</id>
-         <url>java-net:/maven2-repository/trunk/repository/</url>
-      </repository>
-   </distributionManagement>
 </project>

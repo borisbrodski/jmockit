@@ -22,14 +22,11 @@
       </resources>
       <plugins>
          <plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-               <excludes><exclude>**/integrationTests/**/*.java</exclude></excludes>
-            </configuration>
-         </plugin>
-         <plugin>
             <artifactId>maven-jar-plugin</artifactId>
-            <configuration><excludes><exclude>integrationTests/</exclude></excludes></configuration>
+            <configuration>
+               <archive><addMavenDescriptor>false</addMavenDescriptor></archive>
+               <excludes><exclude>integrationTests/</exclude></excludes>
+            </configuration>
          </plugin>
          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>

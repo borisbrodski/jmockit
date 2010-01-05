@@ -792,6 +792,7 @@
         <option value="$PROJECT_DIR$/samples/orderMngmntWebapp/pom.xml" />
         <option value="$PROJECT_DIR$/samples/LoginService/pom.xml" />
         <option value="$PROJECT_DIR$/hibernate3emul/pom.xml" />
+        <option value="$PROJECT_DIR$/samples/pom.xml" />
       </list>
     </option>
   </component>
@@ -958,6 +959,7 @@
       <module fileurl="file://$PROJECT_DIR$/samples/unitils/Unitils.iml" filepath="$PROJECT_DIR$/samples/unitils/Unitils.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/jmock/jMock2.iml" filepath="$PROJECT_DIR$/samples/jmock/jMock2.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/mockit.iml" filepath="$PROJECT_DIR$/mockit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/samples.iml" filepath="$PROJECT_DIR$/samples/samples.iml" />
       <module fileurl="file://$PROJECT_DIR$/www/www.iml" filepath="$PROJECT_DIR$/www/www.iml" />
     </modules>
   </component>
@@ -1022,13 +1024,15 @@
     </library>
     <library name="Maven: junit:junit:4.7">
       <CLASSES>
+        <root url="jar://C:/Java/junit4.7/junit-4.7.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.7/junit-4.7.jar!/" />
       </CLASSES>
       <JAVADOC>
+        <root url="jar://C:/Java/junit4.7/junit-4.7-javadoc.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.7/junit-4.7-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://C:/Java/junit4.7/junit-4.7-src.jar!/" />
+        <root url="jar://C:/Java/junit4.7/junit-4.7-sources.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.7/junit-4.7-sources.jar!/" />
       </SOURCES>
     </library>
@@ -1166,35 +1170,35 @@
     </library>
     <library name="Maven: org.hamcrest:hamcrest-core:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.hamcrest:hamcrest-library:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.objenesis:objenesis:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/objenesis-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/objenesis-1.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/objenesis-1.1-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/objenesis-1.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/objenesis-1.1-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/objenesis-1.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: commons-logging:commons-logging:0">
