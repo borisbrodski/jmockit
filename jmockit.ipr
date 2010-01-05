@@ -1420,6 +1420,15 @@
         <root url="jar://$PROJECT_DIR$/samples/tutorial/../../lib/javax.persistence-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: mockit:jmockit:0.995">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.995/jmockit-0.995.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.995/jmockit-0.995-sources.jar!/" />
+      </SOURCES>
+    </library>
   </component>
 </project>
 
