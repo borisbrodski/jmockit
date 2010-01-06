@@ -24,6 +24,8 @@
  */
 package mockit;
 
+import java.util.concurrent.*;
+
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -100,9 +102,9 @@ public final class MockInstanceMatchingTest
       new Expectations()
       {
          {
-            onInstance(mock).getValue(); result = 12;
-            onInstance(mock2).getValue(); result = 13;
-            onInstance(mock).setValue(20);
+            mock.getValue(); result = 12;
+            mock2.getValue(); result = 13;
+            mock.setValue(20);
          }
       };
 
@@ -117,8 +119,8 @@ public final class MockInstanceMatchingTest
       new Expectations()
       {
          {
-            onInstance(mock).setValue(12);
-            onInstance(mock2).setValue(13);
+            mock.setValue(12);
+            mock2.setValue(13);
          }
       };
 
@@ -136,9 +138,9 @@ public final class MockInstanceMatchingTest
       new VerificationsInOrder()
       {
          {
-            onInstance(mock).setValue(12);
-            onInstance(mock2).setValue(13);
-            onInstance(mock).setValue(20);
+            mock.setValue(12);
+            mock2.setValue(13);
+            mock.setValue(20);
          }
       };
    }
@@ -152,8 +154,8 @@ public final class MockInstanceMatchingTest
       new FullVerifications()
       {
          {
-            onInstance(mock).setValue(12);
-            onInstance(mock2).setValue(13);
+            mock.setValue(12);
+            mock2.setValue(13);
          }
       };
    }
@@ -188,8 +190,8 @@ public final class MockInstanceMatchingTest
       new NonStrictExpectations()
       {
          {
-            onInstance(mock).getValue(); result = 1; times = 1;
-            onInstance(mock2).getValue(); result = 2; times = 1;
+            mock.getValue(); result = 1; times = 1;
+            mock2.getValue(); result = 2; times = 1;
          }
       };
 
@@ -197,17 +199,77 @@ public final class MockInstanceMatchingTest
       assertEquals(2, mock2.getValue());
    }
 
-//   @Test
+   @Test
+   public void matchOnTwoMockInstancesWithNonStrictExpectationsAndReplayInDifferentOrder(
+      final Collaborator mock2)
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mock.getValue(); result = 1;
+            mock2.getValue(); result = 2;
+         }
+      };
+
+      assertEquals(2, mock2.getValue());
+      assertEquals(1, mock.getValue());
+      assertEquals(1, mock.getValue());
+      assertEquals(2, mock2.getValue());
+   }
+
+   @Test
    public void matchOnTwoMockInstancesForOtherwiseIdenticalExpectations(final Collaborator mock2)
    {
       mock.getValue();
       mock2.getValue();
+      mock2.setValue(1);
+      mock.setValue(1);
 
       new Verifications()
       {
          {
             mock.getValue(); times = 1;
             mock2.getValue(); times = 1;
+         }
+      };
+
+      new VerificationsInOrder()
+      {
+         {
+            mock2.setValue(1);
+            mock.setValue(1);
+         }
+      };
+   }
+
+   @Test(expected = AssertionError.class)
+   public void recordExpectationsMatchingOnMultipleMockParametersButReplayOutOfOrder(
+      final Runnable r1, final Runnable r2)
+   {
+      new Expectations()
+      {
+         {
+            r2.run();
+            r1.run();
+         }
+      };
+
+      r1.run();
+      r2.run();
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyExpectationsMatchingOnMultipleMockParametersButReplayedOutOfOrder(
+      final AbstractExecutorService es1, final AbstractExecutorService es2)
+   {
+      es2.submit((Callable<?>) null);
+      es1.submit((Runnable) null);
+
+      new FullVerificationsInOrder()
+      {
+         {
+            es1.submit((Callable<?>) any);
+            es2.submit((Runnable) any);
          }
       };
    }

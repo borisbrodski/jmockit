@@ -36,7 +36,6 @@ public abstract class VerificationPhase extends TestOnlyPhase
    private boolean allInvocationsDuringReplayMustBeVerified;
    private Object[] mockedTypesAndInstancesToFullyVerify;
    protected AssertionError pendingError;
-   private boolean matchInstance;
 
    protected VerificationPhase(
       RecordAndReplayExecution recordAndReplay, List<Expectation> expectationsInReplayOrder)

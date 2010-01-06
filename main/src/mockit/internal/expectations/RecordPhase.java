@@ -26,6 +26,7 @@ package mockit.internal.expectations;
 
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.state.*;
+import static mockit.internal.util.Utilities.*;
 
 public final class RecordPhase extends TestOnlyPhase
 {
@@ -50,7 +51,8 @@ public final class RecordPhase extends TestOnlyPhase
       Object mock, int mockAccess, String classDesc, String mockNameAndDesc, Object[] args)
       throws Throwable
    {
-      boolean matchInstance = nextInstanceToMatch != null && mock == nextInstanceToMatch;
+      //noinspection AssignmentToMethodParameter
+      mock = configureMatchingOnMockInstanceIfSpecified(mock);
       ExpectedInvocation invocation =
          new ExpectedInvocation(mock, mockAccess, classDesc, mockNameAndDesc, matchInstance, args);
       boolean nonStrictInvocation =
@@ -63,18 +65,37 @@ public final class RecordPhase extends TestOnlyPhase
 
       currentExpectation = new Expectation(this, invocation, nonStrictInvocation);
 
-      if (matchInstance) {
-         nextInstanceToMatch = null;
-      }
-
       if (argMatchers != null) {
          invocation.arguments.setMatchers(argMatchers);
          argMatchers = null;
       }
 
-      recordAndReplay.addExpectation(currentExpectation, nonStrictInvocation);
+      recordAndReplay.addRecordedExpectation(currentExpectation, nonStrictInvocation);
 
       return invocation.getDefaultValueForReturnType(this);
+   }
+
+   private Object configureMatchingOnMockInstanceIfSpecified(Object mock)
+   {
+      matchInstance = false;
+
+      if (mock == null || nextInstanceToMatch == null) {
+         return mock;
+      }
+
+      Object specified = nextInstanceToMatch;
+
+      if (mock != specified) {
+         Class<?> mockedClass = getMockedClass(mock);
+
+         if (!mockedClass.isInstance(specified)) {
+            return mock;
+         }
+      }
+
+      nextInstanceToMatch = null;
+      matchInstance = true;
+      return specified;
    }
 
    @Override

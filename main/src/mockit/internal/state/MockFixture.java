@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -30,7 +30,8 @@ import java.util.Map.*;
 
 import mockit.internal.*;
 import mockit.internal.expectations.mocking.*;
-import mockit.internal.util.*;
+
+import static mockit.internal.util.Utilities.*;
 
 /**
  * Holds data about redefined real classes and their corresponding mock classes (if any), and
@@ -133,12 +134,7 @@ public final class MockFixture
 
    public Object getNewInstanceForMockedType(Class<?> mockedType)
    {
-      if (mockedType.getName().contains(Utilities.GENERATED_SUBCLASS_PREFIX)) {
-         //noinspection AssignmentToMethodParameter
-         mockedType = mockedType.getSuperclass();
-      }
-
-      InstanceFactory instanceFactory = mockedTypesAndInstances.get(mockedType);
+      InstanceFactory instanceFactory = mockedTypesAndInstances.get(getMockedClass(mockedType));
 
       if (instanceFactory == null) {
          return null;

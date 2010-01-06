@@ -37,18 +37,19 @@ import static org.junit.Assert.*;
 
 public final class CompositeEffectTest
 {
-   @Mocked private ComponentState start;
-   @Mocked private ComponentState end;
-   @Mocked({"init", "setup"}) private Effect effect1;
-   @Mocked({"init", "setup"}) private Effect effect2;
-   @Mocked({"init", "setup"}) private Effect effectSuperClass;
+   @Mocked ComponentState start;
+   @Mocked ComponentState end;
 
-   private CompositeEffect composite;
+   CompositeEffect composite;
+   Effect effect1;
+   Effect effect2;
 
    @Before
    public void setUp()
    {
       composite = new CompositeEffect();
+      effect1 = new Unchanging();
+      effect2 = new Unchanging();
    }
 
    @Test
@@ -72,12 +73,14 @@ public final class CompositeEffectTest
       composite.addEffect(effect1);
       composite.addEffect(effect2);
 
-      new Expectations()
+      new Expectations(effect1, effect2)
       {
+         Effect effectSuper;
+
          {
             effect1.setStart(start);
             effect2.setStart(start);
-            effectSuperClass.setStart(start);
+            onInstance(composite); effectSuper.setStart(start);
          }
       };
 
@@ -90,16 +93,18 @@ public final class CompositeEffectTest
       composite.addEffect(effect1);
       composite.addEffect(effect2);
 
-      new Expectations()
+      new Expectations(effect1, effect2)
       {
+         Effect effectSuper;
+
          {
             effect1.setEnd(end);
             effect2.setEnd(end);
-            effectSuperClass.setEnd(start);
+            onInstance(composite); effectSuper.setEnd(end);
          }
       };
 
-      composite.setEnd(start);
+      composite.setEnd(end);
    }
 
    @Test
@@ -108,12 +113,14 @@ public final class CompositeEffectTest
       composite.addEffect(effect1);
       composite.addEffect(effect2);
 
-      new Expectations()
+      new Expectations(effect1, effect2)
       {
+         Effect effectSuper;
+
          {
-            onInstance(effect1).init(animator, composite);
-            onInstance(effect2).init(animator, composite);
-            effectSuperClass.init(animator, null);
+            effect1.init(animator, composite);
+            effect2.init(animator, composite);
+            onInstance(composite); effectSuper.init(animator, null);
          }
       };
 
@@ -125,7 +132,7 @@ public final class CompositeEffectTest
    {
       composite.addEffect(effect1);
 
-      new Expectations()
+      new Expectations(effect1)
       {
          {
             effect1.cleanup(animator);
@@ -138,20 +145,22 @@ public final class CompositeEffectTest
    @Test
    public void testSetup()
    {
-      CompositeEffect compositeEffect = new CompositeEffect(effect1);
-      compositeEffect.addEffect(effect2);
+      composite = new CompositeEffect(effect1);
+      composite.addEffect(effect2);
 
       final Graphics2D g2D = null;
 
-      new Expectations()
+      new Expectations(effect1, effect2)
       {
+         Effect effectSuper;
+
          {
             effect1.setup(g2D);
             effect2.setup(g2D);
-            effectSuperClass.setup(g2D);
+            onInstance(composite); effectSuper.setup(g2D);
          }
       };
 
-      compositeEffect.setup(g2D);
+      composite.setup(g2D);
    }
 }

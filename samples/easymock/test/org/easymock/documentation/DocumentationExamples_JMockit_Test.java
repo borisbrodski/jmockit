@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -43,8 +43,8 @@ public final class DocumentationExamples_JMockit_Test
          {
             mock.voteForRemoval(title);
             returns(42, 42, 42); times = 3;
-            // TODO: change repeats(n) so that it stores a repeatCount in the current
-            // InvocationResult? may break existing tests, so I am not sure, but seems worth a try
+            // TODO: change times/repeats(n) so that it stores a repeatCount in the current
+            // InvocationResult? may break existing tests, but seems worth a try
             result = new RuntimeException();
             result = -42;
          }
@@ -71,16 +71,14 @@ public final class DocumentationExamples_JMockit_Test
       new Expectations()
       {
          {
-            // TODO: if two or more mock fields/parameters of the same type are declared, shouldn't
-            // onInstance be assumed by default in all recorded instance method invocations?
-            onInstance(mock1).a();
-            onInstance(mock2).a();
+            mock1.a();
+            mock2.a();
 
-            // By default, the mock instance doesn't matter, so record only for one of them:
             mock1.c(); notStrict();
+            mock2.c(); notStrict();
 
-            onInstance(mock2).b();
-            onInstance(mock1).b();
+            mock2.b();
+            mock1.b();
          }
       };
 
@@ -115,17 +113,22 @@ public final class DocumentationExamples_JMockit_Test
       mock2.b();
       mock1.b();
 
-      new FullVerificationsInOrder()
+      new VerificationsInOrder()
       {
          {
-            // TODO: verification doesn't consider the instance, so onInstance(mock) must be added
             mock1.a();
             mock2.a();
 
-            mock1.c();
-
             mock2.b();
             mock1.b();
+         }
+      };
+
+      new Verifications()
+      {
+         {
+            mock1.c();
+            mock2.c();
          }
       };
    }

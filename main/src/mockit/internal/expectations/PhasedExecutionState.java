@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -26,26 +26,61 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
+import mockit.internal.expectations.invocation.*;
+import mockit.internal.util.*;
+
 final class PhasedExecutionState
 {
    final List<Expectation> expectations;
    final List<Expectation> nonStrictExpectations;
    final Map<Object, Object> instanceMap;
+   final List<Class<?>> mockedTypesToMatchOnInstances;
 
    PhasedExecutionState()
    {
       expectations = new ArrayList<Expectation>();
       nonStrictExpectations = new ArrayList<Expectation>();
       instanceMap = new IdentityHashMap<Object, Object>();
+      mockedTypesToMatchOnInstances = new LinkedList<Class<?>>();
+   }
+
+   void discoverMockedTypesToMatchOnInstances(List<Class<?>> targetClasses)
+   {
+      int numClasses = targetClasses.size();
+
+      if (numClasses > 1) {
+         for (int i = 0; i < numClasses; i++) {
+            Class<?> targetClass = targetClasses.get(i);
+
+            if (targetClasses.lastIndexOf(targetClass) > i) {
+               mockedTypesToMatchOnInstances.add(targetClass);
+            }
+         }
+      }
    }
 
    void addExpectation(Expectation expectation, boolean nonStrict)
    {
+      forceMatchingOnMockInstanceIfRequired(expectation.invocation);
+
       if (nonStrict) {
          nonStrictExpectations.add(expectation);
       }
       else {
          expectations.add(expectation);
+      }
+   }
+
+   private void forceMatchingOnMockInstanceIfRequired(ExpectedInvocation invocation)
+   {
+      Object mock = invocation.instance;
+
+      if (mock != null) {
+         Class<?> mockedClass = Utilities.getMockedClass(mock);
+
+         if (mockedTypesToMatchOnInstances.contains(mockedClass)) {
+            invocation.matchInstance = true;
+         }
       }
    }
 }

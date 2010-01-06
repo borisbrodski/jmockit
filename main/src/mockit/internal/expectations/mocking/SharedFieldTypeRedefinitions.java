@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -47,6 +47,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
    public void redefineTypesForTestClass()
    {
       Class<?> testClass = parentObject.getClass();
+      targetClasses.clear();
       redefineFieldTypes(testClass, !Expectations.class.isAssignableFrom(testClass));
    }
 
@@ -70,6 +71,8 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
             finalMockFields.add(typeMetadata);
          }
       }
+
+      targetClasses.add(typeRedefinition.targetClass);
 
       return typeRedefinition;
    }

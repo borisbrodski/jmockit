@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -240,13 +240,6 @@ public final class RestrictedFullVerificationsTest
    @Test
    public void verifyAllInvocationsWithReplayOnSameInstance(final Dependency mock2)
    {
-      new NonStrictExpectations()
-      {
-         {
-            onInstance(mock2).editABunchMoreStuff();
-         }
-      };
-
       mock2.editABunchMoreStuff();
 
       new FullVerifications(mock2)
@@ -260,13 +253,6 @@ public final class RestrictedFullVerificationsTest
    @Test(expected = AssertionError.class)
    public void verifyAllWithReplayOnDifferentInstanceWhenShouldBeSame(final Dependency mock2)
    {
-      new NonStrictExpectations()
-      {
-         {
-            onInstance(mock2).editABunchMoreStuff();
-         }
-      };
-
       mock2.editABunchMoreStuff();
 
       new FullVerificationsInOrder(mock2)
@@ -280,13 +266,6 @@ public final class RestrictedFullVerificationsTest
    @Test(expected = AssertionError.class)
    public void verifyAllWithUnverifiedReplayOnSameInstance(final Dependency mock2)
    {
-      new NonStrictExpectations()
-      {
-         {
-            onInstance(mock2).editABunchMoreStuff();
-         }
-      };
-
       mock.editABunchMoreStuff();
       mock2.editABunchMoreStuff();
 

@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -44,7 +44,7 @@ public final class TimingTriggerTest
          TimingTrigger timingTrigger;
 
          {
-            onInstance(source).addTarget(new TimingTrigger(target, event, false));
+            source.addTarget(new TimingTrigger(target, event, false));
             endRecording();
 
             TimingTrigger triggerAdded = TimingTrigger.addTrigger(source, target, event);
@@ -65,7 +65,7 @@ public final class TimingTriggerTest
 
          {
             timingTrigger = new TimingTrigger(target, event, true);
-            onInstance(source).addTarget(timingTrigger);
+            source.addTarget(timingTrigger);
             endRecording();
 
             TimingTrigger triggerAdded = TimingTrigger.addTrigger(source, target, event, true);
@@ -130,8 +130,6 @@ public final class TimingTriggerTest
          // if any call actually happens, the test will fail.
          @Mocked(methods = "timingEvent", inverse = true)
          final TimingTrigger unused = null;
-         
-         {}
       };
 
       timingTrigger.timingEvent(0.0f);

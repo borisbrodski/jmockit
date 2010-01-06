@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations & Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -37,8 +37,7 @@ public final class ExecutingTest
    private RecordAndReplayExecution recordAndReplayForLastTestMethod;
    private boolean shouldIgnoreMockingCallbacks;
 
-   private int mockParametersDeclared;
-   private CaptureOfNewInstancesForParameters captureOfNewInstancesForParameters;
+   private ParameterTypeRedefinitions parameterTypeRedefinitions;
 
    private final List<Object> nonStrictMocks = new ArrayList<Object>();
    private final List<Object> strictMocks = new ArrayList<Object>();
@@ -94,31 +93,22 @@ public final class ExecutingTest
          return recordAndReplayForLastTestMethod;
       }
       else {
-         // This should only happen if no expectation at all were created by the whole test, but
-         // there is a (probably empty) verification block.
+         // This should only happen if no expectations at all were created by the whole test, but
+         // there is one (probably empty) verification block.
          setUpNewRecordAndReplay();
          return currentRecordAndReplay;
       }
    }
 
-   public int getMockParametersDeclared()
+   public ParameterTypeRedefinitions getParameterTypeRedefinitions()
    {
-      return mockParametersDeclared;
+      return parameterTypeRedefinitions;
    }
 
-   public void setMockParametersDeclared(int mockParametersDeclared)
+   public void setParameterTypeRedefinitions(ParameterTypeRedefinitions redefinitions)
    {
-      this.mockParametersDeclared = mockParametersDeclared;
-   }
-
-   public CaptureOfNewInstancesForParameters getCaptureOfNewInstancesForParameters()
-   {
-      return captureOfNewInstancesForParameters;
-   }
-
-   public void setCaptureOfNewInstancesForParameters(CaptureOfNewInstancesForParameters capture)
-   {
-      captureOfNewInstancesForParameters = capture;
+      parameterTypeRedefinitions = redefinitions;
+      addNonStrictMocks(redefinitions.getNonStrictMocks());
    }
 
    public void addNonStrictMock(Class<?> mockedClass)
@@ -277,11 +267,10 @@ public final class ExecutingTest
    {
       recordAndReplayForLastTestMethod = currentRecordAndReplay;
       currentRecordAndReplay = null;
-      mockParametersDeclared = 0;
 
-      if (captureOfNewInstancesForParameters != null) {
-         captureOfNewInstancesForParameters.cleanUp();
-         captureOfNewInstancesForParameters = null;
+      if (parameterTypeRedefinitions != null) {
+         parameterTypeRedefinitions.cleanUp();
+         parameterTypeRedefinitions = null;
       }
 
       nonStrictMocks.clear();

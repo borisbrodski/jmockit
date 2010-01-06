@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -70,8 +70,10 @@ public final class RecordAndReplayExecution
       }
 
       redefinitions = null;
-      typesAndTargetObjects = Collections.emptyMap();
+      typesAndTargetObjects = new HashMap<Type, Object>(1);
       dynamicPartialMocking = null;
+      validateThereIsAtLeastOneMockedTypeInScope();
+      discoverDuplicateMockedTypesForAutomaticMockInstanceMatching();
       replayPhase = new ReplayPhase(this);
    }
 
@@ -115,17 +117,8 @@ public final class RecordAndReplayExecution
          }
 
          dynamicPartialMocking = applyDynamicPartialMocking(classesOrInstancesToBePartiallyMocked);
-
-         if (
-            redefinitions == null && dynamicPartialMocking == null &&
-            TestRun.getSharedFieldTypeRedefinitions().getTypesRedefined() == 0 &&
-            TestRun.getExecutingTest().getMockParametersDeclared() == 0
-         ) {
-            throw new IllegalStateException(
-               "No mocked types in scope; " +
-               "please declare mock fields or parameters for the types you need mocked");
-         }
-
+         validateThereIsAtLeastOneMockedTypeInScope();
+         discoverDuplicateMockedTypesForAutomaticMockInstanceMatching();
          TestRun.getExecutingTest().setRecordAndReplay(this);
       }
       finally {
@@ -150,6 +143,42 @@ public final class RecordAndReplayExecution
          Utilities.filterStackTrace(e);
          throw e;
       }
+   }
+
+   private void validateThereIsAtLeastOneMockedTypeInScope()
+   {
+      if (
+         redefinitions == null && dynamicPartialMocking == null &&
+         TestRun.getSharedFieldTypeRedefinitions().getTypesRedefined() == 0
+      ) {
+         ParameterTypeRedefinitions paramTypeRedefinitions =
+            TestRun.getExecutingTest().getParameterTypeRedefinitions();
+
+         if (paramTypeRedefinitions == null || paramTypeRedefinitions.getTypesRedefined() == 0) {
+            throw new IllegalStateException(
+               "No mocked types in scope; " +
+               "please declare mock fields or parameters for the types you need mocked");
+         }
+      }
+   }
+
+   private void discoverDuplicateMockedTypesForAutomaticMockInstanceMatching()
+   {
+      List<Class<?>> fields = TestRun.getSharedFieldTypeRedefinitions().getTargetClasses();
+      List<Class<?>> targetClasses = new ArrayList<Class<?>>(fields);
+
+      ParameterTypeRedefinitions paramTypeRedefinitions =
+         TestRun.getExecutingTest().getParameterTypeRedefinitions();
+
+      if (paramTypeRedefinitions != null) {
+         targetClasses.addAll(paramTypeRedefinitions.getTargetClasses());
+      }
+
+      if (dynamicPartialMocking != null) {
+         targetClasses.addAll(dynamicPartialMocking.getTargetClasses());
+      }
+
+      executionState.discoverMockedTypesToMatchOnInstances(targetClasses);
    }
 
    public Map<Type, Object> getLocalMocks()
@@ -227,14 +256,19 @@ public final class RecordAndReplayExecution
             return true;
          }
 
-         CaptureOfNewInstancesForParameters paramTypeCaptures =
-            TestRun.getExecutingTest().getCaptureOfNewInstancesForParameters();
+         ParameterTypeRedefinitions paramTypeRedefinitions =
+            TestRun.getExecutingTest().getParameterTypeRedefinitions();
 
-         if (
-            paramTypeCaptures != null &&
-            paramTypeCaptures.captureNewInstanceForApplicableMockParameter(mock)
-         ) {
-            return true;
+         if (paramTypeRedefinitions != null) {
+            CaptureOfNewInstancesForParameters paramTypeCaptures =
+               paramTypeRedefinitions.getCaptureOfNewInstances();
+
+            if (
+               paramTypeCaptures != null &&
+               paramTypeCaptures.captureNewInstanceForApplicableMockParameter(mock)
+            ) {
+               return true;
+            }
          }
 
          FieldTypeRedefinitions sharedFieldTypeRedefs = TestRun.getSharedFieldTypeRedefinitions();
@@ -288,7 +322,7 @@ public final class RecordAndReplayExecution
       return verification;
    }
 
-   void addExpectation(Expectation expectation, boolean nonStrictInvocation)
+   void addRecordedExpectation(Expectation expectation, boolean nonStrictInvocation)
    {
       executionState.addExpectation(expectation, nonStrictInvocation);
 

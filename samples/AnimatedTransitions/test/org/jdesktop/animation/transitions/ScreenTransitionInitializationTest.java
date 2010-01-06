@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -62,15 +62,15 @@ public final class ScreenTransitionInitializationTest
          new AnimationLayer(withInstanceOf(ScreenTransition.class));
          layer.setVisible(false);
          onInstance(container).addComponentListener(withInstanceOf(ComponentListener.class));
-         onInstance(container).getWidth(); returns(0);
-         onInstance(container).getHeight(); returns(0);
+         onInstance(container).getWidth(); result = 0;
+         onInstance(container).getHeight(); result = 0;
       }
    }
 
    final class SettingOfAnimatorField extends Expectations
    {
       {
-         onInstance(animator).isRunning(); returns(false);
+         onInstance(animator).isRunning(); result = false;
          onInstance(animator).addTarget(withInstanceOf(TimingTargetAdapter.class));
       }
    }

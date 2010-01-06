@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations & Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,22 +24,31 @@
  */
 package mockit.internal.expectations.mocking;
 
+import java.util.*;
+
 import mockit.internal.capturing.*;
 
 class TypeRedefinitions
 {
    protected final Object parentObject;
    protected int typesRedefined;
+   protected final List<Class<?>> targetClasses;
    protected CaptureOfImplementations captureOfNewInstances;
 
    protected TypeRedefinitions(Object parentObject)
    {
       this.parentObject = parentObject;
+      targetClasses = new ArrayList<Class<?>>(2);
    }
 
    public final int getTypesRedefined()
    {
       return typesRedefined;
+   }
+
+   public final List<Class<?>> getTargetClasses()
+   {
+      return targetClasses;
    }
 
    public CaptureOfImplementations getCaptureOfNewInstances()

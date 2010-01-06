@@ -32,6 +32,7 @@ public abstract class TestOnlyPhase extends Phase
 {
    protected int numberOfIterations;
    protected Object nextInstanceToMatch;
+   protected boolean matchInstance;
    protected List<Matcher<?>> argMatchers;
 
    TestOnlyPhase(RecordAndReplayExecution recordAndReplay)

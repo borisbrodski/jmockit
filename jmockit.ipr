@@ -1082,22 +1082,18 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/easymock/../lib/easymock-2.5.2.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/easymock/../lib/easymock-2.5.2-javadoc.jar!/" />
-      </JAVADOC>
+      <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/easymock/../lib/easymock-2.5.2-sources.jar!/" />
+        <root url="jar://C:/Java/easymock-2.5.2/easymock-2.5.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: easymock:easymockclassextension:0">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-2.5.2.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-2.5.2-javadoc.jar!/" />
-      </JAVADOC>
+      <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymockclassextension-2.5.2-sources.jar!/" />
+        <root url="jar://C:/Java/easymockclassextension-2.5.2/easymockclassextension-2.5.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: cglib:cglib-nodep:0">
@@ -1115,11 +1111,9 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1-javadoc.jar!/" />
-      </JAVADOC>
+      <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1-sources.jar!/" />
+        <root url="jar://C:/Java/jmock-2.5.1/jmock-2.5.1.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: jmock:jmock:junit4:0">
@@ -1325,23 +1319,18 @@
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/unitils/unitils-mock/3.1/unitils-mock-3.1.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/unitils/unitils-mock/3.1/unitils-mock-3.1-javadoc.jar!/" />
-      </JAVADOC>
+      <JAVADOC />
       <SOURCES>
         <root url="file://C:/Java/unitils-3.1/unitils-mock/src/main/java" />
-        <root url="jar://$MAVEN_REPOSITORY$/org/unitils/unitils-mock/3.1/unitils-mock-3.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.unitils:unitils-core:3.1">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/unitils/unitils-core/3.1/unitils-core-3.1.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/unitils/unitils-core/3.1/unitils-core-3.1-javadoc.jar!/" />
-      </JAVADOC>
+      <JAVADOC />
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/unitils/unitils-core/3.1/unitils-core-3.1-sources.jar!/" />
+        <root url="file://C:/Java/unitils-3.1/unitils-core/src/main/java" />
       </SOURCES>
     </library>
     <library name="Maven: commons-collections:commons-collections:3.2">
@@ -1370,11 +1359,9 @@
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/unitils/unitils-inject/3.1/unitils-inject-3.1.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/unitils/unitils-inject/3.1/unitils-inject-3.1-javadoc.jar!/" />
-      </JAVADOC>
+      <JAVADOC />
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/unitils/unitils-inject/3.1/unitils-inject-3.1-sources.jar!/" />
+        <root url="file://C:/Java/unitils-3.1/unitils-inject/src/main/java" />
       </SOURCES>
     </library>
     <library name="Maven: commons-email:commons-email:0">

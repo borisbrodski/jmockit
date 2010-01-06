@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -108,10 +108,8 @@ final class ReplayPhase extends Phase
       if (!TestRun.getExecutingTest().containsStrictMockForRunningTest(mock, mockClassDesc)) {
          ExpectedInvocation invocation =
             new ExpectedInvocation(mock, mockAccess, mockClassDesc, mockNameAndDesc, false, args);
-
          nonStrictExpectation = new Expectation(null, invocation, true);
-
-         getNonStrictExpectations().add(nonStrictExpectation);
+         recordAndReplay.executionState.addExpectation(nonStrictExpectation, true);
       }
    }
 

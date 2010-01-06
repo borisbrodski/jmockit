@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -149,9 +149,7 @@ public class TestRunnerDecorator
       ParameterTypeRedefinitions redefinitions = new ParameterTypeRedefinitions(target, testMethod);
 
       ExecutingTest executingTest = TestRun.getExecutingTest();
-      executingTest.setMockParametersDeclared(redefinitions.getTypesRedefined());
-      executingTest.setCaptureOfNewInstancesForParameters(redefinitions.getCaptureOfNewInstances());
-      executingTest.addNonStrictMocks(redefinitions.getNonStrictMocks());
+      executingTest.setParameterTypeRedefinitions(redefinitions);
 
       return redefinitions.getParameterValues();
    }

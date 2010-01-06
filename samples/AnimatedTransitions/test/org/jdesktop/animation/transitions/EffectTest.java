@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -85,7 +85,7 @@ public final class EffectTest
       new NonStrictExpectations()
       {
          {
-            state.getComponent(); returns(component);
+            state.getComponent(); result = component;
          }
       };
 
@@ -144,7 +144,7 @@ public final class EffectTest
       new NonStrictExpectations()
       {
          {
-            image.getWidth(null); returns(100);
+            image.getWidth(null); result = 100;
          }
       };
 
@@ -196,7 +196,7 @@ public final class EffectTest
       new Expectations()
       {
          {
-            state.getSnapshot(); returns(componentImage);
+            state.getSnapshot(); result = componentImage;
          }
       };
 
@@ -220,7 +220,7 @@ public final class EffectTest
       new Expectations()
       {
          {
-            state.getSnapshot(); returns(componentImage);
+            state.getSnapshot(); result = componentImage;
          }
       };
 
@@ -235,7 +235,7 @@ public final class EffectTest
       new NonStrictExpectations()
       {
          {
-            state.getSnapshot(); returns(componentImage);
+            state.getSnapshot(); result = componentImage;
          }
       };
 
@@ -260,15 +260,15 @@ public final class EffectTest
       {
          {
             // Start state:
-            onInstance(startState).getWidth(); returns(20);
-            onInstance(startState).getHeight(); returns(20);
+            startState.getWidth(); result = 20;
+            startState.getHeight(); result = 20;
 
             // End state with different width or height:
-            onInstance(endState).getWidth(); returns(20 + dx);
-            onInstance(endState).getHeight(); returns(20 + dy);
+            endState.getWidth(); result = 20 + dx;
+            endState.getHeight(); result = 20 + dy;
 
             ComponentState stateToGetSnapshotImageFrom = dx < 0 || dy < 0 ? startState : endState;
-            onInstance(stateToGetSnapshotImageFrom).getSnapshot(); returns(componentImage);
+            stateToGetSnapshotImageFrom.getSnapshot(); result = componentImage;
          }
       };
 

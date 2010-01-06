@@ -141,12 +141,27 @@ public final class Utilities
             // Assumes that the proxy class implements a single interface.
             argType = argType.getInterfaces()[0];
          }
-         else if (argType.getSimpleName().startsWith(GENERATED_SUBCLASS_PREFIX)) {
-            argType = argType.getSuperclass();
+         else {
+            argType = getMockedClass(argType);
          }
       }
 
       return argType;
+   }
+
+   public static Class<?> getMockedClass(Class<?> aClass)
+   {
+      return isGeneratedSubclass(aClass.getName()) ? aClass.getSuperclass() : aClass;
+   }
+
+   public static Class<?> getMockedClass(Object mock)
+   {
+      return getMockedClass(mock.getClass());
+   }
+
+   public static boolean isGeneratedSubclass(String className)
+   {
+      return className.contains(GENERATED_SUBCLASS_PREFIX);
    }
 
    public static <T> T newInnerInstance(

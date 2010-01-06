@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -43,10 +43,22 @@ public final class DynamicPartialMocking
       });
    }};
 
-   private final Map<Class<?>, List<MockFilter>> classesAndMockFilters =
-      new LinkedHashMap<Class<?>, List<MockFilter>>();
-   private final Map<Class<?>, byte[]> modifiedClassfiles = new HashMap<Class<?>, byte[]>();
+   private final List<Class<?>> targetClasses;
+   private final Map<Class<?>, List<MockFilter>> classesAndMockFilters;
+   private final Map<Class<?>, byte[]> modifiedClassfiles;
    private MockingConfiguration mockingCfg;
+
+   public DynamicPartialMocking()
+   {
+      targetClasses = new ArrayList<Class<?>>(2);
+      classesAndMockFilters = new LinkedHashMap<Class<?>, List<MockFilter>>();
+      modifiedClassfiles = new HashMap<Class<?>, byte[]>();
+   }
+
+   public List<Class<?>> getTargetClasses()
+   {
+      return targetClasses;
+   }
 
    public void redefineTypes(Object[] classesOrInstancesToBePartiallyMocked)
    {
@@ -78,6 +90,8 @@ public final class DynamicPartialMocking
          targetClass = classOrInstance.getClass();
          redefineClassAndItsSuperClasses(targetClass);
       }
+      
+      targetClasses.add(targetClass);
    }
 
    private void redefineClassAndItsSuperClasses(Class<?> realClass)

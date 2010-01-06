@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -71,7 +71,7 @@ final class CapturedType
    
    boolean isToBeCaptured(String className)
    {
-      if (className.contains(Utilities.GENERATED_SUBCLASS_PREFIX)) {
+      if (Utilities.isGeneratedSubclass(className)) {
          return false;
       }
 

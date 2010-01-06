@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -194,22 +194,19 @@ public final class CapturingImplementationsTest
    }
 
    @Test
-   public void captureGeneratedMockSubclass(@Capturing final AbstractService mock1)
+   public void captureGeneratedMockSubclass(
+      @Capturing final AbstractService mock1, final AbstractService mock2)
    {
       new NonStrictExpectations()
       {
-         AbstractService mock2;
-
          {
-            onInstance(mock1).doSomething(); returns(true);
-            onInstance(mock2).doSomething(); returns(true);
-            endRecording();
-
-            assertTrue(mock1.doSomething());
-            assertTrue(mock2.doSomething());
+            mock1.doSomething(); result = true;
+            mock2.doSomething(); result = false;
          }
       };
 
+      assertFalse(mock2.doSomething());
+      assertTrue(mock1.doSomething());
       assertFalse(new DefaultServiceImpl().doSomething());
    }
 }
