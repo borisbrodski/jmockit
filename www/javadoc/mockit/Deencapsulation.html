@@ -236,6 +236,23 @@ Provides utility methods that enable access to (ie "de-encapsulate") otherwise n
 </TR>
 </TABLE>
 </CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/Deencapsulation.html#invoke(java.lang.String, java.lang.String, java.lang.Object...)">invoke</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;classWithStaticMethod,
+       <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
+       <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullArgs)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Invokes a non-accessible (eg <code>private</code> static method with the given arguments.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
+<TR ALIGN="right" VALIGN="">
+<TD NOWRAP><FONT SIZE="-1">
+<CODE>&lt;T&gt; T</CODE></FONT></TD>
+</TR>
+</TABLE>
+</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Deencapsulation.html#newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)">newInnerInstance</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;innerClassSimpleName,
                  <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;outerClassInstance,
                  <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullArgs)</CODE>
@@ -415,7 +432,7 @@ public static &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/do
 <P>
 <DD><DL>
 <DT><B>Type Parameters:</B><DD><CODE>T</CODE> - interface or class type to which the returned instance should be assignable<DT><B>Parameters:</B><DD><CODE>classWithStaticMethod</CODE> - the class on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the static method to invoke<DD><CODE>nonNullArgs</CODE> - zero or more non-null parameter values for the invocation; if a null value
- needs to be passed, the <code>Class</code> object for the parameter type must be passed instead</DL>
+ needs to be passed, the <code>Class</code> object for the parameter type must be passed instead<DT><B>See Also:</B><DD><A HREF="../mockit/Deencapsulation.html#invoke(java.lang.String, java.lang.String, java.lang.Object...)"><CODE>invoke(String, String, Object...)</CODE></A></DL>
 </DD>
 </DL>
 <HR>
@@ -434,6 +451,23 @@ public static &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/do
 <DT><B>Type Parameters:</B><DD><CODE>T</CODE> - interface or class type to which the returned instance should be assignable<DT><B>Parameters:</B><DD><CODE>objectWithMethod</CODE> - the instance on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the method to invoke<DD><CODE>nonNullArgs</CODE> - zero or more non-null parameter values for the invocation; if a null value
  needs to be passed, the <code>Class</code> object for the parameter type must be passed instead
 <DT><B>Returns:</B><DD>the return value from the invoked method, wrapped if primitive<DT><B>See Also:</B><DD><A HREF="../mockit/Deencapsulation.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><CODE>invoke(Class, String, Object...)</CODE></A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="invoke(java.lang.String, java.lang.String, java.lang.Object...)"><!-- --></A><H3>
+invoke</H3>
+<PRE>
+public static &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;classWithStaticMethod,
+                           <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
+                           <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullArgs)</PRE>
+<DL>
+<DD>Invokes a non-accessible (eg <code>private</code> static method with the given arguments.
+<P>
+<DD><DL>
+<DT><B>Type Parameters:</B><DD><CODE>T</CODE> - interface or class type to which the returned instance should be assignable<DT><B>Parameters:</B><DD><CODE>classWithStaticMethod</CODE> - the (fully qualified) name of the class on which the invocation
+ is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the static method to invoke<DD><CODE>nonNullArgs</CODE> - zero or more non-null parameter values for the invocation; if a null value
+ needs to be passed, the <code>Class</code> object for the parameter type must be passed instead<DT><B>See Also:</B><DD><A HREF="../mockit/Deencapsulation.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><CODE>invoke(Class, String, Object...)</CODE></A></DL>
 </DD>
 </DL>
 <HR>
@@ -614,6 +648,6 @@ DETAIL:&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHO
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 
 <HR>
-<font size=-1>© 2006-2009 Rogério Liesenfeld</font>
+<font size=-1>© 2006-2010 Rogério Liesenfeld</font>
 </BODY>
 </HTML>

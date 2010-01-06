@@ -288,9 +288,25 @@ public final class DeencapsulationTest
    }
 
    @Test
+   public void invokeStaticMethodByClassNameWithoutParameters()
+   {
+      Boolean result = invoke(Subclass.class.getName(), "anStaticMethod");
+
+      assertTrue(result);
+   }
+
+   @Test
    public void invokeStaticMethodWithMultipleParameters()
    {
       Object result = invoke(Subclass.class, "staticMethod", (short) 7, "abc", true);
+
+      assertNull(result);
+   }
+
+   @Test
+   public void invokeStaticMethodByClassNameWithMultipleParameters()
+   {
+      Object result = invoke(Subclass.class.getName(), "staticMethod", (short) 7, "abc", true);
 
       assertNull(result);
    }

@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -75,7 +75,7 @@ public final class Deencapsulation
     */
    public static <T> T getField(Object objectWithField, Class<T> fieldType)
    {
-      return (T) Utilities.getField(objectWithField.getClass(), fieldType, objectWithField);
+      return Utilities.getField(objectWithField.getClass(), fieldType, objectWithField);
    }
 
    /**
@@ -105,7 +105,7 @@ public final class Deencapsulation
     */
    public static <T> T getField(Class<?> classWithStaticField, Class<T> fieldType)
    {
-      return (T) Utilities.getField(classWithStaticField, fieldType, null);
+      return Utilities.getField(classWithStaticField, fieldType, null);
    }
 
    /**
@@ -187,11 +187,32 @@ public final class Deencapsulation
     * @param nonNullArgs zero or more non-null parameter values for the invocation; if a null value
     * needs to be passed, the {@code Class} object for the parameter type must be passed instead
     * @param <T> interface or class type to which the returned instance should be assignable
+    *
+    * @see #invoke(String, String, Object...)
     */
    public static <T> T invoke(
       Class<?> classWithStaticMethod, String methodName, Object... nonNullArgs)
    {
       return (T) Utilities.invoke(classWithStaticMethod, null, methodName, nonNullArgs);
+   }
+
+   /**
+    * Invokes a non-accessible (eg {@code private} static method with the given arguments.
+    *
+    * @param classWithStaticMethod the (fully qualified) name of the class on which the invocation
+    * is to be done; must not be null
+    * @param methodName the name of the static method to invoke
+    * @param nonNullArgs zero or more non-null parameter values for the invocation; if a null value
+    * needs to be passed, the {@code Class} object for the parameter type must be passed instead
+    * @param <T> interface or class type to which the returned instance should be assignable
+    *
+    * @see #invoke(Class, String, Object...)
+    */
+   public static <T> T invoke(
+      String classWithStaticMethod, String methodName, Object... nonNullArgs)
+   {
+      Class<Object> theClass = Utilities.loadClass(classWithStaticMethod);
+      return (T) Utilities.invoke(theClass, null, methodName, nonNullArgs);
    }
 
    /**
