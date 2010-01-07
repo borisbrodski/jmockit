@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -33,12 +33,8 @@ abstract class ListWithFilesAndPercentages
 {
    protected final PrintWriter output;
    private final String baseIndent;
-   int totalSegments;
-   int coveredSegments;
-   int totalPaths;
-   int coveredPaths;
-   int totalDataItems;
-   int coveredDataItems;
+   final int[] totalItems = new int[3];
+   final int[] coveredItems = new int[3];
    private boolean firstColumnWithDoubleSpan;
 
    protected ListWithFilesAndPercentages(PrintWriter output, String baseIndent)
@@ -54,13 +50,8 @@ abstract class ListWithFilesAndPercentages
       }
 
       Collections.sort(fileNames);
-
-      totalSegments = 0;
-      coveredSegments = 0;
-      totalPaths = 0;
-      coveredPaths = 0;
-      totalDataItems = 0;
-      coveredDataItems = 0;
+      Arrays.fill(totalItems, 0);
+      Arrays.fill(coveredItems, 0);
 
       for (String fileName : fileNames) {
          printIndent();

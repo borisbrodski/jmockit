@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -57,15 +57,16 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       output.write("  <td class='file'>");
 
       int fileNameLength = buildFileNameWithoutExtensionButCompletedWithSpaces(fileName);
+      FileCoverageData fileData = filesToFileData.get(filePath);
 
-      if (filesToFileData.containsKey(filePath)) {
-         writeTableCellWithFileName(fileNameLength);
-         writeCodeCoveragePercentageForFile();
-         writePathCoveragePercentageForFile();
-         writeDataCoveragePercentageForFile();
+      if (fileData == null) {
+         writeTableCellsWithFileNameAndUnknownCoverageMetrics();
       }
       else {
-         writeTableCellsWithFileNameAndUnknownCoverageMetrics();
+         writeTableCellWithFileName(fileNameLength);
+         writeCodeCoveragePercentageForFile(fileData);
+         writePathCoveragePercentageForFile(fileData);
+         writeDataCoveragePercentageForFile(fileData);
       }
    }
 
@@ -107,34 +108,30 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       output.println("</td>");
    }
 
-   private void writeCodeCoveragePercentageForFile()
+   private void writeCodeCoveragePercentageForFile(FileCoverageData fileData)
    {
-      FileCoverageData fileData = filesToFileData.get(filePath);
       int percentage = fileData.getCodeCoveragePercentage();
 
-      coveredSegments += fileData.getCoveredSegments();
-      totalSegments += fileData.getTotalSegments();
+      coveredItems[0] += fileData.getCoveredSegments();
+      totalItems[0] += fileData.getTotalSegments();
 
       printCoveragePercentage(true, percentage);
    }
 
-   private void writePathCoveragePercentageForFile()
+   private void writePathCoveragePercentageForFile(FileCoverageData fileData)
    {
-      FileCoverageData fileData = filesToFileData.get(filePath);
       int percentage = fileData.getPathCoveragePercentage();
 
-      coveredPaths += fileData.getCoveredPaths();
-      totalPaths += fileData.getTotalPaths();
+      coveredItems[1] += fileData.getCoveredPaths();
+      totalItems[1] += fileData.getTotalPaths();
 
       printCoveragePercentage(false, percentage);
    }
 
-   private void writeDataCoveragePercentageForFile()
+   private void writeDataCoveragePercentageForFile(FileCoverageData fileData)
    {
-      FileCoverageData fileData = filesToFileData.get(filePath);
-
-      coveredDataItems += fileData.dataCoverageInfo.getCoveredItems();
-      totalDataItems += fileData.dataCoverageInfo.getTotalItems();
+      coveredItems[2] += fileData.dataCoverageInfo.getCoveredItems();
+      totalItems[2] += fileData.dataCoverageInfo.getTotalItems();
 
       int percentage = fileData.dataCoverageInfo.getCoveragePercentage();
 

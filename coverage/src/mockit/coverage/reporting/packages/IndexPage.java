@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -35,9 +35,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
 {
    private final List<File> sourceDirs;
    private final Map<String, List<String>> packageToFiles;
-   private final Map<String, Integer> packageToPackageCodePercentages;
-   private final Map<String, Integer> packageToPackagePathPercentages;
-   private final Map<String, Integer> packageToPackageDataPercentages;
+   private final Map<String, int[]> packageToPackagePercentages;
    private final PackageCoverageReport packageReport;
    private String packageName;
 
@@ -49,9 +47,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
       super(new OutputFile(outputFile), "    ");
       this.sourceDirs = sourceDirs;
       this.packageToFiles = packageToFiles;
-      packageToPackageCodePercentages = new HashMap<String, Integer>();
-      packageToPackagePathPercentages = new HashMap<String, Integer>();
-      packageToPackageDataPercentages = new HashMap<String, Integer>();
+      packageToPackagePercentages = new HashMap<String, int[]>();
       packageReport = new PackageCoverageReport(output, fileToFileData, sourceDirs != null);
    }
 
@@ -135,13 +131,13 @@ public final class IndexPage extends ListWithFilesAndPercentages
       output.println("    <tr class='total'>");
       output.println("      <td>Total</td><td>&nbsp;</td>");
 
-      int totalLinePercentage = CoveragePercentage.calculate(coveredSegments, totalSegments);
+      int totalLinePercentage = CoveragePercentage.calculate(coveredItems[0], totalItems[0]);
       printCoveragePercentage(true, totalLinePercentage);
 
-      int totalPathPercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
+      int totalPathPercentage = CoveragePercentage.calculate(coveredItems[1], totalItems[1]);
       printCoveragePercentage(false, totalPathPercentage);
 
-      int totalDataPercentage = CoveragePercentage.calculate(coveredDataItems, totalDataItems);
+      int totalDataPercentage = CoveragePercentage.calculate(coveredItems[2], totalItems[2]);
       printCoveragePercentage(false, totalDataPercentage);
 
       output.println("    </tr>");
@@ -162,9 +158,9 @@ public final class IndexPage extends ListWithFilesAndPercentages
       this.packageName = packageName;
       writeTableCellWithPackageName();
       writeInternalTableForSourceFiles();
-      writeCodeCoveragePercentageForFile();
-      writePathCoveragePercentageForFile();
-      writeDataCoveragePercentageForFile();
+      writeCoveragePercentageForFile(0, true);
+      writeCoveragePercentageForFile(1, false);
+      writeCoveragePercentageForFile(2, false);
    }
 
    private void writeTableCellWithPackageName()
@@ -187,9 +183,9 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
       packageReport.writeMetricsForEachFile(packageName, packageToFiles.get(packageName));
 
-      recordCodeCoverageInformationForPackage();
-      recordPathCoverageInformationForPackage();
-      recordDataCoverageInformationForPackage();
+      recordCoverageInformationForPackage(0);
+      recordCoverageInformationForPackage(1);
+      recordCoverageInformationForPackage(2);
 
       printIndent();
       output.println("    </table>");
@@ -197,48 +193,33 @@ public final class IndexPage extends ListWithFilesAndPercentages
       output.println("  </td>");
    }
 
-   private void recordCodeCoverageInformationForPackage()
+   private void recordCoverageInformationForPackage(int metric)
    {
-      int packagePercentage =
-         CoveragePercentage.calculate(packageReport.coveredSegments, packageReport.totalSegments);
-      packageToPackageCodePercentages.put(packageName, packagePercentage);
-      totalSegments += packageReport.totalSegments;
-      coveredSegments += packageReport.coveredSegments;
+      int coveredInPackage = packageReport.coveredItems[metric];
+      int totalInPackage = packageReport.totalItems[metric];
+      int packagePercentage = CoveragePercentage.calculate(coveredInPackage, totalInPackage);
+
+      setPackageCoveragePercentage(metric, packagePercentage);
+
+      totalItems[metric] += totalInPackage;
+      coveredItems[metric] += coveredInPackage;
    }
 
-   private void recordPathCoverageInformationForPackage()
+   private void setPackageCoveragePercentage(int metric, int percentage)
    {
-      int packagePercentage =
-         CoveragePercentage.calculate(packageReport.coveredPaths, packageReport.totalPaths);
-      packageToPackagePathPercentages.put(packageName, packagePercentage);
-      totalPaths += packageReport.totalPaths;
-      coveredPaths += packageReport.coveredPaths;
+      int[] percentages = packageToPackagePercentages.get(packageName);
+
+      if (percentages == null) {
+         percentages = new int[3];
+         packageToPackagePercentages.put(packageName, percentages);
+      }
+
+      percentages[metric] = percentage;
    }
 
-   private void recordDataCoverageInformationForPackage()
+   private void writeCoveragePercentageForFile(int metric, boolean firstColumn)
    {
-      int packagePercentage =
-         CoveragePercentage.calculate(packageReport.coveredDataItems, packageReport.totalDataItems);
-      packageToPackageDataPercentages.put(packageName, packagePercentage);
-      totalDataItems += packageReport.totalDataItems;
-      coveredDataItems += packageReport.coveredDataItems;
-   }
-
-   private void writeCodeCoveragePercentageForFile()
-   {
-      int filePercentage = packageToPackageCodePercentages.get(packageName);
-      printCoveragePercentage(true, filePercentage);
-   }
-
-   private void writePathCoveragePercentageForFile()
-   {
-      int filePercentage = packageToPackagePathPercentages.get(packageName);
-      printCoveragePercentage(false, filePercentage);
-   }
-
-   private void writeDataCoveragePercentageForFile()
-   {
-      int filePercentage = packageToPackageDataPercentages.get(packageName);
-      printCoveragePercentage(false, filePercentage);
+      int filePercentage = packageToPackagePercentages.get(packageName)[metric];
+      printCoveragePercentage(firstColumn, filePercentage);
    }
 }

@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -58,31 +58,29 @@ class CoverageReport
 
       createOutputDirIfNotExists();
 
-      File outputFile = new File(outputDir, "index.html");
+      File outputFile = createOutputFileForIndexPage();
 
-      if (outputFile.exists() && !outputFile.canWrite()) {
-         System.out.println(
-            "JMockit: " + outputFile.getCanonicalPath() +
-            " is read-only; report generation canceled");
+      if (outputFile == null) {
          return;
       }
 
-      if (sourceDirs != null && sourceDirs.size() > 1) {
+      boolean withSourceFilePages = sourceDirs != null;
+
+      if (withSourceFilePages && sourceDirs.size() > 1) {
          System.out.println("JMockit: Coverage source dirs: " + sourceDirs);
       }
 
       generateFileCoverageReportsWhileBuildingPackageLists();
 
-      if (sourceDirs != null) {
+      if (withSourceFilePages) {
          addUncoveredSourceFilesToPackageLists();
       }
 
       new IndexPage(outputFile, sourceDirs, packageToFiles, fileToFileData).generate();
-
-      new StaticFiles().copyToOutputDir(outputDir, sourceDirs != null);
+      new StaticFiles().copyToOutputDir(outputDir, withSourceFilePages);
 
       System.out.println(
-         "JMockit: Coverage report written to " + new File(outputDir).getCanonicalPath());
+         "JMockit: Coverage report written to " + outputFile.getParentFile().getCanonicalPath());
    }
 
    private void createOutputDirIfNotExists()
@@ -93,6 +91,20 @@ class CoverageReport
          boolean dirCreated = outDir.mkdir();
          assert dirCreated : "Failed to create output dir: " + outputDir;
       }
+   }
+
+   private File createOutputFileForIndexPage() throws IOException
+   {
+      File outputFile = new File(outputDir, "index.html");
+
+      if (outputFile.exists() && !outputFile.canWrite()) {
+         System.out.println(
+            "JMockit: " + outputFile.getCanonicalPath() +
+            " is read-only; report generation canceled");
+         return null;
+      }
+
+      return outputFile;
    }
 
    private void generateFileCoverageReportsWhileBuildingPackageLists() throws IOException
