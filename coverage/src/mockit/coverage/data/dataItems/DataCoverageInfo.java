@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -34,6 +34,7 @@ public final class DataCoverageInfo implements Serializable
 {
    private static final long serialVersionUID = -4561686103982673490L;
 
+   public final List<String> allFields = new ArrayList<String>(2);
    public final Map<String, Map<Integer, Boolean>> staticFieldsData =
       new LinkedHashMap<String, Map<Integer, Boolean>>();
    public final Map<String, Map<Integer, List<Integer>>> instanceFieldsData =
@@ -43,13 +44,14 @@ public final class DataCoverageInfo implements Serializable
 
    public void addField(String className, String fieldName, boolean isStatic)
    {
-      String classAndFieldNames = className + '.' + fieldName;
+      String classAndField = className + '.' + fieldName;
+      allFields.add(classAndField);
 
       if (isStatic) {
-         staticFieldsData.put(classAndFieldNames, new HashMap<Integer, Boolean>());
+         staticFieldsData.put(classAndField, new HashMap<Integer, Boolean>());
       }
       else {
-         instanceFieldsData.put(classAndFieldNames, new HashMap<Integer, List<Integer>>());
+         instanceFieldsData.put(classAndField, new HashMap<Integer, List<Integer>>());
       }
    }
 
@@ -108,6 +110,24 @@ public final class DataCoverageInfo implements Serializable
       fieldData.remove(instanceId);
    }
 
+   public boolean hasFields()
+   {
+      return !allFields.isEmpty();
+   }
+
+   public boolean isCovered(String classAndFieldNames)
+   {
+      Map<Integer, List<Integer>> instanceFieldInfo = instanceFieldsData.get(classAndFieldNames);
+
+      if (instanceFieldInfo != null && isInstanceFieldCovered(instanceFieldInfo)) {
+         return true;
+      }
+
+      Map<Integer, Boolean> staticFieldInfo = staticFieldsData.get(classAndFieldNames);
+
+      return staticFieldInfo != null && isStaticFieldCovered(staticFieldInfo);
+   }
+
    public int getTotalItems()
    {
       return staticFieldsData.size() + instanceFieldsData.size();
@@ -122,24 +142,40 @@ public final class DataCoverageInfo implements Serializable
       coveredDataItems = 0;
 
       for (Map<Integer, Boolean> withUnreadValue : staticFieldsData.values()) {
-         for (Boolean unread : withUnreadValue.values()) {
-            if (unread == null) {
-               coveredDataItems++;
-               break;
-            }
+         if (isStaticFieldCovered(withUnreadValue)) {
+            coveredDataItems++;
          }
       }
 
       for (Map<Integer, List<Integer>> withUnreadValue : instanceFieldsData.values()) {
-         for (List<Integer> unreadInstances : withUnreadValue.values()) {
-            if (unreadInstances.isEmpty()) {
-               coveredDataItems++;
-               break;
-            }
+         if (isInstanceFieldCovered(withUnreadValue)) {
+            coveredDataItems++;
          }
       }
 
       return coveredDataItems;
+   }
+
+   private boolean isStaticFieldCovered(Map<Integer, Boolean> fieldInfo)
+   {
+      for (Boolean withUnreadValue : fieldInfo.values()) {
+         if (withUnreadValue == null) {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   private boolean isInstanceFieldCovered(Map<Integer, List<Integer>> fieldInfo)
+   {
+      for (List<Integer> unreadInstances : fieldInfo.values()) {
+         if (unreadInstances.isEmpty()) {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    public int getCoveragePercentage()

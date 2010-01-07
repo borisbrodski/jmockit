@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -28,8 +28,10 @@ import java.io.*;
 import java.util.*;
 
 import mockit.coverage.data.*;
+import mockit.coverage.data.dataItems.*;
 import mockit.coverage.paths.*;
 import mockit.coverage.reporting.OutputFile;
+import mockit.coverage.reporting.dataCoverage.*;
 import mockit.coverage.reporting.lineCoverage.*;
 import mockit.coverage.reporting.parsing.*;
 import mockit.coverage.reporting.pathCoverage.*;
@@ -44,6 +46,7 @@ public final class FileCoverageReport
    private final LineParser lineParser = new LineParser();
    private final LineCoverageOutput lineCoverage;
    private final PathCoverageOutput pathCoverage;
+   private final DataCoverageOutput dataCoverage;
 
    public FileCoverageReport(
       String outputDir, InputFile inputFile, FileCoverageData fileData, boolean withCallPoints)
@@ -51,10 +54,14 @@ public final class FileCoverageReport
    {
       this.inputFile = inputFile;
       output = new OutputFile(outputDir, inputFile.filePath);
+
       lineCoverage = new LineCoverageOutput(output, fileData.getLineToLineData(), withCallPoints);
 
       Collection<MethodCoverageData> methods = fileData.getMethods();
       pathCoverage = methods.isEmpty() ? null : new PathCoverageOutput(output, methods);
+
+      DataCoverageInfo dataCoverageInfo = fileData.dataCoverageInfo;
+      dataCoverage = dataCoverageInfo.hasFields() ? new DataCoverageOutput(dataCoverageInfo) : null;
    }
 
    public void generate() throws IOException
@@ -84,8 +91,14 @@ public final class FileCoverageReport
       while ((line = inputFile.input.readLine()) != null) {
          lineParser.parse(line);
 
-         if (pathCoverage != null && !lineParser.isInComments()) {
-            pathCoverage.writePathCoverageInfoIfLineStartsANewMethodOrConstructor(lineParser);
+         if (!lineParser.isInComments() && !lineParser.isBlankLine()) {
+            if (dataCoverage != null) {
+               dataCoverage.writeCoverageInfoIfLineStartsANewFieldDeclaration(lineParser);
+            }
+
+            if (pathCoverage != null) {
+               pathCoverage.writePathCoverageInfoIfLineStartsANewMethodOrConstructor(lineParser);
+            }
          }
 
          lineCoverage.writeLineOfSourceCodeWithCoverageInfo(lineParser);

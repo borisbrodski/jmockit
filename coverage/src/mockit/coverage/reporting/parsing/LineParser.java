@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,6 +24,8 @@
  */
 package mockit.coverage.reporting.parsing;
 
+import java.util.*;
+
 import mockit.coverage.reporting.parsing.LineElement.*;
 
 /**
@@ -39,15 +41,19 @@ public final class LineParser
    private int lineNum;
    private String line;
    private LineElement initialElement;
-   private LineElement currentElement;
    private boolean inComments;
 
    // Helper variables:
+   private LineElement currentElement;
    private int lineLength;
    private int startPos;
    private boolean inCodeElement;
    private int pos;
    private int currChar;
+
+   // TODO: keep track of class and method declarations; create FileParser class
+   private List<String> currentClasses;
+   private boolean insideMethodBody;
 
    public int getNumber()
    {
@@ -56,7 +62,17 @@ public final class LineParser
 
    public boolean isBlankLine()
    {
-      return line.trim().length() == 0;
+      int n = line.length();
+
+      for (int i = 0; i < n; i++) {
+         char c = line.charAt(i);
+
+         if (!Character.isWhitespace(c)) {
+            return false;
+         }
+      }
+
+      return true;
    }
 
    public boolean isInComments()

@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -36,6 +36,8 @@ public final class LineElement implements Iterable<LineElement>
 
    private final ElementType type;
    private final String text;
+   private String openingTag;
+   private String closingTag;
    private LineElement next;
 
    LineElement(ElementType type, String text)
@@ -57,6 +59,12 @@ public final class LineElement implements Iterable<LineElement>
       return next;
    }
 
+   public void wrapText(String openingTag, String closingTag)
+   {
+      this.openingTag = openingTag;
+      this.closingTag = closingTag;
+   }
+
    void setNext(LineElement next)
    {
       this.next = next;
@@ -67,11 +75,21 @@ public final class LineElement implements Iterable<LineElement>
       LineElement element = this;
 
       while (element != null && !element.isCode()) {
-         line.append(element.text);
+         element.appendText(line);
          element = element.next;
       }
 
       return element;
+   }
+
+   private void appendText(StringBuilder line)
+   {
+      if (openingTag == null) {
+         line.append(text);
+      }
+      else {
+         line.append(openingTag).append(text).append(closingTag);
+      }
    }
 
    public LineElement findNextBranchingPoint()
@@ -127,12 +145,23 @@ public final class LineElement implements Iterable<LineElement>
       return 0;
    }
 
+   public LineElement findWord(String word)
+   {
+      for (LineElement element : this) {
+         if (element.isCode() && word.equals(element.text)) {
+            return element;
+         }
+      }
+
+      return null;
+   }
+
    public void appendAllBefore(StringBuilder line, LineElement elementToStopBefore)
    {
       LineElement elementToPrint = this;
 
       do {
-         line.append(elementToPrint.text);
+         elementToPrint.appendText(line);
          elementToPrint = elementToPrint.next;
       }
       while (elementToPrint != elementToStopBefore);
@@ -171,7 +200,7 @@ public final class LineElement implements Iterable<LineElement>
       StringBuilder line = new StringBuilder(200);
 
       for (LineElement element : this) {
-         line.append(element.text);
+         element.appendText(line);
       }
 
       return line.toString();
