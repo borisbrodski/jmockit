@@ -44,7 +44,7 @@
    <li>
       <strong>Enhancement</strong> and <em>potentially breaking change</em>:
       to make it easier to match invocations on the invoked instance, the semantics obtained from a
-      call to <code>onInstance(mock)</code> is now <em>implied</em> whenever a test method has in
+      call to <code>onInstance(mock)</code> are now <em>implied</em> whenever a test method has in
       its scope two or more mock fields/parameters of the exact same mocked type.
       This change greatly reduces the cases where explicit calls to <code>onInstance(mock)</code>
       were needed, but it may break existing tests.
