@@ -66,7 +66,5 @@ function showHideAllFiles(header)
 function showHideFiles(files)
 {
    var table = files.parentNode.cells[1].getElementsByTagName('table')[0];
-   var body = table.style;
-   var wasHidden = body.display == 'none';
-   body.display = wasHidden ? 'block' : 'none';
+   table.style.display = table.style.display == 'none' ? 'block' : 'none';
 }

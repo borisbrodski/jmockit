@@ -1,5 +1,5 @@
 table { border-spacing: 1px; }
-table table { width: 100%; border-spacing: 0px; }
+table table { width: 100%; border-spacing: 0; }
 caption {
    background-color: #483d8b; color: white;
    font-size: larger;
@@ -37,12 +37,14 @@ pre.comment { margin: 0; color: gray; }
 .covered { background-color: #90ee90; }
 .uncovered { background-color: #f08080; }
 
-td.file {
-   vertical-align: middle; background-color: #e0e0e0; padding: 2px;
-   border-bottom: white solid 1px;
+td.package, td.file {
+   background-color: #e0e0e0; padding: 2px; border-bottom: white solid 1px;
 }
+td.click { cursor: pointer; }
+td.file { white-space: pre; }
+
 td.coverage {
-   font-weight: bolder; width: 3em; text-align: right; vertical-align: middle;
+   font-weight: bolder; width: 3em; text-align: right;
    border-bottom: white solid 1px;
 }
 td.unknown { background-color: #daa520; text-align: center; }
@@ -50,7 +52,7 @@ td.nocode { background-color: #999999; text-align: center; }
 
 pre.jmp { background-color: #f8ebb8; }
 
-td.total { text-align: right; font-weight: bold; background-color: #e0e0e0; }
+.total td { text-align: right; font-weight: bold; background-color: #e0e0e0; }
 
 .cp { cursor: pointer; }
 
