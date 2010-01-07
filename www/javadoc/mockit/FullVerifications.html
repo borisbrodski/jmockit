@@ -1355,10 +1355,32 @@ protected final &lt;T&gt; T <B>onInstance</B>(T&nbsp;mock)</PRE>
  By default, such instances can be different between the replay phase and the record or verify
  phase, even though the method or constructor invoked is the same, and the invocation arguments
  all match.
- The use of this method allows the invocation(s) to also be matched on the instance invoked.
+ The use of this method allows invocations to also be matched on the instance invoked.
+ <p/>
+ Typically, tests that need to match instance invocations on the mock instances invoked will
+ declare two or more mock fields and/or parameters of the exact same mocked type. These mocks
+ will then be passed to the code under test, which will invoke them during the replay phase.
+ To avoid the need to explicitly call <code>onInstance(mock)</code> on each of these different
+ instances of the same type, instance matching is <em>implied</em> (and automatically applied
+ to all relevant invocations) whenever two or more mock instances of the same type are in scope
+ for a given test method. This property of the API makes the use of <code>onInstance</code> much
+ less frequent than it might otherwise be.
+ <p/>
+ In most cases, an invocation to the given mock instance will be made on the value returned by
+ this method (ie, a chained invocation).
+ However, in the situation where the tested method calls an instance method defined in a mocked
+ super-class (possibly an overridden method called through the <code>super</code> keyword), it will
+ be necessary to match on a different instance than the one used for recording invocations.
+ To do so, this method should be given the desired instance to match, while the invocation to
+ be recorded should be done on the available mock instance, which must be a different one
+ (otherwise a non-mocked method would get executed).
+ This is valid only if the instance to be matched is assignable to the mocked type, and
+ typically occurs when partially mocking a class hierarchy.
 <P>
 <DD><DL>
-</DL>
+
+<DT><B>Returns:</B><DD>the given mock instance, allowing the invocation to be recorded/verified to
+ immediately follow the call to this method</DL>
 </DD>
 </DL>
 <HR>
