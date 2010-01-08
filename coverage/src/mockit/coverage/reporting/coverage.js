@@ -68,3 +68,9 @@ function showHideFiles(files)
    var table = files.parentNode.cells[1].getElementsByTagName('table')[0];
    table.style.display = table.style.display == 'none' ? 'block' : 'none';
 }
+
+function showHideLines(row)
+{
+   var cellWithLines = row.cells[2].style;
+   cellWithLines.display = cellWithLines.display == 'block' ? 'none' : 'block';
+}

@@ -54,6 +54,11 @@ public final class LineParser
       return lineNum;
    }
 
+   public boolean isInComments()
+   {
+      return inComments;
+   }
+
    public boolean isBlankLine()
    {
       int n = line.length();
@@ -74,7 +79,7 @@ public final class LineParser
       return initialElement;
    }
 
-   public boolean parse(String line)
+   boolean parse(String line)
    {
       lineNum++;
       initialElement = null;

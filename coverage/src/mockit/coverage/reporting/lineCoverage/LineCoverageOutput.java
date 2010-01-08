@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -36,6 +36,7 @@ public final class LineCoverageOutput
    private final Map<Integer, LineCoverageData> lineToLineData;
    private final LineCoverageFormatter lineCoverageFormatter;
    private LineCoverageData lineData;
+   private boolean previousLineInComments;
 
    public LineCoverageOutput(
       PrintWriter output, Map<Integer, LineCoverageData> lineToLineData, boolean withCallPoints)
@@ -47,18 +48,56 @@ public final class LineCoverageOutput
 
    public void writeLineOfSourceCodeWithCoverageInfo(LineParser lineParser)
    {
+      if (writeLineInComments(lineParser)) {
+         return;
+      }
+
       int lineNum = lineParser.getNumber();
+      writeOpeningOfNewLine(lineNum);
 
-      writeOpeningOfNewExecutableLine(lineNum);
-
-      lineData = lineToLineData.get(lineNum);
-      writeLineExecutionCountIfAny();
-      writeExecutableLine(lineParser);
+      if (lineParser.isBlankLine()) {
+         output.println("<td colspan='2'></td>");
+      }
+      else {
+         lineData = lineToLineData.get(lineNum);
+         writeLineExecutionCountIfAny();
+         writeCodeFromLine(lineParser);
+      }
 
       output.println("    </tr>");
    }
 
-   private void writeOpeningOfNewExecutableLine(int line)
+   private boolean writeLineInComments(LineParser lineParser)
+   {
+      LineElement initialElement = lineParser.getInitialElement();
+
+      if (
+         lineParser.isInComments() ||
+         previousLineInComments && initialElement.isComment() && initialElement.getNext() == null
+      ) {
+         if (!previousLineInComments) {
+            writeOpeningForBlockOfCommentedLines();
+            previousLineInComments = true;
+         }
+
+         output.println(initialElement.toString());
+         return true;
+      }
+      else if (previousLineInComments) {
+         output.println("</td></tr>");
+         previousLineInComments = false;
+      }
+
+      return false;
+   }
+
+   private void writeOpeningForBlockOfCommentedLines()
+   {
+      output.println("    <tr class='click' onclick='showHideLines(this)'>");
+      output.write("      <td class='line'></td><td>&nbsp;</td><td class='comment'>");
+   }
+
+   private void writeOpeningOfNewLine(int line)
    {
       output.println("    <tr>");
       output.write("      <td class='line'>");
@@ -78,24 +117,21 @@ public final class LineCoverageOutput
       }
    }
 
-   private void writeExecutableLine(LineParser lineParser)
+   private void writeCodeFromLine(LineParser lineParser)
    {
-      output.write("      <td>");
+      LineElement initialElement = lineParser.getInitialElement();
 
-      if (!lineParser.isBlankLine()) {
-         LineElement initialElement = lineParser.getInitialElement();
-
-         if (lineData == null) {
-            output.write("<pre class='");
-            output.write(initialElement.isComment() ? "comment'>" : "prettyprint'>");
-            output.write(initialElement.toString());
-            output.write("</pre>");
-         }
-         else {
-            int line = lineParser.getNumber();
-            String formattedLine = lineCoverageFormatter.format(line, lineData, initialElement);
-            output.write(formattedLine);
-         }
+      if (lineData == null) {
+         output.write("      <td><pre class='");
+         output.write(initialElement.isComment() ? "comment'>" : "prettyprint'>");
+         output.write(initialElement.toString());
+         output.write("</pre>");
+      }
+      else {
+         String formattedLine =
+            lineCoverageFormatter.format(lineParser.getNumber(), lineData, initialElement);
+         output.write("      <td>");
+         output.write(formattedLine);
       }
 
       output.println("</td>");

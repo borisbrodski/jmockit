@@ -17,6 +17,7 @@ ol {
    margin: 1ex 2em 1ex 4em;
 }
 
+td.comment { white-space: pre; color: gray; display: none; }
 pre.comment { margin: 0; color: gray; }
 
 .line {
@@ -43,7 +44,7 @@ pre.comment { margin: 0; color: gray; }
 td.package, td.file {
    background-color: #e0e0e0; padding: 2px; border-bottom: white solid 1px;
 }
-td.click { cursor: pointer; }
+.click { cursor: pointer; }
 td.file { white-space: pre; }
 
 td.coverage {
