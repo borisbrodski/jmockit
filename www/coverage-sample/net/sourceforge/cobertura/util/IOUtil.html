@@ -12,113 +12,39 @@
 <body onload='prettyPrint()'>
   <table cellpadding='0' cellspacing='1'>
     <caption><code>..\orderMngmntWebapp\src\net\sourceforge\cobertura\util\IOUtil.java</code></caption>
-    <tr>
-      <td class='line'>1</td><td>&nbsp;</td>
-      <td><pre class='comment'>/*</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>2</td><td>&nbsp;</td>
-      <td><pre class='comment'> * Cobertura - http://cobertura.sourceforge.net/</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>3</td><td>&nbsp;</td>
-      <td><pre class='comment'> *</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>4</td><td>&nbsp;</td>
-      <td><pre class='comment'> * Copyright (C) 2005 Grzegorz Lukasik</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>5</td><td>&nbsp;</td>
-      <td><pre class='comment'> * Copyright (C) 2006 John Lewis</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>6</td><td>&nbsp;</td>
-      <td><pre class='comment'> *</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>7</td><td>&nbsp;</td>
-      <td><pre class='comment'> * Note: This file is dual licensed under the GPL and the Apache</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>8</td><td>&nbsp;</td>
-      <td><pre class='comment'> * Source License (so that it can be used from both the main</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>9</td><td>&nbsp;</td>
-      <td><pre class='comment'> * Cobertura classes and the ant tasks).</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>10</td><td>&nbsp;</td>
-      <td><pre class='comment'> *</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>11</td><td>&nbsp;</td>
-      <td><pre class='comment'> * Cobertura is free software; you can redistribute it and/or modify</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>12</td><td>&nbsp;</td>
-      <td><pre class='comment'> * it under the terms of the GNU General Public License as published</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>13</td><td>&nbsp;</td>
-      <td><pre class='comment'> * by the Free Software Foundation; either version 2 of the License,</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>14</td><td>&nbsp;</td>
-      <td><pre class='comment'> * or (at your option) any later version.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>15</td><td>&nbsp;</td>
-      <td><pre class='comment'> *</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>16</td><td>&nbsp;</td>
-      <td><pre class='comment'> * Cobertura is distributed in the hope that it will be useful, but</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>17</td><td>&nbsp;</td>
-      <td><pre class='comment'> * WITHOUT ANY WARRANTY; without even the implied warranty of</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>18</td><td>&nbsp;</td>
-      <td><pre class='comment'> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>19</td><td>&nbsp;</td>
-      <td><pre class='comment'> * General Public License for more details.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>20</td><td>&nbsp;</td>
-      <td><pre class='comment'> *</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>21</td><td>&nbsp;</td>
-      <td><pre class='comment'> * You should have received a copy of the GNU General Public License</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>22</td><td>&nbsp;</td>
-      <td><pre class='comment'> * along with Cobertura; if not, write to the Free Software</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>23</td><td>&nbsp;</td>
-      <td><pre class='comment'> * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>24</td><td>&nbsp;</td>
-      <td><pre class='comment'> * USA</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>25</td><td>&nbsp;</td>
-      <td><pre class='comment'> */</pre></td>
-    </tr>
+    <tr class='click' onclick='showHideLines(this)'>
+      <td class='line'></td><td>&nbsp;</td><td class='comment'>/*
+ * Cobertura - http://cobertura.sourceforge.net/
+ *
+ * Copyright (C) 2005 Grzegorz Lukasik
+ * Copyright (C) 2006 John Lewis
+ *
+ * Note: This file is dual licensed under the GPL and the Apache
+ * Source License (so that it can be used from both the main
+ * Cobertura classes and the ant tasks).
+ *
+ * Cobertura is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ *
+ * Cobertura is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Cobertura; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ * USA
+ */
+</td></tr>
     <tr>
       <td class='line'>26</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>package net.sourceforge.cobertura.util;</pre></td>
     </tr>
     <tr>
-      <td class='line'>27</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>27</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>28</td><td>&nbsp;</td>
@@ -169,33 +95,16 @@
       <td><pre class='prettyprint'>import java.io.Writer;</pre></td>
     </tr>
     <tr>
-      <td class='line'>40</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>40</td><td colspan='2'></td>
     </tr>
-    <tr>
-      <td class='line'>41</td><td>&nbsp;</td>
-      <td><pre class='comment'>/**</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>42</td><td>&nbsp;</td>
-      <td><pre class='comment'> * Helper class with useful I/O operations.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>43</td><td>&nbsp;</td>
-      <td><pre class='comment'> * </pre></td>
-    </tr>
-    <tr>
-      <td class='line'>44</td><td>&nbsp;</td>
-      <td><pre class='comment'> * @author Grzegorz Lukasik</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>45</td><td>&nbsp;</td>
-      <td><pre class='comment'> * Compare to the original: http://cobertura.sourceforge.net/sample/net.sourceforge.cobertura.util.IOUtil.html</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>46</td><td>&nbsp;</td>
-      <td><pre class='comment'> */</pre></td>
-    </tr>
+    <tr class='click' onclick='showHideLines(this)'>
+      <td class='line'></td><td>&nbsp;</td><td class='comment'>/**
+ * Helper class with useful I/O operations.
+ * 
+ * @author Grzegorz Lukasik
+ * Compare to the original: http://cobertura.sourceforge.net/sample/net.sourceforge.cobertura.util.IOUtil.html
+ */
+</td></tr>
     <tr>
       <td class='line'>47</td><td class='count'>0</td>
       <td><pre class='prettyprint uncovered' id='l47s0'>public abstract class IOUtil</pre></td>
@@ -205,41 +114,18 @@
       <td><pre class='prettyprint'>{</pre></td>
     </tr>
     <tr>
-      <td class='line'>49</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>49</td><td colspan='2'></td>
     </tr>
-    <tr>
-      <td class='line'>50</td><td>&nbsp;</td>
-      <td><pre class='comment'>	/**</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>51</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * Copies bytes from input stream into the output stream.  Stops</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>52</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * when the input stream read method returns -1.  Does not close</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>53</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * the streams.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>54</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * </pre></td>
-    </tr>
-    <tr>
-      <td class='line'>55</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * @throws IOException If either passed stream will throw IOException.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>56</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * @throws NullPointerException If either passed stream is null.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>57</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 */</pre></td>
-    </tr>
+    <tr class='click' onclick='showHideLines(this)'>
+      <td class='line'></td><td>&nbsp;</td><td class='comment'>	/**
+	 * Copies bytes from input stream into the output stream.  Stops
+	 * when the input stream read method returns -1.  Does not close
+	 * the streams.
+	 * 
+	 * @throws IOException If either passed stream will throw IOException.
+	 * @throws NullPointerException If either passed stream is null.
+	 */
+</td></tr>
     <tr>
       <td class='line'>58</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>	public static void copyStream(InputStream in, OutputStream out)</pre></td>
@@ -286,8 +172,7 @@
       </td>
     </tr>
     <tr>
-      <td class='line'>64</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>64</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>65</td><td>&nbsp;</td>
@@ -334,33 +219,16 @@
       </td>
     </tr>
     <tr>
-      <td class='line'>72</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>72</td><td colspan='2'></td>
     </tr>
-    <tr>
-      <td class='line'>73</td><td>&nbsp;</td>
-      <td><pre class='comment'>	/**</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>74</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * Returns an array that contains values read from the</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>75</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * given input stream.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>76</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * </pre></td>
-    </tr>
-    <tr>
-      <td class='line'>77</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * @throws NullPointerException If null stream is passed.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>78</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 */</pre></td>
-    </tr>
+    <tr class='click' onclick='showHideLines(this)'>
+      <td class='line'></td><td>&nbsp;</td><td class='comment'>	/**
+	 * Returns an array that contains values read from the
+	 * given input stream.
+	 * 
+	 * @throws NullPointerException If null stream is passed.
+	 */
+</td></tr>
     <tr>
       <td class='line'>79</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>	public static byte[] createByteArrayFromInputStream(InputStream in)</pre></td>
@@ -399,33 +267,16 @@
       <td><pre class='prettyprint'>	}</pre></td>
     </tr>
     <tr>
-      <td class='line'>86</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>86</td><td colspan='2'></td>
     </tr>
-    <tr>
-      <td class='line'>87</td><td>&nbsp;</td>
-      <td><pre class='comment'>	/**</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>88</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * Moves a file from one location to other.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>89</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 *</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>90</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * @throws IOException If IO exception occur during moving.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>91</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * @throws NullPointerException If either passed file is null.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>92</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 */</pre></td>
-    </tr>
+    <tr class='click' onclick='showHideLines(this)'>
+      <td class='line'></td><td>&nbsp;</td><td class='comment'>	/**
+	 * Moves a file from one location to other.
+	 *
+	 * @throws IOException If IO exception occur during moving.
+	 * @throws NullPointerException If either passed file is null.
+	 */
+</td></tr>
     <tr>
       <td class='line'>93</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>	public static void moveFile(File sourceFile, File destinationFile)</pre></td>
@@ -471,8 +322,7 @@
       <td><pre class='prettyprint'>		}</pre></td>
     </tr>
     <tr>
-      <td class='line'>100</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>100</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>101</td><td>&nbsp;</td>
@@ -500,8 +350,7 @@
       </td>
     </tr>
     <tr>
-      <td class='line'>105</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>105</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>106</td><td>&nbsp;</td>
@@ -560,8 +409,7 @@
       <td><pre class='prettyprint uncovered' id='l119s0'>		}</pre></td>
     </tr>
     <tr>
-      <td class='line'>120</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>120</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>121</td><td>&nbsp;</td>
@@ -576,37 +424,17 @@
       <td><pre class='prettyprint uncovered' id='l123s0'>	}</pre></td>
     </tr>
     <tr>
-      <td class='line'>124</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>124</td><td colspan='2'></td>
     </tr>
-    <tr>
-      <td class='line'>125</td><td>&nbsp;</td>
-      <td><pre class='comment'>	/**</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>126</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * Closes an input stream.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>127</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * </pre></td>
-    </tr>
-    <tr>
-      <td class='line'>128</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * @param in The stream to close.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>129</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * @return null unless an exception was thrown while closing, else</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>130</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 *         returns the stream</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>131</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 */</pre></td>
-    </tr>
+    <tr class='click' onclick='showHideLines(this)'>
+      <td class='line'></td><td>&nbsp;</td><td class='comment'>	/**
+	 * Closes an input stream.
+	 * 
+	 * @param in The stream to close.
+	 * @return null unless an exception was thrown while closing, else
+	 *         returns the stream
+	 */
+</td></tr>
     <tr>
       <td class='line'>132</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>	public static InputStream closeInputStream(InputStream in)</pre></td>
@@ -699,37 +527,17 @@
       <td><pre class='prettyprint'>	}</pre></td>
     </tr>
     <tr>
-      <td class='line'>149</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>149</td><td colspan='2'></td>
     </tr>
-    <tr>
-      <td class='line'>150</td><td>&nbsp;</td>
-      <td><pre class='comment'>	/**</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>151</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * Closes an output stream.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>152</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * </pre></td>
-    </tr>
-    <tr>
-      <td class='line'>153</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * @param out The stream to close.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>154</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 * @return null unless an exception was thrown while closing, else</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>155</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 *         returns the stream.</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>156</td><td>&nbsp;</td>
-      <td><pre class='comment'>	 */</pre></td>
-    </tr>
+    <tr class='click' onclick='showHideLines(this)'>
+      <td class='line'></td><td>&nbsp;</td><td class='comment'>	/**
+	 * Closes an output stream.
+	 * 
+	 * @param out The stream to close.
+	 * @return null unless an exception was thrown while closing, else
+	 *         returns the stream.
+	 */
+</td></tr>
     <tr>
       <td class='line'>157</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>	public static OutputStream closeOutputStream(OutputStream out)</pre></td>
@@ -822,8 +630,7 @@
       <td><pre class='prettyprint'>	}</pre></td>
     </tr>
     <tr>
-      <td class='line'>174</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>174</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>175</td><td>&nbsp;</td>
@@ -859,8 +666,7 @@
       <td><pre class='prettyprint'>	}</pre></td>
     </tr>
     <tr>
-      <td class='line'>181</td><td>&nbsp;</td>
-      <td></td>
+      <td class='line'>181</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>182</td><td>&nbsp;</td>
