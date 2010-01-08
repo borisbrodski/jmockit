@@ -45,43 +45,52 @@ public final class FileParser
    private PendingClass currentClass;
    private boolean openingBraceForClassFound;
    private int currentBraceBalance;
-   private boolean insideMethodBody;
 
    public boolean parseCurrentLine(String line)
    {
-      boolean lineWithCodeElements = lineParser.parse(line);
-
-      if (lineWithCodeElements) {
-         LineElement firstElement = lineParser.getInitialElement();
-         LineElement classDeclaration = firstElement.findWord("class");
-
-         if (classDeclaration != null) {
-            firstElement = classDeclaration.getNextCodeElement();
-            String className = firstElement.getText();
-
-            if (currentClass != null) {
-               currentClass.braceBalance = currentBraceBalance;
-            }
-
-            currentClass = new PendingClass(className);
-            currentClasses.add(currentClass);
-            currentBraceBalance = 0;
-         }
-
-         if (currentClass != null) {
-            // TODO: how to deal with classes defined entirely in one line?
-            currentBraceBalance += firstElement.getBraceBalanceUntilEndOfLine();
-
-            if (!openingBraceForClassFound && currentBraceBalance > 0) {
-               openingBraceForClassFound = true;
-            }
-            else if (openingBraceForClassFound && currentBraceBalance == 0) {
-               restorePreviousPendingClassIfAny();
-            }
-         }
+      if (!lineParser.parse(line)) {
+         return false;
       }
 
-      return lineWithCodeElements;
+      LineElement firstElement = lineParser.getInitialElement();
+      LineElement classDeclaration = firstElement.findWord("class");
+
+      if (classDeclaration != null) {
+         firstElement = classDeclaration.getNextCodeElement();
+         registerStartOfClassDeclaration(firstElement);
+      }
+
+      if (currentClass != null) {
+         detectPotentialEndOfClassDeclaration(firstElement);
+      }
+
+      return true;
+   }
+
+   private void registerStartOfClassDeclaration(LineElement firstElement)
+   {
+      String className = firstElement.getText();
+
+      if (currentClass != null) {
+         currentClass.braceBalance = currentBraceBalance;
+      }
+
+      currentClass = new PendingClass(className);
+      currentClasses.add(currentClass);
+      currentBraceBalance = 0;
+   }
+
+   private void detectPotentialEndOfClassDeclaration(LineElement firstElement)
+   {
+      // TODO: how to deal with classes defined entirely in one line?
+      currentBraceBalance += firstElement.getBraceBalanceUntilEndOfLine();
+
+      if (!openingBraceForClassFound && currentBraceBalance > 0) {
+         openingBraceForClassFound = true;
+      }
+      else if (openingBraceForClassFound && currentBraceBalance == 0) {
+         restorePreviousPendingClassIfAny();
+      }
    }
 
    private void restorePreviousPendingClassIfAny()
