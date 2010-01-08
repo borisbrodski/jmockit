@@ -59,6 +59,17 @@ public final class LineElement implements Iterable<LineElement>
       return next;
    }
 
+   public LineElement getNextCodeElement()
+   {
+      for (LineElement element : next) {
+         if (element.isCode()) {
+            return element;
+         }
+      }
+      
+      return null;
+   }
+
    public void wrapText(String openingTag, String closingTag)
    {
       this.openingTag = openingTag;
@@ -154,6 +165,33 @@ public final class LineElement implements Iterable<LineElement>
       }
 
       return null;
+   }
+
+   public int getBraceBalanceUntilEndOfLine()
+   {
+      int balance = 0;
+
+      for (LineElement element : this) {
+         balance += element.getBraceBalance();
+      }
+
+      return balance;
+   }
+
+   private int getBraceBalance()
+   {
+      if (isCode() && text.length() == 1) {
+         char c = text.charAt(0);
+
+         if (c == '{') {
+            return 1;
+         }
+         else if (c == '}') {
+            return -1;
+         }
+      }
+
+      return 0;
    }
 
    public void appendAllBefore(StringBuilder line, LineElement elementToStopBefore)

@@ -34,27 +34,44 @@ public final class DataCoverageOutput
 
    private final DataCoverageInfo coverageInfo;
    private int nextField;
+   private String classAndFieldNames;
+   private String className;
+   private String fieldName;
 
    public DataCoverageOutput(DataCoverageInfo coverageInfo)
    {
       this.coverageInfo = coverageInfo;
+      moveToNextField();
    }
 
-   public void writeCoverageInfoIfLineStartsANewFieldDeclaration(LineParser lineParser)
+   public void writeCoverageInfoIfLineStartsANewFieldDeclaration(FileParser fileParser)
    {
-      if (nextField < coverageInfo.allFields.size()) {
-         String classAndFieldNames = coverageInfo.allFields.get(nextField);
-         int p = classAndFieldNames.indexOf('.');
-         String className = classAndFieldNames.substring(0, p);
-         String fieldName = classAndFieldNames.substring(p + 1);
-
-         LineElement elementWithFieldName = lineParser.getInitialElement().findWord(fieldName);
+      if (classAndFieldNames != null && className.equals(fileParser.getCurrentlyPendingClass())) {
+         LineElement initialLineElement = fileParser.lineParser.getInitialElement();
+         LineElement elementWithFieldName = initialLineElement.findWord(fieldName);
 
          if (elementWithFieldName != null) {
             String openingTag = coverageInfo.isCovered(classAndFieldNames) ? COVERED : UNCOVERED;
             elementWithFieldName.wrapText(openingTag, "</span>");
-            nextField++;
+            moveToNextField();
          }
       }
+   }
+
+   private void moveToNextField()
+   {
+      if (nextField >= coverageInfo.allFields.size()) {
+         classAndFieldNames = null;
+         className = null;
+         fieldName = null;
+         return;
+      }
+
+      classAndFieldNames = coverageInfo.allFields.get(nextField);
+      nextField++;
+
+      int p = classAndFieldNames.indexOf('.');
+      className = classAndFieldNames.substring(0, p);
+      fieldName = classAndFieldNames.substring(p + 1);
    }
 }

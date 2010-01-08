@@ -24,8 +24,6 @@
  */
 package mockit.coverage.reporting.parsing;
 
-import java.util.*;
-
 import mockit.coverage.reporting.parsing.LineElement.*;
 
 /**
@@ -43,17 +41,13 @@ public final class LineParser
    private LineElement initialElement;
    private boolean inComments;
 
-   // Helper variables:
+   // Helper fields:
    private LineElement currentElement;
    private int lineLength;
    private int startPos;
    private boolean inCodeElement;
    private int pos;
    private int currChar;
-
-   // TODO: keep track of class and method declarations; create FileParser class
-   private List<String> currentClasses;
-   private boolean insideMethodBody;
 
    public int getNumber()
    {
@@ -75,17 +69,12 @@ public final class LineParser
       return true;
    }
 
-   public boolean isInComments()
-   {
-      return inComments;
-   }
-
    public LineElement getInitialElement()
    {
       return initialElement;
    }
 
-   public void parse(String line)
+   public boolean parse(String line)
    {
       lineNum++;
       initialElement = null;
@@ -108,6 +97,8 @@ public final class LineParser
       if (startPos >= 0) {
          addElement(0);
       }
+
+      return !inComments && !isBlankLine();
    }
 
    private void parseSeparatorsAndCode()

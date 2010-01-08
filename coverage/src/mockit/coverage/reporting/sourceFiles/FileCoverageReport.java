@@ -43,7 +43,7 @@ public final class FileCoverageReport
 {
    private final InputFile inputFile;
    private final OutputFile output;
-   private final LineParser lineParser = new LineParser();
+   private final FileParser fileParser = new FileParser();
    private final LineCoverageOutput lineCoverage;
    private final PathCoverageOutput pathCoverage;
    private final DataCoverageOutput dataCoverage;
@@ -89,19 +89,20 @@ public final class FileCoverageReport
       String line;
 
       while ((line = inputFile.input.readLine()) != null) {
-         lineParser.parse(line);
+         boolean lineWithCodeElements = fileParser.parseCurrentLine(line);
 
-         if (!lineParser.isInComments() && !lineParser.isBlankLine()) {
+         if (lineWithCodeElements) {
             if (dataCoverage != null) {
-               dataCoverage.writeCoverageInfoIfLineStartsANewFieldDeclaration(lineParser);
+               dataCoverage.writeCoverageInfoIfLineStartsANewFieldDeclaration(fileParser);
             }
 
             if (pathCoverage != null) {
-               pathCoverage.writePathCoverageInfoIfLineStartsANewMethodOrConstructor(lineParser);
+               pathCoverage.writePathCoverageInfoIfLineStartsANewMethodOrConstructor(
+                  fileParser.lineParser.getNumber());
             }
          }
 
-         lineCoverage.writeLineOfSourceCodeWithCoverageInfo(lineParser);
+         lineCoverage.writeLineOfSourceCodeWithCoverageInfo(fileParser.lineParser);
       }
    }
 

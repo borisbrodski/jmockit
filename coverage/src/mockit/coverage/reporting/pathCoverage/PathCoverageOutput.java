@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -29,7 +29,6 @@ import java.util.*;
 
 import mockit.coverage.*;
 import mockit.coverage.paths.*;
-import mockit.coverage.reporting.parsing.*;
 
 public final class PathCoverageOutput
 {
@@ -53,9 +52,9 @@ public final class PathCoverageOutput
       currentMethod = nextMethod.hasNext() ? nextMethod.next() : null;
    }
 
-   public void writePathCoverageInfoIfLineStartsANewMethodOrConstructor(LineParser lineParser)
+   public void writePathCoverageInfoIfLineStartsANewMethodOrConstructor(int lineNumber)
    {
-      if (currentMethod != null && lineParser.getNumber() == currentMethod.getFirstLineInBody()) {
+      if (currentMethod != null && lineNumber == currentMethod.getFirstLineInBody()) {
          writePathCoverageInformationForMethod();
          moveToNextMethod();
       }
