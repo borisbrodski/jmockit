@@ -29,9 +29,6 @@ import mockit.coverage.reporting.parsing.*;
 
 public final class DataCoverageOutput
 {
-   private static final String COVERED = "<span class='covered'>";
-   private static final String UNCOVERED = "<span class='uncovered'>";
-
    private final DataCoverageInfo coverageInfo;
    private int nextField;
    private String classAndFieldNames;
@@ -42,20 +39,6 @@ public final class DataCoverageOutput
    {
       this.coverageInfo = coverageInfo;
       moveToNextField();
-   }
-
-   public void writeCoverageInfoIfLineStartsANewFieldDeclaration(FileParser fileParser)
-   {
-      if (classAndFieldNames != null && className.equals(fileParser.getCurrentlyPendingClass())) {
-         LineElement initialLineElement = fileParser.lineParser.getInitialElement();
-         LineElement elementWithFieldName = initialLineElement.findWord(fieldName);
-
-         if (elementWithFieldName != null) {
-            String openingTag = coverageInfo.isCovered(classAndFieldNames) ? COVERED : UNCOVERED;
-            elementWithFieldName.wrapText(openingTag, "</span>");
-            moveToNextField();
-         }
-      }
    }
 
    private void moveToNextField()
@@ -73,5 +56,31 @@ public final class DataCoverageOutput
       int p = classAndFieldNames.indexOf('.');
       className = classAndFieldNames.substring(0, p);
       fieldName = classAndFieldNames.substring(p + 1);
+   }
+
+   public void writeCoverageInfoIfLineStartsANewFieldDeclaration(FileParser fileParser)
+   {
+      if (classAndFieldNames != null && className.equals(fileParser.getCurrentlyPendingClass())) {
+         LineElement initialLineElement = fileParser.lineParser.getInitialElement();
+         LineElement elementWithFieldName = initialLineElement.findWord(fieldName);
+
+         if (elementWithFieldName != null) {
+            String openingTag = getOpeningTagForFieldWrapper();
+            elementWithFieldName.wrapText(openingTag, "</span>");
+            moveToNextField();
+         }
+      }
+   }
+
+   private String getOpeningTagForFieldWrapper()
+   {
+      boolean covered = coverageInfo.isCovered(classAndFieldNames);
+
+      if (coverageInfo.isInstanceField(classAndFieldNames)) {
+         return covered ? "<span class='instance covered'>" : "<span class='instance uncovered'>";
+      }
+      else {
+         return covered ? "<span class='static covered'>" : "<span class='static uncovered'>";
+      }
    }
 }

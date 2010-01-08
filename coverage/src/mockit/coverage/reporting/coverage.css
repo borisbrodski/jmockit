@@ -37,6 +37,9 @@ pre.comment { margin: 0; color: gray; }
 .covered { background-color: #90ee90; }
 .uncovered { background-color: #f08080; }
 
+.instance { font-weight: bold; }
+.static { font-weight: bold; font-style: italic; }
+
 td.package, td.file {
    background-color: #e0e0e0; padding: 2px; border-bottom: white solid 1px;
 }

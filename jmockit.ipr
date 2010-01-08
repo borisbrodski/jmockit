@@ -885,6 +885,7 @@
         <w>millis</w>
         <w>mngmnt</w>
         <w>mockit</w>
+        <w>monospace</w>
         <w>multi</w>
         <w>nano</w>
         <w>nbsp</w>
@@ -940,6 +941,7 @@
         <w>username</w>
         <w>versioned</w>
         <w>webapp</w>
+        <w>webkit</w>
         <w>wiki</w>
         <w>xmlbasic</w>
         <w>xmlfull</w>
