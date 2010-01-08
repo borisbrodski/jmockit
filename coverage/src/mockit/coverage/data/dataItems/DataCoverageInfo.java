@@ -100,11 +100,6 @@ public final class DataCoverageInfo implements Serializable
       return !allFields.isEmpty();
    }
 
-   public boolean isInstanceField(String classAndFieldNames)
-   {
-      return instanceFieldsData.containsKey(classAndFieldNames);
-   }
-
    public boolean isCovered(String classAndFieldNames)
    {
       InstanceFieldData instanceData = getInstanceFieldData(classAndFieldNames);
