@@ -27,12 +27,12 @@ package integrationTests.data;
 public class ClassWithFields
 {
    private static int static1;
-   private static String static2;
+   private static String static2 = "B2";
    private static long static3;
 
    // Instance fields:
    // (coverage accounts for each owner instance)
-   private boolean instance1;
+   private boolean instance1 = true;
    private Boolean instance2;
    private double instance3;
 

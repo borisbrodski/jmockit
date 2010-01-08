@@ -28,17 +28,16 @@ import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
-import mockit.internal.state.TestRun;
 
 public final class DataCoverageInfo implements Serializable
 {
    private static final long serialVersionUID = -4561686103982673490L;
 
    public final List<String> allFields = new ArrayList<String>(2);
-   public final Map<String, Map<Integer, Boolean>> staticFieldsData =
-      new LinkedHashMap<String, Map<Integer, Boolean>>();
-   public final Map<String, Map<Integer, List<Integer>>> instanceFieldsData =
-      new LinkedHashMap<String, Map<Integer, List<Integer>>>();
+   public final Map<String, StaticFieldData> staticFieldsData =
+      new LinkedHashMap<String, StaticFieldData>();
+   public final Map<String, InstanceFieldData> instanceFieldsData =
+      new LinkedHashMap<String, InstanceFieldData>();
 
    private transient int coveredDataItems = -1;
 
@@ -48,10 +47,10 @@ public final class DataCoverageInfo implements Serializable
       allFields.add(classAndField);
 
       if (isStatic) {
-         staticFieldsData.put(classAndField, new HashMap<Integer, Boolean>());
+         staticFieldsData.put(classAndField, new StaticFieldData());
       }
       else {
-         instanceFieldsData.put(classAndField, new HashMap<Integer, List<Integer>>());
+         instanceFieldsData.put(classAndField, new InstanceFieldData());
       }
    }
 
@@ -64,50 +63,36 @@ public final class DataCoverageInfo implements Serializable
 
    public void registerAssignmentToStaticField(String classAndFieldNames)
    {
-      setStaticFieldData(classAndFieldNames, Boolean.TRUE);
+      StaticFieldData staticData = getStaticFieldData(classAndFieldNames);
+      staticData.registerAssignment();
+   }
+
+   public StaticFieldData getStaticFieldData(String classAndFieldNames)
+   {
+      return staticFieldsData.get(classAndFieldNames);
    }
 
    public void registerReadOfStaticField(String classAndFieldNames)
    {
-      setStaticFieldData(classAndFieldNames, null);
-   }
-
-   private void setStaticFieldData(String classAndFieldNames, Boolean data)
-   {
-      Map<Integer, Boolean> testToFieldData = staticFieldsData.get(classAndFieldNames);
-      int testId = TestRun.getTestId();
-      testToFieldData.put(testId, data);
+      StaticFieldData staticData = getStaticFieldData(classAndFieldNames);
+      staticData.registerRead();
    }
 
    public void registerAssignmentToInstanceField(Object instance, String classAndFieldNames)
    {
-      List<Integer> fieldData = getInstanceFieldData(classAndFieldNames);
-      Integer instanceId = System.identityHashCode(instance);
-
-      if (!fieldData.contains(instanceId)) {
-         fieldData.add(instanceId);
-      }
+      InstanceFieldData instanceData = getInstanceFieldData(classAndFieldNames);
+      instanceData.registerAssignment(instance);
    }
 
-   private List<Integer> getInstanceFieldData(String classAndFieldNames)
+   public InstanceFieldData getInstanceFieldData(String classAndFieldNames)
    {
-      Map<Integer, List<Integer>> testToFieldData = instanceFieldsData.get(classAndFieldNames);
-      int testId = TestRun.getTestId();
-      List<Integer> fieldData = testToFieldData.get(testId);
-
-      if (fieldData == null) {
-         fieldData = new LinkedList<Integer>();
-         testToFieldData.put(testId, fieldData);
-      }
-
-      return fieldData;
+      return instanceFieldsData.get(classAndFieldNames);
    }
 
    public void registerReadOfInstanceField(Object instance, String classAndFieldNames)
    {
-      List<Integer> fieldData = getInstanceFieldData(classAndFieldNames);
-      Integer instanceId = System.identityHashCode(instance);
-      fieldData.remove(instanceId);
+      InstanceFieldData instanceData = getInstanceFieldData(classAndFieldNames);
+      instanceData.registerRead(instance);
    }
 
    public boolean hasFields()
@@ -122,15 +107,15 @@ public final class DataCoverageInfo implements Serializable
 
    public boolean isCovered(String classAndFieldNames)
    {
-      Map<Integer, List<Integer>> instanceFieldInfo = instanceFieldsData.get(classAndFieldNames);
+      InstanceFieldData instanceData = getInstanceFieldData(classAndFieldNames);
 
-      if (instanceFieldInfo != null && isInstanceFieldCovered(instanceFieldInfo)) {
+      if (instanceData != null && instanceData.isCovered()) {
          return true;
       }
 
-      Map<Integer, Boolean> staticFieldInfo = staticFieldsData.get(classAndFieldNames);
+      StaticFieldData staticData = getStaticFieldData(classAndFieldNames);
 
-      return staticFieldInfo != null && isStaticFieldCovered(staticFieldInfo);
+      return staticData != null && staticData.isCovered();
    }
 
    public int getTotalItems()
@@ -146,41 +131,19 @@ public final class DataCoverageInfo implements Serializable
 
       coveredDataItems = 0;
 
-      for (Map<Integer, Boolean> withUnreadValue : staticFieldsData.values()) {
-         if (isStaticFieldCovered(withUnreadValue)) {
+      for (StaticFieldData staticData : staticFieldsData.values()) {
+         if (staticData.isCovered()) {
             coveredDataItems++;
          }
       }
 
-      for (Map<Integer, List<Integer>> withUnreadValue : instanceFieldsData.values()) {
-         if (isInstanceFieldCovered(withUnreadValue)) {
+      for (InstanceFieldData instanceData : instanceFieldsData.values()) {
+         if (instanceData.isCovered()) {
             coveredDataItems++;
          }
       }
 
       return coveredDataItems;
-   }
-
-   private boolean isStaticFieldCovered(Map<Integer, Boolean> fieldInfo)
-   {
-      for (Boolean withUnreadValue : fieldInfo.values()) {
-         if (withUnreadValue == null) {
-            return true;
-         }
-      }
-
-      return false;
-   }
-
-   private boolean isInstanceFieldCovered(Map<Integer, List<Integer>> fieldInfo)
-   {
-      for (List<Integer> unreadInstances : fieldInfo.values()) {
-         if (unreadInstances.isEmpty()) {
-            return true;
-         }
-      }
-
-      return false;
    }
 
    public int getCoveragePercentage()

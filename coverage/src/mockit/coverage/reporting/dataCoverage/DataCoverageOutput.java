@@ -29,6 +29,7 @@ import mockit.coverage.reporting.parsing.*;
 
 public final class DataCoverageOutput
 {
+   private final StringBuilder openingTag;
    private final DataCoverageInfo coverageInfo;
    private int nextField;
    private String classAndFieldNames;
@@ -37,6 +38,7 @@ public final class DataCoverageOutput
 
    public DataCoverageOutput(DataCoverageInfo coverageInfo)
    {
+      openingTag = new StringBuilder(50);
       this.coverageInfo = coverageInfo;
       moveToNextField();
    }
@@ -65,22 +67,37 @@ public final class DataCoverageOutput
          LineElement elementWithFieldName = initialLineElement.findWord(fieldName);
 
          if (elementWithFieldName != null) {
-            String openingTag = getOpeningTagForFieldWrapper();
-            elementWithFieldName.wrapText(openingTag, "</span>");
+            buildOpeningTagForFieldWrapper();
+            elementWithFieldName.wrapText(openingTag.toString(), "</span>");
             moveToNextField();
          }
       }
    }
 
-   private String getOpeningTagForFieldWrapper()
+   private void buildOpeningTagForFieldWrapper()
    {
-      boolean covered = coverageInfo.isCovered(classAndFieldNames);
+      openingTag.setLength(0);
+      openingTag.append("<span class='");
 
-      if (coverageInfo.isInstanceField(classAndFieldNames)) {
-         return covered ? "<span class='instance covered'>" : "<span class='instance uncovered'>";
+      StaticFieldData staticData = coverageInfo.getStaticFieldData(classAndFieldNames);
+      boolean staticField = staticData != null;
+      openingTag.append(staticField ? "static" : "instance");
+
+      openingTag.append(coverageInfo.isCovered(classAndFieldNames) ? " covered" : " uncovered");
+
+      InstanceFieldData instanceData = coverageInfo.getInstanceFieldData(classAndFieldNames);
+
+      if (staticField || instanceData != null) {
+         openingTag.append("' title='");
+         appendAccessCounts(staticField ? staticData : instanceData);
       }
-      else {
-         return covered ? "<span class='static covered'>" : "<span class='static uncovered'>";
-      }
+
+      openingTag.append("'>");
+   }
+
+   private void appendAccessCounts(FieldData fieldData)
+   {
+      openingTag.append("Reads: ").append(fieldData.getReadCount());
+      openingTag.append(" Writes: ").append(fieldData.getWriteCount());
    }
 }

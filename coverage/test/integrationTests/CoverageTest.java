@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -30,6 +30,7 @@ import java.util.*;
 import org.junit.*;
 
 import mockit.coverage.data.*;
+import mockit.coverage.data.dataItems.*;
 import mockit.coverage.paths.*;
 
 import static java.lang.reflect.Modifier.*;
@@ -156,71 +157,61 @@ public class CoverageTest extends Assert
 
    protected static void assertStaticFieldCovered(String fieldName)
    {
-      assertNull("Static field " + fieldName + " should be covered", getStaticFieldData(fieldName));
+      assertTrue(
+         "Static field " + fieldName + " should be covered", isStaticFieldCovered(fieldName));
    }
 
-   private static Boolean getStaticFieldData(String fieldName)
+   private static boolean isStaticFieldCovered(String fieldName)
    {
       String classAndFieldNames = testedClassSimpleName + '.' + fieldName;
-      Map<Integer, Boolean> testToFieldData =
+      StaticFieldData staticFieldData =
          fileData.dataCoverageInfo.staticFieldsData.get(classAndFieldNames);
 
-      for (Boolean unread : testToFieldData.values()) {
-         if (unread == null) {
-            return null;
-         }
-
-      }
-      return Boolean.TRUE;
+      return staticFieldData.isCovered();
    }
 
    protected static void assertStaticFieldUncovered(String fieldName)
    {
-      assertNotNull(
-         "Static field " + fieldName + " should not be covered", getStaticFieldData(fieldName));
+      assertFalse(
+         "Static field " + fieldName + " should not be covered", isStaticFieldCovered(fieldName));
    }
 
    protected static void assertInstanceFieldCovered(String fieldName)
    {
       assertTrue(
-         "Instance field " + fieldName + " should be covered",
-         getInstanceFieldData(fieldName).isEmpty());
+         "Instance field " + fieldName + " should be covered", isInstanceFieldCovered(fieldName));
    }
 
-   private static List<Integer> getInstanceFieldData(String fieldName)
+   private static boolean isInstanceFieldCovered(String fieldName)
+   {
+      return getInstanceFieldData(fieldName).isCovered();
+   }
+
+   private static InstanceFieldData getInstanceFieldData(String fieldName)
    {
       String classAndFieldNames = testedClassSimpleName + '.' + fieldName;
-      Map<Integer, List<Integer>> testToFieldData =
-         fileData.dataCoverageInfo.instanceFieldsData.get(classAndFieldNames);
-
-      for (List<Integer> unreadInstances : testToFieldData.values()) {
-         if (unreadInstances.isEmpty()) {
-            return unreadInstances;
-         }
-      }
-
-      return testToFieldData.values().iterator().next();
+      return fileData.dataCoverageInfo.instanceFieldsData.get(classAndFieldNames);
    }
 
    protected static void assertInstanceFieldUncovered(String fieldName)
    {
-      String msg = "Instance field " + fieldName + " should not be covered";
-      List<Integer> actualUncoveredInstances = getInstanceFieldData(fieldName);
-
-      assertFalse(msg, actualUncoveredInstances.isEmpty());
+      assertFalse(
+         "Instance field " + fieldName + " should not be covered",
+         isInstanceFieldCovered(fieldName));
    }
 
    protected static void assertInstanceFieldUncovered(
       String fieldName, Object... uncoveredInstances)
    {
       String msg = "Instance field " + fieldName + " should not be covered";
-      List<Integer> actualUncoveredInstances = getInstanceFieldData(fieldName);
+      InstanceFieldData fieldData = getInstanceFieldData(fieldName);
+      List<Integer> ownerInstances = fieldData.getOwnerInstancesWithUnreadAssignments();
 
-      assertEquals(msg, uncoveredInstances.length, actualUncoveredInstances.size());
+      assertEquals(msg, uncoveredInstances.length, ownerInstances.size());
 
       for (Object uncoveredInstance : uncoveredInstances) {
          Integer instanceId = System.identityHashCode(uncoveredInstance);
-         assertTrue(msg, actualUncoveredInstances.contains(instanceId));
+         assertTrue(msg, ownerInstances.contains(instanceId));
       }
    }
 
