@@ -19,7 +19,15 @@ public final class BooleanExpressions
 
    public boolean eval4(boolean x, boolean y, boolean z)
    {
-      return x && (y || z);
+      return x && (!y || z);
+   }
+
+   public boolean eval5(boolean a, boolean b, boolean c)
+   {
+      if (a) return true;
+      if (b || c) return false;
+
+      return !c;
    }
 
    static boolean isSameTypeIgnoringAutoBoxing(Class<?> firstType, Class<?> secondType)

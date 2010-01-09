@@ -91,11 +91,21 @@ public final class BooleanExpressionsTest extends CoverageTest
       assertFalse(tested.eval4(false, false, false));
       assertFalse(tested.eval4(false, true, true));
       assertFalse(tested.eval4(false, false, true));
-      assertTrue(tested.eval4(true, true, false));
-      assertTrue(tested.eval4(true, true, true));
+      assertTrue(tested.eval4(true, false, false));
+      assertTrue(tested.eval4(true, false, true));
 
       findMethodData(22, "eval4");
       assertPaths(4, 2, 6);
+   }
+
+   @Test
+   public void eval5()
+   {
+      assertFalse(tested.eval5(false, true, true));
+      assertTrue(tested.eval5(false, false, false));
+
+      findMethodData(27, "eval5");
+      assertPaths(5, 2, 2);
    }
 
    @Test
@@ -103,10 +113,10 @@ public final class BooleanExpressionsTest extends CoverageTest
    {
       BooleanExpressions.isSameTypeIgnoringAutoBoxing(int.class, Integer.class);
 
-      findMethodData(27, "isSameTypeIgnoringAutoBoxing");
+      findMethodData(35, "isSameTypeIgnoringAutoBoxing");
       assertPaths(8, 1, 1);
 
-      findMethodData(35, "isWrapperOfPrimitiveType");
+      findMethodData(43, "isWrapperOfPrimitiveType");
       assertPaths(63, 1, 1);
    }
 }
