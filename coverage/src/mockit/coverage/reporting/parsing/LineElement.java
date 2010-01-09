@@ -40,6 +40,9 @@ public final class LineElement implements Iterable<LineElement>
    private String closingTag;
    private LineElement next;
 
+   private boolean underConditionalStatement;
+   private int parenthesesBalance;
+
    LineElement(ElementType type, String text)
    {
       this.type = type;
@@ -85,12 +88,24 @@ public final class LineElement implements Iterable<LineElement>
    {
       LineElement element = this;
 
-      while (element != null && !element.isCode()) {
+      while (!element.isCode()) {
          element.appendText(line);
          element = element.next;
+
+         if (element == null) {
+            break;
+         }
+
+         copyConditionalTrackingState(element);
       }
 
       return element;
+   }
+
+   private void copyConditionalTrackingState(LineElement destination)
+   {
+      destination.underConditionalStatement = underConditionalStatement;
+      destination.parenthesesBalance = parenthesesBalance;
    }
 
    private void appendText(StringBuilder line)
@@ -105,33 +120,33 @@ public final class LineElement implements Iterable<LineElement>
 
    public LineElement findNextBranchingPoint()
    {
-      boolean underConditionalStatement = false;
-      int parenthesesBalance = -1;
-      LineElement element = this;
-
-      while (element != null) {
-         if (!underConditionalStatement) {
-            underConditionalStatement = isConditionalStatement();
-            parenthesesBalance = 0;
-         }
-
-         if (element.isBranchingElement()) {
-            break;
-         }
-
-         if (underConditionalStatement) {
-            int balance = element.getParenthesisBalance();
-            parenthesesBalance += balance;
-
-            if (balance != 0 && parenthesesBalance == 0) {
-               return element.next;
-            }
-         }
-
-         element = element.next;
+      if (!underConditionalStatement) {
+         underConditionalStatement = isConditionalStatement();
       }
 
-      return element;
+      if (isBranchingElement()) {
+         if (next != null) {
+            copyConditionalTrackingState(next);
+         }
+
+         return this;
+      }
+
+      if (underConditionalStatement) {
+         int balance = getParenthesisBalance();
+         parenthesesBalance += balance;
+
+         if (balance != 0 && parenthesesBalance == 0) {
+            return next;
+         }
+      }
+
+      if (next == null) {
+         return null;
+      }
+
+      copyConditionalTrackingState(next);
+      return next.findNextBranchingPoint();
    }
 
    private boolean isConditionalStatement()
