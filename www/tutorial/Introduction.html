@@ -118,20 +118,40 @@
    </div>
 </h3>
 <p>
-   Existing tools for testing with mock objects include <a
-   href="http://www.easymock.org">EasyMock</a> and <a href="http://www.jmock.org">jMock</a>, both of
-   which are based on <a href="http://java.sun.com/javase/6/docs/api/java/lang/reflect/Proxy.html"
-   >java.lang.reflect.Proxy</a>, which requires an interface to be implemented. It's also possible
-   to create proxies for concrete classes with CGLIB-based extensions to these tools. Each of these
-   tools has a rich API for expressing expectations that are verified when the methods on mock
-   classes are called. It's not uncommon to see JUnit tests with most or all checks written as
-   EasyMock/jMock expectations, instead of with JUnit's own assertion methods. In that sense, such
-   tools compete with the base testing framework.
+   Existing tools for testing with mock objects include
+   <a href="http://www.easymock.org">EasyMock</a> and <a href="http://www.jmock.org">jMock</a>, both
+   of which are based on
+   <a href="http://java.sun.com/javase/6/docs/api/java/lang/reflect/Proxy.html">java.lang.reflect.Proxy</a>,
+   which requires an interface to be implemented.
+   It's also possible to create proxies for concrete classes with CGLIB-based extensions to these
+   tools.
+   Each of these tools has a rich API for expressing <em>expectations</em> that are verified when
+   the methods on mock classes are called.
+   It's not uncommon to see JUnit tests with most or all checks written as EasyMock/jMock
+   expectations, instead of with JUnit's own assertion methods. In that sense, such tools compete
+   with the base testing framework.
 </p>
 <p>
    JMockit has its own <strong>Expectations API</strong>, which is similar to those APIs but goes
    beyond them by providing support for mocking all kinds of methods, constructors, and types
    (interfaces, abstract classes, final or non-final classes, classes from the JRE, etc.).
+</p>
+<p>
+   There is another group of mocking tools, which rely on <em>explicit verification</em> of
+   expectations over <em>implicit verification</em>:
+   <a href="http://code.google.com/p/mockito">Mockito</a> and
+   <a href="http://www.unitils.org/summary.html">Unitils Mock</a>.
+   All of these mocking APIs use direct invocations to mock objects as a way to specify
+   expectations.
+   In the case of EasyMock and jMock, such invocations can only be made <em>before</em> exercising
+   the unit under test, in the so-called <em>record phase</em> of the test.
+   In the case of Mockito and Unitils Mock, on the other hand, the invocations can also be made
+   <em>after</em> exercising the unit under, in the <em>verify phase</em> of the test.
+   (The phase in between is the <em>replay phase</em>, during which the unit under test actually
+   performs the invocations of interest on the mock collaborators.)
+   JMockit provides the <strong>Verifications API</strong>, a natural extension of the Expectations
+   API, to allow the explicit verification of <em>non-strict</em> expectations in the "verify"
+   phase. (<em>Strict</em> expectations are always verified implicitly.)
 </p>
 
 <h3 id="issues">
@@ -147,26 +167,27 @@
 <p>
    The conventional solutions for achieving isolation with mock objects impose certain design
    restrictions on the code under test. JMockit was created as an alternative with no such
-   restrictions, by leveraging the facilities in the new <a
-   href="http://java.sun.com/javase/6/docs/api/java/lang/instrument/package-summary.html"
+   restrictions, by leveraging the facilities in the
+   <a href="http://java.sun.com/javase/6/docs/api/java/lang/instrument/package-summary.html"
    >java.lang.instrument</a> Java 5 package (in addition to making use of - to a lesser degree -
    reflection, dynamic proxies, and custom class loaders).
 </p>
 <p>
-   The restrictions on application classes for which a mock object may be needed in a given test
-   demand that said classes either implement a separate interface, or that all (instance) methods to
-   be mocked are overridable (which means neither the class itself nor any of those methods can be
+   Because of certain technical limitations, the mocking tools previously mentioned impose some
+   restrictions on the classes for which a mock object may be needed.
+   Specifically, said classes must either implement a separate interface or all (instance) methods
+   to be mocked must be overridable (ie, neither the class itself nor any of those methods can be
    declared to be <code>final</code>).
-   Additionally, the restrictions also imply that the instantiation of dependencies must be
-   controlled from outside the dependent unit, so that a proxy object (the mock) can be passed to it
-   in place of the "real" implementation for each dependency (see
-   <a href="http://en.wikipedia.org/wiki/Dependency_injection">dependency injection</a>).
+   Additionally, the instantiation of dependencies must be controlled from outside the dependent
+   unit, so that a proxy object (the mock) can be passed to it in place of the "real" implementation
+   for each dependency (see <a href="http://en.wikipedia.org/wiki/Dependency_injection">dependency
+   injection</a>).
    That is, proxied classes can't simply be created with the <code>new</code> operator in client
    code, because constructor invocations cannot be intercepted through conventional techniques.
 </p>
 <p>
-   To sum up, these are the design restrictions one has to live with when using a conventional
-   approach to mocking:
+   To sum up, these are the design restrictions that apply when using a conventional approach to
+   mocking:
 </p>
 <ul>
    <li>
@@ -220,7 +241,7 @@
    Design decisions which have a negative effect on testability when using only traditional mock
    objects are inconsequential when using this new approach.
    In effect, testability becomes much less of an issue in application design, allowing developers
-   to avoid complexities such as explicit interfaces, factories, dependency injection and so on,
+   to avoid complexities such as separate interfaces, factories, dependency injection and so on,
    when they aren't justified by actual system requirements.
 </p>
 <div class="navigation">
