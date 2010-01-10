@@ -47,7 +47,7 @@ public final class MyBusinessService
    {
       Email email = new SimpleEmail();
       email.setSubject("Notification about processing of ...");
-      email.addTo(data.getCustomerEmail());
+(3)   email.addTo(data.getCustomerEmail());
 
       // Other e-mail parameters, such as the host name of the mail server, have defaults defined
       // through external configuration.
@@ -55,7 +55,7 @@ public final class MyBusinessService
       String message = buildNotificationMessage(items);
       email.setMsg(message);
 
-(3)   email.send();
+(4)   email.send();
    }
 
    private String buildNotificationMessage(List&lt;EntityX> items)
@@ -73,15 +73,15 @@ public final class MyBusinessService
 <p>
    So, how can we unit test the "doBusinessOperationXyz" method without making any changes to the
    existing application code?
-   JMockit actually provides four different APIs that can be used, each capable enough for our
+   JMockit actually provides three different APIs that can be used, each capable enough for our
    needs.
    (In practice, the first two APIs are just subsets of a larger <em>behavior-oriented</em> mocking
-   API, while one of the other two, which can be described as <em>state-oriented</em> mocking APIs,
-   is an older and more limited version of the other.)
+   API; the other one, which can be described as an <em>state-oriented</em> mocking API, is truly
+   different and unique.)
    We will see how to use each one of them in the following sections.
-   In all four cases, a JUnit test case will verify the three invocations of interest made from the
-   unit under test to its external dependencies: the method calls at <code>(1)</code>,
-   <code>(2)</code>, and <code>(3)</code>.
+   In every situation, a JUnit test case will verify the three invocations of interest made from the
+   unit under test to its external dependencies. These invocations are the ones at points
+   <code>(1)</code>-<code>(4)</code>, indicated above.
 </p>
 
 <h3 id="expectations">
@@ -128,7 +128,7 @@ public final class MyBusinessService_ExpectationsAPI_Test
 (2)         Database.<em>persist</em>(data);
 
             // Since "email" is a non-strict mock, this invocation can be replayed in any order:
-(3)         email.send(); <em>times</em> = 1; // a non-strict invocation requires a constraint if expected
+(4)         email.send(); <em>times</em> = 1; // a non-strict invocation requires a constraint if expected
          }
       };
 
@@ -141,7 +141,7 @@ public final class MyBusinessService_ExpectationsAPI_Test
       new NonStrictExpectations()
       {
          {
-            email.addTo((String) withNotNull()); <em>result</em> = new EmailException();
+(3)         email.addTo((String) withNotNull()); <em>result</em> = new EmailException();
          }
       };
 
@@ -333,7 +333,7 @@ public final class MyBusinessService_VerificationsAPI_Test
       new Verifications()
       {
          {
-(3)         email.send();
+(4)         email.send();
          }
       };
    }
@@ -417,7 +417,7 @@ public final class MyBusinessService_VerificationsAPI_Test
       <a href="#expectations"><img align="right" src="go-top.png" title="First section"></a>
       <img align="right" src="blank.gif" width="22">
       <a href="#verifications"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#core"><img align="right" src="go-down.png" title="Next section"></a>
+      <img align="right" src="blank.gif" width="22">
    </div>
 </h3>
 <p>
@@ -461,7 +461,7 @@ public final class MyBusinessService_AnnotationsAPI_Test
       new MockUp&lt;Email>()
       {
          @Mock(invocations = 1)
-(3)      String send() { return ""; }
+(4)      String send() { return ""; }
       });
 
       new MyBusinessService().doBusinessOperationXyz(data);
@@ -473,7 +473,7 @@ public final class MyBusinessService_AnnotationsAPI_Test
       new MockUp&lt;Email>()
       {
          @Mock
-         Email addTo(String emailAddress) throws EmailException
+(3)      Email addTo(String emailAddress) throws EmailException
          {
             assertNotNull(emailAddress);
             throw new EmailException();
@@ -485,12 +485,39 @@ public final class MyBusinessService_AnnotationsAPI_Test
 }
 </code></pre>
 <p>
-   Here, instead of recording invocations, we directly specify the mock implementations for the
-   methods and constructors of interest.
-   Such mocks must have the same signature as the "real" methods and constructors, and be annotated
-   with <code>@Mock</code> in a <em>mock class</em>, which can be either a separate class (nested or
-   not) annotated with <code>@MockClass</code> or an anonymous inner class defined inside a test.
-   Both tests use an special kind of inline mock class known as a <em>mock-up class</em>.
+   Here, instead of recording or verifying expectations through invocations to mocked types, we
+   directly specify <em>mock implementations</em> for the methods and constructors of interest.
+   Such <em>mock methods</em> must have the same signature as the "real" methods and constructors,
+   and be annotated with <code>@Mock</code>.
+   They are defined in a <em>mock class</em>, which can either be a separate class (nested or not)
+   annotated with <code>@MockClass</code> or an anonymous inner class defined inside a test method.
+</p>
+<p>
+   The two tests above share a reusable mock class, <code>MockDatabase</code>, which is applied to
+   the test class as a whole through the <code>@UsingMocksAndStubs</code> annotation.
+   As the name suggests, this annotation can also be applied to make all tests in a given test class
+   use stub (empty) implementations for one or more classes.
+   In this case, we stub out the <code>Email</code> class, which has methods that are called from
+   the tested class (<code>MyBusinessService</code>) but aren't actually relevant in our tests (for
+   example, the <code>setSubject(String)</code> method).
+   When a class is stubbed out, <em>all</em> of its methods, constructors, and static
+   initializers (if any) are temporarily replaced with empty implementations. However, an individual
+   test method can still specify a particular mock implementation for any of the stubbed out methods
+   and constructors.
+</p>
+<p>
+   Notice that we also stub out static initializers in the <code>Database</code> class, by
+   specifying the special method name "<code>&lt;clinit></code>" in another attribute of the
+   <code>@MockClass</code> annotation. This is necessary in this case because the
+   <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/src/jmockit/tutorial/infrastructure/Database.java">Database</a>
+   class actually creates a JPA <code>EntityManagerFactory</code> instance during its static
+   initialization.
+</p>
+<p>
+   Each test sets up specific mocks for the <code>Email</code> class by creating an inline
+   <em>mock-up class</em>, which is a special kind of mock class where the mocked type is specified
+   through a generic type parameter instead of through the
+   <code>@MockClass(realClass = Xyz.class)</code> annotation.
 </p>
 <p>
    Constructors in a mock class (not shown above) can also be mocks, but it is usually better to
@@ -506,128 +533,6 @@ public final class MyBusinessService_AnnotationsAPI_Test
    be executed. For that, an instance field named <code>it</code> must be defined in the mock
    class, and have the same type as the real class. (This is a powerful AOP-like feature which
    should be used sparingly, though.)
-</p>
-
-<h3 id="core">
-   Using the Core API
-   <div class="navigation">
-      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
-      <a href="#expectations"><img align="right" src="go-top.png" title="First section"></a>
-      <img align="right" src="blank.gif" width="22">
-      <a href="#annotations"><img align="right" src="go-up.png" title="Previous section"></a>
-      <img align="right" src="blank.gif" width="22">
-   </div>
-</h3>
-<p>
-   Lastly, there is the <strong>JMockit Core</strong> API, which really is just an older and less
-   capable version of the Annotations API. It allows tests written with JDK 1.4, but these days
-   few developers would actually need that, so it probably will be removed in a future version.
-   <br/>
-   The following test class uses JUnit 3.8 just for some variation. In reality, JUnit 3.8 and
-   JUnit 4.5+ (for Java SE 5+) can always be used. TestNG 5.8+ can also be used.
-</p>
-<pre><code>   package domain;
-
-   import java.math.*;
-   import java.util.*;
-
-   import junit.framework.*;
-
-   import mockit.*;
-
-   import infrastructure.*;
-
-   public final class ServiceA_CoreAPI_Test extends TestCase
-   {
-      private boolean serviceMethodCalled;
-
-      public static class MockDatabase
-      {
-         static int findMethodCallCount;
-         static int saveMethodCallCount;
-
-(1)      public static List<?> find(String ql, Object arg1)
-         {
-            assertNotNull(ql);
-            assertNotNull(arg1);
-            findMethodCallCount++;
-            return Collections.EMPTY_LIST;
-         }
-
-(3)      public static void save(Object o)
-         {
-            assertNotNull(o);
-            saveMethodCallCount++;
-         }
-      }
-
-      @Override
-      protected void setUp() throws Exception
-      {
-         super.setUp();
-         MockDatabase.findMethodCallCount = 0;
-         MockDatabase.saveMethodCallCount = 0;
-         Mockit.redefineMethods(Database.class, MockDatabase.class);
-      }
-
-      @Override
-      protected void tearDown() throws Exception
-      {
-         Mockit.restoreAllOriginalDefinitions();
-         super.tearDown();
-      }
-
-      public void testDoBusinessOperationXyz() throws Exception
-      {
-         final BigDecimal total = new BigDecimal("125.40");
-
-         Mockit.redefineMethods(ServiceB.class, new Object()
-         {
-(2)         public BigDecimal computeTotal(List<?> items)
-            {
-               assertNotNull(items);
-               serviceMethodCalled = true;
-               return total;
-            }
-         });
-
-         EntityX data = new EntityX(5, "abc", "5453-1");
-         new ServiceA().doBusinessOperationXyz(data);
-
-         assertEquals(total, data.getTotal());
-         assertTrue(serviceMethodCalled);
-         assertEquals(1, MockDatabase.findMethodCallCount);
-         assertEquals(1, MockDatabase.saveMethodCallCount);
-      }
-
-      public void testDoBusinessOperationXyzWithInvalidItemStatus()
-      {
-         Mockit.redefineMethods(ServiceB.class, new Object()
-         {
-(2)         public BigDecimal computeTotal(List<?> items) throws InvalidItemStatus
-            {
-               throw new InvalidItemStatus();
-            }
-         });
-
-         EntityX data = new EntityX(5, "abc", "5453-1");
-
-         try {
-            new ServiceA().doBusinessOperationXyz(data);
-            fail(InvalidItemStatus.class + " was expected");
-         }
-         catch (InvalidItemStatus ignore) {
-            // OK, test passed
-            assertNull(data.getTotal());
-            assertEquals(1, MockDatabase.findMethodCallCount);
-            assertEquals(0, MockDatabase.saveMethodCallCount);
-         }
-      }
-   }
-</code></pre>
-<p>
-   Notice how these tests emulate the invocation counts of the Annotations API by using static
-   fields in the mock class.
 </p>
 <p>
    Typically, the vast majority of tests can be written with the Expectations API.

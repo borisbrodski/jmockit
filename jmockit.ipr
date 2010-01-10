@@ -1379,11 +1379,9 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/tutorial/lib/commons-email-1.2.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/tutorial/lib/commons-email-1.2-javadoc.jar!/" />
-      </JAVADOC>
+      <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/tutorial/lib/commons-email-1.2-sources.jar!/" />
+        <root url="jar://C:/Java/commons-email-1.2/commons-email-1.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: javamail:javamail:1.3.3">

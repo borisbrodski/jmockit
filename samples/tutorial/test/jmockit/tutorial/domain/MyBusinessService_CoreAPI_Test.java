@@ -33,6 +33,7 @@ import junit.framework.*;
 
 import mockit.*;
 
+@SuppressWarnings({"UnusedDeclaration"})
 public final class MyBusinessService_CoreAPI_Test extends TestCase
 {
    private boolean emailSent;
@@ -81,7 +82,6 @@ public final class MyBusinessService_CoreAPI_Test extends TestCase
       Mockit.redefineMethods(Email.class, new MockEmail(true));
 
       EntityX data = new EntityX(5, "abc", "5453-1");
-
       new MyBusinessService().doBusinessOperationXyz(data);
 
       assertEquals(1, MockDatabase.findMethodCallCount);
@@ -115,7 +115,7 @@ public final class MyBusinessService_CoreAPI_Test extends TestCase
       }
    }
 
-   public void testDoBusinessOperationXyzWithInvalidCustomerEmailAddress() throws Exception
+   public void testDoBusinessOperationXyzWithInvalidEmailAddress() throws Exception
    {
       Mockit.redefineMethods(Email.class, new MockEmail(false));
 
