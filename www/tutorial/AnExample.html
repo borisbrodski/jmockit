@@ -423,79 +423,66 @@ public final class MyBusinessService_VerificationsAPI_Test
 <p>
    Next, lets see how the <strong>JMockit Annotations</strong> API solves the problem.
 </p>
-<pre><code>   package domain;
+<pre><code>package domain;
 
-   import java.math.*;
-   import java.util.*;
+import java.util.*;
 
-   import org.junit.*;
-   import static org.junit.Assert.*;
+import org.apache.commons.mail.*;
+import org.junit.*;
+import static org.junit.Assert.*;
 
-   import mockit.*;
-   import static mockit.Mockit.*;
+import mockit.*;
 
-   import infrastructure.*;
+import infrastructure.*;
 
-   public final class ServiceA_AnnotationsAPI_Test
+@UsingMocksAndStubs({MockDatabase.class, Email.class})
+public final class MyBusinessService_AnnotationsAPI_Test
+{
+   @MockClass(realClass = Database.class, stubs = "&lt;clinit>")
+   public static class MockDatabase
    {
-      @MockClass(realClass = Database.class)
-      public static class MockDatabase
+      @Mock(invocations = 1)
+(1)   public static List&lt;EntityX> find(String ql, Object... args)
+      {
+         assertNotNull(ql);
+         assertNotNull(args.length > 0);
+         return Arrays.asList(new EntityX(1, "AX5", "someone@somewhere.com"));
+      }
+
+      @Mock(maxInvocations = 1)
+(2)   public static void persist(Object o) { assertNotNull(o); }
+   }
+
+   final EntityX data = new EntityX(5, "abc", "5453-1");
+
+   @Test
+   public void doBusinessOperationXyz() throws Exception
+   {
+      new MockUp&lt;Email>()
       {
          @Mock(invocations = 1)
-(1)      public static List<?> find(String ql, Object arg1)
-         {
-            assertNotNull(ql);
-            assertNotNull(arg1);
-            return Collections.emptyList();
-         }
+(3)      String send() { return ""; }
+      });
 
-         @Mock(maxInvocations = 1)
-(3)      public static void save(Object o) { assertNotNull(o); }
-      }
-
-      @Before
-      public void setUp() { setUpMocks(MockDatabase.class); }
-
-      @After
-      public void tearDown() { tearDownMocks(); }
-
-      @Test
-      public void doBusinessOperationXyz() throws Exception
-      {
-         final BigDecimal total = new BigDecimal("125.40");
-
-         setUpMock(ServiceB.class, new Object()
-         {
-            @Mock(invocations = 1)
-(2)         BigDecimal computeTotal(List<?> items)
-            {
-               assertNotNull(items);
-               return total;
-            }
-         });
-
-         EntityX data = new EntityX(5, "abc", "5453-1");
-         new ServiceA().doBusinessOperationXyz(data);
-
-         assertEquals(total, data.getTotal());
-      }
-
-      @Test(expected = InvalidItemStatus.class)
-      public void doBusinessOperationXyzWithInvalidItemStatus() throws Exception
-      {
-         new MockUp&lt;ServiceB>()
-         {
-            @Mock
-(2)         BigDecimal computeTotal(List<?> items) throws InvalidItemStatus
-            {
-               throw new InvalidItemStatus();
-            }
-         };
-
-         EntityX data = new EntityX(5, "abc", "5453-1");
-         new ServiceA().doBusinessOperationXyz(data);
-      }
+      new MyBusinessService().doBusinessOperationXyz(data);
    }
+
+   @Test(expected = EmailException.class)
+   public void doBusinessOperationXyzWithInvalidEmailAddress() throws Exception
+   {
+      new MockUp&lt;Email>()
+      {
+         @Mock
+         Email addTo(String emailAddress) throws EmailException
+         {
+            assertNotNull(emailAddress);
+            throw new EmailException();
+         }
+      };
+
+      new MyBusinessService().doBusinessOperationXyz(data);
+   }
+}
 </code></pre>
 <p>
    Here, instead of recording invocations, we directly specify the mock implementations for the
@@ -503,9 +490,7 @@ public final class MyBusinessService_VerificationsAPI_Test
    Such mocks must have the same signature as the "real" methods and constructors, and be annotated
    with <code>@Mock</code> in a <em>mock class</em>, which can be either a separate class (nested or
    not) annotated with <code>@MockClass</code> or an anonymous inner class defined inside a test.
-   The last test uses an inline <em>mock-up class</em> instead of using the
-   <code>Mockit.setUpMock</code> method. This is in fact the preferred way to define test-specific
-   mock classes.
+   Both tests use an special kind of inline mock class known as a <em>mock-up class</em>.
 </p>
 <p>
    Constructors in a mock class (not shown above) can also be mocks, but it is usually better to
@@ -513,8 +498,8 @@ public final class MyBusinessService_VerificationsAPI_Test
    will provide a mock implementation for the static initialization block of the real class, if any.
 </p>
 <p>
-   The <code>@Mock</code> annotation can optionally specify exact/min/max
-   constraints on the expected number of invocations to the mock method.
+   The <code>@Mock</code> annotation can optionally specify exact/min/max constraints on the
+   expected/allowed number of invocations to the mock method.
    <br/>
    Another attribute of this annotation is <code>reentrant</code> (boolean with default of false),
    which allows a mock method to call back to the real method, causing its real implementation to
