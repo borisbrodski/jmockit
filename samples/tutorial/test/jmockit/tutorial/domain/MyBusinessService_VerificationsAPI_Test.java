@@ -76,20 +76,4 @@ public final class MyBusinessService_VerificationsAPI_Test
          }
       };
    }
-
-   @Test(expected = EmailException.class)
-   public void doBusinessOperationXyzWithInvalidItemStatus() throws Exception
-   {
-      new NonStrictExpectations()
-      {
-         {
-            email.addTo((String) withNotNull()); result = new EmailException();
-         }
-      };
-
-      EntityX data = new EntityX(5, "abc", "5453-1");
-      new MyBusinessService().doBusinessOperationXyz(data);
-
-      // Nothing left to verify at this point.
-   }
 }
