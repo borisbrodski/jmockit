@@ -18,51 +18,70 @@
 <p>
    Say you have a business domain layer class (a "service" class) with a business operation which
    does two things through separate dependencies:
-   a) it accesses a database using a static facade to the persistence subsystem (assume the
+   a) it accesses a database using a simplified API to the persistence subsystem (assume the
    transaction is demarcated at the appropriate point up in the call stack);
-   and b) it calls a business method in another service class.
+   and b) it sends a notification e-mail to the customer through a third-party API (in this example,
+   <a href="http://commons.apache.org/email">Commons Email</a> is used).
 </p>
-<pre><code>   public final class ServiceA
+<pre><code>import static infrastructure.Database.*;
+import org.apache.commons.mail.*;
+
+public final class MyBusinessService
+{
+   public void doBusinessOperationXyz(EntityX data) throws EmailException
    {
-      public void doBusinessOperationXyz(EntityX data) throws InvalidItemStatus
-      {
-(1)      List&lt;?> items = Database.find(
-            "select item from EntityY item where item.someProperty=?",
-            data.getSomeProperty());
+      List&lt;EntityX> items =
+(1)      <em>find</em>("select item from EntityX item where item.someProperty = ?1", data.getSomeProperty());
 
-(2)      BigDecimal total = new ServiceB().computeTotal(items);
+      // Compute or obtain from another service a total value for the new persistent entity:
+      BigDecimal total = ...
+      data.setTotal(total);
 
-         data.setTotal(total);
-(3)      Database.save(data);
-      }
+(2)   <em>persist</em>(data);
+
+      sendNotificationEmailToCustomer(data, items);
    }
 
-   public final class ServiceB
+   private void sendNotificationEmailToCustomer(EntityX data, List&lt;EntityX> items)
+      throws EmailException
    {
-      public BigDecimal computeTotal(List&lt;?> items) throws InvalidItemStatus
-      {
-         BigDecimal total = new BigDecimal(0);
-         // compute total while iterating items, or throws InvalidItemStatus exception
-         return total;
-      }
+      Email email = new SimpleEmail();
+      email.setSubject("Notification about processing of ...");
+      email.addTo(data.getCustomerEmail());
+
+      // Other e-mail parameters, such as the host name of the mail server, have defaults defined
+      // through external configuration.
+
+      String message = buildNotificationMessage(items);
+      email.setMsg(message);
+
+(3)   email.send();
    }
+
+   private String buildNotificationMessage(List&lt;EntityX> items)
+   {
+      // Simply builds the message with data from the list of items...
+   }
+}
 </code></pre>
 <p>
    The <code>Database</code> class contains only static methods and a private
-   constructor; the <code>find</code> and <code>save</code> methods should be obvious, so we won't
-   list them here (assume they are implemented on top of an ORM API, such as Hibernate or JPA).
+   constructor; the <code>find</code> and <code>persist</code> methods should be obvious, so we
+   won't list them here (assume they are implemented on top of an ORM API, such as Hibernate or
+   JPA).
 </p>
 <p>
    So, how can we unit test the "doBusinessOperationXyz" method without making any changes to the
    existing application code?
    JMockit actually provides four different APIs that can be used, each capable enough for our
    needs.
-   (In practice, the first two APIs are just subsets of a larger <em>behavior-based</em> mocking
-   API, while one of the other two, which can be described as <em>state-based</em> mocking APIs, is
-   an older and more limited version of the other.)
+   (In practice, the first two APIs are just subsets of a larger <em>behavior-oriented</em> mocking
+   API, while one of the other two, which can be described as <em>state-oriented</em> mocking APIs,
+   is an older and more limited version of the other.)
    We will see how to use each one of them in the following sections.
-   In all four cases, a JUnit test case will mock out the three dependencies of the method under
-   test, that is, the method calls at <code>(1)</code>, <code>(2)</code>, and <code>(3)</code>.
+   In all four cases, a JUnit test case will verify the three invocations of interest made from the
+   unit under test to its external dependencies: the method calls at <code>(1)</code>,
+   <code>(2)</code>, and <code>(3)</code>.
 </p>
 
 <h3 id="expectations">
@@ -78,62 +97,58 @@
 <p>
    First, lets use the <strong>JMockit Expectations</strong> API.
 </p>
-<pre><code>   package domain;
+<pre><code>package domain;
 
-   import java.math.*;
-   import java.util.*;
+import java.util.*;
 
-   import static org.junit.Assert.*;
-   import org.junit.*;
+import org.apache.commons.mail.*;
+import org.junit.*;
 
-   import mockit.*;
+import mockit.*;
 
-   import infrastructure.*;
+import infrastructure.*;
 
-   public final class ServiceA_ExpectationsAPI_Test
+public final class MyBusinessService_ExpectationsAPI_Test
+{
+   @Mocked final Database unused = null;
+   @NonStrict SimpleEmail email; // calls to setters are irrelevant, so we make it non-strict
+
+   @Test
+   public void doBusinessOperationXyz() throws Exception
    {
-      @Mocked final Database unused = null;
-      @Mocked ServiceB serviceB;
+      final EntityX data = new EntityX(5, "abc", "5453-1");
+      final List&lt;EntityX> items = new ArrayList&lt;EntityX>();
+      items.add(new EntityX(1, "AX5", "someone@somewhere.com"));
 
-      @Test
-      public void doBusinessOperationXyz() throws Exception
+      new Expectations()
       {
-         final EntityX data = new EntityX(5, "abc", "5453-1");
-         final BigDecimal total = new BigDecimal("125.40");
-
-         new Expectations()
          {
-            {
-               List&lt;?> items = new ArrayList&lt;Object>();
-(1)            Database.find(withSubstring("select"), null); returns(items);
+            // "Database" is mocked strictly, therefore the order of these invocations does matter:
+(1)         Database.<em>find</em>(withSubstring("select"), (Object[]) null); <em>result</em> = items;
+(2)         Database.<em>persist</em>(data);
 
-(2)            new ServiceB().computeTotal(items); returns(total);
-(3)            Database.save(data);
-            }
-         };
+            // Since "email" is a non-strict mock, this invocation can be replayed in any order:
+(3)         email.send(); <em>times</em> = 1; // a non-strict invocation requires a constraint if expected
+         }
+      };
 
-         new ServiceA().doBusinessOperationXyz(data);
-
-         assertEquals(total, data.getTotal());
-      }
-
-      @Test(expected = InvalidItemStatus.class)
-      public void doBusinessOperationXyzWithInvalidItemStatus() throws Exception
-      {
-         new Expectations()
-         {
-            {
-(1)            Database.find(anyString, anyString);
-
-(2)            new ServiceB().computeTotal((List&lt;?>) withNotNull());
-               throwsException(new InvalidItemStatus());
-            }
-         };
-
-         EntityX data = new EntityX(5, "abc", "5453-1");
-         new ServiceA().doBusinessOperationXyz(data);
-      }
+      new MyBusinessService().doBusinessOperationXyz(data);
    }
+
+   @Test(expected = EmailException.class)
+   public void doBusinessOperationXyzWithInvalidEmailAddress() throws Exception
+   {
+      new NonStrictExpectations()
+      {
+         {
+            email.addTo((String) withNotNull()); <em>result</em> = new EmailException();
+         }
+      };
+
+      EntityX data = new EntityX(5, "abc", "5453-1");
+      new MyBusinessService().doBusinessOperationXyz(data);
+   }
+}
 </code></pre>
 <div class="sidebar">
    Other mocking tools usually require a call to some mock creation method, which always returns a
@@ -143,9 +158,11 @@
 </div>
 <p>
    First of all, note that <em>what</em> gets mocked is specified through <em>mock fields</em>,
-   which in this case are instance fields of the test class annotated as <code>@Mocked</code>.
+   which in this case are instance fields of the test class annotated as <code>@Mocked</code> and/or
+   as <code>@NonStrict</code>.
    A mock field can be of any reference type: an interface, an abstract class, a final/non-final
-   class, a class with private constructors only, an enum type, or even an annotation type.
+   class, a class with private constructors only, an enum type, an annotation type, or a generic
+   type parameter.
    We say that such a mock field has a <em>mocked type</em>. In truth, it is the type specified to
    be mocked that truly matters; the field itself is not essential, although very useful when the
    test needs a <em>mock object</em> to invoke instance methods on. Such a mock instance will be
@@ -185,10 +202,10 @@
    <code>org.jmock.Expectations</code> subclass.
 </div>
 <p>
-   As the example tests show, <em>expected invocations</em> are specified through regular method
-   and constructor invocations on mocked types or mock fields, while inside an
-   <code>Expectations</code> block (which is an anonymous inner class containing an instance
-   initialization block).
+   As the example tests show, <em>expected/allowed invocations</em> are specified through regular
+   method and constructor invocations on mocked types or mock fields, while inside an
+   <code>Expectations</code> or <code>NonStrictExpectations</code> block (which is an anonymous
+   inner class containing an instance initialization block).
    Each such invocation partly defines an <em>expectation</em> for the test.
    We say that such invocations/expectations are <em>recorded</em> during a <em>record phase</em>,
    so that they can be <em>replayed</em> (and automatically verified) later, during a
@@ -199,16 +216,18 @@
 </p>
 <p>
    Additional behavior can and often is recorded for an expectation.
-   This is done by calling certain methods of the Expectations API <em>after</em> the recorded
-   method/constructor invocation of interest, and <em>before</em> the next expectation to appear in
-   the block. 
-   An <em>expected return value</em> can be specified through a call to <code>returns(...)</code>.
-   Similarly, an <em>expected exception</em> is recorded with <code>throwsException(...)</code>.
-   (For errors, it would be <code>throwsError(...)</code>.)
+   This is done by assigning values to certain fields and/or calling certain methods of the
+   Expectations API <em>after</em> the recorded method/constructor invocation of interest, and
+   <em>before</em> the next expectation to appear in the block.
+   A <em>recorded return value</em> of any type can be assigned to the special
+   <strong><code>result</code></strong> field.
+   Similarly, a <em>recorded exception</em> (or <em>error</em>) can be recorded by assigning the
+   desired <code>Throwable</code> to this same <code>result</code> field.
 </p>
 <p>
-   The method calls <code>withXyz(...)</code>, as well as the field accesses <code>anyAbc</code> use
-   <em>Hamcrest matchers</em> for flexible argument matching.
+   The method calls <strong><code>withXyz(...)</code></strong>, as well as the field accesses
+   <strong><code>anyAbc</code></strong>, allow flexible matching of argument values for the recorded
+   invocations.
    Otherwise, an exact match is expected between recorded argument values and the corresponding
    values received in the replay phase.
 </p>
@@ -222,19 +241,26 @@
 </div>
 <p>
    All expectations recorded inside <code>Expectations</code> blocks are <em>strictly verified</em>
-   before the end of the test (actually, this is only the <em>default</em> verification behavior, as
-   we see later).
+   before the end of the test, unless the mocked type was declared as <code>@NonStrict</code>.
+   <em>Non-strict</em> invocations (those made to non-strict mocked types or appearing inside a
+   <code>NonStrictExpectations</code> block) are only verified if an explicit <em>invocation count
+   constraint</em> is specified in the test, through an assignment to the
+   <strong><code>times</code></strong> field
+   (or alternatively to the <code>minTimes</code> and/or <code>maxTimes</code> fields).
    A <code>java.lang.AssertionError</code> will be thrown for any expected invocation which did not
    happen during the replay phase.
    An error will also be thrown for any invocation to a mocked type that does occur during the
-   replay phase, but which was not expected (that is, no expectation was recorded for it).
+   replay phase, but which was expected to not occur (all the strict ones, by default, but also any
+   non-strict ones for which a minimum invocation count was specified and got violated).
    Even more, the test will fail (again, with an <code>AssertionError</code>) if expected
-   invocations are replayed in a different order than they were recorded.
-   We say that expectations that exhibit these properties are <em>strict</em>.
+   invocations to one or more strict mocked types are replayed in a different order than they were
+   recorded.
 </p>
 <p>
-   There is more to the Expectations API, about which you can find in the API documentation, and
-   also in the many additional sample tests inside the full distribution.
+   There is more to the Expectations API, about which you can find in the chapter on
+   <a href="BehaviorBasedTesting.html">behavior-based testing</a>, in the
+   <a href="../javadoc/mockit/Expectations.html">API documentation</a>, and also in the many
+   additional sample tests inside the full distribution.
 </p>
 
 <h3 id="verifications">
