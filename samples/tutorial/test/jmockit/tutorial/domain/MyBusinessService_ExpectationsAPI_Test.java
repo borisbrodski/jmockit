@@ -67,6 +67,9 @@ public final class MyBusinessService_ExpectationsAPI_Test
       {
          {
             email.addTo((String) withNotNull()); result = new EmailException();
+
+            // If the e-mail address is invalid, sending the message should not be attempted:
+            email.send(); times = 0;
          }
       };
 
