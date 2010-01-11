@@ -79,6 +79,9 @@ public final class MyBusinessService_AnnotationsAPI_Test
             assertNotNull(emailAddress);
             throw new EmailException();
          }
+         
+         @Mock(invocations = 0)
+         String send() { return null; }
       };
 
       new MyBusinessService().doBusinessOperationXyz(data);
