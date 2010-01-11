@@ -120,6 +120,8 @@ public final class MockFixture
       redefinedClasses.put(redefinedClass, modifiedClassfile);
 
       // TODO: implement support for multiple simultaneous redefinitions for each class?
+      // at least support the case where some class is stubbed out for the whole test class and
+      // then mocked in one or more tests, particularly when using @Mock(invocations = n)
    }
 
    public Map<Class<?>, InstanceFactory> getMockedTypesAndInstances()
