@@ -1,6 +1,6 @@
 /*
  * JMockit Annotations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -99,11 +99,7 @@ final class MockState
 
    void verifyExpectations()
    {
-      int timesInvoked;
-
-      synchronized (invocationCountLock) {
-         timesInvoked = invocationCount;
-      }
+      int timesInvoked = getTimesInvoked();
 
       if (expectedInvocations >= 0 && timesInvoked != expectedInvocations) {
          throw new AssertionError(errorMessage("exactly", expectedInvocations, timesInvoked));
@@ -113,6 +109,13 @@ final class MockState
       }
       else if (maxExpectedInvocations >= 0 && timesInvoked > maxExpectedInvocations) {
          throw new AssertionError(errorMessage("at most", maxExpectedInvocations, timesInvoked));
+      }
+   }
+
+   int getTimesInvoked()
+   {
+      synchronized (invocationCountLock) {
+         return invocationCount;
       }
    }
 
@@ -141,5 +144,12 @@ final class MockState
       }
 
       return realClass.getName();
+   }
+
+   void reset()
+   {
+      synchronized (invocationCountLock) {
+         invocationCount = 0;
+      }
    }
 }

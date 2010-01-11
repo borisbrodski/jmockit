@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -82,31 +82,11 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
 
       TestRun.setRunningIndividualTest(it);
       TestRun.generateIdForNextTest();
-      AssertionError error;
 
       try {
          originalRunBare();
-
-         error = RecordAndReplayExecution.endCurrentReplayIfAny();
-         TestRun.finishCurrentTestExecution();
       }
       catch (Throwable t) {
-         //noinspection ThrowableResultOfMethodCallIgnored
-         RecordAndReplayExecution.endCurrentReplayIfAny();
-         TestRun.finishCurrentTestExecution();
-         Utilities.filterStackTrace(t);
-         throw t;
-      }
-
-      if (error != null) {
-         Utilities.filterStackTrace(error);
-         throw error;
-      }
-
-      try {
-         TestRun.verifyExpectationsOnAnnotatedMocks();
-      }
-      catch (AssertionError t) {
          Utilities.filterStackTrace(t);
          throw t;
       }
@@ -120,8 +100,10 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
 
       try {
          runTest();
+         exception = endTestExecution(true);
       }
       catch (Throwable running) {
+         endTestExecution(false);
          exception = running;
       }
       finally {
@@ -181,5 +163,25 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       }
 
       return null;
+   }
+
+   private AssertionError endTestExecution(boolean nothingThrownByTestMethod)
+   {
+      AssertionError expectationsFailure = RecordAndReplayExecution.endCurrentReplayIfAny();
+
+      try {
+         if (nothingThrownByTestMethod && expectationsFailure == null) {
+            TestRun.verifyExpectationsOnAnnotatedMocks();
+         }
+      }
+      catch (AssertionError e) {
+         expectationsFailure = e;
+      }
+      finally {
+         TestRun.resetExpectationsOnAnnotatedMocks();
+      }
+
+      TestRun.finishCurrentTestExecution();
+      return expectationsFailure;
    }
 }

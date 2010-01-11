@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -103,6 +103,31 @@ public final class TestNGTestRunnerDecorator extends TestRunnerDecorator
       TestRun.setRunningTestMethod(method);
       generateTestIdForNextBeforeMethod = true;
 
+      return executeTestMethod(instance, method, parameters);
+   }
+
+   private boolean isTestMethod(Class<?> testClass, Method method)
+   {
+      return
+         method.isAnnotationPresent(Test.class) ||
+         testClass.isAnnotationPresent(Test.class) && Modifier.isPublic(method.getModifiers()) &&
+         method.getDeclaredAnnotations().length == 0;
+   }
+
+   private boolean isMethodWithParametersProvidedByTestNG(Method method)
+   {
+      if (method.isAnnotationPresent(Parameters.class)) {
+         return true;
+      }
+
+      Test testMetadata = method.getAnnotation(Test.class);
+
+      return testMetadata != null && testMetadata.dataProvider().length() > 0;
+   }
+
+   private Object executeTestMethod(Object instance, Method method, Object[] parameters)
+      throws InvocationTargetException, IllegalAccessException
+   {
       try {
          Object result = MethodHelper.invokeMethod(method, instance, parameters);
 
@@ -128,25 +153,9 @@ public final class TestNGTestRunnerDecorator extends TestRunnerDecorator
          endTestExecution();
          throw e;
       }
-   }
-
-   private boolean isMethodWithParametersProvidedByTestNG(Method method)
-   {
-      if (method.isAnnotationPresent(Parameters.class)) {
-         return true;
+      finally {
+         TestRun.resetExpectationsOnAnnotatedMocks();
       }
-
-      Test testMetadata = method.getAnnotation(Test.class);
-
-      return testMetadata != null && testMetadata.dataProvider().length() > 0;
-   }
-
-   private boolean isTestMethod(Class<?> testClass, Method method)
-   {
-      return
-         method.isAnnotationPresent(Test.class) ||
-         testClass.isAnnotationPresent(Test.class) && Modifier.isPublic(method.getModifiers()) &&
-         method.getDeclaredAnnotations().length == 0;
    }
 
    private AssertionError endTestExecution()

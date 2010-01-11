@@ -1,6 +1,6 @@
 /*
  * JMockit Annotations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -108,13 +108,6 @@ public final class AnnotatedMockStates
       mockStatesWithExpectations.add(mockState);
    }
 
-   public void verifyExpectations()
-   {
-      for (MockState mockState : mockStatesWithExpectations) {
-         mockState.verifyExpectations();
-      }
-   }
-
    public boolean updateMockState(String mockClassName, int mockIndex)
    {
       MockState mockState = getMockState(mockClassName, mockIndex);
@@ -127,7 +120,7 @@ public final class AnnotatedMockStates
       return true;
    }
 
-   private MockState getMockState(String mockClassInternalName, int mockIndex)
+   MockState getMockState(String mockClassInternalName, int mockIndex)
    {
       return classStates.get(mockClassInternalName).getMockState(mockIndex);
    }
@@ -136,5 +129,19 @@ public final class AnnotatedMockStates
    {
       MockState mockState = getMockState(mockClassInternalName, mockIndex);
       mockState.exitReentrantCall();
+   }
+
+   public void verifyExpectations()
+   {
+      for (MockState mockState : mockStatesWithExpectations) {
+         mockState.verifyExpectations();
+      }
+   }
+
+   public void resetExpectations()
+   {
+      for (MockState mockState : mockStatesWithExpectations) {
+         mockState.reset();
+      }
    }
 }

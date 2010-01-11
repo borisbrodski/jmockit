@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -78,8 +78,6 @@ public final class TestRun
 
    public static int getTestId() { return instance.testId; }
 
-   public static Method getRunningTestMethod() { return instance.runningTestMethod; }
-
    public static boolean isInsideNoMockingZone()
    {
       return instance.noMockingCount.get() > 0;
@@ -136,6 +134,11 @@ public final class TestRun
    public static void verifyExpectationsOnAnnotatedMocks()
    {
       getMockClasses().getMockStates().verifyExpectations();
+   }
+
+   public static void resetExpectationsOnAnnotatedMocks()
+   {
+      getMockClasses().getMockStates().resetExpectations();
    }
 
    // Static "mutators" for global state //////////////////////////////////////////////////////////

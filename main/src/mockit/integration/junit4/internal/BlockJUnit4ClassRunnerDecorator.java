@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -136,6 +136,7 @@ public final class BlockJUnit4ClassRunnerDecorator extends TestRunnerDecorator
             }
          }
          finally {
+            TestRun.resetExpectationsOnAnnotatedMocks();
             savePoint.rollback();
             TestRun.exitNoMockingZone();
          }
