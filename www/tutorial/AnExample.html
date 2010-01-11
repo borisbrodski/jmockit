@@ -142,6 +142,9 @@ public final class MyBusinessService_ExpectationsAPI_Test
       {
          {
 (3)         email.addTo((String) withNotNull()); <em>result</em> = new EmailException();
+
+            // If the e-mail address is invalid, sending the message should not be attempted:
+            email.send(); <em>times</em> = 0;
          }
       };
 
@@ -478,6 +481,9 @@ public final class MyBusinessService_AnnotationsAPI_Test
             assertNotNull(emailAddress);
             throw new EmailException();
          }
+
+         @Mock(invocations = 0)
+         String send() { return null; }
       };
 
       new MyBusinessService().doBusinessOperationXyz(data);
