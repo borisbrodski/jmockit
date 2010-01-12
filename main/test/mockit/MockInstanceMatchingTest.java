@@ -262,13 +262,13 @@ public final class MockInstanceMatchingTest
    public void verifyExpectationsMatchingOnMultipleMockParametersButReplayedOutOfOrder(
       final AbstractExecutorService es1, final AbstractExecutorService es2)
    {
-      es2.submit((Callable<?>) null);
+      es2.execute(null);
       es1.submit((Runnable) null);
 
       new FullVerificationsInOrder()
       {
          {
-            es1.submit((Callable<?>) any);
+            es1.execute((Runnable) any);
             es2.submit((Runnable) any);
          }
       };

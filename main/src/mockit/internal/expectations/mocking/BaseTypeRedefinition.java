@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -162,7 +162,8 @@ abstract class BaseTypeRedefinition
 
       ClassReader classReader = createClassReader(targetClass);
       SubclassGenerationModifier modifier =
-         new SubclassGenerationModifier(mockConstructorInfo, mockingCfg, classReader, subclassName);
+         new SubclassGenerationModifier(
+            mockConstructorInfo, mockingCfg, targetClass, classReader, subclassName);
       classReader.accept(modifier, false);
       final byte[] modifiedClass = modifier.toByteArray();
 
