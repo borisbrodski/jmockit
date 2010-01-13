@@ -33,10 +33,90 @@
    fields, and to mock test method parameters.
    In the first case, it does not matter if individual tests are pure JUnit/TestNG tests, or if they
    are written with any of the available mocking APIs.
-   In the other cases (mock fields/parameters), this annotation will be used in conjunction with
-   the Expectations API.
+   In the other cases (mock fields/parameters), this annotation is used in conjunction with the
+   Expectations & Verifications API.
 </p>
-<del>more to be written</del>
+
+<h3 id="stubbing">Stubbing out implementation classes for a whole test class</h3>
+<p>
+   If you have several tests which happen to load classes that implement abstractions (Java
+   interfaces or base classes), but those classes are not known at compile time (or you simply don't
+   want test code to have compile-time dependencies on them), then it may be necessary to stub them
+   out to avoid interference with other parts of the tested code.
+   The following test class, where <code>MyService</code> is an arbitrary interface or base class
+   (<code>abstract</code> or not), provides an example.
+</p>
+<pre><code><strong>@Capturing(baseType = MyService.class)</strong>
+public final class CapturingImplementationsTest
+{
+   @Test
+   public void aTestMethod()
+   {
+      ...
+
+      // In the tested production code, a suitable implementation class is selected
+      // through external configuration, loaded, and instantiated:
+      MyService service = ...
+
+      ...
+   
+      // Another implementation class may be created deep inside production code, as
+      // an anonymous inner class (which will also get stubbed out):
+      MyService another = new MyService()
+      {
+         ...
+      };
+      ...
+   }
+
+   ...
+}
+</code></pre>
+<p>
+   For all tests defined in the annotated test class, all implementations of the specified base type
+   will get fully stubbed out, independently of how or when the concrete implementation classes
+   actually get loaded by the JVM. Implementation classes loaded by previously executed tests in
+   another test class will also be stubbed out. All class definitions will get automatically
+   restored for the next test class in the same test run, though.
+</p>
+<p>
+   The <code>baseType</code> attribute is only used in this situation, where the annotation is
+   applied to a test class. In other situations it normally isn't used, since the base type can be
+   inferred from the declared type of an annotated field or parameter.
+</p>
+
+<h4 id="filtering">Filtering implementation classes by name</h4>
+<p>
+   It's possible to filter the classes to be stubbed out by specifying one or more
+   <a href="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true">regular
+      expressions</a> through the <strong><code>classNames</code></strong> attribute.
+   Each regular expression must match the fully qualified names of the desired classes.
+   The set of filters can be inverted through the <strong><code>inverse</code></strong> attribute,
+   so that only the classes <em>not</em> matching the specified regular expressions will get stubbed
+   out.
+</p>
+
+<h3 id="mocking">Mocking unknown implementation classes</h3>
+<p>
+   If some tests need to verify the interaction between tested code and the captured base types,
+   then <em>mocking</em> rather than mere <em>stubbing</em> is required.
+   Such tests can use the <code>@Capturing</code> annotation just like they would use the
+   <code>@Mocked</code> annotation, in the declaration of a mock field or test method parameter.
+   The <code>baseType</code> attribute can be used to specify the mocked type, but this is only
+   necessary if said type differs from the declared type of the mock field/parameter.
+</p>
+<p>
+   Filtering of implementation classes can be done just like in the case where the annotation is
+   applied to the test class.
+</p>
+<p>
+   The semantics for mock fields and parameters annotated with <code>@Capturing</code> are the same
+   as if they were annotated with <code>@Mocked(capture = n)</code>, with <code>n > 0</code>.
+   The <strong><code>maxInstances</code></strong> attribute can be used to specify the maximum
+   number of instances to capture, when the annotation is applied to a non-<code>final</code> mock
+   field (by default, all instances are captured for any "<code>@Capturing</code>" field/parameter).
+</p>
+
 <div class="navigation">
    <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
    <a href="UsingMocksAndStubs.html"><img align="right" src="go-next.png" title="Next chapter"></a>
