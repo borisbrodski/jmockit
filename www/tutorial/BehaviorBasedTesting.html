@@ -1513,7 +1513,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    mocking</em> since the decision of what is mocked is made at runtime, as the expectation blocks
    in a test are executed.
 </p>
-<pre><code>public final class DynamicPartialMockingTest extends JMockitTest
+<pre><code>public final class DynamicPartialMockingTest
 {
    static class Collaborator
    {
@@ -1675,12 +1675,12 @@ public final class TestedUnit
    duration of a given test, transparently and as needed.)
    The next test shows how it's done.
 </p>
-<pre><code>public final class UnitTest extends JMockitTest
+<pre><code>public final class UnitTest
 {
-   @Mocked(<strong>capture = 10</strong>) private Service service;
+   @Mocked(<strong>capture = 10</strong>) Service service;
 
    @Test
-   public void captureAllInternallyCreatedInstances(@Mocked(<strong>capture = 1</strong>) final Callable<?> callable)
+   public void captureAllInternallyCreatedInstances(@Mocked(<strong>capture = 1</strong>) final Callable&lt;?> callable)
       throws Exception
    {
       Service initialMockService = service;
@@ -1706,8 +1706,8 @@ public final class TestedUnit
 }
 </code></pre>
 <p>
-   Notice we used all three possible scopes for mocked types: a mock field of the test class, a mock
-   parameter of the test method, and a local mock field of the expectation block.
+   Note that we used all three possible scopes for mocked types: a mock field of the test class, a
+   mock parameter of the test method, and a local mock field of the expectation block.
    In all three cases the mocked type is either an interface or a non-<code>final</code> class, and
    the <code>capturing</code> annotation attribute has been used.
 </p>
@@ -1718,7 +1718,7 @@ public final class TestedUnit
    For a non-<code>final</code> mock field, each captured instance will be immediately assigned to
    the field, up to the specified maximum number of instances.
    If any more instantiations occur they won't be assigned to the field, even though the classes to
-   which such instances belong will still be mocked.
+   which such instances belong will still get mocked.
    However, if there is a second capturing field of the same mocked type, then those extra instances
    will get assigned to it up to the <em>its</em> maximum number of instances to capture.
    So, once a mocked type is declared to be captured, all implementation classes will get mocked for
