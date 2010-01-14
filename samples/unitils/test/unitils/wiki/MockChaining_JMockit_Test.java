@@ -29,11 +29,6 @@ import org.junit.*;
 import mockit.*;
 
 import static org.junit.Assert.*;
-import org.unitils.*;
-import org.unitils.inject.annotation.*;
-import org.unitils.mock.*;
-import org.unitils.mock.Mock;
-import org.unitils.mock.core.*;
 
 public final class MockChaining_JMockit_Test
 {
