@@ -1,6 +1,6 @@
 /*
  * JMockit Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -92,7 +92,7 @@ public class Verifications extends Invocations
     * <p/>
     * The effect of specifying a number of iterations larger than 1 (one) is equivalent to
     * multiplying by that number the lower and upper invocation count limits for each invocation
-    * inside the verification block (see {@link #repeats(int, int)}).
+    * inside the verification block.
     * 
     * @param numberOfIterations the positive number of iterations for the whole set of invocations
     * verified inside the block; when not specified, 1 (one) iteration is assumed

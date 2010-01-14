@@ -48,14 +48,13 @@ import mockit.internal.expectations.*;
  * test methods can share the same mock fields. Such fields need to be annotated with 
  * {@code @Mocked}, though.
  * <p/>
- * There are several API methods (all of them {@code protected final}) which the
- * subclass/expectation block can use for setting {@linkplain #returns(Object) expected return
- * values}, {@linkplain #throwsException(Exception) expected thrown exceptions} or
- * {@linkplain #throwsError(Error) errors}, and argument matching constraints such as
+ * There are several API fields and methods (all of them {@code protected final}) which the
+ * expectation block can use for recording desired return values and exceptions/errors to be thrown
+ * (see {@link #result}), and for specifying argument matching constraints such as
  * {@linkplain #withEqual(Object)}.
  * <p/>
- * Individual expectations are set during the <em>recording phase</em>, and later exercised during
- * the <em>replay phase</em> of the test.
+ * Individual expectations are set during the <em>record phase</em>, and later exercised during the
+ * <em>replay phase</em> of the test.
  * At the end of the test, the test runner will automatically assert that all recorded invocations 
  * were actually replayed as expected.
  * <p/>
@@ -87,8 +86,10 @@ import mockit.internal.expectations.*;
  * Most tests shouldn't need these facilities, though.
  * </li>
  * <li>
- * Another set of API methods provides the ability to specify {@linkplain #repeats(int, int) how
- * many times a recorded invocation is expected to occur} during replay.
+ * A set of special API fields provides the ability to specify how many {@linkplain #times times} a
+ * recorded invocation is expected to occur during replay, the {@linkplain #minTimes minimum
+ * number of times} it's expected, or the {@linkplain #maxTimes maximum number of times} it will be
+ * allowed to occur.
  * </li>
  * <li>
  * By default, the exact instance on which instance method invocations occur during the replay phase

@@ -119,14 +119,13 @@ Base class whose subclasses are defined in test code, and whose instances define
  test methods can share the same mock fields. Such fields need to be annotated with 
  <code>@Mocked</code>, though.
  <p/>
- There are several API methods (all of them <code>protected final</code>) which the
- subclass/expectation block can use for setting <A HREF="../mockit/Expectations.html#returns(java.lang.Object)">expected return
- values</A>, <A HREF="../mockit/Expectations.html#throwsException(java.lang.Exception)">expected thrown exceptions</A> or
- <A HREF="../mockit/Expectations.html#throwsError(java.lang.Error)">errors</A>, and argument matching constraints such as
+ There are several API fields and methods (all of them <code>protected final</code>) which the
+ expectation block can use for recording desired return values and exceptions/errors to be thrown
+ (see <A HREF="../mockit/Expectations.html#result"><CODE>result</CODE></A>), and for specifying argument matching constraints such as
  <A HREF="../mockit/Expectations.html#withEqual(T)">withEqual(Object)</A>.
  <p/>
- Individual expectations are set during the <em>recording phase</em>, and later exercised during
- the <em>replay phase</em> of the test.
+ Individual expectations are set during the <em>record phase</em>, and later exercised during the
+ <em>replay phase</em> of the test.
  At the end of the test, the test runner will automatically assert that all recorded invocations 
  were actually replayed as expected.
  <p/>
@@ -157,8 +156,10 @@ Base class whose subclasses are defined in test code, and whose instances define
  Most tests shouldn't need these facilities, though.
  </li>
  <li>
- Another set of API methods provides the ability to specify <A HREF="../mockit/Expectations.html#repeats(int, int)">how
- many times a recorded invocation is expected to occur</A> during replay.
+ A set of special API fields provides the ability to specify how many <A HREF="../mockit/Expectations.html#times">times</A> a
+ recorded invocation is expected to occur during replay, the <A HREF="../mockit/Expectations.html#minTimes">minimum
+ number of times</A> it's expected, or the <A HREF="../mockit/Expectations.html#maxTimes">maximum number of times</A> it will be
+ allowed to occur.
  </li>
  <li>
  By default, the exact instance on which instance method invocations occur during the replay phase
