@@ -92,10 +92,7 @@ public final class ForEachInvocationTest
       collaborator.addElements(asList("a", "B", "c"));
       collaborator.addElements(asList("B", "123"));
 
-      final boolean bExpected = true;
-      final int[] iExpected = new int[0];
-      final String sExpected = "test";
-      collaborator.doSomething(bExpected, iExpected, sExpected);
+      collaborator.doSomething(true, new int[0], "test");
 
       new Verifications()
       {
@@ -106,14 +103,14 @@ public final class ForEachInvocationTest
                void verify(Collection<String> elements) { assert elements.contains("B"); }
             };
 
-            mock.doSomething(bExpected, iExpected, sExpected);
+            mock.doSomething(anyBoolean, null, null);
             forEachInvocation = new Object()
             {
                void invoked(Boolean b, int[] i, String s)
                {
-                  assertEquals(bExpected, b);
-                  assertArrayEquals(iExpected, i);
-                  assertEquals(sExpected, s);
+                  assertTrue(b);
+                  assertArrayEquals(new int[0], i);
+                  assertEquals("test", s);
                }
             };
          }
