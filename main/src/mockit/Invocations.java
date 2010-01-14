@@ -158,8 +158,6 @@ abstract class Invocations
    /**
     * A non-negative value assigned to this field will be taken as the exact number of times that
     * invocations matching the current expectation should occur during replay.
-    * Each assignment to this field is equivalent to calling {@link #repeats(int)} with the assigned
-    * value.
     *
     * @see #minTimes
     * @see #maxTimes
@@ -169,8 +167,9 @@ abstract class Invocations
    /**
     * A non-negative value assigned to this field will be taken as the minimum number of times that
     * invocations matching the current expectation should occur during replay.
-    * Each assignment to this field is equivalent to calling {@link #repeatsAtLeast(int)} with the
-    * assigned value.
+    * <p/>
+    * Both {@code minTimes} and {@code maxTimes} can be specified for the same expectation, as long
+    * as {@code minTimes} is assigned first.
     *
     * @see #times
     * @see #maxTimes
@@ -181,11 +180,10 @@ abstract class Invocations
     * A non-negative value assigned to this field will be taken as the maximum number of times that
     * invocations matching the current expectation should occur during replay.
     * A <em>negative</em> value implies there is no upper limit.
-    * Each assignment to this field is equivalent to calling {@link #repeatsAtMost(int)} with the
-    * assigned value.
     * <p/>
     * Both {@code minTimes} and {@code maxTimes} can be specified for the same expectation, as long
     * as {@code minTimes} is assigned first.
+    *
     * @see #times
     * @see #minTimes
     */
@@ -520,8 +518,6 @@ abstract class Invocations
 
    /**
     * Specifies the exact number of invocations for the current expectation.
-    * <p/>
-    * As an alternative, consider using the {@link #times} field.
     *
     * @param exactInvocationCount exact number of times the invocation is expected to occur during
     * the replay phase
@@ -529,7 +525,10 @@ abstract class Invocations
     * @see #repeats(int, int)
     * @see #repeatsAtLeast(int)
     * @see #repeatsAtMost(int)
+    *
+    * @deprecated Use {@link #times} instead.
     */
+   @Deprecated
    protected final void repeats(int exactInvocationCount)
    {
       getCurrentPhase().handleInvocationCountConstraint(exactInvocationCount, exactInvocationCount);
@@ -537,8 +536,6 @@ abstract class Invocations
 
    /**
     * Specifies a range for the number of invocations of the current expectation.
-    * <p/>
-    * As an alternative, consider using the {@link #minTimes} and {@link #maxTimes} fields.
     *
     * @param minInvocations minimum number of times the invocation is expected to occur during the
     * replay phase
@@ -548,7 +545,10 @@ abstract class Invocations
     * @see #repeats(int)
     * @see #repeatsAtLeast(int)
     * @see #repeatsAtMost(int)
+    *
+    * @deprecated Use {@link #minTimes} and {@link #maxTimes} (in this order) instead.
     */
+   @Deprecated
    protected final void repeats(int minInvocations, int maxInvocations)
    {
       getCurrentPhase().handleInvocationCountConstraint(minInvocations, maxInvocations);
@@ -560,8 +560,6 @@ abstract class Invocations
     * The upper limit is automatically adjusted so that any number of invocations beyond the
     * specified minimum is allowed. The upper limit can still be specified for the same expectation,
     * but consider instead using {@link #repeats(int, int)} to specify both limits at the same time.
-    * <p/>
-    * As an alternative, consider using the {@link #minTimes} field.
     *
     * @param minInvocations minimum number of times the invocation is expected to occur during the
     * replay phase
@@ -569,7 +567,10 @@ abstract class Invocations
     * @see #repeats(int)
     * @see #repeats(int, int)
     * @see #repeatsAtMost(int)
+    *
+    * @deprecated Use {@link #minTimes} instead.
     */
+   @Deprecated
    protected final void repeatsAtLeast(int minInvocations)
    {
       getCurrentPhase().handleInvocationCountConstraint(minInvocations, -1);
@@ -580,8 +581,6 @@ abstract class Invocations
     * <p/>
     * The lower limit is automatically adjusted, if needed, to be no more than the specified
     * maximum.
-    * <p/>
-    * As an alternative, consider using the {@link #maxTimes} field.
     *
     * @param maxInvocations maximum number of times the invocation is allowed to occur during the
     * replay phase, or {@literal -1} for no upper limit
@@ -589,7 +588,10 @@ abstract class Invocations
     * @see #repeats(int)
     * @see #repeats(int, int)
     * @see #repeatsAtLeast(int)
+    *
+    * @deprecated Use {@link #maxTimes} instead.
     */
+   @Deprecated
    protected final void repeatsAtMost(int maxInvocations)
    {
       getCurrentPhase().setMaxInvocationCount(maxInvocations);

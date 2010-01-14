@@ -473,39 +473,6 @@ An <A HREF="../mockit/Expectations.html" title="class in mockit"><CODE>Expectati
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/NonStrictExpectations.html#repeats(int)">repeats</A></B>(int&nbsp;exactInvocationCount)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies the exact number of invocations for the current expectation.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/NonStrictExpectations.html#repeats(int, int)">repeats</A></B>(int&nbsp;minInvocations,
-        int&nbsp;maxInvocations)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies a range for the number of invocations of the current expectation.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/NonStrictExpectations.html#repeatsAtLeast(int)">repeatsAtLeast</A></B>(int&nbsp;minInvocations)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies a lower limit for the number of invocations of the current expectation.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/NonStrictExpectations.html#repeatsAtMost(int)">repeatsAtMost</A></B>(int&nbsp;maxInvocations)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an upper limit for the number of invocations of the current expectation.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected &nbsp;void</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/NonStrictExpectations.html#setField(java.lang.Class, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;mockClass,
          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
 
@@ -817,7 +784,7 @@ T</CODE></FONT></TD>
 <TH ALIGN="left"><B>Methods inherited from class mockit.<A HREF="../mockit/Expectations.html" title="class in mockit">Expectations</A></B></TH>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD><CODE><A HREF="../mockit/Expectations.html#endRecording()">endRecording</A>, <A HREF="../mockit/Expectations.html#notStrict()">notStrict</A>, <A HREF="../mockit/Expectations.html#returns(java.lang.Object)">returns</A>, <A HREF="../mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">returns</A>, <A HREF="../mockit/Expectations.html#throwsError(java.lang.Error)">throwsError</A>, <A HREF="../mockit/Expectations.html#throwsException(java.lang.Exception)">throwsException</A></CODE></TD>
+<TD><CODE><A HREF="../mockit/Expectations.html#endRecording()">endRecording</A>, <A HREF="../mockit/Expectations.html#notStrict()">notStrict</A>, <A HREF="../mockit/Expectations.html#returns(java.lang.Object)">returns</A>, <A HREF="../mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">returns</A></CODE></TD>
 </TR>
 </TABLE>
 &nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
@@ -1039,8 +1006,6 @@ protected static int <B>maxTimes</B></PRE>
 <DD>A non-negative value assigned to this field will be taken as the maximum number of times that
  invocations matching the current expectation should occur during replay.
  A <em>negative</em> value implies there is no upper limit.
- Each assignment to this field is equivalent to calling <A HREF="../mockit/NonStrictExpectations.html#repeatsAtMost(int)"><CODE>repeatsAtMost(int)</CODE></A> with the
- assigned value.
  <p/>
  Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long
  as <code>minTimes</code> is assigned first.
@@ -1058,8 +1023,9 @@ protected static int <B>minTimes</B></PRE>
 <DL>
 <DD>A non-negative value assigned to this field will be taken as the minimum number of times that
  invocations matching the current expectation should occur during replay.
- Each assignment to this field is equivalent to calling <A HREF="../mockit/NonStrictExpectations.html#repeatsAtLeast(int)"><CODE>repeatsAtLeast(int)</CODE></A> with the
- assigned value.
+ <p/>
+ Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long
+ as <code>minTimes</code> is assigned first.
 <P>
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/NonStrictExpectations.html#times"><CODE>times</CODE></A>, 
@@ -1074,8 +1040,6 @@ protected static int <B>times</B></PRE>
 <DL>
 <DD>A non-negative value assigned to this field will be taken as the exact number of times that
  invocations matching the current expectation should occur during replay.
- Each assignment to this field is equivalent to calling <A HREF="../mockit/NonStrictExpectations.html#repeats(int)"><CODE>repeats(int)</CODE></A> with the assigned
- value.
 <P>
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/NonStrictExpectations.html#minTimes"><CODE>minTimes</CODE></A>, 
@@ -1366,87 +1330,6 @@ protected final &lt;T&gt; T <B>onInstance</B>(T&nbsp;mock)</PRE>
 
 <DT><B>Returns:</B><DD>the given mock instance, allowing the invocation to be recorded/verified to
  immediately follow the call to this method</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="repeats(int)"><!-- --></A><H3>
-repeats</H3>
-<PRE>
-protected final void <B>repeats</B>(int&nbsp;exactInvocationCount)</PRE>
-<DL>
-<DD>Specifies the exact number of invocations for the current expectation.
- <p/>
- As an alternative, consider using the <A HREF="../mockit/NonStrictExpectations.html#times"><CODE>times</CODE></A> field.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>exactInvocationCount</CODE> - exact number of times the invocation is expected to occur during
- the replay phase<DT><B>See Also:</B><DD><A HREF="../mockit/NonStrictExpectations.html#repeats(int, int)"><CODE>repeats(int, int)</CODE></A>, 
-<A HREF="../mockit/NonStrictExpectations.html#repeatsAtLeast(int)"><CODE>repeatsAtLeast(int)</CODE></A>, 
-<A HREF="../mockit/NonStrictExpectations.html#repeatsAtMost(int)"><CODE>repeatsAtMost(int)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="repeats(int, int)"><!-- --></A><H3>
-repeats</H3>
-<PRE>
-protected final void <B>repeats</B>(int&nbsp;minInvocations,
-                             int&nbsp;maxInvocations)</PRE>
-<DL>
-<DD>Specifies a range for the number of invocations of the current expectation.
- <p/>
- As an alternative, consider using the <A HREF="../mockit/NonStrictExpectations.html#minTimes"><CODE>minTimes</CODE></A> and <A HREF="../mockit/NonStrictExpectations.html#maxTimes"><CODE>maxTimes</CODE></A> fields.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>minInvocations</CODE> - minimum number of times the invocation is expected to occur during the
- replay phase<DD><CODE>maxInvocations</CODE> - maximum number of times the invocation is allowed to occur during the
- replay phase, or -1 for no upper limit<DT><B>See Also:</B><DD><A HREF="../mockit/NonStrictExpectations.html#repeats(int)"><CODE>repeats(int)</CODE></A>, 
-<A HREF="../mockit/NonStrictExpectations.html#repeatsAtLeast(int)"><CODE>repeatsAtLeast(int)</CODE></A>, 
-<A HREF="../mockit/NonStrictExpectations.html#repeatsAtMost(int)"><CODE>repeatsAtMost(int)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="repeatsAtLeast(int)"><!-- --></A><H3>
-repeatsAtLeast</H3>
-<PRE>
-protected final void <B>repeatsAtLeast</B>(int&nbsp;minInvocations)</PRE>
-<DL>
-<DD>Specifies a lower limit for the number of invocations of the current expectation.
- <p/>
- The upper limit is automatically adjusted so that any number of invocations beyond the
- specified minimum is allowed. The upper limit can still be specified for the same expectation,
- but consider instead using <A HREF="../mockit/NonStrictExpectations.html#repeats(int, int)"><CODE>repeats(int, int)</CODE></A> to specify both limits at the same time.
- <p/>
- As an alternative, consider using the <A HREF="../mockit/NonStrictExpectations.html#minTimes"><CODE>minTimes</CODE></A> field.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>minInvocations</CODE> - minimum number of times the invocation is expected to occur during the
- replay phase<DT><B>See Also:</B><DD><A HREF="../mockit/NonStrictExpectations.html#repeats(int)"><CODE>repeats(int)</CODE></A>, 
-<A HREF="../mockit/NonStrictExpectations.html#repeats(int, int)"><CODE>repeats(int, int)</CODE></A>, 
-<A HREF="../mockit/NonStrictExpectations.html#repeatsAtMost(int)"><CODE>repeatsAtMost(int)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="repeatsAtMost(int)"><!-- --></A><H3>
-repeatsAtMost</H3>
-<PRE>
-protected final void <B>repeatsAtMost</B>(int&nbsp;maxInvocations)</PRE>
-<DL>
-<DD>Specifies an upper limit for the number of invocations of the current expectation.
- <p/>
- The lower limit is automatically adjusted, if needed, to be no more than the specified
- maximum.
- <p/>
- As an alternative, consider using the <A HREF="../mockit/NonStrictExpectations.html#maxTimes"><CODE>maxTimes</CODE></A> field.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>maxInvocations</CODE> - maximum number of times the invocation is allowed to occur during the
- replay phase, or -1 for no upper limit<DT><B>See Also:</B><DD><A HREF="../mockit/NonStrictExpectations.html#repeats(int)"><CODE>repeats(int)</CODE></A>, 
-<A HREF="../mockit/NonStrictExpectations.html#repeats(int, int)"><CODE>repeats(int, int)</CODE></A>, 
-<A HREF="../mockit/NonStrictExpectations.html#repeatsAtLeast(int)"><CODE>repeatsAtLeast(int)</CODE></A></DL>
 </DD>
 </DL>
 <HR>

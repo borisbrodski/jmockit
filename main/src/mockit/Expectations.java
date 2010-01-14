@@ -113,19 +113,24 @@ public class Expectations extends Invocations
    /**
     * A value assigned to this field will be taken as the result for the current expectation.
     * <p/>
-    * If the value is of type {@link Throwable} then the assignment is equivalent to a call to
-    * {@link #throwsException(Exception)} or {@link #throwsError(Error)} with the given
-    * exception/error instance.
-    * Otherwise, it's equivalent to a call to {@link #returns(Object)} with the given value.
+    * If the value is of type {@link Throwable} then it will be <em>thrown</em> when a matching
+    * invocation occurs in the replay phase.
+    * Otherwise, it's assumed to be a <em>return value</em> for a non-void method, and will be
+    * returned at replay time from a matching invocation.
+    * Attempting to return a value that is incompatible with the method return type will cause a
+    * {@code ClassCastException} to be thrown at replay time.
     * <p/>
     * If the current expectation is for a method which actually <em>returns</em> an exception or
     * error (as opposed to <em>throwing</em> one), then the {@link #returns(Object)} method should
     * be used instead.
     * <p/>
     * If the value assigned to the field is of a type assignable to {@link java.util.Collection} or
-    * to {@link java.util.Iterator}, then it is taken as a sequence of consecutive results for the
-    * current expectation.
+    * to {@link java.util.Iterator}, then it is taken as a sequence of <em>consecutive results</em>
+    * for the current expectation.
+    * Another way to specify consecutive results is to simply write multiple consecutive assignments
+    * to the field.
     *
+    * @see #returns(Object)
     * @see #returns(Object, Object...)
     */
    protected static Object result;
@@ -257,6 +262,9 @@ public class Expectations extends Invocations
     * @throws IllegalStateException if not currently recording an invocation
     * @throws IllegalArgumentException if the given return value is not {@code null} but the
     * preceding mock invocation is to a constructor or {@code void} method
+    *
+    * @see #result
+    * @see #returns(Object, Object...)
     */
    protected final void returns(Object value)
    {
@@ -292,7 +300,10 @@ public class Expectations extends Invocations
     * @param exception the exception that will be thrown when the invocation is replayed
     *
     * @throws IllegalStateException if not currently recording an invocation
+    *
+    * @deprecated Use {@link #result} instead.
     */
+   @Deprecated
    protected final void throwsException(Exception exception)
    {
       getCurrentExpectation().getResults().addThrowable(exception);
@@ -307,7 +318,10 @@ public class Expectations extends Invocations
     * @param error the error that will be thrown when the invocation is replayed
     *
     * @throws IllegalStateException if not currently recording an invocation
+    *
+    * @deprecated Use {@link #result} instead.
     */
+   @Deprecated
    protected final void throwsError(Error error)
    {
       getCurrentExpectation().getResults().addThrowable(error);

@@ -14,6 +14,14 @@
 <p>Release 0.996 (January ??, 2010):</p>
 <ul>
    <li>
+      <strong>Deprecated</strong> the following methods of the <em>Expectations & Verifications</em>
+      API: <code>throwsException(e)</code>, <code>throwsError(e)</code>, <code>repeats(n)</code>,
+      <code>repeats(m, n)</code>, <code>repeatsAtLeast(n)</code>, <code>repeatsAtMost(n)</code>.
+      Calls to these methods in existing tests should be replaced with the equivalent <em>field
+      assignments</em>, to the corresponding fields <code>result</code>, <code>times</code>,
+      <code>minTimes</code>, and <code>maxTimes</code>.
+   </li>
+   <li>
       <strong>New feature</strong>: the <code>forEachInvocation</code> field was created, for use
       both in expectation and verification blocks. It's similar to <code>Delegate</code> objects,
       but more convenient and capable (since delegates can only be used in expectation blocks).
