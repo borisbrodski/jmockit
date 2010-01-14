@@ -15,6 +15,40 @@
    </div>
 </h2>
 
+<ol style="border: medium ridge; background-color: beige;">
+   <li><a href="#mocks">Mock methods and mock classes</a></li>
+   <li>
+      <a href="#setUp">Setting up mocks for a test</a>
+      <ol>
+         <li><a href="#setupTime">Setting up mocks for a real class chosen at setup time</a></li>
+         <li><a href="#mockableMethods">Which kinds of methods can have mocks?</a></li>
+         <li><a href="#MockClass">Using the <code>@MockClass</code> annotation</a></li>
+         <li><a href="#inline">In-line mock classes</a></li>
+      </ol>
+   </li>
+   <li><a href="#interfaces">Mocking interfaces</a></li>
+   <li><a href="#stubs">Specifying stubs with a mock class</a></li>
+   <li><a href="#constraints">Invocation count constraints</a></li>
+   <li><a href="#initializers">Mocking and stubbing class initializers</a></li>
+   <li>
+      <a href="#instantiation">Controlling the instantiation of mock classes</a>
+      <ol>
+         <li><a href="#PerMockSetup">Instantiation per Mock Setup</a></li>
+         <li><a href="#PerMockInvocation">Instantiation per Mock Invocation</a></li>
+         <li><a href="#PerMockedInstance">Instantiation per Mocked Instance</a></li>
+      </ol>
+   </li>
+   <li><a href="#it">Accessing the mocked object: the "it" field</a></li>
+   <li><a href="#reentrant">Reentrant mocks</a></li>
+   <li>
+      <a href="#reuse">Reusing mocks between tests</a>
+      <ol>
+         <li><a href="#beforeAfter">Using before/after methods</a></li>
+         <li><a href="#reusableMocks">Reusable mock classes</a></li>
+      </ol>
+   </li>
+</ol>
+
 <p>
    In the JMockit toolkit, the <strong>Annotations API</strong> provides support for the creation of
    <em>state-based</em> tests.
