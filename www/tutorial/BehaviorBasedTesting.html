@@ -1604,7 +1604,68 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   <del>to be written</del>
+   When using complex APIs where functionality is distributed through many different objects, it is
+   not uncommon to see chained invocations of the form
+   <code>mock.getObj2(...).getYetAnotherObj().doSomething(...)</code>.
+   In such cases it may be necessary to mock all objects/classes in the chain, starting with
+   <code>obj1</code>.
+</p>
+<p>
+   The <code>@Cascading</code> annotation provides this ability. Just like <code>@Mocked</code>, it
+   can be applied to mock fields and mock parameters. Similarly to <code>@NonStrict</code> and
+   <code>@Capturing</code>, the use of <code>@Cascading</code> on a mock field or test method
+   parameter will imply that the type is mocked (this doesn't preclude use of <code>@Mocked</code>
+   on the same field/parameter, however).
+   The following test shows a basic example, where the cascading mocked type is used in expectation
+   and verification blocks. The test involves use of the <code>java.net</code> and
+   <code>java.nio</code> APIs.
+</p>
+<pre><code>   @Test
+   public void recordAndVerifyExpectationsOnCascadedMocks(@Cascading final Socket mock)
+      throws Exception
+   {
+      new NonStrictExpectations()
+      {
+         InetSocketAddress ignored;
+
+         {
+            mock.getChannel().isConnected(); <em>result</em> = false;
+         }
+      };
+
+      // Inside production code:
+      Socket s = new Socket(...);
+      ...
+   
+      if (!s.getChannel().isConnected()) {
+         SocketAddress sa = new InetSocketAddress("remoteHost", 123);
+         s.getChannel().connect(sa);
+      }
+
+      ...
+   
+      new Verifications()
+      {
+         {
+            mock.getChannel().connect((SocketAddress) withNotNull());
+         }
+      };
+   }
+</code></pre>
+<p>
+   In the test above, since the <code>Socket</code> class was mocked with cascading, any calls to
+   methods like <code>getChannel()</code> will return a <em>cascaded mock</em> object whenever they
+   occur during the test. The cascaded mock will allow further cascading, so a <code>null</code>
+   reference will never be obtained from methods which return object references (except for methods
+   returning <code>Object</code>, <code>String</code>, or collection types).
+</p>
+<p>
+   Now, what if you need to specify different return values or verify invocations to an intermediate
+   cascaded mock, such as the one created for <code>mock.getObj2(...)</code>?
+   The answer is quite simple: declare a regular mock field or parameter of the desired cascaded
+   type and then use it normally in the test. The mock instance obtained from this mocked type will
+   be the same as the cascaded mock created and returned by calls to the <code>getObj2</code>
+   method.
 </p>
 
 <h3 id="capturing">
