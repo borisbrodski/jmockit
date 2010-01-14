@@ -490,31 +490,32 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </h3>
 <p>
    For a given method with non-<code>void</code> return type, a return value can be recorded through
-   the <code>Expectations#returns(...)</code> method or through the <code>Expectations#result</code>
-   field.
+   the <code>Expectations#result</code> field or through the <code>Expectations#returns(...)</code>
+   method.
    When the method gets called in the replay phase, the specified return value will be returned to
    the caller (which normally is the unit under test).
 </p>
 <p>
    If the test instead needs an exception or error to be thrown when the method is invoked, then
-   the <code>Expectations#throwsException(...)</code> or <code>Expectations#throwsError(...)</code>
-   method can be used to record the desired exception/error to be thrown.
-   Alternatively (and preferably, since it's simpler), the <code>result</code> field can be assigned
-   the exception or error instance to be thrown.
-   Recording exceptions/errors to be thrown is applicable to mocked methods as well as to mocked
-   constructors.
+   the <code>result</code> field can also be used to record the desired exception/error to be
+   thrown, by having the desired throwable instance assigned to it.
+   In the rare case where a method actually returns exception or error objects, the
+   <code>returns(Object)</code> method will have to be used, to avoid the ambiguity.
+   Note that recording exceptions/errors to be thrown is applicable to mocked methods as well as to
+   mocked constructors.
 </p>
 <p>
-   Multiple consecutive results (return values and throwables) can be recorded for the same
-   expectation, by simply calling those API methods or assigning the <code>result</code> field
-   multiple times after the mock invocation that creates the expectation.
+   Multiple consecutive results (values to return and/or throwables to throw) can be recorded for
+   the same expectation, by simply assigning the <code>result</code> field multiple times after the
+   mock invocation that creates the expectation.
    The recording of multiple return values and/or exceptions/errors to be thrown can be freely mixed
    for the same expectation.
    In the case of recording multiple consecutive return values for a given expectation, a single
-   call to the <code>returns(...)</code> method can be made to specify more than one return value.
-   This is the only situation where the <code>result</code> field cannot be used; the
-   <code>returns</code> method used here actually is an overload which takes a <em>varargs</em>
-   argument for consecutive values after the first one.
+   call to the <code>returns(Object, Object...)</code> method can be made to specify more than one
+   return value.
+   This is the only situation where the <code>result</code> field cannot be used; note that this
+   <code>returns</code> method is an overload which takes a <em>varargs</em> argument for
+   consecutive values after the first one.
    For more details about this ability, see the corresponding
    <a href="../javadoc/mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">API
       documentation</a>.
@@ -541,8 +542,6 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 
             abc.stringReturningMethod(); <strong>returns("str1", "str2");</strong>
             <em>result</em> = new IllegalStateException();
-            // The previous field assignment could instead be written as:
-            // <strong>throwsException(new IllegalStateException());</strong>
          }
       };
 
@@ -679,7 +678,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    <a href="http://code.google.com/p/hamcrest">Hamcrest</a> library, which is bundled with JUnit 4.
 </p>
 
-<h4 id="matcherFields">Argument matching <em>fields</em>: a succinct alternative</h4>
+<h4 id="matcherFields">Using the "any" <em>fields</em> for argument matching</h4>
 <p>
    For the <code>withAny(?)</code> methods that take no arguments or take one only to designate
    the parameter type, there is a set of special <em>argument matching fields</em> that are
@@ -789,13 +788,10 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    Yet another way, particularly useful for <code>void</code> methods or when the test doesn't care
    about specific return values, is to specify an <em>invocation count constraint</em> for a given
    expectation.
-   The API has several fields and methods just for that: <code>times</code>, <code>minTimes</code>,
-   <code>maxTimes</code>, <code>repeats(int expectedNoOfInvocations)</code>,
-   <code>repeats(int minInvocations, int maxInvocations)</code>,
-   <code>repeatsAtLeast(int minInvocations)</code>, and
-   <code>repeatsAtMost(int maxInvocations)</code>.
-   These fields and methods belong to the <code>mockit.Invocations</code> class, the non-public base
-   class for both <code>mockit.Expectations</code> and <code>mockit.Verifications</code>.
+   The API has several fields just for that: <code>times</code>, <code>minTimes</code>, and
+   <code>maxTimes</code>.
+   These fields belong to the <code>mockit.Invocations</code> class, the non-public base class for
+   both <code>mockit.Expectations</code> and <code>mockit.Verifications</code>.
    Therefore, an invocation count constraint can be specified either when recording or when
    verifying invocations.
    In either case, the method or constructor associated with the expectation will be constrained to
@@ -809,13 +805,13 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       new Expectations()
       {
          {
-            // By default, one invocation is expected, ie "times = 1;" or "repeats(1);":
+            // By default, one invocation is expected, ie "times = 1;":
             new DependencyAbc();
 
-            // At least two invocations are expected (equivalent to <strong>repeatsAtLeast(2)</strong>):
+            // At least two invocations are expected:
             abc.voidMethod(); <strong><em>minTimes</em> = 2;</strong>
 
-            // 1 to 5 invocations are expected (equivalent to <strong>repeats(1, 5)</strong>):
+            // 1 to 5 invocations are expected:
             abc.stringReturningMethod(); <strong><em>minTimes</em> = 1; <em>maxTimes</em> = 5;</strong>
          }
       };
@@ -832,10 +828,10 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       {
          {
             // Verifies that zero or one invocations occurred, with the specified argument value:
-            abc.anotherVoidMethod(3); <strong><em>maxTimes</em> = 1;</strong> // or <strong>repeatsAtMost(1);</strong>
+            abc.anotherVoidMethod(3); <strong><em>maxTimes</em> = 1;</strong>
 
             // Verifies the occurrence of at least one invocation with the specified arguments:
-            DependencyAbc.someStaticMethod("test", false); // "minTimes = 1"/"repeatsAtLeast(1)" is implied
+            DependencyAbc.someStaticMethod("test", false); // "minTimes = 1" is implied
          }
       };
    }
@@ -870,13 +866,13 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <p>
    By default, an invocation recorded as an strict expectation will be expected to match exactly one
    invocation in the replay phase. That is, the expectation will have an invocation count constraint
-   of <code>1</code>, as if it was followed by a call to <code>repeats(1);</code>.
+   of <code>1</code>, as if it was followed by <code><em>times</em> = 1;</code> assignment.
    An invocation recorded as non-strict, on the other hand, will by default be allowed to match any
    number of invocations in the replay phase. That is, its invocation count constraint will have a
-   lower limit of <code>0</code> and an unbounded upper limit, as if followed by
-   <code>repeats(0, Integer.MAX_INT)</code>.
+   lower limit of <code>0</code> and an unbounded upper limit, as if followed by a
+   <code>minTimes = 0;</code> assignment.
    In either case, however, the default invocation count constraint can be overridden by an explicit
-   one (that is, an explicit call to one of the <code>repeats</code> methods).
+   one (that is, an explicit assignment to one of the <code>times/minTimes/maxTimes</code> fields).
 </p>
 <p>
    Notice that in the case of strict expectations, all the invocations occurring in the replay phase
@@ -934,12 +930,12 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    a <code>new NonStrictExpectations() {...}</code> block, with the exception of the methods used
    to record return values and thrown exceptions/errors.
    That is, all of the <code>withXyz(...)</code> argument matching methods can be used, as well as
-   the <code>repeatsXyz(...)</code> invocation count constraint methods.
+   the <code>times/minTimes/maxTimes</code> invocation count constraint fields.
 </p>
 
 <h4 id="neverHappened">Verifying that an invocation never happened</h4>
 <p>
-   To do this inside a verification block, add a call to <code>repeats(0)</code> right after the
+   To do this inside a verification block, add a <code>times = 0</code> assignment right after the
    invocation that is expected to not have happened during the replay phase.
    If one or more matching invocations did happen, the test will fail.
 </p>
@@ -1117,9 +1113,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    You may now be thinking that writing a <code>FullVerificationsInOrder</code> block ends up being
    the same as writing an <code>Expectations</code> block where all expectations are strict.
    So, have we come full circle? Almost, but not quite.
-   For non-strict expectations, the default invocation count constraint corresponds to a call to
-   <code>repeatsAtLeast(1)</code> or a <code><em>minTimes</em> = 1</code> assignment, which leaves
-   room for multiple invocations to the same method or constructor in the replay phase.
+   For non-strict expectations, the default invocation count constraint corresponds to a
+   <code><em>minTimes</em> = 1</code> assignment, which leaves room for multiple invocations to the
+   same method or constructor in the replay phase.
    So, in the above test for example, if the <code>setSomethingElse(...)</code> method was invoked
    a second time during the replay phase, the test would still pass (provided the second invocation
    occurred in the expected order, as specified inside the verification block).
@@ -1129,7 +1125,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <p>
    A full verification block (ordered or not) also allows us to verify that certain methods and/or
    constructors never get invoked, without having to specify each one of them with a corresponding
-   call to <code>repeats(0)</code> or a <code><em>times</em> = 0</code> assignment.
+   <code><em>times</em> = 0</code> assignment.
    The following test provides an example.
 </p>
 <pre><code>   @Test
@@ -1197,8 +1193,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    constructor.
    For an unordered iterating block, the specified number of iterations is effectively multiplied by
    the lower and upper invocation count limits; this happens even if an explicit constraint is
-   specified inside the block, such as a <code>repeats(1, 4);</code> call, which in this particular
-   example would be turned into <code>repeats(3, 12)</code>.
+   specified inside the block, such as a <code><em>minTimes</em> = 1; <em>maxTimes</em> = 4;</code>
+   pair of assignments, which in this particular example would be turned into
+   <code><em>minTimes</em> = 3; <em>maxTimes</em> = 12;</code>.
    In the second block, on the other hand, invocation count constraints are not affected.
    Instead, the resulting effect is equivalent to "unrolling the loop", as if the whole sequence of
    verified invocations inside the block was duplicated for each iteration.
@@ -1222,14 +1219,12 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </h3>
 <p>
    We have seen how to record results for invocations through assignments to the
-   <code><em>result</em></code> field or calls to the <code>returns(...)</code>,
-   <code>throwsException(...)</code> and <code>throwsError(...)</code> methods.
+   <code><em>result</em></code> field or calls to the <code>returns(...)</code> methods.
    We have also seen how to match invocation arguments flexibly with the <code>withXyz(...)</code>
-   group of methods and the various <code><em>any</em></code> fields.
+   group of methods and the various <code><em>anyXyz</em></code> fields.
    But what if a test needs to decide the result of a recorded invocation based on the arguments it
    will receive at replay time?
-   Or if the test simply wants to capture invocation argument values for use in "asserts"?
-   We can do it all through a <code>mockit.Delegate</code> instance, as exemplified below.
+   We can do it through a <code>mockit.Delegate</code> instance, as exemplified below.
 </p>
 <pre><code>   @Test
    public void someTestMethod()
@@ -1320,7 +1315,61 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   <del>to be written</del>
+   <code>Delegate</code> implementations can be used to validate invocation arguments, but they are
+   limited to expectation blocks. Besides, the main point of delegate methods is to specify
+   <em>invocation results</em> (values to return or exceptions to throw) at replay time, based on
+   the arguments received.
+   If the actual need is to validate the arguments passed at replay time in each invocation matching
+   an expectation, the <strong><code>forEachInvocation</code></strong> field should be used instead.
+   Such validations can be specified not only in expectation blocks, but also in verification
+   blocks.
+   For example, consider the following test:
+</p>
+<pre><code>   @Test
+   public void verifyExpectationWithArgumentValidatorForEachInvocation(final Collaborator mock)
+   {
+      // Inside tested code:
+      new Collaborator().doSomething(true, new int[2], "test");
+
+      new Verifications()
+      {
+         {
+            mock.doSomething(<em>anyBoolean</em>, null, null);
+            <em>forEachInvocation</em> = new Object()
+            {
+               void validate(Boolean b, int[] i, String s)
+               {
+                  assertTrue(b);
+                  assertEquals(2, i.length);
+                  assertEquals("test", s);
+               }
+            };
+         }
+      };
+   }
+</code></pre>
+<p>
+   In this test, all invocations to the <code>Collaborator#doSomething</code> method that occur
+   during the replay phase and that match the verified expectation will be validated by a call to
+   the specified <code>validate</code> method.
+   Each such call will be made with the same arguments that the verified method/constructor received
+   at replay time.
+   In this particular example, the verified expectation matches invocations with any arguments, but
+   more strict argument matchers could have been specified.
+</p>
+<p>
+   Differently from <code>Delegate</code> implementations, the object assigned to the
+   <code>forEachInvocation</code> field can be of any type.
+   The implementation class, however, should define exactly one non-<code>private</code> method of
+   any name, with the same number of parameters as the validated method/constructor (any number of
+   additional <code>private</code> methods is allowed).
+   The types of corresponding parameters don't have to be exactly the same, but they must be 
+   compatible in order to avoid the potential for <code>ClassCastException</code>'s.
+</p>
+<p>
+   Optionally, a first parameter of type <code>mockit.Invocation</code> can be declared in the
+   validation method, which should still have the remaining parameters. The semantics in this case
+   are the same as in the case of a <code>Delegate</code> method with that same special parameter.
 </p>
 
 <h3 id="deencapsulation">
@@ -1372,7 +1421,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
             <strong>setField(tested, "someIntField", 123);</strong>
 
             // Expectations recorded (even if the invocations are done through Reflection):
-            <strong>newInstance("some.package.AnotherDependency", true, "test");</strong> repeatsAtMost(1);
+            <strong>newInstance("some.package.AnotherDependency", true, "test");</strong> <em>maxTimes</em> = 1;
             <strong>invoke(tested, "intReturningMethod", 45, "");</strong> <em>result</em> = 1;
             // other expectations recorded...
          }
