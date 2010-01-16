@@ -223,12 +223,13 @@ public final class Deencapsulation
     * @param parameterTypes the formal parameter types for the desired constructor, possibly empty
     * @param initArgs the invocation arguments for the constructor, which must be consistent with
     * the specified parameter types
-    * @param <T> interface or super-class type to which the returned instance should be assignable
+    * @param <T> type to which the returned instance should be assignable
     *
-    * @return a newly created instance of the specified class, initialized with the specified
+    * @return a newly created instance of the specified class, initialized through the specified
     * constructor and arguments
     *
     * @see #newInstance(String, Object...)
+    * @see #newInstance(Class, Class[], Object...)
     * @see #newInnerInstance(String, Object, Object...)
     */
    public static <T> T newInstance(String className, Class<?>[] parameterTypes, Object... initArgs)
@@ -237,15 +238,52 @@ public final class Deencapsulation
    }
 
    /**
+    * Creates a new instance of a given class, invoking the constructor which has the specified
+    * parameter types.
+    *
+    * @param classToInstantiate the class to be instantiated
+    * @param parameterTypes the formal parameter types for the desired constructor, possibly empty
+    * @param initArgs the invocation arguments for the constructor, which must be consistent with
+    * the specified parameter types
+    * @param <T> type to which the returned instance should be assignable
+    *
+    * @return a newly created instance of the specified class, initialized through the specified
+    * constructor and arguments
+    *
+    * @see #newInstance(String, Object...)
+    * @see #newInstance(String, Class[], Object...)
+    * @see #newInnerInstance(String, Object, Object...)
+    */
+   public static <T> T newInstance(
+      Class<? extends T> classToInstantiate, Class<?>[] parameterTypes, Object... initArgs)
+   {
+      return Utilities.newInstance(classToInstantiate, parameterTypes, initArgs);
+   }
+
+   /**
     * Creates a new instance of a given non-accessible class, invoking the constructor which has
     * parameters matching the number, order, and types of the given non-null arguments.
     *
     * @param nonNullArgs zero or more non-null parameter values for the invocation; if a null value
     * needs to be passed, the {@code Class} object for the parameter type must be passed instead
+    * @param <T> type to which the returned instance should be assignable
     */
    public static <T> T newInstance(String className, Object... nonNullArgs)
    {
       return (T) Utilities.newInstance(className, nonNullArgs);
+   }
+
+   /**
+    * Creates a new instance of a given class, invoking the constructor which has parameters
+    * matching the number, order, and types of the given non-null arguments.
+    *
+    * @param nonNullArgs zero or more non-null parameter values for the invocation; if a null value
+    * needs to be passed, the {@code Class} object for the parameter type must be passed instead
+    * @param <T> type to which the returned instance should be assignable
+    */
+   public static <T> T newInstance(Class<? extends T> classToInstantiate, Object... nonNullArgs)
+   {
+      return Utilities.newInstance(classToInstantiate, nonNullArgs);
    }
 
    /**
@@ -259,10 +297,29 @@ public final class Deencapsulation
     * belong
     * @param nonNullArgs zero or more non-null parameter values for the invocation; if a null value
     * needs to be passed, the {@code Class} object for the parameter type must be passed instead
+    * @param <T> type to which the returned instance should be assignable
     */
    public static <T> T newInnerInstance(
       String innerClassSimpleName, Object outerClassInstance, Object... nonNullArgs)
    {
       return (T) Utilities.newInnerInstance(innerClassSimpleName, outerClassInstance, nonNullArgs);
+   }
+
+   /**
+    * The same as {@link #newInstance(String, Class[], Object...)}, but for instantiating an inner
+    * class of some other class, and where all other (if any) initialization arguments are known to
+    * be non-null.
+    *
+    * @param innerClassToInstantiate the inner class to be instantiated
+    * @param outerClassInstance the outer class instance to which the inner class instance will
+    * belong
+    * @param nonNullArgs zero or more non-null parameter values for the invocation; if a null value
+    * needs to be passed, the {@code Class} object for the parameter type must be passed instead
+    * @param <T> type to which the returned instance should be assignable
+    */
+   public static <T> T newInnerInstance(
+      Class<? extends T> innerClassToInstantiate, Object outerClassInstance, Object... nonNullArgs)
+   {
+      return Utilities.newInnerInstance(innerClassToInstantiate, outerClassInstance, nonNullArgs);
    }
 }

@@ -99,10 +99,15 @@ public final class Utilities
       return newInstance(theClass, parameterTypes, initArgs);
    }
 
+   public static <T> T newInstance(Class<? extends T> aClass, Object... nonNullArgs)
+   {
+      Class<?>[] paramTypes = getParameterTypesFromArguments(nonNullArgs);
+      return newInstance(aClass, paramTypes, nonNullArgs);
+   }
+
    public static <T> T newInstance(String className, Object... nonNullArgs)
    {
       Class<?>[] paramTypes = getParameterTypesFromArguments(nonNullArgs);
-
       return (T) newInstance(className, paramTypes, nonNullArgs);
    }
 
@@ -165,10 +170,8 @@ public final class Utilities
    }
 
    public static <T> T newInnerInstance(
-      String innerClassName, Object outerInstance, Object... nonNullArgs)
+      Class<? extends T> innerClass, Object outerInstance, Object... nonNullArgs)
    {
-      String className = outerInstance.getClass().getName() + '$' + innerClassName;
-
       Class<?>[] parameterTypes = new Class<?>[1 + nonNullArgs.length];
       parameterTypes[0] = outerInstance.getClass();
 
@@ -180,7 +183,16 @@ public final class Utilities
          initArgs[1 + i] = nonNullArgs[i];
       }
 
-      return (T) newInstance(className, parameterTypes, initArgs);
+      return newInstance(innerClass, parameterTypes, initArgs);
+   }
+
+   public static <T> T newInnerInstance(
+      String innerClassName, Object outerInstance, Object... nonNullArgs)
+   {
+      String className = outerInstance.getClass().getName() + '$' + innerClassName;
+      Class<T> innerClass = loadClass(className);
+
+      return newInnerInstance(innerClass, outerInstance, nonNullArgs);
    }
 
    public static <T> T invoke(Object targetInstance, String methodName, Object... methodArgs)

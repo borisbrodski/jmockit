@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -330,7 +330,7 @@ public final class DeencapsulationTest
    }
 
    @Test
-   public void newInstanceUsingMultipleArgsConstructorFromSpecifiedParameterTypes()
+   public void newInstanceByNameUsingMultipleArgsConstructorFromSpecifiedParameterTypes()
    {
       Subclass instance =
          newInstance(Subclass.class.getName(), new Class<?>[] {int.class, String.class}, 1, "XYZ");
@@ -340,6 +340,15 @@ public final class DeencapsulationTest
       assertEquals("XYZ", instance.stringField);
    }
 
+   @Test
+   public void newInstanceUsingMultipleArgsConstructorFromSpecifiedParameterTypes()
+   {
+      BaseClass instance =
+         newInstance(Subclass.class, new Class<?>[] {int.class, String.class}, 1, "XYZ");
+
+      assertNotNull(instance);
+   }
+
    @Test(expected = IllegalArgumentException.class)
    public void attemptNewInstanceWithNoMatchingConstructor()
    {
@@ -347,13 +356,21 @@ public final class DeencapsulationTest
    }
 
    @Test
-   public void newInstanceUsingMultipleArgsConstructorFromNonNullArgumentValues()
+   public void newInstanceByNameUsingMultipleArgsConstructorFromNonNullArgumentValues()
    {
       Subclass instance = newInstance(Subclass.class.getName(), 590, "");
 
       assertNotNull(instance);
       assertEquals(590, instance.intField);
       assertEquals("", instance.stringField);
+   }
+
+   @Test
+   public void newInstanceUsingMultipleArgsConstructorFromNonNullArgumentValues()
+   {
+      BaseClass instance = newInstance(Subclass.class, 590, "");
+
+      assertNotNull(instance);
    }
 
    @Test
@@ -371,9 +388,18 @@ public final class DeencapsulationTest
    }
 
    @Test
-   public void newInnerInstanceUsingMultipleArgsConstructor()
+   public void newInnerInstanceByNameUsingMultipleArgsConstructor()
    {
       Subclass.InnerClass innerInstance = newInnerInstance("InnerClass", anInstance, true, 5L, "");
+
+      assertNotNull(innerInstance);
+   }
+
+   @Test
+   public void newInnerInstanceUsingMultipleArgsConstructor()
+   {
+      Subclass.InnerClass innerInstance = 
+         newInnerInstance(Subclass.InnerClass.class, anInstance, true, 5L, "");
 
       assertNotNull(innerInstance);
    }
