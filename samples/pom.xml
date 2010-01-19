@@ -18,6 +18,7 @@
       <module>TimingFramework</module>
       <module>AnimatedTransitions</module>
       <module>orderMngmntWebapp</module>
+      <module>tourdemock</module>
    </modules>
 
    <name>The JMockit Testing Toolkit Samples</name>

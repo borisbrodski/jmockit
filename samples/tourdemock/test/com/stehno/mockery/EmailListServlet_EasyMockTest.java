@@ -1,0 +1,72 @@
+package com.stehno.mockery;
+
+import java.io.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+import org.junit.*;
+
+import com.stehno.mockery.service.*;
+import static java.util.Arrays.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.anyObject;
+import static org.easymock.classextension.EasyMock.replay;
+import org.easymock.classextension.EasyMockSupport;
+
+public final class EmailListServlet_EasyMockTest extends EasyMockSupport
+{
+   EmailListServlet servlet;
+
+   HttpServletRequest request;
+   HttpServletResponse response;
+   EmailListService emailListService;
+
+   @Before
+   public void before() throws ServletException
+   {
+      request = createNiceMock(HttpServletRequest.class);
+      response = createNiceMock(HttpServletResponse.class);
+      emailListService = createMock(EmailListService.class);
+
+      ServletConfig servletConfig = createNiceMock(ServletConfig.class);
+      ServletContext servletContext = createNiceMock(ServletContext.class);
+
+      expect(servletConfig.getServletContext()).andReturn(servletContext);
+      expect(servletContext.getAttribute(EmailListService.KEY)).andReturn(emailListService);
+      replay(servletConfig, servletContext);
+
+      servlet = new EmailListServlet();
+      servlet.init(servletConfig);
+   }
+
+   @Test(expected = IOException.class)
+   public void doGetWithoutList() throws Exception
+   {
+      expect(emailListService.getListByName(null)).andThrow(new IOException());
+      replay(request, emailListService);
+
+      servlet.doGet(request, response);
+   }
+
+   @Test
+   public void doGetWithList() throws Exception
+   {
+      List<String> emails = asList("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
+      expect(emailListService.getListByName((String) anyObject())).andReturn(emails);
+
+      PrintWriter writer = createStrictMock(PrintWriter.class);
+      expect(response.getWriter()).andReturn(writer);
+
+      writer.println("larry@stooge.com");
+      writer.println("moe@stooge.com");
+      writer.println("curley@stooge.com");
+      response.flushBuffer();
+
+      replay(request, response, writer, emailListService);
+
+      servlet.doGet(request, response);
+
+      verifyAll();
+   }
+}

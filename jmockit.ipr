@@ -437,7 +437,7 @@
         </inspection_tool>
         <inspection_tool class="NonReproducibleMathCall" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NonSerializableFieldInSerializableClass" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="superClassString" value="java.awt.Component" />
+          <option name="superClassString" value="java.awt.Component,javax.servlet.http.HttpServlet" />
         </inspection_tool>
         <inspection_tool class="NonSerializableObjectBoundToHttpSession" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NonSerializableObjectPassedToObjectStream" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -530,7 +530,7 @@
         <inspection_tool class="SerialPersistentFieldsWithWrongSignature" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SerialVersionUIDNotStaticFinal" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SerializableHasSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="superClassString" value="java.awt.Component,java.lang.Exception,java.util.HashMap,java.lang.AssertionError,java.util.ArrayList" />
+          <option name="superClassString" value="java.awt.Component,java.lang.Exception,java.util.HashMap,java.lang.AssertionError,java.util.ArrayList,javax.servlet.http.HttpServlet" />
         </inspection_tool>
         <inspection_tool class="SerializableInnerClassHasSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="superClassString" value="java.awt.Component" />
@@ -900,6 +900,7 @@
         <w>premain</w>
         <w>preprocessor</w>
         <w>pretransform</w>
+        <w>println</w>
         <w>proxied</w>
         <w>rect</w>
         <w>recurse</w>
@@ -926,6 +927,7 @@
         <w>throwable</w>
         <w>timingframework</w>
         <w>tooltip</w>
+        <w>tourdemock</w>
         <w>tremblay</w>
         <w>unbox</w>
         <w>unformatted</w>
@@ -963,6 +965,7 @@
       <module fileurl="file://$PROJECT_DIR$/samples/jmock/jMock2.iml" filepath="$PROJECT_DIR$/samples/jmock/jMock2.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/mockit.iml" filepath="$PROJECT_DIR$/mockit.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/samples.iml" filepath="$PROJECT_DIR$/samples/samples.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/tourdemock/tourdemock.iml" filepath="$PROJECT_DIR$/samples/tourdemock/tourdemock.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/www/www.iml" filepath="$PROJECT_DIR$/www/www.iml" />
     </modules>
   </component>
@@ -1092,13 +1095,13 @@
     </library>
     <library name="Maven: easymock:easymock:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/easymock/../lib/easymock-2.5.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymock-2.5.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/easymock/../lib/easymock-2.5.2-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymock-2.5.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/easymock/../lib/easymock-2.5.2-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/easymock-2.5.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: easymock:easymockclassextension:0">
@@ -1180,35 +1183,35 @@
     </library>
     <library name="Maven: org.hamcrest:hamcrest-core:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.hamcrest:hamcrest-library:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.objenesis:objenesis:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/objenesis-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/objenesis-1.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/objenesis-1.1-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/objenesis-1.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/easymockclassextension/../lib/objenesis-1.1-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/objenesis-1.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: commons-logging:commons-logging:0">
@@ -1235,24 +1238,24 @@
     </library>
     <library name="Maven: org.slf4j:slf4j-api:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/slf4j-api-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../lib/slf4j-api-1.5.8.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/slf4j-api-1.5.8-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../lib/slf4j-api-1.5.8-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/slf4j-api-1.5.8-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../lib/slf4j-api-1.5.8-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: dom4j:dom4j:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/dom4j-1.6.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/dom4j-1.6.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/dom4j-1.6.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: log4j:log4j:0">
@@ -1268,13 +1271,13 @@
     </library>
     <library name="Maven: org.slf4j:slf4j-nop:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/slf4j-nop-1.5.8.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/slf4j-nop-1.5.8-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/slf4j-nop-1.5.8-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: junit:junit:3.8.1">
@@ -1432,6 +1435,160 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/samples/tutorial/../../lib/javax.persistence-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.servlet:servlet-api:2.5">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.jmock:jmock:2.5.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/jmock/jmock/2.5.1/jmock-2.5.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/jmock/jmock/2.5.1/jmock-2.5.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/jmock/jmock/2.5.1/jmock-2.5.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.hamcrest:hamcrest-core:1.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.hamcrest:hamcrest-library:1.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/1.1/hamcrest-library-1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/1.1/hamcrest-library-1.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/1.1/hamcrest-library-1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.jmock:jmock-junit4:2.5.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/jmock/jmock-junit4/2.5.1/jmock-junit4-2.5.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/jmock/jmock-junit4/2.5.1/jmock-junit4-2.5.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/jmock/jmock-junit4/2.5.1/jmock-junit4-2.5.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: junit:junit-dep:4.4">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit-dep/4.4/junit-dep-4.4.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit-dep/4.4/junit-dep-4.4-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit-dep/4.4/junit-dep-4.4-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-test:2.5.6.SEC01">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/2.5.6.SEC01/spring-test-2.5.6.SEC01.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/2.5.6.SEC01/spring-test-2.5.6.SEC01-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/2.5.6.SEC01/spring-test-2.5.6.SEC01-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.jmock:jmock-legacy:2.5.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/jmock/jmock-legacy/2.5.1/jmock-legacy-2.5.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/jmock/jmock-legacy/2.5.1/jmock-legacy-2.5.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/jmock/jmock-legacy/2.5.1/jmock-legacy-2.5.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.easymock:easymock:2.5.2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/easymock/easymock/2.5.2/easymock-2.5.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/easymock/easymock/2.5.2/easymock-2.5.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/easymock/easymock/2.5.2/easymock-2.5.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.easymock:easymockclassextension:2.5.2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/easymock/easymockclassextension/2.5.2/easymockclassextension-2.5.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/easymock/easymockclassextension/2.5.2/easymockclassextension-2.5.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/easymock/easymockclassextension/2.5.2/easymockclassextension-2.5.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: cglib:cglib-nodep:2.2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/cglib/cglib-nodep/2.2/cglib-nodep-2.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/cglib/cglib-nodep/2.2/cglib-nodep-2.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/cglib/cglib-nodep/2.2/cglib-nodep-2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.objenesis:objenesis:1.2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/objenesis/objenesis/1.2/objenesis-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/objenesis/objenesis/1.2/objenesis-1.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/objenesis/objenesis/1.2/objenesis-1.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-core:2.5.6.SEC01">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/2.5.6.SEC01/spring-core-2.5.6.SEC01.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/2.5.6.SEC01/spring-core-2.5.6.SEC01-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/2.5.6.SEC01/spring-core-2.5.6.SEC01-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: commons-lang:commons-lang:2.3">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.3/commons-lang-2.3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.3/commons-lang-2.3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.3/commons-lang-2.3-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
