@@ -11,7 +11,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.996 (January ??, 2010):</p>
+<p>Release 0.996 (January 2?, 2010):</p>
 <ul>
    <li>
       <strong>Deprecated</strong> the following methods of the <em>Expectations & Verifications</em>
@@ -79,6 +79,12 @@
       out when needed).
    </li>
    <li>
+      Enhancement: the <code>returns(Object, Object...)</code> method of the 
+      <code>Expectations</code> class can now be used to easily specify a list of values to be
+      returned from a method whose return type is <code>List</code>, <code>Collection</code>, or
+      <code>Iterable</code>.
+   </li>
+   <li>
       Enhancement: four new utility methods created in the <code>Deencapsulation</code> class, all
       of them overloading existing methods (see issues 23 and 26).
    </li>
@@ -101,6 +107,12 @@
    <li>
       Fixed a bug in the capture of fields whose mocked type is an interface (a NPE would occur
       when the constructor of a captured implementation class was transformed).
+   </li>
+   <li>
+      New "Tour de Mock" sample test suite created, based on code published in a
+      <a href="http://coffeaelectronica.com/blog/2009/07/tour-de-mock-spring">series of articles</a>.
+      There is a test class written with each of the usual mocking APIs (EasyMock CE, jMock,
+      Mockito, Unitils Mock, JMockit), plus another one which uses Spring Test.
    </li>
 </ul>
 
