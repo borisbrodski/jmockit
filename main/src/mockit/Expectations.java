@@ -33,7 +33,7 @@ import mockit.internal.expectations.*;
  * expected method/constructor invocations on the mocked types (classes or interfaces) declared
  * through one or more <em>mock fields</em> and/or <em>mock parameters</em>.
  * A (local) mock field is any field declared in a subclass which is either non-private or annotated
- * with {@linkplain Mocked}.
+ * with {@link Mocked}.
  * <p/>
  * Typically, this class is used by extending it with <em>anonymous inner classes</em>
  * (named as <em>expectation blocks</em>) inside test methods, which record expectations on the
@@ -51,7 +51,7 @@ import mockit.internal.expectations.*;
  * There are several API fields and methods (all of them {@code protected final}) which the
  * expectation block can use for recording desired return values and exceptions/errors to be thrown
  * (see {@link #result}), and for specifying argument matching constraints such as
- * {@linkplain #withEqual(Object)}.
+ * {@link #withEqual(Object)}.
  * <p/>
  * Individual expectations are set during the <em>record phase</em>, and later exercised during the
  * <em>replay phase</em> of the test.
@@ -162,7 +162,7 @@ public class Expectations extends Invocations
    }
 
    /**
-    * Same as {@linkplain #Expectations()}, except that one or more classes will be partially mocked
+    * Same as {@link #Expectations()}, except that one or more classes will be partially mocked
     * according to the invocations received during the record phase.
     * Such classes are those directly specified as well as those to which any given instances
     * belong.
@@ -187,8 +187,8 @@ public class Expectations extends Invocations
    }
 
    /**
-    * Identical to {@linkplain #Expectations(Object...)}, but considering that the invocations
-    * inside the block will occur in a given number of iterations.
+    * Identical to {@link #Expectations(Object...)}, but considering that the invocations inside the
+    * block will occur in a given number of iterations.
     * <p/>
     * The effect of specifying a number of iterations larger than 1 (one) is equivalent to
     * duplicating (like in "copy & paste") the whole sequence of <em>strict</em> invocations in the
@@ -244,17 +244,17 @@ public class Expectations extends Invocations
     * <li>Primitive: the standard default value is returned (ie {@code false} for
     * {@code boolean}, '\0' for {@code char}, {@code 0} for {@code int}, and so on).</li>
     * <li>{@code java.util.Collection} or {@code java.util.List}: returns
-    * {@linkplain Collections#EMPTY_LIST}</li>
-    * <li>{@code java.util.Set}: returns {@linkplain Collections#EMPTY_SET}.</li>
+    * {@link Collections#EMPTY_LIST}</li>
+    * <li>{@code java.util.Set}: returns {@link Collections#EMPTY_SET}.</li>
     * <li>{@code java.util.SortedSet}: returns an unmodifiable empty sorted set.</li>
-    * <li>{@code java.util.Map}: returns {@linkplain Collections#EMPTY_MAP}.</li>
+    * <li>{@code java.util.Map}: returns {@link Collections#EMPTY_MAP}.</li>
     * <li>{@code java.util.SortedMap}: returns an unmodifiable empty sorted map.</li>
     * <li>A reference type (including {@code String} and wrapper types for primitives, and excluding
     * the exact collection types above): returns {@code null}.</li>
     * <li>An array type: an array with zero elements (empty) in each dimension is returned.</li>
     * </ul>
     * The actual value(s) to be returned can be determined at replay time through a
-    * {@linkplain Delegate} instance, typically created as an anonymous class at the point this
+    * {@link Delegate} instance, typically created as an anonymous class at the point this
     * method is called.
     *
     * @param value the value to be returned when the method is replayed; must be compatible with the
@@ -273,11 +273,15 @@ public class Expectations extends Invocations
    }
 
    /**
-    * Equivalent to calling {@linkplain #returns(Object)} two or more times in sequence.
+    * Equivalent to calling {@link #returns(Object)} two or more times in sequence, except when the
+    * associated method can return a {@code List} of values.
+    * Specifically, if said method has a return type which is an ordered collection type that can
+    * receive a {@link List} value, then the given sequence of values will be converted into an
+    * {@code ArrayList}; this list will then be returned by matching invocations at replay time.
     * <p/>
     * The current expectation will have its upper invocation count automatically set to the total
     * number of values specified to be returned. This upper limit can be overridden through the
-    * {@code repeats} methods, if necessary.
+    * {@code maxTimes} field, if necessary.
     *
     * @param firstValue the first value to be returned in the replay phase
     * @param remainingValues the remaining values to be returned, in the same order
@@ -295,8 +299,8 @@ public class Expectations extends Invocations
     * Specifies that the preceding method/constructor invocation will throw an exception when
     * executed in the replay phase.
     * <p/>
-    * Just like with {@linkplain #returns(Object)}, multiple consecutive exceptions to be thrown can
-    * be specified by calling this method multiple times for the same invocation.
+    * Just like with {@link #returns(Object)}, multiple consecutive exceptions to be thrown can be
+    * specified by calling this method multiple times for the same invocation.
     *
     * @param exception the exception that will be thrown when the invocation is replayed
     *
@@ -313,7 +317,7 @@ public class Expectations extends Invocations
    /**
     * Specifies that the preceding method/constructor invocation will throw an error when replayed.
     * <p/>
-    * Just like with {@linkplain #returns(Object)}, multiple consecutive errors to be thrown can be
+    * Just like with {@link #returns(Object)}, multiple consecutive errors to be thrown can be
     * specified by calling this method multiple times for the same invocation.
     *
     * @param error the error that will be thrown when the invocation is replayed
@@ -332,9 +336,8 @@ public class Expectations extends Invocations
 
    /**
     * Marks the preceding mock invocation as belonging to a <em>non-strict</em> expectation.
-    * Note that all invocations to {@linkplain NonStrict} mocks will be automatically considered
-    * non-strict. The same is true for all invocations inside a {@linkplain NonStrictExpectations}
-    * block.
+    * Note that all invocations to {@link NonStrict} mocks will be automatically considered
+    * non-strict. The same is true for all invocations inside a {@link NonStrictExpectations} block.
     * <p/>
     * For a non-strict expectation, any number (including zero) of invocations with matching
     * arguments can occur while in the replay phase, in any order, and they will all produce the
@@ -343,7 +346,7 @@ public class Expectations extends Invocations
     * long as the arguments differ. Argument matchers can be used as well.
     * <p/>
     * Expected invocation counts can also be specified for a non-strict expectation (with one of
-    * the "repeats" methods).
+    * the "times" fields).
     */
    protected final void notStrict()
    {

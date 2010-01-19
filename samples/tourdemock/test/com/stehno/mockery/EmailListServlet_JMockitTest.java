@@ -25,7 +25,6 @@
 package com.stehno.mockery;
 
 import java.io.*;
-import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -34,7 +33,6 @@ import org.junit.*;
 import mockit.*;
 
 import com.stehno.mockery.service.*;
-import static java.util.Arrays.*;
 
 public final class EmailListServlet_JMockitTest
 {
@@ -80,10 +78,8 @@ public final class EmailListServlet_JMockitTest
       new Expectations()
       {
          {
-            List<String> emails = asList("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
-            emailListService.getListByName(anyString); result = emails;
-            // TODO: implement support for the following use of the returns method:
-            // returns("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
+            emailListService.getListByName(anyString);
+            returns("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
          }
       };
 

@@ -104,7 +104,7 @@ Base class whose subclasses are defined in test code, and whose instances define
  expected method/constructor invocations on the mocked types (classes or interfaces) declared
  through one or more <em>mock fields</em> and/or <em>mock parameters</em>.
  A (local) mock field is any field declared in a subclass which is either non-private or annotated
- with <A HREF="../mockit/Mocked.html" title="annotation in mockit">Mocked</A>.
+ with <A HREF="../mockit/Mocked.html" title="annotation in mockit"><CODE>Mocked</CODE></A>.
  <p/>
  Typically, this class is used by extending it with <em>anonymous inner classes</em>
  (named as <em>expectation blocks</em>) inside test methods, which record expectations on the
@@ -122,7 +122,7 @@ Base class whose subclasses are defined in test code, and whose instances define
  There are several API fields and methods (all of them <code>protected final</code>) which the
  expectation block can use for recording desired return values and exceptions/errors to be thrown
  (see <A HREF="../mockit/Expectations.html#result"><CODE>result</CODE></A>), and for specifying argument matching constraints such as
- <A HREF="../mockit/Expectations.html#withEqual(T)">withEqual(Object)</A>.
+ <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>.
  <p/>
  Individual expectations are set during the <em>record phase</em>, and later exercised during the
  <em>replay phase</em> of the test.
@@ -348,8 +348,8 @@ Base class whose subclasses are defined in test code, and whose instances define
              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;classesOrObjectsToBePartiallyMocked)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Identical to <A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)">Expectations(Object...)</A>, but considering that the invocations
- inside the block will occur in a given number of iterations.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Identical to <A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)"><CODE>Expectations(Object...)</CODE></A>, but considering that the invocations inside the
+ block will occur in a given number of iterations.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -357,7 +357,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TD><CODE><B><A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)">Expectations</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;classesOrObjectsToBePartiallyMocked)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Expectations.html#Expectations()">Expectations()</A>, except that one or more classes will be partially mocked
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, except that one or more classes will be partially mocked
  according to the invocations received during the record phase.</TD>
 </TR>
 </TABLE>
@@ -570,7 +570,8 @@ Base class whose subclasses are defined in test code, and whose instances define
         <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;remainingValues)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Equivalent to calling <A HREF="../mockit/Expectations.html#returns(java.lang.Object)">returns(Object)</A> two or more times in sequence.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Equivalent to calling <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> two or more times in sequence, except when the
+ associated method can return a <code>List</code> of values.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -1212,8 +1213,8 @@ Expectations</H3>
 protected <B>Expectations</B>(int&nbsp;numberOfIterations,
                        <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;classesOrObjectsToBePartiallyMocked)</PRE>
 <DL>
-<DD>Identical to <A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)">Expectations(Object...)</A>, but considering that the invocations
- inside the block will occur in a given number of iterations.
+<DD>Identical to <A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)"><CODE>Expectations(Object...)</CODE></A>, but considering that the invocations inside the
+ block will occur in a given number of iterations.
  <p/>
  The effect of specifying a number of iterations larger than 1 (one) is equivalent to
  duplicating (like in "copy & paste") the whole sequence of <em>strict</em> invocations in the
@@ -1235,7 +1236,7 @@ Expectations</H3>
 <PRE>
 protected <B>Expectations</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;classesOrObjectsToBePartiallyMocked)</PRE>
 <DL>
-<DD>Same as <A HREF="../mockit/Expectations.html#Expectations()">Expectations()</A>, except that one or more classes will be partially mocked
+<DD>Same as <A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, except that one or more classes will be partially mocked
  according to the invocations received during the record phase.
  Such classes are those directly specified as well as those to which any given instances
  belong.
@@ -1293,9 +1294,8 @@ notStrict</H3>
 protected final void <B>notStrict</B>()</PRE>
 <DL>
 <DD>Marks the preceding mock invocation as belonging to a <em>non-strict</em> expectation.
- Note that all invocations to <A HREF="../mockit/NonStrict.html" title="annotation in mockit">NonStrict</A> mocks will be automatically considered
- non-strict. The same is true for all invocations inside a <A HREF="../mockit/NonStrictExpectations.html" title="class in mockit">NonStrictExpectations</A>
- block.
+ Note that all invocations to <A HREF="../mockit/NonStrict.html" title="annotation in mockit"><CODE>NonStrict</CODE></A> mocks will be automatically considered
+ non-strict. The same is true for all invocations inside a <A HREF="../mockit/NonStrictExpectations.html" title="class in mockit"><CODE>NonStrictExpectations</CODE></A> block.
  <p/>
  For a non-strict expectation, any number (including zero) of invocations with matching
  arguments can occur while in the replay phase, in any order, and they will all produce the
@@ -1304,7 +1304,7 @@ protected final void <B>notStrict</B>()</PRE>
  long as the arguments differ. Argument matchers can be used as well.
  <p/>
  Expected invocation counts can also be specified for a non-strict expectation (with one of
- the "repeats" methods).
+ the "times" fields).
 <P>
 <DD><DL>
 </DL>
@@ -1344,17 +1344,17 @@ protected final void <B>returns</B>(<A HREF="http://java.sun.com/javase/6/docs/a
  <li>Primitive: the standard default value is returned (ie <code>false</code> for
  <code>boolean</code>, '\0' for <code>char</code>, <code>0</code> for <code>int</code>, and so on).</li>
  <li><code>java.util.Collection</code> or <code>java.util.List</code>: returns
- <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_LIST" title="class or interface in java.util">Collections.EMPTY_LIST</A></li>
- <li><code>java.util.Set</code>: returns <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_SET" title="class or interface in java.util">Collections.EMPTY_SET</A>.</li>
+ <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_LIST" title="class or interface in java.util"><CODE>Collections.EMPTY_LIST</CODE></A></li>
+ <li><code>java.util.Set</code>: returns <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_SET" title="class or interface in java.util"><CODE>Collections.EMPTY_SET</CODE></A>.</li>
  <li><code>java.util.SortedSet</code>: returns an unmodifiable empty sorted set.</li>
- <li><code>java.util.Map</code>: returns <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_MAP" title="class or interface in java.util">Collections.EMPTY_MAP</A>.</li>
+ <li><code>java.util.Map</code>: returns <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_MAP" title="class or interface in java.util"><CODE>Collections.EMPTY_MAP</CODE></A>.</li>
  <li><code>java.util.SortedMap</code>: returns an unmodifiable empty sorted map.</li>
  <li>A reference type (including <code>String</code> and wrapper types for primitives, and excluding
  the exact collection types above): returns <code>null</code>.</li>
  <li>An array type: an array with zero elements (empty) in each dimension is returned.</li>
  </ul>
  The actual value(s) to be returned can be determined at replay time through a
- <A HREF="../mockit/Delegate.html" title="interface in mockit">Delegate</A> instance, typically created as an anonymous class at the point this
+ <A HREF="../mockit/Delegate.html" title="interface in mockit"><CODE>Delegate</CODE></A> instance, typically created as an anonymous class at the point this
  method is called.
 <P>
 <DD><DL>
@@ -1375,11 +1375,15 @@ returns</H3>
 protected final void <B>returns</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;firstValue,
                              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;remainingValues)</PRE>
 <DL>
-<DD>Equivalent to calling <A HREF="../mockit/Expectations.html#returns(java.lang.Object)">returns(Object)</A> two or more times in sequence.
+<DD>Equivalent to calling <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> two or more times in sequence, except when the
+ associated method can return a <code>List</code> of values.
+ Specifically, if said method has a return type which is an ordered collection type that can
+ receive a <A HREF="http://java.sun.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util"><CODE>List</CODE></A> value, then the given sequence of values will be converted into an
+ <code>ArrayList</code>; this list will then be returned by matching invocations at replay time.
  <p/>
  The current expectation will have its upper invocation count automatically set to the total
  number of values specified to be returned. This upper limit can be overridden through the
- <code>repeats</code> methods, if necessary.
+ <code>maxTimes</code> field, if necessary.
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>firstValue</CODE> - the first value to be returned in the replay phase<DD><CODE>remainingValues</CODE> - the remaining values to be returned, in the same order

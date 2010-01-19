@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -94,7 +94,7 @@ public final class Expectation
       }
    }
 
-   public void validateReturnValues(Object firstValue, Object... remainingValues)
+   private void validateReturnValues(Object firstValue, Object... remainingValues)
    {
       if (hasVoidReturnType()) {
          validateReturnValueForConstructorOrVoidMethod(firstValue);
@@ -122,11 +122,14 @@ public final class Expectation
 
    private boolean hasReturnValueOfType(Class<?> typeToBeReturned)
    {
-      Type invocationReturnType = Type.getReturnType(invocation.getMethodNameAndDescription());
-
-      Class<?> invocationReturnClass = Utilities.getClassForType(invocationReturnType);
-
+      Class<?> invocationReturnClass = getReturnType();
       return invocationReturnClass.isAssignableFrom(typeToBeReturned);
+   }
+
+   private Class<?> getReturnType()
+   {
+      Type invocationReturnType = Type.getReturnType(invocation.getMethodNameAndDescription());
+      return Utilities.getClassForType(invocationReturnType);
    }
 
    public void addSequenceOfReturnValues(Object firstValue, Object[] remainingValues)
@@ -134,10 +137,23 @@ public final class Expectation
       validateReturnValues(firstValue, remainingValues);
 
       InvocationResults invocationResults = getResults();
-      invocationResults.addReturnValue(firstValue);
 
-      if (remainingValues != null) {
-         invocationResults.addReturnValues(remainingValues);
+      if (remainingValues == null) {
+         invocationResults.addReturnValue(firstValue);
+      }
+      else {
+         Class<?> rt = getReturnType();
+
+         if (rt != null && Iterable.class.isAssignableFrom(rt) && rt.isAssignableFrom(List.class)) {
+            List<Object> values = new ArrayList<Object>(1 + remainingValues.length);
+            values.add(firstValue);
+            Collections.addAll(values, remainingValues);
+            invocationResults.addReturnValue(values);
+         }
+         else {
+            invocationResults.addReturnValue(firstValue);
+            invocationResults.addReturnValues(remainingValues);
+         }
       }
    }
 
