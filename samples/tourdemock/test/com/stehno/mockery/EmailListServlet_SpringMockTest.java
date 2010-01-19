@@ -23,9 +23,9 @@ public final class EmailListServlet_SpringMockTest
    @Before
    public void before() throws ServletException
    {
-      MockEmailListService emailListService = new MockEmailListService();
+      EmailListService emailListService = new MockEmailListService();
 
-      MockServletConfig servletConfig = new MockServletConfig();
+      ServletConfig servletConfig = new MockServletConfig();
       servletConfig.getServletContext().setAttribute(EmailListService.KEY, emailListService);
 
       servlet = new EmailListServlet();
