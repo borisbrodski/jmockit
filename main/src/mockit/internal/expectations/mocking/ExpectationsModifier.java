@@ -55,7 +55,7 @@ final class ExpectationsModifier extends BaseClassModifier
    private final MockingConfiguration mockingCfg;
    private final boolean mockingCfgNullOrEmpty;
    private final MockConstructorInfo mockConstructorInfo;
-   private final boolean ignoreStaticMethodsAndConstructors;
+   private final boolean ignoreStaticMethods;
    private String redefinedConstructorDesc;
    private String superClassName;
    private String className;
@@ -71,7 +71,7 @@ final class ExpectationsModifier extends BaseClassModifier
       mockingCfg = mockingConfiguration;
       mockingCfgNullOrEmpty = mockingConfiguration == null || mockingConfiguration.isEmpty();
       this.mockConstructorInfo = mockConstructorInfo;
-      ignoreStaticMethodsAndConstructors = false;
+      ignoreStaticMethods = false;
       setUseMockingBridge(classLoader);
    }
 
@@ -81,7 +81,7 @@ final class ExpectationsModifier extends BaseClassModifier
       mockingCfg = null;
       mockingCfgNullOrEmpty = true;
       mockConstructorInfo = null;
-      ignoreStaticMethodsAndConstructors = true;
+      ignoreStaticMethods = true;
       setUseMockingBridge(classLoader);
    }
 
@@ -201,8 +201,7 @@ final class ExpectationsModifier extends BaseClassModifier
    private boolean isMethodOrConstructorNotToBeMocked(int access, String name)
    {
       return
-         isMethodFromCapturedClassNotToBeMocked(access) ||
-         isStaticMethodOrConstructorToBeIgnored(access, name) ||
+         isMethodFromCapturedClassNotToBeMocked(access) || isStaticMethodToBeIgnored(access) ||
          defaultFilters != null && defaultFilters.contains(name);
    }
 
@@ -212,9 +211,9 @@ final class ExpectationsModifier extends BaseClassModifier
          baseClassNameForCapturedInstanceMethods != null && (isStatic(access) || isPrivate(access));
    }
 
-   private boolean isStaticMethodOrConstructorToBeIgnored(int access, String name)
+   private boolean isStaticMethodToBeIgnored(int access)
    {
-      return ignoreStaticMethodsAndConstructors && (isStatic(access) || "<init>".equals(name));
+      return ignoreStaticMethods && isStatic(access);
    }
 
    private boolean validateModificationOfNativeMethod(int access, String name)
