@@ -49,7 +49,7 @@ public final class MyBusinessService_ExpectationsAPI_Test
       {
          {
             // "Database" is mocked strictly, therefore the order of these invocations does matter:
-            Database.find(withSubstring("select"), (Object[]) null); result = items;
+            Database.find(withSubstring("select"), (Object[]) any); result = items;
             Database.persist(data);
 
             // Since "email" is a non-strict mock, this invocation can be replayed in any order:

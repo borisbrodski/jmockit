@@ -16,12 +16,21 @@
 </h2>
 
 <p>
-   Say you have a business domain layer class (a "service" class) with a business operation which
-   does two things through separate dependencies:
-   a) it accesses a database using a simplified API to the persistence subsystem (assume the
-   transaction is demarcated at the appropriate point up in the call stack);
-   and b) it sends a notification e-mail to the customer through a third-party API (in this example,
-   <a href="http://commons.apache.org/email">Commons Email</a> is used).
+   Lets say we have a business service class which provides a business operation with the following
+   responsibilities:
+   a) it finds certain persistent entities needed by the operation;
+   b) it persists the state for a new entity; and
+   c) it sends a notification e-mail to an interested party.
+   The first two responsibilities require access to the application database, which is done through
+   a simplified API to the persistence subsystem.
+   The third one can be achieved with a third-party API for sending e-mail, which in this example
+   is the <a href="http://commons.apache.org/email">Commons Email</a> library.
+</p>
+<p>
+   Therefore, the service class has two separate dependencies, one for persistence and another for
+   e-mail.
+   In order to unit test the business operation while verifying proper interaction with these
+   collaborators, we will use the available mocking APIs.
 </p>
 <pre><code>import static infrastructure.Database.*;
 import org.apache.commons.mail.*;
@@ -39,11 +48,10 @@ public final class MyBusinessService
 
 (2)   <em>persist</em>(data);
 
-      sendNotificationEmailToCustomer(data, items);
+      sendNotificationEmail(data, items);
    }
 
-   private void sendNotificationEmailToCustomer(EntityX data, List&lt;EntityX> items)
-      throws EmailException
+   private void sendNotificationEmail(EntityX data, List&lt;EntityX> items) throws EmailException
    {
       Email email = new SimpleEmail();
       email.setSubject("Notification about processing of ...");
@@ -60,7 +68,7 @@ public final class MyBusinessService
 
    private String buildNotificationMessage(List&lt;EntityX> items)
    {
-      // Simply builds the message with data from the list of items...
+      // Builds the message with data from the list of items...
    }
 }
 </code></pre>
@@ -79,8 +87,8 @@ public final class MyBusinessService
    API; the other one, which can be described as an <em>state-oriented</em> mocking API, is truly
    different and unique.)
    We will see how to use each one of them in the following sections.
-   In every situation, a JUnit test case will verify the three invocations of interest made from the
-   unit under test to its external dependencies. These invocations are the ones at points
+   In every situation, a JUnit test case will verify the invocations of interest made from the unit
+   under test to its external dependencies. These invocations are the ones at points
    <code>(1)</code>-<code>(4)</code>, indicated above.
 </p>
 
@@ -111,7 +119,7 @@ import infrastructure.*;
 public final class MyBusinessService_ExpectationsAPI_Test
 {
    @Mocked final Database unused = null;
-   @NonStrict SimpleEmail email; // calls to setters are irrelevant, so we make it non-strict
+   @NonStrict SimpleEmail email; // calls to setters are unimportant, so we make it non-strict
 
    @Test
    public void doBusinessOperationXyz() throws Exception
@@ -124,7 +132,7 @@ public final class MyBusinessService_ExpectationsAPI_Test
       {
          {
             // "Database" is mocked strictly, therefore the order of these invocations does matter:
-(1)         Database.<em>find</em>(withSubstring("select"), (Object[]) null); <em>result</em> = items;
+(1)         Database.<em>find</em>(withSubstring("select"), (Object[]) <em>any</em>); <em>result</em> = items;
 (2)         Database.<em>persist</em>(data);
 
             // Since "email" is a non-strict mock, this invocation can be replayed in any order:
@@ -157,15 +165,14 @@ public final class MyBusinessService_ExpectationsAPI_Test
    Other mocking tools usually require a call to some mock creation method, which always returns a
    new object which later needs to be passed to the code under test. In JMockit, such instances may
    be passed to code under test, but don't have to be. In fact, no instance may be used at all, like
-   with the <code>final Database unused = null;</code> mock field in the example tests.
+   in the case of <code>final Database unused = null;</code> used in the example tests.
 </div>
 <p>
    First of all, note that <em>what</em> gets mocked is specified through <em>mock fields</em>,
    which in this case are instance fields of the test class annotated as <code>@Mocked</code> and/or
    as <code>@NonStrict</code>.
    A mock field can be of any reference type: an interface, an abstract class, a final/non-final
-   class, a class with private constructors only, an enum type, an annotation type, or a generic
-   type parameter.
+   class, an enum type, an annotation type, or even a generic type parameter.
    We say that such a mock field has a <em>mocked type</em>. In truth, it is the type specified to
    be mocked that truly matters; the field itself is not essential, although very useful when the
    test needs a <em>mock object</em> to invoke instance methods on. Such a mock instance will be
@@ -181,8 +188,8 @@ public final class MyBusinessService_ExpectationsAPI_Test
    The same holds true for the constructors of a mocked class.
    Notice that JMockit Expectations does not create any mock subclasses for concrete mocked classes;
    instead, it directly modifies the actual implementation of the mocked class. 
-   On the other hand, methods of an interface and abstract methods do not contain any implementation
-   to be modified.
+   On the other hand, methods of an interface and <code>abstract</code> methods do not contain any
+   implementation to be modified.
    In such cases, an empty implementation body is provided in a concrete implementation class.
    This is all done automatically by JMockit in a transparent way, with no additional effort on the
    part of the developer.
@@ -205,32 +212,39 @@ public final class MyBusinessService_ExpectationsAPI_Test
    <code>org.jmock.Expectations</code> subclass.
 </div>
 <p>
-   As the example tests show, <em>expected/allowed invocations</em> are specified through regular
-   method and constructor invocations on mocked types or mock fields, while inside an
-   <code>Expectations</code> or <code>NonStrictExpectations</code> block (which is an anonymous
-   inner class containing an instance initialization block).
+   As the example tests show, <em>expected</em> or <em>allowed invocations</em> are specified
+   through regular method and constructor invocations on mocked classes or mock fields, while inside
+   an <code>Expectations</code> or <code>NonStrictExpectations</code> <em>block</em> (which is an
+   anonymous inner class containing an instance initialization block).
    Each such invocation partly defines an <em>expectation</em> for the test.
-   We say that such invocations/expectations are <em>recorded</em> during a <em>record phase</em>,
-   so that they can be <em>replayed</em> (and automatically verified) later, during a
-   <em>replay phase</em>.
-   This second phase of the test starts with the call that exercises the code under test, and lasts
-   until the test execution completes.
-   This is known as the <em>record-replay model</em> of test execution.
 </p>
 <p>
-   Additional behavior can and often is recorded for an expectation.
+   We say that such invocations or expectations are <em>recorded</em> during a
+   <em>record phase</em>, so that they can be <em>replayed</em> (and automatically verified) later,
+   during a <em>replay phase</em>.
+   Typically, this second phase of the test starts with the call that exercises the code under test,
+   and lasts until the test execution completes.
+   This is known as the <em>record-replay model</em> of test execution.
+   Note that the record/replay dichotomy applies to each individual expectation, not to the test as
+   whole.
+   That is, a test method <em>can</em> switch between the record and replay phases any number of
+   times with different expectations; doing so, however, would lead to confusing tests and is
+   therefore highly discouraged, even if valid.
+</p>
+<p>
+   Additional behavior can and often is specified for an expectation.
    This is done by assigning values to certain fields and/or calling certain methods of the
-   Expectations API <em>after</em> the recorded method/constructor invocation of interest, and
+   Expectations API, <em>after</em> the recorded method/constructor invocation of interest, and
    <em>before</em> the next expectation to appear in the block.
    A <em>recorded return value</em> of any type can be assigned to the special
    <strong><code>result</code></strong> field.
-   Similarly, a <em>recorded exception</em> (or <em>error</em>) can be recorded by assigning the
-   desired <code>Throwable</code> to this same <code>result</code> field.
+   Similarly, a <em>recorded exception</em> (or <em>error</em>) can be specified by assigning the
+   desired <code>Throwable</code> instance to this same <code>result</code> field.
 </p>
 <p>
-   The method calls <strong><code>withXyz(...)</code></strong>, as well as the field accesses
-   <strong><code>anyAbc</code></strong>, allow flexible matching of argument values for the recorded
-   invocations.
+   The method calls "<strong><code>withXyz(...)</code></strong>", as well as the field accesses
+   "<strong><code>anyAbc</code></strong>", allow flexible matching of argument values for the
+   recorded invocations.
    Otherwise, an exact match is expected between recorded argument values and the corresponding
    values received in the replay phase.
 </p>
@@ -249,12 +263,14 @@ public final class MyBusinessService_ExpectationsAPI_Test
    <code>NonStrictExpectations</code> block) are only verified if an explicit <em>invocation count
    constraint</em> is specified in the test, through an assignment to the
    <strong><code>times</code></strong> field
-   (or alternatively to the <code>minTimes</code> and/or <code>maxTimes</code> fields).
+   (or alternatively to the <strong><code>minTimes</code></strong> and/or
+   <strong><code>maxTimes</code></strong> fields).
    A <code>java.lang.AssertionError</code> will be thrown for any expected invocation which did not
    happen during the replay phase.
    An error will also be thrown for any invocation to a mocked type that does occur during the
-   replay phase, but which was expected to not occur (all the strict ones, by default, but also any
-   non-strict ones for which a minimum invocation count was specified and got violated).
+   replay phase, but which was expected to <em>not</em> occur; all the unrecorded invocations to
+   strictly mocked types will cause such an error, and also the ones recorded (strictly or not) with
+   a minimum invocation count which gets violated at replay time.
    Even more, the test will fail (again, with an <code>AssertionError</code>) if expected
    invocations to one or more strict mocked types are replayed in a different order than they were
    recorded.
