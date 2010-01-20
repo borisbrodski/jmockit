@@ -325,8 +325,8 @@
             <pathelement location="samples/AnimatedTransitions/classes"/>
             <pathelement location="samples/AnimatedTransitions/test-classes"/>
 
-            <pathelement location="${SPRING_HOME}/dist/modules/spring-core.jar"/>
-            <pathelement location="${SPRING_HOME}/dist/modules/spring-test.jar"/>
+            <pathelement location="${SPRING_HOME}/dist/org.springframework.core-3.0.0.RELEASE.jar"/>
+            <pathelement location="${SPRING_HOME}/dist/org.springframework.test-3.0.0.RELEASE.jar"/>
             <pathelement location="samples/tourdemock/classes"/>
             <pathelement location="samples/tourdemock/test-classes"/>
          </classpath>

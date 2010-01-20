@@ -1504,17 +1504,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit-dep/4.4/junit-dep-4.4-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-test:2.5.6.SEC01">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/2.5.6.SEC01/spring-test-2.5.6.SEC01.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/2.5.6.SEC01/spring-test-2.5.6.SEC01-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/2.5.6.SEC01/spring-test-2.5.6.SEC01-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: org.jmock:jmock-legacy:2.5.1">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/jmock/jmock-legacy/2.5.1/jmock-legacy-2.5.1.jar!/" />
@@ -1570,17 +1559,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/objenesis/objenesis/1.2/objenesis-1.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-core:2.5.6.SEC01">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/2.5.6.SEC01/spring-core-2.5.6.SEC01.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/2.5.6.SEC01/spring-core-2.5.6.SEC01-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/2.5.6.SEC01/spring-core-2.5.6.SEC01-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: commons-lang:commons-lang:2.3">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.3/commons-lang-2.3.jar!/" />
@@ -1590,6 +1568,39 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.3/commons-lang-2.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-test:3.0.0.RELEASE">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/3.0.0.RELEASE/spring-test-3.0.0.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/3.0.0.RELEASE/spring-test-3.0.0.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/3.0.0.RELEASE/spring-test-3.0.0.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-core:3.0.0.RELEASE">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/3.0.0.RELEASE/spring-core-3.0.0.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/3.0.0.RELEASE/spring-core-3.0.0.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/3.0.0.RELEASE/spring-core-3.0.0.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-asm:3.0.0.RELEASE">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-asm/3.0.0.RELEASE/spring-asm-3.0.0.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-asm/3.0.0.RELEASE/spring-asm-3.0.0.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-asm/3.0.0.RELEASE/spring-asm-3.0.0.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
