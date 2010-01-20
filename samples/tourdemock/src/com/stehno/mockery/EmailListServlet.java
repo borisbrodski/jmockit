@@ -28,12 +28,19 @@ public final class EmailListServlet extends HttpServlet
    }
 
    @Override
-   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException
    {
       String listName = request.getParameter("listName");
-      List<String> emails = emailListService.getListByName(listName);
 
-      writeListOfEmailsToClient(response.getWriter(), emails);
+      try {
+         List<String> emails = emailListService.getListByName(listName);
+         writeListOfEmailsToClient(response.getWriter(), emails);
+      }
+      catch (EmailListNotFound e) {
+         throw new ServletException("No e-mail list with the given name was found", e);
+      }
+
       response.flushBuffer();
    }
 

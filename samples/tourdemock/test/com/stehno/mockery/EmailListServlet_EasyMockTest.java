@@ -23,7 +23,7 @@ public final class EmailListServlet_EasyMockTest extends EasyMockSupport
    EmailListService emailListService;
 
    @Before
-   public void before() throws ServletException
+   public void before() throws Exception
    {
       request = createNiceMock(HttpServletRequest.class);
       response = createNiceMock(HttpServletResponse.class);
@@ -40,10 +40,10 @@ public final class EmailListServlet_EasyMockTest extends EasyMockSupport
       servlet.init(servletConfig);
    }
 
-   @Test(expected = IOException.class)
+   @Test(expected = ServletException.class)
    public void doGetWithoutList() throws Exception
    {
-      expect(emailListService.getListByName(null)).andThrow(new IOException());
+      expect(emailListService.getListByName(null)).andThrow(new EmailListNotFound());
       replay(request, emailListService);
 
       servlet.doGet(request, response);

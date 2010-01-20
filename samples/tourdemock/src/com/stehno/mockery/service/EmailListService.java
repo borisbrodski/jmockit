@@ -1,7 +1,6 @@
 package com.stehno.mockery.service;
 
-import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 public interface EmailListService
 {
@@ -9,7 +8,7 @@ public interface EmailListService
 
    /**
     * Retrieves the list of email addresses with the specified name. If no list exists with that
-    * name an IOException is thrown.
+    * name an exception is thrown.
     */
-   List<String> getListByName(String listName) throws IOException;
+   List<String> getListByName(String listName) throws EmailListNotFound;
 }

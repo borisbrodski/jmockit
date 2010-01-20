@@ -25,13 +25,13 @@
 package simpler;
 
 import java.io.*;
+import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.junit.*;
 
 import mockit.*;
 
-import static java.util.Arrays.*;
 import simpler.service.*;
 
 public final class EmailListServletTest
@@ -39,13 +39,13 @@ public final class EmailListServletTest
    @Mocked HttpServletRequest request;
    @Mocked EmailListService emailListService;
 
-   @Test(expected = IOException.class)
+   @Test(expected = ServletException.class)
    public void doGetWithoutList() throws Exception
    {
       new NonStrictExpectations()
       {
          {
-            emailListService.getListByName(null); result = new IOException();
+            emailListService.getListByName(null); result = new EmailListNotFound();
          }
       };
 
@@ -60,7 +60,7 @@ public final class EmailListServletTest
       {
          {
             emailListService.getListByName(anyString);
-            result = asList("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
+            returns("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
          }
       };
 

@@ -36,10 +36,10 @@ public final class EmailListServlet_MockitoTest
       servlet.init(servletConfig);
    }
 
-   @Test(expected = IOException.class)
+   @Test(expected = ServletException.class)
    public void doGetWithoutList() throws Exception
    {
-      when(emailListService.getListByName(null)).thenThrow(new IOException());
+      when(emailListService.getListByName(null)).thenThrow(new EmailListNotFound());
 
       servlet.doGet(request, response);
    }

@@ -1,6 +1,5 @@
 package com.stehno.mockery;
 
-import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 
@@ -35,7 +34,7 @@ public final class EmailListServlet_SpringMockTest
       response = new MockHttpServletResponse();
    }
 
-   @Test(expected = IOException.class)
+   @Test(expected = ServletException.class)
    public void doGetWithoutList() throws Exception
    {
       servlet.doGet(request, response);
@@ -57,10 +56,10 @@ public final class EmailListServlet_SpringMockTest
    private static final class MockEmailListService implements EmailListService
    {
       @Override
-      public List<String> getListByName(String listName) throws IOException
+      public List<String> getListByName(String listName) throws EmailListNotFound
       {
          if (listName == null) {
-            throw new IOException();
+            throw new EmailListNotFound();
          }
 
          return asList("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");

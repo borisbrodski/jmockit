@@ -2,6 +2,7 @@ package simpler;
 
 import java.io.*;
 import java.util.*;
+import javax.servlet.*;
 import javax.servlet.http.*;
 
 import simpler.service.*;
@@ -9,12 +10,19 @@ import simpler.service.*;
 public final class EmailListServlet extends HttpServlet
 {
    @Override
-   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException
    {
       String listName = request.getParameter("listName");
-      List<String> emails = new EmailListService().getListByName(listName);
 
-      writeListOfEmailsToClient(response.getWriter(), emails);
+      try {
+         List<String> emails = new EmailListService().getListByName(listName);
+         writeListOfEmailsToClient(response.getWriter(), emails);
+      }
+      catch (EmailListNotFound e) {
+         throw new ServletException("No e-mail list with the given name was found", e);
+      }
+
       response.flushBuffer();
    }
 

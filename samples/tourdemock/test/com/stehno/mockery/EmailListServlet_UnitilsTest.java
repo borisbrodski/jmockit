@@ -58,10 +58,10 @@ public final class EmailListServlet_UnitilsTest
       servlet.init(servletConfig.getMock());
    }
 
-   @Test(expected = IOException.class)
+   @Test(expected = ServletException.class)
    public void doGetWithoutList() throws Exception
    {
-      emailListService.raises(new IOException()).getListByName(null);
+      emailListService.raises(new EmailListNotFound()).getListByName(null);
 
       servlet.doGet(request.getMock(), response.getMock());
    }

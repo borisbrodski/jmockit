@@ -31,7 +31,7 @@ public final class EmailListServlet_JMockTest
    }
 
    @Before
-   public void before() throws ServletException
+   public void before() throws Exception
    {
       request = mockery.mock(HttpServletRequest.class);
       response = mockery.mock(HttpServletResponse.class);
@@ -57,13 +57,13 @@ public final class EmailListServlet_JMockTest
       servlet.init(servletConfig);
    }
 
-   @Test(expected = IOException.class)
+   @Test(expected = ServletException.class)
    public void doGetWithoutList() throws Exception
    {
       mockery.checking(new Expectations()
       {
          {
-            oneOf(emailListService).getListByName(""); will(throwException(new IOException()));
+            oneOf(emailListService).getListByName(""); will(throwException(new EmailListNotFound()));
          }
       });
 
