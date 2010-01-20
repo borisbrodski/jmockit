@@ -324,6 +324,11 @@
 
             <pathelement location="samples/AnimatedTransitions/classes"/>
             <pathelement location="samples/AnimatedTransitions/test-classes"/>
+
+            <pathelement location="${SPRING_HOME}/dist/modules/spring-core.jar"/>
+            <pathelement location="${SPRING_HOME}/dist/modules/spring-test.jar"/>
+            <pathelement location="samples/tourdemock/classes"/>
+            <pathelement location="samples/tourdemock/test-classes"/>
          </classpath>
          <batchtest>
             <fileset dir="samples/jbossaop/test-classes" includes="**/*Test.class"/>
@@ -341,6 +346,7 @@
             <fileset dir="samples/tutorial/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/TimingFramework/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/AnimatedTransitions/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/tourdemock/test-classes" includes="**/*Test.class"/>
          </batchtest>
          <formatter type="xml"/>
       </junit>
