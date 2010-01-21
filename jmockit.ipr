@@ -821,6 +821,7 @@
         <w>clinit</w>
         <w>covariant</w>
         <w>darkcyan</w>
+        <w>darkslategray</w>
         <w>deencapsulating</w>
         <w>deencapsulation</w>
         <w>defs</w>
@@ -869,6 +870,7 @@
         <w>jplis</w>
         <w>liesenfeld</w>
         <w>lifecycle</w>
+        <w>lightseagreen</w>
         <w>login</w>
         <w>logins</w>
         <w>logout</w>
@@ -912,6 +914,7 @@
         <w>reregister</w>
         <w>resize</w>
         <w>resized</w>
+        <w>rgba</w>
         <w>rogério</w>
         <w>runtime</w>
         <w>savepoint</w>
