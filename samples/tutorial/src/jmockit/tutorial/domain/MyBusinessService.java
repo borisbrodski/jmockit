@@ -50,11 +50,10 @@ public final class MyBusinessService
       // Persist the entity (no DAO required for such a common, high-level, operation):
       persist(data);
 
-      sendNotificationEmailToCustomer(data, items);
+      sendNotificationEmail(data, items);
    }
 
-   private void sendNotificationEmailToCustomer(EntityX data, List<EntityX> items)
-      throws EmailException
+   private void sendNotificationEmail(EntityX data, List<EntityX> items) throws EmailException
    {
       Email email = new SimpleEmail();
       email.setSubject("Notification about processing of ...");

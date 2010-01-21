@@ -41,7 +41,7 @@ public final class MyBusinessService_ExpectationsAPI_Test
    @Test
    public void doBusinessOperationXyz() throws Exception
    {
-      final EntityX data = new EntityX(5, "abc", "5453-1");
+      final EntityX data = new EntityX(5, "abc", "abc@xpta.net");
       final List<EntityX> items = new ArrayList<EntityX>();
       items.add(new EntityX(1, "AX5", "someone@somewhere.com"));
 
@@ -73,7 +73,7 @@ public final class MyBusinessService_ExpectationsAPI_Test
          }
       };
 
-      EntityX data = new EntityX(5, "abc", "5453-1");
+      EntityX data = new EntityX(5, "abc", "someone@somewhere.com");
       new MyBusinessService().doBusinessOperationXyz(data);
    }
 }

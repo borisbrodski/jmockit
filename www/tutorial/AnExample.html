@@ -303,6 +303,7 @@ public final class MyBusinessService_ExpectationsAPI_Test
 <pre><code>package domain;
 
 import java.util.*;
+import static java.util.Arrays.*;
 
 import org.apache.commons.mail.*;
 import org.junit.*;
@@ -316,11 +317,11 @@ public final class MyBusinessService_VerificationsAPI_Test
    @Mocked Database onlyStatics;
    @Capturing Email email; // concrete subclass mocked on demand, when loaded
 
+   final EntityX data = new EntityX(5, "abc", "someone@somewhere.com");
+
    @Test
    public void doBusinessOperationXyzPersistsData() throws Exception
    {
-      final EntityX data = new EntityX(5, "abc", "5453-1");
-
       // No expectations recorded in this case.
 
       new MyBusinessService().doBusinessOperationXyz(data);
@@ -336,22 +337,21 @@ public final class MyBusinessService_VerificationsAPI_Test
    @Test
    public void doBusinessOperationXyzFindsItemsAndSendsNotificationEmail() throws Exception
    {
-      EntityX data = new EntityX(5, "abc", "5453-1");
-      final List&lt;EntityX> items = Arrays.asList(new EntityX(1, "AX5", "someone@somewhere.com"));
-
       // Invocations that produce a result are recorded, but only those we care about.
       new NonStrictExpectations()
       {
          {
-(1)         Database.<em>find</em>(withSubstring("select"), (Object[]) null); <em>result</em> = items;
+(1)         Database.<em>find</em>(withSubstring("select"), (Object[]) null);
+            <em>result</em> = <em>asList</em>(new EntityX(1, "AX5", "someone@somewhere.com"));
          }
       };
 
       new MyBusinessService().doBusinessOperationXyz(data);
 
-      new Verifications()
+      new VerificationsInOrder()
       {
          {
+(3)         email.addTo(data.getCustomerEmail());
 (4)         email.send();
          }
       };
@@ -359,10 +359,10 @@ public final class MyBusinessService_VerificationsAPI_Test
 }
 </code></pre>
 <p>
-   To recapitulate, non-strict expectations differ from strict ones in that they can be executed or
-   not by code under test, even if they were not previously recorded. And if they are executed, the
-   order of invocations doesn't matter (by default, but it can be made to matter as we will see
-   later).
+   To recapitulate, <em>non-strict</em> expectations differ from <em>strict</em> ones in that they
+   can be executed or not by code under test, even if they were not previously recorded.
+   And if they are executed the relative order between invocations doesn't matter, unless specified
+   otherwise.
 </p>
 <p>
    The example tests above show two ways to have non-strict expectations: first, by simply having
@@ -379,7 +379,8 @@ public final class MyBusinessService_VerificationsAPI_Test
 </p>
 <p>
    When we use non-strict expectations, invocations to mocked methods and constructors during the
-   replay phase are not immediately verified (unless explicitly specified otherwise).
+   replay phase are not immediately verified (unless explicitly specified otherwise through an
+   invocation count constraint).
    Those non-strict invocations which were recorded with an specific return value or with an
    exception/error to be thrown will produce the expected result if and when replayed by production
    code.
@@ -387,28 +388,31 @@ public final class MyBusinessService_VerificationsAPI_Test
 <p>
    The fact that an explicitly recorded non-strict expectation allows the test to pass is usually
    enough evidence to demonstrate that the tested unit did the right thing.
-   In the second test above for example, suppose the line recording <code>items</code> as the
-   expected result from a call to <code>Database.find(...)</code> is commented out.
+   In the second test above for example, suppose the line recording a result for the
+   <code>Database.find(...)</code> invocation is commented out.
    The test will likely fail when another part of the code under test which depends on that returned
-   value is executed, or when an expected invocation is verified in the test itself.
+   value is executed, or when an expected invocation is verified in the test itself (in this example
+   test, an extra <code>email.setMsg(withNotEqual(""));</code> verification would be needed between
+   the other two verified invocations).
    However, in some cases you may want to be sure that the invocation will occur at least once.
-   To achieve that, simply specify it with a <code><em>minTimes</em> = 1;</code> assignment after
+   To achieve that, simply specify it with a <code><em>minTimes</em> = 1;</code> constraint after
    the recorded invocation in the non-strict expectation block.
 </p>
 <div class="sidebar">
-   Two other mocking toolkits which provide verification after the replay phase are
+   Two other mocking toolkits which provide explicit verification after the replay phase are
    <strong>Mockito</strong> and <strong>Unitils Mock</strong>.
    Besides significant differences in power and API style, they lack JMockit's ability to specify
-   invocation count constraints on recorded expectations, thereby forcing developers to explicitly
-   verify all expected invocations.
+   invocation count constraints on recorded expectations, thereby forcing the developer to
+   explicitly verify all expected invocations.
    In addition, JMockit supports both kinds of expectations, not only the non-strict kind supported
    exclusively in Mockito and Unitils.
 </div>
 <p>
-   Another big advantage of non-strict expectations is that they can be explicitly verified in test
+   Another advantage of non-strict expectations is that they can be explicitly verified in test
    code.
    Such verifications are just like the recording of invocations: simply invoke the method or
-   constructor to be verified, but inside a <code>Verifications</code> block.
+   constructor to be verified, but inside a <code>Verifications</code> block (or a subclass such as
+   <code>VerificationsInOrder</code>, which also verifies the relative order of execution).
    Such blocks must always be executed <em>after</em> the code under test was exercised, that is,
    after the end of the replay phase.
    Note that verification blocks will typically contain invocations to constructors and methods of
@@ -425,8 +429,9 @@ public final class MyBusinessService_VerificationsAPI_Test
    The invocation count for a particular method or constructor can be verified by specifying
    constraints through one of the <code>times</code>, <code>minTimes</code>, and
    <code>maxTimes</code> fields, just like it can be done for expectations in the recording phase.
-   In particular, it can be verified that an specific invocation never happened by verifying it with
-   a <code><em>times</em> = 0;</code> invocation count constraint.
+   In particular, it can be verified that an specific invocation never happened by specifying a
+   <code><em>times</em> = 0;</code> invocation count constraint (or
+   <code><em>maxTimes</em> = 0;</code> if preferred).
 </p>
 
 <h3 id="annotations">
