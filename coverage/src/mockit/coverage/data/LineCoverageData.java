@@ -39,13 +39,13 @@ public final class LineCoverageData extends LineSegmentData
    // Static data:
    private List<BranchCoverageData> branches;
 
-   public int addBranch(Label targetLabel)
+   public int addBranch(Label jumpSource, Label jumpTarget)
    {
       if (branches == null) {
          branches = new ArrayList<BranchCoverageData>(4);
       }
 
-      BranchCoverageData data = new BranchCoverageData(targetLabel);
+      BranchCoverageData data = new BranchCoverageData(jumpSource, jumpTarget);
       branches.add(data);
 
       return branches.size() - 1;

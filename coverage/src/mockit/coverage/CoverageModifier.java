@@ -224,7 +224,7 @@ final class CoverageModifier extends ClassWriter
          nextLabelAfterConditionalJump = isConditionalJump(opcode);
 
          if (nextLabelAfterConditionalJump) {
-            int branchIndex = lineData.addBranch(mw.currentBlock);
+            int branchIndex = lineData.addBranch(mw.currentBlock, label);
             pendingBranches.put(branchIndex, false);
 
             if (assertFoundInCurrentLine) {
@@ -291,7 +291,7 @@ final class CoverageModifier extends ClassWriter
          }
 
          if (unconditionalJump != null && label.line == 0) {
-            int branchIndex = lineData.addBranch(unconditionalJump);
+            int branchIndex = lineData.addBranch(unconditionalJump, null);
             BranchCoverageData branchData = lineData.getBranchData(branchIndex);
             branchData.setHasJumpTarget();
             generateCallToRegisterBranchTargetExecution("jumpTargetExecuted", branchIndex);

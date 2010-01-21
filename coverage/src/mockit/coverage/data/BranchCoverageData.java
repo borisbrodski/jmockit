@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -35,14 +35,16 @@ public final class BranchCoverageData extends LineSegmentData
    private static final long serialVersionUID = 1003335601845442606L;
 
    // Static data:
-   public final transient Label startLabel;
+   public final transient Label jumpSource;
+   public final transient Label jumpTarget;
 
    // Runtime data (and static if any execution count is -1, meaning lack of the jump target):
    private int jumpExecutionCount;
 
-   BranchCoverageData(Label startLabel)
+   BranchCoverageData(Label jumpSource, Label jumpTarget)
    {
-      this.startLabel = startLabel;
+      this.jumpSource = jumpSource;
+      this.jumpTarget = jumpTarget;
       jumpExecutionCount = -1;
       executionCount = -1;
    }
@@ -69,31 +71,6 @@ public final class BranchCoverageData extends LineSegmentData
       assert executionCount >= 0 : "Illegal registerNoJumpExecution";
       executionCount++;
       addCallPointIfAny(callPoint);
-   }
-
-   public boolean hasJumpTarget()
-   {
-      return jumpExecutionCount >= 0;
-   }
-
-   public boolean hasNoJumpTarget()
-   {
-      return executionCount >= 0;
-   }
-
-   public boolean isNonEmpty()
-   {
-      return hasJumpTarget() || hasNoJumpTarget();
-   }
-
-   public int getJumpExecutionCount()
-   {
-      return jumpExecutionCount;
-   }
-
-   public int getNoJumpExecutionCount()
-   {
-      return executionCount;
    }
 
    @Override
