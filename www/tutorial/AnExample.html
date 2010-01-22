@@ -457,6 +457,7 @@ import static org.junit.Assert.*;
 
 import mockit.*;
 
+import domain.MyBusinessService_AnnotationsAPI_Test.*;
 import infrastructure.*;
 
 @UsingMocksAndStubs({MockDatabase.class, Email.class})
@@ -469,7 +470,7 @@ public final class MyBusinessService_AnnotationsAPI_Test
 (1)   public static List&lt;EntityX> find(String ql, Object... args)
       {
          assertNotNull(ql);
-         assertNotNull(args.length > 0);
+         assertTrue(args.length > 0);
          return Arrays.asList(new EntityX(1, "AX5", "someone@somewhere.com"));
       }
 
@@ -553,7 +554,7 @@ public final class MyBusinessService_AnnotationsAPI_Test
 </p>
 <p>
    The <code>@Mock</code> annotation can optionally specify exact/min/max constraints on the
-   expected/allowed number of invocations to the mock method.
+   expected/allowed number of invocations to the corresponding real method.
    <br/>
    Another attribute of this annotation is <code>reentrant</code> (boolean with default of false),
    which allows a mock method to call back to the real method, causing its real implementation to
@@ -562,7 +563,7 @@ public final class MyBusinessService_AnnotationsAPI_Test
    should be used sparingly, though.)
 </p>
 <p>
-   Typically, the vast majority of tests can be written with the Expectations API.
+   Typically, the vast majority of tests can be written with the Expectations & Verifications API.
    There are situations, however, where the Annotations API can be an useful complement to that.
 </p>
 <div class="navigation">
