@@ -11,7 +11,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.996 (January 2?, 2010):</p>
+<p>Release 0.996 (January 24, 2010):</p>
 <ul>
    <li>
       <strong>Deprecated</strong> the following methods of the <em>Expectations & Verifications</em>
@@ -101,6 +101,15 @@
          <li>
             Blocks of commented lines in source files are now collapsed by default.
             They can be un-collapsed by clicking on the block.
+         </li>
+         <li>
+            A new metric was introduced: <em>data coverage</em>.
+            In this release, it accounts for static and instance non-<code>final</code> fields only.
+            A field is considered to be covered (shown in green in the formatted source file) if at
+            least one test left no unread values from previous assignments to the field; otherwise,
+            the field is considered not covered (shown in red).
+            Newer releases will expand and improve this metric, with the goal of using it to
+            discover missing assertions in tests.
          </li>
       </ul>
    </li>
