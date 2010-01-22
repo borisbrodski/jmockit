@@ -101,7 +101,24 @@ public final class IndexPage extends ListWithFilesAndPercentages
       output.println("</th>");
       output.write("      <th>Files (.java): ");
       output.print(totalFileCount);
-      output.println("</th><th>Line</th><th>Path</th><th>Data</th>");
+      output.println("</th>");
+      output.println("      <th title='" +
+         "Measures how much of the executable production code was exercised by tests.\r\n" +
+         "An executable line of code contains one or more executable segments.\r\n" +
+         "The percentages are calculated as 100*NE/NS, where NS is the number of segments " +
+         "and NE the number of executed segments.'>Line</th>");
+      output.println("      <th title='" +
+         "Measures how many of the possible execution paths through method/constructor bodies " +
+         "were actually executed by tests.\r\n" +
+         "The percentages are calculated as 100*NPE/NP, where NP is the number of possible " +
+         "paths and NPE the number of fully executed paths.'>Path</th>");
+      output.println("      <th title='" +
+         "Measures how many of the instance and static non-final fields were fully exercised " +
+         "by the test run.\r\n" +
+         "To be fully exercised, a field must have the last value assigned to it read by at " +
+         "least one test.\r\n" +
+         "The percentages are calculated as 100*NFE/NF, where NF is the number of non-final " +
+         "fields and NFE the number of fully exercised fields.'>Data</th>");
       output.println("    </tr>");
    }
 
