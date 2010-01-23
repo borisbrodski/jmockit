@@ -17,9 +17,9 @@
       <strong>Deprecated</strong> the following methods of the <em>Expectations & Verifications</em>
       API: <code>throwsException(e)</code>, <code>throwsError(e)</code>, <code>repeats(n)</code>,
       <code>repeats(m, n)</code>, <code>repeatsAtLeast(n)</code>, <code>repeatsAtMost(n)</code>.
-      Calls to these methods in existing tests should be replaced with the equivalent <em>field
-      assignments</em>, to the corresponding fields <code>result</code>, <code>times</code>,
-      <code>minTimes</code>, and <code>maxTimes</code>.
+      Calls to these methods in existing tests should be replaced with <em>assignments</em> to the
+      corresponding <em>fields</em> <code>result</code>, <code>times</code>, <code>minTimes</code>,
+      and <code>maxTimes</code>.
    </li>
    <li>
       <strong>New feature</strong>: the <code>forEachInvocation</code> field was created, for use
@@ -41,7 +41,7 @@
             <em>Full</em> verification blocks, used to force explicit verification of <em>all</em>
             invocations, now can be restricted to a subset of the mock objects or mocked types used
             in the test.
-            (See <a href="http://code.google.com/p/jmockit/issues/detail?id=4">issue 5</a>.)
+            (See <a href="http://code.google.com/p/jmockit/issues/detail?id=5">issue 5</a>.)
          </li>
          <li>
             The <code>onInstance(mock)</code> method, previously only available in expectation
@@ -86,7 +86,9 @@
    </li>
    <li>
       Enhancement: four new utility methods created in the <code>Deencapsulation</code> class, all
-      of them overloading existing methods (see issues 23 and 26).
+      of them overloading existing methods (see issues
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=23">23</a> and
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=26">26</a>).
    </li>
    <li>
       Enhancements to <strong>JMockit Coverage</strong>:
@@ -94,7 +96,7 @@
          <li>
             In the XHTML report, information on source files can now be interactively hidden and
             re-displayed, both for the whole list of files and for each package.
-            This makes it easy to focus only on the package results, for example, in particular when
+            This makes it easy to focus only on package results, for example, in particular when
             there is a large number of source files.
             (Requires a JavaScript-enabled browser, though.)
          </li>
@@ -103,7 +105,7 @@
             They can be un-collapsed by clicking on the block.
          </li>
          <li>
-            A new metric was introduced: <em>data coverage</em>.
+            A <strong>new metric</strong> was introduced: <em>data coverage</em>.
             In this release, it accounts for static and instance non-<code>final</code> fields only.
             A field is considered to be covered (shown in green in the formatted source file) if at
             least one test left no unread values from previous assignments to the field; otherwise,
