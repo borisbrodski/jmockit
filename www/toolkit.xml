@@ -105,7 +105,7 @@ for the production code exercised during a test run.">
       <area shape="rect" coords="358,226,499,253" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/IncrementalTests.html">
    </map>
-   <img src="http://jmockit.googlecode.com/svn/trunk/www/toolkit.png" usemap="#figure1">
+   <img src="http://jmockit.googlecode.com/svn/trunk/www/toolkit.png" usemap="#figure1" border="0">
 </div>
 ]]></Content>
 </Module>
