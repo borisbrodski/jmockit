@@ -4,7 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.995</version>
+      <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.996</version>
    </parent>
    <artifactId>jmock</artifactId>
    <name>jMock 2 Comparison Sample</name>
@@ -19,38 +19,16 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>jmock</groupId><artifactId>jmock</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/lib/jmock-2.5.1.jar</systemPath>
+         <groupId>org.jmock</groupId><artifactId>jmock</artifactId><version>2.5.1</version>
+         <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>jmock</groupId><artifactId>jmock</artifactId><version>0</version>
-         <classifier>junit4</classifier>
-         <scope>system</scope><systemPath>${basedir}/lib/jmock-junit4-2.5.1.jar</systemPath>
+         <groupId>org.jmock</groupId><artifactId>jmock-junit4</artifactId><version>2.5.1</version>
+         <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>jmock</groupId><artifactId>jmock</artifactId><version>0</version>
-         <classifier>legacy</classifier>
-         <scope>system</scope><systemPath>${basedir}/lib/jmock-legacy-2.5.1.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>org.objenesis</groupId><artifactId>objenesis</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/objenesis-1.1.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>cglib</groupId><artifactId>cglib</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/cglib-2.2.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>asm</groupId><artifactId>asm</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/asm-3.1.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>org.hamcrest</groupId><artifactId>hamcrest-library</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/hamcrest-library-1.2.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>org.hamcrest</groupId><artifactId>hamcrest-core</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../../lib/hamcrest-core-1.2.jar</systemPath>
+         <groupId>org.jmock</groupId><artifactId>jmock-legacy</artifactId><version>2.5.1</version>
+         <scope>test</scope>
       </dependency>
    </dependencies>
 </project>

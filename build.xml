@@ -73,12 +73,21 @@
       <attribute name="outdir" default="classes"/>
       <attribute name="testLibrary" default="${JUNIT_JAR}"/>
       <attribute name="extraclasspathLocation" default=""/>
+      <attribute name="extraLocation1" default=""/>
+      <attribute name="extraLocation2" default=""/>
+      <attribute name="extraLocation3" default=""/>
+      <attribute name="extraLocation4" default=""/>
+      <attribute name="extraLocation5" default=""/>
       <attribute name="extraclasspath" default="none"/>
       <sequential>
          <delete dir="samples/@{module}/classes" includes="**/*.class"/>
          <javac
             srcdir="samples/@{module}/src" destdir="samples/@{module}/@{outdir}"
             source="@{jdkVersion}" target="@{jdkVersion}" debug="true" nowarn="true">
+            <classpath refid="common.classpath"/>
+            <classpath>
+               <fileset dir="samples/@{module}/lib" includes="*.jar" erroronmissingdir="false"/>
+            </classpath>
             <classpath location="@{extraclasspathLocation}"/>
             <classpath><fileset dir="." includes="@{extraclasspath}"/></classpath>
          </javac>
@@ -87,6 +96,7 @@
          <javac
             srcdir="samples/@{module}/test" destdir="samples/@{module}/test-classes"
             source="@{jdkVersion}" target="@{jdkVersion}" debug="true" nowarn="true">
+            <classpath refid="common.classpath"/>
             <classpath location="jmockit.jar"/>
             <classpath location="@{testLibrary}"/>
             <classpath>
@@ -94,6 +104,11 @@
             </classpath>
             <classpath location="samples/@{module}/@{outdir}"/>
             <classpath location="@{extraclasspathLocation}"/>
+            <classpath location="@{extraLocation1}"/>
+            <classpath location="@{extraLocation2}"/>
+            <classpath location="@{extraLocation3}"/>
+            <classpath location="@{extraLocation4}"/>
+            <classpath location="@{extraLocation5}"/>
             <classpath><fileset dir="." includes="@{extraclasspath}"/></classpath>
          </javac>
       </sequential>
@@ -106,12 +121,24 @@
       <buildSample module="easymockclassextension" extraclasspath="samples/lib/easymock*.jar"/>
    </target>
    <target name="buildJMock">
-      <buildSample module="jmock" extraclasspath="lib/hamcrest-*.jar"/>
+      <buildSample
+         module="jmock" extraclasspath="lib/hamcrest-*.jar"
+         extralocation1="${JMOCK_HOME}/jmock-2.5.1.jar"
+         extralocation2="${JMOCK_HOME}/jmock-junit4-2.5.1.jar"
+         extralocation3="${JMOCK_HOME}/jmock-legacy-2.5.1.jar"/>
    </target>
    <target name="buildMockito">
-      <buildSample module="mockito" extraclasspath="lib/hamcrest-*.jar samples/lib/hamcrest-*.jar"/>
+      <buildSample
+         module="mockito" extraclasspath="lib/hamcrest-*.jar samples/lib/hamcrest-*.jar"
+         extraclasspathlocation="${MOCKITO_JAR}"/>
    </target>
-   <target name="buildUnitils"><buildSample module="unitils"/></target>
+   <target name="buildUnitils">
+      <buildSample
+         module="unitils"
+         extralocation1="${UNITILS_HOME}/unitils-core/unitils-core-3.1.jar"
+         extralocation2="${UNITILS_HOME}/unitils-mock/unitils-mock-3.1.jar"
+         extralocation3="${UNITILS_HOME}/unitils-inject/unitils-inject-3.1.jar"/>
+   </target>
    <target name="buildPowerMock">
       <buildSample module="powermock" extraclasspath="lib/*.jar samples/lib/dom4j-*.jar"/>
    </target>
@@ -119,7 +146,9 @@
    <target name="buildLoginService">
       <buildSample module="LoginService" testlibrary="${TESTNG_JAR}"/>
    </target>
-   <target name="buildTutorial"><buildSample module="tutorial"/></target>
+   <target name="buildTutorial">
+      <buildSample module="tutorial" extraclasspath=""/>
+   </target>
    <target name="buildOrderManagement">
       <buildSample
          module="orderMngmntWebapp" outdir="WEB-INF/classes"
@@ -132,12 +161,24 @@
       <buildSample
          module="AnimatedTransitions" extraclasspathLocation="samples/TimingFramework/classes"/>
    </target>
+   <target name="buildTourDeMock">
+      <buildSample
+         module="tourdemock"
+         extraclasspath="samples/lib/easymock*.jar samples/jmock/lib/*.jar"
+         extraclasspathlocation="${MOCKITO_JAR}"
+         extralocation1="${SPRING_HOME}/dist/org.springframework.core-3.0.0.RELEASE.jar"
+         extralocation2="${SPRING_HOME}/dist/org.springframework.test-3.0.0.RELEASE.jar"
+         extralocation3="${UNITILS_HOME}/unitils-core/unitils-core-3.1.jar"
+         extralocation4="${UNITILS_HOME}/unitils-mock/unitils-mock-3.1.jar"
+         extralocation5="${UNITILS_HOME}/unitils-inject/unitils-inject-3.1.jar"/>
+   </target>
 
    <target
       name="buildSamples"
       depends="buildEasyMock, buildEasyMockCE, buildJMock, buildMockito, buildUnitils,
                buildPowerMock, buildLoginService, buildJBossAOP, buildTutorial,
-               buildOrderManagement, buildTimingFramework, buildAnimatedTransitions"/>
+               buildOrderManagement, buildTimingFramework, buildAnimatedTransitions,
+               buildTourDeMock"/>
    <target
       name="buildAll"
       depends="buildMain, buildCoverage, buildIncremental, buildHibernateEmulation, buildSamples"/>
@@ -266,6 +307,7 @@
                <exclude name="**/Base*Test.class"/>
                <exclude name="**/JMockitTest.class"/>
                <exclude name="**/TestNGDecoratorTest.class"/>
+               <exclude name="**/MockStateBetweenTestMethodsNGTest.class"/>
                <exclude name="**/ExecutingTest.class"/>
             </fileset>
          </batchtest>
@@ -295,6 +337,9 @@
             <pathelement location="samples/easymockclassextension/classes"/>
             <pathelement location="samples/easymockclassextension/test-classes"/>
 
+            <pathelement location="${JMOCK_HOME}/jmock-2.5.1.jar"/>
+            <pathelement location="${JMOCK_HOME}/jmock-junit4-2.5.1.jar"/>
+            <pathelement location="${JMOCK_HOME}/jmock-legacy-2.5.1.jar"/>
             <pathelement location="samples/jmock/classes"/>
             <pathelement location="samples/jmock/test-classes"/>
 

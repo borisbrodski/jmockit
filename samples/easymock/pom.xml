@@ -4,7 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.995</version>
+      <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.996</version>
    </parent>
    <artifactId>easymock</artifactId>
    <name>EasyMock 2 Comparison Sample</name>

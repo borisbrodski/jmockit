@@ -255,7 +255,7 @@
         <inspection_tool class="EqualsHashCodeCalledOnUrl" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="EqualsUsesNonFinalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ExceptionFromCatchWhichDoesntWrap" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="ignoreGetMessage" value="false" />
+          <option name="ignoreGetMessage" value="true" />
         </inspection_tool>
         <inspection_tool class="ExternalizableWithSerializationMethods" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="FallthruInSwitchStatement" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -382,7 +382,7 @@
         </inspection_tool>
         <inspection_tool class="MethodNameSameAsParentName" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MethodOnlyUsedFromInnerClass" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="ignoreMethodsAccessedFromAnonymousClass" value="false" />
+          <option name="ignoreMethodsAccessedFromAnonymousClass" value="true" />
         </inspection_tool>
         <inspection_tool class="MethodOverloadsParentMethod" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MethodOverridesPackageLocalMethod" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -437,7 +437,7 @@
         </inspection_tool>
         <inspection_tool class="NonReproducibleMathCall" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NonSerializableFieldInSerializableClass" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="superClassString" value="java.awt.Component,javax.servlet.http.HttpServlet" />
+          <option name="superClassString" value="java.awt.Component,javax.servlet.http.HttpServlet,javax.swing.table.AbstractTableModel" />
         </inspection_tool>
         <inspection_tool class="NonSerializableObjectBoundToHttpSession" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NonSerializableObjectPassedToObjectStream" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -530,7 +530,7 @@
         <inspection_tool class="SerialPersistentFieldsWithWrongSignature" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SerialVersionUIDNotStaticFinal" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SerializableHasSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="superClassString" value="java.awt.Component,java.lang.Exception,java.util.HashMap,java.lang.AssertionError,java.util.ArrayList,javax.servlet.http.HttpServlet" />
+          <option name="superClassString" value="java.awt.Component,java.lang.Exception,java.util.HashMap,java.lang.AssertionError,java.util.ArrayList,javax.servlet.http.HttpServlet,javax.swing.table.AbstractTableModel" />
         </inspection_tool>
         <inspection_tool class="SerializableInnerClassHasSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="superClassString" value="java.awt.Component" />
@@ -651,15 +651,16 @@
           <option name="REPORT_PARAMETER_FOR_PUBLIC_METHODS" value="true" />
           <option name="INJECTION_ANNOS">
             <value>
-              <list size="8">
+              <list size="9">
                 <item index="0" class="java.lang.String" itemvalue="mockit.Capturing" />
                 <item index="1" class="java.lang.String" itemvalue="mockit.Cascading" />
                 <item index="2" class="java.lang.String" itemvalue="mockit.Mock" />
-                <item index="3" class="java.lang.String" itemvalue="mockit.Mocked" />
-                <item index="4" class="java.lang.String" itemvalue="mockit.NonStrict" />
-                <item index="5" class="java.lang.String" itemvalue="org.mockito.Mock" />
-                <item index="6" class="java.lang.String" itemvalue="org.powermock.api.easymock.annotation.Mock" />
-                <item index="7" class="java.lang.String" itemvalue="powermock.examples.tutorial.common.annotation.Inject" />
+                <item index="3" class="java.lang.String" itemvalue="mockit.MockClass" />
+                <item index="4" class="java.lang.String" itemvalue="mockit.Mocked" />
+                <item index="5" class="java.lang.String" itemvalue="mockit.NonStrict" />
+                <item index="6" class="java.lang.String" itemvalue="org.mockito.Mock" />
+                <item index="7" class="java.lang.String" itemvalue="org.powermock.api.easymock.annotation.Mock" />
+                <item index="8" class="java.lang.String" itemvalue="powermock.examples.tutorial.common.annotation.Inject" />
               </list>
             </value>
           </option>
@@ -1133,78 +1134,37 @@
     <library name="Maven: jmock:jmock:0">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/jmock/jmock/0/jmock-0.jar!/" />
       </CLASSES>
       <JAVADOC>
         <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/jmock/jmock/0/jmock-0-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-2.5.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: jmock:jmock:junit4:0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-junit4-2.5.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-junit4-2.5.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-junit4-2.5.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: jmock:jmock:legacy:0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-legacy-2.5.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-legacy-2.5.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/lib/jmock-legacy-2.5.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: cglib:cglib:0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/cglib-2.2.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/cglib-2.2-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/cglib-2.2-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: asm:asm:0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/asm-3.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/asm-3.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/asm-3.1-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/jmock/jmock/0/jmock-0-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.hamcrest:hamcrest-core:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.hamcrest:hamcrest-library:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.objenesis:objenesis:0">
@@ -1242,24 +1202,24 @@
     </library>
     <library name="Maven: org.slf4j:slf4j-api:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/slf4j-api-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../lib/slf4j-api-1.5.8.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/slf4j-api-1.5.8-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../lib/slf4j-api-1.5.8-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/slf4j-api-1.5.8-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../lib/slf4j-api-1.5.8-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: dom4j:dom4j:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/dom4j-1.6.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/dom4j-1.6.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/dom4j-1.6.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: log4j:log4j:0">
@@ -1275,13 +1235,13 @@
     </library>
     <library name="Maven: org.slf4j:slf4j-nop:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/slf4j-nop-1.5.8.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/slf4j-nop-1.5.8-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/slf4j-nop-1.5.8-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: junit:junit:3.8.1">
@@ -1336,7 +1296,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.8.2/mockito-all-1.8.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://C:/Java/mockito-1.8.2/sources/mockito-all-1.8.2-sources.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.8.2/mockito-all-1.8.2-sources.jar!/" />
       </SOURCES>
     </library>
@@ -1604,6 +1563,28 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-asm/3.0.0.RELEASE/spring-asm-3.0.0.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: cglib:cglib-nodep:2.1_3">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.objenesis:objenesis:1.0">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/objenesis/objenesis/1.0/objenesis-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/objenesis/objenesis/1.0/objenesis-1.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/objenesis/objenesis/1.0/objenesis-1.0-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
