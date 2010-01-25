@@ -342,7 +342,7 @@
          <classpath path="jmockit-coverage-merge.jar"/>
          <classpath refid="common.classpath"/>
          <classpath>
-            <fileset dir="samples" includes="**/*.jar"/>
+            <fileset dir="samples" includes="lib/*.jar"/>
 
             <pathelement location="samples/jbossaop/classes"/>
             <pathelement location="samples/jbossaop/test-classes"/>
@@ -371,6 +371,7 @@
             <pathelement location="${UNITILS_HOME}/unitils-core/unitils-core-3.1.jar"/>
             <pathelement location="${UNITILS_HOME}/unitils-mock/unitils-mock-3.1.jar"/>
             <pathelement location="${UNITILS_HOME}/unitils-inject/unitils-inject-3.1.jar"/>
+            <pathelement location="samples/unitils/lib/ognl-2.6.9.jar"/>
             <pathelement location="samples/unitils/classes"/>
             <pathelement location="samples/unitils/test-classes"/>
 
@@ -379,6 +380,7 @@
             <pathelement location="samples/orderMngmntWebapp/WEB-INF/classes"/>
             <pathelement location="samples/orderMngmntWebapp/test-classes"/>
 
+            <pathelement location="samples/tutorial/lib/commons-email-1.2.jar"/>
             <pathelement location="samples/tutorial/classes"/>
             <pathelement location="samples/tutorial/test-classes"/>
 
