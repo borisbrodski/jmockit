@@ -18,32 +18,6 @@ public final class BankBusiness
       bankAccountDAO = BankAccountDAOFactory.getBankAccountDAOSerializer();
    }
 
-   public boolean creditCheck(Customer c, double amount)
-   {
-      return getSumOfAllAccounts(c) < amount * 0.4;
-   }
-
-   public double calculateInterest(BankAccount account)
-   {
-      int balance = account.getBalance();
-
-      if (balance < 1000) {
-         return 0.01;
-      }
-      else if (balance < 10000) {
-         return 0.02;
-      }
-      else if (balance < 100000) {
-         return 0.03;
-      }
-      else if (balance < 1000000) {
-         return 0.05;
-      }
-      else {
-         return 0.06;
-      }
-   }
-
    public double getSumOfAllAccounts(Customer c)
    {
       double sum = 0;
