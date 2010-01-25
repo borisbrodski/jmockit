@@ -19,20 +19,8 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>easymock</groupId><artifactId>easymock</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/easymock-2.5.2.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>easymock</groupId><artifactId>easymockclassextension</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/easymockclassextension-2.5.2.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>cglib</groupId><artifactId>cglib-nodep</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/cglib-nodep-2.1_3.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>org.objenesis</groupId><artifactId>objenesis</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/objenesis-1.1.jar</systemPath>
+         <groupId>org.easymock</groupId><artifactId>easymockclassextension</artifactId><version>2.5.2</version>
+         <scope>test</scope>
       </dependency>
    </dependencies>
 </project>

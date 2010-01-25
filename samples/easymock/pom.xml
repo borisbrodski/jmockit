@@ -19,8 +19,8 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>easymock</groupId><artifactId>easymock</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/easymock-2.5.2.jar</systemPath>
+         <groupId>org.easymock</groupId><artifactId>easymock</artifactId><version>2.5.2</version>
+         <scope>test</scope>
       </dependency>
    </dependencies>
 </project>
