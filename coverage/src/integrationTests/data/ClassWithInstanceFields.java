@@ -1,3 +1,7 @@
+/*
+   File header followed by blank line.
+ */
+
 package integrationTests.data;
 
 @SuppressWarnings({"ClassWithTooManyFields"})

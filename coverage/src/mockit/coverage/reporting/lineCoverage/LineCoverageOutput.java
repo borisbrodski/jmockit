@@ -73,7 +73,8 @@ public final class LineCoverageOutput
 
       if (
          lineParser.isInComments() ||
-         previousLineInComments && initialElement.isComment() && initialElement.getNext() == null
+         previousLineInComments &&
+         initialElement != null && initialElement.isComment() && initialElement.getNext() == null
       ) {
          if (!previousLineInComments) {
             writeOpeningForBlockOfCommentedLines();
