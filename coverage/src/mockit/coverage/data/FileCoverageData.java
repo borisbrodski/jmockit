@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -147,50 +147,51 @@ public final class FileCoverageData implements Serializable
       return CoveragePercentage.calculate(coveredPaths, totalPaths);
    }
 
-   void mergeWithDataFromPreviousTestRun(FileCoverageData previousData)
+   void mergeWithDataFromPreviousTestRun(FileCoverageData previousInfo)
    {
-      mergeLineCoverageData(previousData.lineToLineData);
-      mergePathCoverageData(previousData.firstLineToMethodData);
+      mergeLineCoverageInformation(previousInfo.lineToLineData);
+      mergePathCoverageInformation(previousInfo.firstLineToMethodData);
+      dataCoverageInfo.mergeInformation(previousInfo.dataCoverageInfo);
    }
 
-   private void mergeLineCoverageData(Map<Integer, LineCoverageData> previousData)
+   private void mergeLineCoverageInformation(Map<Integer, LineCoverageData> previousInfo)
    {
-      for (Entry<Integer, LineCoverageData> lineAndData : lineToLineData.entrySet()) {
-         Integer line = lineAndData.getKey();
-         LineCoverageData previousLineData = previousData.get(line);
+      for (Entry<Integer, LineCoverageData> lineAndInfo : lineToLineData.entrySet()) {
+         Integer line = lineAndInfo.getKey();
+         LineCoverageData previousLineInfo = previousInfo.get(line);
 
-         if (previousLineData != null) {
-            LineCoverageData lineData = lineAndData.getValue();
-            lineData.addCountsFromPreviousTestRun(previousLineData);
+         if (previousLineInfo != null) {
+            LineCoverageData lineInfo = lineAndInfo.getValue();
+            lineInfo.addCountsFromPreviousTestRun(previousLineInfo);
          }
       }
 
-      for (Entry<Integer, LineCoverageData> lineAndData : previousData.entrySet()) {
-         Integer line = lineAndData.getKey();
+      for (Entry<Integer, LineCoverageData> lineAndInfo : previousInfo.entrySet()) {
+         Integer line = lineAndInfo.getKey();
 
          if (!lineToLineData.containsKey(line)) {
-            lineToLineData.put(line, lineAndData.getValue());
+            lineToLineData.put(line, lineAndInfo.getValue());
          }
       }
    }
 
-   private void mergePathCoverageData(Map<Integer, MethodCoverageData> previousData)
+   private void mergePathCoverageInformation(Map<Integer, MethodCoverageData> previousInfo)
    {
-      for (Entry<Integer, MethodCoverageData> firstLineAndData : firstLineToMethodData.entrySet()) {
-         Integer firstLine = firstLineAndData.getKey();
-         MethodCoverageData previousPathData = previousData.get(firstLine);
+      for (Entry<Integer, MethodCoverageData> firstLineAndInfo : firstLineToMethodData.entrySet()) {
+         Integer firstLine = firstLineAndInfo.getKey();
+         MethodCoverageData previousPathInfo = previousInfo.get(firstLine);
 
-         if (previousPathData != null) {
-            MethodCoverageData pathData = firstLineAndData.getValue();
-            pathData.addCountsFromPreviousTestRun(previousPathData);
+         if (previousPathInfo != null) {
+            MethodCoverageData pathInfo = firstLineAndInfo.getValue();
+            pathInfo.addCountsFromPreviousTestRun(previousPathInfo);
          }
       }
 
-      for (Entry<Integer, MethodCoverageData> firstLineAndData : previousData.entrySet()) {
-         Integer firstLine = firstLineAndData.getKey();
+      for (Entry<Integer, MethodCoverageData> firstLineAndInfo : previousInfo.entrySet()) {
+         Integer firstLine = firstLineAndInfo.getKey();
 
          if (!firstLineToMethodData.containsKey(firstLine)) {
-            firstLineToMethodData.put(firstLine, firstLineAndData.getValue());
+            firstLineToMethodData.put(firstLine, firstLineAndInfo.getValue());
          }
       }
    }

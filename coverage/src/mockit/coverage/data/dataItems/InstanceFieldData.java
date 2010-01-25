@@ -24,16 +24,15 @@
  */
 package mockit.coverage.data.dataItems;
 
-import java.io.*;
 import java.util.*;
 
 import mockit.internal.state.*;
 
-public final class InstanceFieldData extends FieldData implements Serializable
+public final class InstanceFieldData extends FieldData
 {
    private static final long serialVersionUID = 6991762113575259754L;
 
-   private final Map<Integer, List<Integer>> testIdsToAssignments =
+   private final transient Map<Integer, List<Integer>> testIdsToAssignments =
       new HashMap<Integer, List<Integer>>();
 
    void registerAssignment(Object instance)
@@ -71,15 +70,14 @@ public final class InstanceFieldData extends FieldData implements Serializable
    }
 
    @Override
-   public boolean isCovered()
+   void markAsCoveredIfNoUnreadValuesAreLeft()
    {
       for (List<Integer> unreadInstances : testIdsToAssignments.values()) {
          if (unreadInstances.isEmpty()) {
-            return true;
+            covered = true;
+            break;
          }
       }
-
-      return false;
    }
 
    public List<Integer> getOwnerInstancesWithUnreadAssignments()

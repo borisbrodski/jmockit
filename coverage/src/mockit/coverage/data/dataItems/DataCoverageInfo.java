@@ -26,6 +26,7 @@ package mockit.coverage.data.dataItems;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.*;
 
 import mockit.coverage.*;
 
@@ -149,6 +150,41 @@ public final class DataCoverageInfo implements Serializable
          return -1;
       }
 
-      return CoveragePercentage.calculate(coveredDataItems, totalFields);
+      return CoveragePercentage.calculate(getCoveredItems(), totalFields);
+   }
+
+   public void mergeInformation(DataCoverageInfo previousInfo)
+   {
+      addInfoFromPreviousTestRun(staticFieldsData, previousInfo.staticFieldsData);
+      addFieldsFromPreviousTestRunIfAbsent(staticFieldsData, previousInfo.staticFieldsData);
+
+      addInfoFromPreviousTestRun(instanceFieldsData, previousInfo.instanceFieldsData);
+      addFieldsFromPreviousTestRunIfAbsent(instanceFieldsData, previousInfo.instanceFieldsData);
+   }
+
+   private <FI extends FieldData> void addInfoFromPreviousTestRun(
+      Map<String, FI> currentInfo, Map<String, FI> previousInfo)
+   {
+      for (Entry<String, FI> nameAndInfo : currentInfo.entrySet()) {
+         String fieldName = nameAndInfo.getKey();
+         FieldData previousFieldInfo = previousInfo.get(fieldName);
+
+         if (previousFieldInfo != null) {
+            FieldData fieldInfo = nameAndInfo.getValue();
+            fieldInfo.addCountsFromPreviousTestRun(previousFieldInfo);
+         }
+      }
+   }
+
+   private <FI extends FieldData> void addFieldsFromPreviousTestRunIfAbsent(
+      Map<String, FI> currentInfo, Map<String, FI> previousInfo)
+   {
+      for (Entry<String, FI> nameAndInfo : previousInfo.entrySet()) {
+         String fieldName = nameAndInfo.getKey();
+
+         if (!currentInfo.containsKey(fieldName)) {
+            currentInfo.put(fieldName, previousInfo.get(fieldName));
+         }
+      }
    }
 }
