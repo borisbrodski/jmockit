@@ -52,6 +52,16 @@ public final class LineElement implements Iterable<LineElement>
    public boolean isCode() { return type == ElementType.CODE; }
    public boolean isComment() { return type == ElementType.COMMENT; }
 
+   public boolean isKeyword(String keyword)
+   {
+      return isCode() && text.equals(keyword);
+   }
+
+   public boolean isDotSeparator()
+   {
+      return type == ElementType.SEPARATOR && text.charAt(0) == '.';
+   }
+
    public String getText()
    {
       return text;

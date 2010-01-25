@@ -53,11 +53,11 @@ public final class FileParser
       }
 
       LineElement firstElement = lineParser.getInitialElement();
-      LineElement classDeclaration = firstElement.findWord("class");
+      LineElement classDeclaration = findClassNameInNewClassDeclaration();
 
       if (classDeclaration != null) {
-         firstElement = classDeclaration.getNextCodeElement();
-         registerStartOfClassDeclaration(firstElement);
+         firstElement = classDeclaration;
+         registerStartOfClassDeclaration(classDeclaration);
       }
 
       if (currentClass != null) {
@@ -67,9 +67,24 @@ public final class FileParser
       return true;
    }
 
-   private void registerStartOfClassDeclaration(LineElement firstElement)
+   private LineElement findClassNameInNewClassDeclaration()
    {
-      String className = firstElement.getText();
+      LineElement previous = null;
+
+      for (LineElement element : lineParser.getInitialElement()) {
+         if (element.isKeyword("class") && (previous == null || !previous.isDotSeparator())) {
+            return element.getNextCodeElement();
+         }
+
+         previous = element;
+      }
+
+      return null;
+   }
+
+   private void registerStartOfClassDeclaration(LineElement elementWithClassName)
+   {
+      String className = elementWithClassName.getText();
 
       if (currentClass != null) {
          currentClass.braceBalance = currentBraceBalance;
