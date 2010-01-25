@@ -4,8 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>mockit</groupId><artifactId>mockit</artifactId><version>0.996</version>
-      <relativePath>../../pom.xml</relativePath>
+      <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.996</version>
    </parent>
    <artifactId>LoginService</artifactId>
    <name>LoginService Sample</name>
