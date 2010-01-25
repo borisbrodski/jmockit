@@ -1114,24 +1114,13 @@
     </library>
     <library name="Maven: org.hamcrest:hamcrest-core:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../../lib/hamcrest-core-1.2-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.hamcrest:hamcrest-library:0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/jmock/../lib/hamcrest-library-1.2-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: commons-logging:commons-logging:0">
@@ -1541,6 +1530,20 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.hamcrest:hamcrest-library:0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/0/hamcrest-library-0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/0/hamcrest-library-0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/0/hamcrest-library-0-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
