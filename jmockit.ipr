@@ -348,7 +348,6 @@
         <inspection_tool class="LabeledStatement" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="LengthOneStringInIndexOf" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="LengthOneStringsInConcatenation" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="LimitedScopeInnerClass" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ListIndexOfReplaceableByContains" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ListenerMayUseAdapter" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="checkForEmptyMethods" value="true" />
@@ -802,6 +801,7 @@
   <component name="ProjectDictionaryState">
     <dictionary name="Administrator">
       <words>
+        <w>abcd</w>
         <w>animatedtransitions</w>
         <w>args</w>
         <w>arraycopy</w>

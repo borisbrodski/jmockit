@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -28,6 +28,8 @@ import java.util.*;
 
 import org.junit.*;
 
+import static org.junit.Assert.*;
+
 public final class ExpectationsWithVarArgsMatchersTest
 {
    static class Collaborator
@@ -36,6 +38,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       {
          return input1 == null ? Collections.emptyList() : Arrays.asList(otherInputs);
       }
+
+      @SuppressWarnings({"UnusedDeclaration"})
+      int anotherOperation(int i, boolean b, String s, String... otherStrings) { return -1; }
    }
 
    @Mocked private Collaborator mock;
@@ -92,11 +97,97 @@ public final class ExpectationsWithVarArgsMatchersTest
       mock.complexOperation(1, 3, null);
    }
 
+   @Test
+   public void expectInvocationWithAnyNumberOfVariableArguments()
+   {
+      new Expectations()
+      {
+         {
+            mock.complexOperation(any, (Object[]) null); times = 3;
+            mock.complexOperation(123, (Object[]) any);
+         }
+      };
+
+      mock.complexOperation("test");
+      mock.complexOperation(null, 'X');
+      mock.complexOperation(1, 3, null);
+      mock.complexOperation(123, true, "test", 3);
+   }
+
+   @Test
+   public void expectInvocationOnVarargsMethodWithMatcherOnlyForRegularFirstParameter()
+   {
+      new Expectations()
+      {
+         {
+            mock.complexOperation(any, 1, 2);
+         }
+      };
+
+      mock.complexOperation("test", 1, 2);
+   }
+
+   @Test
+   public void expectInvocationWithMatchersForRegularParametersAndAllVarargsValues()
+   {
+      new Expectations()
+      {
+         {
+            mock.complexOperation(anyBoolean, anyInt, withEqual(2));
+            mock.complexOperation(anyString, withEqual(1), any, withEqual(3), anyBoolean);
+         }
+      };
+
+      mock.complexOperation(true, 1, 2);
+      mock.complexOperation("abc", 1, 2, 3, true);
+   }
+
+   @Test
+   public void expectInvocationWithMatchersForSomeRegularParametersAndNoneForVarargs()
+   {
+      new NonStrictExpectations()
+      {
+         {
+            // TODO: make matcher for last regular parameter unnecessary, if possible 
+            mock.anotherOperation(1, anyBoolean, withEqual("test"), "a"); result = 1;
+         }
+      };
+
+      assertEquals(1, mock.anotherOperation(1, true, "test", "a"));
+      assertEquals(1, mock.anotherOperation(1, true, "test", "a"));
+      assertEquals(1, mock.anotherOperation(1, false, "test", "a"));
+      assertEquals(0, mock.anotherOperation(1, false, "test", null, "a"));
+   }
+
+   @Test
+   public void expectInvocationWithMatchersForSomeRegularParametersAndAllForVarargs()
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mock.anotherOperation(anyInt, true, withEqual("abc"), anyString, withEqual("test"));
+            result = 1;
+
+            mock.anotherOperation(0, anyBoolean, withEqual("Abc"), anyString, anyString, anyString);
+            result = 2;
+         }
+      };
+
+      assertEquals(0, mock.anotherOperation(1, false, "test", null, "a"));
+
+      assertEquals(1, mock.anotherOperation(2, true, "abc", "xyz", "test"));
+      assertEquals(1, mock.anotherOperation(-1, true, "abc", null, "test"));
+      assertEquals(0, mock.anotherOperation(-1, true, "abc", null, "test", null));
+
+      assertEquals(2, mock.anotherOperation(0, false, "Abc", "", "Abc", "test"));
+      assertEquals(0, mock.anotherOperation(0, false, "Abc", "", "Abc", "test", ""));
+   }
+
    @SuppressWarnings({"NullArgumentToVariableArgMethod"})
    @Test
    public void expectInvocationWithNoVarArgs()
    {
-      //noinspection UnusedDeclaration
+      @SuppressWarnings({"UnusedDeclaration"})
       class VarArgs
       {
          public void varsOnly(int... ints) {}
@@ -125,9 +216,9 @@ public final class ExpectationsWithVarArgsMatchersTest
    @Test
    public void expectInvocationWithNonPrimitiveVarArgs()
    {
-      //noinspection UnusedDeclaration
       class VarArgs
       {
+         @SuppressWarnings({"UnusedDeclaration"})
          public void mixed(String[] strings, Integer... ints) {}
       }
 
@@ -160,7 +251,7 @@ public final class ExpectationsWithVarArgsMatchersTest
    @Test
    public void expectInvocationWithPrimitiveVarArgs()
    {
-      //noinspection UnusedDeclaration
+      @SuppressWarnings({"UnusedDeclaration"})
       class VarArgs
       {
          public void varsOnly(int... ints) {}
@@ -203,9 +294,9 @@ public final class ExpectationsWithVarArgsMatchersTest
    @Test
    public void expectInvocationWithPrimitiveVarArgsUsingMatchers()
    {
-      //noinspection UnusedDeclaration
       class VarArgs
       {
+         @SuppressWarnings({"UnusedDeclaration"})
          public void mixed(String[] strings, int... ints) {}
       }
 

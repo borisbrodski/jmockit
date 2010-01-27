@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -33,6 +33,8 @@ import mockit.internal.util.*;
 
 public final class InvocationArguments
 {
+   private static final Object[] NULL_VARARGS = new Object[1];
+
    final String classDesc;
    final String methodNameAndDesc;
    private final boolean methodWithVarargs;
@@ -84,22 +86,34 @@ public final class InvocationArguments
 
       int argCount = replayArgs.length;
       Object[] replayVarArgs = replayArgs;
-      int varargsCount = 0;
+      Object[] invocationVarArgs = invocationArgs;
+      int varArgsCount = 0;
 
       if (methodWithVarargs) {
-         argCount--;
+         invocationVarArgs = getVarArgs(invocationArgs);
+
+         if (invocationVarArgs == NULL_VARARGS) {
+            return null;
+         }
+
          replayVarArgs = getVarArgs(replayArgs);
-         varargsCount = replayVarArgs.length;
+         varArgsCount = replayVarArgs.length;
+
+         if (varArgsCount != invocationVarArgs.length) {
+            return errorForVarargsArraysOfDifferentLengths(invocationVarArgs, replayVarArgs);
+         }
+
+         argCount--;
       }
 
-      int n = argCount + varargsCount;
+      int n = argCount + varArgsCount;
 
       for (int i = 0; i < n; i++) {
-         Object actual = i < argCount ? replayArgs[i] : replayVarArgs[i - argCount];
+         Object actual = getArgument(replayArgs, replayVarArgs, argCount, i);
          Matcher<?> expected = i < matchers.size() ? matchers.get(i) : null;
 
          if (expected == null) {
-            Object arg = invocationArgs[i];
+            Object arg = getArgument(invocationArgs, invocationVarArgs, argCount, i);
             expected = arg == null ? new IsAnything() : new IsEqual<Object>(arg);
          }
 
@@ -109,6 +123,11 @@ public final class InvocationArguments
       }
 
       return null;
+   }
+
+   private Object getArgument(Object[] regularArgs, Object[] varArgs, int regularArgCount, int i)
+   {
+      return i < regularArgCount ? regularArgs[i] : varArgs[i - regularArgCount];
    }
 
    private AssertionError assertEquality(Object[] replayArgs, Map<Object, Object> instanceMap)
@@ -127,9 +146,7 @@ public final class InvocationArguments
          Object[] actualValues = getVarArgs(replayArgs);
 
          if (expectedValues.length != actualValues.length) {
-            return new AssertionError(
-               "Expected " + expectedValues.length + " values for varargs parameter, got " +
-               actualValues.length);
+            return errorForVarargsArraysOfDifferentLengths(expectedValues, actualValues);
          }
 
          AssertionError varargsError =
@@ -144,6 +161,14 @@ public final class InvocationArguments
       else {
          return assertEquals(invocationArgs, replayArgs, argCount, instanceMap);
       }
+   }
+
+   private AssertionError errorForVarargsArraysOfDifferentLengths(
+      Object[] expectedValues, Object[] actualValues)
+   {
+      return new AssertionError(
+         "Expected " + expectedValues.length + " values for varargs parameter, got " +
+         actualValues.length);
    }
 
    private AssertionError assertEquals(
@@ -172,7 +197,7 @@ public final class InvocationArguments
 
       if (lastArg == null)
       {
-         return new Object[1];
+         return NULL_VARARGS;
       }
       else if (lastArg instanceof Object[]) {
          return (Object[]) lastArg;
