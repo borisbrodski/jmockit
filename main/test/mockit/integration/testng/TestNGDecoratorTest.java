@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -23,6 +23,8 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package mockit.integration.testng;
+
+import javax.security.auth.login.*;
 
 import static org.testng.Assert.*;
 import org.testng.annotations.*;
@@ -73,6 +75,7 @@ public final class TestNGDecoratorTest extends BaseTestNGDecoratorTest
       assertEquals("REAL2", new RealClass2().getValue());
    }
 
+   @SuppressWarnings({"ClassMayBeInterface"})
    public static class Temp {}
    private static final Temp temp = new Temp();
 
@@ -92,5 +95,22 @@ public final class TestNGDecoratorTest extends BaseTestNGDecoratorTest
    public void checkMockingOfParameterWhenNotUsingDataProvider(Temp mock)
    {
       assertNotSame(temp, mock);
+   }
+
+   @Test(expectedExceptions = AssertionError.class)
+   public void mockMethodWithViolatedInvocationCountConstraint() throws Exception
+   {
+      Mockit.setUpMock(LoginContext.class, new Object()
+      {
+         @Mock(minInvocations = 1)
+         void $init(String name) { assert "test".equals(name); }
+
+         @Mock(invocations = 1)
+         void login() {}
+      });
+
+      LoginContext context = new LoginContext("test");
+      context.login();
+      context.login();
    }
 }

@@ -131,7 +131,7 @@ public final class TestNGTestRunnerDecorator extends TestRunnerDecorator
       try {
          Object result = MethodHelper.invokeMethod(method, instance, parameters);
 
-         AssertionError error = endTestExecution();
+         AssertionError error = RecordAndReplayExecution.endCurrentReplayIfAny();
 
          if (error != null) {
             Utilities.filterStackTrace(error);
@@ -143,27 +143,19 @@ public final class TestNGTestRunnerDecorator extends TestRunnerDecorator
          return result;
       }
       catch (InvocationTargetException e) {
-         //noinspection ThrowableResultOfMethodCallIgnored
-         endTestExecution();
+         RecordAndReplayExecution.endCurrentReplayIfAny();
          Utilities.filterStackTrace(e.getCause());
          throw e;
       }
       catch (IllegalAccessException e) {
-         //noinspection ThrowableResultOfMethodCallIgnored
-         endTestExecution();
+         RecordAndReplayExecution.endCurrentReplayIfAny();
          throw e;
       }
       finally {
          TestRun.resetExpectationsOnAnnotatedMocks();
+         TestRun.finishCurrentTestExecution();
+         savePoint.get().rollback();
+         savePoint.set(null);
       }
-   }
-
-   private AssertionError endTestExecution()
-   {
-      AssertionError error = RecordAndReplayExecution.endCurrentReplayIfAny();
-      TestRun.finishCurrentTestExecution();
-      savePoint.get().rollback();
-      savePoint.set(null);
-      return error;
    }
 }
