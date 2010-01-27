@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -54,15 +54,12 @@ public final class OrderRepositoryTestUsingExpectations
       new Expectations()
       {
          {
-            // TODO: it should be possible to avoid the various "withEqual" calls here...
             Database.executeInsertUpdateOrDelete(
-               withPrefix("insert into order "),
-               withEqual(order.getNumber()), withEqual(order.getCustomerId()));
+               withPrefix("insert into order "), order.getNumber(), order.getCustomerId());
             Database.executeInsertUpdateOrDelete(
                withPrefix("insert into order_item "),
-               withEqual(order.getNumber()), withEqual(orderItem.getProductId()),
-               withEqual(orderItem.getProductDescription()), withEqual(orderItem.getQuantity()),
-               withEqual(orderItem.getUnitPrice()));
+               order.getNumber(), orderItem.getProductId(), orderItem.getProductDescription(),
+               orderItem.getQuantity(), orderItem.getUnitPrice());
          }
       };
 
@@ -78,8 +75,7 @@ public final class OrderRepositoryTestUsingExpectations
       {
          {
             Database.executeInsertUpdateOrDelete(
-               withPrefix("update order "),
-               withEqual(order.getCustomerId()), withEqual(order.getNumber()));
+               withPrefix("update order "), order.getCustomerId(), order.getNumber());
          }
       };
 
@@ -95,7 +91,7 @@ public final class OrderRepositoryTestUsingExpectations
       {
          {
             Database.executeInsertUpdateOrDelete(
-               withPrefix("delete from order "), withEqual(order.getNumber()));
+               withPrefix("delete from order "), order.getNumber());
          }
       };
 
