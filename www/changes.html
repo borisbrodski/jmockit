@@ -17,6 +17,32 @@
       A couple of bugs fixed in JMockit Coverage: certain source code constructs could cause a NPE
       to be thrown.
    </li>
+   <li>
+      Fixed a bug in the JMockit-TestNG integration: invocation count constraints specified on mock
+      methods annotated with <code>@Mock(...)</code> were not being verified after the execution of
+      a test method.
+   </li>
+   <li>
+      Enhancements to the support of <strong><em>varargs</em> parameters</strong> in the
+      Expectations & Verifications API:
+      <ol>
+         <li>
+            Any number of variable argument values can be matched by passing an
+            "<strong><code>(Object[]) <em>any</em></code></strong>" argument matching constraint (or
+            "<strong><code>(Object[]) null</code></strong>" if another argument matcher is specified
+            for the same invocation) to a recorded/verified expectation.
+         </li>
+         <li>
+            Now it's possible to use matchers only on the regular parameters of a varargs method or
+            constructor, without any matchers specified for the varargs values (before, a matcher
+            was needed for each varargs value).
+            Matchers for <em>some</em> varargs values only is <em>not</em> supported, though.
+            In addition, unless no matchers at all are used, the last regular parameter preceding
+            the varargs parameter (if any) must use a matcher (not all regular parameters need it,
+            though).
+         </li>
+      </ol>
+   </li>
 </ul>
 
 <h3>Current release</h3>
