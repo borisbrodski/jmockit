@@ -358,7 +358,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, except that one or more classes will be partially mocked
- according to the invocations received during the record phase.</TD>
+ according to the expectations recorded in the expectation block.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -1237,13 +1237,13 @@ Expectations</H3>
 protected <B>Expectations</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;classesOrObjectsToBePartiallyMocked)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, except that one or more classes will be partially mocked
- according to the invocations received during the record phase.
+ according to the expectations recorded in the expectation block.
  Such classes are those directly specified as well as those to which any given instances
  belong.
  <p/>
  During the replay phase, any invocations to one of these classes or instances will execute
- real production code, unless a corresponding invocation was previously recorded as an
- expectation inside the block.
+ real production code, unless a matching invocation was previously recorded as an expectation
+ inside the block.
  <p/>
  For a given <em>object</em> (of any valid mockable type) that is to be partially mocked, all
  methods will be considered for mocking, from the concrete class of the given object up to but
@@ -1254,7 +1254,10 @@ protected <B>Expectations</B>(<A HREF="http://java.sun.com/javase/6/docs/api/jav
 <P>
 <DL>
 <DT><B>Parameters:</B><DD><CODE>classesOrObjectsToBePartiallyMocked</CODE> - one or more classes or objects whose classes are
- to be considered for partial mocking</DL>
+ to be considered for partial mocking
+<DT><B>Throws:</B>
+<DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if given a class literal for an interface, an annotation, an
+ array, or a primitive/wrapper type, or given a value of such a type</DL>
 </DL>
 
 <!-- ============ METHOD DETAIL ========== -->
