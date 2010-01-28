@@ -1045,17 +1045,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.7/junit-4.7-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.testng:testng:jdk15:5.10">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.10/testng-5.10-jdk15.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.10/testng-5.10-jdk15-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.10/testng-5.10-jdk15-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: commons-logging:commons-logging:1.1.1">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/main/../lib/commons-logging-1.1.1.jar!/" />
@@ -1147,24 +1136,24 @@
     </library>
     <library name="Maven: org.slf4j:slf4j-api:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../lib/slf4j-api-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/slf4j-api-1.5.8.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../lib/slf4j-api-1.5.8-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/slf4j-api-1.5.8-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../lib/slf4j-api-1.5.8-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/slf4j-api-1.5.8-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: dom4j:dom4j:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/dom4j-1.6.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/dom4j-1.6.1-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/dom4j-1.6.1-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: log4j:log4j:0">
@@ -1180,13 +1169,13 @@
     </library>
     <library name="Maven: org.slf4j:slf4j-nop:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/slf4j-nop-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/slf4j-nop-1.5.8-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/slf4j-nop-1.5.8-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: hibernate:hibernate:3.0">
@@ -1544,6 +1533,17 @@
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2-sources.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/0/hamcrest-library-0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.testng:testng:jdk15:5.11">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.11/testng-5.11-jdk15.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.11/testng-5.11-jdk15-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.11/testng-5.11-jdk15-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
