@@ -32,6 +32,7 @@ import mockit.external.asm.*;
 import mockit.internal.*;
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.filtering.*;
+import mockit.internal.util.*;
 
 public final class DynamicPartialMocking
 {
@@ -47,12 +48,14 @@ public final class DynamicPartialMocking
    private final Map<Class<?>, List<MockFilter>> classesAndMockFilters;
    private final Map<Class<?>, byte[]> modifiedClassfiles;
    private MockingConfiguration mockingCfg;
+   private boolean firstRedefinition;
 
    public DynamicPartialMocking()
    {
       targetClasses = new ArrayList<Class<?>>(2);
       classesAndMockFilters = new LinkedHashMap<Class<?>, List<MockFilter>>();
       modifiedClassfiles = new HashMap<Class<?>, byte[]>();
+      firstRedefinition = true;
    }
 
    public List<Class<?>> getTargetClasses()
@@ -76,22 +79,28 @@ public final class DynamicPartialMocking
 
       if (classOrInstance instanceof Class) {
          targetClass = (Class<?>) classOrInstance;
-
-         if (targetClass.isInterface()) {
-            throw new IllegalArgumentException(
-               "Invalid interface type " + targetClass.getName() + " for partial mocking");
-         }
-
+         validateTargetClassType(targetClass);
          mockingCfg = null;
          redefineClass(targetClass);
       }
       else {
-         mockingCfg = new MockingConfiguration(exclusionFiltersForMockObject, false);
          targetClass = classOrInstance.getClass();
+         validateTargetClassType(targetClass);
+         mockingCfg = new MockingConfiguration(exclusionFiltersForMockObject, false);
          redefineClassAndItsSuperClasses(targetClass);
       }
-      
+
       targetClasses.add(targetClass);
+   }
+
+   private void validateTargetClassType(Class<?> targetClass)
+   {
+      if (
+         targetClass.isInterface() || targetClass.isAnnotation() || targetClass.isArray() ||
+         targetClass.isPrimitive() || Utilities.isWrapperOfPrimitiveType(targetClass)
+      ) {
+         throw new IllegalArgumentException("Invalid type for dynamic mocking: " + targetClass);
+      }
    }
 
    private void redefineClassAndItsSuperClasses(Class<?> realClass)
@@ -107,8 +116,17 @@ public final class DynamicPartialMocking
    private void redefineClass(Class<?> realClass)
    {
       ClassReader classReader = new ClassFile(realClass, false).getReader();
+
       ExpectationsModifier modifier =
          new ExpectationsModifier(realClass.getClassLoader(), classReader, mockingCfg, null);
+
+      if (firstRedefinition) {
+         modifier.setExtraMethodAccess(InvocationArguments.ACC_REAL_IMPL);
+      }
+      else {
+         modifier.setEnableExecutionOfRealImplementation(true);
+      }
+
       classReader.accept(modifier, false);
       byte[] modifiedClass = modifier.toByteArray();
 
@@ -133,6 +151,8 @@ public final class DynamicPartialMocking
 
    public void restoreNonRecordedMethodsAndConstructors()
    {
+      firstRedefinition = false;
+
       for (Entry<Class<?>, List<MockFilter>> classAndFilters : classesAndMockFilters.entrySet()) {
          Class<?> targetClass = classAndFilters.getKey();
          List<MockFilter> mockFilters = classAndFilters.getValue();

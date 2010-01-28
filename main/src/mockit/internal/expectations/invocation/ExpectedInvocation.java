@@ -77,12 +77,24 @@ public final class ExpectedInvocation
 
    // Matching based on instance or mocked type ///////////////////////////////////////////////////
 
+   public boolean isMatch(String invokedClassDesc, String invokedMethod)
+   {
+      return invokedClassDesc.equals(arguments.classDesc) && isMatchingMethod(invokedMethod);
+   }
+
+   public boolean isMatch(Object replayInstance, Map<Object, Object> instanceMap)
+   {
+      return
+         arguments.methodNameAndDesc.charAt(0) == '<' ||
+         !matchInstance || isEquivalentInstance(replayInstance, instanceMap);
+   }
+
    public boolean isMatch(
       Object replayInstance, String invokedClassDesc, String invokedMethod,
       Map<Object, Object> instanceMap)
    {
       return
-         invokedClassDesc.equals(arguments.classDesc) && isMatchingMethod(invokedMethod) &&
+         isMatch(invokedClassDesc, invokedMethod) &&
          (arguments.methodNameAndDesc.charAt(0) == '<' ||
           !matchInstance || isEquivalentInstance(replayInstance, instanceMap));
    }

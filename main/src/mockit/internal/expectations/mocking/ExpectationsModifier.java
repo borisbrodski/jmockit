@@ -42,7 +42,6 @@ final class ExpectationsModifier extends BaseClassModifier
 {
    private static final int METHOD_ACCESS_MASK = ACC_SYNTHETIC + ACC_ABSTRACT;
    private static final Type VOID_TYPE = Type.getType("Ljava/lang/Void;");
-
    private static final Map<String, String> DEFAULT_FILTERS = new HashMap<String, String>()
    {{
       put("java/lang/System", "arraycopy getSecurityManager");
@@ -53,13 +52,14 @@ final class ExpectationsModifier extends BaseClassModifier
    }};
 
    private final MockingConfiguration mockingCfg;
-   private final boolean mockingCfgNullOrEmpty;
    private final MockConstructorInfo mockConstructorInfo;
    private final boolean ignoreStaticMethods;
    private String redefinedConstructorDesc;
    private String superClassName;
    private String className;
    private String baseClassNameForCapturedInstanceMethods;
+   private int extraMethodAccess;
+   private boolean enableExecutionOfRealImplementation;
    private boolean isProxy;
    private String defaultFilters;
 
@@ -69,7 +69,6 @@ final class ExpectationsModifier extends BaseClassModifier
    {
       super(classReader);
       mockingCfg = mockingConfiguration;
-      mockingCfgNullOrEmpty = mockingConfiguration == null || mockingConfiguration.isEmpty();
       this.mockConstructorInfo = mockConstructorInfo;
       ignoreStaticMethods = false;
       setUseMockingBridge(classLoader);
@@ -79,7 +78,6 @@ final class ExpectationsModifier extends BaseClassModifier
    {
       super(classReader);
       mockingCfg = null;
-      mockingCfgNullOrEmpty = true;
       mockConstructorInfo = null;
       ignoreStaticMethods = true;
       setUseMockingBridge(classLoader);
@@ -88,6 +86,16 @@ final class ExpectationsModifier extends BaseClassModifier
    public void setClassNameForInstanceMethods(String internalClassName)
    {
       baseClassNameForCapturedInstanceMethods = internalClassName;
+   }
+
+   public void setExtraMethodAccess(int extraMethodAccess)
+   {
+      this.extraMethodAccess = extraMethodAccess;
+   }
+
+   public void setEnableExecutionOfRealImplementation(boolean enableExecutionOfRealImplementation)
+   {
+      this.enableExecutionOfRealImplementation = enableExecutionOfRealImplementation;
    }
 
    @Override
@@ -135,9 +143,10 @@ final class ExpectationsModifier extends BaseClassModifier
          return super.visitMethod(access, name, desc, signature, exceptions);
       }
 
-      boolean matchesFilters = mockingCfg == null || mockingCfg.matchesFilters(name, desc);
+      boolean noFiltersToMatch = mockingCfg == null || mockingCfg.isEmpty();
+      boolean matchesFilters = noFiltersToMatch || mockingCfg.matchesFilters(name, desc);
 
-      if (!matchesFilters || mockingCfgNullOrEmpty && isMethodFromObject(name, desc)) {
+      if (!matchesFilters || noFiltersToMatch && isMethodFromObject(name, desc)) {
          // Copies original without modifications if it doesn't pass the filters, or when it's an
          // override of equals, hashCode, toString or finalize (from java.lang.Object) not
          // prohibited by any mock filter.
@@ -145,8 +154,7 @@ final class ExpectationsModifier extends BaseClassModifier
       }
 
       // Otherwise, replace original implementation.
-      boolean visitingNativeMethod = validateModificationOfNativeMethod(access, name);
-
+      validateModificationOfNativeMethod(access, name);
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
 
       boolean visitingConstructor = "<init>".equals(name);
@@ -162,21 +170,20 @@ final class ExpectationsModifier extends BaseClassModifier
          internalClassName = baseClassNameForCapturedInstanceMethods;
       }
 
-      if (useMockingBridge) {
-         generateCallToMockingBridge(
-            MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, null);
-         generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
+      int adjustedAccess = extraMethodAccess + access;
 
-         if (visitingNativeMethod) {
-            generateEmptyImplementation(desc);
-            return null;
-         }
-         else {
-            return new MethodAdapter(mw);
-         }
+      if (useMockingBridge) {
+         return generateCallToRecordOrReplayThroughMockingBridge(
+            adjustedAccess, name, desc, internalClassName);
       }
 
-      generateDirectCallToRecordOrReplay(internalClassName, access, name, desc);
+      generateDirectCallToRecordOrReplay(internalClassName, adjustedAccess, name, desc);
+
+      if (enableExecutionOfRealImplementation) {
+         generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
+         return new MethodAdapter(mw);
+      }
+
       generateReturnWithObjectAtTopOfTheStack(desc);
       mw.visitMaxs(1, 0);
       return null;
@@ -216,17 +223,13 @@ final class ExpectationsModifier extends BaseClassModifier
       return ignoreStaticMethods && isStatic(access);
    }
 
-   private boolean validateModificationOfNativeMethod(int access, String name)
+   private void validateModificationOfNativeMethod(int access, String name)
    {
-      boolean nativeMethod = isNative(access);
-
-      if (nativeMethod && !Startup.isJava6OrLater()) {
+      if (isNative(access) && !Startup.isJava6OrLater()) {
          throw new IllegalArgumentException(
             "Mocking of native methods not supported under JDK 1.5; please filter out method \"" +
             name + "\", or run under JDK 1.6+");
       }
-
-      return nativeMethod;
    }
 
    private void generateCallToDefaultOrConfiguredSuperConstructor()
@@ -297,8 +300,24 @@ final class ExpectationsModifier extends BaseClassModifier
       }
       else {
          // TODO: get Object value onto stack by calling an static method which returns
-         // the argument value
+         // the argument value; add the Object argument to a global List, passing the index
          mw.visitInsn(ACONST_NULL);
+      }
+   }
+
+   private MethodVisitor generateCallToRecordOrReplayThroughMockingBridge(
+      int access, String name, String desc, String internalClassName)
+   {
+      generateCallToMockingBridge(
+         MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, null);
+      generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
+
+      if (isNative(access)) {
+         generateEmptyImplementation(desc);
+         return null;
+      }
+      else {
+         return new MethodAdapter(mw);
       }
    }
 

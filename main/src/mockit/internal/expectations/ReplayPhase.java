@@ -35,6 +35,7 @@ final class ReplayPhase extends Phase
    int currentStrictExpectationIndex;
    final List<Expectation> nonStrictInvocations;
    private Expectation nonStrictExpectation;
+   private boolean continueToRealImplementation;
 
    ReplayPhase(RecordAndReplayExecution recordAndReplay)
    {
@@ -67,10 +68,17 @@ final class ReplayPhase extends Phase
       throws Throwable
    {
       nonStrictExpectation = null;
+      continueToRealImplementation = false;
 
       if (!findNonStrictExpectation(mock, mockClassDesc, mockNameAndDesc, args)) {
          createExpectationIfNonStrictInvocation(
             mock, mockAccess, mockClassDesc, mockNameAndDesc, args);
+
+         if (continueToRealImplementation) {
+            nonStrictInvocations.add(nonStrictExpectation);
+            nonStrictExpectation.constraints.incrementInvocationCount();
+            return Void.class;
+         }
       }
 
       if (nonStrictExpectation != null) {
@@ -88,14 +96,20 @@ final class ReplayPhase extends Phase
 
       for (Expectation nonStrict : nonStrictExpectations) {
          ExpectedInvocation invocation = nonStrict.invocation;
-         Map<Object, Object> instanceMap = getInstanceMap();
 
-         if (
-            invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap) &&
-            invocation.arguments.assertMatch(args, instanceMap) == null
-         ) {
-            nonStrictExpectation = nonStrict;
-            return true;
+         if (invocation.isMatch(mockClassDesc, mockNameAndDesc)) {
+            Map<Object, Object> instanceMap = getInstanceMap();
+
+            if (
+               invocation.isMatch(mock, instanceMap) &&
+               invocation.arguments.assertMatch(args, instanceMap) == null
+            ) {
+               nonStrictExpectation = nonStrict;
+               return true;
+            }
+            else if (invocation.arguments.isMethodWithRealImplementation()) {
+               continueToRealImplementation = true;
+            }
          }
       }
 

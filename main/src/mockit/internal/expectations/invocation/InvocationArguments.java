@@ -27,17 +27,19 @@ package mockit.internal.expectations.invocation;
 import java.lang.reflect.*;
 import java.util.*;
 
+import mockit.external.asm.*;
 import mockit.external.hamcrest.*;
 import mockit.external.hamcrest.core.*;
 import mockit.internal.util.*;
 
 public final class InvocationArguments
 {
+   public static int ACC_REAL_IMPL = 0x8000;
    private static final Object[] NULL_VARARGS = new Object[1];
 
    final String classDesc;
    final String methodNameAndDesc;
-   private final boolean methodWithVarargs;
+   private final int methodAccess;
    private Object[] invocationArgs;
    private List<Matcher<?>> matchers;
 
@@ -45,8 +47,13 @@ public final class InvocationArguments
    {
       this.classDesc = classDesc;
       this.methodNameAndDesc = methodNameAndDesc;
-      methodWithVarargs = (methodAccess & 128) != 0;
+      this.methodAccess = methodAccess;
       invocationArgs = args;
+   }
+
+   public boolean isMethodWithRealImplementation()
+   {
+      return (methodAccess & ACC_REAL_IMPL) != 0;
    }
 
    public Object[] getValues()
@@ -89,7 +96,7 @@ public final class InvocationArguments
       Object[] invocationVarArgs = invocationArgs;
       int varArgsCount = 0;
 
-      if (methodWithVarargs) {
+      if ((methodAccess & Opcodes.ACC_VARARGS) != 0) {
          invocationVarArgs = getVarArgs(invocationArgs);
 
          if (invocationVarArgs == NULL_VARARGS) {
@@ -134,33 +141,32 @@ public final class InvocationArguments
    {
       int argCount = replayArgs.length;
 
-      if (methodWithVarargs) {
-         AssertionError nonVarargsError =
-            assertEquals(invocationArgs, replayArgs, argCount - 1, instanceMap);
-
-         if (nonVarargsError != null) {
-            return nonVarargsError;
-         }
-
-         Object[] expectedValues = getVarArgs(invocationArgs);
-         Object[] actualValues = getVarArgs(replayArgs);
-
-         if (expectedValues.length != actualValues.length) {
-            return errorForVarargsArraysOfDifferentLengths(expectedValues, actualValues);
-         }
-
-         AssertionError varargsError =
-            assertEquals(expectedValues, actualValues, expectedValues.length, instanceMap);
-
-         if (varargsError != null) {
-            return new AssertionError("Varargs " + varargsError);
-         }
-
-         return null;
-      }
-      else {
+      if ((methodAccess & Opcodes.ACC_VARARGS) == 0) {
          return assertEquals(invocationArgs, replayArgs, argCount, instanceMap);
       }
+
+      AssertionError nonVarargsError =
+         assertEquals(invocationArgs, replayArgs, argCount - 1, instanceMap);
+
+      if (nonVarargsError != null) {
+         return nonVarargsError;
+      }
+
+      Object[] expectedValues = getVarArgs(invocationArgs);
+      Object[] actualValues = getVarArgs(replayArgs);
+
+      if (expectedValues.length != actualValues.length) {
+         return errorForVarargsArraysOfDifferentLengths(expectedValues, actualValues);
+      }
+
+      AssertionError varargsError =
+         assertEquals(expectedValues, actualValues, expectedValues.length, instanceMap);
+
+      if (varargsError != null) {
+         return new AssertionError("Varargs " + varargsError);
+      }
+
+      return null;
    }
 
    private AssertionError errorForVarargsArraysOfDifferentLengths(

@@ -163,13 +163,13 @@ public class Expectations extends Invocations
 
    /**
     * Same as {@link #Expectations()}, except that one or more classes will be partially mocked
-    * according to the invocations received during the record phase.
+    * according to the expectations recorded in the expectation block.
     * Such classes are those directly specified as well as those to which any given instances
     * belong.
     * <p/>
     * During the replay phase, any invocations to one of these classes or instances will execute
-    * real production code, unless a corresponding invocation was previously recorded as an
-    * expectation inside the block.
+    * real production code, unless a matching invocation was previously recorded as an expectation
+    * inside the block.
     * <p/>
     * For a given <em>object</em> (of any valid mockable type) that is to be partially mocked, all
     * methods will be considered for mocking, from the concrete class of the given object up to but
@@ -180,6 +180,9 @@ public class Expectations extends Invocations
     *
     * @param classesOrObjectsToBePartiallyMocked one or more classes or objects whose classes are
     * to be considered for partial mocking
+    *
+    * @throws IllegalArgumentException if given a class literal for an interface, an annotation, an
+    * array, or a primitive/wrapper type, or given a value of such a type
     */
    protected Expectations(Object... classesOrObjectsToBePartiallyMocked)
    {

@@ -175,7 +175,14 @@ public final class RecordAndReplayExecution
       }
 
       if (dynamicPartialMocking != null) {
-         targetClasses.addAll(dynamicPartialMocking.getTargetClasses());
+         List<Class<?>> staticallyMockedClasses = new ArrayList<Class<?>>(targetClasses);
+         List<Class<?>> dynamicallyMockedClasses = dynamicPartialMocking.getTargetClasses();
+
+         for (Class<?> dynamicallyMockedClass : dynamicallyMockedClasses) {
+            if (!staticallyMockedClasses.contains(dynamicallyMockedClass)) {
+               targetClasses.addAll(dynamicallyMockedClasses);
+            }
+         }
       }
 
       executionState.discoverMockedTypesToMatchOnInstances(targetClasses);
@@ -188,10 +195,7 @@ public final class RecordAndReplayExecution
 
    private DynamicPartialMocking applyDynamicPartialMocking(Object... classesOrInstances)
    {
-      if (
-         classesOrInstances == null || classesOrInstances.length == 0 ||
-         classesOrInstances.length == 1 && classesOrInstances[0] == Boolean.TRUE
-      ) {
+      if (classesOrInstances == null || classesOrInstances.length == 0) {
          return null;
       }
 

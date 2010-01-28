@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -65,7 +65,7 @@ public final class DynamicPartialMockingTest
       new Expectations(Collaborator.class)
       {
          {
-            new Collaborator().getValue(); returns(123);
+            new Collaborator().getValue(); result = 123;
          }
       };
 
@@ -86,7 +86,7 @@ public final class DynamicPartialMockingTest
       new Expectations(mock)
       {
          {
-            mock.getValue(); returns(123);
+            mock.getValue(); result = 123;
          }
       };
 
@@ -108,7 +108,7 @@ public final class DynamicPartialMockingTest
       new Expectations(collaborator)
       {
          {
-            collaborator.getValue(); returns(123);
+            collaborator.getValue(); result = 123;
          }
       };
 
@@ -129,19 +129,25 @@ public final class DynamicPartialMockingTest
       new NonStrictExpectations(collaborator)
       {
          {
-            collaborator.simpleOperation(1, "", null); returns(false);
+            collaborator.simpleOperation(1, "", null); result = false;
             Collaborator.doSomething(true, "test");
          }
       };
 
       // Mocked:
       assertFalse(collaborator.simpleOperation(1, "", null));
-      Collaborator.doSomething(false, null);
+      Collaborator.doSomething(true, "test");
 
       // Not mocked:
       assertEquals(2, collaborator.getValue());
       assertEquals(45, new Collaborator(45).value);
       assertEquals(-1, new Collaborator().value);
+
+      try {
+         Collaborator.doSomething(false, null);
+         fail();
+      }
+      catch (IllegalStateException ignore) {}
    }
 
    @Test(expected = IllegalStateException.class)
@@ -152,8 +158,8 @@ public final class DynamicPartialMockingTest
       new NonStrictExpectations(collaborator)
       {
          {
-            collaborator.getValue(); returns(5);
-            new SubCollaborator().format(); returns("test");
+            collaborator.getValue(); result = 5;
+            new SubCollaborator().format(); result = "test";
          }
       };
 
@@ -178,7 +184,7 @@ public final class DynamicPartialMockingTest
       {
          {
             collaborator.getValue();
-            collaborator.format(); returns("test");
+            collaborator.format(); result = "test";
          }
       };
 
@@ -207,8 +213,8 @@ public final class DynamicPartialMockingTest
       new NonStrictExpectations(collaborator, dependency)
       {
          {
-            collaborator.getValue(); returns(5);
-            dependency.doSomething(); returns(true);
+            collaborator.getValue(); result = 5;
+            dependency.doSomething(); result = true;
          }
       };
 
@@ -229,8 +235,8 @@ public final class DynamicPartialMockingTest
       new NonStrictExpectations(list)
       {
          {
-            list.get(1); returns("an item");
-            list.size(); returns(2);
+            list.get(1); result = "an item";
+            list.size(); result = 2;
          }
       };
 
@@ -241,5 +247,77 @@ public final class DynamicPartialMockingTest
       // Use unmocked methods:
       assertTrue(list.add("another"));
       assertEquals("another", list.remove(0));
+   }
+
+   @Test
+   public void attemptToUseDynamicMockingForInvalidTypes()
+   {
+      assertInvalidTypeForDynamicMocking(Runnable.class);
+      assertInvalidTypeForDynamicMocking(Test.class);
+      assertInvalidTypeForDynamicMocking(int[].class);
+      assertInvalidTypeForDynamicMocking(new String[1]);
+      assertInvalidTypeForDynamicMocking(char.class);
+      assertInvalidTypeForDynamicMocking(123);
+      assertInvalidTypeForDynamicMocking(Boolean.class);
+      assertInvalidTypeForDynamicMocking(true);
+      assertInvalidTypeForDynamicMocking(2.5);
+   }
+
+   private void assertInvalidTypeForDynamicMocking(Object classOrObject)
+   {
+      try {
+         new Expectations(classOrObject) {};
+         fail();
+      }
+      catch (IllegalArgumentException ignore) {}
+   }
+
+   @Test
+   public void dynamicPartialMockingWithExactArgumentMatching()
+   {
+      final Collaborator collaborator = new Collaborator();
+
+      new NonStrictExpectations(collaborator)
+      {{
+         collaborator.simpleOperation(1, "s", null); result = false;
+      }};
+
+      assertFalse(collaborator.simpleOperation(1, "s", null));
+      assertTrue(collaborator.simpleOperation(2, "s", null));
+      assertTrue(collaborator.simpleOperation(1, "S", null));
+      assertTrue(collaborator.simpleOperation(1, "s", new Date()));
+      assertTrue(collaborator.simpleOperation(1, null, new Date()));
+      assertFalse(collaborator.simpleOperation(1, "s", null));
+   }
+
+   @Test
+   public void dynamicPartialMockingWithFlexibleArgumentMatching(final Collaborator mock)
+   {
+      new NonStrictExpectations(mock)
+      {{
+         mock.simpleOperation(anyInt, withPrefix("s"), null); result = false;
+      }};
+
+      Collaborator collaborator = new Collaborator();
+      assertFalse(collaborator.simpleOperation(1, "sSs", null));
+      assertTrue(collaborator.simpleOperation(2, " s", null));
+      assertTrue(collaborator.simpleOperation(1, "S", null));
+      assertFalse(collaborator.simpleOperation(-1, "s", new Date()));
+      assertTrue(collaborator.simpleOperation(1, null, null));
+      assertFalse(collaborator.simpleOperation(0, "string", null));
+   }
+
+   @Test
+   public void dynamicPartialMockingWithOnInstanceMatching()
+   {
+      final Collaborator mock = new Collaborator();
+
+      new NonStrictExpectations(mock)
+      {{
+         onInstance(mock).getValue(); result = 3;
+      }};
+
+      assertEquals(3, mock.getValue());
+      assertEquals(4, new Collaborator(4).getValue());
    }
 }

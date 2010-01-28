@@ -44,6 +44,18 @@ public final class Utilities
       null, boolean.class, char.class, byte.class, short.class, int.class, float.class, long.class,
       double.class
    };
+   private static final Map<Class<?>, Class<?>> WRAPPER_TO_PRIMITIVE =
+      new HashMap<Class<?>, Class<?>>()
+      {{
+         put(Boolean.class, boolean.class);
+         put(Character.class, char.class);
+         put(Byte.class, byte.class);
+         put(Short.class, short.class);
+         put(Integer.class, int.class);
+         put(Float.class, float.class);
+         put(Long.class, long.class);
+         put(Double.class, double.class);
+      }};
    private static final Class<?>[] NO_PARAMETERS = new Class<?>[0];
 
    private Utilities() {}
@@ -420,15 +432,12 @@ public final class Utilities
 
    private static boolean isWrapperOfPrimitiveType(Class<?> primitiveType, Class<?> otherType)
    {
-      return
-         primitiveType == int.class && otherType == Integer.class ||
-         primitiveType == long.class && otherType == Long.class ||
-         primitiveType == short.class && otherType == Short.class ||
-         primitiveType == byte.class && otherType == Byte.class ||
-         primitiveType == double.class && otherType == Double.class ||
-         primitiveType == float.class && otherType == Float.class ||
-         primitiveType == char.class && otherType == Character.class ||
-         primitiveType == boolean.class && otherType == Boolean.class;
+      return primitiveType == WRAPPER_TO_PRIMITIVE.get(otherType);
+   }
+
+   public static boolean isWrapperOfPrimitiveType(Class<?> type)
+   {
+      return WRAPPER_TO_PRIMITIVE.containsKey(type);
    }
 
    public static Method findPublicVoidMethod(Class<?> aClass, String methodName)

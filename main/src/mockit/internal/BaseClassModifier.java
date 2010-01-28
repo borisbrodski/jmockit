@@ -169,7 +169,7 @@ public class BaseClassModifier extends ClassWriter
       boolean isStatic = generateCodeToPassThisOrNullIfStaticMethod(access);
 
       // Second argument: method access flags.
-      mw.visitIntInsn(SIPUSH, access);
+      mw.visitLdcInsn(access);
 
       // Third argument: class name.
       mw.visitLdcInsn(className);
