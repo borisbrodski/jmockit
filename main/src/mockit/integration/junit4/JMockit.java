@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -27,7 +27,6 @@ package mockit.integration.junit4;
 import org.junit.runners.*;
 import org.junit.runners.model.*;
 
-import mockit.*;
 import mockit.internal.startup.*;
 
 /**
@@ -55,7 +54,7 @@ public final class JMockit extends BlockJUnit4ClassRunner
 {
    static
    {
-      Startup.verifyInitialization();
+      Startup.initializeIfNeeded();
    }
 
    /**

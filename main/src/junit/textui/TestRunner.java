@@ -26,7 +26,7 @@ import junit.runner.*;
 public class TestRunner extends BaseTestRunner {
    static
    {
-      mockit.internal.startup.Startup.verifyInitialization();
+      mockit.internal.startup.Startup.initializeIfNeeded();
    }
 
 	private ResultPrinter fPrinter;

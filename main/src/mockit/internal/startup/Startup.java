@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -246,6 +246,16 @@ public final class Startup
    }
 
    public static void verifyInitialization()
+   {
+      if (instrumentation == null) {
+         new AgentInitialization().initializeAccordingToJDKVersion();
+         System.out.println(
+            "WARNING: JMockit was initialized on demand, which may cause certain tests to fail;\n" +
+            "please check the documentation for better ways to get it initialized.");
+      }
+   }
+
+   public static void initializeIfNeeded()
    {
       if (instrumentation == null) {
          new AgentInitialization().initializeAccordingToJDKVersion();

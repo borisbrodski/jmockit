@@ -24,7 +24,7 @@ public abstract class Runner implements Describable
 {
    static
    {
-      Startup.verifyInitialization();
+      Startup.initializeIfNeeded();
    }
 
    public abstract Description getDescription();
