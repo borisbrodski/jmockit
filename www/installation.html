@@ -38,7 +38,7 @@
       (this isn't required, but it will provide the greatest ease of use).
    </li>
    <li>
-      Depending on your development environment, you <em>may</em> have to do one of two other
+      Depending on your development environment, you <em>may</em> have to do one or two other
       things:
       <ul>
          <li>
@@ -57,6 +57,12 @@
             If you are developing on a JDK of version 1.6 or newer on Mac OS X, add
             <strong><code>&lt;jdkDir>/lib/tools.jar</code></strong> to the classpath, where
             <code>&lt;jdkDir></code> is the home directory for your local JDK 1.6 installation.
+         </li>
+         <li>
+            If you use <strong>TestNG</strong> in a JDK 1.6 environment, JMockit will have to be
+            initialized in one of three possible ways. See
+            <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">this page</a>
+            for details.
          </li>
       </ul>
       When using a Sun HotSpot JDK 1.6+ or an Oracle JRockit JDK 1.6+ on Windows or Linux, neither
