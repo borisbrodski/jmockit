@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations & Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -39,7 +39,6 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
    protected Field field;
    protected MockedType typeMetadata;
    protected boolean finalField;
-   private int fieldModifiers;
 
    protected FieldTypeRedefinitions(Object objectWithMockFields)
    {
@@ -60,21 +59,22 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
       Field[] fields = classWithMockFields.getDeclaredFields();
 
       for (Field candidateField : fields) {
-         fieldModifiers = candidateField.getModifiers();
+         int fieldModifiers = candidateField.getModifiers();
 
          if ((fieldModifiers & FIELD_ACCESS_MASK) == 0) {
             field = candidateField;
-            redefineFieldType(isTestClass);
+            redefineFieldType(isTestClass, fieldModifiers);
+            field = null;
          }
       }
    }
 
-   private void redefineFieldType(boolean fromTestClass)
+   private void redefineFieldType(boolean fromTestClass, int modifiers)
    {
       typeMetadata = new MockedType(field, fromTestClass);
 
       if (typeMetadata.isMockField()) {
-         finalField = isFinal(fieldModifiers);
+         finalField = isFinal(modifiers);
 
          TypeRedefinition typeRedefinition = redefineTypeForMockField();
          typeMetadata.mockingCfg = typeRedefinition.mockingCfg;
@@ -83,6 +83,8 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
 
          registerCaptureOfNewInstances();
       }
+
+      typeMetadata = null;
    }
 
    protected abstract TypeRedefinition redefineTypeForMockField();
