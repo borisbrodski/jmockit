@@ -2,8 +2,6 @@ package org.junit.runner;
 
 import org.junit.runner.notification.RunNotifier;
 
-import mockit.internal.startup.*;
-
 /**
  * A <code>Runner</code> runs tests and notifies a {@link org.junit.runner.notification.RunNotifier}
  * of significant events as it does so. You will need to subclass <code>Runner</code>
@@ -24,7 +22,9 @@ public abstract class Runner implements Describable
 {
    static
    {
-      Startup.initializeIfNeeded();
+      if ("1.6 1.7".contains(System.getProperty("java.specification.version"))) {
+         mockit.internal.startup.Startup.initializeIfNeeded();
+      }
    }
 
    public abstract Description getDescription();
