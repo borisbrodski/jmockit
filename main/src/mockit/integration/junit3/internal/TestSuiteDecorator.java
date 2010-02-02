@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -25,6 +25,7 @@
 package mockit.integration.junit3.internal;
 
 import java.lang.reflect.*;
+import static java.lang.reflect.Modifier.*;
 
 import junit.framework.*;
 
@@ -43,8 +44,11 @@ public final class TestSuiteDecorator
    @Mock
    public boolean isTestMethod(Method m)
    {
+      int modifiers = m.getModifiers();
+
       return
-         !Modifier.isStatic(m.getModifiers()) && m.getReturnType() == Void.TYPE && 
+         isPublic(modifiers) && !isStatic(modifiers) &&
+         m.getReturnType() == Void.TYPE &&
          m.getName().startsWith("test");
    }
 }
