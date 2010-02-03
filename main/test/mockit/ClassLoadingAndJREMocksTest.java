@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -41,7 +41,7 @@ public final class ClassLoadingAndJREMocksTest
       }
    }
 
-   @Ignore @Test // broken in JDK 1.6.0_18
+   @Test
    public void recordExpectationForFileUsingLocalMockField()
    {
       new Expectations()
@@ -57,7 +57,7 @@ public final class ClassLoadingAndJREMocksTest
       assertTrue(foo.checkFile("filePath"));
    }
 
-   @Ignore @Test // broken in JDK 1.6.0_18
+   @Test
    public void recordExpectationForFileUsingMockParameter(File file)
    {
       new Expectations()
@@ -71,7 +71,7 @@ public final class ClassLoadingAndJREMocksTest
       assertTrue(foo.checkFile("filePath"));
    }
 
-   @Ignore @Test // broken in JDK 1.6.0_18
+   @Test
    public void mockUpFile()
    {
       // TODO: this test fails when run alone; mock classes should also support conditional mocking
