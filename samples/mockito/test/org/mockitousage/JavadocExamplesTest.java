@@ -22,46 +22,45 @@ import org.hamcrest.beans.*;
 @RunWith(MockitoJUnitRunner.class)
 public class JavadocExamplesTest
 {
-   private final List<String> mockedList = mock(List.class);
+   @Mock List<String> mockedList;
 
-   @Test
+   @Test // Uses of Mockito API: 3
    public void verifyingBehavior()
    {
-      //mock creation
-      List<String> mockedList = mock(List.class);
+      // Mock creation (for interfaces or concrete classes):
+      MockedClass mock = mock(MockedClass.class);
 
       //using mock object
-      mockedList.add("one");
-      mockedList.clear();
+      mock.doSomething("one", true);
+      mock.someMethod("test");
 
       //verification
-      verify(mockedList).add("one");
-      verify(mockedList).clear();
+      verify(mock).doSomething("one", true);
+      verify(mock).someMethod("test");
    }
 
-   @Test
+   @Test // Uses of Mockito API: 5
    public void stubbing()
    {
-      //You can mock concrete classes, not only interfaces
-      List<String> mockedList = mock(LinkedList.class);
+      MockedClass mock = mock(MockedClass.class);
 
       //stubbing
-      when(mockedList.get(0)).thenReturn("first");
-      when(mockedList.get(1)).thenThrow(new RuntimeException());
+      when(mock.getItem(0)).thenReturn("first");
+      when(mock.getItem(1)).thenThrow(new RuntimeException());
 
-      assertEquals("first", mockedList.get(0));
+      assertEquals("first", mock.getItem(0));
 
       try {
-         mockedList.get(1);
+         mock.getItem(1);
       }
       catch (RuntimeException e) {
          // OK
       }
 
-      assertNull(mockedList.get(999));
+      assertNull(mock.getItem(999));
    }
 
-   @Test
+   @Test // Uses of Mockito API: 3
    public void stubbingAndVerifying()
    {
       when(mockedList.get(0)).thenReturn("first");
@@ -75,7 +74,7 @@ public class JavadocExamplesTest
       verify(mockedList).get(0);
    }
 
-   @Test
+   @Test // Uses of Mockito API: 8
    public void argumentMatchers()
    {
       //stubbing using built-in anyInt() argument matcher
@@ -90,7 +89,7 @@ public class JavadocExamplesTest
       verify(mockedList).get(anyInt());
    }
 
-   @Test
+   @Test // Uses of Mockito API: 15
    public void verifyingNumberOfInvocations()
    {
       //using mock
@@ -120,16 +119,18 @@ public class JavadocExamplesTest
       verify(mockedList, atMost(5)).add("three times");
    }
 
-   @Test(expected = RuntimeException.class)
+   @Test(expected = RuntimeException.class) // Uses of Mockito API: 2
    public void stubbingVoidMethodsWithExceptions()
    {
+      // "thenThrow(...)" is not applicable for void methods, so "doThrow" is used;
+      // note also that in this situation it's "when(mock)", not "when(mock.someMethod(...))"
       doThrow(new RuntimeException()).when(mockedList).clear();
 
       //following throws RuntimeException:
       mockedList.clear();
    }
 
-   @Test
+   @Test // Uses of Mockito API: 5
    public void verificationInOrder()
    {
       List<String> firstMock = mock(List.class);
@@ -147,7 +148,7 @@ public class JavadocExamplesTest
       inOrder.verify(secondMock).add("was called second");
    }
 
-   @Test
+   @Test // Uses of Mockito API: 6
    public void verifyingThatInteractionsNeverHappened()
    {
       List<String> mockTwo = mock(List.class);
@@ -166,7 +167,7 @@ public class JavadocExamplesTest
       verifyZeroInteractions(mockTwo, mockThree);
    }
 
-   @Test(expected = NoInteractionsWanted.class)
+   @Test(expected = NoInteractionsWanted.class) // Uses of Mockito API: 3
    public void verifyingThatInteractionsNeverHappenedWhenTheyDid()
    {
       List<String> mockTwo = mock(List.class);
@@ -179,7 +180,7 @@ public class JavadocExamplesTest
       verifyZeroInteractions(mockTwo);
    }
 
-   @Test
+   @Test // Uses of Mockito API: 3
    public void verifyingAllInteractions()
    {
       mockedList.add("one");
@@ -195,7 +196,7 @@ public class JavadocExamplesTest
       verifyNoMoreInteractions(mockedList);
    }
 
-   @Test(expected = NoInteractionsWanted.class)
+   @Test(expected = NoInteractionsWanted.class) // Uses of Mockito API: 3
    public void verifyingAllInteractionsWhenMoreOfThemHappen()
    {
       mockedList.add("one");
@@ -207,14 +208,12 @@ public class JavadocExamplesTest
       verifyNoMoreInteractions(mockedList);
    }
 
-   @Test
+   @Test // Uses of Mockito API: 4
    public void stubbingConsecutiveCalls()
    {
       Iterator<String> mock = mock(Iterator.class);
 
-      when(mock.next())
-         .thenThrow(new IllegalStateException())
-         .thenReturn("foo");
+      when(mock.next()).thenThrow(new IllegalStateException()).thenReturn("foo");
 
       // First call: throws exception.
       try {
@@ -231,10 +230,10 @@ public class JavadocExamplesTest
       assertEquals("foo", mock.next());
    }
 
-   @Test
+   @Test // Uses of Mockito API: 7
    public void stubbingWithCallbacks()
    {
-      final TestedClass mock = mock(TestedClass.class);
+      final MockedClass mock = mock(MockedClass.class);
 
       when(mock.someMethod(anyString())).thenAnswer(new Answer()
       {
@@ -249,35 +248,30 @@ public class JavadocExamplesTest
       assertEquals("called with arguments: [foo]", mock.someMethod("foo"));
    }
 
-   static class TestedClass // cannot be "final"
-   {
-      public String someMethod(String s) { return s; }
-   }
-
-   @Test
+   @Test // Uses of Mockito API: 9
    public void spyingOnRealObjects()
    {
-      List<String> spy = spy(new LinkedList<String>());
+      MockedClass spy = spy(new MockedClass());
 
-      //optionally, you can stub out some methods:
-      when(spy.size()).thenReturn(100);
+      // Optionally, you can stub out some methods:
+      when(spy.getSomeValue()).thenReturn(100);
 
       // When using the regular "when(spy.someMethod(...)).thenDoXyz(...)" API, all calls to a spy
       // object will not only perform stubbing, but also execute the real method:
-      // when(spy.get(1)).thenReturn("an item"); => would throw an IndexOutOfBoundsException.
-      // Therefore, a different API must sometimes be used for stubbing, to avoid side effects:
-      doReturn("an item").when(spy).get(1);
+      // when(spy.get(1)).thenReturn("an item"); would throw an IndexOutOfBoundsException.
+      // Therefore, a different API may need to be used with a spy, in order to avoid side effects:
+      doReturn("an item").when(spy).getItem(1);
       
-      //using the spy calls real methods, except those stubbed out
-      spy.add("one");
-      spy.add("two");
+      // Using the spy calls real methods, except those stubbed out:
+      spy.doSomething("one", true);
+      spy.doSomething("two", false);
 
-      assertEquals("one", spy.get(0));
-      assertEquals("an item", spy.get(1));
-      assertEquals(100, spy.size());
+      assertEquals("one", spy.getItem(0));
+      assertEquals("an item", spy.getItem(1));
+      assertEquals(100, spy.getSomeValue());
 
-      //optionally, you can verify
-      verify(spy).add("one"); // the real "addItem" is not called here
-      verify(spy).add("two");
+      // Optionally, you can verify:
+      verify(spy).doSomething("one", true); // the real "doSomething" method is not called here
+      verify(spy).doSomething(eq("two"), anyBoolean());
    }
 }

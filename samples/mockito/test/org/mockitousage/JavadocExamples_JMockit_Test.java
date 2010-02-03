@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -33,51 +33,54 @@ import mockit.*;
 import org.hamcrest.beans.*;
 import static org.junit.Assert.*;
 
+// Even though JMockit tests often take more lines of code than the equivalent Mockito tests,
+// the number of uses of each mocking API (considering methods/constructors called, fields accessed,
+// and annotations applied) is often less in the JMockit ones.
 public final class JavadocExamples_JMockit_Test
 {
    @Mocked List<String> mockedList;
 
-   @Test
-   public void verifyBehavior()
+   @Test // Uses of JMockit API: 1
+   public void verifyBehavior(final MockedClass mock)
    {
       // Mock is used (replay phase):
-      mockedList.add("one");
-      mockedList.clear();
+      mock.doSomething("one", true);
+      mock.someMethod("test");
 
       // Invocations to mock are verified (verify phase):
       new Verifications()
       {
          {
-            mockedList.add("one");
-            mockedList.clear();
+            mock.doSomething("one", true);
+            mock.someMethod("test");
          }
       };
    }
 
-   @Test
-   public void stubInvocations()
+   @Test // Uses of JMockit API: 3
+   public void stubInvocations(final MockedClass mock)
    {
       new NonStrictExpectations()
       {
          {
-            mockedList.get(0); result = "first";
-            mockedList.get(1); result = new RuntimeException();
+            mock.getItem(0); result = "first";
+            mock.getItem(1); result = new RuntimeException();
          }
       };
 
-      assertEquals("first", mockedList.get(0));
+      assertEquals("first", mock.getItem(0));
 
       try {
-         mockedList.get(1);
+         mock.getItem(1);
       }
       catch (RuntimeException e) {
          // OK
       }
 
-      assertNull(mockedList.get(999));
+      assertNull(mock.getItem(999));
    }
 
-   @Test
+   @Test // Uses of JMockit API: 3
    public void stubAndVerifyInvocation()
    {
       new NonStrictExpectations()
@@ -101,7 +104,7 @@ public final class JavadocExamples_JMockit_Test
       };
    }
 
-   @Test
+   @Test // Uses of JMockit API: 3
    public void stubAndVerifyInvocationWithoutRepeatingItInExpectationAndVerificationBlocks()
    {
       new NonStrictExpectations()
@@ -119,7 +122,7 @@ public final class JavadocExamples_JMockit_Test
       assertEquals("first", mockedList.get(0));
    }
 
-   @Test
+   @Test // Uses of JMockit API: 7
    public void useArgumentMatchers()
    {
       new NonStrictExpectations()
@@ -140,7 +143,7 @@ public final class JavadocExamples_JMockit_Test
       };
    }
 
-   @Test
+   @Test // Uses of JMockit API: 8
    public void verifyNumberOfInvocations()
    {
       // Using mock:
@@ -175,13 +178,13 @@ public final class JavadocExamples_JMockit_Test
       };
    }
 
-   @Test(expected = RuntimeException.class)
+   @Test(expected = RuntimeException.class) // Uses of JMockit API: 2
    public void stubVoidMethodsWithExceptions()
    {
       new NonStrictExpectations()
       {
          {
-            // void/non-void methods are handled the same way:
+            // void/non-void methods are handled the same way, with a consistent API:
             mockedList.clear(); result = new RuntimeException();
          }
       };
@@ -189,7 +192,7 @@ public final class JavadocExamples_JMockit_Test
       mockedList.clear();
    }
 
-   @Test
+   @Test // Uses of JMockit API: 1
    public void verifyInOrder(final List<String> firstMock, final List<String> secondMock)
    {
       // Using mocks:
@@ -206,8 +209,7 @@ public final class JavadocExamples_JMockit_Test
       };
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
-   @Test
+   @Test // Uses of JMockit API: 2
    public void verifyThatInvocationsNeverHappened(List<String> mockTwo, List<String> mockThree)
    {
       // Using mocks - only mockedList is invoked:
@@ -226,7 +228,7 @@ public final class JavadocExamples_JMockit_Test
       };
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = AssertionError.class) // Uses of JMockit API: 1
    public void verifyThatInvocationsNeverHappenedWhenTheyDid(List<String> mockTwo)
    {
       mockedList.add("one");
@@ -240,7 +242,7 @@ public final class JavadocExamples_JMockit_Test
       };
    }
 
-   @Test
+   @Test // Uses of JMockit API: 1
    public void verifyAllInvocations()
    {
       mockedList.add("one");
@@ -259,7 +261,7 @@ public final class JavadocExamples_JMockit_Test
       };
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = AssertionError.class) // Uses of JMockit API: 1
    public void verifyAllInvocationsWhenMoreOfThemHappen()
    {
       mockedList.add("one");
@@ -276,7 +278,7 @@ public final class JavadocExamples_JMockit_Test
       };
    }
 
-   @Test
+   @Test // Uses of JMockit API: 1
    public void verifyAllInvocationsInOrder()
    {
       mockedList.add("one");
@@ -293,7 +295,7 @@ public final class JavadocExamples_JMockit_Test
       };
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = AssertionError.class) // Uses of JMockit API: 1
    public void verifyAllInvocationsInOrderWhenMoreOfThemHappen()
    {
       mockedList.add("one");
@@ -309,7 +311,7 @@ public final class JavadocExamples_JMockit_Test
       };
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = AssertionError.class) // Uses of JMockit API: 1
    public void verifyAllInvocationsInOrderWithOutOfOrderVerifications()
    {
       mockedList.add("one");
@@ -324,7 +326,7 @@ public final class JavadocExamples_JMockit_Test
       };
    }
 
-   @Test
+   @Test // Uses of JMockit API: 4
    public void consecutiveCallsWithStrictExpectations(final Iterator<String> mock)
    {
       new Expectations()
@@ -355,7 +357,7 @@ public final class JavadocExamples_JMockit_Test
       assertEquals("foo", mock.next());
    }
 
-   @Test
+   @Test // Uses of JMockit API: 3
    public void consecutiveCallsWithNonStrictExpectations(final Iterator<String> mock)
    {
       new NonStrictExpectations()
@@ -368,8 +370,8 @@ public final class JavadocExamples_JMockit_Test
       verifyConsecutiveCallsWithRegularAssertions(mock);
    }
 
-   @Test
-   public void stubbingWithCallbacksUsingDelegate(final TestedClass mock)
+   @Test // Uses of JMockit API: 4
+   public void stubbingWithCallbacksUsingDelegate(final MockedClass mock)
    {
       new NonStrictExpectations()
       {
@@ -388,14 +390,14 @@ public final class JavadocExamples_JMockit_Test
       assertEquals("called with arguments: foo", mock.someMethod("foo"));
    }
 
-   @Test
+   @Test // Uses of JMockit API: 2
    public void stubbingWithCallbacksUsingMockUp()
    {
-      final TestedClass mock = new TestedClass();
+      final MockedClass mock = new MockedClass();
 
-      new MockUp<TestedClass>()
+      new MockUp<MockedClass>()
       {
-         TestedClass it;
+         MockedClass it;
 
          @Mock
          String someMethod(String s)
@@ -408,60 +410,40 @@ public final class JavadocExamples_JMockit_Test
       assertEquals("called with arguments: foo", mock.someMethod("foo"));
    }
 
-   static final class TestedClass
-   {
-      public String someMethod(String s) { return s; }
-   }
-
-   @Test // essentially equivalent to "spyingOnRealObjects", with some differences in behavior
+   // Equivalent to "spyingOnRealObjects", but real implementations execute only on replay.
+   @Test // Uses of JMockit API: 5
    public void dynamicPartialMocking()
    {
-      final List<String> partialMock = new LinkedList<String>();
+      final MockedClass dynamicMock = new MockedClass();
 
       // Optionally, you can record some invocations:
-      new NonStrictExpectations(partialMock)
+      new NonStrictExpectations(dynamicMock)
       {
          {
-            partialMock.size(); result = 100;
+            dynamicMock.getSomeValue(); result = 100;
 
-            // When recording invocations, real methods are never called, so this would not throw an
-            // IndexOutOfBoundsException, but it would prevent the real "get" method from being
-            // executed in the replay phase:
-            // partialMock.get(1); result = "an item";
-            // TODO: allow execution of a mocked method when no matching invocation was recorded
+            // When recording invocations the real implementations are never executed, so this call
+            // would never throw an exception:
+            dynamicMock.getItem(1); result = "an item";
          }
       };
 
-      // Using the mock calls real methods, except those with recorded invocations:
-      partialMock.add("one");
-      partialMock.add("two");
+      // Using the mock calls real methods, except for calls which match recorded expectations:
+      dynamicMock.doSomething("one", true);
+      dynamicMock.doSomething("two", false);
 
-      assertEquals("one", partialMock.get(0));
-      assertEquals("two", partialMock.get(1));
-      assertEquals(100, partialMock.size());
+      assertEquals("one", dynamicMock.getItem(0));
+      assertEquals("an item", dynamicMock.getItem(1));
+      assertEquals(100, dynamicMock.getSomeValue());
 
-      // Optionally, you can verify the actual execution of recorded invocations:
+      // Optionally, you can verify invocations to the dynamically mocked types/objects:
       new Verifications()
       {
          {
-            // This works, but adding a "times = 1;" assignment when recording the invocation would
-            // have been simpler:
-            partialMock.size();
-
-            // Since no invocations were recorded for the "add" method, it was not mocked during
-            // the replay phase. Therefore the following call will NOT verify anything; instead, it
-            // will execute the real method.
-            // If a test really needs to verify the execution of such a method, it can be done by
-            // recording a strict invocation, or by specifying the minimum or exact invocation count
-            // on the recording of a non-strict invocation; but then the real method would not be
-            // executed in the replay phase.
-            partialMock.add("three");
+            // When verifying invocations, real implementations are never executed:
+            dynamicMock.doSomething("one", true);
+            dynamicMock.doSomething("two", anyBoolean);
          }
       };
-
-      // From the above, we can see that invocations to REAL (unmocked) methods cannot be explicitly
-      // verified with JMockit. It is doubtful that such a thing would be useful in real-world
-      // tests, since the point of not mocking a method is to allow it to be exercised normally as
-      // part of the code under test.
    }
 }
