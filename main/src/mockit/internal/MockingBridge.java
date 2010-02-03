@@ -1,6 +1,6 @@
 /*
- * JMockit Core
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,6 +24,7 @@
  */
 package mockit.internal;
 
+import java.io.File;
 import java.lang.reflect.*;
 
 import mockit.internal.expectations.*;
@@ -82,10 +83,12 @@ public final class MockingBridge implements InvocationHandler
 
       try {
          int mockAccess = (Integer) args[1];
+         boolean withRealImpl = targetId == RECORD_OR_REPLAY && (Integer) args[5] == 1;
 
          return
             RecordAndReplayExecution.recordOrReplay(
-               mocked, mockAccess, mockClassInternalName, mockName + mockDesc, mockArgs);
+               mocked, mockAccess, mockClassInternalName, mockName + mockDesc, withRealImpl,
+               mockArgs);
       }
       finally {
          TestRun.exitNoMockingZone();
@@ -94,15 +97,15 @@ public final class MockingBridge implements InvocationHandler
 
    private boolean isCallThatParticipatesInClassLoading(Object mocked)
    {
-      if (mocked != null && mocked.getClass() == java.io.File.class) {
+      if (mocked != null && mocked.getClass() == File.class) {
          StackTraceElement[] st = new Throwable().getStackTrace();
 
          for (int i = 3; i < st.length; i++) {
             StackTraceElement ste = st[i];
 
             if (
-               "ClassLoader.java".equals(ste.getFileName()) && 
-               "loadClassInternal".equals(ste.getMethodName())
+               "ClassLoader.java".equals(ste.getFileName()) &&
+               "loadClass".equals(ste.getMethodName())
             ) {
                return true;
             }
@@ -117,7 +120,7 @@ public final class MockingBridge implements InvocationHandler
       mockName = (String) args[3];
       mockDesc = (String) args[4];
 
-      int i = targetId < FIRST_TARGET_WITH_EXTRA_ARG ? 5 : 6;
+      int i = targetId > RECORD_OR_REPLAY && targetId < FIRST_TARGET_WITH_EXTRA_ARG ? 5 : 6;
 
       if (args.length > i) {
          mockArgs = new Object[args.length - i];
