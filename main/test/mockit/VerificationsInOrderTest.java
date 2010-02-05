@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations & Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -39,7 +39,7 @@ public final class VerificationsInOrderTest
       public void save() {}
    }
 
-   @Mocked private Dependency mock;
+   @Mocked Dependency mock;
 
    private void exerciseCodeUnderTest()
    {
@@ -111,12 +111,12 @@ public final class VerificationsInOrderTest
 
       new VerificationsInOrder()
       {{
-         mock.prepare(); repeatsAtLeast(1);
-         mock.setSomethingElse(withAny(""));
-         mock.setSomething(withAny(0)); repeats(1, 2);
+         mock.prepare(); minTimes = 1;
+         mock.setSomethingElse(anyString);
+         mock.setSomething(anyInt); minTimes = 1; maxTimes = 2;
          mock.editABunchMoreStuff();
-         mock.notifyBeforeSave(); repeatsAtMost(1);
-         mock.save(); repeats(1);
+         mock.notifyBeforeSave(); maxTimes = 1;
+         mock.save(); times = 1;
       }};
    }
 
@@ -138,8 +138,8 @@ public final class VerificationsInOrderTest
 
       new VerificationsInOrder()
       {{
-         mock.setSomething(withAny(0));
-         mock.setSomethingElse(withAny(""));
+         mock.setSomething(anyInt);
+         mock.setSomethingElse(anyString);
          mock.save();
       }};
    }
@@ -154,8 +154,8 @@ public final class VerificationsInOrderTest
       new VerificationsInOrder()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0));
-         mock.save(); repeatsAtLeast(0);
+         mock.setSomething(anyInt);
+         mock.save(); minTimes = 0;
       }};
    }
 
@@ -170,7 +170,7 @@ public final class VerificationsInOrderTest
       new VerificationsInOrder()
       {{
          mock.prepare();
-         mock.save(); repeatsAtLeast(0);
+         mock.save(); minTimes = 0;
       }};
    }
 
@@ -182,8 +182,8 @@ public final class VerificationsInOrderTest
 
       new VerificationsInOrder()
       {{
-         mock.setSomething(withAny(0));
-         mock.save(); repeatsAtLeast(0);
+         mock.setSomething(anyInt);
+         mock.save(); minTimes = 0;
       }};
    }
 
@@ -196,8 +196,8 @@ public final class VerificationsInOrderTest
       new VerificationsInOrder()
       {{
          mock.prepare();
-         mock.editABunchMoreStuff(); repeatsAtLeast(0);
-         mock.setSomething(withAny(0));
+         mock.editABunchMoreStuff(); minTimes = 0;
+         mock.setSomething(anyInt);
       }};
    }
 
@@ -222,7 +222,7 @@ public final class VerificationsInOrderTest
 
       new VerificationsInOrder()
       {{
-         mock.setSomething(123); repeats(2);
+         mock.setSomething(123); times = 2;
       }};
    }
 
@@ -234,7 +234,7 @@ public final class VerificationsInOrderTest
 
       new VerificationsInOrder()
       {{
-         mock.setSomething(123); repeatsAtMost(1);
+         mock.setSomething(123); maxTimes = 1;
       }};
    }
 
@@ -260,7 +260,7 @@ public final class VerificationsInOrderTest
 
       new VerificationsInOrder(2)
       {{
-         mock.setSomething(123); repeatsAtLeast(2);
+         mock.setSomething(123); minTimes = 2;
       }};
    }
 
@@ -272,7 +272,7 @@ public final class VerificationsInOrderTest
 
       new VerificationsInOrder()
       {{
-         mock.setSomething(withAny(1)); repeats(2);
+         mock.setSomething(anyInt); times = 2;
       }};
    }
 
@@ -284,7 +284,7 @@ public final class VerificationsInOrderTest
 
       new VerificationsInOrder(2)
       {{
-         mock.setSomething(withAny(1));
+         mock.setSomething(anyInt);
       }};
    }
 
@@ -298,7 +298,7 @@ public final class VerificationsInOrderTest
 
       new VerificationsInOrder(2)
       {{
-         mock.setSomething(withAny(1));
+         mock.setSomething(anyInt);
          mock.save();
       }};
    }
@@ -322,7 +322,7 @@ public final class VerificationsInOrderTest
       new VerificationsInOrder()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0));
+         mock.setSomething(anyInt);
       }};
    }
 
@@ -333,8 +333,8 @@ public final class VerificationsInOrderTest
 
       new VerificationsInOrder()
       {{
-         mock.prepare(); repeats(1);
-         mock.setSomething(withAny(0)); repeats(2);
+         mock.prepare(); times = 1;
+         mock.setSomething(anyInt); times = 2;
       }};
    }
 
@@ -347,9 +347,9 @@ public final class VerificationsInOrderTest
 
       new VerificationsInOrder()
       {{
-         mock.setSomething(withAny(0));
-         mock.setSomething(withAny(1));
-         mock.setSomethingElse(withAny(""));
+         mock.setSomething(anyInt);
+         mock.setSomething(anyInt);
+         mock.setSomethingElse(anyString);
       }};
    }
 
@@ -363,7 +363,56 @@ public final class VerificationsInOrderTest
       new VerificationsInOrder()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0)); repeats(2);
+         mock.setSomething(anyInt); times = 2;
+      }};
+   }
+
+   @Test
+   public void verifyTwoIndependentSequencesOfInvocationsWhichOccurSeparately()
+   {
+      // First sequence:
+      mock.setSomething(1);
+      mock.setSomething(2);
+
+      // Second sequence:
+      mock.setSomething(10);
+      mock.setSomething(20);
+
+      // Verifies first sequence:
+      new VerificationsInOrder()
+      {{
+         mock.setSomething(1);
+         mock.setSomething(2);
+      }};
+
+      // Verifies second sequence:
+      new VerificationsInOrder()
+      {{
+         mock.setSomething(10);
+         mock.setSomething(20);
+      }};
+   }
+
+   @Test
+   public void verifyTwoIndependentSequencesOfInvocationsWhichAreMixedTogether()
+   {
+      mock.setSomething(1);  // first sequence
+      mock.setSomething(10); // second sequence
+      mock.setSomething(2);  // first sequence
+      mock.setSomething(20); // second sequence
+
+      // Verifies second sequence:
+      new VerificationsInOrder()
+      {{
+         mock.setSomething(10);
+         mock.setSomething(20);
+      }};
+
+      // Verifies first sequence:
+      new VerificationsInOrder()
+      {{
+         mock.setSomething(1);
+         mock.setSomething(2);
       }};
    }
 }
