@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -39,32 +39,36 @@ import static org.junit.Assert.*;
 
 public final class AnimationManagerTest
 {
+   @BeforeClass
+   public static void initializeAWTStaticState()
+   {
+      JComponent.getDefaultLocale();
+   }
+
    @Test
    public void recreateImageForContainerOfSizeZero(final JComponent container)
    {
-      new Expectations()
-      {
-         {
-            container.getWidth(); returns(0);
-            container.getHeight(); returns(0);
-            // Nothing more expected.
-         }
-      };
-
       // recreateImage() is called by the constructor.
       new AnimationManager(container);
+
+      new Verifications()
+      {
+         {
+            container.createImage(anyInt, anyInt); times = 0;
+         }
+      };
    }
 
    @Test
    public void recreateImageForContainerOfSizeNotZeroAndBackgroundStillUndefined(
       final JComponent container)
    {
-      new Expectations()
+      new NonStrictExpectations()
       {
          {
-            container.getWidth(); returns(100);
-            container.getHeight(); returns(80);
-            container.createImage(100, 80);
+            container.getWidth(); result = 100;
+            container.getHeight(); result = 80;
+            container.createImage(100, 80); times = 1;
          }
       };
 
@@ -72,24 +76,25 @@ public final class AnimationManagerTest
       new AnimationManager(container);
    }
 
+   @SuppressWarnings({"TooBroadScope"})
    @Test
    public void recreateImageForContainerOfSizeNotZeroAndBackgroundAlreadyDefined(
       final JComponent container, final BufferedImage transitionImageBG)
    {
-      final int cw = 100;
-      final int ch = 80;
-
       new Expectations()
       {
          {
-            container.getWidth(); returns(cw);
-            container.getHeight(); returns(ch);
+            int cw = 100;
+            int ch = 80;
+
+            container.getWidth(); result = cw;
+            container.getHeight(); result = ch;
             container.createImage(cw, ch);
 
-            container.getWidth(); returns(cw);
-            container.getHeight(); returns(ch);
-            transitionImageBG.getWidth(); returns(cw);
-            transitionImageBG.getHeight(); returns(ch);
+            container.getWidth(); result = cw;
+            container.getHeight(); result = ch;
+            transitionImageBG.getWidth(); result = cw;
+            transitionImageBG.getHeight(); result = ch;
          }
       };
 
@@ -160,8 +165,8 @@ public final class AnimationManagerTest
          ComponentState componentState;
 
          {
-            animationState = new AnimationState(component, false);   // first addEnd
-            animationState.setEnd(new ComponentState(component)); // second addEnd
+            animationState = new AnimationState(component, false); // first addEnd
+            animationState.setEnd(new ComponentState(component));  // second addEnd
          }
       };
 
