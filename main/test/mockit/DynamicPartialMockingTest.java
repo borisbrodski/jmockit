@@ -50,6 +50,9 @@ public final class DynamicPartialMockingTest
 
    static final class SubCollaborator extends Collaborator
    {
+      SubCollaborator() { this(1); }
+      SubCollaborator(int value) { super(value); }
+
       String format() { return String.valueOf(value); }
    }
 
@@ -192,7 +195,7 @@ public final class DynamicPartialMockingTest
       assertEquals("test", collaborator.format());
 
       // Not mocked:
-      assertEquals(-1, collaborator.getValue());
+      assertEquals(1, collaborator.getValue());
       assertTrue(collaborator.simpleOperation(0, null, null));
 
       // Mocked sub-constructor/not mocked base constructor:

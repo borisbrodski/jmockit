@@ -151,7 +151,7 @@ final class ExpectationsModifier extends BaseClassModifier
       validateModificationOfNativeMethod(access, name);
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
 
-      final boolean visitingConstructor = "<init>".equals(name);
+      boolean visitingConstructor = "<init>".equals(name);
 
       if (visitingConstructor && superClassName != null) {
          redefinedConstructorDesc = desc;
@@ -173,17 +173,7 @@ final class ExpectationsModifier extends BaseClassModifier
 
       if (enableExecutionOfRealImplementation) {
          generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
-
-         return new MethodAdapter(mw)
-         {
-            @Override
-            public void visitMethodInsn(int opcode, String owner, String name2, String desc2)
-            {
-               if (opcode != INVOKESPECIAL || !visitingConstructor) {
-                  super.visitMethodInsn(opcode, owner, name2, desc2);
-               }
-            }
-         };
+         return visitingConstructor ? new DynamicConstructorModifier() : new MethodAdapter(mw);
       }
 
       generateReturnWithObjectAtTopOfTheStack(desc);
@@ -340,5 +330,20 @@ final class ExpectationsModifier extends BaseClassModifier
    String getRedefinedConstructorDesc()
    {
       return redefinedConstructorDesc;
+   }
+
+   private final class DynamicConstructorModifier extends MethodAdapter
+   {
+      DynamicConstructorModifier() { super(mw); }
+
+      @Override
+      public void visitMethodInsn(int opcode, String owner, String name, String desc)
+      {
+         if (opcode == INVOKESPECIAL && (owner.equals(superClassName) || owner.equals(className))) {
+            return;
+         }
+
+         mw.visitMethodInsn(opcode, owner, name, desc);
+      }
    }
 }
