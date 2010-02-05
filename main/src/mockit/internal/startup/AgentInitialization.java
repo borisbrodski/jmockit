@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -25,14 +25,15 @@
 package mockit.internal.startup;
 
 import java.io.*;
-import java.net.*;
-import java.security.*;
+import java.util.regex.*;
 
 public final class AgentInitialization
 {
+   private static final Pattern JAR_REGEX = Pattern.compile(".*jmockit[-.\\d]*.jar");
+
    public void initializeAccordingToJDKVersion()
    {
-      String jarFilePath = discoverPathToJarFile();
+      String jarFilePath = findPathToJarFileFromClasspath();
 
       if (Startup.jdk6OrLater) {
          new JDK6AgentLoader(jarFilePath).loadAgent();
@@ -47,36 +48,18 @@ public final class AgentInitialization
       }
    }
 
-   private String discoverPathToJarFile()
-   {
-      CodeSource codeSource = AgentInitialization.class.getProtectionDomain().getCodeSource();
-
-      if (codeSource == null) {
-         return findPathToJarFileFromClasspath();
-      }
-
-      URI jarFileURI; // URI is needed to deal with spaces and non-ASCII characters
-
-      try {
-         jarFileURI = codeSource.getLocation().toURI();
-      }
-      catch (URISyntaxException e) {
-         throw new RuntimeException(e);
-      }
-
-      return new File(jarFileURI).getPath();
-   }
-
    private String findPathToJarFileFromClasspath()
    {
       String[] classPath = System.getProperty("java.class.path").split(File.pathSeparator);
 
       for (String cpEntry : classPath) {
-         if (cpEntry.matches(".*jmockit[-.\\d]*.jar")) {
+         if (JAR_REGEX.matcher(cpEntry).matches()) {
             return cpEntry;
          }
       }
 
-      return null;
+      throw new IllegalStateException(
+         "No jar file with name ending in \"jmockit.jar\" or \"jmockit-nnn.jar\" (where \"nnn\" " +
+         "is a version number) found in the classpath");
    }
 }
