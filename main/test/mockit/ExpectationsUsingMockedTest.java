@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,7 +24,11 @@
  */
 package mockit;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
+
+import javax.swing.*;
 
 import static org.junit.Assert.*;
 import org.junit.*;
@@ -206,12 +210,56 @@ public final class ExpectationsUsingMockedTest
       new Expectations()
       {
          {
-            mockDependency.doSomething(withAny(true)); repeatsAtLeast(2);
+            mockDependency.doSomething(anyBoolean); minTimes = 2;
          }
       };
 
       mockDependency.doSomething(true);
       mockDependency.doSomething(false);
       mockDependency.doSomething(true);
+   }
+
+   @Test
+   public void mockNothingAndStubNoStaticInitializers(@Mocked("") JComponent container)
+   {
+      assertEquals("Test", new JLabel("Test").getText());
+   }
+
+   static class ClassWithStaticInitializer
+   {
+      static boolean initialized = true;
+
+      static int initialized() { return initialized ? 1 : -1; }
+   }
+
+   @Test
+   public void onlyStubOutStaticInitializers()
+   {
+      new Expectations()
+      {
+         @Mocked("<clinit>") final ClassWithStaticInitializer unused = null;
+      };
+
+      assertEquals(-1, ClassWithStaticInitializer.initialized());
+   }
+
+   static class AnotherClassWithStaticInitializer
+   {
+      static boolean initialized = true;
+
+      static int initialized() { return initialized ? 1 : -1; }
+   }
+
+   @Test
+   public void mockEverythingWithoutStubbingStaticInitializers()
+   {
+      new Expectations()
+      {
+         @Mocked(methods = "<clinit>", inverse = true)
+         final AnotherClassWithStaticInitializer unused = null;
+      };
+
+      assertEquals(0, AnotherClassWithStaticInitializer.initialized());
+      assertTrue(AnotherClassWithStaticInitializer.initialized);
    }
 }

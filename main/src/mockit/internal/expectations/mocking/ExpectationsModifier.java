@@ -120,13 +120,6 @@ final class ExpectationsModifier extends BaseClassModifier
    public MethodVisitor visitMethod(
       int access, String name, String desc, String signature, String[] exceptions)
    {
-      if ("<clinit>".equals(name)) {
-         // Stub out any class initialization block, to avoid potential side effects in tests.
-         mw = super.visitMethod(access, name, desc, signature, exceptions);
-         generateEmptyImplementation();
-         return null;
-      }
-
       if (
          (access & METHOD_ACCESS_MASK) != 0 ||
          isProxy && isConstructorOrSystemMethodNotToBeMocked(name, desc) ||
@@ -139,6 +132,14 @@ final class ExpectationsModifier extends BaseClassModifier
 
       boolean noFiltersToMatch = mockingCfg == null || mockingCfg.isEmpty();
       boolean matchesFilters = noFiltersToMatch || mockingCfg.matchesFilters(name, desc);
+
+      if ("<clinit>".equals(name) && matchesFilters) {
+         // Stub out any class initialization block (unless specified otherwise), to avoid potential
+         // side effects in tests.
+         mw = super.visitMethod(access, name, desc, signature, exceptions);
+         generateEmptyImplementation();
+         return null;
+      }
 
       if (!matchesFilters || noFiltersToMatch && isMethodFromObject(name, desc)) {
          // Copies original without modifications if it doesn't pass the filters, or when it's an

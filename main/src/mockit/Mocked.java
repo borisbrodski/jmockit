@@ -68,7 +68,8 @@ import java.lang.annotation.*;
  * attribute.
  * By default, all methods (including those which are {@code static}, {@code final},
  * {@code private}, {@code abstract}, or {@code native}) and constructors in the target classes will
- * be mocked.
+ * be mocked; in addition, all static class initializers (if any, and including assignments to
+ * non-constant static fields) will be stubbed out.
  * The only exceptions are the overrides (if any) for the following {@code java.lang.Object}
  * methods: {@code equals(Object)}, {@code hashCode()}, {@code toString()}, and {@code finalize()}.
  * For reasons of safety and also because mocking such methods isn't typically needed in real tests,
@@ -131,7 +132,16 @@ public @interface Mocked
     * If {@code (paramTypeName...)} is omitted the filter matches methods with any parameters.
     * <p/>
     * If no filters are specified, then all methods and constructors declared in the target class
-    * are mocked.
+    * are mocked, and all static initializers are stubbed out.
+    * <p/>
+    * A filter containing just the empty string matches <em>no</em> methods, no constructors, and no 
+    * static initializers of the target class; this can be used to obtain a mock instance where
+    * nothing is mocked or stubbed out.
+    * <p/>
+    * The special filter {@code "<clinit>"} can be used to match the static initializers of the
+    * target class. If only this filter is specified then the static initializers are stubbed out
+    * and no methods or constructors are mocked; the opposite can be achieved by using the
+    * {@link #inverse} attribute.
     * <p/>
     * For constructors, there is special syntax that can be used inside a mock filter to specify
     * which one of the constructors in the super-class is to be called by the mock constructor, when

@@ -801,6 +801,7 @@
     <dictionary name="Administrator">
       <words>
         <w>abcd</w>
+        <w>anim</w>
         <w>animatedtransitions</w>
         <w>args</w>
         <w>arraycopy</w>
