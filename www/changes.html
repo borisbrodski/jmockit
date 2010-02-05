@@ -42,6 +42,34 @@
          </li>
       </ol>
    </li>
+   <li>
+      The <strong>dynamic partial mocking</strong> feature (Expectations API) was re-implemented,
+      with richer semantics (the API itself was not changed).
+      Now only the invocations to dynamically mocked types that occur during the replay phase and
+      that actually match a recorded expectation will be mocked; all other invocations will cause
+      the real method/constructor implementation to be executed.
+      Additionally, invocations to such mocked types can also be verified inside verification
+      blocks.
+      (Invocations to mocked types will never execute the real implementation when they occur
+      <em>inside</em> an expectation or verification block.)
+   </li>
+   <li>
+      Fixed an issue introduced in the previous release, when <em>static initializers</em> became
+      stubbed out by default (Expectations API): mock filters (where <code>"&lt;clinit>"</code>
+      specifies static initializers) were not considering the inclusion/exclusion of static
+      initializers.
+      In particular, the empty filter <code>@Mocked("")</code> previously excluded all methods and
+      constructors from being mocked, but still caused static initializers to be stubbed out;
+      now they are also ignored.
+   </li>
+   <li>
+      A few fixes and enhancements to JMockit's internal auto-initialization mechanisms:
+      <code>jmockit.jar</code> (or a versioned jar name) can now be loaded from a remote
+      file system without triggering a security-related exception; when running under JDK 1.5, the
+      presence of <code>jmockit.jar</code> in the classpath when <code>-javaagent:jmockit.jar</code>
+      was not used will no longer cause a JMockit-specific exception to be thrown, unless the
+      mocking API is actually used in a test.
+   </li>
 </ul>
 
 <h3>Current release</h3>
