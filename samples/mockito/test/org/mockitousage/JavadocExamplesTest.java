@@ -14,7 +14,7 @@ import org.mockito.stubbing.*;
 import org.hamcrest.beans.*;
 
 /**
- * File created from code snippets in
+ * File created from code snippets in the official
  * <a href="http://mockito.googlecode.com/svn/branches/1.7/javadoc/org/mockito/Mockito.html">Mockito documentation</a>,
  * with some minor changes.
  */
@@ -273,5 +273,36 @@ public class JavadocExamplesTest
       // Optionally, you can verify:
       verify(spy).doSomething("one", true); // the real "doSomething" method is not called here
       verify(spy).doSomething(eq("two"), anyBoolean());
+   }
+
+   @Test // Uses of Mockito API: 6
+   public void capturingSingleArgumentForVerification()
+   {
+      MockedClass mock = mock(MockedClass.class);
+
+      mock.doSomething(new Person("John"));
+      mock.doSomething(new Person("Jane"));
+
+      ArgumentCaptor<Person> peopleCaptor = ArgumentCaptor.forClass(Person.class);
+      verify(mock, times(2)).doSomething(peopleCaptor.capture());
+
+      List<Person> capturedPeople = peopleCaptor.getAllValues();
+      assertEquals("John", capturedPeople.get(0).getName());
+      assertEquals("Jane", capturedPeople.get(1).getName());
+   }
+
+   @Test // Uses of Mockito API: 8
+   public void capturingMultipleArgumentsForVerification()
+   {
+      MockedClass mock = mock(MockedClass.class);
+
+      mock.doSomething("test", true);
+
+      ArgumentCaptor<String> captor1 = ArgumentCaptor.forClass(String.class);
+      ArgumentCaptor<Boolean> captor2 = ArgumentCaptor.forClass(boolean.class);
+      verify(mock).doSomething(captor1.capture(), captor2.capture());
+
+      assertEquals("test", captor1.getValue());
+      assertTrue(captor2.getValue());
    }
 }

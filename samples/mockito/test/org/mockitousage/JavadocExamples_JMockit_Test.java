@@ -446,4 +446,48 @@ public final class JavadocExamples_JMockit_Test
          }
       };
    }
+
+   @Test // Uses of JMockit API: 5
+   public void validatingSingleArgumentForEachInvocation(final MockedClass mock)
+   {
+      mock.doSomething(new Person("John"));
+      mock.doSomething(new Person("Jane"));
+
+      new Verifications()
+      {
+         {
+            mock.doSomething((Person) any); times = 2;
+            forEachInvocation = new Object()
+            {
+               String[] expectedNames = {"John", "Jane"};
+
+               void validatePerson(Invocation i, Person p)
+               {
+                  assertEquals(expectedNames[i.getInvocationIndex()], p.getName());
+               }
+            };
+         }
+      };
+   }
+
+   @Test // Uses of JMockit API: 4
+   public void validatingMultipleArgumentsForEachInvocation(final MockedClass mock)
+   {
+      mock.doSomething("test", true);
+
+      new Verifications()
+      {
+         {
+            mock.doSomething(anyString, anyBoolean);
+            forEachInvocation = new Object()
+            {
+               void validateArguments(String s, boolean b)
+               {
+                  assertEquals("test", s);
+                  assertTrue(b);
+               }
+            };
+         }
+      };
+   }
 }
