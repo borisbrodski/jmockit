@@ -58,7 +58,6 @@ final class ExpectationsModifier extends BaseClassModifier
    private String superClassName;
    private String className;
    private String baseClassNameForCapturedInstanceMethods;
-   private int extraMethodAccess;
    private boolean enableExecutionOfRealImplementation;
    private boolean isProxy;
    private String defaultFilters;
@@ -88,14 +87,9 @@ final class ExpectationsModifier extends BaseClassModifier
       baseClassNameForCapturedInstanceMethods = internalClassName;
    }
 
-   public void setExtraMethodAccess(int extraMethodAccess)
+   public void enableExecutionOfRealImplementation()
    {
-      this.extraMethodAccess = extraMethodAccess;
-   }
-
-   public void setEnableExecutionOfRealImplementation(boolean enableExecutionOfRealImplementation)
-   {
-      this.enableExecutionOfRealImplementation = enableExecutionOfRealImplementation;
+      enableExecutionOfRealImplementation = true;
    }
 
    @Override
@@ -157,7 +151,7 @@ final class ExpectationsModifier extends BaseClassModifier
       validateModificationOfNativeMethod(access, name);
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
 
-      boolean visitingConstructor = "<init>".equals(name);
+      final boolean visitingConstructor = "<init>".equals(name);
 
       if (visitingConstructor && superClassName != null) {
          redefinedConstructorDesc = desc;
@@ -170,18 +164,26 @@ final class ExpectationsModifier extends BaseClassModifier
          internalClassName = baseClassNameForCapturedInstanceMethods;
       }
 
-      int adjustedAccess = extraMethodAccess + access;
-
       if (useMockingBridge) {
-         return generateCallToRecordOrReplayThroughMockingBridge(
-            adjustedAccess, name, desc, internalClassName);
+         return generateCallToHandlerThroughMockingBridge(access, name, desc, internalClassName);
       }
 
-      generateDirectCallToRecordOrReplay(internalClassName, adjustedAccess, name, desc);
+      generateDirectCallToHandler(
+         internalClassName, access, name, desc, enableExecutionOfRealImplementation);
 
       if (enableExecutionOfRealImplementation) {
          generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
-         return new MethodAdapter(mw);
+
+         return new MethodAdapter(mw)
+         {
+            @Override
+            public void visitMethodInsn(int opcode, String owner, String name2, String desc2)
+            {
+               if (opcode != INVOKESPECIAL || !visitingConstructor) {
+                  super.visitMethodInsn(opcode, owner, name2, desc2);
+               }
+            }
+         };
       }
 
       generateReturnWithObjectAtTopOfTheStack(desc);
@@ -305,20 +307,20 @@ final class ExpectationsModifier extends BaseClassModifier
       }
    }
 
-   private MethodVisitor generateCallToRecordOrReplayThroughMockingBridge(
+   private MethodVisitor generateCallToHandlerThroughMockingBridge(
       int access, String name, String desc, String internalClassName)
    {
       generateCallToMockingBridge(
-         MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, null);
+         MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc,
+         enableExecutionOfRealImplementation ? 1 : 0);
       generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
 
       if (isNative(access)) {
          generateEmptyImplementation(desc);
          return null;
       }
-      else {
-         return new MethodAdapter(mw);
-      }
+
+      return new MethodAdapter(mw);
    }
 
    private void generateDecisionBetweenReturningOrContinuingToRealImplementation(String desc)

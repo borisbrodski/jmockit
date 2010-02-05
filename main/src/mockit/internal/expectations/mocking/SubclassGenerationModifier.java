@@ -171,7 +171,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
       mw = super.visitMethod(ACC_PUBLIC, name, desc, signature, exceptions);
 
       if (mockingConfiguration == null || mockingConfiguration.matchesFilters(name, desc)) {
-         generateDirectCallToRecordOrReplay(className, access, name, desc);
+         generateDirectCallToHandler(className, access, name, desc, false);
          generateReturnWithObjectAtTopOfTheStack(desc);
          mw.visitMaxs(1, 0);
       }

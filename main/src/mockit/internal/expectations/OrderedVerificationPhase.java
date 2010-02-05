@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -217,7 +217,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
          argMatchers = invocation.arguments.getMatchers();
          handleInvocation(
             invocation.instance, 0, invocation.getClassDesc(),
-            invocation.getMethodNameAndDescription(), invocation.arguments.getValues());
+            invocation.getMethodNameAndDescription(), false, invocation.arguments.getValues());
 
          if (recordAndReplay.errorThrown != null) {
             return recordAndReplay.errorThrown;

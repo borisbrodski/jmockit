@@ -43,12 +43,12 @@ public final class ExpectedInvocation
    private Object defaultReturnValue;
 
    public ExpectedInvocation(
-      Object mock, int methodAccess, String mockedClassDesc, String mockNameAndDesc,
+      Object mock, int access, String mockedClassDesc, String mockNameAndDesc,
       boolean matchInstance, Object[] args)
    {
       instance = mock;
       this.matchInstance = matchInstance;
-      arguments = new InvocationArguments(methodAccess, mockedClassDesc, mockNameAndDesc, args);
+      arguments = new InvocationArguments(access, mockedClassDesc, mockNameAndDesc, args);
       invocationCause = new ExpectationError();
       defaultReturnValue = UNDEFINED_DEFAULT_RETURN;
    }

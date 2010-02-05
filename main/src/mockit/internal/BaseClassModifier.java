@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -162,8 +162,8 @@ public class BaseClassModifier extends ClassWriter
       mw.visitInsn(returnType.getOpcode(IRETURN));
    }
 
-   protected final void generateDirectCallToRecordOrReplay(
-      String className, int access, String name, String desc)
+   protected final void generateDirectCallToHandler(
+      String className, int access, String name, String desc, boolean withRealImpl)
    {
       // First argument: the mock instance, if any.
       boolean isStatic = generateCodeToPassThisOrNullIfStaticMethod(access);
@@ -177,13 +177,16 @@ public class BaseClassModifier extends ClassWriter
       // Fourth argument: method signature.
       mw.visitLdcInsn(name + desc);
 
-      // Fifth argument: call arguments.
+      // Fifth argument: whether real implementation is available or not
+      mw.visitInsn(ICONST_0 + (withRealImpl ? 1 : 0));
+      
+      // Sixth argument: call arguments.
       Type[] argTypes = Type.getArgumentTypes(desc);
       generateCodeToPassMethodArgumentsAsVarargs(isStatic, argTypes);
 
       mw.visitMethodInsn(
          INVOKESTATIC, "mockit/internal/expectations/RecordAndReplayExecution", "recordOrReplay",
-         "(Ljava/lang/Object;ILjava/lang/String;Ljava/lang/String;" +
+         "(Ljava/lang/Object;ILjava/lang/String;Ljava/lang/String;Z" +
          "[Ljava/lang/Object;)Ljava/lang/Object;");
    }
 

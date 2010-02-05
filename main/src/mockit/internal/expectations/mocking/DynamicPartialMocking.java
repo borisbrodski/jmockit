@@ -26,11 +26,9 @@ package mockit.internal.expectations.mocking;
 
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.Map.*;
 
 import mockit.external.asm.*;
 import mockit.internal.*;
-import mockit.internal.expectations.invocation.*;
 import mockit.internal.filtering.*;
 import mockit.internal.util.*;
 
@@ -45,17 +43,13 @@ public final class DynamicPartialMocking
    }};
 
    private final List<Class<?>> targetClasses;
-   private final Map<Class<?>, List<MockFilter>> classesAndMockFilters;
    private final Map<Class<?>, byte[]> modifiedClassfiles;
    private MockingConfiguration mockingCfg;
-   private boolean firstRedefinition;
 
    public DynamicPartialMocking()
    {
       targetClasses = new ArrayList<Class<?>>(2);
-      classesAndMockFilters = new LinkedHashMap<Class<?>, List<MockFilter>>();
       modifiedClassfiles = new HashMap<Class<?>, byte[]>();
-      firstRedefinition = true;
    }
 
    public List<Class<?>> getTargetClasses()
@@ -119,61 +113,11 @@ public final class DynamicPartialMocking
 
       ExpectationsModifier modifier =
          new ExpectationsModifier(realClass.getClassLoader(), classReader, mockingCfg, null);
-
-      if (firstRedefinition) {
-         modifier.setExtraMethodAccess(InvocationArguments.ACC_REAL_IMPL);
-      }
-      else {
-         modifier.setEnableExecutionOfRealImplementation(true);
-      }
+      modifier.enableExecutionOfRealImplementation();
 
       classReader.accept(modifier, false);
       byte[] modifiedClass = modifier.toByteArray();
 
       modifiedClassfiles.put(realClass, modifiedClass);
-      classesAndMockFilters.put(realClass, new ArrayList<MockFilter>());
-   }
-
-   public void addRecordedInvocation(ExpectedInvocation invocation)
-   {
-      String targetClassName = invocation.getClassName();
-
-      for (Entry<Class<?>, List<MockFilter>> classAndFilters : classesAndMockFilters.entrySet()) {
-         Class<?> targetClass = classAndFilters.getKey();
-
-         if (targetClass.getName().equals(targetClassName)) {
-            List<MockFilter> mockFilters = classAndFilters.getValue();
-            mockFilters.add(new InternalDescMockFilter(invocation.getMethodNameAndDescription()));
-            break;
-         }
-      }
-   }
-
-   public void restoreNonRecordedMethodsAndConstructors()
-   {
-      firstRedefinition = false;
-
-      for (Entry<Class<?>, List<MockFilter>> classAndFilters : classesAndMockFilters.entrySet()) {
-         Class<?> targetClass = classAndFilters.getKey();
-         List<MockFilter> mockFilters = classAndFilters.getValue();
-
-         mockingCfg = new MockingConfiguration(mockFilters, true);
-         redefineClass(targetClass);
-      }
-
-      new RedefinitionEngine().redefineMethods(modifiedClassfiles);
-      modifiedClassfiles.clear();
-   }
-
-   private static final class InternalDescMockFilter implements MockFilter
-   {
-      private final String mockNameAndDesc;
-
-      InternalDescMockFilter(String mockNameAndDesc) { this.mockNameAndDesc = mockNameAndDesc; }
-
-      public boolean matches(String name, String desc)
-      {
-         return mockNameAndDesc.equals(name + desc);
-      }
    }
 }

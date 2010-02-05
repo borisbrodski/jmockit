@@ -48,7 +48,8 @@ public final class RecordPhase extends TestOnlyPhase
 
    @Override
    Object handleInvocation(
-      Object mock, int mockAccess, String classDesc, String mockNameAndDesc, Object[] args)
+      Object mock, int mockAccess, String classDesc, String mockNameAndDesc, boolean withRealImpl,
+      Object[] args)
       throws Throwable
    {
       //noinspection AssignmentToMethodParameter

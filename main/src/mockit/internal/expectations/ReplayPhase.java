@@ -35,7 +35,6 @@ final class ReplayPhase extends Phase
    int currentStrictExpectationIndex;
    final List<Expectation> nonStrictInvocations;
    private Expectation nonStrictExpectation;
-   private boolean continueToRealImplementation;
 
    ReplayPhase(RecordAndReplayExecution recordAndReplay)
    {
@@ -64,29 +63,23 @@ final class ReplayPhase extends Phase
 
    @Override
    Object handleInvocation(
-      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, Object[] args)
+      Object mock, int mockAccess, String mockClassDesc, String mockDesc, boolean withRealImpl,
+      Object[] args)
       throws Throwable
    {
       nonStrictExpectation = null;
-      continueToRealImplementation = false;
+      boolean noExpectationFound = !findNonStrictExpectation(mock, mockClassDesc, mockDesc, args);
 
-      if (!findNonStrictExpectation(mock, mockClassDesc, mockNameAndDesc, args)) {
-         createExpectationIfNonStrictInvocation(
-            mock, mockAccess, mockClassDesc, mockNameAndDesc, args);
-
-         if (continueToRealImplementation) {
-            nonStrictInvocations.add(nonStrictExpectation);
-            nonStrictExpectation.constraints.incrementInvocationCount();
-            return Void.class;
-         }
+      if (noExpectationFound) {
+         createExpectationIfNonStrictInvocation(mock, mockAccess, mockClassDesc, mockDesc, args);
       }
 
       if (nonStrictExpectation != null) {
          nonStrictInvocations.add(nonStrictExpectation);
-         return updateConstraintsAndProduceResult(mock, args);
+         return updateConstraintsAndProduceResult(mock, noExpectationFound && withRealImpl, args);
       }
 
-      return handleStrictInvocation(mock, mockClassDesc, mockNameAndDesc, args);
+      return handleStrictInvocation(mock, mockClassDesc, mockDesc, withRealImpl, args);
    }
 
    private boolean findNonStrictExpectation(
@@ -107,9 +100,6 @@ final class ReplayPhase extends Phase
                nonStrictExpectation = nonStrict;
                return true;
             }
-            else if (invocation.arguments.isMethodWithRealImplementation()) {
-               continueToRealImplementation = true;
-            }
          }
       }
 
@@ -127,9 +117,14 @@ final class ReplayPhase extends Phase
       }
    }
 
-   private Object updateConstraintsAndProduceResult(Object object, Object[] args) throws Throwable
+   private Object updateConstraintsAndProduceResult(
+      Object mock, boolean executeRealImpl, Object[] args) throws Throwable
    {
       nonStrictExpectation.constraints.incrementInvocationCount();
+
+      if (executeRealImpl) {
+         return Void.class;
+      }
 
       if (nonStrictExpectation.constraints.isInvocationCountMoreThanMaximumExpected()) {
          recordAndReplay.errorThrown =
@@ -137,15 +132,20 @@ final class ReplayPhase extends Phase
          return null;
       }
 
-      return nonStrictExpectation.produceResult(object, args);
+      return nonStrictExpectation.produceResult(mock, args);
    }
 
    private Object handleStrictInvocation(
-      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] replayArgs)
+      Object mock, String mockClassDesc, String mockNameAndDesc, boolean withRealImpl,
+      Object[] replayArgs)
       throws Throwable
    {
       while (true) {
          if (currentExpectation == null) {
+            if (withRealImpl) {
+               return Void.class;
+            }
+
             recordAndReplay.errorThrown =
                new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, replayArgs)
                   .errorForUnexpectedInvocation();
@@ -168,6 +168,10 @@ final class ReplayPhase extends Phase
                   continue;
                }
 
+               if (withRealImpl) {
+                  return Void.class;
+               }
+
                recordAndReplay.errorThrown = error;
                return null;
             }
@@ -186,6 +190,9 @@ final class ReplayPhase extends Phase
          }
          else if (currentExpectation.constraints.isInvocationCountInExpectedRange()) {
             moveToNextExpectation();
+         }
+         else if (withRealImpl) {
+            return Void.class;
          }
          else {
             recordAndReplay.errorThrown =

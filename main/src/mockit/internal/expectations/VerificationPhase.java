@@ -57,7 +57,8 @@ public abstract class VerificationPhase extends TestOnlyPhase
 
    @Override
    final Object handleInvocation(
-      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, Object[] args)
+      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc,
+      boolean withRealImpl, Object[] args)
    {
       if (pendingError != null) {
          recordAndReplay.errorThrown = pendingError;

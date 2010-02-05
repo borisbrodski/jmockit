@@ -34,7 +34,6 @@ import mockit.internal.util.*;
 
 public final class InvocationArguments
 {
-   public static int ACC_REAL_IMPL = 0x8000;
    private static final Object[] NULL_VARARGS = new Object[1];
 
    final String classDesc;
@@ -43,17 +42,12 @@ public final class InvocationArguments
    private Object[] invocationArgs;
    private List<Matcher<?>> matchers;
 
-   InvocationArguments(int methodAccess, String classDesc, String methodNameAndDesc, Object[] args)
+   InvocationArguments(int access, String classDesc, String methodNameAndDesc, Object[] args)
    {
+      methodAccess = access;
       this.classDesc = classDesc;
       this.methodNameAndDesc = methodNameAndDesc;
-      this.methodAccess = methodAccess;
       invocationArgs = args;
-   }
-
-   public boolean isMethodWithRealImplementation()
-   {
-      return (methodAccess & ACC_REAL_IMPL) != 0;
    }
 
    public Object[] getValues()
