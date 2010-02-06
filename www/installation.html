@@ -90,31 +90,55 @@
    as part of a "User Library".
 </p>
 
+<h4 id="ant">Running tests with the JUnit Ant task</h4>
+<p>
+   When using the <code>&lt;junit></code> element in a <code>build.xml</code> script, it's
+   important to use a separate JVM instance. For example, something like the following:
+</p>
+<pre><code>&lt;junit fork="yes" forkmode="once" dir="directoryContainingJars">
+   &lt;!-- If needed (eg, when running on JDK 1.5), uncomment the following JVM argument:
+   &lt;jvmarg value="-javaagent:jmockit.jar"/> -->
+
+   &lt;classpath path="jmockit.jar"/>
+
+   &lt;!-- To generate (if desired) a code coverage report: -->
+   &lt;classpath path="jmockit-coverage-htmlfull.jar"/>
+
+   &lt;!-- additional classpath entries, including one for the appropriate junit.jar -->
+
+   &lt;batchtest>
+      &lt;!-- filesets specifying the desired test classes -->
+   &lt;/batchtest>
+&lt;/junit>
+</code></pre>
+<p>
+   For a complete example, see the <strong><code>"sampleTests"</code></strong> target in the
+   <code>build.xml</code> file found inside the full distribution.
+</p>
+
 <h3 id="maven">Using JMockit in a Maven project</h3>
 <p>
    The JMockit artifacts, including a binary jar and a sources jar for each release, are located in
    the <a href="http://download.java.net/maven/2/">Java.net Maven 2 Repository</a>.
    Therefore, you might need to add the following to your Maven configuration:
 </p>
-<pre>
-      &lt;repository>
-         &lt;id>maven2-repository.dev.java.net&lt;/id>
-         &lt;name>Java.net Repository for Maven&lt;/name>
-         &lt;url>http://download.java.net/maven/2/&lt;/url>
-      &lt;/repository>
-</pre>
+<pre><code>&lt;repository>
+   &lt;id>maven2-repository.dev.java.net&lt;/id>
+   &lt;name>Java.net Repository for Maven&lt;/name>
+   &lt;url>http://download.java.net/maven/2/&lt;/url>
+&lt;/repository>
+</code></pre>
 <p>
    For any project containing JMockit tests, add the following dependency to the
    <code>pom.xml</code> file:
 </p>
-<pre>
-      &lt;dependency>
-         &lt;groupId>mockit&lt;/groupId>
-         &lt;artifactId>jmockit&lt;/artifactId>
-         &lt;version>0.996&lt;/version>
-         &lt;scope>test&lt;/scope>
-      &lt;/dependency>
-</pre>
+<pre><code>&lt;dependency>
+   &lt;groupId>mockit&lt;/groupId>
+   &lt;artifactId>jmockit&lt;/artifactId>
+   &lt;version>0.996&lt;/version>
+   &lt;scope>test&lt;/scope>
+&lt;/dependency>
+</code></pre>
 <p>
    This dependency should come <em>before</em> the <code>junit</code> dependency, if any.
 </p>
@@ -123,14 +147,13 @@
    <code>-javaagent</code> initialization parameter. This can be done in the Maven Surefire plug-in
    as follows:
 </p>
-<pre>
-      &lt;plugin>
-         &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
-         &lt;configuration>
-            &lt;argLine>-javaagent:"${settings.localRepository}"/mockit/jmockit/0.996/jmockit-0.996.jar&lt;/argLine>
-         &lt;/configuration>
-      &lt;/plugin>
-</pre>
+<pre><code>&lt;plugin>
+   &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
+   &lt;configuration>
+      &lt;argLine>-javaagent:"${settings.localRepository}"/mockit/jmockit/0.996/jmockit-0.996.jar&lt;/argLine>
+   &lt;/configuration>
+&lt;/plugin>
+</code></pre>
 <p>
    Note that the above JVM parameter is not required when using JDK 1.6 (or newer) to run tests.
    Even if you have to deploy production code in a JDK 1.5 environment, consider using JDK 1.6 in
@@ -141,15 +164,14 @@
 <p>
    If using JDK 1.6 on Mac OS X, you should have the following extra dependency in your project:
 </p>
-<pre>
-      &lt;dependency>
-         &lt;groupId>com.sun&lt;/groupId>
-         &lt;artifactId>tools&lt;/artifactId>
-         &lt;version>1.6.0&lt;/version>
-         &lt;scope>system&lt;/scope>
-         &lt;systemPath>${java.home}/../lib/tools.jar&lt;/systemPath>
-      &lt;/dependency>
-</pre>
+<pre><code>&lt;dependency>
+   &lt;groupId>com.sun&lt;/groupId>
+   &lt;artifactId>tools&lt;/artifactId>
+   &lt;version>1.6.0&lt;/version>
+   &lt;scope>system&lt;/scope>
+   &lt;systemPath>${java.home}/../lib/tools.jar&lt;/systemPath>
+&lt;/dependency>
+</code></pre>
 <p>
    This dependency is <em>not</em> needed in a Windows or Linux environment when using a Sun HotSpot
    JDK 1.6+ or an Oracle JRockit JDK 1.6+.
