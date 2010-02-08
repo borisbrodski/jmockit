@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -43,8 +43,8 @@ public final class AnimationManagerInitTest
    @Mocked AnimationState animationState;
    @Mocked ComponentState componentState;
 
-   private JComponent component;
-   private AnimationManager manager;
+   JComponent component;
+   AnimationManager manager;
 
    @Before
    public void setUp()
@@ -65,8 +65,8 @@ public final class AnimationManagerInitTest
          Graphics gImg;
 
          {
-            container.createImage(100, 100); returns(bgImage);
-            bgImage.getGraphics(); returns(gImg);
+            container.createImage(100, 100); result = bgImage;
+            bgImage.getGraphics(); result = gImg;
          }
       };
    }
@@ -88,7 +88,7 @@ public final class AnimationManagerInitTest
          {
             // Expect checking of states to remove those components completely outside the
             // container:
-            animationState.getStart(); returns(componentState);
+            animationState.getStart(); result = componentState;
          }
       };
 
@@ -102,7 +102,7 @@ public final class AnimationManagerInitTest
       new NonStrictExpectations()
       {
          {
-            animationState.getEnd(); returns(componentState);
+            animationState.getEnd(); result = componentState;
          }
       };
 
@@ -116,8 +116,8 @@ public final class AnimationManagerInitTest
       new NonStrictExpectations()
       {
          {
-            animationState.getStart(); returns(componentState);
-            animationState.getEnd(); returns(componentState);
+            animationState.getStart(); result = componentState;
+            animationState.getEnd(); result = componentState;
          }
       };
 
@@ -130,11 +130,11 @@ public final class AnimationManagerInitTest
       new NonStrictExpectations()
       {
          {
-            animationState.getStart(); returns(componentState);
-            componentState.getX(); returns(-10);
-            componentState.getY(); returns(-8);
-            componentState.getWidth(); returns(8);
-            componentState.getHeight(); returns(6);
+            animationState.getStart(); result = componentState;
+            componentState.getX(); result = -10;
+            componentState.getY(); result = -8;
+            componentState.getWidth(); result = 8;
+            componentState.getHeight(); result = 6;
          }
       };
 
@@ -150,7 +150,7 @@ public final class AnimationManagerInitTest
       new NonStrictExpectations()
       {
          {
-            animationState.getStart(); returns(componentState);
+            animationState.getStart(); result = componentState;
          }
       };
 
