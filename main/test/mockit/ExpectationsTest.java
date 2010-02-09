@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -47,13 +47,101 @@ public final class ExpectationsTest
       void setValue(int value) { this.value = value; }
    }
 
+   @Test(expected = AssertionError.class)
+   public void expectOnlyOneInvocationOnLocalMockedTypeButExerciseOthersDuringReplay()
+   {
+      Collaborator collaborator = new Collaborator();
+
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService();
+         }
+      };
+
+      collaborator.provideSomeService();
+      collaborator.setValue(1);
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectOnlyOneInvocationOnTestScopedMockedTypeButExerciseOthersDuringReplay(
+      final Collaborator mock)
+   {
+      new Expectations()
+      {
+         {
+            mock.provideSomeService();
+         }
+      };
+
+      mock.provideSomeService();
+      mock.setValue(1);
+   }
+
+   @Test
+   public void recordNothingOnLocalMockedTypeButExerciseItDuringReplay()
+   {
+      Collaborator collaborator = new Collaborator();
+
+      new Expectations()
+      {
+         Collaborator mock;
+      };
+
+      collaborator.provideSomeService();
+   }
+
+   @Test
+   public void recordNothingOnTestScopedMockedTypeButExerciseItDuringReplay(Collaborator mock)
+   {
+      new Expectations() {};
+
+      mock.provideSomeService();
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectNothingOnLocalMockedTypeButExerciseItDuringReplay()
+   {
+      Collaborator collaborator = new Collaborator();
+
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); times = 0;
+         }
+      };
+
+      collaborator.setValue(2);
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectNothingOnTestScopedMockedTypeButExerciseItDuringReplay(final Collaborator mock)
+   {
+      new Expectations()
+      {
+         {
+            mock.setValue(anyInt); times = 0;
+         }
+      };
+
+      mock.setValue(2);
+   }
+
    @Test
    public void expectNothingWithExplicitEndRecording()
    {
       new Expectations()
       {
          Collaborator mock;
-      }.endRecording();
+
+         {
+            endRecording();
+         }
+      };
    }
 
    @Test(expected = IllegalStateException.class)
