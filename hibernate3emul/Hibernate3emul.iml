@@ -14,7 +14,7 @@
     <orderEntry type="library" name="JMockit" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Main" scope="TEST" />
-    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.1" level="project" />
     <orderEntry type="library" name="Maven: jta:jta:1.0.1b" level="project" />
     <orderEntry type="library" name="Maven: hibernate:hibernate:3.0" level="project" />
   </component>

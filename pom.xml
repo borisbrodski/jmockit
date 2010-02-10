@@ -80,4 +80,11 @@
          <url>java-net:/maven2-repository/trunk/repository/</url>
       </repository>
    </distributionManagement>
+
+   <repositories>
+      <repository>
+         <id>maven2-jboss-repository</id>
+         <url>http://repository.jboss.com/maven2/</url>
+      </repository>
+   </repositories>
 </project>

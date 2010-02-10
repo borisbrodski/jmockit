@@ -15,7 +15,7 @@
     <orderEntry type="library" name="Logging APIs" level="project" />
     <orderEntry type="library" name="TestNG 5.11" level="application" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: junit:junit:4.7" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.testng:testng:jdk15:5.11" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.5.8" level="project" />
