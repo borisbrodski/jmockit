@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -64,10 +64,7 @@ final class LineSegmentsFormatter
          segmentData = branchData.get(segmentIndex - 1);
 
          element = element.appendUntilNextCodeElement(line);
-
-         if (element != null) {
-            appendUntilFirstElementAfterNextBranchingPoint();
-         }
+         appendUntilFirstElementAfterNextBranchingPoint();
       }
 
       line.append("</pre>");
@@ -79,14 +76,16 @@ final class LineSegmentsFormatter
 
    private void appendUntilFirstElementAfterNextBranchingPoint()
    {
-      LineElement firstElement = element;
-      element = element.findNextBranchingPoint();
+      if (element != null) {
+         LineElement firstElement = element;
+         element = element.findNextBranchingPoint();
 
-      appendToFormattedLine(firstElement);
+         appendToFormattedLine(firstElement);
 
-      if (element != null && element.isBranchingElement()) {
-         line.append(element.getText());
-         element = element.getNext();
+         if (element != null && element.isBranchingElement()) {
+            line.append(element.getText());
+            element = element.getNext();
+         }
       }
    }
 
