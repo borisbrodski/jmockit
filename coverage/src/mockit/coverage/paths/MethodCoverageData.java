@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -56,6 +56,7 @@ public final class MethodCoverageData implements Serializable
       paths = new PathBuilder().buildPaths(nodes);
 
       nodesReached = new ThreadLocal<Integer>();
+      nodesReached.set(0);
    }
 
    public int getFirstLineInBody()
