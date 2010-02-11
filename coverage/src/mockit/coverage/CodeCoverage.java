@@ -76,7 +76,8 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
 
    private Matcher getClassNameRegexForClassesToExclude()
    {
-      String regex = System.getProperty("jmockit-coverage-excludes", "mockit\\..+|.+Test(\\$.+)?");
+      String defaultExclusions = "mockit\\..+|.+Test(\\$.+)?|junit\\..+";
+      String regex = System.getProperty("jmockit-coverage-excludes", defaultExclusions);
       return getClassNameRegex(regex);
    }
 
