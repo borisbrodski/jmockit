@@ -907,6 +907,46 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    kinds of expectations, so there is a lot of flexibility in using them.
 </p>
 
+<h4 id="strictMocks">Strict and non-strict <em>mocks</em></h4>
+<p>
+   It's usually best to think about <em>strictness</em> at the level of individual expectations, not
+   at the level of mock objects or mocked types.
+   That said, it is also correct to say that a given mock object (or mocked type) is strict or
+   non-strict.
+   All it means, really, is that all expectations associated to that particular mock are of a given
+   type.
+   On the other hand, it's perfectly valid to record both strict and non-strict expectations for
+   the same mock object or mocked type, in the same test.
+   And when using mock fields declared at the test class level, it's possible that a given mock will
+   be entirely strict in one test and entirely non-strict in another, in the same test class.
+</p>
+<p>
+   The JMockit Expectations API lets you specify that a given recorded expectation should be
+   non-strict (through the <code>notStrict()</code> method), that all expectations for a particular
+   mock should be non-strict (by annotating the mock field or parameter with
+   <code>@NonStrict</code>), and that all expectations recorded inside a particular block should be
+   non-strict (by extending the <code>NonStrictExpectations</code> base class).
+   That's it. There is no way to specify that a given expectation, a mock, or a whole expectation
+   block should be <em>strict</em>.
+</p>
+<p>
+   Strict expectations are recorded and verified <em>by default</em>, when we do <em>not</em>
+   specify that they should be non-strict. For an expectation to be strict, it needs to be recorded
+   inside an expectation block not derived from <code>NonStrictExpectations</code>, for a mocked
+   type not annotated as <code>@NonStrict</code>.
+</p>
+<p>
+   Remember that <em>unexpected invocations</em> can only be detected for so-called <em>strict
+   mocks</em>, or for expectations with an specified maximum invocation count constraint.
+   So, how do we obtain a mock object or mocked type where all unrecorded expectations are
+   considered to be strict (and therefore cause matching invocations at replay time to throw an
+   "unexpected invocation" error)? Simple: by recording at least one <em>strict</em> expectation
+   on the mock object or mocked type. Note that this rules out the use of empty expectation blocks.
+   If you need to specify that no invocations are allowed on a given mock, then either record a
+   strict expectation with a <code>times = 0</code> constraint or use a
+   <code>FullVerifications</code> block (explained in the next section).
+</p>
+
 <h3 id="verification">
    Explicit verification
    <div class="navigation">
