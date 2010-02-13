@@ -39,8 +39,8 @@
       <a href="#strictness"><em>Strict</em> and <em>non-strict</em> expectations</a>
       <ol>
          <li><a href="#strictMocks">Strict and non-strict <em>mocks</em></a></li>
+         <li><a href="#iteratedExpectations">Iterated expectations</a></li>
       </ol>
-   </li>
    <li>
       <a href="#verification">Explicit verification</a>
       <ol>
@@ -958,6 +958,41 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    If you need to specify that no invocations are allowed on a given mock, then either record a
    strict expectation with a <code>times = 0</code> constraint or use a
    <code>FullVerifications</code> block (explained in the next section).
+</p>
+
+<h4 id="iteratedExpectations">Iterated expectations</h4>
+<p>
+   When a sequence of consecutive invocations is recorded with strict expectations (the relative
+   order between invocations is irrelevant with <em>non-strict</em> expectations), the whole
+   sequence is expected to occur exactly once during the replay phase.
+   Consider, however, the case where the tested code executes those invocations in a loop (or any
+   kind of iteration).
+   Assuming that the number of iterations is known in the test, we can still record those
+   expectations with a single invocation to each method/constructor called inside the loop (that is,
+   without writing a loop or repeating the expectations inside the expectation block).
+   The next test demonstrates this feature, using the
+   <code>Expectations(int numberOfIterations)</code> constructor.
+</p>
+<pre><code>   @Test
+   public void recordStrictInvocationsInIteratingBlock(final Collaborator mock)
+   {
+      new <strong>Expectations(2)</strong>
+      {{
+         mock.setSomething(<em>anyInt</em>);
+         mock.save();
+      }};
+
+      // In the tested code:
+      mock.setSomething(123);
+      mock.save();
+      mock.setSomething(45);
+      mock.save();
+   }
+</code></pre>
+<p>
+   The ability to specify how many iterations are expected for a group of invocations is typically
+   used with strict expectations, but it also applies to non-strict expectations.
+   There is also a <code>NonStrictExpectations(int numberOfIterations)</code> constructor.
 </p>
 
 <h3 id="verification">

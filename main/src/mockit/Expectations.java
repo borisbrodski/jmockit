@@ -48,17 +48,16 @@ import mockit.internal.expectations.*;
  * test methods can share the same mock fields. Such fields need to be annotated with 
  * {@code @Mocked}, though.
  * <p/>
- * There are several API fields and methods (all of them {@code protected final}) which the
- * expectation block can use for recording desired return values and exceptions/errors to be thrown
- * (see {@link #result}), and for specifying argument matching constraints such as
- * {@link #withEqual(Object)}.
+ * There are several API fields and methods which the expectation block can use for recording
+ * desired return values and exceptions/errors to be thrown (see {@link #result}), and for
+ * specifying argument matching constraints such as {@link #withEqual(Object)}.
  * <p/>
- * Individual expectations are set during the <em>record phase</em>, and later exercised during the
- * <em>replay phase</em> of the test.
+ * Individual expectations are defined during the <em>record phase</em>, and later exercised during
+ * the <em>replay phase</em> of the test.
  * At the end of the test, the test runner will automatically assert that all recorded invocations 
  * were actually replayed as expected.
  * <p/>
- * Additional features and details about the process above are as follows:
+ * Additional features and powerful details:
  * <ul>
  * <li>
  * A <strong>mock field</strong> can be of any non-primitive type, including interfaces, abstract
@@ -103,7 +102,7 @@ import mockit.internal.expectations.*;
  * {@linkplain #Expectations(int, Object...) iterated invocations}.
  * </li>
  * </ul>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#expectation">Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#expectation">In the Tutorial</a>
  *
  * @see #Expectations()
  */
@@ -130,6 +129,8 @@ public class Expectations extends Invocations
     * for the current expectation.
     * Another way to specify consecutive results is to simply write multiple consecutive assignments
     * to the field.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#results">In the Tutorial</a>
     *
     * @see #returns(Object)
     * @see #returns(Object, Object...)
@@ -177,6 +178,8 @@ public class Expectations extends Invocations
     * considered.
     * For a given {@code Class} object, on the other hand, both constructors and methods will be
     * considered for mocking, but only those belonging to the specified class.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#dynamicPartial">In the Tutorial</a>
     *
     * @param classesOrObjectsToBePartiallyMocked one or more classes or objects whose classes are
     * to be considered for partial mocking
@@ -201,6 +204,8 @@ public class Expectations extends Invocations
     * <p/>
     * It's also valid to have multiple expectation blocks for the same test, each with an arbitrary
     * number of iterations, and containing any mix of strict and non-strict expectations.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#iteratedExpectations">In the Tutorial</a>
     * 
     * @param numberOfIterations the positive number of iterations for the whole set of invocations
     * recorded inside the block; when not specified, 1 (one) iteration is assumed

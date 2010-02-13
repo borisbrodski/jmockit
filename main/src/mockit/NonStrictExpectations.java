@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -31,7 +31,7 @@ package mockit;
  * Such expectations will typically be later verified through a {@link Verifications} block,
  * executed after the replay phase of the test.
  * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#strictness">Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#strictness">In the Tutorial</a>
  *
  * @see NonStrict
  */
@@ -48,6 +48,8 @@ public class NonStrictExpectations extends Expectations
    /**
     * Identical to {@linkplain Expectations#Expectations(Object...) Expectations(Object...)}, except
     * that all expectations recorded will be {@linkplain #notStrict() non-strict} by default.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#dynamicPartial">In the Tutorial</a>
     */
    protected NonStrictExpectations(Object... classesOrObjectsToBePartiallyMocked)
    {
@@ -64,6 +66,8 @@ public class NonStrictExpectations extends Expectations
     * Note that by default the invocation count range for a non-strict expectation is [0, ∞), that
     * is, a lower limit of 0 (zero) and no upper limit, so the number of iterations will only be
     * meaningful if a positive and finite limit is explicitly specified for the expectation.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#iteratedExpectations">In the Tutorial</a>
     *
     * @param numberOfIterations the positive number of iterations for the whole set of invocations
     * recorded inside the block; when not specified, 1 (one) iteration is assumed

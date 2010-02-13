@@ -104,7 +104,7 @@ A combination of <A HREF="../mockit/FullVerifications.html" title="class in mock
  <A HREF="../mockit/Expectations.html" title="class in mockit"><CODE>Expectations</CODE></A> recording block, except that the number of expected invocations for each
  expectation is still "non-strict".
  <p/>
- <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerificationInOrder">Tutorial</a>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerificationInOrder">In the Tutorial</a>
 <P>
 
 <P>
@@ -543,36 +543,6 @@ A combination of <A HREF="../mockit/FullVerifications.html" title="class in mock
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#withAny()">withAny</A></B>()</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/FullVerificationsInOrder.html#withAny(T)"><CODE>withAny(Object)</CODE></A>, but always returning <code>null</code>.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#withAny(T)">withAny</A></B>(T&nbsp;arg)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/FullVerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but matching any argument value of the appropriate type.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;double</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#withEqual(double, double)">withEqual</A></B>(double&nbsp;value,
           double&nbsp;delta)</CODE>
@@ -906,6 +876,8 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
  When used as argument for a method/constructor invocation in the recording or verification
  phase of a test, specifies the matching of <em>any</em> value passed as argument to
  corresponding invocations in the replay phase.
+ <p/>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#hamcrest">In the Tutorial</a>
 <P>
 <DL>
 </DL>
@@ -983,6 +955,8 @@ protected static <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object
  <p/>
  Just like with <A HREF="../mockit/Delegate.html" title="interface in mockit">delegate classes</A>, the handler method can declare
  its first parameter as being of type <A HREF="../mockit/Invocation.html" title="class in mockit"><CODE>Invocation</CODE></A>.
+ <p/>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#forEachInvocation">In the Tutorial</a>
 <P>
 <DL>
 </DL>
@@ -1031,6 +1005,8 @@ protected static int <B>times</B></PRE>
 <DL>
 <DD>A non-negative value assigned to this field will be taken as the exact number of times that
  invocations matching the current expectation should occur during replay.
+ <p/>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#constraints">In the Tutorial</a>
 <P>
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#minTimes"><CODE>minTimes</CODE></A>, 
@@ -1180,6 +1156,8 @@ protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/
  <p/>
  This may be useful when a mock object has a field not accessible from the test (private, for
  example), and there is some method under test which writes to the field.
+ <p/>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>mock</CODE> - the instance from which to get the field value<DD><CODE>fieldName</CODE> - the name of the field to get<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><CODE>setField(Object, String, Object)</CODE></A></DL>
@@ -1227,6 +1205,8 @@ protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/
  Additionally, this can also be used to directly test private methods, when there is no other
  way to do so, or it would be too difficult by indirect means. Note that in such a case the
  target instance will actually be a "real" object, not a mock.
+ <p/>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>mock</CODE> - the mock field instance on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the invocation; if a
@@ -1266,6 +1246,8 @@ protected final &lt;T&gt; T <B>newInstance</B>(<A HREF="http://java.sun.com/java
  <p/>
  This is useful for invoking non-accessible constructors (private ones, for example) from the
  test, which otherwise could not be called normally.
+ <p/>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
 <P>
 <DD><DL>
 <DT><B>Type Parameters:</B><DD><CODE>T</CODE> - interface or super-class type to which the returned instance should be assignable<DT><B>Parameters:</B><DD><CODE>className</CODE> - the fully qualified name of the desired class (which should not be accessible
@@ -1331,6 +1313,8 @@ protected final &lt;T&gt; T <B>onInstance</B>(T&nbsp;mock)</PRE>
  (otherwise a non-mocked method would get executed).
  This is valid only if the instance to be matched is assignable to the mocked type, and
  typically occurs when partially mocking a class hierarchy.
+ <p/>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#onInstance">In the Tutorial</a>
 <P>
 <DD><DL>
 
@@ -1402,6 +1386,8 @@ protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/
  <p/>
  This may be useful when a mock object has a field not accessible from the test (private, for
  example), and there is some method under test which needs to read the correct field value.
+ <p/>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>mock</CODE> - the instance on which to set the field value<DD><CODE>fieldName</CODE> - the name of the field to set<DD><CODE>fieldValue</CODE> - the value to set the field to<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
@@ -1459,37 +1445,6 @@ protected final &lt;T&gt; T <B>with</B>(T&nbsp;argValue,
 </DL>
 <HR>
 
-<A NAME="withAny()"><!-- --></A><H3>
-withAny</H3>
-<PRE>
-protected final &lt;T&gt; T <B>withAny</B>()</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/FullVerificationsInOrder.html#withAny(T)"><CODE>withAny(Object)</CODE></A>, but always returning <code>null</code>.
-<P>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withAny(java.lang.Object)"><!-- --></A><A NAME="withAny(T)"><!-- --></A><H3>
-withAny</H3>
-<PRE>
-protected final &lt;T&gt; T <B>withAny</B>(T&nbsp;arg)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/FullVerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but matching any argument value of the appropriate type.
- <p/>
- Consider using instead the "any" field appropriate to the parameter type: <A HREF="../mockit/FullVerificationsInOrder.html#any"><CODE>any</CODE></A>,
- <A HREF="../mockit/FullVerificationsInOrder.html#anyBoolean"><CODE>anyBoolean</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyByte"><CODE>anyByte</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyChar"><CODE>anyChar</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyDouble"><CODE>anyDouble</CODE></A>,
- <A HREF="../mockit/FullVerificationsInOrder.html#anyFloat"><CODE>anyFloat</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyLong"><CODE>anyLong</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyShort"><CODE>anyShort</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyString"><CODE>anyString</CODE></A>.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>arg</CODE> - an arbitrary value which will match any argument value in the replay phase
-<DT><B>Returns:</B><DD>the input argument</DL>
-</DD>
-</DL>
-<HR>
-
 <A NAME="withEqual(double, double)"><!-- --></A><H3>
 withEqual</H3>
 <PRE>
@@ -1533,8 +1488,7 @@ protected final &lt;T&gt; T <B>withEqual</B>(T&nbsp;arg)</PRE>
  The matcher is added to the end of the list of argument matchers for the invocation being
  recorded/verified. It cannot be reused for a different parameter.
  <p/>
- For methods with a <strong>varargs</strong> parameter, a corresponding matcher must be
- specified for each element in the varargs array passed in the replay phase.
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#hamcrest">In the Tutorial</a>
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>arg</CODE> - the expected argument value
@@ -1551,8 +1505,8 @@ protected final &lt;T&gt; T <B>withInstanceLike</B>(T&nbsp;object)</PRE>
 <DD>Same as <A HREF="../mockit/FullVerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay
  phase is an instance of the same class as the given object.
  <p/>
- Equivalent to a call <code>withInstanceOf(object.getClass())</code>, except that it returns
- <code>object</code> instead of <code>null</code>.
+ Equivalent to a call <code>withInstanceOf(arg.getClass())</code>, except that it returns
+ <code>arg</code> instead of <code>null</code>.
 <P>
 <DD><DL>
 </DL>

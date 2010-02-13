@@ -67,7 +67,7 @@ import mockit.internal.util.*;
  * Such blocks can be of different types. (Typically, when using multiple verification blocks there
  * will be a mix of ordered and unordered ones.)
  * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#verification">Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#verification">In the Tutorial</a>
  *
  * @see Expectations#notStrict()
  * @see NonStrict
@@ -93,7 +93,9 @@ public class Verifications extends Invocations
     * The effect of specifying a number of iterations larger than 1 (one) is equivalent to
     * multiplying by that number the lower and upper invocation count limits for each invocation
     * inside the verification block.
-    * 
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#iterations">In the Tutorial</a>
+    *
     * @param numberOfIterations the positive number of iterations for the whole set of invocations
     * verified inside the block; when not specified, 1 (one) iteration is assumed
     */

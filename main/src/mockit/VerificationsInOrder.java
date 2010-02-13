@@ -30,7 +30,7 @@ import mockit.internal.expectations.*;
  * Same as {@link Verifications}, but checking that invocations in the replay phase occurred in the
  * same order as specified in this <em>ordered</em> verification block.
  * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#VerificationInOrder">Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#VerificationInOrder">In the Tutorial</a>
  *
  * @see #VerificationsInOrder()
  * @see #VerificationsInOrder(int)
@@ -90,6 +90,8 @@ public class VerificationsInOrder extends Verifications
     * Finally, notice that you can combine an ordered block that verifies the position of some calls
     * relative to others, with an unordered block which verifies some or all of those other
     * invocations.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#partiallyOrdered">In the Tutorial</a>
     */
    protected final void unverifiedInvocations()
    {

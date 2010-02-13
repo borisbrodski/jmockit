@@ -1,6 +1,6 @@
 /*
  * JMockit Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -39,7 +39,7 @@ package mockit;
  * except for the ordering and the number of occurrences of invocations, which are both still
  * "non-strict".
  * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerification">Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerification">In the Tutorial</a>
  */
 public class FullVerifications extends Verifications
 {
