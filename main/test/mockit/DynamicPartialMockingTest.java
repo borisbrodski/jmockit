@@ -151,6 +151,15 @@ public final class DynamicPartialMockingTest
          fail();
       }
       catch (IllegalStateException ignore) {}
+
+      new Verifications()
+      {
+         {
+            Collaborator.doSomething(anyBoolean, "test");
+            collaborator.getValue(); times = 1;
+            new Collaborator(45);
+         }
+      };
    }
 
    @Test(expected = IllegalStateException.class)
@@ -173,9 +182,6 @@ public final class DynamicPartialMockingTest
       // Not mocked:
       assertTrue(collaborator.simpleOperation(0, null, null));
       Collaborator.doSomething(true, null); // will throw the IllegalStateException
-
-      // Mocked sub-constructor/not mocked base constructor:
-      assertEquals(-1, new SubCollaborator().value);
    }
 
    @Test
@@ -200,6 +206,14 @@ public final class DynamicPartialMockingTest
 
       // Mocked sub-constructor/not mocked base constructor:
       assertEquals(-1, new SubCollaborator().value);
+
+      new VerificationsInOrder()
+      {
+         {
+            collaborator.format();
+            new SubCollaborator();
+         }
+      };
    }
 
    @Test
@@ -228,6 +242,16 @@ public final class DynamicPartialMockingTest
       // Not mocked:
       assertTrue(collaborator.simpleOperation(0, null, null));
       assertNull(dependency.doSomethingElse(3));
+
+      new FullVerifications()
+      {
+         {
+            dependency.doSomething();
+            collaborator.getValue();
+            dependency.doSomethingElse(anyInt);
+            collaborator.simpleOperation(0, null, null);
+         }
+      };
    }
 
    @Test
@@ -291,6 +315,13 @@ public final class DynamicPartialMockingTest
       assertTrue(collaborator.simpleOperation(1, "s", new Date()));
       assertTrue(collaborator.simpleOperation(1, null, new Date()));
       assertFalse(collaborator.simpleOperation(1, "s", null));
+
+      new FullVerifications()
+      {
+         {
+            collaborator.simpleOperation(anyInt, null, null);
+         }
+      };
    }
 
    @Test
@@ -322,5 +353,13 @@ public final class DynamicPartialMockingTest
 
       assertEquals(3, mock.getValue());
       assertEquals(4, new Collaborator(4).getValue());
+
+      new FullVerificationsInOrder()
+      {
+         {
+            onInstance(mock).getValue();
+            mock.getValue();
+         }
+      };
    }
 }
