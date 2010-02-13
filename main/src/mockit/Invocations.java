@@ -76,6 +76,8 @@ abstract class Invocations
     * When used as argument for a method/constructor invocation in the recording or verification
     * phase of a test, specifies the matching of <em>any</em> value passed as argument to
     * corresponding invocations in the replay phase.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#hamcrest">In the Tutorial</a>
     */
    protected static final Integer anyInt = 0;
 
@@ -152,12 +154,16 @@ abstract class Invocations
     * <p/>
     * Just like with {@linkplain mockit.Delegate delegate classes}, the handler method can declare
     * its first parameter as being of type {@link mockit.Invocation}.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#forEachInvocation">In the Tutorial</a>
     */
    protected static Object forEachInvocation;
 
    /**
     * A non-negative value assigned to this field will be taken as the exact number of times that
     * invocations matching the current expectation should occur during replay.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#constraints">In the Tutorial</a>
     *
     * @see #minTimes
     * @see #maxTimes
@@ -239,6 +245,8 @@ abstract class Invocations
     * (otherwise a non-mocked method would get executed).
     * This is valid only if the instance to be matched is assignable to the mocked type, and
     * typically occurs when partially mocking a class hierarchy.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#onInstance">In the Tutorial</a>
     *
     * @return the given mock instance, allowing the invocation to be recorded/verified to
     * immediately follow the call to this method
@@ -315,9 +323,13 @@ abstract class Invocations
 
    /**
     * Same as {@link #withAny(Object)}, but always returning {@code null}.
+    *
+    * @deprecated Use the {@code any} field appropriate for type T
     */
+   @Deprecated
    protected final <T> T withAny()
    {
+      //noinspection deprecation
       return withAny((T) null);
    }
 
@@ -331,7 +343,9 @@ abstract class Invocations
     * @param arg an arbitrary value which will match any argument value in the replay phase
     *
     * @return the input argument
+    * @deprecated Use the {@code any} field appropriate for type T
     */
+   @Deprecated
    protected final <T> T withAny(T arg)
    {
       addMatcher(new IsAnything());
@@ -347,8 +361,7 @@ abstract class Invocations
     * The matcher is added to the end of the list of argument matchers for the invocation being
     * recorded/verified. It cannot be reused for a different parameter.
     * <p/>
-    * For methods with a <strong>varargs</strong> parameter, a corresponding matcher must be
-    * specified for each element in the varargs array passed in the replay phase.
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#hamcrest">In the Tutorial</a>
     *
     * @param arg the expected argument value
     *
@@ -385,8 +398,8 @@ abstract class Invocations
     * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay
     * phase is an instance of the same class as the given object.
     * <p/>
-    * Equivalent to a call <code>withInstanceOf(object.getClass())</code>, except that it returns
-    * {@code object} instead of {@code null}.
+    * Equivalent to a call <code>withInstanceOf(arg.getClass())</code>, except that it returns
+    * {@code arg} instead of {@code null}.
     */
    protected final <T> T withInstanceLike(T object)
    {
@@ -604,6 +617,8 @@ abstract class Invocations
     * <p/>
     * This is useful for invoking non-accessible constructors (private ones, for example) from the
     * test, which otherwise could not be called normally.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
     *
     * @param className the fully qualified name of the desired class (which should not be accessible
     * to the test; otherwise just refer to it in code)
@@ -671,6 +686,8 @@ abstract class Invocations
     * Additionally, this can also be used to directly test private methods, when there is no other
     * way to do so, or it would be too difficult by indirect means. Note that in such a case the
     * target instance will actually be a "real" object, not a mock.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
     *
     * @param mock the mock field instance on which the invocation is to be done; must not be null
     * @param methodName the name of the expected method
@@ -716,6 +733,8 @@ abstract class Invocations
     * <p/>
     * This may be useful when a mock object has a field not accessible from the test (private, for
     * example), and there is some method under test which writes to the field.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
     *
     * @param mock the instance from which to get the field value
     * @param fieldName the name of the field to get
@@ -788,6 +807,8 @@ abstract class Invocations
     * <p/>
     * This may be useful when a mock object has a field not accessible from the test (private, for
     * example), and there is some method under test which needs to read the correct field value.
+    * <p/>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
     *
     * @param mock the instance on which to set the field value
     * @param fieldName the name of the field to set
