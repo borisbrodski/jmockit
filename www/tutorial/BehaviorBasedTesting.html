@@ -580,7 +580,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    <code>DependencyAbc#intReturningMethod()</code> on <em>any</em> instance of the mocked
    <code>DependencyAbc</code> class.
    In most cases, this won't really matter and can be safely ignored.
-   But what if we need to have the test verify that the invocation occurs on a specific instance?
+   But what if we need to verify that the invocation occurs on a specific instance?
    We use the <code>Expectations#onInstance(mockObject)</code> method when recording the invocation,
    as the next example shows.
 </p>
@@ -605,8 +605,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    same mock instance on which the recording invocation was made.
    This is typically useful when the unit under test makes calls on two or more different instances
    of the same type, and the test wants to verify that each invocation occurred on the proper
-   instance. (For a real-world example of this, see <code>CompositeEffectTest#testInit</code> in the
-   <em>Timing Framework</em> sample test suite.)
+   instance.
+   In fact, whenever two or more mocks of the exact same type are in scope for a given test, JMockit
+   will automatically apply "onInstance" matching to all invocations made on those mocks.
+   Therefore, in such common situations it isn't necessary to explicitly use the
+   <code>onInstance(mock)</code> method.
+</p>
+<p>
+   In practice, this matching specifier method will rarely be used.
+   For a real-world example of this functionality, see the <code>CompositeEffectTest#testInit</code>
+   test from the <em>Timing Framework</em> sample test suite.
 </p>
 
 <h3 id="hamcrest">
