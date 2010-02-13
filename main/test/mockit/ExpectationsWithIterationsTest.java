@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -57,10 +57,10 @@ public final class ExpectationsWithIterationsTest
    {
       new Expectations(1)
       {{
-         mock.prepare(); repeatsAtMost(1);
-         mock.setSomething(withAny(0)); repeatsAtLeast(2);
-         mock.setSomethingElse(withAny("")); notStrict();
-         mock.editABunchMoreStuff(); repeats(0, 5);
+         mock.prepare(); maxTimes = 1;
+         mock.setSomething(anyInt); minTimes = 2;
+         mock.setSomethingElse(anyString); notStrict();
+         mock.editABunchMoreStuff(); minTimes = 0; maxTimes = 5;
          mock.notifyBeforeSave(); notStrict();
          mock.save();
       }};
@@ -73,7 +73,7 @@ public final class ExpectationsWithIterationsTest
    {
       new Expectations(2)
       {{
-         mock.setSomething(withAny(1));
+         mock.setSomething(anyInt);
          mock.save();
       }};
 
@@ -88,7 +88,7 @@ public final class ExpectationsWithIterationsTest
    {
       new Expectations(2)
       {{
-         mock.setSomething(withAny(1)); notStrict();
+         mock.setSomething(anyInt); notStrict();
          mock.save(); notStrict();
       }};
 
@@ -129,9 +129,9 @@ public final class ExpectationsWithIterationsTest
    {
       new Expectations(2)
       {{
-         mock.prepare(); repeatsAtMost(1);
-         mock.setSomething(withAny(0)); repeatsAtLeast(2);
-         mock.editABunchMoreStuff(); repeats(1, 5);
+         mock.prepare(); maxTimes = 1;
+         mock.setSomething(anyInt); minTimes = 2;
+         mock.editABunchMoreStuff(); minTimes = 1; maxTimes = 5;
          mock.save();
       }};
 
@@ -151,7 +151,7 @@ public final class ExpectationsWithIterationsTest
    {
       new Expectations(2)
       {{
-         mock.setSomething(123); repeats(2);
+         mock.setSomething(123); times = 2;
       }};
 
       mock.setSomething(123);
@@ -184,7 +184,7 @@ public final class ExpectationsWithIterationsTest
    {
       new Expectations(2)
       {{
-         mock.setSomething(withAny(1));
+         mock.setSomething(anyInt);
          mock.save();
       }};
 
