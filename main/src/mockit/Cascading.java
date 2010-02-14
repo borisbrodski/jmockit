@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -33,6 +33,8 @@ import java.lang.annotation.*;
  * Instead of returning the default {@literal null} reference, such methods will return a mock
  * instance on which further invocations can be made.
  * This behavior automatically cascades to those mocked return types.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#cascading">In the Tutorial</a>
  * <p/>
  * Sample tests:
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/jbossaop/test/jbossaop/testing/bank/BankBusinessTest.java"

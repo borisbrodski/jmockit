@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -52,7 +52,7 @@ import java.lang.annotation.*;
  * explicitly verified at the end of the test using a {@linkplain mockit.Verifications verification
  * block}.
  * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#strictness">Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#strictMocks">In the Tutorial</a>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

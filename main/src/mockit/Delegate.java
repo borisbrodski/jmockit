@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -25,9 +25,9 @@
 package mockit;
 
 /**
- * An empty interface to be used with the {@link mockit.Expectations#returns(Object)} method, in
- * order to allow test code to define invocation results (return values or thrown errors/exceptions)
- * based on test-specific logic.
+ * An empty interface to be used with the {@link Expectations#result} field, in order to allow test
+ * code to define invocation results (return values or thrown errors/exceptions) based on 
+ * test-specific logic.
  * <p/>
  * An implementation of this interface should define a method matching the signature of the recorded
  * method/constructor call.
@@ -50,8 +50,9 @@ package mockit;
  * Even {@code static} methods in the mocked type can have delegates, which in turn can be static or
  * not. The same is true for {@code private}, {@code final}, and {@code native} methods.
  * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#delegates">Tutorial</a>
- * <br/>Sample tests:
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#delegates">In the Tutorial</a>
+ * <p/>
+ * Sample tests:
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/easymock/test/org/easymock/samples/DocumentManager_JMockit_Test.java">DocumentManager_JMockit_Test</a>
  */
 public interface Delegate
