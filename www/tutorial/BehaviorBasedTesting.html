@@ -44,6 +44,7 @@
    <li>
       <a href="#verification">Explicit verification</a>
       <ol>
+         <li><a href="#importingMocks">Importing mocks from expectation blocks</a></li>
          <li><a href="#neverHappened">Verifying that an invocation never happened</a></li>
          <li><a href="#VerificationInOrder">Verification in order</a></li>
          <li><a href="#partiallyOrdered">Partially ordered verification</a></li>
@@ -1016,10 +1017,54 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </p>
 <p>
    Inside a <code>new Verifications() {...}</code> block we can use the same API that's available in
-   a <code>new NonStrictExpectations() {...}</code> block, with the exception of the methods used
-   to record return values and thrown exceptions/errors.
+   a <code>new NonStrictExpectations() {...}</code> block, with the exception of the methods and
+   fields used to record return values and thrown exceptions/errors.
    That is, all of the <code>withXyz(...)</code> argument matching methods can be used, as well as
-   the <code>times/minTimes/maxTimes</code> invocation count constraint fields.
+   the <code>times</code>, <code>minTimes</code>, and <code>maxTimes</code> invocation count
+   constraint fields.
+</p>
+
+<h4 id="importingMocks">Importing mocks from expectation blocks</h4>
+<p>
+   Mock objects and mocked types declared as mock fields of the test class or as mock parameters of
+   the test method are immediately available inside verification blocks.
+   However, expectation blocks can also declare <em>local</em> mock fields, which won't be
+   accessible outside the block.
+   In such cases, it's possible to <em>import</em> those local mock objects or mocked types into a
+   verification block, as the next example shows.
+</p>
+<pre><code>   @Test
+   public void importLocalMockFromPreviousNonStrictExpectationsBlock()
+   {
+      new NonStrictExpectations()
+      {
+         <strong>Dependency mock;</strong>
+
+         {
+            mock.notifyBeforeSave(); result = true;
+         }
+      };
+
+      // Inside tested code:
+      Dependency dependency = new Dependency();
+      dependency.editABunchMoreStuff();
+
+      new Verifications()
+      {
+         <strong>Dependency mock;</strong>
+
+         {
+            mock.editABunchMoreStuff();
+         }
+      };
+   }
+</code></pre>
+<p>
+   The mocked types to be imported are identified by the <em>types</em> of the fields declared in
+   the verification, not by the field names. Typically, though, the same field names will be used
+   to avoid confusion.
+   This ability can be useful if for whatever reason mock parameters are not desired, or when
+   capturing internally created instances of mocked types (explained in a later section).
 </p>
 
 <h4 id="neverHappened">Verifying that an invocation never happened</h4>

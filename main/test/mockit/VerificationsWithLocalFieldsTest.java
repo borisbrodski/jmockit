@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations & Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -27,6 +27,8 @@ package mockit;
 import java.util.concurrent.*;
 
 import org.junit.*;
+
+import static org.junit.Assert.*;
 
 @SuppressWarnings({"UnusedDeclaration"})
 public final class VerificationsWithLocalFieldsTest
@@ -57,9 +59,14 @@ public final class VerificationsWithLocalFieldsTest
       new NonStrictExpectations()
       {
          Dependency mock;
+
+         {
+            mock.notifyBeforeSave(); result = true;
+         }
       };
 
       dependency.editABunchMoreStuff();
+      assertTrue(dependency.notifyBeforeSave());
 
       new Verifications()
       {
