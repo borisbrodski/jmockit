@@ -75,6 +75,14 @@ public final class RestrictedFullVerificationsTest
          mock.editABunchMoreStuff();
          mock.save(); times = 1;
       }};
+
+      new FullVerifications(mock.getClass())
+      {{
+         mock.prepare();
+         mock.setSomething(anyInt); minTimes = 1; maxTimes = 2;
+         mock.editABunchMoreStuff();
+         mock.save(); times = 1;
+      }};
    }
 
    @Test(expected = AssertionError.class)
@@ -86,7 +94,7 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(mock, mock2)
       {{
          mock.prepare();
-         mock.setSomething(withAny(0));
+         mock.setSomething(anyInt);
          mock.save();
          mock2.doSomething();
       }};
@@ -129,6 +137,13 @@ public final class RestrictedFullVerificationsTest
       mock2.getValue();
 
       new FullVerificationsInOrder(1, mock)
+      {
+         {
+            mock.prepare();
+         }
+      };
+
+      new FullVerificationsInOrder(Dependency.class)
       {
          {
             mock.prepare();

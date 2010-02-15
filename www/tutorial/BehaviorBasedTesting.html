@@ -49,6 +49,7 @@
          <li><a href="#partiallyOrdered">Partially ordered verification</a></li>
          <li><a href="#FullVerification">Full verification</a></li>
          <li><a href="#FullVerificationInOrder">Full verification in order</a></li>
+         <li><a href="#restrictedFullVerifications">Restricting the set of mocked types to be fully verified</a></li>
          <li><a href="#unspecifiedInvocations">Verifying unspecified invocations that should not happen</a></li>
          <li><a href="#iterations">Verifying iterations</a></li>
       </ol>
@@ -1157,8 +1158,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   Note that if a lower limit or minimum invocation count is specified for an otherwise non-strict
-   expectation, then this constraint will always be implicitly verified at the end of the test.
+   Note that if a lower limit (a minimum invocation count constraint) is specified for an otherwise
+   non-strict expectation, then this constraint will always be implicitly verified at the end of the
+   test.
    Therefore, explicitly verifying such an expectation inside the full verification block is not
    necessary.
 </p>
@@ -1207,6 +1209,47 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    So, in the above test for example, if the <code>setSomethingElse(...)</code> method was invoked
    a second time during the replay phase, the test would still pass (provided the second invocation
    occurred in the expected order, as specified inside the verification block).
+</p>
+
+<h4 id="restrictedFullVerifications">Restricting the set of mocked types to be fully verified</h4>
+<p>
+   By default, <em>all</em> invocations to <em>all</em> mock objects or mocked types in effect for
+   a given test must be verified explicitly when using a <code>new FullVerifications() {}</code> or
+   <code>new FullVerificationsInOrder() {}</code> block.
+   Now, what if we have a test with two (or more) mocked types but we only want to fully verify
+   invocations to one of them (or to any subset of mocked types when more than two)?
+   The answer is to use the
+   <strong><code>FullVerifications(Object... mockedTypesAndInstancesToVerify)</code></strong>
+   constructor, where only the given mock objects and mocked types (ie, class objects/literals) are
+   considered. The following test provides an example.
+</p>
+<pre><code>   @Test
+   public void verifyAllInvocationsToOnlyOneOfTwoMockedTypes(Dependency mock1, AnotherDependency mock2)
+   {
+      // Inside code under test:
+      mock1.prepare();
+      mock1.setSomething(123);
+      <strong>mock2</strong>.doSomething();
+      mock1.editABunchMoreStuff();
+      mock1.save();
+
+      new FullVerifications(mock1)
+      {{
+         mock1.prepare();
+         mock1.setSomething(<em>anyInt</em>);
+         mock1.editABunchMoreStuff();
+         mock1.save(); <em>times</em> = 1;
+      }};
+   }
+</code></pre>
+<p>
+   In the test above, the <code>mock2.doSomething()</code> invocation is never verified.
+   It's possible to restrict verification only to the methods (and constructors) of a single class,
+   by passing its class literal in the <code>FullVerifications(...)</code> or
+   <code>FullVerificationsInOrder(...)</code> constructor.
+   For example, the <code>new FullVerificationsInOrder(AnotherDependency.class) { ... }</code> block
+   would only make sure that all invocations to the mocked <code>AnotherDependency</code> class were
+   verified.
 </p>
 
 <h4 id="unspecifiedInvocations">Verifying unspecified invocations that should not happen</h4>
