@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -31,11 +31,14 @@ import mockit.external.asm.*;
 import mockit.internal.*;
 import mockit.internal.startup.*;
 
-public abstract class CaptureOfImplementations implements ModifierFactory
+public abstract class CaptureOfImplementations
 {
    private final List<CaptureTransformer> captureTransformers = new ArrayList<CaptureTransformer>();
 
    protected CaptureOfImplementations() {}
+
+   protected abstract ClassWriter createModifier(
+      ClassLoader cl, ClassReader cr, String capturedTypeDesc);
 
    public final void makeSureAllSubtypesAreModified(Class<?> baseType, Capturing capturing)
    {

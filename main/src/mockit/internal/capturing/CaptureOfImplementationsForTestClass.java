@@ -31,6 +31,7 @@ public final class CaptureOfImplementationsForTestClass extends CaptureOfImpleme
 {
    public CaptureOfImplementationsForTestClass() {}
 
+   @Override
    public ClassWriter createModifier(ClassLoader classLoader, ClassReader cr, String baseTypeDesc)
    {
       return new StubOutModifier(cr, null);

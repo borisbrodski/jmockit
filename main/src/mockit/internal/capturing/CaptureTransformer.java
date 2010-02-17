@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -39,11 +39,11 @@ final class CaptureTransformer implements ClassFileTransformer
 
    private final CapturedType metadata;
    private final String capturedType;
-   private final ModifierFactory modifierFactory;
+   private final CaptureOfImplementations modifierFactory;
    private final SuperTypeCollector superTypeCollector;
    private boolean inactive;
 
-   CaptureTransformer(CapturedType metadata, ModifierFactory modifierFactory)
+   CaptureTransformer(CapturedType metadata, CaptureOfImplementations modifierFactory)
    {
       this.metadata = metadata;
       capturedType = metadata.baseType.getName().replace('.', '/');

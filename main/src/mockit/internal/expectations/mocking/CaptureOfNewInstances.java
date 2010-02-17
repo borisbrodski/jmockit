@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -31,7 +31,7 @@ import mockit.internal.capturing.*;
 import mockit.internal.filtering.*;
 import mockit.internal.util.*;
 
-abstract class CaptureOfNewInstances extends CaptureOfImplementations
+class CaptureOfNewInstances extends CaptureOfImplementations
 {
    static class Capture
    {
@@ -64,6 +64,7 @@ abstract class CaptureOfNewInstances extends CaptureOfImplementations
 
    CaptureOfNewInstances() {}
 
+   @Override
    public final ClassWriter createModifier(ClassLoader cl, ClassReader cr, String baseTypeDesc)
    {
       ExpectationsModifier modifier =
