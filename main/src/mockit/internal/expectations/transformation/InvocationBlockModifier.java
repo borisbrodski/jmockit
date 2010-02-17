@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -47,14 +47,8 @@ final class InvocationBlockModifier extends MethodAdapter
    @Override
    public void visitFieldInsn(int opcode, String owner, String name, String desc)
    {
-      if (fieldOwner.equals(owner)) {
-         if (opcode == GETSTATIC && name.startsWith("any")) {
-            mw.visitFieldInsn(GETSTATIC, owner, name, desc);
-            mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addArgMatcher", "()V");
-            matcherStacks[matchers++] = mw.stackSize;
-            return;
-         }
-         else if (opcode == PUTSTATIC) {
+      if ((opcode == GETSTATIC || opcode == PUTSTATIC) && fieldOwner.equals(owner)) {
+         if (opcode == PUTSTATIC) {
             if ("result".equals(name)) {
                mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addResult", "(Ljava/lang/Object;)V");
                return;
@@ -72,6 +66,12 @@ final class InvocationBlockModifier extends MethodAdapter
                   INVOKESTATIC, CLASS_DESC, "setErrorMessage", "(Ljava/lang/CharSequence;)V");
                return;
             }
+         }
+         else if (name.startsWith("any")) {
+            mw.visitFieldInsn(GETSTATIC, owner, name, desc);
+            mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addArgMatcher", "()V");
+            matcherStacks[matchers++] = mw.stackSize;
+            return;
          }
       }
 
