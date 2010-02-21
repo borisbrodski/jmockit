@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -86,7 +86,7 @@ public final class NonStrictExpectationsTest
    {
       new NonStrictExpectations()
       {{
-         mock.editABunchMoreStuff(); repeats(1);
+         mock.editABunchMoreStuff(); times = 1;
       }};
    }
 
@@ -95,7 +95,7 @@ public final class NonStrictExpectationsTest
    {
       new NonStrictExpectations()
       {{
-         mock.editABunchMoreStuff(); repeatsAtLeast(2);
+         mock.editABunchMoreStuff(); minTimes = 2;
       }};
 
       mock.editABunchMoreStuff();
@@ -106,7 +106,7 @@ public final class NonStrictExpectationsTest
    {
       new NonStrictExpectations()
       {{
-         mock.editABunchMoreStuff(); repeatsAtMost(1);
+         mock.editABunchMoreStuff(); maxTimes = 1;
       }};
 
       mock.editABunchMoreStuff();
@@ -118,8 +118,8 @@ public final class NonStrictExpectationsTest
    {
       new NonStrictExpectations()
       {{
-         mock.setSomethingElse(withAny("")); repeatsAtLeast(1);
-         mock.save(); repeats(2);
+         mock.setSomethingElse(anyString); minTimes = 1;
+         mock.save(); times = 2;
       }};
 
       mock.setSomething(3);
@@ -133,7 +133,7 @@ public final class NonStrictExpectationsTest
    {
       new NonStrictExpectations()
       {{
-         mock.save(); repeatsAtLeast(2);
+         mock.save(); minTimes = 2;
       }};
 
       mock.save();
@@ -144,10 +144,10 @@ public final class NonStrictExpectationsTest
    {
       new NonStrictExpectations(1)
       {{
-         mock.prepare(); repeatsAtMost(1);
-         mock.setSomething(withAny(0)); repeatsAtLeast(2);
-         mock.editABunchMoreStuff(); repeats(0, 5);
-         mock.save(); repeats(1);
+         mock.prepare(); maxTimes = 1;
+         mock.setSomething(anyInt); minTimes = 2;
+         mock.editABunchMoreStuff(); minTimes = 0; maxTimes = 5;
+         mock.save(); times = 1;
       }};
 
       exerciseCodeUnderTest();
@@ -159,7 +159,7 @@ public final class NonStrictExpectationsTest
       new NonStrictExpectations()
       {{
          Dependency.staticMethod(any, null);
-         repeatsAtMost(1);
+         maxTimes = 1;
          returns(1);
       }};
 
@@ -172,7 +172,7 @@ public final class NonStrictExpectationsTest
       new NonStrictExpectations()
       {{
          Dependency.staticMethod(any, null);
-         repeatsAtMost(1);
+         maxTimes = 1;
          returns(1);
       }};
 
@@ -187,7 +187,7 @@ public final class NonStrictExpectationsTest
       {{
          Dependency.staticMethod(any, null);
          returns(1);
-         repeats(1);
+         times = 1;
       }};
 
       assertEquals(1, Dependency.staticMethod(null, null));
@@ -199,7 +199,7 @@ public final class NonStrictExpectationsTest
       new NonStrictExpectations()
       {{
          Dependency.staticMethod(any, null);
-         repeatsAtLeast(1);
+         minTimes = 1;
          returns(new Delegate()
          {
             int staticMethod(Object o, Exception e) { return 1; }
@@ -214,8 +214,8 @@ public final class NonStrictExpectationsTest
    {
       new NonStrictExpectations(2)
       {{
-         mock.setSomething(withAny(1)); repeats(1);
-         mock.save(); repeats(1);
+         mock.setSomething(anyInt); times = 1;
+         mock.save(); times = 1;
       }};
 
       mock.setSomething(123);
@@ -229,7 +229,7 @@ public final class NonStrictExpectationsTest
    {
       new NonStrictExpectations(3)
       {{
-         mock.setSomething(123); repeatsAtLeast(1);
+         mock.setSomething(123); minTimes = 1;
       }};
 
       mock.setSomething(123);
@@ -240,10 +240,10 @@ public final class NonStrictExpectationsTest
    {
       new NonStrictExpectations(2)
       {{
-         mock.prepare(); repeatsAtMost(1);
-         mock.setSomething(withAny(0)); repeatsAtLeast(2);
-         mock.editABunchMoreStuff(); repeats(1, 5);
-         mock.save(); repeats(1);
+         mock.prepare(); maxTimes = 1;
+         mock.setSomething(anyInt); minTimes = 2;
+         mock.editABunchMoreStuff(); minTimes = 1; maxTimes = 5;
+         mock.save(); times = 1;
       }};
 
       for (int i = 0; i < 2; i++) {
