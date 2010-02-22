@@ -7,9 +7,9 @@
       <pathelement location="lib/commons-logging-1.1.1.jar"/>
       <pathelement location="lib/log4j-1.2.15.jar"/>
       <pathelement location="lib/slf4j-api-1.5.8.jar"/>
+      <pathelement location="lib/javaee.jar"/>
       <fileset file="${JUNIT_JAR}"/>
       <fileset file="${TESTNG_JAR}"/>
-      <fileset file="${JAVAEE_JAR}" erroronmissingdir="false"/>
    </path>
 
    <target name="fullRebuildWithTests" depends="buildAll, createjars, tests, sampleTests"/>
@@ -234,12 +234,13 @@
    <target name="createjar-core">
       <jar destfile="jmockit.jar" manifest="main/META-INF/MANIFEST.MF">
          <fileset file="main/src/jmockit.properties"/>
+         <fileset dir="main" includes="META-INF/services/*"/>
          <fileset
             dir="main/src"
             includes="mockit/**/*.java mockit/external/**/*.txt **/attach/**/*.java"/>
          <fileset
             dir="main/classes"
-            includes="mockit/**/*.class **/attach/**/*.class org/junit/*/*.class junit/*/*.class"/>
+            includes="mockit/**/*.class **/attach/**/*.class org/junit/**/*.class junit/*/*.class"/>
          <manifest><attribute name="Implementation-Version" value="${version}"/></manifest>
       </jar>
    </target>

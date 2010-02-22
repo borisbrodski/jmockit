@@ -24,8 +24,7 @@
       </dependency>
       <dependency>
          <groupId>jta</groupId><artifactId>jta</artifactId><version>1.0.1b</version>
-         <!-- Jar file is missing from central Maven repository -->
-         <scope>system</scope><systemPath>C:/Java/JavaEE/lib/javaee.jar</systemPath>
+         <scope>system</scope><systemPath>${basedir}/../lib/javaee.jar</systemPath>
       </dependency>
       <dependency>
          <groupId>hibernate</groupId><artifactId>hibernate</artifactId><version>3.0</version>

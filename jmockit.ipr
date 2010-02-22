@@ -1391,13 +1391,6 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="Maven: javax.persistence:persistence-api:2.0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../lib/javax.persistence.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="Maven: commons-email:commons-email:0">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/tutorial/lib/commons-email-1.2.jar!/" />
@@ -1407,7 +1400,7 @@
     </library>
     <library name="Maven: javamail:javamail:1.3.3">
       <CLASSES>
-        <root url="jar://C:/Java/JavaEE/lib/javaee.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../lib/javaee.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -1446,7 +1439,7 @@
     </library>
     <library name="Maven: jta:jta:1.0.1b">
       <CLASSES>
-        <root url="jar://C:/Java/JavaEE/lib/javaee.jar!/" />
+        <root url="jar://$PROJECT_DIR$/hibernate3emul/../lib/javaee.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -1501,6 +1494,13 @@
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.8.1/junit-4.8.1-sources.jar!/" />
       </SOURCES>
+    </library>
+    <library name="Maven: javax.persistence:persistence-api:2.0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../lib/javaee.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
     </library>
   </component>
 </project>
