@@ -46,6 +46,11 @@ public final class DynamicPartialMockingTest
 
       @SuppressWarnings({"UnusedDeclaration"})
       static void doSomething(boolean b, String s) { throw new IllegalStateException(); }
+
+      boolean methodWhichCallsAnotherInTheSameClass()
+      {
+         return simpleOperation(1, "internal", null);
+      }
    }
 
    static final class SubCollaborator extends Collaborator
@@ -160,6 +165,23 @@ public final class DynamicPartialMockingTest
             new Collaborator(45);
          }
       };
+   }
+
+   @Test
+   public void mockMethodInSameClass()
+   {
+      final Collaborator collaborator = new Collaborator();
+
+      new NonStrictExpectations(collaborator)
+      {
+         {
+            collaborator.simpleOperation(1, anyString, null); result = false;
+         }
+      };
+
+      assertFalse(collaborator.methodWhichCallsAnotherInTheSameClass());
+      assertTrue(collaborator.simpleOperation(2, "", null));
+      assertFalse(collaborator.simpleOperation(1, "", null));
    }
 
    @Test(expected = IllegalStateException.class)
