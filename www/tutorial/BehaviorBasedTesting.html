@@ -1731,12 +1731,12 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    code. In short, it entails extra work and is not "refactoring friendly".
 </p>
 <p>
-   An alternative that avoids both problems is to let JMockit figure out which methods/constructors
-   should be mocked or not, based on which invocations are recorded in an expectation block, and
-   which are not.
+   An alternative that avoids both problems is to let JMockit figure out when to execute the real
+   implementation of methods/constructors during the <em>replay</em> phase, based on which
+   invocations were recorded in an expectation block and which were not.
    The following example tests demonstrate this feature, which we describe as <em>dynamic partial
-   mocking</em> since the decision of what is mocked is made at runtime, as the expectation blocks
-   in a test are executed.
+   mocking</em> since the decision of what is mocked is made at runtime, as invocations to mocked
+   types during the replay phase match invocations recorded in expectation blocks.
 </p>
 <pre><code>public final class DynamicPartialMockingTest
 {
@@ -1777,12 +1777,12 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       new NonStrictExpectations(<strong>collaborator</strong>)
       {{
          collaborator.simpleOperation(1, "", null); <em>result</em> = false;
-         Collaborator.doSomething(true, "test");
+         Collaborator.doSomething(<em>anyBoolean</em>, "test");
       }};
 
       // Mocked:
       assertFalse(collaborator.simpleOperation(1, "", null));
-      Collaborator.doSomething(false, null);
+      Collaborator.doSomething(true, null);
 
       // Not mocked:
       assertEquals(2, collaborator.getValue());
@@ -1816,6 +1816,11 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    <code>Mocked</code> annotation and any of its attributes.
    We could even combine static and dynamic partial mocking for the same mocked class, although that
    wouldn't probably be of much use.
+</p>
+<p>
+   Finally, dynamically mocked types can be freely verified inside <em>verification</em> blocks.
+   Just like in expectation blocks, invocations to them will never execute the real implementation
+   when inside the verification block.
 </p>
 
 <h3 id="cascading">
