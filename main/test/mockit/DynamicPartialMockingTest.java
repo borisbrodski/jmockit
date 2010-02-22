@@ -133,7 +133,7 @@ public final class DynamicPartialMockingTest
       {
          {
             collaborator.simpleOperation(1, "", null); result = false;
-            Collaborator.doSomething(true, "test");
+            Collaborator.doSomething(anyBoolean, "test");
          }
       };
 
