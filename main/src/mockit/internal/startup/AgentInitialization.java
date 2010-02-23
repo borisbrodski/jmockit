@@ -29,7 +29,7 @@ import java.util.regex.*;
 
 public final class AgentInitialization
 {
-   private static final Pattern JAR_REGEX = Pattern.compile(".*jmockit[-.\\d]*.jar");
+   private static final Pattern JAR_REGEX = Pattern.compile(".*jmockit[-.\\w]*.jar");
 
    public void initializeAccordingToJDKVersion()
    {
