@@ -83,7 +83,7 @@ public final class RecordAndReplayExecution
    }
 
    public RecordAndReplayExecution(
-      Object targetObject, Object... classesOrInstancesToBePartiallyMocked)
+      Expectations targetObject, Object... classesOrInstancesToBePartiallyMocked)
    {
       TestRun.enterNoMockingZone();
       TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(true);
@@ -92,7 +92,11 @@ public final class RecordAndReplayExecution
          RecordAndReplayExecution previous = TestRun.getExecutingTest().setRecordAndReplay(null);
          Class<?> enclosingClassForTargetObject = targetObject.getClass().getEnclosingClass();
 
-         if (previous == null || enclosingClassForTargetObject == null) {
+         if (enclosingClassForTargetObject == null) {
+            throw new RuntimeException("Invalid top level Expectations subclass");
+         }
+
+         if (previous == null) {
             executionState = new PhasedExecutionState();
             lastExpectationIndexInPreviousReplayPhase = 0;
          }
@@ -104,19 +108,14 @@ public final class RecordAndReplayExecution
 
          recordPhase = new RecordPhase(this, targetObject instanceof NonStrictExpectations);
 
-         if (enclosingClassForTargetObject == null) {
-            redefinitions = null;
-            typesAndTargetObjects = Collections.emptyMap();
-         }
-         else {
-            LocalFieldTypeRedefinitions redefs = new LocalFieldTypeRedefinitions(targetObject);
-            typesAndTargetObjects =
-               previous == null ? new HashMap<Type, Object>(2) : previous.typesAndTargetObjects;
-            redefineFieldTypes(redefs);
-            redefinitions = redefs.getTypesRedefined() == 0 ? null : redefs;
-         }
+         LocalFieldTypeRedefinitions redefs = new LocalFieldTypeRedefinitions(targetObject);
+         typesAndTargetObjects =
+            previous == null ? new HashMap<Type, Object>(2) : previous.typesAndTargetObjects;
+         redefineFieldTypes(redefs);
+         redefinitions = redefs.getTypesRedefined() == 0 ? null : redefs;
 
          dynamicPartialMocking = applyDynamicPartialMocking(classesOrInstancesToBePartiallyMocked);
+
          validateThereIsAtLeastOneMockedTypeInScope();
          discoverDuplicateMockedTypesForAutomaticMockInstanceMatching();
          TestRun.getExecutingTest().setRecordAndReplay(this);
