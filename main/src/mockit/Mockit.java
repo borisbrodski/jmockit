@@ -1,6 +1,6 @@
 /*
  * JMockit Core/Annotations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -56,13 +56,13 @@ import mockit.internal.util.*;
  * {@link #stubOutClass(Class, String...)}, and {@link #stubOutClass(Class, boolean, String...)}.
  * </li>
  * <li>
- * <strong>Annotations API</strong> for state-based mocking: {@link MockUp},
+ * <strong>Annotations API</strong> for state-oriented mocking: {@link MockUp},
  * {@link #setUpMocks(Object...)}, {@link #setUpMock(Class, Class)} and its several overloads,
  * {@link #setUpStartupMocks(Object...)}, {@link #setUpMocksAndStubs(Class...)}, and
  * {@link #tearDownMocks(Class...)} / {@link #tearDownMocks()}.
  * </li>
  * <li>
- * <strong>Core API</strong> for state-based mocking on JDK 1.4, now obsolete: 
+ * <strong>Core API</strong> for state-oriented mocking on JDK 1.4, now obsolete and deprecated:
  * {@linkplain #redefineMethods(Class, Class)} and its several overloads, and
  * {@link #restoreAllOriginalDefinitions()} / {@link #restoreOriginalDefinition(Class...)}.
  * </li>
@@ -72,8 +72,8 @@ import mockit.internal.util.*;
  * These are merely convenience methods that create empty implementation classes for one or more
  * interfaces, where all implemented methods do nothing beyond returning a default value according
  * to the return type of each interface method.
- * The created classes can be redefined/mocked through the Core or Annotations API, and its
- * instances passed to code under test.
+ * The created classes can be mocked through the Annotations API, and its instances passed to code
+ * under test.
  * </li>
  * </ul>
  * Tutorial:
@@ -96,7 +96,9 @@ public final class Mockit
     *
     * @param allowDefaultConstructor indicates whether the public default constructor in the mock
     * class is a mock for the default constructor in the real class
+    * @deprecated Use {@code @MockClass} and {@code setUpMocks(mock)} instead. Better yet, use {@link MockUp}.
     */
+   @Deprecated
    public static void redefineMethods(
       Class<?> realClass, Object mock, boolean allowDefaultConstructor)
    {
@@ -108,7 +110,9 @@ public final class Mockit
     *
     * @param allowDefaultConstructor indicates whether the public default constructor in the mock
     * class is a mock for the default constructor in the real class
+    * @deprecated Use {@code @MockClass} and {@code setUpMocks(mockClass)} instead. Better yet, use {@link MockUp}.
     */
+   @Deprecated
    public static void redefineMethods(
       Class<?> realClass, Class<?> mockClass, boolean allowDefaultConstructor)
    {
@@ -120,7 +124,9 @@ public final class Mockit
     * The mock methods will be called on this instance from the modified real methods.
     *
     * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java">Example</a>
+    * @deprecated Use {@code @MockClass} and {@code setUpMocks(mock)} instead. Better yet, use {@link MockUp}.
     */
+   @Deprecated
    public static void redefineMethods(Class<?> realClass, Object mock)
    {
       redefineMethods(realClass, mock, mock.getClass(), false);
@@ -194,7 +200,9 @@ public final class Mockit
     * class
     *
     * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/test/jmockit/tutorial/domain/ServiceA_CoreAPI_Test.java">Example</a>
+    * @deprecated Use {@code @MockClass} and {@code setUpMocks(mockClass)} instead. Better yet, use {@link MockUp}.
     */
+   @Deprecated
    public static void redefineMethods(Class<?> realClass, Class<?> mockClass)
    {
       redefineMethods(realClass, null, mockClass, false);
@@ -544,11 +552,10 @@ public final class Mockit
     * method's execution, as well as all classes mocked for the test class as a whole (through a
     * "before class" method or an {@code @UsingMocksAndStubs} annotation) before the first test in
     * the next test class is executed.
-    * <p/>
-    * This is equivalent to {@link #restoreAllOriginalDefinitions()}.
     */
    public static void tearDownMocks()
    {
+      //noinspection deprecation
       restoreAllOriginalDefinitions();
    }
 
@@ -569,11 +576,10 @@ public final class Mockit
     * In practice, this method should only be used inside "after" methods ({@code tearDown()} in a
     * JUnit 3.8 test class), since mock classes set up in a "before" or {@code setUp()} method are
     * <em>not</em> automatically discarded.
-    * <p/>
-    * This is equivalent to {@link #restoreOriginalDefinition(Class...)}.
     */
    public static void tearDownMocks(Class<?>... realClasses)
    {
+      //noinspection deprecation
       restoreOriginalDefinition(realClasses);
    }
 
@@ -610,7 +616,9 @@ public final class Mockit
     *
     * @param realClasses one or more real classes from production code, which may have had methods
     * redefined
+    * @deprecated Use {@code tearDownMocks(realClasses)} instead.
     */
+   @Deprecated
    public static void restoreOriginalDefinition(Class<?>... realClasses)
    {
       Set<Class<?>> classesToRestore = new HashSet<Class<?>>();
@@ -628,7 +636,10 @@ public final class Mockit
     * all classes mocked by a test at the end of that test, as well as all classes mocked for the
     * test class as a whole (eg, in a {@code @BeforeClass} JUnit method) before the first test in
     * the next test class is executed.
+    *
+    * @deprecated Use {@code tearDownMocks()} instead.
     */
+   @Deprecated
    public static void restoreAllOriginalDefinitions()
    {
       MockFixture mockFixture = TestRun.mockFixture();
