@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2009 JMockit Developers
+ * Copyright (c) 2009-2010 JMockit Developers
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -192,7 +192,7 @@ public final class DelegateInvocationTest
       new NonStrictExpectations()
       {
          {
-            mock.finalMethod(); repeatsAtMost(1);
+            mock.finalMethod(); maxTimes = 1;
             result = new Delegate()
             {
                char finalMethod(Invocation invocation)
