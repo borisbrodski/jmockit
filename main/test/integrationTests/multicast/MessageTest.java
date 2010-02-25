@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -102,7 +102,7 @@ public final class MessageTest
    // Waits a fixed time for all threads to finish - not elegant, but easy.
    private void allowSomeTimeForAllEventsToBeReceived() throws InterruptedException
    {
-      Thread.sleep(150);
+      Thread.sleep(200);
    }
 
    @Test
@@ -170,11 +170,11 @@ public final class MessageTest
 
       new NonStrictExpectations(testClients.length)
       {
-         final Socket con = new Socket(withPrefix("client"), withAny(1));
+         final Socket con = new Socket(withPrefix("client"), anyInt);
 
          {
-            con.getOutputStream(); returns(new ByteArrayOutputStream());
-            con.getInputStream(); returns(new ByteArrayInputStream("reply1\nreply2\n".getBytes()));
+            con.getOutputStream(); result = new ByteArrayOutputStream();
+            con.getInputStream(); result = new ByteArrayInputStream("reply1\nreply2\n".getBytes());
             con.close();
          }
       };
@@ -207,8 +207,8 @@ public final class MessageTest
          Socket con;
 
          {
-            con.getOutputStream(); returns(new ByteArrayOutputStream());
-            con.getInputStream(); returns(new ByteArrayInputStream("reply1\nreply2\n".getBytes()));
+            con.getOutputStream(); result = new ByteArrayOutputStream();
+            con.getInputStream(); result = new ByteArrayInputStream("reply1\nreply2\n".getBytes());
          }
       };
 
