@@ -24,6 +24,7 @@
  */
 package mockit;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -48,6 +49,8 @@ public final class DeencapsulationTest
 
    static final class Subclass extends BaseClass
    {
+      final int INITIAL_VALUE = new Random().nextInt();
+
       private static StringBuilder buffer;
       private static char static1;
       private static char static2;
@@ -71,6 +74,16 @@ public final class DeencapsulationTest
          InnerClass() {}
          InnerClass(boolean b, Long l, String s) {}
       }
+   }
+
+   @Test
+   public void setValueOfNonConstantFinalField()
+   {
+      Subclass obj = new Subclass();
+
+      setField(obj, "INITIAL_VALUE", 123);
+
+      assertEquals(123, obj.INITIAL_VALUE);
    }
 
    @Test
