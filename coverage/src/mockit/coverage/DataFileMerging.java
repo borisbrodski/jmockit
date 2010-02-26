@@ -25,35 +25,53 @@
 package mockit.coverage;
 
 import java.io.*;
+import java.util.*;
 
 import mockit.coverage.data.*;
 
-final class AccretionFile
+final class DataFileMerging
 {
-   private final File outputFile;
+   private final List<File> inputFiles;
 
-   AccretionFile(String outputDir)
+   DataFileMerging(String[] inputPaths)
    {
-      String parentDir = outputDir.length() == 0 ? null : outputDir;
-      outputFile = new File(parentDir, "coverage.ser");
-   }
+      inputFiles = new ArrayList<File>(inputPaths.length);
 
-   void generate(CoverageData newData) throws ClassNotFoundException, IOException
-   {
-      newData.fillLastModifiedTimesForAllClassFiles();
-
-      mergeDataFromExistingFile(newData);
-
-      newData.writeDataToFile(outputFile);
-      System.out.println("JMockit: Coverage data written to " + outputFile.getCanonicalPath());
-   }
-
-   private void mergeDataFromExistingFile(CoverageData newData)
-      throws IOException, ClassNotFoundException
-   {
-      if (outputFile.exists()) {
-         CoverageData previousData = CoverageData.readDataFromFile(outputFile);
-         newData.merge(previousData);
+      for (String path : inputPaths) {
+         addInputFileToList(path.trim());
       }
+   }
+
+   private void addInputFileToList(String path)
+   {
+      if (path.length() > 0) {
+         File inputFile = new File(path);
+
+         if (inputFile.isDirectory()) {
+            inputFile = new File(inputFile, "coverage.ser");
+         }
+
+         inputFiles.add(inputFile);
+      }
+   }
+
+   CoverageData merge() throws ClassNotFoundException, IOException
+   {
+      CoverageData mergedData = null;
+
+      for (File inputFile : inputFiles) {
+         if (inputFile.exists()) {
+            CoverageData existingData = CoverageData.readDataFromFile(inputFile);
+
+            if (mergedData == null) {
+               mergedData = existingData;
+            }
+            else {
+               mergedData.merge(existingData);
+            }
+         }
+      }
+
+      return mergedData;
    }
 }

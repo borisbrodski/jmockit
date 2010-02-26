@@ -33,15 +33,14 @@ final class OutputFileGenerator extends Thread
 {
    private static final String COVERAGE_PREFIX = "jmockit-coverage-";
 
-   private final Runnable onRun;
+   Runnable onRun;
    private final String outputFormat;
    private final String outputDir;
    private final String[] sourceDirs;
    private String[] classPath;
 
-   OutputFileGenerator(Runnable onRun, String outputFormat, String outputDir, String[] srcDirs)
+   OutputFileGenerator(String outputFormat, String outputDir, String[] srcDirs)
    {
-      this.onRun = onRun;
       this.outputFormat = getOutputFormat(outputFormat);
       this.outputDir = outputDir.length() > 0 ? outputDir : getCoverageProperty("outputDir");
 
@@ -134,13 +133,34 @@ final class OutputFileGenerator extends Thread
    @Override
    public void run()
    {
-      onRun.run();
+      if (onRun != null) {
+         onRun.run();
+      }
+
       createOutputDirIfSpecifiedButNotExists();
 
       CoverageData coverageData = CoverageData.instance();
 
       try {
          generateAccretionDataFileIfRequested(coverageData);
+         generateHTMLReportIfRequested(coverageData);
+      }
+      catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+      catch (ClassNotFoundException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   void generateAggregateReportFromInputFiles(String commaSeparatedPaths)
+   {
+      createOutputDirIfSpecifiedButNotExists();
+
+      String[] inputPaths = commaSeparatedPaths.split(",");
+
+      try {
+         CoverageData coverageData = new DataFileMerging(inputPaths).merge();
          generateHTMLReportIfRequested(coverageData);
       }
       catch (IOException e) {
@@ -167,11 +187,7 @@ final class OutputFileGenerator extends Thread
       throws IOException, ClassNotFoundException
    {
       if (outputFormat.contains("merge")) {
-         String commaSeparatedPaths = System.getProperty(COVERAGE_PREFIX + "input");
-         String[] pathsToInputFiles =
-            commaSeparatedPaths == null ? null : commaSeparatedPaths.split(",");
-
-         new AccretionFile(outputDir, pathsToInputFiles).generate(newData);
+         new AccretionFile(outputDir).generate(newData);
       }
    }
 

@@ -335,11 +335,10 @@
 
    <target name="sampleTests">
       <taskdef resource="testngtasks" classpath="${TESTNG_JAR}"/>
-      <delete file="samples/coverage.ser" quiet="true"/>
 
+      <delete file="samples/coverage.ser" quiet="true"/>
       <junit fork="yes" forkmode="once" dir="samples">
          <classpath path="jmockit.jar"/>
-         <classpath path="jmockit-coverage-htmlfull.jar"/>
          <classpath path="jmockit-coverage-merge.jar"/>
          <classpath refid="common.classpath"/>
          <classpath>
@@ -418,18 +417,25 @@
       </junit>
       <testReport name="samples/JMockitSampleTests"/>
 
-      <testng workingdir="samples" listener="mockit.integration.testng.Initializer">
+      <property name="sampleDir" value="samples/LoginService"/>
+      <delete file="${sampleDir}/coverage.ser" quiet="true"/>
+      <testng workingdir="${sampleDir}" listener="mockit.integration.testng.Initializer">
          <classpath path="jmockit.jar"/>
-         <classpath path="jmockit-coverage-htmlfull.jar"/>
          <classpath path="jmockit-coverage-merge.jar"/>
          <classpath refid="common.classpath"/>
          <classpath>
             <fileset dir="samples" includes="lib/*.jar"/>
-            <pathelement location="samples/LoginService/classes"/>
-            <pathelement location="samples/LoginService/test-classes"/>
+            <pathelement location="${sampleDir}/classes"/>
+            <pathelement location="${sampleDir}/test-classes"/>
          </classpath>
-         <classfileset dir="samples/LoginService/test-classes" includes="**/*Test.class"/>
+         <classfileset dir="${sampleDir}/test-classes" includes="**/*Test.class"/>
       </testng>
+
+      <java
+         fork="yes" dir="samples" classname="mockit.coverage.CodeCoverage"
+         classpath="jmockit-coverage-htmlfull.jar">
+         <arg value=".,LoginService"/>
+      </java>
    </target>
 
    <target name="findbugs">

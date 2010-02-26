@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -45,17 +45,33 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
    private final Matcher classesToInclude;
    private final Matcher classesToExclude;
 
+   public static void main(String[] args)
+   {
+      OutputFileGenerator generator = createOutputFileGenerator(args);
+      generator.generateAggregateReportFromInputFiles(args[0]);
+   }
+
+   private static OutputFileGenerator createOutputFileGenerator(String[] args)
+   {
+      int argCount = args.length;
+      String outputFormat = argCount <= 1 ? "" : args[1];
+      String outputDir = argCount <= 2 ? "" : args[2];
+      String[] sourceDirs = argCount <= 3 ? NO_ARGS : args[3].split(",");
+
+      return new OutputFileGenerator(outputFormat, outputDir, sourceDirs);
+   }
+
+   @SuppressWarnings({"UnusedDeclaration"})
    public CodeCoverage(String argsSeparatedByColon)
    {
-      modifiedClasses = new HashSet<String>();
-
       String[] args = argsSeparatedByColon == null ? NO_ARGS : argsSeparatedByColon.split(":");
 
+      modifiedClasses = new HashSet<String>();
       classesToInclude = getClassNameRegexForClassesToInclude(args);
       classesToExclude = getClassNameRegexForClassesToExclude();
 
       redefineClassesAlreadyLoadedForCoverage();
-      setUpOutputFileGenerators(args);
+      setUpOutputFileGenerator(args);
    }
 
    private Matcher getClassNameRegexForClassesToInclude(String[] args)
@@ -81,19 +97,14 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
       return getClassNameRegex(regex);
    }
 
-   private void setUpOutputFileGenerators(String[] args)
+   private void setUpOutputFileGenerator(String[] args)
    {
-      int argCount = args.length;
-      String outputFormat = argCount <= 1 ? "" : args[1];
-      String outputDir = argCount <= 2 ? "" : args[2];
-      String[] sourceDirs = argCount <= 3 ? NO_ARGS : args[3].split(",");
+      OutputFileGenerator generator = createOutputFileGenerator(args);
 
-      OutputFileGenerator outputFileGenerator =
-         new OutputFileGenerator(this, outputFormat, outputDir, sourceDirs);
-
-      if (outputFileGenerator.isOutputToBeGenerated()) {
-         CoverageData.instance().setWithCallPoints(outputFileGenerator.isWithCallPoints());
-         Runtime.getRuntime().addShutdownHook(outputFileGenerator);
+      if (generator.isOutputToBeGenerated()) {
+         CoverageData.instance().setWithCallPoints(generator.isWithCallPoints());
+         Runtime.getRuntime().addShutdownHook(generator);
+         generator.onRun = this;
       }
    }
 
