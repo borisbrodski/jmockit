@@ -177,11 +177,11 @@ final class OutputFileGenerator extends Thread
 
    private void generateHTMLReportIfRequested(CoverageData coverageData) throws IOException
    {
-      if (isWithCallPoints()) {
-         new FullCoverageReport(outputDir, sourceDirs, coverageData).generate();
-      }
-      else {
+      if (outputFormat.contains("html-nocp")) {
          new BasicCoverageReport(outputDir, sourceDirs, coverageData).generate();
+      }
+      else if (outputFormat.contains("html")) {
+         new FullCoverageReport(outputDir, sourceDirs, coverageData).generate();
       }
    }
 }
