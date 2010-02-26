@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -167,7 +167,11 @@ final class OutputFileGenerator extends Thread
       throws IOException, ClassNotFoundException
    {
       if (outputFormat.contains("merge")) {
-         new AccretionFile(outputDir).generate(newData);
+         String commaSeparatedPaths = System.getProperty(COVERAGE_PREFIX + "input");
+         String[] pathsToInputFiles =
+            commaSeparatedPaths == null ? null : commaSeparatedPaths.split(",");
+
+         new AccretionFile(outputDir, pathsToInputFiles).generate(newData);
       }
    }
 
