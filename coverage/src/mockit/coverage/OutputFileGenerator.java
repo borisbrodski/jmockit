@@ -98,7 +98,10 @@ final class OutputFileGenerator extends Thread
          result += " html";
       }
 
-      if (isAvailableInTheClasspath("merge")) {
+      if (isAvailableInTheClasspath("serial")) {
+         result += " serial";
+      }
+      else if (isAvailableInTheClasspath("merge")) {
          result += " merge";
       }
 
@@ -133,10 +136,7 @@ final class OutputFileGenerator extends Thread
    @Override
    public void run()
    {
-      if (onRun != null) {
-         onRun.run();
-      }
-
+      onRun.run();
       createOutputDirIfSpecifiedButNotExists();
 
       CoverageData coverageData = CoverageData.instance();
@@ -186,8 +186,13 @@ final class OutputFileGenerator extends Thread
    private void generateAccretionDataFileIfRequested(CoverageData newData)
       throws IOException, ClassNotFoundException
    {
-      if (outputFormat.contains("merge")) {
-         new AccretionFile(outputDir).generate(newData);
+      if (outputFormat.contains("serial")) {
+         new AccretionFile(outputDir, newData).generate();
+      }
+      else if (outputFormat.contains("merge")) {
+         AccretionFile accretionFile = new AccretionFile(outputDir, newData);
+         accretionFile.mergeDataFromExistingFileIfAny();
+         accretionFile.generate();
       }
    }
 

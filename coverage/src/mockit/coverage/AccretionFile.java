@@ -31,29 +31,28 @@ import mockit.coverage.data.*;
 final class AccretionFile
 {
    private final File outputFile;
+   private final CoverageData newData;
 
-   AccretionFile(String outputDir)
+   AccretionFile(String outputDir, CoverageData newData)
    {
       String parentDir = outputDir.length() == 0 ? null : outputDir;
       outputFile = new File(parentDir, "coverage.ser");
-   }
 
-   void generate(CoverageData newData) throws ClassNotFoundException, IOException
-   {
       newData.fillLastModifiedTimesForAllClassFiles();
-
-      mergeDataFromExistingFile(newData);
-
-      newData.writeDataToFile(outputFile);
-      System.out.println("JMockit: Coverage data written to " + outputFile.getCanonicalPath());
+      this.newData = newData;
    }
 
-   private void mergeDataFromExistingFile(CoverageData newData)
-      throws IOException, ClassNotFoundException
+   void mergeDataFromExistingFileIfAny() throws IOException, ClassNotFoundException
    {
       if (outputFile.exists()) {
          CoverageData previousData = CoverageData.readDataFromFile(outputFile);
          newData.merge(previousData);
       }
+   }
+
+   void generate() throws IOException
+   {
+      newData.writeDataToFile(outputFile);
+      System.out.println("JMockit: Coverage data written to " + outputFile.getCanonicalPath());
    }
 }
