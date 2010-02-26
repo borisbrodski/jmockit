@@ -151,22 +151,22 @@
    <li>
       <strong>Coverage data files</strong>: a single serialized file of name "coverage.ser" is
       written under the current working directory or under an specified output directory.
-      Differently from the other cases, however, if the file already exists its contents are first
-      read and <em>merged</em> with the in-memory results of the current test run.
+      If the file already exists its contents are first read and <em>merged</em> with the in-memory
+      results of the current test run.
       In the end, the file is overwritten with the merged coverage data.
    </li>
 </ol>
 
 <h4 id="callPoints">Call points</h4>
 <p>
-   For the first two types of output, there is optional "call point" information which may be
-   included or not, as selected by the user.
+   When running a test suite with the coverage tool, there is optional "call point" information
+   which can be gathered, as selected by the user.
    A <em>call point</em> is the point in the source test code from which an specific line of
    production code was exercised.
    Note that generating coverage with this extra information takes more time and produces
    significantly larger output. On the other hand, it can be useful to know which lines of test code
-   caused a given line of production code to be executed during the test run. The XHTML report, in
-   particular, makes this information easily viewable, though hiding it at first.
+   caused a given line of production code to be executed during the test run.
+   The XHTML report makes this information easily viewable, though hiding it at first.
 </p>
 
 <h3 id="configuration">
@@ -192,7 +192,7 @@
    Whatever the coverage jar(s) used, <code>jmockit.jar</code> (or a versioned jar obtained from the
    <a href="http://download.java.net/maven/2/mockit/jmockit/">Maven repository</a>) does
    <em>not</em> need to be added to the classpath, unless of course the suite contains tests which
-   use the JMockit API (it will also be implicitly added to the classpath).
+   use the JMockit mocking APIs (it will also be implicitly added to the classpath).
 </p>
 <p>
    Apart from enabling JMockit Coverage for a given test run, there are four aspects of the tool's
@@ -200,8 +200,8 @@
 </p>
 <ol>
    <li>
-      The <strong>output format</strong> desired: an XHTML report, or a data file for merging of
-      multiple test runs. Any combination of these three can be selected for the same test run.
+      The <strong>output format</strong> desired: an XHTML report or a data file for merging of
+      multiple test runs. Both kinds of output can be selected for the same test run.
       The default if none is specified is to generate a basic XHTML report.
    </li>
    <li>
@@ -216,8 +216,8 @@
    </li>
    <li>
       The set of Java classes which should be considered for coverage gathering.
-      By default, all classes in production code loaded during the test run which are not inside jar
-      files will be considered.
+      By default, all classes in production code loaded during the test run and which are not inside
+      jar files will be considered.
    </li>
 </ol>
 
@@ -434,7 +434,7 @@
    Notice that it will probably be useful to define a property for the JMockit version in use:
 </p>
 <pre><code>   &lt;properties>
-      &lt;jmockit.version>0.995&lt;/jmockit.version> 
+      &lt;jmockit.version>0.996&lt;/jmockit.version> 
    &lt;/properties>
 </code></pre>
 <p>
