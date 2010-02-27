@@ -83,7 +83,8 @@ abstract class ListWithFilesAndPercentages
       }
       else if (firstColumn) {
          printIndent();
-         output.println("  <td colspan='2' class='coverage nocode'>N/A</td>");
+         output.println(
+            "  <td class='coverage nocode'>N/A</td><td class='coverage nocode'>N/A</td>");
          firstColumnWithDoubleSpan = true;
       }
       else if (firstColumnWithDoubleSpan) {
