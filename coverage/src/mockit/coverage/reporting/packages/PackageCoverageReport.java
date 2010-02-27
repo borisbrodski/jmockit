@@ -111,30 +111,35 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    private void writeCodeCoveragePercentageForFile(FileCoverageData fileData)
    {
       int percentage = fileData.getCodeCoveragePercentage();
+      int covered = fileData.getCoveredSegments();
+      int total = fileData.getTotalSegments();
 
-      coveredItems[0] += fileData.getCoveredSegments();
-      totalItems[0] += fileData.getTotalSegments();
+      writeCodeCoverageMetricForFile(0, covered, total, percentage);
+   }
 
-      printCoveragePercentage(true, percentage);
+   private void writeCodeCoverageMetricForFile(int metric, int covered, int total, int percentage)
+   {
+      coveredItems[metric] += covered;
+      totalItems[metric] += total;
+
+      printCoveragePercentage(metric, covered, total, percentage);
    }
 
    private void writePathCoveragePercentageForFile(FileCoverageData fileData)
    {
       int percentage = fileData.getPathCoveragePercentage();
+      int covered = fileData.getCoveredPaths();
+      int total = fileData.getTotalPaths();
 
-      coveredItems[1] += fileData.getCoveredPaths();
-      totalItems[1] += fileData.getTotalPaths();
-
-      printCoveragePercentage(false, percentage);
+      writeCodeCoverageMetricForFile(1, covered, total, percentage);
    }
 
    private void writeDataCoveragePercentageForFile(FileCoverageData fileData)
    {
-      coveredItems[2] += fileData.dataCoverageInfo.getCoveredItems();
-      totalItems[2] += fileData.dataCoverageInfo.getTotalItems();
-
       int percentage = fileData.dataCoverageInfo.getCoveragePercentage();
+      int covered = fileData.dataCoverageInfo.getCoveredItems();
+      int total = fileData.dataCoverageInfo.getTotalItems();
 
-      printCoveragePercentage(false, percentage);
+      writeCodeCoverageMetricForFile(2, covered, total, percentage);
    }
 }

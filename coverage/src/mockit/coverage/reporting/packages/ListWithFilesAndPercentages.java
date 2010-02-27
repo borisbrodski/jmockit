@@ -31,6 +31,8 @@ import mockit.coverage.*;
 
 abstract class ListWithFilesAndPercentages
 {
+   private static final String[] METRIC_ITEM_NAMES = {"Line segments", "Paths", "Fields"};
+
    protected final PrintWriter output;
    private final String baseIndent;
    final int[] totalItems = new int[3];
@@ -71,17 +73,23 @@ abstract class ListWithFilesAndPercentages
 
    protected abstract void writeMetricsForFile(String packageName, String fileName);
 
-   final void printCoveragePercentage(boolean firstColumn, int percentage)
+   final void printCoveragePercentage(int metric, int covered, int total, int percentage)
    {
       if (percentage >= 0) {
          printIndent();
          output.write("  <td class='coverage' style='background-color:#");
          output.write(CoveragePercentage.percentageColor(percentage));
+         output.write("' title='");
+         output.write(METRIC_ITEM_NAMES[metric]);
+         output.write(": ");
+         output.print(covered);
+         output.write('/');
+         output.print(total);
          output.write("'>");
          output.print(percentage);
          output.println("%</td>");
       }
-      else if (firstColumn) {
+      else if (metric == 0) {
          printIndent();
          output.println(
             "  <td class='coverage nocode'>N/A</td><td class='coverage nocode'>N/A</td>");
