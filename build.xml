@@ -234,7 +234,7 @@
    <target name="createjar-core">
       <jar destfile="jmockit.jar" manifest="main/META-INF/MANIFEST.MF">
          <fileset file="main/src/jmockit.properties"/>
-         <fileset dir="main" includes="META-INF/services/*"/>
+         <!--<fileset dir="main" includes="META-INF/services/*"/>-->
          <fileset
             dir="main/src"
             includes="mockit/**/*.java mockit/external/**/*.txt **/attach/**/*.java"/>
@@ -256,12 +256,18 @@
    </target>
    <target name="createjar-coverage-htmlbasic">
       <jar destfile="jmockit-coverage-htmlbasic.jar" basedir="coverage/classes" excludes="**/*">
-         <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
+         <manifest>
+            <attribute name="Class-Path" value="jmockit-coverage.jar"/>
+            <attribute name="Main-Class" value="mockit.coverage.CodeCoverage"/>
+         </manifest>
       </jar>
    </target>
    <target name="createjar-coverage-htmlfull">
       <jar destfile="jmockit-coverage-htmlfull.jar" basedir="coverage/classes" excludes="**/*">
-         <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
+         <manifest>
+            <attribute name="Class-Path" value="jmockit-coverage.jar"/>
+            <attribute name="Main-Class" value="mockit.coverage.CodeCoverage"/>
+         </manifest>
       </jar>
    </target>
    <target name="createjar-coverage-serial">
@@ -434,9 +440,7 @@
          <classfileset dir="${sampleDir}/test-classes" includes="**/*Test.class"/>
       </testng>
 
-      <java
-         fork="yes" dir="samples" classname="mockit.coverage.CodeCoverage"
-         classpath="jmockit-coverage-htmlfull.jar" args=".,LoginService"/>
+      <java fork="yes" dir="samples" jar="jmockit-coverage-htmlfull.jar" args=".,LoginService"/>
    </target>
 
    <target name="findbugs">
