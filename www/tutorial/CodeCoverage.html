@@ -206,7 +206,9 @@
    </li>
    <li>
       The <strong>output directory</strong> where output files should be written.
-      By default, the current working directory of the running JVM is used.
+      By default, the current working directory of the running JVM is used, with all ".html" files
+      of the XHTML report generated inside a "coverage-report" sub-directory. Sub-directories are
+      automatically created as needed.
    </li>
    <li>
       The list of <strong>source directories</strong> for the XHTML report.
@@ -223,11 +225,6 @@
 
 <h4 id="classpathConfiguration">Selecting the desired output through classpath configuration</h4>
 <p>
-   This mechanism applies when the <code>-javaagent:jmockit.jar</code> JVM parameter is <em>not</em>
-   used for running tests with JMockit. As such, it's only valid when running on JDK 1.6. (See the
-   <a href="RunningTests.html">relevant chapter</a> for details.)
-</p>
-<p>
    To select the desired output format(s) to be generated for a test run, add one or more of the
    following jar files to the classpath:
 </p>
@@ -241,14 +238,19 @@
       generates an XHTML report <em>with</em> call points.
    </li>
    <li>
+      <code>jmockit-coverage-<strong>serial</strong>.jar</code>:
+      generates a <em>serialized data file</em> of name "coverage.ser".
+   </li>
+   <li>
       <code>jmockit-coverage-<strong>merge</strong>.jar</code>:
-      generates a merged data file of name "coverage.ser".
+      generates the same serialized data file, but after <em>merging</em> the coverage data gathered
+      by the current test run with an existing "coverage.ser" file (if any is found in the working
+      dir - otherwise has the same effect as <code>jmockit-coverage-serial.jar</code>).
    </li>
 </ul>
 <p>
-   The "htmlbasic" and "htmlfull" jars are mutually exclusive.
-   However, it <em>is</em> valid to have both <code>jmockit-coverage-merge.jar</code> and one of the
-   two "html" jars in the classpath at the same time.
+   The "htmlbasic" and "htmlfull" jars are mutually exclusive, just like "serial" and "merge" are.
+   However, it <em>is</em> valid to have one of each pair in the classpath at the same time.
    In such a case, at the end of the test run both a "coverage.ser" file and a "coverage-report" 
    directory (unless another is specified) will be written.
 </p>
@@ -275,13 +277,13 @@
    JUnit or TestNG.
 </p>
 <p>
-   The available system properties are:
+   The available system properties, all prefixed with "jmockit-coverage-", are:
 </p>
 <ol>
    <li>
       <code>jmockit-coverage-<strong>output</strong></code>: one or more comma-separated values
       between <strong><code>html</code></strong>, <strong><code>html-nocp</code></strong>,
-      and <strong><code>merge</code></strong>.
+      <strong><code>serial</code></strong>, and <strong><code>merge</code></strong>.
       The "nocp" suffix stands for "no call points".
       The use of this system property takes precedence over the presence of coverage jars in the
       classpath.
@@ -308,64 +310,15 @@
       This property can be used together with <code>jmockit-coverage-classes</code> or on its own.
    </li>
 </ol>
-
-<h4 id="javaagentConfiguration">Configuration through <code>-javaagent</code></h4>
 <p>
-   Another way to have full control over the code coverage tool is to use a JVM command line with
-   <code>-javaagent:jmockit.jar=coverage=&lt;Coverage arguments></code> when running the test suite.
-   Note that you should be able to do this inside an Ant target, a Maven <code>surefire</code>
-   plug-in configuration, or in a test run configuration for your Java IDE of choice.
-</p>
-<p>
-   The "<code>Coverage arguments</code>" part consist of up to four different arguments, in the
-   format <code>classSelectionRegex:outputFormat:outputDir:srcDirs</code>, as follows.
-   Each of these four arguments can be left unspecified by leaving it empty in the full string.
-   After the last non-empty argument, the ":" characters can be omitted.
-</p>
-<ol>
-   <li>
-      <code>classSelectionRegex</code> specifies the classes to be selected for coverage;
-      if empty, coverage will be gathered for all production classes loaded during the test which
-      are not inside jar files.
-   </li>
-   <li>
-      <code>outputFormat</code> specifies the format for the coverage output, and should be
-      one or more of: <strong><code>html</code></strong>, <strong><code>html-nocp</code></strong>,
-      <strong><code>merge</code></strong> ("nocp" stands for "no call points"); more than one value
-      can be specified by separating them with a comma; if no value is specified,
-      <code>html-nocp</code> is assumed by default.
-   </li>
-   <li>
-      <code>outputDir</code> specifies the destination directory for coverage output;
-      if empty, the current working directory is assumed, with a "coverage-report"
-      subdirectory being created for the XHTML report (if not already existing).
-   </li>
-   <li>
-      <code>srcDirs</code> is only applicable to the XHTML report, and is a comma-separated
-      list of Java source directories;
-      if empty, all "src" directories under the current working dir are automatically found
-      and searched for ".java" sources.
-   </li>
-</ol>
-<p>
-   The <code>classSelectionRegex</code> argument should be a
-   <code>java.util.regex</code>-conformable regular expression specifying the classes and/or
-   packages in production code for which coverage is desired.
-   For example, "orderMngr.domain.*" selects all classes in the <code>orderMngr.domain</code>
+   The class selection regular expressions should specify the fully qualified names of classes in
+   production code for which coverage is desired.
+   For example, "orderMngr\.domain\..+" selects all classes in the <code>orderMngr.domain</code>
    package as well as in any sub-packages.
-</p>
-<p>
-   Note that both types ("merge" and XHTML) of output can be specified; if both "<code>html</code>"
-   and "<code>html-nocp</code>" are specified, the first occurrence will take precedence.
-</p>
-<p>
-   When one of these four arguments is left unspecified, the equivalent
-   <code>jmockit-coverage-xyz</code> system property will be respected, if specified.
-   If the argument <em>is</em> specified, though, it will take precedence over the property.
 </p>
 
 <h3 id="merging">
-   Generating aggregate reports for separate test runs
+   Generating aggregate or cumulative reports for separate test runs
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#output"><img align="right" src="go-top.png" title="First section"></a>
@@ -376,37 +329,72 @@
 </h3>
 <p>
    Suppose you have multiple test run configurations (in separate Ant targets, for example), and
-   you want to generate a single XHTML report for the production code covered by the full set of
-   tests.
+   you want to generate a single XHTML report for the code covered by the full set of tests.
    Normally, when JMockit Coverage generates a report at the end of a test run, it overwrites any
    previous report that may have been generated in the same output directory.
-   So, instead of getting an aggregate report as desired, you would end up with the report for the
-   last test run only (assuming all test runs used the same working dir).
-   Here is where the third type of output, the <em>merged data file</em> (coverage.ser), comes in.
+   So, instead of getting a merged report as desired, you would end up with the report for the last
+   test run only (assuming all test runs used the same working dir).
+   Here is where the serialized data files ("coverage.ser" files generated in the same or in
+   different output directories) come in.
 </p>
 <p>
    As seen in other sections, we activate the generation of this file by either adding
-   <code>jmockit-coverage-merge.jar</code> to the classpath or by using a JVM command line such as
-   "<code>-javaagent:jmockit.jar=coverage=:html,merge</code>".
+   <code>jmockit-coverage-serial.jar</code> or <code>jmockit-coverage-merge.jar</code> to the
+   classpath, or by setting the <code>jmockit-coverage-output</code> system property.
 </p>
 <p>
-   At the end of any test run, and <em>before</em> any XHTML report is generated, an existing
-   "coverage.ser" file in the current working dir will be read, with the coverage data in it merged
-   with the current in-memory coverage data.
-   The modified in-memory data is then used in the generation of the XHTML report, if it is enabled
-   for the test run.
+   There are different ways to use the merging of multiple coverage data files. The following
+   sub-sections provide the details for each use case.
+</p>
+
+<h4 id="singleMergedReport">Generating a single aggregate report for multiple test runs</h4>
+<p>
+   Lets say you have multiple test run configurations (for example, multiple <code>junit</code> or
+   <code>testng</code> tasks in the same Ant target) to be executed at once, and want to produce a
+   single aggregate coverage report for the full set of tests. That is, you don't want to produce a
+   separate report for each individual test run.
+   The easiest way to achieve this is to use the same working directory for all test runs, with
+   <code>jmockit-coverage-merge.jar</code> in the classpath or with
+   <code>jmockit-coverage-output=merge</code> specified as a system property for each test run
+   configuration. Since the XHTML report is only desired at the end, the last test run configuration
+   in the sequence should either have the appropriate coverage jar in the classpath or add the
+   appropriate value to the <code>jmockit-coverage-output</code> property.
+   The "coverage.ser" file will be shared between all test runs. The first test run must
+   <em>not</em> read data from this file, therefore it should either be deleted or ignored by the
+   first test run by using <code>jmockit-coverage-serial.jar</code> or
+   <code>jmockit-coverage-output=serial</code> instead.
+</p>
+
+<h4 id="separateAggregateReport">Generating an aggregate report from a set of data files</h4>
+<p>
+   Suppose you want to generate a separate coverage report for <em>each</em> test run configuration
+   and also an aggregate report merging together the results from all test runs.
+   In this case we would have <code>n</code> test runs but <code>n + 1</code> coverage reports.
+   Only one XHTML report can be produced from a single test run, so an extra step which doesn't
+   execute any tests is necessary.
+   In order to preserve the original <code>coverage.ser</code> output files generated by each test
+   run, they will need to be written or copied into different output directories.
 </p>
 <p>
-   Note that these separate test runs may be for the <em>same</em> test suite, or for
-   <em>different</em> test suites.
-   The only thing in common between all test runs, if a single XHTML report is desired from them, is
-   that the working directory should be the same.
-   Otherwise, the shared "coverage.ser" file won't be found and a new "coverage-report" directory
-   will be created.
-   If different test runs <em>must</em> use different working dirs (perhaps because the source
-   directories are not all under the same top-level directory, or for some other reason), then the
-   "coverage.ser" file will have to be provided in each working dir by whatever means are available
-   (for example, by moving the file through an Ant task, or by creating a link in the file system).
+   Assuming that two or more <code>coverage.ser</code> files are available in separate directories,
+   an aggregate report can be generated from them by executing the
+   <code>mockit.coverage.CodeCoverage.main</code> method (a regular Java "main" method).
+   To facilitate this, the <code>jmockit-coverage-htmlbasic.jar</code> and
+   <code>jmockit-coverage-htmlfull.jar</code> files are <em>executable</em>.
+   Using Ant, the following task could be used:
+</p>
+<pre><code>   &lt;java
+      fork="yes" dir="myBaseDir" jar="jmockit-coverage-htmlfull.jar"
+      args="module1-outDir,anotherOutDir"/>
+</code></pre>
+<p>
+   The example above uses "myBaseDir" as the base directory where a separate JVM instance will run.
+   Two output directories containing "coverage.ser" data files are specified, separated by commas,
+   as the first command line argument.
+   Other configuration parameters can be specified through the "jmockit-coverage-xyz" system
+   properties.
+   This separate JVM instance will read each of the "coverage.ser" data files, merge the coverage
+   data in memory, and then generate the aggregate XHTML report before exiting.
 </p>
 
 <h3 id="maven">
@@ -440,32 +428,33 @@
 <p>
    In Maven 2, the <code>surefire</code> plugin is the one usually responsible for actually running
    tests.
-   To configure JMockit Coverage through JVM parameters, add something like the following:
+   To configure the coverage tool, specify values for the appropriate "jmockit-coverage-xyz" system
+   properties. For example, the output directory for generated files can be specified through the
+   <code>jmockit-coverage-outputDir</code> property.
 </p>
 <pre><code>&lt;plugin>
    &lt;groupId>org.apache.maven.plugins&lt;/groupId>
    &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
    &lt;configuration>
+      &lt;!-- uncomment this if needed
       &lt;argLine>
-         -javaagent:"${settings.localRepository}"/mockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar=
-coverage=:html:./target/coverage-report
+         -javaagent:"${settings.localRepository}"/mockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
       &lt;/argLine>
+      -->
+      &lt;systemProperties>
+         &lt;property>
+            &lt;name>jmockit-coverage-outputDir&lt;/name>&lt;value>target/my-coverage-report&lt;/value>
+         &lt;/property>
+         &lt;!-- other "jmockit-coverage" properties... -->
+      &lt;/systemProperties>
    &lt;/configuration>
 &lt;/plugin>
 </code></pre>
 <p>
-   A more convenient way to specify the output directory for files generated by JMockit Coverage
-   ("coverage.ser", "index.html" and other XHTML pages) is to configure <code>surefire</code> with
-   the <code>jmockit-coverage-outputDir</code> <em>system property</em> (which goes inside the
-   <code>configuration</code> element shown above):
+   If the tests are run in a Java SE 5 JVM, or if for whatever reason JMockit cannot be
+   automatically initialized when running on Java SE 6 (typically, when using the IBM or Apple
+   JDKs), then the <code>-javaagent</code> JVM parameter should be used as shown above.
 </p>
-<pre><code>      &lt;systemProperties>
-         &lt;property>
-            &lt;name>jmockit-coverage-outputDir&lt;/name>
-            &lt;value>target/my-coverage-report&lt;/value>
-         &lt;/property>
-      &lt;/systemProperties>
-</code></pre>
 
 <h3 id="switching">
    Turning coverage output on/off
