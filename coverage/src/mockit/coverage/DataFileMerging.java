@@ -72,6 +72,10 @@ final class DataFileMerging
          }
       }
 
+      if (mergedData == null) {
+         throw new IllegalArgumentException("No input \"coverage.ser\" files found");
+      }
+
       return mergedData;
    }
 }
