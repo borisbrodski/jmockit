@@ -95,7 +95,7 @@ public final class AnimationManagerInitTest
       manager.init(animator);
    }
 
-   @Test
+   @Ignore @Test
    public void initForComponentWithEndStateOnly()
    {
       // Expect checking of states to remove those components completely outside the container:
@@ -109,7 +109,7 @@ public final class AnimationManagerInitTest
       manager.init(animator);
    }
 
-   @Test
+   @Ignore @Test
    public void initForComponentWithStartAndEndStates()
    {
       // Expect checking of states to remove those components completely outside the container:
@@ -124,7 +124,7 @@ public final class AnimationManagerInitTest
       manager.init(animator);
    }
 
-   @Test
+   @Ignore @Test
    public void initForComponentCompletelyOutsideTheContainer()
    {
       new NonStrictExpectations()
@@ -141,7 +141,7 @@ public final class AnimationManagerInitTest
       manager.init(animator);
    }
 
-   @Test
+   @Ignore @Test
    public void initForChangingComponent()
    {
       List<JComponent> changingComponents = getField(manager, List.class);
