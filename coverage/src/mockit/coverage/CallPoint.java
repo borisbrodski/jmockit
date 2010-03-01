@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -67,8 +67,8 @@ public final class CallPoint implements Serializable
          try {
             return Class.forName("org.testng.Test");
          }
-         catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+         catch (ClassNotFoundException ignored) {
+            return null;
          }
       }
    }
