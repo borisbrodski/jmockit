@@ -42,6 +42,12 @@ public final class DataCoverageInfo implements Serializable
 
    private transient int coveredDataItems = -1;
 
+   private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+   {
+      coveredDataItems = -1;
+      in.defaultReadObject();
+   }
+
    public void addField(String className, String fieldName, boolean isStatic)
    {
       String classAndField = className + '.' + fieldName;
