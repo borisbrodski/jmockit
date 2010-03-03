@@ -38,16 +38,16 @@ package mockit;
 public class NonStrictExpectations extends Expectations
 {
    /**
-    * Identical to {@linkplain Expectations#Expectations() Expectations()}, except that all
-    * expectations recorded will be {@linkplain #notStrict() non-strict} by default.
+    * Identical to the corresponding super-constructor, except that all expectations recorded will
+    * be {@linkplain #notStrict() non-strict} by default.
     */
    protected NonStrictExpectations()
    {
    }
 
    /**
-    * Identical to {@linkplain Expectations#Expectations(Object...) Expectations(Object...)}, except
-    * that all expectations recorded will be {@linkplain #notStrict() non-strict} by default.
+    * Identical to the corresponding super-constructor, except that all expectations recorded will
+    * be {@linkplain #notStrict() non-strict} by default.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#dynamicPartial">In the Tutorial</a>
     */
@@ -57,8 +57,8 @@ public class NonStrictExpectations extends Expectations
    }
 
    /**
-    * Identical to {@linkplain Expectations#Expectations(Object...) Expectations(Object...)}, except
-    * that all expectations recorded will be {@linkplain #notStrict() non-strict} by default.
+    * Identical to the corresponding super-constructor, except that all expectations recorded will
+    * be {@linkplain #notStrict() non-strict} by default.
     * <p/>
     * The effect of specifying a number of iterations larger than 1 (one) is equivalent to
     * multiplying by that number the lower and upper invocation count limits for each invocation
