@@ -100,8 +100,9 @@ public final class IndexPage extends ListWithFilesAndPercentages
       output.print(packageToFiles.keySet().size());
       output.println("</th>");
       output.write(
-         "      <th title='Click on the title for each metric to sort by size (total number " +
-         "of line segments, paths, or fields).'>Files (.java): ");
+         "      <th onclick='location.reload()' style='cursor: pointer' " +
+         "title='Click on the title for each metric to sort by size (total number of line " +
+         "segments, paths, or fields).'>Files (.java): ");
       output.print(totalFileCount);
       output.println("</th>");
       output.println("      <th onclick='sortTables(1)' style='cursor: pointer' title='" +
