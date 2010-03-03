@@ -11,7 +11,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.997 (February ??, 2010):</p>
+<p>Release 0.997 (March 7, 2010):</p>
 <ul>
    <li>
       Bugs fixed in JMockit Coverage: certain source code constructs could cause a NPE to be thrown
@@ -101,6 +101,16 @@
             the <code>serial</code> output specifier were created as an alternative to "merge".
             The difference is that "merge" reads in an existing data file, while "serial" only
             writes it out at the end.
+         </li>
+         <li>
+            The summary page of the XHTML report now provides extra information, in addition to
+            coverage percentages for each metric:
+            1) the number of <em>covered</em> and <em>total</em> items from which coverage
+            percentages were calculated are now shown in tooltips over the percentage values;
+            2) the list of packages and the list of source files of each package can now be
+            <em>sorted by size</em>, where "size" has a different meaning for each metric (total
+            number of executable <em>line segments</em> for line coverage, total number of
+            <em>paths</em> for path coverage, and total number of <em>fields</em> for data coverage.
          </li>
       </ul>
    </li>
