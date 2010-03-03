@@ -9,19 +9,33 @@
 
 <h2>JMockit development history</h2>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
-<p>Release 0.997 (March 7, 2010):</p>
+<p>Release 0.997 (March 3, 2010):</p>
 <ul>
    <li>
-      Bugs fixed in JMockit Coverage: certain source code constructs could cause a NPE to be thrown
-      during generation of the XHTML report; see also
-      <a href="http://code.google.com/p/jmockit/issues/detail?id=33">issue 33</a>.
+      The <strong>dynamic partial mocking</strong> feature (Expectations API) was re-implemented,
+      with richer semantics (the API itself was not changed).
+      Now only the invocations to dynamically mocked types that occur during the replay phase and
+      that actually match a recorded expectation will be mocked; all other invocations will cause
+      the real method/constructor implementation to be executed.
+      Additionally, invocations to such mocked types can also be verified inside verification
+      blocks.
+      (Invocations to mocked types will never execute the real implementation when they occur
+      <em>inside</em> an expectation or verification block.)
    </li>
    <li>
-      Fixed a bug in the JMockit-TestNG integration: invocation count constraints specified on mock
-      methods annotated with <code>@Mock(...)</code> were not being verified after the execution of
-      a test method.
+      <strong>Deprecated</strong> the "<strong><code>withAny</code></strong>" methods defined in
+      the base <code>Invocations</code> class.
+      The newer "<strong><code>any</code></strong>" fields should be used instead.
+   </li>
+   <li>
+      <strong>Deprecated</strong> old methods in the <code>Mockit</code> class which belong to the
+      Core API: <code>redefineMethods(...)</code>, <code>restoreOriginalDefinition(...)</code>, and
+      <code>restoreAllOriginalDefinitions()</code>.
+      Equivalent methods to be used are indicated in the API documentation for the deprecated
+      methods. Usually, however, it's best to use the <code>MockUp&lt;T></code> generic base class
+      when a state-oriented mock class is needed. The deprecated methods will eventually be removed.
    </li>
    <li>
       Enhancements to the support of <strong><em>varargs</em> parameters</strong> in the
@@ -44,45 +58,12 @@
       </ul>
    </li>
    <li>
-      The <strong>dynamic partial mocking</strong> feature (Expectations API) was re-implemented,
-      with richer semantics (the API itself was not changed).
-      Now only the invocations to dynamically mocked types that occur during the replay phase and
-      that actually match a recorded expectation will be mocked; all other invocations will cause
-      the real method/constructor implementation to be executed.
-      Additionally, invocations to such mocked types can also be verified inside verification
-      blocks.
-      (Invocations to mocked types will never execute the real implementation when they occur
-      <em>inside</em> an expectation or verification block.)
-   </li>
-   <li>
-      Fixed an issue introduced in the previous release, when <em>static initializers</em> became
-      stubbed out by default (Expectations API): mock filters (where <code>"&lt;clinit>"</code>
-      specifies static initializers) were not considering the inclusion/exclusion of static
-      initializers.
-      In particular, the empty filter <code>@Mocked("")</code> previously excluded all methods and
-      constructors from being mocked, but still caused static initializers to be stubbed out;
-      now they are also ignored.
-   </li>
-   <li>
       A few fixes and enhancements to JMockit's internal auto-initialization mechanisms:
       <code>jmockit.jar</code> (or a versioned jar name) can now be loaded from a remote
       file system without triggering a security-related exception; when running under JDK 1.5, the
       presence of <code>jmockit.jar</code> in the classpath when <code>-javaagent:jmockit.jar</code>
       was not used will no longer cause a JMockit-specific exception to be thrown, unless the
       mocking API is actually used in a test.
-   </li>
-   <li>
-      <strong>Deprecated</strong> the "<strong><code>withAny</code></strong>" methods defined in
-      the base <code>Invocations</code> class.
-      The newer "<strong><code>any</code></strong>" fields should be used instead.
-   </li>
-   <li>
-      <strong>Deprecated</strong> old methods in the <code>Mockit</code> class which belong to the
-      Core API: <code>redefineMethods(...)</code>, <code>restoreOriginalDefinition(...)</code>, and
-      <code>restoreAllOriginalDefinitions()</code>.
-      Equivalent methods to be used are indicated in the API documentation for the deprecated
-      methods. Usually, however, it's best to use the <code>MockUp&lt;T></code> generic base class
-      when a state-oriented mock class is needed. The deprecated methods will eventually be removed.
    </li>
    <li>
       Enhancements to <strong>JMockit Coverage</strong>:
@@ -115,9 +96,28 @@
          </li>
       </ul>
    </li>
+   <li>
+      Fixed an issue introduced in the previous release, when <em>static initializers</em> became
+      stubbed out by default (Expectations API): mock filters (where <code>"&lt;clinit>"</code>
+      specifies static initializers) were not considering the inclusion/exclusion of static
+      initializers.
+      In particular, the empty filter <code>@Mocked("")</code> previously excluded all methods and
+      constructors from being mocked, but still caused static initializers to be stubbed out;
+      now they are also ignored.
+   </li>
+   <li>
+      Bugs fixed in JMockit Coverage: certain source code constructs could cause a NPE to be thrown
+      during generation of the XHTML report; see also
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=33">issue 33</a>.
+   </li>
+   <li>
+      Fixed a bug in the JMockit-TestNG integration: invocation count constraints specified on mock
+      methods annotated with <code>@Mock(...)</code> were not being verified after the execution of
+      a test method.
+   </li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release 0.996 (January 24, 2010):</p>
 <ul>
@@ -234,8 +234,6 @@
       Mockito, Unitils Mock, JMockit), plus another one which uses Spring Test.
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.995 (December 20, 2009):</p>
 <ul>
