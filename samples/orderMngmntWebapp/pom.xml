@@ -4,7 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.996</version>
+      <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.997</version>
    </parent>
    <artifactId>orderManagement</artifactId>
    <name>Order Management Sample</name>
@@ -33,6 +33,9 @@
       <dependency>
          <groupId>mockit</groupId><artifactId>jmockit-hibernate3emul</artifactId><version>0</version>
          <scope>system</scope><systemPath>${basedir}/../../jmockit-hibernate3emul.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>javax.persistence</groupId><artifactId>persistence-api</artifactId><version>1.0</version>
       </dependency>
       <dependency>
          <groupId>hibernate</groupId><artifactId>hibernate</artifactId><version>3.0</version>

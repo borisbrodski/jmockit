@@ -176,9 +176,9 @@
    <target name="buildTourDeMock">
       <buildSample
          module="tourdemock"
-         extraclasspath="samples/lib/easymock*.jar samples/jmock/lib/*.jar"
          extraclasspathlocation="${MOCKITO_JAR}"
          extralocation1="${EASYMOCK_JAR}"
+         extralocation2="${EASYMOCK_CE_JAR}"
          extralocation3="${JMOCK_HOME}/jmock-2.5.1.jar"
          extralocation4="${JMOCK_HOME}/jmock-junit4-2.5.1.jar"
          extralocation5="${JMOCK_HOME}/jmock-legacy-2.5.1.jar"
@@ -322,8 +322,11 @@
    <target name="tests">
       <junit fork="yes" forkmode="once" dir="main">
          <jvmarg value="-javaagent:../jmockit.jar"/>
-         <sysproperty
-            key="jmockit-tools" value="coverage=mockit.*,mockit.integration.logging.Slf4jMocks"/>
+<!--
+         <sysproperty key="jmockit-tools" value="coverage,mockit.integration.logging.Slf4jMocks"/>
+         <sysproperty key="jmockit-coverage-classes" value="mockit\..+"/>
+         <sysproperty key="jmockit-coverage-excludes" value="mockit\.coverage\..+"/>
+-->
          <classpath refid="common.classpath"/>
          <classpath location="main/test-classes"/>
          <classpath path="jmockit.jar"/>

@@ -4,7 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.996</version>
+      <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.997</version>
    </parent>
    <artifactId>powermock</artifactId>
    <name>PowerMock Comparison Sample</name>
