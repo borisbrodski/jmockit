@@ -172,7 +172,10 @@ class CoverageReport
    private void addMissingSourceFiles(List<String> packageFilesToReport, String[] allPackageFiles)
    {
       for (String packageFile : allPackageFiles) {
-         if (packageFile.endsWith(".java") && !packageFilesToReport.contains(packageFile)) {
+         if (
+            packageFile.endsWith(".java") && !"package-info.java".equals(packageFile) &&
+            !packageFilesToReport.contains(packageFile)
+         ) {
             packageFilesToReport.add(packageFile);
          }
       }
