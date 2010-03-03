@@ -50,6 +50,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
 
    private static final Method setUpMethod;
    private static final Method tearDownMethod;
+   private static final Method runTestMethod;
    private static final Field fName;
 
    static
@@ -57,6 +58,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       try {
          setUpMethod = TestCase.class.getDeclaredMethod("setUp");
          tearDownMethod = TestCase.class.getDeclaredMethod("tearDown");
+         runTestMethod = TestCase.class.getDeclaredMethod("runTest");
          fName = TestCase.class.getDeclaredField("fName");
       }
       catch (NoSuchMethodException e) {
@@ -70,6 +72,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
 
       setUpMethod.setAccessible(true);
       tearDownMethod.setAccessible(true);
+      runTestMethod.setAccessible(true);
       fName.setAccessible(true);
    }
 
@@ -124,7 +127,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       }
    }
 
-   @Mock
+   @Mock(reentrant = true)
    public void runTest() throws Throwable
    {
       String testMethodName = (String) fName.get(it);
@@ -139,15 +142,23 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       Object[] args = createInstancesForMockParametersIfAny(it, testMethod, NO_ARGS);
 
       try {
-         testMethod.invoke(it, args);
-      }
-      catch (InvocationTargetException e) {
-         e.fillInStackTrace();
-         throw e.getTargetException();
-      }
-      catch (IllegalAccessException e) {
-         e.fillInStackTrace();
-         throw e;
+         if (args.length == 0) {
+            runTestMethod.invoke(it);
+         }
+         else {
+            //noinspection NestedTryStatement
+            try {
+               testMethod.invoke(it, args);
+            }
+            catch (InvocationTargetException e) {
+               e.fillInStackTrace();
+               throw e.getTargetException();
+            }
+            catch (IllegalAccessException e) {
+               e.fillInStackTrace();
+               throw e;
+            }
+         }
       }
       finally {
          savePoint.rollback();

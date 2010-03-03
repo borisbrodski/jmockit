@@ -1493,6 +1493,7 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.8.1/junit-4.8.1-sources.jar!/" />
+        <root url="jar://C:/Java/junit4.8.1/junit-4.8.1-src.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: javax.persistence:persistence-api:2.0">
