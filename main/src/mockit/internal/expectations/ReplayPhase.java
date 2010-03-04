@@ -140,20 +140,16 @@ final class ReplayPhase extends Phase
       Object[] replayArgs)
       throws Throwable
    {
+      Map<Object, Object> instanceMap = getInstanceMap();
+
       while (true) {
          if (currentExpectation == null) {
-            if (withRealImpl) {
-               return Void.class;
-            }
-
-            recordAndReplay.errorThrown =
-               new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, replayArgs)
-                  .errorForUnexpectedInvocation();
-            return null;
+            return
+               handleUnexpectedInvocation(
+                  mock, mockClassDesc, mockNameAndDesc, withRealImpl, replayArgs);
          }
 
          ExpectedInvocation invocation = currentExpectation.invocation;
-         Map<Object, Object> instanceMap = getInstanceMap();
 
          if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap)) {
             if (mock != invocation.instance) {
@@ -200,6 +196,21 @@ final class ReplayPhase extends Phase
             return null;
          }
       }
+   }
+
+   private Object handleUnexpectedInvocation(
+      Object mock, String mockClassDesc, String mockNameAndDesc, boolean withRealImpl,
+      Object[] replayArgs)
+   {
+      if (withRealImpl) {
+         return Void.class;
+      }
+
+      recordAndReplay.errorThrown =
+         new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, replayArgs)
+            .errorForUnexpectedInvocation();
+
+      return null;
    }
 
    private void moveToNextExpectation()
