@@ -33,7 +33,6 @@ import mockit.*;
 import static org.junit.Assert.*;
 import powermock.examples.dependencymanagement.*;
 import powermock.examples.domain.*;
-import powermock.examples.service.*;
 
 /**
  * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/AbstractFactory/src/test/java/powermock/examples/MyServiceUserTest.java">PowerMock version</a>
