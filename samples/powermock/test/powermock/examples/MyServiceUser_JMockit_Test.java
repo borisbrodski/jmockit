@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -40,10 +40,9 @@ import powermock.examples.service.*;
  */
 public final class MyServiceUser_JMockit_Test
 {
-   private MyServiceUser tested;
+   MyServiceUser tested;
 
-   @Cascading private DependencyManager dependencyManagerMock;
-   @Mocked private MyService myServiceMock;
+   @Cascading DependencyManager dependencyManagerMock;
 
    @Before
    public void setUp()
