@@ -952,7 +952,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/samples/AnimatedTransitions/AnimatedTransitions.iml" filepath="$PROJECT_DIR$/samples/AnimatedTransitions/AnimatedTransitions.iml" group="Samples" />
-      <module fileurl="file://$PROJECT_DIR$/samples/AuctionSniper/AuctionSniper.iml" filepath="$PROJECT_DIR$/samples/AuctionSniper/AuctionSniper.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/coverage/Coverage.iml" filepath="$PROJECT_DIR$/coverage/Coverage.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/easymock/EasyMock2.iml" filepath="$PROJECT_DIR$/samples/easymock/EasyMock2.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/easymockclassextension/EasyMockCE.iml" filepath="$PROJECT_DIR$/samples/easymockclassextension/EasyMockCE.iml" group="Samples" />
