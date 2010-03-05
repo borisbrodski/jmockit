@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations & Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -171,7 +171,7 @@ public final class MultipleMockedTypesTest
       {
          {
             mock1.getValue();
-            mock2.getValue(); repeats(0);
+            mock2.getValue(); times = 0;
          }
       };
    }
@@ -231,7 +231,7 @@ public final class MultipleMockedTypesTest
          @Mocked(capture = 1) Observer observer;
 
          {
-            observer.update(null, any); repeats(1);
+            observer.update(null, any); times = 1;
          }
       };
 
