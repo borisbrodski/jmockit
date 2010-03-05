@@ -282,11 +282,21 @@ public class Expectations extends Invocations
 
    /**
     * Equivalent to calling {@link #returns(Object)} two or more times in sequence, except when the
-    * associated method can return a {@code List} of values.
-    * Specifically, if said method has a return type which is an ordered collection type that can
-    * receive a {@link List} value, then the given sequence of values will be converted into an
-    * {@code ArrayList}; this list will then be returned by matching invocations at replay time.
-    * <p/>
+    * associated method can return a collection of values or an iterator.
+    * Specifically, the following situations receive special treatment, according to the declared
+    * return type of said method:
+    * <ol>
+    * <li>If the return type is iterable and can receive a {@link List} value, then the given
+    * sequence of values will be converted into an {@code ArrayList}; this list will then be
+    * returned by matching invocations at replay time.</li>
+    * <li>If the return type is {@code SortedSet} or a sub-type, then the given sequence of values
+    * will be converted into a {@code TreeSet}; otherwise, if it is {@code Set} or a sub-type, then
+    * a {@code LinkedHashSet} will be created to hold the values;
+    * the set will then be returned by matching invocations at replay time.</li>
+    * <li>If the return type is {@code Iterator} or a sub-type, then the given sequence of values
+    * will be converted into a {@code List} and the iterator created from this list will be returned
+    * by matching invocations at replay time.</li>
+    * </ol>
     * The current expectation will have its upper invocation count automatically set to the total
     * number of values specified to be returned. This upper limit can be overridden through the
     * {@code maxTimes} field, if necessary.

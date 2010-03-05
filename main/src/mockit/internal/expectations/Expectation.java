@@ -136,25 +136,59 @@ public final class Expectation
    {
       validateReturnValues(firstValue, remainingValues);
 
-      InvocationResults invocationResults = getResults();
+      InvocationResults sequence = getResults();
 
       if (remainingValues == null) {
-         invocationResults.addReturnValue(firstValue);
+         sequence.addReturnValue(firstValue);
       }
-      else {
-         Class<?> rt = getReturnType();
+      else if (!addReturnValuesForIteratorOrIterableType(sequence, firstValue, remainingValues)) {
+         sequence.addReturnValue(firstValue);
+         sequence.addReturnValues(remainingValues);
+      }
+   }
 
-         if (rt != null && Iterable.class.isAssignableFrom(rt) && rt.isAssignableFrom(List.class)) {
-            List<Object> values = new ArrayList<Object>(1 + remainingValues.length);
-            values.add(firstValue);
-            Collections.addAll(values, remainingValues);
-            invocationResults.addReturnValue(values);
+   private boolean addReturnValuesForIteratorOrIterableType(
+      InvocationResults sequence, Object first, Object[] remaining)
+   {
+      Class<?> rt = getReturnType();
+
+      if (rt != null) {
+         int n = 1 + remaining.length;
+
+         if (Iterator.class.isAssignableFrom(rt)) {
+            List<Object> values = new ArrayList<Object>(n);
+            addAllValues(values, first, remaining);
+            sequence.addReturnValue(values.iterator());
+            return true;
          }
-         else {
-            invocationResults.addReturnValue(firstValue);
-            invocationResults.addReturnValues(remainingValues);
+         else if (Iterable.class.isAssignableFrom(rt)) {
+            if (rt.isAssignableFrom(List.class)) {
+               return addReturnValues(sequence, new ArrayList<Object>(n), first, remaining);
+            }
+            else if (rt.isAssignableFrom(Set.class)) {
+               return addReturnValues(sequence, new LinkedHashSet<Object>(n), first, remaining);
+            }
+            else if (rt.isAssignableFrom(SortedSet.class)) {
+               return addReturnValues(sequence, new TreeSet<Object>(), first, remaining);
+            }
          }
       }
+
+      return false;
+   }
+
+   private void addAllValues(Collection<Object> values, Object first, Object[] remaining)
+   {
+      values.add(first);
+      Collections.addAll(values, remaining);
+   }
+
+   private boolean addReturnValues(
+      InvocationResults sequence, Collection<Object> values, Object first, Object[] remaining)
+   {
+      addAllValues(values, first, remaining);
+      sequence.addReturnValue(values);
+      return true;
    }
 
    public void setCustomErrorMessage(CharSequence message)
