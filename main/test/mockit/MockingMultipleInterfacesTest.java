@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -47,7 +47,7 @@ public final class MockingMultipleInterfacesTest<MultiMock extends Dependency & 
       new NonStrictExpectations()
       {
          {
-            multiMock.doSomething(false); returns("test");
+            multiMock.doSomething(false); result = "test";
          }
       };
 
@@ -68,7 +68,7 @@ public final class MockingMultipleInterfacesTest<MultiMock extends Dependency & 
       new Expectations()
       {
          {
-            mock.doSomething(true); returns("");
+            mock.doSomething(true); result = "";
          }
       };
 

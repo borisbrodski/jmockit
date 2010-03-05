@@ -1,6 +1,6 @@
 /*
- * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -62,8 +62,8 @@ public final class MockedEnumsTest
          final MyEnum mock = MyEnum.First;
 
          {
-            MyEnum.values(); returns(new MyEnum[] {mock});
-            mock.getValue(withAny(0.0)); returns(50.0);
+            MyEnum.values(); result = new MyEnum[] {mock};
+            mock.getValue(anyDouble); result = 50.0;
          }
       };
 
@@ -84,7 +84,7 @@ public final class MockedEnumsTest
          final MyEnum mock = MyEnum.Second;
 
          {
-            mock.getValue(f); returns(12.3);
+            mock.getValue(f); result = 12.3;
          }
       };
 
