@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations & Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -65,7 +65,7 @@ public final class VerificationsTest
 
       new Verifications()
       {{
-         mock.prepare(); repeats(1);
+         mock.prepare(); times = 1;
          mock.editABunchMoreStuff();
          mock.setSomething(45);
       }};
@@ -111,8 +111,8 @@ public final class VerificationsTest
 
       new Verifications()
       {{
-         mock.setSomething(withAny(0));
-         mock.save(); repeatsAtLeast(0);
+         mock.setSomething(anyInt);
+         mock.save(); minTimes = 0;
       }};
    }
 
@@ -127,7 +127,7 @@ public final class VerificationsTest
       new Verifications()
       {{
          mock.prepare();
-         mock.save(); repeatsAtLeast(0);
+         mock.save(); minTimes = 0;
       }};
    }
 
@@ -140,8 +140,8 @@ public final class VerificationsTest
       new Verifications()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0));
-         mock.save(); repeatsAtLeast(0);
+         mock.setSomething(anyInt);
+         mock.save(); minTimes = 0;
       }};
    }
 
@@ -166,7 +166,7 @@ public final class VerificationsTest
 
       new Verifications()
       {{
-         mock.save(); repeats(2);
+         mock.save(); times = 2;
       }};
    }
 
@@ -180,7 +180,7 @@ public final class VerificationsTest
 
       new Verifications()
       {{
-         mock.save(); repeats(3);
+         mock.save(); times = 3;
       }};
    }
 
@@ -194,7 +194,7 @@ public final class VerificationsTest
 
       new Verifications(2)
       {{
-         mock.setSomething(withAny(1));
+         mock.setSomething(anyInt);
          mock.save();
       }};
    }
@@ -217,7 +217,7 @@ public final class VerificationsTest
 
       new Verifications()
       {{
-         mock.setSomething(withAny(0));
+         mock.setSomething(anyInt);
       }};
    }
 
@@ -228,10 +228,10 @@ public final class VerificationsTest
 
       new Verifications(1)
       {{
-         mock.prepare(); repeatsAtMost(1);
-         mock.setSomething(withAny(0)); repeatsAtLeast(2);
-         mock.editABunchMoreStuff(); repeats(0, 5);
-         mock.save(); repeats(1);
+         mock.prepare(); maxTimes = 1;
+         mock.setSomething(anyInt); minTimes = 2;
+         mock.editABunchMoreStuff(); minTimes = 0; maxTimes = 5;
+         mock.save(); times = 1;
       }};
    }
 
@@ -244,10 +244,10 @@ public final class VerificationsTest
 
       new Verifications(2)
       {{
-         mock.prepare(); repeatsAtMost(1);
-         mock.setSomething(withAny(0)); repeatsAtLeast(2);
-         mock.editABunchMoreStuff(); repeats(0, 5);
-         mock.save(); repeats(1);
+         mock.prepare(); maxTimes = 1;
+         mock.setSomething(anyInt); minTimes = 2;
+         mock.editABunchMoreStuff(); minTimes = 0; maxTimes = 5;
+         mock.save(); times = 1;
       }};
    }
 
