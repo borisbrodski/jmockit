@@ -584,25 +584,6 @@ public final class Mockit
    }
 
    /**
-    * Verify that any and all expectations defined for the {@linkplain Mock mocks} which are in
-    * effect are satisfied at this moment, throwing an {@link AssertionError} for any violation.
-    * <p/>
-    * <strong>This method will be called automatically</strong> at the end of each test execution,
-    * so it normally does not need to be explicitly called in test code.
-    *
-    * @see Mock#invocations()
-    * @see Mock#minInvocations()
-    * @see Mock#maxInvocations()
-    *
-    * @deprecated This method will soon be removed from the API, so remove any calls to it if any.
-    */
-   @Deprecated
-   public static void assertExpectations()
-   {
-      TestRun.verifyExpectationsOnAnnotatedMocks();
-   }
-
-   /**
     * Restores a given set of classes to their original definitions. This is equivalent to calling
     * {@code redefineMethods(realClass, realClass)}.
     * <p/>
