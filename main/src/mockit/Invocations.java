@@ -322,30 +322,19 @@ abstract class Invocations
    }
 
    /**
-    * Same as {@link #withAny(Object)}, but always returning {@code null}.
-    *
-    * @deprecated Use the {@code any} field appropriate for type T
-    */
-   @Deprecated
-   protected final <T> T withAny()
-   {
-      //noinspection deprecation
-      return withAny((T) null);
-   }
-
-   /**
     * Same as {@link #withEqual(Object)}, but matching any argument value of the appropriate type.
     * <p/>
     * Consider using instead the "any" field appropriate to the parameter type: {@link #any},
     * {@link #anyBoolean}, {@link #anyByte}, {@link #anyChar}, {@link #anyDouble},
     * {@link #anyFloat}, {@link #anyInt}, {@link #anyLong}, {@link #anyShort}, {@link #anyString}.
+    * On the other hand, this method is useful if a specific value must be passed as argument to the
+    * mocked invocation (typically, when using the {@link #invoke(Object, String, Object...)} 
+    * method).
     *
     * @param arg an arbitrary value which will match any argument value in the replay phase
     *
     * @return the input argument
-    * @deprecated Use the {@code any} field appropriate for type T
     */
-   @Deprecated
    protected final <T> T withAny(T arg)
    {
       addMatcher(new IsAnything());
@@ -525,89 +514,6 @@ abstract class Invocations
       });
 
       return regex;
-   }
-
-   // Methods for setting expectation constraints /////////////////////////////////////////////////
-
-   /**
-    * Specifies the exact number of invocations for the current expectation.
-    *
-    * @param exactInvocationCount exact number of times the invocation is expected to occur during
-    * the replay phase
-    *
-    * @see #repeats(int, int)
-    * @see #repeatsAtLeast(int)
-    * @see #repeatsAtMost(int)
-    *
-    * @deprecated Use {@link #times} instead.
-    */
-   @Deprecated
-   protected final void repeats(int exactInvocationCount)
-   {
-      getCurrentPhase().handleInvocationCountConstraint(exactInvocationCount, exactInvocationCount);
-   }
-
-   /**
-    * Specifies a range for the number of invocations of the current expectation.
-    *
-    * @param minInvocations minimum number of times the invocation is expected to occur during the
-    * replay phase
-    * @param maxInvocations maximum number of times the invocation is allowed to occur during the
-    * replay phase, or {@literal -1} for no upper limit
-    *
-    * @see #repeats(int)
-    * @see #repeatsAtLeast(int)
-    * @see #repeatsAtMost(int)
-    *
-    * @deprecated Use {@link #minTimes} and {@link #maxTimes} (in this order) instead.
-    */
-   @Deprecated
-   protected final void repeats(int minInvocations, int maxInvocations)
-   {
-      getCurrentPhase().handleInvocationCountConstraint(minInvocations, maxInvocations);
-   }
-
-   /**
-    * Specifies a lower limit for the number of invocations of the current expectation.
-    * <p/>
-    * The upper limit is automatically adjusted so that any number of invocations beyond the
-    * specified minimum is allowed. The upper limit can still be specified for the same expectation,
-    * but consider instead using {@link #repeats(int, int)} to specify both limits at the same time.
-    *
-    * @param minInvocations minimum number of times the invocation is expected to occur during the
-    * replay phase
-    *
-    * @see #repeats(int)
-    * @see #repeats(int, int)
-    * @see #repeatsAtMost(int)
-    *
-    * @deprecated Use {@link #minTimes} instead.
-    */
-   @Deprecated
-   protected final void repeatsAtLeast(int minInvocations)
-   {
-      getCurrentPhase().handleInvocationCountConstraint(minInvocations, -1);
-   }
-
-   /**
-    * Specifies an upper limit for the number of invocations of the current expectation.
-    * <p/>
-    * The lower limit is automatically adjusted, if needed, to be no more than the specified
-    * maximum.
-    *
-    * @param maxInvocations maximum number of times the invocation is allowed to occur during the
-    * replay phase, or {@literal -1} for no upper limit
-    *
-    * @see #repeats(int)
-    * @see #repeats(int, int)
-    * @see #repeatsAtLeast(int)
-    *
-    * @deprecated Use {@link #maxTimes} instead.
-    */
-   @Deprecated
-   protected final void repeatsAtMost(int maxInvocations)
-   {
-      getCurrentPhase().setMaxInvocationCount(maxInvocations);
    }
 
    // Methods for instantiating non-accessible classes ////////////////////////////////////////////

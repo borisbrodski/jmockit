@@ -62,7 +62,7 @@ public class NonStrictExpectations extends Expectations
     * <p/>
     * The effect of specifying a number of iterations larger than 1 (one) is equivalent to
     * multiplying by that number the lower and upper invocation count limits for each invocation
-    * inside the expectation block (see {@link #repeats(int, int)}).
+    * inside the expectation block.
     * Note that by default the invocation count range for a non-strict expectation is [0, ∞), that
     * is, a lower limit of 0 (zero) and no upper limit, so the number of iterations will only be
     * meaningful if a positive and finite limit is explicitly specified for the expectation.

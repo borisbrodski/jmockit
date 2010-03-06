@@ -9,6 +9,43 @@
 
 <h2>JMockit development history</h2>
 
+<h3>Next release</h3>
+
+<p>Release 0.998 (April ??, 2010):</p>
+<ul>
+   <li>
+      <strong>Removed</strong> the following <em>deprecated methods</em>:
+      <code>Mockit.assertExpectations()</code>;
+      <code>throwsException(Exception)</code> and <code>throwsError(Error)</code> from the
+      <code>Expectations</code> class;
+      <code>repeats(int)</code>, <code>repeatsAtLeast(int)</code>, <code>repeatsAtMost(int)</code>,
+      and <code>repeats(int, int)</code> from the <code>Invocations</code> base class;
+      and <code>withAny()</code> also from the <code>Invocations</code> class.
+      The <code>Invocations#withAny(T)</code> method is no longer deprecated, as it is useful in
+      certain situations where a non-null argument value is needed.
+   </li>
+   <li>
+      Fixed an issue in the JUnit 3.8 integration, where <code>TestCase</code> subclasses overriding
+      the <code>runTest()</code> method (such as <code>GWTTestCase</code>) would not work properly
+      with JMockit in the classpath.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=37">issue 37</a>.
+   </li>
+   <li>
+      Enhancements to the
+      <code>Expectations#returns(Object firstValue, Object... remainingValues)</code> method:
+      when used for methods of return type <code>Set</code>, <code>SortedSet</code>,
+      <code>Iterator</code>, or array, the individual elements contained in the collection,
+      iterator or array will be the ones directly specified as arguments.
+   </li>
+<!--
+   <li>
+      Fixed a bug of omission in the use of <code>@Cascading</code>, when expectations are recorded
+      on a cascaded mock through a separate mock field/parameter.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=38">issue 38</a>.
+   </li>
+-->
+</ul>
+
 <h3>Current release</h3>
 
 <p>Release 0.997 (March 3, 2010):</p>

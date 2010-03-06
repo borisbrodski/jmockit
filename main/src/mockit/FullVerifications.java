@@ -58,7 +58,7 @@ public class FullVerifications extends Verifications
     * <p/>
     * The effect of specifying a number of iterations larger than 1 (one) is equivalent to
     * multiplying by that number the lower and upper invocation count limits for each invocation
-    * inside the verification block (see {@link #repeats(int, int)}).
+    * inside the verification block.
     *
     * @param numberOfIterations the positive number of iterations for the whole set of invocations
     * verified inside the block; when not specified, 1 (one) iteration is assumed

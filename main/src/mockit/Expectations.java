@@ -222,7 +222,7 @@ public class Expectations extends Invocations
       return execution.getRecordPhase();
    }
 
-   // Methods for setting expected return values and thrown exceptions ////////////////////////////
+   // Methods for setting expected return values //////////////////////////////////////////////////
 
    /**
     * Specifies that the previously recorded method invocation will return a given value.
@@ -313,43 +313,6 @@ public class Expectations extends Invocations
    protected final void returns(Object firstValue, Object... remainingValues)
    {
       getCurrentExpectation().addSequenceOfReturnValues(firstValue, remainingValues);
-   }
-
-   /**
-    * Specifies that the preceding method/constructor invocation will throw an exception when
-    * executed in the replay phase.
-    * <p/>
-    * Just like with {@link #returns(Object)}, multiple consecutive exceptions to be thrown can be
-    * specified by calling this method multiple times for the same invocation.
-    *
-    * @param exception the exception that will be thrown when the invocation is replayed
-    *
-    * @throws IllegalStateException if not currently recording an invocation
-    *
-    * @deprecated Use {@link #result} instead.
-    */
-   @Deprecated
-   protected final void throwsException(Exception exception)
-   {
-      getCurrentExpectation().getResults().addThrowable(exception);
-   }
-
-   /**
-    * Specifies that the preceding method/constructor invocation will throw an error when replayed.
-    * <p/>
-    * Just like with {@link #returns(Object)}, multiple consecutive errors to be thrown can be
-    * specified by calling this method multiple times for the same invocation.
-    *
-    * @param error the error that will be thrown when the invocation is replayed
-    *
-    * @throws IllegalStateException if not currently recording an invocation
-    *
-    * @deprecated Use {@link #result} instead.
-    */
-   @Deprecated
-   protected final void throwsError(Error error)
-   {
-      getCurrentExpectation().getResults().addThrowable(error);
    }
 
    // Methods for defining expectation strictness /////////////////////////////////////////////////

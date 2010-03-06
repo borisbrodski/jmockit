@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2009 JMockit Developers
+ * Copyright (c) 2009-2010 JMockit Developers
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -88,9 +88,8 @@ public class Invocation
    /**
     * Returns the minimum invocation count for the current expectation.
     * <p/>
-    * This call will return the value set with {@link Expectations#repeats(int)},
-    * {@link Expectations#repeats(int, int)} and {@link Expectations#repeatsAtLeast(int)}, if that
-    * was the case.
+    * This call will return the value specified through the {@link Expectations#times} or
+    * {@link Expectations#minTimes} field, if that was the case.
     */
    public final int getMinInvocations()
    {
@@ -100,8 +99,8 @@ public class Invocation
    /**
     * Sets the minimum invocation count for the current expectation.
     * <p/>
-    * This call can be used to override the value set with {@link Expectations#repeats(int)},
-    * {@link Expectations#repeats(int, int)} or {@link Expectations#repeatsAtLeast(int)}.
+    * This call can be used to override the value set on the {@link Expectations#times} or
+    * {@link Expectations#minTimes} field.
     */
    public final void setMinInvocations(int minInvocations)
    {
@@ -111,9 +110,8 @@ public class Invocation
    /**
     * Returns the maximum invocation count for the current expectation (-1 indicates unlimited).
     * <p/>
-    * This call will return the value set with {@link Expectations#repeats(int)},
-    * {@link Expectations#repeats(int, int)} or {@link Expectations#repeatsAtMost(int)}, if that was
-    * the case.
+    * This call will return the value specified through the {@link Expectations#times} or
+    * {@link Expectations#maxTimes} field, if that was the case.
     */
    public final int getMaxInvocations()
    {
@@ -123,8 +121,8 @@ public class Invocation
    /**
     * Sets the maximum invocation count for the current expectation.
     * <p/>
-    * This call can be used to override value set with {@link Expectations#repeats(int)},
-    * {@link Expectations#repeats(int, int)} or {@link Expectations#repeatsAtMost(int)}.
+    * This call can be used to override the value set on the {@link Expectations#times} or
+    * {@link Expectations#maxTimes} field.
     */
    public final void setMaxInvocations(int maxInvocations)
    {
