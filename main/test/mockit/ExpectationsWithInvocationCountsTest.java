@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -144,7 +144,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeats(2);
+            mock.provideSomeService(); times = 2;
             mock.simpleOperation(1, "b", null);
          }
       };
@@ -162,7 +162,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeats(2);
+            mock.provideSomeService(); times = 2;
             mock.simpleOperation(1, "b", null);
          }
       };
@@ -179,7 +179,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeatsAtLeast(1);
+            mock.provideSomeService(); minTimes = 1;
             mock.simpleOperation(1, "b", null);
          }
       };
@@ -197,7 +197,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeatsAtLeast(2);
+            mock.provideSomeService(); minTimes = 2;
          }
       };
 
@@ -212,7 +212,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeatsAtLeast(2);
+            mock.provideSomeService(); minTimes = 2;
             mock.simpleOperation(1, "b", null);
          }
       };
@@ -229,7 +229,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeatsAtMost(2); repeatsAtLeast(1);
+            mock.provideSomeService(); maxTimes = 2; minTimes = 1;
          }
       };
 
@@ -246,7 +246,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeatsAtMost(2);
+            mock.provideSomeService(); maxTimes = 2;
             mock.simpleOperation(1, "b", null);
          }
       };
@@ -263,7 +263,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeatsAtMost(1);
+            mock.provideSomeService(); maxTimes = 1;
             mock.simpleOperation(1, "b", null);
          }
       };
@@ -281,7 +281,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeatsAtLeast(2); repeatsAtMost(3);
+            mock.provideSomeService(); minTimes = 2; maxTimes = 3;
          }
       };
 
@@ -295,7 +295,7 @@ public final class ExpectationsWithInvocationCountsTest
       new Expectations()
       {
          {
-            mock.simpleOperation(1, "", null); repeats(1, 2);
+            mock.simpleOperation(1, "", null); minTimes = 1; maxTimes = 2;
             mock.simpleOperation(2, "", null);
          }
       };
@@ -312,7 +312,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeats(2, 3);
+            mock.provideSomeService(); minTimes = 2; maxTimes = 3;
             mock.simpleOperation(1, "b", null);
          }
       };
@@ -330,7 +330,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeats(0, -1);
+            mock.provideSomeService(); minTimes = 0; maxTimes = -1;
             mock.simpleOperation(1, "b", null);
          }
       };
@@ -348,7 +348,7 @@ public final class ExpectationsWithInvocationCountsTest
          Collaborator mock;
 
          {
-            mock.provideSomeService(); repeats(0, -1);
+            mock.provideSomeService(); minTimes = 0; maxTimes = -1;
             mock.simpleOperation(1, "b", null);
          }
       };
