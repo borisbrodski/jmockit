@@ -49,7 +49,7 @@ public final class ClassLoadingAndJREMocksTest
          File file;
 
          {
-            new File("filePath").exists(); returns(true);
+            new File("filePath").exists(); result = true;
          }
       };
 
@@ -58,12 +58,12 @@ public final class ClassLoadingAndJREMocksTest
    }
 
    @Test
-   public void recordExpectationForFileUsingMockParameter(File file)
+   public void recordExpectationForFileUsingMockParameter(@Mocked File file)
    {
       new Expectations()
       {
          {
-            new File("filePath").exists(); returns(true);
+            new File("filePath").exists(); result = true;
          }
       };
 
@@ -95,7 +95,9 @@ public final class ClassLoadingAndJREMocksTest
          FileOutputStream mockOS;
 
          {
-            invoke(tested, "helperMethod", withAny(FileOutputStream.class));
+            invoke(
+               tested, "helperMethod",
+               withInstanceOf(FileOutputStream.class) == null ? FileOutputStream.class : null);
          }
       };
 
