@@ -1,3 +1,27 @@
+/*
+ * JMockit Expectations
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package mockit;
 
 import javax.swing.*;
@@ -31,10 +55,10 @@ public final class CovariantReturnTypesTest
          SubClass mock;
 
          {
-            new SuperClass().getTextField(); returns(regularField);
+            new SuperClass().getTextField(); result = regularField;
 
-            mock.getTextField(); returns(passwordField);
-            mock.getTextField(); returns(passwordField);
+            mock.getTextField(); result = passwordField;
+            mock.getTextField(); result = passwordField;
          }
       };
 
@@ -55,9 +79,9 @@ public final class CovariantReturnTypesTest
          SubClass mock;
 
          {
-            new SuperClass().getTextField(); returns(regularField);
+            new SuperClass().getTextField(); result = regularField;
 
-            mock.getTextField(); returns(passwordField);
+            mock.getTextField(); result = passwordField;
          }
       };
 
@@ -91,8 +115,8 @@ public final class CovariantReturnTypesTest
          ConcreteClass mock;
 
          {
-            mock.getTextField(); returns(formattedField);
-            ((AbstractBaseClass) mock).getTextField(); returns(formattedField);
+            mock.getTextField(); result = formattedField;
+            ((AbstractBaseClass) mock).getTextField(); result = formattedField;
          }
       };
 
@@ -131,8 +155,8 @@ public final class CovariantReturnTypesTest
          @Capturing AbstractBaseClass mock;
 
          {
-            mock.getTextField(); returns(regularField);
-            mock.getTextField(); returns(formattedField);
+            mock.getTextField(); result = regularField;
+            mock.getTextField(); result = formattedField;
          }
       };
 
@@ -157,7 +181,7 @@ public final class CovariantReturnTypesTest
          @NonStrict @Capturing AbstractBaseClass mock;
 
          {
-            mock.getTextField(); returns(regularField); returns(formattedField);
+            mock.getTextField(); result = regularField; result = formattedField;
          }
       };
 
@@ -184,8 +208,8 @@ public final class CovariantReturnTypesTest
       new Expectations()
       {
          {
-            mock.getValue(); returns(value);
-            mock.getValue(); returns(specificValue);
+            mock.getValue(); result = value;
+            mock.getValue(); result = specificValue;
          }
       };
 
@@ -203,7 +227,7 @@ public final class CovariantReturnTypesTest
       new Expectations()
       {
          {
-            mock.getValue(); returns(value); returns(specificValue);
+            mock.getValue(); result = value; result = specificValue;
          }
       };
 
@@ -221,11 +245,11 @@ public final class CovariantReturnTypesTest
       new Expectations()
       {
          {
-            base.getValue(); returns(value);
-            base.getValue(); returns(specificValue);
+            base.getValue(); result = value;
+            base.getValue(); result = specificValue;
 
-            mock.getValue(); returns(specificValue);
-            base.getValue(); returns(specificValue);
+            mock.getValue(); result = specificValue;
+            base.getValue(); result = specificValue;
          }
       };
 
@@ -249,7 +273,7 @@ public final class CovariantReturnTypesTest
          {
             base.getValue(); returns(specificValue1, value);
 
-            mock.getValue(); returns(specificValue2);
+            mock.getValue(); result = specificValue2;
          }
       };
 
