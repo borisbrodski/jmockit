@@ -282,7 +282,7 @@ public class Expectations extends Invocations
 
    /**
     * Equivalent to calling {@link #returns(Object)} two or more times in sequence, except when the
-    * associated method can return a collection of values or an iterator.
+    * associated method can return a collection of values, an iterator, or an array.
     * Specifically, the following situations receive special treatment, according to the declared
     * return type of said method:
     * <ol>
@@ -296,6 +296,8 @@ public class Expectations extends Invocations
     * <li>If the return type is {@code Iterator} or a sub-type, then the given sequence of values
     * will be converted into a {@code List} and the iterator created from this list will be returned
     * by matching invocations at replay time.</li>
+    * <li>If the return type is an array, then the given sequence of values will be converted to an
+    * array of the same type, which will be returned by matching invocations at replay time.</li>
     * </ol>
     * The current expectation will have its upper invocation count automatically set to the total
     * number of values specified to be returned. This upper limit can be overridden through the

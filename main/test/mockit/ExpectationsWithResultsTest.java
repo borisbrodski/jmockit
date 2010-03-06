@@ -70,6 +70,7 @@ public final class ExpectationsWithResultsTest
       int[] getIntArray() { return null; }
       int[][] getInt2Array() { return null; }
       byte[] getByteArray() { return null; }
+      Byte[] getByteWrapperArray() { return null; }
       short[] getShortArray() { return null; }
       Short[] getShortWrapperArray() { return null; }
       long[] getLongArray() { return null; }
@@ -609,5 +610,38 @@ public final class ExpectationsWithResultsTest
 
       assertArrayEquals(new Object[] {4.0, "aB", 2}, collaborator.getSetItems().toArray());
       assertArrayEquals(new Object[] {1, 5, 123}, collaborator.getSortedSetItems().toArray());
+   }
+
+   @Test
+   public void recordResultsForArrayReturningMethodsUsingVarargs()
+   {
+      final Collaborator collaborator = new Collaborator();
+
+      new NonStrictExpectations(collaborator)
+      {
+         {
+            collaborator.getIntArray(); returns(1, 2, 3, 4);
+            collaborator.getLongArray(); returns(1023, 20234L, 354);
+            collaborator.getByteArray(); returns(0, -4, 5);
+            collaborator.getByteWrapperArray(); returns(0, -4, 5);
+            collaborator.getCharArray(); returns('a', 'B');
+            collaborator.getShortArray(); returns(-1, 3, 0);
+            collaborator.getShortWrapperArray(); returns(-1, 3, 0);
+            collaborator.getFloatArray(); returns(-0.1F, 5.6F, 7);
+            collaborator.getDoubleArray(); returns(4.1, 15, -7.0E2);
+            collaborator.getStringArray(); returns("aX", null, "B2 m");
+         }
+      };
+
+      assertArrayEquals(new int[] {1, 2, 3, 4}, collaborator.getIntArray());
+      assertArrayEquals(new long[] {1023, 20234, 354}, collaborator.getLongArray());
+      assertArrayEquals(new byte[] {0, -4, 5}, collaborator.getByteArray());
+      assertArrayEquals(new Byte[] {0, -4, 5}, collaborator.getByteWrapperArray());
+      assertArrayEquals(new char[] {'a', 'B'}, collaborator.getCharArray());
+      assertArrayEquals(new short[] {-1, 3, 0}, collaborator.getShortArray());
+      assertArrayEquals(new Short[] {-1, 3, 0}, collaborator.getShortWrapperArray());
+      assertArrayEquals(new float[] {-0.1F, 5.6F, 7}, collaborator.getFloatArray(), 0.0F);
+      assertArrayEquals(new double[] {4.0, 15, -7.0001E2}, collaborator.getDoubleArray(), 0.1);
+      assertArrayEquals(new String[] {"aX", null, "B2 m"}, collaborator.getStringArray());
    }
 }

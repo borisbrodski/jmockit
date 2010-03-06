@@ -24,10 +24,11 @@
  */
 package mockit.internal.expectations;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.*;
-import mockit.external.asm.*;
+import mockit.external.asm.Type;
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.util.*;
 
@@ -141,40 +142,78 @@ public final class Expectation
       if (remainingValues == null) {
          sequence.addReturnValue(firstValue);
       }
-      else if (!addReturnValuesForIteratorOrIterableType(sequence, firstValue, remainingValues)) {
+      else if (!addReturnValueForSequenceOfValues(firstValue, remainingValues)) {
          sequence.addReturnValue(firstValue);
          sequence.addReturnValues(remainingValues);
       }
    }
 
-   private boolean addReturnValuesForIteratorOrIterableType(
-      InvocationResults sequence, Object first, Object[] remaining)
+   private boolean addReturnValueForSequenceOfValues(Object first, Object[] remaining)
    {
       Class<?> rt = getReturnType();
 
       if (rt != null) {
          int n = 1 + remaining.length;
 
-         if (Iterator.class.isAssignableFrom(rt)) {
-            List<Object> values = new ArrayList<Object>(n);
-            addAllValues(values, first, remaining);
-            sequence.addReturnValue(values.iterator());
+         if (rt.isArray()) {
+            if (first == null || !first.getClass().isArray()) {
+               addArrayAsReturnValue(rt.getComponentType(), n, first, remaining);
+               return true;
+            }
+         }
+         else if (Iterator.class.isAssignableFrom(rt)) {
+            addIteratorAsReturnValue(first, remaining, n);
             return true;
          }
          else if (Iterable.class.isAssignableFrom(rt)) {
             if (rt.isAssignableFrom(List.class)) {
-               return addReturnValues(sequence, new ArrayList<Object>(n), first, remaining);
+               addReturnValues(new ArrayList<Object>(n), first, remaining);
+               return true;
             }
             else if (rt.isAssignableFrom(Set.class)) {
-               return addReturnValues(sequence, new LinkedHashSet<Object>(n), first, remaining);
+               addReturnValues(new LinkedHashSet<Object>(n), first, remaining);
+               return true;
             }
             else if (rt.isAssignableFrom(SortedSet.class)) {
-               return addReturnValues(sequence, new TreeSet<Object>(), first, remaining);
+               addReturnValues(new TreeSet<Object>(), first, remaining);
+               return true;
             }
          }
       }
 
       return false;
+   }
+
+   private void addArrayAsReturnValue(Class<?> elementType, int n, Object first, Object[] remaining)
+   {
+      Object values = Array.newInstance(elementType, n);
+      setArrayElement(elementType, values, 0, first);
+
+      for (int i = 1; i < n; i++) {
+         setArrayElement(elementType, values, i, remaining[i - 1]);
+      }
+
+      results.addReturnValue(values);
+   }
+
+   @SuppressWarnings({"AssignmentToMethodParameter"})
+   private void setArrayElement(Class<?> elementType, Object array, int index, Object value)
+   {
+      if (elementType == byte.class || elementType == Byte.class) {
+         value = ((Number) value).byteValue();
+      }
+      else if (elementType == short.class || elementType == Short.class) {
+         value = ((Number) value).shortValue();
+      }
+
+      Array.set(array, index, value);
+   }
+
+   private void addIteratorAsReturnValue(Object first, Object[] remaining, int n)
+   {
+      List<Object> values = new ArrayList<Object>(n);
+      addAllValues(values, first, remaining);
+      results.addReturnValue(values.iterator());
    }
 
    private void addAllValues(Collection<Object> values, Object first, Object[] remaining)
@@ -183,12 +222,10 @@ public final class Expectation
       Collections.addAll(values, remaining);
    }
 
-   private boolean addReturnValues(
-      InvocationResults sequence, Collection<Object> values, Object first, Object[] remaining)
+   private void addReturnValues(Collection<Object> values, Object first, Object[] remaining)
    {
       addAllValues(values, first, remaining);
-      sequence.addReturnValue(values);
-      return true;
+      results.addReturnValue(values);
    }
 
    public void setCustomErrorMessage(CharSequence message)
