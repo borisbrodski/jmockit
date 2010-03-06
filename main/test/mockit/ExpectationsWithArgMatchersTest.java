@@ -110,7 +110,7 @@ public final class ExpectationsWithArgMatchersTest
       new Expectations()
       {
          {
-            mock.setValue(withAny(5));
+            mock.setValue(anyInt);
          }
       };
 
@@ -136,7 +136,7 @@ public final class ExpectationsWithArgMatchersTest
       new Expectations()
       {
          {
-            mock.setValue(withEqual(3.0, 0.01)); repeats(3);
+            mock.setValue(withEqual(3.0, 0.01)); times = 3;
          }
       };
 
@@ -151,7 +151,7 @@ public final class ExpectationsWithArgMatchersTest
       new Expectations()
       {
          {
-            mock.setValue(withEqual(3.0F, 0.01)); repeats(3);
+            mock.setValue(withEqual(3.0F, 0.01)); times = 3;
          }
       };
 
