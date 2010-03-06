@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -46,7 +46,7 @@ public final class MisusedExpectationsTest
       // First record phase:
       new Expectations()
       {{
-         new Blah().value(); returns(5);
+         new Blah().value(); result = 5;
       }};
 
       // First replay phase:
@@ -55,8 +55,8 @@ public final class MisusedExpectationsTest
       // Second record phase:
       new Expectations()
       {{
-         mock.value(); returns(6);
-         mock.value(); returns(3);
+         mock.value(); result = 6;
+         mock.value(); result = 3;
       }};
 
       // Second replay phase:
@@ -93,11 +93,11 @@ public final class MisusedExpectationsTest
    {
       new NonStrictExpectations()
       {{
-         mock.value(); returns(1);
-         mock.value(); returns(2);
+         mock.value(); result = 1;
+         mock.value(); result = 2;
 
          mock.setValue(1);
-         mock.setValue(1); throwsError(new UnknownError());
+         mock.setValue(1); result = new UnknownError();
       }};
 
       assertEquals(1, mock.value());
@@ -113,10 +113,10 @@ public final class MisusedExpectationsTest
       new NonStrictExpectations()
       {{
          mock.setValue(1);
-         mock.setValue(withAny(0)); throwsError(new UnknownError());
+         mock.setValue(anyInt); result = new UnknownError();
 
-         mock.doSomething(withEqual(true)); returns("first");
-         mock.doSomething(withNotEqual(false)); returns("second");
+         mock.doSomething(withEqual(true)); result = "first";
+         mock.doSomething(withNotEqual(false)); result = "second";
       }};
 
       mock.setValue(1);
