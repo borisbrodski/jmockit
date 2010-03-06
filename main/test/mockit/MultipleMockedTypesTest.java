@@ -89,8 +89,8 @@ public final class MultipleMockedTypesTest
          SecondDependency mock2;
 
          {
-            mock1.getValue(); returns(15);
-            mock2.getDifferentValue(); returns(-50);
+            mock1.getValue(); result = 15;
+            mock2.getDifferentValue(); result = -50;
          }
       };
 
@@ -110,8 +110,8 @@ public final class MultipleMockedTypesTest
       new NonStrictExpectations()
       {
          {
-            mock1.getValue(); returns(15);
-            mock2.getValue(); returns(-50);
+            mock1.getValue(); result = 15;
+            mock2.getValue(); result = -50;
          }
       };
 
@@ -144,8 +144,8 @@ public final class MultipleMockedTypesTest
          SecondDependency mock2;
 
          {
-            mock1.getValue(); returns(15);
-            mock2.getValue(); returns(-50);
+            mock1.getValue(); result = 15;
+            mock2.getValue(); result = -50;
          }
       };
 
@@ -159,8 +159,8 @@ public final class MultipleMockedTypesTest
       new NonStrictExpectations()
       {
          {
-            mock1.getValue(); returns(15);
-            mock2.getValue(); returns(-50);
+            mock1.getValue(); result = 15;
+            mock2.getValue(); result = -50;
          }
       };
 
@@ -184,8 +184,8 @@ public final class MultipleMockedTypesTest
          @Capturing SecondDependency mock2;
 
          {
-            mock1.getValue(); returns(15);
-            mock2.getValue(); returns(-50);
+            mock1.getValue(); result = 15;
+            mock2.getValue(); result = -50;
          }
       };
 
@@ -206,8 +206,8 @@ public final class MultipleMockedTypesTest
       new NonStrictExpectations()
       {
          {
-            mock1.getValue(); returns(15);
-            mock2.getValue(); returns(-50);
+            mock1.getValue(); result = 15;
+            mock2.getValue(); result = -50;
          }
       };
 
