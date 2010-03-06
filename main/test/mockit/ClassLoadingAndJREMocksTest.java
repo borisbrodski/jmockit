@@ -95,9 +95,7 @@ public final class ClassLoadingAndJREMocksTest
          FileOutputStream mockOS;
 
          {
-            invoke(
-               tested, "helperMethod",
-               withInstanceOf(FileOutputStream.class) == null ? FileOutputStream.class : null);
+            invoke(tested, "helperMethod", withAny(FileOutputStream.class));
          }
       };
 
