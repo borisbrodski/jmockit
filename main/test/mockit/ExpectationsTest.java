@@ -158,12 +158,12 @@ public final class ExpectationsTest
       new Expectations()
       {
          {
-            mock.getValue(); returns(2);
+            mock.getValue(); result = 2;
          }
       };
 
       assertEquals(2, mock.getValue());
-      Mockit.restoreAllOriginalDefinitions();
+      Mockit.tearDownMocks();
       assertEquals(0, mock.getValue());
    }
 
@@ -299,7 +299,7 @@ public final class ExpectationsTest
          Collaborator mock;
 
          {
-            returns(42);
+            result = 42;
          }
       };
    }
@@ -313,7 +313,7 @@ public final class ExpectationsTest
 
          {
             endRecording();
-            mock.setValue(withAny(5));
+            mock.setValue(withNotEqual(5));
          }
       };
    }
@@ -411,7 +411,7 @@ public final class ExpectationsTest
       new Expectations()
       {
          {
-            mock.getValue(); returns(1); returns(2);
+            mock.getValue(); result = 1; result = 2;
          }
       };
 
@@ -427,7 +427,7 @@ public final class ExpectationsTest
          final System system = null;
 
          {
-            System.nanoTime(); returns(0L);
+            System.nanoTime(); result = 0L;
          }
       };
 
@@ -442,7 +442,7 @@ public final class ExpectationsTest
          System mockedSystem;
 
          {
-            System.getenv("envVar"); returns(".");
+            System.getenv("envVar"); result = ".";
          }
       };
 
