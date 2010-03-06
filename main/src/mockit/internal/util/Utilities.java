@@ -125,11 +125,14 @@ public final class Utilities
 
    public static Class<?>[] getParameterTypesFromArguments(Object... args)
    {
+      if (args.length == 0) {
+         return NO_PARAMETERS;
+      }
+
       Class<?>[] paramTypes = new Class<?>[args.length];
 
       for (int i = 0; i < args.length; i++) {
-         Class<?> argType = getParameterTypeFromArgument(i, args);
-         paramTypes[i] = argType;
+         paramTypes[i] = getParameterTypeFromArgument(i, args);
       }
 
       return paramTypes;
@@ -670,6 +673,11 @@ public final class Utilities
    public static Class<?>[] getParameterTypes(String mockDesc)
    {
       mockit.external.asm.Type[] paramTypes = mockit.external.asm.Type.getArgumentTypes(mockDesc);
+
+      if (paramTypes.length == 0) {
+         return NO_PARAMETERS;
+      }
+
       Class<?>[] paramClasses = new Class<?>[paramTypes.length];
 
       for (int i = 0; i < paramTypes.length; i++) {
