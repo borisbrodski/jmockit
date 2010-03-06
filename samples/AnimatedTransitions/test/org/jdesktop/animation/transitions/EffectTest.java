@@ -183,7 +183,7 @@ public final class EffectTest
       new Verifications()
       {
          {
-            image.flush(); repeats(0);
+            image.flush(); times = 0;
          }
       };
    }
