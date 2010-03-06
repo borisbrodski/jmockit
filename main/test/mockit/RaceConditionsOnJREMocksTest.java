@@ -1,6 +1,6 @@
 /*
- * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -77,7 +77,7 @@ public final class RaceConditionsOnJREMocksTest
       new Expectations(stuffHandler)
       {
          {
-            invoke(stuffHandler, "getStuffType"); throwsException(new Exception());
+            invoke(stuffHandler, "getStuffType"); result = new Exception();
          }
       };
 
@@ -95,8 +95,8 @@ public final class RaceConditionsOnJREMocksTest
          @Mocked("(String)") FileInputStream mockFIS;
 
          {
-            invoke(stuffHandler, "getStuffType"); returns("*mocked*");
-            new FileInputStream(anyString); throwsException(new FileNotFoundException());
+            invoke(stuffHandler, "getStuffType"); result = "*mocked*";
+            new FileInputStream(anyString); result = new FileNotFoundException();
          }
       };
 
@@ -115,10 +115,10 @@ public final class RaceConditionsOnJREMocksTest
          @Mocked("(String)") FileInputStream mockFIS;
 
          {
-            invoke(stuffHandler, "getStuffType"); returns("*mocked*");
+            invoke(stuffHandler, "getStuffType"); result = "*mocked*";
 
             invoke(props, "load", withAny(FileInputStream.class));
-            throwsException(new IOException());
+            result = new IOException();
          }
       };
 
@@ -136,8 +136,8 @@ public final class RaceConditionsOnJREMocksTest
          @Mocked("(String)") FileInputStream mockFIS;
 
          {
-            invoke(stuffHandler, "getStuffType"); returns("*mocked*");
-            invoke(props, "getProperty", withAny("")); returns(" *mocked*");
+            invoke(stuffHandler, "getStuffType"); result = "*mocked*";
+            invoke(props, "getProperty", withAny("")); result = " *mocked*";
          }
       };
 
