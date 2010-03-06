@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations & Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -59,13 +59,13 @@ public final class FullVerificationsInOrderTest
 
       new FullVerificationsInOrder()
       {{
-         mock.prepare(); repeatsAtLeast(1);
-         mock.setSomething(withAny(0)); repeats(0, 2);
-         mock.setSomethingElse(withAny(' '));
-         mock.setSomething(withAny(0)); repeats(1, 2);
+         mock.prepare(); minTimes = 1;
+         mock.setSomething(anyInt); minTimes = 0; maxTimes = 2;
+         mock.setSomethingElse(anyChar);
+         mock.setSomething(anyInt); minTimes = 1; maxTimes = 2;
          mock.editABunchMoreStuff();
-         mock.notifyBeforeSave(); repeatsAtMost(1);
-         mock.save(); repeats(1);
+         mock.notifyBeforeSave(); maxTimes = 1;
+         mock.save(); times = 1;
       }};
    }
 
@@ -75,8 +75,8 @@ public final class FullVerificationsInOrderTest
       new NonStrictExpectations()
       {
          {
-            mock.prepare(); returns(true);
-            mock.editABunchMoreStuff(); returns(5);
+            mock.prepare(); result = true;
+            mock.editABunchMoreStuff(); result = 5;
          }
       };
 
@@ -84,13 +84,13 @@ public final class FullVerificationsInOrderTest
 
       new FullVerificationsInOrder()
       {{
-         mock.prepare(); repeatsAtLeast(1);
-         mock.setSomething(withAny(0)); repeats(0, 2);
-         mock.setSomethingElse(withAny(' '));
-         mock.setSomething(withAny(0)); repeats(1, 2);
+         mock.prepare(); minTimes = 1;
+         mock.setSomething(anyInt); minTimes = 0; maxTimes = 2;
+         mock.setSomethingElse(anyChar);
+         mock.setSomething(anyInt); minTimes = 1; maxTimes = 2;
          mock.editABunchMoreStuff();
-         mock.notifyBeforeSave(); repeatsAtMost(1);
-         mock.save(); repeats(1);
+         mock.notifyBeforeSave(); maxTimes = 1;
+         mock.save(); times = 1;
       }};
    }
 
@@ -99,8 +99,8 @@ public final class FullVerificationsInOrderTest
    {
       new NonStrictExpectations()
       {{
-         mock.setSomething(45); repeats(1);
-         mock.editABunchMoreStuff(); returns(5); repeatsAtLeast(1);
+         mock.setSomething(45); times = 1;
+         mock.editABunchMoreStuff(); result = 5; minTimes = 1;
       }};
 
       exerciseCodeUnderTest();
@@ -121,8 +121,8 @@ public final class FullVerificationsInOrderTest
       new NonStrictExpectations()
       {
          {
-            mock.prepare(); returns(true);
-            mock.editABunchMoreStuff(); returns(5);
+            mock.prepare(); result = true;
+            mock.editABunchMoreStuff(); result = 5;
          }
       };
 
@@ -134,8 +134,8 @@ public final class FullVerificationsInOrderTest
       new FullVerificationsInOrder()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0));
-         mock.setSomethingElse(withAny(' '));
+         mock.setSomething(anyInt);
+         mock.setSomethingElse(anyChar);
          mock.save();
       }};
    }
@@ -161,8 +161,8 @@ public final class FullVerificationsInOrderTest
       new FullVerificationsInOrder()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0));
-         mock.setSomethingElse(withAny('0'));
+         mock.setSomething(anyInt);
+         mock.setSomethingElse(anyChar);
          mock.notifyBeforeSave();
          mock.save();
       }};
@@ -178,7 +178,7 @@ public final class FullVerificationsInOrderTest
       {{
          mock.prepare();
          mock.setSomething(123);
-         mock.notifyBeforeSave(); repeats(0);
+         mock.notifyBeforeSave(); times = 0;
       }};
    }
 
@@ -191,7 +191,7 @@ public final class FullVerificationsInOrderTest
       new FullVerificationsInOrder()
       {{
          mock.setSomething(1);
-         mock.notifyBeforeSave(); repeats(0);
+         mock.notifyBeforeSave(); times = 0;
       }};
    }
 
@@ -205,8 +205,8 @@ public final class FullVerificationsInOrderTest
       new FullVerificationsInOrder()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0));
-         mock.save(); repeatsAtLeast(0);
+         mock.setSomething(anyInt);
+         mock.save(); minTimes = 0;
       }};
    }
 
@@ -221,8 +221,8 @@ public final class FullVerificationsInOrderTest
       new FullVerificationsInOrder()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0));
-         mock.save(); repeatsAtLeast(0);
+         mock.setSomething(anyInt);
+         mock.save(); minTimes = 0;
       }};
    }
 
@@ -235,8 +235,8 @@ public final class FullVerificationsInOrderTest
       new FullVerificationsInOrder()
       {{
          mock.prepare();
-         mock.setSomething(withAny(0));
-         mock.save(); repeatsAtLeast(0);
+         mock.setSomething(anyInt);
+         mock.save(); minTimes = 0;
       }};
    }
 
@@ -249,8 +249,8 @@ public final class FullVerificationsInOrderTest
       new FullVerificationsInOrder()
       {{
          mock.prepare();
-         mock.editABunchMoreStuff(); repeatsAtLeast(0);
-         mock.setSomething(withAny(0));
+         mock.editABunchMoreStuff(); minTimes = 0;
+         mock.setSomething(anyInt);
       }};
    }
 
@@ -276,7 +276,7 @@ public final class FullVerificationsInOrderTest
 
       new FullVerificationsInOrder()
       {{
-         mock.setSomething(withAny(0)); repeats(1);
+         mock.setSomething(anyInt); times = 1;
       }};
    }
 
@@ -287,7 +287,7 @@ public final class FullVerificationsInOrderTest
 
       new FullVerificationsInOrder()
       {{
-         mock.setSomethingElse(withAny('T')); repeats(3, 6);
+         mock.setSomethingElse(anyChar); minTimes = 3; maxTimes = 6;
       }};
    }
 
@@ -301,7 +301,7 @@ public final class FullVerificationsInOrderTest
 
       new FullVerificationsInOrder(2)
       {{
-         mock.setSomething(withAny(1));
+         mock.setSomething(anyInt);
          mock.save();
       }};
    }
@@ -326,13 +326,13 @@ public final class FullVerificationsInOrderTest
 
       new FullVerificationsInOrder(2)
       {{
-         mock.prepare(); repeatsAtMost(1);
-         mock.setSomething(withAny(0)); repeatsAtLeast(1);
+         mock.prepare(); maxTimes = 1;
+         mock.setSomething(anyInt); minTimes = 1;
          mock.setSomethingElse('a');
-         mock.setSomething(withAny(0)); repeatsAtMost(1);
-         mock.editABunchMoreStuff(); repeats(0, 5);
+         mock.setSomething(anyInt); maxTimes = 1;
+         mock.editABunchMoreStuff(); minTimes = 0; maxTimes = 5;
          mock.notifyBeforeSave();
-         mock.save(); repeats(1);
+         mock.save(); times = 1;
       }};
    }
 }
