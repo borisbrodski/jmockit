@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -110,7 +110,7 @@ public final class TextFileUsingExpectationsTest
          Object reader;
 
          {
-            invoke(reader, "close"); repeats(1);
+            invoke(reader, "close"); times = 1;
          }
       };
 
@@ -126,7 +126,7 @@ public final class TextFileUsingExpectationsTest
 
          // Records TextFile#parse():
          {
-            reader.skip(200); returns(200L);
+            reader.skip(200); result = 200L;
             reader.readLine(); returns("line1", "another,line", null);
             reader.close();
          }
@@ -157,7 +157,7 @@ public final class TextFileUsingExpectationsTest
       {
          // Records TextFile#parse():
          {
-            reader.skip(200); returns(200L);
+            reader.skip(200); result = 200L;
             reader.readLine(); returns("line1", "another,line", null);
             reader.close();
          }
@@ -186,8 +186,8 @@ public final class TextFileUsingExpectationsTest
 
          // Records TextFile#parse():
          {
-            reader.skip(0); returns(0L);
-            reader.readLine(); returns("line1"); returns("another,line"); returns(null);
+            reader.skip(0); result = 0L;
+            reader.readLine(); result = "line1"; result = "another,line"; result = null;
             reader.close();
          }
       };
