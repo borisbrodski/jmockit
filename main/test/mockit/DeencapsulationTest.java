@@ -24,7 +24,6 @@
  */
 package mockit;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 import static org.junit.Assert.*;
