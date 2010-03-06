@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -71,14 +71,14 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
          {
             mock.simpleOperation(withEqual(1), "", null);
             mock.simpleOperation(withNotEqual(1), null, (Date) withNull());
-            mock.simpleOperation(1, withNotEqual("arg"), null); repeats(1, 2);
+            mock.simpleOperation(1, withNotEqual("arg"), null); minTimes = 1; maxTimes = 2;
             mock.simpleOperation(12, "arg", (Date) withNotNull());
 
-            mock.anotherOperation((byte) 0, withAny(0L)); returns(123L);
-            mock.anotherOperation(withAny((byte) 0), 5); returns(-123L);
+            mock.anotherOperation((byte) 0, anyLong); result = 123L;
+            mock.anotherOperation(anyByte, 5); result = -123L;
 
-            Collaborator.staticVoidMethod(34L, withAny('c'), 5.0);
-            Collaborator.staticBooleanMethod(true, withSuffix("end"), null); returns(true);
+            Collaborator.staticVoidMethod(34L, anyChar, 5.0);
+            Collaborator.staticBooleanMethod(true, withSuffix("end"), null); result = true;
          }
       };
 
@@ -142,7 +142,7 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
             mock.setValues(123L, withEqual((byte) 5), 6.4, withNotEqual((short) 14));
             mock.booleanValues(12L, (byte) 4, withEqual(6.0, 0.1), withEqual((short) 14));
             Collaborator.staticSetValues(withNotEqual(1L), (byte) 4, 6.1, withEqual((short) 3));
-            Collaborator.staticLongValues(12L, withAny((byte) 0), withEqual(6.1), (short) 4);
+            Collaborator.staticLongValues(12L, anyByte, withEqual(6.1), (short) 4);
          }
       };
 
@@ -212,10 +212,10 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
       new Expectations()
       {
          {
-            mock.simpleOperation(anyInt, null, (Date) withAny());
+            mock.simpleOperation(anyInt, null, (Date) any);
             mock.simpleOperation(anyInt, withEqual("test"), null);
             mock.simpleOperation(3, withPrefix("test"), (Date) any);
-            mock.simpleOperation(-1, withAny(""), (Date) any);
+            mock.simpleOperation(-1, anyString, (Date) any);
             mock.simpleOperation(1, anyString, (Date) withNotNull());
          }
       };
@@ -238,7 +238,7 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
       new NonStrictExpectations()
       {
          {
-            mock.getAlerts(withAny(), 1, withAny(false)); returns(asList("A", "b"));
+            mock.getAlerts(any, 1, anyBoolean); result = asList("A", "b");
          }
       };
 
