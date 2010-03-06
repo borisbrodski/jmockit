@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Expectations & Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -59,12 +59,12 @@ public final class FullVerificationsTest
 
       new FullVerifications()
       {{
-         mock.prepare(); repeatsAtLeast(1);
+         mock.prepare(); minTimes = 1;
          mock.editABunchMoreStuff();
-         mock.notifyBeforeSave(); repeatsAtMost(1);
-         mock.setSomething(anyInt); repeats(0, 2);
+         mock.notifyBeforeSave(); maxTimes = 1;
+         mock.setSomething(anyInt); minTimes = 0; maxTimes = 2;
          mock.setSomethingElse(anyChar);
-         mock.save(); repeats(1);
+         mock.save(); times = 1;
       }};
    }
 
@@ -73,7 +73,7 @@ public final class FullVerificationsTest
    {
       new NonStrictExpectations()
       {{
-         mock.editABunchMoreStuff(); returns(true);
+         mock.editABunchMoreStuff(); result = true;
          mock.setSomething(45);
       }};
 
@@ -95,8 +95,8 @@ public final class FullVerificationsTest
    {
       new NonStrictExpectations()
       {{
-         mock.setSomething(45); repeats(1);
-         mock.editABunchMoreStuff(); returns(true); repeatsAtLeast(1);
+         mock.setSomething(45); times = 1;
+         mock.editABunchMoreStuff(); result = true; minTimes = 1;
       }};
 
       exerciseCodeUnderTest();
@@ -136,8 +136,8 @@ public final class FullVerificationsTest
       new FullVerifications()
       {{
          mock.prepare();
-         mock.setSomething(anyInt); repeats(2);
-         mock.notifyBeforeSave(); repeats(0);
+         mock.setSomething(anyInt); times = 2;
+         mock.notifyBeforeSave(); times = 0;
       }};
    }
 
@@ -150,7 +150,7 @@ public final class FullVerificationsTest
       new FullVerifications()
       {{
          mock.setSomething(1);
-         mock.notifyBeforeSave(); repeats(0);
+         mock.notifyBeforeSave(); times = 0;
       }};
    }
 
@@ -165,7 +165,7 @@ public final class FullVerificationsTest
       {{
          mock.prepare();
          mock.setSomething(anyInt);
-         mock.save(); repeatsAtLeast(0);
+         mock.save(); minTimes = 0;
       }};
    }
 
@@ -181,7 +181,7 @@ public final class FullVerificationsTest
       {{
          mock.prepare();
          mock.setSomething(anyInt);
-         mock.save(); repeatsAtLeast(0);
+         mock.save(); minTimes = 0;
       }};
    }
 
@@ -195,7 +195,7 @@ public final class FullVerificationsTest
       {{
          mock.prepare();
          mock.setSomething(anyInt);
-         mock.save(); repeatsAtLeast(0);
+         mock.save(); minTimes = 0;
       }};
    }
 
@@ -248,7 +248,7 @@ public final class FullVerificationsTest
 
       new FullVerifications()
       {{
-         mock.setSomething(anyInt); repeats(1);
+         mock.setSomething(anyInt); times = 1;
       }};
    }
 
@@ -261,7 +261,7 @@ public final class FullVerificationsTest
 
       new FullVerifications()
       {{
-         mock.setSomething(anyInt); repeats(1);
+         mock.setSomething(anyInt); times = 1;
       }};
    }
 
@@ -272,7 +272,7 @@ public final class FullVerificationsTest
 
       new FullVerifications()
       {{
-         mock.setSomethingElse(anyChar); repeats(3);
+         mock.setSomethingElse(anyChar); times = 3;
       }};
    }
 
@@ -311,12 +311,12 @@ public final class FullVerificationsTest
 
       new FullVerifications(2)
       {{
-         mock.prepare(); repeatsAtMost(1);
-         mock.setSomething(anyInt); repeatsAtLeast(2);
+         mock.prepare(); maxTimes = 1;
+         mock.setSomething(anyInt); minTimes = 2;
          mock.setSomethingElse('a');
-         mock.editABunchMoreStuff(); repeats(0, 5);
+         mock.editABunchMoreStuff(); minTimes = 0; maxTimes = 5;
          mock.notifyBeforeSave();
-         mock.save(); repeats(1);
+         mock.save(); times = 1;
       }};
    }
 }
