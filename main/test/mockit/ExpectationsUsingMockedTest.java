@@ -24,9 +24,7 @@
  */
 package mockit;
 
-import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 import javax.swing.*;
 
@@ -157,8 +155,8 @@ public final class ExpectationsUsingMockedTest
          @NonStrict private Dependency dependency2;
 
          {
-            dependency1.doSomething(true); returns("1");
-            dependency2.doSomething(false); returns("2");
+            dependency1.doSomething(true); result = "1";
+            dependency2.doSomething(false); result = "2";
          }
       };
 
@@ -195,7 +193,7 @@ public final class ExpectationsUsingMockedTest
       new Expectations()
       {
          {
-            base.add(1); returns(true);
+            base.add(1); result = true;
          }
       };
 
