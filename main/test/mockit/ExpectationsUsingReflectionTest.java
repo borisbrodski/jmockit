@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -99,7 +99,7 @@ public final class ExpectationsUsingReflectionTest
          final Collaborator mock = null;
 
          {
-            invoke(Collaborator.class, "doInternal"); returns("test");
+            invoke(Collaborator.class, "doInternal"); result = "test";
          }
       };
 
