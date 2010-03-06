@@ -61,10 +61,10 @@ public final class DelegateTest extends TestCase
          Collaborator mock;
 
          {
-            mock.getValue(); returns(new Delegate() { int getValue() { return 2; } });
+            mock.getValue(); result = new Delegate() { int getValue() { return 2; } };
 
             mock.doSomething(bExpected, iExpected, sExpected);
-            returns(new Delegate()
+            result = new Delegate()
             {
                String doSomething(boolean b, int[] i, String s)
                {
@@ -73,7 +73,7 @@ public final class DelegateTest extends TestCase
                   assertEquals(sExpected, s);
                   return "";
                }
-            });
+            };
          }
       };
 
