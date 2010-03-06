@@ -1,5 +1,5 @@
 /*
- * JMockit Verifications
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -181,7 +181,7 @@ public final class VerificationsWithPartialOrderingTest
 
       new VerificationsInOrder()
       {{
-         mock.prepare(); repeats(1);
+         mock.prepare(); times = 1;
          unverifiedInvocations();
       }};
    }
@@ -200,7 +200,7 @@ public final class VerificationsWithPartialOrderingTest
       new VerificationsInOrder()
       {{
          unverifiedInvocations();
-         mock.save(); repeats(1);
+         mock.save(); times = 1;
       }};
    }
 
@@ -304,7 +304,7 @@ public final class VerificationsWithPartialOrderingTest
       new Verifications()
       {{
          mock.setSomethingElse("anotherValue");
-         mock.setSomething(withAny(0));
+         mock.setSomething(anyInt);
       }};
 
       new VerificationsInOrder()
@@ -360,7 +360,7 @@ public final class VerificationsWithPartialOrderingTest
          mock.prepare();
          unverifiedInvocations();
          mock.setSomething(123);
-         mock.setSomethingElse(withAny(""));
+         mock.setSomethingElse(anyString);
          unverifiedInvocations();
          mock.notifyBeforeSave();
          unverifiedInvocations();
