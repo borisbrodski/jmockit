@@ -1,6 +1,6 @@
 /*
  * JMockit Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -83,10 +83,10 @@ public final class VerificationsWithSomeArgumentMatchersTest
             mock.simpleOperation(1, withNotEqual("arg"), null);
             mock.simpleOperation(12, "arg", (Date) withNotNull());
 
-            mock.anotherOperation((byte) 0, withAny(0L));
-            mock.anotherOperation(withAny((byte) 0), 5);
+            mock.anotherOperation((byte) 0, anyLong);
+            mock.anotherOperation(anyByte, 5);
 
-            Collaborator.staticVoidMethod(34L, withAny('c'), 5.0F);
+            Collaborator.staticVoidMethod(34L, anyChar, 5.0F);
             Collaborator.staticBooleanMethod(true, withSuffix("end"), null);
          }
       };
@@ -145,7 +145,7 @@ public final class VerificationsWithSomeArgumentMatchersTest
             mock.setValues(123L, anyByte, 6.4, anyShort);
             mock.booleanValues(12L, (byte) 4, withEqual(6.0, 0.1), withEqual((short) 14));
             Collaborator.staticSetValues(withNotEqual(1L), (byte) 4, 6.1, withEqual((short) 3));
-            Collaborator.staticLongValues(12L, withAny((byte) 0), withEqual(6.1), 'F');
+            Collaborator.staticLongValues(12L, anyByte, withEqual(6.1), 'F');
          }
       };
    }
@@ -206,10 +206,10 @@ public final class VerificationsWithSomeArgumentMatchersTest
       new Verifications()
       {
          {
-            mock.simpleOperation(anyInt, null, (Date) withAny());
+            mock.simpleOperation(anyInt, null, (Date) any);
             mock.simpleOperation(anyInt, withEqual("test"), null);
             mock.simpleOperation(3, withPrefix("test"), (Date) any);
-            mock.simpleOperation(-1, withAny(""), (Date) any);
+            mock.simpleOperation(-1, anyString, (Date) any);
             mock.simpleOperation(1, anyString, (Date) withNotNull());
          }
       };
@@ -229,14 +229,14 @@ public final class VerificationsWithSomeArgumentMatchersTest
       new FullVerifications()
       {
          {
-            mock.getAlerts(withAny(), 1, withAny(false)); repeats(2);
+            mock.getAlerts(any, 1, anyBoolean); times = 2;
          }
       };
 
       new Verifications()
       {
          {
-            mock.getAlerts(null, anyInt, anyBoolean); repeats(2);
+            mock.getAlerts(null, anyInt, anyBoolean); times = 2;
          }
       };
    }
