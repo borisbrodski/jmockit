@@ -37,6 +37,12 @@
       <code>Iterator</code>, or array, the individual elements contained in the collection,
       iterator or array will be the ones directly specified as arguments.
    </li>
+   <li>
+      Fixed a bug of omission in tests with two or more mocks of the same type, where one of them is
+      declared as <code>@NonStrict</code>. The issue was that all other mocks were also considered
+      non-strict, when they should be strict.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=39">issue 39</a>.
+   </li>
 <!--
    <li>
       Fixed a bug of omission in the use of <code>@Cascading</code>, when expectations are recorded
