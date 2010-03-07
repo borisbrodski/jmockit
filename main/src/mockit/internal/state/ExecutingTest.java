@@ -116,9 +116,20 @@ public final class ExecutingTest
       String mockedClassDesc = mockedClass.getName().replace('.', '/');
       String uniqueClassDesc = mockedClassDesc.intern();
 
-      if (!containsNonStrictMock(null, uniqueClassDesc)) {
+      if (!containsNonStrictMockedClass(uniqueClassDesc)) {
          nonStrictMocks.add(uniqueClassDesc);
       }
+   }
+
+   private boolean containsNonStrictMockedClass(String classDesc)
+   {
+      for (Object mockClassDesc : nonStrictMocks) {
+         if (classDesc == mockClassDesc) {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    public void addNonStrictMock(Object mock)
@@ -146,7 +157,10 @@ public final class ExecutingTest
       if (mockClassDesc != null) {
          String uniqueMockClassDesc = mockClassDesc.intern();
 
-         if (!containsStrictMock(uniqueMockClassDesc)) {
+         if (
+            !containsStrictMock(uniqueMockClassDesc) &&
+            !containsNonStrictMockedClass(uniqueMockClassDesc)
+         ) {
             strictMocks.add(uniqueMockClassDesc);
          }
       }
@@ -170,10 +184,19 @@ public final class ExecutingTest
       return false;
    }
 
-   public boolean containsNonStrictMock(Object mock, String mockClassDesc)
+   public boolean containsNonStrictMock(
+      int access, Object mock, String mockClassDesc, String mockNameAndDesc)
    {
+      boolean staticMethod = Modifier.isStatic(access);
+      boolean constructor = !staticMethod && mockNameAndDesc.startsWith("<init>");
+
       for (Object nonStrictMock : nonStrictMocks) {
-         if (nonStrictMock == mock || nonStrictMock == mockClassDesc) {
+         if (staticMethod || constructor) {
+            if (nonStrictMock == mockClassDesc) {
+               return true;
+            }
+         }
+         else if (nonStrictMock == mock) {
             return true;
          }
       }

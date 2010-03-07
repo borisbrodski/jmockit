@@ -286,4 +286,63 @@ public final class MockInstanceMatchingTest
 
       assertEquals(1, new Collaborator().getValue());
    }
+
+   @Test(expected = AssertionError.class)
+   public void missingInvocationOnStrictMockWithNonStrictOneOfSameType(
+      final Collaborator mock1, @NonStrict Collaborator mock2)
+   {
+      new Expectations()
+      {
+         {
+            mock1.setValue(5);
+         }
+      };
+
+      assertEquals(0, mock2.getValue());
+   }
+
+   @Test(expected = AssertionError.class)
+   public void unexpectedInvocationOnStrictMockWithNonStrictOneOfSameType(final Collaborator mock1)
+   {
+      new Expectations()
+      {
+         @NonStrict Collaborator mock2;
+
+         {
+            mock1.setValue(5);
+         }
+      };
+
+      mock1.getValue();
+   }
+
+   @Test
+   public void recordAllowedConstructorInvocationForMockedTypeWithBothStrictAndNonStrictMocks(
+      @NonStrict Collaborator mock1, final Collaborator mock2)
+   {
+      new Expectations()
+      {
+         {
+            mock2.setValue(2);
+            new Collaborator();
+         }
+      };
+
+      mock2.setValue(2);
+   }
+
+   @Test
+   public void unexpectedConstructorInvocationForMockedTypeWithBothStrictAndNonStrictMocks(
+      @NonStrict Collaborator mock1, final Collaborator mock2)
+   {
+      new Expectations()
+      {
+         {
+            mock2.getValue(); result = 2;
+         }
+      };
+
+      new Collaborator().setValue(1);
+      assertEquals(2, mock2.getValue());
+   }
 }

@@ -48,16 +48,17 @@ public final class RecordPhase extends TestOnlyPhase
 
    @Override
    Object handleInvocation(
-      Object mock, int mockAccess, String classDesc, String mockNameAndDesc, boolean withRealImpl,
+      Object mock, int access, String classDesc, String mockNameAndDesc, boolean withRealImpl,
       Object[] args)
       throws Throwable
    {
       //noinspection AssignmentToMethodParameter
       mock = configureMatchingOnMockInstanceIfSpecified(mock);
       ExpectedInvocation invocation =
-         new ExpectedInvocation(mock, mockAccess, classDesc, mockNameAndDesc, matchInstance, args);
+         new ExpectedInvocation(mock, access, classDesc, mockNameAndDesc, matchInstance, args);
       boolean nonStrictInvocation =
-         nonStrict || TestRun.getExecutingTest().containsNonStrictMock(mock, classDesc);
+         nonStrict ||
+         TestRun.getExecutingTest().containsNonStrictMock(access, mock, classDesc, mockNameAndDesc);
 
       if (!nonStrictInvocation) {
          String mockClassDesc = matchInstance ? null : classDesc;
