@@ -76,7 +76,8 @@ final class ReplayPhase extends Phase
 
       if (nonStrictExpectation != null) {
          nonStrictInvocations.add(nonStrictExpectation);
-         return updateConstraintsAndProduceResult(mock, noExpectationFound && withRealImpl, args);
+         boolean executeRealImpl = withRealImpl && nonStrictExpectation.recordPhase == null;
+         return updateConstraintsAndProduceResult(mock, executeRealImpl, args);
       }
 
       return handleStrictInvocation(mock, mockClassDesc, mockDesc, withRealImpl, args);

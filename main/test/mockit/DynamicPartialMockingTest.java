@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -381,6 +381,24 @@ public final class DynamicPartialMockingTest
          {
             onInstance(mock).getValue();
             mock.getValue();
+         }
+      };
+   }
+
+   @Test
+   public void methodWithNoRecordedExpectationCalledTwiceDuringReplay()
+   {
+      final Collaborator collaborator = new Collaborator(123);
+
+      new NonStrictExpectations(collaborator) {};
+
+      assertEquals(123, collaborator.getValue());
+      assertEquals(123, collaborator.getValue());
+
+      new FullVerifications()
+      {
+         {
+            collaborator.getValue(); times = 2;
          }
       };
    }
