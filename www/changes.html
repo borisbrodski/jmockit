@@ -43,6 +43,12 @@
       non-strict, when they should be strict.
       See <a href="http://code.google.com/p/jmockit/issues/detail?id=39">issue 39</a>.
    </li>
+   <li>
+      Fixed a bug in the <em>dynamic partial mocking</em> feature: when a method with no recorded
+      expectation was called more than once during the replay phase, only the first invocation was
+      executing the real implementation.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=40">issue 40</a>.
+   </li>
 <!--
    <li>
       Fixed a bug of omission in the use of <code>@Cascading</code>, when expectations are recorded
