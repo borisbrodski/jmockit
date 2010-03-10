@@ -128,6 +128,29 @@ public final class DynamicOnInstanceMockingTest
    }
 
    @Test
+   public void mockingTwoInstancesButRecordingOnAnother()
+   {
+      final Collaborator collaborator1 = new Collaborator();
+      final Collaborator collaborator2 = new Collaborator();
+      final Collaborator collaborator3 = new Collaborator();
+
+      new NonStrictExpectations(collaborator1, collaborator2)
+      {
+         {
+            // Recording expectations on a mock instance other than the ones
+            // passed in the constructor should be avoided, but it is valid:
+            collaborator3.getValue(); result = 3;
+         }
+      };
+
+      collaborator1.setValue(1);
+      collaborator2.setValue(2);
+      assertEquals(1, collaborator1.getValue());
+      assertEquals(2, collaborator2.getValue());
+      assertEquals(3, collaborator3.getValue());
+   }
+
+   @Test
    public void mockingOneInstanceAndOneClass()
    {
       final Collaborator collaborator1 = new Collaborator();
