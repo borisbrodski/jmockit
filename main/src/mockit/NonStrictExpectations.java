@@ -38,18 +38,24 @@ package mockit;
 public class NonStrictExpectations extends Expectations
 {
    /**
-    * Identical to the corresponding super-constructor, except that all expectations recorded will
-    * be {@linkplain #notStrict() non-strict} by default.
+    * Identical to the corresponding super-constructor {@link Expectations#Expectations()}, except
+    * that all expectations recorded will be {@linkplain #notStrict() non-strict} by default.
+    *
+    * @see #NonStrictExpectations(Object...)
+    * @see #NonStrictExpectations(int, Object...)
     */
    protected NonStrictExpectations()
    {
    }
 
    /**
-    * Identical to the corresponding super-constructor, except that all expectations recorded will
-    * be {@linkplain #notStrict() non-strict} by default.
+    * Identical to the corresponding super-constructor {@link Expectations#Expectations(Object...)},
+    * except that all expectations recorded will be {@linkplain #notStrict() non-strict} by default.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#dynamicPartial">In the Tutorial</a>
+    *
+    * @see #NonStrictExpectations()
+    * @see #NonStrictExpectations(int, Object...)
     */
    protected NonStrictExpectations(Object... classesOrObjectsToBePartiallyMocked)
    {
@@ -57,7 +63,8 @@ public class NonStrictExpectations extends Expectations
    }
 
    /**
-    * Identical to the corresponding super-constructor, except that all expectations recorded will
+    * Identical to the corresponding super-constructor
+    * {@link Expectations#Expectations(int, Object...)}, except that all expectations recorded will
     * be {@linkplain #notStrict() non-strict} by default.
     * <p/>
     * The effect of specifying a number of iterations larger than 1 (one) is equivalent to
@@ -71,6 +78,9 @@ public class NonStrictExpectations extends Expectations
     *
     * @param numberOfIterations the positive number of iterations for the whole set of invocations
     * recorded inside the block; when not specified, 1 (one) iteration is assumed
+    *
+    * @see #NonStrictExpectations()
+    * @see #NonStrictExpectations(Object...)
     */
    protected NonStrictExpectations(
       int numberOfIterations, Object... classesOrObjectsToBePartiallyMocked)

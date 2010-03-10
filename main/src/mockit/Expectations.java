@@ -156,6 +156,9 @@ public class Expectations extends Invocations
     * </ol>
     * After this, test code can start recording invocations to the mocked types and mock instances.
     * Each and every such call made from inside the expectation block is recorded.
+    *
+    * @see #Expectations(Object...)
+    * @see #Expectations(int, Object...)
     */
    protected Expectations()
    {
@@ -179,6 +182,12 @@ public class Expectations extends Invocations
     * For a given {@code Class} object, on the other hand, both constructors and methods will be
     * considered for mocking, but only those belonging to the specified class.
     * <p/>
+    * If more than one instance of the same mocked class is given, then instance method invocations
+    * will automatically be matched on those individual instances, during the replay phase.
+    * Otherwise, an expectation recorded on a dynamically mocked object will match invocations on
+    * <em>any</em> instance of the mocked class (unless the {@link #onInstance(Object)} specifier
+    * was used in the expectation block).
+    * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#dynamicPartial">In the Tutorial</a>
     *
     * @param classesOrObjectsToBePartiallyMocked one or more classes or objects whose classes are
@@ -186,6 +195,9 @@ public class Expectations extends Invocations
     *
     * @throws IllegalArgumentException if given a class literal for an interface, an annotation, an
     * array, or a primitive/wrapper type, or given a value of such a type
+    * 
+    * @see #Expectations()
+    * @see #Expectations(int, Object...)
     */
    protected Expectations(Object... classesOrObjectsToBePartiallyMocked)
    {
@@ -209,6 +221,9 @@ public class Expectations extends Invocations
     * 
     * @param numberOfIterations the positive number of iterations for the whole set of invocations
     * recorded inside the block; when not specified, 1 (one) iteration is assumed
+    *
+    * @see #Expectations()
+    * @see #Expectations(Object...)
     */
    protected Expectations(int numberOfIterations, Object... classesOrObjectsToBePartiallyMocked)
    {
