@@ -174,17 +174,22 @@ public final class RecordAndReplayExecution
       }
 
       if (dynamicPartialMocking != null) {
-         List<Class<?>> staticallyMockedClasses = new ArrayList<Class<?>>(targetClasses);
-         List<Class<?>> dynamicallyMockedClasses = dynamicPartialMocking.getTargetClasses();
-
-         for (Class<?> dynamicallyMockedClass : dynamicallyMockedClasses) {
-            if (!staticallyMockedClasses.contains(dynamicallyMockedClass)) {
-               targetClasses.addAll(dynamicallyMockedClasses);
-            }
-         }
+         addDynamicallyMockedTargetClasses(targetClasses);
       }
 
       executionState.discoverMockedTypesToMatchOnInstances(targetClasses);
+   }
+
+   private void addDynamicallyMockedTargetClasses(List<Class<?>> targetClasses)
+   {
+      List<Class<?>> staticallyMockedClasses = new ArrayList<Class<?>>(targetClasses);
+      List<Class<?>> dynamicallyMockedClasses = dynamicPartialMocking.getTargetClasses();
+
+      for (Class<?> dynamicallyMockedClass : dynamicallyMockedClasses) {
+         if (!staticallyMockedClasses.contains(dynamicallyMockedClass)) {
+            targetClasses.add(dynamicallyMockedClass);
+         }
+      }
    }
 
    public Map<Type, Object> getLocalMocks()
