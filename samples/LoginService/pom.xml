@@ -4,15 +4,28 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.997</version>
+      <groupId>mockit</groupId><artifactId>samples</artifactId><version>1</version>
    </parent>
    <artifactId>LoginService</artifactId>
    <name>LoginService Sample</name>
 
+   <build>
+      <plugins>
+         <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration><properties>
+               <property>
+                  <name>listener</name><value>mockit.integration.testng.Initializer</value>
+               </property>
+            </properties></configuration>
+         </plugin>
+      </plugins>
+   </build>
+
    <dependencies>
       <dependency>
-         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>${version}</version>
-         <scope>test</scope>
+         <groupId>mockit</groupId><artifactId>jmockit</artifactId>
+         <version>${jmockit.version}</version><scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.testng</groupId><artifactId>testng</artifactId><version>5.11</version>
