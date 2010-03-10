@@ -33,9 +33,14 @@
          For TestNG test suites, configure TestNG with the
          <code>mockit.integration.testng.Initializer</code>
          <a href="http://testng.org/doc/documentation-main.html#testng-listeners">test listener</a>.
-         This can be done through the command line
-         (<code>-listener mockit.integration.testng.Initializer</code>) or in the
-         <code>testng.xml</code> configuration file:
+         This can be done by passing <code>-listener mockit.integration.testng.Initializer</code> as
+         a test runner argument in the JVM command line.
+         When using Maven, the listener can be specified by configuring the
+         <code>maven-surefire-plugin</code> with a property of name "listener" and a value
+         containing "mockit.integration.testng.Initializer" (see
+         <a href="http://maven.apache.org/plugins/maven-surefire-plugin/examples/testng.html">this
+            page</a> for more details).
+         Another way is to specify the listener in the <code>testng.xml</code> configuration file:
          <code style="white-space: nowrap;">&lt;listener class-name="mockit.integration.testng.Initializer"/></code>.
       </li>
    </ul>
