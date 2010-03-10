@@ -4,18 +4,18 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.997</version>
+      <groupId>mockit</groupId><artifactId>samples</artifactId><version>1</version>
    </parent>
    <artifactId>animatedtransitions</artifactId>
    <name>Animated Transitions Sample</name>
 
    <dependencies>
       <dependency>
-         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>${version}</version>
-         <scope>test</scope>
+         <groupId>mockit</groupId><artifactId>jmockit</artifactId>
+         <version>${jmockit.version}</version><scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>junit</groupId><artifactId>junit</artifactId><version>4.8.1</version>
+         <groupId>junit</groupId><artifactId>junit</artifactId><version>${junit.version}</version>
          <scope>test</scope>
       </dependency>
       <dependency>
