@@ -3,7 +3,7 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-   <groupId>mockit</groupId><artifactId>samples</artifactId><version>0.997</version>
+   <groupId>mockit</groupId><artifactId>samples</artifactId><version>1</version>
    <packaging>pom</packaging>
 
    <modules>
@@ -39,7 +39,12 @@
       <connection>scm:http://jmockit.googlecode.com/svn/trunk/ jmockit-read-only</connection>
    </scm>
 
-   <properties><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
+   <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <jmockit.version>0.997</jmockit.version>
+      <junit.version>4.8.1</junit.version>
+   </properties>
+
    <repositories>
       <repository>
          <id>maven2-repository.dev.java.net</id>

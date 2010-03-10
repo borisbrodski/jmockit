@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
-      <artifactId>samples</artifactId><groupId>mockit</groupId><version>0.997</version>
+      <artifactId>samples</artifactId><groupId>mockit</groupId><version>1</version>
    </parent>
 
    <artifactId>tourdemock</artifactId>
@@ -28,13 +28,13 @@
 
       <!-- JMockit -->
       <dependency>
-         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>${version}</version>
-         <scope>test</scope>
+         <groupId>mockit</groupId><artifactId>jmockit</artifactId>
+         <version>${jmockit.version}</version><scope>test</scope>
       </dependency>
 
       <!-- JUnit -->
       <dependency>
-         <groupId>junit</groupId><artifactId>junit</artifactId><version>4.8.1</version>
+         <groupId>junit</groupId><artifactId>junit</artifactId><version>${junit.version}</version>
          <scope>test</scope>
       </dependency>
 
