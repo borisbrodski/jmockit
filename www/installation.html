@@ -313,9 +313,6 @@ public class MyFirstJMockitTest
    The <em><code>result</code></em> field also accepts a <code>Throwable</code> instance, which
    would cause the corresponding invocation in the replay phase to throw the specified exception or
    error.
-   Each of these special fields has an equivalent method that could be used instead:
-   <code>returns(...)</code>, <code>repeats(n)</code>, <code>throwsException(...)</code>, etc;
-   but the fields are nicer.
 </p>
 
 <h4 id="verify">Verifying expectations</h4>
@@ -397,7 +394,7 @@ public class MyFirstJMockitTest
 <p>
    The examples above give only a brief overview of the available mocking APIs. There is much more.
    The full <a href="tutorial.html">JMockit Tutorial</a> contains an extensive discussion of nearly
-   all methods, annotations, etc., with many examples.
+   all methods, fields, annotations, etc., with many examples.
    The <a href="javadoc/overview-summary.html">API documentation</a> provides a detailed
    specification for all elements of the mocking APIs.
    Finally, there are hundreds of JUnit <a href="samples.html">sample tests</a> available under the
