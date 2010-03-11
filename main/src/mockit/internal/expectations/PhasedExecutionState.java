@@ -34,14 +34,13 @@ final class PhasedExecutionState
    final List<Expectation> expectations;
    final List<Expectation> nonStrictExpectations;
    final Map<Object, Object> instanceMap;
-   final List<Class<?>> mockedTypesToMatchOnInstances;
+   private List<Class<?>> mockedTypesToMatchOnInstances;
 
    PhasedExecutionState()
    {
       expectations = new ArrayList<Expectation>();
       nonStrictExpectations = new ArrayList<Expectation>();
       instanceMap = new IdentityHashMap<Object, Object>();
-      mockedTypesToMatchOnInstances = new LinkedList<Class<?>>();
    }
 
    void discoverMockedTypesToMatchOnInstances(List<Class<?>> targetClasses)
@@ -53,10 +52,19 @@ final class PhasedExecutionState
             Class<?> targetClass = targetClasses.get(i);
 
             if (targetClasses.lastIndexOf(targetClass) > i) {
-               mockedTypesToMatchOnInstances.add(targetClass);
+               addMockedTypeToMatchOnInstance(targetClass);
             }
          }
       }
+   }
+
+   private void addMockedTypeToMatchOnInstance(Class<?> mockedType)
+   {
+      if (mockedTypesToMatchOnInstances == null) {
+         mockedTypesToMatchOnInstances = new LinkedList<Class<?>>();
+      }
+
+      mockedTypesToMatchOnInstances.add(mockedType);
    }
 
    void addExpectation(Expectation expectation, boolean nonStrict)
@@ -73,13 +81,15 @@ final class PhasedExecutionState
 
    private void forceMatchingOnMockInstanceIfRequired(ExpectedInvocation invocation)
    {
-      Object mock = invocation.instance;
+      if (mockedTypesToMatchOnInstances != null) {
+         Object mock = invocation.instance;
 
-      if (mock != null) {
-         Class<?> mockedClass = Utilities.getMockedClass(mock);
+         if (mock != null) {
+            Class<?> mockedClass = Utilities.getMockedClass(mock);
 
-         if (mockedTypesToMatchOnInstances.contains(mockedClass)) {
-            invocation.matchInstance = true;
+            if (mockedTypesToMatchOnInstances.contains(mockedClass)) {
+               invocation.matchInstance = true;
+            }
          }
       }
    }
