@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2007 Mockito contributors
+ * Copyright (c) 2007-2010 Mockito contributors
  * This program is made available under the terms of the MIT License.
  */
 package org.mockitousage.examples.use;
 
+import org.mockito.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
@@ -11,22 +12,15 @@ import static java.util.Arrays.asList;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
-import org.mockito.Mock;
+
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ArticleManagerTest
+public final class ArticleManagerTest
 {
-   @Mock private ArticleCalculator mockCalculator;
-   @Mock private ArticleDatabase mockDatabase;
-   private ArticleManager articleManager;
-
-   @Before
-   public void setup()
-   {
-      articleManager = new ArticleManager(mockCalculator, mockDatabase);
-   }
+   @Mock ArticleCalculator mockCalculator;
+   @Mock ArticleDatabase mockDatabase;
+   @InjectMocks final ArticleManager articleManager = new ArticleManager(null, null);
 
    @Test
    public void managerCountsArticlesAndSavesThemInTheDatabase()
