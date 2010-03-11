@@ -332,11 +332,6 @@ public final class RecordAndReplayExecution
       return verification;
    }
 
-   void addRecordedExpectation(Expectation expectation, boolean nonStrictInvocation)
-   {
-      executionState.addExpectation(expectation, nonStrictInvocation);
-   }
-
    public void endRecording()
    {
       if (replayPhase == null) {

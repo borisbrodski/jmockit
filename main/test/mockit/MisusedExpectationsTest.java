@@ -88,23 +88,62 @@ public final class MisusedExpectationsTest
       assertEquals(4, mock.value());
    }
 
-   @Test
-   public void recordDuplicateInvocationsWhereAllButTheFirstOneWillBeIgnored()
+   @Test(expected = IllegalArgumentException.class)
+   public void recordDuplicateInvocationWithNoArguments()
    {
       new NonStrictExpectations()
       {{
          mock.value(); result = 1;
          mock.value(); result = 2;
+      }};
+   }
 
-         mock.setValue(1);
-         mock.setValue(1); result = new UnknownError();
+   @Test(expected = IllegalArgumentException.class)
+   public void recordDuplicateInvocationWithArgumentMatcher()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.setValue(anyInt);
+         mock.setValue(anyInt); result = new UnknownError();
+      }};
+   }
+
+   @Test
+   public void recordInvocationUsingDynamicMockingWhichDiffersOnlyOnTheMatchedInstance()
+   {
+      final Blah blah = new Blah();
+
+      new NonStrictExpectations(blah)
+      {{
+         onInstance(mock).doSomething(true); result = "first";
+         blah.value(); result = 123;
+         onInstance(blah).doSomething(true); result = "second";
       }};
 
-      assertEquals(1, mock.value());
-      assertEquals(1, mock.value());
+      assertEquals("first", mock.doSomething(true));
+      assertEquals("second", blah.doSomething(true));
+   }
 
-      mock.setValue(1);
-      mock.setValue(1); // won't throw an error
+   public static class Foo
+   {
+      void doIt() {}
+   }
+
+   public static class SubFoo extends Foo
+   {
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void recordDuplicateInvocationOnTwoDynamicMocksOfDifferentTypesButSharedBaseClass()
+   {
+      final Foo f1 = new Foo();
+      final SubFoo f2 = new SubFoo();
+
+      new NonStrictExpectations(f1, f2)
+      {{
+         f1.doIt();
+         f2.doIt();
+      }};
    }
 
    @Test

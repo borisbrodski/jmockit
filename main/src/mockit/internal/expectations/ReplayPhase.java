@@ -63,15 +63,15 @@ final class ReplayPhase extends Phase
 
    @Override
    Object handleInvocation(
-      Object mock, int mockAccess, String mockClassDesc, String mockDesc, boolean withRealImpl,
+      Object mock, int mockAccess, String mockClsDesc, String mockDesc, boolean withRealImpl,
       Object[] args)
       throws Throwable
    {
-      nonStrictExpectation = null;
-      boolean noExpectationFound = !findNonStrictExpectation(mock, mockClassDesc, mockDesc, args);
+      nonStrictExpectation =
+         recordAndReplay.executionState.findNonStrictExpectation(mock, mockClsDesc, mockDesc, args);
 
-      if (noExpectationFound) {
-         createExpectationIfNonStrictInvocation(mock, mockAccess, mockClassDesc, mockDesc, args);
+      if (nonStrictExpectation == null) {
+         createExpectationIfNonStrictInvocation(mock, mockAccess, mockClsDesc, mockDesc, args);
       }
 
       if (nonStrictExpectation != null) {
@@ -80,31 +80,7 @@ final class ReplayPhase extends Phase
          return updateConstraintsAndProduceResult(mock, executeRealImpl, args);
       }
 
-      return handleStrictInvocation(mock, mockClassDesc, mockDesc, withRealImpl, args);
-   }
-
-   private boolean findNonStrictExpectation(
-      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
-   {
-      List<Expectation> nonStrictExpectations = getNonStrictExpectations();
-
-      for (Expectation nonStrict : nonStrictExpectations) {
-         ExpectedInvocation invocation = nonStrict.invocation;
-
-         if (invocation.isMatch(mockClassDesc, mockNameAndDesc)) {
-            Map<Object, Object> instanceMap = getInstanceMap();
-
-            if (
-               invocation.isMatch(mock, instanceMap) &&
-               invocation.arguments.assertMatch(args, instanceMap) == null
-            ) {
-               nonStrictExpectation = nonStrict;
-               return true;
-            }
-         }
-      }
-
-      return false;
+      return handleStrictInvocation(mock, mockClsDesc, mockDesc, withRealImpl, args);
    }
 
    private void createExpectationIfNonStrictInvocation(

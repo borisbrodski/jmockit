@@ -69,7 +69,7 @@ public final class RecordPhase extends TestOnlyPhase
          argMatchers = null;
       }
 
-      recordAndReplay.addRecordedExpectation(currentExpectation, nonStrictInvocation);
+      recordAndReplay.executionState.addExpectation(currentExpectation, nonStrictInvocation);
 
       return invocation.getDefaultValueForReturnType(this);
    }

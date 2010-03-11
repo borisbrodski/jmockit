@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -498,11 +498,13 @@ public final class InvocationBlocksWithTimesFieldsTest
    @Test
    public void nonStrict_expectZeroOrMoreTimesAndReplayTwice()
    {
-      new NonStrictExpectations(Collaborator.class)
+      final Collaborator collaborator = new Collaborator();
+
+      new NonStrictExpectations(collaborator)
       {
          {
-            new Collaborator().simpleOperation(1, "b", null);
-            new Collaborator().provideSomeService(); minTimes = 0; maxTimes = -1;
+            collaborator.simpleOperation(1, "b", null);
+            collaborator.provideSomeService(); minTimes = 0; maxTimes = -1;
          }
       };
 

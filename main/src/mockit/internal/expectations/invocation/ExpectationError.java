@@ -33,10 +33,15 @@ final class ExpectationError extends AssertionError
    @Override
    public String toString() { return message; }
 
-   void defineCause(String title, AssertionError error)
+   void prepareForDisplay(String title)
    {
       message = title;
       Utilities.filterStackTrace(this);
+   }
+
+   void defineCause(String title, AssertionError error)
+   {
+      prepareForDisplay(title);
       error.initCause(this);
    }
 }

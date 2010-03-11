@@ -69,9 +69,11 @@ final class PhasedExecutionState
 
    void addExpectation(Expectation expectation, boolean nonStrict)
    {
-      forceMatchingOnMockInstanceIfRequired(expectation.invocation);
+      ExpectedInvocation invocation = expectation.invocation;
+      forceMatchingOnMockInstanceIfRequired(invocation);
 
       if (nonStrict) {
+         validateNonDuplicateInvocation(invocation);
          nonStrictExpectations.add(expectation);
       }
       else {
@@ -94,7 +96,39 @@ final class PhasedExecutionState
       }
    }
 
-   public void makeNonStrict(Expectation expectation)
+   private void validateNonDuplicateInvocation(ExpectedInvocation invocation)
+   {
+      Expectation previouslyRecordedExpectation = findNonStrictExpectation(
+         invocation.instance, invocation.getClassDesc(), invocation.getMethodNameAndDescription(),
+         invocation.getArgumentValues());
+
+      if (previouslyRecordedExpectation != null) {
+         throw new IllegalArgumentException(
+            "Duplicate expectation recorded for" + invocation,
+            previouslyRecordedExpectation.invocation.getCause("Duplicated expectation"));
+      }
+   }
+
+   Expectation findNonStrictExpectation(
+      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
+   {
+      for (Expectation nonStrict : nonStrictExpectations) {
+         ExpectedInvocation invocation = nonStrict.invocation;
+
+         if (invocation.isMatch(mockClassDesc, mockNameAndDesc)) {
+            if (
+               invocation.isMatch(mock, instanceMap) &&
+               invocation.arguments.assertMatch(args, instanceMap) == null
+            ) {
+               return nonStrict;
+            }
+         }
+      }
+
+      return null;
+   }
+
+   void makeNonStrict(Expectation expectation)
    {
       if (expectations.remove(expectation)) {
          expectation.constraints.setDefaultLimits(true);
