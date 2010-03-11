@@ -49,6 +49,15 @@
       executing the real implementation.
       See <a href="http://code.google.com/p/jmockit/issues/detail?id=40">issue 40</a>.
    </li>
+   <li>
+      <strong>New validation</strong> implemented for uses of the Expectations API, applicable when
+      recording non-strict expectations: previously, duplicate expectations were simply ignored;
+      now, such occurrences cause an <code>IllegalArgumentException</code> to be thrown.
+      Note that this change can cause existing tests to break, if they inadvertently recorded
+      duplicate non-strict expectations; to fix such tests, the duplicate expectations will have to
+      be removed.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=42">issue 42</a>.
+   </li>
 <!--
    <li>
       Fixed a bug of omission in the use of <code>@Cascading</code>, when expectations are recorded
