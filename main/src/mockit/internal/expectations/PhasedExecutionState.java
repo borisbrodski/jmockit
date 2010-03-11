@@ -93,4 +93,12 @@ final class PhasedExecutionState
          }
       }
    }
+
+   public void makeNonStrict(Expectation expectation)
+   {
+      if (expectations.remove(expectation)) {
+         expectation.constraints.setDefaultLimits(true);
+         nonStrictExpectations.add(expectation);
+      }
+   }
 }

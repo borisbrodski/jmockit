@@ -40,10 +40,7 @@ public final class RecordPhase extends TestOnlyPhase
 
    public void setNotStrict()
    {
-      if (getExpectations().remove(currentExpectation)) {
-         currentExpectation.constraints.setDefaultLimits(true);
-         getNonStrictExpectations().add(currentExpectation);
-      }
+      recordAndReplay.executionState.makeNonStrict(currentExpectation);
    }
 
    @Override
