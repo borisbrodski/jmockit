@@ -490,4 +490,26 @@ public final class JavadocExamples_JMockit_Test
          }
       };
    }
+
+   @Test // Uses of JMockit API: 4
+   public void chainingMethodCallsWithCascading(@Cascading final MockedClass mock)
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mock.getPerson().getName(); result = "deep";
+         }
+      };
+
+      assertEquals("deep", mock.getPerson().getName());
+
+      new Verifications()
+      {
+         {
+            // Not likely to be useful often, but such verifications do work:
+            mock.getPerson();
+            mock.getPerson().getName();
+         }
+      };
+   }
 }

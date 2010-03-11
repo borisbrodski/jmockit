@@ -2,6 +2,8 @@ package org.mockitousage;
 
 import java.util.*;
 
+import javax.xml.stream.events.*;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.junit.runner.*;
@@ -15,12 +17,12 @@ import org.hamcrest.beans.*;
 
 /**
  * File created from code snippets in the official
- * <a href="http://mockito.googlecode.com/svn/branches/1.7/javadoc/org/mockito/Mockito.html">Mockito documentation</a>,
+ * <a href="http://mockito.googlecode.com/svn/tags/latest/javadoc/org/mockito/Mockito.html">Mockito documentation</a>,
  * with some minor changes.
  */
 @SuppressWarnings({"unchecked"})
 @RunWith(MockitoJUnitRunner.class)
-public class JavadocExamplesTest
+public final class JavadocExamplesTest
 {
    @Mock List<String> mockedList;
 
@@ -261,7 +263,7 @@ public class JavadocExamplesTest
       // when(spy.get(1)).thenReturn("an item"); would throw an IndexOutOfBoundsException.
       // Therefore, a different API may need to be used with a spy, in order to avoid side effects:
       doReturn("an item").when(spy).getItem(1);
-      
+
       // Using the spy calls real methods, except those stubbed out:
       spy.doSomething("one", true);
       spy.doSomething("two", false);
@@ -304,5 +306,21 @@ public class JavadocExamplesTest
 
       assertEquals("test", captor1.getValue());
       assertTrue(captor2.getValue());
+   }
+
+   @Test // Uses of Mockito API: 5
+   public void chainingMethodCallsWithDeepStubbing()
+   {
+      MockedClass mock = mock(MockedClass.class, RETURNS_DEEP_STUBS);
+
+      // note that we're stubbing a chain of methods here: getBar().getName()
+      when(mock.getPerson().getName()).thenReturn("deep");
+
+      // note that we're chaining method calls: getBar().getName()
+      assertEquals("deep", mock.getPerson().getName());
+
+      // The following verification does work:
+      verify(mock.getPerson()).getName();
+      // ... but this one does not: verify(mock).getPerson();
    }
 }

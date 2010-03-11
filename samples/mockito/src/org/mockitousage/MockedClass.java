@@ -11,4 +11,5 @@ public class MockedClass
    public String getItem(int index) { return items.get(index); }
    public void doSomething(String s, boolean b) { items.add(b ? s : s.trim()); }
    public void doSomething(Person p) { p.getName(); }
+   public Person getPerson() { return new Person("someone"); }
 }
