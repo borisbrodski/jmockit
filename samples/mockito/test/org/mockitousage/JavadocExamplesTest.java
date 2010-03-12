@@ -2,8 +2,6 @@ package org.mockitousage;
 
 import java.util.*;
 
-import javax.xml.stream.events.*;
-
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.junit.runner.*;
