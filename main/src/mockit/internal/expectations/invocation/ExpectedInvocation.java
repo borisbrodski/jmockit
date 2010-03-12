@@ -41,6 +41,7 @@ public final class ExpectedInvocation
    public CharSequence customErrorMessage;
    private final ExpectationError invocationCause;
    private Object defaultReturnValue;
+   private Object cascadedMock;
 
    public ExpectedInvocation(
       Object mock, int access, String mockedClassDesc, String mockNameAndDesc,
@@ -244,8 +245,7 @@ public final class ExpectedInvocation
 
          if (defaultReturnValue == null && returnTypeDesc.charAt(0) == 'L') {
             String mockedTypeDesc = getClassDesc();
-            Object cascadedMock = 
-               MockedTypeCascade.getMock(mockedTypeDesc, instance, returnTypeDesc);
+            cascadedMock = MockedTypeCascade.getMock(mockedTypeDesc, instance, returnTypeDesc);
 
             if (cascadedMock != null) {
                if (phase != null) {
@@ -258,5 +258,15 @@ public final class ExpectedInvocation
       }
 
       return defaultReturnValue;
+   }
+
+   public boolean overrideDefaultCascadedMockIfAny(Object mock)
+   {
+      if (mock == null || cascadedMock == null) {
+         return false;
+      }
+
+      defaultReturnValue = mock;
+      return true;
    }
 }

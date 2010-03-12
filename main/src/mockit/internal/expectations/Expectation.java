@@ -81,17 +81,18 @@ public final class Expectation
    {
       validateReturnValues(value, (Object) null);
 
-      InvocationResults invocationResults = getResults();
-
       if (value instanceof Iterator<?> && !hasReturnValueOfType(value.getClass())) {
-         invocationResults.addDeferredReturnValues((Iterator<?>) value);
+         getResults().addDeferredReturnValues((Iterator<?>) value);
       }
       else if (value instanceof Collection<?> && !hasReturnValueOfType(value.getClass())) {
          Collection<?> values = (Collection<?>) value;
-         invocationResults.addReturnValues(values.toArray(new Object[values.size()]));
+         getResults().addReturnValues(values.toArray(new Object[values.size()]));
+      }
+      else if (invocation.overrideDefaultCascadedMockIfAny(value)) {
+         recordPhase.setNextInstanceToMatch(null);
       }
       else {
-         invocationResults.addReturnValue(value);
+         getResults().addReturnValue(value);
       }
    }
 

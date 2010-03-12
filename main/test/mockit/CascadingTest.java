@@ -33,6 +33,8 @@ import org.junit.*;
 
 import mockit.internal.state.*;
 
+import static org.junit.Assert.*;
+
 public final class CascadingTest
 {
    static class Foo
@@ -356,5 +358,84 @@ public final class CascadingTest
             sf.createSocket("first", 8080).getChannel().provider().openPipe();
          }
       };
+   }
+
+   @Test
+   public void overrideCascadedMockAndRecordStrictExpectationOnIt(
+      @Cascading final Foo foo, final Bar mockBar)
+   {
+      new Expectations()
+      {
+         {
+            foo.getBar(); result = mockBar;
+            mockBar.doSomething();
+         }
+      };
+
+      Bar bar = foo.getBar();
+      bar.doSomething();
+   }
+
+   @Test
+   public void overrideCascadedMockAndRecordNonStrictExpectationOnIt(@Cascading final Foo foo)
+   {
+      new NonStrictExpectations()
+      {
+         Bar mockBar;
+
+         {
+            foo.getBar(); result = mockBar;
+            mockBar.doSomething(); times = 1; result = 123;
+         }
+      };
+
+      Bar bar = foo.getBar();
+      assertEquals(123, bar.doSomething());
+   }
+
+   @Test
+   public void overrideTwoCascadedMocksOfTheSameType(
+      @Cascading final Foo foo1, @Cascading final Foo foo2)
+   {
+      new Expectations()
+      {
+         Bar bar1;
+         Bar bar2;
+
+         {
+            foo1.getBar(); result = bar1;
+            foo2.getBar(); result = bar2;
+            bar1.doSomething();
+            bar2.doSomething();
+         }
+      };
+
+      Bar bar1 = foo1.getBar();
+      Bar bar2 = foo2.getBar();
+      bar1.doSomething();
+      bar2.doSomething();
+   }
+
+   @Test(expected = AssertionError.class)
+   public void overrideTwoCascadedMocksOfTheSameTypeButReplayInDifferentOrder(
+      @Cascading final Foo foo1, @Cascading final Foo foo2)
+   {
+      new Expectations()
+      {
+         Bar bar1;
+         Bar bar2;
+
+         {
+            foo1.getBar(); result = bar1;
+            foo2.getBar(); result = bar2;
+            bar1.doSomething();
+            bar2.doSomething();
+         }
+      };
+
+      Bar bar1 = foo1.getBar();
+      Bar bar2 = foo2.getBar();
+      bar2.doSomething();
+      bar1.doSomething();
    }
 }
