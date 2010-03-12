@@ -161,7 +161,7 @@ public final class ExpectationsUsingMockedTest
       };
 
       assertEquals("1", dependency1.doSomething(true));
-      assertEquals("2", dependency1.doSomething(false));
+      assertNull(dependency1.doSomething(false));
    }
 
    @Test

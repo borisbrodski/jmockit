@@ -166,6 +166,10 @@ public final class RecordAndReplayExecution
       List<Class<?>> fields = TestRun.getSharedFieldTypeRedefinitions().getTargetClasses();
       List<Class<?>> targetClasses = new ArrayList<Class<?>>(fields);
 
+      if (redefinitions != null) {
+         targetClasses.addAll(redefinitions.getTargetClasses());
+      }
+
       ParameterTypeRedefinitions paramTypeRedefinitions =
          TestRun.getExecutingTest().getParameterTypeRedefinitions();
 
