@@ -1836,7 +1836,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <p>
    When using complex APIs where functionality is distributed through many different objects, it is
    not uncommon to see chained invocations of the form
-   <code>mock.getObj2(...).getYetAnotherObj().doSomething(...)</code>.
+   <code>obj1.getObj2(...).getYetAnotherObj().doSomething(...)</code>.
    In such cases it may be necessary to mock all objects/classes in the chain, starting with
    <code>obj1</code>.
 </p>
@@ -1886,16 +1886,15 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    In the test above, since the <code>Socket</code> class was mocked with cascading, any calls to
    methods like <code>getChannel()</code> will return a <em>cascaded mock</em> object whenever they
    occur during the test. The cascaded mock will allow further cascading, so a <code>null</code>
-   reference will never be obtained from methods which return object references (except for methods
-   returning <code>Object</code>, <code>String</code>, or collection types).
+   reference will never be obtained from methods which return object references (except for return
+   types <code>Object</code> or <code>String</code> which will return <code>null</code>, or
+   collection types which will return a non-mocked empty collection).
 </p>
 <p>
-   Now, what if you need to specify different return values or verify invocations to an intermediate
-   cascaded mock, such as the one created for <code>mock.getObj2(...)</code>?
-   The answer is quite simple: declare a regular mock field or parameter of the desired cascaded
-   type and then use it normally in the test. The mock instance obtained from this mocked type will
-   be the same as the cascaded mock created and returned by calls to the <code>getObj2</code>
-   method.
+   By default, a new cascaded mock is created for each unique chain of method calls, starting from a
+   given cascading type. If necessary, this default mock can be replaced with a regular mock,
+   introduced though a mock field or parameter. To do so, assign the desired mock instance to the
+   <code>result</code> field, right after the method invocation chain of interest.
 </p>
 
 <h3 id="capturing">
