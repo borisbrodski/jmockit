@@ -22,7 +22,7 @@
 <hr/>
 <p>
    The following links provide a short overview of the different tools and APIs in the toolkit.
-   The APIs (first four items) can be used for writing unit and integration tests.
+   The APIs (first three items) can be used for writing unit and integration tests.
    They enable the isolation of code under test from its dependencies, no matter what form they take
    or how they are obtained at runtime.
    The last two items are separate tools delivered in their own jar files, which can optionally be
@@ -34,7 +34,6 @@
    <td align="center"><a href="#expectations">JMockit Expectations</a></td>
    <td align="center"><a href="#verifications">JMockit Verifications</a></td>
    <td align="center"><a href="#annotations">JMockit Annotations</a></td>
-   <td align="center"><a href="#core">JMockit Core</a></td>
    <td align="center"><a href="#coverage">JMockit Coverage</a></td>
    <td align="center"><a href="#hibernate">JMockit Hibernate Emulation</a></td>
 </tr>
@@ -435,7 +434,8 @@
    (typically), and are completely separate from the invocations to mocked methods and constructors.
 </li>
 <li>
-   The Mockito API uses inconsistent syntax in invocations to mocked methods.
+   The Mockito API contains several inconsistencies in the syntax used for invocations to mocked
+   methods.
    In the <em>record</em> phase, we have calls like
    <code>when<strong>(mock.mockedMethod(args))</strong>...</code> while in the
    <em>verify</em> phase this same call will be written as
@@ -457,7 +457,7 @@
    <code>doThrow(new RuntimeException()).when(mockedList).clear();</code> for a <code>void</code>
    one.
    With JMockit, it's always the same syntax: 
-   <code>mockedList.clear(); throwsException(new RuntimeException());</code>.
+   <code>mockedList.clear(); <em>result</em> = new RuntimeException();</code>.
    <br/>
    Yet another inconsistency occurs in the use of Mockito <em>spies</em>: "mocks" that allow the
    real methods to be executed on the spied instance.
@@ -483,7 +483,7 @@
    Verification is performed explicitly after the code under test is exercised, never automatically.
    <br/>
    Both approaches are too extreme, and consequently less than optimal.
-   JMockit Expectations/Verifications is the only API that allows the developer to choose the best
+   JMockit Expectations & Verifications is the only API that allows the developer to choose the best
    combination of <em>strict</em> (expected by default) and <em>non-strict</em> (allowed by default)
    mock invocations for each test.
    <br/>
@@ -494,9 +494,10 @@
    <code>when(mock.someMethod()).thenReturn(xyz)</code> call in the <em>record</em> phase, and a
    <code>verify(mock).someMethod()</code> in the <em>verify</em> phase.
    With JMockit, an <em>strict</em> expectation can always be recorded, which won't have to be
-   explicitly verified. Alternatively, an invocation count constraint (<code>repeats(1);</code>) can
-   be specified for any recorded <em>non-strict</em> expectation (with Mockito such constraints can
-   only be specified in a <code>verify(mock, constraint)</code> call).
+   explicitly verified. Alternatively, an invocation count constraint
+   (<code><em>times</em> = 1;</code>) can be specified for any recorded <em>non-strict</em>
+   expectation (with Mockito such constraints can only be specified in a
+   <code>verify(mock, constraint)</code> call).
 </li>
 <li>
    Mockito has poor syntax for verifications <em>in order</em>, and for <em>full</em> verifications
@@ -511,8 +512,7 @@
    <code>new FullVerificationsInOrder()</code> to combine both requirements). No need to
    specify which mock objects are involved. No extra mocking API calls.
    And as a bonus, by calling <code>unverifiedInvocations();</code> inside an ordered verification
-   block, you can perform order-related verifications that are currently impossible in Mockito (or
-   perhaps just not easily done, if some custom logic can be used).
+   block, you can perform order-related verifications that are currently impossible in Mockito.
 </li>
 </ul></dl>
 
@@ -717,47 +717,6 @@
    <a href="tutorial/AnExample.html#annotations">Tutorial sample</a>
    <a href="tutorial/StateBasedTesting.html">Tutorial chapter</a>
    <a href="javadoc/mockit/Mock.html">Javadocs</a>
-</div>
-
-<h3 id="core">JMockit Core</h3>
-<p>
-   The <em>JMockit Core</em> API consists of a single class with a small set of static methods,
-   which allow arbitrary methods and constructors of any other class to be replaced with mock
-   implementations at runtime.
-   It relies on coding conventions to determine which methods/constructors in a mock class are
-   actually mocks (while the Annotations API provides a Java 5 annotation for that purpose).
-</p>
-<p>
-   Although it is the easiest API to learn, it falls short in actually helping write complex tests,
-   so at this point it can be considered a "legacy" API in the JMockit Toolkit.
-   New users interested in state-based testing should use the Annotations API instead of this
-   old-fashioned and more limited API.
-</p>
-<pre><code>public class JMockitCoreExampleTest extends TestCase
-{
-   public void testDoOperationAbc()
-   {
-      Mockit.redefineMethods(DependencyXyz.class, MockDependencyXyz.class);
-
-      // In ServiceAbc#doOperationAbc(String s): "new DependencyXyz().doSomething(s);"
-      Object result = new ServiceAbc().doOperationAbc("test");
-
-      assertNotNull(result);
-   }
-
-   public static class MockDependencyXyz
-   {
-      public int doSomething(String value)
-      {
-         assertEquals("test", value);
-         return 123;
-      }
-   }
-}
-</code></pre>
-<div class="links">
-   <a href="tutorial/AnExample.html#core">Tutorial sample</a>
-   <a href="javadoc/mockit/Mockit.html">Javadocs</a>
 </div>
 
 <h3 id="coverage">JMockit Coverage</h3>
