@@ -108,6 +108,60 @@ public final class MisusedExpectationsTest
       }};
    }
 
+   @Test(expected = IllegalArgumentException.class)
+   public void recordDuplicateInvocationInSeparateNonStrictExpectationBlocks()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.value(); result = 1;
+      }};
+
+      new NonStrictExpectations()
+      {{
+         mock.value(); result = 2;
+      }};
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void recordSameInvocationInNonStrictExpectationBlockThenInStrictOne()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.value(); result = 1;
+      }};
+
+      new Expectations()
+      {{
+         mock.value(); result = 2;
+      }};
+   }
+
+   @Test
+   public void recordNonStrictExpectationAfterInvokingSameMethodInReplayPhase()
+   {
+      assertEquals(0, mock.value());
+
+      new NonStrictExpectations()
+      {{
+         mock.value(); result = 1;
+      }};
+
+      assertEquals(1, mock.value());
+   }
+
+   @Test
+   public void recordStrictExpectationAfterInvokingSameMethodInReplayPhase() throws Exception
+   {
+      assertEquals(0, mock.value());
+
+      new Expectations()
+      {{
+         mock.value(); result = 1;
+      }};
+
+      assertEquals(1, mock.value());
+   }
+
    @Test
    public void recordInvocationUsingDynamicMockingWhichDiffersOnlyOnTheMatchedInstance()
    {
