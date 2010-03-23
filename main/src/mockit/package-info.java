@@ -1,6 +1,6 @@
 /*
  * JMockit Core/Annotations/Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -26,10 +26,9 @@
 /**
  * Provides the main classes and annotations used when writing tests with the JMockit toolkit.
  * <p/>
- * The {@link mockit.Mockit} class contains two groups of static methods for defining mocks for code
- * under test: the "old style" <code>redefineMethods</code> variants, and the newer,
- * annotation-based, <code>setUpMock</code> variants. This second group of methods rely on the
- * {@link mockit.Mock} and {@link mockit.MockClass} annotations.
+ * The {@link mockit.Mockit} class contains a group of <code>setUpMock/setUpMocks</code> static
+ * methods that can be used to set up <em>state-oriented</em> mock implementations.
+ * They rely on the {@link mockit.Mock} and {@link mockit.MockClass} annotations.
  * <p/>
  * The {@link mockit.MockUp} class is a convenient wrapper for common uses of the
  * {@link mockit.Mockit#setUpMock(Class, Object)} and {@link mockit.Mockit#setUpMock(Object)}
