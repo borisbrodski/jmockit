@@ -25,6 +25,7 @@
 package mockit;
 
 import java.io.*;
+import java.util.*;
 
 import org.junit.*;
 
@@ -114,5 +115,14 @@ public final class ClassLoadingAndJREMocksTest
          // Won't happen:
          throw new IllegalStateException(output.toString());
       }
+   }
+
+   @Test
+   public void mockEntireAbstractListClass()
+   {
+      new NonStrictExpectations()
+      {
+         AbstractList<?> c;
+      };
    }
 }
