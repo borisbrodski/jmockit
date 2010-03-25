@@ -38,12 +38,9 @@ public final class ExpectationsUsingReflectionTest
       void doOperation();
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
    static class Collaborator
    {
       static String xyz;
-      static Collection<?> items;
-      static List<?> items2;
 
       private int value;
       private Integer value2;
@@ -62,10 +59,9 @@ public final class ExpectationsUsingReflectionTest
 
       void setValue(int value) { this.value = value; }
 
-      final void simpleOperation(int a, String b, Date c) {}
-
       void doBusinessOperation(BusinessInterface operation) { operation.doOperation(); }
 
+      @SuppressWarnings({"UnusedDeclaration"})
       private final class Inner
       {
          private final String s;
