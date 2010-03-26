@@ -821,6 +821,7 @@
         <w>classpath</w>
         <w>clazz</w>
         <w>clinit</w>
+        <w>coffeaelectronica</w>
         <w>covariant</w>
         <w>darkcyan</w>
         <w>darkslategray</w>
@@ -847,6 +848,7 @@
         <w>forkmode</w>
         <w>formatter</w>
         <w>getenv</w>
+        <w>google</w>
         <w>goto</w>
         <w>hamcrest</w>
         <w>hexa</w>
@@ -861,6 +863,7 @@
         <w>interp</w>
         <w>interpolator</w>
         <w>interpolators</w>
+        <w>intra</w>
         <w>ints</w>
         <w>iterable</w>
         <w>jaas</w>
@@ -868,6 +871,7 @@
         <w>javaagent</w>
         <w>javac</w>
         <w>javamail</w>
+        <w>javascript</w>
         <w>javassist</w>
         <w>jaxen</w>
         <w>jbossaop</w>
@@ -889,6 +893,7 @@
         <w>mock1</w>
         <w>mock2</w>
         <w>mockit</w>
+        <w>mockito</w>
         <w>monospace</w>
         <w>multi</w>
         <w>nano</w>
@@ -929,6 +934,7 @@
         <w>rogério</w>
         <w>runtime</w>
         <w>savepoint</w>
+        <w>schuchert</w>
         <w>slategray</w>
         <w>smil</w>
         <w>solaris</w>
@@ -939,6 +945,7 @@
         <w>sublicense</w>
         <w>telecom</w>
         <w>templated</w>
+        <w>testng</w>
         <w>throwable</w>
         <w>timingframework</w>
         <w>tooltip</w>
@@ -946,6 +953,7 @@
         <w>tremblay</w>
         <w>unbox</w>
         <w>unformatted</w>
+        <w>unitils</w>
         <w>unmocked</w>
         <w>usedbypico</w>
         <w>username</w>
@@ -953,6 +961,9 @@
         <w>webapp</w>
         <w>webkit</w>
         <w>wiki</w>
+        <w>wikispaces</w>
+        <w>xbootclasspath</w>
+        <w>xhtml</w>
         <w>xmlbasic</w>
         <w>xmlfull</w>
         <w>xmpp</w>

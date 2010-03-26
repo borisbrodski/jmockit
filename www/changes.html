@@ -64,6 +64,17 @@
       of the same cascaded type.
       See <a href="http://code.google.com/p/jmockit/issues/detail?id=38">issue 38</a>.
    </li>
+   <li>
+      Fixes and enhancements to the support for mocking <strong>Java enums</strong> with the
+      Expectations API: the first enum value will now be used as the default for mock fields and
+      parameters of enum type; cascading will now work as expected for methods that return an enum
+      value.
+   </li>
+   <li>
+      Fixed a bug that prevented consecutive values to be returned from a cascaded mock, when
+      recording a sequence of return values through the <code>result</code> field or the
+      <code>returns(...)</code> varargs method.
+   </li>
 </ul>
 
 <h3>Current release</h3>
