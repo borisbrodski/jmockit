@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -36,15 +36,9 @@ public interface InstanceFactory
    {
       private final Object emptyProxy;
 
-      InterfaceInstanceFactory(Object emptyProxy)
-      {
-         this.emptyProxy = emptyProxy;
-      }
+      InterfaceInstanceFactory(Object emptyProxy) { this.emptyProxy = emptyProxy; }
 
-      public Object create()
-      {
-         return emptyProxy;
-      }
+      public Object create() { return emptyProxy; }
    }
 
    final class AbstractClassInstanceFactory implements InstanceFactory
@@ -93,5 +87,14 @@ public interface InstanceFactory
             return Utilities.newInstance(concreteClass, constructorParamTypes, initArgs);
          }
       }
+   }
+
+   final class EnumInstanceFactory implements InstanceFactory
+   {
+      private final Object anEnumValue;
+
+      EnumInstanceFactory(Class<?> enumClass) { anEnumValue = enumClass.getEnumConstants()[0]; }
+
+      public Object create() { return anEnumValue; }
    }
 }

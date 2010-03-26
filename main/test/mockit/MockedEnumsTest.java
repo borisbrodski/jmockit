@@ -75,20 +75,69 @@ public final class MockedEnumsTest
    }
 
    @Test
-   public void mockSpecificEnumElement()
+   public void mockInstanceMethodOnAnyEnumElement()
    {
       final double f = 2.5;
 
       new NonStrictExpectations()
       {
-         final MyEnum mock = MyEnum.Second;
+         MyEnum mock;
 
          {
             mock.getValue(f); result = 12.3;
          }
       };
 
-      double surfaceWeight = MyEnum.Second.getValue(f);
-      assertEquals(12.3, surfaceWeight, 0.0);
+      assertEquals(12.3, MyEnum.First.getValue(f), 0.0);
+      assertEquals(12.3, MyEnum.Second.getValue(f), 0.0);
+   }
+
+   @Test
+   public void mockSpecificEnumElementsByUsingTwoMockInstances()
+   {
+      new Expectations()
+      {
+         final MyEnum mock1 = MyEnum.First;
+         final MyEnum mock2 = MyEnum.Second;
+
+         {
+            mock1.getValue(anyDouble); result = 12.3;
+            mock2.getValue(anyDouble); result = -5.01;
+         }
+      };
+
+      assertEquals(12.3, MyEnum.First.getValue(2.5), 0.0);
+      assertEquals(-5.01, MyEnum.Second.getValue(1), 0.0);
+   }
+
+   @Test
+   public void mockSpecificEnumElementsByUsingASingleMockInstance(@NonStrict MyEnum unused)
+   {
+      new Expectations()
+      {
+         {
+            onInstance(MyEnum.First).getValue(anyDouble); result = 12.3;
+            onInstance(MyEnum.Second).getValue(anyDouble); result = -5.01;
+         }
+      };
+
+      assertEquals(-5.01, MyEnum.Second.getValue(1), 0.0);
+      assertEquals(12.3, MyEnum.First.getValue(2.5), 0.0);
+   }
+
+   @Test(expected = AssertionError.class)
+   public void mockSpecificEnumElementsByUsingASingleStrictMockInstance()
+   {
+      new Expectations()
+      {
+         @Mocked("toString") final MyEnum unused = null;
+
+         {
+            onInstance(MyEnum.First).toString();
+            onInstance(MyEnum.Second).toString();
+         }
+      };
+
+      MyEnum.Second.toString();
    }
 }

@@ -141,16 +141,17 @@ abstract class BaseTypeRedefinition
 
    private void createInstanceFactoryForRedefinedClass()
    {
-      ExpectationsModifier modifier = redefineMethodsAndConstructorsInTargetType();
-
       if (isAbstract(targetClass.getModifiers())) {
+         redefineMethodsAndConstructorsInTargetType();
          Class<?> subclass = generateConcreteSubclassForAbstractType();
          instanceFactory = new AbstractClassInstanceFactory(mockConstructorInfo, subclass);
       }
       else if (targetClass.isEnum()) {
-         // TODO: create InstanceFactory for enum
+         instanceFactory = new EnumInstanceFactory(targetClass);
+         redefineMethodsAndConstructorsInTargetType();
       }
       else {
+         ExpectationsModifier modifier = redefineMethodsAndConstructorsInTargetType();
          String constructorDesc = modifier.getRedefinedConstructorDesc();
          instanceFactory = new ConcreteClassInstanceFactory(targetClass, constructorDesc);
       }
