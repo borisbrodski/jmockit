@@ -805,6 +805,8 @@
         <w>args</w>
         <w>arraycopy</w>
         <w>attr</w>
+        <w>bar1</w>
+        <w>bar2</w>
         <w>blanchedalmond</w>
         <w>blog</w>
         <w>booleans</w>
@@ -836,13 +838,17 @@
         <w>emul</w>
         <w>enableassertions</w>
         <w>enqueue</w>
+        <w>enums</w>
         <w>extraclasspath</w>
         <w>finalizers</w>
         <w>fixme</w>
+        <w>foo1</w>
+        <w>foo2</w>
         <w>forkmode</w>
         <w>formatter</w>
         <w>getenv</w>
         <w>goto</w>
+        <w>hamcrest</w>
         <w>hexa</w>
         <w>htmlbasic</w>
         <w>htmlfull</w>
@@ -880,6 +886,8 @@
         <w>microsystems</w>
         <w>millis</w>
         <w>mngmnt</w>
+        <w>mock1</w>
+        <w>mock2</w>
         <w>mockit</w>
         <w>monospace</w>
         <w>multi</w>
@@ -896,6 +904,8 @@
         <w>onfocus</w>
         <w>onload</w>
         <w>opcodes</w>
+        <w>out1</w>
+        <w>out2</w>
         <w>paleturquoise</w>
         <w>param</w>
         <w>parameterized</w>

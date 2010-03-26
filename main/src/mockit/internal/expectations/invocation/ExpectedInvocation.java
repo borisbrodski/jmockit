@@ -262,11 +262,6 @@ public final class ExpectedInvocation
 
    public boolean overrideDefaultCascadedMockIfAny(Object mock)
    {
-      if (mock == null || cascadedMock == null) {
-         return false;
-      }
-
-      defaultReturnValue = mock;
-      return true;
+      return mock != null && cascadedMock != null;
    }
 }

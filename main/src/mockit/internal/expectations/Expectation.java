@@ -88,10 +88,11 @@ public final class Expectation
          Collection<?> values = (Collection<?>) value;
          getResults().addReturnValues(values.toArray(new Object[values.size()]));
       }
-      else if (invocation.overrideDefaultCascadedMockIfAny(value)) {
-         recordPhase.setNextInstanceToMatch(null);
-      }
       else {
+         if (invocation.overrideDefaultCascadedMockIfAny(value)) {
+            recordPhase.setNextInstanceToMatch(null);
+         }
+
          getResults().addReturnValue(value);
       }
    }
