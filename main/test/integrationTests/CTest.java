@@ -1,6 +1,6 @@
 /*
- * JMockit Core
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -42,29 +42,13 @@ public final class CTest
    @After
    public void tearDown()
    {
-      Mockit.restoreAllOriginalDefinitions();
-   }
-
-   public static class E
-   {
-      static boolean noReturnCalled;
-
-      public int i()
-      {
-         System.out.println("E.i");
-         return 2;
-      }
-
-      public void noReturn()
-      {
-         noReturnCalled = true;
-      }
+      Mockit.tearDownMocks();
    }
 
    @Test
-   public void testPackageVoidNoArgs()
+   public void packageVoidNoArgs()
    {
-      redefineMethods(C.class, E.class);
+      setUpMock(C.class, E.class);
 
       E.noReturnCalled = false;
       C c = new C();
@@ -72,11 +56,29 @@ public final class CTest
       assertTrue("noReturn() wasn't called", E.noReturnCalled);
    }
 
+   public static class E
+   {
+      static boolean noReturnCalled;
+
+      @Mock
+      public int i()
+      {
+         System.out.println("E.i");
+         return 2;
+      }
+
+      @Mock
+      public void noReturn()
+      {
+         noReturnCalled = true;
+      }
+   }
+
    @Test
-   public void testProtectedVoid1Arg()
+   public void protectedVoid1Arg()
    {
       F f = new F();
-      redefineMethods(C.class, f);
+      setUpMock(C.class, f);
 
       C c = new C();
       c.setSomeValue("test");
@@ -87,6 +89,7 @@ public final class CTest
    {
       String someValue = "";
 
+      @Mock
       public void setSomeValue(String someValue)
       {
          this.someValue = someValue;
@@ -94,18 +97,20 @@ public final class CTest
    }
 
    @Test
-   public void testPrimitiveLongAndIntParameters()
+   public void primitiveLongAndIntParameters()
    {
-      redefineMethods(C.class, PrimitiveLongAndIntParametersMock.class);
+      setUpMocks(PrimitiveLongAndIntParametersMock.class);
       PrimitiveLongAndIntParametersMock.sum = 0;
       C.validateValues(1L, 2);
       assertEquals(3L, PrimitiveLongAndIntParametersMock.sum);
    }
 
+   @MockClass(realClass = C.class)
    public static class PrimitiveLongAndIntParametersMock
    {
       static long sum;
 
+      @Mock
       public static void validateValues(long v1, int v2)
       {
          sum = v1 + v2;
@@ -113,9 +118,11 @@ public final class CTest
    }
 
    @Test
-   public void testPrimitiveNumericParameters()
+   public void primitiveNumericParameters()
    {
-      redefineMethods(C.class, new Object() {
+      setUpMock(C.class, new Object()
+      {
+         @Mock
          public double sumValues(byte v1, short v2, int v3, long v4, float v5, double v6)
          {
             return 0.0;
@@ -127,9 +134,10 @@ public final class CTest
    }
 
    @Test
-   public void testDefaultConstructor()
+   public void defaultConstructor()
    {
-      redefineMethods(C.class, new DefaultConstructorMock(), true);
+      //noinspection InstantiationOfUtilityClass
+      setUpMock(C.class, new DefaultConstructorMock());
 
       DefaultConstructorMock.x = 0;
       new C();
@@ -141,20 +149,24 @@ public final class CTest
    public static class DefaultConstructorMock
    {
       static int x;
+
+      @Mock
       public DefaultConstructorMock() { x = 1; }
    }
 
    @Test
-   public void testConstructor1Arg()
+   public void constructor1Arg()
    {
-      redefineMethods(C.class, F2.class);
+      setUpMocks(F2.class);
 
       C c = new C("test");
       assertNull(c.getSomeValue());
    }
 
+   @MockClass(realClass = C.class)
    public static class F2
    {
+      @Mock
       public F2(String someValue)
       {
          // do nothing
@@ -162,9 +174,9 @@ public final class CTest
    }
 
    @Test
-   public void testTwoConstructorsWithMultipleArgs()
+   public void twoConstructorsWithMultipleArgs()
    {
-      redefineMethods(RealClassWithTwoConstructors.class, new MockConstructors("", '\0'));
+      setUpMock(RealClassWithTwoConstructors.class, new MockConstructors());
 
       new RealClassWithTwoConstructors("a", 'b');
       assertEquals("ab", testData);
@@ -173,35 +185,39 @@ public final class CTest
       assertEquals("ab1", testData);
    }
 
-   // TODO: this class should be static, but then special handling for the first parameter in the
-   // mock constructors is needed
-   public class RealClassWithTwoConstructors
+   public static class RealClassWithTwoConstructors
    {
       RealClassWithTwoConstructors(String a, char b) {}
       RealClassWithTwoConstructors(String a, char b, int c) {}
    }
 
-   public class MockConstructors
+   final class MockConstructors
    {
-      public MockConstructors(String a, char b) { testData = a + b; }
-      public MockConstructors(String a, char b, int c) { testData = a + b + c; }
+      @Mock void $init(String a, char b) { testData = a + b; }
+      @Mock void $init(String a, char b, int c) { testData = a + b + c; }
    }
 
    @Test
-   public void testPrivateStaticVoidNoArgs()
+   public void privateStaticVoidNoArgs()
    {
-      redefineMethods(C.class, H.class);
+      //noinspection InstantiationOfUtilityClass
+      setUpMocks(new H());
 
       C.printText();
       assertEquals("H.doPrintText", C.printedText);
    }
 
-   public static class H { public static void doPrintText() { C.printedText = "H.doPrintText"; } }
+   @MockClass(realClass = C.class)
+   public static class H
+   {
+      @Mock
+      public static void doPrintText() { C.printedText = "H.doPrintText"; }
+   }
 
    @Test
-   public void testStaticVoid1ArgOverload()
+   public void staticVoid1ArgOverload()
    {
-      redefineMethods(C.class, H2.class);
+      setUpMock(C.class.getName(), H2.class);
 
       C.printedText = "";
       C.printText("mock");
@@ -210,25 +226,26 @@ public final class CTest
 
    public static class H2
    {
+      @Mock
       public static void printText(String text) { assertEquals("mock", text); }
    }
 
    @Test
-   public void testInt1ArgWithWildcard()
+   public void int1ArgWithWildcard()
    {
-      redefineMethods(C.class, new I());
+      setUpMock(C.class, new I());
 
       Collection<String> names = asList("abc", "G20", "xyz");
       int c = new C().count(names);
       assertEquals(0, c);
    }
 
-   public static class I { public int count(Collection<?> items) { return 0; } }
+   public static class I { @Mock public int count(Collection<?> items) { return 0; } }
 
    @Test
-   public void testGenericList2Args()
+   public void genericList2Args()
    {
-      redefineMethods(C.class, J.class);
+      setUpMock(C.class, J.class);
 
       Collection<String> names = asList("abc", "G20", "xyz");
       names = new C().orderBy(names, false);
@@ -238,6 +255,7 @@ public final class CTest
 
    public static class J
    {
+      @Mock
       public <E extends Comparable<E>> List<E> orderBy(Collection<E> items, boolean asc)
       {
          return emptyList();
@@ -245,9 +263,9 @@ public final class CTest
    }
 
    @Test
-   public void testThrowsException() throws FileNotFoundException
+   public void throwsException() throws FileNotFoundException
    {
-      redefineMethods(C.class, K.class);
+      setUpMock(C.class, K.class);
 
       new C().loadFile("temp");
       // no exception expected
@@ -257,13 +275,14 @@ public final class CTest
    public static class K
    {
       static boolean executed;
-      public void loadFile(String name) { executed = true; }
+
+      @Mock public void loadFile(String name) { executed = true; }
    }
 
    @Test
-   public void testThrowsRuntimeException() throws FileNotFoundException
+   public void throwsRuntimeException() throws FileNotFoundException
    {
-      redefineMethods(C.class, L.class);
+      setUpMock(C.class, L.class);
 
       try {
          new C().loadFile("temp");
@@ -276,6 +295,7 @@ public final class CTest
 
    public static class L
    {
+      @Mock
       public void loadFile(String name) throws FileNotFoundException
       {
          throw new IllegalArgumentException();
@@ -283,9 +303,9 @@ public final class CTest
    }
 
    @Test(expected = TooManyListenersException.class)
-   public void testThrowsCheckedExceptionNotInThrowsOfRealMethod() throws Exception
+   public void throwsCheckedExceptionNotInThrowsOfRealMethod() throws Exception
    {
-      redefineMethods(C.class, MockThrowingCheckedExceptionNotInRealMethodThrowsClause.class);
+      setUpMock(C.class, MockThrowingCheckedExceptionNotInRealMethodThrowsClause.class);
 
       new C().loadFile("test");
       fail();
@@ -293,6 +313,7 @@ public final class CTest
 
    public static class MockThrowingCheckedExceptionNotInRealMethodThrowsClause
    {
+      @Mock
       public void loadFile(String name) throws TooManyListenersException
       {
          throw new TooManyListenersException();
@@ -300,9 +321,9 @@ public final class CTest
    }
 
    @Test
-   public void testVarargs()
+   public void varargs()
    {
-      redefineMethods(C.class, M.class);
+      setUpMock(C.class, M.class);
 
       new C().printArgs(1, true, "test");
       assertEquals("mock", C.printedText);
@@ -310,6 +331,7 @@ public final class CTest
 
    public static class M
    {
+      @Mock
       public void printArgs(Object... args)
       {
          C.printedText = "mock";
@@ -319,37 +341,46 @@ public final class CTest
    @Test
    public void testRedefineOneClassTwoTimes()
    {
-      redefineMethods(C.class, D.class);
+      setUpMock(C.class, D.class);
       boolean b = C.b();
       assertFalse(b);
 
-      redefineMethods(C.class, D.class);
-      b = C.b();
-      assertFalse(b);
+      setUpMock(C.class, D.class);
+      boolean b2 = C.b();
+      assertFalse(b2);
+   }
+
+   public static final class D
+   {
+      @Mock
+      public static boolean b()
+      {
+         return false;
+      }
    }
 
    @Test
-   public void testRedefineOneClassThreeTimes()
+   public void redefineOneClassThreeTimes()
    {
-      redefineMethods(Ct.class, Cf.class);
+      setUpMock(Ct.class, Cf.class);
       assertFalse(Ct.b());
 
-      redefineMethods(Ct.class, Ce.class);
-      redefineMethods(Ct.class, Ce.class);
+      setUpMock(Ct.class, Ce.class);
+      setUpMock(Ct.class, Ce.class);
 
-      redefineMethods(Ct.class, Cf.class);
+      setUpMock(Ct.class, Cf.class);
       assertFalse(Ct.b());
    }
 
-   public static class Ct { public static boolean b() { return true; } }
-   public static class Cf { public static boolean b() { return false; } }
-   public static class Ce { public static boolean b() { return true; }}
+   public static class Ct { @Mock public static boolean b() { return true; } }
+   public static class Cf { @Mock public static boolean b() { return false; } }
+   public static class Ce { @Mock public static boolean b() { return true; }}
 
    @Test
-   public void testRedefineMultipleClasses()
+   public void redefineMultipleClasses()
    {
-      redefineMethods(C.class, D.class);
-      redefineMethods(C2.class, N.class);
+      setUpMock(C.class, D.class);
+      setUpMock(C2.class, N.class);
 
       boolean b = C.b();
       assertFalse(b);
@@ -360,14 +391,15 @@ public final class CTest
 
    public static class N
    {
+      @Mock
       public String getCode() { return null; }
    }
 
    @Test
-   public void testMockInstanceState()
+   public void mockInstanceState()
    {
       O mock = new O();
-      redefineMethods(C.class, mock);
+      setUpMock(C.class, mock);
 
       C c = new C("some data");
 
@@ -377,18 +409,20 @@ public final class CTest
    public static class O
    {
       String value = "mock data";
+
+      @Mock
       public String getSomeValue() { return value; }
    }
 
    @Test
-   public void testTwoMockInstances()
+   public void twoMockInstances()
    {
       P mock1 = new P(new C2(123, "one23"));
-      redefineMethods(C.class, mock1);
+      setUpMock(C.class, mock1);
 
       C2Mock mock2 = new C2Mock();
       mock2.code = "mock2";
-      redefineMethods(C2.class, mock2);
+      setUpMock(C2.class, mock2);
 
       List<C2> c2Found = new C().findC2();
       assertEquals(mock1.data, c2Found);
@@ -402,6 +436,8 @@ public final class CTest
       List<C2> data;
 
       P(C2... data) { this.data = asList(data); }
+
+      @Mock
       public List<C2> findC2() { return data; }
    }
 
@@ -410,14 +446,16 @@ public final class CTest
       private String code;
 
       C2Mock() {}
+
+      @Mock
       public String getCode() { return code; }
    }
 
    @Test
-   public void testRedefineMethodsWithInnerMockClass()
+   public void redefineMethodsWithInnerMockClass()
    {
       try {
-         redefineMethods(C2.class, C2Mock.class);
+         setUpMock(C2.class, C2Mock.class);
          fail();
       }
       catch (IllegalArgumentException e) {
@@ -432,17 +470,19 @@ public final class CTest
    }
 
    @Test
-   public void testRedefineMethodsWithExtendedMockClass()
+   public void redefineMethodsWithExtendedMockClass()
    {
-      redefineMethods(C2.class, new C3Mock());
+      setUpMock(C2.class, new C3Mock());
       C2 c2 = new C2(12, "c2");
       assertNull(c2.getCode());
    }
 
    @Test
-   public void testMockInstanceOfAnonymousInnerClass()
+   public void mockInstanceOfAnonymousInnerClass()
    {
-      redefineMethods(C.class, new Object() {
+      setUpMock(C.class, new Object()
+      {
+         @Mock
          public String getSomeValue() { return "test data"; }
       });
 
@@ -452,9 +492,12 @@ public final class CTest
    }
 
    @Test
-   public void testMockInstanceOfAnonymousInnerClassUsingParentData()
+   public void mockInstanceOfAnonymousInnerClassUsingParentData()
    {
-      redefineMethods(C.class, new Serializable() {
+      //noinspection serial
+      setUpMock(C.class, new Serializable()
+      {
+         @Mock
          public String getSomeValue() { return testData; }
       });
 
@@ -465,14 +508,14 @@ public final class CTest
    }
 
    @Test
-   public void testAccessToInstanceUnderTest()
+   public void accessToInstanceUnderTest()
    {
-      redefineMethods(C.class, new Object()
+      setUpMock(C.class, new Object()
       {
          // Instance under test. Warning: calling redefined methods may lead to infinite recursion!
          C it;
 
-         @Override
+         @Mock @Override
          public String toString() { return it.getSomeValue().toUpperCase(); }
       });
 
@@ -482,10 +525,10 @@ public final class CTest
    }
 
    @Test
-   public void testAttemptToMockNonExistentMethodInRealClass()
+   public void attemptToMockNonExistentMethodInRealClass()
    {
       try {
-         redefineMethods(C.class, ClassWithMockMethodForNonExistentRealMethod.class);
+         setUpMock(C.class, ClassWithMockMethodForNonExistentRealMethod.class);
          fail("Should have thrown " + IllegalArgumentException.class);
       }
       catch (IllegalArgumentException e) {
@@ -495,46 +538,48 @@ public final class CTest
 
    public static class ClassWithMockMethodForNonExistentRealMethod
    {
+      @Mock
       public void nonExistent() {}
+      
       int helperMethodNotIntendedAsMock(String s) { return s.length(); }
    }
 
    @Test
-   public void testMockJREClasses()
+   public void mockJREClasses()
    {
-      redefineMethods(Date.class, new MockDate());
+      setUpMock(Date.class, new MockDate());
       assertEquals(0L, new Date().getTime());
       assertTrue(new Date().before(null));
 
-      redefineMethods(Date.class, MockDate.class);
+      setUpMock(Date.class, MockDate.class);
       assertEquals(0L, new Date().getTime());
       assertTrue(new Date().before(null));
 
-      redefineMethods(String.class, MockString.class);
+      setUpMock(String.class, MockString.class);
       assertEquals("0", String.valueOf(1.2));
       assertEquals("1", String.valueOf(5.0f));
 
-      redefineMethods(String.class, new MockString());
+      setUpMock(String.class, new MockString());
       assertEquals("0", String.valueOf(1.2));
       assertEquals("1", String.valueOf(5.0f));
    }
 
    public static class MockDate
    {
-      public long getTime() { return 0L; }
-      public static boolean before(Date d) { return true; }
+      @Mock public long getTime() { return 0L; }
+      @Mock public static boolean before(Date d) { return true; }
    }
 
    public static class MockString
    {
-      public static String valueOf(double d) { return "0"; }
-      public String valueOf(float f) { return "1"; }
+      @Mock public static String valueOf(double d) { return "0"; }
+      @Mock public String valueOf(float f) { return "1"; }
    }
 
    @Test
-   public void testStaticMockMethodForNonStaticRealMethod()
+   public void staticMockMethodForNonStaticRealMethod()
    {
-      redefineMethods(CX.class, C4Mock.class);
+      setUpMock(CX.class, C4Mock.class);
 
       int i = new CX().i("");
 
@@ -543,13 +588,14 @@ public final class CTest
 
    public static class C4Mock
    {
+      @Mock
       public static int i(String s) { return 2; }
    }
 
    @Test
-   public void testNonStaticMockMethodForStaticRealMethod()
+   public void nonStaticMockMethodForStaticRealMethod()
    {
-      redefineMethods(CX.class, new CXMock());
+      setUpMock(CX.class, new CXMock());
 
       boolean b = CX.b("");
 
@@ -573,6 +619,7 @@ public final class CTest
    {
       CXMock() {}
 
+      @Mock
       public boolean b(String s)
       {
          return false;
@@ -580,10 +627,10 @@ public final class CTest
    }
 
    @Test
-   public void testMockMethodWithDifferentReturnType()
+   public void mockMethodWithDifferentReturnType()
    {
       try {
-         redefineMethods(C.class, MockWithDifferentButAssignableReturnType.class);
+         setUpMock(C.class, MockWithDifferentButAssignableReturnType.class);
          fail();
       }
       catch (IllegalArgumentException e) {
@@ -593,6 +640,7 @@ public final class CTest
 
    public static class MockWithDifferentButAssignableReturnType
    {
+      @Mock
       public final java.sql.Date createOtherObject(boolean b, Date d, int a)
       {
          return new java.sql.Date(d.getTime());
