@@ -1,6 +1,6 @@
 /*
- * JMockit Core
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -44,7 +44,7 @@ public final class MockitTest
    @Test
    public void redefineMethodsWithEmptyMockClass()
    {
-      Mockit.redefineMethods(RealClass.class, EmptyMockClass.class);
+      Mockit.setUpMock(RealClass.class, EmptyMockClass.class);
 
       assertEquals(0, TestRun.mockFixture().getRedefinedClassCount());
       assertEquals(0, TestRun.getMockClasses().getRegularMocks().getInstanceCount());
@@ -61,7 +61,7 @@ public final class MockitTest
    public void redefineMethodsWithMockClass()
    {
       classRedefined = RealClass.class;
-      Mockit.redefineMethods(RealClass.class, MockClass.class);
+      Mockit.setUpMock(RealClass.class, MockClass.class);
 
       assertClassRedefined();
       assertEquals(0, TestRun.getMockClasses().getRegularMocks().getInstanceCount());
@@ -69,6 +69,7 @@ public final class MockitTest
 
    public static class MockClass
    {
+      @Mock
       public int doSomething() { return -1; }
    }
 
@@ -83,7 +84,7 @@ public final class MockitTest
    {
       classRedefined = RealClass.class;
       MockClass mockInstance = new MockClass();
-      Mockit.redefineMethods(RealClass.class, mockInstance);
+      Mockit.setUpMock(RealClass.class, mockInstance);
 
       assertClassRedefined();
       assertEquals(1, TestRun.getMockClasses().getRegularMocks().getInstanceCount());
@@ -93,19 +94,19 @@ public final class MockitTest
    @Test(expected = IllegalArgumentException.class)
    public void redefineMethodsWithMockMethodForNoCorrespondingRealMethod()
    {
-      Mockit.redefineMethods(RealClass.class, MockClassWithMethodWithoutRealMethod.class);
+      Mockit.setUpMock(RealClass.class, MockClassWithMethodWithoutRealMethod.class);
    }
 
    public static class MockClassWithMethodWithoutRealMethod
    {
-      @SuppressWarnings({"UnusedDeclaration"})
+      @Mock
       public void doSomethingElse() {}
    }
 
    @Test(expected = IllegalArgumentException.class)
    public void redefineMethodsWithIncompatibleReturnTypeBetweenRealAndMockMethod()
    {
-      Mockit.redefineMethods(RealClass2.class, MockClassWithIncompatibleReturnType.class);
+      Mockit.setUpMock(RealClass2.class, MockClassWithIncompatibleReturnType.class);
 
       // Force the compiler to generate a synthetic "String access$0(RealClass2)" method:
       new RealClass2().dummy();
@@ -120,16 +121,16 @@ public final class MockitTest
 
    public static class MockClassWithIncompatibleReturnType
    {
-      @SuppressWarnings({"UnusedDeclaration"})
+      @Mock
       public int dummy() { return 0; }
    }
 
    @Test
    public void restoreOriginalDefinition()
    {
-      Mockit.redefineMethods(RealClass.class, MockClass.class);
+      Mockit.setUpMock(RealClass.class, MockClass.class);
 
-      Mockit.restoreOriginalDefinition(RealClass.class);
+      Mockit.tearDownMocks(RealClass.class);
 
       assertEquals(0, TestRun.mockFixture().getRedefinedClassCount());
    }
@@ -137,7 +138,7 @@ public final class MockitTest
    @Test
    public void restoreOriginalDefinitionWithClassNotRedefined()
    {
-      Mockit.restoreOriginalDefinition(RealClass.class);
+      Mockit.tearDownMocks(RealClass.class);
 
       assertEquals(0, TestRun.mockFixture().getRedefinedClassCount());
    }
@@ -145,9 +146,9 @@ public final class MockitTest
    @Test
    public void restoreAllDefinitions()
    {
-      Mockit.redefineMethods(RealClass.class, new MockClass());
+      Mockit.setUpMock(RealClass.class, new MockClass());
 
-      Mockit.restoreAllOriginalDefinitions();
+      Mockit.tearDownMocks();
 
       assertEquals(0, TestRun.mockFixture().getRedefinedClassCount());
       assertEquals(0, TestRun.getMockClasses().getRegularMocks().getInstanceCount());
@@ -198,7 +199,7 @@ public final class MockitTest
       SomeInterface proxy = Mockit.newEmptyProxy(SomeInterface.class);
       classRedefined = proxy.getClass();
 
-      Mockit.redefineMethods(classRedefined, MockClass.class);
+      Mockit.setUpMock(classRedefined, MockClass.class);
 
       assertClassRedefined();
    }
@@ -238,20 +239,21 @@ public final class MockitTest
    @Test
    public void mockJREMethodAndConstructor() throws Exception
    {
-      Mockit.redefineMethods(LoginContext.class, new MockLoginContext("test", null));
+      Mockit.setUpMock(LoginContext.class, new MockLoginContext("test", null));
 
       new LoginContext("test", (CallbackHandler) null).login();
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
    public static class MockLoginContext
    {
+      @Mock
       public MockLoginContext(String name, CallbackHandler callbackHandler)
       {
          assertEquals("test", name);
          assertNull(callbackHandler);
       }
 
+      @Mock
       public void login() {}
    }
 }
