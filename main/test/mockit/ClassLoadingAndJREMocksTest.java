@@ -125,4 +125,18 @@ public final class ClassLoadingAndJREMocksTest
          AbstractList<?> c;
       };
    }
+
+   @Test(expected = IllegalStateException.class)
+   public void attemptToMockNonMockableJREClass()
+   {
+      new NonStrictExpectations()
+      {
+         Integer mock;
+
+         {
+            //noinspection UnnecessaryUnboxing
+            mock.intValue(); result = 123;
+         }
+      };
+   }
 }

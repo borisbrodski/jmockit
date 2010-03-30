@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -120,7 +120,7 @@ final class MockedType
    {
       if (declaredType instanceof Class) {
          Class<?> classType = (Class<?>) declaredType;
-         return !classType.isPrimitive() && !classType.isArray();
+         return !classType.isPrimitive() && !classType.isArray() && classType != Integer.class;
       }
 
       return true;
