@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -93,8 +93,9 @@ final class TypeRedefinition extends BaseTypeRedefinition
    @Override
    String getNameForConcreteSubclassToCreate()
    {
-      return
-         objectWithInitializerMethods.getClass().getPackage().getName() + '.' +
-         Utilities.GENERATED_SUBCLASS_PREFIX + typeMetadata.mockId;
+      Package testPackage = objectWithInitializerMethods.getClass().getPackage();
+      String prefix = testPackage == null ? "" : testPackage.getName() + '.';
+
+      return prefix + Utilities.GENERATED_SUBCLASS_PREFIX + typeMetadata.mockId;
    }
 }
