@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -50,7 +50,9 @@ public final class OutputFile extends PrintWriter
 
    private static File getOutputFileCreatingDirIfNeeded(String outputDir, String sourceFilePath)
    {
-      File outputFile = new File(outputDir, sourceFilePath.replace(".java", ".html"));
+      int p = sourceFilePath.lastIndexOf('.');
+      String outputFileName = sourceFilePath.substring(0, p) + ".html";
+      File outputFile = new File(outputDir, outputFileName);
       File parentDir = outputFile.getParentFile();
 
       if (!parentDir.exists()) {
