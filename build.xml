@@ -85,7 +85,8 @@
       <attribute name="extraLocation10" default=""/>
       <attribute name="extraclasspath" default="none"/>
       <sequential>
-         <delete dir="samples/@{module}/classes" includes="**/*.class" quiet="true"/>
+         <delete dir="samples/@{module}/@{outdir}" includes="**/*.class" quiet="true"/>
+         <mkdir dir="samples/@{module}/@{outdir}"/>
          <javac
             srcdir="samples/@{module}/src" destdir="samples/@{module}/@{outdir}"
             source="@{jdkVersion}" target="@{jdkVersion}" debug="true" nowarn="true">
