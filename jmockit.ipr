@@ -802,6 +802,7 @@
         <w>abcd</w>
         <w>anim</w>
         <w>animatedtransitions</w>
+        <w>anttask</w>
         <w>args</w>
         <w>arraycopy</w>
         <w>attr</w>
@@ -871,8 +872,10 @@
         <w>jacc</w>
         <w>javaagent</w>
         <w>javac</w>
+        <w>javaee</w>
         <w>javamail</w>
         <w>javascript</w>
+        <w>javase</w>
         <w>javassist</w>
         <w>jaxen</w>
         <w>jbossaop</w>
@@ -891,6 +894,7 @@
         <w>microsystems</w>
         <w>millis</w>
         <w>mngmnt</w>
+        <w>mngr</w>
         <w>mock1</w>
         <w>mock2</w>
         <w>mockit</w>
@@ -939,11 +943,13 @@
         <w>slategray</w>
         <w>smil</w>
         <w>solaris</w>
+        <w>springframework</w>
         <w>startup</w>
         <w>stmt</w>
         <w>stubbings</w>
         <w>stylesheet</w>
         <w>sublicense</w>
+        <w>sysproperty</w>
         <w>telecom</w>
         <w>templated</w>
         <w>testng</w>
@@ -1380,7 +1386,7 @@
     </library>
     <library name="Maven: dom4j:dom4j:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/dom4j-1.6.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -1401,14 +1407,14 @@
     </library>
     <library name="Maven: org.slf4j:slf4j-api:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../lib/slf4j-api-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/slf4j-api-1.5.8.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="Maven: org.slf4j:slf4j-nop:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/slf4j-nop-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

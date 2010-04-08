@@ -23,7 +23,7 @@
       <attribute name="extraclasspathLocation" default=""/>
       <attribute name="extraclasspath" default="none"/>
       <sequential>
-         <delete dir="@{module}/@{outdir}" includes="**/*"/>
+         <delete dir="@{module}/@{outdir}" includes="**/*" quiet="true"/>
          <mkdir dir="@{module}/@{outdir}"/>
 
          <javac
@@ -85,7 +85,7 @@
       <attribute name="extraLocation10" default=""/>
       <attribute name="extraclasspath" default="none"/>
       <sequential>
-         <delete dir="samples/@{module}/classes" includes="**/*.class"/>
+         <delete dir="samples/@{module}/classes" includes="**/*.class" quiet="true"/>
          <javac
             srcdir="samples/@{module}/src" destdir="samples/@{module}/@{outdir}"
             source="@{jdkVersion}" target="@{jdkVersion}" debug="true" nowarn="true">
@@ -97,7 +97,7 @@
             <classpath><fileset dir="." includes="@{extraclasspath}"/></classpath>
          </javac>
 
-         <delete dir="samples/@{module}/test-classes" includes="**/*.class"/>
+         <delete dir="samples/@{module}/test-classes" includes="**/*.class" quiet="true"/>
          <javac
             srcdir="samples/@{module}/test" destdir="samples/@{module}/test-classes"
             source="@{jdkVersion}" target="@{jdkVersion}" debug="true" nowarn="true">
@@ -202,7 +202,7 @@
    <!-- Target for generating the Javadoc HTML documentation -->
 
    <target name="createjavadocs">
-      <delete dir="www/javadoc" includes="**/*.html" excludes="overview.html"/>
+      <delete dir="www/javadoc" includes="**/*.html" excludes="overview.html" quiet="true"/>
       <javadoc
          destdir="www/javadoc" overview="www/javadoc/overview.html" classpathref="common.classpath"
          nodeprecated="true" noindex="true" notree="true" nohelp="true" breakiterator="true"
@@ -314,7 +314,7 @@
            <fileset dir="." includes="TEST-*.xml"/>
            <report format="noframes"/>
          </junitreport>
-         <delete dir="." includes="TEST*-*.xml" failonerror="false"/>
+         <delete dir="." includes="TEST*-*.xml" quiet="true"/>
          <move file="junit-noframes.html" tofile="@{name}.html"/>
       </sequential>
    </macrodef>
