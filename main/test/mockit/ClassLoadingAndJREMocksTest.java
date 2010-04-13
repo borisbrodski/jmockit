@@ -139,4 +139,23 @@ public final class ClassLoadingAndJREMocksTest
          }
       };
    }
+
+   @Test
+   public void mockHashtable()
+   {
+      Properties props = new Properties();
+
+      new Expectations()
+      {
+         Properties mock;
+
+         {
+            mock.remove(anyString); result = 123;
+            mock.getProperty("test"); result = "mock";
+         }
+      };
+
+      assertEquals(123, props.remove(""));
+      assertEquals("mock", props.getProperty("test"));
+   }
 }
