@@ -48,6 +48,7 @@ final class ExpectationsModifier extends BaseClassModifier
       put("java/util/AbstractCollection", "<init>");
       put("java/util/AbstractList", "<init> iterator");
       put("java/util/ArrayList", "get size RangeCheck");
+      put("java/util/Hashtable", "get");
       put("java/lang/Throwable", "<init> fillInStackTrace");
       put("java/lang/Exception", "<init>");
    }};
