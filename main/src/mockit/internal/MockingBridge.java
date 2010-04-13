@@ -26,6 +26,7 @@ package mockit.internal;
 
 import java.io.File;
 import java.lang.reflect.*;
+import java.util.Hashtable;
 
 import mockit.internal.expectations.*;
 import mockit.internal.state.*;
@@ -97,17 +98,21 @@ public final class MockingBridge implements InvocationHandler
 
    private boolean isCallThatParticipatesInClassLoading(Object mocked)
    {
-      if (mocked != null && mocked.getClass() == File.class) {
-         StackTraceElement[] st = new Throwable().getStackTrace();
+      if (mocked != null) {
+         Class<?> mockedClass = mocked.getClass();
 
-         for (int i = 3; i < st.length; i++) {
-            StackTraceElement ste = st[i];
+         if (mockedClass == File.class || Hashtable.class.isInstance(mocked)) {
+            StackTraceElement[] st = new Throwable().getStackTrace();
 
-            if (
-               "ClassLoader.java".equals(ste.getFileName()) &&
-               "loadClass".equals(ste.getMethodName())
-            ) {
-               return true;
+            for (int i = 3; i < st.length; i++) {
+               StackTraceElement ste = st[i];
+
+               if (
+                  "ClassLoader.java".equals(ste.getFileName()) &&
+                  "loadClass".equals(ste.getMethodName())
+               ) {
+                  return true;
+               }
             }
          }
       }
