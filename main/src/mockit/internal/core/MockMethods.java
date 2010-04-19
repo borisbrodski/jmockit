@@ -1,6 +1,6 @@
 /*
  * JMockit Core
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -35,6 +35,7 @@ public class MockMethods
    protected String mockClassInternalName;
    private boolean isInnerMockClass;
    private boolean withItField;
+   private boolean withInvocationParameter;
 
    /**
     * The set of public mock methods and constructors in a mock class. Each one is represented by
@@ -89,12 +90,25 @@ public class MockMethods
     */
    protected boolean containsMethod(String name, String desc)
    {
-      String nameAndDesc = name + desc;
+      withInvocationParameter = false;
+      int n = name.length();
 
       for (int i = 0; i < methods.size(); i++) {
-         if (nameAndDesc.equals(methods.get(i))) {
-            methods.remove(i);
-            return true;
+         String methodNameAndDesc = methods.get(i);
+
+         if (methodNameAndDesc.startsWith(name) && methodNameAndDesc.charAt(n) == '(') {
+            if (methodNameAndDesc.endsWith(desc)) {
+               methods.remove(i);
+               return true;
+            }
+            else if (
+               methodNameAndDesc.contains("(Lmockit/Invocation;") &&
+               methodNameAndDesc.substring(n + 20).endsWith(desc.substring(1))
+            ) {
+               withInvocationParameter = true;
+               methods.remove(i);
+               return true;
+            }
          }
       }
 
@@ -144,5 +158,10 @@ public class MockMethods
    public final List<String> getMethods()
    {
       return methods;
+   }
+
+   final boolean isWithInvocationParameter()
+   {
+      return withInvocationParameter;
    }
 }
