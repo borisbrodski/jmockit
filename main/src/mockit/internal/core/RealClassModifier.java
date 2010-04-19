@@ -1,6 +1,6 @@
 /*
  * JMockit Core
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -56,6 +56,8 @@ public class RealClassModifier extends BaseClassModifier
    protected String mockName;
    private boolean mockIsStatic;
    protected int varIndex;
+   private String methodOrConstructorDesc;
+   private int initialVar;
 
    /**
     * Initializes the modifier for a given real/mock class pair.
@@ -236,35 +238,39 @@ public class RealClassModifier extends BaseClassModifier
    @SuppressWarnings({"DesignForExtension"})
    protected void generateCallToMock(int access, String desc)
    {
+      methodOrConstructorDesc = desc;
+
       if ("<init>".equals(mockName)) {
          // Note: trying to call a constructor on a getMock(i) instance doesn't work (for reasons
          // not clear), and it's also not possible to set the "it" field before calling the mock
          // constructor; so, we do the only thing that can be done for mock constructors, which is
          // to instantiate a new mock object and then call the mock constructor on it.
-         generateInstantiationAndConstructorCall(access, desc);
+         generateInstantiationAndConstructorCall(access);
       }
       else if (mockIsStatic) {
-         generateStaticMethodCall(access, desc);
+         generateStaticMethodCall(access);
       }
       else {
-         generateInstanceMethodCall(access, desc);
+         generateInstanceMethodCall(access);
       }
    }
 
-   private void generateInstantiationAndConstructorCall(int access, String desc)
+   private void generateInstantiationAndConstructorCall(int access)
    {
       if (useMockingBridge) {
          generateCallToMockingBridge(
-            MockingBridge.CALL_CONSTRUCTOR_MOCK, getMockClassInternalName(), access, mockName, desc,
-            null);
+            MockingBridge.CALL_CONSTRUCTOR_MOCK, getMockClassInternalName(), access, mockName,
+            methodOrConstructorDesc, null);
          return;
       }
 
       generateMockObjectInstantiation();
 
       // Generate a call to the mock constructor, with the real constructor's arguments.
-      generateMethodOrConstructorArguments(desc, 1);
-      mw.visitMethodInsn(INVOKESPECIAL, getMockClassInternalName(), "<init>", desc);
+      initialVar = 1;
+      generateMethodOrConstructorArguments();
+      mw.visitMethodInsn(
+         INVOKESPECIAL, getMockClassInternalName(), "<init>", methodOrConstructorDesc);
 
       mw.visitInsn(POP);
    }
@@ -280,17 +286,19 @@ public class RealClassModifier extends BaseClassModifier
       mw.visitInsn(DUP);
    }
 
-   private void generateStaticMethodCall(int access, String desc)
+   private void generateStaticMethodCall(int access)
    {
       String mockClassName = getMockClassInternalName();
 
       if (useMockingBridge) {
          generateCallToMockingBridge(
-            MockingBridge.CALL_STATIC_MOCK, mockClassName, access, mockName, desc, null);
+            MockingBridge.CALL_STATIC_MOCK, mockClassName, access, mockName,
+            methodOrConstructorDesc, null);
       }
       else {
-         int initialVar = initialLocalVariableIndexForRealMethod(access);
-         generateMethodOrConstructorArguments(desc, initialVar);
+         initialVar = initialLocalVariableIndexForRealMethod(access);
+         String desc = generateInvocationArgumentIfNeeded();
+         generateMethodOrConstructorArguments();
          mw.visitMethodInsn(INVOKESTATIC, mockClassName, mockName, desc);
       }
    }
@@ -300,14 +308,14 @@ public class RealClassModifier extends BaseClassModifier
       return (access & ACC_STATIC) == 0 ? 1 : 0;
    }
 
-   private void generateInstanceMethodCall(int access, String desc)
+   private void generateInstanceMethodCall(int access)
    {
       String mockClassName = getMockClassInternalName();
 
       if (useMockingBridge) {
          generateCallToMockingBridge(
-            MockingBridge.CALL_INSTANCE_MOCK, mockClassName, access, mockName, desc,
-            mockInstanceIndex);
+            MockingBridge.CALL_INSTANCE_MOCK, mockClassName, access, mockName,
+            methodOrConstructorDesc, mockInstanceIndex);
          return;
       }
 
@@ -321,10 +329,10 @@ public class RealClassModifier extends BaseClassModifier
       }
 
       if ((access & ACC_STATIC) == 0 && mockMethods.isWithItField()) {
-         generateItFieldSetting(desc);
+         generateItFieldSetting();
       }
 
-      generateMockInstanceMethodInvocationWithRealMethodArgs(access, desc);
+      generateMockInstanceMethodInvocationWithRealMethodArgs(access);
    }
 
    @SuppressWarnings({"DesignForExtension"})
@@ -343,9 +351,9 @@ public class RealClassModifier extends BaseClassModifier
       mw.visitTypeInsn(CHECKCAST, getMockClassInternalName());
    }
 
-   private void generateItFieldSetting(String methodDesc)
+   private void generateItFieldSetting()
    {
-      Type[] argTypes = Type.getArgumentTypes(methodDesc);
+      Type[] argTypes = Type.getArgumentTypes(methodOrConstructorDesc);
       int var = 1;
 
       for (Type argType : argTypes) {
@@ -359,16 +367,28 @@ public class RealClassModifier extends BaseClassModifier
       mw.visitVarInsn(ALOAD, var);  // again loads the mock instance onto the stack
    }
 
-   private void generateMockInstanceMethodInvocationWithRealMethodArgs(int access, String desc)
+   private void generateMockInstanceMethodInvocationWithRealMethodArgs(int access)
    {
-      int initialVar = initialLocalVariableIndexForRealMethod(access);
-      generateMethodOrConstructorArguments(desc, initialVar);
+      initialVar = initialLocalVariableIndexForRealMethod(access);
+      String desc = generateInvocationArgumentIfNeeded();
+      generateMethodOrConstructorArguments();
       mw.visitMethodInsn(INVOKEVIRTUAL, getMockClassInternalName(), mockName, desc);
    }
 
-   private void generateMethodOrConstructorArguments(String desc, int initialVar)
+   private String generateInvocationArgumentIfNeeded()
    {
-      Type[] argTypes = Type.getArgumentTypes(desc);
+      if (mockMethods.isWithInvocationParameter()) {
+         mw.visitInsn(ACONST_NULL);
+//         initialVar++;
+         return "(Lmockit/Invocation;" + methodOrConstructorDesc.substring(1);
+      }
+
+      return methodOrConstructorDesc;
+   }
+
+   private void generateMethodOrConstructorArguments()
+   {
+      Type[] argTypes = Type.getArgumentTypes(methodOrConstructorDesc);
       varIndex = initialVar;
 
       for (Type argType : argTypes) {
