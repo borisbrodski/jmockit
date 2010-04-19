@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -80,6 +80,30 @@ abstract class InvocationResult
          throws Throwable
       {
          return values.hasNext() ? values.next() : null;
+      }
+   }
+
+   static final class DeferredResults extends InvocationResult
+   {
+      private final Iterator<?> values;
+
+      DeferredResults(Iterator<?> values) { this.values = values; }
+
+      @Override
+      Object produceResult(
+         Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints,
+         Object[] args)
+         throws Throwable
+      {
+         Object nextValue = values.hasNext() ? values.next() : null;
+
+         if (nextValue instanceof Throwable) {
+            Throwable t = (Throwable) nextValue;
+            t.fillInStackTrace();
+            throw t;
+         }
+
+         return nextValue;
       }
    }
 }

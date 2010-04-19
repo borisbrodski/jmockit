@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -59,9 +59,28 @@ public final class InvocationResults
       }
    }
 
+   public void addResults(Collection<?> values)
+   {
+      for (Object value : values) {
+         if (value instanceof Throwable) {
+            addThrowable((Throwable) value);
+         }
+         else {
+            addReturnValue(value);
+         }
+      }
+   }
+
    public void addDeferredReturnValues(Iterator<?> values)
    {
       InvocationResult result = new DeferredReturnValues(values);
+      addResult(result);
+      constraints.setUnlimitedMaxInvocations();
+   }
+
+   public void addDeferredResults(Iterator<?> values)
+   {
+      InvocationResult result = new DeferredResults(values);
       addResult(result);
       constraints.setUnlimitedMaxInvocations();
    }

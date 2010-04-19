@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -65,13 +65,7 @@ public final class ActiveInvocations
 
       if (instance != null) {
          Expectation expectation = instance.getRecordPhase().getCurrentExpectation();
-
-         if (result instanceof Throwable) {
-            expectation.getResults().addThrowable((Throwable) result);
-         }
-         else {
-            expectation.addReturnValueOrValues(result);
-         }
+         expectation.addResult(result);
       }
    }
 

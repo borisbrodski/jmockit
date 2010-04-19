@@ -38,7 +38,7 @@ public final class ExpectationsWithResultsTest
    {
       private static String doInternal() { return "123"; }
 
-      void provideSomeService() {}
+      void provideSomeService() { throw new RuntimeException("Should not occur"); }
 
       int getValue() { return -1; }
       Integer getInteger() { return -1; }
@@ -493,6 +493,55 @@ public final class ExpectationsWithResultsTest
             result = 123;
          }
       };
+   }
+
+   @Test
+   public void recordReturnValuesMixedWithThrowablesForNonVoidMethod()
+   {
+      new NonStrictExpectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.getString();
+            result = asList("Abc", new IllegalStateException(), "DEF", null, new UnknownError());
+         }
+      };
+
+      Collaborator c = new Collaborator();
+      assertEquals("Abc", c.getString());
+      try { c.getString(); fail(); } catch (IllegalStateException ignored) {}
+      assertEquals("DEF", c.getString());
+      assertNull(c.getString());
+      try { c.getString(); fail(); } catch (UnknownError ignored) {}
+      try { c.getString(); fail(); } catch (UnknownError ignored) {}
+   }
+
+   @Test
+   public void recordExceptionFollowedByNullReturnValueForVoidMethod(final Collaborator mock)
+   {
+      new Expectations()
+      {
+         {
+            // One way of doing it:
+            mock.provideSomeService();
+            result = new IllegalArgumentException();
+            result = null;
+
+            // Another way:
+            mock.provideSomeService();
+            result = asList(new IllegalArgumentException(), null);
+
+            // Yet another way:
+            mock.provideSomeService();
+            result = asList(new IllegalArgumentException(), null).iterator();
+         }
+      };
+
+      for (int i = 0; i < 3; i++) {
+         try { mock.provideSomeService(); fail(); } catch (IllegalArgumentException ignored) {}
+         mock.provideSomeService();
+      }
    }
 
    @Test(expected = IllegalArgumentException.class)

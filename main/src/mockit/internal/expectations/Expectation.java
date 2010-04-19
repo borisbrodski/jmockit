@@ -79,22 +79,43 @@ public final class Expectation
 
    public void addReturnValueOrValues(Object value)
    {
-      validateReturnValues(value, (Object) null);
+      boolean valueIsACollection = value instanceof Collection<?>;
 
-      if (value instanceof Iterator<?> && !hasReturnValueOfType(value.getClass())) {
-         getResults().addDeferredReturnValues((Iterator<?>) value);
-      }
-      else if (value instanceof Collection<?> && !hasReturnValueOfType(value.getClass())) {
-         Collection<?> values = (Collection<?>) value;
-         getResults().addReturnValues(values.toArray(new Object[values.size()]));
-      }
-      else {
-         if (invocation.overrideDefaultCascadedMockIfAny(value)) {
-            recordPhase.setNextInstanceToMatch(null);
+      if (
+         (valueIsACollection || value instanceof Iterator<?>) &&
+         !hasReturnValueOfType(value.getClass())
+      ) {
+         if (valueIsACollection) {
+            Collection<?> values = (Collection<?>) value;
+            getResults().addReturnValues(values.toArray(new Object[values.size()]));
+         }
+         else {
+            getResults().addDeferredReturnValues((Iterator<?>) value);
          }
 
-         getResults().addReturnValue(value);
+         return;
       }
+
+      addSingleReturnValue(value);
+   }
+
+   private void addSingleReturnValue(Object value)
+   {
+      validateReturnValues(value, (Object) null);
+      substituteCascadedMockToBeReturnedIfNeeded(value);
+      getResults().addReturnValue(value);
+   }
+
+   private boolean hasReturnValueOfType(Class<?> typeToBeReturned)
+   {
+      Class<?> returnClass = getReturnType();
+      return returnClass != null && returnClass.isAssignableFrom(typeToBeReturned);
+   }
+
+   private Class<?> getReturnType()
+   {
+      Type invocationReturnType = Type.getReturnType(invocation.getMethodNameAndDescription());
+      return Utilities.getClassForType(invocationReturnType);
    }
 
    private void validateReturnValues(Object firstValue, Object... remainingValues)
@@ -123,16 +144,11 @@ public final class Expectation
       }
    }
 
-   private boolean hasReturnValueOfType(Class<?> typeToBeReturned)
+   private void substituteCascadedMockToBeReturnedIfNeeded(Object value)
    {
-      Class<?> invocationReturnClass = getReturnType();
-      return invocationReturnClass.isAssignableFrom(typeToBeReturned);
-   }
-
-   private Class<?> getReturnType()
-   {
-      Type invocationReturnType = Type.getReturnType(invocation.getMethodNameAndDescription());
-      return Utilities.getClassForType(invocationReturnType);
+      if (invocation.overrideDefaultCascadedMockIfAny(value)) {
+         recordPhase.setNextInstanceToMatch(null);
+      }
    }
 
    public void addSequenceOfReturnValues(Object firstValue, Object[] remainingValues)
@@ -228,6 +244,32 @@ public final class Expectation
    {
       addAllValues(values, first, remaining);
       results.addReturnValue(values);
+   }
+
+   public void addResult(Object value)
+   {
+      if (value instanceof Throwable) {
+         getResults().addThrowable((Throwable) value);
+         return;
+      }
+
+      boolean valueIsACollection = value instanceof Collection<?>;
+
+      if (
+         (valueIsACollection || value instanceof Iterator<?>) &&
+         !hasReturnValueOfType(value.getClass())
+      ) {
+         if (valueIsACollection) {
+            getResults().addResults((Collection<?>) value);
+         }
+         else {
+            getResults().addDeferredResults((Iterator<?>) value);
+         }
+
+         return;
+      }
+
+      addSingleReturnValue(value);
    }
 
    public void setCustomErrorMessage(CharSequence message)
