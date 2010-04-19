@@ -93,7 +93,6 @@ public final class AnnotationsModifier extends RealClassModifier
    protected boolean shouldCopyOriginalMethodBytecode(
       int access, String name, String desc, String signature, String[] exceptions)
    {
-      // TODO: shouldn't stub out native methods when running under JDK 1.6?
       if (
          (access & IGNORED_ACCESS) == 0 && mockingCfg != null &&
          mockingCfg.matchesFilters(name, desc)
