@@ -27,6 +27,7 @@ package mockit.coverage.reporting.sourceFiles;
 import java.io.*;
 import java.util.*;
 
+import mockit.coverage.*;
 import mockit.coverage.data.*;
 import mockit.coverage.data.dataItems.*;
 import mockit.coverage.paths.*;
@@ -56,12 +57,30 @@ public final class FileCoverageReport
       output = new OutputFile(outputDir, inputFile.filePath);
 
       lineCoverage = new LineCoverageOutput(output, fileData.getLineToLineData(), withCallPoints);
+      pathCoverage = createPathCoverageOutput(fileData);
+      dataCoverage = createDataCoverageOutput(fileData);
+   }
 
-      Collection<MethodCoverageData> methods = fileData.getMethods();
-      pathCoverage = methods.isEmpty() ? null : new PathCoverageOutput(output, methods);
+   private PathCoverageOutput createPathCoverageOutput(FileCoverageData fileData)
+   {
+      if (Metrics.PATH_COVERAGE) {
+         Collection<MethodCoverageData> methods = fileData.getMethods();
+         return methods.isEmpty() ? null : new PathCoverageOutput(output, methods);
+      }
+      else {
+         return null;
+      }
+   }
 
-      DataCoverageInfo dataCoverageInfo = fileData.dataCoverageInfo;
-      dataCoverage = dataCoverageInfo.hasFields() ? new DataCoverageOutput(dataCoverageInfo) : null;
+   private DataCoverageOutput createDataCoverageOutput(FileCoverageData fileData)
+   {
+      if (Metrics.DATA_COVERAGE) {
+         DataCoverageInfo dataCoverageInfo = fileData.dataCoverageInfo;
+         return dataCoverageInfo.hasFields() ? new DataCoverageOutput(dataCoverageInfo) : null;
+      }
+      else {
+         return null;
+      }
    }
 
    public void generate() throws IOException

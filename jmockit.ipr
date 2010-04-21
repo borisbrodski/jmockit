@@ -810,6 +810,8 @@
         <w>bytecodes</w>
         <w>cadetblue</w>
         <w>cdata</w>
+        <w>cellpadding</w>
+        <w>cellspacing</w>
         <w>charset</w>
         <w>classfile</w>
         <w>classfiles</w>
