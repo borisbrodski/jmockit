@@ -28,7 +28,6 @@ import java.io.*;
 import java.lang.instrument.*;
 import java.security.*;
 import java.util.*;
-import java.util.regex.*;
 
 import mockit.coverage.data.*;
 import mockit.external.asm.*;
@@ -42,8 +41,7 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
    private static final String[] NO_ARGS = new String[0];
 
    private final Set<String> modifiedClasses;
-   private final Matcher classesToInclude;
-   private final Matcher classesToExclude;
+   private final ClassSelection classSelection;
 
    public static void main(String[] args)
    {
@@ -67,34 +65,10 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
       String[] args = argsSeparatedByColon == null ? NO_ARGS : argsSeparatedByColon.split(":");
 
       modifiedClasses = new HashSet<String>();
-      classesToInclude = getClassNameRegexForClassesToInclude(args);
-      classesToExclude = getClassNameRegexForClassesToExclude();
+      classSelection = new ClassSelection(args);
 
       redefineClassesAlreadyLoadedForCoverage();
       setUpOutputFileGenerator(args);
-   }
-
-   private Matcher getClassNameRegexForClassesToInclude(String[] args)
-   {
-      String regex = args.length == 0 ? "" : args[0];
-
-      if (regex.length() == 0) {
-         regex = System.getProperty("jmockit-coverage-classes", "");
-      }
-
-      return getClassNameRegex(regex);
-   }
-
-   private Matcher getClassNameRegex(String regex)
-   {
-      return regex.length() == 0 ? null : Pattern.compile(regex).matcher("");
-   }
-
-   private Matcher getClassNameRegexForClassesToExclude()
-   {
-      String defaultExclusions = "mockit\\..+|.+Test(\\$.+)?|junit\\..+";
-      String regex = System.getProperty("jmockit-coverage-excludes", defaultExclusions);
-      return getClassNameRegex(regex);
    }
 
    private void setUpOutputFileGenerator(String[] args)
@@ -146,37 +120,9 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
 
    private boolean isToBeConsideredForCoverage(String className, ProtectionDomain protectionDomain)
    {
-      if (modifiedClasses.contains(className)) {
-         return false;
-      }
-
-      if (classesToInclude != null) {
-         return
-            classesToInclude.reset(className).matches() &&
-            (classesToExclude == null || !classesToExclude.reset(className).matches());
-      }
-      else if (classesToExclude != null && classesToExclude.reset(className).matches()) {
-         return false;
-      }
-
-      if (protectionDomain == null) {
-         return false;
-      }
-
-      CodeSource codeSource = protectionDomain.getCodeSource();
-
-      if (codeSource == null) {
-         return false;
-      }
-
-      String codeLocation = codeSource.getLocation().getPath();
-
-      if (codeLocation.endsWith(".jar") || codeLocation.endsWith("/test-classes/")) {
-         return false;
-      }
-
-      // Class to modify for coverage found.
-      return true;
+      return
+         !modifiedClasses.contains(className) &&
+         classSelection.isSelected(className, protectionDomain);
    }
 
    private void registerClassAsModifiedForCoverage(String className, byte[] modifiedClassfile)
