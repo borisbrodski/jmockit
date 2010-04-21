@@ -300,7 +300,7 @@
          excludes="**/*.i*, **/*.zip, **/*.ser, **/Temp.java,
                    **/target/**, **/classes/**, **/test-classes/**, jmockit/samples/test-output/**,
                    jmockit/coverage/coverage-report/**, jmockit/samples/*/coverage-report/**,
-                   jmockit/coverage-report/**, **/testRun.properties"
+                   jmockit/main/coverage-report/**, jmockit/coverage-report/**, **/testRun.properties"
          encoding="UTF-8"/>
    </target>
 
