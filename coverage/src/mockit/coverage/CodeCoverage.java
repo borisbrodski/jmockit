@@ -24,24 +24,17 @@
  */
 package mockit.coverage;
 
-import java.io.*;
 import java.lang.instrument.*;
 import java.security.*;
-import java.util.*;
 
 import mockit.coverage.data.*;
-import mockit.external.asm.*;
 import mockit.internal.startup.*;
-import mockit.internal.state.TestRun;
 
 public final class CodeCoverage implements ClassFileTransformer, Runnable
 {
-   static final class VisitInterruptedException extends RuntimeException {}
-   static final VisitInterruptedException CLASS_IGNORED = new VisitInterruptedException();
    private static final String[] NO_ARGS = new String[0];
 
-   private final Set<String> modifiedClasses;
-   private final ClassSelection classSelection;
+   private final ClassModification classModification;
 
    public static void main(String[] args)
    {
@@ -64,10 +57,9 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
    {
       String[] args = argsSeparatedByColon == null ? NO_ARGS : argsSeparatedByColon.split(":");
 
-      modifiedClasses = new HashSet<String>();
-      classSelection = new ClassSelection(args);
+      classModification = new ClassModification(args);
+      classModification.redefineClassesAlreadyLoadedForCoverage();
 
-      redefineClassesAlreadyLoadedForCoverage();
       setUpOutputFileGenerator(args);
    }
 
@@ -96,125 +88,7 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
       }
 
       String className = internalClassName.replace('/', '.');
-      boolean modifyClassForCoverage = isToBeConsideredForCoverage(className, protectionDomain);
 
-      if (modifyClassForCoverage) {
-         try {
-            byte[] modifiedClassfile = modifyClassForCoverage(className, originalClassfile);
-            registerClassAsModifiedForCoverage(className, modifiedClassfile);
-            return modifiedClassfile;
-         }
-         catch (VisitInterruptedException ignore) {
-            // Ignore the class if the modification was refused for some reason.
-         }
-         catch (RuntimeException e) {
-            e.printStackTrace();
-         }
-         catch (AssertionError e) {
-            e.printStackTrace();
-         }
-      }
-
-      return originalClassfile;
-   }
-
-   private boolean isToBeConsideredForCoverage(String className, ProtectionDomain protectionDomain)
-   {
-      return
-         !modifiedClasses.contains(className) &&
-         classSelection.isSelected(className, protectionDomain);
-   }
-
-   private void registerClassAsModifiedForCoverage(String className, byte[] modifiedClassfile)
-   {
-      modifiedClasses.add(className);
-      TestRun.mockFixture().addFixedClass(className, modifiedClassfile);
-   }
-
-   private void redefineClassesAlreadyLoadedForCoverage()
-   {
-      Class<?>[] loadedClasses =
-         Startup.instrumentation().getInitiatedClasses(CodeCoverage.class.getClassLoader());
-
-      for (Class<?> loadedClass : loadedClasses) {
-         if (
-            !loadedClass.isAnnotation() && !loadedClass.isSynthetic() &&
-            isToBeConsideredForCoverage(loadedClass.getName(), loadedClass.getProtectionDomain())
-         ) {
-            redefineClassForCoverage(loadedClass);
-         }
-      }
-   }
-
-   private void redefineClassForCoverage(Class<?> loadedClass)
-   {
-      String className = loadedClass.getName();
-      byte[] modifiedClassfile = readAndModifyClassForCoverage(loadedClass);
-
-      if (modifiedClassfile != null) {
-         redefineClassForCoverage(loadedClass, modifiedClassfile);
-         registerClassAsModifiedForCoverage(className, modifiedClassfile);
-      }
-   }
-
-   private byte[] readAndModifyClassForCoverage(Class<?> loadedClass)
-   {
-      try {
-         return modifyClassForCoverage(loadedClass.getName(), null);
-      }
-      catch (VisitInterruptedException ignore) {
-         // Ignore the class if the modification was refused for some reason.
-      }
-      catch (RuntimeException e) {
-         e.printStackTrace();
-      }
-      catch (AssertionError e) {
-         e.printStackTrace();
-      }
-
-      return null;
-   }
-
-   private byte[] modifyClassForCoverage(String className, byte[] classBytecode)
-   {
-      byte[] modifiedBytecode = CoverageModifier.recoverModifiedByteCodeIfAvailable(className);
-
-      if (modifiedBytecode != null) {
-         return modifiedBytecode;
-      }
-
-      ClassReader cr;
-
-      if (classBytecode == null) {
-         try {
-            cr = new ClassReader(className);
-         }
-         catch (IOException e) {
-            // Ignore the class if the ".class" file can't be located.
-            return null;
-         }
-      }
-      else {
-         cr = new ClassReader(classBytecode);
-      }
-
-      CoverageModifier modifier = new CoverageModifier(cr);
-      cr.accept(modifier, false);
-      return modifier.toByteArray();
-   }
-
-   private void redefineClassForCoverage(Class<?> loadedClass, byte[] modifiedClassfile)
-   {
-      ClassDefinition[] classDefs = { new ClassDefinition(loadedClass, modifiedClassfile) };
-
-      try {
-         Startup.instrumentation().redefineClasses(classDefs);
-      }
-      catch (ClassNotFoundException e) {
-         throw new RuntimeException(e);
-      }
-      catch (UnmodifiableClassException e) {
-         throw new RuntimeException(e);
-      }
+      return classModification.modifyClass(className, protectionDomain, originalClassfile);
    }
 }

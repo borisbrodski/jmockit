@@ -93,7 +93,7 @@ final class CoverageModifier extends ClassWriter
    {
       if (!forInnerClass) {
          if (cannotModify) {
-            throw CodeCoverage.CLASS_IGNORED;
+            throw VisitInterruptedException.INSTANCE;
          }
 
          sourceFileName += file;
@@ -652,7 +652,7 @@ final class CoverageModifier extends ClassWriter
          boolean isTestMethod = desc.startsWith("Lorg/junit/") || desc.startsWith("Lorg/testng/");
 
          if (isTestMethod) {
-            throw CodeCoverage.CLASS_IGNORED;
+            throw VisitInterruptedException.INSTANCE;
          }
 
          return mw.visitAnnotation(desc, visible);
