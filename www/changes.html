@@ -11,7 +11,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.998 (April 2?, 2010):</p>
+<p>Release 0.998 (April 21, 2010):</p>
 <ul>
    <li>
       <strong>Removed</strong> the following <em>deprecated methods</em>:
@@ -25,17 +25,38 @@
       certain situations where a non-null argument value is needed.
    </li>
    <li>
+      Enhancements to the
+      <code>Expectations#returns(Object firstValue, Object... remainingValues)</code> method:
+      when used for methods of return type <code>Set</code>, <code>SortedSet</code>,
+      <code>Iterator</code>, or array, the individual elements contained in the collection,
+      iterator or array will be the ones directly specified as arguments.
+   </li>
+   <li>
+      <strong>New validation</strong> implemented for uses of the Expectations API, applicable when
+      recording non-strict expectations: previously, duplicate expectations were simply ignored;
+      now, such occurrences cause an <code>IllegalArgumentException</code> to be thrown.
+      Note that this change can cause existing tests to break, if they inadvertently recorded
+      duplicate non-strict expectations; to fix such tests, the duplicate expectations will have to
+      be removed.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=42">issue 42</a>.
+   </li>
+   <li>
+      Fixes and enhancements to the support for mocking <strong>Java enums</strong> with the
+      Expectations API: the first enum value will now be used as the default for mock fields and
+      parameters of enum type; cascading will now work as expected for methods that return an enum
+      value.
+   </li>
+   <li>
       Fixed an issue in the JUnit 3.8 integration, where <code>TestCase</code> subclasses overriding
       the <code>runTest()</code> method (such as <code>GWTTestCase</code>) would not work properly
       with JMockit in the classpath.
       See <a href="http://code.google.com/p/jmockit/issues/detail?id=37">issue 37</a>.
    </li>
    <li>
-      Enhancements to the
-      <code>Expectations#returns(Object firstValue, Object... remainingValues)</code> method:
-      when used for methods of return type <code>Set</code>, <code>SortedSet</code>,
-      <code>Iterator</code>, or array, the individual elements contained in the collection,
-      iterator or array will be the ones directly specified as arguments.
+      Fixed a bug of omission in the use of <code>@Cascading</code>, when expectations are recorded
+      on a cascaded mock through a separate mock field/parameter, and there are two or more mocks
+      of the same cascaded type.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=38">issue 38</a>.
    </li>
    <li>
       Fixed a bug of omission in tests with two or more mocks of the same type, where one of them is
@@ -48,27 +69,6 @@
       expectation was called more than once during the replay phase, only the first invocation was
       executing the real implementation.
       See <a href="http://code.google.com/p/jmockit/issues/detail?id=40">issue 40</a>.
-   </li>
-   <li>
-      <strong>New validation</strong> implemented for uses of the Expectations API, applicable when
-      recording non-strict expectations: previously, duplicate expectations were simply ignored;
-      now, such occurrences cause an <code>IllegalArgumentException</code> to be thrown.
-      Note that this change can cause existing tests to break, if they inadvertently recorded
-      duplicate non-strict expectations; to fix such tests, the duplicate expectations will have to
-      be removed.
-      See <a href="http://code.google.com/p/jmockit/issues/detail?id=42">issue 42</a>.
-   </li>
-   <li>
-      Fixed a bug of omission in the use of <code>@Cascading</code>, when expectations are recorded
-      on a cascaded mock through a separate mock field/parameter, and there are two or more mocks
-      of the same cascaded type.
-      See <a href="http://code.google.com/p/jmockit/issues/detail?id=38">issue 38</a>.
-   </li>
-   <li>
-      Fixes and enhancements to the support for mocking <strong>Java enums</strong> with the
-      Expectations API: the first enum value will now be used as the default for mock fields and
-      parameters of enum type; cascading will now work as expected for methods that return an enum
-      value.
    </li>
    <li>
       Fixed a bug that prevented consecutive values to be returned from a cascaded mock, when
