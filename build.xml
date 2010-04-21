@@ -323,11 +323,10 @@
    <target name="tests">
       <junit fork="yes" forkmode="once" dir="main">
          <jvmarg value="-javaagent:../jmockit.jar"/>
-<!--
          <sysproperty key="jmockit-tools" value="coverage,mockit.integration.logging.Slf4jMocks"/>
          <sysproperty key="jmockit-coverage-classes" value="mockit\..+"/>
          <sysproperty key="jmockit-coverage-excludes" value="mockit\.coverage\..+"/>
--->
+         <sysproperty key="jmockit-coverage-metrics" value="line"/>
          <classpath refid="common.classpath"/>
          <classpath location="main/test-classes"/>
          <classpath path="jmockit.jar"/>

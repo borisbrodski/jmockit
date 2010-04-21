@@ -195,7 +195,7 @@
    use the JMockit mocking APIs (it will also be implicitly added to the classpath).
 </p>
 <p>
-   Apart from enabling JMockit Coverage for a given test run, there are four aspects of the tool's
+   Apart from enabling JMockit Coverage for a given test run, there are five aspects of the tool's
    behavior which can optionally be configured for the test run:
 </p>
 <ol>
@@ -220,6 +220,11 @@
       The set of Java classes which should be considered for coverage gathering.
       By default, all classes in production code loaded during the test run and which are not inside
       jar files will be considered.
+   </li>
+   <li>
+      The specific set of code coverage <strong>metrics</strong> which should be considered.
+      By default, all available metrics (<em>line</em>, <em>path</em>, and <em>data</em> coverage)
+      are included.
    </li>
 </ol>
 
@@ -308,6 +313,12 @@
       a <code>java.util.regex</code>-conformable regular expression for class names which should be
       excluded from consideration when deciding which classes will be modified to gather coverage.
       This property can be used together with <code>jmockit-coverage-classes</code> or on its own.
+   </li>
+   <li>
+      <code>jmockit-coverage-<strong>metrics</strong></code>:
+      one or more comma-separated words between <strong><code>line</code></strong>,
+      <strong><code>path</code></strong>, <strong><code>data</code></strong>, and
+      <strong><code>all</code></strong> (the default).
    </li>
 </ol>
 <p>
@@ -422,7 +433,7 @@
    Notice that it will probably be useful to define a property for the JMockit version in use:
 </p>
 <pre><code>   &lt;properties>
-      &lt;jmockit.version>0.997&lt;/jmockit.version> 
+      &lt;jmockit.version>0.998&lt;/jmockit.version> 
    &lt;/properties>
 </code></pre>
 <p>

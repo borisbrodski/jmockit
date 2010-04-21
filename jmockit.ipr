@@ -802,6 +802,7 @@
         <w>attr</w>
         <w>bar1</w>
         <w>bar2</w>
+        <w>batchtest</w>
         <w>blanchedalmond</w>
         <w>blog</w>
         <w>booleans</w>
@@ -847,7 +848,9 @@
         <w>forkmode</w>
         <w>formatter</w>
         <w>getenv</w>
+        <w>github</w>
         <w>google</w>
+        <w>googlecode</w>
         <w>goto</w>
         <w>hamcrest</w>
         <w>hashtable</w>
@@ -872,6 +875,7 @@
         <w>jacc</w>
         <w>javaagent</w>
         <w>javac</w>
+        <w>javadocs</w>
         <w>javaee</w>
         <w>javamail</w>
         <w>javascript</w>
@@ -883,6 +887,8 @@
         <w>jmxri</w>
         <w>jmxtools</w>
         <w>jplis</w>
+        <w>jvmarg</w>
+        <w>jvnet</w>
         <w>liesenfeld</w>
         <w>lifecycle</w>
         <w>lightseagreen</w>
@@ -973,6 +979,7 @@
         <w>webapp</w>
         <w>webkit</w>
         <w>wiki</w>
+        <w>wikipedia</w>
         <w>wikispaces</w>
         <w>xbootclasspath</w>
         <w>xhtml</w>
@@ -1390,7 +1397,7 @@
     </library>
     <library name="Maven: dom4j:dom4j:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/dom4j-1.6.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -1411,14 +1418,14 @@
     </library>
     <library name="Maven: org.slf4j:slf4j-api:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/slf4j-api-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../lib/slf4j-api-1.5.8.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="Maven: org.slf4j:slf4j-nop:0">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../lib/slf4j-nop-1.5.8.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

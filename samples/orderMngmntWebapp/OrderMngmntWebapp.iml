@@ -25,7 +25,7 @@
     <orderEntry type="module" module-name="Main" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.1" level="project" />
     <orderEntry type="library" name="Maven: mockit:jmockit-hibernate3emul:0" level="project" />
-    <orderEntry type="library" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
     <orderEntry type="library" name="Maven: hibernate:hibernate:3.0" level="project" />
     <orderEntry type="library" name="Maven: dom4j:dom4j:0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:0" level="project" />
