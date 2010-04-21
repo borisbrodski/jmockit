@@ -11,7 +11,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.998 (April ??, 2010):</p>
+<p>Release 0.998 (April 2?, 2010):</p>
 <ul>
    <li>
       <strong>Removed</strong> the following <em>deprecated methods</em>:
@@ -74,6 +74,12 @@
       Fixed a bug that prevented consecutive values to be returned from a cascaded mock, when
       recording a sequence of return values through the <code>result</code> field or the
       <code>returns(...)</code> varargs method.
+   </li>
+   <li>
+      <strong>New feature</strong> for JMockit Coverage: the <code>jmockit-coverage-metrics</code>
+      system property can now be used to select the desired combination of the three available code
+      coverage metrics. Its value should be a comma-separated list containing one or more of the
+      following words: "line", "path", "data", and "all".
    </li>
 </ul>
 
