@@ -102,26 +102,39 @@ public final class IndexPage extends ListWithFilesAndPercentages
       output.write(
          "      <th onclick='location.reload()' style='cursor: pointer' " +
          "title='Click on the title for each metric to sort by size (total number of line " +
-         "segments, paths, or fields).'>Files (.java): ");
+         "segments, paths, or fields).'>Files (.java, .fx): ");
       output.print(totalFileCount);
       output.println("</th>");
-      output.println("      <th onclick='sortTables(1)' style='cursor: pointer' title='" +
-         "Measures how much of the executable production code was exercised by tests.\r\n" +
-         "An executable line of code contains one or more executable segments.\r\n" +
-         "The percentages are calculated as 100*NE/NS, where NS is the number of segments " +
-         "and NE the number of executed segments.'>Line</th>");
-      output.println("      <th onclick='sortTables(2)' style='cursor: pointer' title='" +
-         "Measures how many of the possible execution paths through method/constructor bodies " +
-         "were actually executed by tests.\r\n" +
-         "The percentages are calculated as 100*NPE/NP, where NP is the number of possible " +
-         "paths and NPE the number of fully executed paths.'>Path</th>");
-      output.println("      <th onclick='sortTables(3)' style='cursor: pointer' title='" +
-         "Measures how many of the instance and static non-final fields were fully exercised " +
-         "by the test run.\r\n" +
-         "To be fully exercised, a field must have the last value assigned to it read by at " +
-         "least one test.\r\n" +
-         "The percentages are calculated as 100*NFE/NF, where NF is the number of non-final " +
-         "fields and NFE the number of fully exercised fields.'>Data</th>");
+
+      if (Metrics.LINE_COVERAGE) {
+         output.println(
+            "      <th onclick='sortTables(1)' style='cursor: pointer' title='" +
+            "Measures how much of the executable production code was exercised by tests.\r\n" +
+            "An executable line of code contains one or more executable segments.\r\n" +
+            "The percentages are calculated as 100*NE/NS, where NS is the number of segments " +
+            "and NE the number of executed segments.'>Line</th>");
+      }
+
+      if (Metrics.PATH_COVERAGE) {
+         output.println(
+            "      <th onclick='sortTables(2)' style='cursor: pointer' title='" +
+            "Measures how many of the possible execution paths through method/constructor bodies " +
+            "were actually executed by tests.\r\n" +
+            "The percentages are calculated as 100*NPE/NP, where NP is the number of possible " +
+            "paths and NPE the number of fully executed paths.'>Path</th>");
+      }
+
+      if (Metrics.DATA_COVERAGE) {
+         output.println(
+            "      <th onclick='sortTables(3)' style='cursor: pointer' title='" +
+            "Measures how many of the instance and static non-final fields were fully exercised " +
+            "by the test run.\r\n" +
+            "To be fully exercised, a field must have the last value assigned to it read by at " +
+            "least one test.\r\n" +
+            "The percentages are calculated as 100*NFE/NF, where NF is the number of non-final " +
+            "fields and NFE the number of fully exercised fields.'>Data</th>");
+      }
+
       output.println("    </tr>");
    }
 
@@ -160,11 +173,13 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeLineWithCoverageTotals(int metric)
    {
-      int covered = coveredItems[metric];
-      int total = totalItems[metric];
-      int percentage = CoveragePercentage.calculate(covered, total);
+      if (Metrics.withMetric(metric)) {
+         int covered = coveredItems[metric];
+         int total = totalItems[metric];
+         int percentage = CoveragePercentage.calculate(covered, total);
 
-      printCoveragePercentage(metric, covered, total, percentage);
+         printCoveragePercentage(metric, covered, total, percentage);
+      }
    }
 
    private void writeFooter()
@@ -219,14 +234,16 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void recordCoverageInformationForPackage(int metric)
    {
-      int coveredInPackage = packageReport.coveredItems[metric];
-      int totalInPackage = packageReport.totalItems[metric];
-      int packagePercentage = CoveragePercentage.calculate(coveredInPackage, totalInPackage);
+      if (Metrics.withMetric(metric)) {
+         int coveredInPackage = packageReport.coveredItems[metric];
+         int totalInPackage = packageReport.totalItems[metric];
+         int packagePercentage = CoveragePercentage.calculate(coveredInPackage, totalInPackage);
 
-      setPackageCoveragePercentage(metric, packagePercentage);
+         setPackageCoveragePercentage(metric, packagePercentage);
 
-      totalItems[metric] += totalInPackage;
-      coveredItems[metric] += coveredInPackage;
+         totalItems[metric] += totalInPackage;
+         coveredItems[metric] += coveredInPackage;
+      }
    }
 
    private void setPackageCoveragePercentage(int metric, int percentage)
@@ -243,10 +260,12 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeCoveragePercentageForFile(int metric)
    {
-      int coveredInPackage = packageReport.coveredItems[metric];
-      int totalInPackage = packageReport.totalItems[metric];
-      int filePercentage = packageToPackagePercentages.get(packageName)[metric];
+      if (Metrics.withMetric(metric)) {
+         int coveredInPackage = packageReport.coveredItems[metric];
+         int totalInPackage = packageReport.totalItems[metric];
+         int filePercentage = packageToPackagePercentages.get(packageName)[metric];
 
-      printCoveragePercentage(metric, coveredInPackage, totalInPackage, filePercentage);
+         printCoveragePercentage(metric, coveredInPackage, totalInPackage, filePercentage);
+      }
    }
 }

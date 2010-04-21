@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -146,11 +146,18 @@ final class CoverageModifier extends ClassWriter
          if (name.charAt(1) == 'c') {
             return new StaticBlockModifier(mv);
          }
-         
-         return new ConstructorModifier(mv);
+
+         if (Metrics.PATH_COVERAGE || Metrics.DATA_COVERAGE) {
+            return new ConstructorModifier(mv);
+         }
       }
 
-      return new MethodModifier(mv, name);
+      if (Metrics.PATH_COVERAGE || Metrics.DATA_COVERAGE) {
+         return new MethodModifier(mv, name);
+      }
+      else {
+         return new BaseMethodModifier(mv);
+      }
    }
 
    private class BaseMethodModifier extends MethodAdapter

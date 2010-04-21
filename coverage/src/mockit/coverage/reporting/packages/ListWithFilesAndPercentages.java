@@ -91,8 +91,12 @@ abstract class ListWithFilesAndPercentages
       }
       else if (metric == 0) {
          printIndent();
-         output.println(
-            "  <td class='coverage nocode'>N/A</td><td class='coverage nocode'>N/A</td>");
+         output.println("  <td class='coverage nocode'>N/A</td>");
+
+         if (Metrics.PATH_COVERAGE) {
+            output.println("<td class='coverage nocode'>N/A</td>");
+         }
+
          firstColumnWithDoubleSpan = true;
       }
       else if (firstColumnWithDoubleSpan) {

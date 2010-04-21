@@ -27,6 +27,7 @@ package mockit.coverage.reporting.packages;
 import java.io.*;
 import java.util.*;
 
+import mockit.coverage.*;
 import mockit.coverage.data.*;
 
 final class PackageCoverageReport extends ListWithFilesAndPercentages
@@ -64,9 +65,18 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       }
       else {
          writeTableCellWithFileName(fileNameLength);
-         writeCodeCoveragePercentageForFile(fileData);
-         writePathCoveragePercentageForFile(fileData);
-         writeDataCoveragePercentageForFile(fileData);
+
+         if (Metrics.LINE_COVERAGE) {
+            writeLineCoveragePercentageForFile(fileData);
+         }
+
+         if (Metrics.PATH_COVERAGE) {
+            writePathCoveragePercentageForFile(fileData);
+         }
+
+         if (Metrics.DATA_COVERAGE) {
+            writeDataCoveragePercentageForFile(fileData);
+         }
       }
    }
 
@@ -87,7 +97,9 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       output.println("</td>");
 
       printIndent();
-      output.println("  <td colspan='3' class='coverage unknown'>?</td>");
+      output.print("  <td colspan='");
+      output.print(Metrics.amountActive());
+      output.println("' class='coverage unknown'>?</td>");
    }
 
    private void writeTableCellWithFileName(int fileNameLen)
@@ -108,7 +120,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       output.println("</td>");
    }
 
-   private void writeCodeCoveragePercentageForFile(FileCoverageData fileData)
+   private void writeLineCoveragePercentageForFile(FileCoverageData fileData)
    {
       int percentage = fileData.getCodeCoveragePercentage();
       int covered = fileData.getCoveredSegments();
