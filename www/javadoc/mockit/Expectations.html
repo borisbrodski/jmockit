@@ -570,7 +570,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Equivalent to calling <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> two or more times in sequence, except when the
- associated method can return a <code>List</code> of values.</TD>
+ associated method can return a collection of values, an iterator, or an array.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -642,6 +642,21 @@ Base class whose subclasses are defined in test code, and whose instances define
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a custom argument matcher for a parameter in the current invocation.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected 
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
+<TR ALIGN="right" VALIGN="">
+<TD NOWRAP><FONT SIZE="-1">
+<CODE>&lt;T&gt; T</CODE></FONT></TD>
+</TR>
+</TABLE>
+</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#withAny(T)">withAny</A></B>(T&nbsp;arg)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but matching any argument value of the appropriate type.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -1181,6 +1196,9 @@ protected <B>Expectations</B>()</PRE>
  After this, test code can start recording invocations to the mocked types and mock instances.
  Each and every such call made from inside the expectation block is recorded.
 <P>
+<DL>
+<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)"><CODE>Expectations(Object...)</CODE></A>, 
+<A HREF="../mockit/Expectations.html#Expectations(int, java.lang.Object...)"><CODE>Expectations(int, Object...)</CODE></A></DL>
 </DL>
 <HR>
 
@@ -1206,7 +1224,8 @@ protected <B>Expectations</B>(int&nbsp;numberOfIterations,
 <P>
 <DL>
 <DT><B>Parameters:</B><DD><CODE>numberOfIterations</CODE> - the positive number of iterations for the whole set of invocations
- recorded inside the block; when not specified, 1 (one) iteration is assumed</DL>
+ recorded inside the block; when not specified, 1 (one) iteration is assumed<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, 
+<A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)"><CODE>Expectations(Object...)</CODE></A></DL>
 </DL>
 <HR>
 
@@ -1231,6 +1250,12 @@ protected <B>Expectations</B>(<A HREF="http://java.sun.com/javase/6/docs/api/jav
  For a given <code>Class</code> object, on the other hand, both constructors and methods will be
  considered for mocking, but only those belonging to the specified class.
  <p/>
+ If more than one instance of the same mocked class is given, then instance method invocations
+ will automatically be matched on those individual instances, during the replay phase.
+ Otherwise, an expectation recorded on a dynamically mocked object will match invocations on
+ <em>any</em> instance of the mocked class (unless the <A HREF="../mockit/Expectations.html#onInstance(T)"><CODE>onInstance(Object)</CODE></A> specifier
+ was used in the expectation block).
+ <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#dynamicPartial">In the Tutorial</a>
 <P>
 <DL>
@@ -1238,7 +1263,8 @@ protected <B>Expectations</B>(<A HREF="http://java.sun.com/javase/6/docs/api/jav
  to be considered for partial mocking
 <DT><B>Throws:</B>
 <DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if given a class literal for an interface, an annotation, an
- array, or a primitive/wrapper type, or given a value of such a type</DL>
+ array, or a primitive/wrapper type, or given a value of such a type<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, 
+<A HREF="../mockit/Expectations.html#Expectations(int, java.lang.Object...)"><CODE>Expectations(int, Object...)</CODE></A></DL>
 </DL>
 
 <!-- ============ METHOD DETAIL ========== -->
@@ -1360,11 +1386,23 @@ protected final void <B>returns</B>(<A HREF="http://java.sun.com/javase/6/docs/a
                              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;remainingValues)</PRE>
 <DL>
 <DD>Equivalent to calling <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> two or more times in sequence, except when the
- associated method can return a <code>List</code> of values.
- Specifically, if said method has a return type which is an ordered collection type that can
- receive a <A HREF="http://java.sun.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util"><CODE>List</CODE></A> value, then the given sequence of values will be converted into an
- <code>ArrayList</code>; this list will then be returned by matching invocations at replay time.
- <p/>
+ associated method can return a collection of values, an iterator, or an array.
+ Specifically, the following situations receive special treatment, according to the declared
+ return type of said method:
+ <ol>
+ <li>If the return type is iterable and can receive a <A HREF="http://java.sun.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util"><CODE>List</CODE></A> value, then the given
+ sequence of values will be converted into an <code>ArrayList</code>; this list will then be
+ returned by matching invocations at replay time.</li>
+ <li>If the return type is <code>SortedSet</code> or a sub-type, then the given sequence of values
+ will be converted into a <code>TreeSet</code>; otherwise, if it is <code>Set</code> or a sub-type, then
+ a <code>LinkedHashSet</code> will be created to hold the values;
+ the set will then be returned by matching invocations at replay time.</li>
+ <li>If the return type is <code>Iterator</code> or a sub-type, then the given sequence of values
+ will be converted into a <code>List</code> and the iterator created from this list will be returned
+ by matching invocations at replay time.</li>
+ <li>If the return type is an array, then the given sequence of values will be converted to an
+ array of the same type, which will be returned by matching invocations at replay time.</li>
+ </ol>
  The current expectation will have its upper invocation count automatically set to the total
  number of values specified to be returned. This upper limit can be overridden through the
  <code>maxTimes</code> field, if necessary.
@@ -1729,6 +1767,27 @@ protected final &lt;T&gt; T <B>with</B>(T&nbsp;argValue,
  to the invocation parameter<DD><CODE>argumentMatcher</CODE> - an instance of a class implementing the <code>org.hamcrest.Matcher</code>
  interface, or any other instance with an appropriate invocation handler method
 <DT><B>Returns:</B><DD>the given <code>argValue</code></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="withAny(java.lang.Object)"><!-- --></A><A NAME="withAny(T)"><!-- --></A><H3>
+withAny</H3>
+<PRE>
+protected final &lt;T&gt; T <B>withAny</B>(T&nbsp;arg)</PRE>
+<DL>
+<DD>Same as <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but matching any argument value of the appropriate type.
+ <p/>
+ Consider using instead the "any" field appropriate to the parameter type: <A HREF="../mockit/Expectations.html#any"><CODE>any</CODE></A>,
+ <A HREF="../mockit/Expectations.html#anyBoolean"><CODE>anyBoolean</CODE></A>, <A HREF="../mockit/Expectations.html#anyByte"><CODE>anyByte</CODE></A>, <A HREF="../mockit/Expectations.html#anyChar"><CODE>anyChar</CODE></A>, <A HREF="../mockit/Expectations.html#anyDouble"><CODE>anyDouble</CODE></A>,
+ <A HREF="../mockit/Expectations.html#anyFloat"><CODE>anyFloat</CODE></A>, <A HREF="../mockit/Expectations.html#anyInt"><CODE>anyInt</CODE></A>, <A HREF="../mockit/Expectations.html#anyLong"><CODE>anyLong</CODE></A>, <A HREF="../mockit/Expectations.html#anyShort"><CODE>anyShort</CODE></A>, <A HREF="../mockit/Expectations.html#anyString"><CODE>anyString</CODE></A>.
+ On the other hand, this method is useful if a specific value must be passed as argument to the
+ mocked invocation (typically, when using the <A HREF="../mockit/Expectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><CODE>invoke(Object, String, Object...)</CODE></A> 
+ method).
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>arg</CODE> - an arbitrary value which will match any argument value in the replay phase
+<DT><B>Returns:</B><DD>the input argument</DL>
 </DD>
 </DL>
 <HR>

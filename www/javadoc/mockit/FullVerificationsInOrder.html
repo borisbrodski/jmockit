@@ -543,6 +543,21 @@ A combination of <A HREF="../mockit/FullVerifications.html" title="class in mock
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected 
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
+<TR ALIGN="right" VALIGN="">
+<TD NOWRAP><FONT SIZE="-1">
+<CODE>&lt;T&gt; T</CODE></FONT></TD>
+</TR>
+</TABLE>
+</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#withAny(T)">withAny</A></B>(T&nbsp;arg)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/FullVerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but matching any argument value of the appropriate type.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;double</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#withEqual(double, double)">withEqual</A></B>(double&nbsp;value,
           double&nbsp;delta)</CODE>
@@ -1441,6 +1456,27 @@ protected final &lt;T&gt; T <B>with</B>(T&nbsp;argValue,
  to the invocation parameter<DD><CODE>argumentMatcher</CODE> - an instance of a class implementing the <code>org.hamcrest.Matcher</code>
  interface, or any other instance with an appropriate invocation handler method
 <DT><B>Returns:</B><DD>the given <code>argValue</code></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="withAny(java.lang.Object)"><!-- --></A><A NAME="withAny(T)"><!-- --></A><H3>
+withAny</H3>
+<PRE>
+protected final &lt;T&gt; T <B>withAny</B>(T&nbsp;arg)</PRE>
+<DL>
+<DD>Same as <A HREF="../mockit/FullVerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but matching any argument value of the appropriate type.
+ <p/>
+ Consider using instead the "any" field appropriate to the parameter type: <A HREF="../mockit/FullVerificationsInOrder.html#any"><CODE>any</CODE></A>,
+ <A HREF="../mockit/FullVerificationsInOrder.html#anyBoolean"><CODE>anyBoolean</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyByte"><CODE>anyByte</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyChar"><CODE>anyChar</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyDouble"><CODE>anyDouble</CODE></A>,
+ <A HREF="../mockit/FullVerificationsInOrder.html#anyFloat"><CODE>anyFloat</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyLong"><CODE>anyLong</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyShort"><CODE>anyShort</CODE></A>, <A HREF="../mockit/FullVerificationsInOrder.html#anyString"><CODE>anyString</CODE></A>.
+ On the other hand, this method is useful if a specific value must be passed as argument to the
+ mocked invocation (typically, when using the <A HREF="../mockit/FullVerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><CODE>invoke(Object, String, Object...)</CODE></A> 
+ method).
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>arg</CODE> - an arbitrary value which will match any argument value in the replay phase
+<DT><B>Returns:</B><DD>the input argument</DL>
 </DD>
 </DL>
 <HR>

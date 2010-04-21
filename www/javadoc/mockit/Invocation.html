@@ -297,9 +297,8 @@ public final int <B>getMaxInvocations</B>()</PRE>
 <DL>
 <DD>Returns the maximum invocation count for the current expectation (-1 indicates unlimited).
  <p/>
- This call will return the value set with <CODE>Invocations.repeats(int)</CODE>,
- <CODE>Invocations.repeats(int, int)</CODE> or <CODE>Invocations.repeatsAtMost(int)</CODE>, if that was
- the case.
+ This call will return the value specified through the <CODE>Invocations.times</CODE> or
+ <CODE>Invocations.maxTimes</CODE> field, if that was the case.
 <P>
 <DD><DL>
 </DL>
@@ -314,9 +313,8 @@ public final int <B>getMinInvocations</B>()</PRE>
 <DL>
 <DD>Returns the minimum invocation count for the current expectation.
  <p/>
- This call will return the value set with <CODE>Invocations.repeats(int)</CODE>,
- <CODE>Invocations.repeats(int, int)</CODE> and <CODE>Invocations.repeatsAtLeast(int)</CODE>, if that
- was the case.
+ This call will return the value specified through the <CODE>Invocations.times</CODE> or
+ <CODE>Invocations.minTimes</CODE> field, if that was the case.
 <P>
 <DD><DL>
 </DL>
@@ -331,8 +329,8 @@ public final void <B>setMaxInvocations</B>(int&nbsp;maxInvocations)</PRE>
 <DL>
 <DD>Sets the maximum invocation count for the current expectation.
  <p/>
- This call can be used to override value set with <CODE>Invocations.repeats(int)</CODE>,
- <CODE>Invocations.repeats(int, int)</CODE> or <CODE>Invocations.repeatsAtMost(int)</CODE>.
+ This call can be used to override the value set on the <CODE>Invocations.times</CODE> or
+ <CODE>Invocations.maxTimes</CODE> field.
 <P>
 <DD><DL>
 </DL>
@@ -347,8 +345,8 @@ public final void <B>setMinInvocations</B>(int&nbsp;minInvocations)</PRE>
 <DL>
 <DD>Sets the minimum invocation count for the current expectation.
  <p/>
- This call can be used to override the value set with <CODE>Invocations.repeats(int)</CODE>,
- <CODE>Invocations.repeats(int, int)</CODE> or <CODE>Invocations.repeatsAtLeast(int)</CODE>.
+ This call can be used to override the value set on the <CODE>Invocations.times</CODE> or
+ <CODE>Invocations.minTimes</CODE> field.
 <P>
 <DD><DL>
 </DL>

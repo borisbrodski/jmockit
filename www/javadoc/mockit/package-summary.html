@@ -228,10 +228,9 @@ Package mockit Description
 <P>
 Provides the main classes and annotations used when writing tests with the JMockit toolkit.
  <p/>
- The <A HREF="../mockit/Mockit.html" title="class in mockit"><CODE>Mockit</CODE></A> class contains two groups of static methods for defining mocks for code
- under test: the "old style" <code>redefineMethods</code> variants, and the newer,
- annotation-based, <code>setUpMock</code> variants. This second group of methods rely on the
- <A HREF="../mockit/Mock.html" title="annotation in mockit"><CODE>Mock</CODE></A> and <A HREF="../mockit/MockClass.html" title="annotation in mockit"><CODE>MockClass</CODE></A> annotations.
+ The <A HREF="../mockit/Mockit.html" title="class in mockit"><CODE>Mockit</CODE></A> class contains a group of <code>setUpMock/setUpMocks</code> static
+ methods that can be used to set up <em>state-oriented</em> mock implementations.
+ They rely on the <A HREF="../mockit/Mock.html" title="annotation in mockit"><CODE>Mock</CODE></A> and <A HREF="../mockit/MockClass.html" title="annotation in mockit"><CODE>MockClass</CODE></A> annotations.
  <p/>
  The <A HREF="../mockit/MockUp.html" title="class in mockit"><CODE>MockUp</CODE></A> class is a convenient wrapper for common uses of the
  <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)"><CODE>Mockit.setUpMock(Class, Object)</CODE></A> and <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Object)"><CODE>Mockit.setUpMock(Object)</CODE></A>
