@@ -31,18 +31,64 @@ import mockit.external.asm.*;
 import mockit.external.asm.commons.*;
 import mockit.internal.*;
 
+import static mockit.external.asm.Opcodes.*;
+
 /**
  * Responsible for collecting the signatures of all methods and constructors defined in a given mock
  * class which are explicitly annotated as {@link mockit.Mock mocks}.
  */
-public final class AnnotatedMockMethodCollector extends BaseMockCollector
+public final class AnnotatedMockMethodCollector extends EmptyVisitor
 {
-   private final Class<?> realClass;
+   private static final int INVALID_FIELD_ACCESSES = ACC_FINAL + ACC_STATIC + ACC_SYNTHETIC;
+   private static final int INVALID_METHOD_ACCESSES =
+      ACC_BRIDGE + ACC_SYNTHETIC + ACC_ABSTRACT + ACC_NATIVE;
+
+   private final AnnotatedMockMethods mockMethods;
+   private boolean collectingFromSuperClass;
+   private String enclosingClassDescriptor;
 
    public AnnotatedMockMethodCollector(AnnotatedMockMethods mockMethods)
    {
-      super(mockMethods);
-      realClass = mockMethods.realClass;
+      this.mockMethods = mockMethods;
+   }
+
+   public void collectMockMethods(Class<?> mockClass)
+   {
+      Class<?> classToCollectMocksFrom = mockClass;
+
+      do {
+         ClassReader mcReader = ClassFile.createClassFileReader(classToCollectMocksFrom.getName());
+         mcReader.accept(this, true);
+         classToCollectMocksFrom = classToCollectMocksFrom.getSuperclass();
+         collectingFromSuperClass = true;
+      }
+      while (classToCollectMocksFrom != Object.class);
+   }
+
+   @Override
+   public void visit(
+      int version, int access, String name, String signature, String superName, String[] interfaces)
+   {
+      if (!collectingFromSuperClass) {
+         mockMethods.setMockClassInternalName(name);
+
+         int p = name.lastIndexOf('$');
+
+         if (p > 0) {
+            enclosingClassDescriptor = "(L" + name.substring(0, p) + ";)V";
+         }
+      }
+   }
+
+   @Override
+   public FieldVisitor visitField(
+      int access, String name, String desc, String signature, Object value)
+   {
+      if ((access & INVALID_FIELD_ACCESSES) == 0 && "it".equals(name)) {
+         mockMethods.setWithItField(true);
+      }
+
+      return null;
    }
 
    /**
@@ -56,18 +102,22 @@ public final class AnnotatedMockMethodCollector extends BaseMockCollector
     * @param signature generic signature for a Java 5 generic method, ignored since redefinition
     * only needs to consider the "erased" signature
     * @param exceptions zero or more thrown exceptions in the method "throws" clause, also ignored
-    *
-    * @return always null, since we are not interested in visiting the code of the method
     */
    @Override
    public MethodVisitor visitMethod(
       final int access, final String name, final String methodDesc,
       String signature, String[] exceptions)
    {
-      super.visitMethod(access, name, methodDesc, signature, exceptions);
-
-      if (isMethodWithInvalidAccess(access)) {
+      if ((access & INVALID_METHOD_ACCESSES) != 0) {
          return null;
+      }
+
+      if (
+         !collectingFromSuperClass && enclosingClassDescriptor != null &&
+         "<init>".equals(name) && methodDesc.equals(enclosingClassDescriptor)
+      ) {
+         mockMethods.setInnerMockClass(true);
+         enclosingClassDescriptor = null;
       }
 
       return new EmptyVisitor()
@@ -124,7 +174,7 @@ public final class AnnotatedMockMethodCollector extends BaseMockCollector
       private MockState getMockState()
       {
          if (mockState == null) {
-            mockState = new MockState(realClass, mockNameAndDesc);
+            mockState = new MockState(mockMethods.realClass, mockNameAndDesc);
          }
 
          return mockState;
