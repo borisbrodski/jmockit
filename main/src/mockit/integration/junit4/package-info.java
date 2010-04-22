@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -43,10 +43,10 @@
  * executed, but before any {@code @After} methods are executed).
  * </li>
  * <li>
- * Any mock classes applied with the Core or Annotations API from inside a test method will be
- * discarded before the execution of the test method ends, so it is not necessary to call
- * {@link mockit.Mockit#tearDownMocks()} (or {@link mockit.Mockit#restoreAllOriginalDefinitions()}) at the end of
- * the test, be it from inside the test method itself or from an {@code @After} method.
+ * Any mock classes applied with the Annotations API from inside a test method will be discarded
+ * before the execution of the test method ends, so it is not necessary to call
+ * {@link mockit.Mockit#tearDownMocks()} at the end of the test, be it from inside the test method
+ * itself or from an {@code @After} method.
  * The same is <em>not</em> true for mocks applied in a {@code @Before} method, however: you
  * <em>will</em> need to explicitly tear down those mock classes in an {@code @After} method, so
  * that the mocked real classes are properly restored to their original definitions.

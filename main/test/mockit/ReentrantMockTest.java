@@ -1,6 +1,6 @@
 /*
- * JMockit Core/Annotations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Annotations
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -31,53 +31,9 @@ import static mockit.Mockit.*;
 
 public final class ReentrantMockTest
 {
-   @Test
-   public void callMockMethodUsingCoreAPI()
-   {
-      Mockit.redefineMethods(RealClass.class, MockClassForCoreAPI.class);
-      MockClassForCoreAPI.fakeIt = true;
-
-      String foo = new RealClass().foo();
-
-      assertEquals("fakevalue", foo);
-   }
-
-   @Test(expected = StackOverflowError.class)
-   public void callOriginalMethodUsingCoreAPI()
-   {
-      Mockit.redefineMethods(RealClass.class, new MockClassForCoreAPI());
-      MockClassForCoreAPI.fakeIt = false;
-
-      // This call will recurse infinitely.
-      String foo = new RealClass().foo();
-
-      assertEquals("realvalue", foo);
-   }
-
-   public static class MockClassForCoreAPI
-   {
-      private static boolean fakeIt;
-      public RealClass it;
-
-      @SuppressWarnings({"UnusedDeclaration"})
-      public String foo()
-      {
-         if (fakeIt) {
-            return "fakevalue";
-         }
-         else {
-            // Keeps calling the mock foo in infinite recursion.
-            return it.foo();
-         }
-      }
-   }
-
    public static class RealClass
    {
-      String foo()
-      {
-         return "realvalue";
-      }
+      String foo() { return "real value"; }
    }
 
    @MockClass(realClass = RealClass.class)
@@ -93,7 +49,7 @@ public final class ReentrantMockTest
             throw new IllegalStateException("null fakeIt");
          }
          else if (fakeIt) {
-            return "fakevalue";
+            return "fake value";
          }
          else {
             return it.foo();
@@ -109,7 +65,7 @@ public final class ReentrantMockTest
 
       String foo = new RealClass().foo();
 
-      assertEquals("fakevalue", foo);
+      assertEquals("fake value", foo);
    }
 
    @Test
@@ -120,7 +76,7 @@ public final class ReentrantMockTest
 
       String foo = new RealClass().foo();
 
-      assertEquals("realvalue", foo);
+      assertEquals("real value", foo);
    }
 
    @Test(expected = IllegalStateException.class)
@@ -152,6 +108,7 @@ public final class ReentrantMockTest
       public boolean removeShutdownHook(Thread hook)
       {
          if (hook == null) {
+            //noinspection AssignmentToMethodParameter
             hook = Thread.currentThread();
          }
 
@@ -208,7 +165,7 @@ public final class ReentrantMockTest
          synchronized (MultiThreadedMock.class) {
             if (nobodyEntered) {
                nobodyEntered = false;
-               MultiThreadedMock.class.wait();
+               MultiThreadedMock.class.wait(5000);
             }
             else {
                MultiThreadedMock.class.notifyAll();
@@ -242,7 +199,7 @@ public final class ReentrantMockTest
       thread1.join();
       thread2.join();
 
-      assertEquals("fakevalue", first.toString());
-      assertEquals("fakevalue", second.toString());
+      assertEquals("fake value", first.toString());
+      assertEquals("fake value", second.toString());
    }
 }

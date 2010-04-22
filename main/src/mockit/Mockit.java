@@ -62,11 +62,6 @@ import mockit.internal.util.*;
  * {@link #tearDownMocks(Class...)} / {@link #tearDownMocks()}.
  * </li>
  * <li>
- * <strong>Core API</strong> for state-oriented mocking on JDK 1.4, now obsolete and deprecated:
- * {@linkplain #redefineMethods(Class, Class)} and its several overloads, and
- * {@link #restoreAllOriginalDefinitions()} / {@link #restoreOriginalDefinition(Class...)}.
- * </li>
- * <li>
  * <strong>Proxy-based utilities</strong>:
  * {@link #newEmptyProxy(ClassLoader, Class)} and its overloads.
  * These are merely convenience methods that create empty implementation classes for one or more
@@ -88,131 +83,6 @@ public final class Mockit
    }
 
    private Mockit() {}
-
-   /**
-    * Same as {@link #redefineMethods(Class, Class)}, except that any mock methods and even mock
-    * constructors will be called on the given mock class instance, whenever the (redefined)
-    * corresponding real methods or constructors are called.
-    *
-    * @param allowDefaultConstructor indicates whether the public default constructor in the mock
-    * class is a mock for the default constructor in the real class
-    * @deprecated Use {@code @MockClass} and {@code setUpMocks(mock)} instead. Better yet, use {@link MockUp}.
-    */
-   @Deprecated
-   public static void redefineMethods(
-      Class<?> realClass, Object mock, boolean allowDefaultConstructor)
-   {
-      redefineMethods(realClass, mock, mock.getClass(), allowDefaultConstructor);
-   }
-
-   /**
-    * Same as {@link #redefineMethods(Class, Class)}, except for the extra parameter.
-    *
-    * @param allowDefaultConstructor indicates whether the public default constructor in the mock
-    * class is a mock for the default constructor in the real class
-    * @deprecated Use {@code @MockClass} and {@code setUpMocks(mockClass)} instead. Better yet, use {@link MockUp}.
-    */
-   @Deprecated
-   public static void redefineMethods(
-      Class<?> realClass, Class<?> mockClass, boolean allowDefaultConstructor)
-   {
-      redefineMethods(realClass, null, mockClass, allowDefaultConstructor);
-   }
-
-   /**
-    * Same as {@link #redefineMethods(Class, Class)}, for a given mock class instance.
-    * The mock methods will be called on this instance from the modified real methods.
-    *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java">Example</a>
-    * @deprecated Use {@code @MockClass} and {@code setUpMocks(mock)} instead. Better yet, use {@link MockUp}.
-    */
-   @Deprecated
-   public static void redefineMethods(Class<?> realClass, Object mock)
-   {
-      redefineMethods(realClass, mock, mock.getClass(), false);
-   }
-
-   /**
-    * Redefines methods and/or constructors in the real class with the corresponding methods or
-    * constructors in a mock class (in all documentation, wherever we mention a mock/real method,
-    * keep in mind that it also applies to constructors).
-    * <p/>
-    * For each call made during test execution to a mocked real method, the corresponding mock
-    * method is called instead. For an instance mock method, the mock class instance on which the
-    * call is made is created with the default constructor for the mock class, <strong>every
-    * time</strong> the mocked real method is called. If you want to reuse mock instances for all
-    * such calls you should pass an instance of the mock class instead of its {@code Class} object.
-    * <p/>
-    * For a <strong>mock method</strong> to be considered as <strong>corresponding</strong> to a
-    * given <strong>real method</strong>, it must have the same name, the exact same parameter types
-    * in the same order, and also the exact same return type. The throws clauses may differ in any
-    * way. Note also that the mock method can be static or not, independently of the real method
-    * being static or not.
-    * <p/>
-    * A constructor in the real class can be mocked by a corresponding <strong>mock
-    * constructor</strong> in the mock class, declared with the same signature.
-    * However, since a constructor can only be called on a freshly created instance, it is generally
-    * recommended to declare a mock method of name {@code $init} instead (which can also be
-    * {@code static}). This method should have {@code void} return type and must have the
-    * same declared parameters as the mocked constructor. It will be called for each new instance of
-    * the real class that is created through a call to that constructor, with whatever arguments are
-    * passed to it.
-    * <p/>
-    * <strong>Class initializers</strong> of the real class (one or more {@code static}
-    * initialization blocks plus all assignments to {@code static} fields) can be mocked by
-    * providing a mock method named {@code $clinit} in the mock class.
-    * This method should return {@code void} and have no declared parameters.
-    * It will called at most once, at the time the real class is initialized by the JVM (and since
-    * all static initializers for that class are mocked, the initialization will have no effect).
-    * <p/>
-    * In a mock class, each method intended as a mock for some real method must be public.
-    * Non-public methods in the mock class are allowed, but are not considered to be mocks.
-    * <p/>
-    * The mock class must not be private, being either public or defined in the same package as the
-    * real class, so that the modified methods in the real class can make valid calls.
-    * Note that anonymous inner class instances are accepted as mocks.
-    * <p/>
-    * Any constructor in the real class can be redefined by a corresponding public mock constructor,
-    * except the default no-args constructor. This restriction is only to avoid the inconvenience of
-    * having to explicitly define a non-public no-args constructor in the mock class, in the most
-    * common case where a mock for the default constructor is not wanted. If you want to mock the
-    * default constructor, then use the overload that takes a boolean parameter to indicate that.
-    * <p/>
-    * Mock methods and even constructors can gain access to the instance of the real class on which
-    * the corresponding real method or constructor was called. This requires that the mock class
-    * defines an instance field with name <strong>"it"</strong> of the same type as the real class,
-    * and accessible from that real class (in general, this means the field will have to be
-    * {@code public}). Such a field will always be set to the appropriate real class instance,
-    * whenever a mock method is called. Note that through this field the mock class will be able to
-    * call any accessible instance method on the real class, including the real method corresponding
-    * to the current mock method. In this case, however, such calls are not allowed because they
-    * lead to infinite recursion, with the mock calling itself indirectly through the redefined real
-    * method. If you really need to call the real method from its mock method, then you will have to
-    * use the <em>JMockit Annotations</em> API, such as {@link #setUpMocks(Object...)}, using the
-    * {@link Mock} annotation with {@code reentrant = true}.
-    *
-    * @param realClass the class from production code to be mocked, which is used by code under test
-    * @param mockClass the class containing the mock methods that will replace methods of same
-    *                  signature in the real class
-    *
-    * @throws IllegalArgumentException if the mock class is an inner (non static) class, or if the
-    * mock class contains a public method for which no corresponding method is found in the real
-    * class
-    *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/test/jmockit/tutorial/domain/ServiceA_CoreAPI_Test.java">Example</a>
-    * @deprecated Use {@code @MockClass} and {@code setUpMocks(mockClass)} instead. Better yet, use {@link MockUp}.
-    */
-   @Deprecated
-   public static void redefineMethods(Class<?> realClass, Class<?> mockClass)
-   {
-      redefineMethods(realClass, null, mockClass, false);
-   }
-
-   private static void redefineMethods(
-      Class<?> realClass, Object mock, Class<?> mockClass, boolean allowDefaultConstructor)
-   {
-      new RedefinitionEngine(realClass, mock, mockClass, allowDefaultConstructor).redefineMethods();
-   }
 
    /**
     * Stubs out all methods, constructors, and static initializers in the given classes, so that
@@ -336,14 +206,44 @@ public final class Mockit
     * mocks will remain in effect until they are explicitly {@linkplain #tearDownMocks(Class...)
     * torn down} in an "after"/"tearDown" method.
     * <p/>
-    * Any invocation count constraints specified on the mocks will be automatically verified after
-    * the code under test is executed.
+    * Any invocation count constraints specified on mock methods will be automatically verified
+    * after the code under test is executed.
     * <p/>
-    * For each given mock class or instance, method redefinition occurs as if
-    * {@link #redefineMethods(Class, Class)} or {@link #redefineMethods(Class, Object)} was called,
-    * respectively, except that the rules for determining which methods are mocks are different
-    * (that is, in this case only methods or constructors annotated as mocks are considered to be
-    * so).
+    * For each call made during test execution to a <em>mocked</em> method, the corresponding
+    * <em>mock</em> method is called instead.
+    * A mock method must have the same signature as the corresponding mocked/real method.
+    * The return type of the mock method must be the same exact type or a compatible one.
+    * The {@code throws} clause may differ in any way. Note also that the mock method can be static
+    * or not, independently of the real method being static or not.
+    * <p/>
+    * A constructor in the real class can be mocked by a corresponding <strong>mock
+    * constructor</strong> in the mock class, declared with the same signature.
+    * However, since a constructor can only be called on a freshly created instance, it is generally
+    * recommended to declare a mock method of name {@code $init} instead (which can also be
+    * {@code static}). This method should have {@code void} return type and must have the
+    * same declared parameters as the mocked constructor. It will be called for each new instance of
+    * the real class that is created through a call to that constructor, with whatever arguments are
+    * passed to it.
+    * <p/>
+    * <strong>Class initializers</strong> of the real class (one or more {@code static}
+    * initialization blocks plus all assignments to {@code static} fields) can be mocked by
+    * providing a mock method named {@code $clinit} in the mock class.
+    * This method should return {@code void} and have no declared parameters.
+    * It will be called at most once, at the time the real class is initialized by the JVM (and
+    * since all static initializers for that class are mocked, the initialization will have no
+    * effect).
+    * <p/>
+    * Mock methods can gain access to the instance of the real class on which the corresponding real
+    * method or constructor was called. This requires the mock class to define an instance field of
+    * name <strong>"it"</strong>, the same type as the real class, and accessible from that class
+    * (in general, this means the field will have to be {@code public}). Such a field will always be
+    * set to the appropriate real class instance, whenever a mock method is called. Note that
+    * through this field the mock class will be able to call any accessible instance method on the
+    * real class, including the real method corresponding to the current mock method. In this case,
+    * however, such calls are not allowed by default because they lead to infinite recursion, with
+    * the mock calling itself indirectly through the redefined real method. If the real method needs
+    * to be called from the mock method, then the latter must be declared as
+    * {@linkplain mockit.Mock#reentrant reentrant}.
     *
     * @param mockClassesOrInstances one or more classes ({@code Class} objects) or instances of
     * classes which define arbitrary methods and/or constructors, where the ones annotated as
@@ -541,8 +441,8 @@ public final class Mockit
     * method to the last "after class" method), and the current test suite.
     * <p/>
     * Notice that a call to this method will tear down <em>all</em> mock classes that were applied
-    * through use of the Annotations or Core API that are still in effect, as well as any mock
-    * classes or stubs applied to the current test class through {@code @UsingMocksAndStubs}.
+    * through use of the Annotations API that are still in effect, as well as any mock classes or
+    * stubs applied to the current test class through {@code @UsingMocksAndStubs}.
     * In other words, it would effectively prevent mocks to be set up at the test class and test
     * suite levels. So, use it only if necessary and if it won't discard mock classes that should
     * remain in effect. Consider using {@link #tearDownMocks(Class...)} instead, which lets you
@@ -555,8 +455,13 @@ public final class Mockit
     */
    public static void tearDownMocks()
    {
-      //noinspection deprecation
-      restoreAllOriginalDefinitions();
+      MockFixture mockFixture = TestRun.mockFixture();
+
+      Set<Class<?>> redefinedClasses = mockFixture.getRedefinedClasses();
+      mockFixture.restoreAndRemoveRedefinedClasses(redefinedClasses);
+      assert mockFixture.getRedefinedClassCount() == 0;
+
+      TestRun.getMockClasses().getRegularMocks().discardInstances();
    }
 
    /**
@@ -576,60 +481,15 @@ public final class Mockit
     * In practice, this method should only be used inside "after" methods ({@code tearDown()} in a
     * JUnit 3.8 test class), since mock classes set up in a "before" or {@code setUp()} method are
     * <em>not</em> automatically discarded.
+    *
+    * @param realClasses one or more real classes from production code, which may have mocked
+    * methods
     */
    public static void tearDownMocks(Class<?>... realClasses)
-   {
-      //noinspection deprecation
-      restoreOriginalDefinition(realClasses);
-   }
-
-   /**
-    * Restores a given set of classes to their original definitions. This is equivalent to calling
-    * {@code redefineMethods(realClass, realClass)}.
-    * <p/>
-    * In practice, this method should only be used inside "after" methods ({@code tearDown()} with
-    * JUnit 3.8, {@code @After}-annotated with JUnit 4, and {@code @AfterMethod}-annotated with
-    * TestNG). 
-    * Otherwise, it is redundant because JMockit will automatically restore all classes mocked by a
-    * test method at the end of that test method's execution, as well as all classes mocked for the
-    * test class as a whole (through a "before class" method or an {@code @UsingMocksAndStubs}
-    * annotation) before the first test in the next test class is executed.
-    *
-    * @param realClasses one or more real classes from production code, which may have had methods
-    * redefined
-    * @deprecated Use {@code tearDownMocks(realClasses)} instead.
-    */
-   @Deprecated
-   public static void restoreOriginalDefinition(Class<?>... realClasses)
    {
       Set<Class<?>> classesToRestore = new HashSet<Class<?>>();
       Collections.addAll(classesToRestore, realClasses);
       TestRun.mockFixture().restoreAndRemoveRedefinedClasses(classesToRestore);
-   }
-
-   /**
-    * {@linkplain #restoreOriginalDefinition Restores the original definitions} for all the classes
-    * which have been redefined, if any. Once this method executes, all "real" classes will be back
-    * to the definitions they had at JVM startup.
-    * <p/>
-    * In practice, this method should only be used if all mocked classes needs to be restored in the
-    * middle of some test. Otherwise, it is unnecessary because JMockit will automatically restore
-    * all classes mocked by a test at the end of that test, as well as all classes mocked for the
-    * test class as a whole (eg, in a {@code @BeforeClass} JUnit method) before the first test in
-    * the next test class is executed.
-    *
-    * @deprecated Use {@code tearDownMocks()} instead.
-    */
-   @Deprecated
-   public static void restoreAllOriginalDefinitions()
-   {
-      MockFixture mockFixture = TestRun.mockFixture();
-
-      Set<Class<?>> redefinedClasses = mockFixture.getRedefinedClasses();
-      mockFixture.restoreAndRemoveRedefinedClasses(redefinedClasses);
-      assert mockFixture.getRedefinedClassCount() == 0;
-
-      TestRun.getMockClasses().getRegularMocks().discardInstances();
    }
 
    /**

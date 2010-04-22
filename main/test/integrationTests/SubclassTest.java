@@ -1,6 +1,6 @@
 /*
- * JMockit Core
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -102,24 +102,23 @@ public final class SubclassTest
    }
 
    @Test
-   public void mockSubclassUsingRedefineMethods()
+   public void mockSubclassUsingMockUpClass()
    {
-      redefineMethods(SubClass.class, SubClassMock.class);
+      new MockUp<SubClass>()
+      {
+         @Mock
+         void $init(String name)
+         {
+            assertNotNull(name);
+            mockConstructorCalled = true;
+         }
+      };
 
       new SubClass("test");
 
       assertTrue(superClassConstructorCalled);
       assertFalse(subClassConstructorCalled);
       assertTrue(mockConstructorCalled);
-   }
-
-   public static final class SubClassMock
-   {
-      public SubClassMock(String name)
-      {
-         assertNotNull(name);
-         mockConstructorCalled = true;
-      }
    }
 
    @Test

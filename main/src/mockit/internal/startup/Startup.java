@@ -101,9 +101,7 @@ public final class Startup
     * map for storing the transformed classes; and the second of type <code>String</code>, which
     * will receive any tool arguments. </li> <li>An <strong>external mock</strong>, which can be any
     * class with a public no-args constructor. Such a class will be used to redefine one or more
-    * real classes, in a manner similar to the behavior of
-    * {@link mockit.Mockit#redefineMethods(Class, Class)}. The real classes can be specified in one of two
-    * ways: by providing a regular
+    * real classes. The real classes can be specified in one of two ways: by providing a regular
     * expression matching class names as the tool arguments, or by annotating the external mock
     * class with {@link mockit.MockClass}.</li> </ol>
     * <p/>

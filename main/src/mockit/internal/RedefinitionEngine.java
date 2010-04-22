@@ -131,13 +131,6 @@ public final class RedefinitionEngine
    }
 
    public RedefinitionEngine(
-      Class<?> realClass, Object mock, Class<?> mockClass, boolean allowDefaultConstructor)
-   {
-      this(realClass, mockClass, mock, new MockMethods());
-      new MockMethodCollector(mockMethods, allowDefaultConstructor).collectMockMethods(mockClass);
-   }
-
-   public RedefinitionEngine(
       Object mock, Class<?> mockClass, boolean ignoreRealClassIfNotInClasspath)
    {
       this(getRealClass(mockClass, ignoreRealClassIfNotInClasspath), mock, mockClass);
