@@ -31,7 +31,6 @@ import java.util.Map.*;
 import mockit.*;
 import mockit.external.asm.*;
 import mockit.internal.annotations.*;
-import mockit.internal.core.*;
 import mockit.internal.filtering.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.*;
@@ -43,7 +42,7 @@ public final class RedefinitionEngine
    private final Class<?> mockClass;
    private final Instantiation instantiation;
    private final MockingConfiguration mockingConfiguration;
-   private final MockMethods mockMethods;
+   private final AnnotatedMockMethods mockMethods;
    private Object mock;
 
    public RedefinitionEngine()
@@ -68,9 +67,8 @@ public final class RedefinitionEngine
          instantiation = metadata.instantiation();
          mockingConfiguration = createMockingConfiguration(metadata);
 
-         AnnotatedMockMethods annotatedMocks = new AnnotatedMockMethods(realClass);
-         new AnnotatedMockMethodCollector(annotatedMocks).collectMockMethods(mockClass);
-         mockMethods = annotatedMocks;
+         mockMethods = new AnnotatedMockMethods(realClass);
+         new AnnotatedMockMethodCollector(mockMethods).collectMockMethods(mockClass);
 
          createMockInstanceAccordingToInstantiation();
       }
@@ -106,12 +104,11 @@ public final class RedefinitionEngine
    public RedefinitionEngine(Class<?> realClass, Object mock, Class<?> mockClass)
    {
       this(realClass, mockClass, mock, new AnnotatedMockMethods(realClass));
-      new AnnotatedMockMethodCollector((AnnotatedMockMethods) mockMethods).collectMockMethods(
-         mockClass);
+      new AnnotatedMockMethodCollector(mockMethods).collectMockMethods(mockClass);
    }
 
    public RedefinitionEngine(
-      Class<?> realClass, Class<?> mockClass, Object mock, MockMethods mockMethods)
+      Class<?> realClass, Class<?> mockClass, Object mock, AnnotatedMockMethods mockMethods)
    {
       this.realClass = realClass;
       this.mockClass = mockClass;
@@ -208,24 +205,15 @@ public final class RedefinitionEngine
    private byte[] modifyRealClass(boolean forStartupMock)
    {
       ClassReader rcReader = createClassReaderForRealClass();
-      ClassWriter rcWriter;
 
-      if (mockMethods instanceof AnnotatedMockMethods) {
-         AnnotationsModifier modifier = new AnnotationsModifier(
-            rcReader, realClass, mock, (AnnotatedMockMethods) mockMethods, mockingConfiguration,
-            forStartupMock);
+      AnnotationsModifier modifier = new AnnotationsModifier(
+         rcReader, realClass, mock, mockMethods, mockingConfiguration, forStartupMock);
 
-         if (mock == null && instantiation == Instantiation.PerMockedInstance) {
-            modifier.useOneMockInstancePerMockedInstance(mockClass);
-         }
-
-         rcWriter = modifier;
-      }
-      else {
-         rcWriter = new RealClassModifier(rcReader, realClass, mock, mockMethods, forStartupMock);
+      if (mock == null && instantiation == Instantiation.PerMockedInstance) {
+         modifier.useOneMockInstancePerMockedInstance(mockClass);
       }
 
-      return modifyRealClass(rcReader, rcWriter, mockClass.getName());
+      return modifyRealClass(rcReader, modifier, mockClass.getName());
    }
 
    private ClassReader createClassReaderForRealClass()

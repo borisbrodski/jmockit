@@ -24,13 +24,11 @@
  */
 package mockit.internal.core;
 
-import java.lang.reflect.*;
-
 import static mockit.external.asm.Opcodes.*;
 
 import mockit.external.asm.*;
-import mockit.external.asm.Type;
 import mockit.internal.*;
+import mockit.internal.annotations.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
@@ -47,7 +45,7 @@ import mockit.internal.util.*;
 public class RealClassModifier extends BaseClassModifier
 {
    private final String itFieldDesc;
-   private final MockMethods mockMethods;
+   private final AnnotatedMockMethods mockMethods;
    private final int mockInstanceIndex;
    private final boolean forStartupMock;
 
@@ -80,25 +78,7 @@ public class RealClassModifier extends BaseClassModifier
     * class, which cannot be instantiated since the enclosing instance is not known
     */
    public RealClassModifier(
-      ClassReader cr, Class<?> realClass, Object mock, MockMethods mockMethods,
-      boolean forStartupMock)
-   {
-      this(cr, getItFieldDescriptor(realClass), mock, mockMethods, forStartupMock);
-      setUseMockingBridge(realClass.getClassLoader());
-   }
-
-   protected static String getItFieldDescriptor(Class<?> realClass)
-   {
-      if (Proxy.isProxyClass(realClass)) {
-         //noinspection AssignmentToMethodParameter
-         realClass = realClass.getInterfaces()[0];
-      }
-
-      return Type.getDescriptor(realClass);
-   }
-
-   public RealClassModifier(
-      ClassReader cr, String realClassDesc, Object mock, MockMethods mockMethods,
+      ClassReader cr, String realClassDesc, Object mock, AnnotatedMockMethods mockMethods,
       boolean forStartupMock)
    {
       super(cr);

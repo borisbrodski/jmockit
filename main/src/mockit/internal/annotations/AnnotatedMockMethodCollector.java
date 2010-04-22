@@ -1,6 +1,6 @@
 /*
  * JMockit Annotations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -134,7 +134,7 @@ public final class AnnotatedMockMethodCollector extends BaseMockCollector
       public void visitEnd()
       {
          if (mockState != null) {
-            ((AnnotatedMockMethods) mockMethods).addMockState(mockState);
+            mockMethods.addMockState(mockState);
          }
       }
    }

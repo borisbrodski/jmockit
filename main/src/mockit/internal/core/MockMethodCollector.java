@@ -28,6 +28,7 @@ import static java.lang.reflect.Modifier.*;
 
 import mockit.external.asm.*;
 import mockit.internal.*;
+import mockit.internal.annotations.*;
 
 /**
  * Responsible for collecting the signatures of all public methods and constructors (except the
@@ -41,7 +42,7 @@ public final class MockMethodCollector extends BaseMockCollector
     */
    private final boolean allowDefaultConstructor;
 
-   public MockMethodCollector(MockMethods mockMethods, boolean allowDefaultConstructor)
+   public MockMethodCollector(AnnotatedMockMethods mockMethods, boolean allowDefaultConstructor)
    {
       super(mockMethods);
       this.allowDefaultConstructor = allowDefaultConstructor;

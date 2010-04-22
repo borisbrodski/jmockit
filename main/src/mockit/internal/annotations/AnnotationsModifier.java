@@ -42,7 +42,7 @@ public final class AnnotationsModifier extends RealClassModifier
    private final AnnotatedMockMethods annotatedMocks;
    private final MockingConfiguration mockingCfg;
 
-   private boolean useMockingBridgeForUpdatingMockState;
+   private final boolean useMockingBridgeForUpdatingMockState;
    private boolean mockIsReentrant;
    private Type mockClassType;
 
@@ -66,11 +66,14 @@ public final class AnnotationsModifier extends RealClassModifier
       }
    }
 
-   public AnnotationsModifier(ClassReader cr, String realClassDesc, AnnotatedMockMethods mocks)
+   private static String getItFieldDescriptor(Class<?> realClass)
    {
-      super(cr, realClassDesc, null, mocks, true);
-      annotatedMocks = mocks;
-      mockingCfg = null ;
+      if (Proxy.isProxyClass(realClass)) {
+         //noinspection AssignmentToMethodParameter
+         realClass = realClass.getInterfaces()[0];
+      }
+
+      return Type.getDescriptor(realClass);
    }
 
    public void useOneMockInstancePerMockedInstance(Class<?> mockClass)

@@ -1,6 +1,6 @@
 /*
  * JMockit Core
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -22,7 +22,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package mockit.internal.core;
+package mockit.internal.annotations;
 
 import java.util.*;
 
@@ -30,16 +30,17 @@ import static org.junit.Assert.*;
 import org.junit.*;
 
 import mockit.external.asm.*;
+import mockit.internal.core.*;
 
 import static mockit.external.asm.Opcodes.*;
 
 public final class MockMethodCollectorTest
 {
-   private final MockMethods mockMethods = new MockMethods();
-   private final MockMethodCollector collector = new MockMethodCollector(mockMethods, false);
+   final AnnotatedMockMethods mockMethods = new AnnotatedMockMethods(null);
+   final MockMethodCollector collector = new MockMethodCollector(mockMethods, false);
 
    @Test
-   public void testVisitPublicStaticVoidMethodWithTwoParameters()
+   public void visitPublicStaticVoidMethodWithTwoParameters()
    {
       assertVisitMethod(ACC_PUBLIC + ACC_STATIC, "someMethod", "(IL)V");
    }
@@ -56,19 +57,19 @@ public final class MockMethodCollectorTest
    }
 
    @Test
-   public void testVisitInstanceStringMethodWithNoParameters()
+   public void visitInstanceStringMethodWithNoParameters()
    {
       assertVisitMethod(ACC_PUBLIC, "someMethod", "()Ljava/lang/String;");
    }
 
    @Test
-   public void testVisitPublicConstructorWithOneParameter()
+   public void visitPublicConstructorWithOneParameter()
    {
       assertVisitMethod(ACC_PUBLIC, "<init>", "(J)V");
    }
 
    @Test
-   public void testVisitDefaultConstructor()
+   public void visitDefaultConstructor()
    {
       assertVisitWhatIsNotAllowedToBeAMock(ACC_PUBLIC, "<init>", "()V");
    }
@@ -84,37 +85,37 @@ public final class MockMethodCollectorTest
    }
 
    @Test
-   public void testVisitNonPublicConstructor()
+   public void visitNonPublicConstructor()
    {
       assertVisitWhatIsNotAllowedToBeAMock(ACC_PROTECTED, "<init>", "()V");
    }
 
    @Test
-   public void testVisitSyntheticMethod()
+   public void visitSyntheticMethod()
    {
       assertVisitWhatIsNotAllowedToBeAMock(ACC_SYNTHETIC, "method", "()V");
    }
 
    @Test
-   public void testVisitBridgeMethod()
+   public void visitBridgeMethod()
    {
       assertVisitWhatIsNotAllowedToBeAMock(ACC_BRIDGE, "method", "()V");
    }
 
    @Test
-   public void testVisitAbstractMethod()
+   public void visitAbstractMethod()
    {
       assertVisitWhatIsNotAllowedToBeAMock(ACC_ABSTRACT, "method", "()V");
    }
 
    @Test
-   public void testVisitNativeMethod()
+   public void visitNativeMethod()
    {
       assertVisitWhatIsNotAllowedToBeAMock(ACC_NATIVE, "method", "()V");
    }
 
    @Test
-   public void testVisitSecondMethod()
+   public void visitSecondMethod()
    {
       String firstMethodName = "aMethod";
       String firstMethodDesc = "()V";

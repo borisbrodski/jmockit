@@ -1,6 +1,6 @@
 /*
  * JMockit Core
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -26,7 +26,7 @@ package mockit.internal;
 
 import mockit.external.asm.*;
 import mockit.external.asm.commons.*;
-import mockit.internal.core.*;
+import mockit.internal.annotations.*;
 
 import static mockit.external.asm.Opcodes.*;
 
@@ -36,11 +36,11 @@ public class BaseMockCollector extends EmptyVisitor
       ACC_BRIDGE + ACC_SYNTHETIC + ACC_ABSTRACT + ACC_NATIVE;
    private static final int INVALID_FIELD_ACCESSES = ACC_FINAL + ACC_STATIC + ACC_SYNTHETIC;
 
-   protected final MockMethods mockMethods;
+   protected final AnnotatedMockMethods mockMethods;
    private String enclosingClassDescriptor;
    protected boolean collectingFromSuperClass;
 
-   public BaseMockCollector(MockMethods mockMethods)
+   public BaseMockCollector(AnnotatedMockMethods mockMethods)
    {
       this.mockMethods = mockMethods;
    }
