@@ -1,6 +1,6 @@
 /*
  * JMockit Core
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -35,7 +35,6 @@ final class ToolLoader implements ClassVisitor
 {
    private final String toolClassName;
    private final String toolArgs;
-   private boolean annotatedStartupMock;
    private boolean loadClassFileTransformer;
 
    ToolLoader(String toolClassName, String toolArgs)
@@ -66,10 +65,6 @@ final class ToolLoader implements ClassVisitor
 
    public AnnotationVisitor visitAnnotation(String desc, boolean visible)
    {
-      if ("Lmockit/MockClass;".equals(desc)) {
-         annotatedStartupMock = true;
-      }
-
       return new EmptyVisitor();
    }
 
@@ -88,13 +83,18 @@ final class ToolLoader implements ClassVisitor
       if (loadClassFileTransformer) {
          createAndInstallSpecifiedClassFileTransformer();
       }
-      else if (annotatedStartupMock && toolArgs == null) {
+      else {
          setUpStartupMock();
       }
-      else if (toolArgs != null && toolArgs.length() > 0) {
-         Startup.instrumentation().addTransformer(
-            new ExternalMockTransformer(toolClassName, annotatedStartupMock, toolArgs));
-      }
+   }
+
+   private void createAndInstallSpecifiedClassFileTransformer()
+   {
+      Class<ClassFileTransformer> transformerClass = Utilities.loadClass(toolClassName);
+      ClassFileTransformer transformer =
+         Utilities.newInstance(transformerClass, new Class<?>[] {String.class}, toolArgs);
+
+      Startup.instrumentation().addTransformer(transformer);
    }
 
    private void setUpStartupMock()
@@ -112,14 +112,5 @@ final class ToolLoader implements ClassVisitor
          // Real class not in the classpath, so we ignore the startup mock.
          System.out.println(e);
       }
-   }
-
-   private void createAndInstallSpecifiedClassFileTransformer()
-   {
-      Class<ClassFileTransformer> transformerClass = Utilities.loadClass(toolClassName);
-      ClassFileTransformer transformer =
-         Utilities.newInstance(transformerClass, new Class<?>[] {String.class}, toolArgs);
-
-      Startup.instrumentation().addTransformer(transformer);
    }
 }
