@@ -98,18 +98,7 @@ public final class AnnotationsModifier extends BaseClassModifier
       annotatedMocks = mockMethods;
       mockingCfg = mockingConfiguration;
       this.forStartupMock = forStartupMock;
-
-      if (mock != null) {
-         mockInstanceIndex = TestRun.getMockClasses().getMocks(forStartupMock).addMock(mock);
-      }
-      else if (!mockMethods.isInnerMockClass()) {
-         mockInstanceIndex = -1;
-      }
-      else {
-         throw new IllegalArgumentException(
-            "An inner mock class cannot be instantiated without its enclosing instance; " +
-            "you must either pass a mock instance, or make the class static");
-      }
+      mockInstanceIndex = getMockInstanceIndex(mock);
 
       setUseMockingBridge(realClass.getClassLoader());
       useMockingBridgeForUpdatingMockState = useMockingBridge;
@@ -122,7 +111,7 @@ public final class AnnotationsModifier extends BaseClassModifier
       }
    }
 
-   private static String getItFieldDescriptor(Class<?> realClass)
+   private String getItFieldDescriptor(Class<?> realClass)
    {
       if (Proxy.isProxyClass(realClass)) {
          //noinspection AssignmentToMethodParameter
@@ -130,6 +119,20 @@ public final class AnnotationsModifier extends BaseClassModifier
       }
 
       return Type.getDescriptor(realClass);
+   }
+
+   private int getMockInstanceIndex(Object mock)
+   {
+      if (mock != null) {
+         return TestRun.getMockClasses().getMocks(forStartupMock).addMock(mock);
+      }
+      else if (!annotatedMocks.isInnerMockClass()) {
+         return -1;
+      }
+
+      throw new IllegalArgumentException(
+         "An inner mock class cannot be instantiated without its enclosing instance; " +
+         "you must either pass a mock instance, or make the class static");
    }
 
    public void useOneMockInstancePerMockedInstance(Class<?> mockClass)
@@ -285,41 +288,10 @@ public final class AnnotationsModifier extends BaseClassModifier
       mw.visitMethodInsn(INVOKESPECIAL, realSuperClassName, "<init>", constructorDesc);
    }
 
-   private void obtainMockInstanceForInvocation(int access, String mockClassName)
-   {
-      if (mockClassType == null || Modifier.isStatic(access)) {
-         obtainMockInstanceForInvocation2(mockClassName);
-      }
-      else {
-         generateGetMockCallWithMockClassAndMockedInstance();
-      }
-   }
-
-   private void obtainMockInstanceForInvocation2(String mockClassName)
-   {
-      generateMockObjectInstantiation();
-      mw.visitMethodInsn(INVOKESPECIAL, mockClassName, "<init>", "()V");
-   }
-
    private void generateMockObjectInstantiation()
    {
-      mw.visitTypeInsn(NEW, getMockClassInternalName());
+      mw.visitTypeInsn(NEW, annotatedMocks.getMockClassInternalName());
       mw.visitInsn(DUP);
-   }
-
-   private String getMockClassInternalName()
-   {
-      return annotatedMocks.getMockClassInternalName();
-   }
-
-   private void generateGetMockCallWithMockClassAndMockedInstance()
-   {
-      mw.visitLdcInsn(mockClassType);
-      mw.visitVarInsn(ALOAD, 0); // loads "this" onto the operand stack
-      mw.visitMethodInsn(
-         INVOKESTATIC, "mockit/internal/state/TestRun", "getMock",
-         "(Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;");
-      mw.visitTypeInsn(CHECKCAST, getMockClassInternalName());
    }
 
    private void generateCallToMock(int access, String desc)
@@ -409,8 +381,8 @@ public final class AnnotationsModifier extends BaseClassModifier
    {
       if (useMockingBridge) {
          generateCallToMockingBridge(
-            MockingBridge.CALL_CONSTRUCTOR_MOCK, getMockClassInternalName(), access, mockName,
-            methodOrConstructorDesc, null);
+            MockingBridge.CALL_CONSTRUCTOR_MOCK, annotatedMocks.getMockClassInternalName(), access,
+            mockName, methodOrConstructorDesc, null);
          return;
       }
 
@@ -420,14 +392,15 @@ public final class AnnotationsModifier extends BaseClassModifier
       initialVar = 1;
       generateMethodOrConstructorArguments();
       mw.visitMethodInsn(
-         INVOKESPECIAL, getMockClassInternalName(), "<init>", methodOrConstructorDesc);
+         INVOKESPECIAL, annotatedMocks.getMockClassInternalName(), "<init>",
+         methodOrConstructorDesc);
 
       mw.visitInsn(POP);
    }
 
    private void generateStaticMethodCall(int access)
    {
-      String mockClassName = getMockClassInternalName();
+      String mockClassName = annotatedMocks.getMockClassInternalName();
 
       if (useMockingBridge) {
          generateCallToMockingBridge(
@@ -444,18 +417,16 @@ public final class AnnotationsModifier extends BaseClassModifier
 
    private void generateInstanceMethodCall(int access)
    {
-      String mockClassName = getMockClassInternalName();
-
       if (useMockingBridge) {
          generateCallToMockingBridge(
-            MockingBridge.CALL_INSTANCE_MOCK, mockClassName, access, mockName,
-            methodOrConstructorDesc, mockInstanceIndex);
+            MockingBridge.CALL_INSTANCE_MOCK, annotatedMocks.getMockClassInternalName(), access,
+            mockName, methodOrConstructorDesc, mockInstanceIndex);
          return;
       }
 
       if (mockInstanceIndex < 0) {
          // No mock instance available yet.
-         obtainMockInstanceForInvocation(access, mockClassName);
+         obtainMockInstanceForInvocation(access);
       }
       else {
          // A mock instance is available, so retrieve it from the global list.
@@ -469,13 +440,35 @@ public final class AnnotationsModifier extends BaseClassModifier
       generateMockInstanceMethodInvocationWithRealMethodArgs(access);
    }
 
+   private void obtainMockInstanceForInvocation(int access)
+   {
+      if (mockClassType == null || Modifier.isStatic(access)) {
+         generateMockObjectInstantiation();
+         mw.visitMethodInsn(
+            INVOKESPECIAL, annotatedMocks.getMockClassInternalName(), "<init>", "()V");
+      }
+      else {
+         generateGetMockCallWithMockClassAndMockedInstance();
+      }
+   }
+
+   private void generateGetMockCallWithMockClassAndMockedInstance()
+   {
+      mw.visitLdcInsn(mockClassType);
+      mw.visitVarInsn(ALOAD, 0); // loads "this" onto the operand stack
+      mw.visitMethodInsn(
+         INVOKESTATIC, "mockit/internal/state/TestRun", "getMock",
+         "(Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;");
+      mw.visitTypeInsn(CHECKCAST, annotatedMocks.getMockClassInternalName());
+   }
+
    private void generateGetMockCallWithMockInstanceIndex()
    {
       mw.visitIntInsn(SIPUSH, mockInstanceIndex);
       String methodName = forStartupMock ? "getStartupMock" : "getMock";
       mw.visitMethodInsn(
          INVOKESTATIC, "mockit/internal/state/TestRun", methodName, "(I)Ljava/lang/Object;");
-      mw.visitTypeInsn(CHECKCAST, getMockClassInternalName());
+      mw.visitTypeInsn(CHECKCAST, annotatedMocks.getMockClassInternalName());
    }
 
    private void generateItFieldSetting()
@@ -490,7 +483,7 @@ public final class AnnotationsModifier extends BaseClassModifier
       mw.visitVarInsn(ASTORE, var); // stores the mock instance into local variable
       mw.visitVarInsn(ALOAD, var);  // loads the mock instance onto the operand stack
       mw.visitVarInsn(ALOAD, 0); // loads "this" onto the operand stack
-      mw.visitFieldInsn(PUTFIELD, getMockClassInternalName(), "it", itFieldDesc);
+      mw.visitFieldInsn(PUTFIELD, annotatedMocks.getMockClassInternalName(), "it", itFieldDesc);
       mw.visitVarInsn(ALOAD, var);  // again loads the mock instance onto the stack
    }
 
@@ -499,7 +492,7 @@ public final class AnnotationsModifier extends BaseClassModifier
       initialVar = initialLocalVariableIndexForRealMethod(access);
       String desc = generateInvocationArgumentIfNeeded();
       generateMethodOrConstructorArguments();
-      mw.visitMethodInsn(INVOKEVIRTUAL, getMockClassInternalName(), mockName, desc);
+      mw.visitMethodInsn(INVOKEVIRTUAL, annotatedMocks.getMockClassInternalName(), mockName, desc);
    }
 
    private int initialLocalVariableIndexForRealMethod(int access)
