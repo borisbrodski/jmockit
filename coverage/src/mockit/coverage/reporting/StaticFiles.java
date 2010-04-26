@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -52,8 +52,8 @@ final class StaticFiles
          return;
       }
 
-      FileOutputStream output = new FileOutputStream(outputFile);
-      InputStream input = StaticFiles.class.getResourceAsStream(fileName);
+      OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile));
+      InputStream input = new BufferedInputStream(StaticFiles.class.getResourceAsStream(fileName));
 
       try {
          int b;

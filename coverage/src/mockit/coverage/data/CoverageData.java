@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -101,7 +101,8 @@ public final class CoverageData implements Serializable
    public static CoverageData readDataFromFile(File dataFile)
       throws IOException, ClassNotFoundException
    {
-      ObjectInputStream input = new ObjectInputStream(new FileInputStream(dataFile));
+      ObjectInputStream input =
+         new ObjectInputStream(new BufferedInputStream(new FileInputStream(dataFile)));
 
       try {
          return (CoverageData) input.readObject();
@@ -113,7 +114,8 @@ public final class CoverageData implements Serializable
 
    public void writeDataToFile(File dataFile) throws IOException
    {
-      ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(dataFile));
+      ObjectOutputStream output =
+         new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(dataFile)));
 
       try {
          output.writeObject(this);
