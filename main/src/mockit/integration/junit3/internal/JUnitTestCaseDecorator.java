@@ -146,19 +146,16 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
             runTestMethod.invoke(it);
          }
          else {
-            //noinspection NestedTryStatement
-            try {
-               testMethod.invoke(it, args);
-            }
-            catch (InvocationTargetException e) {
-               e.fillInStackTrace();
-               throw e.getTargetException();
-            }
-            catch (IllegalAccessException e) {
-               e.fillInStackTrace();
-               throw e;
-            }
+            testMethod.invoke(it, args);
          }
+      }
+      catch (InvocationTargetException e) {
+         e.fillInStackTrace();
+         throw e.getTargetException();
+      }
+      catch (IllegalAccessException e) {
+         e.fillInStackTrace();
+         throw e;
       }
       finally {
          savePoint.rollback();
