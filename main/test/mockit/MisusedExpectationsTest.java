@@ -218,4 +218,22 @@ public final class MisusedExpectationsTest
       assertNull(mock.doSomething(false));
       assertEquals("first", mock.doSomething(true));
    }
+
+   @BeforeClass
+   public static void recordExpectationsInStaticContext()
+   {
+      try {
+         new NonStrictExpectations()
+         {
+            Blah blah;
+
+            {
+               blah.doSomething(anyBoolean); result = "invalid";
+            }
+         };
+      }
+      catch (IllegalStateException ignored) {
+         // OK
+      }
+   }
 }

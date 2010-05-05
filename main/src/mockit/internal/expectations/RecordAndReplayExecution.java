@@ -72,6 +72,7 @@ public final class RecordAndReplayExecution
       redefinitions = null;
       typesAndTargetObjects = new HashMap<Type, Object>(1);
       dynamicPartialMocking = null;
+      validateRecordingContext();
       validateThereIsAtLeastOneMockedTypeInScope();
       discoverDuplicateMockedTypesForAutomaticMockInstanceMatching();
       replayPhase = new ReplayPhase(this);
@@ -80,6 +81,13 @@ public final class RecordAndReplayExecution
    private int getLastExpectationIndexInPreviousReplayPhase()
    {
       return replayPhase == null ? -1 : replayPhase.currentStrictExpectationIndex;
+   }
+
+   private void validateRecordingContext()
+   {
+      if (TestRun.getSharedFieldTypeRedefinitions() == null) {
+         throw new IllegalStateException("Invalid context for the recording of expectations");
+      }
    }
 
    public RecordAndReplayExecution(
@@ -116,6 +124,7 @@ public final class RecordAndReplayExecution
 
          dynamicPartialMocking = applyDynamicPartialMocking(classesOrInstancesToBePartiallyMocked);
 
+         validateRecordingContext();
          validateThereIsAtLeastOneMockedTypeInScope();
          discoverDuplicateMockedTypesForAutomaticMockInstanceMatching();
          TestRun.getExecutingTest().setRecordAndReplay(this);
