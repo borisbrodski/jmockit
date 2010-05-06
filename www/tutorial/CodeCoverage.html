@@ -193,6 +193,9 @@
    <a href="http://download.java.net/maven/2/mockit/jmockit/">Maven repository</a>) does
    <em>not</em> need to be added to the classpath, unless of course the suite contains tests which
    use the JMockit mocking APIs (it will also be implicitly added to the classpath).
+   That said, it <em>may</em> be necessary to use the <code>-javaagent:jmockit.jar</code> JVM parameter
+   so that JMockit gets properly initialized at start-up. It is possible to avoid the use of this JVM
+   parameter, depending on a few conditions. See <a href="RunningTests.html">this page</a> for details.
 </p>
 <p>
    Apart from enabling JMockit Coverage for a given test run, there are five aspects of the tool's
