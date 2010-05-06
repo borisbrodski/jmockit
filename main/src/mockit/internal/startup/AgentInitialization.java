@@ -25,15 +25,17 @@
 package mockit.internal.startup;
 
 import java.io.*;
+import java.net.*;
+import java.security.*;
 import java.util.regex.*;
 
 public final class AgentInitialization
 {
-   private static final Pattern JAR_REGEX = Pattern.compile(".*jmockit[-.\\w]*.jar");
+   private static final Pattern JAR_REGEX = Pattern.compile(".*jmockit[-.\\d]*.jar");
 
    public void initializeAccordingToJDKVersion()
    {
-      String jarFilePath = findPathToJarFileFromClasspath();
+      String jarFilePath = discoverPathToJarFile();
 
       if (Startup.jdk6OrLater) {
          new JDK6AgentLoader(jarFilePath).loadAgent();
@@ -48,6 +50,24 @@ public final class AgentInitialization
       }
    }
 
+   private String discoverPathToJarFile()
+   {
+      String jarFilePath = findPathToJarFileFromClasspath();
+
+      if (jarFilePath == null) {
+         // This can fail for a remote URL, so it is used as a fallback only:
+         jarFilePath = getPathToJarFileContainingThisClass();
+      }
+
+      if (jarFilePath != null) {
+         return jarFilePath;
+      }
+
+      throw new IllegalStateException(
+         "No jar file with name ending in \"jmockit.jar\" or \"jmockit-nnn.jar\" (where \"nnn\" " +
+         "is a version number) found in the classpath");
+   }
+
    private String findPathToJarFileFromClasspath()
    {
       String[] classPath = System.getProperty("java.class.path").split(File.pathSeparator);
@@ -58,8 +78,26 @@ public final class AgentInitialization
          }
       }
 
-      throw new IllegalStateException(
-         "No jar file with name ending in \"jmockit.jar\" or \"jmockit-nnn.jar\" (where \"nnn\" " +
-         "is a version number) found in the classpath");
+      return null;
+   }
+
+   private String getPathToJarFileContainingThisClass()
+   {
+      CodeSource codeSource = AgentInitialization.class.getProtectionDomain().getCodeSource();
+
+      if (codeSource == null) {
+         return null;
+      }
+
+      URI jarFileURI; // URI is needed to deal with spaces and non-ASCII characters
+
+      try {
+         jarFileURI = codeSource.getLocation().toURI();
+      }
+      catch (URISyntaxException e) {
+         throw new RuntimeException(e);
+      }
+
+      return new File(jarFileURI).getPath();
    }
 }
