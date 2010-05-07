@@ -34,6 +34,13 @@
       2) When using only JMockit Coverage, without "jmockit.jar" directly added to the classpath, that jar
       file wasn't found and consequently JMockit never got initialized.
    </li>
+   <li>
+      <strong>Fixed a bug</strong> in the validation for duplicate non-strict expectations, which
+      was rejecting expectations recorded for the same method but with different argument matching
+      constraints, when the actual argument values passed to the method had the same values in each
+      recorded invocation.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=62">issue 62</a>.
+   </li>
 </ul>
 
 <h3>Current release</h3>
