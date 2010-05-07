@@ -36,6 +36,7 @@ public final class MisusedExpectationsTest
       int value() { return 0; }
       void setValue(int value) {}
       String doSomething(boolean b) { return ""; }
+      boolean doSomething(int i) { return true; }
    }
 
    @Mocked Blah mock;
@@ -106,6 +107,21 @@ public final class MisusedExpectationsTest
          mock.setValue(anyInt);
          mock.setValue(anyInt); result = new UnknownError();
       }};
+   }
+
+   @Test
+   public void recordNonStrictExpectationsForSameMethodWithDifferentArgumentMatchers()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.doSomething(withEqual(1)); result = false;
+         mock.doSomething(withNotEqual(1)); result = true;
+      }};
+
+      assertFalse(mock.doSomething(1));
+      assertTrue(mock.doSomething(2));
+      assertTrue(mock.doSomething(0));
+      assertFalse(mock.doSomething(1));
    }
 
    @Test(expected = IllegalArgumentException.class)
