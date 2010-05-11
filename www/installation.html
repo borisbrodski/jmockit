@@ -34,8 +34,10 @@
    <li>
       Add the library file <strong><code>jmockit.jar</code></strong> to your classpath (in your Java
       IDE project, Ant build file, and so on, as required).
-      Verify that this file appears <em>before</em> any JUnit jar file in the classpath
-      (this isn't required, but it will provide the greatest ease of use).
+      When using JUnit 4.5+ (older versions are not supported, but note that JUnit 3.8-style tests
+      <em>are</em> covered by JUnit 4.x), verify that <code>jmockit.jar</code> appears
+      <em>before</em> the JUnit jar file in the classpath (this isn't required, but it will provide
+      the greatest ease of use with JUnit and JDK 1.6+).
    </li>
    <li>
       Depending on your development environment, you <em>may</em> have to do one or two other
