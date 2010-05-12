@@ -126,11 +126,6 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
  <A HREF="../mockit/Mockit.html#tearDownMocks(java.lang.Class...)"><CODE>tearDownMocks(Class...)</CODE></A> / <A HREF="../mockit/Mockit.html#tearDownMocks()"><CODE>tearDownMocks()</CODE></A>.
  </li>
  <li>
- <strong>Core API</strong> for state-oriented mocking on JDK 1.4, now obsolete and deprecated:
- <A HREF="../mockit/Mockit.html#redefineMethods(java.lang.Class, java.lang.Class)">redefineMethods(Class, Class)</A> and its several overloads, and
- <A HREF="../mockit/Mockit.html#restoreAllOriginalDefinitions()"><CODE>restoreAllOriginalDefinitions()</CODE></A> / <A HREF="../mockit/Mockit.html#restoreOriginalDefinition(java.lang.Class...)"><CODE>restoreOriginalDefinition(Class...)</CODE></A>.
- </li>
- <li>
  <strong>Proxy-based utilities</strong>:
  <A HREF="../mockit/Mockit.html#newEmptyProxy(java.lang.ClassLoader, java.lang.Class)"><CODE>newEmptyProxy(ClassLoader, Class)</CODE></A> and its overloads.
  These are merely convenience methods that create empty implementation classes for one or more
@@ -568,14 +563,44 @@ public static void <B>setUpMocks</B>(<A HREF="http://java.sun.com/javase/6/docs/
  If the method is a "before"/"setUp" method which executes before all test methods, then the
  mocks will remain in effect until they are explicitly <A HREF="../mockit/Mockit.html#tearDownMocks(java.lang.Class...)">torn down</A> in an "after"/"tearDown" method.
  <p/>
- Any invocation count constraints specified on the mocks will be automatically verified after
- the code under test is executed.
+ Any invocation count constraints specified on mock methods will be automatically verified
+ after the code under test is executed.
  <p/>
- For each given mock class or instance, method redefinition occurs as if
- <A HREF="../mockit/Mockit.html#redefineMethods(java.lang.Class, java.lang.Class)"><CODE>redefineMethods(Class, Class)</CODE></A> or <A HREF="../mockit/Mockit.html#redefineMethods(java.lang.Class, java.lang.Object)"><CODE>redefineMethods(Class, Object)</CODE></A> was called,
- respectively, except that the rules for determining which methods are mocks are different
- (that is, in this case only methods or constructors annotated as mocks are considered to be
- so).
+ For each call made during test execution to a <em>mocked</em> method, the corresponding
+ <em>mock</em> method is called instead.
+ A mock method must have the same signature as the corresponding mocked/real method.
+ The return type of the mock method must be the same exact type or a compatible one.
+ The <code>throws</code> clause may differ in any way. Note also that the mock method can be static
+ or not, independently of the real method being static or not.
+ <p/>
+ A constructor in the real class can be mocked by a corresponding <strong>mock
+ constructor</strong> in the mock class, declared with the same signature.
+ However, since a constructor can only be called on a freshly created instance, it is generally
+ recommended to declare a mock method of name <code>$init</code> instead (which can also be
+ <code>static</code>). This method should have <code>void</code> return type and must have the
+ same declared parameters as the mocked constructor. It will be called for each new instance of
+ the real class that is created through a call to that constructor, with whatever arguments are
+ passed to it.
+ <p/>
+ <strong>Class initializers</strong> of the real class (one or more <code>static</code>
+ initialization blocks plus all assignments to <code>static</code> fields) can be mocked by
+ providing a mock method named <code>$clinit</code> in the mock class.
+ This method should return <code>void</code> and have no declared parameters.
+ It will be called at most once, at the time the real class is initialized by the JVM (and
+ since all static initializers for that class are mocked, the initialization will have no
+ effect).
+ <p/>
+ Mock methods can gain access to the instance of the real class on which the corresponding real
+ method or constructor was called. This requires the mock class to define an instance field of
+ name <strong>"it"</strong>, the same type as the real class, and accessible from that class
+ (in general, this means the field will have to be <code>public</code>). Such a field will always be
+ set to the appropriate real class instance, whenever a mock method is called. Note that
+ through this field the mock class will be able to call any accessible instance method on the
+ real class, including the real method corresponding to the current mock method. In this case,
+ however, such calls are not allowed by default because they lead to infinite recursion, with
+ the mock calling itself indirectly through the redefined real method. If the real method needs
+ to be called from the mock method, then the latter must be declared as
+ <A HREF="../mockit/Mock.html#reentrant()">reentrant</A>.
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>mockClassesOrInstances</CODE> - one or more classes (<code>Class</code> objects) or instances of
@@ -769,8 +794,8 @@ public static void <B>tearDownMocks</B>()</PRE>
  method to the last "after class" method), and the current test suite.
  <p/>
  Notice that a call to this method will tear down <em>all</em> mock classes that were applied
- through use of the Annotations or Core API that are still in effect, as well as any mock
- classes or stubs applied to the current test class through <code>@UsingMocksAndStubs</code>.
+ through use of the Annotations API that are still in effect, as well as any mock classes or
+ stubs applied to the current test class through <code>@UsingMocksAndStubs</code>.
  In other words, it would effectively prevent mocks to be set up at the test class and test
  suite levels. So, use it only if necessary and if it won't discard mock classes that should
  remain in effect. Consider using <A HREF="../mockit/Mockit.html#tearDownMocks(java.lang.Class...)"><CODE>tearDownMocks(Class...)</CODE></A> instead, which lets you
@@ -810,7 +835,8 @@ public static void <B>tearDownMocks</B>(<A HREF="http://java.sun.com/javase/6/do
  <em>not</em> automatically discarded.
 <P>
 <DD><DL>
-</DL>
+<DT><B>Parameters:</B><DD><CODE>realClasses</CODE> - one or more real classes from production code, which may have mocked
+ methods</DL>
 </DD>
 </DL>
 <!-- ========= END OF CLASS DATA ========= -->

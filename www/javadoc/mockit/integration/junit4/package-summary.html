@@ -126,10 +126,10 @@ Provides integration with <em>JUnit 4.x</em> test runners.
  executed, but before any <code>@After</code> methods are executed).
  </li>
  <li>
- Any mock classes applied with the Core or Annotations API from inside a test method will be
- discarded before the execution of the test method ends, so it is not necessary to call
- <A HREF="../../../mockit/Mockit.html#tearDownMocks()"><CODE>Mockit.tearDownMocks()</CODE></A> (or <A HREF="../../../mockit/Mockit.html#restoreAllOriginalDefinitions()"><CODE>Mockit.restoreAllOriginalDefinitions()</CODE></A>) at the end of
- the test, be it from inside the test method itself or from an <code>@After</code> method.
+ Any mock classes applied with the Annotations API from inside a test method will be discarded
+ before the execution of the test method ends, so it is not necessary to call
+ <A HREF="../../../mockit/Mockit.html#tearDownMocks()"><CODE>Mockit.tearDownMocks()</CODE></A> at the end of the test, be it from inside the test method
+ itself or from an <code>@After</code> method.
  The same is <em>not</em> true for mocks applied in a <code>@Before</code> method, however: you
  <em>will</em> need to explicitly tear down those mock classes in an <code>@After</code> method, so
  that the mocked real classes are properly restored to their original definitions.
