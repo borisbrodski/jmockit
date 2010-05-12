@@ -36,18 +36,19 @@ import mockit.internal.startup.*;
  * (if running on JDK 1.5, then "-javaagent:jmockit.jar" will be mandatory and this class would have
  * no effect since JMockit would already be initialized).
  * <p/>
- * Besides being annotated with {@code @RunWith(JMockit.class)}, the use of this base class for
- * your test classes has the advantage of inheriting {@link Assert}, which eliminates the need to
- * statically import its methods.
- * <p/>
  * If JMockit is not explicitly initialized before the first test executes, it will still get
  * initialized on the first call to a method in the API. However, this will probably cause the first
  * test, and possibly others, to fail.
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">Tutorial</a>
+ *
+ * @deprecated Use the {@code -javaagent:jmockit.jar} JVM parameter, or make sure that
+ * {@code junit.jar} (4.5+) appears before {@code jmockit.jar} in the classpath if running under
+ * JDK 1.6.
  */
 @RunWith(JMockit.class)
 @Ignore
+@Deprecated
 public class JMockitTest extends Assert
 {
    static

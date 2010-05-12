@@ -41,6 +41,13 @@
       recorded invocation.
       See <a href="http://code.google.com/p/jmockit/issues/detail?id=62">issue 62</a>.
    </li>
+   <li>
+      <strong>Deprecated</strong> the following JUnit/TestNG integration support classes:
+      <code>JMockitTestCase</code>, <code>JMockitTest</code>, <code>JMockit</code> (custom runner
+      for JUnit 4.5+ tests), and <code>JMockitTestNG</code>. All they ever did was make sure that
+      JMockit got initialized at start-up. This is best done through other means, which have been
+      available for some time.
+   </li>
 </ul>
 
 <h3>Current release</h3>

@@ -34,8 +34,11 @@ import mockit.internal.startup.*;
  * If that is the case, then this mechanism avoids the need to make all test classes extend
  * {@link mockit.integration.testng.JMockitTestNG}.
  * <p/>
+ * One way to configure TestNG to use this class as a listener is to pass
+ * "-listener mockit.integration.testng.Initializer" as a command line argument.
+ * Another way would be through {@code testng.xml} configuration.
  * Please check the <a href="http://testng.org/doc/documentation-main.html#running-testng">TestNG
- * documentation</a> for ways to run it with this class as a listener.
+ * documentation</a> for more details.
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">Tutorial</a>
  */

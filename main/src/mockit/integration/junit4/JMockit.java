@@ -49,7 +49,11 @@ import mockit.internal.startup.*;
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">Tutorial</a>
  *
  * @see JMockitTest
+ * @deprecated Use the {@code -javaagent:jmockit.jar} JVM parameter, or make sure that
+ * {@code junit.jar} (4.5+) appears before {@code jmockit.jar} in the classpath if running under
+ * JDK 1.6.
  */
+@Deprecated
 public final class JMockit extends BlockJUnit4ClassRunner
 {
    static

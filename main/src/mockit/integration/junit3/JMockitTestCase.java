@@ -37,8 +37,13 @@ import mockit.internal.startup.*;
  * test class.
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">Tutorial</a>
+ *
+ * @deprecated Use the {@code -javaagent:jmockit.jar} JVM parameter, or make sure that
+ * {@code junit.jar} (4.5+) appears before {@code jmockit.jar} in the classpath if running under
+ * JDK 1.6.
  */
-@SuppressWarnings({"JUnitTestCaseWithNoTests", "UnconstructableJUnitTestCase", "UnusedDeclaration"})
+@SuppressWarnings({"JUnitTestCaseWithNoTests", "UnusedDeclaration", "JUnitTestCaseInProductSource"})
+@Deprecated
 public class JMockitTestCase extends TestCase
 {
    static

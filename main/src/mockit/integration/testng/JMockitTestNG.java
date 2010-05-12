@@ -34,7 +34,11 @@ import mockit.internal.startup.*;
  * {@link mockit.integration.testng.Initializer}.
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">Tutorial</a>
+ *
+ * @deprecated Use the {@code -javaagent:jmockit.jar} JVM parameter, or make sure that TestNG uses
+ * the {@link mockit.integration.testng.Initializer} class as a listener.
  */
+@Deprecated
 public class JMockitTestNG
 {
    static
