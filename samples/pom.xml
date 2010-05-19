@@ -9,7 +9,6 @@
    <modules>
       <module>tutorial</module>
       <module>easymock</module>
-      <module>easymockclassextension</module>
       <module>jmock</module>
       <module>jbossaop</module>
       <module>mockito</module>

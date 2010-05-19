@@ -38,10 +38,10 @@
          <scope>test</scope>
       </dependency>
 
-      <!-- EasyMock CE -->
+      <!-- EasyMock -->
       <dependency>
-         <groupId>org.easymock</groupId><artifactId>easymockclassextension</artifactId>
-         <version>2.5.2</version><scope>test</scope>
+         <groupId>org.easymock</groupId><artifactId>easymock</artifactId><version>3.0</version>
+         <scope>test</scope>
       </dependency>
 
       <!-- jMock -->

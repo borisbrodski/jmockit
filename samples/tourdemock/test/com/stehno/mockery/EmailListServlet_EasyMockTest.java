@@ -9,10 +9,8 @@ import org.junit.*;
 
 import com.stehno.mockery.service.*;
 import static java.util.Arrays.*;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.anyObject;
-import static org.easymock.classextension.EasyMock.replay;
-import org.easymock.classextension.EasyMockSupport;
+import static org.easymock.EasyMock.*;
+import org.easymock.EasyMockSupport;
 
 public final class EmailListServlet_EasyMockTest extends EasyMockSupport
 {
