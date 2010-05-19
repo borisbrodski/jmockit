@@ -29,8 +29,6 @@ import java.security.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-import mockit.internal.util.*;
-
 /**
  * Coverage data captured for all source files exercised during a test run.
  */
@@ -82,16 +80,26 @@ public final class CoverageData implements Serializable
 
    public void fillLastModifiedTimesForAllClassFiles()
    {
-      for (Map.Entry<String, FileCoverageData> fileAndFileData : fileToFileData.entrySet()) {
-         File coveredClassFile = getClassFile(fileAndFileData.getKey());
-         fileAndFileData.getValue().lastModified = coveredClassFile.lastModified();
+      for (
+         Iterator<Map.Entry<String, FileCoverageData>> itr = fileToFileData.entrySet().iterator();
+         itr.hasNext();
+      ) {
+         Map.Entry<String, FileCoverageData> fileAndFileData = itr.next();
+
+         try {
+            File coveredClassFile = getClassFile(fileAndFileData.getKey());
+            fileAndFileData.getValue().lastModified = coveredClassFile.lastModified();
+         }
+         catch (ClassNotFoundException ignored) {
+            itr.remove();
+         }
       }
    }
 
-   private File getClassFile(String sourceFilePath)
+   private File getClassFile(String sourceFilePath) throws ClassNotFoundException
    {
-      String sourceFilePathNoExt = sourceFilePath.substring(0, sourceFilePath.length() - 5);
-      Class<?> coveredClass = Utilities.loadClass(sourceFilePathNoExt.replace('/', '.'));
+      String sourceFilePathNoExt = sourceFilePath.substring(0, sourceFilePath.lastIndexOf('.'));
+      Class<?> coveredClass = Class.forName(sourceFilePathNoExt.replace('/', '.'));
       CodeSource codeSource = coveredClass.getProtectionDomain().getCodeSource();
       String pathToClassFile = codeSource.getLocation().getPath() + sourceFilePathNoExt + ".class";
 
