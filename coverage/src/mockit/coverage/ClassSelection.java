@@ -63,15 +63,6 @@ final class ClassSelection
 
    boolean isSelected(String className, ProtectionDomain protectionDomain)
    {
-      if (classesToInclude != null) {
-         return
-            classesToInclude.reset(className).matches() &&
-            (classesToExclude == null || !classesToExclude.reset(className).matches());
-      }
-      else if (classesToExclude != null && classesToExclude.reset(className).matches()) {
-         return false;
-      }
-
       if (protectionDomain == null) {
          return false;
       }
@@ -79,6 +70,15 @@ final class ClassSelection
       CodeSource codeSource = protectionDomain.getCodeSource();
 
       if (codeSource == null) {
+         return false;
+      }
+
+      if (classesToInclude != null) {
+         return
+            classesToInclude.reset(className).matches() &&
+            (classesToExclude == null || !classesToExclude.reset(className).matches());
+      }
+      else if (classesToExclude != null && classesToExclude.reset(className).matches()) {
          return false;
       }
 
