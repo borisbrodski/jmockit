@@ -128,11 +128,6 @@
    <target name="buildEasyMock">
       <buildSample module="easymock" extralocation1="${EASYMOCK_JAR}"/>
    </target>
-   <target name="buildEasyMockCE">
-      <buildSample
-         module="easymockclassextension"
-         extralocation1="${EASYMOCK_JAR}" extralocation2="${EASYMOCK_CE_JAR}"/>
-   </target>
    <target name="buildJMock">
       <buildSample
          module="jmock" extraclasspath="lib/hamcrest-*.jar"
@@ -179,7 +174,6 @@
          module="tourdemock"
          extraclasspathlocation="${MOCKITO_JAR}"
          extralocation1="${EASYMOCK_JAR}"
-         extralocation2="${EASYMOCK_CE_JAR}"
          extralocation3="${JMOCK_HOME}/jmock-2.5.1.jar"
          extralocation4="${JMOCK_HOME}/jmock-junit4-2.5.1.jar"
          extralocation5="${JMOCK_HOME}/jmock-legacy-2.5.1.jar"
@@ -192,10 +186,9 @@
 
    <target
       name="buildSamples"
-      depends="buildEasyMock, buildEasyMockCE, buildJMock, buildMockito, buildUnitils,
-               buildPowerMock, buildLoginService, buildJBossAOP, buildTutorial,
-               buildOrderManagement, buildTimingFramework, buildAnimatedTransitions,
-               buildTourDeMock"/>
+      depends="buildEasyMock, buildJMock, buildMockito, buildUnitils, buildPowerMock,
+               buildLoginService, buildJBossAOP, buildTutorial, buildOrderManagement,
+               buildTimingFramework, buildAnimatedTransitions, buildTourDeMock"/>
    <target
       name="buildAll"
       depends="buildMain, buildCoverage, buildIncremental, buildHibernateEmulation, buildSamples"/>
@@ -364,10 +357,6 @@
             <pathelement location="samples/easymock/classes"/>
             <pathelement location="samples/easymock/test-classes"/>
 
-            <pathelement location="${EASYMOCK_CE_JAR}"/>
-            <pathelement location="samples/easymockclassextension/classes"/>
-            <pathelement location="samples/easymockclassextension/test-classes"/>
-
             <pathelement location="${JMOCK_HOME}/jmock-2.5.1.jar"/>
             <pathelement location="${JMOCK_HOME}/jmock-junit4-2.5.1.jar"/>
             <pathelement location="${JMOCK_HOME}/jmock-legacy-2.5.1.jar"/>
@@ -411,7 +400,6 @@
          <batchtest>
             <fileset dir="samples/jbossaop/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/easymock/test-classes" includes="**/*Test.class"/>
-            <fileset dir="samples/easymockclassextension/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/jmock/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/mockito/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/unitils/test-classes" includes="**/*Test.class"/>
