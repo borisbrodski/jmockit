@@ -7,7 +7,7 @@
       <groupId>mockit</groupId><artifactId>samples</artifactId><version>1</version>
    </parent>
    <artifactId>easymock</artifactId>
-   <name>EasyMock 2 Comparison Sample</name>
+   <name>EasyMock Comparison Sample</name>
 
    <dependencies>
       <dependency>
@@ -19,7 +19,7 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>org.easymock</groupId><artifactId>easymock</artifactId><version>2.5.2</version>
+         <groupId>org.easymock</groupId><artifactId>easymock</artifactId><version>3.0</version>
          <scope>test</scope>
       </dependency>
    </dependencies>
