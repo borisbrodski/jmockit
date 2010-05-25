@@ -23,7 +23,7 @@
 </p>
 <ol>
 <li>
-   First of all, add <code>jmockit.jar</code> to the classpath.
+   When using a HotSpot or JRockit JDK of version 1.6 or newer on Windows or Linux:
    <ul>
       <li>
          For JUnit test suites, make sure that <code>jmockit.jar</code> appears <em>before</em> any
@@ -44,22 +44,10 @@
          <code style="white-space: nowrap;">&lt;listener class-name="mockit.integration.testng.Initializer"/></code>.
       </li>
    </ul>
-   This option applies to what probably is the most common development environment: Windows or
-   Linux with a Sun JDK of version 1.6 or newer.
 </li>
 <li>
-   Along with <code>jmockit.jar</code>, add <code>&lt;jdkHome>/lib/tools.jar</code> from a JDK 1.6
-   installation to the classpath.
-   (This standard JDK 1.6 library contains the Sun Attach API which JMockit uses to automatically
-   load the Java agent from <code>jmockit.jar</code>. Although this API is not yet part of Java SE,
-   the JDKs from Sun, Oracle, IBM, and Apple come with it, to the best of my knowledge.)
-   This will be necessary in environments such as Mac OS X which are not supported by the Attach API
-   implementation classes from OpenJDK embedded in <code>jmockit.jar</code> (currently, these
-   classes support only Windows and Linux JVMs).
-</li>
-<li>
-   Alternatively, or if you only have a JDK 1.5 installation available, pass
-   <code>-javaagent:jmockit.jar</code> as a JVM initialization parameter.
+   Alternatively or in other environments (if using JDK 1.5 or a different JDK implementation or
+   OS), pass <code>-javaagent:jmockit.jar</code> as a JVM initialization parameter.
    This can easily be done in the "Run/Debug Configuration" for both Eclipse and IntelliJ IDEA.
    (Note that if <code>jmockit.jar</code> is not in the current working directory when running the
    tests, you will have to insert the appropriate absolute or relative path after the colon, so the
