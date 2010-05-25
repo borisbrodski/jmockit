@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -41,10 +41,9 @@ import static org.junit.Assert.*;
  * argument must be specified as <code>-javaagent:jmockit.jar=hibernate</code> (inserting the
  * correct path to jmockit.jar if necessary), when using a conventional Hibernate configuration
  * (that is, the <code>org.hibernate.Configuration</code> class).
- * Alternatively, when using JDK 1.6+, if {@code jmockit-hibernate3emul.jar} is in the classpath 
- * then the emulator will be used automatically, without the need for any JVM initialization
- * parameter (in a Mac OS X environment with the Apple JDK 1.6, {@code &lt;jdkDir>/lib/tools.jar}
- * also needs to be in the classpath).
+ * Alternatively, when using a HotSpot or JRockit JDK 1.6+ on Windows or Linux, if
+ * {@code jmockit-hibernate3emul.jar} is in the classpath then the emulator will be used
+ * automatically, without the need for any JVM initialization parameter.
  * <p/>
  * If run without the emulator, the tests should still pass, as long as an appropriate Hibernate
  * session factory and the corresponding relational database are available. The use of the emulator
