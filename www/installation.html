@@ -40,8 +40,7 @@
       the greatest ease of use with JUnit and JDK 1.6+).
    </li>
    <li>
-      Depending on your development environment, you <em>may</em> have to do one or two other
-      things:
+      Depending on your development environment, you <em>may</em> have to do one other thing:
       <ul>
          <li>
             If you are developing on JDK 1.5, then make sure that
@@ -51,24 +50,20 @@
             This standard JVM initialization parameter causes it to load on start-up the
             "Java agent" that JMockit uses internally for bytecode instrumentation; this is required
             to work in all standard JVMs since version 1.5, in all OSs.
-            You may also have to use this parameter on a newer JDK 1.6+, if for some reason the
-            second option described below doesn't work as expected (as is currently the case with
-            the IBM J9 JDK 1.6).
+            You may have to use this parameter even on a newer JDK 1.6+, if its <em>Attach API</em>
+            implementation is not supported by JMockit: such is the case with the IBM J9 JDK 1.6,
+            the Mac OS X JDKs, and with JDKs for the Solaris OS.
          </li>
          <li>
-            If you are developing on a JDK of version 1.6 or newer on Mac OS X, add
-            <strong><code>&lt;jdkDir>/lib/tools.jar</code></strong> to the classpath, where
-            <code>&lt;jdkDir></code> is the home directory for your local JDK 1.6 installation.
-         </li>
-         <li>
-            If you use <strong>TestNG</strong> in a JDK 1.6 environment, JMockit will have to be
-            initialized in one of three possible ways. See
+            If you use <strong>TestNG</strong> in a JDK 1.6+ environment, JMockit can be initialized
+            in one of three possible ways (apart from use of "-javaagent" indicated above, which can
+            also be used). See
             <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">this page</a>
             for details.
          </li>
       </ul>
-      When using a Sun HotSpot JDK 1.6+ or an Oracle JRockit JDK 1.6+ on Windows or Linux, neither
-      of the extra steps above is necessary.
+      When using a HotSpot JDK 1.6+ or a JRockit JDK 1.6+ on Windows or Linux, neither of the extra
+      steps above is necessary.
    </li>
    <li>
       Optionally, configure your IDE to find API source code (and consequently the associated
@@ -157,26 +152,13 @@
 &lt;/plugin>
 </code></pre>
 <p>
-   Note that the above JVM parameter is not required when using JDK 1.6 (or newer) to run tests.
+   Note that the above JVM parameter is not required when running tests on a JDK 1.6+ environment
+   which contains a supported implementation of the Attach API (ie, a HotSpot or JRockit JVM on
+   Windows or Linux).
    Even if you have to deploy production code in a JDK 1.5 environment, consider using JDK 1.6 in
    your local development environment; with the proper build/IDE configuration, a JDK 1.6 Java
    compiler (either "javac" or the Eclipse compiler) can safely be used to compile Java 1.5 code
    while generating Java 1.5-compliant class files.
-</p>
-<p>
-   If using JDK 1.6 on Mac OS X, you should have the following extra dependency in your project:
-</p>
-<pre><code>&lt;dependency>
-   &lt;groupId>com.sun&lt;/groupId>
-   &lt;artifactId>tools&lt;/artifactId>
-   &lt;version>1.6.0&lt;/version>
-   &lt;scope>system&lt;/scope>
-   &lt;systemPath>${java.home}/../lib/tools.jar&lt;/systemPath>
-&lt;/dependency>
-</code></pre>
-<p>
-   This dependency is <em>not</em> needed in a Windows or Linux environment when using a Sun HotSpot
-   JDK 1.6+ or an Oracle JRockit JDK 1.6+.
 </p>
 <p>
    For information on using JMockit Coverage with Maven, see the
