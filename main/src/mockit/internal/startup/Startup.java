@@ -256,7 +256,13 @@ public final class Startup
    public static void initializeIfNeeded()
    {
       if (instrumentation == null) {
-         new AgentInitialization().initializeAccordingToJDKVersion();
+         try {
+            new AgentInitialization().initializeAccordingToJDKVersion();
+         }
+         catch (RuntimeException e) {
+            e.printStackTrace(); // makes sure the exception gets printed at least once
+            throw e;
+         }
       }
    }
 }
