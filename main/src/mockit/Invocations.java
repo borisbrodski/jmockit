@@ -51,6 +51,9 @@ abstract class Invocations
     * If there is any other parameter for which an argument matching constraint can be specified,
     * though, the {@code null} reference can be passed instead, as it will also match any
     * reference during the replay phase.
+    * <p/>
+    * Note: in invocations to <em>non-accessible</em> methods or constructors (for example, with
+    * {@link #invoke(Object, String, Object...)}), use {@link #withAny} instead.
     *
     * @see #anyInt
     */
@@ -61,7 +64,9 @@ abstract class Invocations
     *
     * @see #anyInt
     */
-   protected static final String anyString = null;
+   // This is intentional: the empty string causes the compiler to not generate a field read,
+   // while the null reference is inconvenient with the invoke(...) methods:
+   protected static final String anyString = new String();
 
    /**
     * Matches any {@code long} or {@code Long} value for the relevant parameter.
@@ -324,12 +329,14 @@ abstract class Invocations
    /**
     * Same as {@link #withEqual(Object)}, but matching any argument value of the appropriate type.
     * <p/>
-    * Consider using instead the "any" field appropriate to the parameter type: {@link #any},
+    * Consider using instead the "anyXyz" field appropriate to the parameter type:
     * {@link #anyBoolean}, {@link #anyByte}, {@link #anyChar}, {@link #anyDouble},
-    * {@link #anyFloat}, {@link #anyInt}, {@link #anyLong}, {@link #anyShort}, {@link #anyString}.
-    * On the other hand, this method is useful if a specific value must be passed as argument to the
-    * mocked invocation (typically, when using the {@link #invoke(Object, String, Object...)} 
-    * method).
+    * {@link #anyFloat}, {@link #anyInt}, {@link #anyLong}, {@link #anyShort}, {@link #anyString},
+    * or {@link #any} for other reference types.
+    * <p/>
+    * Note: when using {@link #invoke(Object, String, Object...)}, etc., it's valid to pass
+    * {@code withAny(ParameterType.class)} if an actual instance of the parameter type cannot be
+    * created.
     *
     * @param arg an arbitrary value which will match any argument value in the replay phase
     *

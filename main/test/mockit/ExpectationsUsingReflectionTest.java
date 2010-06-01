@@ -95,13 +95,17 @@ public final class ExpectationsUsingReflectionTest
       {
          {
             invoke(mock, "setValue", anyInt);
+            invoke(mock, "setValue", withAny(1));
+            invoke(mock, "setValue", anyString);
             invoke(mock, "setValue", withAny(""));
             invoke(mock, "doBusinessOperation", withAny(BusinessInterface.class));
          }
       };
 
       mock.setValue(2);
+      mock.setValue(-3);
       mock.setValue("test");
+      mock.setValue(null);
       mock.doBusinessOperation(null);
    }
 
