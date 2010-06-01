@@ -58,6 +58,7 @@ public final class ExpectationsUsingReflectionTest
       private static String doInternal() { return "123"; }
 
       void setValue(int value) { this.value = value; }
+      void setValue(String value) { value3 = value; }
 
       void doBusinessOperation(BusinessInterface operation) { operation.doOperation(); }
 
@@ -85,6 +86,23 @@ public final class ExpectationsUsingReflectionTest
       };
 
       mock.setValue(2);
+   }
+
+   @Test
+   public void expectInstanceMethodInvocationsWithAnyArguments(final Collaborator mock)
+   {
+      new Expectations()
+      {
+         {
+            invoke(mock, "setValue", anyInt);
+            invoke(mock, "setValue", withAny(""));
+            invoke(mock, "doBusinessOperation", withAny(BusinessInterface.class));
+         }
+      };
+
+      mock.setValue(2);
+      mock.setValue("test");
+      mock.doBusinessOperation(null);
    }
 
    @Test
