@@ -1,6 +1,6 @@
 /*
  * JMockit Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -28,7 +28,7 @@ import org.junit.*;
 
 import mockit.*;
 
-public class JMockitVerificationsExampleTest
+public final class JMockitVerificationsExampleTest
 {
    @Test // notice the "mock parameter", whose argument value will be created automatically
    public void testDoAnotherOperation(final AnotherDependency anotherMock)

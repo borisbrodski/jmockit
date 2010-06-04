@@ -1,6 +1,6 @@
 /*
  * JMockit Annotations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -30,7 +30,7 @@ import mockit.*;
 
 import static org.junit.Assert.*;
 
-public class JMockitAnnotationsExampleTest
+public final class JMockitAnnotationsExampleTest
 {
    @Test
    public void testDoOperationAbc()
