@@ -171,6 +171,23 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomethingElse();
    }
 
+   @Test(expected = AssertionError.class)
+   public void expectExactlyTwiceButReplayMoreTimes()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); times = 2;
+         }
+      };
+
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomething();
+      codeUnderTest.doSomething();
+   }
+
    @Test
    public void expectAtLeastOnceAndReplayTwice()
    {
