@@ -129,6 +129,94 @@ public final class DynamicPartialMockingTest
       assertEquals(-1, new Collaborator().value);
    }
 
+   @Test(expected = AssertionError.class)
+   public void expectTwoInvocationsOnStrictDynamicMockButReplayOnce()
+   {
+      final Collaborator collaborator = new Collaborator();
+
+      new Expectations(collaborator)
+      {
+         {
+            collaborator.getValue(); times = 2;
+         }
+      };
+
+      assertEquals(0, collaborator.getValue());
+   }
+
+   @Test
+   public void expectOneInvocationOnStrictDynamicMockButReplayTwice()
+   {
+      final Collaborator collaborator = new Collaborator(1);
+
+      new Expectations(collaborator)
+      {
+         {
+            collaborator.methodWhichCallsAnotherInTheSameClass(); result = false;
+         }
+      };
+
+      // Mocked:
+      assertFalse(collaborator.methodWhichCallsAnotherInTheSameClass());
+
+      // No longer mocked, since it's strict:
+      assertTrue(collaborator.methodWhichCallsAnotherInTheSameClass());
+   }
+
+   @Test
+   public void expectTwoInvocationsOnStrictDynamicMockButReplayMoreTimes()
+   {
+      final Collaborator collaborator = new Collaborator(1);
+
+      new Expectations(collaborator)
+      {
+         {
+            collaborator.getValue(); times = 2;
+         }
+      };
+
+      // Mocked:
+      assertEquals(0, collaborator.getValue());
+      assertEquals(0, collaborator.getValue());
+
+      // No longer mocked, since it's strict and all expected invocations were already replayed:
+      assertEquals(1, collaborator.getValue());
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectTwoInvocationsOnNonStrictDynamicMockButReplayOnce()
+   {
+      final Collaborator collaborator = new Collaborator();
+
+      new NonStrictExpectations(collaborator)
+      {
+         {
+            collaborator.getValue(); times = 2;
+         }
+      };
+
+      assertEquals(0, collaborator.getValue());
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectOneInvocationOnNonStrictDynamicMockButReplayTwice()
+   {
+      final Collaborator collaborator = new Collaborator(1);
+
+      new NonStrictExpectations(collaborator)
+      {
+         {
+            collaborator.getValue(); times = 1;
+         }
+      };
+
+      // Mocked:
+      assertEquals(0, collaborator.getValue());
+
+      // Still mocked because it's non-strict:
+      assertEquals(0, collaborator.getValue());
+   }
+
    @Test
    public void dynamicallyMockAnInstanceWithNonStrictExpectations()
    {
