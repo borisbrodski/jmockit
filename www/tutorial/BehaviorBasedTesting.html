@@ -32,6 +32,7 @@
       <ol>
          <li><a href="#matcherFields">Using the "any" <em>fields</em> for argument matching</a></li>
          <li><a href="#nullAsMatcher">Using the <code>null</code> value to match any object reference</a></li>
+         <li><a href="#varargs">Matching values passed through a <em>varargs</em> parameter</a></li>
       </ol>
    </li>
    <li><a href="#constraints">Specifying invocation count constraints</a></li>
@@ -777,6 +778,11 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    For complex invocations where multiple arguments are involved, though, the benefits of being able
    to use "any" fields and the <code>null</code> reference should outweigh the additional API
    complexity.
+</p>
+
+<h4 id="varargs">Matching values passed through a <em>varargs</em> parameter</h4>
+<p>
+   <del>to be written</del>
 </p>
 
 <h3 id="constraints">
@@ -1808,6 +1814,22 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    objects stored in <em>local variables</em> into mock objects.
    Such objects can be created with any amount of state in instance fields; they will keep that
    state after being mocked.
+</p>
+<p>
+   With <em>regular</em> mocking, invocations to mocked types or mock instances that occur during
+   replay time will never cause the real method/constructor implementation to be executed.
+   With dynamic mocking, on the other hand, whether the real implementation gets executed or not
+   depends on the existence of a recorded expectation that <em>matches</em> the invocation.
+   If such a matching expectation exists, the invoked method or constructor is still mocked,
+   preventing its real implementation to be executed. If no such expectation can be found for a
+   particular invocation at replay time, the real implementation gets executed.
+   This is a simple rule, but it can produce surprising results, specially when <em>strict</em>
+   expectations are recorded on a dynamic mock. For example, if you record a strict expectation on
+   a dynamically mocked object with a maximum invocation count of <em>n</em> (specified either
+   through the <code>times</code> or <code>maxTimes</code> field), then only the first <em>n</em>
+   invocations at replay time will match the expectation; the next invocation, if it occurs, will
+   cause the real method implementation to be executed, instead of causing the test to fail with an
+   "unexpected invocation" error.
 </p>
 <p>
    It's also possible to pass the objects automatically created for mock fields or parameters into
