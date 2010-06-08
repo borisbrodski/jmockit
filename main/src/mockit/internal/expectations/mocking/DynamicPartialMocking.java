@@ -91,7 +91,8 @@ public final class DynamicPartialMocking
    {
       if (
          targetClass.isInterface() || targetClass.isAnnotation() || targetClass.isArray() ||
-         targetClass.isPrimitive() || Utilities.isWrapperOfPrimitiveType(targetClass)
+         targetClass.isPrimitive() || Utilities.isWrapperOfPrimitiveType(targetClass) ||
+         Proxy.isProxyClass(targetClass)
       ) {
          throw new IllegalArgumentException("Invalid type for dynamic mocking: " + targetClass);
       }

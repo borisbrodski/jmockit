@@ -389,7 +389,7 @@ public final class DynamicPartialMockingTest
    @Test
    public void attemptToUseDynamicMockingForInvalidTypes()
    {
-      assertInvalidTypeForDynamicMocking(Runnable.class);
+      assertInvalidTypeForDynamicMocking(Dependency.class);
       assertInvalidTypeForDynamicMocking(Test.class);
       assertInvalidTypeForDynamicMocking(int[].class);
       assertInvalidTypeForDynamicMocking(new String[1]);
@@ -398,6 +398,7 @@ public final class DynamicPartialMockingTest
       assertInvalidTypeForDynamicMocking(Boolean.class);
       assertInvalidTypeForDynamicMocking(true);
       assertInvalidTypeForDynamicMocking(2.5);
+      assertInvalidTypeForDynamicMocking(Mockit.newEmptyProxy(Dependency.class));
    }
 
    private void assertInvalidTypeForDynamicMocking(Object classOrObject)

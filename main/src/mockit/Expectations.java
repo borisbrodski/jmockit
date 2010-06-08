@@ -194,7 +194,8 @@ public class Expectations extends Invocations
     * to be considered for partial mocking
     *
     * @throws IllegalArgumentException if given a class literal for an interface, an annotation, an
-    * array, or a primitive/wrapper type, or given a value of such a type
+    * array, a primitive/wrapper type, or a {@linkplain java.lang.reflect.Proxy#isProxyClass(Class)
+    * proxy class} created for an interface, or if given a value/instance of such a type
     * 
     * @see #Expectations()
     * @see #Expectations(int, Object...)
