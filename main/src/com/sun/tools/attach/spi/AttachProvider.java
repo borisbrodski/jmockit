@@ -125,6 +125,53 @@ public abstract class AttachProvider
       throws AttachNotSupportedException, IOException;
 
    /**
+    * Attaches to a Java virtual machine.
+    * <p/>
+    * A Java virtual machine can be described using a {@link
+    * com.sun.tools.attach.VirtualMachineDescriptor VirtualMachineDescriptor}.
+    * This method invokes the descriptor's {@link
+    * com.sun.tools.attach.VirtualMachineDescriptor#provider() provider()} method
+    * to check that it is equal to this provider. It then attempts to attach to the
+    * Java virtual machine.
+    *
+    * @param vmd The virtual machine descriptor
+    * @return VirtualMachine representing the target virtual machine.
+    * @throws SecurityException           If a security manager has been installed and it denies
+    *                                     {@link com.sun.tools.attach.AttachPermission AttachPermission}
+    *                                     <tt>("attachVirtualMachine")</tt>, or other permission
+    *                                     required by the implementation.
+    * @throws AttachNotSupportedException If the descriptor's {@link
+    *                                     com.sun.tools.attach.VirtualMachineDescriptor#provider() provider()} method
+    *                                     returns a provider that is not this provider, or it does not correspond
+    *                                     to a Java virtual machine to which this provider can attach.
+    * @throws IOException                 If some other I/O error occurs
+    * @throws NullPointerException        If <code>vmd</code> is <code>null</code>
+    */
+   public VirtualMachine attachVirtualMachine(VirtualMachineDescriptor vmd)
+      throws AttachNotSupportedException, IOException
+   {
+      if (vmd.provider() != this) {
+         throw new AttachNotSupportedException("provider mismatch");
+      }
+
+      return attachVirtualMachine(vmd.id());
+   }
+
+   /**
+    * Lists the Java virtual machines known to this provider.
+    * <p/>
+    * This method returns a list of {@link com.sun.tools.attach.VirtualMachineDescriptor} elements.
+    * Each <code>VirtualMachineDescriptor</code> describes a Java virtual machine
+    * to which this provider can <i>potentially</i> attach.  There isn't any
+    * guarantee that invoking {@link #attachVirtualMachine(VirtualMachineDescriptor)
+    * attachVirtualMachine} on each descriptor in the list will succeed.
+    *
+    * @return The list of virtual machine descriptors which describe the
+    *         Java virtual machines known to this provider (may be empty).
+    */
+   public abstract List<VirtualMachineDescriptor> listVirtualMachines();
+
+   /**
     * Returns a list of the installed attach providers.
     * <p/>
     * <p> An AttachProvider is installed on the platform if:

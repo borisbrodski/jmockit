@@ -75,6 +75,16 @@ public abstract class HotSpotVirtualMachine extends VirtualMachine
    }
 
    /**
+    * Load agent - absolute path of library provided to target VM.
+    */
+   @Override
+   public void loadAgentPath(String agentLibrary, String options)
+      throws AgentLoadException, AgentInitializationException, IOException
+   {
+      loadAgentLibrary(agentLibrary, true, options);
+   }
+
+   /**
     * Load JPLIS agent which will load the agent JAR file and invoke the agentmain method.
     */
    @Override

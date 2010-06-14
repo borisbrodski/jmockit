@@ -37,7 +37,14 @@ public final class AttachNotSupportedException extends Exception
    private static final long serialVersionUID = 3391824968260177264L;
 
    /**
-    * Constructs an <code>AttachNotSupportedException</code> with
+    * Constructs an <code>AttachNotSupportedException</code> with no detail message.
+    */
+   public AttachNotSupportedException()
+   {
+   }
+
+   /**
+     * Constructs an <code>AttachNotSupportedException</code> with
     * the specified detail message.
     *
     * @param s the detail message.
