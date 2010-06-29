@@ -57,7 +57,7 @@ import mockit.internal.expectations.*;
  * At the end of the test, the test runner will automatically assert that all recorded invocations 
  * were actually replayed as expected.
  * <p/>
- * Additional features and powerful details:
+ * Additional features and details:
  * <ul>
  * <li>
  * A <strong>mock field</strong> can be of any non-primitive type, including interfaces, abstract
