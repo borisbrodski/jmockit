@@ -337,7 +337,7 @@ public final class DelegateTest extends TestCase
       assertNull(collaborator.doSomething(true, null, "str"));
    }
 
-   public void testDelegateWithSingleMethodOfDifferentName()
+   public void testDelegateWithSingleMethodHavingADifferentName()
    {
       new NonStrictExpectations()
       {
@@ -358,6 +358,64 @@ public final class DelegateTest extends TestCase
       };
 
       assertNull(new Collaborator().doSomething(true, null, "str"));
+   }
+
+   public void testDelegateWithSingleMethodHavingNoParameters()
+   {
+      new NonStrictExpectations()
+      {
+         Collaborator collaborator;
+
+         {
+            collaborator.doSomething(anyBoolean, null, null);
+            result = new Delegate()
+            {
+               String onReplay() { return "action"; }
+            };
+         }
+      };
+
+      assertEquals("action", new Collaborator().doSomething(true, null, null));
+   }
+
+   public void testDelegateWithSingleMethodHavingNoParametersExceptForInvocationContext()
+   {
+      new NonStrictExpectations()
+      {
+         Collaborator collaborator;
+
+         {
+            collaborator.doSomething(anyBoolean, null, null);
+            result = new Delegate()
+            {
+               void doSomething(Invocation inv) { assertEquals(1, inv.getInvocationCount()); }
+            };
+         }
+      };
+
+      assertNull(new Collaborator().doSomething(false, new int[] {1, 2}, "test"));
+   }
+
+   public void testDelegateWithOneMethodHavingDifferentParameters(final Collaborator collaborator)
+   {
+      new NonStrictExpectations()
+      {
+         {
+            collaborator.doSomething(true, null, "str");
+            result = new Delegate()
+            {
+               void doSomething(boolean b, String s) {}
+            };
+         }
+      };
+
+      try {
+         assertNull(collaborator.doSomething(true, null, "str"));
+         fail();
+      }
+      catch (IllegalArgumentException e) {
+         assertTrue(e.getMessage().contains("doSomething("));
+      }
    }
 
    public void testDelegateWithTwoInvalidMethods(final Collaborator collaborator)

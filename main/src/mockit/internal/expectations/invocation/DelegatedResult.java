@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -53,6 +53,10 @@ final class DelegatedResult extends DynamicInvocationResult
          String methodName = adaptNameAndArgumentsForDelegate(invocation, args);
          methodToInvoke = Utilities.findCompatibleMethod(targetObject, methodName, args);
          determineWhetherMethodToInvokeHasInvocationParameter();
+      }
+      else if (numberOfRegularParameters == 0 && args.length > 0) {
+         //noinspection AssignmentToMethodParameter
+         args = Utilities.NO_ARGS;
       }
 
       return invokeMethodOnTargetObject(invokedObject, constraints, args);

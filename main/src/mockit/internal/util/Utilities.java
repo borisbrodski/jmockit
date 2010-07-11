@@ -25,9 +25,9 @@
 package mockit.internal.util;
 
 import java.lang.reflect.*;
-import static java.lang.reflect.Modifier.*;
-
 import java.util.*;
+
+import static java.lang.reflect.Modifier.*;
 
 import mockit.*;
 
@@ -39,6 +39,7 @@ import mockit.*;
 public final class Utilities
 {
    public static final String GENERATED_SUBCLASS_PREFIX = "$Subclass_";
+   public static final Object[] NO_ARGS = {};
 
    private static final Class<?>[] PRIMITIVE_TYPES = {
       null, boolean.class, char.class, byte.class, short.class, int.class, float.class, long.class,
@@ -348,6 +349,10 @@ public final class Utilities
       catch (IllegalAccessException e) {
          assert false : "Not expected to happen because the method was made accessible";
          throw new RuntimeException(e);
+      }
+      catch (IllegalArgumentException e) {
+         filterStackTrace(e);
+         throw new IllegalArgumentException("Failure to invoke method: " + method, e);
       }
       catch (InvocationTargetException e) {
          Throwable cause = e.getCause();

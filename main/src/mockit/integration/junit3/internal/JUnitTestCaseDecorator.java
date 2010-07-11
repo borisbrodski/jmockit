@@ -46,8 +46,6 @@ import mockit.internal.util.*;
 @MockClass(realClass = TestCase.class)
 public final class JUnitTestCaseDecorator extends TestRunnerDecorator
 {
-   private static final Object[] NO_ARGS = new Object[0];
-
    private static final Method setUpMethod;
    private static final Method tearDownMethod;
    private static final Method runTestMethod;
@@ -139,7 +137,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
 
       TestRun.setRunningTestMethod(testMethod);
       SavePoint savePoint = new SavePoint();
-      Object[] args = createInstancesForMockParametersIfAny(it, testMethod, NO_ARGS);
+      Object[] args = createInstancesForMockParametersIfAny(it, testMethod, Utilities.NO_ARGS);
 
       try {
          if (args.length == 0) {

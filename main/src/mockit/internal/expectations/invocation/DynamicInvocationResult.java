@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -33,6 +33,7 @@ abstract class DynamicInvocationResult extends InvocationResult
 {
    final Object targetObject;
    Method methodToInvoke;
+   int numberOfRegularParameters;
    private boolean hasInvocationParameter;
 
    DynamicInvocationResult(Object targetObject, Method methodToInvoke)
@@ -48,7 +49,9 @@ abstract class DynamicInvocationResult extends InvocationResult
    final void determineWhetherMethodToInvokeHasInvocationParameter()
    {
       Class<?>[] parameters = methodToInvoke.getParameterTypes();
-      hasInvocationParameter = parameters.length > 0 && parameters[0] == Invocation.class;
+      int n = parameters.length;
+      hasInvocationParameter = n > 0 && parameters[0] == Invocation.class;
+      numberOfRegularParameters = hasInvocationParameter ? n - 1 : n;
    }
 
    final Object invokeMethodOnTargetObject(
