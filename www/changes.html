@@ -11,7 +11,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.999 (June ??, 2010):</p>
+<p>Release 0.999 (July ??, 2010):</p>
 <ul>
    <li>
       <strong>Removed</strong> the following <em>deprecated methods</em> from the
@@ -26,13 +26,13 @@
       invalid context, such as an static <code>@BeforeClass</code> JUnit method.
    </li>
    <li>
-      <strong>Bug fixes</strong> in the "Java agent" auto-initialization under JDK 1.6, when not using the
-      "-javaagent" JVM parameter:
-      1) When using JUnit, the agent would not get loaded if another jar file named like "jmockit-xyz.jar"
-      (such as "jmockit-coverage.jar", for example) was present in the classpath <em>before</em> the actual
-      "jmockit.jar".
-      2) When using only JMockit Coverage, without "jmockit.jar" directly added to the classpath, that jar
-      file wasn't found and consequently JMockit never got initialized.
+      <strong>Bug fixes</strong> in the "Java agent" auto-initialization under JDK 1.6, when not
+      using the "-javaagent" JVM parameter:
+      1) When using JUnit, the agent would not get loaded if another jar file named like
+      "jmockit-xyz.jar" (such as "jmockit-coverage.jar", for example) was present in the classpath
+      <em>before</em> the actual "jmockit.jar".
+      2) When using only JMockit Coverage, without "jmockit.jar" directly added to the classpath,
+      that jar file wasn't found and consequently JMockit never got initialized.
    </li>
    <li>
       <strong>Fixed a bug</strong> in the validation for duplicate non-strict expectations, which
@@ -47,6 +47,19 @@
       for JUnit 4.5+ tests), and <code>JMockitTestNG</code>. All they ever did was make sure that
       JMockit got initialized at start-up. This is best done through other means, which have been
       available for some time.
+   </li>
+   <li>
+      <strong>Enhancement</strong> to the use of <code>Delegate</code> objects: when there is only
+      one delegate method, it is allowed to have no parameters even if the corresponding mocked
+      method has them.
+   </li>
+   <li>
+      <strong>Enhancements</strong> in the support for testing multi-threaded code with the
+      Expectations API:
+      a) a delegate method is now allowed to execute code in a different thread, even if such code
+      invokes other mocked methods (previously, this situation would cause a dead-lock).
+      b) if an unexpected invocation occurs in a thread other than the test thread, the test will
+      now fail just as if it had occurred in the regular test thread.
    </li>
 </ul>
 
