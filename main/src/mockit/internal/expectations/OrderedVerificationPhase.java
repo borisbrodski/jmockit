@@ -71,7 +71,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
             unverifiedExpectationsLeftBehind = true;
          }
          else if (indexIncrement > 0) {
-            recordAndReplay.errorThrown = expectation.invocation.errorForUnexpectedInvocation();
+            recordAndReplay.setErrorThrown(expectation.invocation.errorForUnexpectedInvocation());
             replayIndex = i;
             break;
          }
@@ -219,8 +219,10 @@ public final class OrderedVerificationPhase extends VerificationPhase
             invocation.instance, 0, invocation.getClassDesc(),
             invocation.getMethodNameAndDescription(), false, invocation.arguments.getValues());
 
-         if (recordAndReplay.errorThrown != null) {
-            return recordAndReplay.errorThrown;
+         AssertionError testFailure = recordAndReplay.getErrorThrown();
+
+         if (testFailure != null) {
+            return testFailure;
          }
       }
 

@@ -464,4 +464,27 @@ public final class ExpectationsTest
 
       new FileWriter("no.file");
    }
+
+   @Test(expected = AssertionError.class)
+   public void failureFromUnexpectedInvocationInAnotherThread() throws Exception
+   {
+      final Collaborator collaborator = new Collaborator();
+      Thread t = new Thread(new Runnable()
+      {
+         public void run() { collaborator.provideSomeService(); }
+      });
+
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.getValue();
+         }
+      };
+
+      collaborator.getValue();
+      t.start();
+      t.join();
+   }
 }

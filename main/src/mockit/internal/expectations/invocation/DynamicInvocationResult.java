@@ -27,6 +27,7 @@ package mockit.internal.expectations.invocation;
 import java.lang.reflect.*;
 
 import mockit.*;
+import mockit.internal.expectations.*;
 import mockit.internal.util.*;
 
 abstract class DynamicInvocationResult extends InvocationResult
@@ -63,7 +64,7 @@ abstract class DynamicInvocationResult extends InvocationResult
          result = invokeMethodWithContext(mockOrRealObject, constraints, args);
       }
       else {
-         result = Utilities.invoke(targetObject, methodToInvoke, args);
+         result = executeMethodToInvoke(args);
       }
 
       return result;
@@ -79,7 +80,7 @@ abstract class DynamicInvocationResult extends InvocationResult
       Object[] delegateArgs = getArgumentsWithExtraInvocationObject(invocation, args);
 
       try {
-         return Utilities.invoke(targetObject, methodToInvoke, delegateArgs);
+         return executeMethodToInvoke(delegateArgs);
       }
       finally {
          constraints.setLimits(invocation.getMinInvocations(), invocation.getMaxInvocations());
@@ -92,5 +93,22 @@ abstract class DynamicInvocationResult extends InvocationResult
       delegateArgs[0] = invocation;
       System.arraycopy(args, 0, delegateArgs, 1, args.length);
       return delegateArgs;
+   }
+   
+   private Object executeMethodToInvoke(Object[] args)
+   {
+      if (!RecordAndReplayExecution.LOCK.isHeldByCurrentThread()) {
+         return Utilities.invoke(targetObject, methodToInvoke, args);
+      }
+
+      RecordAndReplayExecution.LOCK.unlock();
+
+      try {
+         return Utilities.invoke(targetObject, methodToInvoke, args);
+      }
+      finally {
+         //noinspection LockAcquiredButNotSafelyReleased
+         RecordAndReplayExecution.LOCK.lock();
+      }
    }
 }

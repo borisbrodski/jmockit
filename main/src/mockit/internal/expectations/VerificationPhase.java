@@ -61,7 +61,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
       boolean withRealImpl, Object[] args)
    {
       if (pendingError != null) {
-         recordAndReplay.errorThrown = pendingError;
+         recordAndReplay.setErrorThrown(pendingError);
          pendingError = null;
          return null;
       }
@@ -76,7 +76,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
          nextInstanceToMatch = null;
       }
 
-      if (recordAndReplay.errorThrown != null) {
+      if (recordAndReplay.getErrorThrown() != null) {
          return null;
       }
 

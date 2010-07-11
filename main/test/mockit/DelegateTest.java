@@ -440,4 +440,33 @@ public final class DelegateTest extends TestCase
          assertTrue(e.getMessage().startsWith("No compatible method found"));
       }
    }
+
+   public void testDelegateCausingConcurrentMockInvocation()
+   {
+      final Collaborator collaborator = new Collaborator();
+      final Thread t = new Thread(new Runnable()
+      {
+         public void run() { collaborator.doSomething(false, null, ""); }
+      });
+
+      new Expectations()
+      {
+         @NonStrict Collaborator mock;
+
+         {
+            mock.getValue(); times = 1;
+            result = new Delegate()
+            {
+               int executeInAnotherThread() throws Exception
+               {
+                  t.start();
+                  t.join();
+                  return 1;
+               }
+            };
+         }
+      };
+
+      collaborator.getValue();
+   }
 }
