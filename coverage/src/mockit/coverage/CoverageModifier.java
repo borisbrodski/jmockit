@@ -147,7 +147,7 @@ final class CoverageModifier extends ClassWriter
             return new StaticBlockModifier(mv);
          }
 
-         if (Metrics.PATH_COVERAGE || Metrics.DATA_COVERAGE) {
+         if (Metrics.PATH_COVERAGE || Metrics.DATA_COVERAGE) { // TODO: fully separate these
             return new ConstructorModifier(mv);
          }
       }
@@ -406,6 +406,7 @@ final class CoverageModifier extends ClassWriter
       }
    }
 
+   // TODO: implement max limit for number of paths
    private class MethodOrConstructorModifier extends BaseMethodModifier
    {
       final MethodCoverageData methodData;
