@@ -9,9 +9,9 @@
 
 <h2>JMockit development history</h2>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
-<p>Release 0.999 (July ??, 2010):</p>
+<p>Release 0.999 (July 15, 2010):</p>
 <ul>
    <li>
       <strong>Removed</strong> the following <em>deprecated methods</em> from the
@@ -20,6 +20,13 @@
       If tests using these methods still exist, they will have to be changed according to the
       instructions provided in the API documentation (from release 0.997, in which the methods were
       deprecated).
+   </li>
+   <li>
+      <strong>Deprecated</strong> the following JUnit/TestNG integration support classes:
+      <code>JMockitTestCase</code>, <code>JMockitTest</code>, <code>JMockit</code> (custom runner
+      for JUnit 4.5+ tests), and <code>JMockitTestNG</code>. All they ever did was make sure that
+      JMockit got initialized at start-up. This is best done through other means, which have been
+      available for some time.
    </li>
    <li>
       <strong>New validation</strong> implemented to detect uses of the Expectations API from an
@@ -42,13 +49,6 @@
       See <a href="http://code.google.com/p/jmockit/issues/detail?id=62">issue 62</a>.
    </li>
    <li>
-      <strong>Deprecated</strong> the following JUnit/TestNG integration support classes:
-      <code>JMockitTestCase</code>, <code>JMockitTest</code>, <code>JMockit</code> (custom runner
-      for JUnit 4.5+ tests), and <code>JMockitTestNG</code>. All they ever did was make sure that
-      JMockit got initialized at start-up. This is best done through other means, which have been
-      available for some time.
-   </li>
-   <li>
       <strong>Enhancement</strong> to the use of <code>Delegate</code> objects: when there is only
       one delegate method, it is allowed to have no parameters even if the corresponding mocked
       method has them.
@@ -63,7 +63,7 @@
    </li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release 0.998 (April 21, 2010):</p>
 <ul>
@@ -136,8 +136,6 @@
       following words: "line", "path", "data", and "all".
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.997 (March 3, 2010):</p>
 <ul>
