@@ -827,6 +827,9 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
  If there is any other parameter for which an argument matching constraint can be specified,
  though, the <code>null</code> reference can be passed instead, as it will also match any
  reference during the replay phase.
+ <p/>
+ Note: in invocations to <em>non-accessible</em> methods or constructors (for example, with
+ <A HREF="../mockit/NonStrictExpectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><CODE>invoke(Object, String, Object...)</CODE></A>), use <A HREF="../mockit/NonStrictExpectations.html#withAny(T)"><CODE>withAny(T)</CODE></A> instead.
 <P>
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/NonStrictExpectations.html#anyInt"><CODE>anyInt</CODE></A></DL>
@@ -1476,12 +1479,14 @@ protected final &lt;T&gt; T <B>withAny</B>(T&nbsp;arg)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/NonStrictExpectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but matching any argument value of the appropriate type.
  <p/>
- Consider using instead the "any" field appropriate to the parameter type: <A HREF="../mockit/NonStrictExpectations.html#any"><CODE>any</CODE></A>,
+ Consider using instead the "anyXyz" field appropriate to the parameter type:
  <A HREF="../mockit/NonStrictExpectations.html#anyBoolean"><CODE>anyBoolean</CODE></A>, <A HREF="../mockit/NonStrictExpectations.html#anyByte"><CODE>anyByte</CODE></A>, <A HREF="../mockit/NonStrictExpectations.html#anyChar"><CODE>anyChar</CODE></A>, <A HREF="../mockit/NonStrictExpectations.html#anyDouble"><CODE>anyDouble</CODE></A>,
- <A HREF="../mockit/NonStrictExpectations.html#anyFloat"><CODE>anyFloat</CODE></A>, <A HREF="../mockit/NonStrictExpectations.html#anyInt"><CODE>anyInt</CODE></A>, <A HREF="../mockit/NonStrictExpectations.html#anyLong"><CODE>anyLong</CODE></A>, <A HREF="../mockit/NonStrictExpectations.html#anyShort"><CODE>anyShort</CODE></A>, <A HREF="../mockit/NonStrictExpectations.html#anyString"><CODE>anyString</CODE></A>.
- On the other hand, this method is useful if a specific value must be passed as argument to the
- mocked invocation (typically, when using the <A HREF="../mockit/NonStrictExpectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><CODE>invoke(Object, String, Object...)</CODE></A> 
- method).
+ <A HREF="../mockit/NonStrictExpectations.html#anyFloat"><CODE>anyFloat</CODE></A>, <A HREF="../mockit/NonStrictExpectations.html#anyInt"><CODE>anyInt</CODE></A>, <A HREF="../mockit/NonStrictExpectations.html#anyLong"><CODE>anyLong</CODE></A>, <A HREF="../mockit/NonStrictExpectations.html#anyShort"><CODE>anyShort</CODE></A>, <A HREF="../mockit/NonStrictExpectations.html#anyString"><CODE>anyString</CODE></A>,
+ or <A HREF="../mockit/NonStrictExpectations.html#any"><CODE>any</CODE></A> for other reference types.
+ <p/>
+ Note: when using <A HREF="../mockit/NonStrictExpectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><CODE>invoke(Object, String, Object...)</CODE></A>, etc., it's valid to pass
+ <code>withAny(ParameterType.class)</code> if an actual instance of the parameter type cannot be
+ created.
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>arg</CODE> - an arbitrary value which will match any argument value in the replay phase

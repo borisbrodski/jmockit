@@ -52,7 +52,7 @@ function windowTitle()
 <TR>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;PREV CLASS&nbsp;
-&nbsp;<A HREF="../../../mockit/integration/testng/JMockitTestNG.html" title="class in mockit.integration.testng"><B>NEXT CLASS</B></A></FONT></TD>
+&nbsp;NEXT CLASS</FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
   <A HREF="../../../index.html?mockit/integration/testng/Initializer.html" target="_top"><B>FRAMES</B></A>  &nbsp;
 &nbsp;<A HREF="Initializer.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
@@ -104,10 +104,13 @@ A test listener implementation for TestNG that will properly initialize JMockit 
  are executed. This class is useful if running on JDK 1.6+ and the JVM argument
  "-javaagent:jmockit.jar" isn't being used.
  If that is the case, then this mechanism avoids the need to make all test classes extend
- <A HREF="../../../mockit/integration/testng/JMockitTestNG.html" title="class in mockit.integration.testng"><CODE>JMockitTestNG</CODE></A>.
+ <CODE>JMockitTestNG</CODE>.
  <p/>
+ One way to configure TestNG to use this class as a listener is to pass
+ "-listener mockit.integration.testng.Initializer" as a command line argument.
+ Another way would be through <code>testng.xml</code> configuration.
  Please check the <a href="http://testng.org/doc/documentation-main.html#running-testng">TestNG
- documentation</a> for ways to run it with this class as a listener.
+ documentation</a> for more details.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">Tutorial</a>
 <P>
@@ -362,7 +365,7 @@ public void <B>onTestSuccess</B>(org.testng.ITestResult&nbsp;result)</PRE>
 <TR>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;PREV CLASS&nbsp;
-&nbsp;<A HREF="../../../mockit/integration/testng/JMockitTestNG.html" title="class in mockit.integration.testng"><B>NEXT CLASS</B></A></FONT></TD>
+&nbsp;NEXT CLASS</FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
   <A HREF="../../../index.html?mockit/integration/testng/Initializer.html" target="_top"><B>FRAMES</B></A>  &nbsp;
 &nbsp;<A HREF="Initializer.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
