@@ -191,15 +191,6 @@ final class ExpectationsModifier extends BaseClassModifier
          "annotationType".equals(name) && "()Ljava/lang/Class;".equals(desc);
    }
 
-   private boolean isMethodFromObject(String name, String desc)
-   {
-      return
-         "equals".equals(name)   && "(Ljava/lang/Object;)Z".equals(desc) ||
-         "hashCode".equals(name) && "()I".equals(desc) ||
-         "toString".equals(name) && "()Ljava/lang/String;".equals(desc) ||
-         "finalize".equals(name) && "()V".equals(desc);
-   }
-
    private boolean isMethodOrConstructorNotToBeMocked(int access, String name)
    {
       return

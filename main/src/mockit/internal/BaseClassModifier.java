@@ -352,4 +352,13 @@ public class BaseClassModifier extends ClassWriter
       mw.visitInsn(RETURN);
       mw.visitMaxs(1, 0);
    }
+
+   protected final boolean isMethodFromObject(String name, String desc)
+   {
+      return
+         "equals".equals(name)   && "(Ljava/lang/Object;)Z".equals(desc) ||
+         "hashCode".equals(name) && "()I".equals(desc) ||
+         "toString".equals(name) && "()Ljava/lang/String;".equals(desc) ||
+         "finalize".equals(name) && "()V".equals(desc);
+   }
 }

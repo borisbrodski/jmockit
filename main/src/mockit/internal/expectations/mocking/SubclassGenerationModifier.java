@@ -25,9 +25,11 @@
 package mockit.internal.expectations.mocking;
 
 import java.io.*;
-import java.lang.reflect.*;
 import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.*;
+
+import static mockit.external.asm.Opcodes.*;
 
 import mockit.external.asm.*;
 import mockit.external.asm.Type;
@@ -35,8 +37,6 @@ import mockit.external.asm.commons.*;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
 import mockit.internal.util.*;
-
-import static mockit.external.asm.Opcodes.*;
 
 final class SubclassGenerationModifier extends BaseClassModifier
 {
@@ -170,7 +170,12 @@ final class SubclassGenerationModifier extends BaseClassModifier
    {
       mw = super.visitMethod(ACC_PUBLIC, name, desc, signature, exceptions);
 
-      if (mockingConfiguration == null || mockingConfiguration.matchesFilters(name, desc)) {
+      boolean noFiltersToMatch = mockingConfiguration == null || mockingConfiguration.isEmpty();
+
+      if (
+         noFiltersToMatch && !isMethodFromObject(name, desc) ||
+         !noFiltersToMatch && mockingConfiguration.matchesFilters(name, desc)
+      ) {
          generateDirectCallToHandler(className, access, name, desc, false);
          generateReturnWithObjectAtTopOfTheStack(desc);
          mw.visitMaxs(1, 0);
