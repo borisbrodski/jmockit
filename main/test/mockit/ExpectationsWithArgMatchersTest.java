@@ -24,12 +24,12 @@
  */
 package mockit;
 
+import java.security.cert.*;
 import java.util.*;
-
-import org.junit.*;
 
 import org.hamcrest.*;
 import org.hamcrest.core.*;
+import org.junit.*;
 
 public final class ExpectationsWithArgMatchersTest
 {
@@ -46,9 +46,11 @@ public final class ExpectationsWithArgMatchersTest
       }
 
       final void simpleOperation(int a, String b, Date c) {}
+
+      void setValue(Certificate cert) {}
    }
 
-   @Mocked private Collaborator mock;
+   @Mocked Collaborator mock;
 
    @Test(expected = AssertionError.class)
    public void replayWithUnexpectedMethodArgument()
@@ -251,6 +253,45 @@ public final class ExpectationsWithArgMatchersTest
       };
 
       mock.complexOperation(45L);
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectInvocationWithSameMockInstanceButReplayWithNull()
+   {
+      new NonStrictExpectations()
+      {
+         // This class defines an abstract "toString" override, which initially was erroneously 
+         // mocked, causing a non-strict expectation to be created during replay:
+         Certificate cert;
+
+         {
+            mock.setValue(withSameInstance(cert)); times = 1;
+         }
+      };
+
+      mock.setValue(null);
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectNonStrictInvocationWithMatcherWhichInvokesMockedMethod()
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mock.setValue(with(0, new Object()
+            {
+               boolean validateAsPositive(int value)
+               {
+                  // Invoking mocked method caused ConcurrentModificationException (bug fixed):
+                  mock.simpleOperation(1, "b", null);
+                  return value > 0;
+               }
+            }));
+            minTimes = 1;
+         }
+      };
+
+      mock.setValue(-3);
    }
 
    @Test

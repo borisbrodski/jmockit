@@ -126,14 +126,16 @@ final class PhasedExecutionState
    Expectation findNonStrictExpectation(
       Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
-      for (Expectation nonStrict : nonStrictExpectations) {
+      // Note: new expectations might get added to the list, so a regular loop would cause a CME:
+      for (int i = 0, n = nonStrictExpectations.size(); i < n; i++) {
+         Expectation nonStrict = nonStrictExpectations.get(i);
          ExpectedInvocation invocation = nonStrict.invocation;
 
          if (
             invocation.isMatch(mockClassDesc, mockNameAndDesc) &&
             invocation.isMatch(mock, instanceMap) &&
-            invocation.arguments.assertMatch(args, instanceMap) == null)
-         {
+            invocation.arguments.assertMatch(args, instanceMap) == null
+         ) {
             return nonStrict;
          }
       }
