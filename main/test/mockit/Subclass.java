@@ -45,6 +45,7 @@ final class Subclass extends BaseClass
    Subclass() { intField = -1; }
    Subclass(int a, String b) { intField = a; stringField = b; }
    Subclass(String... args) { listField = Arrays.asList(args); }
+   Subclass(List<String> list) { listField = list; }
 
    private static Boolean anStaticMethod() { return true; }
    private static void staticMethod(short s, String str, Boolean b) {}
@@ -68,5 +69,6 @@ final class Subclass extends BaseClass
    {
       private InnerClass() {}
       private InnerClass(boolean b, Long l, String s) {}
+      private InnerClass(List<String> list) {}
    }
 }

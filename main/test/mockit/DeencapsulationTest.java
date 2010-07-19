@@ -255,6 +255,12 @@ public final class DeencapsulationTest
    }
 
    @Test
+   public void invokeInstanceMethodWithSingleParameterOfBaseTypeWhilePassingSubtypeInstance()
+   {
+      invoke(anInstance, "setListField", new ArrayList<String>());
+   }
+
+   @Test
    public void invokeStaticMethodWithoutParameters()
    {
       Boolean result = invoke(Subclass.class, "anStaticMethod");
@@ -341,6 +347,17 @@ public final class DeencapsulationTest
    }
 
    @Test
+   public void newInstancePassingSubclassInstanceToConstructorWithSingleArgument()
+   {
+      List<String> aList = new ArrayList<String>();
+
+      Subclass instance = newInstance(Subclass.class, aList);
+
+      assertNotNull(instance);
+      assertSame(aList, instance.getListField());
+   }
+
+   @Test
    public void newInstanceUsingMultipleArgsConstructorFromNonNullArgumentValues()
    {
       BaseClass instance = newInstance(Subclass.class, 590, "");
@@ -371,9 +388,19 @@ public final class DeencapsulationTest
    }
 
    @Test
-   public void newInnerInstanceUsingMultipleArgsConstructor() throws Exception
+   public void newInnerInstanceUsingMultipleArgsConstructor()
    {
       Object innerInstance = newInnerInstance(innerClass, anInstance, true, 5L, "");
+
+      assertTrue(innerClass.isInstance(innerInstance));
+   }
+
+   @Test
+   public void newInnerInstancePassingSubclassInstanceToConstructorWithSingleArgument()
+   {
+      List<String> aList = new ArrayList<String>();
+
+      Object innerInstance = newInnerInstance(innerClass, anInstance, aList);
 
       assertTrue(innerClass.isInstance(innerInstance));
    }

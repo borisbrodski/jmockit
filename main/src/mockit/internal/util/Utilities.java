@@ -97,10 +97,11 @@ public final class Utilities
 
       String paramTypesDesc = getParameterTypesDescription(paramTypes);
 
-      throw new IllegalArgumentException("Specified constructor not found: " + paramTypesDesc);
+      throw new IllegalArgumentException(
+         "Specified constructor not found: " + theClass.getSimpleName() + paramTypesDesc);
    }
 
-   private static String getParameterTypesDescription(Class<?>[] paramTypes)
+   private static String getParameterTypesDescription(Type[] paramTypes)
    {
       String paramTypesDesc = Arrays.asList(paramTypes).toString();
       return paramTypesDesc.replace("class ", "").replace('[', '(').replace(']', ')');
@@ -114,32 +115,52 @@ public final class Utilities
 
    public static <T> T newInstance(Class<? extends T> aClass, Object... nonNullArgs)
    {
-      Class<?>[] paramTypes = getParameterTypesFromArguments(nonNullArgs);
-      return newInstance(aClass, paramTypes, nonNullArgs);
+      Class<?>[] argTypes = getArgumentTypesFromArgumentValues(nonNullArgs);
+      Constructor constructor = findCompatibleConstructor(aClass, argTypes);
+      return (T) invoke(constructor, nonNullArgs);
+   }
+
+   private static Constructor findCompatibleConstructor(Class<?> theClass, Class<?>[] argTypes)
+   {
+      for (Constructor declaredConstructor : theClass.getDeclaredConstructors()) {
+         Class<?>[] declaredParamTypes = declaredConstructor.getParameterTypes();
+
+         if (
+            matchesParameterTypes(declaredParamTypes, argTypes) ||
+            acceptsArgumentTypes(declaredParamTypes, argTypes)
+         ) {
+            return declaredConstructor;
+         }
+      }
+
+      String argTypesDesc = getParameterTypesDescription(argTypes);
+
+      throw new IllegalArgumentException(
+         "No compatible constructor found: " + theClass.getSimpleName() + argTypesDesc);
    }
 
    public static <T> T newInstance(String className, Object... nonNullArgs)
    {
-      Class<?>[] paramTypes = getParameterTypesFromArguments(nonNullArgs);
-      return (T) newInstance(className, paramTypes, nonNullArgs);
+      Class<?>[] argTypes = getArgumentTypesFromArgumentValues(nonNullArgs);
+      return (T) newInstance(className, argTypes, nonNullArgs);
    }
 
-   public static Class<?>[] getParameterTypesFromArguments(Object... args)
+   private static Class<?>[] getArgumentTypesFromArgumentValues(Object... args)
    {
       if (args.length == 0) {
          return NO_PARAMETERS;
       }
 
-      Class<?>[] paramTypes = new Class<?>[args.length];
+      Class<?>[] argTypes = new Class<?>[args.length];
 
       for (int i = 0; i < args.length; i++) {
-         paramTypes[i] = getParameterTypeFromArgument(i, args);
+         argTypes[i] = getArgumentTypeFromArgumentValue(i, args);
       }
 
-      return paramTypes;
+      return argTypes;
    }
 
-   private static Class<?> getParameterTypeFromArgument(int i, Object[] args)
+   private static Class<?> getArgumentTypeFromArgumentValue(int i, Object[] args)
    {
       Object arg = args[i];
 
@@ -151,19 +172,19 @@ public final class Utilities
 
       Class<?> argType;
 
-      if (arg instanceof Class) {
+      if (arg instanceof Class<?>) {
          argType = (Class<?>) arg;
          args[i] = null;
       }
       else {
-         argType = arg.getClass();
+         Class<?> argClass = arg.getClass();
 
-         if (Proxy.isProxyClass(argType)) {
+         if (Proxy.isProxyClass(argClass)) {
             // Assumes that the proxy class implements a single interface.
-            argType = argType.getInterfaces()[0];
+            argType = argClass.getInterfaces()[0];
          }
          else {
-            argType = getMockedClass(argType);
+            argType = getMockedClass(argClass);
          }
       }
 
@@ -188,18 +209,11 @@ public final class Utilities
    public static <T> T newInnerInstance(
       Class<? extends T> innerClass, Object outerInstance, Object... nonNullArgs)
    {
-      Class<?>[] parameterTypes = new Class<?>[1 + nonNullArgs.length];
-      parameterTypes[0] = outerInstance.getClass();
-
       Object[] initArgs = new Object[1 + nonNullArgs.length];
       initArgs[0] = outerInstance;
+      System.arraycopy(nonNullArgs, 0, initArgs, 1, nonNullArgs.length);
 
-      for (int i = 0; i < nonNullArgs.length; i++) {
-         parameterTypes[1 + i] = getParameterTypeFromArgument(i, nonNullArgs);
-         initArgs[1 + i] = nonNullArgs[i];
-      }
-
-      return newInstance(innerClass, parameterTypes, initArgs);
+      return newInstance(innerClass, initArgs);
    }
 
    public static <T> T newInnerInstance(
@@ -211,16 +225,11 @@ public final class Utilities
       return newInnerInstance(innerClass, outerInstance, nonNullArgs);
    }
 
-   public static <T> T invoke(Object targetInstance, String methodName, Object... methodArgs)
-   {
-      return (T) invoke(targetInstance.getClass(), targetInstance, methodName, methodArgs);
-   }
-
    public static <T> T invoke(
       Class<?> theClass, Object targetInstance, String methodName, Object... methodArgs)
    {
-      Class<?>[] paramTypes = getParameterTypesFromArguments(methodArgs);
-      Method method = findCompatibleMethod(theClass, methodName, paramTypes);
+      Class<?>[] argTypes = getArgumentTypesFromArgumentValues(methodArgs);
+      Method method = findCompatibleMethod(theClass, methodName, argTypes);
 
       T result = (T) invoke(targetInstance, method, methodArgs);
       return result;
@@ -229,8 +238,8 @@ public final class Utilities
    public static Method findCompatibleMethod(
       Object targetInstance, String methodName, Object[] args)
    {
-      Class<?>[] paramTypes = getParameterTypesFromArguments(args);
-      return findCompatibleMethod(targetInstance.getClass(), methodName, paramTypes);
+      Class<?>[] argTypes = getArgumentTypesFromArgumentValues(args);
+      return findCompatibleMethod(targetInstance.getClass(), methodName, argTypes);
    }
 
    private static Method findCompatibleMethod(
