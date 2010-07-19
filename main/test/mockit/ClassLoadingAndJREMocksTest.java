@@ -25,6 +25,7 @@
 package mockit;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 
 import org.junit.*;
@@ -157,5 +158,42 @@ public final class ClassLoadingAndJREMocksTest
 
       assertEquals(123, props.remove(""));
       assertEquals("mock", props.getProperty("test"));
+   }
+
+   @Test
+   public void mockURLAndHttpURLConnection() throws Exception
+   {
+      // Several different ways to write this test don't work: 1) mocking the URL class without
+      // dynamic mocking; 2) using a mock URL parameter with dynamic mocking; 3) mocking
+      // HttpURLConnection with a mock parameter or mock field of the test class.
+      final URL url = new URL("http://nowhere");
+
+      new NonStrictExpectations(url)
+      {
+         HttpURLConnection mockConnection;
+
+         {
+            url.openConnection(); result = mockConnection;
+            mockConnection.getOutputStream(); result = new ByteArrayOutputStream();
+         }
+      };
+
+      // Code under test:
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setDoOutput(true);
+      conn.setRequestMethod("PUT");
+      OutputStream out = conn.getOutputStream();
+
+      assertNotNull(out);
+
+      new Verifications()
+      {
+         HttpURLConnection mockConnection;
+
+         {
+            mockConnection.setDoOutput(true);
+            mockConnection.setRequestMethod("PUT");
+         }
+      };
    }
 }

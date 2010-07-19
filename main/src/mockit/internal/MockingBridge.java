@@ -24,9 +24,10 @@
  */
 package mockit.internal;
 
-import java.io.File;
+import java.io.*;
 import java.lang.reflect.*;
-import java.util.Hashtable;
+import java.net.*;
+import java.util.*;
 
 import mockit.internal.expectations.*;
 import mockit.internal.state.*;
@@ -101,7 +102,10 @@ public final class MockingBridge implements InvocationHandler
       if (mocked != null) {
          Class<?> mockedClass = mocked.getClass();
 
-         if (mockedClass == File.class || Hashtable.class.isInstance(mocked)) {
+         if (
+            mockedClass == File.class || mockedClass == URL.class ||
+            Hashtable.class.isInstance(mocked)
+         ) {
             StackTraceElement[] st = new Throwable().getStackTrace();
 
             for (int i = 3; i < st.length; i++) {
