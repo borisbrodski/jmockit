@@ -26,54 +26,17 @@ package mockit;
 
 import java.util.*;
 
+import static mockit.Deencapsulation.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-import static mockit.Deencapsulation.*;
+import mockit.internal.util.*;
 
 @SuppressWarnings({"UnusedDeclaration", "ClassWithTooManyMethods"})
 public final class DeencapsulationTest
 {
-   private final Subclass anInstance = new Subclass();
-
-   static class BaseClass
-   {
-      protected int baseInt;
-      protected String baseString;
-      protected Set<Boolean> baseSet;
-      private long longField;
-
-      void setLongField(long value) { longField = value; }
-   }
-
-   static final class Subclass extends BaseClass
-   {
-      final int INITIAL_VALUE = new Random().nextInt();
-
-      private static StringBuilder buffer;
-      private static char static1;
-      private static char static2;
-
-      private int intField;
-      private int intField2;
-      private String stringField;
-      private List<String> listField;
-
-      private Subclass() { intField = -1; }
-      private Subclass(int a, String b) { intField = a; stringField = b; }
-      private Subclass(String... args) { listField = Arrays.asList(args); }
-
-      private long aMethod() { return 567L; }
-      private static Boolean anStaticMethod() { return true; }
-      private void instanceMethod(short s, String str, Boolean b) {}
-      private static void staticMethod(short s, String str, Boolean b) {}
-
-      private final class InnerClass
-      {
-         InnerClass() {}
-         InnerClass(boolean b, Long l, String s) {}
-      }
-   }
+   static final Class<?> innerClass = Utilities.loadClass("mockit.Subclass$InnerClass");
+   final Subclass anInstance = new Subclass();
 
    @Test
    public void setValueOfNonConstantFinalField()
@@ -88,17 +51,17 @@ public final class DeencapsulationTest
    @Test
    public void getInstanceFieldByName()
    {
-      anInstance.intField = 3;
-      anInstance.stringField = "test";
-      anInstance.listField = Collections.emptyList();
+      anInstance.setIntField(3);
+      anInstance.setStringField("test");
+      anInstance.setListField(Collections.<String>emptyList());
 
       Integer intValue = getField(anInstance, "intField");
       String stringValue = getField(anInstance, "stringField");
       List<String> listValue = getField(anInstance, "listField");
 
-      assertEquals(anInstance.intField, intValue.intValue());
-      assertEquals(anInstance.stringField, stringValue);
-      assertSame(anInstance.listField, listValue);
+      assertEquals(anInstance.getIntField(), intValue.intValue());
+      assertEquals(anInstance.getStringField(), stringValue);
+      assertSame(anInstance.getListField(), listValue);
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -126,15 +89,15 @@ public final class DeencapsulationTest
    @Test
    public void getInstanceFieldByType()
    {
-      anInstance.stringField = "by type";
-      anInstance.listField = new ArrayList<String>();
+      anInstance.setStringField("by type");
+      anInstance.setListField(new ArrayList<String>());
 
       String stringValue = getField(anInstance, String.class);
       List<String> listValue = getField(anInstance, List.class);
       List<String> listValue2 = getField(anInstance, ArrayList.class);
 
-      assertEquals(anInstance.stringField, stringValue);
-      assertSame(anInstance.listField, listValue);
+      assertEquals(anInstance.getStringField(), stringValue);
+      assertSame(anInstance.getListField(), listValue);
       assertSame(listValue, listValue2);
    }
 
@@ -176,11 +139,11 @@ public final class DeencapsulationTest
    @Test
    public void getStaticFieldByName()
    {
-      Subclass.buffer = new StringBuilder();
+      Subclass.setBuffer(new StringBuilder());
 
       StringBuilder b = getField(Subclass.class, "buffer");
 
-      assertSame(Subclass.buffer, b);
+      assertSame(Subclass.getBuffer(), b);
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -192,21 +155,21 @@ public final class DeencapsulationTest
    @Test
    public void getStaticFieldByType()
    {
-      Subclass.buffer = new StringBuilder();
+      Subclass.setBuffer(new StringBuilder());
 
       StringBuilder b = getField(Subclass.class, StringBuilder.class);
 
-      assertSame(Subclass.buffer, b);
+      assertSame(Subclass.getBuffer(), b);
    }
 
    @Test
    public void setInstanceFieldByName()
    {
-      anInstance.intField2 = 1;
+      anInstance.setIntField2(1);
 
       setField(anInstance, "intField2", 901);
 
-      assertEquals(901, anInstance.intField2);
+      assertEquals(901, anInstance.getIntField2());
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -218,11 +181,11 @@ public final class DeencapsulationTest
    @Test
    public void setInstanceFieldByType()
    {
-      anInstance.stringField = "";
+      anInstance.setStringField("");
 
       setField(anInstance, "Test");
 
-      assertEquals("Test", anInstance.stringField);
+      assertEquals("Test", anInstance.getStringField());
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -240,11 +203,11 @@ public final class DeencapsulationTest
    @Test
    public void setStaticFieldByName()
    {
-      Subclass.buffer = null;
+      Subclass.setBuffer(null);
 
       setField(Subclass.class, "buffer", new StringBuilder());
 
-      assertNotNull(Subclass.buffer);
+      assertNotNull(Subclass.getBuffer());
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -256,11 +219,11 @@ public final class DeencapsulationTest
    @Test
    public void setStaticFieldByType()
    {
-      Subclass.buffer = null;
+      Subclass.setBuffer(null);
 
       setField(Subclass.class, new StringBuilder());
 
-      assertNotNull(Subclass.buffer);
+      assertNotNull(Subclass.getBuffer());
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -329,7 +292,7 @@ public final class DeencapsulationTest
       Subclass instance = newInstance(Subclass.class.getName(), new Class<?>[] {});
 
       assertNotNull(instance);
-      assertEquals(-1, instance.intField);
+      assertEquals(-1, instance.getIntField());
    }
 
    @Test
@@ -338,7 +301,7 @@ public final class DeencapsulationTest
       Subclass instance = newInstance(Subclass.class.getName());
 
       assertNotNull(instance);
-      assertEquals(-1, instance.intField);
+      assertEquals(-1, instance.getIntField());
    }
 
    @Test
@@ -348,8 +311,8 @@ public final class DeencapsulationTest
          newInstance(Subclass.class.getName(), new Class<?>[] {int.class, String.class}, 1, "XYZ");
 
       assertNotNull(instance);
-      assertEquals(1, instance.intField);
-      assertEquals("XYZ", instance.stringField);
+      assertEquals(1, instance.getIntField());
+      assertEquals("XYZ", instance.getStringField());
    }
 
    @Test
@@ -373,8 +336,8 @@ public final class DeencapsulationTest
       Subclass instance = newInstance(Subclass.class.getName(), 590, "");
 
       assertNotNull(instance);
-      assertEquals(590, instance.intField);
-      assertEquals("", instance.stringField);
+      assertEquals(590, instance.getIntField());
+      assertEquals("", instance.getStringField());
    }
 
    @Test
@@ -388,9 +351,9 @@ public final class DeencapsulationTest
    @Test
    public void newInnerInstanceUsingNoArgsConstructor()
    {
-      Subclass.InnerClass innerInstance = newInnerInstance("InnerClass", anInstance);
+      Object innerInstance = newInnerInstance("InnerClass", anInstance);
 
-      assertNotNull(innerInstance);
+      assertTrue(innerClass.isInstance(innerInstance));
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -402,17 +365,16 @@ public final class DeencapsulationTest
    @Test
    public void newInnerInstanceByNameUsingMultipleArgsConstructor()
    {
-      Subclass.InnerClass innerInstance = newInnerInstance("InnerClass", anInstance, true, 5L, "");
+      Object innerInstance = newInnerInstance("InnerClass", anInstance, true, 5L, "");
 
-      assertNotNull(innerInstance);
+      assertTrue(innerClass.isInstance(innerInstance));
    }
 
    @Test
-   public void newInnerInstanceUsingMultipleArgsConstructor()
+   public void newInnerInstanceUsingMultipleArgsConstructor() throws Exception
    {
-      Subclass.InnerClass innerInstance = 
-         newInnerInstance(Subclass.InnerClass.class, anInstance, true, 5L, "");
+      Object innerInstance = newInnerInstance(innerClass, anInstance, true, 5L, "");
 
-      assertNotNull(innerInstance);
+      assertTrue(innerClass.isInstance(innerInstance));
    }
 }
