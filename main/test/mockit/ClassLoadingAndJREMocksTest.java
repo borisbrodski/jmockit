@@ -196,4 +196,17 @@ public final class ClassLoadingAndJREMocksTest
          }
       };
    }
+
+   @Ignore @Test // causes infinite loop
+   public void mockFileInputStream() throws Exception
+   {
+      new Expectations(FileInputStream.class)
+      {
+         {
+            new FileInputStream("").close(); result = new IOException();
+         }
+      };
+
+      new FileInputStream("").close();
+   }
 }
