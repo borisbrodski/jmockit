@@ -39,7 +39,10 @@ public abstract class Phase
    public final Expectation getCurrentExpectation()
    {
       if (currentExpectation == null) {
-         throw new IllegalStateException("No current invocation available");
+         throw new IllegalStateException(
+            "Missing invocation to mocked type at this point; " +
+            "please make sure such invocations appear only after the declaration of a suitable " +
+            "mock field or parameter");
       }
 
       return currentExpectation;
