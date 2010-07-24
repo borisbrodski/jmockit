@@ -127,7 +127,7 @@ public final class ClassLoadingAndJREMocksTest
       };
    }
 
-   @Test(expected = IllegalStateException.class)
+   @Test
    public void attemptToMockNonMockableJREClass()
    {
       new NonStrictExpectations()
@@ -135,8 +135,7 @@ public final class ClassLoadingAndJREMocksTest
          Integer mock;
 
          {
-            //noinspection UnnecessaryUnboxing
-            mock.intValue(); result = 123;
+            assertNull(mock);
          }
       };
    }
@@ -160,21 +159,49 @@ public final class ClassLoadingAndJREMocksTest
       assertEquals("mock", props.getProperty("test"));
    }
 
+   @Mocked URLConnection mockConnection;
+
    @Test
-   public void mockURLAndHttpURLConnection() throws Exception
+   public void mockURLAndURLConnectionUsingMockParameterAndMockField(final URL url) throws Exception
    {
-      // Several different ways to write this test don't work: 1) mocking the URL class without
-      // dynamic mocking; 2) using a mock URL parameter with dynamic mocking; 3) mocking
-      // HttpURLConnection with a mock parameter or mock field of the test class.
+      new Expectations()
+      {
+         {
+            url.openConnection(); result = mockConnection;
+         }
+      };
+
+      URLConnection conn = url.openConnection();
+      assertSame(mockConnection, conn);
+   }
+
+   @Test
+   public void mockURLAndHttpURLConnectionUsingMockParameters(
+      final URL mockUrl, final HttpURLConnection mockHttpConnection) throws Exception
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mockUrl.openConnection(); result = mockHttpConnection;
+         }
+      };
+
+      HttpURLConnection conn = (HttpURLConnection) mockUrl.openConnection();
+      assertSame(mockHttpConnection, conn);
+   }
+
+   @Test
+   public void mockURLAndHttpURLConnectionWithDynamicMockAndLocalMockField() throws Exception
+   {
       final URL url = new URL("http://nowhere");
 
       new NonStrictExpectations(url)
       {
-         HttpURLConnection mockConnection;
+         HttpURLConnection mockHttpConnection;
 
          {
-            url.openConnection(); result = mockConnection;
-            mockConnection.getOutputStream(); result = new ByteArrayOutputStream();
+            url.openConnection(); result = mockHttpConnection;
+            mockHttpConnection.getOutputStream(); result = new ByteArrayOutputStream();
          }
       };
 
@@ -188,16 +215,16 @@ public final class ClassLoadingAndJREMocksTest
 
       new Verifications()
       {
-         HttpURLConnection mockConnection;
+         HttpURLConnection mockHttpConnection;
 
          {
-            mockConnection.setDoOutput(true);
-            mockConnection.setRequestMethod("PUT");
+            mockHttpConnection.setDoOutput(true);
+            mockHttpConnection.setRequestMethod("PUT");
          }
       };
    }
 
-   @Ignore @Test // causes infinite loop
+   @Test
    public void mockFileInputStream() throws Exception
    {
       new Expectations(FileInputStream.class)
@@ -207,6 +234,12 @@ public final class ClassLoadingAndJREMocksTest
          }
       };
 
-      new FileInputStream("").close();
+      try {
+         new FileInputStream("").close();
+         fail();
+      }
+      catch (IOException ignore) {
+         // OK
+      }
    }
 }

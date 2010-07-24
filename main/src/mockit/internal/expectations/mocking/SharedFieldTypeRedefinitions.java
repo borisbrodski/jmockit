@@ -46,9 +46,16 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
 
    public void redefineTypesForTestClass()
    {
-      Class<?> testClass = parentObject.getClass();
-      targetClasses.clear();
-      redefineFieldTypes(testClass, !Expectations.class.isAssignableFrom(testClass));
+      TestRun.enterNoMockingZone();
+
+      try {
+         Class<?> testClass = parentObject.getClass();
+         targetClasses.clear();
+         redefineFieldTypes(testClass, !Expectations.class.isAssignableFrom(testClass));
+      }
+      finally {
+         TestRun.exitNoMockingZone();
+      }
    }
 
    @Override

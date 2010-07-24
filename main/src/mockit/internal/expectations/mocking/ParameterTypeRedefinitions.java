@@ -28,6 +28,8 @@ import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+import mockit.internal.state.*;
+
 public final class ParameterTypeRedefinitions extends TypeRedefinitions
 {
    private final Type[] paramTypes;
@@ -43,8 +45,15 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       paramValues = new Object[paramTypes.length];
       nonStrictMocks = new ArrayList<Object>();
 
-      for (int i = 0; i < paramTypes.length; i++) {
-         redefineTypeForMockParameter(i);
+      TestRun.enterNoMockingZone();
+
+      try {
+         for (int i = 0; i < paramTypes.length; i++) {
+            redefineTypeForMockParameter(i);
+         }
+      }
+      finally {
+         TestRun.exitNoMockingZone();
       }
    }
 
