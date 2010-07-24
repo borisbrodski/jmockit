@@ -22,11 +22,11 @@
          <groupId>org.mockito</groupId><artifactId>mockito-all</artifactId><version>1.8.4</version>
       </dependency>
       <dependency>
-         <groupId>org.hamcrest</groupId><artifactId>hamcrest-library</artifactId><version>0</version>
+         <groupId>org.hamcrest</groupId><artifactId>hamcrest-library</artifactId><version>1.2</version>
          <scope>system</scope><systemPath>${basedir}/../lib/hamcrest-library-1.2.jar</systemPath>
       </dependency>
       <dependency>
-         <groupId>org.hamcrest</groupId><artifactId>hamcrest-core</artifactId><version>0</version>
+         <groupId>org.hamcrest</groupId><artifactId>hamcrest-core</artifactId><version>1.2</version>
          <scope>system</scope><systemPath>${basedir}/../../lib/hamcrest-core-1.2.jar</systemPath>
       </dependency>
    </dependencies>

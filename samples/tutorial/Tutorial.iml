@@ -11,13 +11,27 @@
       <excludeFolder url="file://$MODULE_DIR$/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" name="JMockit" level="project" />
+    <orderEntry type="library" scope="TEST" name="JMockit" level="project" />
+    <orderEntry type="library" scope="TEST" name="JUnit 4.8" level="application" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/commons-email-1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../lib/javaee.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="Main" scope="TEST" />
-    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.1" level="project" />
-    <orderEntry type="library" name="Maven: javax.persistence:persistence-api:2.0" level="project" />
-    <orderEntry type="library" name="Maven: commons-email:commons-email:0" level="project" />
-    <orderEntry type="library" name="Maven: javamail:javamail:1.3.3" level="project" />
   </component>
 </module>
 

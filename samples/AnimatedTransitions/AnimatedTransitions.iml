@@ -15,7 +15,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Main" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.1" level="project" />
-    <orderEntry type="module" module-name="TimingFramework" exported="" />
+    <orderEntry type="module" module-name="TimingFramework" />
   </component>
 </module>
 
