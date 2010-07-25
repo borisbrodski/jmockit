@@ -5,7 +5,7 @@
 
    <groupId>mockit</groupId>
    <artifactId>mockit</artifactId>
-   <version>0.999</version>
+   <version>0.999.1</version>
    <packaging>pom</packaging>
 
    <modules>

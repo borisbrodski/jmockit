@@ -14,9 +14,11 @@
     <orderEntry type="library" scope="TEST" name="JMockit" level="project" />
     <orderEntry type="library" scope="TEST" name="JUnit 4.8" level="application" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-all:1.8.4" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-library:1.2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.2" level="project" />
+    <orderEntry type="module" module-name="Main" scope="TEST" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.mockito:mockito-all:1.8.4" level="project" />
+    <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-library:1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.2" level="project" />
   </component>
 </module>
 

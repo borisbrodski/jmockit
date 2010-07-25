@@ -11,6 +11,42 @@
 
 <h3>Current release</h3>
 
+<p>Release 0.999.1 (July 25, 2010):</p>
+<ul>
+   <li>
+      <strong>Fixed bug</strong>: the special <code>Object</code> methods
+      (<code>equals</code>, <code>hashCode</code>, <code>toString</code>, <code>finalize</code>),
+      when they happened to have an abstract override in a subclass, would get mocked by default
+      when the concrete mock subclass was created; now, they get empty implementations unless
+      explicitly selected for mocking through mock filters.
+   </li>
+   <li>
+      <strong>Fixed bug</strong>: in the event that a non-strict invocation, while being handled
+      internally by JMockit, would trigger another non-strict invocation during replay (typically,
+      during the execution of a <em>delegate</em> method), a
+      <code>ConcurrentModificationException</code> could occur.
+   </li>
+   <li>
+      <strong>Fixed bug</strong>: the utility methods for <em>constructor invocation</em> through
+      Reflection (see <code>Deencapsulation</code> or <code>Expectations</code>) were not correctly
+      finding constructors with parameters for which a subtype argument could be passed (for
+      example, when passing an <code>ArrayList</code> instance to a <code>List</code> parameter).
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=77">issue 77</a>.
+   </li>
+   <li>
+      <strong>Enhancement</strong>: improved the error message for situations were an attempt is
+      made to record or verify an expectation on a type which is not mocked at the point the
+      invocation appears (it previously was <code>"No current invocation available"</code>).
+   </li>
+   <li>
+      <strong>Robustness issue solved</strong>: when mocking certain JRE classes such as
+      <code>java.net.URL</code> and <code>java.io.FileInputStream</code>, unexpected test failures
+      could occur.
+   </li>
+</ul>
+
+<h3>Previous releases</h3>
+
 <p>Release 0.999 (July 15, 2010):</p>
 <ul>
    <li>
@@ -62,8 +98,6 @@
       now fail just as if it had occurred in the regular test thread.
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.998 (April 21, 2010):</p>
 <ul>
