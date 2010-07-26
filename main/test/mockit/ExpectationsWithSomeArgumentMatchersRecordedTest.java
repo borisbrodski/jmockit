@@ -177,6 +177,7 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
 
       assertEquals("one", mock.setValue("test"));
       assertEquals("two", mock.setValue(""));
+      assertEquals("two", mock.setValue(null));
    }
 
    @Test

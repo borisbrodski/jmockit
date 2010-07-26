@@ -36,7 +36,6 @@ public final class MisusedExpectationsTest
       int value() { return 0; }
       void setValue(int value) {}
       String doSomething(boolean b) { return ""; }
-      boolean doSomething(int i) { return true; }
    }
 
    @Mocked Blah mock;
@@ -89,7 +88,7 @@ public final class MisusedExpectationsTest
       assertEquals(4, mock.value());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test//(expected = IllegalArgumentException.class)
    public void recordDuplicateInvocationWithNoArguments()
    {
       new NonStrictExpectations()
@@ -97,9 +96,12 @@ public final class MisusedExpectationsTest
          mock.value(); result = 1;
          mock.value(); result = 2;
       }};
+
+      assertEquals(1, mock.value());
+      assertEquals(1, mock.value());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test//(expected = IllegalArgumentException.class)
    public void recordDuplicateInvocationWithArgumentMatcher()
    {
       new NonStrictExpectations()
@@ -107,24 +109,11 @@ public final class MisusedExpectationsTest
          mock.setValue(anyInt);
          mock.setValue(anyInt); result = new UnknownError();
       }};
+
+      mock.setValue(3);
    }
 
-   @Test
-   public void recordNonStrictExpectationsForSameMethodWithDifferentArgumentMatchers()
-   {
-      new NonStrictExpectations()
-      {{
-         mock.doSomething(withEqual(1)); result = false;
-         mock.doSomething(withNotEqual(1)); result = true;
-      }};
-
-      assertFalse(mock.doSomething(1));
-      assertTrue(mock.doSomething(2));
-      assertTrue(mock.doSomething(0));
-      assertFalse(mock.doSomething(1));
-   }
-
-   @Test(expected = IllegalArgumentException.class)
+   @Test//(expected = IllegalArgumentException.class)
    public void recordDuplicateInvocationInSeparateNonStrictExpectationBlocks()
    {
       new NonStrictExpectations()
@@ -136,9 +125,11 @@ public final class MisusedExpectationsTest
       {{
          mock.value(); result = 2;
       }};
+
+      assertEquals(1, mock.value());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test(expected = AssertionError.class)
    public void recordSameInvocationInNonStrictExpectationBlockThenInStrictOne()
    {
       new NonStrictExpectations()
@@ -148,8 +139,12 @@ public final class MisusedExpectationsTest
 
       new Expectations()
       {{
+         // This expectation can never be replayed, so it will cause the test to fail:
          mock.value(); result = 2;
       }};
+
+      assertEquals(1, mock.value());
+      assertEquals(1, mock.value());
    }
 
    @Test
@@ -196,14 +191,14 @@ public final class MisusedExpectationsTest
 
    public static class Foo
    {
-      void doIt() {}
+      boolean doIt() { return true; }
    }
 
    public static class SubFoo extends Foo
    {
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test//(expected = IllegalArgumentException.class)
    public void recordDuplicateInvocationOnTwoDynamicMocksOfDifferentTypesButSharedBaseClass()
    {
       final Foo f1 = new Foo();
@@ -211,28 +206,13 @@ public final class MisusedExpectationsTest
 
       new NonStrictExpectations(f1, f2)
       {{
-         f1.doIt();
-         f2.doIt();
-      }};
-   }
-
-   @Test
-   public void recordAmbiguousExpectationsUsingArgumentMatchers()
-   {
-      new NonStrictExpectations()
-      {{
-         mock.setValue(1);
-         mock.setValue(anyInt); result = new UnknownError();
-
-         mock.doSomething(withEqual(true)); result = "first";
-         mock.doSomething(withNotEqual(false)); result = "second";
+         // These two expectations should be recorded with "onInstance(fn)" instead:
+         f1.doIt(); result = true;
+         f2.doIt(); result = false;
       }};
 
-      mock.setValue(1);
-      mock.setValue(1); // won't throw an error
-
-      assertNull(mock.doSomething(false));
-      assertEquals("first", mock.doSomething(true));
+      assertTrue(f1.doIt());
+      assertTrue(f2.doIt());
    }
 
    @BeforeClass

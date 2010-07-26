@@ -71,7 +71,7 @@ final class PhasedExecutionState
    {
       ExpectedInvocation invocation = expectation.invocation;
       forceMatchingOnMockInstanceIfRequired(invocation);
-      validateNewExpectation(invocation);
+      removeMatchingExpectationsCreatedBeforeRecordPhase(invocation);
 
       if (nonStrict) {
          nonStrictExpectations.add(expectation);
@@ -96,30 +96,14 @@ final class PhasedExecutionState
       }
    }
 
-   private void validateNewExpectation(ExpectedInvocation invocation)
+   private void removeMatchingExpectationsCreatedBeforeRecordPhase(ExpectedInvocation invocation)
    {
       Expectation previousExpectation = findNonStrictExpectation(
          invocation.instance, invocation.getClassDesc(), invocation.getMethodNameAndDescription(),
          invocation.getArgumentValues());
 
-      if (previousExpectation == null) {
-         return;
-      }
-
-      if (previousExpectation.recordPhase == null) {
+      if (previousExpectation != null && previousExpectation.recordPhase == null) {
          nonStrictExpectations.remove(previousExpectation);
-         return;
-      }
-
-      ExpectedInvocation previousInvocation = previousExpectation.invocation;
-
-      if (
-         invocation.isMatch(previousInvocation.instance, instanceMap) &&
-         invocation.arguments.assertMatch(previousInvocation.getArgumentValues(), instanceMap) == null)
-      {
-         throw new IllegalArgumentException(
-            "Duplicate expectation recorded for" + invocation,
-            previousInvocation.getCause("Duplicated expectation"));
       }
    }
 
