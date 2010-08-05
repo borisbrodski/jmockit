@@ -195,8 +195,8 @@ public final class CovariantReturnTypesTest
       assertSame(formattedField, firstInstance.getTextField());
    }
 
-   interface SuperInterface { Object getValue(); }
-   interface SubInterface extends SuperInterface { String getValue(); }
+   public interface SuperInterface { void someOtherMethod(int i); Object getValue(); }
+   public interface SubInterface extends SuperInterface { String getValue(); }
 
    @Test
    public void methodInSuperInterfaceWithVaryingReturnValuesUsingStrictExpectations(
@@ -248,6 +248,8 @@ public final class CovariantReturnTypesTest
             base.getValue(); result = value;
             base.getValue(); result = specificValue;
 
+            mock.someOtherMethod(anyInt);
+
             mock.getValue(); result = specificValue;
             base.getValue(); result = specificValue;
          }
@@ -255,6 +257,8 @@ public final class CovariantReturnTypesTest
 
       assertSame(value, base.getValue());
       assertSame(specificValue, base.getValue());
+
+      mock.someOtherMethod(1);
 
       assertSame(specificValue, mock.getValue());
       assertSame(specificValue, base.getValue());

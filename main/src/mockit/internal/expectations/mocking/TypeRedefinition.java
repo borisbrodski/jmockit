@@ -33,7 +33,6 @@ import mockit.internal.util.*;
 final class TypeRedefinition extends BaseTypeRedefinition
 {
    private final Object objectWithInitializerMethods;
-   private final MockedType typeMetadata;
 
    TypeRedefinition(Object objectWithInitializerMethods, MockedType typeMetadata)
    {

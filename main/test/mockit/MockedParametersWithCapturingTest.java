@@ -24,11 +24,8 @@
  */
 package mockit;
 
-import java.lang.reflect.*;
-
-import org.junit.*;
-
 import static org.junit.Assert.*;
+import org.junit.*;
 
 public final class MockedParametersWithCapturingTest
 {
@@ -72,7 +69,6 @@ public final class MockedParametersWithCapturingTest
    public void captureInstancesWithoutMockingAnyMethods(
       @Mocked(capture = 2, methods = "") Service service)
    {
-      assertTrue(Proxy.isProxyClass(service.getClass()));
       assertEquals(0, service.doSomething());
 
       TestedUnit unit = new TestedUnit();

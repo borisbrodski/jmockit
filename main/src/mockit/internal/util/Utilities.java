@@ -39,6 +39,7 @@ import mockit.*;
 public final class Utilities
 {
    public static final String GENERATED_SUBCLASS_PREFIX = "$Subclass_";
+   public static final String GENERATED_IMPLCLASS_PREFIX = "$Impl_";
    public static final Object[] NO_ARGS = {};
 
    private static final Class<?>[] PRIMITIVE_TYPES = {
@@ -179,7 +180,7 @@ public final class Utilities
       else {
          Class<?> argClass = arg.getClass();
 
-         if (Proxy.isProxyClass(argClass)) {
+         if (Proxy.isProxyClass(argClass) || isGeneratedImplementationClass(argClass.getName())) {
             // Assumes that the proxy class implements a single interface.
             argType = argClass.getInterfaces()[0];
          }
@@ -201,9 +202,19 @@ public final class Utilities
       return getMockedClass(mock.getClass());
    }
 
-   public static boolean isGeneratedSubclass(String className)
+   private static boolean isGeneratedSubclass(String className)
    {
       return className.contains(GENERATED_SUBCLASS_PREFIX);
+   }
+
+   private static boolean isGeneratedImplementationClass(String className)
+   {
+      return className.contains(GENERATED_IMPLCLASS_PREFIX);
+   }
+
+   public static boolean isGeneratedClass(String className)
+   {
+      return isGeneratedSubclass(className) || isGeneratedImplementationClass(className);
    }
 
    public static <T> T newInnerInstance(
@@ -744,14 +755,18 @@ public final class Utilities
    {
       synchronized (ThrowOfCheckedException.class) {
          ThrowOfCheckedException.exceptionToThrow = exceptionToThrow;
-
-         try {
-            //noinspection ClassNewInstance
-            ThrowOfCheckedException.class.newInstance();
-         }
-         catch (InstantiationException ignore) {}
-         catch (IllegalAccessException ignored) {}
+         newInstanceUsingDefaultConstructor(ThrowOfCheckedException.class);
       }
+   }
+
+   public static Object newInstanceUsingDefaultConstructor(Class<?> aClass)
+   {
+      try {
+         //noinspection ClassNewInstance
+         return aClass.newInstance();
+      }
+      catch (InstantiationException ignore) { return null; }
+      catch (IllegalAccessException ignored) { return null; }
    }
 
    private static final class ThrowOfCheckedException

@@ -24,7 +24,6 @@
  */
 package mockit.internal.expectations.mocking;
 
-import java.io.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.*;
 import java.util.*;
@@ -216,18 +215,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
       BaseMethodModifier(String typeName)
       {
          this.typeName = typeName;
-
-         InputStream superClass = ClassLoader.getSystemResourceAsStream(typeName + ".class");
-         ClassReader cr;
-
-         try {
-            cr = new ClassReader(superClass);
-         }
-         catch (IOException e) {
-            throw new RuntimeException(e);
-         }
-
-         cr.accept(this, true);
+         ClassFile.visitClass(typeName, this);
       }
 
       @Override

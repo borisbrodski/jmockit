@@ -1,6 +1,6 @@
 /*
- * JMockit Core
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -57,6 +57,20 @@ public final class ClassFile
       return new ClassReader(classFile);
    }
 
+   public static void visitClass(String internalClassName, ClassVisitor visitor)
+   {
+      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      InputStream classFile = classLoader.getResourceAsStream(internalClassName + ".class");
+
+      try {
+         ClassReader cr = new ClassReader(classFile);
+         cr.accept(visitor, true);
+      }
+      catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
    private final ClassReader reader;
 
    public ClassFile(Class<?> aClass, boolean fromLastRedefinitionIfAny)
@@ -72,13 +86,7 @@ public final class ClassFile
       reader = classfile == null ? createClassFileReader(className) : new ClassReader(classfile);
    }
 
-   public ClassReader getReader()
-   {
-      return reader;
-   }
+   public ClassReader getReader() { return reader; }
 
-   public byte[] getBytecode()
-   {
-      return reader.b;
-   }
+   public byte[] getBytecode() { return reader.b; }
 }

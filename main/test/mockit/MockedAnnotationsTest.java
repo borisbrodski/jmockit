@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
 
 public final class MockedAnnotationsTest
 {
-   @interface MyAnnotation
+   public @interface MyAnnotation
    {
       String value();
       boolean flag() default true;

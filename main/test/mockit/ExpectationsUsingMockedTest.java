@@ -33,7 +33,7 @@ import org.junit.*;
 
 public final class ExpectationsUsingMockedTest
 {
-   interface Dependency
+   public interface Dependency
    {
       String doSomething(boolean b);
    }

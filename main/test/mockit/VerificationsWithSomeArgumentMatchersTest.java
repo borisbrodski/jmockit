@@ -215,7 +215,7 @@ public final class VerificationsWithSomeArgumentMatchersTest
       };
    }
 
-   interface Scheduler
+   public interface Scheduler
    {
       List<String> getAlerts(Object o, int i, boolean b);
    }

@@ -24,11 +24,10 @@
  */
 package mockit;
 
+import static org.junit.Assert.*;
 import org.junit.*;
 
 import mockit.CapturingImplementationsTest.*;
-
-import static org.junit.Assert.*;
 
 @Capturing(baseType = ServiceToBeStubbedOut.class)
 public final class CapturingImplementationsTest
@@ -63,7 +62,7 @@ public final class CapturingImplementationsTest
       assertEquals(0, service.doSomething());
    }
 
-   interface Service
+   public interface Service
    {
       int doSomething();
    }
@@ -109,7 +108,7 @@ public final class CapturingImplementationsTest
       assertEquals(2, new ServiceImpl().doSomething());
    }
 
-   interface AnotherService
+   public interface AnotherService
    {
       int doSomethingElse();
    }

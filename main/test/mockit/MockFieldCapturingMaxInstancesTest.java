@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,11 +24,8 @@
  */
 package mockit;
 
-import java.lang.reflect.*;
-
-import org.junit.*;
-
 import static org.junit.Assert.*;
+import org.junit.*;
 
 public final class MockFieldCapturingMaxInstancesTest
 {
@@ -47,8 +44,6 @@ public final class MockFieldCapturingMaxInstancesTest
    @Test
    public void mockFieldWithUnlimitedCapturing()
    {
-      assertTrue(Proxy.isProxyClass(mock1.getClass()));
-
       new Expectations()
       {
          {
@@ -79,7 +74,9 @@ public final class MockFieldCapturingMaxInstancesTest
 
    static class DerivedClass extends BaseClass
    {
+      @SuppressWarnings({"UnusedDeclaration"})
       DerivedClass() {}
+
       DerivedClass(String str) { super(str); }
    }
 

@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 @SuppressWarnings({"ClassWithTooManyMethods"})
 public final class ExpectationsUsingReflectionTest
 {
-   interface BusinessInterface
+   public interface BusinessInterface
    {
       void doOperation();
    }

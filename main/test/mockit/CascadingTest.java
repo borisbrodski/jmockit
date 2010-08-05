@@ -30,10 +30,9 @@ import java.nio.channels.*;
 import java.util.*;
 
 import org.junit.*;
+import static org.junit.Assert.*;
 
 import mockit.internal.state.*;
-
-import static org.junit.Assert.*;
 
 public final class CascadingTest
 {
@@ -56,7 +55,7 @@ public final class CascadingTest
       AnEnum getEnum() { return null; }
    }
 
-   interface Baz
+   public interface Baz
    {
       void runIt();
    }
@@ -67,7 +66,6 @@ public final class CascadingTest
    public void verifyThereAreNoCascadingMockedTypesOutsideTestMethods()
    {
       assert TestRun.getExecutingTest().getCascadingMockedTypes().isEmpty();
-      assert TestRun.mockFixture().getMockedTypesAndInstances().isEmpty();
    }
 
    @Test

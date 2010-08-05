@@ -26,6 +26,9 @@ package mockit.internal.expectations.mocking;
 
 import java.lang.reflect.*;
 import java.lang.reflect.Type;
+import java.util.*;
+
+import static java.lang.reflect.Modifier.*;
 
 import mockit.*;
 import mockit.external.asm.*;
@@ -35,19 +38,17 @@ import mockit.internal.filtering.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
-import static java.lang.reflect.Modifier.isAbstract;
-
 abstract class BaseTypeRedefinition
 {
+   private static final Map<Class<?>, Class<?>> mockInterfaces = new HashMap<Class<?>, Class<?>>();
+
    Class<?> targetClass;
+   MockedType typeMetadata;
    InstanceFactory instanceFactory;
    MockingConfiguration mockingCfg;
    MockConstructorInfo mockConstructorInfo;
 
-   BaseTypeRedefinition(Class<?> mockedType)
-   {
-      targetClass = mockedType;
-   }
+   BaseTypeRedefinition(Class<?> mockedType) { targetClass = mockedType; }
 
    final Object redefineType(Type typeToMock)
    {
@@ -73,13 +74,80 @@ abstract class BaseTypeRedefinition
       return mock;
    }
 
-   private void createMockedInterfaceImplementation(Type mockedInterface)
+   protected void createMockedInterfaceImplementation(Type typeToMock)
    {
-      Object mock = Mockit.newEmptyProxy(mockedInterface);
+      Class<?> mockedInterface = interfaceToMock(typeToMock);
+
+      if (mockedInterface == null) {
+         createMockInterfaceImplementationUsingStandardProxy(typeToMock);
+         return;
+      }
+
+      Class<?> mockClass = mockInterfaces.get(mockedInterface);
+
+      if (mockClass != null) {
+         targetClass = mockClass;
+
+         if (typeMetadata != null && typeMetadata.fieldFromTestClass) {
+            instanceFactory = TestRun.mockFixture().getMockedTypesAndInstances().get(mockClass);
+         }
+         else {
+            createNewMockInstanceFactoryForInterface();
+         }
+
+         return;
+      }
+
+      generateNewMockImplementationClassForInterface(mockedInterface);
+      createNewMockInstanceFactoryForInterface();
+
+      mockInterfaces.put(mockedInterface, targetClass);
+   }
+
+   private Class<?> interfaceToMock(Type typeToMock)
+   {
+      if (typeToMock instanceof Class<?>) {
+         Class<?> theInterface = (Class<?>) typeToMock;
+
+         if (isPublic(theInterface.getModifiers()) && !theInterface.isAnnotation()) {
+            return theInterface;
+         }
+      }
+
+      return null;
+   }
+
+   private void createMockInterfaceImplementationUsingStandardProxy(Type typeToMock)
+   {
+      Object mock = Mockit.newEmptyProxy(typeToMock);
       targetClass = mock.getClass();
 
       redefineMethodsAndConstructorsInTargetType();
 
+      instanceFactory = new InterfaceInstanceFactory(mock);
+   }
+
+   private void generateNewMockImplementationClassForInterface(Class<?> mockedInterface)
+   {
+      ClassReader interfaceReader = ClassFile.createClassFileReader(mockedInterface.getName());
+      String mockClassName = Utilities.GENERATED_IMPLCLASS_PREFIX + mockedInterface.getSimpleName();
+      ClassWriter modifier = new InterfaceImplementationGenerator(interfaceReader, mockClassName);
+      interfaceReader.accept(modifier, true);
+      final byte[] generatedClass = modifier.toByteArray();
+
+      targetClass = new ClassLoader()
+      {
+         @Override
+         protected Class<?> findClass(String name)
+         {
+            return defineClass(name, generatedClass, 0, generatedClass.length);
+         }
+      }.findClass(mockClassName);
+   }
+
+   private void createNewMockInstanceFactoryForInterface()
+   {
+      Object mock = Utilities.newInstanceUsingDefaultConstructor(targetClass);
       instanceFactory = new InterfaceInstanceFactory(mock);
    }
 

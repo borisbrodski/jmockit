@@ -36,7 +36,7 @@ import mockit.internal.state.*;
 final class MockedType
 {
    final Field field;
-   private final boolean fieldFromTestClass;
+   final boolean fieldFromTestClass;
    private final int accessModifiers;
    private final Mocked mocked;
    final Capturing capturing;

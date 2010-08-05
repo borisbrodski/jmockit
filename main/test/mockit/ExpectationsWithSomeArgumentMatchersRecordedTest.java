@@ -228,7 +228,7 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
       mock.simpleOperation(1, "", new Date());
    }
 
-   interface Scheduler
+   public interface Scheduler
    {
       List<String> getAlerts(Object o, int i, boolean b);
    }

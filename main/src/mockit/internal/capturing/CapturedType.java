@@ -71,7 +71,7 @@ final class CapturedType
    
    boolean isToBeCaptured(String className)
    {
-      if (Utilities.isGeneratedSubclass(className)) {
+      if (Utilities.isGeneratedClass(className)) {
          return false;
       }
 
