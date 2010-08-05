@@ -76,12 +76,6 @@ public final class ExpectedInvocation
       return arguments.getValues();
    }
 
-   public AssertionError getCause(String message)
-   {
-      invocationCause.prepareForDisplay(message);
-      return invocationCause;
-   }
-
    // Matching based on instance or mocked type ///////////////////////////////////////////////////
 
    public boolean isMatch(String invokedClassDesc, String invokedMethod)
