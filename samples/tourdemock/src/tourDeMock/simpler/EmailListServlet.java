@@ -1,11 +1,11 @@
-package simpler;
+package tourDeMock.simpler;
 
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import simpler.service.*;
+import tourDeMock.simpler.service.*;
 
 public final class EmailListServlet extends HttpServlet
 {

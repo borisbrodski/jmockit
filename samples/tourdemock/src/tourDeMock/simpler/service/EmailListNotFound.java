@@ -1,4 +1,4 @@
-package simpler.service;
+package tourDeMock.simpler.service;
 
 public final class EmailListNotFound extends Exception
 {

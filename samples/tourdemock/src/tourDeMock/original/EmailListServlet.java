@@ -1,11 +1,11 @@
-package com.stehno.mockery;
+package tourDeMock.original;
 
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import com.stehno.mockery.service.*;
+import tourDeMock.original.service.*;
 
 public final class EmailListServlet extends HttpServlet
 {
