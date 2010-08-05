@@ -22,77 +22,64 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.stehno.mockery;
+package tourDeMock.original;
 
 import java.io.*;
+import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.junit.*;
+import org.junit.runner.*;
 
-import mockit.*;
+import tourDeMock.original.*;
+import tourDeMock.original.service.*;
+import static java.util.Arrays.*;
+import org.unitils.*;
+import org.unitils.mock.*;
 
-import com.stehno.mockery.service.*;
-
-public final class EmailListServlet_JMockitTest
+@RunWith(UnitilsJUnit4TestClassRunner.class)
+public final class EmailListServlet_UnitilsTest
 {
    EmailListServlet servlet;
 
-   @NonStrict HttpServletRequest request;
-   @Cascading HttpServletResponse response;
-   @Mocked EmailListService emailListService;
+   Mock<HttpServletRequest> request;
+   Mock<HttpServletResponse> response;
+   Mock<EmailListService> emailListService;
 
-   @Cascading ServletConfig servletConfig;
+   Mock<ServletConfig> servletConfig;
+   Mock<PrintWriter> writer;
 
-   @Before // TODO: add support for mock parameters in setup methods
+   @Before
    public void before() throws Exception
    {
-      new Expectations()
-      {
-         {
-            servletConfig.getServletContext().getAttribute(EmailListService.KEY);
-            result = emailListService;
-         }
-      };
+      servletConfig.returns(emailListService).getServletContext().getAttribute(EmailListService.KEY);
 
       servlet = new EmailListServlet();
-      servlet.init(servletConfig);
+      servlet.init(servletConfig.getMock());
    }
 
    @Test(expected = ServletException.class)
    public void doGetWithoutList() throws Exception
    {
-      new Expectations()
-      {
-         {
-            emailListService.getListByName(null); result = new ServletException();
-         }
-      };
+      emailListService.raises(new EmailListNotFound()).getListByName(null);
 
-      servlet.doGet(request, response);
+      servlet.doGet(request.getMock(), response.getMock());
    }
 
    @Test
-   public void doGetWithList(final PrintWriter writer) throws Exception
+   public void doGetWithList() throws Exception
    {
-      new Expectations()
-      {
-         {
-            emailListService.getListByName(anyString);
-            returns("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
-         }
-      };
+      List<String> emails = asList("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
+      emailListService.returns(emails).getListByName(null);
 
-      servlet.doGet(request, response);
+      response.returns(writer).getWriter();
 
-      new VerificationsInOrder()
-      {
-         {
-            writer.println("larry@stooge.com");
-            writer.println("moe@stooge.com");
-            writer.println("curley@stooge.com");
-            response.flushBuffer();
-         }
-      };
+      servlet.doGet(request.getMock(), response.getMock());
+
+      writer.assertInvokedInSequence().println("larry@stooge.com");
+      writer.assertInvokedInSequence().println("moe@stooge.com");
+      writer.assertInvokedInSequence().println("curley@stooge.com");
+      response.assertInvokedInSequence().flushBuffer();
    }
 }

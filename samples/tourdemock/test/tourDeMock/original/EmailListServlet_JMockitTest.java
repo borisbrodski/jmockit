@@ -22,63 +22,76 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.stehno.mockery;
+package tourDeMock.original;
 
 import java.io.*;
-import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.junit.*;
-import org.junit.runner.*;
+import tourDeMock.original.service.*;
 
-import com.stehno.mockery.service.*;
-import static java.util.Arrays.*;
-import org.unitils.*;
-import org.unitils.mock.*;
+import mockit.*;
 
-@RunWith(UnitilsJUnit4TestClassRunner.class)
-public final class EmailListServlet_UnitilsTest
+public final class EmailListServlet_JMockitTest
 {
    EmailListServlet servlet;
 
-   Mock<HttpServletRequest> request;
-   Mock<HttpServletResponse> response;
-   Mock<EmailListService> emailListService;
+   @NonStrict HttpServletRequest request;
+   @Cascading HttpServletResponse response;
+   @Mocked EmailListService emailListService;
 
-   Mock<ServletConfig> servletConfig;
-   Mock<PrintWriter> writer;
+   @Cascading ServletConfig servletConfig;
 
    @Before
    public void before() throws Exception
    {
-      servletConfig.returns(emailListService).getServletContext().getAttribute(EmailListService.KEY);
+      new Expectations()
+      {
+         {
+            servletConfig.getServletContext().getAttribute(EmailListService.KEY);
+            result = emailListService;
+         }
+      };
 
       servlet = new EmailListServlet();
-      servlet.init(servletConfig.getMock());
+      servlet.init(servletConfig);
    }
 
    @Test(expected = ServletException.class)
    public void doGetWithoutList() throws Exception
    {
-      emailListService.raises(new EmailListNotFound()).getListByName(null);
+      new Expectations()
+      {
+         {
+            emailListService.getListByName(null); result = new ServletException();
+         }
+      };
 
-      servlet.doGet(request.getMock(), response.getMock());
+      servlet.doGet(request, response);
    }
 
    @Test
-   public void doGetWithList() throws Exception
+   public void doGetWithList(final PrintWriter writer) throws Exception
    {
-      List<String> emails = asList("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
-      emailListService.returns(emails).getListByName(null);
+      new Expectations()
+      {
+         {
+            emailListService.getListByName(anyString);
+            returns("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
+         }
+      };
 
-      response.returns(writer).getWriter();
+      servlet.doGet(request, response);
 
-      servlet.doGet(request.getMock(), response.getMock());
-
-      writer.assertInvokedInSequence().println("larry@stooge.com");
-      writer.assertInvokedInSequence().println("moe@stooge.com");
-      writer.assertInvokedInSequence().println("curley@stooge.com");
-      response.assertInvokedInSequence().flushBuffer();
+      new VerificationsInOrder()
+      {
+         {
+            writer.println("larry@stooge.com");
+            writer.println("moe@stooge.com");
+            writer.println("curley@stooge.com");
+            response.flushBuffer();
+         }
+      };
    }
 }

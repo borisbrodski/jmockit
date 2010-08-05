@@ -1,11 +1,12 @@
-package com.stehno.mockery;
+package tourDeMock.original;
 
 import java.util.*;
 import javax.servlet.*;
 
 import org.junit.*;
 
-import com.stehno.mockery.service.*;
+import tourDeMock.original.*;
+import tourDeMock.original.service.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 import org.springframework.mock.web.*;

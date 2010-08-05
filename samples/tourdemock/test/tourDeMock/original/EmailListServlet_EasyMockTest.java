@@ -1,4 +1,4 @@
-package com.stehno.mockery;
+package tourDeMock.original;
 
 import java.io.*;
 import java.util.*;
@@ -7,7 +7,8 @@ import javax.servlet.http.*;
 
 import org.junit.*;
 
-import com.stehno.mockery.service.*;
+import tourDeMock.original.*;
+import tourDeMock.original.service.*;
 import static java.util.Arrays.*;
 import static org.easymock.EasyMock.*;
 import org.easymock.EasyMockSupport;

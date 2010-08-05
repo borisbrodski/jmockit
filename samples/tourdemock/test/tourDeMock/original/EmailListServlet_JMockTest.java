@@ -1,4 +1,4 @@
-package com.stehno.mockery;
+package tourDeMock.original;
 
 import java.io.*;
 import java.util.*;
@@ -8,7 +8,8 @@ import javax.servlet.http.*;
 import org.junit.*;
 import org.junit.runner.*;
 
-import com.stehno.mockery.service.*;
+import tourDeMock.original.*;
+import tourDeMock.original.service.*;
 import static java.util.Arrays.*;
 import org.jmock.*;
 import org.jmock.integration.junit4.*;
