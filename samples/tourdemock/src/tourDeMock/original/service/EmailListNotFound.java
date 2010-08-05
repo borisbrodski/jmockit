@@ -1,4 +1,4 @@
-package com.stehno.mockery.service;
+package tourDeMock.original.service;
 
 public final class EmailListNotFound extends Exception
 {
