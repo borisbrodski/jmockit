@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -26,16 +26,15 @@ package org.easymock.samples;
 
 import java.util.*;
 
+import static org.junit.Assert.*;
 import org.junit.*;
 
 import mockit.*;
 
-import static org.junit.Assert.*;
-
 public final class DocumentManager_JMockit_Test
 {
-   private DocumentManager classUnderTest;
-   @Mocked private Collaborator mock; // A mock field which will be automatically set.
+   DocumentManager classUnderTest;
+   @Mocked Collaborator mock; // A mock field which will be automatically set.
 
    @Before
    public void setup()
@@ -128,8 +127,7 @@ public final class DocumentManager_JMockit_Test
          {
             mock.documentAdded("Document 1");
             mock.documentAdded("Document 2");
-            String[] documents = {"Document 1", "Document 2"};
-            mock.voteForRemovals(withEqual(documents)); result = 42;
+            mock.voteForRemovals("Document 1", "Document 2"); result = 42;
             mock.documentRemoved("Document 1");
             mock.documentRemoved("Document 2");
          }
@@ -148,8 +146,7 @@ public final class DocumentManager_JMockit_Test
          {
             mock.documentAdded("Document 1");
             mock.documentAdded("Document 2");
-            String[] documents = {"Document 1", "Document 2"};
-            mock.voteForRemovals(withEqual(documents)); result = -42;
+            mock.voteForRemovals("Document 1", "Document 2"); result = -42;
          }
       };
 
