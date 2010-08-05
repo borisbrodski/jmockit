@@ -22,17 +22,16 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package simpler;
+package tourDeMock.simpler;
 
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.junit.*;
+import tourDeMock.simpler.service.*;
 
 import mockit.*;
-
-import simpler.service.*;
 
 public final class EmailListServletTest
 {
@@ -53,7 +52,8 @@ public final class EmailListServletTest
    }
 
    @Test
-   public void doGetWithList(@Cascading final HttpServletResponse response, final PrintWriter writer)
+   public void doGetWithList(
+      @Cascading final HttpServletResponse response, @Mocked final PrintWriter writer)
       throws Exception
    {
       new NonStrictExpectations()
