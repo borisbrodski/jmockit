@@ -899,6 +899,7 @@
         <w>htmlbasic</w>
         <w>htmlfull</w>
         <w>iinc</w>
+        <w>implclass</w>
         <w>inconvertible</w>
         <w>inet</w>
         <w>initializer</w>
