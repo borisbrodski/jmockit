@@ -920,6 +920,7 @@
         <w>javadocs</w>
         <w>javaee</w>
         <w>javamail</w>
+        <w>javamockit</w>
         <w>javascript</w>
         <w>javase</w>
         <w>javassist</w>
@@ -944,6 +945,7 @@
         <w>logins</w>
         <w>logout</w>
         <w>lorg</w>
+        <w>mailto</w>
         <w>matcher&lt;?&gt;</w>
         <w>maxs</w>
         <w>metadata</w>
