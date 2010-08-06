@@ -30,12 +30,11 @@ import java.util.List;
 import java.util.*;
 import javax.swing.*;
 
+import static mockit.Deencapsulation.*;
+import org.jdesktop.animation.timing.*;
 import org.junit.*;
 
 import mockit.*;
-
-import static mockit.Deencapsulation.*;
-import org.jdesktop.animation.timing.*;
 
 public final class AnimationManagerInitTest
 {
@@ -95,7 +94,7 @@ public final class AnimationManagerInitTest
       manager.init(animator);
    }
 
-   @Ignore @Test
+   @Test
    public void initForComponentWithEndStateOnly()
    {
       // Expect checking of states to remove those components completely outside the container:
@@ -109,7 +108,7 @@ public final class AnimationManagerInitTest
       manager.init(animator);
    }
 
-   @Ignore @Test
+   @Test
    public void initForComponentWithStartAndEndStates()
    {
       // Expect checking of states to remove those components completely outside the container:
@@ -124,7 +123,7 @@ public final class AnimationManagerInitTest
       manager.init(animator);
    }
 
-   @Ignore @Test
+   @Test
    public void initForComponentCompletelyOutsideTheContainer()
    {
       new NonStrictExpectations()
@@ -141,7 +140,7 @@ public final class AnimationManagerInitTest
       manager.init(animator);
    }
 
-   @Ignore @Test
+   @Test
    public void initForChangingComponent()
    {
       List<JComponent> changingComponents = getField(manager, List.class);
