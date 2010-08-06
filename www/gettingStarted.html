@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-   <title>JMockit installation instructions</title>
+   <title>Getting started with JMockit</title>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
    <link rel="stylesheet" type="text/css" href="prettify.css"/>
 </head>
@@ -56,10 +56,8 @@
          </li>
          <li>
             If you use <strong>TestNG</strong> in a JDK 1.6+ environment, JMockit can be initialized
-            in one of three possible ways (apart from use of "-javaagent" indicated above, which can
-            also be used). See
-            <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">this page</a>
-            for details.
+            through TestNG-specific configuration (in addition to the use of "-javaagent" as
+            indicated above). See <a href="tutorial/RunningTests.html">this page</a> for details.
          </li>
       </ul>
       When using a HotSpot JDK 1.6+ or a JRockit JDK 1.6+ on Windows or Linux, neither of the extra
@@ -73,19 +71,6 @@
       <a href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/overview-summary.html">on-line</a>.
    </li>
 </ol>
-
-<h4 id="eclipse">Running tests in Eclipse with the JUnit plug-in</h4>
-<p>
-   The JUnit plug-in available in the Eclipse Java IDE provides a version of <code>junit.jar</code>
-   which does not work with JMockit (the plug-in itself does work).
-   The problem is that, contrary to the
-   <a href="http://github.com/KentBeck/junit/downloads">official JUnit jars</a>, the
-   <code>junit.jar</code> file that comes with the Eclipse installation is
-   <a href="http://wiki.eclipse.org/JAR_Signing#Should_third_party_JARs_be_signed.3F">signed</a>.
-   This prevents JMockit from starting itself up correctly. The workaround is to use a regular
-   (non-signed) JUnit jar file instead, which in Eclipse can be added to the classpath directly or
-   as part of a "User Library".
-</p>
 
 <h4 id="ant">Running tests with the JUnit Ant task</h4>
 <p>
