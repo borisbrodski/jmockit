@@ -30,12 +30,11 @@ import java.util.List;
 import java.util.*;
 import javax.swing.*;
 
+import static mockit.Deencapsulation.*;
+import static org.junit.Assert.*;
 import org.junit.*;
 
 import mockit.*;
-
-import static mockit.Deencapsulation.*;
-import static org.junit.Assert.*;
 
 public final class AnimationManagerTest
 {
@@ -54,7 +53,7 @@ public final class AnimationManagerTest
       new Verifications()
       {
          {
-            container.createImage(anyInt, anyInt); times = 0;
+            onInstance(container).createImage(anyInt, anyInt); times = 0;
          }
       };
    }
