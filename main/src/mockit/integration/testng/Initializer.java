@@ -31,8 +31,6 @@ import mockit.internal.startup.*;
  * A test listener implementation for TestNG that will properly initialize JMockit before any tests
  * are executed. This class is useful if running on JDK 1.6+ and the JVM argument
  * "-javaagent:jmockit.jar" isn't being used.
- * If that is the case, then this mechanism avoids the need to make all test classes extend
- * {@link mockit.integration.testng.JMockitTestNG}.
  * <p/>
  * One way to configure TestNG to use this class as a listener is to pass
  * "-listener mockit.integration.testng.Initializer" as a command line argument.

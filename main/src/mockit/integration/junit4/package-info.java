@@ -26,14 +26,8 @@
 /**
  * Provides integration with <em>JUnit 4.x</em> test runners.
  * <p/>
- * Contains special helper classes for users of JUnit 4.5+: the
- * {@link mockit.integration.junit4.JMockit} test runner which is nothing more than the standard
- * JUnit 4.5+ test runner integrated to JMockit, and the
- * {@link mockit.integration.junit4.JMockitTest} convenience base test class.
- * <p/>
- * Also contains the "startup mock" implementation for integration with the JUnit 4.5+ test runner
- * (JUnit 4.4 had a different test runner which was deprecated, and is no longer supported by
- * JMockit).
+ * Contains the "startup mock" implementation for integration with the JUnit 4.5+ test runner.
+ * (JUnit 4.4 had a different test runner which was deprecated, and is no longer supported.)
  * <p/>
  * The integration adds the following benefits to test code:
  * <ol>

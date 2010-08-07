@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -26,9 +26,8 @@
 /**
  * Provides integration with <em>TestNG</em> test runners, for versions 5.8+.
  * <p/>
- * Contains the {@link mockit.integration.testng.JMockitTestNG} convenience base test class, and the
- * {@link mockit.integration.testng.Initializer} test listener class that can be specified to TestNG
- * at startup.
+ * Contains the {@link mockit.integration.testng.Initializer} test listener class that can be
+ * specified to TestNG at startup.
  * <p/>
  * Also contains the "startup mock" implementation for integration with the TestNG 5.8+ test runner.
  * <p/>
