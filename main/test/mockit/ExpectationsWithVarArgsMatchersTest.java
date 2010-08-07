@@ -43,7 +43,13 @@ public final class ExpectationsWithVarArgsMatchersTest
       int anotherOperation(int i, boolean b, String s, String... otherStrings) { return -1; }
    }
 
-   @Mocked private Collaborator mock;
+   public interface Dependency
+   {
+      void doSomething(String... args);
+   }
+
+   @Mocked Collaborator mock;
+   @Mocked Dependency mock2;
 
    @Test(expected = AssertionError.class)
    public void replayVarargsMethodWithDifferentThanExpectedNonVarargsArgument()
@@ -72,6 +78,19 @@ public final class ExpectationsWithVarArgsMatchersTest
    }
 
    @Test(expected = AssertionError.class)
+   public void replayVarargsMethodWithDifferentThanExpectedNumberOfVarargsArguments_nonStrict()
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mock2.doSomething("1", "2", "3"); times = 1;
+         }
+      };
+
+      mock2.doSomething("1", "2");
+   }
+
+   @Test(expected = AssertionError.class)
    public void replayVarargsMethodWithDifferentThanExpectedVarargsArgument()
    {
       new Expectations()
@@ -84,6 +103,19 @@ public final class ExpectationsWithVarArgsMatchersTest
       mock.complexOperation(1, 2, 4);
    }
 
+   @Test(expected = AssertionError.class)
+   public void replayVarargsMethodWithDifferentThanExpectedVarargsArgument_nonStrict()
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mock2.doSomething("1", "2", "3"); minTimes = 1;
+         }
+      };
+
+      mock2.doSomething("1", "2", "4");
+   }
+
    @Test
    public void expectInvocationOnMethodWithVarargsArgumentUsingArgumentMatchers()
    {
@@ -91,10 +123,12 @@ public final class ExpectationsWithVarArgsMatchersTest
       {
          {
             mock.complexOperation(withEqual(1), withNotEqual(2), withNull());
+            mock2.doSomething(withPrefix("C"), withSuffix("."));
          }
       };
 
       mock.complexOperation(1, 3, null);
+      mock2.doSomething("Cab", "123.");
    }
 
    @Test
@@ -104,6 +138,7 @@ public final class ExpectationsWithVarArgsMatchersTest
       {
          {
             mock.complexOperation(any, (Object[]) null); times = 3;
+            mock2.doSomething((String[]) any); minTimes = 2;
             mock.complexOperation(123, (Object[]) any);
          }
       };
@@ -111,6 +146,8 @@ public final class ExpectationsWithVarArgsMatchersTest
       mock.complexOperation("test");
       mock.complexOperation(null, 'X');
       mock.complexOperation(1, 3, null);
+      mock2.doSomething();
+      mock2.doSomething("test", "abc");
       mock.complexOperation(123, true, "test", 3);
    }
 
