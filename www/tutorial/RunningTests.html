@@ -54,15 +54,6 @@
    JVM can locate the jar file.)
 </li>
 </ol>
-<p>
-   If use of the <code>-javaagent</code> JVM parameter is not desired, but for some reason
-   <code>jmockit.jar</code> cannot precede <code>junit.jar</code> in the classpath or the TestNG
-   listener cannot be used, then all test classes must make sure that JMockit gets initialized
-   <em>before</em> the first test in the suite gets executed.
-   This can be achieved by creating a static test class initializer or a <code>@BeforeClass</code>
-   method (in JUnit 4) with a call to <strong><code>Mockit.setUpMocks()</code></strong>.
-   This option can be used with any supported version of JUnit or TestNG.
-</p>
 <div class="navigation">
    <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
    <a href="BehaviorBasedTesting.html"><img align="right" src="go-next.png" title="Next chapter"></a>
