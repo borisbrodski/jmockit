@@ -5,15 +5,13 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.junit.*;
-import org.junit.runner.*;
-
-import tourDeMock.original.*;
-import tourDeMock.original.service.*;
 import static java.util.Arrays.*;
 import org.jmock.*;
 import org.jmock.integration.junit4.*;
 import org.jmock.lib.legacy.*;
+import org.junit.*;
+import org.junit.runner.*;
+import tourDeMock.original.service.*;
 
 @RunWith(JMock.class)
 public final class EmailListServlet_JMockTest

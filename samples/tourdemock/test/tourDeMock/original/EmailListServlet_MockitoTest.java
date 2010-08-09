@@ -5,15 +5,13 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import static java.util.Arrays.*;
 import org.junit.*;
 import org.junit.runner.*;
-
-import tourDeMock.original.*;
-import tourDeMock.original.service.*;
-import static java.util.Arrays.*;
 import org.mockito.*;
 import static org.mockito.Mockito.*;
 import org.mockito.runners.*;
+import tourDeMock.original.service.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public final class EmailListServlet_MockitoTest
@@ -21,17 +19,16 @@ public final class EmailListServlet_MockitoTest
    EmailListServlet servlet;
 
    @Mock HttpServletRequest request;
-   @Mock HttpServletResponse response;
+   @Mock(answer = Answers.RETURNS_DEEP_STUBS) HttpServletResponse response;
    @Mock EmailListService emailListService;
+
+   @Mock(answer = Answers.RETURNS_DEEP_STUBS) ServletConfig servletConfig;
 
    @Before
    public void before() throws Exception
    {
-      ServletConfig servletConfig = mock(ServletConfig.class);
-      ServletContext servletContext = mock(ServletContext.class);
-
-      when(servletConfig.getServletContext()).thenReturn(servletContext);
-      when(servletContext.getAttribute(EmailListService.KEY)).thenReturn(emailListService);
+      when(servletConfig.getServletContext().getAttribute(EmailListService.KEY))
+         .thenReturn(emailListService);
 
       servlet = new EmailListServlet();
       servlet.init(servletConfig);
@@ -48,11 +45,10 @@ public final class EmailListServlet_MockitoTest
    @Test
    public void doGetWithList() throws Exception
    {
+      PrintWriter writer = response.getWriter();
+
       List<String> emails = asList("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
       when(emailListService.getListByName(anyString())).thenReturn(emails);
-
-      PrintWriter writer = mock(PrintWriter.class);
-      when(response.getWriter()).thenReturn(writer);
 
       servlet.doGet(request, response);
 

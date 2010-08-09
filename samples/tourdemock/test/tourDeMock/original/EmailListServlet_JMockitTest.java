@@ -62,11 +62,9 @@ public final class EmailListServlet_JMockitTest
    public void doGetWithoutList() throws Exception
    {
       new Expectations()
-      {
-         {
-            emailListService.getListByName(null); result = new ServletException();
-         }
-      };
+      {{
+         emailListService.getListByName(null); result = new ServletException();
+      }};
 
       servlet.doGet(request, response);
    }

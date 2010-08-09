@@ -29,14 +29,12 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import static java.util.Arrays.*;
 import org.junit.*;
 import org.junit.runner.*;
-
-import tourDeMock.original.*;
-import tourDeMock.original.service.*;
-import static java.util.Arrays.*;
 import org.unitils.*;
 import org.unitils.mock.*;
+import tourDeMock.original.service.*;
 
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 public final class EmailListServlet_UnitilsTest

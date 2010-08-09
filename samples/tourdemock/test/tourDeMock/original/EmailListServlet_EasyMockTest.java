@@ -5,13 +5,11 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.junit.*;
-
-import tourDeMock.original.*;
-import tourDeMock.original.service.*;
 import static java.util.Arrays.*;
 import static org.easymock.EasyMock.*;
-import org.easymock.EasyMockSupport;
+import org.easymock.*;
+import org.junit.*;
+import tourDeMock.original.service.*;
 
 public final class EmailListServlet_EasyMockTest extends EasyMockSupport
 {

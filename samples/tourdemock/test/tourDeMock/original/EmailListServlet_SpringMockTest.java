@@ -3,17 +3,15 @@ package tourDeMock.original;
 import java.util.*;
 import javax.servlet.*;
 
-import org.junit.*;
-
-import tourDeMock.original.*;
-import tourDeMock.original.service.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
+import org.junit.*;
 import org.springframework.mock.web.*;
+import tourDeMock.original.service.*;
 
 public final class EmailListServlet_SpringMockTest
 {
-   static final String sep = System.getProperty("line.separator");
+   static final String SEP = System.getProperty("line.separator");
 
    EmailListServlet servlet;
 
@@ -50,7 +48,7 @@ public final class EmailListServlet_SpringMockTest
 
       assertTrue(response.isCommitted());
       assertEquals(
-         "larry@stooge.com" + sep + "moe@stooge.com" + sep + "curley@stooge.com" + sep,
+         "larry@stooge.com" + SEP + "moe@stooge.com" + SEP + "curley@stooge.com" + SEP,
          response.getContentAsString());
    }
 
