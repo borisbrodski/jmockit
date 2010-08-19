@@ -102,7 +102,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
       output.write(
          "      <th onclick='location.reload()' style='cursor: pointer' " +
          "title='Click on the title for each metric to sort by size (total number of line " +
-         "segments, paths, or fields).'>Files (.java, .fx): ");
+         "segments, paths, or fields).'>Files: ");
       output.print(totalFileCount);
       output.println("</th>");
 
@@ -147,7 +147,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
          totalFileCount += files.size();
 
          for (String fileName : files) {
-            int n = fileName.lastIndexOf('.');
+            int n = fileName.length();
             
             if (n > maxFileNameLength) {
                maxFileNameLength = n;

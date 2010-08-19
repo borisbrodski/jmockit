@@ -57,7 +57,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       printIndent();
       output.write("  <td class='file'>");
 
-      int fileNameLength = buildFileNameWithoutExtensionButCompletedWithSpaces(fileName);
+      int fileNameLength = buildFileNameWithTrailingSpaces(fileName);
       FileCoverageData fileData = filesToFileData.get(filePath);
 
       if (fileData == null) {
@@ -80,15 +80,14 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       }
    }
 
-   private int buildFileNameWithoutExtensionButCompletedWithSpaces(String fileName)
+   private int buildFileNameWithTrailingSpaces(String fileName)
    {
-      int p = fileName.lastIndexOf('.');
+      int n = fileName.length();
 
-      for (int i = 0; i < fileNameWithSpaces.length; i++) {
-         fileNameWithSpaces[i] = i < p ? fileName.charAt(i) : ' ';
-      }
-
-      return p;
+      fileName.getChars(0, n, fileNameWithSpaces, 0);
+      Arrays.fill(fileNameWithSpaces, n, fileNameWithSpaces.length, ' ');
+      
+      return n;
    }
 
    private void writeTableCellsWithFileNameAndUnknownCoverageMetrics()
