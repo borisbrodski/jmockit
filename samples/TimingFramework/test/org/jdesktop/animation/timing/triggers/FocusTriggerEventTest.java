@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -27,9 +27,6 @@ package org.jdesktop.animation.timing.triggers;
 import static org.junit.Assert.*;
 
 import org.junit.*;
-import org.junit.runner.*;
-
-import mockit.integration.junit4.*;
 
 public final class FocusTriggerEventTest
 {
