@@ -1491,17 +1491,6 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="Maven: mockit:jmockit:0.999">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.999/jmockit-0.999.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.999/jmockit-0.999-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.999/jmockit-0.999-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: commons-logging:commons-logging:0">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/unitils/../../lib/commons-logging-1.1.1.jar!/" />
