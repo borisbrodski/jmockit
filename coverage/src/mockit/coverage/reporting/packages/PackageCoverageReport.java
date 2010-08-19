@@ -104,7 +104,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    private void writeTableCellWithFileName(int fileNameLen)
    {
       if (withSourceFiles) {
-         output.write("<a href='");
+         output.write("<a target='_blank' href='");
          int p = filePath.lastIndexOf('.');
          output.write(filePath.substring(0, p));
          output.write(".html'>");
