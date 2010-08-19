@@ -96,18 +96,12 @@ public final class CallPoint implements Serializable
       return ste;
    }
 
-   static CallPoint create(String file, int line, Throwable newThrowable)
+   static CallPoint create(Throwable newThrowable)
    {
       StackTraceElement[] stackTrace = newThrowable.getStackTrace();
-      StackTraceElement ste = stackTrace[1];
-
-      assert file.endsWith(ste.getFileName()) :
-         "CallPoint#create: found file " + ste.getFileName() + " instead of " + file;
-      assert line == ste.getLineNumber() :
-         "CallPoint#create: found line " + ste.getLineNumber() + " instead of " + line;
 
       for (int i = 2; i < stackTrace.length; i++) {
-         ste = stackTrace[i];
+         StackTraceElement ste = stackTrace[i];
 
          if (isTestMethod(ste)) {
             return new CallPoint(ste);

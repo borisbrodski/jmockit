@@ -51,12 +51,16 @@ td.coverage {
    font-weight: bolder; width: 3em; text-align: right;
    border-bottom: white solid 1px;
 }
+
+.total td {
+   text-align: right; font-weight: bold; background-color: #e0e0e0;
+   border-bottom: none;
+}
+
 td.unknown { background-color: #daa520; text-align: center; }
 td.nocode { background-color: #999999; text-align: center; }
 
 pre.jmp { background-color: #f8ebb8; }
-
-.total td { text-align: right; font-weight: bold; background-color: #e0e0e0; }
 
 .cp { cursor: pointer; }
 

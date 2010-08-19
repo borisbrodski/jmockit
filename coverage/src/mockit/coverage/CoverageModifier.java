@@ -178,12 +178,12 @@ final class CoverageModifier extends ClassWriter
       int currentLine;
       LineCoverageData lineData;
       final List<Label> visitedLabels = new ArrayList<Label>();
-      final List<Label> jumpTargetsForCurrentLine = new ArrayList<Label>();
+      final List<Label> jumpTargetsForCurrentLine = new ArrayList<Label>(4);
+      private final Map<Label, Label> unconditionalJumps = new HashMap<Label, Label>(2);
       final Map<Integer, Boolean> pendingBranches = new HashMap<Integer, Boolean>();
       boolean assertFoundInCurrentLine;
       boolean nextLabelAfterConditionalJump;
       boolean potentialAssertFalseFound;
-      private Label unconditionalJump;
 
       BaseMethodModifier(MethodVisitor mv)
       {
@@ -203,7 +203,7 @@ final class CoverageModifier extends ClassWriter
 
          jumpTargetsForCurrentLine.clear();
          nextLabelAfterConditionalJump = false;
-         unconditionalJump = null;
+         unconditionalJumps.clear();
 
          generateCallToRegisterLineExecution();
 
@@ -250,7 +250,7 @@ final class CoverageModifier extends ClassWriter
             }
          }
          else {
-            unconditionalJump = mw.currentBlock;
+            unconditionalJumps.put(label, mw.currentBlock);
          }
 
          mw.visitJumpInsn(opcode, label);
@@ -307,8 +307,10 @@ final class CoverageModifier extends ClassWriter
             nextLabelAfterConditionalJump = false;
          }
 
-         if (unconditionalJump != null && label.line == 0) {
-            int branchIndex = lineData.addBranch(unconditionalJump, null);
+         Label unconditionalJumpSource = unconditionalJumps.get(label);
+
+         if (unconditionalJumpSource != null) {
+            int branchIndex = lineData.addBranch(unconditionalJumpSource, label);
             BranchCoverageData branchData = lineData.getBranchData(branchIndex);
             branchData.setHasJumpTarget();
             generateCallToRegisterBranchTargetExecution("jumpTargetExecuted", branchIndex);

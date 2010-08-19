@@ -1,6 +1,6 @@
 /*
  * JMockit Coverage
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -48,7 +48,7 @@ public final class TestRun
 
       CoverageData coverageData = CoverageData.instance();
       CallPoint callPoint =
-         coverageData.isWithCallPoints() ? CallPoint.create(file, line, new Throwable()) : null;
+         coverageData.isWithCallPoints() ? CallPoint.create(new Throwable()) : null;
 
       FileCoverageData fileData = coverageData.getFileData(file);
       fileData.incrementLineCount(line, callPoint);
@@ -66,7 +66,7 @@ public final class TestRun
 
       CoverageData coverageData = CoverageData.instance();
       CallPoint callPoint =
-         coverageData.isWithCallPoints() ? CallPoint.create(file, line, new Throwable()) : null;
+         coverageData.isWithCallPoints() ? CallPoint.create(new Throwable()) : null;
 
       FileCoverageData fileData = coverageData.getFileData(file);
       fileData.registerBranchExecution(line, segment, true, callPoint);
@@ -84,7 +84,7 @@ public final class TestRun
 
       CoverageData coverageData = CoverageData.instance();
       CallPoint callPoint =
-         coverageData.isWithCallPoints() ? CallPoint.create(file, line, new Throwable()) : null;
+         coverageData.isWithCallPoints() ? CallPoint.create(new Throwable()) : null;
 
       FileCoverageData fileData = coverageData.getFileData(file);
       fileData.registerBranchExecution(line, segment, false, callPoint);
