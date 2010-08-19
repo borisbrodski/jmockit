@@ -53,7 +53,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    @Override
    protected void writeMetricsForFile(String packageName, String fileName)
    {
-      filePath = packageName + '/' + fileName;
+      filePath = packageName.length() == 0 ? fileName : packageName + '/' + fileName;
       printIndent();
       output.write("  <td class='file'>");
 

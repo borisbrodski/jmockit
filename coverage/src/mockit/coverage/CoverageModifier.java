@@ -27,11 +27,11 @@ package mockit.coverage;
 import java.io.*;
 import java.util.*;
 
+import static mockit.external.asm.Opcodes.*;
+
 import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
 import mockit.external.asm.*;
-
-import static mockit.external.asm.Opcodes.*;
 
 final class CoverageModifier extends ClassWriter
 {
@@ -50,6 +50,7 @@ final class CoverageModifier extends ClassWriter
    private FileCoverageData fileData;
    private boolean cannotModify;
    private final boolean forInnerClass;
+   private boolean forEnumClass;
 
    CoverageModifier(ClassReader cr)
    {
@@ -57,12 +58,12 @@ final class CoverageModifier extends ClassWriter
       forInnerClass = false;
    }
 
-   private CoverageModifier(ClassReader cr, CoverageModifier other)
+   private CoverageModifier(ClassReader cr, CoverageModifier other, String simpleClassName)
    {
       super(cr, true);
-      simpleClassName = other.simpleClassName;
       sourceFileName = other.sourceFileName;
       fileData = other.fileData;
+      this.simpleClassName = simpleClassName;
       forInnerClass = true;
    }
 
@@ -70,6 +71,10 @@ final class CoverageModifier extends ClassWriter
    public void visit(
       int version, int access, String name, String signature, String superName, String[] interfaces)
    {
+      if ((access & ACC_SYNTHETIC) != 0) {
+         throw new VisitInterruptedException();
+      }
+
       if (!forInnerClass) {
          int p = name.lastIndexOf('/');
 
@@ -85,6 +90,7 @@ final class CoverageModifier extends ClassWriter
          cannotModify = (access & ACC_ANNOTATION) != 0 || name.startsWith("mockit/coverage/");
       }
 
+      forEnumClass = (access & ACC_ENUM) != 0;
       super.visit(version, access, name, signature, superName, interfaces);
    }
 
@@ -108,7 +114,7 @@ final class CoverageModifier extends ClassWriter
    {
       super.visitInnerClass(internalName, outerName, innerName, access);
 
-      if (forInnerClass) {
+      if (forInnerClass || (access & ACC_SYNTHETIC) != 0 || access == ACC_STATIC + ACC_ENUM) {
          return;
       }
 
@@ -116,7 +122,7 @@ final class CoverageModifier extends ClassWriter
 
       try {
          ClassReader innerCR = new ClassReader(innerClassName);
-         CoverageModifier innerClassModifier = new CoverageModifier(innerCR, this);
+         CoverageModifier innerClassModifier = new CoverageModifier(innerCR, this, innerName);
          innerCR.accept(innerClassModifier, false);
          INNER_CLASS_MODIFIERS.put(innerClassName, innerClassModifier);
       }
@@ -142,9 +148,13 @@ final class CoverageModifier extends ClassWriter
    {
       MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 
+      if ((access & ACC_SYNTHETIC) != 0) {
+         return mv;
+      }
+
       if (name.charAt(0) == '<') {
          if (name.charAt(1) == 'c') {
-            return new StaticBlockModifier(mv);
+            return forEnumClass ? mv : new StaticBlockModifier(mv);
          }
 
          if (Metrics.PATH_COVERAGE || Metrics.DATA_COVERAGE) { // TODO: fully separate these
