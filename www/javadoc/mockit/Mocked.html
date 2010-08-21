@@ -101,6 +101,8 @@ Indicates an instance field or parameter whose value will be a mock object.
  For the duration of each test where such a <em>mocked type</em> is in scope, all new instances of
  that type, as well as those previously existing, will be mocks.
  Static methods and constructors belonging to a mocked class type will also be mocked.
+ Static initializers (including assignments to static fields) will be stubbed out by default (see
+ <A HREF="../mockit/Mocked.html#methods()"><CODE>methods()</CODE></A> for a way to override this default).
  <p/>
  In the case of an instance field, it can be declared in a test class, in a super-class of a test
  class, or in an <A HREF="../mockit/Expectations.html" title="class in mockit"><CODE>Expectations</CODE></A> subclass.

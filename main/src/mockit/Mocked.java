@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -32,6 +32,8 @@ import java.lang.annotation.*;
  * For the duration of each test where such a <em>mocked type</em> is in scope, all new instances of
  * that type, as well as those previously existing, will be mocks.
  * Static methods and constructors belonging to a mocked class type will also be mocked.
+ * Static initializers (including assignments to static fields) will be stubbed out by default (see
+ * {@link #methods} for a way to override this default).
  * <p/>
  * In the case of an instance field, it can be declared in a test class, in a super-class of a test
  * class, or in an {@link Expectations} subclass.

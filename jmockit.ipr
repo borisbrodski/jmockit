@@ -842,6 +842,7 @@
     <dictionary name="Administrator">
       <words>
         <w>abcd</w>
+        <w>accessor</w>
         <w>anim</w>
         <w>animatedtransitions</w>
         <w>anttask</w>
