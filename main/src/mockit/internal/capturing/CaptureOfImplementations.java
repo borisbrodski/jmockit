@@ -44,8 +44,7 @@ public abstract class CaptureOfImplementations
    {
       String baseTypeDesc = baseType == null ? null : baseType.getName().replace('.', '/');
       CapturedType captureMetadata = new CapturedType(baseType, capturing);
-      Class<?>[] classesLoaded =
-         Startup.instrumentation().getInitiatedClasses(getClass().getClassLoader());
+      Class<?>[] classesLoaded = Startup.instrumentation().getAllLoadedClasses();
 
       for (Class<?> aClass : classesLoaded) {
          if (captureMetadata.isToBeCaptured(aClass)) {
