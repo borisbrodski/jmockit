@@ -24,6 +24,8 @@
  */
 package mockit;
 
+import java.util.concurrent.atomic.*;
+
 import static org.junit.Assert.*;
 import org.junit.*;
 
@@ -207,5 +209,31 @@ public final class CapturingImplementationsTest
       assertFalse(mock2.doSomething());
       assertTrue(mock1.doSomething());
       assertFalse(new DefaultServiceImpl().doSomething());
+   }
+
+   static class AtomicFieldHolder
+   {
+      final AtomicIntegerFieldUpdater<AtomicFieldHolder> atomicCount =
+         AtomicIntegerFieldUpdater.newUpdater(AtomicFieldHolder.class, "count");
+
+      volatile int count;
+   }
+
+   @Test
+   public void captureClassPreviouslyLoadedByClassLoaderOtherThanContext()
+   {
+      final AtomicFieldHolder fieldHolder = new AtomicFieldHolder();
+
+      new Expectations()
+      {
+         @Capturing AtomicIntegerFieldUpdater<AtomicFieldHolder> mock;
+
+         {
+            mock.compareAndSet(fieldHolder, 0, 1); result = false;
+         }
+      };
+
+      assertFalse(fieldHolder.atomicCount.compareAndSet(fieldHolder, 0, 1));
+      assertEquals(0, fieldHolder.count);
    }
 }
