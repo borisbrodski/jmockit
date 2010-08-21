@@ -1,6 +1,6 @@
 /*
  * JMockit Annotations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -45,12 +45,14 @@ public class MockUp<T>
    private final T mockInstance;
 
    /**
-    * Apply the mock methods/constructors defined in the concrete subclass to the class or interface
-    * specified through the type parameter.
+    * Applies the mock methods defined in the concrete subclass to the class or interface specified
+    * through the type parameter.
     * <p/>
     * When one or more interfaces are specified to be mocked, a mocked proxy class that implements
     * the interfaces is created, with the proxy instance made available through a call to
     * {@link #getMockInstance()}.
+    *
+    * @see #MockUp(Class)
     */
    protected MockUp()
    {
@@ -70,12 +72,38 @@ public class MockUp<T>
             mockInstance = null;
          }
       }
-      else {
+      else if (typeToMock instanceof TypeVariable) {
          //noinspection unchecked
          mockInstance = (T) Mockit.newEmptyProxy(typeToMock);
          classToMock = mockInstance.getClass();
       }
+      else {
+         classToMock = (Class<?>) ((ParameterizedType) typeToMock).getRawType();
 
+         if (classToMock.isInterface()) {
+            //noinspection unchecked
+            mockInstance = (T) Mockit.newEmptyProxy(typeToMock);
+            classToMock = mockInstance.getClass();
+         }
+         else {
+            mockInstance = null;
+         }
+      }
+
+      Mockit.setUpMock(classToMock, this);
+   }
+
+   /**
+    * Applies the mock methods defined in the concrete subclass to the given class.
+    * <p/>
+    * In most cases, the constructor with no parameters can be used. This variation should be used
+    * only when the real class to be mocked is not accessible or known to the test.
+    *
+    * @see #MockUp()
+    */
+   protected MockUp(Class<?> classToMock)
+   {
+      mockInstance = null;
       Mockit.setUpMock(classToMock, this);
    }
 

@@ -1,6 +1,6 @@
 /*
  * JMockit Annotations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -25,6 +25,7 @@
 package mockit;
 
 import java.sql.*;
+import java.util.concurrent.atomic.*;
 
 import org.junit.*;
 
@@ -88,5 +89,59 @@ public final class MockUpTest
 
       mock.run();
       assertTrue(mock.next());
+   }
+
+   static final class Main
+   {
+      static final AtomicIntegerFieldUpdater<Main> atomicCount =
+         AtomicIntegerFieldUpdater.newUpdater(Main.class, "count");
+
+      volatile int count;
+      int max = 2;
+
+      boolean increment()
+      {
+         while (true) {
+            int currentCount = count;
+
+            if (currentCount >= max) {
+               return false;
+            }
+
+            if (atomicCount.compareAndSet(this, currentCount, currentCount + 1)) {
+               return true;
+            }
+         }
+      }
+   }
+
+   @Test
+   public void mockUpGivenClass()
+   {
+      final Main main = new Main();
+      AtomicIntegerFieldUpdater<?> atomicCount =
+         Deencapsulation.getField(Main.class, AtomicIntegerFieldUpdater.class);
+
+      new MockUp<AtomicIntegerFieldUpdater<Main>>(atomicCount.getClass())
+      {
+         boolean second;
+
+         @Mock(invocations = 2)
+         public boolean compareAndSet(Object obj, int expect, int update)
+         {
+            assertSame(main, obj);
+            assertEquals(0, expect);
+            assertEquals(1, update);
+
+            if (second) {
+               return true;
+            }
+
+            second = true;
+            return false;
+         }
+      };
+
+      assertTrue(main.increment());
    }
 }
