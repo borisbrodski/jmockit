@@ -52,7 +52,12 @@ final class TypeRedefinition extends BaseTypeRedefinition
             "specified through the @Mocked annotation:\n" + typeMetadata.mockId);
       }
 
-      redefineMethodsAndConstructorsInTargetType();
+      Integer mockedClassId = redefineClassesFromCache();
+
+      if (mockedClassId != null) {
+         redefineMethodsAndConstructorsInTargetType();
+         storeRedefinedClassesInCache(mockedClassId);
+      }
    }
 
    Object redefineType()

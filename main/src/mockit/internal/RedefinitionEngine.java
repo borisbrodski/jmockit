@@ -244,6 +244,17 @@ public final class RedefinitionEngine
       return rcWriter.toByteArray();
    }
 
+   public static void redefineClasses(ClassDefinition... definitions)
+   {
+      redefineMethods(definitions);
+
+      MockFixture mockFixture = TestRun.mockFixture();
+      
+      for (ClassDefinition def : definitions) {
+         mockFixture.addRedefinedClass(def.getDefinitionClass(), def.getDefinitionClassFile());
+      }
+   }
+
    public void redefineMethods(
       String mockClassInternalName, byte[] modifiedClassfile, boolean register)
    {

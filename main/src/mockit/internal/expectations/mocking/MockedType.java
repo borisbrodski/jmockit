@@ -32,9 +32,24 @@ import mockit.*;
 import mockit.internal.filtering.*;
 import mockit.internal.state.*;
 
-@SuppressWarnings({"ClassWithTooManyFields"})
+@SuppressWarnings({"ClassWithTooManyFields", "EqualsAndHashcode"})
 final class MockedType
 {
+   @Mocked private static final Object DUMMY = null;
+   private static final int DUMMY_HASHCODE;
+
+   static
+   {
+      int h = 0;
+
+      try {
+         h = MockedType.class.getDeclaredField("DUMMY").getAnnotation(Mocked.class).hashCode();
+      }
+      catch (NoSuchFieldException ignore) {}
+
+      DUMMY_HASHCODE = h;
+   }
+
    final Field field;
    final boolean fieldFromTestClass;
    private final int accessModifiers;
@@ -176,5 +191,25 @@ final class MockedType
    String getRealClassName()
    {
       return mocked == null ? "" : mocked.realClassName();
+   }
+
+   @Override
+   public int hashCode()
+   {
+      int result = declaredType.hashCode();
+
+      if (isFinal(accessModifiers)) {
+         result *= 31;
+      }
+
+      if (mocked != null) {
+         int h = mocked.hashCode();
+
+         if (h != DUMMY_HASHCODE) {
+            result = 31 * result + h;
+         }
+      }
+
+      return result;
    }
 }

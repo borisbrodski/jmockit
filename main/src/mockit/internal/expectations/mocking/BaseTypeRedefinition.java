@@ -24,6 +24,7 @@
  */
 package mockit.internal.expectations.mocking;
 
+import java.lang.instrument.*;
 import java.lang.reflect.*;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -40,6 +41,24 @@ import mockit.internal.util.*;
 
 abstract class BaseTypeRedefinition
 {
+   private static final class MockedClass
+   {
+      final InstanceFactory instanceFactory;
+      final ClassDefinition[] mockedClassDefinitions;
+
+      MockedClass(InstanceFactory instanceFactory, ClassDefinition[] classDefinitions)
+      {
+         this.instanceFactory = instanceFactory;
+         mockedClassDefinitions = classDefinitions;
+      }
+
+      void redefineClasses()
+      {
+         RedefinitionEngine.redefineClasses(mockedClassDefinitions);
+      }
+   }
+
+   private static final Map<Integer, MockedClass> mockedClasses = new HashMap<Integer, MockedClass>();
    private static final Map<Class<?>, Class<?>> mockInterfaces = new HashMap<Class<?>, Class<?>>();
 
    Class<?> targetClass;
@@ -47,6 +66,7 @@ abstract class BaseTypeRedefinition
    InstanceFactory instanceFactory;
    MockingConfiguration mockingCfg;
    MockConstructorInfo mockConstructorInfo;
+   private List<ClassDefinition> mockedClassDefinitions;
 
    BaseTypeRedefinition(Class<?> mockedType) { targetClass = mockedType; }
 
@@ -74,7 +94,7 @@ abstract class BaseTypeRedefinition
       return mock;
    }
 
-   protected void createMockedInterfaceImplementation(Type typeToMock)
+   private void createMockedInterfaceImplementation(Type typeToMock)
    {
       Class<?> mockedInterface = interfaceToMock(typeToMock);
 
@@ -179,7 +199,12 @@ abstract class BaseTypeRedefinition
       classReader.accept(modifier, false);
       byte[] modifiedClass = modifier.toByteArray();
 
-      new RedefinitionEngine(realClass).redefineMethods(null, modifiedClass, true);
+      ClassDefinition classDefinition = new ClassDefinition(realClass, modifiedClass);
+      RedefinitionEngine.redefineClasses(classDefinition);
+
+      if (mockedClassDefinitions != null) {
+         mockedClassDefinitions.add(classDefinition);
+      }
    }
 
    private ClassReader createClassReader(Class<?> realClass)
@@ -209,6 +234,12 @@ abstract class BaseTypeRedefinition
 
    private void createInstanceFactoryForRedefinedClass()
    {
+      Integer mockedClassId = redefineClassesFromCache();
+
+      if (mockedClassId == null) {
+         return;
+      }
+
       if (isAbstract(targetClass.getModifiers())) {
          redefineMethodsAndConstructorsInTargetType();
          Class<?> subclass = generateConcreteSubclassForAbstractType();
@@ -223,6 +254,34 @@ abstract class BaseTypeRedefinition
          String constructorDesc = modifier.getRedefinedConstructorDesc();
          instanceFactory = new ConcreteClassInstanceFactory(targetClass, constructorDesc);
       }
+
+      storeRedefinedClassesInCache(mockedClassId);
+   }
+
+   final Integer redefineClassesFromCache()
+   {
+      Integer mockedClassId =
+         typeMetadata != null ? typeMetadata.hashCode() : targetClass.hashCode();
+      MockedClass mockedClass = mockedClasses.get(mockedClassId);
+
+      if (mockedClass != null) {
+         mockedClass.redefineClasses();
+         instanceFactory = mockedClass.instanceFactory;
+         return null;
+      }
+
+      mockedClassDefinitions = new ArrayList<ClassDefinition>();
+      return mockedClassId;
+   }
+
+   final void storeRedefinedClassesInCache(Integer mockedClassId)
+   {
+      MockedClass mockedClass =
+         new MockedClass(
+            instanceFactory,
+            mockedClassDefinitions.toArray(new ClassDefinition[mockedClassDefinitions.size()]));
+
+      mockedClasses.put(mockedClassId, mockedClass);
    }
 
    private Class<?> generateConcreteSubclassForAbstractType()

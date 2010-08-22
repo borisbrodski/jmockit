@@ -28,10 +28,10 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.Map.*;
 
+import static mockit.internal.util.Utilities.*;
+
 import mockit.internal.*;
 import mockit.internal.expectations.mocking.*;
-
-import static mockit.internal.util.Utilities.*;
 
 /**
  * Holds data about redefined real classes and their corresponding mock classes (if any), and
@@ -117,11 +117,16 @@ public final class MockFixture
          }
       }
 
-      redefinedClasses.put(redefinedClass, modifiedClassfile);
+      addRedefinedClass(redefinedClass, modifiedClassfile);
 
       // TODO: implement support for multiple simultaneous redefinitions for each class?
       // at least support the case where some class is stubbed out for the whole test class and
       // then mocked in one or more tests, particularly when using @Mock(invocations = n)
+   }
+
+   public void addRedefinedClass(Class<?> redefinedClass, byte[] modifiedClassfile)
+   {
+      redefinedClasses.put(redefinedClass, modifiedClassfile);
    }
 
    public Map<Class<?>, InstanceFactory> getMockedTypesAndInstances()
