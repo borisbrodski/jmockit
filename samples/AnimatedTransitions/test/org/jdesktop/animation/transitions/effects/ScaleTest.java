@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,21 +24,20 @@
  */
 package org.jdesktop.animation.transitions.effects;
 
+import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.timing.interpolation.*;
+import org.jdesktop.animation.transitions.*;
 import org.junit.*;
 
 import mockit.*;
 
-import org.jdesktop.animation.timing.*;
-import org.jdesktop.animation.timing.interpolation.*;
-import org.jdesktop.animation.transitions.*;
-
 public final class ScaleTest
 {
-   @Mocked private ComponentState start;
-   @Mocked private ComponentState end;
-   @Mocked private final PropertySetter<Integer> propertySetter = null;
-   @Mocked private Animator animator;
-   @Mocked("init") private Effect effect;
+   @Mocked ComponentState start;
+   @Mocked ComponentState end;
+   @Mocked final PropertySetter<Integer> propertySetter = null;
+   @Mocked Animator animator;
+   @Mocked("init") Effect effect;
 
    @Test
    public void testInit()
