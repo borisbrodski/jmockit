@@ -130,8 +130,16 @@ A <em>mock-up</em> for a class or interface, to be used in state-based tests.
 <TD><CODE><B><A HREF="../mockit/MockUp.html#MockUp()">MockUp</A></B>()</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Apply the mock methods/constructors defined in the concrete subclass to the class or interface
- specified through the type parameter.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Applies the mock methods defined in the concrete subclass to the class or interface specified
+ through the type parameter.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected </CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/MockUp.html#MockUp(java.lang.Class)">MockUp</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;classToMock)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Applies the mock methods defined in the concrete subclass to the given class.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -180,13 +188,30 @@ MockUp</H3>
 <PRE>
 protected <B>MockUp</B>()</PRE>
 <DL>
-<DD>Apply the mock methods/constructors defined in the concrete subclass to the class or interface
- specified through the type parameter.
+<DD>Applies the mock methods defined in the concrete subclass to the class or interface specified
+ through the type parameter.
  <p/>
  When one or more interfaces are specified to be mocked, a mocked proxy class that implements
  the interfaces is created, with the proxy instance made available through a call to
  <A HREF="../mockit/MockUp.html#getMockInstance()"><CODE>getMockInstance()</CODE></A>.
 <P>
+<DL>
+<DT><B>See Also:</B><DD><A HREF="../mockit/MockUp.html#MockUp(java.lang.Class)"><CODE>MockUp(Class)</CODE></A></DL>
+</DL>
+<HR>
+
+<A NAME="MockUp(java.lang.Class)"><!-- --></A><H3>
+MockUp</H3>
+<PRE>
+protected <B>MockUp</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;classToMock)</PRE>
+<DL>
+<DD>Applies the mock methods defined in the concrete subclass to the given class.
+ <p/>
+ In most cases, the constructor with no parameters can be used. This variation should be used
+ only when the real class to be mocked is not accessible or known to the test.
+<P>
+<DL>
+<DT><B>See Also:</B><DD><A HREF="../mockit/MockUp.html#MockUp()"><CODE>MockUp()</CODE></A></DL>
 </DL>
 
 <!-- ============ METHOD DETAIL ========== -->
