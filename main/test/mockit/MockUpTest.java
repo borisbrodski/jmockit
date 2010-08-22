@@ -37,8 +37,12 @@ public final class MockUpTest
    {
       final boolean b;
 
+      Collaborator() { b = false; }
       Collaborator(boolean b) { this.b = b; }
       int doSomething(String s) { return s.length(); }
+
+      @SuppressWarnings({"UnusedDeclaration"})
+      <N extends Number> N genericMethod(N n) { return null; }
    }
 
    @Test
@@ -143,5 +147,55 @@ public final class MockUpTest
       };
 
       assertTrue(main.increment());
+   }
+
+   @Test
+   public void mockGenericMethod()
+   {
+      new MockUp<Collaborator>()
+      {
+         @Mock <T extends Number> T genericMethod(T t) { return t; }
+
+         // This also works (same erasure):
+         // @Mock Number genericMethod(Number t) { return t; }
+      };
+
+      Integer n = new Collaborator().genericMethod(123);
+      assertEquals(123, n.intValue());
+
+      Long l = new Collaborator().genericMethod(45L);
+      assertEquals(45L, l.longValue());
+
+      Short s = new Collaborator().genericMethod((short) 6);
+      assertEquals(6, s.shortValue());
+
+      Double d = new Collaborator().genericMethod(0.5);
+      assertEquals(0.5, d, 0);
+   }
+
+   public static final class GenericClass<T>
+   {
+      public void methodWithGenericParameter(T t) { System.out.println("t=" + t); }
+   }
+
+   @Ignore @Test
+   public void mockMethodWithGenericTypeArgument()
+   {
+      // Currently, this isn't supported but it can be. If the mock method has a generic signature,
+      // then it can be used when comparing to real methods. The MockUp class can pass the type
+      // arguments ("StringBuilder") defined for "MockUp<T>".
+      new MockUp<GenericClass<StringBuilder>>()
+      {
+         @Mock
+         public void methodWithGenericParameter(StringBuilder s)
+         {
+            s.setLength(0);
+            s.append("mock");
+         }
+      };
+
+      StringBuilder s = new StringBuilder("test");
+      new GenericClass<StringBuilder>().methodWithGenericParameter(s);
+      assertEquals("mock", s.toString());
    }
 }
