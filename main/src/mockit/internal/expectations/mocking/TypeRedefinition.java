@@ -90,8 +90,12 @@ final class TypeRedefinition extends BaseTypeRedefinition
       MockConstructorInfo constructorInfoToUse =
          isAbstract(targetClass.getModifiers()) ? null : mockConstructorInfo;
 
-      return new ExpectationsModifier(
-         realClass.getClassLoader(), classReader, mockingCfg, constructorInfoToUse);
+      ExpectationsModifier modifier =
+         new ExpectationsModifier(
+            realClass.getClassLoader(), classReader, mockingCfg, constructorInfoToUse);
+      modifier.setStubOutClassInitialization(typeMetadata.isClassInitializationToBeStubbedOut());
+
+      return modifier;
    }
 
    @Override

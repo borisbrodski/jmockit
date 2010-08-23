@@ -32,8 +32,8 @@ import java.lang.annotation.*;
  * For the duration of each test where such a <em>mocked type</em> is in scope, all new instances of
  * that type, as well as those previously existing, will be mocks.
  * Static methods and constructors belonging to a mocked class type will also be mocked.
- * Static initializers (including assignments to static fields) will be stubbed out by default (see
- * {@link #methods} for a way to override this default).
+ * Static initializers (including assignments to static fields) will be stubbed out by default
+ * (specifying {@code stubOutClassInitialization = false} overrides this default).
  * <p/>
  * In the case of an instance field, it can be declared in a test class, in a super-class of a test
  * class, or in an {@link Expectations} subclass.
@@ -100,6 +100,7 @@ import java.lang.annotation.*;
  *
  * @see #methods
  * @see #inverse
+ * @see #stubOutClassInitialization
  * @see #capture
  * @see #constructorArgsMethod
  * @see #realClassName
@@ -165,6 +166,22 @@ public @interface Mocked
     * and constructors matching them are <strong>not</strong> mocked.
     */
    boolean inverse() default false;
+
+   /**
+    * Indicates whether <em>static initialization code</em> in the mocked class should be stubbed
+    * out or not.
+    * Static initialization includes the execution of all assignments to static fields of the class,
+    * as well as the execution of all static initialization blocks (if any).
+    * <p/>
+    * Note that, by default, such class initialization code <em>is</em> stubbed out.
+    * This is generally helpful in that it fully isolates a class under test from a class it depends
+    * on, but it can have unexpected consequences due to the fact that the JVM will only initialize
+    * a class <em>once</em>. So, if the static initialization code in a class is stubbed out
+    * <em>before</em> this class is instantiated or has a static method called on it (the events
+    * which prompt the JVM to initialize the class), then the original initialization code will not
+    * be there to be executed at the time of static initialization.
+    */
+   boolean stubOutClassInitialization() default true;
 
    /**
     * Specifies the name of an instance method which will be used to determine which constructor to

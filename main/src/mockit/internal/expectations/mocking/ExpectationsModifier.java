@@ -38,6 +38,7 @@ import mockit.internal.filtering.*;
 import mockit.internal.startup.*;
 import mockit.internal.util.*;
 
+@SuppressWarnings({"ClassWithTooManyFields"})
 final class ExpectationsModifier extends BaseClassModifier
 {
    private static final int METHOD_ACCESS_MASK = ACC_SYNTHETIC + ACC_ABSTRACT;
@@ -63,6 +64,7 @@ final class ExpectationsModifier extends BaseClassModifier
    private boolean enableExecutionOfRealImplementation;
    private boolean isProxy;
    private String defaultFilters;
+   private boolean stubOutClassInitialization;
 
    ExpectationsModifier(
       ClassLoader classLoader, ClassReader classReader, MockingConfiguration mockingConfiguration,
@@ -71,6 +73,7 @@ final class ExpectationsModifier extends BaseClassModifier
       super(classReader);
       mockingCfg = mockingConfiguration;
       this.mockConstructorInfo = mockConstructorInfo;
+      stubOutClassInitialization = true;
       ignoreStaticMethods = false;
       setUseMockingBridge(classLoader);
    }
@@ -80,6 +83,7 @@ final class ExpectationsModifier extends BaseClassModifier
       super(classReader);
       mockingCfg = null;
       mockConstructorInfo = null;
+      stubOutClassInitialization = true;
       ignoreStaticMethods = true;
       setUseMockingBridge(classLoader);
    }
@@ -92,6 +96,11 @@ final class ExpectationsModifier extends BaseClassModifier
    public void enableExecutionOfRealImplementation()
    {
       enableExecutionOfRealImplementation = true;
+   }
+
+   public void setStubOutClassInitialization(boolean stubOutClassInitialization)
+   {
+      this.stubOutClassInitialization = stubOutClassInitialization;
    }
 
    @Override
@@ -135,12 +144,17 @@ final class ExpectationsModifier extends BaseClassModifier
       boolean noFiltersToMatch = mockingCfg == null || mockingCfg.isEmpty();
       boolean matchesFilters = noFiltersToMatch || mockingCfg.matchesFilters(name, desc);
 
-      if ("<clinit>".equals(name) && matchesFilters) {
-         // Stub out any class initialization block (unless specified otherwise), to avoid potential
-         // side effects in tests.
-         mw = super.visitMethod(access, name, desc, signature, exceptions);
-         generateEmptyImplementation();
-         return null;
+      if ("<clinit>".equals(name)) {
+         if (matchesFilters && stubOutClassInitialization) {
+            // Stub out any class initialization block (unless specified otherwise), to avoid
+            // potential side effects in tests.
+            mw = super.visitMethod(access, name, desc, signature, exceptions);
+            generateEmptyImplementation();
+            return null;
+         }
+         else {
+            return super.visitMethod(access, name, desc, signature, exceptions);
+         }
       }
 
       if (!matchesFilters || noFiltersToMatch && isMethodFromObject(name, desc)) {

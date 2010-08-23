@@ -61,6 +61,7 @@ class CaptureOfNewInstances extends CaptureOfImplementations
 
    private MockingConfiguration mockingCfg;
    private MockConstructorInfo mockConstructorInfo;
+   private boolean stubOutClassInitialization;
 
    CaptureOfNewInstances() {}
 
@@ -69,6 +70,7 @@ class CaptureOfNewInstances extends CaptureOfImplementations
    {
       ExpectationsModifier modifier =
          new ExpectationsModifier(cl, cr, mockingCfg, mockConstructorInfo);
+      modifier.setStubOutClassInitialization(stubOutClassInitialization);
       modifier.setClassNameForInstanceMethods(baseTypeDesc);
       return modifier;
    }
@@ -77,6 +79,7 @@ class CaptureOfNewInstances extends CaptureOfImplementations
    {
       mockingCfg = typeMetadata.mockingCfg;
       mockConstructorInfo = typeMetadata.mockConstructorInfo;
+      stubOutClassInitialization = typeMetadata.isClassInitializationToBeStubbedOut();
 
       Class<?> baseType = typeMetadata.getClassType();
 

@@ -70,6 +70,7 @@ public final class ExpectationsUsingMockedTest
    @Test
    public void annotatedField()
    {
+      //noinspection UnusedDeclaration
       new Expectations()
       {
          @Mocked
@@ -150,6 +151,7 @@ public final class ExpectationsUsingMockedTest
    @Test
    public void annotatedFieldAndParameter(@NonStrict final Dependency dependency1)
    {
+      //noinspection UnusedDeclaration
       new Expectations()
       {
          @NonStrict private Dependency dependency2;
@@ -241,6 +243,20 @@ public final class ExpectationsUsingMockedTest
       assertEquals(-1, ClassWithStaticInitializer.initialized());
    }
 
+   static class ClassWithStaticInitializer2
+   {
+      static boolean initialized = true;
+
+      static int initialized() { return initialized ? 1 : -1; }
+   }
+
+   @Test
+   public void stubOutStaticInitializersByDefault(@Mocked ClassWithStaticInitializer2 unused)
+   {
+      assertEquals(0, ClassWithStaticInitializer2.initialized());
+      assertFalse(ClassWithStaticInitializer2.initialized);
+   }
+
    static class AnotherClassWithStaticInitializer
    {
       static boolean initialized = true;
@@ -259,5 +275,20 @@ public final class ExpectationsUsingMockedTest
 
       assertEquals(0, AnotherClassWithStaticInitializer.initialized());
       assertTrue(AnotherClassWithStaticInitializer.initialized);
+   }
+
+   static class AnotherClassWithStaticInitializer2
+   {
+      static boolean initialized = true;
+
+      static int initialized() { return initialized ? 1 : -1; }
+   }
+
+   @Test
+   public void avoidStubbingStaticInitializersThroughSpecificAnnotationAttribute(
+      @Mocked(stubOutClassInitialization = false) AnotherClassWithStaticInitializer2 unused)
+   {
+      assertEquals(0, AnotherClassWithStaticInitializer2.initialized());
+      assertTrue(AnotherClassWithStaticInitializer2.initialized);
    }
 }

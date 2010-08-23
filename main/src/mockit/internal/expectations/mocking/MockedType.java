@@ -35,6 +35,7 @@ import mockit.internal.state.*;
 @SuppressWarnings({"ClassWithTooManyFields", "EqualsAndHashcode"})
 final class MockedType
 {
+   @SuppressWarnings({"UnusedDeclaration"})
    @Mocked private static final Object DUMMY = null;
    private static final int DUMMY_HASHCODE;
 
@@ -169,6 +170,11 @@ final class MockedType
    boolean hasInverseFilters()
    {
       return mocked != null && mocked.inverse();
+   }
+
+   boolean isClassInitializationToBeStubbedOut()
+   {
+      return mocked == null || mocked.stubOutClassInitialization();
    }
 
    String getConstructorArgsMethod()
