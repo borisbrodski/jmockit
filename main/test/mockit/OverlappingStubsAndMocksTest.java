@@ -27,9 +27,8 @@ package mockit;
 import org.junit.*;
 
 /**
- * Overlapping mocks/stubbing for the same real class is a misuse of the Annotations API.
- * The mocks/stubs applied at the level of the test class are set-up and restored only once, so
- * there can be no interference from individual tests.
+ * Overlapping mocks/stubbing for the same real class is currently not supported by the Annotations
+ * API. See related "TO DO" item in MockFixture.
  */
 @UsingMocksAndStubs(RealClass.class)
 public final class OverlappingStubsAndMocksTest
