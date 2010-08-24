@@ -32,9 +32,6 @@ import static mockit.external.asm.Opcodes.*;
 public abstract class FieldTypeRedefinitions extends TypeRedefinitions
 {
    private static final int FIELD_ACCESS_MASK = ACC_SYNTHETIC + ACC_STATIC;
-   private static final String EXCLUDED_BASE_CLASSES =
-      "mockit.Expectations mockit.integration.junit4.JMockitTest " +
-      "mockit.integration.junit3.JMockitTestCase";
 
    protected Field field;
    protected MockedType typeMetadata;
@@ -49,9 +46,10 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
    {
       Class<?> superClass = classWithMockFields.getSuperclass();
 
+      //noinspection UnnecessaryFullyQualifiedName
       if (
          superClass != null && superClass != Object.class &&
-         !EXCLUDED_BASE_CLASSES.contains(superClass.getName())
+         superClass != mockit.Expectations.class && superClass != mockit.NonStrictExpectations.class
       ) {
          redefineFieldTypes(superClass, isTestClass);
       }

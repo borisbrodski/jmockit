@@ -329,7 +329,6 @@
                <include name="**/*Test.class"/>
                <exclude name="**/*CodeUnderTest.class"/>
                <exclude name="**/Base*Test.class"/>
-               <exclude name="**/JMockitTest.class"/>
                <exclude name="**/TestNGDecoratorTest.class"/>
                <exclude name="**/MockStateBetweenTestMethodsNGTest.class"/>
                <exclude name="**/ExecutingTest.class"/>

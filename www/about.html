@@ -802,9 +802,7 @@
    The JMockit Hibernate Emulation component is a <em>fake implementation</em> of the Hibernate 3
    Core APIs, which can be installed in place of the real implementation by simply having the
    component jar file (jmockit-hibernate3emul.jar) in the classpath, and allowing JMockit to be
-   initialized before the first test is run (usually by having the tests use the JMockit test
-   runner, extend <code>JMockitTest</code>, call an static startup method, or by passing a simple
-   initialization argument to the JVM).
+   initialized before the first test is run.
    When those tests run with the emulation in effect, they won't use the O/R mapping information,
    nor will they access any real database. All persistence operations, including HQL queries, will
    be executed against the equivalent of an in-memory database.
