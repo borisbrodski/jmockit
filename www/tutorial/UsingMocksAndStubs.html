@@ -74,14 +74,9 @@ public final class UnitTest
 <pre><code>@RunWith(Suite.class)
 @Suite.SuiteClasses({MyFirstTest.class, MySecondTest.class})
 @UsingMocksAndStubs({JDKLoggingMocks.class, Log4jMocks.class})
-public final class TestSuite extends JMockitTest
+public final class TestSuite
 {}
 </code></pre>
-<p>
-   Notice that the above JUnit test suite class extends <code>JMockitTest</code>, to make sure that
-   JMockit will get properly initialized (another way would be to call
-   <code>Mockit.setUpMocks();</code> inside a <code>@BeforeClass</code> method of the suite class).
-</p>
 <p>
    In this example, we apply the <code>JDKLoggingMocks</code> and <code>Log4jMocks</code> mock
    classes, both available in the <code>mockit.integration.logging</code> package.
