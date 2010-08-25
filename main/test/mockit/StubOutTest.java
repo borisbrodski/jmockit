@@ -1,6 +1,6 @@
 /*
- * JMockit Core
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -158,5 +158,20 @@ public final class StubOutTest
       YetAnotherRealClass obj = new YetAnotherRealClass();
       assertEquals(0, obj.value);
       assertEquals("false", obj.doSomething(new RealClass(), new AnotherRealClass()));
+   }
+
+   @Test
+   public void stubOutClassThenSetUpMockMethodsForIt()
+   {
+      Mockit.stubOut(AnotherRealClass.class);
+
+      new MockUp<AnotherRealClass>()
+      {
+         @Mock
+         String getText(boolean b) { return b ? "mocked" : "MOCKED"; }
+      };
+
+      assertEquals("mocked", new AnotherRealClass().getText(true));
+      assertEquals("MOCKED", new AnotherRealClass().getText(false));
    }
 }
