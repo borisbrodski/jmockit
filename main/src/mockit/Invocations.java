@@ -587,7 +587,7 @@ abstract class Invocations
          (T) Utilities.newInnerInstance(innerClassSimpleName, outerClassInstance, nonNullInitArgs);
    }
 
-   // Methods for invoking non-accessible methods on mock instances/classes ///////////////////////
+   // Methods for invoking non-accessible methods on instances or classes /////////////////////////
 
    /**
     * Specifies an expected invocation to a given instance method, with a given list of arguments.
@@ -602,7 +602,7 @@ abstract class Invocations
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
     *
-    * @param mock the mock field instance on which the invocation is to be done; must not be null
+    * @param fieldOwner the instance on which the invocation is to be done; must not be null
     * @param methodName the name of the expected method
     * @param methodArgs zero or more non-null expected parameter values for the invocation; if a
     * null value needs to be passed, the Class object for the parameter type must be passed instead
@@ -611,127 +611,112 @@ abstract class Invocations
     *
     * @see #invoke(Class, String, Object...)
     */
-   protected final <T> T invoke(Object mock, String methodName, Object... methodArgs)
+   protected final <T> T invoke(Object fieldOwner, String methodName, Object... methodArgs)
    {
       //noinspection unchecked
-      return (T) Utilities.invoke(mock.getClass(), mock, methodName, methodArgs);
+      return (T) Utilities.invoke(fieldOwner.getClass(), fieldOwner, methodName, methodArgs);
    }
 
    /**
     * Specifies an expected invocation to a given static method, with a given list of arguments.
     * <p/>
     * This is useful when the next expected method is not accessible (private, for example) from the
-    * test, and therefore can not be called normally. It should <strong>not</strong> be used for
+    * test, and therefore cannot be called normally. It should <strong>not</strong> be used for
     * calling accessible methods.
     * <p/>
     * Additionally, this can also be used to directly test private methods, when there is no other
     * way to do so, or it would be too difficult by indirect means. Note that in such a case the
     * target class will normally be a "real", non-mocked, class in the code under test.
     *
-    * @param mockClass the class on which the invocation is to be done; must not be null
+    * @param methodOwner the class on which the invocation is to be done; must not be null
     * @param methodName the name of the expected static method
     * @param methodArgs zero or more non-null expected parameter values for the invocation; if a
     * null value needs to be passed, the Class object for the parameter type must be passed instead
     */
-   protected final <T> T invoke(Class<?> mockClass, String methodName, Object... methodArgs)
+   protected final <T> T invoke(Class<?> methodOwner, String methodName, Object... methodArgs)
    {
       //noinspection unchecked
-      return (T) Utilities.invoke(mockClass, null, methodName, methodArgs);
+      return (T) Utilities.invoke(methodOwner, null, methodName, methodArgs);
    }
 
-   // Methods for getting/setting non-accessible fields on mock instances/classes /////////////////
+   // Methods for getting/setting non-accessible fields on instances or classes ///////////////////
 
    /**
-    * Gets the value of a field from a given object (usually a mock).
-    * <p/>
-    * This may be useful when a mock object has a field not accessible from the test (private, for
-    * example), and there is some method under test which writes to the field.
+    * Gets the value of a non-accessible field from a given object.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
     *
-    * @param mock the instance from which to get the field value
+    * @param fieldOwner the instance from which to get the field value
     * @param fieldName the name of the field to get
     *
     * @see #setField(Object, String, Object)
     */
-   protected final <T> T getField(Object mock, String fieldName)
+   protected final <T> T getField(Object fieldOwner, String fieldName)
    {
       //noinspection unchecked
-      return (T) Utilities.getField(mock.getClass(), fieldName, mock);
+      return (T) Utilities.getField(fieldOwner.getClass(), fieldName, fieldOwner);
    }
 
    /**
-    * Gets the value of a field from a given object (usually a mock),
-    * <em>assuming</em> there is only one field declared in the class of the given object whose type
-    * can receive values of the specified field type.
-    * <p/>
-    * This may be useful when a mock object has a field not accessible from the test (private, for
-    * example), and there is some method under test which writes to the field.
+    * Gets the value of a non-accessible field from a given object, <em>assuming</em> there is only
+    * one field declared in the class of the given object whose type can receive values of the
+    * specified field type.
     *
-    * @param objectWithField the instance from which to get the field value
+    * @param fieldOwner the instance from which to get the field value
     * @param fieldType the declared type of the field, or a sub-type of the declared field type
     *
     * @see #getField(Object, String)
     *
     * @throws IllegalArgumentException if either the desired field is not found, or more than one is
     */
-   protected final <T> T getField(Object objectWithField, Class<T> fieldType)
+   protected final <T> T getField(Object fieldOwner, Class<T> fieldType)
    {
       //noinspection unchecked
-      return Utilities.getField(objectWithField.getClass(), fieldType, objectWithField);
+      return Utilities.getField(fieldOwner.getClass(), fieldType, fieldOwner);
    }
 
    /**
-    * Gets the value of a static field defined in a given class.
-    * <p/>
-    * This may be useful when a class under test has a field not accessible from the test (private,
-    * for example), and there is some method under test which writes to the field.
+    * Gets the value of a non-accessible static field defined in a given class.
     *
-    * @param realClass the class from which to get the field value
+    * @param fieldOwner the class from which to get the field value
     * @param fieldName the name of the static field to get
     *
     * @see #setField(Class, String, Object)
     */
-   protected final <T> T getField(Class<?> realClass, String fieldName)
+   protected final <T> T getField(Class<?> fieldOwner, String fieldName)
    {
       //noinspection unchecked
-      return (T) Utilities.getField(realClass, fieldName, null);
+      return (T) Utilities.getField(fieldOwner, fieldName, null);
    }
 
    /**
-    * Gets the value of a static field defined in a given class.
-    * <p/>
-    * This may be useful when a class under test has a field not accessible from the test (private,
-    * for example), and there is some method under test which writes to the field.
+    * Gets the value of a non-accessible static field defined in a given class.
     *
-    * @param realClass the class from which to get the field value
+    * @param fieldOwner the class from which to get the field value
     * @param fieldType the declared type of the field, or a sub-type of the declared field type
     *
     * @see #setField(Class, String, Object)
     */
-   protected final <T> T getField(Class<?> realClass, Class<T> fieldType)
+   protected final <T> T getField(Class<?> fieldOwner, Class<T> fieldType)
    {
       //noinspection unchecked
-      return Utilities.getField(realClass, fieldType, null);
+      return Utilities.getField(fieldOwner, fieldType, null);
    }
 
    /**
-    * Sets the value of a field on a given object (usually a mock).
-    * <p/>
-    * This may be useful when a mock object has a field not accessible from the test (private, for
-    * example), and there is some method under test which needs to read the correct field value.
+    * Sets the value of a non-accessible field on a given object.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
     *
-    * @param mock the instance on which to set the field value
+    * @param fieldOwner the instance on which to set the field value
     * @param fieldName the name of the field to set
     * @param fieldValue the value to set the field to
     *
     * @see #setField(Class, String, Object)
     */
-   protected final void setField(Object mock, String fieldName, Object fieldValue)
+   protected final void setField(Object fieldOwner, String fieldName, Object fieldValue)
    {
-      Utilities.setField(mock.getClass(), mock, fieldName, fieldValue);
+      Utilities.setField(fieldOwner.getClass(), fieldOwner, fieldName, fieldValue);
    }
 
    /**
@@ -741,35 +726,32 @@ abstract class Invocations
     * @throws IllegalArgumentException if no field or more than one is found in the target class to
     * which the given value can be assigned
     */
-   protected final void setField(Object mock, Object fieldValue)
+   protected final void setField(Object fieldOwner, Object fieldValue)
    {
-      Utilities.setField(mock.getClass(), mock, null, fieldValue);
+      Utilities.setField(fieldOwner.getClass(), fieldOwner, null, fieldValue);
    }
 
    /**
-    * Sets the value of a static field on a given class.
-    * <p/>
-    * This may be useful when a mock object has a field not accessible from the test (private, for
-    * example), and there is some method under test which needs to read the correct field value.
+    * Sets the value of a non-accessible static field on a given class.
     *
-    * @param mockClass  the class on which the static field is defined
-    * @param fieldName  the name of the field to set
+    * @param fieldOwner the class on which the static field is defined
+    * @param fieldName the name of the field to set
     * @param fieldValue the value to set the field to
     */
-   protected final void setField(Class<?> mockClass, String fieldName, Object fieldValue)
+   protected final void setField(Class<?> fieldOwner, String fieldName, Object fieldValue)
    {
-      Utilities.setField(mockClass, null, fieldName, fieldValue);
+      Utilities.setField(fieldOwner, null, fieldName, fieldValue);
    }
 
    /**
     * Same as {@link #setField(Class, String, Object)}, except that the field is looked up by the
     * type of the given field value instead of by name.
     *
-    * @param mockClass  the class on which the static field is defined
+    * @param fieldOwner  the class on which the static field is defined
     * @param fieldValue the value to set the field to
     */
-   protected final void setField(Class<?> mockClass, Object fieldValue)
+   protected final void setField(Class<?> fieldOwner, Object fieldValue)
    {
-      Utilities.setField(mockClass, null, null, fieldValue);
+      Utilities.setField(fieldOwner, null, null, fieldValue);
    }
 }

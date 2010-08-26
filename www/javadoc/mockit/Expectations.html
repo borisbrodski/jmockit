@@ -135,10 +135,10 @@ Base class whose subclasses are defined in test code, and whose instances define
  classes, and concrete classes (even <code>final</code> classes).
  An instance will be automatically created when the subclass gets instantiated, unless the field
  is <code>final</code> (in which case, the test code itself will have the responsibility of
- obtaining an appropriate instance). This instance will be a mock object that can be used from
- that point forward; however, <strong>static methods</strong> and <strong>constructors</strong>
- belonging to the mocked class and its super-classes will also be mocked, and any invocations made
- to them will work just as a regular instance method invocation would.
+ obtaining an appropriate instance). This mocked instance can then be used inside the expectation
+ block for the recording of expectations on instance methods; <strong>static methods</strong> and
+ <strong>constructors</strong> belonging to the mocked class or its super-classes are also mocked,
+ and can also have expectations recorded on them.
  </li>
  <li>
  Unless specified otherwise, all expectations defined inside an <code>Expectations</code> immediate
@@ -387,11 +387,11 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Class, java.lang.Class)">getField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;realClass,
+<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Class, java.lang.Class)">getField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;fieldType)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a static field defined in a given class.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a non-accessible static field defined in a given class.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -403,11 +403,11 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Class, java.lang.String)">getField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;realClass,
+<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Class, java.lang.String)">getField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a static field defined in a given class.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a non-accessible static field defined in a given class.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -419,13 +419,13 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Object, java.lang.Class)">getField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;objectWithField,
+<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Object, java.lang.Class)">getField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;fieldType)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a field from a given object (usually a mock),
- <em>assuming</em> there is only one field declared in the class of the given object whose type
- can receive values of the specified field type.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a non-accessible field from a given object, <em>assuming</em> there is only
+ one field declared in the class of the given object whose type can receive values of the
+ specified field type.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -437,11 +437,11 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Object, java.lang.String)">getField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mock,
+<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Object, java.lang.String)">getField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a field from a given object (usually a mock).</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a non-accessible field from a given object.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -453,7 +453,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)">invoke</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;mockClass,
+<TD><CODE><B><A HREF="../mockit/Expectations.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)">invoke</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;methodOwner,
        <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
        <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</CODE>
 
@@ -470,7 +470,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)">invoke</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mock,
+<TD><CODE><B><A HREF="../mockit/Expectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)">invoke</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
        <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
        <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</CODE>
 
@@ -575,7 +575,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;mockClass,
+<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
 
 <BR>
@@ -585,17 +585,17 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;mockClass,
+<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName,
          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value of a static field on a given class.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value of a non-accessible static field on a given class.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mock,
+<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
 
 <BR>
@@ -605,12 +605,12 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.String, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mock,
+<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.String, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName,
          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value of a field on a given object (usually a mock).</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value of a non-accessible field on a given object.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -1423,16 +1423,13 @@ protected final void <B>returns</B>(<A HREF="http://java.sun.com/javase/6/docs/a
 <A NAME="getField(java.lang.Class, java.lang.Class)"><!-- --></A><H3>
 getField</H3>
 <PRE>
-protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;realClass,
+protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
                                <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;fieldType)</PRE>
 <DL>
-<DD>Gets the value of a static field defined in a given class.
- <p/>
- This may be useful when a class under test has a field not accessible from the test (private,
- for example), and there is some method under test which writes to the field.
+<DD>Gets the value of a non-accessible static field defined in a given class.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>realClass</CODE> - the class from which to get the field value<DD><CODE>fieldType</CODE> - the declared type of the field, or a sub-type of the declared field type<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
+<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the class from which to get the field value<DD><CODE>fieldType</CODE> - the declared type of the field, or a sub-type of the declared field type<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
 </DD>
 </DL>
 <HR>
@@ -1440,16 +1437,13 @@ protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/
 <A NAME="getField(java.lang.Class, java.lang.String)"><!-- --></A><H3>
 getField</H3>
 <PRE>
-protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;realClass,
+protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
                                <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName)</PRE>
 <DL>
-<DD>Gets the value of a static field defined in a given class.
- <p/>
- This may be useful when a class under test has a field not accessible from the test (private,
- for example), and there is some method under test which writes to the field.
+<DD>Gets the value of a non-accessible static field defined in a given class.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>realClass</CODE> - the class from which to get the field value<DD><CODE>fieldName</CODE> - the name of the static field to get<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
+<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the class from which to get the field value<DD><CODE>fieldName</CODE> - the name of the static field to get<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
 </DD>
 </DL>
 <HR>
@@ -1457,18 +1451,15 @@ protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/
 <A NAME="getField(java.lang.Object, java.lang.Class)"><!-- --></A><H3>
 getField</H3>
 <PRE>
-protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;objectWithField,
+protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
                                <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;fieldType)</PRE>
 <DL>
-<DD>Gets the value of a field from a given object (usually a mock),
- <em>assuming</em> there is only one field declared in the class of the given object whose type
- can receive values of the specified field type.
- <p/>
- This may be useful when a mock object has a field not accessible from the test (private, for
- example), and there is some method under test which writes to the field.
+<DD>Gets the value of a non-accessible field from a given object, <em>assuming</em> there is only
+ one field declared in the class of the given object whose type can receive values of the
+ specified field type.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>objectWithField</CODE> - the instance from which to get the field value<DD><CODE>fieldType</CODE> - the declared type of the field, or a sub-type of the declared field type
+<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the instance from which to get the field value<DD><CODE>fieldType</CODE> - the declared type of the field, or a sub-type of the declared field type
 <DT><B>Throws:</B>
 <DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if either the desired field is not found, or more than one is<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#getField(java.lang.Object, java.lang.String)"><CODE>getField(Object, String)</CODE></A></DL>
 </DD>
@@ -1478,18 +1469,15 @@ protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/
 <A NAME="getField(java.lang.Object, java.lang.String)"><!-- --></A><H3>
 getField</H3>
 <PRE>
-protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mock,
+protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
                                <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName)</PRE>
 <DL>
-<DD>Gets the value of a field from a given object (usually a mock).
- <p/>
- This may be useful when a mock object has a field not accessible from the test (private, for
- example), and there is some method under test which writes to the field.
+<DD>Gets the value of a non-accessible field from a given object.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>mock</CODE> - the instance from which to get the field value<DD><CODE>fieldName</CODE> - the name of the field to get<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><CODE>setField(Object, String, Object)</CODE></A></DL>
+<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the instance from which to get the field value<DD><CODE>fieldName</CODE> - the name of the field to get<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><CODE>setField(Object, String, Object)</CODE></A></DL>
 </DD>
 </DL>
 <HR>
@@ -1497,14 +1485,14 @@ protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/
 <A NAME="invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><!-- --></A><H3>
 invoke</H3>
 <PRE>
-protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;mockClass,
+protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;methodOwner,
                              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
                              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</PRE>
 <DL>
 <DD>Specifies an expected invocation to a given static method, with a given list of arguments.
  <p/>
  This is useful when the next expected method is not accessible (private, for example) from the
- test, and therefore can not be called normally. It should <strong>not</strong> be used for
+ test, and therefore cannot be called normally. It should <strong>not</strong> be used for
  calling accessible methods.
  <p/>
  Additionally, this can also be used to directly test private methods, when there is no other
@@ -1512,7 +1500,7 @@ protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/
  target class will normally be a "real", non-mocked, class in the code under test.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>mockClass</CODE> - the class on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected static method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the invocation; if a
+<DT><B>Parameters:</B><DD><CODE>methodOwner</CODE> - the class on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected static method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the invocation; if a
  null value needs to be passed, the Class object for the parameter type must be passed instead</DL>
 </DD>
 </DL>
@@ -1521,7 +1509,7 @@ protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/
 <A NAME="invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><!-- --></A><H3>
 invoke</H3>
 <PRE>
-protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mock,
+protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
                              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
                              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</PRE>
 <DL>
@@ -1538,7 +1526,7 @@ protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>mock</CODE> - the mock field instance on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the invocation; if a
+<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the instance on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the invocation; if a
  null value needs to be passed, the Class object for the parameter type must be passed instead
 <DT><B>Returns:</B><DD>the return value from the invoked method, wrapped if primitive<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><CODE>invoke(Class, String, Object...)</CODE></A></DL>
 </DD>
@@ -1656,14 +1644,14 @@ protected final &lt;T&gt; T <B>onInstance</B>(T&nbsp;mock)</PRE>
 <A NAME="setField(java.lang.Class, java.lang.Object)"><!-- --></A><H3>
 setField</H3>
 <PRE>
-protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;mockClass,
+protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
                               <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A>, except that the field is looked up by the
  type of the given field value instead of by name.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>mockClass</CODE> - the class on which the static field is defined<DD><CODE>fieldValue</CODE> - the value to set the field to</DL>
+<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the class on which the static field is defined<DD><CODE>fieldValue</CODE> - the value to set the field to</DL>
 </DD>
 </DL>
 <HR>
@@ -1671,17 +1659,14 @@ protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/
 <A NAME="setField(java.lang.Class, java.lang.String, java.lang.Object)"><!-- --></A><H3>
 setField</H3>
 <PRE>
-protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;mockClass,
+protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
                               <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName,
                               <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</PRE>
 <DL>
-<DD>Sets the value of a static field on a given class.
- <p/>
- This may be useful when a mock object has a field not accessible from the test (private, for
- example), and there is some method under test which needs to read the correct field value.
+<DD>Sets the value of a non-accessible static field on a given class.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>mockClass</CODE> - the class on which the static field is defined<DD><CODE>fieldName</CODE> - the name of the field to set<DD><CODE>fieldValue</CODE> - the value to set the field to</DL>
+<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the class on which the static field is defined<DD><CODE>fieldName</CODE> - the name of the field to set<DD><CODE>fieldValue</CODE> - the value to set the field to</DL>
 </DD>
 </DL>
 <HR>
@@ -1689,7 +1674,7 @@ protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/
 <A NAME="setField(java.lang.Object, java.lang.Object)"><!-- --></A><H3>
 setField</H3>
 <PRE>
-protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mock,
+protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
                               <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><CODE>setField(Object, String, Object)</CODE></A>, except that the field is looked up by the
@@ -1707,19 +1692,16 @@ protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/
 <A NAME="setField(java.lang.Object, java.lang.String, java.lang.Object)"><!-- --></A><H3>
 setField</H3>
 <PRE>
-protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mock,
+protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
                               <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName,
                               <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</PRE>
 <DL>
-<DD>Sets the value of a field on a given object (usually a mock).
- <p/>
- This may be useful when a mock object has a field not accessible from the test (private, for
- example), and there is some method under test which needs to read the correct field value.
+<DD>Sets the value of a non-accessible field on a given object.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>mock</CODE> - the instance on which to set the field value<DD><CODE>fieldName</CODE> - the name of the field to set<DD><CODE>fieldValue</CODE> - the value to set the field to<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
+<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the instance on which to set the field value<DD><CODE>fieldName</CODE> - the name of the field to set<DD><CODE>fieldValue</CODE> - the value to set the field to<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
 </DD>
 </DL>
 <HR>

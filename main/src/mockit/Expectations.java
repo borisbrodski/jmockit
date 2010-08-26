@@ -64,10 +64,10 @@ import mockit.internal.expectations.*;
  * classes, and concrete classes (even {@code final} classes).
  * An instance will be automatically created when the subclass gets instantiated, unless the field
  * is {@code final} (in which case, the test code itself will have the responsibility of
- * obtaining an appropriate instance). This instance will be a mock object that can be used from
- * that point forward; however, <strong>static methods</strong> and <strong>constructors</strong>
- * belonging to the mocked class and its super-classes will also be mocked, and any invocations made
- * to them will work just as a regular instance method invocation would.
+ * obtaining an appropriate instance). This mocked instance can then be used inside the expectation
+ * block for the recording of expectations on instance methods; <strong>static methods</strong> and
+ * <strong>constructors</strong> belonging to the mocked class or its super-classes are also mocked,
+ * and can also have expectations recorded on them.
  * </li>
  * <li>
  * Unless specified otherwise, all expectations defined inside an {@code Expectations} immediate

@@ -27,13 +27,14 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * Indicates an instance field or parameter whose value will be a mock object.
+ * Indicates an instance field or test method parameter whose value will be a mocked instance.
  * Such fields or parameters can be of any type, except for primitive and array types.
  * For the duration of each test where such a <em>mocked type</em> is in scope, all new instances of
- * that type, as well as those previously existing, will be mocks.
- * Static methods and constructors belonging to a mocked class type will also be mocked.
- * Static initializers (including assignments to static fields) will be stubbed out by default
- * (specifying {@code stubOutClassInitialization = false} overrides this default).
+ * that type, as well as those previously existing, will also be mocked.
+ * <em>Static methods</em> and <em>constructors</em> belonging to a mocked class type are mocked as
+ * well, just like instance methods.
+ * Static initializers (including assignments to static fields) are stubbed out by default
+ * (however, specifying {@code stubOutClassInitialization = false} overrides this default).
  * <p/>
  * In the case of an instance field, it can be declared in a test class, in a super-class of a test
  * class, or in an {@link Expectations} subclass.
@@ -56,14 +57,14 @@ import java.lang.annotation.*;
  * Some tests will use only one or two of these scopes, while others can take advantage of all
  * three.
  * <p/>
- * Usually, an actual mock object gets created and assigned to a declared mock field automatically,
+ * Usually, a mocked instance gets created and assigned to a declared mock field automatically,
  * without the test code having to do anything.
  * It is also possible, however, for the test itself to provide this instance, by declaring the
  * field as {@code final} and assigning to it the desired instance.
- * If no mock instance is necessary because only static methods or constructors will be called, then
+ * If no such instance is necessary because only static methods or constructors will be called, then
  * this final field can receive the {@literal null} reference.
- * Mock parameters, on the other hand, will always receive a mock argument whenever the test method
- * is executed by the test runner.
+ * Mock parameters, on the other hand, will always receive a mocked argument whenever the test
+ * method is executed by the test runner.
  * <p/>
  * For each mocked type there is at least one <em>target class for mocking</em>, which is derived
  * from the declared type of the mock field or parameter, or specified through an annotation
@@ -138,8 +139,8 @@ public @interface Mocked
     * are mocked, and all static initializers are stubbed out.
     * <p/>
     * A filter containing just the empty string matches <em>no</em> methods, no constructors, and no 
-    * static initializers of the target class; this can be used to obtain a mock instance where
-    * nothing is mocked or stubbed out.
+    * static initializers of the target class; this can be used to obtain a mocked instance where
+    * no executable code is actually mocked or stubbed out.
     * <p/>
     * The special filter {@code "<clinit>"} can be used to match the static initializers of the
     * target class. If only this filter is specified then the static initializers are stubbed out
