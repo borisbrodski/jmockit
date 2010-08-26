@@ -37,8 +37,8 @@ import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 /**
- * Provides an startup mock that modifies the TestNG 5.8/5.9 test runner so that it calls back to
- * JMockit for each test execution.
+ * Provides an startup mock that modifies the TestNG 5.9/5.10/5.11 test runner so that it calls back
+ * to JMockit for each test execution.
  * When that happens, JMockit will assert any expectations set during the test, including
  * expectations specified through {@link Mock} as well as in {@link Expectations} subclasses.
  * <p/>

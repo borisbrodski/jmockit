@@ -29,7 +29,7 @@
  * Contains the {@link mockit.integration.testng.Initializer} test listener class that can be
  * specified to TestNG at startup.
  * <p/>
- * Also contains the "startup mock" implementation for integration with the TestNG 5.8+ test runner.
+ * Also contains the "startup mock" implementation for integration with the TestNG 5.9+ test runner.
  * <p/>
  * This integration provides the same benefits to test code as the one for
  * <a href="../junit4/package-summary.html">JUnit 4</a>.
