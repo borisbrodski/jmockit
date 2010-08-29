@@ -34,12 +34,14 @@ final class ReplayPhase extends Phase
    private int initialStrictExpectationIndexForCurrentBlock;
    int currentStrictExpectationIndex;
    final List<Expectation> nonStrictInvocations;
+   final List<Object[]> nonStrictInvocationArguments;
    private Expectation nonStrictExpectation;
 
    ReplayPhase(RecordAndReplayExecution recordAndReplay)
    {
       super(recordAndReplay);
       nonStrictInvocations = new ArrayList<Expectation>();
+      nonStrictInvocationArguments = new ArrayList<Object[]>();
       initialStrictExpectationIndexForCurrentBlock =
          Math.max(recordAndReplay.lastExpectationIndexInPreviousReplayPhase, 0);
       positionOnFirstStrictInvocation();
@@ -76,8 +78,8 @@ final class ReplayPhase extends Phase
 
       if (nonStrictExpectation != null) {
          nonStrictInvocations.add(nonStrictExpectation);
-         boolean executeRealImpl = withRealImpl && nonStrictExpectation.recordPhase == null;
-         return updateConstraintsAndProduceResult(mock, executeRealImpl, args);
+         nonStrictInvocationArguments.add(args);
+         return updateConstraintsAndProduceResult(mock, withRealImpl, args);
       }
 
       return handleStrictInvocation(mock, mockClsDesc, mockDesc, withRealImpl, args);
@@ -95,8 +97,9 @@ final class ReplayPhase extends Phase
    }
 
    private Object updateConstraintsAndProduceResult(
-      Object mock, boolean executeRealImpl, Object[] args) throws Throwable
+      Object mock, boolean withRealImpl, Object[] args) throws Throwable
    {
+      boolean executeRealImpl = withRealImpl && nonStrictExpectation.recordPhase == null;
       nonStrictExpectation.constraints.incrementInvocationCount();
 
       if (executeRealImpl) {

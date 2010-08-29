@@ -1,6 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * JMockit Verifications
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -33,9 +33,10 @@ final class UnorderedVerificationPhase extends VerificationPhase
    private Expectation aggregate;
 
    UnorderedVerificationPhase(
-      RecordAndReplayExecution recordAndReplay, List<Expectation> expectationsInReplayOrder)
+      RecordAndReplayExecution recordAndReplay,
+      List<Expectation> expectationsInReplayOrder, List<Object[]> invocationArgumentsInReplayOrder)
    {
-      super(recordAndReplay, expectationsInReplayOrder);
+      super(recordAndReplay, expectationsInReplayOrder, invocationArgumentsInReplayOrder);
    }
 
    @Override
@@ -102,11 +103,13 @@ final class UnorderedVerificationPhase extends VerificationPhase
 
       getCurrentExpectation();
       InvocationHandler handler = new InvocationHandler(invocationHandler);
-      List<Expectation> expectations = expectationsInReplayOrder;
       int i = 0;
 
-      for (Expectation expectation : expectations) {
-         if (evaluateInvocationHandlerIfExpectationMatchesCurrent(expectation, handler, i)) {
+      for (int j = 0, n = expectationsInReplayOrder.size(); j < n; j++) {
+         Expectation expectation = expectationsInReplayOrder.get(j);
+         Object[] args = invocationArgumentsInReplayOrder.get(j);
+
+         if (evaluateInvocationHandlerIfExpectationMatchesCurrent(expectation, args, handler, i)) {
             i++;
          }
       }

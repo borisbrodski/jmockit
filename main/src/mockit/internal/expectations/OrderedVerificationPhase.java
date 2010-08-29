@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Verifications
  * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -37,9 +37,10 @@ public final class OrderedVerificationPhase extends VerificationPhase
    private int indexIncrement;
 
    OrderedVerificationPhase(
-      RecordAndReplayExecution recordAndReplay, List<Expectation> expectationsInReplayOrder)
+      RecordAndReplayExecution recordAndReplay,
+      List<Expectation> expectationsInReplayOrder, List<Object[]> invocationArgumentsInReplayOrder)
    {
-      super(recordAndReplay, expectationsInReplayOrder);
+      super(recordAndReplay, expectationsInReplayOrder, invocationArgumentsInReplayOrder);
       expectationCount = expectationsInReplayOrder.size();
       indexIncrement = 1;
    }
@@ -161,8 +162,9 @@ public final class OrderedVerificationPhase extends VerificationPhase
 
       while (i < expectationCount) {
          Expectation expectation = expectationsInReplayOrder.get(i);
+         Object[] args = invocationArgumentsInReplayOrder.get(i);
 
-         if (!evaluateInvocationHandlerIfExpectationMatchesCurrent(expectation, handler, i)) {
+         if (!evaluateInvocationHandlerIfExpectationMatchesCurrent(expectation, args, handler, i)) {
             break;
          }
 

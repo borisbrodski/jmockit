@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -519,5 +519,55 @@ public final class ForEachInvocationTest
             forEachInvocation = handler;
          }
       };
+   }
+
+   @Test
+   public void verifyInvocationsWithHandlersHavingAlsoRecordedExpectations(final Collaborator mock)
+   {
+      new NonStrictExpectations()
+      {{
+         mock.doSomething(anyInt);
+
+         mock.doSomething(anyBoolean, null, null);
+         result = new Delegate()
+         {
+            String delegate(boolean b, int[] i, String s)
+            {
+               assertTrue(b);
+               assertNotNull(i);
+               assertEquals("test", s);
+               return "mocked";
+            }
+         };
+      }};
+
+      assertEquals("mocked", mock.doSomething(true, new int[0], "test"));
+      mock.doSomething(1);
+      assertEquals("mocked", mock.doSomething(true, new int[0], "test"));
+
+      new Verifications()
+      {{
+         mock.doSomething(anyInt); times = 1;
+         forEachInvocation = new Object()
+         {
+            void validate(int i) { assertEquals(1, i); }
+         };
+      }};
+
+      new VerificationsInOrder()
+      {{
+         mock.doSomething(anyBoolean, null, null);
+         forEachInvocation = new Object()
+         {
+            void validate(boolean b, int[] i, String s)
+            {
+               assertTrue(b);
+               assertNotNull(i);
+               assertEquals("test", s);
+            }
+         };
+
+         mock.doSomething(1);
+      }};
    }
 }

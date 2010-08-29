@@ -357,11 +357,12 @@ public final class RecordAndReplayExecution
          throw new IllegalStateException("Not in the replay phase yet");
       }
 
-      List<Expectation> expectationsInReplayOrder = replayPhase.nonStrictInvocations;
+      List<Expectation> expectations = replayPhase.nonStrictInvocations;
+      List<Object[]> invocationArguments = replayPhase.nonStrictInvocationArguments;
       verificationPhase =
          inOrder ?
-            new OrderedVerificationPhase(this, expectationsInReplayOrder) :
-            new UnorderedVerificationPhase(this, expectationsInReplayOrder);
+            new OrderedVerificationPhase(this, expectations, invocationArguments) :
+            new UnorderedVerificationPhase(this, expectations, invocationArguments);
 
       return verificationPhase;
    }

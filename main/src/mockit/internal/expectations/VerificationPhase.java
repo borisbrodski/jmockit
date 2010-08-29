@@ -32,16 +32,19 @@ import mockit.internal.util.*;
 public abstract class VerificationPhase extends TestOnlyPhase
 {
    final List<Expectation> expectationsInReplayOrder;
+   final List<Object[]> invocationArgumentsInReplayOrder;
    protected final List<Expectation> expectationsVerified;
    private boolean allInvocationsDuringReplayMustBeVerified;
    private Object[] mockedTypesAndInstancesToFullyVerify;
    protected AssertionError pendingError;
 
    protected VerificationPhase(
-      RecordAndReplayExecution recordAndReplay, List<Expectation> expectationsInReplayOrder)
+      RecordAndReplayExecution recordAndReplay,
+      List<Expectation> expectationsInReplayOrder, List<Object[]> invocationArgumentsInReplayOrder)
    {
       super(recordAndReplay);
       this.expectationsInReplayOrder = expectationsInReplayOrder;
+      this.invocationArgumentsInReplayOrder = invocationArgumentsInReplayOrder;
       expectationsVerified = new ArrayList<Expectation>();
    }
 
@@ -150,7 +153,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
    }
 
    final boolean evaluateInvocationHandlerIfExpectationMatchesCurrent(
-      Expectation expectation, InvocationHandler handler, int invocationIndex)
+      Expectation expectation, Object[] replayArgs, InvocationHandler handler, int invocationIndex)
    {
       ExpectedInvocation invocation = expectation.invocation;
       Object mock = invocation.instance;
@@ -164,7 +167,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
          constraints.invocationCount = invocationIndex + 1;
 
          try {
-            handler.evaluateInvocation(expectation);
+            handler.evaluateInvocation(expectation, replayArgs);
          }
          finally {
             constraints.invocationCount = originalCount;

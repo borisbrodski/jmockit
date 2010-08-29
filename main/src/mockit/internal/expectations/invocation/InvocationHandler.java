@@ -34,11 +34,9 @@ public final class InvocationHandler extends DynamicInvocationResult
       super(handler, Utilities.findNonPrivateHandlerMethod(handler));
    }
 
-   public void evaluateInvocation(Expectation expectation)
+   public void evaluateInvocation(Expectation expectation, Object[] args)
    {
-      ExpectedInvocation invocation = expectation.invocation;
-      Object[] args = invocation.getArgumentValues();
-      invokeMethodOnTargetObject(invocation.instance, expectation.constraints, args);
+      invokeMethodOnTargetObject(expectation.invocation.instance, expectation.constraints, args);
    }
 
    @Override
