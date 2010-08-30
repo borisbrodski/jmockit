@@ -156,7 +156,19 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
          throw e;
       }
       finally {
+         rollbackToSavePoint(savePoint);
+      }
+   }
+
+   private void rollbackToSavePoint(SavePoint savePoint)
+   {
+      TestRun.enterNoMockingZone();
+
+      try {
          savePoint.rollback();
+      }
+      finally {
+         TestRun.exitNoMockingZone();
       }
    }
 
