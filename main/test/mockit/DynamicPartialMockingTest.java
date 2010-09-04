@@ -24,6 +24,7 @@
  */
 package mockit;
 
+import java.io.*;
 import java.util.*;
 
 import org.junit.*;
@@ -490,5 +491,79 @@ public final class DynamicPartialMockingTest
             collaborator.getValue(); times = 2;
          }
       };
+   }
+
+   static final class TaskWithConsoleInput
+   {
+      boolean finished;
+
+      void doIt()
+      {
+         int input = '\0';
+
+         while (input != 'A') {
+            try {
+               input = System.in.read();
+            }
+            catch (IOException e) {
+               throw new RuntimeException(e);
+            }
+
+            if (input == 'Z') {
+               finished = true;
+               break;
+            }
+         }
+      }
+   }
+
+   private boolean runTaskWithTimeout(long timeoutInMillis) throws InterruptedException
+   {
+      final TaskWithConsoleInput task = new TaskWithConsoleInput();
+
+      while (!task.finished) {
+         Thread worker = new Thread(new Runnable()
+         {
+            public void run() { task.doIt(); }
+         });
+         worker.start();
+         worker.join(timeoutInMillis);
+
+         if (worker.isAlive()) {
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   @Test
+   public void taskWithConsoleInputTerminatingNormally() throws Exception
+   {
+      new Expectations(System.in)
+      {
+         {
+            System.in.read(); returns((int) 'A', (int) 'x', (int) 'Z');
+         }
+      };
+
+      assertTrue(runTaskWithTimeout(5000));
+   }
+
+   @Test
+   public void taskWithConsoleInputTerminatingOnTimeout() throws Exception
+   {
+      new Expectations(System.in)
+      {
+         {
+            System.in.read();
+            result = new Delegate()
+            {
+               void takeTooLong() throws InterruptedException { Thread.sleep(5000); }
+            };
+         }
+      };
+
+      assertFalse("no timeout", runTaskWithTimeout(10));
    }
 }
