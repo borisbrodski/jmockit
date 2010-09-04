@@ -26,7 +26,7 @@
       </ol>
    </li>
    <li><a href="#results">Recording results for an expectation</a></li>
-   <li><a href="#onInstance">Matching invocations to specific mock objects</a></li>
+   <li><a href="#onInstance">Matching invocations to specific instances</a></li>
    <li>
       <a href="#hamcrest">Constraint-based matching of argument values</a>
       <ol>
@@ -414,20 +414,30 @@ public class SomeTest
    and static methods are going to be called on it.
 </p>
 <p>
-   The mock instances created by JMockit can be used normally in test code, and/or passed to the
+   The mocked instances created by JMockit can be used normally in test code, and/or passed to the
    code under test.
-   Differently from other mocking APIs, though, these mock objects don't <em>have</em> to be the
+   Differently from other mocking APIs, though, these <em>mocked</em> objects don't have to be the
    ones used by the unit under test when it calls instance methods on its dependencies.
    By default, JMockit does not care on which object a mocked instance method is called.
    This is what allows the transparent mocking of instances created directly inside code under test
    through invocations to constructors using the <code>new</code> operator.
    The classes instantiated must be covered by mocked types declared in test code, that's all.
 </p>
+<p>
+   Finally, note that the <em>mocked instances</em> created by JMockit are similar to the
+   traditional <em>mock objects</em> created by other mocking tools, but they are not the same.
+   With the JMockit Expectations API, every instance of a mocked type - whether created by JMockit
+   or not - is mocked, for as long as that type remains mocked.
+   With a more traditional mocking API, only the mock objects/instances created by the mocking tool
+   are actually mocked.
+   Most of the time, this makes little or no difference when writing tests, but it is something to
+   keep in mind. 
+</p>
 
 <h4 id="multipleInterfaces">Mocking multiple interfaces at the same time</h4>
 <p>
    Suppose the unit under test needs to be given an object which implements two or more interfaces.
-   Can we create a mock object which satisfies this requirement?
+   Can we get a mocked instance which satisfies this requirement?
    One way to do it would be to create a test-specific interface which extends all the interfaces
    required by the tested unit, and then use that as the mocked type.
    There is a better way though, which does not require the definition of a new interface, as the
@@ -568,7 +578,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </p>
 
 <h3 id="onInstance">
-   Matching invocations to specific mock objects
+   Matching invocations to specific instances
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
@@ -597,7 +607,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
          }
       };
 
-      // Exercise unit under test with the mock object passed from the test:
+      // Exercise unit under test with the mocked instance passed from the test:
       int result = <strong>mock</strong>.getValue();
 
       assertEquals(12, result);
@@ -931,15 +941,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <h4 id="strictMocks">Strict and non-strict <em>mocks</em></h4>
 <p>
    It's usually best to think about <em>strictness</em> at the level of individual expectations, not
-   at the level of mock objects or mocked types.
-   That said, it is also correct to say that a given mock object (or mocked type) is strict or
+   at the level of mocked instances or types.
+   That said, it is also correct to say that a given mocked instance (or mocked type) is strict or
    non-strict.
-   All it means, really, is that all expectations associated to that particular mock are of a given
-   type.
+   All it means, really, is that all expectations associated to that particular instance/type have
+   the same strictness.
    On the other hand, it's perfectly valid to record both strict and non-strict expectations for
-   the same mock object or mocked type, in the same test.
-   And when using mock fields declared at the test class level, it's possible that a given mock will
-   be entirely strict in one test and entirely non-strict in another, in the same test class.
+   the same mocked instance or type, in the same test.
+   And when using mock fields declared at the test class level, it's possible that a given mocked
+   instance will be entirely strict in one test and entirely non-strict in another, in the same test
+   class.
 </p>
 <p>
    The JMockit Expectations API lets you specify that a given recorded expectation should be
@@ -959,10 +970,10 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <p>
    Remember that <em>unexpected invocations</em> can only be detected for so-called <em>strict
    mocks</em>, or for expectations with an specified maximum invocation count constraint.
-   So, how do we obtain a mock object or mocked type where all unrecorded expectations are
-   considered to be strict (and therefore cause matching invocations at replay time to throw an
-   "unexpected invocation" error)? Simple: by recording at least one <em>strict</em> expectation
-   on the mock object or mocked type. Note that this rules out the use of empty expectation blocks.
+   So, how do we obtain a mocked instance/type where all unrecorded expectations are considered to
+   be strict (and therefore cause matching invocations at replay time to throw an "unexpected
+   invocation" error)? Simple: by recording at least one <em>strict</em> expectation on the mocked
+   instance/type. Note that this rules out the use of empty expectation blocks.
    If you need to specify that no invocations are allowed on a given mock, then either record a
    strict expectation with a <code>times = 0</code> constraint or use a
    <code>FullVerifications</code> block (explained in the next section).
@@ -1032,12 +1043,12 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 
 <h4 id="importingMocks">Importing mocks from expectation blocks</h4>
 <p>
-   Mock objects and mocked types declared as mock fields of the test class or as mock parameters of
-   the test method are immediately available inside verification blocks.
+   Mocked instances and mocked types declared as mock fields of the test class or as mock parameters
+   of the test method are immediately available inside verification blocks.
    However, expectation blocks can also declare <em>local</em> mock fields, which won't be
    accessible outside the block.
-   In such cases, it's possible to <em>import</em> those local mock objects or mocked types into a
-   verification block, as the next example shows.
+   In such cases, it's possible to <em>import</em> those mocked instances into a verification block,
+   as the next example shows.
 </p>
 <pre><code>   @Test
    public void importLocalMockFromPreviousNonStrictExpectationsBlock()
@@ -1264,15 +1275,15 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 
 <h4 id="restrictedFullVerifications">Restricting the set of mocked types to be fully verified</h4>
 <p>
-   By default, <em>all</em> invocations to <em>all</em> mock objects or mocked types in effect for
-   a given test must be verified explicitly when using a <code>new FullVerifications() {}</code> or
+   By default, <em>all</em> invocations to <em>all</em> mocked instances/types in effect for a
+   given test must be verified explicitly when using a <code>new FullVerifications() {}</code> or
    <code>new FullVerificationsInOrder() {}</code> block.
    Now, what if we have a test with two (or more) mocked types but we only want to fully verify
    invocations to one of them (or to any subset of mocked types when more than two)?
    The answer is to use the
    <strong><code>FullVerifications(Object... mockedTypesAndInstancesToVerify)</code></strong>
-   constructor, where only the given mock objects and mocked types (ie, class objects/literals) are
-   considered. The following test provides an example.
+   constructor, where only the given mocked instances and mocked types (ie, class objects/literals)
+   are considered. The following test provides an example.
 </p>
 <pre><code>   @Test
    public void verifyAllInvocationsToOnlyOneOfTwoMockedTypes(Dependency mock1, AnotherDependency mock2)
@@ -1811,7 +1822,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <p>
    Notice that in these two example tests there is no mock field or mock parameter.
    This feature effectively provides yet another way to specify mocked types, which lets us turn
-   objects stored in <em>local variables</em> into mock objects.
+   objects stored in <em>local variables</em> into mocked instances.
    Such objects can be created with any amount of state in instance fields; they will keep that
    state after being mocked.
 </p>
@@ -2057,9 +2068,9 @@ public final class TestedUnit
 <p>
    The simplest form of test code reuse with JMockit is the declaration of mock fields at the test
    class level.
-   As the next example shows, the mock objects that are automatically created and assigned to such
-   fields (when they aren't declared to be <code>final</code>, that is) can be used in any number of
-   test methods.
+   As the next example shows, the objects that are automatically created and assigned to such fields
+   (when they aren't declared to be <code>final</code>, that is) can be used in any number of test
+   methods.
    (The complete source code for this example can be found under "mockit/samples/LoginService", in
    the full distribution.)
 </p>
@@ -2135,8 +2146,8 @@ public final class TestedUnit
    And such blocks can even be written inside shared "before" and "after" methods, respectively.
 </p>
 <p>
-   Since the mock object assigned to a mock field of the test class is available <em>anywhere</em>
-   in the class, not just inside expectation/verification blocks, there is the question of just what
+   Since the object assigned to a mock field of the test class is available <em>anywhere</em> in the
+   class, not just inside expectation/verification blocks, there is the question of just what
    happens as a consequence of such invocations, if any occur.
    The answer is that such invocations are freely <em>allowed</em>, and in the case of
    non-<code>void</code> methods the invocation will return the default value according to the
