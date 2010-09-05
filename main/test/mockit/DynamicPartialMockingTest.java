@@ -520,16 +520,18 @@ public final class DynamicPartialMockingTest
    private boolean runTaskWithTimeout(long timeoutInMillis) throws InterruptedException
    {
       final TaskWithConsoleInput task = new TaskWithConsoleInput();
+      Runnable asynchronousTask = new Runnable()
+      {
+         public void run() { task.doIt(); }
+      };
 
       while (!task.finished) {
-         Thread worker = new Thread(new Runnable()
-         {
-            public void run() { task.doIt(); }
-         });
+         Thread worker = new Thread(asynchronousTask);
          worker.start();
          worker.join(timeoutInMillis);
 
          if (worker.isAlive()) {
+            worker.interrupt();
             return false;
          }
       }
