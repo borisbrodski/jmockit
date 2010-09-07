@@ -531,7 +531,6 @@ public final class DynamicPartialMockingTest
          worker.join(timeoutInMillis);
 
          if (worker.isAlive()) {
-            worker.interrupt();
             return false;
          }
       }
@@ -561,7 +560,7 @@ public final class DynamicPartialMockingTest
             System.in.read();
             result = new Delegate()
             {
-               void takeTooLong() throws InterruptedException { Thread.sleep(5000); }
+               int takeTooLong() throws InterruptedException { Thread.sleep(5000); return 0; }
             };
          }
       };
