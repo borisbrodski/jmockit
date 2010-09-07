@@ -52,7 +52,6 @@
             <package name="jmockit" withSubpackages="true" static="false" />
           </value>
         </option>
-        <option name="RIGHT_MARGIN" value="100" />
         <option name="KEEP_SIMPLE_BLOCKS_IN_ONE_LINE" value="true" />
         <option name="KEEP_SIMPLE_METHODS_IN_ONE_LINE" value="true" />
         <ADDITIONAL_INDENT_OPTIONS fileType="java">

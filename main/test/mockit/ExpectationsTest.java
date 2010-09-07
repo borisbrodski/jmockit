@@ -175,6 +175,23 @@ public final class ExpectationsTest
       mock.run();
    }
 
+   public interface IA {}
+   public interface IB extends IA {}
+   public interface IC { boolean doSomething(IB b); }
+
+   @Test
+   public void mockInterfaceWhichExtendsAnother(final IB b, final IC c)
+   {
+      new Expectations()
+      {{
+         c.doSomething(b); result = false;
+         invoke(c, "doSomething", b); result = true;
+      }};
+
+      assertFalse(c.doSomething(b));
+      assertTrue(c.doSomething(b));
+   }
+
    public abstract static class AbstractCollaborator
    {
       String doSomethingConcrete() { return "test"; }

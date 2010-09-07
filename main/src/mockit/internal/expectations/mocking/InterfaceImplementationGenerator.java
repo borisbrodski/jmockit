@@ -52,14 +52,10 @@ final class InterfaceImplementationGenerator extends BaseClassModifier
       interfaceName = name;
       initialSuperInterfaces = interfaces;
 
-      int n = interfaces.length;
-      String[] implementedInterfaces = new String[n + 1];
-      System.arraycopy(interfaces, 0, implementedInterfaces, 0, n);
-      implementedInterfaces[n] = name;
+      String[] implementedInterfaces = {name};
 
       super.visit(
-         version, ACC_PUBLIC + ACC_FINAL, implementationClassName, signature, superName,
-         implementedInterfaces);
+         version, ACC_PUBLIC + ACC_FINAL, implementationClassName, signature, superName, implementedInterfaces);
 
       generateConstructor();
    }
@@ -85,12 +81,10 @@ final class InterfaceImplementationGenerator extends BaseClassModifier
    public void visitSource(String file, String debug) {}
 
    @Override
-   public FieldVisitor visitField(
-      int access, String name, String desc, String signature, Object value) { return null; }
+   public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) { return null; }
 
    @Override
-   public MethodVisitor visitMethod(
-      int access, String name, String desc, String signature, String[] exceptions)
+   public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
    {
       generateMethodImplementation(access, name, desc, signature, exceptions);
       return null;
@@ -129,9 +123,7 @@ final class InterfaceImplementationGenerator extends BaseClassModifier
       }
 
       @Override
-      public void visit(
-         int version, int access, String name, String signature, String superName,
-         String[] interfaces)
+      public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
       {
          superInterfaces = interfaces;
       }
@@ -141,8 +133,7 @@ final class InterfaceImplementationGenerator extends BaseClassModifier
          int access, String name, String desc, String signature, Object value) { return null; }
 
       @Override
-      public MethodVisitor visitMethod(
-         int access, String name, String desc, String signature, String[] exceptions)
+      public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
       {
          generateMethodImplementation(access, name, desc, signature, exceptions);
          return null;
