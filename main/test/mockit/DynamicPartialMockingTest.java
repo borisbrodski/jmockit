@@ -26,10 +26,10 @@ package mockit;
 
 import java.io.*;
 import java.util.*;
-
-import org.junit.*;
+import java.util.concurrent.*;
 
 import static org.junit.Assert.*;
+import org.junit.*;
 
 public final class DynamicPartialMockingTest
 {
@@ -517,20 +517,23 @@ public final class DynamicPartialMockingTest
       }
    }
 
-   private boolean runTaskWithTimeout(long timeoutInMillis) throws InterruptedException
+   private boolean runTaskWithTimeout(long timeoutInMillis) throws InterruptedException, ExecutionException
    {
       final TaskWithConsoleInput task = new TaskWithConsoleInput();
       Runnable asynchronousTask = new Runnable()
       {
          public void run() { task.doIt(); }
       };
+      ExecutorService executor = Executors.newSingleThreadExecutor();
 
       while (!task.finished) {
-         Thread worker = new Thread(asynchronousTask);
-         worker.start();
-         worker.join(timeoutInMillis);
+         Future<?> worker = executor.submit(asynchronousTask);
 
-         if (worker.isAlive()) {
+         try {
+            worker.get(timeoutInMillis, TimeUnit.MILLISECONDS);
+         }
+         catch (TimeoutException ignore) {
+            executor.shutdownNow();
             return false;
          }
       }
@@ -560,7 +563,7 @@ public final class DynamicPartialMockingTest
             System.in.read();
             result = new Delegate()
             {
-               int takeTooLong() throws InterruptedException { Thread.sleep(5000); return 0; }
+               void takeTooLong() throws InterruptedException { Thread.sleep(5000); }
             };
          }
       };
