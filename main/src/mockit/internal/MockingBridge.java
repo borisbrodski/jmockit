@@ -104,7 +104,7 @@ public final class MockingBridge implements InvocationHandler
 
          if (
             mockedClass == File.class || mockedClass == URL.class ||
-            Hashtable.class.isInstance(mocked)
+            Vector.class.isInstance(mocked) || Hashtable.class.isInstance(mocked)
          ) {
             StackTraceElement[] st = new Throwable().getStackTrace();
 

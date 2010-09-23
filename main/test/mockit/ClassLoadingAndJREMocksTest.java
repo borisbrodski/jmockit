@@ -29,9 +29,9 @@ import java.net.*;
 import java.util.*;
 
 import org.junit.*;
-
 import static org.junit.Assert.*;
 
+@SuppressWarnings({"UseOfObsoleteCollectionType", "CollectionDeclaredAsConcreteClass"})
 public final class ClassLoadingAndJREMocksTest
 {
    static class Foo
@@ -138,6 +138,28 @@ public final class ClassLoadingAndJREMocksTest
             assertNull(mock);
          }
       };
+   }
+
+   static class ClassWithVector
+   {
+      final Collection<?> theVector = new Vector<Object>();
+
+      public int getVectorSize() { return theVector.size(); }
+   }
+
+   @Test
+   public void useMockedVectorDuringClassLoading()
+   {
+      new NonStrictExpectations()
+      {
+         Vector<?> mockedVector;
+
+         {
+            mockedVector.size(); result = 2;
+         }
+      };
+
+      assertEquals(2, new ClassWithVector().getVectorSize());
    }
 
    @Test
