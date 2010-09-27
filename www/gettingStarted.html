@@ -4,6 +4,8 @@
    <title>Getting started with JMockit</title>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
    <link rel="stylesheet" type="text/css" href="prettify.css"/>
+   <script type="text/javascript" src="highlight.pack.js"></script>
+   <script type="text/javascript">hljs.initHighlightingOnLoad()</script>
 </head>
 <body>
 
@@ -12,8 +14,8 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 <p>
-   Available toolkit artifacts include a full distribution zip file as well as binary and source
-   jars in a public Maven 2 repository.
+   Available toolkit artifacts include a full distribution zip file as well as binary and source jars in a public
+   Maven 2 repository.
    The toolkit is documented through a tutorial, API documentation, and several sample test suites.
 </p>
 
@@ -23,13 +25,13 @@
 </p>
 <ol>
    <li>
-      Download the <a href="http://code.google.com/p/jmockit/downloads/list?q=label:Featured">full
-      distribution</a> for the latest release.
+      Download the <a href="http://code.google.com/p/jmockit/downloads/list?q=label:Featured">full distribution</a>
+      for the latest release.
    </li>
    <li>
       Unpack the zip file to any directory.
-      This will create the <code>jmockit</code> directory containing the library jars and source,
-      samples, Javadocs and additional documentation.
+      This will create the <code>jmockit</code> directory containing the library jars and source, samples, Javadocs
+      and additional documentation.
    </li>
    <li>
       Add the library file <strong><code>jmockit.jar</code></strong> to your classpath (in your Java
@@ -88,7 +90,7 @@
 <h4 id="mockObject">Creating a mock object</h4>
 <p>
    In a test class, simply declare a <em>mock field</em> of the desired type, annotated as
-   <code>@Mocked</code>.
+   <code class="annotation">@Mocked</code>.
 </p>
 <pre><code>import org.junit.*;
 import mockit.*;
@@ -125,10 +127,9 @@ public class MyFirstJMockitTest
    when the test method is invoked by the test runner.
 </p>
 <p>
-   Although optional, mock parameters can also be annotated with <code>@Mocked</code>.
-   Instance fields of the test class which are <em>not</em> annotated, on the other hand, will not
-   be mocked. Therefore, the use of <code>@Mocked</code> for <em>mock</em> fields of the test class
-   is required.
+   Although optional, mock parameters can also be annotated with <code class="annotation">@Mocked</code>.
+   Instance fields of the test class which are <em>not</em> annotated, on the other hand, will not be mocked.
+   Therefore, the use of <code class="annotation">@Mocked</code> for <em>mock</em> fields of the test class is required.
 </p>
 
 <h4 id="testMethod">What exactly goes inside a test method?</h4>
@@ -189,8 +190,8 @@ public class MyFirstJMockitTest
    }
 </code></pre>
 <p>
-   There are two classes that can be used to define "expectation blocks": <code>Expectations</code>
-   and <code>NonStrictExpectations</code>.
+   There are two classes that can be used to define "expectation blocks": <code class="type">Expectations</code>
+   and <code class="type">NonStrictExpectations</code>.
    The difference is only in the default behavior for the recorded expectations.
    In the first case, all expectations associated to mocked types used in the block will be
    <em>strict</em> by default, meaning that the invocations are <em>expected</em> to occur in the
@@ -206,7 +207,7 @@ public class MyFirstJMockitTest
    invocation, while <em><code>times</code></em> takes the number of times the preceding invocation
    is allowed and expected to occur.
    (There is also a <em><code>minTimes</code></em> and a <em><code>maxTimes</code></em> field.)
-   The <em><code>result</code></em> field also accepts a <code>Throwable</code> instance, which
+   The <em><code>result</code></em> field also accepts a <code class="type">Throwable</code> instance, which
    would cause the corresponding invocation in the replay phase to throw the specified exception or
    error.
 </p>
@@ -251,7 +252,7 @@ public class MyFirstJMockitTest
    client/tested method.
    Of course, you <em>can</em> check argument values through a recorded or verified expectation, but
    it becomes more difficult when those values are complex.
-   In such cases it may be easier to use the <code>mockit.MockUp&lt;T></code> generic class, as the
+   In such cases it may be easier to use the <code class="type">mockit.MockUp&lt;T></code> generic class, as the
    next test shows.
 </p>
 <pre><code>   @Test
@@ -279,10 +280,10 @@ public class MyFirstJMockitTest
    }
 </code></pre>
 <p>
-   The <code>@Mock</code> annotation marks those methods in the <em>mock-up class</em> which are
-   supposed to provide mock/stub implementations for the corresponding methods (of the same
-   signature) in the mocked class.
-   If no invocation count constraint is specified through attributes of the <code>@Mock</code>
+   The <code class="annotation">@Mock</code> annotation marks those methods in the <em>mock-up class</em> which are
+   supposed to provide mock/stub implementations for the corresponding methods (of the same signature) in the mocked
+   class.
+   If no invocation count constraint is specified through attributes of the <code class="annotation">@Mock</code>
    annotation, then any number (including zero) of invocations will be allowed.
 </p>
 
@@ -297,6 +298,5 @@ public class MyFirstJMockitTest
    <code>jmockit/samples</code> folder, which use nearly everything that is available in the APIs.
 </p>
 
-<script type="text/javascript" src="prettify.js"></script>
 </body>
 </html>
