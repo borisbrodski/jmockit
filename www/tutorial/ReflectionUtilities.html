@@ -4,6 +4,8 @@
    <title>The JMockit Testing Toolkit Tutorial</title>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
    <link rel="stylesheet" type="text/css" href="../prettify.css"/>
+   <script type="text/javascript" src="../highlight.pack.js"></script>
+   <script type="text/javascript">hljs.initHighlightingOnLoad()</script>
 </head>
 <body>
 <h2>
@@ -58,7 +60,7 @@
 
 public final class DeencapsulationTest
 {
-   final Subclass anInstance = new Subclass();
+   final SubClass anInstance = new SubClass();
 
    static class BaseClass
    {
@@ -67,7 +69,7 @@ public final class DeencapsulationTest
       protected Set&lt;Boolean> baseSet;
    }
 
-   static final class Subclass extends BaseClass
+   static final class SubClass extends BaseClass
    {
       private static StringBuilder buffer;
       private static char static1;
@@ -78,9 +80,9 @@ public final class DeencapsulationTest
       private String stringField;
       private List&lt;String> listField;
 
-      private Subclass() { intField = -1; }
-      private Subclass(int a, String b) { intField = a; stringField = b; }
-      private Subclass(String... args) { listField = Arrays.asList(args); }
+      private SubClass() { intField = -1; }
+      private SubClass(int a, String b) { intField = a; stringField = b; }
+      private SubClass(String... args) { listField = Arrays.asList(args); }
 
       private long aMethod() { return 567L; }
       private static Boolean anStaticMethod() { return true; }
@@ -116,13 +118,13 @@ public final class DeencapsulationTest
       List&lt;String> listValue = getField(anInstance, "listField");
 
       // Get static fields:
-      StringBuilder b = getField(Subclass.class, "buffer");
+      StringBuilder b = getField(SubClass.class, "buffer");
 
       // Set instance fields:
       setField(anInstance, "intField2", 901);
 
       // Set static fields:
-      setField(Subclass.class, "buffer", new StringBuilder());
+      setField(SubClass.class, "buffer", new StringBuilder());
    }
 
    @Test
@@ -135,15 +137,15 @@ public final class DeencapsulationTest
       getField(anInstance, int.class); // ambiguous: will throw an IllegalArgumentException
 
       // Get static fields:
-      StringBuilder b = getField(Subclass.class, StringBuilder.class);
+      StringBuilder b = getField(SubClass.class, StringBuilder.class);
 
       // Set instance fields:
-      setField(anInstance, "Test"); // will set Subclass#stringField, not BaseClass#baseString
+      setField(anInstance, "Test"); // will set SubClass#stringField, not BaseClass#baseString
       setField(anInstance, 901); // ambiguous: will throw an IllegalArgumentException
 
       // Set static fields:
-      setField(Subclass.class, new StringBuilder());
-      setField(Subclass.class, 'A'); // ambiguous: will throw an IllegalArgumentException
+      setField(SubClass.class, new StringBuilder());
+      setField(SubClass.class, 'A'); // ambiguous: will throw an IllegalArgumentException
    }
 </code></pre>
 <p>
@@ -170,8 +172,8 @@ public final class DeencapsulationTest
       String s = invoke(anInstance, "instanceMethod", (short) 7, "abc", true);
 
       // Static methods:
-      Boolean b = invoke(Subclass.class, "anStaticMethod");
-      Object result = invoke(Subclass.class, "staticMethod", (short) 7, "abc", true);
+      Boolean b = invoke(SubClass.class, "anStaticMethod");
+      Object result = invoke(SubClass.class, "staticMethod", (short) 7, "abc", true);
    }
 </code></pre>
 <p>
@@ -197,12 +199,12 @@ public final class DeencapsulationTest
    public void newInstance()
    {
       // Instances of top-level or non-inner nested classes:
-      Subclass instance = newInstance(Subclass.class.getName());
-      Subclass instance2 = newInstance("DeencapsulationTest$Subclass", 1, "XYZ");
+      SubClass instance = newInstance(SubClass.class.getName());
+      SubClass instance2 = newInstance("DeencapsulationTest$Subclass", 1, "XYZ");
 
       // Instances of inner classes:
-      Subclass.InnerClass innerInstance = newInnerInstance("InnerClass", anInstance);
-      Subclass.InnerClass innerInstance2 = newInnerInstance("InnerClass", anInstance, true, 5L, "");
+      SubClass.InnerClass innerInstance = newInnerInstance("InnerClass", anInstance);
+      SubClass.InnerClass innerInstance2 = newInnerInstance("InnerClass", anInstance, true, 5L, "");
    }
 </code></pre>
 <p>
@@ -248,6 +250,5 @@ public final class DeencapsulationTest
    <a href="StateBasedTesting.html"><img align="right" src="go-previous.png" title="Previous chapter"></a>
 </div>
 <br/>
-<script type="text/javascript" src="../prettify.js"></script>
 </body>
 </html>
