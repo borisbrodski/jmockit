@@ -168,6 +168,25 @@ public final class FullVerificationsInOrderTest
       }};
    }
 
+   @Ignore @Test(expected = AssertionError.class)
+   public void verifyAllInvocationsWithExpectationRecordedButOneInvocationUnverified()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.setSomething(anyInt);
+      }};
+
+      mock.setSomething(123);
+      mock.editABunchMoreStuff();
+      mock.setSomething(45);
+
+      new FullVerificationsInOrder()
+      {{
+         mock.setSomething(anyInt);
+         mock.editABunchMoreStuff();
+      }};
+   }
+
    @Test
    public void verifyInvocationThatNeverHappens()
    {
