@@ -27,14 +27,9 @@
             <option name="SMART_TABS" value="false" />
             <option name="LABEL_INDENT_SIZE" value="0" />
             <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+            <option name="USE_RELATIVE_INDENTS" value="false" />
           </value>
         </option>
-        <option name="CLASS_BRACE_STYLE" value="2" />
-        <option name="METHOD_BRACE_STYLE" value="2" />
-        <option name="ELSE_ON_NEW_LINE" value="true" />
-        <option name="WHILE_ON_NEW_LINE" value="true" />
-        <option name="CATCH_ON_NEW_LINE" value="true" />
-        <option name="FINALLY_ON_NEW_LINE" value="true" />
         <option name="LAYOUT_STATIC_IMPORTS_SEPARATELY" value="false" />
         <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="1" />
         <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="1" />
@@ -52,6 +47,12 @@
             <package name="jmockit" withSubpackages="true" static="false" />
           </value>
         </option>
+        <option name="CLASS_BRACE_STYLE" value="2" />
+        <option name="METHOD_BRACE_STYLE" value="2" />
+        <option name="ELSE_ON_NEW_LINE" value="true" />
+        <option name="WHILE_ON_NEW_LINE" value="true" />
+        <option name="CATCH_ON_NEW_LINE" value="true" />
+        <option name="FINALLY_ON_NEW_LINE" value="true" />
         <option name="KEEP_SIMPLE_BLOCKS_IN_ONE_LINE" value="true" />
         <option name="KEEP_SIMPLE_METHODS_IN_ONE_LINE" value="true" />
         <ADDITIONAL_INDENT_OPTIONS fileType="java">
@@ -62,6 +63,7 @@
           <option name="SMART_TABS" value="false" />
           <option name="LABEL_INDENT_SIZE" value="0" />
           <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+          <option name="USE_RELATIVE_INDENTS" value="false" />
         </ADDITIONAL_INDENT_OPTIONS>
         <ADDITIONAL_INDENT_OPTIONS fileType="jsp">
           <option name="INDENT_SIZE" value="4" />
@@ -71,6 +73,7 @@
           <option name="SMART_TABS" value="false" />
           <option name="LABEL_INDENT_SIZE" value="0" />
           <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+          <option name="USE_RELATIVE_INDENTS" value="false" />
         </ADDITIONAL_INDENT_OPTIONS>
         <ADDITIONAL_INDENT_OPTIONS fileType="xml">
           <option name="INDENT_SIZE" value="4" />
@@ -80,6 +83,7 @@
           <option name="SMART_TABS" value="false" />
           <option name="LABEL_INDENT_SIZE" value="0" />
           <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+          <option name="USE_RELATIVE_INDENTS" value="false" />
         </ADDITIONAL_INDENT_OPTIONS>
       </value>
     </option>
@@ -417,6 +421,8 @@
         <inspection_tool class="MethodNameSameAsParentName" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MethodOnlyUsedFromInnerClass" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreMethodsAccessedFromAnonymousClass" value="true" />
+          <option name="ignoreStaticMethodsFromNonStaticInnerClass" value="false" />
+          <option name="onlyReportStaticMethods" value="false" />
         </inspection_tool>
         <inspection_tool class="MethodOverloadsParentMethod" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MethodOverridesPackageLocalMethod" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -424,7 +430,9 @@
         <inspection_tool class="MethodReturnAlwaysConstant" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MisorderedAssertEqualsParameters" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MissingDeprecatedAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="MissingOverrideAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="MissingOverrideAnnotation" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreObjectMethods" value="true" />
+        </inspection_tool>
         <inspection_tool class="MissortedModifiers" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_requireAnnotationsFirst" value="true" />
         </inspection_tool>
@@ -458,6 +466,7 @@
         </inspection_tool>
         <inspection_tool class="NonBooleanMethodNameMayNotStartWithQuestion" enabled="false" level="WARNING" enabled_by_default="false">
           <option name="questionString" value="is,can,has,should,could,shall,check,contains,equals,startsWith,endsWith" />
+          <option name="ignoreBooleanMethods" value="false" />
         </inspection_tool>
         <inspection_tool class="NonCommentSourceStatements" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_limit" value="30" />
@@ -700,7 +709,9 @@
           <option name="m_ignoreStaticAccessFromStaticContext" value="false" />
         </inspection_tool>
         <inspection_tool class="UnnecessaryAnnotationParentheses" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="UnnecessaryBlockStatement" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryBlockStatement" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreSwitchBranches" value="false" />
+        </inspection_tool>
         <inspection_tool class="UnnecessaryCallToStringValueOf" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryConstantArrayCreationExpression" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryDefault" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -746,8 +757,6 @@
               <list size="0" />
             </value>
           </option>
-          <option name="ADD_TESTNG_TO_ENTRIES" value="true" />
-          <option name="ADD_JUNIT_TO_ENTRIES" value="true" />
         </inspection_tool>
         <inspection_tool class="UnusedImport" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnusedLibrary" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -850,6 +859,7 @@
         <w>cdata</w>
         <w>cellpadding</w>
         <w>cellspacing</w>
+        <w>cglib</w>
         <w>charset</w>
         <w>classfile</w>
         <w>classfiles</w>
@@ -894,6 +904,8 @@
         <w>hashcode</w>
         <w>hashtable</w>
         <w>hexa</w>
+        <w>hexcolor</w>
+        <w>hljs</w>
         <w>htmlbasic</w>
         <w>htmlfull</w>
         <w>iinc</w>
@@ -954,6 +966,7 @@
         <w>mock1</w>
         <w>mock2</w>
         <w>mockit</w>
+        <w>mockit's</w>
         <w>mockito</w>
         <w>monospace</w>
         <w>multi</w>
@@ -995,12 +1008,14 @@
         <w>resized</w>
         <w>rethrown</w>
         <w>rgba</w>
+        <w>rockit</w>
         <w>rogério</w>
         <w>runtime</w>
         <w>savepoint</w>
         <w>schuchert</w>
         <w>slategray</w>
         <w>smil</w>
+        <w>softwaremaniacs</w>
         <w>solaris</w>
         <w>springframework</w>
         <w>startup</w>
@@ -1009,6 +1024,7 @@
         <w>stubbings</w>
         <w>stylesheet</w>
         <w>sublicense</w>
+        <w>subst</w>
         <w>sysproperty</w>
         <w>telecom</w>
         <w>templated</w>
@@ -1057,12 +1073,16 @@
       <module fileurl="file://$PROJECT_DIR$/samples/TimingFramework/TimingFramework.iml" filepath="$PROJECT_DIR$/samples/TimingFramework/TimingFramework.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/tutorial/Tutorial.iml" filepath="$PROJECT_DIR$/samples/tutorial/Tutorial.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/unitils/Unitils.iml" filepath="$PROJECT_DIR$/samples/unitils/Unitils.iml" group="Samples" />
+      <module fileurl="file://$PROJECT_DIR$/samples/gwt-mocking/gwt-mocking.iml" filepath="$PROJECT_DIR$/samples/gwt-mocking/gwt-mocking.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/jmock/jMock2.iml" filepath="$PROJECT_DIR$/samples/jmock/jMock2.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/mockit.iml" filepath="$PROJECT_DIR$/mockit.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/samples.iml" filepath="$PROJECT_DIR$/samples/samples.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/tourdemock/tourdemock.iml" filepath="$PROJECT_DIR$/samples/tourdemock/tourdemock.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/www/www.iml" filepath="$PROJECT_DIR$/www/www.iml" />
     </modules>
+  </component>
+  <component name="ProjectResources">
+    <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="Oracle 1.6.0_21" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
@@ -1225,17 +1245,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.11/testng-5.11-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: junit:junit:3.8.1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.jmock:jmock:2.5.1">
