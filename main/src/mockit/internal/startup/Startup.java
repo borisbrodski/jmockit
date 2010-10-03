@@ -50,6 +50,7 @@ public final class Startup
       "1.6".equals(javaSpecVersion) || "1.7".equals(javaSpecVersion);
 
    private static Instrumentation instrumentation;
+   private static boolean initializedOnDemand;
    private static final Properties startupTools = new Properties();
    private static final List<String> defaultTools = new ArrayList<String>();
 
@@ -243,10 +244,16 @@ public final class Startup
       return instrumentation;
    }
 
+   public static boolean wasInitializedOnDemand()
+   {
+      return initializedOnDemand;
+   }
+
    public static void verifyInitialization()
    {
       if (instrumentation == null) {
          new AgentInitialization().initializeAccordingToJDKVersion();
+         initializedOnDemand = true;
          System.out.println(
             "WARNING: JMockit was initialized on demand, which may cause certain tests to fail;\n" +
             "please check the documentation for better ways to get it initialized.");

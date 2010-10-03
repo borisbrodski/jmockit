@@ -30,6 +30,7 @@ import java.util.concurrent.locks.*;
 
 import mockit.*;
 import mockit.internal.expectations.mocking.*;
+import mockit.internal.startup.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
@@ -79,7 +80,11 @@ public final class RecordAndReplayExecution
    private void validateRecordingContext()
    {
       if (TestRun.getSharedFieldTypeRedefinitions() == null) {
-         throw new IllegalStateException("Invalid context for the recording of expectations");
+         String msg = Startup.wasInitializedOnDemand() ?
+            "JMockit wasn't properly initialized; check that jmockit.jar precedes junit.jar in the classpath " +
+            "(if using JUnit; if not, check the documentation)" : 
+            "Invalid context for the recording of expectations";
+         throw new IllegalStateException(msg);
       }
    }
 
