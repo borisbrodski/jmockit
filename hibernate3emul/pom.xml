@@ -4,7 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>mockit</groupId><artifactId>mockit</artifactId><version>0.999.2</version>
+      <groupId>mockit</groupId><artifactId>mockit</artifactId><version>0.999.3</version>
    </parent>
    <artifactId>jmockit-hibernate3emul</artifactId>
    <name>JMockit Hibernate 3 Emulation</name>

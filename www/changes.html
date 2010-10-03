@@ -14,22 +14,31 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
-<p>Release 0.999.3 (September ?, 2010):</p>
+<p>Release 0.999.3 (October 3, 2010):</p>
 <ul>
    <li>
-      <strong>Enhancement</strong>: new attribute <code>stubOutClassInitialization</code> added to
-      <code>@Mocked</code> annotation.
-      See <a href="http://code.google.com/p/jmockit/issues/detail?id=96">issue 96</a>.
+      <strong>Enhancement</strong>: new attribute <code>stubOutClassInitialization</code> added to the
+      <code>@Mocked</code> annotation, with support for a new <code>jmockit-retainStaticInitializers</code> system
+      property which allows global configuration of the default behavior.
+      See issues <a href="http://code.google.com/p/jmockit/issues/detail?id=96">96</a> and
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=103">103</a>.
+   </li>
+   <li>
+      Fixed a bug in the JUnit 3.8 integration.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=101">issue 101</a>.
    </li>
    <li>
       Replaced use of <a href="http://code.google.com/p/google-code-prettify">prettify.js</a> with
       <a href="http://softwaremaniacs.org/soft/highlight/en">highlight.js</a>, to fix issues with IE.
    </li>
+   <li>
+      A few other small fixes and enhancements.
+   </li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release 0.999.2 (August 22, 2010):</p>
 <ul>
@@ -65,8 +74,6 @@
       <a href="http://code.google.com/p/jmockit/issues/detail?id=89">89</a>.
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.999.1 (July 25, 2010):</p>
 <ul>

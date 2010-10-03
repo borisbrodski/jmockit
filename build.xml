@@ -323,7 +323,7 @@
          <classpath refid="common.classpath"/>
          <classpath location="main/test-classes"/>
          <classpath path="jmockit.jar"/>
-         <classpath path="jmockit-coverage-htmlbasic.jar"/>
+         <!--<classpath path="jmockit-coverage-htmlbasic.jar"/>-->
          <batchtest>
             <fileset dir="main/test-classes">
                <include name="**/*Test.class"/>
