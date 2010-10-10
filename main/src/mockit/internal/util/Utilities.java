@@ -43,21 +43,19 @@ public final class Utilities
    public static final Object[] NO_ARGS = {};
 
    private static final Class<?>[] PRIMITIVE_TYPES = {
-      null, boolean.class, char.class, byte.class, short.class, int.class, float.class, long.class,
-      double.class
+      null, boolean.class, char.class, byte.class, short.class, int.class, float.class, long.class, double.class
    };
-   private static final Map<Class<?>, Class<?>> WRAPPER_TO_PRIMITIVE =
-      new HashMap<Class<?>, Class<?>>()
-      {{
-         put(Boolean.class, boolean.class);
-         put(Character.class, char.class);
-         put(Byte.class, byte.class);
-         put(Short.class, short.class);
-         put(Integer.class, int.class);
-         put(Float.class, float.class);
-         put(Long.class, long.class);
-         put(Double.class, double.class);
-      }};
+   private static final Map<Class<?>, Class<?>> WRAPPER_TO_PRIMITIVE = new HashMap<Class<?>, Class<?>>()
+   {{
+      put(Boolean.class, boolean.class);
+      put(Character.class, char.class);
+      put(Byte.class, byte.class);
+      put(Short.class, short.class);
+      put(Integer.class, int.class);
+      put(Float.class, float.class);
+      put(Long.class, long.class);
+      put(Double.class, double.class);
+   }};
    private static final Class<?>[] NO_PARAMETERS = new Class<?>[0];
 
    private Utilities() {}
@@ -136,8 +134,7 @@ public final class Utilities
 
       String argTypesDesc = getParameterTypesDescription(argTypes);
 
-      throw new IllegalArgumentException(
-         "No compatible constructor found: " + theClass.getSimpleName() + argTypesDesc);
+      throw new IllegalArgumentException("No compatible constructor found: " + theClass.getSimpleName() + argTypesDesc);
    }
 
    public static <T> T newInstance(String className, Object... nonNullArgs)
@@ -217,8 +214,7 @@ public final class Utilities
       return isGeneratedSubclass(className) || isGeneratedImplementationClass(className);
    }
 
-   public static <T> T newInnerInstance(
-      Class<? extends T> innerClass, Object outerInstance, Object... nonNullArgs)
+   public static <T> T newInnerInstance(Class<? extends T> innerClass, Object outerInstance, Object... nonNullArgs)
    {
       Object[] initArgs = new Object[1 + nonNullArgs.length];
       initArgs[0] = outerInstance;
@@ -227,8 +223,7 @@ public final class Utilities
       return newInstance(innerClass, initArgs);
    }
 
-   public static <T> T newInnerInstance(
-      String innerClassName, Object outerInstance, Object... nonNullArgs)
+   public static <T> T newInnerInstance(String innerClassName, Object outerInstance, Object... nonNullArgs)
    {
       String className = outerInstance.getClass().getName() + '$' + innerClassName;
       Class<T> innerClass = loadClass(className);
@@ -236,8 +231,7 @@ public final class Utilities
       return newInnerInstance(innerClass, outerInstance, nonNullArgs);
    }
 
-   public static <T> T invoke(
-      Class<?> theClass, Object targetInstance, String methodName, Object... methodArgs)
+   public static <T> T invoke(Class<?> theClass, Object targetInstance, String methodName, Object... methodArgs)
    {
       Class<?>[] argTypes = getArgumentTypesFromArgumentValues(methodArgs);
       Method method = findCompatibleMethod(theClass, methodName, argTypes);
@@ -246,15 +240,13 @@ public final class Utilities
       return result;
    }
 
-   public static Method findCompatibleMethod(
-      Object targetInstance, String methodName, Object[] args)
+   public static Method findCompatibleMethod(Object targetInstance, String methodName, Object[] args)
    {
       Class<?>[] argTypes = getArgumentTypesFromArgumentValues(args);
       return findCompatibleMethod(targetInstance.getClass(), methodName, argTypes);
    }
 
-   private static Method findCompatibleMethod(
-      Class<?> theClass, String methodName, Class<?>[] argTypes)
+   private static Method findCompatibleMethod(Class<?> theClass, String methodName, Class<?>[] argTypes)
    {
       while (true) {
          Method methodFound = findCompatibleMethodInClass(theClass, methodName, argTypes);
@@ -275,12 +267,10 @@ public final class Utilities
 
       String argTypesDesc = getParameterTypesDescription(argTypes);
 
-      throw new IllegalArgumentException(
-         "No compatible method found: " + methodName + argTypesDesc);
+      throw new IllegalArgumentException("No compatible method found: " + methodName + argTypesDesc);
    }
 
-   private static Method findCompatibleMethodInClass(
-      Class<?> theClass, String methodName, Class<?>[] argTypes)
+   private static Method findCompatibleMethodInClass(Class<?> theClass, String methodName, Class<?>[] argTypes)
    {
       for (Method declaredMethod : theClass.getDeclaredMethods()) {
          if (declaredMethod.getName().equals(methodName)) {
@@ -335,8 +325,7 @@ public final class Utilities
       for (Method declaredMethod : declaredMethods) {
          if (!Modifier.isPrivate(declaredMethod.getModifiers())) {
             if (nonPrivateMethod != null) {
-               throw new IllegalArgumentException(
-                  "More than one non-private invocation handler method found");
+               throw new IllegalArgumentException("More than one non-private invocation handler method found");
             }
 
             nonPrivateMethod = declaredMethod;
@@ -351,8 +340,7 @@ public final class Utilities
    }
 
    public static <T> T invoke(
-      Class<?> theClass, Object targetInstance, String methodName, Class<?>[] paramTypes,
-      Object... methodArgs)
+      Class<?> theClass, Object targetInstance, String methodName, Class<?>[] paramTypes, Object... methodArgs)
    {
       Method method = findSpecifiedMethod(theClass, methodName, paramTypes);
       T result = (T) invoke(targetInstance, method, methodArgs);
@@ -397,8 +385,7 @@ public final class Utilities
       }
    }
 
-   private static Method findSpecifiedMethod(
-      Class<?> theClass, String methodName, Class<?>[] paramTypes)
+   private static Method findSpecifiedMethod(Class<?> theClass, String methodName, Class<?>[] paramTypes)
    {
       for (Method declaredMethod : theClass.getDeclaredMethods()) {
          if (
@@ -417,8 +404,7 @@ public final class Utilities
 
       String paramTypesDesc = getParameterTypesDescription(paramTypes);
 
-      throw new IllegalArgumentException(
-         "Specified method not found: " + methodName + paramTypesDesc);
+      throw new IllegalArgumentException("Specified method not found: " + methodName + paramTypesDesc);
    }
 
    private static boolean matchesParameterTypes(Class<?>[] declaredTypes, Class<?>[] specifiedTypes)
@@ -548,8 +534,7 @@ public final class Utilities
          }
 
          //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
-         throw new IllegalArgumentException(
-            "No instance field of name \"" + fieldName + "\" found in " + theClass);
+         throw new IllegalArgumentException("No instance field of name \"" + fieldName + "\" found in " + theClass);
       }
    }
 
@@ -568,8 +553,7 @@ public final class Utilities
    private static Field getDeclaredField(
       Class<?> theClass, Type desiredType, boolean instanceField, boolean forAssignment)
    {
-      Field found =
-         getDeclaredFieldInSingleClass(theClass, desiredType, instanceField, forAssignment);
+      Field found = getDeclaredFieldInSingleClass(theClass, desiredType, instanceField, forAssignment);
 
       if (found == null) {
          Class<?> superClass = theClass.getSuperclass();
@@ -579,8 +563,7 @@ public final class Utilities
          }
          
          throw new IllegalArgumentException(
-            (instanceField ? "Instance" : "Static") + " field of " + desiredType +
-            " not found in " + theClass);
+            (instanceField ? "Instance" : "Static") + " field of " + desiredType + " not found in " + theClass);
       }
 
       return found;
@@ -601,8 +584,7 @@ public final class Utilities
             ) {
                if (found != null) {
                   String message =
-                     errorMessageForMoreThanOneFieldFound(
-                        desiredType, instanceField, forAssignment, found, field);
+                     errorMessageForMoreThanOneFieldFound(desiredType, instanceField, forAssignment, found, field);
 
                   throw new IllegalArgumentException(message);
                }
@@ -616,8 +598,7 @@ public final class Utilities
    }
 
    private static String errorMessageForMoreThanOneFieldFound(
-      Type desiredFieldType, boolean instanceField, boolean forAssignment,
-      Field firstField, Field secondField)
+      Type desiredFieldType, boolean instanceField, boolean forAssignment, Field firstField, Field secondField)
    {
       StringBuilder message = new StringBuilder("More than one ");
       message.append(instanceField ? "instance" : "static").append(" field ");
@@ -632,8 +613,7 @@ public final class Utilities
       return message.toString();
    }
 
-   private static boolean isCompatibleFieldType(
-      Type fieldType, Type desiredType, boolean forAssignment)
+   private static boolean isCompatibleFieldType(Type fieldType, Type desiredType, boolean forAssignment)
    {
       Class<?> fieldClass = getClassType(fieldType);
       Class<?> desiredClass = getClassType(desiredType);
@@ -670,8 +650,7 @@ public final class Utilities
       }
    }
 
-   public static Field setField(
-      Class<?> theClass, Object targetObject, String fieldName, Object fieldValue)
+   public static Field setField(Class<?> theClass, Object targetObject, String fieldName, Object fieldValue)
    {
       Field field =
          fieldName == null ?
@@ -721,8 +700,7 @@ public final class Utilities
       }
 
       String className =
-         elementSort == mockit.external.asm.Type.ARRAY ?
-            type.getDescriptor().replace('/', '.') : type.getClassName();
+         elementSort == mockit.external.asm.Type.ARRAY ? type.getDescriptor().replace('/', '.') : type.getClassName();
 
       return loadClass(className);
    }
@@ -777,10 +755,9 @@ public final class Utilities
    }
 
    /**
-    * This method was created to work around an issue in the standard
-    * {@link Class#isAnonymousClass()} method, which causes a sibling nested class to be loaded
-    * when called on a nested class. If that sibling nested class is not in the classpath, a
-    * <code>ClassNotFoundException</code> would result.
+    * This method was created to work around an issue in the standard {@link Class#isAnonymousClass()} method, which
+    * causes a sibling nested class to be loaded when called on a nested class. If that sibling nested class is not in
+    * the classpath, a {@code ClassNotFoundException} would result.
     * <p/>
     * This method checks only the given class name, never causing any other classes to be loaded.
     */

@@ -89,8 +89,7 @@ public final class MockingBridge implements InvocationHandler
 
          return
             RecordAndReplayExecution.recordOrReplay(
-               mocked, mockAccess, mockClassInternalName, mockName + mockDesc, withRealImpl,
-               mockArgs);
+               mocked, mockAccess, mockClassInternalName, mockName + mockDesc, withRealImpl, mockArgs);
       }
       finally {
          TestRun.exitNoMockingZone();
@@ -111,10 +110,7 @@ public final class MockingBridge implements InvocationHandler
             for (int i = 3; i < st.length; i++) {
                StackTraceElement ste = st[i];
 
-               if (
-                  "ClassLoader.java".equals(ste.getFileName()) &&
-                  "loadClass".equals(ste.getMethodName())
-               ) {
+               if ("ClassLoader.java".equals(ste.getFileName()) && "loadClass".equals(ste.getMethodName())) {
                   return true;
                }
             }

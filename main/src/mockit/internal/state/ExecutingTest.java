@@ -42,8 +42,7 @@ public final class ExecutingTest
    private final List<Object> nonStrictMocks = new ArrayList<Object>();
    private final List<Object> strictMocks = new ArrayList<Object>();
 
-   private final Map<String, MockedTypeCascade> cascadingTypes =
-      new HashMap<String, MockedTypeCascade>();
+   private final Map<String, MockedTypeCascade> cascadingTypes = new HashMap<String, MockedTypeCascade>();
 
    RecordAndReplayExecution getRecordAndReplay(boolean createIfUndefined)
    {
@@ -157,10 +156,7 @@ public final class ExecutingTest
       if (mockClassDesc != null) {
          String uniqueMockClassDesc = mockClassDesc.intern();
 
-         if (
-            !containsStrictMock(uniqueMockClassDesc) &&
-            !containsNonStrictMockedClass(uniqueMockClassDesc)
-         ) {
+         if (!containsStrictMock(uniqueMockClassDesc) && !containsNonStrictMockedClass(uniqueMockClassDesc)) {
             strictMocks.add(uniqueMockClassDesc);
          }
       }
@@ -184,8 +180,7 @@ public final class ExecutingTest
       return false;
    }
 
-   public boolean containsNonStrictMock(
-      int access, Object mock, String mockClassDesc, String mockNameAndDesc)
+   public boolean containsNonStrictMock(int access, Object mock, String mockClassDesc, String mockNameAndDesc)
    {
       boolean staticMethod = Modifier.isStatic(access);
       boolean constructor = !staticMethod && mockNameAndDesc.startsWith("<init>");

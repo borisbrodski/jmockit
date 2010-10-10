@@ -46,20 +46,17 @@ public final class StubOutModifier extends BaseClassModifier
    }
 
    @Override
-   public void visit(
-      int version, int access, String name, String signature, String superName, String[] interfaces)
+   public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       superClassName = superName;
       super.visit(version, access, name, signature, superName, interfaces);
    }
 
    @Override
-   public MethodVisitor visitMethod(
-      int access, String name, String desc, String signature, String[] exceptions)
+   public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
    {
       if (
-         isAbstract(access) || (access & ACC_SYNTHETIC) != 0 ||
-         isNative(access) && !Startup.isJava6OrLater() ||
+         isAbstract(access) || (access & ACC_SYNTHETIC) != 0 || isNative(access) && !Startup.isJava6OrLater() ||
          stubbingCfg != null && !stubbingCfg.matchesFilters(name, desc)
       ) {
          return super.visitMethod(access, name, desc, signature, exceptions);

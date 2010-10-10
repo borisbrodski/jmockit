@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -38,9 +38,7 @@ public final class MethodFormatter
    private char typeCode;
    private int arrayDimensions;
 
-   public MethodFormatter()
-   {
-   }
+   public MethodFormatter() {}
 
    public MethodFormatter(String classDesc, String methodDesc)
    {
@@ -55,8 +53,7 @@ public final class MethodFormatter
       return out.toString();
    }
 
-   public String friendlyMethodSignatures(
-      String constructorName, Collection<String> classAndMethodDescs)
+   public String friendlyMethodSignatures(String constructorName, Collection<String> classAndMethodDescs)
    {
       String sep = "";
 
@@ -80,8 +77,7 @@ public final class MethodFormatter
          constructorName = getConstructorName(className);
       }
 
-      String friendlyDesc =
-         methodDesc.replace("<init>", constructorName).replace("$init", constructorName);
+      String friendlyDesc = methodDesc.replace("<init>", constructorName).replace("$init", constructorName);
       int leftParenPos = friendlyDesc.indexOf('(');
       int rightParenPos = friendlyDesc.indexOf(')');
 
@@ -111,6 +107,7 @@ public final class MethodFormatter
       int p = className.lastIndexOf('.');
       String constructorName = p < 0 ? className : className.substring(p + 1);
 
+      //noinspection ReuseOfLocalVariable
       p = constructorName.lastIndexOf('$');
 
       if (p > 0) {
@@ -127,7 +124,6 @@ public final class MethodFormatter
       if (p >= 0) {
          classDesc = classAndMethodDesc.substring(0, p);
          methodDesc = classAndMethodDesc.substring(p + 1);
-
       }
       else {
          classDesc = null;

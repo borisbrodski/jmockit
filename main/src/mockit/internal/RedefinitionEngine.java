@@ -91,8 +91,7 @@ public final class RedefinitionEngine
       }
    }
 
-   public RedefinitionEngine(
-      Class<?> realClass, boolean filtersNotInverted, String[] stubbingFilters)
+   public RedefinitionEngine(Class<?> realClass, boolean filtersNotInverted, String[] stubbingFilters)
    {
       this.realClass = realClass;
       mockClass = null;
@@ -107,8 +106,7 @@ public final class RedefinitionEngine
       new AnnotatedMockMethodCollector(mockMethods).collectMockMethods(mockClass);
    }
 
-   public RedefinitionEngine(
-      Class<?> realClass, Class<?> mockClass, Object mock, AnnotatedMockMethods mockMethods)
+   public RedefinitionEngine(Class<?> realClass, Class<?> mockClass, Object mock, AnnotatedMockMethods mockMethods)
    {
       this.realClass = realClass;
       this.mockClass = mockClass;
@@ -127,14 +125,12 @@ public final class RedefinitionEngine
       }
    }
 
-   public RedefinitionEngine(
-      Object mock, Class<?> mockClass, boolean ignoreRealClassIfNotInClasspath)
+   public RedefinitionEngine(Object mock, Class<?> mockClass, boolean ignoreRealClassIfNotInClasspath)
    {
       this(getRealClass(mockClass, ignoreRealClassIfNotInClasspath), mock, mockClass);
    }
 
-   private static Class<?> getRealClass(
-      Class<?> specifiedMockClass, boolean ignoreRealClassIfNotInClasspath)
+   private static Class<?> getRealClass(Class<?> specifiedMockClass, boolean ignoreRealClassIfNotInClasspath)
    {
       try {
          MockClass mockClassAnnotation = specifiedMockClass.getAnnotation(MockClass.class);
@@ -154,20 +150,10 @@ public final class RedefinitionEngine
       }
    }
 
-   public boolean isWithMockClass()
-   {
-      return mockClass != null;
-   }
+   public boolean isWithMockClass() { return mockClass != null; }
 
-   public Class<?> getRealClass()
-   {
-      return realClass;
-   }
-
-   public void setRealClass(Class<?> realClass)
-   {
-      this.realClass = realClass;
-   }
+   public Class<?> getRealClass() { return realClass; }
+   public void setRealClass(Class<?> realClass) { this.realClass = realClass; }
 
    public void setUpStartupMock()
    {
@@ -197,8 +183,7 @@ public final class RedefinitionEngine
    {
       if (mockMethods.getMethodCount() > 0 || mockingConfiguration != null) {
          byte[] modifiedClassFile = modifyRealClass(forStartupMock);
-         redefineMethods(
-            mockMethods.getMockClassInternalName(), modifiedClassFile, !forStartupMock);
+         redefineMethods(mockMethods.getMockClassInternalName(), modifiedClassFile, !forStartupMock);
       }
    }
 
@@ -206,8 +191,8 @@ public final class RedefinitionEngine
    {
       ClassReader rcReader = createClassReaderForRealClass();
 
-      AnnotationsModifier modifier = new AnnotationsModifier(
-         rcReader, realClass, mock, mockMethods, mockingConfiguration, forStartupMock);
+      AnnotationsModifier modifier =
+         new AnnotationsModifier(rcReader, realClass, mock, mockMethods, mockingConfiguration, forStartupMock);
 
       if (mock == null && instantiation == Instantiation.PerMockedInstance) {
          modifier.useOneMockInstancePerMockedInstance(mockClass);
@@ -234,8 +219,7 @@ public final class RedefinitionEngine
       if (!remainingMocks.isEmpty()) {
          int p = mockClassName.lastIndexOf('.');
          String constructorName = p > 0 ? mockClassName.substring(p + 1) : mockClassName;
-         String mockSignatures =
-            new MethodFormatter().friendlyMethodSignatures(constructorName, remainingMocks);
+         String mockSignatures = new MethodFormatter().friendlyMethodSignatures(constructorName, remainingMocks);
          
          throw new IllegalArgumentException(
             "Matching real methods not found for the following mocks:\n" + mockSignatures);
@@ -255,8 +239,7 @@ public final class RedefinitionEngine
       }
    }
 
-   public void redefineMethods(
-      String mockClassInternalName, byte[] modifiedClassfile, boolean register)
+   public void redefineMethods(String mockClassInternalName, byte[] modifiedClassfile, boolean register)
    {
       redefineMethods(modifiedClassfile);
 

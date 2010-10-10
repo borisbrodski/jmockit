@@ -76,8 +76,7 @@ public final class ClassFile
    public ClassFile(Class<?> aClass, boolean fromLastRedefinitionIfAny)
    {
       String className = aClass.getName();
-      byte[] classfile =
-         Proxy.isProxyClass(aClass) ? TestRun.proxyClasses().getClassfile(className) : null;
+      byte[] classfile = Proxy.isProxyClass(aClass) ? TestRun.proxyClasses().getClassfile(className) : null;
 
       if (classfile == null && fromLastRedefinitionIfAny) {
          classfile = TestRun.mockFixture().getRedefinedClassfile(aClass);

@@ -37,12 +37,11 @@ public class BaseClassModifier extends ClassWriter
 {
    private static final int ACCESS_MASK = 0xFFFF - ACC_ABSTRACT - ACC_NATIVE;
    private static final String[] PRIMITIVE_WRAPPER_TYPE = {
-      null, "java/lang/Boolean", "java/lang/Character", "java/lang/Byte", "java/lang/Short",
-      "java/lang/Integer", "java/lang/Float", "java/lang/Long", "java/lang/Double"
+      null, "java/lang/Boolean", "java/lang/Character", "java/lang/Byte", "java/lang/Short", "java/lang/Integer",
+      "java/lang/Float", "java/lang/Long", "java/lang/Double"
    };
    private static final String[] UNBOXING_METHOD = {
-      null, "booleanValue", "charValue", "byteValue", "shortValue",
-      "intValue", "floatValue", "longValue", "doubleValue"
+      null, "booleanValue", "charValue", "byteValue", "shortValue", "intValue", "floatValue", "longValue", "doubleValue"
    };
    private static final Type[] NO_ARGS = new Type[0];
 
@@ -101,8 +100,7 @@ public class BaseClassModifier extends ClassWriter
       }
    }
 
-   protected final void generateCodeToPassMethodArgumentsAsVarargs(
-      boolean isStatic, Type[] argTypes)
+   protected final void generateCodeToPassMethodArgumentsAsVarargs(boolean isStatic, Type[] argTypes)
    {
       generateCodeToCreateArrayOfObject(argTypes.length);
       generateCodeToPassMethodArgumentsAsVarargs(argTypes, 0, isStatic ? 0 : 1);
@@ -129,8 +127,7 @@ public class BaseClassModifier extends ClassWriter
 
          if (sort < Type.ARRAY) {
             String wrapperType = PRIMITIVE_WRAPPER_TYPE[sort];
-            mw.visitMethodInsn(
-               INVOKESTATIC, wrapperType, "valueOf", "(" + argType + ")L" + wrapperType + ';');
+            mw.visitMethodInsn(INVOKESTATIC, wrapperType, "valueOf", "(" + argType + ")L" + wrapperType + ';');
          }
 
          mw.visitInsn(AASTORE);
@@ -186,13 +183,11 @@ public class BaseClassModifier extends ClassWriter
 
       mw.visitMethodInsn(
          INVOKESTATIC, "mockit/internal/expectations/RecordAndReplayExecution", "recordOrReplay",
-         "(Ljava/lang/Object;ILjava/lang/String;Ljava/lang/String;Z" +
-         "[Ljava/lang/Object;)Ljava/lang/Object;");
+         "(Ljava/lang/Object;ILjava/lang/String;Ljava/lang/String;Z[Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
    protected final void generateCallToMockingBridge(
-      int targetId, String mockClassName, int mockAccess, String mockName, String mockDesc,
-      Object extra)
+      int targetId, String mockClassName, int mockAccess, String mockName, String mockDesc, Object extra)
    {
       generateCodeToInstantiateMockingBridge();
 
@@ -223,12 +218,9 @@ public class BaseClassModifier extends ClassWriter
    {
       mw.visitLdcInsn("mockit.internal.MockingBridge");
       mw.visitInsn(ICONST_1);
+      mw.visitMethodInsn(INVOKESTATIC, "java/lang/ClassLoader", "getSystemClassLoader", "()Ljava/lang/ClassLoader;");
       mw.visitMethodInsn(
-         INVOKESTATIC, "java/lang/ClassLoader", "getSystemClassLoader",
-         "()Ljava/lang/ClassLoader;");
-      mw.visitMethodInsn(
-         INVOKESTATIC, "java/lang/Class", "forName",
-         "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
+         INVOKESTATIC, "java/lang/Class", "forName", "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
       mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "newInstance", "()Ljava/lang/Object;");
    }
 

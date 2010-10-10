@@ -90,10 +90,9 @@ public final class MockFixture
     */
    private final Map<Class<?>, String> realClassesToMockClasses = new HashMap<Class<?>, String>(8);
 
-   private final Map<Class<?>, InstanceFactory> mockedTypesAndInstances =
-      new HashMap<Class<?>, InstanceFactory>();
+   private final Map<Class<?>, InstanceFactory> mockedTypesAndInstances = new HashMap<Class<?>, InstanceFactory>();
 
-   // Methods to add/remove redefined classes /////////////////////////////////////////////////////
+   // Methods to add/remove redefined classes /////////////////////////////////////////////////////////////////////////
 
    public void addFixedClass(String className, byte[] fixedClassfile)
    {
@@ -105,15 +104,13 @@ public final class MockFixture
       transformedClasses.put(className, pretransformClassfile);
    }
 
-   public void addRedefinedClass(
-      String mockClassInternalName, Class<?> redefinedClass, byte[] modifiedClassfile)
+   public void addRedefinedClass(String mockClassInternalName, Class<?> redefinedClass, byte[] modifiedClassfile)
    {
       if (mockClassInternalName != null) {
          String previousNames = realClassesToMockClasses.put(redefinedClass, mockClassInternalName);
 
          if (previousNames != null) {
-            realClassesToMockClasses.put(
-               redefinedClass, previousNames + ' ' + mockClassInternalName);
+            realClassesToMockClasses.put(redefinedClass, previousNames + ' ' + mockClassInternalName);
          }
       }
 
@@ -191,11 +188,10 @@ public final class MockFixture
    {
       String mockClassesInternalNames = realClassesToMockClasses.remove(redefinedClass);
 
-      TestRun.getMockClasses().getMockStates().removeClassState(
-         redefinedClass, mockClassesInternalNames);
+      TestRun.getMockClasses().getMockStates().removeClassState(redefinedClass, mockClassesInternalNames);
    }
 
-   // Methods that deal with redefined native methods /////////////////////////////////////////////
+   // Methods that deal with redefined native methods /////////////////////////////////////////////////////////////////
 
    public void addRedefinedClassWithNativeMethods(String redefinedClassInternalName)
    {
@@ -235,7 +231,7 @@ public final class MockFixture
       // natives to be explicitly registered again (not all do, such as java.lang.Float).
    }
 
-   // Getter methods for the maps of redefined classes ////////////////////////////////////////////
+   // Getter methods for the maps of redefined classes ////////////////////////////////////////////////////////////////
 
    public byte[] getFixedClassfile(String className)
    {
