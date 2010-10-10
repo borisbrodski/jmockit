@@ -1,5 +1,5 @@
 /*
- * JMockit Core
+ * JMockit
  * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -43,9 +43,7 @@ final class ToolLoader implements ClassVisitor
       this.toolArgs = toolArgs;
    }
 
-   public void visit(
-      int version, int access, String name, String signature, String superName,
-      String[] interfaces)
+   public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       if (interfaces != null && containsClassFileTransformer(interfaces)) {
          loadClassFileTransformer = true;
@@ -63,19 +61,13 @@ final class ToolLoader implements ClassVisitor
       return false;
    }
 
-   public AnnotationVisitor visitAnnotation(String desc, boolean visible)
-   {
-      return new EmptyVisitor();
-   }
-
+   public AnnotationVisitor visitAnnotation(String desc, boolean visible) { return new EmptyVisitor(); }
    public void visitSource(String source, String debug) {}
    public void visitOuterClass(String owner, String name, String desc) {}
    public void visitAttribute(Attribute attr) {}
    public void visitInnerClass(String name, String outerName, String innerName, int access) {}
-   public FieldVisitor visitField(
-      int access, String name, String desc, String signature, Object value) { return null; }
-   public MethodVisitor visitMethod(
-      int access, String name, String desc, String signature, String[] exceptions)
+   public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) { return null; }
+   public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
    { return null; }
 
    public void visitEnd()

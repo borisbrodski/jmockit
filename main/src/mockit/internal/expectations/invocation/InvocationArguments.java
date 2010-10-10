@@ -139,8 +139,7 @@ public final class InvocationArguments
          return assertEquals(invocationArgs, replayArgs, argCount, instanceMap);
       }
 
-      AssertionError nonVarargsError =
-         assertEquals(invocationArgs, replayArgs, argCount - 1, instanceMap);
+      AssertionError nonVarargsError = assertEquals(invocationArgs, replayArgs, argCount - 1, instanceMap);
 
       if (nonVarargsError != null) {
          return nonVarargsError;
@@ -153,8 +152,7 @@ public final class InvocationArguments
          return errorForVarargsArraysOfDifferentLengths(expectedValues, actualValues);
       }
 
-      AssertionError varargsError =
-         assertEquals(expectedValues, actualValues, expectedValues.length, instanceMap);
+      AssertionError varargsError = assertEquals(expectedValues, actualValues, expectedValues.length, instanceMap);
 
       if (varargsError != null) {
          return new AssertionError("Varargs " + varargsError);
@@ -163,12 +161,10 @@ public final class InvocationArguments
       return null;
    }
 
-   private AssertionError errorForVarargsArraysOfDifferentLengths(
-      Object[] expectedValues, Object[] actualValues)
+   private AssertionError errorForVarargsArraysOfDifferentLengths(Object[] expectedValues, Object[] actualValues)
    {
       return new AssertionError(
-         "Expected " + expectedValues.length + " values for varargs parameter, got " +
-         actualValues.length);
+         "Expected " + expectedValues.length + " values for varargs parameter, got " + actualValues.length);
    }
 
    private AssertionError assertEquals(

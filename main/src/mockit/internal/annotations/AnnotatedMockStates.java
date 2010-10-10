@@ -78,10 +78,7 @@ public final class AnnotatedMockStates
 
    private void removeMockStates(Class<?> redefinedClass)
    {
-      for (
-         Iterator<Map.Entry<String, MockClassState>> itr = classStates.entrySet().iterator();
-         itr.hasNext();
-      ) {
+      for (Iterator<Map.Entry<String, MockClassState>> itr = classStates.entrySet().iterator(); itr.hasNext(); ) {
          Map.Entry<String, MockClassState> mockClassAndItsState = itr.next();
          MockClassState mockClassState = mockClassAndItsState.getValue();
          MockState mockState = mockClassState.mockStates.get(0);

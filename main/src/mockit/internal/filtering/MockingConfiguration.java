@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -106,8 +106,7 @@ public final class MockingConfiguration
       }
 
       if (superConstructorNo > 0) {
-         String constructorDesc =
-            new SuperConstructorCollector(superConstructorNo).findConstructor(superClassName);
+         String constructorDesc = new SuperConstructorCollector(superConstructorNo).findConstructor(superClassName);
 
          return Type.getArgumentTypes(constructorDesc);
       }
@@ -234,13 +233,13 @@ public final class MockingConfiguration
             return null;
          }
          else {
-            String[] paramTypeNames = filter.substring(lp + 1, rp).split(",");
+            String[] typeNames = filter.substring(lp + 1, rp).split(",");
 
-            for (int i = 0; i < paramTypeNames.length; i++) {
-               paramTypeNames[i] = paramTypeNames[i].trim();
+            for (int i = 0; i < typeNames.length; i++) {
+               typeNames[i] = typeNames[i].trim();
             }
 
-            return paramTypeNames;
+            return typeNames;
          }
       }
 

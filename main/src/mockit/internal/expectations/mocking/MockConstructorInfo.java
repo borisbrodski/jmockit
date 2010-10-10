@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -62,8 +62,7 @@ final class MockConstructorInfo
       }
 
       throw new IllegalArgumentException(
-         "Method for constructor arguments \"" + methodName + "\" not found in class " +
-         classOfTargetObject.getName());
+         "Method for constructor arguments \"" + methodName + "\" not found in class " + classOfTargetObject.getName());
    }
 
    private Object[] getDefaultArgs()
@@ -104,7 +103,6 @@ final class MockConstructorInfo
 
       return
          superConstructorParameterTypes == null ?
-            Utilities.invoke(constructor) :
-            Utilities.invoke(constructor, (Object) superConstructorArgs);
+            Utilities.invoke(constructor) : Utilities.invoke(constructor, (Object) superConstructorArgs);
    }
 }

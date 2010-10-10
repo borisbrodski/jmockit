@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -34,8 +34,8 @@ import mockit.internal.util.*;
 final class ProxyRegistrationTransformer implements ClassFileTransformer
 {
    public byte[] transform(
-      ClassLoader loader, String className, Class<?> classBeingRedefined,
-      ProtectionDomain protectionDomain, byte[] classfileBuffer)
+      ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
+      byte[] classfileBuffer)
    {
       if (classBeingRedefined == null) {
          registerClassIfProxy(className, classfileBuffer);
@@ -59,8 +59,7 @@ final class ProxyRegistrationTransformer implements ClassFileTransformer
       }
    }
 
-   private void enableAssertsIfTestClass(
-      ClassLoader loader, ProtectionDomain protectionDomain, String className)
+   private void enableAssertsIfTestClass(ClassLoader loader, ProtectionDomain protectionDomain, String className)
    {
       if (
          loader != null && protectionDomain != null &&

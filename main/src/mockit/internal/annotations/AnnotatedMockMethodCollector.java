@@ -40,8 +40,7 @@ import static mockit.external.asm.Opcodes.*;
 public final class AnnotatedMockMethodCollector extends EmptyVisitor
 {
    private static final int INVALID_FIELD_ACCESSES = ACC_FINAL + ACC_STATIC + ACC_SYNTHETIC;
-   private static final int INVALID_METHOD_ACCESSES =
-      ACC_BRIDGE + ACC_SYNTHETIC + ACC_ABSTRACT + ACC_NATIVE;
+   private static final int INVALID_METHOD_ACCESSES = ACC_BRIDGE + ACC_SYNTHETIC + ACC_ABSTRACT + ACC_NATIVE;
 
    private final AnnotatedMockMethods mockMethods;
    private boolean collectingFromSuperClass;
@@ -66,8 +65,7 @@ public final class AnnotatedMockMethodCollector extends EmptyVisitor
    }
 
    @Override
-   public void visit(
-      int version, int access, String name, String signature, String superName, String[] interfaces)
+   public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       if (!collectingFromSuperClass) {
          mockMethods.setMockClassInternalName(name);
@@ -81,8 +79,7 @@ public final class AnnotatedMockMethodCollector extends EmptyVisitor
    }
 
    @Override
-   public FieldVisitor visitField(
-      int access, String name, String desc, String signature, Object value)
+   public FieldVisitor visitField(int access, String name, String desc, String signature, Object value)
    {
       if ((access & INVALID_FIELD_ACCESSES) == 0 && "it".equals(name)) {
          mockMethods.setWithItField(true);
@@ -105,8 +102,7 @@ public final class AnnotatedMockMethodCollector extends EmptyVisitor
     */
    @Override
    public MethodVisitor visitMethod(
-      final int access, final String name, final String methodDesc,
-      String signature, String[] exceptions)
+      final int access, final String name, final String methodDesc, String signature, String[] exceptions)
    {
       if ((access & INVALID_METHOD_ACCESSES) != 0) {
          return null;
@@ -127,8 +123,7 @@ public final class AnnotatedMockMethodCollector extends EmptyVisitor
          {
             if ("Lmockit/Mock;".equals(desc)) {
                String nameAndDesc =
-                  mockMethods.addMethod(
-                     collectingFromSuperClass, name, methodDesc, Modifier.isStatic(access));
+                  mockMethods.addMethod(collectingFromSuperClass, name, methodDesc, Modifier.isStatic(access));
 
                if (nameAndDesc != null) {
                   return new MockAnnotationVisitor(nameAndDesc);

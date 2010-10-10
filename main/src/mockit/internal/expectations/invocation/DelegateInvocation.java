@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2009 JMockit Developers
+ * Copyright (c) 2009-2010 JMockit Developers
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -28,8 +28,7 @@ import mockit.Invocation;
 
 final class DelegateInvocation extends Invocation
 {
-   DelegateInvocation(
-      Object invokedInstance, int invocationCount, int minInvocations, int maxInvocations)
+   DelegateInvocation(Object invokedInstance, int invocationCount, int minInvocations, int maxInvocations)
    {
       super(invokedInstance, invocationCount, minInvocations, maxInvocations);
    }

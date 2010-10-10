@@ -55,8 +55,7 @@ abstract class DynamicInvocationResult extends InvocationResult
       numberOfRegularParameters = hasInvocationParameter ? n - 1 : n;
    }
 
-   final Object invokeMethodOnTargetObject(
-      Object mockOrRealObject, InvocationConstraints constraints, Object[] args)
+   final Object invokeMethodOnTargetObject(Object mockOrRealObject, InvocationConstraints constraints, Object[] args)
    {
       Object result;
 
@@ -70,13 +69,11 @@ abstract class DynamicInvocationResult extends InvocationResult
       return result;
    }
 
-   private Object invokeMethodWithContext(
-      Object mockOrRealObject, InvocationConstraints constraints, Object[] args)
+   private Object invokeMethodWithContext(Object mockOrRealObject, InvocationConstraints constraints, Object[] args)
    {
       Invocation invocation =
          new DelegateInvocation(
-            mockOrRealObject, constraints.invocationCount,
-            constraints.minInvocations, constraints.maxInvocations);
+            mockOrRealObject, constraints.invocationCount, constraints.minInvocations, constraints.maxInvocations);
       Object[] delegateArgs = getArgumentsWithExtraInvocationObject(invocation, args);
 
       try {

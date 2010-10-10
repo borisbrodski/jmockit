@@ -40,9 +40,8 @@ public abstract class Phase
    {
       if (currentExpectation == null) {
          throw new IllegalStateException(
-            "Missing invocation to mocked type at this point; " +
-            "please make sure such invocations appear only after the declaration of a suitable " +
-            "mock field or parameter");
+            "Missing invocation to mocked type at this point; please make sure such invocations appear only after " +
+            "the declaration of a suitable mock field or parameter");
       }
 
       return currentExpectation;
@@ -64,7 +63,6 @@ public abstract class Phase
    }
 
    abstract Object handleInvocation(
-      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc,
-      boolean withRealImpl, Object[] args)
+      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, boolean withRealImpl, Object[] args)
       throws Throwable;
 }

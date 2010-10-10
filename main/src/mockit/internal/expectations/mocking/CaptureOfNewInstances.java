@@ -68,8 +68,7 @@ class CaptureOfNewInstances extends CaptureOfImplementations
    @Override
    public final ClassWriter createModifier(ClassLoader cl, ClassReader cr, String baseTypeDesc)
    {
-      ExpectationsModifier modifier =
-         new ExpectationsModifier(cl, cr, mockingCfg, mockConstructorInfo);
+      ExpectationsModifier modifier = new ExpectationsModifier(cl, cr, mockingCfg, mockConstructorInfo);
       modifier.setStubOutClassInitialization(stubOutClassInitialization);
       modifier.setClassNameForInstanceMethods(baseTypeDesc);
       return modifier;

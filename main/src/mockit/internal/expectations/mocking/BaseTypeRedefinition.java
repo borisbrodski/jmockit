@@ -260,8 +260,7 @@ abstract class BaseTypeRedefinition
 
    final Integer redefineClassesFromCache()
    {
-      Integer mockedClassId =
-         typeMetadata != null ? typeMetadata.hashCode() : targetClass.hashCode();
+      Integer mockedClassId = typeMetadata != null ? typeMetadata.hashCode() : targetClass.hashCode();
       MockedClass mockedClass = mockedClasses.get(mockedClassId);
 
       if (mockedClass != null) {
@@ -278,8 +277,7 @@ abstract class BaseTypeRedefinition
    {
       MockedClass mockedClass =
          new MockedClass(
-            instanceFactory,
-            mockedClassDefinitions.toArray(new ClassDefinition[mockedClassDefinitions.size()]));
+            instanceFactory, mockedClassDefinitions.toArray(new ClassDefinition[mockedClassDefinitions.size()]));
 
       mockedClasses.put(mockedClassId, mockedClass);
    }
@@ -290,8 +288,7 @@ abstract class BaseTypeRedefinition
 
       ClassReader classReader = createClassReader(targetClass);
       SubclassGenerationModifier modifier =
-         new SubclassGenerationModifier(
-            mockConstructorInfo, mockingCfg, targetClass, classReader, subclassName);
+         new SubclassGenerationModifier(mockConstructorInfo, mockingCfg, targetClass, classReader, subclassName);
       classReader.accept(modifier, false);
       final byte[] modifiedClass = modifier.toByteArray();
 

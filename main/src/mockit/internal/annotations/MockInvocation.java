@@ -28,8 +28,7 @@ import mockit.*;
 
 final class MockInvocation extends Invocation
 {
-   MockInvocation(
-      Object invokedInstance, int invocationCount, int minInvocations, int maxInvocations)
+   MockInvocation(Object invokedInstance, int invocationCount, int minInvocations, int maxInvocations)
    {
       super(invokedInstance, invocationCount, minInvocations, maxInvocations);
    }

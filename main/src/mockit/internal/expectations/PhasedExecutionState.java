@@ -107,8 +107,7 @@ final class PhasedExecutionState
       }
    }
 
-   Expectation findNonStrictExpectation(
-      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
+   Expectation findNonStrictExpectation(Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
       // Note: new expectations might get added to the list, so a regular loop would cause a CME:
       for (int i = 0, n = nonStrictExpectations.size(); i < n; i++) {

@@ -46,8 +46,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
    }
 
    @Override
-   protected void findNonStrictExpectation(
-      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
+   protected void findNonStrictExpectation(Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
       int i = replayIndex;
 
@@ -218,8 +217,8 @@ public final class OrderedVerificationPhase extends VerificationPhase
 
          argMatchers = invocation.arguments.getMatchers();
          handleInvocation(
-            invocation.instance, 0, invocation.getClassDesc(),
-            invocation.getMethodNameAndDescription(), false, invocation.arguments.getValues());
+            invocation.instance, 0, invocation.getClassDesc(), invocation.getMethodNameAndDescription(), false,
+            invocation.arguments.getValues());
 
          AssertionError testFailure = recordAndReplay.getErrorThrown();
 

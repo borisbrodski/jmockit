@@ -81,10 +81,7 @@ public final class Expectation
    {
       boolean valueIsACollection = value instanceof Collection<?>;
 
-      if (
-         (valueIsACollection || value instanceof Iterator<?>) &&
-         !hasReturnValueOfType(value.getClass())
-      ) {
+      if ((valueIsACollection || value instanceof Iterator<?>) && !hasReturnValueOfType(value.getClass())) {
          if (valueIsACollection) {
             Collection<?> values = (Collection<?>) value;
             getResults().addReturnValues(values.toArray(new Object[values.size()]));
@@ -139,8 +136,7 @@ public final class Expectation
    private void validateReturnValueForConstructorOrVoidMethod(Object value)
    {
       if (value != null && !(value instanceof Delegate)) {
-         throw new IllegalArgumentException(
-            "Non-null return value specified for constructor or void method");
+         throw new IllegalArgumentException("Non-null return value specified for constructor or void method");
       }
    }
 
@@ -255,10 +251,7 @@ public final class Expectation
 
       boolean valueIsACollection = value instanceof Collection<?>;
 
-      if (
-         (valueIsACollection || value instanceof Iterator<?>) &&
-         !hasReturnValueOfType(value.getClass())
-      ) {
+      if ((valueIsACollection || value instanceof Iterator<?>) && !hasReturnValueOfType(value.getClass())) {
          if (valueIsACollection) {
             getResults().addResults((Collection<?>) value);
          }

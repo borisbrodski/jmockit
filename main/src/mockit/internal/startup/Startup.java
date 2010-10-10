@@ -46,8 +46,7 @@ import mockit.internal.state.*;
 public final class Startup
 {
    static final String javaSpecVersion = System.getProperty("java.specification.version");
-   static final boolean jdk6OrLater =
-      "1.6".equals(javaSpecVersion) || "1.7".equals(javaSpecVersion);
+   static final boolean jdk6OrLater = "1.6".equals(javaSpecVersion) || "1.7".equals(javaSpecVersion);
 
    private static Instrumentation instrumentation;
    private static boolean initializedOnDemand;
@@ -83,10 +82,7 @@ public final class Startup
 
    private Startup() {}
 
-   public static boolean isJava6OrLater()
-   {
-      return jdk6OrLater;
-   }
+   public static boolean isJava6OrLater() { return jdk6OrLater; }
 
    /**
     * This method must only be called by the JVM, to provide the instrumentation object. In order
@@ -127,8 +123,7 @@ public final class Startup
       initialize(agentArgs, inst);
    }
 
-   private static void initialize(String agentArgs, Instrumentation inst)
-      throws IOException, ClassNotFoundException
+   private static void initialize(String agentArgs, Instrumentation inst) throws IOException, ClassNotFoundException
    {
       instrumentation = inst;
 
@@ -244,10 +239,7 @@ public final class Startup
       return instrumentation;
    }
 
-   public static boolean wasInitializedOnDemand()
-   {
-      return initializedOnDemand;
-   }
+   public static boolean wasInitializedOnDemand() { return initializedOnDemand; }
 
    public static void verifyInitialization()
    {

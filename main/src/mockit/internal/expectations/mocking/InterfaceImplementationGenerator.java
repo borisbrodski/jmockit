@@ -46,8 +46,7 @@ final class InterfaceImplementationGenerator extends BaseClassModifier
    }
 
    @Override
-   public void visit(
-      int version, int access, String name, String signature, String superName, String[] interfaces)
+   public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       interfaceName = name;
       initialSuperInterfaces = interfaces;

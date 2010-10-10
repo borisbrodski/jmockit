@@ -44,8 +44,7 @@ public final class ExpectedInvocation
    private Object cascadedMock;
 
    public ExpectedInvocation(
-      Object mock, int access, String mockedClassDesc, String mockNameAndDesc,
-      boolean matchInstance, Object[] args)
+      Object mock, int access, String mockedClassDesc, String mockNameAndDesc, boolean matchInstance, Object[] args)
    {
       instance = mock;
       this.matchInstance = matchInstance;
@@ -54,7 +53,7 @@ public final class ExpectedInvocation
       defaultReturnValue = UNDEFINED_DEFAULT_RETURN;
    }
 
-   // Simple getters //////////////////////////////////////////////////////////////////////////////
+   // Simple getters //////////////////////////////////////////////////////////////////////////////////////////////////
 
    public String getClassDesc()
    {
@@ -76,7 +75,7 @@ public final class ExpectedInvocation
       return arguments.getValues();
    }
 
-   // Matching based on instance or mocked type ///////////////////////////////////////////////////
+   // Matching based on instance or mocked type ///////////////////////////////////////////////////////////////////////
 
    public boolean isMatch(String invokedClassDesc, String invokedMethod)
    {
@@ -91,8 +90,7 @@ public final class ExpectedInvocation
    }
 
    public boolean isMatch(
-      Object replayInstance, String invokedClassDesc, String invokedMethod,
-      Map<Object, Object> instanceMap)
+      Object replayInstance, String invokedClassDesc, String invokedMethod, Map<Object, Object> instanceMap)
    {
       return
          isMatch(invokedClassDesc, invokedMethod) &&
@@ -194,15 +192,12 @@ public final class ExpectedInvocation
    public AssertionError errorForMissingInvocations(int totalMissing)
    {
       String plural = totalMissing == 1 ? "" : "s";
-      return newErrorWithCause(
-         "Missing invocations", "Missing " + totalMissing + " invocation" + plural + " to");
+      return newErrorWithCause("Missing invocations", "Missing " + totalMissing + " invocation" + plural + " to");
    }
 
-   public AssertionError errorForUnexpectedInvocation(
-      Object mock, String invokedClassDesc, String invokedMethod)
+   public AssertionError errorForUnexpectedInvocation(Object mock, String invokedClassDesc, String invokedMethod)
    {
-      String instanceDescription =
-         mock == null ? "" : "\non instance: " + Utilities.objectIdentity(mock);
+      String instanceDescription = mock == null ? "" : "\non instance: " + Utilities.objectIdentity(mock);
 
       return newErrorWithCause(
          "Unexpected invocation",
@@ -213,8 +208,7 @@ public final class ExpectedInvocation
    public AssertionError errorForUnexpectedInvocations(int totalUnexpected)
    {
       String plural = totalUnexpected == 1 ? "" : "s";
-      return newErrorWithCause(
-         "Unexpected invocations", totalUnexpected + " unexpected invocation" + plural + " to");
+      return newErrorWithCause("Unexpected invocations", totalUnexpected + " unexpected invocation" + plural + " to");
    }
 
    @Override

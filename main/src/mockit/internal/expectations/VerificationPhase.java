@@ -60,8 +60,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
 
    @Override
    final Object handleInvocation(
-      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc,
-      boolean withRealImpl, Object[] args)
+      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, boolean withRealImpl, Object[] args)
    {
       if (pendingError != null) {
          recordAndReplay.setErrorThrown(pendingError);
@@ -88,20 +87,17 @@ public abstract class VerificationPhase extends TestOnlyPhase
             new ExpectedInvocation(mock, mockAccess, mockClassDesc, mockNameAndDesc, false, args);
          currentExpectation = new Expectation(null, currentInvocation, true);
 
-         ExpectedInvocation missingInvocation =
-            new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, args);
+         ExpectedInvocation missingInvocation = new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, args);
          pendingError = missingInvocation.errorForMissingInvocation();
       }
 
       return currentExpectation.invocation.getDefaultValueForReturnType(this);
    }
 
-   abstract void findNonStrictExpectation(
-      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args);
+   abstract void findNonStrictExpectation(Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args);
 
    final boolean matches(
-      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args,
-      Expectation expectation)
+      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args, Expectation expectation)
    {
       ExpectedInvocation invocation = expectation.invocation;
       Map<Object, Object> instanceMap = getInstanceMap();
@@ -111,8 +107,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
          (!matchInstance || invocation.isEquivalentInstance(mock, instanceMap))
       ) {
          Object[] argsToVerify =
-            argMatchers == null ?
-               args : invocation.arguments.prepareForVerification(args, argMatchers);
+            argMatchers == null ? args : invocation.arguments.prepareForVerification(args, argMatchers);
 
          AssertionError error = invocation.arguments.assertMatch(argsToVerify, instanceMap);
 

@@ -104,8 +104,7 @@ final class ExpectationsModifier extends BaseClassModifier
    }
 
    @Override
-   public void visit(
-      int version, int access, String name, String signature, String superName, String[] interfaces)
+   public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       superClassName = superName;
 
@@ -128,8 +127,7 @@ final class ExpectationsModifier extends BaseClassModifier
    }
 
    @Override
-   public MethodVisitor visitMethod(
-      int access, String name, String desc, String signature, String[] exceptions)
+   public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
    {
       if (
          (access & METHOD_ACCESS_MASK) != 0 ||
@@ -185,8 +183,7 @@ final class ExpectationsModifier extends BaseClassModifier
          return generateCallToHandlerThroughMockingBridge(access, name, desc, internalClassName);
       }
 
-      generateDirectCallToHandler(
-         internalClassName, access, name, desc, enableExecutionOfRealImplementation);
+      generateDirectCallToHandler(internalClassName, access, name, desc, enableExecutionOfRealImplementation);
 
       if (enableExecutionOfRealImplementation) {
          generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
@@ -214,8 +211,7 @@ final class ExpectationsModifier extends BaseClassModifier
 
    private boolean isMethodFromCapturedClassNotToBeMocked(int access)
    {
-      return
-         baseClassNameForCapturedInstanceMethods != null && (isStatic(access) || isPrivate(access));
+      return baseClassNameForCapturedInstanceMethods != null && (isStatic(access) || isPrivate(access));
    }
 
    private boolean isStaticMethodToBeIgnored(int access)
@@ -272,8 +268,7 @@ final class ExpectationsModifier extends BaseClassModifier
       return constructorDesc;
    }
 
-   private void pushParameterValueForSuperConstructorCall(
-      Type paramType, Object arg, GeneratorAdapter generator)
+   private void pushParameterValueForSuperConstructorCall(Type paramType, Object arg, GeneratorAdapter generator)
    {
       switch (paramType.getSort()) {
          case Type.BOOLEAN: generator.push((Boolean) arg); break;
@@ -284,13 +279,11 @@ final class ExpectationsModifier extends BaseClassModifier
          case Type.LONG:    generator.push((Long) arg); break;
          case Type.FLOAT:   generator.push((Float) arg); break;
          case Type.DOUBLE:  generator.push((Double) arg); break;
-         default:
-            pushObjectValueForSuperConstructorCall(paramType, arg, generator);
+         default: pushObjectValueForSuperConstructorCall(paramType, arg, generator);
       }
    }
 
-   private void pushObjectValueForSuperConstructorCall(
-      Type paramType, Object value, GeneratorAdapter generator)
+   private void pushObjectValueForSuperConstructorCall(Type paramType, Object value, GeneratorAdapter generator)
    {
       if (value == null || value instanceof String) {
          generator.push((String) value);

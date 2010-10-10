@@ -52,10 +52,7 @@ final class MockState
       this.mockNameAndDesc = mockNameAndDesc;
    }
 
-   Class<?> getRealClass()
-   {
-      return realClass;
-   }
+   Class<?> getRealClass() { return realClass; }
 
    boolean isReentrant()
    {
@@ -125,8 +122,7 @@ final class MockState
 
       return
          "Expected " + quantifier + ' ' + numExpectedInvocations + " invocation(s) of " +
-         new MethodFormatter(realClassName, mockNameAndDesc) +
-         ", but was invoked " + timesInvoked + " time(s)";
+         new MethodFormatter(realClassName, mockNameAndDesc) + ", but was invoked " + timesInvoked + " time(s)";
    }
 
    private String getRealClassName()

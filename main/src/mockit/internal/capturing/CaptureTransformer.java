@@ -57,8 +57,8 @@ final class CaptureTransformer implements ClassFileTransformer
    }
 
    public byte[] transform(
-      ClassLoader loader, String internalClassName, Class<?> classBeingRedefined,
-      ProtectionDomain protectionDomain, byte[] classfileBuffer)
+      ClassLoader loader, String internalClassName, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
+      byte[] classfileBuffer)
    {
       if (
          inactive || classBeingRedefined != null || TestRun.getCurrentTestInstance() == null ||
@@ -103,9 +103,7 @@ final class CaptureTransformer implements ClassFileTransformer
       boolean classExtendsCapturedType;
 
       @Override
-      public void visit(
-         int version, int access, String name, String signature, String superName,
-         String[] interfaces)
+      public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
       {
          classExtendsCapturedType = false;
 

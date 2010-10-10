@@ -37,8 +37,7 @@ public abstract class CaptureOfImplementations
 
    protected CaptureOfImplementations() {}
 
-   protected abstract ClassWriter createModifier(
-      ClassLoader cl, ClassReader cr, String capturedTypeDesc);
+   protected abstract ClassWriter createModifier(ClassLoader cl, ClassReader cr, String capturedTypeDesc);
 
    public final void makeSureAllSubtypesAreModified(Class<?> baseType, Capturing capturing)
    {

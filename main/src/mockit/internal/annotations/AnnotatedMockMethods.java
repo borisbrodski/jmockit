@@ -152,63 +152,30 @@ public final class AnnotatedMockMethods
 
    boolean isReentrant()
    {
-      return
-         indexForMockExpectations >= 0 &&
-         mockStates.getMockState(indexForMockExpectations).isReentrant();
+      return indexForMockExpectations >= 0 && mockStates.getMockState(indexForMockExpectations).isReentrant();
    }
 
-   public int getIndexForMockExpectations()
-   {
-      return indexForMockExpectations;
-   }
+   public int getIndexForMockExpectations() { return indexForMockExpectations; }
 
    public boolean containsStaticMethod(String name, String desc)
    {
       return staticMethods.remove(name + desc);
    }
 
-   public String getMockClassInternalName()
-   {
-      return mockClassInternalName;
-   }
-
+   public String getMockClassInternalName() { return mockClassInternalName; }
    public void setMockClassInternalName(String mockClassInternalName)
    {
       this.mockClassInternalName = mockClassInternalName;
    }
 
-   public boolean isInnerMockClass()
-   {
-      return isInnerMockClass;
-   }
+   public boolean isInnerMockClass() { return isInnerMockClass; }
+   public void setInnerMockClass(boolean innerMockClass) { isInnerMockClass = innerMockClass; }
 
-   public void setInnerMockClass(boolean innerMockClass)
-   {
-      isInnerMockClass = innerMockClass;
-   }
+   public boolean isWithItField() { return withItField; }
+   public void setWithItField(boolean withItField) { this.withItField = withItField; }
 
-   public boolean isWithItField()
-   {
-      return withItField;
-   }
+   public int getMethodCount() { return methods.size(); }
+   public List<String> getMethods() { return methods; }
 
-   public void setWithItField(boolean withItField)
-   {
-      this.withItField = withItField;
-   }
-
-   public int getMethodCount()
-   {
-      return methods.size();
-   }
-
-   public List<String> getMethods()
-   {
-      return methods;
-   }
-
-   public boolean isWithInvocationParameter()
-   {
-      return withInvocationParameter;
-   }
+   public boolean isWithInvocationParameter() { return withInvocationParameter; }
 }

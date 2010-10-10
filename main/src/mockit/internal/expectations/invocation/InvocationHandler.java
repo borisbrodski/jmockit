@@ -41,8 +41,7 @@ public final class InvocationHandler extends DynamicInvocationResult
 
    @Override
    Object produceResult(
-      Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints,
-      Object[] args)
+      Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
       throws Throwable
    {
       return invokeMethodOnTargetObject(invokedObject, constraints, args);

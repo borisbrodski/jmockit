@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -42,8 +42,7 @@ public final class MockedTypeCascade
          return null;
       }
 
-      MockedTypeCascade cascade =
-         TestRun.getExecutingTest().getMockedTypeCascade(mockedTypeDesc, mockInstance);
+      MockedTypeCascade cascade = TestRun.getExecutingTest().getMockedTypeCascade(mockedTypeDesc, mockInstance);
 
       return cascade == null ? null : cascade.getCascadedMock(returnTypeName);
    }

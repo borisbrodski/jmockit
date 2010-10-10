@@ -50,8 +50,7 @@ final class CapturedType
 
          if (specifiedBaseType == Void.class) {
             if (baseType == null) {
-               throw new IllegalArgumentException(
-                  "Missing base type in @Capturing annotation at class level");
+               throw new IllegalArgumentException("Missing base type in @Capturing annotation at class level");
             }
 
             this.baseType = baseType;

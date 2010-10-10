@@ -64,8 +64,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
    }
 
    @Override
-   public void visit(
-      int version, int access, String name, String signature, String superName, String[] interfaces)
+   public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       super.visit(version, access & CLASS_ACCESS_MASK, subclassName, signature, name, null);
       superClassName = name;
@@ -86,12 +85,10 @@ final class SubclassGenerationModifier extends BaseClassModifier
    public void visitSource(String file, String debug) {}
 
    @Override
-   public FieldVisitor visitField(
-      int access, String name, String desc, String signature, Object value) { return null; }
+   public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) { return null; }
 
    @Override
-   public MethodVisitor visitMethod(
-      int access, String name, String desc, String signature, String[] exceptions)
+   public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
    {
       if ("<init>".equals(name)) {
          if (!defaultConstructorCreated) {
@@ -102,8 +99,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
       else {
          // Inherits from super-class when non-abstract.
          // Otherwise, creates implementation for abstract method with call to "recordOrReplay".
-         generateImplementationIfAbstractMethod(
-            superClassName, access, name, desc, signature, exceptions);
+         generateImplementationIfAbstractMethod(superClassName, access, name, desc, signature, exceptions);
       }
 
       return null;
@@ -111,8 +107,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
 
    private void generateConstructor(String candidateSuperConstructor)
    {
-      boolean withSuperConstructor =
-         mockConstructorInfo != null && mockConstructorInfo.isWithSuperConstructor();
+      boolean withSuperConstructor = mockConstructorInfo != null && mockConstructorInfo.isWithSuperConstructor();
       String newConstructorDesc = withSuperConstructor ? "([Ljava/lang/Object;)V" : "()V";
 
       mw = super.visitMethod(ACC_PUBLIC, "<init>", newConstructorDesc, null, null);
@@ -233,19 +228,15 @@ final class SubclassGenerationModifier extends BaseClassModifier
       }
 
       @Override
-      public void visit(
-         int version, int access, String name, String signature, String superName,
-         String[] interfaces)
+      public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
       {
          this.superName = superName;
       }
 
       @Override
-      public MethodVisitor visitMethod(
-         int access, String name, String desc, String signature, String[] exceptions)
+      public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
       {
-         generateImplementationIfAbstractMethod(
-            typeName, access, name, desc, signature, exceptions);
+         generateImplementationIfAbstractMethod(typeName, access, name, desc, signature, exceptions);
          return null;
       }
 
@@ -266,19 +257,15 @@ final class SubclassGenerationModifier extends BaseClassModifier
       }
 
       @Override
-      public void visit(
-         int version, int access, String name, String signature, String superName,
-         String[] interfaces)
+      public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
       {
          superInterfaces = interfaces;
       }
 
       @Override
-      public MethodVisitor visitMethod(
-         int access, String name, String desc, String signature, String[] exceptions)
+      public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
       {
-         generateImplementationForInterfaceMethodIfMissing(
-            access, name, desc, signature, exceptions);
+         generateImplementationForInterfaceMethodIfMissing(access, name, desc, signature, exceptions);
          return null;
       }
 

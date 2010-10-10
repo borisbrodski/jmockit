@@ -88,9 +88,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
    {
       TestRun.getExecutingTest().clearNonStrictMocks();
 
-      for (
-         Entry<MockedType, InstanceFactory> metadataAndFactory : mockInstanceFactories.entrySet()
-      ) {
+      for (Entry<MockedType, InstanceFactory> metadataAndFactory : mockInstanceFactories.entrySet()) {
          MockedType metadata = metadataAndFactory.getKey();
          InstanceFactory instanceFactory = metadataAndFactory.getValue();
 
@@ -104,8 +102,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
       }
    }
 
-   private void assignNewInstanceToMockField(
-      Object target, MockedType metadata, InstanceFactory instanceFactory)
+   private void assignNewInstanceToMockField(Object target, MockedType metadata, InstanceFactory instanceFactory)
    {
       Field mockField = metadata.field;
       Object mock = Utilities.getFieldValue(mockField, target);

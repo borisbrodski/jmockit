@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -105,8 +105,8 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    }
 
    public byte[] transform(
-      ClassLoader loader, String className, Class<?> classBeingRedefined,
-      ProtectionDomain protectionDomain, byte[] classfileBuffer)
+      ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
+      byte[] classfileBuffer)
    {
       if (classBeingRedefined == null && TestRun.isRunningTestCode(protectionDomain)) {
          ClassReader cr = new ClassReader(classfileBuffer);
@@ -126,9 +126,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       EndOfBlockModifier(ClassReader cr) { super(cr, true); }
 
       @Override
-      public void visit(
-         int version, int access, String name, String signature, String superName,
-         String[] interfaces)
+      public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
       {
          int p = name.indexOf('$');
 
@@ -136,10 +134,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
             boolean superClassIsKnownInvocationsSubclass = baseSubclasses.contains(superName);
 
             if (isFinal(access) || Character.isDigit(name.charAt(p + 1))) {
-               if (
-                  superClassIsKnownInvocationsSubclass ||
-                  superClassAnalyser.classExtendsInvocationsClass(superName)
-               ) {
+               if (superClassIsKnownInvocationsSubclass || superClassAnalyser.classExtendsInvocationsClass(superName)) {
                   super.visit(version, access, name, signature, superName, interfaces);
                   classDesc = name;
                   return; // go on and modify the class
@@ -155,8 +150,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 
 
       @Override
-      public MethodVisitor visitMethod(
-         int access, String name, String desc, String signature, String[] exceptions)
+      public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
       {
          mw = super.visitMethod(access, name, desc, signature, exceptions);
 
@@ -192,9 +186,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       }
 
       @Override
-      public void visit(
-         int version, int access, String name, String signature, String superName,
-         String[] interfaces)
+      public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
       {
          classExtendsBaseSubclass = baseSubclasses.contains(superName);
 

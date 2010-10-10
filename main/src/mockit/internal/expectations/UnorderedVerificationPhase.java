@@ -40,8 +40,7 @@ final class UnorderedVerificationPhase extends VerificationPhase
    }
 
    @Override
-   protected void findNonStrictExpectation(
-      Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
+   protected void findNonStrictExpectation(Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
       aggregate = null;
       List<Expectation> expectations = getNonStrictExpectations();
@@ -83,8 +82,7 @@ final class UnorderedVerificationPhase extends VerificationPhase
    public void handleInvocationCountConstraint(int minInvocations, int maxInvocations)
    {
       Expectation expectation = getCurrentExpectation();
-      expectation.constraints.setLimits(
-         numberOfIterations * minInvocations, numberOfIterations * maxInvocations);
+      expectation.constraints.setLimits(numberOfIterations * minInvocations, numberOfIterations * maxInvocations);
 
       pendingError = null;
       AssertionError error = expectation.verifyConstraints();

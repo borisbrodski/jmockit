@@ -45,8 +45,7 @@ final class DelegatedResult extends DynamicInvocationResult
 
    @Override
    Object produceResult(
-      Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints, 
-      Object[] args)
+      Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
       throws Throwable
    {
       if (methodToInvoke == null) {
@@ -78,8 +77,7 @@ final class DelegatedResult extends DynamicInvocationResult
       return methodName;
    }
 
-   private void replaceNullArgumentsWithClassObjectsIfAny(
-      String methodNameAndDesc, int leftParen, Object[] args)
+   private void replaceNullArgumentsWithClassObjectsIfAny(String methodNameAndDesc, int leftParen, Object[] args)
    {
       Type[] argTypes = null;
 

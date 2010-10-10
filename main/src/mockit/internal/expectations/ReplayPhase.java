@@ -65,12 +65,10 @@ final class ReplayPhase extends Phase
 
    @Override
    Object handleInvocation(
-      Object mock, int mockAccess, String mockClsDesc, String mockDesc, boolean withRealImpl,
-      Object[] args)
+      Object mock, int mockAccess, String mockClsDesc, String mockDesc, boolean withRealImpl, Object[] args)
       throws Throwable
    {
-      nonStrictExpectation =
-         recordAndReplay.executionState.findNonStrictExpectation(mock, mockClsDesc, mockDesc, args);
+      nonStrictExpectation = recordAndReplay.executionState.findNonStrictExpectation(mock, mockClsDesc, mockDesc, args);
 
       if (nonStrictExpectation == null) {
          createExpectationIfNonStrictInvocation(mock, mockAccess, mockClsDesc, mockDesc, args);
@@ -96,8 +94,7 @@ final class ReplayPhase extends Phase
       }
    }
 
-   private Object updateConstraintsAndProduceResult(
-      Object mock, boolean withRealImpl, Object[] args) throws Throwable
+   private Object updateConstraintsAndProduceResult(Object mock, boolean withRealImpl, Object[] args) throws Throwable
    {
       boolean executeRealImpl = withRealImpl && nonStrictExpectation.recordPhase == null;
       nonStrictExpectation.constraints.incrementInvocationCount();
@@ -115,9 +112,9 @@ final class ReplayPhase extends Phase
       return nonStrictExpectation.produceResult(mock, args);
    }
 
+   @SuppressWarnings({"OverlyComplexMethod"})
    private Object handleStrictInvocation(
-      Object mock, String mockClassDesc, String mockNameAndDesc, boolean withRealImpl,
-      Object[] replayArgs)
+      Object mock, String mockClassDesc, String mockNameAndDesc, boolean withRealImpl, Object[] replayArgs)
       throws Throwable
    {
       Map<Object, Object> instanceMap = getInstanceMap();
@@ -125,8 +122,7 @@ final class ReplayPhase extends Phase
       while (true) {
          if (currentExpectation == null) {
             return
-               handleUnexpectedInvocation(
-                  mock, mockClassDesc, mockNameAndDesc, withRealImpl, replayArgs);
+               handleUnexpectedInvocation(mock, mockClassDesc, mockNameAndDesc, withRealImpl, replayArgs);
          }
 
          ExpectedInvocation invocation = currentExpectation.invocation;
@@ -179,16 +175,14 @@ final class ReplayPhase extends Phase
    }
 
    private Object handleUnexpectedInvocation(
-      Object mock, String mockClassDesc, String mockNameAndDesc, boolean withRealImpl,
-      Object[] replayArgs)
+      Object mock, String mockClassDesc, String mockNameAndDesc, boolean withRealImpl, Object[] replayArgs)
    {
       if (withRealImpl) {
          return Void.class;
       }
 
       recordAndReplay.setErrorThrown(
-         new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, replayArgs)
-            .errorForUnexpectedInvocation());
+         new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, replayArgs).errorForUnexpectedInvocation());
 
       return null;
    }
@@ -200,8 +194,7 @@ final class ReplayPhase extends Phase
       currentStrictExpectationIndex++;
 
       currentExpectation =
-         currentStrictExpectationIndex < expectations.size() ?
-            expectations.get(currentStrictExpectationIndex) : null;
+         currentStrictExpectationIndex < expectations.size() ? expectations.get(currentStrictExpectationIndex) : null;
 
       if (expectationBlock.numberOfIterations == 1) {
          if (currentExpectation != null && currentExpectation.recordPhase != expectationBlock) {
