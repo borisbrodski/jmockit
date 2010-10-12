@@ -34,7 +34,7 @@ import mockit.internal.util.*;
 
 public final class InvocationArguments
 {
-   private static final Object[] NULL_VARARGS = new Object[1];
+   private static final Object[] NULL_VARARGS = new Object[0];
 
    final String classDesc;
    final String methodNameAndDesc;
@@ -92,16 +92,14 @@ public final class InvocationArguments
 
       if ((methodAccess & Opcodes.ACC_VARARGS) != 0) {
          invocationVarArgs = getVarArgs(invocationArgs);
-
-         if (invocationVarArgs == NULL_VARARGS) {
-            return null;
-         }
-
          replayVarArgs = getVarArgs(replayArgs);
-         varArgsCount = replayVarArgs.length;
 
-         if (varArgsCount != invocationVarArgs.length) {
-            return errorForVarargsArraysOfDifferentLengths(invocationVarArgs, replayVarArgs);
+         if (invocationVarArgs != NULL_VARARGS) {
+            varArgsCount = replayVarArgs.length;
+
+            if (varArgsCount != invocationVarArgs.length) {
+               return errorForVarargsArraysOfDifferentLengths(invocationVarArgs, replayVarArgs);
+            }
          }
 
          argCount--;

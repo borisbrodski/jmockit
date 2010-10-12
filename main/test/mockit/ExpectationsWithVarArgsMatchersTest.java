@@ -180,20 +180,66 @@ public final class ExpectationsWithVarArgsMatchersTest
    }
 
    @Test
-   public void expectInvocationWithMatchersForSomeRegularParametersAndNoneForVarargs()
+   public void recordExpectationsWithMatchersForSomeRegularParametersAndNoneForVarargs()
    {
       new NonStrictExpectations()
       {
          {
-            // TODO: make matcher for last regular parameter unnecessary, if possible 
-            mock.anotherOperation(1, anyBoolean, withEqual("test"), "a"); result = 1;
+            mock.anotherOperation(1, anyBoolean, "test", "a"); result = 1;
+            mock.anotherOperation(anyInt, true, withSubstring("X"), "a", "b"); result = 2;
          }
       };
 
+      // Invocations that match a recorded expectation:
       assertEquals(1, mock.anotherOperation(1, true, "test", "a"));
       assertEquals(1, mock.anotherOperation(1, true, "test", "a"));
       assertEquals(1, mock.anotherOperation(1, false, "test", "a"));
+
+      assertEquals(2, mock.anotherOperation(2, true, "aXb", "a", "b"));
+      assertEquals(2, mock.anotherOperation(-1, true, "  X", "a", "b"));
+      assertEquals(2, mock.anotherOperation(0, true, "XXX", "a", "b"));
+      assertEquals(2, mock.anotherOperation(1, true, "X", "a", "b"));
+
+      // Invocations that don't match any expectation:
       assertEquals(0, mock.anotherOperation(1, false, "test", null, "a"));
+      assertEquals(0, mock.anotherOperation(1, false, "tst", "a"));
+      assertEquals(0, mock.anotherOperation(0, false, "test", "a"));
+      assertEquals(0, mock.anotherOperation(1, true, "test", "b"));
+      assertEquals(0, mock.anotherOperation(1, true, "test"));
+
+      assertEquals(0, mock.anotherOperation(2, false, "aXb", "a", "b"));
+      assertEquals(0, mock.anotherOperation(1, true, "  X", "A", "b"));
+      assertEquals(0, mock.anotherOperation(0, true, "XXX", "a"));
+      assertEquals(0, mock.anotherOperation(0, true, "XXX", "b"));
+      assertEquals(0, mock.anotherOperation(32, true, "-Xx", "a", null));
+   }
+
+   @Test
+   public void expectInvocationsWithNonNullRegularArgumentAndAnyVarargs()
+   {
+      new Expectations()
+      {
+         {
+            mock.complexOperation(withNotNull(), (Object[]) any); times = 3;
+         }
+      };
+
+      mock.complexOperation(new Object(), 1, "2");
+      mock.complexOperation("", true, 'a', 2.5);
+      mock.complexOperation(123);
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectInvocationWithNonNullRegularArgumentAndAnyVarargsButReplayWithNull()
+   {
+      new Expectations()
+      {
+         {
+            mock.complexOperation(withNotNull(), (Object[]) any);
+         }
+      };
+
+      mock.complexOperation(null, 1, "2");
    }
 
    @Test
@@ -202,11 +248,8 @@ public final class ExpectationsWithVarArgsMatchersTest
       new NonStrictExpectations()
       {
          {
-            mock.anotherOperation(anyInt, true, withEqual("abc"), anyString, withEqual("test"));
-            result = 1;
-
-            mock.anotherOperation(0, anyBoolean, withEqual("Abc"), anyString, anyString, anyString);
-            result = 2;
+            mock.anotherOperation(anyInt, true, withEqual("abc"), anyString, withEqual("test")); result = 1;
+            mock.anotherOperation(0, anyBoolean, withEqual("Abc"), anyString, anyString, anyString); result = 2;
          }
       };
 
