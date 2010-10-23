@@ -173,7 +173,7 @@ public final class MockFixture
       for (Class<?> redefinedClass : redefinedClassesToRestore) {
          redefinitionEngine.restoreOriginalDefinition(redefinedClass);
 
-         if (redefinedClassesWithNativeMethods.remove(redefinedClass.getName())) {
+         if (redefinedClassesWithNativeMethods.contains(redefinedClass.getName())) {
             reregisterNativeMethodsForRestoredClass(redefinedClass);
          }
 

@@ -44,4 +44,28 @@ public final class JREMockingTest extends TestCase
       File f = new File("...");
       assertTrue(f.exists());
    }
+
+   public void testFirstMockingOfNativeMethods(System mockedSystem)
+   {
+       new Expectations()
+       {
+           // First mocking: puts mocked class in cache, knowing it has native methods to re-register.
+           @Mocked("sleep") final Thread unused = null;
+       };
+   }
+
+   public void testSecondMockingOfNativeMethods(System mockedSystem)
+   {
+       new Expectations()
+       {
+           // Second mocking: retrieves from cache, no longer knowing it has native methods to re-register.
+           @Mocked("sleep") final Thread unused = null;
+       };
+   }
+
+   public void testUnmockedNativeMethods() throws Exception
+   {
+       Thread.sleep(10);
+       assertTrue(System.currentTimeMillis() > 0);
+   }
 }
