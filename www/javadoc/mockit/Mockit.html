@@ -88,12 +88,12 @@ mockit</FONT>
 <BR>
 Class Mockit</H2>
 <PRE>
-<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</A>
+java.lang.Object
   <IMG SRC="../resources/inherit.gif" ALT="extended by "><B>mockit.Mockit</B>
 </PRE>
 <HR>
 <DL>
-<DT><PRE>public final class <B>Mockit</B><DT>extends <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></DL>
+<DT><PRE>public final class <B>Mockit</B><DT>extends java.lang.Object</DL>
 </PRE>
 
 <P>
@@ -163,7 +163,7 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#newEmptyProxy(java.lang.Class)">newEmptyProxy</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;E&gt;&nbsp;interfaceToBeProxied)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#newEmptyProxy(java.lang.Class)">newEmptyProxy</A></B>(java.lang.Class&lt;E&gt;&nbsp;interfaceToBeProxied)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Mockit.html#newEmptyProxy(java.lang.ClassLoader, java.lang.Class)"><CODE>newEmptyProxy(ClassLoader, Class)</CODE></A>, but with the class loader obtained from
@@ -179,11 +179,11 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#newEmptyProxy(java.lang.ClassLoader, java.lang.Class)">newEmptyProxy</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang">ClassLoader</A>&nbsp;loader,
-              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;E&gt;&nbsp;interfaceToBeProxied)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#newEmptyProxy(java.lang.ClassLoader, java.lang.Class)">newEmptyProxy</A></B>(java.lang.ClassLoader&nbsp;loader,
+              java.lang.Class&lt;E&gt;&nbsp;interfaceToBeProxied)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creates a <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/reflect/Proxy.html?is-external=true" title="class or interface in java.lang.reflect"><CODE>Proxy</CODE></A> implementation for a given interface, in which all methods are empty.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creates a <CODE>Proxy</CODE> implementation for a given interface, in which all methods are empty.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -195,16 +195,16 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#newEmptyProxy(java.lang.reflect.Type...)">newEmptyProxy</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/reflect/Type.html?is-external=true" title="class or interface in java.lang.reflect">Type</A>...&nbsp;interfacesToBeProxied)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#newEmptyProxy(java.lang.reflect.Type...)">newEmptyProxy</A></B>(java.lang.reflect.Type...&nbsp;interfacesToBeProxied)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creates a <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/reflect/Proxy.html?is-external=true" title="class or interface in java.lang.reflect"><CODE>Proxy</CODE></A> implementation for a given set of interface types.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creates a <CODE>Proxy</CODE> implementation for a given set of interface types.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Class)">setUpMock</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;realClass,
-          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;mockClass)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Class)">setUpMock</A></B>(java.lang.Class&lt;?&gt;&nbsp;realClass,
+          java.lang.Class&lt;?&gt;&nbsp;mockClass)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Similar to <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>setUpMocks(Object...)</CODE></A>, but accepting a single mock class and its
@@ -213,8 +213,8 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)">setUpMock</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;realClass,
-          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mock)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)">setUpMock</A></B>(java.lang.Class&lt;?&gt;&nbsp;realClass,
+          java.lang.Object&nbsp;mock)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Similar to <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>setUpMocks(Object...)</CODE></A>, but accepting a single mock and its corresponding
@@ -230,7 +230,7 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMock(java.lang.Object)">setUpMock</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mockClassOrInstance)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMock(java.lang.Object)">setUpMock</A></B>(java.lang.Object&nbsp;mockClassOrInstance)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets up the mocks defined in the given mock class.</TD>
@@ -238,8 +238,8 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMock(java.lang.String, java.lang.Class)">setUpMock</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;realClassName,
-          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;mockClass)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMock(java.lang.String, java.lang.Class)">setUpMock</A></B>(java.lang.String&nbsp;realClassName,
+          java.lang.Class&lt;?&gt;&nbsp;mockClass)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Class)"><CODE>setUpMock(Class, Class)</CODE></A>, but accepting the (fully qualified) name of the
@@ -248,8 +248,8 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMock(java.lang.String, java.lang.Object)">setUpMock</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;realClassName,
-          <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mock)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMock(java.lang.String, java.lang.Object)">setUpMock</A></B>(java.lang.String&nbsp;realClassName,
+          java.lang.Object&nbsp;mock)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)"><CODE>setUpMock(Class, Object)</CODE></A>, but accepting the (fully qualified) name of the
@@ -258,7 +258,7 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)">setUpMocks</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;mockClassesOrInstances)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)">setUpMocks</A></B>(java.lang.Object...&nbsp;mockClassesOrInstances)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets up the mocks defined in one or more <A HREF="../mockit/MockClass.html" title="annotation in mockit">mock classes</A>.</TD>
@@ -266,7 +266,7 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMocksAndStubs(java.lang.Class...)">setUpMocksAndStubs</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;...&nbsp;mockAndRealClasses)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpMocksAndStubs(java.lang.Class...)">setUpMocksAndStubs</A></B>(java.lang.Class&lt;?&gt;...&nbsp;mockAndRealClasses)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Given a mix of <A HREF="../mockit/MockClass.html" title="annotation in mockit">mock</A> and real classes,
@@ -276,7 +276,7 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpStartupMocks(java.lang.Object...)">setUpStartupMocks</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;mockClassesOrInstances)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#setUpStartupMocks(java.lang.Object...)">setUpStartupMocks</A></B>(java.lang.Object...&nbsp;mockClassesOrInstances)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets up the <em>startup</em> mocks defined in one or more mock classes, similarly to
@@ -285,7 +285,7 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#stubOut(java.lang.Class...)">stubOut</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;...&nbsp;realClasses)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#stubOut(java.lang.Class...)">stubOut</A></B>(java.lang.Class&lt;?&gt;...&nbsp;realClasses)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stubs out all methods, constructors, and static initializers in the given classes, so that
@@ -294,9 +294,9 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#stubOutClass(java.lang.Class, boolean, java.lang.String...)">stubOutClass</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;realClass,
+<TD><CODE><B><A HREF="../mockit/Mockit.html#stubOutClass(java.lang.Class, boolean, java.lang.String...)">stubOutClass</A></B>(java.lang.Class&lt;?&gt;&nbsp;realClass,
              boolean&nbsp;inverse,
-             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>...&nbsp;filters)</CODE>
+             java.lang.String...&nbsp;filters)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The same as <A HREF="../mockit/Mockit.html#stubOutClass(java.lang.Class, java.lang.String...)"><CODE>stubOutClass(Class, String...)</CODE></A>, but specifying whether filters are to be
@@ -305,8 +305,8 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#stubOutClass(java.lang.Class, java.lang.String...)">stubOutClass</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;realClass,
-             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>...&nbsp;filters)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#stubOutClass(java.lang.Class, java.lang.String...)">stubOutClass</A></B>(java.lang.Class&lt;?&gt;&nbsp;realClass,
+             java.lang.String...&nbsp;filters)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Mockit.html#stubOut(java.lang.Class...)"><CODE>stubOut(Class...)</CODE></A> for the given class, except that only the specified class
@@ -315,9 +315,9 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#stubOutClass(java.lang.String, boolean, java.lang.String...)">stubOutClass</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;realClassName,
+<TD><CODE><B><A HREF="../mockit/Mockit.html#stubOutClass(java.lang.String, boolean, java.lang.String...)">stubOutClass</A></B>(java.lang.String&nbsp;realClassName,
              boolean&nbsp;inverse,
-             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>...&nbsp;filters)</CODE>
+             java.lang.String...&nbsp;filters)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Mockit.html#stubOutClass(java.lang.Class, boolean, java.lang.String...)"><CODE>stubOutClass(Class, boolean, String...)</CODE></A>, but accepting the (fully qualified)
@@ -326,8 +326,8 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#stubOutClass(java.lang.String, java.lang.String...)">stubOutClass</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;realClassName,
-             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>...&nbsp;filters)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#stubOutClass(java.lang.String, java.lang.String...)">stubOutClass</A></B>(java.lang.String&nbsp;realClassName,
+             java.lang.String...&nbsp;filters)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Mockit.html#stubOutClass(java.lang.Class, java.lang.String...)"><CODE>stubOutClass(Class, String...)</CODE></A>, but accepting the (fully qualified) name of
@@ -347,7 +347,7 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mockit.html#tearDownMocks(java.lang.Class...)">tearDownMocks</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;...&nbsp;realClasses)</CODE>
+<TD><CODE><B><A HREF="../mockit/Mockit.html#tearDownMocks(java.lang.Class...)">tearDownMocks</A></B>(java.lang.Class&lt;?&gt;...&nbsp;realClasses)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Discards any mocks set up for the specified classes that are currently in effect, for all test
@@ -360,10 +360,10 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 &nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
-<TH ALIGN="left"><B>Methods inherited from class java.lang.<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></B></TH>
+<TH ALIGN="left"><B>Methods inherited from class java.lang.Object</B></TH>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang">clone</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang">equals</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang">finalize</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang">getClass</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#hashCode()" title="class or interface in java.lang">hashCode</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang">notify</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang">notifyAll</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang">toString</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang">wait</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang">wait</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait(long, int)" title="class or interface in java.lang">wait</A></CODE></TD>
+<TD><CODE>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</CODE></TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -382,7 +382,7 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
 <A NAME="newEmptyProxy(java.lang.Class)"><!-- --></A><H3>
 newEmptyProxy</H3>
 <PRE>
-public static &lt;E&gt; E <B>newEmptyProxy</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;E&gt;&nbsp;interfaceToBeProxied)</PRE>
+public static &lt;E&gt; E <B>newEmptyProxy</B>(java.lang.Class&lt;E&gt;&nbsp;interfaceToBeProxied)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Mockit.html#newEmptyProxy(java.lang.ClassLoader, java.lang.Class)"><CODE>newEmptyProxy(ClassLoader, Class)</CODE></A>, but with the class loader obtained from
  the interface to be proxied. Note that this may lead to a <code>NoClassDefFoundError</code> if that
@@ -404,10 +404,10 @@ public static &lt;E&gt; E <B>newEmptyProxy</B>(<A HREF="http://java.sun.com/java
 <A NAME="newEmptyProxy(java.lang.ClassLoader, java.lang.Class)"><!-- --></A><H3>
 newEmptyProxy</H3>
 <PRE>
-public static &lt;E&gt; E <B>newEmptyProxy</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang">ClassLoader</A>&nbsp;loader,
-                                  <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;E&gt;&nbsp;interfaceToBeProxied)</PRE>
+public static &lt;E&gt; E <B>newEmptyProxy</B>(java.lang.ClassLoader&nbsp;loader,
+                                  java.lang.Class&lt;E&gt;&nbsp;interfaceToBeProxied)</PRE>
 <DL>
-<DD>Creates a <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/reflect/Proxy.html?is-external=true" title="class or interface in java.lang.reflect"><CODE>Proxy</CODE></A> implementation for a given interface, in which all methods are empty.
+<DD>Creates a <CODE>Proxy</CODE> implementation for a given interface, in which all methods are empty.
  Non-void methods will return a default value according to the return type: 0 for
  <code>int</code>, null for a reference type, and so on.
  <p/>
@@ -434,9 +434,9 @@ public static &lt;E&gt; E <B>newEmptyProxy</B>(<A HREF="http://java.sun.com/java
 <A NAME="newEmptyProxy(java.lang.reflect.Type...)"><!-- --></A><H3>
 newEmptyProxy</H3>
 <PRE>
-public static &lt;E&gt; E <B>newEmptyProxy</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/reflect/Type.html?is-external=true" title="class or interface in java.lang.reflect">Type</A>...&nbsp;interfacesToBeProxied)</PRE>
+public static &lt;E&gt; E <B>newEmptyProxy</B>(java.lang.reflect.Type...&nbsp;interfacesToBeProxied)</PRE>
 <DL>
-<DD>Creates a <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/reflect/Proxy.html?is-external=true" title="class or interface in java.lang.reflect"><CODE>Proxy</CODE></A> implementation for a given set of interface types.
+<DD>Creates a <CODE>Proxy</CODE> implementation for a given set of interface types.
  In this created class all methods will be empty, with return values for non-void methods being
  the appropriate default value (0 for <code>int</code>, null for a reference
  type, and so on).
@@ -454,8 +454,8 @@ public static &lt;E&gt; E <B>newEmptyProxy</B>(<A HREF="http://java.sun.com/java
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>interfacesToBeProxied</CODE> - one or more <code>Type</code> objects, each of which can be a
- <code>Class</code> object for an interface, a <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/reflect/ParameterizedType.html?is-external=true" title="class or interface in java.lang.reflect"><CODE>ParameterizedType</CODE></A> whose raw type is an
- interface, or a <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/reflect/TypeVariable.html?is-external=true" title="class or interface in java.lang.reflect"><CODE>TypeVariable</CODE></A> whose bounds are interfaces
+ <code>Class</code> object for an interface, a <CODE>ParameterizedType</CODE> whose raw type is an
+ interface, or a <CODE>TypeVariable</CODE> whose bounds are interfaces
 <DT><B>Returns:</B><DD>the created proxy instance</DL>
 </DD>
 </DL>
@@ -464,14 +464,14 @@ public static &lt;E&gt; E <B>newEmptyProxy</B>(<A HREF="http://java.sun.com/java
 <A NAME="setUpMock(java.lang.Class, java.lang.Class)"><!-- --></A><H3>
 setUpMock</H3>
 <PRE>
-public static void <B>setUpMock</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;realClass,
-                             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;mockClass)</PRE>
+public static void <B>setUpMock</B>(java.lang.Class&lt;?&gt;&nbsp;realClass,
+                             java.lang.Class&lt;?&gt;&nbsp;mockClass)</PRE>
 <DL>
 <DD>Similar to <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>setUpMocks(Object...)</CODE></A>, but accepting a single mock class and its
  corresponding real class.
  <p/>
  Can also be useful when the real class is not known in advance, such as when it is determined
- at runtime through configuration or by creating a <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/reflect/Proxy.html?is-external=true" title="class or interface in java.lang.reflect"><CODE>Proxy</CODE></A> for an interface.
+ at runtime through configuration or by creating a <CODE>Proxy</CODE> for an interface.
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>realClass</CODE> - the class to be mocked that is used by code under test<DD><CODE>mockClass</CODE> - the class containing the mock methods/constructors for the real class<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java">Example</a></DL>
@@ -482,14 +482,14 @@ public static void <B>setUpMock</B>(<A HREF="http://java.sun.com/javase/6/docs/a
 <A NAME="setUpMock(java.lang.Class, java.lang.Object)"><!-- --></A><H3>
 setUpMock</H3>
 <PRE>
-public static void <B>setUpMock</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;realClass,
-                             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mock)</PRE>
+public static void <B>setUpMock</B>(java.lang.Class&lt;?&gt;&nbsp;realClass,
+                             java.lang.Object&nbsp;mock)</PRE>
 <DL>
 <DD>Similar to <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>setUpMocks(Object...)</CODE></A>, but accepting a single mock and its corresponding
  real class.
  <p/>
  Useful when the real class is not known in advance, such as when it is determined at runtime
- through configuration of by creating a <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/reflect/Proxy.html?is-external=true" title="class or interface in java.lang.reflect"><CODE>Proxy</CODE></A> for an interface.
+ through configuration of by creating a <CODE>Proxy</CODE> for an interface.
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>realClass</CODE> - the class to be mocked that is used by code under test<DD><CODE>mock</CODE> - an instance of the class containing the mock methods/constructors for the real
@@ -501,7 +501,7 @@ public static void <B>setUpMock</B>(<A HREF="http://java.sun.com/javase/6/docs/a
 <A NAME="setUpMock(java.lang.Object)"><!-- --></A><H3>
 setUpMock</H3>
 <PRE>
-public static &lt;T&gt; T <B>setUpMock</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mockClassOrInstance)</PRE>
+public static &lt;T&gt; T <B>setUpMock</B>(java.lang.Object&nbsp;mockClassOrInstance)</PRE>
 <DL>
 <DD>Sets up the mocks defined in the given mock class.
  <p/>
@@ -513,7 +513,7 @@ public static &lt;T&gt; T <B>setUpMock</B>(<A HREF="http://java.sun.com/javase/6
  instance of the mock class
 <DT><B>Returns:</B><DD>the new proxy instance created for the mocked interface, or null otherwise
 <DT><B>Throws:</B>
-<DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if the mock class fails to specify an interface or class
+<DD><CODE>java.lang.IllegalArgumentException</CODE> - if the mock class fails to specify an interface or class
  using the <code>@MockClass(realClass = ...)</code> annotation<DT><B>See Also:</B><DD><A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)"><CODE>setUpMock(Class, Object)</CODE></A>, 
 <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>setUpMocks(Object...)</CODE></A>, 
 <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderFactoryTest.java">Example</a></DL>
@@ -524,8 +524,8 @@ public static &lt;T&gt; T <B>setUpMock</B>(<A HREF="http://java.sun.com/javase/6
 <A NAME="setUpMock(java.lang.String, java.lang.Class)"><!-- --></A><H3>
 setUpMock</H3>
 <PRE>
-public static void <B>setUpMock</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;realClassName,
-                             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;mockClass)</PRE>
+public static void <B>setUpMock</B>(java.lang.String&nbsp;realClassName,
+                             java.lang.Class&lt;?&gt;&nbsp;mockClass)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Class)"><CODE>setUpMock(Class, Class)</CODE></A>, but accepting the (fully qualified) name of the
  real class. This is useful when said class is not accessible from the test.
@@ -539,8 +539,8 @@ public static void <B>setUpMock</B>(<A HREF="http://java.sun.com/javase/6/docs/a
 <A NAME="setUpMock(java.lang.String, java.lang.Object)"><!-- --></A><H3>
 setUpMock</H3>
 <PRE>
-public static void <B>setUpMock</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;realClassName,
-                             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;mock)</PRE>
+public static void <B>setUpMock</B>(java.lang.String&nbsp;realClassName,
+                             java.lang.Object&nbsp;mock)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)"><CODE>setUpMock(Class, Object)</CODE></A>, but accepting the (fully qualified) name of the
  real class. This is useful when said class is not accessible from the test.
@@ -554,7 +554,7 @@ public static void <B>setUpMock</B>(<A HREF="http://java.sun.com/javase/6/docs/a
 <A NAME="setUpMocks(java.lang.Object...)"><!-- --></A><H3>
 setUpMocks</H3>
 <PRE>
-public static void <B>setUpMocks</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;mockClassesOrInstances)</PRE>
+public static void <B>setUpMocks</B>(java.lang.Object...&nbsp;mockClassesOrInstances)</PRE>
 <DL>
 <DD>Sets up the mocks defined in one or more <A HREF="../mockit/MockClass.html" title="annotation in mockit">mock classes</A>.
  <p/>
@@ -609,7 +609,7 @@ public static void <B>setUpMocks</B>(<A HREF="http://java.sun.com/javase/6/docs/
  designated <A HREF="../mockit/MockClass.html#realClass()">real class</A> (usually, a class on which the code
  under test depends on)
 <DT><B>Throws:</B>
-<DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if any mock class fails to specify the corresponding real
+<DD><CODE>java.lang.IllegalArgumentException</CODE> - if any mock class fails to specify the corresponding real
  class using the <code>@MockClass(realClass = ...)</code> annotation<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/web/submitOrder/OrderEntryPageTest.java">Example</a></DL>
 </DD>
 </DL>
@@ -618,7 +618,7 @@ public static void <B>setUpMocks</B>(<A HREF="http://java.sun.com/javase/6/docs/
 <A NAME="setUpMocksAndStubs(java.lang.Class...)"><!-- --></A><H3>
 setUpMocksAndStubs</H3>
 <PRE>
-public static void <B>setUpMocksAndStubs</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;...&nbsp;mockAndRealClasses)</PRE>
+public static void <B>setUpMocksAndStubs</B>(java.lang.Class&lt;?&gt;...&nbsp;mockAndRealClasses)</PRE>
 <DL>
 <DD>Given a mix of <A HREF="../mockit/MockClass.html" title="annotation in mockit">mock</A> and real classes,
  <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Class)">sets up</A> each mock class for the associated real class,
@@ -633,7 +633,7 @@ public static void <B>setUpMocksAndStubs</B>(<A HREF="http://java.sun.com/javase
 <A NAME="setUpStartupMocks(java.lang.Object...)"><!-- --></A><H3>
 setUpStartupMocks</H3>
 <PRE>
-public static void <B>setUpStartupMocks</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;mockClassesOrInstances)</PRE>
+public static void <B>setUpStartupMocks</B>(java.lang.Object...&nbsp;mockClassesOrInstances)</PRE>
 <DL>
 <DD>Sets up the <em>startup</em> mocks defined in one or more mock classes, similarly to
  <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>setUpMocks(Object...)</CODE></A>. The difference is in the lifetime of the mocks, which will last
@@ -669,7 +669,7 @@ public static void <B>setUpStartupMocks</B>(<A HREF="http://java.sun.com/javase/
  designated <A HREF="../mockit/MockClass.html#realClass()">real class</A> (usually, a class on which the code
  under test depends on)
 <DT><B>Throws:</B>
-<DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if any mock class fails to specify the corresponding real
+<DD><CODE>java.lang.IllegalArgumentException</CODE> - if any mock class fails to specify the corresponding real
  class using the <code>@MockClass(realClass = ...)</code> annotation</DL>
 </DD>
 </DL>
@@ -678,7 +678,7 @@ public static void <B>setUpStartupMocks</B>(<A HREF="http://java.sun.com/javase/
 <A NAME="stubOut(java.lang.Class...)"><!-- --></A><H3>
 stubOut</H3>
 <PRE>
-public static void <B>stubOut</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;...&nbsp;realClasses)</PRE>
+public static void <B>stubOut</B>(java.lang.Class&lt;?&gt;...&nbsp;realClasses)</PRE>
 <DL>
 <DD>Stubs out all methods, constructors, and static initializers in the given classes, so that
  they do nothing whenever executed.
@@ -707,9 +707,9 @@ public static void <B>stubOut</B>(<A HREF="http://java.sun.com/javase/6/docs/api
 <A NAME="stubOutClass(java.lang.Class, boolean, java.lang.String...)"><!-- --></A><H3>
 stubOutClass</H3>
 <PRE>
-public static void <B>stubOutClass</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;realClass,
+public static void <B>stubOutClass</B>(java.lang.Class&lt;?&gt;&nbsp;realClass,
                                 boolean&nbsp;inverse,
-                                <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>...&nbsp;filters)</PRE>
+                                java.lang.String...&nbsp;filters)</PRE>
 <DL>
 <DD>The same as <A HREF="../mockit/Mockit.html#stubOutClass(java.lang.Class, java.lang.String...)"><CODE>stubOutClass(Class, String...)</CODE></A>, but specifying whether filters are to be
  inverted or not.
@@ -724,8 +724,8 @@ public static void <B>stubOutClass</B>(<A HREF="http://java.sun.com/javase/6/doc
 <A NAME="stubOutClass(java.lang.Class, java.lang.String...)"><!-- --></A><H3>
 stubOutClass</H3>
 <PRE>
-public static void <B>stubOutClass</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;realClass,
-                                <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>...&nbsp;filters)</PRE>
+public static void <B>stubOutClass</B>(java.lang.Class&lt;?&gt;&nbsp;realClass,
+                                java.lang.String...&nbsp;filters)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Mockit.html#stubOut(java.lang.Class...)"><CODE>stubOut(Class...)</CODE></A> for the given class, except that only the specified class
  members (if any) are stubbed out, leaving the rest unaffected.
@@ -733,7 +733,7 @@ public static void <B>stubOutClass</B>(<A HREF="http://java.sun.com/javase/6/doc
  or instance initialization blocks it might have.
  Note that if <em>no</em> filters are specified the whole class will be stubbed out.
  <p/>
- For methods, the filters are <A HREF="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex">regular expressions</A> for
+ For methods, the filters are regular expressions for
  method names, optionally followed by parameter type names between parentheses.
  For constructors, only the parameters are specified.
  For more details about the syntax for mock filters, see the <A HREF="../mockit/MockClass.html#stubs()"><CODE>MockClass.stubs()</CODE></A> annotation
@@ -755,9 +755,9 @@ public static void <B>stubOutClass</B>(<A HREF="http://java.sun.com/javase/6/doc
 <A NAME="stubOutClass(java.lang.String, boolean, java.lang.String...)"><!-- --></A><H3>
 stubOutClass</H3>
 <PRE>
-public static void <B>stubOutClass</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;realClassName,
+public static void <B>stubOutClass</B>(java.lang.String&nbsp;realClassName,
                                 boolean&nbsp;inverse,
-                                <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>...&nbsp;filters)</PRE>
+                                java.lang.String...&nbsp;filters)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Mockit.html#stubOutClass(java.lang.Class, boolean, java.lang.String...)"><CODE>stubOutClass(Class, boolean, String...)</CODE></A>, but accepting the (fully qualified)
  name of the real class. This is useful when said class is not accessible from the test.
@@ -771,8 +771,8 @@ public static void <B>stubOutClass</B>(<A HREF="http://java.sun.com/javase/6/doc
 <A NAME="stubOutClass(java.lang.String, java.lang.String...)"><!-- --></A><H3>
 stubOutClass</H3>
 <PRE>
-public static void <B>stubOutClass</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;realClassName,
-                                <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>...&nbsp;filters)</PRE>
+public static void <B>stubOutClass</B>(java.lang.String&nbsp;realClassName,
+                                java.lang.String...&nbsp;filters)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Mockit.html#stubOutClass(java.lang.Class, java.lang.String...)"><CODE>stubOutClass(Class, String...)</CODE></A>, but accepting the (fully qualified) name of
  the real class. This is useful when said class is not accessible from the test.
@@ -815,7 +815,7 @@ public static void <B>tearDownMocks</B>()</PRE>
 <A NAME="tearDownMocks(java.lang.Class...)"><!-- --></A><H3>
 tearDownMocks</H3>
 <PRE>
-public static void <B>tearDownMocks</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;...&nbsp;realClasses)</PRE>
+public static void <B>tearDownMocks</B>(java.lang.Class&lt;?&gt;...&nbsp;realClasses)</PRE>
 <DL>
 <DD>Discards any mocks set up for the specified classes that are currently in effect, for all test
  scopes: the current test method (if any), the current test (which starts with the first

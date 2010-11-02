@@ -11,7 +11,7 @@
          title="Base class whose subclasses are defined in test code, and whose instances define a set of expected method/constructor invocations on the mocked types (classes or interfaces) declared through one or more mock fields and/or mock parameters.">
       <area shape="rect" coords="169,87,261,114" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Mocked.html"
-         title="Indicates an instance field or parameter whose value will be a mock object.">
+         title="Indicates an instance field or test method parameter whose value will be a mocked instance.">
       <area shape="rect" coords="271,87,371,114" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/NonStrict.html"
          title="For tests using Expectations, indicates a non-strict mocked type for an instance field or test method parameter.">
@@ -23,7 +23,7 @@
          title="An Expectations subclass where all expectations are automatically non-strict.">
       <area shape="rect" coords="382,87,502,114" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Verifications.html"
-         title="Base class whose subclasses are defined in test code, and whose instances define a set of invocations on mocks to be verified against the actual invocations executed during the replay phase of the test.">
+         title="Base class whose subclasses are defined in test code, and whose instances define a set of invocations on mocked types/instances to be verified against the actual invocations executed during the replay phase of the test.">
       <area shape="rect" coords="205,163,367,190" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/VerificationsInOrder.html"
          title="Same as Verifications, but checking that invocations in the replay phase occurred in the same order as specified in this ordered verification block.">

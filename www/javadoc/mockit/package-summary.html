@@ -78,7 +78,7 @@ function windowTitle()
 <H2>
 Package mockit
 </H2>
-Provides the main classes and annotations used when writing tests with the JMockit toolkit.
+Provides the classes and annotations used when writing tests with the JMockit mocking APIs.
 <P>
 <B>See:</B>
 <BR>
@@ -113,9 +113,9 @@ Provides the main classes and annotations used when writing tests with the JMock
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Expectations.html" title="class in mockit">Expectations</A></B></TD>
-<TD>Base class whose subclasses are defined in test code, and whose instances define a set of
- expected method/constructor invocations on the mocked types (classes or interfaces) declared
- through one or more <em>mock fields</em> and/or <em>mock parameters</em>.</TD>
+<TD>Base class whose subclasses are defined in test code, and whose instances define a set of <em>expected</em> and/or
+ <em>allowed</em> method/constructor invocations on the mocked types declared through one or more <em>mock fields</em>
+ and/or <em>mock parameters</em>.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/FullVerifications.html" title="class in mockit">FullVerifications</A></B></TD>
@@ -147,9 +147,8 @@ Provides the main classes and annotations used when writing tests with the JMock
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Verifications.html" title="class in mockit">Verifications</A></B></TD>
-<TD>Base class whose subclasses are defined in test code, and whose instances define a set of
- invocations on mocks to be verified against the actual invocations executed during the replay
- phase of the test.</TD>
+<TD>Base class whose subclasses are defined in test code, and whose instances define a set of invocations on mocked
+ types/instances to be verified against the actual invocations executed during the replay phase of the test.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/VerificationsInOrder.html" title="class in mockit">VerificationsInOrder</A></B></TD>
@@ -226,25 +225,24 @@ Package mockit Description
 </H2>
 
 <P>
-Provides the main classes and annotations used when writing tests with the JMockit toolkit.
+Provides the classes and annotations used when writing tests with the JMockit mocking APIs.
  <p/>
- The <A HREF="../mockit/Mockit.html" title="class in mockit"><CODE>Mockit</CODE></A> class contains a group of <code>setUpMock/setUpMocks</code> static
- methods that can be used to set up <em>state-oriented</em> mock implementations.
+ The <A HREF="../mockit/Mockit.html" title="class in mockit"><CODE>Mockit</CODE></A> class contains a group of <code>setUpMock/setUpMocks</code> static methods that can be used to
+ set up <em>state-oriented</em> mock implementations.
  They rely on the <A HREF="../mockit/Mock.html" title="annotation in mockit"><CODE>Mock</CODE></A> and <A HREF="../mockit/MockClass.html" title="annotation in mockit"><CODE>MockClass</CODE></A> annotations.
  <p/>
  The <A HREF="../mockit/MockUp.html" title="class in mockit"><CODE>MockUp</CODE></A> class is a convenient wrapper for common uses of the
- <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)"><CODE>Mockit.setUpMock(Class, Object)</CODE></A> and <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Object)"><CODE>Mockit.setUpMock(Object)</CODE></A>
- methods, which allows the definition of in-line mocks for individual tests.
+ <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)"><CODE>Mockit.setUpMock(Class, Object)</CODE></A> and <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Object)"><CODE>Mockit.setUpMock(Object)</CODE></A> methods, which allows the
+ definition of in-line mocks for individual tests.
  <p/>
- The <A HREF="../mockit/Expectations.html" title="class in mockit"><CODE>Expectations</CODE></A> class provides an API for the traditional <em>record-replay</em>
- model of recording expected invocations which are later replayed and automatically verified.
+ The <A HREF="../mockit/Expectations.html" title="class in mockit"><CODE>Expectations</CODE></A> class provides an API for the traditional <em>record-replay</em> model of recording
+ expected invocations which are later replayed and implicitly verified.
  This API makes use of the <A HREF="../mockit/Mocked.html" title="annotation in mockit"><CODE>Mocked</CODE></A> annotation.
  <p/>
- The <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Verifications</CODE></A> class, when combined with the use of the
- <A HREF="../mockit/NonStrictExpectations.html" title="class in mockit"><CODE>NonStrictExpectations</CODE></A> class, the <A HREF="../mockit/NonStrict.html" title="annotation in mockit"><CODE>NonStrict</CODE></A> annotation and/or the
- <A HREF="../mockit/Expectations.html#notStrict()"><CODE>Expectations.notStrict()</CODE></A> method, extends the record-replay model to a
- <em>record-replay-verify</em> model, where the record phase can be empty (or not) and the
- verifications can be done explicitly.
+ The <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Verifications</CODE></A> class, when combined with the <A HREF="../mockit/NonStrictExpectations.html" title="class in mockit"><CODE>NonStrictExpectations</CODE></A> class and/or the
+ <A HREF="../mockit/NonStrict.html" title="annotation in mockit"><CODE>NonStrict</CODE></A> annotation, extends the record-replay model to a <em>record-replay-verify</em> model, where
+ the record phase can be empty (or not) and the expected invocations can be verified explicitly <em>after</em>
+ exercising the code under test.
 <P>
 
 <P>

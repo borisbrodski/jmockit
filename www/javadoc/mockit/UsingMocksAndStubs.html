@@ -89,10 +89,10 @@ mockit</FONT>
 Annotation Type UsingMocksAndStubs</H2>
 <HR>
 <DL>
-<DT><PRE><FONT SIZE="-1"><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation">@Documented</A>
-<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/Inherited.html?is-external=true" title="class or interface in java.lang.annotation">@Inherited</A>
-<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</A>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>=<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation">RUNTIME</A>)
-<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</A>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>=<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#TYPE" title="class or interface in java.lang.annotation">TYPE</A>)
+<DT><PRE><FONT SIZE="-1">@Documented
+@Inherited
+@Retention(value=RUNTIME)
+@Target(value=TYPE)
 </FONT>public @interface <B>UsingMocksAndStubs</B></DL>
 </PRE>
 
@@ -120,7 +120,7 @@ Indicates one or more <A HREF="../mockit/UsingMocksAndStubs.html#value()">classe
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;[]</CODE></FONT></TD>
+<CODE>&nbsp;java.lang.Class&lt;?&gt;[]</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/UsingMocksAndStubs.html#value()">value</A></B></CODE>
 
 <BR>
@@ -144,7 +144,7 @@ Indicates one or more <A HREF="../mockit/UsingMocksAndStubs.html#value()">classe
 <A NAME="value()"><!-- --></A><H3>
 value</H3>
 <PRE>
-public abstract <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;[] <B>value</B></PRE>
+public abstract java.lang.Class&lt;?&gt;[] <B>value</B></PRE>
 <DL>
 <DD>A mix of mock and real classes from which the set of methods and constructors to be mocked or
  stubbed out is obtained.

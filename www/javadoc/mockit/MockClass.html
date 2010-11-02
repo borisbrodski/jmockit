@@ -89,9 +89,9 @@ mockit</FONT>
 Annotation Type MockClass</H2>
 <HR>
 <DL>
-<DT><PRE><FONT SIZE="-1"><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation">@Documented</A>
-<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</A>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>=<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation">RUNTIME</A>)
-<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</A>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>=<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#TYPE" title="class or interface in java.lang.annotation">TYPE</A>)
+<DT><PRE><FONT SIZE="-1">@Documented
+@Retention(value=RUNTIME)
+@Target(value=TYPE)
 </FONT>public @interface <B>MockClass</B></DL>
 </PRE>
 
@@ -121,7 +121,7 @@ Indicates a mock class containing one or more mock methods/constructors, each on
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;</CODE></FONT></TD>
+<CODE>&nbsp;java.lang.Class&lt;?&gt;</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/MockClass.html#realClass()">realClass</A></B></CODE>
 
 <BR>
@@ -158,7 +158,7 @@ Indicates a mock class containing one or more mock methods/constructors, each on
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>[]</CODE></FONT></TD>
+<CODE>&nbsp;java.lang.String[]</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/MockClass.html#stubs()">stubs</A></B></CODE>
 
 <BR>
@@ -182,7 +182,7 @@ Indicates a mock class containing one or more mock methods/constructors, each on
 <A NAME="realClass()"><!-- --></A><H3>
 realClass</H3>
 <PRE>
-public abstract <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt; <B>realClass</B></PRE>
+public abstract java.lang.Class&lt;?&gt; <B>realClass</B></PRE>
 <DL>
 <DD>The real class whose methods/constructors will be redefined with the corresponding
  methods/constructors in the mock class.
@@ -246,13 +246,13 @@ public abstract boolean <B>inverse</B></PRE>
 <A NAME="stubs()"><!-- --></A><H3>
 stubs</H3>
 <PRE>
-public abstract <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>[] <B>stubs</B></PRE>
+public abstract java.lang.String[] <B>stubs</B></PRE>
 <DL>
 <DD>One or more stubbing filters which specify the set of methods and constructors in the real
  class that are to be stubbed out with empty implementations.
  <p/>
  Each filter must follow the syntax <strong><code>[nameRegex][(paramTypeName...)]</code></strong>,
- where <code>nameRegex</code> is a <A HREF="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex">regular expression</A> for
+ where <code>nameRegex</code> is a regular expression for
  matching method names, and <code>paramTypeName</code> is the name of a primitive or reference
  parameter type. Actually, any <em>suffix</em> of the type name is enough, like "String"
  instead of the full class name "java.lang.String".

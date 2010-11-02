@@ -88,7 +88,7 @@ mockit</FONT>
 <BR>
 Class Expectations</H2>
 <PRE>
-<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</A>
+java.lang.Object
   <IMG SRC="../resources/inherit.gif" ALT="extended by "><B>mockit.Expectations</B>
 </PRE>
 <DL>
@@ -96,74 +96,68 @@ Class Expectations</H2>
 </DL>
 <HR>
 <DL>
-<DT><PRE>public class <B>Expectations</B><DT>extends <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></DL>
+<DT><PRE>public class <B>Expectations</B><DT>extends java.lang.Object</DL>
 </PRE>
 
 <P>
-Base class whose subclasses are defined in test code, and whose instances define a set of
- expected method/constructor invocations on the mocked types (classes or interfaces) declared
- through one or more <em>mock fields</em> and/or <em>mock parameters</em>.
- A (local) mock field is any field declared in a subclass which is either non-private or annotated
- with <A HREF="../mockit/Mocked.html" title="annotation in mockit"><CODE>Mocked</CODE></A>.
+Base class whose subclasses are defined in test code, and whose instances define a set of <em>expected</em> and/or
+ <em>allowed</em> method/constructor invocations on the mocked types declared through one or more <em>mock fields</em>
+ and/or <em>mock parameters</em>.
+ A (local) mock field is any field declared in a subclass which is either non-private or annotated with
+ <A HREF="../mockit/Mocked.html" title="annotation in mockit"><CODE>Mocked</CODE></A>.
  <p/>
- Typically, this class is used by extending it with <em>anonymous inner classes</em>
- (named as <em>expectation blocks</em>) inside test methods, which record expectations on the
- mocked types by calling instance methods on mock fields/parameters, static methods on mocked
- classes, and/or constructors of mocked classes.
- Arguments passed in such calls are later matched to the actual arguments passed from the code
- under test.
+ Typically, this class is used by extending it with <em>anonymous inner classes</em> (named as <em>expectation
+ blocks</em>) inside test methods, which record expectations on mocked types by calling instance methods on mock
+ fields/parameters, static methods on mocked classes, and/or constructors of mocked classes.
+ Arguments passed in such calls are later matched to the actual arguments passed from the code under test.
  <p/>
- Any mock fields declared within an expectation block will only be accessible for mock invocations
- inside this particular block.
- An alternative is to declare mock fields of the <em>test class</em> itself, so that all of its
- test methods can share the same mock fields. Such fields need to be annotated with 
- <code>@Mocked</code>, though.
+ Any mock fields declared within an expectation block will only be accessible for invocations inside this particular
+ block.
+ An alternative is to declare mock fields of the <em>test class</em> itself, so that all of its test methods can share
+ the same mock fields. Such fields need to be annotated as <code>@Mocked</code>, though.
  <p/>
- There are several API fields and methods which the expectation block can use for recording
- desired return values and exceptions/errors to be thrown (see <A HREF="../mockit/Expectations.html#result"><CODE>result</CODE></A>), and for
- specifying argument matching constraints such as <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>.
+ There are several API fields and methods which the expectation block can use for recording desired return values and
+ exceptions/errors to be thrown (see <A HREF="../mockit/Expectations.html#result"><CODE>result</CODE></A>), and for specifying argument matching constraints such as
+ <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>.
  <p/>
- Individual expectations are defined during the <em>record phase</em>, and later exercised during
- the <em>replay phase</em> of the test.
- At the end of the test, the test runner will automatically assert that all recorded invocations 
- were actually replayed as expected.
+ Individual expectations are defined during the <em>record phase</em>, and later exercised during the
+ <em>replay phase</em> of the test.
+ At the end of the test, the test runner will automatically assert that all <em>expected</em> invocations actually
+ occurred during the replay phase. (An expectation block may also record expectations that are merely
+ <em>allowed</em> to occur, and as such are not implicitly verified at the end of the test.)
  <p/>
  Additional features and details:
  <ul>
  <li>
- A <strong>mock field</strong> can be of any non-primitive type, including interfaces, abstract
- classes, and concrete classes (even <code>final</code> classes).
- An instance will be automatically created when the subclass gets instantiated, unless the field
- is <code>final</code> (in which case, the test code itself will have the responsibility of
- obtaining an appropriate instance). This mocked instance can then be used inside the expectation
- block for the recording of expectations on instance methods; <strong>static methods</strong> and
- <strong>constructors</strong> belonging to the mocked class or its super-classes are also mocked,
- and can also have expectations recorded on them.
+ A <strong>mock field</strong> can be of any non-primitive type, including interfaces, abstract classes, and concrete
+ classes (even <code>final</code> classes).
+ An instance will be automatically created when the subclass gets instantiated, unless the field is <code>final</code>
+ (in which case, the test code itself will have the responsibility of obtaining an appropriate instance).
+ This mocked instance can then be used inside the expectation block for the recording of expectations on instance
+ methods; <strong>static methods</strong> and <strong>constructors</strong> belonging to the mocked class or its
+ super-classes are also mocked, and can also have expectations recorded on them.
  </li>
  <li>
- Unless specified otherwise, all expectations defined inside an <code>Expectations</code> immediate
- subclass will be <em>strict</em>, meaning that the recorded invocations are <em>expected</em> to
- occur in the same order during the replay phase, and that non-recorded invocations are <em>not
- allowed</em>.
- This default behavior can be overridden for individual expectations through the
- <A HREF="../mockit/Expectations.html#notStrict()"><CODE>notStrict()</CODE></A> method, and for whole mocked types through the <A HREF="../mockit/NonStrict.html" title="annotation in mockit"><CODE>NonStrict</CODE></A> annotation.
+ Unless specified otherwise, all expectations defined inside an <code>Expectations</code> immediate subclass will be
+ <em>strict</em>, meaning that the recorded invocations are <em>expected</em> to occur in the same order during the
+ replay phase, and that non-recorded invocations are <em>not allowed</em>.
+ This default behavior can be overridden for individual expectations through the <A HREF="../mockit/Expectations.html#notStrict()"><CODE>notStrict()</CODE></A> method, and for
+ whole mocked types through the <A HREF="../mockit/NonStrict.html" title="annotation in mockit"><CODE>NonStrict</CODE></A> annotation.
  </li>
  <li>
- There is a set of API methods that allow the <A HREF="../mockit/Expectations.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)">instantiation of non-accessible (to the test) classes</A>, the
- <A HREF="../mockit/Expectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)">invocation of non-accessible methods</A>, and the
- <A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.String, java.lang.Object)">setting of non-accessible fields</A>.
+ There is a set of API methods that allow the <A HREF="../mockit/Expectations.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)">instantiation of
+ non-accessible (to the test) classes</A>, the <A HREF="../mockit/Expectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)">invocation of
+ non-accessible methods</A>, and the <A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.String, java.lang.Object)">setting of non-accessible fields</A>.
  Most tests shouldn't need these facilities, though.
  </li>
  <li>
- A set of special API fields provides the ability to specify how many <A HREF="../mockit/Expectations.html#times">times</A> a
- recorded invocation is expected to occur during replay, the <A HREF="../mockit/Expectations.html#minTimes">minimum
- number of times</A> it's expected, or the <A HREF="../mockit/Expectations.html#maxTimes">maximum number of times</A> it will be
- allowed to occur.
+ A set of special API fields provides the ability to specify how many <A HREF="../mockit/Expectations.html#times">times</A> a recorded invocation
+ is expected <em>and</em> allowed to occur during replay, the <A HREF="../mockit/Expectations.html#minTimes">minimum number of times</A> it's
+ expected, or the <A HREF="../mockit/Expectations.html#maxTimes">maximum number of times</A> it will be allowed to occur.
  </li>
  <li>
- By default, the exact instance on which instance method invocations occur during the replay phase
- is <em>not</em> verified to be the same as the instance used when recording the corresponding
- expectation.
+ By default, the exact instance on which instance method invocations occur during the replay phase is <em>not</em>
+ verified to be the same as the instance used when recording the corresponding expectation.
  If such verification is needed, the <A HREF="../mockit/Expectations.html#onInstance(T)"><CODE>onInstance(Object)</CODE></A> method should be used.
  </li>
  <li>
@@ -191,7 +185,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.CharSequence</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#$">$</A></B></CODE>
 
 <BR>
@@ -200,7 +194,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.Object</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#any">any</A></B></CODE>
 
 <BR>
@@ -208,7 +202,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.Boolean</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#anyBoolean">anyBoolean</A></B></CODE>
 
 <BR>
@@ -216,7 +210,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.Byte</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#anyByte">anyByte</A></B></CODE>
 
 <BR>
@@ -224,7 +218,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Character.html?is-external=true" title="class or interface in java.lang">Character</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.Character</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#anyChar">anyChar</A></B></CODE>
 
 <BR>
@@ -232,7 +226,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.Double</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#anyDouble">anyDouble</A></B></CODE>
 
 <BR>
@@ -240,7 +234,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.Float</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#anyFloat">anyFloat</A></B></CODE>
 
 <BR>
@@ -248,7 +242,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.Integer</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#anyInt">anyInt</A></B></CODE>
 
 <BR>
@@ -256,7 +250,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.Long</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#anyLong">anyLong</A></B></CODE>
 
 <BR>
@@ -264,7 +258,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.Short</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#anyShort">anyShort</A></B></CODE>
 
 <BR>
@@ -272,7 +266,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.String</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#anyString">anyString</A></B></CODE>
 
 <BR>
@@ -280,12 +274,12 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.Object</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#forEachInvocation">forEachInvocation</A></B></CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An object assigned to this field will be taken as a handler for each invocation matching the
- current expectation, with the purpose of validating invocation arguments.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An object assigned to this field will be taken as a handler for each invocation matching the current expectation,
+ with the purpose of validating invocation arguments.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -307,7 +301,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></CODE></FONT></TD>
+<CODE>protected static&nbsp;java.lang.Object</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#result">result</A></B></CODE>
 
 <BR>
@@ -344,20 +338,20 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected </CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#Expectations(int, java.lang.Object...)">Expectations</A></B>(int&nbsp;numberOfIterations,
-             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;classesOrObjectsToBePartiallyMocked)</CODE>
+             java.lang.Object...&nbsp;classesOrObjectsToBePartiallyMocked)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Identical to <A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)"><CODE>Expectations(Object...)</CODE></A>, but considering that the invocations inside the
- block will occur in a given number of iterations.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Identical to <A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)"><CODE>Expectations(Object...)</CODE></A>, but considering that the invocations inside the block will occur in
+ a given number of iterations.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)">Expectations</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;classesOrObjectsToBePartiallyMocked)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)">Expectations</A></B>(java.lang.Object...&nbsp;classesOrObjectsToBePartiallyMocked)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, except that one or more classes will be partially mocked
- according to the expectations recorded in the expectation block.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, except that one or more classes will be partially mocked according to the
+ expectations recorded in the expectation block.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -387,8 +381,8 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Class, java.lang.Class)">getField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-         <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;fieldType)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Class, java.lang.Class)">getField</A></B>(java.lang.Class&lt;?&gt;&nbsp;fieldOwner,
+         java.lang.Class&lt;T&gt;&nbsp;fieldType)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a non-accessible static field defined in a given class.</TD>
@@ -403,8 +397,8 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Class, java.lang.String)">getField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-         <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Class, java.lang.String)">getField</A></B>(java.lang.Class&lt;?&gt;&nbsp;fieldOwner,
+         java.lang.String&nbsp;fieldName)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a non-accessible static field defined in a given class.</TD>
@@ -419,8 +413,8 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Object, java.lang.Class)">getField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-         <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;fieldType)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Object, java.lang.Class)">getField</A></B>(java.lang.Object&nbsp;fieldOwner,
+         java.lang.Class&lt;T&gt;&nbsp;fieldType)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a non-accessible field from a given object, <em>assuming</em> there is only
@@ -437,8 +431,8 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Object, java.lang.String)">getField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-         <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#getField(java.lang.Object, java.lang.String)">getField</A></B>(java.lang.Object&nbsp;fieldOwner,
+         java.lang.String&nbsp;fieldName)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a non-accessible field from a given object.</TD>
@@ -453,9 +447,9 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)">invoke</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;methodOwner,
-       <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
-       <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)">invoke</A></B>(java.lang.Class&lt;?&gt;&nbsp;methodOwner,
+       java.lang.String&nbsp;methodName,
+       java.lang.Object...&nbsp;methodArgs)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an expected invocation to a given static method, with a given list of arguments.</TD>
@@ -470,9 +464,9 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)">invoke</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-       <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
-       <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)">invoke</A></B>(java.lang.Object&nbsp;fieldOwner,
+       java.lang.String&nbsp;methodName,
+       java.lang.Object...&nbsp;methodArgs)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an expected invocation to a given instance method, with a given list of arguments.</TD>
@@ -487,9 +481,9 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)">newInnerInstance</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;innerClassSimpleName,
-                 <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;outerClassInstance,
-                 <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullInitArgs)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)">newInnerInstance</A></B>(java.lang.String&nbsp;innerClassSimpleName,
+                 java.lang.Object&nbsp;outerClassInstance,
+                 java.lang.Object...&nbsp;nonNullInitArgs)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The same as <A HREF="../mockit/Expectations.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but for instantiating an inner
@@ -506,9 +500,9 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)">newInstance</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;className,
-            <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;[]&nbsp;parameterTypes,
-            <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;initArgs)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)">newInstance</A></B>(java.lang.String&nbsp;className,
+            java.lang.Class&lt;?&gt;[]&nbsp;parameterTypes,
+            java.lang.Object...&nbsp;initArgs)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an expected constructor invocation for a given class.</TD>
@@ -523,8 +517,8 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#newInstance(java.lang.String, java.lang.Object...)">newInstance</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;className,
-            <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullInitArgs)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#newInstance(java.lang.String, java.lang.Object...)">newInstance</A></B>(java.lang.String&nbsp;className,
+            java.lang.Object...&nbsp;nonNullInitArgs)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The same as <A HREF="../mockit/Expectations.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but for the case where each
@@ -536,7 +530,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TD><CODE><B><A HREF="../mockit/Expectations.html#notStrict()">notStrict</A></B>()</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marks the preceding mock invocation as belonging to a <em>non-strict</em> expectation.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marks the preceding invocation as belonging to a <em>non-strict</em> expectation.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -548,16 +542,16 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#onInstance(T)">onInstance</A></B>(T&nbsp;mock)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#onInstance(T)">onInstance</A></B>(T&nbsp;mockedInstance)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specify that the next invocation on the given mock instance must match a corresponding
- invocation on the <em>same</em> instance in the replay phase.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specify that the next invocation on the given mocked instance must match a corresponding invocation on the
+ <em>same</em> instance in the replay phase.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#returns(java.lang.Object)">returns</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;value)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#returns(java.lang.Object)">returns</A></B>(java.lang.Object&nbsp;value)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies that the previously recorded method invocation will return a given value.</TD>
@@ -565,8 +559,8 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">returns</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;firstValue,
-        <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;remainingValues)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">returns</A></B>(java.lang.Object&nbsp;firstValue,
+        java.lang.Object...&nbsp;remainingValues)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Equivalent to calling <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> two or more times in sequence, except when the
@@ -575,8 +569,8 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-         <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.Object)">setField</A></B>(java.lang.Class&lt;?&gt;&nbsp;fieldOwner,
+         java.lang.Object&nbsp;fieldValue)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A>, except that the field is looked up by the
@@ -585,9 +579,9 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-         <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName,
-         <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)">setField</A></B>(java.lang.Class&lt;?&gt;&nbsp;fieldOwner,
+         java.lang.String&nbsp;fieldName,
+         java.lang.Object&nbsp;fieldValue)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value of a non-accessible static field on a given class.</TD>
@@ -595,8 +589,8 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-         <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.Object)">setField</A></B>(java.lang.Object&nbsp;fieldOwner,
+         java.lang.Object&nbsp;fieldValue)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><CODE>setField(Object, String, Object)</CODE></A>, except that the field is looked up by the
@@ -605,9 +599,9 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.String, java.lang.Object)">setField</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-         <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName,
-         <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.String, java.lang.Object)">setField</A></B>(java.lang.Object&nbsp;fieldOwner,
+         java.lang.String&nbsp;fieldName,
+         java.lang.Object&nbsp;fieldValue)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value of a non-accessible field on a given object.</TD>
@@ -622,7 +616,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#with(java.lang.Object)">with</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#with(java.lang.Object)">with</A></B>(java.lang.Object&nbsp;argumentMatcher)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a custom argument matcher for a parameter in the current invocation.</TD>
@@ -638,7 +632,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TABLE>
 </CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Expectations.html#with(T, java.lang.Object)">with</A></B>(T&nbsp;argValue,
-     <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</CODE>
+     java.lang.Object&nbsp;argumentMatcher)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a custom argument matcher for a parameter in the current invocation.</TD>
@@ -693,7 +687,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When called as argument for a method/constructor invocation in the recording or verification
  phase of a test, creates a new matcher that will check if the given value is
- <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang"><CODE>equal</CODE></A> to the corresponding invocation argument in the replay
+ <CODE>equal</CODE> to the corresponding invocation argument in the replay
  phase.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
@@ -722,7 +716,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#withInstanceOf(java.lang.Class)">withInstanceOf</A></B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;argClass)</CODE>
+<TD><CODE><B><A HREF="../mockit/Expectations.html#withInstanceOf(java.lang.Class)">withInstanceOf</A></B>(java.lang.Class&lt;T&gt;&nbsp;argClass)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay
@@ -734,7 +728,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
 <TR ALIGN="right" VALIGN="">
 <TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T extends <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; 
+<CODE>&lt;T extends java.lang.CharSequence&gt; 
 <BR>
 T</CODE></FONT></TD>
 </TR>
@@ -744,7 +738,7 @@ T</CODE></FONT></TD>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the
- replay phase matches the given <A HREF="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex"><CODE>regular expression</CODE></A>.</TD>
+ replay phase matches the given <CODE>regular expression</CODE>.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -800,7 +794,7 @@ T</CODE></FONT></TD>
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
 <TR ALIGN="right" VALIGN="">
 <TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T extends <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; 
+<CODE>&lt;T extends java.lang.CharSequence&gt; 
 <BR>
 T</CODE></FONT></TD>
 </TR>
@@ -834,7 +828,7 @@ T</CODE></FONT></TD>
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
 <TR ALIGN="right" VALIGN="">
 <TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T extends <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; 
+<CODE>&lt;T extends java.lang.CharSequence&gt; 
 <BR>
 T</CODE></FONT></TD>
 </TR>
@@ -852,7 +846,7 @@ T</CODE></FONT></TD>
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
 <TR ALIGN="right" VALIGN="">
 <TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T extends <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; 
+<CODE>&lt;T extends java.lang.CharSequence&gt; 
 <BR>
 T</CODE></FONT></TD>
 </TR>
@@ -868,10 +862,10 @@ T</CODE></FONT></TD>
 &nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
-<TH ALIGN="left"><B>Methods inherited from class java.lang.<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></B></TH>
+<TH ALIGN="left"><B>Methods inherited from class java.lang.Object</B></TH>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang">clone</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang">equals</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang">finalize</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang">getClass</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#hashCode()" title="class or interface in java.lang">hashCode</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang">notify</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang">notifyAll</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang">toString</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang">wait</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang">wait</A>, <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait(long, int)" title="class or interface in java.lang">wait</A></CODE></TD>
+<TD><CODE>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</CODE></TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -890,26 +884,24 @@ T</CODE></FONT></TD>
 <A NAME="result"><!-- --></A><H3>
 result</H3>
 <PRE>
-protected static <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A> <B>result</B></PRE>
+protected static java.lang.Object <B>result</B></PRE>
 <DL>
 <DD>A value assigned to this field will be taken as the result for the current expectation.
  <p/>
- If the value is of type <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang"><CODE>Throwable</CODE></A> then it will be <em>thrown</em> when a matching
- invocation occurs in the replay phase.
- Otherwise, it's assumed to be a <em>return value</em> for a non-void method, and will be
- returned at replay time from a matching invocation.
+ If the value is of type <CODE>Throwable</CODE> then it will be <em>thrown</em> when a matching invocation occurs in the
+ replay phase.
+ Otherwise, it's assumed to be a <em>return value</em> for a non-void method, and will be returned at replay time
+ from a matching invocation.
  Attempting to return a value that is incompatible with the method return type will cause a
  <code>ClassCastException</code> to be thrown at replay time.
  <p/>
- If the current expectation is for a method which actually <em>returns</em> an exception or
- error (as opposed to <em>throwing</em> one), then the <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> method should
- be used instead.
+ If the current expectation is for a method which actually <em>returns</em> an exception or error (as opposed to
+ <em>throwing</em> one), then the <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> method should be used instead.
  <p/>
- If the value assigned to the field is of a type assignable to <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util"><CODE>Collection</CODE></A> or
- to <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util"><CODE>Iterator</CODE></A>, then it is taken as a sequence of <em>consecutive results</em>
- for the current expectation.
- Another way to specify consecutive results is to simply write multiple consecutive assignments
- to the field.
+ If the value assigned to the field is of a type assignable to <CODE>Collection</CODE> or to
+ <CODE>Iterator</CODE>, then it is taken as a sequence of <em>consecutive results</em> for the current
+ expectation.
+ Another way to specify consecutive results is to simply write multiple consecutive assignments to the field.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#results">In the Tutorial</a>
 <P>
@@ -922,7 +914,7 @@ protected static <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object
 <A NAME="$"><!-- --></A><H3>
 $</H3>
 <PRE>
-protected static <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A> <B>$</B></PRE>
+protected static java.lang.CharSequence <B>$</B></PRE>
 <DL>
 <DD>A value assigned to this field will be used as a prefix for the error message to be reported
  if and when the current expectation is violated.
@@ -942,7 +934,7 @@ protected static <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSe
 <A NAME="any"><!-- --></A><H3>
 any</H3>
 <PRE>
-protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A> <B>any</B></PRE>
+protected static final java.lang.Object <B>any</B></PRE>
 <DL>
 <DD>Matches any <code>Object</code> reference for the relevant parameter.
  Note that the use of this field will usually require a cast to the specific parameter type.
@@ -961,7 +953,7 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
 <A NAME="anyBoolean"><!-- --></A><H3>
 anyBoolean</H3>
 <PRE>
-protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</A> <B>anyBoolean</B></PRE>
+protected static final java.lang.Boolean <B>anyBoolean</B></PRE>
 <DL>
 <DD>Matches any <code>boolean</code> or <code>Boolean</code> value for the relevant parameter.
 <P>
@@ -973,7 +965,7 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
 <A NAME="anyByte"><!-- --></A><H3>
 anyByte</H3>
 <PRE>
-protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</A> <B>anyByte</B></PRE>
+protected static final java.lang.Byte <B>anyByte</B></PRE>
 <DL>
 <DD>Matches any <code>byte</code> or <code>Byte</code> value for the relevant parameter.
 <P>
@@ -985,7 +977,7 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
 <A NAME="anyChar"><!-- --></A><H3>
 anyChar</H3>
 <PRE>
-protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Character.html?is-external=true" title="class or interface in java.lang">Character</A> <B>anyChar</B></PRE>
+protected static final java.lang.Character <B>anyChar</B></PRE>
 <DL>
 <DD>Matches any <code>char</code> or <code>Character</code> value for the relevant parameter.
 <P>
@@ -997,7 +989,7 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
 <A NAME="anyDouble"><!-- --></A><H3>
 anyDouble</H3>
 <PRE>
-protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</A> <B>anyDouble</B></PRE>
+protected static final java.lang.Double <B>anyDouble</B></PRE>
 <DL>
 <DD>Matches any <code>double</code> or <code>Double</code> value for the relevant parameter.
 <P>
@@ -1009,7 +1001,7 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
 <A NAME="anyFloat"><!-- --></A><H3>
 anyFloat</H3>
 <PRE>
-protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</A> <B>anyFloat</B></PRE>
+protected static final java.lang.Float <B>anyFloat</B></PRE>
 <DL>
 <DD>Matches any <code>float</code> or <code>Float</code> value for the relevant parameter.
 <P>
@@ -1021,7 +1013,7 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
 <A NAME="anyInt"><!-- --></A><H3>
 anyInt</H3>
 <PRE>
-protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</A> <B>anyInt</B></PRE>
+protected static final java.lang.Integer <B>anyInt</B></PRE>
 <DL>
 <DD>Matches any <code>int</code> or <code>Integer</code> value for the relevant parameter.
  <p/>
@@ -1039,7 +1031,7 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
 <A NAME="anyLong"><!-- --></A><H3>
 anyLong</H3>
 <PRE>
-protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</A> <B>anyLong</B></PRE>
+protected static final java.lang.Long <B>anyLong</B></PRE>
 <DL>
 <DD>Matches any <code>long</code> or <code>Long</code> value for the relevant parameter.
 <P>
@@ -1051,7 +1043,7 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
 <A NAME="anyShort"><!-- --></A><H3>
 anyShort</H3>
 <PRE>
-protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</A> <B>anyShort</B></PRE>
+protected static final java.lang.Short <B>anyShort</B></PRE>
 <DL>
 <DD>Matches any <code>short</code> or <code>Short</code> value for the relevant parameter.
 <P>
@@ -1063,7 +1055,7 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
 <A NAME="anyString"><!-- --></A><H3>
 anyString</H3>
 <PRE>
-protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A> <B>anyString</B></PRE>
+protected static final java.lang.String <B>anyString</B></PRE>
 <DL>
 <DD>Matches any <code>String</code> value for the relevant parameter.
 <P>
@@ -1075,38 +1067,36 @@ protected static final <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/
 <A NAME="forEachInvocation"><!-- --></A><H3>
 forEachInvocation</H3>
 <PRE>
-protected static <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A> <B>forEachInvocation</B></PRE>
+protected static java.lang.Object <B>forEachInvocation</B></PRE>
 <DL>
-<DD>An object assigned to this field will be taken as a handler for each invocation matching the
- current expectation, with the purpose of validating invocation arguments.
- Note that for a <em>recorded</em> expectation such invocations are the ones that will be
- executed during the <em>replay</em> phase, while for a <em>verified</em> expectation they are
- the ones actually executed during that phase.
+<DD>An object assigned to this field will be taken as a handler for each invocation matching the current expectation,
+ with the purpose of validating invocation arguments.
+ Note that for a <em>recorded</em> expectation such invocations are the ones that will be executed during the
+ <em>replay</em> phase, while for a <em>verified</em> expectation they are the ones actually executed during that
+ phase.
  <p/>
- The object assigned can be of any type, but its class should have a single non-private method
+ The object assigned can be of any type, provided its class has a single non-private method
  (therefore, additional methods are allowed and ignored, as long as they are <code>private</code>).
- This <em>handler method</em> can have any name, but it should have parameters that match the
- ones defined in the mocked method or constructor associated to the expectation.
- Corresponding parameters don't need to have the exact same declared type, though, as long as
- each possible invocation argument can be passed to the corresponding parameter in the handler
- method.
+ This <em>handler method</em> can have any name, as long as its parameters match the ones defined in the mocked
+ method or constructor associated with the expectation.
+ Corresponding parameters don't need to have the exact same declared type, though, as long as each possible
+ invocation argument can be passed to the corresponding parameter in the handler method.
  <p/>
- In the case of an expectation recorded for a non-<code>void</code> method, the handler method is
- also responsible for returning appropriate values to be used by the caller (which normally
- belongs to the code under test). That is, the <code>result</code> field or the <code>returns(...)</code>
- method should <em>not</em> be used together with an assignment to this field.
+ In the case of an expectation recorded for a non-<code>void</code> method, the handler method is also responsible for
+ returning appropriate values to be used by the caller (which normally belongs to the code under test).
+ That is, the <code>result</code> field or the <code>returns(...)</code> method should <em>not</em> be used together with an
+ assignment to this field.
  The same observation applies to the throwing of exceptions/errors from a recorded expectation
  (which can also be done for constructors and <code>void</code> methods).
  <p/>
- When used for an expectation inside a <em>verification</em> block, on the other hand, the
- handler method should normally have a <code>void</code> return type. Any value eventually returned
- by the method will be silently ignored in this case. Note that a handler method for a verified
- expectation also shouldn't intentionally throw exceptions or errors, since the verified
- invocation(s) already happened in the replay phase; any exception/error actually thrown will
- simply propagate back to the test method.
+ When used for an expectation inside a <em>verification</em> block, on the other hand, the handler method should
+ normally have a <code>void</code> return type. Any value eventually returned by the method will be silently ignored in
+ this case. Note that a handler method for a verified expectation also shouldn't intentionally throw exceptions or
+ errors, since the verified invocation(s) already happened in the replay phase; any exception/error actually thrown
+ will simply propagate back to the test method.
  <p/>
- Just like with <A HREF="../mockit/Delegate.html" title="interface in mockit">delegate classes</A>, the handler method can declare
- its first parameter as being of type <A HREF="../mockit/Invocation.html" title="class in mockit"><CODE>Invocation</CODE></A>.
+ Just like with <A HREF="../mockit/Delegate.html" title="interface in mockit">delegate classes</A>, the handler method can declare its first parameter
+ as being of type <A HREF="../mockit/Invocation.html" title="class in mockit"><CODE>Invocation</CODE></A>.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#forEachInvocation">In the Tutorial</a>
 <P>
@@ -1188,15 +1178,15 @@ protected <B>Expectations</B>()</PRE>
  Redefines the <em>target class for mocking</em> derived from the mocked type.
  </li>
  <li>
- If the declared type to be mocked is an abstract class, then generates a concrete subclass
- with mock implementations for all inherited abstract methods.
+ If the declared type to be mocked is an abstract class, then generates a concrete subclass with empty
+ implementations for all inherited abstract methods.
  </li>
  <li>
- If the mocked type is the declared type of a non-<code>final</code> instance field, then
- creates and assigns a new mock instance to that field.
+ If the mocked type is the declared type of a non-<code>final</code> instance field, then creates and assigns a new
+ (mocked) instance to that field.
  </li>
  </ol>
- After this, test code can start recording invocations to the mocked types and mock instances.
+ After this, test code can start recording invocations on the mocked types and/or mocked instances.
  Each and every such call made from inside the expectation block is recorded.
 <P>
 <DL>
@@ -1209,25 +1199,24 @@ protected <B>Expectations</B>()</PRE>
 Expectations</H3>
 <PRE>
 protected <B>Expectations</B>(int&nbsp;numberOfIterations,
-                       <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;classesOrObjectsToBePartiallyMocked)</PRE>
+                       java.lang.Object...&nbsp;classesOrObjectsToBePartiallyMocked)</PRE>
 <DL>
-<DD>Identical to <A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)"><CODE>Expectations(Object...)</CODE></A>, but considering that the invocations inside the
- block will occur in a given number of iterations.
+<DD>Identical to <A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)"><CODE>Expectations(Object...)</CODE></A>, but considering that the invocations inside the block will occur in
+ a given number of iterations.
  <p/>
- The effect of specifying a number of iterations larger than 1 (one) is equivalent to
- duplicating (like in "copy & paste") the whole sequence of <em>strict</em> invocations in the
- block.
- For any <em>non-strict</em> invocation inside the same block, the effect will be equivalent to
- multiplying the minimum and maximum invocation count by the specified number of iterations.
+ The effect of specifying a number of iterations larger than 1 (one) is equivalent to duplicating (like in "copy &
+ paste") the whole sequence of <em>strict</em> invocations in the block.
+ For any <em>non-strict</em> invocation inside the same block, the effect will be equivalent to multiplying the
+ minimum and maximum invocation count by the specified number of iterations.
  <p/>
- It's also valid to have multiple expectation blocks for the same test, each with an arbitrary
- number of iterations, and containing any mix of strict and non-strict expectations.
+ It's also valid to have multiple expectation blocks for the same test, each with an arbitrary number of
+ iterations, and containing any mix of strict and non-strict expectations.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#iteratedExpectations">In the Tutorial</a>
 <P>
 <DL>
-<DT><B>Parameters:</B><DD><CODE>numberOfIterations</CODE> - the positive number of iterations for the whole set of invocations
- recorded inside the block; when not specified, 1 (one) iteration is assumed<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, 
+<DT><B>Parameters:</B><DD><CODE>numberOfIterations</CODE> - the positive number of iterations for the whole set of invocations recorded inside the
+ block; when not specified, 1 (one) iteration is assumed<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, 
 <A HREF="../mockit/Expectations.html#Expectations(java.lang.Object...)"><CODE>Expectations(Object...)</CODE></A></DL>
 </DL>
 <HR>
@@ -1235,38 +1224,35 @@ protected <B>Expectations</B>(int&nbsp;numberOfIterations,
 <A NAME="Expectations(java.lang.Object...)"><!-- --></A><H3>
 Expectations</H3>
 <PRE>
-protected <B>Expectations</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;classesOrObjectsToBePartiallyMocked)</PRE>
+protected <B>Expectations</B>(java.lang.Object...&nbsp;classesOrObjectsToBePartiallyMocked)</PRE>
 <DL>
-<DD>Same as <A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, except that one or more classes will be partially mocked
- according to the expectations recorded in the expectation block.
- Such classes are those directly specified as well as those to which any given instances
- belong.
+<DD>Same as <A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, except that one or more classes will be partially mocked according to the
+ expectations recorded in the expectation block.
+ Such classes are those directly specified as well as those to which any given instances belong.
  <p/>
- During the replay phase, any invocations to one of these classes or instances will execute
- real production code, unless a matching invocation was previously recorded as an expectation
- inside the block.
+ During the replay phase, any invocations to one of these classes or instances will execute real production code,
+ unless a matching invocation was previously recorded as an expectation inside the block.
  <p/>
- For a given <em>object</em> (of any valid mockable type) that is to be partially mocked, all
- methods will be considered for mocking, from the concrete class of the given object up to but
- not including <code>java.lang.Object</code>. The constructors of those classes, though, will not be
- considered.
- For a given <code>Class</code> object, on the other hand, both constructors and methods will be
- considered for mocking, but only those belonging to the specified class.
+ For a given <em>object</em> (of any valid mockable type) that is to be partially mocked, all methods will be
+ considered for mocking, from the concrete class of the given object up to but not including
+ <code>java.lang.Object</code>. The constructors of those classes, though, will not be considered.
+ For a given <code>Class</code> object, on the other hand, both constructors and methods will be considered for mocking,
+ but only those belonging to the specified class.
  <p/>
- If more than one instance of the same mocked class is given, then instance method invocations
- will automatically be matched on those individual instances, during the replay phase.
- Otherwise, an expectation recorded on a dynamically mocked object will match invocations on
- <em>any</em> instance of the mocked class (unless the <A HREF="../mockit/Expectations.html#onInstance(T)"><CODE>onInstance(Object)</CODE></A> specifier
- was used in the expectation block).
+ If more than one instance of the same mocked class is given, then instance method invocations will automatically
+ be matched on those individual instances, during the replay phase.
+ Otherwise, an expectation recorded on a dynamically mocked object will match invocations on <em>any</em> instance
+ of the mocked class (unless the <A HREF="../mockit/Expectations.html#onInstance(T)"><CODE>onInstance(Object)</CODE></A> specifier was used in the expectation block).
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#dynamicPartial">In the Tutorial</a>
 <P>
 <DL>
-<DT><B>Parameters:</B><DD><CODE>classesOrObjectsToBePartiallyMocked</CODE> - one or more classes or objects whose classes are
- to be considered for partial mocking
+<DT><B>Parameters:</B><DD><CODE>classesOrObjectsToBePartiallyMocked</CODE> - one or more classes or objects whose classes are to be considered for
+ partial mocking
 <DT><B>Throws:</B>
-<DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if given a class literal for an interface, an annotation, an
- array, a primitive/wrapper type, or a <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/reflect/Proxy.html?is-external=true#isProxyClass(java.lang.Class)" title="class or interface in java.lang.reflect">proxy class</A> created for an interface, or if given a value/instance of such a type<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, 
+<DD><CODE>java.lang.IllegalArgumentException</CODE> - if given a class literal for an interface, an annotation, an array, a
+ primitive/wrapper type, or a proxy class created for an
+ interface, or if given a value/instance of such a type<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#Expectations()"><CODE>Expectations()</CODE></A>, 
 <A HREF="../mockit/Expectations.html#Expectations(int, java.lang.Object...)"><CODE>Expectations(int, Object...)</CODE></A></DL>
 </DL>
 
@@ -1306,18 +1292,17 @@ notStrict</H3>
 <PRE>
 protected final void <B>notStrict</B>()</PRE>
 <DL>
-<DD>Marks the preceding mock invocation as belonging to a <em>non-strict</em> expectation.
- Note that all invocations to <A HREF="../mockit/NonStrict.html" title="annotation in mockit"><CODE>NonStrict</CODE></A> mocks will be automatically considered
- non-strict. The same is true for all invocations inside a <A HREF="../mockit/NonStrictExpectations.html" title="class in mockit"><CODE>NonStrictExpectations</CODE></A> block.
+<DD>Marks the preceding invocation as belonging to a <em>non-strict</em> expectation.
+ Note that all invocations on <A HREF="../mockit/NonStrict.html" title="annotation in mockit"><CODE>NonStrict</CODE></A> mocked types/instances will be automatically considered non-strict.
+ The same is true for all invocations inside a <A HREF="../mockit/NonStrictExpectations.html" title="class in mockit"><CODE>NonStrictExpectations</CODE></A> block.
  <p/>
- For a non-strict expectation, any number (including zero) of invocations with matching
- arguments can occur while in the replay phase, in any order, and they will all produce the
- same result (usually, the <A HREF="../mockit/Expectations.html#returns(java.lang.Object)">specified return value</A>).
- Two or more non-strict expectations can be recorded for the same method or constructor, as
- long as the arguments differ. Argument matchers can be used as well.
+ For a non-strict expectation, any number (including zero) of invocations with matching arguments can occur while
+ in the replay phase, in any order, and they will all produce the same result (usually, the
+ <A HREF="../mockit/Expectations.html#result">specified return value</A>).
+ Two or more non-strict expectations can be recorded for the same method or constructor, as long as the arguments
+ differ. Argument matchers can be used as well.
  <p/>
- Expected invocation counts can also be specified for a non-strict expectation (with one of
- the "times" fields).
+ Expected invocation counts can also be specified for a non-strict expectation (with one of the "times" fields).
 <P>
 <DD><DL>
 </DL>
@@ -1328,7 +1313,7 @@ protected final void <B>notStrict</B>()</PRE>
 <A NAME="returns(java.lang.Object)"><!-- --></A><H3>
 returns</H3>
 <PRE>
-protected final void <B>returns</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;value)</PRE>
+protected final void <B>returns</B>(java.lang.Object&nbsp;value)</PRE>
 <DL>
 <DD>Specifies that the previously recorded method invocation will return a given value.
  <p/>
@@ -1340,7 +1325,7 @@ protected final void <B>returns</B>(<A HREF="http://java.sun.com/javase/6/docs/a
  for all remaining invocations during the replay phase.
  <p/>
  If the recorded invocation is for a method that does <em>not</em> return a
- <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">collection</A> or <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">iterator</A>, then a collection (of
+ collection or iterator, then a collection (of
  any concrete type) or an iterator can be passed as argument to this method.
  In the first case, the elements inside the collection will be successively returned by
  sequential invocations to the recorded method, with the maximum number of invocations
@@ -1357,10 +1342,10 @@ protected final void <B>returns</B>(<A HREF="http://java.sun.com/javase/6/docs/a
  <li>Primitive: the standard default value is returned (ie <code>false</code> for
  <code>boolean</code>, '\0' for <code>char</code>, <code>0</code> for <code>int</code>, and so on).</li>
  <li><code>java.util.Collection</code> or <code>java.util.List</code>: returns
- <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_LIST" title="class or interface in java.util"><CODE>Collections.EMPTY_LIST</CODE></A></li>
- <li><code>java.util.Set</code>: returns <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_SET" title="class or interface in java.util"><CODE>Collections.EMPTY_SET</CODE></A>.</li>
+ <CODE>Collections.EMPTY_LIST</CODE></li>
+ <li><code>java.util.Set</code>: returns <CODE>Collections.EMPTY_SET</CODE>.</li>
  <li><code>java.util.SortedSet</code>: returns an unmodifiable empty sorted set.</li>
- <li><code>java.util.Map</code>: returns <A HREF="http://java.sun.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_MAP" title="class or interface in java.util"><CODE>Collections.EMPTY_MAP</CODE></A>.</li>
+ <li><code>java.util.Map</code>: returns <CODE>Collections.EMPTY_MAP</CODE>.</li>
  <li><code>java.util.SortedMap</code>: returns an unmodifiable empty sorted map.</li>
  <li>A reference type (including <code>String</code> and wrapper types for primitives, and excluding
  the exact collection types above): returns <code>null</code>.</li>
@@ -1374,8 +1359,8 @@ protected final void <B>returns</B>(<A HREF="http://java.sun.com/javase/6/docs/a
 <DT><B>Parameters:</B><DD><CODE>value</CODE> - the value to be returned when the method is replayed; must be compatible with the
  method's return type
 <DT><B>Throws:</B>
-<DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalStateException.html?is-external=true" title="class or interface in java.lang">IllegalStateException</A></CODE> - if not currently recording an invocation
-<DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if the given return value is not <code>null</code> but the
+<DD><CODE>java.lang.IllegalStateException</CODE> - if not currently recording an invocation
+<DD><CODE>java.lang.IllegalArgumentException</CODE> - if the given return value is not <code>null</code> but the
  preceding mock invocation is to a constructor or <code>void</code> method<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#result"><CODE>result</CODE></A>, 
 <A HREF="../mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)"><CODE>returns(Object, Object...)</CODE></A></DL>
 </DD>
@@ -1385,15 +1370,15 @@ protected final void <B>returns</B>(<A HREF="http://java.sun.com/javase/6/docs/a
 <A NAME="returns(java.lang.Object, java.lang.Object...)"><!-- --></A><H3>
 returns</H3>
 <PRE>
-protected final void <B>returns</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;firstValue,
-                             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;remainingValues)</PRE>
+protected final void <B>returns</B>(java.lang.Object&nbsp;firstValue,
+                             java.lang.Object...&nbsp;remainingValues)</PRE>
 <DL>
 <DD>Equivalent to calling <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> two or more times in sequence, except when the
  associated method can return a collection of values, an iterator, or an array.
  Specifically, the following situations receive special treatment, according to the declared
  return type of said method:
  <ol>
- <li>If the return type is iterable and can receive a <A HREF="http://java.sun.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util"><CODE>List</CODE></A> value, then the given
+ <li>If the return type is iterable and can receive a <CODE>List</CODE> value, then the given
  sequence of values will be converted into an <code>ArrayList</code>; this list will then be
  returned by matching invocations at replay time.</li>
  <li>If the return type is <code>SortedSet</code> or a sub-type, then the given sequence of values
@@ -1413,8 +1398,8 @@ protected final void <B>returns</B>(<A HREF="http://java.sun.com/javase/6/docs/a
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>firstValue</CODE> - the first value to be returned in the replay phase<DD><CODE>remainingValues</CODE> - the remaining values to be returned, in the same order
 <DT><B>Throws:</B>
-<DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalStateException.html?is-external=true" title="class or interface in java.lang">IllegalStateException</A></CODE> - if not currently recording an invocation
-<DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if one of the given return values is not <code>null</code> but the
+<DD><CODE>java.lang.IllegalStateException</CODE> - if not currently recording an invocation
+<DD><CODE>java.lang.IllegalArgumentException</CODE> - if one of the given return values is not <code>null</code> but the
  preceding mock invocation is to a constructor or <code>void</code> method</DL>
 </DD>
 </DL>
@@ -1423,8 +1408,8 @@ protected final void <B>returns</B>(<A HREF="http://java.sun.com/javase/6/docs/a
 <A NAME="getField(java.lang.Class, java.lang.Class)"><!-- --></A><H3>
 getField</H3>
 <PRE>
-protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-                               <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;fieldType)</PRE>
+protected final &lt;T&gt; T <B>getField</B>(java.lang.Class&lt;?&gt;&nbsp;fieldOwner,
+                               java.lang.Class&lt;T&gt;&nbsp;fieldType)</PRE>
 <DL>
 <DD>Gets the value of a non-accessible static field defined in a given class.
 <P>
@@ -1437,8 +1422,8 @@ protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/
 <A NAME="getField(java.lang.Class, java.lang.String)"><!-- --></A><H3>
 getField</H3>
 <PRE>
-protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-                               <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName)</PRE>
+protected final &lt;T&gt; T <B>getField</B>(java.lang.Class&lt;?&gt;&nbsp;fieldOwner,
+                               java.lang.String&nbsp;fieldName)</PRE>
 <DL>
 <DD>Gets the value of a non-accessible static field defined in a given class.
 <P>
@@ -1451,8 +1436,8 @@ protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/
 <A NAME="getField(java.lang.Object, java.lang.Class)"><!-- --></A><H3>
 getField</H3>
 <PRE>
-protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-                               <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;fieldType)</PRE>
+protected final &lt;T&gt; T <B>getField</B>(java.lang.Object&nbsp;fieldOwner,
+                               java.lang.Class&lt;T&gt;&nbsp;fieldType)</PRE>
 <DL>
 <DD>Gets the value of a non-accessible field from a given object, <em>assuming</em> there is only
  one field declared in the class of the given object whose type can receive values of the
@@ -1461,7 +1446,7 @@ protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the instance from which to get the field value<DD><CODE>fieldType</CODE> - the declared type of the field, or a sub-type of the declared field type
 <DT><B>Throws:</B>
-<DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if either the desired field is not found, or more than one is<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#getField(java.lang.Object, java.lang.String)"><CODE>getField(Object, String)</CODE></A></DL>
+<DD><CODE>java.lang.IllegalArgumentException</CODE> - if either the desired field is not found, or more than one is<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#getField(java.lang.Object, java.lang.String)"><CODE>getField(Object, String)</CODE></A></DL>
 </DD>
 </DL>
 <HR>
@@ -1469,8 +1454,8 @@ protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/
 <A NAME="getField(java.lang.Object, java.lang.String)"><!-- --></A><H3>
 getField</H3>
 <PRE>
-protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-                               <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName)</PRE>
+protected final &lt;T&gt; T <B>getField</B>(java.lang.Object&nbsp;fieldOwner,
+                               java.lang.String&nbsp;fieldName)</PRE>
 <DL>
 <DD>Gets the value of a non-accessible field from a given object.
  <p/>
@@ -1485,9 +1470,9 @@ protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://java.sun.com/javase/
 <A NAME="invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><!-- --></A><H3>
 invoke</H3>
 <PRE>
-protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;methodOwner,
-                             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
-                             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</PRE>
+protected final &lt;T&gt; T <B>invoke</B>(java.lang.Class&lt;?&gt;&nbsp;methodOwner,
+                             java.lang.String&nbsp;methodName,
+                             java.lang.Object...&nbsp;methodArgs)</PRE>
 <DL>
 <DD>Specifies an expected invocation to a given static method, with a given list of arguments.
  <p/>
@@ -1509,19 +1494,18 @@ protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/
 <A NAME="invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><!-- --></A><H3>
 invoke</H3>
 <PRE>
-protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-                             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
-                             <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</PRE>
+protected final &lt;T&gt; T <B>invoke</B>(java.lang.Object&nbsp;fieldOwner,
+                             java.lang.String&nbsp;methodName,
+                             java.lang.Object...&nbsp;methodArgs)</PRE>
 <DL>
 <DD>Specifies an expected invocation to a given instance method, with a given list of arguments.
  <p/>
- This is useful when the next expected method is not accessible (private, for example) from the
- test, and therefore can not be called normally. It should <strong>not</strong> be used for
- calling accessible methods.
+ This is useful when the next expected method is not accessible (private, for example) from the test, and
+ therefore can not be called normally. It should <strong>not</strong> be used for calling accessible methods.
  <p/>
- Additionally, this can also be used to directly test private methods, when there is no other
- way to do so, or it would be too difficult by indirect means. Note that in such a case the
- target instance will actually be a "real" object, not a mock.
+ Additionally, this can also be used to directly test private methods, when there is no other way to do so, or it
+ would be too difficult by indirect means. Note that in such a case the target instance will actually be a "real"
+ (non-mocked) object, not a mocked instance.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
 <P>
@@ -1536,9 +1520,9 @@ protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://java.sun.com/javase/6/
 <A NAME="newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)"><!-- --></A><H3>
 newInnerInstance</H3>
 <PRE>
-protected final &lt;T&gt; T <B>newInnerInstance</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;innerClassSimpleName,
-                                       <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;outerClassInstance,
-                                       <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullInitArgs)</PRE>
+protected final &lt;T&gt; T <B>newInnerInstance</B>(java.lang.String&nbsp;innerClassSimpleName,
+                                       java.lang.Object&nbsp;outerClassInstance,
+                                       java.lang.Object...&nbsp;nonNullInitArgs)</PRE>
 <DL>
 <DD>The same as <A HREF="../mockit/Expectations.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but for instantiating an inner
  non-accessible class of some other class, and where all other (if any) initialization
@@ -1555,9 +1539,9 @@ protected final &lt;T&gt; T <B>newInnerInstance</B>(<A HREF="http://java.sun.com
 <A NAME="newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><!-- --></A><H3>
 newInstance</H3>
 <PRE>
-protected final &lt;T&gt; T <B>newInstance</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;className,
-                                  <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;[]&nbsp;parameterTypes,
-                                  <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;initArgs)</PRE>
+protected final &lt;T&gt; T <B>newInstance</B>(java.lang.String&nbsp;className,
+                                  java.lang.Class&lt;?&gt;[]&nbsp;parameterTypes,
+                                  java.lang.Object...&nbsp;initArgs)</PRE>
 <DL>
 <DD>Specifies an expected constructor invocation for a given class.
  <p/>
@@ -1580,8 +1564,8 @@ protected final &lt;T&gt; T <B>newInstance</B>(<A HREF="http://java.sun.com/java
 <A NAME="newInstance(java.lang.String, java.lang.Object...)"><!-- --></A><H3>
 newInstance</H3>
 <PRE>
-protected final &lt;T&gt; T <B>newInstance</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;className,
-                                  <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullInitArgs)</PRE>
+protected final &lt;T&gt; T <B>newInstance</B>(java.lang.String&nbsp;className,
+                                  java.lang.Object...&nbsp;nonNullInitArgs)</PRE>
 <DL>
 <DD>The same as <A HREF="../mockit/Expectations.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but for the case where each
  initialization argument is known to be null or non-null at the call point.
@@ -1593,7 +1577,7 @@ protected final &lt;T&gt; T <B>newInstance</B>(<A HREF="http://java.sun.com/java
 <DD><DL>
 
 <DT><B>Throws:</B>
-<DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if one of the given arguments is <code>null</code></DL>
+<DD><CODE>java.lang.IllegalArgumentException</CODE> - if one of the given arguments is <code>null</code></DL>
 </DD>
 </DL>
 <HR>
@@ -1601,42 +1585,40 @@ protected final &lt;T&gt; T <B>newInstance</B>(<A HREF="http://java.sun.com/java
 <A NAME="onInstance(java.lang.Object)"><!-- --></A><A NAME="onInstance(T)"><!-- --></A><H3>
 onInstance</H3>
 <PRE>
-protected final &lt;T&gt; T <B>onInstance</B>(T&nbsp;mock)</PRE>
+protected final &lt;T&gt; T <B>onInstance</B>(T&nbsp;mockedInstance)</PRE>
 <DL>
-<DD>Specify that the next invocation on the given mock instance must match a corresponding
- invocation on the <em>same</em> instance in the replay phase.
+<DD>Specify that the next invocation on the given mocked instance must match a corresponding invocation on the
+ <em>same</em> instance in the replay phase.
  <p/>
- By default, such instances can be different between the replay phase and the record or verify
- phase, even though the method or constructor invoked is the same, and the invocation arguments
- all match.
+ By default, such instances can be different between the replay phase and the record or verify phase, even though
+ the method or constructor invoked is the same, and the invocation arguments all match.
  The use of this method allows invocations to also be matched on the instance invoked.
  <p/>
- Typically, tests that need to match instance invocations on the mock instances invoked will
- declare two or more mock fields and/or parameters of the exact same mocked type. These mocks
- will then be passed to the code under test, which will invoke them during the replay phase.
- To avoid the need to explicitly call <code>onInstance(mock)</code> on each of these different
- instances of the same type, instance matching is <em>implied</em> (and automatically applied
- to all relevant invocations) whenever two or more mock instances of the same type are in scope
- for a given test method. This property of the API makes the use of <code>onInstance</code> much
- less frequent than it might otherwise be.
+ Typically, tests that need to match instance invocations on the mocked instances invoked will declare two or more
+ mock fields and/or parameters of the exact same mocked type. These instances will then be passed to the code under
+ test, which will invoke them during the replay phase.
+ To avoid the need to explicitly call <code>onInstance(Object)</code> on each of these different instances of the
+ same type, instance matching is <em>implied</em> (and automatically applied to all relevant invocations) whenever
+ two or more mocked instances of the same type are in scope for a given test method. This property of the API makes
+ the use of <code>onInstance</code> much less frequent than it might otherwise be.
  <p/>
- In most cases, an invocation to the given mock instance will be made on the value returned by
- this method (ie, a chained invocation).
- However, in the situation where the tested method calls an instance method defined in a mocked
- super-class (possibly an overridden method called through the <code>super</code> keyword), it will
- be necessary to match on a different instance than the one used for recording invocations.
- To do so, this method should be given the desired instance to match, while the invocation to
- be recorded should be done on the available mock instance, which must be a different one
- (otherwise a non-mocked method would get executed).
- This is valid only if the instance to be matched is assignable to the mocked type, and
- typically occurs when partially mocking a class hierarchy.
+ In most cases, an invocation to the given mocked instance will be made on the value returned by this method (ie,
+ a chained invocation).
+ However, in the situation where the tested method calls an instance method defined in a mocked super-class
+ (possibly an overridden method called through the <code>super</code> keyword), it will be necessary to match on a
+ different instance than the one used for recording invocations.
+ To do so, this method should be given the desired instance to match, while the invocation to be recorded should be
+ done on the available mocked instance, which must be a different one (otherwise a non-mocked method would get
+ executed).
+ This is valid only if the instance to be matched is assignable to the mocked type, and typically occurs when
+ partially mocking a class hierarchy.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#onInstance">In the Tutorial</a>
 <P>
 <DD><DL>
 
-<DT><B>Returns:</B><DD>the given mock instance, allowing the invocation to be recorded/verified to
- immediately follow the call to this method</DL>
+<DT><B>Returns:</B><DD>the given mocked instance, allowing the invocation to be recorded/verified to immediately follow the call
+ to this method</DL>
 </DD>
 </DL>
 <HR>
@@ -1644,8 +1626,8 @@ protected final &lt;T&gt; T <B>onInstance</B>(T&nbsp;mock)</PRE>
 <A NAME="setField(java.lang.Class, java.lang.Object)"><!-- --></A><H3>
 setField</H3>
 <PRE>
-protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-                              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</PRE>
+protected final void <B>setField</B>(java.lang.Class&lt;?&gt;&nbsp;fieldOwner,
+                              java.lang.Object&nbsp;fieldValue)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Expectations.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A>, except that the field is looked up by the
  type of the given field value instead of by name.
@@ -1659,9 +1641,9 @@ protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/
 <A NAME="setField(java.lang.Class, java.lang.String, java.lang.Object)"><!-- --></A><H3>
 setField</H3>
 <PRE>
-protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-                              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName,
-                              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</PRE>
+protected final void <B>setField</B>(java.lang.Class&lt;?&gt;&nbsp;fieldOwner,
+                              java.lang.String&nbsp;fieldName,
+                              java.lang.Object&nbsp;fieldValue)</PRE>
 <DL>
 <DD>Sets the value of a non-accessible static field on a given class.
 <P>
@@ -1674,8 +1656,8 @@ protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/
 <A NAME="setField(java.lang.Object, java.lang.Object)"><!-- --></A><H3>
 setField</H3>
 <PRE>
-protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-                              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</PRE>
+protected final void <B>setField</B>(java.lang.Object&nbsp;fieldOwner,
+                              java.lang.Object&nbsp;fieldValue)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Expectations.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><CODE>setField(Object, String, Object)</CODE></A>, except that the field is looked up by the
  type of the given field value instead of by name.
@@ -1683,7 +1665,7 @@ protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/
 <DD><DL>
 
 <DT><B>Throws:</B>
-<DD><CODE><A HREF="http://java.sun.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if no field or more than one is found in the target class to
+<DD><CODE>java.lang.IllegalArgumentException</CODE> - if no field or more than one is found in the target class to
  which the given value can be assigned</DL>
 </DD>
 </DL>
@@ -1692,9 +1674,9 @@ protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/
 <A NAME="setField(java.lang.Object, java.lang.String, java.lang.Object)"><!-- --></A><H3>
 setField</H3>
 <PRE>
-protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-                              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName,
-                              <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</PRE>
+protected final void <B>setField</B>(java.lang.Object&nbsp;fieldOwner,
+                              java.lang.String&nbsp;fieldName,
+                              java.lang.Object&nbsp;fieldValue)</PRE>
 <DL>
 <DD>Sets the value of a non-accessible field on a given object.
  <p/>
@@ -1709,7 +1691,7 @@ protected final void <B>setField</B>(<A HREF="http://java.sun.com/javase/6/docs/
 <A NAME="with(java.lang.Object)"><!-- --></A><H3>
 with</H3>
 <PRE>
-protected final &lt;T&gt; T <B>with</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</PRE>
+protected final &lt;T&gt; T <B>with</B>(java.lang.Object&nbsp;argumentMatcher)</PRE>
 <DL>
 <DD>Adds a custom argument matcher for a parameter in the current invocation.
  This works like <A HREF="../mockit/Expectations.html#with(T, java.lang.Object)"><CODE>with(Object, Object)</CODE></A>, but attempting to extract the argument value
@@ -1728,7 +1710,7 @@ protected final &lt;T&gt; T <B>with</B>(<A HREF="http://java.sun.com/javase/6/do
 with</H3>
 <PRE>
 protected final &lt;T&gt; T <B>with</B>(T&nbsp;argValue,
-                           <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</PRE>
+                           java.lang.Object&nbsp;argumentMatcher)</PRE>
 <DL>
 <DD>Adds a custom argument matcher for a parameter in the current invocation.
  <p/>
@@ -1816,7 +1798,7 @@ protected final &lt;T&gt; T <B>withEqual</B>(T&nbsp;arg)</PRE>
 <DL>
 <DD>When called as argument for a method/constructor invocation in the recording or verification
  phase of a test, creates a new matcher that will check if the given value is
- <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang"><CODE>equal</CODE></A> to the corresponding invocation argument in the replay
+ <CODE>equal</CODE> to the corresponding invocation argument in the replay
  phase.
  <p/>
  The matcher is added to the end of the list of argument matchers for the invocation being
@@ -1851,7 +1833,7 @@ protected final &lt;T&gt; T <B>withInstanceLike</B>(T&nbsp;object)</PRE>
 <A NAME="withInstanceOf(java.lang.Class)"><!-- --></A><H3>
 withInstanceOf</H3>
 <PRE>
-protected final &lt;T&gt; T <B>withInstanceOf</B>(<A HREF="http://java.sun.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;argClass)</PRE>
+protected final &lt;T&gt; T <B>withInstanceOf</B>(java.lang.Class&lt;T&gt;&nbsp;argClass)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay
  phase is an instance of the given class.
@@ -1867,16 +1849,16 @@ protected final &lt;T&gt; T <B>withInstanceOf</B>(<A HREF="http://java.sun.com/j
 <A NAME="withMatch(java.lang.CharSequence)"><!-- --></A><A NAME="withMatch(T)"><!-- --></A><H3>
 withMatch</H3>
 <PRE>
-protected final &lt;T extends <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; T <B>withMatch</B>(T&nbsp;regex)</PRE>
+protected final &lt;T extends java.lang.CharSequence&gt; T <B>withMatch</B>(T&nbsp;regex)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the
- replay phase matches the given <A HREF="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex"><CODE>regular expression</CODE></A>.
+ replay phase matches the given <CODE>regular expression</CODE>.
  <p/>
  Note that this can be used for any string comparison, including case insensitive ones (with
  <code>"(?i)"</code> in the regex).
 <P>
 <DD><DL>
-<DT><B>See Also:</B><DD><A HREF="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true#compile(java.lang.String, int)" title="class or interface in java.util.regex"><CODE>Pattern.compile(String, int)</CODE></A></DL>
+<DT><B>See Also:</B><DD><CODE>Pattern.compile(String, int)</CODE></DL>
 </DD>
 </DL>
 <HR>
@@ -1928,7 +1910,7 @@ protected final &lt;T&gt; T <B>withNull</B>()</PRE>
 <A NAME="withPrefix(java.lang.CharSequence)"><!-- --></A><A NAME="withPrefix(T)"><!-- --></A><H3>
 withPrefix</H3>
 <PRE>
-protected final &lt;T extends <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; T <B>withPrefix</B>(T&nbsp;text)</PRE>
+protected final &lt;T extends java.lang.CharSequence&gt; T <B>withPrefix</B>(T&nbsp;text)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the
  replay phase starts with the given text.
@@ -1956,7 +1938,7 @@ protected final &lt;T&gt; T <B>withSameInstance</B>(T&nbsp;object)</PRE>
 <A NAME="withSubstring(java.lang.CharSequence)"><!-- --></A><A NAME="withSubstring(T)"><!-- --></A><H3>
 withSubstring</H3>
 <PRE>
-protected final &lt;T extends <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; T <B>withSubstring</B>(T&nbsp;text)</PRE>
+protected final &lt;T extends java.lang.CharSequence&gt; T <B>withSubstring</B>(T&nbsp;text)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the
  replay phase contains the given text as a substring.
@@ -1970,7 +1952,7 @@ protected final &lt;T extends <A HREF="http://java.sun.com/javase/6/docs/api/jav
 <A NAME="withSuffix(java.lang.CharSequence)"><!-- --></A><A NAME="withSuffix(T)"><!-- --></A><H3>
 withSuffix</H3>
 <PRE>
-protected final &lt;T extends <A HREF="http://java.sun.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; T <B>withSuffix</B>(T&nbsp;text)</PRE>
+protected final &lt;T extends java.lang.CharSequence&gt; T <B>withSuffix</B>(T&nbsp;text)</PRE>
 <DL>
 <DD>Same as <A HREF="../mockit/Expectations.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the
  replay phase ends with the given text.
