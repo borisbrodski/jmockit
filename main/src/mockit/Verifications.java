@@ -32,40 +32,42 @@ import mockit.internal.expectations.*;
 import mockit.internal.util.*;
 
 /**
- * Base class whose subclasses are defined in test code, and whose instances define a set of
- * invocations on mocks to be verified against the actual invocations executed during the replay
- * phase of the test.
- * The order of the invocations is not relevant, and any subset of the potential invocations in the
- * replay phase can be verified (ie, not all of them need to be verified on each use of this class).
+ * Base class whose subclasses are defined in test code, and whose instances define a set of invocations on mocked
+ * types/instances to be verified against the actual invocations executed during the replay phase of the test.
+ * The order of the invocations is not relevant, and any subset of the potential invocations in the replay phase can be
+ * verified (ie, not all of them need to be verified on each use of this class).
  * <p/>
- * Since each subclass will typically take the form of an anonymous class with no methods but only
- * an instance initialization block, we name such constructs <em>verification blocks</em>.
- * In the particular case of using this class directly, we have an <em>unordered</em> verification
- * block.
+ * Since each user-defined subclass will typically take the form of an anonymous class with no methods but only an
+ * instance initialization block, we name such constructs <em>verification blocks</em>.
+ * When extending this class directly (as opposed to extending one of the three specializations available in the API),
+ * we have an <em>unordered</em> verification block.
  * <p/>
- * Such blocks can appear alone in a test or in conjunction with
- * {@linkplain Expectations strict expectation blocks} which record at least one non-strict
- * expectation, and/or {@linkplain NonStrictExpectations non-strict expectation blocks}.
- * (Strict expectations are unconditionally and automatically verified as invocations occur in the
- * replay phase, and at the end of the test to account for any missing invocations.)
+ * Such blocks can appear alone in a test or (more typically) in conjunction with
+ * {@linkplain NonStrictExpectations non-strict expectation blocks}.
+ * It's also possible to have an {@linkplain Expectations strict expectation block} in the same test, provided at least
+ * one non-strict expectation is recorded in it (strict expectations are <em>implicitly</em> verified as invocations
+ * occur in the replay phase, and at the end of the test to account for any missing invocations - they cannot be
+ * verified explicitly).
  * <p/>
- * Note that while an expectation block can appear only <em>before</em> the replay phase of the
- * test, a verification block can appear only <em>after</em> that phase.
+ * Note that while an expectation block can appear only <em>before</em> the replay phase of the test, a verification
+ * block can appear only <em>after</em> that phase.
  * <p/>
- * For an invocation inside a verification block to succeed (ie, pass verification), a
- * corresponding invocation must have occurred during the replay phase of the test, at least once.
+ * For an invocation inside a verification block to succeed (ie, pass verification), a corresponding invocation must
+ * have occurred during the replay phase of the test, <em>at least once</em>.
  * Such an invocation may or may not have been previously recorded in an expectation block.
+ * This is only the <em>default</em> verification behavior, though. Just like with recorded expectations, it's possible
+ * to specify different invocation count constraints through the {@link #times}, {@link #minTimes}, and
+ * {@link #maxTimes} fields.
  * <p/>
- * The mocked types used inside the verification block can be all the ones that are in scope: mock
- * fields of the test class, and mock parameters of the test method. In addition, local mock fields
- * declared inside expectation blocks can be <em>imported</em> into the verification block by
- * declaring a field of the desired mocked type inside this block (not necessarily with the same
- * name as the imported mock field, although that is recommended for clarity).
+ * The mocked types used inside the verification block can be all the ones that are in scope: mock fields of the test
+ * class and mock parameters of the test method. In addition, local mock fields declared inside expectation blocks can
+ * be <em>imported</em> into the verification block by declaring a field of the desired mocked type inside this block -
+ * though not necessarily with the same name as the imported mock field, although it's recommended for clarity.
  * <p/>
- * Just like it is valid to have multiple expectation blocks in a test, it is also valid to have
- * multiple (non-nested) verification blocks. The relative order of the blocks is not relevant.
- * Such blocks can be of different types. (Typically, when using multiple verification blocks there
- * will be a mix of ordered and unordered ones.)
+ * Just like it is valid to have multiple expectation blocks in a test, it is also valid to have multiple (non-nested)
+ * verification blocks. The relative order of the blocks is not relevant.
+ * Such blocks can be of different types. (Typically, when using multiple verification blocks there will be a mix of
+ * ordered and unordered ones.)
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#verification">In the Tutorial</a>
  *
@@ -79,7 +81,7 @@ public class Verifications extends Invocations
    final VerificationPhase verificationPhase;
 
    /**
-    * Begins verification on the mocks invoked during the replay phase of the test.
+    * Begins verification on the mocked types/instances invoked during the replay phase of the test.
     */
    protected Verifications()
    {
@@ -87,17 +89,16 @@ public class Verifications extends Invocations
    }
 
    /**
-    * Begins verification on the mocks invoked during the replay phase of the test, considering that
+    * Begins verification on the mocked types/instances invoked during the replay phase of the test, considering that
     * such invocations occurred in a given number of iterations.
     * <p/>
-    * The effect of specifying a number of iterations larger than 1 (one) is equivalent to
-    * multiplying by that number the lower and upper invocation count limits for each invocation
-    * inside the verification block.
+    * The effect of specifying a number of iterations larger than 1 (one) is equivalent to multiplying by that number
+    * the lower and upper invocation count limits for each invocation inside the verification block.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#iterations">In the Tutorial</a>
     *
-    * @param numberOfIterations the positive number of iterations for the whole set of invocations
-    * verified inside the block; when not specified, 1 (one) iteration is assumed
+    * @param numberOfIterations the positive number of iterations for the whole set of invocations verified inside the
+    * block; when not specified, 1 (one) iteration is assumed
     */
    protected Verifications(int numberOfIterations)
    {
@@ -107,8 +108,7 @@ public class Verifications extends Invocations
 
    Verifications(boolean inOrder)
    {
-      RecordAndReplayExecution instance =
-         TestRun.getExecutingTest().getRecordAndReplayForVerifications();
+      RecordAndReplayExecution instance = TestRun.getExecutingTest().getRecordAndReplayForVerifications();
 
       Map<Type,Object> availableLocalMocks = instance.getLocalMocks();
 

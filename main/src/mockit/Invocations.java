@@ -35,8 +35,8 @@ import mockit.internal.startup.*;
 import mockit.internal.util.*;
 
 /**
- * Provides common user API for both the {@linkplain Expectations record} and
- * {@linkplain Verifications verification} phases of a test.
+ * Provides common user API for both the {@linkplain Expectations record} and {@linkplain Verifications verification}
+ * phases of a test.
  */
 abstract class Invocations
 {
@@ -129,36 +129,34 @@ abstract class Invocations
    protected static final Float anyFloat = 0.0F;
 
    /**
-    * An object assigned to this field will be taken as a handler for each invocation matching the
-    * current expectation, with the purpose of validating invocation arguments.
-    * Note that for a <em>recorded</em> expectation such invocations are the ones that will be
-    * executed during the <em>replay</em> phase, while for a <em>verified</em> expectation they are
-    * the ones actually executed during that phase.
+    * An object assigned to this field will be taken as a handler for each invocation matching the current expectation,
+    * with the purpose of validating invocation arguments.
+    * Note that for a <em>recorded</em> expectation such invocations are the ones that will be executed during the
+    * <em>replay</em> phase, while for a <em>verified</em> expectation they are the ones actually executed during that
+    * phase.
     * <p/>
-    * The object assigned can be of any type, but its class should have a single non-private method
+    * The object assigned can be of any type, provided its class has a single non-private method
     * (therefore, additional methods are allowed and ignored, as long as they are {@code private}).
-    * This <em>handler method</em> can have any name, but it should have parameters that match the
-    * ones defined in the mocked method or constructor associated to the expectation.
-    * Corresponding parameters don't need to have the exact same declared type, though, as long as
-    * each possible invocation argument can be passed to the corresponding parameter in the handler
-    * method.
+    * This <em>handler method</em> can have any name, as long as its parameters match the ones defined in the mocked
+    * method or constructor associated with the expectation.
+    * Corresponding parameters don't need to have the exact same declared type, though, as long as each possible
+    * invocation argument can be passed to the corresponding parameter in the handler method.
     * <p/>
-    * In the case of an expectation recorded for a non-{@code void} method, the handler method is
-    * also responsible for returning appropriate values to be used by the caller (which normally
-    * belongs to the code under test). That is, the {@code result} field or the {@code returns(...)}
-    * method should <em>not</em> be used together with an assignment to this field.
+    * In the case of an expectation recorded for a non-{@code void} method, the handler method is also responsible for
+    * returning appropriate values to be used by the caller (which normally belongs to the code under test).
+    * That is, the {@code result} field or the {@code returns(...)} method should <em>not</em> be used together with an
+    * assignment to this field.
     * The same observation applies to the throwing of exceptions/errors from a recorded expectation
     * (which can also be done for constructors and {@code void} methods).
     * <p/>
-    * When used for an expectation inside a <em>verification</em> block, on the other hand, the
-    * handler method should normally have a {@code void} return type. Any value eventually returned
-    * by the method will be silently ignored in this case. Note that a handler method for a verified
-    * expectation also shouldn't intentionally throw exceptions or errors, since the verified
-    * invocation(s) already happened in the replay phase; any exception/error actually thrown will
-    * simply propagate back to the test method.
+    * When used for an expectation inside a <em>verification</em> block, on the other hand, the handler method should
+    * normally have a {@code void} return type. Any value eventually returned by the method will be silently ignored in
+    * this case. Note that a handler method for a verified expectation also shouldn't intentionally throw exceptions or
+    * errors, since the verified invocation(s) already happened in the replay phase; any exception/error actually thrown
+    * will simply propagate back to the test method.
     * <p/>
-    * Just like with {@linkplain mockit.Delegate delegate classes}, the handler method can declare
-    * its first parameter as being of type {@link mockit.Invocation}.
+    * Just like with {@linkplain mockit.Delegate delegate classes}, the handler method can declare its first parameter
+    * as being of type {@link mockit.Invocation}.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#forEachInvocation">In the Tutorial</a>
     */
@@ -223,50 +221,48 @@ abstract class Invocations
    }
 
    /**
-    * Specify that the next invocation on the given mock instance must match a corresponding
-    * invocation on the <em>same</em> instance in the replay phase.
+    * Specify that the next invocation on the given mocked instance must match a corresponding invocation on the
+    * <em>same</em> instance in the replay phase.
     * <p/>
-    * By default, such instances can be different between the replay phase and the record or verify
-    * phase, even though the method or constructor invoked is the same, and the invocation arguments
-    * all match.
+    * By default, such instances can be different between the replay phase and the record or verify phase, even though
+    * the method or constructor invoked is the same, and the invocation arguments all match.
     * The use of this method allows invocations to also be matched on the instance invoked.
     * <p/>
-    * Typically, tests that need to match instance invocations on the mock instances invoked will
-    * declare two or more mock fields and/or parameters of the exact same mocked type. These mocks
-    * will then be passed to the code under test, which will invoke them during the replay phase.
-    * To avoid the need to explicitly call {@code onInstance(mock)} on each of these different
-    * instances of the same type, instance matching is <em>implied</em> (and automatically applied
-    * to all relevant invocations) whenever two or more mock instances of the same type are in scope
-    * for a given test method. This property of the API makes the use of {@code onInstance} much
-    * less frequent than it might otherwise be.
+    * Typically, tests that need to match instance invocations on the mocked instances invoked will declare two or more
+    * mock fields and/or parameters of the exact same mocked type. These instances will then be passed to the code under
+    * test, which will invoke them during the replay phase.
+    * To avoid the need to explicitly call {@code onInstance(Object)} on each of these different instances of the
+    * same type, instance matching is <em>implied</em> (and automatically applied to all relevant invocations) whenever
+    * two or more mocked instances of the same type are in scope for a given test method. This property of the API makes
+    * the use of {@code onInstance} much less frequent than it might otherwise be.
     * <p/>
-    * In most cases, an invocation to the given mock instance will be made on the value returned by
-    * this method (ie, a chained invocation).
-    * However, in the situation where the tested method calls an instance method defined in a mocked
-    * super-class (possibly an overridden method called through the {@code super} keyword), it will
-    * be necessary to match on a different instance than the one used for recording invocations.
-    * To do so, this method should be given the desired instance to match, while the invocation to
-    * be recorded should be done on the available mock instance, which must be a different one
-    * (otherwise a non-mocked method would get executed).
-    * This is valid only if the instance to be matched is assignable to the mocked type, and
-    * typically occurs when partially mocking a class hierarchy.
+    * In most cases, an invocation to the given mocked instance will be made on the value returned by this method (ie,
+    * a chained invocation).
+    * However, in the situation where the tested method calls an instance method defined in a mocked super-class
+    * (possibly an overridden method called through the {@code super} keyword), it will be necessary to match on a
+    * different instance than the one used for recording invocations.
+    * To do so, this method should be given the desired instance to match, while the invocation to be recorded should be
+    * done on the available mocked instance, which must be a different one (otherwise a non-mocked method would get
+    * executed).
+    * This is valid only if the instance to be matched is assignable to the mocked type, and typically occurs when
+    * partially mocking a class hierarchy.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#onInstance">In the Tutorial</a>
     *
-    * @return the given mock instance, allowing the invocation to be recorded/verified to
-    * immediately follow the call to this method
+    * @return the given mocked instance, allowing the invocation to be recorded/verified to immediately follow the call
+    * to this method
     */
-   protected final <T> T onInstance(T mock)
+   protected final <T> T onInstance(T mockedInstance)
    {
-      if (mock == null) {
-         throw new NullPointerException("Missing mock instance to match");
+      if (mockedInstance == null) {
+         throw new NullPointerException("Missing mocked instance to match");
       }
 
-      getCurrentPhase().setNextInstanceToMatch(mock);
-      return mock;
+      getCurrentPhase().setNextInstanceToMatch(mockedInstance);
+      return mockedInstance;
    }
 
-   // Methods for argument matching ///////////////////////////////////////////////////////////////
+   // Methods for argument matching ///////////////////////////////////////////////////////////////////////////////////
 
    /**
     * Adds a custom argument matcher for a parameter in the current invocation.
@@ -462,7 +458,7 @@ abstract class Invocations
       return object;
    }
 
-   // Text-related matchers ///////////////////////////////////////////////////////////////////////
+   // Text-related matchers ///////////////////////////////////////////////////////////////////////////////////////////
 
    /**
     * Same as {@link #withEqual(Object)}, but checking that a textual invocation argument in the
@@ -523,7 +519,7 @@ abstract class Invocations
       return regex;
    }
 
-   // Methods for instantiating non-accessible classes ////////////////////////////////////////////
+   // Methods for instantiating non-accessible classes ////////////////////////////////////////////////////////////////
 
    /**
     * Specifies an expected constructor invocation for a given class.
@@ -546,8 +542,7 @@ abstract class Invocations
     * @see #newInstance(String, Object...)
     * @see #newInnerInstance(String, Object, Object...)
     */
-   protected final <T> T newInstance(
-      String className, Class<?>[] parameterTypes, Object... initArgs)
+   protected final <T> T newInstance(String className, Class<?>[] parameterTypes, Object... initArgs)
    {
       //noinspection unchecked
       return (T) Utilities.newInstance(className, parameterTypes, initArgs);
@@ -583,22 +578,20 @@ abstract class Invocations
       String innerClassSimpleName, Object outerClassInstance, Object... nonNullInitArgs)
    {
       //noinspection unchecked
-      return
-         (T) Utilities.newInnerInstance(innerClassSimpleName, outerClassInstance, nonNullInitArgs);
+      return (T) Utilities.newInnerInstance(innerClassSimpleName, outerClassInstance, nonNullInitArgs);
    }
 
-   // Methods for invoking non-accessible methods on instances or classes /////////////////////////
+   // Methods for invoking non-accessible methods on instances or classes /////////////////////////////////////////////
 
    /**
     * Specifies an expected invocation to a given instance method, with a given list of arguments.
     * <p/>
-    * This is useful when the next expected method is not accessible (private, for example) from the
-    * test, and therefore can not be called normally. It should <strong>not</strong> be used for
-    * calling accessible methods.
+    * This is useful when the next expected method is not accessible (private, for example) from the test, and
+    * therefore can not be called normally. It should <strong>not</strong> be used for calling accessible methods.
     * <p/>
-    * Additionally, this can also be used to directly test private methods, when there is no other
-    * way to do so, or it would be too difficult by indirect means. Note that in such a case the
-    * target instance will actually be a "real" object, not a mock.
+    * Additionally, this can also be used to directly test private methods, when there is no other way to do so, or it
+    * would be too difficult by indirect means. Note that in such a case the target instance will actually be a "real"
+    * (non-mocked) object, not a mocked instance.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
     *
@@ -639,7 +632,7 @@ abstract class Invocations
       return (T) Utilities.invoke(methodOwner, null, methodName, methodArgs);
    }
 
-   // Methods for getting/setting non-accessible fields on instances or classes ///////////////////
+   // Methods for getting/setting non-accessible fields on instances or classes ///////////////////////////////////////
 
    /**
     * Gets the value of a non-accessible field from a given object.

@@ -49,13 +49,12 @@ import java.lang.annotation.*;
  * Note also that for inner {@code Expectations} subclasses the full set of mock fields will consist
  * of the local "inner" fields plus any fields declared in the test class.
  * This can be used to declare mock fields that are common to all tests in the class, even though
- * some of them may define additional mock fields in their specific {@code Expectations} subclasses.
+ * some of these tests may define additional mock fields in specific {@code Expectations} subclasses.
  * The same applies to mock parameters declared for the test method.
  * <p/>
- * In conclusion, there are three possible scopes for mocked types, from larger to smaller: the
- * whole test class, the test method, and the expectation block inside the test method.
- * Some tests will use only one or two of these scopes, while others can take advantage of all
- * three.
+ * Therefore, there are three possible scopes for mocked types, from larger to smaller: the whole test class, the test
+ * method, and the expectation block inside the test method. Some tests will use only one or two of these scopes, while
+ * others can take advantage of all three.
  * <p/>
  * Usually, a mocked instance gets created and assigned to a declared mock field automatically,
  * without the test code having to do anything.
@@ -230,13 +229,12 @@ public @interface Mocked
     * during test execution and the specified number of new instances has not been previously
     * captured, the (non-{@code final}) mock field will be assigned that new instance.
     * <p/>
-    * It is valid to declare two or more mocks of the same type with a positive {@code capture}
+    * It is valid to declare two or more mock fields of the same type with a positive {@code capture}
     * number for each of them, say {@code n1}, {@code n2}, etc.
     * In this case, the first {@code n1} new instances will be assigned to the first field, the
     * following {@code n2} new instances to the second, and so on.
     * <p/>
-    * Notice that this attribute does not apply to {@code final} mock fields, which cannot be
-    * reassigned.
+    * Notice that this attribute does not apply to {@code final} mock fields, which cannot be reassigned.
     *
     * @see Capturing
     */

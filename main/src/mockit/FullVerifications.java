@@ -44,8 +44,8 @@ package mockit;
 public class FullVerifications extends Verifications
 {
    /**
-    * Begins <em>full</em> verification on the mocked types that can potentially be invoked during
-    * the replay phase of the test.
+    * Begins <em>full</em> verification on the mocked types/instances that can potentially be invoked during the replay
+    * phase of the test.
     */
    protected FullVerifications()
    {
@@ -53,15 +53,14 @@ public class FullVerifications extends Verifications
    }
 
    /**
-    * Begins <em>full</em> verification on the mocks invoked during the replay phase of the test,
+    * Begins <em>full</em> verification on the mocked types/instances invoked during the replay phase of the test,
     * considering that such invocations occurred in a given number of iterations.
     * <p/>
-    * The effect of specifying a number of iterations larger than 1 (one) is equivalent to
-    * multiplying by that number the lower and upper invocation count limits for each invocation
-    * inside the verification block.
+    * The effect of specifying a number of iterations larger than 1 (one) is equivalent to multiplying by that number
+    * the lower and upper invocation count limits for each invocation inside the verification block.
     *
-    * @param numberOfIterations the positive number of iterations for the whole set of invocations
-    * verified inside the block; when not specified, 1 (one) iteration is assumed
+    * @param numberOfIterations the positive number of iterations for the whole set of invocations verified inside the
+    * block; when not specified, 1 (one) iteration is assumed
     */
    protected FullVerifications(int numberOfIterations)
    {
@@ -70,11 +69,11 @@ public class FullVerifications extends Verifications
    }
 
    /**
-    * Same as {@link #FullVerifications()}, but restricting the verification to the specified mocked
-    * types and/or mock instances.
+    * Same as {@link #FullVerifications()}, but restricting the verification to the specified mocked types and/or
+    * mocked instances.
     *
-    * @param mockedTypesAndInstancesToVerify one or more of the mocked types and/or mock objects
-    * that are in scope for the test; for a given mock <em>instance</em>, all classes up to (but not
+    * @param mockedTypesAndInstancesToVerify one or more of the mocked types (ie, {@code Class} objects) and/or mocked
+    * instances that are in scope for the test; for a given mocked <em>instance</em>, all classes up to (but not
     * including) {@code java.lang.Object} are considered
     */
    protected FullVerifications(Object... mockedTypesAndInstancesToVerify)
@@ -84,11 +83,11 @@ public class FullVerifications extends Verifications
    }
 
    /**
-    * Same as {@link #FullVerifications(int)}, but restricting the verification to the specified
-    * mocked types and/or mock instances.
+    * Same as {@link #FullVerifications(int)}, but restricting the verification to the specified mocked types and/or
+    * mocked instances.
     *
-    * @param mockedTypesAndInstancesToVerify one or more of the mocked types and/or mock objects
-    * that are in scope for the test; for a given mock <em>instance</em>, all classes up to (but not
+    * @param mockedTypesAndInstancesToVerify one or more of the mocked types (ie, {@code Class} objects) and/or mocked
+    * instances that are in scope for the test; for a given mocked <em>instance</em>, all classes up to (but not
     * including) {@code java.lang.Object} are considered
     */
    protected FullVerifications(int numberOfIterations, Object... mockedTypesAndInstancesToVerify)

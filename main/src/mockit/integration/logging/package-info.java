@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,10 +24,10 @@
  */
 
 /**
- * Provides integration with several logging frameworks such as Log4j, SL4J, and standard JDK
- * logging, with the purpose of isolating code under test from them.
+ * Provides integration with logging frameworks such as Log4j, SLF4j, and standard JDK logging, with the purpose of
+ * isolating code under test from them.
  * <p/>
- * Contains one {@linkplain mockit.MockClass mock class} for each supported logging framework, that
- * can be used in a {@link mockit.UsingMocksAndStubs} annotation applied to a test class.
+ * Contains one {@linkplain mockit.MockClass mock class} for each supported logging framework, to be used with the
+ * {@link mockit.UsingMocksAndStubs} annotation when applied to a test class.
  */
 package mockit.integration.logging;
