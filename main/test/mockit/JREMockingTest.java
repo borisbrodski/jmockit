@@ -28,6 +28,10 @@ import java.io.*;
 
 import junit.framework.*;
 
+@SuppressWarnings({
+   "WaitWhileNotSynced", "UnconditionalWait", "WaitWithoutCorrespondingNotify", "WaitNotInLoop",
+   "WaitOrAwaitWithoutTimeout", "UnusedDeclaration"
+})
 public final class JREMockingTest extends TestCase
 {
    public void testMockingOfFile()
@@ -67,5 +71,42 @@ public final class JREMockingTest extends TestCase
    {
        Thread.sleep(10);
        assertTrue(System.currentTimeMillis() > 0);
+   }
+
+   // Mocking of java.lang.Object methods /////////////////////////////////////////////////////////////////////////////
+
+   final Object lock = new Object();
+
+   void awaitNotification() throws InterruptedException
+   {
+      synchronized (lock) {
+         lock.wait();
+      }
+   }
+
+   public void testWaitingWithMockParameter(final Object mockedLock) throws Exception
+   {
+      new Expectations()
+      {
+         {
+            mockedLock.wait();
+         }
+      };
+
+      awaitNotification();
+   }
+
+   public void testWaitingWithLocalMockField() throws Exception
+   {
+      new NonStrictExpectations()
+      {
+         Object mockedLock;
+
+         {
+            mockedLock.wait(); times = 1;
+         }
+      };
+
+      awaitNotification();
    }
 }

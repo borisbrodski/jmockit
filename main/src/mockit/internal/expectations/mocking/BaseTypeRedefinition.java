@@ -185,7 +185,7 @@ abstract class BaseTypeRedefinition
 
       Class<?> superClass = realClass.getSuperclass();
 
-      if (superClass != Object.class && superClass != Proxy.class) {
+      if (superClass != null && superClass != Object.class && superClass != Proxy.class) {
          redefineClassAndItsSuperClasses(superClass);
       }
 
