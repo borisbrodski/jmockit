@@ -196,7 +196,7 @@
    <!-- Target for generating the Javadoc HTML documentation -->
 
    <target name="createjavadocs">
-      <delete dir="www/javadoc" includes="**/*.html" excludes="overview.html" quiet="true"/>
+      <delete dir="www/javadoc" includes="**/*.html" excludes="overview.html external/*" quiet="true"/>
       <javadoc
          destdir="www/javadoc" overview="www/javadoc/overview.html" classpathref="common.classpath"
          nodeprecated="true" noindex="true" notree="true" nohelp="true" breakiterator="true"
@@ -207,7 +207,9 @@
             <include name="mockit/*.java"/>
             <include name="mockit/integration/*/*.java"/>
          </fileset>
-         <link href="http://java.sun.com/javase/6/docs/api/"/>
+         <link
+            href="http://download.oracle.com/javase/6/docs/api"
+            offline="true" packagelistloc="www/javadoc/external"/>
          <header><![CDATA[
             <a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>
          ]]></header>
@@ -216,7 +218,6 @@
          ]]></footer>
          <bottom><![CDATA[<font size=-1>© 2006-2010 Rogério Liesenfeld</font>]]></bottom>
       </javadoc>
-      <delete file="www/javadoc/package-list"/>
       <delete file="www/javadoc/constant-values.html"/>
    </target>
 
@@ -431,18 +432,5 @@
       </testng>
 
       <java fork="yes" dir="samples" jar="jmockit-coverage-htmlfull.jar" args=".,LoginService"/>
-   </target>
-
-   <target name="findbugs">
-      <taskdef
-         name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"
-         classpath="${FINDBUGS_HOME}/lib/findbugs-ant.jar"/>
-      <findbugs
-         home="${FINDBUGS_HOME}" output="html" outputFile="FindBugs-report.html"
-         projectname="JMockit" effort="max" reportlevel="low">
-         <auxclasspath refid="common.classpath"/>
-         <class location="${basedir}/main/classes"/>
-         <sourcepath path="${basedir}/main/src"/>
-      </findbugs>
    </target>
 </project>

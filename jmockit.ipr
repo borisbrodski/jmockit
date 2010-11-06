@@ -210,7 +210,7 @@
         <inspection_tool class="ClassNewInstance" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ClassUnconnectedToPackage" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ClassWithMultipleLoggers" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="loggerClassName" value="java.util.logging.Logger" />
+          <option name="loggerNamesString" value="java.util.logging.Logger,org.slf4j.Logger,org.apache.commons.logging.Log,org.apache.log4j.Logger" />
         </inspection_tool>
         <inspection_tool class="ClassWithTooManyDependencies" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="limit" value="10" />
@@ -322,7 +322,9 @@
           <option name="ignoreCollectionLoops" value="true" />
         </inspection_tool>
         <inspection_tool class="HashCodeUsesNonFinalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="HibernateResource" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="HibernateResource" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="insideTryAllowed" value="false" />
+        </inspection_tool>
         <inspection_tool class="IfStatementWithIdenticalBranches" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="IgnoreResultOfCall" enabled="false" level="WARNING" enabled_by_default="false">
           <option name="m_reportAllNonLibraryCalls" value="true" />
@@ -343,8 +345,12 @@
         <inspection_tool class="IteratorHasNextCallsIteratorNext" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="IteratorNextDoesNotThrowNoSuchElementException" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="JDBCExecuteWithNonConstantString" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="JDBCResource" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="JNDIResource" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="JDBCResource" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="insideTryAllowed" value="false" />
+        </inspection_tool>
+        <inspection_tool class="JNDIResource" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="insideTryAllowed" value="false" />
+        </inspection_tool>
         <inspection_tool class="JUnit4AnnotatedMethodInJUnit3TestCase" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="JUnitAbstractTestClassNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_regex" value="[A-Z][A-Za-z\d]*TestCase" />

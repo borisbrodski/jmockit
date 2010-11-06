@@ -89,10 +89,10 @@ mockit</FONT>
 Annotation Type Capturing</H2>
 <HR>
 <DL>
-<DT><PRE><FONT SIZE="-1">@Documented
-@Inherited
-@Retention(value=RUNTIME)
-@Target(value={TYPE,FIELD,PARAMETER})
+<DT><PRE><FONT SIZE="-1"><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation">@Documented</A>
+<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Inherited.html?is-external=true" title="class or interface in java.lang.annotation">@Inherited</A>
+<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</A>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>=<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation">RUNTIME</A>)
+<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</A>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>={<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#TYPE" title="class or interface in java.lang.annotation">TYPE</A>,<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#FIELD" title="class or interface in java.lang.annotation">FIELD</A>,<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#PARAMETER" title="class or interface in java.lang.annotation">PARAMETER</A>})
 </FONT>public @interface <B>Capturing</B></DL>
 </PRE>
 
@@ -135,7 +135,7 @@ Indicates a test class, an instance field declared in a test class, or a test me
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;java.lang.Class&lt;?&gt;</CODE></FONT></TD>
+<CODE>&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Capturing.html#baseType()">baseType</A></B></CODE>
 
 <BR>
@@ -143,7 +143,7 @@ Indicates a test class, an instance field declared in a test class, or a test me
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;java.lang.String[]</CODE></FONT></TD>
+<CODE>&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>[]</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Capturing.html#classNames()">classNames</A></B></CODE>
 
 <BR>
@@ -174,7 +174,7 @@ Indicates a test class, an instance field declared in a test class, or a test me
 <A NAME="baseType()"><!-- --></A><H3>
 baseType</H3>
 <PRE>
-public abstract java.lang.Class&lt;?&gt; <B>baseType</B></PRE>
+public abstract <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt; <B>baseType</B></PRE>
 <DL>
 <DD>Specifies the base interface/class type whose implementations to capture at runtime.
  <p/>
@@ -202,13 +202,13 @@ public abstract java.lang.Class&lt;?&gt; <B>baseType</B></PRE>
 <A NAME="classNames()"><!-- --></A><H3>
 classNames</H3>
 <PRE>
-public abstract java.lang.String[] <B>classNames</B></PRE>
+public abstract <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>[] <B>classNames</B></PRE>
 <DL>
 <DD>One or more implementation class filters.
  Only classes which implement/extend the base type and match at least one filter will be
  considered.
  <p/>
- Each filter must contain a regular expression for
+ Each filter must contain a <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex">regular expression</A> for
  matching fully qualified class names.
 <P>
 <DD><DL>
