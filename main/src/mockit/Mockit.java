@@ -1,5 +1,5 @@
 /*
- * JMockit Core/Annotations
+ * JMockit Annotations
  * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -85,23 +85,20 @@ public final class Mockit
    private Mockit() {}
 
    /**
-    * Stubs out all methods, constructors, and static initializers in the given classes, so that
-    * they do nothing whenever executed.
+    * Stubs out all methods, constructors, and static initializers in the given classes, so that they do nothing
+    * whenever executed.
     * <p/>
-    * Note that any stubbed out constructor will still call a constructor in the super-class, which
-    * in turn will be executed normally unless also stubbed out.
+    * Note that any stubbed out constructor will still call a constructor in the super-class, which in turn will be
+    * executed normally unless also stubbed out.
     * The super-constructor to be called is chosen arbitrarily.
-    * The classes are stubbed out in the order they are given, so make sure any super-class comes
-    * first.
+    * The classes are stubbed out in the order they are given, so make sure any super-class comes first.
     * <p/>
-    * Methods with non-{@code void} return type will return the default value for this type, that
-    * is, zero for a number or {@code char}, {@literal false} for a boolean, empty for an array, or
-    * {@literal null} for a reference type.
+    * Methods with non-{@code void} return type will return the default value for this type, that is, zero for a number
+    * or {@code char}, {@literal false} for a boolean, empty for an array, or {@literal null} for a reference type.
     * <p/>
-    * If a different behavior is desired for any method or constructor, then
-    * {@link #setUpMocks(Object...)} and the other similar methods can be used right after the call
-    * to this method. They will override any stub previously created with the corresponding mock
-    * implementation, if any.
+    * If a different behavior is desired for any method or constructor, then {@link #setUpMocks(Object...)} and the
+    * other similar methods can be used right after the call to this method.
+    * They will override any stub previously created with the corresponding mock implementation, if any.
     *
     * @param realClasses one or more regular classes to be stubbed out
     *
@@ -115,27 +112,24 @@ public final class Mockit
    }
 
    /**
-    * Same as {@link #stubOut(Class...)} for the given class, except that only the specified class
-    * members (if any) are stubbed out, leaving the rest unaffected.
-    * Such class members include the methods and constructors defined by the class, plus any static
-    * or instance initialization blocks it might have.
+    * Same as {@link #stubOut(Class...)} for the given class, except that only the specified class members (if any) are
+    * stubbed out, leaving the rest unaffected.
+    * Such class members include the methods and constructors defined by the class, plus any static or instance
+    * initialization blocks it might have.
     * Note that if <em>no</em> filters are specified the whole class will be stubbed out.
     * <p/>
-    * For methods, the filters are {@linkplain java.util.regex.Pattern regular expressions} for
-    * method names, optionally followed by parameter type names between parentheses.
-    * For constructors, only the parameters are specified.
-    * For more details about the syntax for mock filters, see the {@link MockClass#stubs} annotation
-    * attribute.
+    * For methods, the filters are {@linkplain java.util.regex.Pattern regular expressions} for method names, optionally
+    * followed by parameter type names between parentheses. For constructors, only the parameters are specified.
+    * For more details about the syntax for mock filters, see the {@link MockClass#stubs} annotation attribute.
     * <p/>
     * The special filter "&lt;clinit>" will match all static initializers in the given class.
     * <p/>
-    * To stub out instance field initializers it is necessary to actually specify all constructors
-    * in the class, because such initialization assignments are copied to each and every constructor
-    * by the Java compiler.
+    * To stub out instance field initializers it is necessary to actually specify all constructors in the class, because
+    * such initialization assignments are copied to each and every constructor by the Java compiler.
     *
     * @param realClass a regular class to be stubbed out
-    * @param filters one or more filters that specify which class members (methods, constructors,
-    * and/or static initialization blocks) to be stubbed out
+    * @param filters one or more filters that specify which class members (methods, constructors, and/or static
+    * initialization blocks) to be stubbed out
     *
     * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/powermock/test/powermock/examples/suppress/method/ExampleWithEvilMethod_JMockit_Test.java">Example</a>
     */
@@ -145,11 +139,10 @@ public final class Mockit
    }
 
    /**
-    * The same as {@link #stubOutClass(Class, String...)}, but specifying whether filters are to be
-    * inverted or not.
+    * The same as {@link #stubOutClass(Class, String...)}, but specifying whether filters are to be inverted or not.
     *
-    * @param inverse indicates whether the mock filters are to be inverted or not; if inverted, only
-    * the methods and constructors matching them are <strong>not</strong> mocked
+    * @param inverse indicates whether the mock filters are to be inverted or not; if inverted, only the methods and
+    * constructors matching them are <strong>not</strong> mocked
     */
    public static void stubOutClass(Class<?> realClass, boolean inverse, String... filters)
    {
@@ -157,8 +150,8 @@ public final class Mockit
    }
 
    /**
-    * Same as {@link #stubOutClass(Class, String...)}, but accepting the (fully qualified) name of
-    * the real class. This is useful when said class is not accessible from the test.
+    * Same as {@link #stubOutClass(Class, String...)}, but accepting the (fully qualified) name of the real class.
+    * This is useful when said class is not accessible from the test.
     */
    public static void stubOutClass(String realClassName, String... filters)
    {
@@ -167,8 +160,8 @@ public final class Mockit
    }
 
    /**
-    * Same as {@link #stubOutClass(Class, boolean, String...)}, but accepting the (fully qualified)
-    * name of the real class. This is useful when said class is not accessible from the test.
+    * Same as {@link #stubOutClass(Class, boolean, String...)}, but accepting the (fully qualified) name of the real
+    * class. This is useful when said class is not accessible from the test.
     */
    public static void stubOutClass(String realClassName, boolean inverse, String... filters)
    {
@@ -177,9 +170,8 @@ public final class Mockit
    }
 
    /**
-    * Given a mix of {@linkplain MockClass mock} and real classes,
-    * {@linkplain #setUpMock(Class, Class) sets up} each mock class for the associated real class,
-    * and {@linkplain #stubOut stubs out} each specified regular class.
+    * Given a mix of {@linkplain MockClass mock} and real classes, {@linkplain #setUpMock(Class, Class) sets up} each
+    * mock class for the associated real class, and {@linkplain #stubOut stubs out} each specified regular class.
     *
     * @param mockAndRealClasses one or more mock classes and/or regular classes to be stubbed out
     */
@@ -200,61 +192,54 @@ public final class Mockit
    /**
     * Sets up the mocks defined in one or more {@linkplain MockClass mock classes}.
     * <p/>
-    * After this call, all such mocks are "in effect" until the end of the test method inside which
-    * it appears, if this is the case.
-    * If the method is a "before"/"setUp" method which executes before all test methods, then the
-    * mocks will remain in effect until they are explicitly {@linkplain #tearDownMocks(Class...)
-    * torn down} in an "after"/"tearDown" method.
+    * After this call, all such mocks are "in effect" until the end of the test method inside which it appears, if this
+    * is the case.
+    * If the method is a "before"/"setUp" method which executes before all test methods, then the mocks will remain in
+    * effect until they are explicitly {@linkplain #tearDownMocks(Class...) torn down} in an "after"/"tearDown" method.
     * <p/>
-    * Any invocation count constraints specified on mock methods will be automatically verified
-    * after the code under test is executed.
+    * Any invocation count constraints specified on mock methods (such as {@code @Mock(invocations = 1)}, for example)
+    * will be automatically verified after the code under test is executed.
     * <p/>
-    * For each call made during test execution to a <em>mocked</em> method, the corresponding
-    * <em>mock</em> method is called instead.
-    * A mock method must have the same signature as the corresponding mocked/real method.
-    * The return type of the mock method must be the same exact type or a compatible one.
-    * The {@code throws} clause may differ in any way. Note also that the mock method can be static
-    * or not, independently of the real method being static or not.
+    * For each call made during test execution to a <em>mocked</em> method, the corresponding <em>mock</em> method is
+    * called instead.
+    * A mock method must have the same signature (ie, name and parameters) as the corresponding mocked/real method.
+    * The return type of the mock method must be the same exact type <em>or</em> a compatible one.
+    * The {@code throws} clause may differ in any way.
+    * Note also that the mock method can be static or not, independently of the real method being static or not.
     * <p/>
-    * A constructor in the real class can be mocked by a corresponding <strong>mock
-    * constructor</strong> in the mock class, declared with the same signature.
-    * However, since a constructor can only be called on a freshly created instance, it is generally
-    * recommended to declare a mock method of name {@code $init} instead (which can also be
-    * {@code static}). This method should have {@code void} return type and must have the
-    * same declared parameters as the mocked constructor. It will be called for each new instance of
-    * the real class that is created through a call to that constructor, with whatever arguments are
-    * passed to it.
+    * A constructor in the real class can be mocked by a corresponding <strong>mock constructor</strong> in the mock
+    * class, declared with the same signature.
+    * However, since a constructor can only be called on a freshly created instance, it is generally recommended to
+    * declare a mock method of name {@code $init} instead (which can also be {@code static}).
+    * This method should have {@code void} return type and must have the same declared parameters as the mocked
+    * constructor. It will be called for each new instance of the real class that is created through a call to that
+    * constructor, with whatever arguments are passed to it.
     * <p/>
-    * <strong>Class initializers</strong> of the real class (one or more {@code static}
-    * initialization blocks plus all assignments to {@code static} fields) can be mocked by
-    * providing a mock method named {@code $clinit} in the mock class.
-    * This method should return {@code void} and have no declared parameters.
-    * It will be called at most once, at the time the real class is initialized by the JVM (and
-    * since all static initializers for that class are mocked, the initialization will have no
-    * effect).
+    * <strong>Class initializers</strong> of the real class (one or more {@code static} initialization blocks plus all
+    * assignments to {@code static} fields) can be mocked by providing a mock method named {@code $clinit} in the mock
+    * class. This method should return {@code void} and have no declared parameters.
+    * It will be called at most once, at the time the real class is initialized by the JVM (and since all static
+    * initializers for that class are mocked, the initialization will have no effect).
     * <p/>
-    * Mock methods can gain access to the instance of the real class on which the corresponding real
-    * method or constructor was called. This requires the mock class to define an instance field of
-    * name <strong>"it"</strong>, the same type as the real class, and accessible from that class
-    * (in general, this means the field will have to be {@code public}). Such a field will always be
-    * set to the appropriate real class instance, whenever a mock method is called. Note that
-    * through this field the mock class will be able to call any accessible instance method on the
-    * real class, including the real method corresponding to the current mock method. In this case,
-    * however, such calls are not allowed by default because they lead to infinite recursion, with
-    * the mock calling itself indirectly through the redefined real method. If the real method needs
-    * to be called from the mock method, then the latter must be declared as
-    * {@linkplain mockit.Mock#reentrant reentrant}.
+    * Mock methods can gain access to the instance of the real class on which the corresponding real method or
+    * constructor was called. This requires the mock class to define an instance field of name <strong>"it"</strong>,
+    * the same type as the real class, and accessible from that class (in general, this means the field will have to be
+    * {@code public}). Such a field will always be set to the appropriate real class instance, whenever a mock method is
+    * called. Note that through this field the mock class will be able to call any accessible instance method on the
+    * real class, including the real method corresponding to the current mock method. In this case, however, such calls
+    * are not allowed by default because they lead to infinite recursion, with the mock calling itself indirectly
+    * through the redefined real method. If the real method needs to be called from the mock method, then the latter
+    * must be declared as {@linkplain mockit.Mock#reentrant reentrant}.
     *
-    * @param mockClassesOrInstances one or more classes ({@code Class} objects) or instances of
-    * classes which define arbitrary methods and/or constructors, where the ones annotated as
-    * {@linkplain Mock mocks} will be used to redefine corresponding real methods/constructors in a
-    * designated {@linkplain MockClass#realClass() real class} (usually, a class on which the code
-    * under test depends on)
+    * @param mockClassesOrInstances one or more classes ({@code Class} objects) or instances of classes which define
+    * arbitrary methods and/or constructors, where the ones annotated as {@linkplain Mock mocks} will be used to
+    * redefine corresponding real methods/constructors in a designated {@linkplain MockClass#realClass() real class}
+    * (usually, a class on which the code under test depends on)
     *
-    * @throws IllegalArgumentException if any mock class fails to specify the corresponding real
-    * class using the {@code @MockClass(realClass = ...)} annotation
+    * @throws IllegalArgumentException if any mock class fails to specify the corresponding real class using the
+    * {@code @MockClass(realClass = ...)} annotation
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/web/submitOrder/OrderEntryPageTest.java">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java#132">Example</a>
     */
    public static void setUpMocks(Object... mockClassesOrInstances)
    {
@@ -277,40 +262,40 @@ public final class Mockit
 
    /**
     * Sets up the <em>startup</em> mocks defined in one or more mock classes, similarly to
-    * {@link #setUpMocks(Object...)}. The difference is in the lifetime of the mocks, which will last
-    * to the end of the current test suite execution.
+    * {@link #setUpMocks(Object...)}. The difference is in the lifetime of the mocks, which will last to the end of the
+    * current test suite execution.
     * Consequently, this method should only be called once, before the first test begins execution.
-    * One way to achieve this is to put the call in the static initializer of a common base class
-    * extended by all test classes in the suite.
+    * One way to achieve this is to put the call in the static initializer of a common base class extended by all test
+    * classes in the suite.
     * Another way is by configuring JMockit to apply one or more of the mock classes at startup.
     * <p/>
-    * There are two mechanisms that allow specifying mock classes to be loaded at JMockit startup
-    * time:
+    * There are two mechanisms that allow specifying mock classes to be loaded at JMockit startup time:
     * <ol>
-    * <li>Using the "-javaagent:jmockit.jar=&lt;agentArgs>" JVM argument, where "agentArgs" contains
-    * one or more <strong>mock class names</strong> (separated by semicolons if more than one).</li>
-    * <li>Using a customized "jmockit.properties" file, which must precede the standard file located
-    * inside jmockit.jar (see comments in that file for more details).
+    * <li>Using the "-javaagent:jmockit.jar=&lt;agentArgs>" JVM argument, where "agentArgs" contains one or more
+    * <strong>mock class names</strong> (separated by semicolons if more than one).
+    * </li>
+    * <li>Using a customized "jmockit.properties" file, which must precede the standard file located inside jmockit.jar
+    * (see comments in that file for more details).
     * </li>
     * </ol>
-    * Note that if you pass all desired mock classes to JMockit at startup using one of these two
-    * mechanisms, this method won't be used. However, it's also possible to pass only one of those
-    * mock classes to JMockit and then call this method in the no-args constructor of the chosen
-    * mock class, to cause the remaining mock classes to be applied.
+    * Note that if you pass all desired mock classes to JMockit at startup using one of these two mechanisms, this
+    * method won't be used. However, it's also possible to pass only one of those mock classes to JMockit and then call
+    * this method in the no-args constructor of the chosen mock class, to cause the remaining mock classes to be
+    * applied.
     * <p/>
-    * Note also that it's possible to package a whole set of mock classes in a jar file containing
-    * a jmockit.properties file and then, by simply adding the jar to the classpath <em>before</em>
-    * jmockit.jar, to have it loaded and applied automatically for any test suite execution, as
-    * soon as JMockit itself is initialized.
+    * Note also that it's possible to package a whole set of mock classes in a jar file containing a jmockit.properties
+    * file and then, by simply adding the jar to the classpath <em>before</em> jmockit.jar, to have it loaded and
+    * applied automatically for any test suite execution, as soon as JMockit itself is initialized.
     *
-    * @param mockClassesOrInstances one or more classes ({@code Class} objects) or instances of
-    * classes which define arbitrary methods and/or constructors, where the ones annotated as
-    * {@linkplain Mock mocks} will be used to redefine corresponding real methods/constructors in a
-    * designated {@linkplain MockClass#realClass() real class} (usually, a class on which the code
-    * under test depends on)
+    * @param mockClassesOrInstances one or more classes ({@code Class} objects) or instances of classes which define
+    * arbitrary methods and/or constructors, where the ones annotated as {@linkplain Mock mocks} will be used to
+    * redefine corresponding real methods/constructors in a designated {@linkplain MockClass#realClass() real class}
+    * (usually, a class on which the code under test depends on)
     *
-    * @throws IllegalArgumentException if any mock class fails to specify the corresponding real
-    * class using the {@code @MockClass(realClass = ...)} annotation
+    * @throws IllegalArgumentException if any mock class fails to specify the corresponding real class using the
+    * {@code @MockClass(realClass = ...)} annotation
+    *
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#467">Example</a>
     */
    public static void setUpStartupMocks(Object... mockClassesOrInstances)
    {
@@ -332,17 +317,15 @@ public final class Mockit
    }
 
    /**
-    * Similar to {@link #setUpMocks(Object...)}, but accepting a single mock and its corresponding
-    * real class.
+    * Similar to {@link #setUpMocks(Object...)}, but accepting a single mock and its corresponding real class.
     * <p/>
-    * Useful when the real class is not known in advance, such as when it is determined at runtime
-    * through configuration of by creating a {@link Proxy} for an interface.
+    * Useful when the real class is not known in advance, such as when it is determined at runtime through configuration
+    * of by creating a {@link Proxy} for an interface.
     *
     * @param realClass the class to be mocked that is used by code under test
-    * @param mock an instance of the class containing the mock methods/constructors for the real
-    * class
+    * @param mock an instance of the class containing the mock methods/constructors for the real class
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderFactoryTest.java">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java#134">Example</a>
     */
    public static void setUpMock(Class<?> realClass, Object mock)
    {
@@ -351,8 +334,8 @@ public final class Mockit
    }
 
    /**
-    * Same as {@link #setUpMock(Class, Object)}, but accepting the (fully qualified) name of the
-    * real class. This is useful when said class is not accessible from the test.
+    * Same as {@link #setUpMock(Class, Object)}, but accepting the (fully qualified) name of the real class.
+    * This is useful when said class is not accessible from the test.
     */
    public static void setUpMock(String realClassName, Object mock)
    {
@@ -361,16 +344,15 @@ public final class Mockit
    }
 
    /**
-    * Similar to {@link #setUpMocks(Object...)}, but accepting a single mock class and its
-    * corresponding real class.
+    * Similar to {@link #setUpMocks(Object...)}, but accepting a single mock class and its corresponding real class.
     * <p/>
-    * Can also be useful when the real class is not known in advance, such as when it is determined
-    * at runtime through configuration or by creating a {@link Proxy} for an interface.
+    * Can also be useful when the real class is not known in advance, such as when it is determined at runtime through
+    * configuration or by creating a {@link Proxy} for an interface.
     *
     * @param realClass the class to be mocked that is used by code under test
     * @param mockClass the class containing the mock methods/constructors for the real class
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#171">Example</a>
     */
    public static void setUpMock(Class<?> realClass, Class<?> mockClass)
    {
@@ -378,8 +360,10 @@ public final class Mockit
    }
 
    /**
-    * Same as {@link #setUpMock(Class, Class)}, but accepting the (fully qualified) name of the
-    * real class. This is useful when said class is not accessible from the test.
+    * Same as {@link #setUpMock(Class, Class)}, but accepting the (fully qualified) name of the real class.
+    * This is useful when said class is not accessible from the test.
+    *
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#61">Example</a>
     */
    public static void setUpMock(String realClassName, Class<?> mockClass)
    {
@@ -390,20 +374,20 @@ public final class Mockit
    /**
     * Sets up the mocks defined in the given mock class.
     * <p/>
-    * If the type {@linkplain MockClass#realClass referred to} by the mock class is actually an
-    * interface, then a {@linkplain #newEmptyProxy(ClassLoader, Class) new empty proxy} is created.
+    * If the type {@linkplain MockClass#realClass referred to} by the mock class is actually an interface, then a
+    * {@linkplain #newEmptyProxy(ClassLoader, Class) new empty proxy} is created.
     *
-    * @param mockClassOrInstance the mock class itself (given by its {@code Class} literal), or an
-    * instance of the mock class
+    * @param mockClassOrInstance the mock class itself (given by its {@code Class} literal), or an instance of the mock
+    * class
     *
-    * @return the new proxy instance created for the mocked interface, or null otherwise
+    * @return the new proxy instance created for the mocked interface, or {@code null} otherwise
     *
-    * @throws IllegalArgumentException if the mock class fails to specify an interface or class
-    * using the {@code @MockClass(realClass = ...)} annotation
+    * @throws IllegalArgumentException if the mock class fails to specify an interface or class using the
+    * {@code @MockClass(realClass = ...)} annotation
     *
     * @see #setUpMock(Class, Object)
     * @see #setUpMocks(Object...)
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderFactoryTest.java">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#698">Example</a>
     */
    public static <T> T setUpMock(Object mockClassOrInstance)
    {
@@ -435,23 +419,24 @@ public final class Mockit
    }
 
    /**
-    * Discards any mocks currently in effect, for all test scopes: the current test method (if any),
-    * the current test (which starts with the first "before" method and continues until the last
-    * "after" method), the current test class (which includes all code from the first "before class"
-    * method to the last "after class" method), and the current test suite.
+    * Discards any mocks currently in effect, for all test scopes: the current test method (if any), the current test
+    * (which starts with the first "before" method and continues until the last "after" method), the current test class
+    * (which includes all code from the first "before class" method to the last "after class" method), and the current
+    * test suite.
     * <p/>
-    * Notice that a call to this method will tear down <em>all</em> mock classes that were applied
-    * through use of the Annotations API that are still in effect, as well as any mock classes or
-    * stubs applied to the current test class through {@code @UsingMocksAndStubs}.
-    * In other words, it would effectively prevent mocks to be set up at the test class and test
-    * suite levels. So, use it only if necessary and if it won't discard mock classes that should
-    * remain in effect. Consider using {@link #tearDownMocks(Class...)} instead, which lets you
-    * restrict the set of real classes to be restored.
+    * Notice that a call to this method will tear down <em>all</em> mock classes that were applied through use of the
+    * Annotations API that are still in effect, as well as any mock classes or stubs applied to the current test class
+    * through {@code @UsingMocksAndStubs}.
+    * In other words, it would effectively prevent mocks to be set up at the test class and test suite levels.
+    * So, use it only if necessary and if it won't discard mock classes that should remain in effect.
+    * Consider using {@link #tearDownMocks(Class...)} instead, which lets you restrict the set of real classes to be
+    * restored.
     * <p/>
-    * JMockit will automatically restore classes mocked by a test method at the end of that test
-    * method's execution, as well as all classes mocked for the test class as a whole (through a
-    * "before class" method or an {@code @UsingMocksAndStubs} annotation) before the first test in
-    * the next test class is executed.
+    * JMockit will automatically restore classes mocked by a test method at the end of that test method's execution, as
+    * well as all classes mocked for the test class as a whole (through a "before class" method or an
+    * {@code @UsingMocksAndStubs} annotation) before the first test in the next test class is executed.
+    *
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/serviceA/ServiceATest.java#56">Example</a>
     */
    public static void tearDownMocks()
    {
@@ -465,25 +450,22 @@ public final class Mockit
    }
 
    /**
-    * Discards any mocks set up for the specified classes that are currently in effect, for all test
-    * scopes: the current test method (if any), the current test (which starts with the first
-    * "before" method and continues until the last "after" method), the current test class (which
-    * includes all code from the first "before class" method to the last "after class" method), and
-    * the current test suite.
+    * Discards any mocks set up for the specified classes that are currently in effect, for all test scopes: the current
+    * test method (if any), the current test (which starts with the first "before" method and continues until the last
+    * "after" method), the current test class (which includes all code from the first "before class" method to the last
+    * "after class" method), and the current test suite.
     * <p/>
-    * Notice that if one of the given real classes has a mock class applied at the level of the test
-    * class, calling this method would negate the application of that mock class.
-    * JMockit will automatically restore classes mocked by a test method at the end of that test
-    * method's execution, as well as all classes mocked for the test class as a whole (through a
-    * "before class" method or an {@code @UsingMocksAndStubs} annotation) before the first test in
-    * the next test class is executed.
+    * Notice that if one of the given real classes has a mock class applied at the level of the test class, calling this
+    * method would negate the application of that mock class.
+    * JMockit will automatically restore classes mocked by a test method at the end of that test method's execution, as
+    * well as all classes mocked for the test class as a whole (through a "before class" method or an
+    * {@code @UsingMocksAndStubs} annotation) before the first test in the next test class is executed.
     * <p/>
-    * In practice, this method should only be used inside "after" methods ({@code tearDown()} in a
-    * JUnit 3.8 test class), since mock classes set up in a "before" or {@code setUp()} method are
-    * <em>not</em> automatically discarded.
+    * In practice, this method should only be used inside "after" methods ({@code tearDown()} in a JUnit 3.8 test
+    * class), since mock classes set up in a "before" or {@code setUp()} method are <em>not</em> automatically
+    * discarded.
     *
-    * @param realClasses one or more real classes from production code, which may have mocked
-    * methods
+    * @param realClasses one or more real classes from production code, which may have mocked methods
     */
    public static void tearDownMocks(Class<?>... realClasses)
    {
@@ -493,16 +475,16 @@ public final class Mockit
    }
 
    /**
-    * Same as {@link #newEmptyProxy(ClassLoader, Class)}, but with the class loader obtained from
-    * the interface to be proxied. Note that this may lead to a {@code NoClassDefFoundError} if that
-    * interface was loaded by the boot class loader (usually, when it's a JRE class).
+    * Same as {@link #newEmptyProxy(ClassLoader, Class)}, but with the class loader obtained from the interface to be
+    * proxied. Note that this may lead to a {@code NoClassDefFoundError} if that interface was loaded by the boot class
+    * loader (usually, when it's a JRE class).
     * Therefore, you should only use this method for application-defined interfaces.
     * <p/>
-    * This method is just a convenience for some uses of the <em>Annotations/Core</em> API.
-    * In <em>JMockit Expectations</em> in particular, mock objects will be automatically created and
-    * assigned to any mock fields or parameters.
-    * <p/>
-    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java">Example</a>
+    * This method is just a convenience for some uses of the <em>Annotations</em> API.
+    * In <em>JMockit Expectations</em> in particular, mocked instances will be automatically created and assigned to any
+    * mock fields or parameters.
+    *
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#112">Example</a>
     */
    public static <E> E newEmptyProxy(Class<E> interfaceToBeProxied)
    {
@@ -511,35 +493,33 @@ public final class Mockit
 
    /**
     * Creates a {@link Proxy} implementation for a given interface, in which all methods are empty.
-    * Non-void methods will return a default value according to the return type: {@literal 0} for
-    * {@code int}, {@literal null} for a reference type, and so on.
+    * Non-void methods will return a default value according to the return type: {@literal 0} for {@code int},
+    * {@literal null} for a reference type, and so on.
     * <p/>
-    * The {@code equals}, {@code hashCode}, and {@code toString} methods inherited from
-    * {@code java.lang.Object} are overridden with an appropriate implementation in each case:
-    * {@code equals} is implemented by comparing the two object references (the proxy instance and
-    * the method argument) for equality; {@code hashCode} is implemented to return the identity
-    * hash code for the proxy instance; and {@code toString} returns the standard string
-    * representation that {@code Object#toString} would have returned.
+    * The {@code equals}, {@code hashCode}, and {@code toString} methods inherited from {@code java.lang.Object} are
+    * overridden with an appropriate implementation in each case:
+    * {@code equals} is implemented by comparing the two object references (the proxy instance and the method argument)
+    * for equality; {@code hashCode} is implemented to return the identity hash code for the proxy instance; and
+    * {@code toString} returns the standard string representation that {@code Object#toString} would have returned.
     * <p/>
-    * This method is just a convenience for some uses of the <em>Annotations/Core</em> API.
-    * In <em>JMockit Expectations</em> in particular, mock objects will be automatically created and
-    * assigned to any mock fields or parameters.
+    * This method is just a convenience for some uses of the <em>Annotations</em> API.
+    * In <em>JMockit Expectations</em> in particular, mocked instances will be automatically created and assigned to any
+    * mock fields or parameters.
     *
-    * @param loader the class loader under which to define the proxy class; usually this would be
-    * the application class loader, which can be obtained from any application class
+    * @param loader the class loader under which to define the proxy class; usually this would be the application class
+    * loader, which can be obtained from any application class
     * @param interfaceToBeProxied a {@code Class} object for an interface
     *
     * @return the created proxy instance
     *
     * @see #newEmptyProxy(Class)
     * @see #newEmptyProxy(Type...)
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java#207">Example</a>
     */
    public static <E> E newEmptyProxy(ClassLoader loader, Class<E> interfaceToBeProxied)
    {
-      Class<?>[] interfaces =
-         loader == null ?
-            new Class<?>[] {interfaceToBeProxied} :
-            new Class<?>[] {interfaceToBeProxied, EmptyProxy.class};
+      Class<?>[] interfaces = loader == null ?
+         new Class<?>[] {interfaceToBeProxied} : new Class<?>[] {interfaceToBeProxied, EmptyProxy.class};
 
       //noinspection unchecked
       return (E) Proxy.newProxyInstance(loader, interfaces, MockInvocationHandler.INSTANCE);
@@ -547,24 +527,22 @@ public final class Mockit
 
    /**
     * Creates a {@link Proxy} implementation for a given set of interface types.
-    * In this created class all methods will be empty, with return values for non-void methods being
-    * the appropriate default value ({@literal 0} for {@code int}, {@literal null} for a reference
-    * type, and so on).
+    * In this created class all methods will be empty, with return values for non-void methods being the appropriate
+    * default value ({@literal 0} for {@code int}, {@literal null} for a reference type, and so on).
     * <p/>
-    * The {@code equals}, {@code hashCode}, and {@code toString} methods inherited from
-    * {@code java.lang.Object} are overridden with an appropriate implementation in each case:
-    * {@code equals} is implemented by comparing the two object references (the proxy instance and
-    * the method argument) for equality; {@code hashCode} is implemented to return the identity
-    * hash code for the proxy instance; and {@code toString} returns the standard string
-    * representation that {@code Object#toString} would have returned.
+    * The {@code equals}, {@code hashCode}, and {@code toString} methods inherited from {@code java.lang.Object} are
+    * overridden with an appropriate implementation in each case:
+    * {@code equals} is implemented by comparing the two object references (the proxy instance and the method argument)
+    * for equality; {@code hashCode} is implemented to return the identity hash code for the proxy instance; and
+    * {@code toString} returns the standard string representation that {@code Object#toString} would have returned.
     * <p/>
-    * This method is just a convenience for some uses of the <em>Annotations/Core</em> API.
-    * In <em>JMockit Expectations</em> in particular, mock objects will be automatically created and
-    * assigned to any mock fields or parameters.
+    * This method is just a convenience for some uses of the <em>Annotations</em> API.
+    * In <em>JMockit Expectations</em> in particular, mocked instances will be automatically created and assigned to any
+    * mock fields or parameters.
     *
-    * @param interfacesToBeProxied one or more {@code Type} objects, each of which can be a
-    * {@code Class} object for an interface, a {@link ParameterizedType} whose raw type is an
-    * interface, or a {@link TypeVariable} whose bounds are interfaces
+    * @param interfacesToBeProxied one or more {@code Type} objects, each of which can be a {@code Class} object for an
+    * interface, a {@link ParameterizedType} whose raw type is an interface, or a {@link TypeVariable} whose bounds are
+    * interfaces
     *
     * @return the created proxy instance
     */
