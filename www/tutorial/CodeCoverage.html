@@ -407,8 +407,7 @@
    The example above uses "myBaseDir" as the base directory where a separate JVM instance will run.
    Two output directories containing "coverage.ser" data files are specified, separated by commas,
    as the first command line argument.
-   Other configuration parameters can be specified through the "jmockit-coverage-xyz" system
-   properties.
+   Other configuration parameters can be specified through the "jmockit-coverage-xyz" system properties.
    This separate JVM instance will read each of the "coverage.ser" data files, merge the coverage
    data in memory, and then generate the aggregate XHTML report before exiting.
 </p>
@@ -424,8 +423,7 @@
    </div>
 </h3>
 <p>
-   If you run tests with the "test" Maven goal, then you will need the following dependency in
-   <code>pom.xml</code>:
+   If you run tests with the "test" Maven goal, then you will need the following dependency in <code>pom.xml</code>:
 </p>
 <pre><code>      &lt;dependency>
          &lt;groupId>mockit&lt;/groupId>
@@ -442,26 +440,25 @@
    &lt;/properties>
 </code></pre>
 <p>
-   In Maven 2, the <code>surefire</code> plugin is the one usually responsible for actually running
-   tests.
+   In Maven 2, the <code>surefire</code> plugin is the one usually responsible for actually running tests.
    To configure the coverage tool, specify values for the appropriate "jmockit-coverage-xyz" system
    properties. For example, the output directory for generated files can be specified through the
    <code>jmockit-coverage-outputDir</code> property.
 </p>
-<pre><code>&lt;plugin>
+<pre class="no-highlight"><code>&lt;plugin>
    &lt;groupId>org.apache.maven.plugins&lt;/groupId>
    &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
    &lt;configuration>
-      &lt;!-- uncomment this if needed
+      <span class="comment">&lt;!-- uncomment this if needed
       &lt;argLine>
          -javaagent:"${settings.localRepository}"/mockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
       &lt;/argLine>
-      -->
+      --></span>
       &lt;systemProperties>
          &lt;property>
             &lt;name>jmockit-coverage-outputDir&lt;/name>&lt;value>target/my-coverage-report&lt;/value>
          &lt;/property>
-         &lt;!-- other "jmockit-coverage" properties... -->
+         <span class="comment">&lt;!-- other "jmockit-coverage" properties... --></span>
       &lt;/systemProperties>
    &lt;/configuration>
 &lt;/plugin>

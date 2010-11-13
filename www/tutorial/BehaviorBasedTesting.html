@@ -81,13 +81,10 @@
    constructors defined in production code.
 </p>
 <p>
-   An interaction between two units always takes the form of a method or constructor
-   <em>invocation</em>.
+   An interaction between two units always takes the form of a method or constructor <em>invocation</em>.
    The set of invocations from a unit under test to its dependencies, together with the argument and
-   return values passed between them, define the behavior of interest for the tests of that
-   particular unit.
-   In addition, a given test may need to verify the relative order of execution between multiple
-   invocations.
+   return values passed between them, define the behavior of interest for the tests of that particular unit.
+   In addition, a given test may need to verify the relative order of execution between multiple invocations.
 </p>
 <div style="text-align: center;" title="Click for API documentation">
    <map name="figure1">
@@ -174,8 +171,7 @@
    An <em>expectation</em> is a set of invocations to an specific mocked method/constructor that is
    relevant for a given test.
    An expectation may encompass multiple different invocations to the same method or constructor,
-   but it does not have to encompass <em>all</em> such invocations that occur during the test
-   execution.
+   but it does not have to encompass <em>all</em> such invocations that occur during the test execution.
 </p>
 <p>
    Besides being associated with an specific method or constructor, each expectation will specify
@@ -183,9 +179,8 @@
    invocation parameters involved.
    For each parameter, an exact argument value may be specified, according to the parameter type.
    For example, the value <code>"test string"</code> for an <code>String</code> parameter.
-   As we will see later, instead of specifying exact argument values, we can specify constraints
-   on such values, which will match whole sets of different argument values, for one or more actual
-   invocations.
+   As we will see later, instead of specifying exact argument values, we can specify constraints on such values, which
+   will match whole sets of different argument values, for one or more actual invocations.
 </p>
 <p>
    The example below shows an expectation for <code>someMethod(int, String)</code>, which will match
@@ -264,21 +259,18 @@
 <ol>
    <li>
       The <strong><em>record</em></strong> phase, during which invocations can be <em>recorded</em>.
-      This happens during test preparation, <em>before</em> the invocations we want to test are
-      executed.
+      This happens during test preparation, <em>before</em> the invocations we want to test are executed.
    </li>
    <li>
       The <strong><em>replay</em></strong> phase, during which the mock invocations of interest have
       a chance to be executed, as the unit under test is exercised.
       The invocations to mocked methods/constructors previously recorded will now be
-      <em>replayed</em>. Often there isn't a one-to-one mapping between invocations recorded and
-      replayed.
+      <em>replayed</em>. Often there isn't a one-to-one mapping between invocations recorded and replayed.
    </li>
    <li>
       The <strong><em>verify</em></strong> phase, during which invocations can be <em>verified</em>
       to have occurred as expected or not.
-      This happens during test verification, <em>after</em> the invocations under test had a chance
-      to be executed.
+      This happens during test verification, <em>after</em> the invocations under test had a chance to be executed.
    </li>
 </ol>
 <p>
@@ -363,15 +355,13 @@ public class SomeTest
    There are other variations to the above templates, but the essence is that the expectation blocks
    belong to the <em>record</em> phase and come before the unit under test is exercised, while the
    verification blocks belong to the <em>verify</em> phase.
-   A test method can contain any number of expectation blocks, including none. The same is true for
-   verification blocks.
+   A test method can contain any number of expectation blocks, including none. The same is true for verification blocks.
 </p>
 <p>
-   The fact that anonymous inner classes are used to demarcate blocks of code allows us to take
-   advantage of the "code folding" feature available in modern Java IDEs.
-   The following image shows how it looks like in IntelliJ IDEA.
+   The fact that anonymous inner classes are used to demarcate blocks of code allows us to take advantage of the
+   "code folding" feature available in modern Java IDEs. The following image shows what it looks like in IntelliJ IDEA.
 </p>
-<img src="folding.PNG">
+<img src="folding.png">
 
 <h3 id="declaration">
    Declaring and using mocked types
@@ -385,16 +375,15 @@ public class SomeTest
 </h3>
 <p>
    A mocked type can be introduced either through an instance field or a parameter declaration.
-   In the first case, the field belongs to the test class or to a <code>mockit.Expectations</code>
+   In the first case, the field belongs to the test class or to a <code class="type">mockit.Expectations</code>
    subclass (a local field inside an expectation block).
    In the second case, the parameter belongs to a test method.
 </p>
 <p>
-   In all cases, a mock field/parameter declaration can use the <code>mockit.Mocked</code>
-   annotation. The use of this annotation is optional for mock parameters and for mock fields
-   declared inside expectation blocks. It's only required for mock fields declared in the test
-   class, in order to avoid confusion with other fields the test class might have that are not
-   intended for mocking.
+   In all cases, a mock field/parameter declaration can use the <code class="type">mockit.Mocked</code> annotation.
+   The use of this annotation is optional for mock parameters and for mock fields declared inside expectation blocks.
+   It's only required for mock fields declared in the test class, in order to avoid confusion with other fields the test
+   class might have that are not intended for mocking.
 </p>
 <p>
    All kinds of Java types are valid for mock fields and parameters, except for primitive types and
@@ -416,8 +405,7 @@ public class SomeTest
    and static methods are going to be called on it.
 </p>
 <p>
-   The mocked instances created by JMockit can be used normally in test code, and/or passed to the
-   code under test.
+   The mocked instances created by JMockit can be used normally in test code, and/or passed to the code under test.
    Differently from other mocking APIs, though, these <em>mocked</em> objects don't have to be the
    ones used by the unit under test when it calls instance methods on its dependencies.
    By default, JMockit does not care on which object a mocked instance method is called.
@@ -426,14 +414,12 @@ public class SomeTest
    The classes instantiated must be covered by mocked types declared in test code, that's all.
 </p>
 <p>
-   Finally, note that the <em>mocked instances</em> created by JMockit are similar to the
-   traditional <em>mock objects</em> created by other mocking tools, but they are not the same.
-   With the JMockit Expectations API, every instance of a mocked type - whether created by JMockit
-   or not - is mocked, for as long as that type remains mocked.
-   With a more traditional mocking API, only the mock objects/instances created by the mocking tool
-   are actually mocked.
-   Most of the time, this makes little or no difference when writing tests, but it is something to
-   keep in mind. 
+   Finally, note that the <em>mocked instances</em> created by JMockit are similar to the traditional
+   <em>mock objects</em> created by other mocking tools, but they are not the same.
+   With the JMockit Expectations API, every instance of a mocked type - whether created by JMockit or not - is mocked,
+   for as long as that type remains mocked.
+   With a more traditional mocking API, only the mock objects/instances created by the mocking tool are actually mocked.
+   Most of the time, this makes little or no difference when writing tests, but it is something to keep in mind. 
 </p>
 
 <h4 id="multipleInterfaces">Mocking multiple interfaces at the same time</h4>
@@ -490,11 +476,11 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 }
 </code></pre>
 <p>
-   In each of the tests above, two interfaces were mocked together: <code>Dependency</code> plus
-   <code>java.lang.Runnable</code> for a mock field, and <code>Dependency</code> plus
-   <code>java.io.Serializable</code> for a mock parameter.
-   We used the <em>type variables</em> <code>MultiMock</code> (defined for the whole test class) and
-   <code>M</code> (defined for a single test method) so that JMockit could know about the component
+   In each of the tests above, two interfaces were mocked together: <code class="type">Dependency</code> plus
+   <code class="type">java.lang.Runnable</code> for a mock field, and <code class="type">Dependency</code> plus
+   <code class="type">java.io.Serializable</code> for a mock parameter.
+   We used the <em>type variables</em> <strong><code>MultiMock</code></strong> (defined for the whole test class) and
+   <strong><code>M</code></strong> (defined for a single test method) so that JMockit could know about the component
    interfaces in each case.
 </p>
 
@@ -510,19 +496,17 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </h3>
 <p>
    For a given method with non-<code>void</code> return type, a return value can be recorded through
-   the <code>Expectations#result</code> field or through the <code>Expectations#returns(...)</code>
-   method.
+   the <code>Expectations#result</code> field or through the <code>Expectations#returns(...)</code> method.
    When the method gets called in the replay phase, the specified return value will be returned to
    the caller (which normally is the unit under test).
 </p>
 <p>
-   If the test instead needs an exception or error to be thrown when the method is invoked, then
-   the <code>result</code> field can also be used to record the desired exception/error to be
-   thrown, by having the desired throwable instance assigned to it.
-   In the rare case where a method actually returns exception or error objects, the
-   <code>returns(Object)</code> method will have to be used, to avoid the ambiguity.
-   Note that recording exceptions/errors to be thrown is applicable to mocked methods as well as to
-   mocked constructors.
+   If the test instead needs an exception or error to be thrown when the method is invoked, then the <code>result</code>
+   field can also be used to record the desired exception/error to be thrown, by having the desired throwable instance
+   assigned to it.
+   In the rare case where a method actually returns exception or error objects, the <code>returns(Object)</code> method
+   will have to be used, to avoid the ambiguity.
+   Note that recording exceptions/errors to be thrown is applicable to mocked methods as well as to mocked constructors.
 </p>
 <p>
    Multiple consecutive results (values to return and/or throwables to throw) can be recorded for
@@ -531,14 +515,12 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    The recording of multiple return values and/or exceptions/errors to be thrown can be freely mixed
    for the same expectation.
    In the case of recording multiple consecutive return values for a given expectation, a single
-   call to the <code>returns(Object, Object...)</code> method can be made to specify more than one
-   return value.
+   call to the <code>returns(Object, Object...)</code> method can be made to specify more than one return value.
    This is the only situation where the <code>result</code> field cannot be used; note that this
    <code>returns</code> method is an overload which takes a <em>varargs</em> argument for
    consecutive values after the first one.
    For more details about this ability, see the corresponding
-   <a href="../javadoc/mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">API
-      documentation</a>.
+   <a href="../javadoc/mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">API documentation</a>.
 </p>
 <p>
    The following example test records expectations for two methods defined in a mocked class.
@@ -548,7 +530,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    The second one specifies that the unit under test should then invoke
    <code>stringReturningMethod()</code> three times, with the first two calls resulting in the
    return values of <code>"str1"</code> and <code>"str2"</code>, and the third call causing an
-   <code>IllegalStateException</code> instance to be thrown.
+   <code class="type">IllegalStateException</code> instance to be thrown.
 </p>
 <pre><code>   @Test
    public void someTestMethod()
@@ -590,9 +572,8 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   On the previous section we mentioned that a recorded invocation like
-   <code>abc.intReturningMethod();</code> would actually match invocations to
-   <code>DependencyAbc#intReturningMethod()</code> on <em>any</em> instance of the mocked
+   On the previous section we mentioned that a recorded invocation like <code>abc.intReturningMethod();</code> would
+   actually match invocations to <code>DependencyAbc#intReturningMethod()</code> on <em>any</em> instance of the mocked
    <code>DependencyAbc</code> class.
    In most cases, this won't really matter and can be safely ignored.
    But what if we need to verify that the invocation occurs on a specific instance?
@@ -619,12 +600,10 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    The test above will only pass if the unit under test invokes <code>getValue()</code> on the exact
    same mock instance on which the recording invocation was made.
    This is typically useful when the unit under test makes calls on two or more different instances
-   of the same type, and the test wants to verify that each invocation occurred on the proper
-   instance.
+   of the same type, and the test wants to verify that each invocation occurred on the proper instance.
    In fact, whenever two or more mocks of the exact same type are in scope for a given test, JMockit
    will automatically apply "onInstance" matching to all invocations made on those mocks.
-   Therefore, in such common situations it isn't necessary to explicitly use the
-   <code>onInstance(mock)</code> method.
+   Therefore, in such common situations it isn't necessary to explicitly use the <code>onInstance(mock)</code> method.
 </p>
 <p>
    In practice, this matching specifier method will rarely be used.
@@ -656,9 +635,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    different argument values, we can specify flexible <em>argument matching constraints</em> instead
    of equal argument values.
    This is done through a set of <code>withXyz(...)</code> methods of the
-   <code>mockit.Invocations</code> base class (which both <code>mockit.Expectations</code> and
-   <code>mockit.Verifications</code> extend), where "Xyz" describes the specific matching
-   constraint. See examples below.
+   <code class="type">mockit.Invocations</code> base class (which both <code class="type">mockit.Expectations</code> and
+   <code class="type">mockit.Verifications</code> extend), where "Xyz" describes the specific matching constraint.
+   See examples below.
 </p>
 <pre><code>   @Test
    public void someTestMethod(@NonStrict final DependencyAbc abc)
@@ -694,16 +673,15 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </code></pre>
 <p>
    There are more "with" methods than shown above.
-   See the <a href="../javadoc/mockit/Expectations.html#withEqual(T)">API documentation</a> for more
-   details.
+   See the <a href="../javadoc/mockit/Expectations.html#withEqual(T)">API documentation</a> for more details.
 </p>
 <p>
-   Besides the several predefined argument matching constraints available in the API, JMockit allows
-   the user to provide custom constraints, through the
-   <code>&lt;T> T with(org.hamcrest.Matcher&lt;T>)</code> and
-   <code>&lt;T> T with(T, org.hamcrest.Matcher&lt;T>)</code> generic methods.
-   The <code>org.hamcrest.Matcher</code> interface belongs to the
-   <a href="http://code.google.com/p/hamcrest">Hamcrest</a> library, which is bundled with JUnit 4.
+   Besides the several predefined argument matching constraints available in the API, JMockit allows the user to provide
+   custom constraints, through the <code>&lt;T> T with(Object)</code> and <code>&lt;T> T with(T, Object>)</code> generic
+   methods.
+   The parameter of type <code class="type">Object</code> can be an <code class="type">org.hamcrest.Matcher</code>
+   object from the <a href="http://code.google.com/p/hamcrest">Hamcrest</a> library, or a suitable handler object
+   (see the <a href="../javadoc/mockit/Expectations.html#with(T, java.lang.Object)">API documentation</a> for details).
 </p>
 
 <h4 id="matcherFields">Using the "any" <em>fields</em> for argument matching</h4>
@@ -711,8 +689,8 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    For the <code>withAny(?)</code> methods that take no arguments or take one only to designate
    the parameter type, there is a set of special <em>argument matching fields</em> that are
    available to expectation and verification blocks.
-   Using these "any" fields will have the same effect as using the corresponding "withAny" method,
-   as demonstrated below.
+   Using these "any" fields will have the same effect as using the corresponding "withAny" method, as demonstrated
+   below.
 </p>
 <pre><code>   @Test
    public void someTestMethod(@NonStrict final DependencyAbc abc)
@@ -785,11 +763,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    In conclusion, there are two <em>modes</em> for argument matching: the basic one where no
    matching constraints are specified and all arguments must be equal, and the one where matching
    constraints are specified for some or all parameters.
-   The meaning of the <code>null</code> value is different for each mode, which may lead to
-   confusion at times.
+   The meaning of the <code>null</code> value is different for each mode, which may lead to confusion at times.
    For complex invocations where multiple arguments are involved, though, the benefits of being able
-   to use "any" fields and the <code>null</code> reference should outweigh the additional API
-   complexity.
+   to use "any" fields and the <code>null</code> reference should outweigh the additional API complexity.
 </p>
 
 <h4 id="varargs">Matching values passed through a <em>varargs</em> parameter</h4>
@@ -819,14 +795,11 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </p>
 <p>
    Yet another way, particularly useful for <code>void</code> methods or when the test doesn't care
-   about specific return values, is to specify an <em>invocation count constraint</em> for a given
-   expectation.
-   The API has several fields just for that: <code>times</code>, <code>minTimes</code>, and
-   <code>maxTimes</code>.
-   These fields belong to the <code>mockit.Invocations</code> class, the non-public base class for
-   both <code>mockit.Expectations</code> and <code>mockit.Verifications</code>.
-   Therefore, an invocation count constraint can be specified either when recording or when
-   verifying invocations.
+   about specific return values, is to specify an <em>invocation count constraint</em> for a given expectation.
+   The API has several fields just for that: <code>times</code>, <code>minTimes</code>, and <code>maxTimes</code>.
+   These fields belong to the <code class="type">mockit.Invocations</code> class, the non-public base class for
+   both <code class="type">mockit.Expectations</code> and <code class="type">mockit.Verifications</code>.
+   Therefore, an invocation count constraint can be specified either when recording or when verifying invocations.
    In either case, the method or constructor associated with the expectation will be constrained to
    have a number of invocations made by the unit under test that falls in the specified range.
    Any invocations less or more than the expected lower or upper limit, respectively, and the test
@@ -885,13 +858,12 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    <em>strict</em> by default, meaning that the invocations they specify are <em>expected</em> to
    occur during the <em>replay</em> phase, and in the same order as they were recorded.
    Even more, only these explicitly recorded expected invocations will be allowed to occur.
-   Any <em>unexpected</em> invocations that were not recorded will automatically cause the test to
-   fail.
+   Any <em>unexpected</em> invocations that were not recorded will automatically cause the test to fail.
 </p>
 <p>
-   The <code>mockit.NonStrictExpectations</code> class (which extends
-   <code>mockit.Expectations</code>), as the name indicates, is used when we want
-   to record <em>non-strict</em> (or <em>loose</em>) expectations.
+   The <code class="type">mockit.NonStrictExpectations</code> class (which extends
+   <code class="type">mockit.Expectations</code>), as the name indicates, is used when we want to record
+   <em>non-strict</em> (or <em>loose</em>) expectations.
    Inside such a block, all invocations to mocked types will be <em>allowed</em> to occur during the
    replay phase, not <em>expected</em>. That is, by default they may or may not occur during replay.
    In addition, they don't have to occur in the same order as they were recorded.
@@ -899,11 +871,10 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <p>
    By default, an invocation recorded as an strict expectation will be expected to match exactly one
    invocation in the replay phase. That is, the expectation will have an invocation count constraint
-   of <code>1</code>, as if it was followed by <code><em>times</em> = 1;</code> assignment.
+   of <code>1</code>, as if it was followed by <code><em>times</em> = 1</code> assignment.
    An invocation recorded as non-strict, on the other hand, will by default be allowed to match any
    number of invocations in the replay phase. That is, its invocation count constraint will have a
-   lower limit of <code>0</code> and an unbounded upper limit, as if followed by a
-   <code>minTimes = 0;</code> assignment.
+   lower limit of <code>0</code> and an unbounded upper limit, as if followed by a <code>minTimes = 0</code> assignment.
    In either case, however, the default invocation count constraint can be overridden by an explicit
    one (that is, an explicit assignment to one of the <code>times/minTimes/maxTimes</code> fields).
 </p>
@@ -920,7 +891,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </p>
 <p>
    To allow mixing strict and non-strict expectations inside an strict expectation block, we can
-   apply the <code>mockit.NonStrict</code> annotation to a mock field or parameter.
+   apply the <code class="type">mockit.NonStrict</code> annotation to a mock field or parameter.
    Any invocation to such a mocked type will be considered as belonging to a non-strict expectation,
    and all unrecorded invocations in the replay phase will be allowed (that is, they will never be
    considered as unexpected, and therefore will not cause the test to fail).
@@ -929,7 +900,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </p>
 <p>
    Inside an strict expectation block, an individual invocation can be explicitly marked as
-   non-strict through a <code>notStrict();</code> call following the invocation.
+   non-strict through a <code>notStrict()</code> call following the invocation.
    Most of the time, it will be easier to use a non-strict expectation block or a mock
    field/parameter annotated as non-strict, though.
 </p>
@@ -944,34 +915,31 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <p>
    It's usually best to think about <em>strictness</em> at the level of individual expectations, not
    at the level of mocked instances or types.
-   That said, it is also correct to say that a given mocked instance (or mocked type) is strict or
-   non-strict.
-   All it means, really, is that all expectations associated to that particular instance/type have
-   the same strictness.
+   That said, it is also correct to say that a given mocked instance (or mocked type) is strict or non-strict.
+   All it means, really, is that all expectations associated to that particular instance/type have the same strictness.
    On the other hand, it's perfectly valid to record both strict and non-strict expectations for
    the same mocked instance or type, in the same test.
    And when using mock fields declared at the test class level, it's possible that a given mocked
-   instance will be entirely strict in one test and entirely non-strict in another, in the same test
-   class.
+   instance will be entirely strict in one test and entirely non-strict in another, in the same test class.
 </p>
 <p>
    The JMockit Expectations API lets you specify that a given recorded expectation should be
    non-strict (through the <code>notStrict()</code> method), that all expectations for a particular
    mock should be non-strict (by annotating the mock field or parameter with
-   <code>@NonStrict</code>), and that all expectations recorded inside a particular block should be
-   non-strict (by extending the <code>NonStrictExpectations</code> base class).
-   That's it. There is no way to specify that a given expectation, a mock, or a whole expectation
-   block should be <em>strict</em>.
+   <code class="annotation">@NonStrict</code>), and that all expectations recorded inside a particular block should be
+   non-strict (by extending the <code class="type">NonStrictExpectations</code> base class).
+   That's it. There is no way to specify that a given expectation, a mock, or a whole expectation block should be
+   <em>strict</em>.
 </p>
 <p>
    Strict expectations are recorded and verified <em>by default</em>, when we do <em>not</em>
    specify that they should be non-strict. For an expectation to be strict, it needs to be recorded
-   inside an expectation block not derived from <code>NonStrictExpectations</code>, for a mocked
-   type not annotated as <code>@NonStrict</code>.
+   inside an expectation block not derived from <code class="type">NonStrictExpectations</code>, for a mocked
+   type not annotated as <code class="annotation">@NonStrict</code>.
 </p>
 <p>
-   Remember that <em>unexpected invocations</em> can only be detected for so-called <em>strict
-   mocks</em>, or for expectations with an specified maximum invocation count constraint.
+   Remember that <em>unexpected invocations</em> can only be detected for so-called <em>strict mocks</em>, or for
+   expectations with an specified maximum invocation count constraint.
    So, how do we obtain a mocked instance/type where all unrecorded expectations are considered to
    be strict (and therefore cause matching invocations at replay time to throw an "unexpected
    invocation" error)? Simple: by recording at least one <em>strict</em> expectation on the mocked
@@ -986,13 +954,11 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    When a sequence of consecutive invocations is recorded with strict expectations (the relative
    order between invocations is irrelevant with <em>non-strict</em> expectations), the whole
    sequence is expected to occur exactly once during the replay phase.
-   Consider, however, the case where the tested code executes those invocations in a loop (or any
-   kind of iteration).
+   Consider, however, the case where the tested code executes those invocations in a loop (or any kind of iteration).
    Assuming that the number of iterations is known in the test, we can still record those
    expectations with a single invocation to each method/constructor called inside the loop (that is,
    without writing a loop or repeating the expectations inside the expectation block).
-   The next test demonstrates this feature, using the
-   <code>Expectations(int numberOfIterations)</code> constructor.
+   The next test demonstrates this feature, using the <code>Expectations(int numberOfIterations)</code> constructor.
 </p>
 <pre><code>   @Test
    public void recordStrictInvocationsInIteratingBlock(final Collaborator mock)
@@ -1039,8 +1005,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    a <code>new NonStrictExpectations() {...}</code> block, with the exception of the methods and
    fields used to record return values and thrown exceptions/errors.
    That is, all of the <code>withXyz(...)</code> argument matching methods can be used, as well as
-   the <code>times</code>, <code>minTimes</code>, and <code>maxTimes</code> invocation count
-   constraint fields.
+   the <code>times</code>, <code>minTimes</code>, and <code>maxTimes</code> invocation count constraint fields.
 </p>
 
 <h4 id="importingMocks">Importing mocks from expectation blocks</h4>
@@ -1079,9 +1044,8 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   The mocked types to be imported are identified by the <em>types</em> of the fields declared in
-   the verification, not by the field names. Typically, though, the same field names will be used
-   to avoid confusion.
+   The mocked types to be imported are identified by the <em>types</em> of the fields declared in the verification,
+   not by the field names. Typically, though, the same field names will be used to avoid confusion.
    This ability can be useful if for whatever reason mock parameters are not desired, or when
    capturing internally created instances of mocked types (explained in a later section).
 </p>
@@ -1097,8 +1061,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <p>
    Regular verification blocks, like the one below, are <em>unordered</em>.
    The actual relative order in which <code>aMethod()</code> and <code>anotherMethod()</code> were
-   called during the replay phase is not verified, but only that each method was executed at least
-   once.
+   called during the replay phase is not verified, but only that each method was executed at least once.
 </p>
 <pre><code>   @Test
    public void someTestMethod(final DependencyAbc abc)
@@ -1115,10 +1078,10 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   If you do want to also verify the relative order of invocations, then a
-   <code>new VerificationsInOrder() {...}</code> block must be used instead.
-   Inside this block, simply write invocations to one or more mocked types in the order they are
-   expected to have happened.
+   If you do want to also verify the relative order of invocations, then a <code>new VerificationsInOrder() {...}</code>
+   block must be used instead.
+   Inside this block, simply write invocations to one or more mocked types in the order they are expected to have
+   happened.
    Naturally, argument matchers and invocation count constraints can be freely used.
 </p>
 
@@ -1127,8 +1090,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    Suppose you want to verify that a particular method (or constructor) was called <em>before</em>
    (or <em>after</em>) other invocations to mocked types in the replay phase, but you don't care
    about the order in which those other invocations occurred.
-   Inside an ordered verification block (<code>VerificationsInOrder</code>), this can be achieved by
-   simply calling the
+   Inside an ordered verification block (<code>VerificationsInOrder</code>), this can be achieved by simply calling the
    <a href="../javadoc/mockit/VerificationsInOrder.html#unverifiedInvocations()">unverifiedInvocations()</a>
    method at the appropriate place(s).
    The following test snippet demonstrates it.
@@ -1195,13 +1157,11 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 
 <h4 id="FullVerification">Full verification</h4>
 <p>
-   Sometimes it may be important to have <em>all</em> invocations to the mocked types involved in a
-   test verified.
-   This is automatically the case when recording strict expectations, since any unexpected
-   invocation causes the test to fail.
-   When non-strict expectations are explicitly verified, though, a
-   <code>new FullVerifications() {...}</code> block can be used to make sure that no invocations are
-   left unverified.
+   Sometimes it may be important to have <em>all</em> invocations to the mocked types involved in a test verified.
+   This is automatically the case when recording strict expectations, since any unexpected invocation causes the test to
+   fail.
+   When non-strict expectations are explicitly verified, though, a <code>new FullVerifications() {...}</code> block can
+   be used to make sure that no invocations are left unverified.
 </p>
 <pre><code>   @Test
    public void verifyAllInvocations(final Dependency mock)
@@ -1223,10 +1183,8 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </code></pre>
 <p>
    Note that if a lower limit (a minimum invocation count constraint) is specified for an otherwise
-   non-strict expectation, then this constraint will always be implicitly verified at the end of the
-   test.
-   Therefore, explicitly verifying such an expectation inside the full verification block is not
-   necessary.
+   non-strict expectation, then this constraint will always be implicitly verified at the end of the test.
+   Therefore, explicitly verifying such an expectation inside the full verification block is not necessary.
 </p>
 
 <h4 id="FullVerificationInOrder">Full verification in order</h4>
@@ -1257,11 +1215,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <p>
    Notice there is a not so obvious difference in semantics, though.
    In the <code>verifyAllInvocations</code> test above, we were able to match two separate
-   <code>mock.setSomething(...)</code> invocations with a single invocation in the verification
-   block.
+   <code>mock.setSomething(...)</code> invocations with a single invocation in the verification block.
    In the <code>verifyAllInvocationsInOrder</code> test, however, we had to write two separate
-   invocations to that method inside the block, in the proper order with respect to other
-   invocations.
+   invocations to that method inside the block, in the proper order with respect to other invocations.
 </p>
 <p>
    You may now be thinking that writing a <code>FullVerificationsInOrder</code> block ends up being
@@ -1282,10 +1238,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    <code>new FullVerificationsInOrder() {}</code> block.
    Now, what if we have a test with two (or more) mocked types but we only want to fully verify
    invocations to one of them (or to any subset of mocked types when more than two)?
-   The answer is to use the
-   <strong><code>FullVerifications(Object... mockedTypesAndInstancesToVerify)</code></strong>
-   constructor, where only the given mocked instances and mocked types (ie, class objects/literals)
-   are considered. The following test provides an example.
+   The answer is to use the <strong><code>FullVerifications(Object... mockedTypesAndInstancesToVerify)</code></strong>
+   constructor, where only the given mocked instances and mocked types (ie, class objects/literals) are considered.
+   The following test provides an example.
 </p>
 <pre><code>   @Test
    public void verifyAllInvocationsToOnlyOneOfTwoMockedTypes(Dependency mock1, AnotherDependency mock2)
@@ -1309,18 +1264,17 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <p>
    In the test above, the <code>mock2.doSomething()</code> invocation is never verified.
    It's possible to restrict verification only to the methods (and constructors) of a single class,
-   by passing its class literal in the <code>FullVerifications(...)</code> or
-   <code>FullVerificationsInOrder(...)</code> constructor.
-   For example, the <code>new FullVerificationsInOrder(AnotherDependency.class) { ... }</code> block
-   would only make sure that all invocations to the mocked <code>AnotherDependency</code> class were
-   verified.
+   by passing its class literal in the <code>FullVerifications(...)</code> or <code>FullVerificationsInOrder(...)</code>
+   constructor.
+   For example, the <code>new FullVerificationsInOrder(AnotherDependency.class) { ... }</code> block would only make
+   sure that all invocations to the mocked <code class="type">AnotherDependency</code> class were verified.
 </p>
 
 <h4 id="unspecifiedInvocations">Verifying unspecified invocations that should not happen</h4>
 <p>
-   A full verification block (ordered or not) also allows us to verify that certain methods and/or
-   constructors never get invoked, without having to specify each one of them with a corresponding
-   <code><em>times</em> = 0</code> assignment.
+   A full verification block (ordered or not) also allows us to verify that certain methods and/or constructors never
+   get invoked, without having to specify each one of them with a corresponding <code><em>times</em> = 0</code>
+   assignment.
    The following test provides an example.
 </p>
 <pre><code>   @Test
@@ -1346,8 +1300,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    If a call to any method (or constructor) of the <code>Dependency</code> class occurs during the
    replay phase, except for the ones explicitly verified in the verification block
    (<code>Dependency#getData()</code> in this case), then the test above will fail.
-   On the other hand, it may be easier to use strict expectations in such cases, without any
-   verification block at all.
+   On the other hand, it may be easier to use strict expectations in such cases, without any verification block at all.
 </p>
 
 <h4 id="iterations">Verifying iterations</h4>
@@ -1384,8 +1337,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    The use of two verification blocks above is just to explain the different semantics between
    ordered and unordered iterating verification blocks.
    In the first block, each verified invocation will have to match at least three invocations to the
-   same method in the replay phase, because this was the number of iterations passed in the
-   constructor.
+   same method in the replay phase, because this was the number of iterations passed in the constructor.
    For an unordered iterating block, the specified number of iterations is effectively multiplied by
    the lower and upper invocation count limits; this happens even if an explicit constraint is
    specified inside the block, such as a <code><em>minTimes</em> = 1; <em>maxTimes</em> = 4;</code>
@@ -1419,7 +1371,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    group of methods and the various <code><em>anyXyz</em></code> fields.
    But what if a test needs to decide the result of a recorded invocation based on the arguments it
    will receive at replay time?
-   We can do it through a <code>mockit.Delegate</code> instance, as exemplified below.
+   We can do it through a <code class="type">mockit.Delegate</code> instance, as exemplified below.
 </p>
 <pre><code>   @Test
    public void someTestMethod()
@@ -1447,9 +1399,8 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   The <code>Delegate</code> interface is empty, being used simply to tell JMockit that actual
-   invocations at replay time should be delegated to the corresponding methods in the delegate
-   object.
+   The <code class="type">Delegate</code> interface is empty, being used simply to tell JMockit that actual
+   invocations at replay time should be delegated to the corresponding methods in the delegate object.
 </p>
 <p>
    A corresponding method in the delegate implementation must have parameters matching the method
@@ -1460,13 +1411,13 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    to match both the name and the parameters of the corresponding recorded method.
    Note that the return type of a delegate method does not have to be exactly the same, since it's
    not part of the method signature. It should be compatible, though, otherwise a
-   <code>ClassCastException</code> is likely.
+   <code class="type">ClassCastException</code> is likely.
    Note also that this can de done for non-<code>public</code> methods and even for
    <code>static</code>, <code>final</code>, and <code>native</code> mocked methods.
 </p>
 <p>
    The following example test shows a <em>constructor</em> invocation being delegated in a reusable
-   <code>Delegate</code> class, which saves an argument value for later verification in the test.
+   <code class="type">Delegate</code> class, which saves an argument value for later verification in the test.
 </p>
 <pre><code>   @Test
    public void anotherTestMethod()
@@ -1495,8 +1446,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }</strong>
 </code></pre>
 <p>
-   Constructors are also handled by delegate <em>methods</em>, except that such methods must be
-   named "$init".
+   Constructors are also handled by delegate <em>methods</em>, except that such methods must be named "$init".
 </p>
 
 <h3 id="forEachInvocation">
@@ -1510,14 +1460,12 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   <code>Delegate</code> implementations can be used to validate invocation arguments, but they are
-   limited to expectation blocks. Besides, the main point of delegate methods is to specify
-   <em>invocation results</em> (values to return or exceptions to throw) at replay time, based on
-   the arguments received.
+   <code>Delegate</code> implementations can be used to validate invocation arguments, but they are limited to
+   expectation blocks. Besides, the main point of delegate methods is to specify <em>invocation results</em> (values to
+   return or exceptions to throw) at replay time, based on the arguments received.
    If the actual need is to validate the arguments passed at replay time in each invocation matching
    an expectation, the <strong><code>forEachInvocation</code></strong> field should be used instead.
-   Such validations can be specified not only in expectation blocks, but also in verification
-   blocks.
+   Such validations can be specified not only in expectation blocks, but also in verification blocks.
    For example, consider the following test:
 </p>
 <pre><code>   @Test
@@ -1544,27 +1492,25 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   In this test, all invocations to the <code>Collaborator#doSomething</code> method that occur
-   during the replay phase and that match the verified expectation will be validated by a call to
-   the specified <code>validate</code> method.
-   Each such call will be made with the same arguments that the verified method/constructor received
-   at replay time.
+   In this test, all invocations to the <code>Collaborator#doSomething</code> method that occur during the replay phase
+   and that match the verified expectation will be validated by a call to the specified <code>validate</code> method.
+   Each such call will be made with the same arguments that the verified method/constructor received at replay time.
    In this particular example, the verified expectation matches invocations with any arguments, but
    more strict argument matchers could have been specified.
 </p>
 <p>
-   Differently from <code>Delegate</code> implementations, the object assigned to the
-   <code>forEachInvocation</code> field can be of any type.
-   The implementation class, however, should define exactly one non-<code>private</code> method of
-   any name, with the same number of parameters as the validated method/constructor (any number of
-   additional <code>private</code> methods is allowed).
+   Differently from <code>Delegate</code> implementations, the object assigned to the <code>forEachInvocation</code>
+   field can be of any type.
+   The implementation class, however, should define exactly one non-<code>private</code> method of any name, with the
+   same number of parameters as the validated method/constructor (any number of additional <code>private</code> methods
+   is allowed).
    The types of corresponding parameters don't have to be exactly the same, but they must be 
-   compatible in order to avoid the potential for <code>ClassCastException</code>'s.
+   compatible in order to avoid the potential for <code class="type">ClassCastException</code>'s.
 </p>
 <p>
-   Optionally, a first parameter of type <code>mockit.Invocation</code> can be declared in the
+   Optionally, a first parameter of type <code class="type">mockit.Invocation</code> can be declared in the
    validation method, which should still have the remaining parameters. The semantics in this case
-   are the same as in the case of a <code>Delegate</code> method with that same special parameter.
+   are the same as in the case of a <code class="type">Delegate</code> method with that same special parameter.
 </p>
 
 <h3 id="deencapsulation">
@@ -1586,17 +1532,16 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </p>
 <p>
    A different situation arises when a test wants to verify not only the behavior, but also the
-   state of the unit under test after it is exercised, and the relevant state is stored in 
-   non-accessible fields.
-   Some tests may also need to set some necessary state in non-accessible fields of the unit under
-   test before it is exercised.
+   state of the unit under test after it is exercised, and the relevant state is stored in non-accessible fields.
+   Some tests may also need to set some necessary state in non-accessible fields of the unit under test before it is
+   exercised.
 </p>
 <p>
    A third kind of situation would be the eventual need to instantiate non-accessible classes from a
    given test. Such a need should be rare, though.
 </p>
 <p>
-   To handle these needs (rare though they may be) the <code>Expectations</code> class provides a
+   To handle these needs (rare though they may be) the <code class="type">Expectations</code> class provides a
    set of Reflection-based utility methods that allow a test to invoke non-accessible methods on a
    given object or class, to instantiate objects through non-accessible constructors, and to get or
    set the values of fields in given objects or classes.
@@ -1629,13 +1574,13 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   The utility methods mentioned above are actually defined in the <code>Invocations</code> base
-   class, and therefore they are also available to <code>Verifications</code> subclasses.
-   This allows invocations to private methods and constructors to be verified in a verification
-   block, just like they can be recorded in an expectation block.
+   The utility methods mentioned above are actually defined in the <code class="type">Invocations</code> base class,
+   and therefore they are also available to <code class="type">Verifications</code> subclasses.
+   This allows invocations to private methods and constructors to be verified in a verification block, just like they
+   can be recorded in an expectation block.
 </p>
 <p>
-   The <code>mockit.Deencapsulation</code> class used at the end of the test is a separate utility
+   The <code class="type">mockit.Deencapsulation</code> class used at the end of the test is a separate utility
    class which contains those same Reflection-based utilities.
    It's a more generally useful class, since it can be called from any place in test code.
    Its methods are all <code>static</code>, so they can be statically imported for easier access.
@@ -1652,13 +1597,12 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   In a test class, we declare mocked types through mock fields and mock parameters, sometimes using
-   one of the <code>@Mocked</code> and <code>@NonStrict</code> annotations, sometimes by simply
-   letting JMockit infer from the declaration scope if the field or parameter is to be mocked or
-   not.
+   In a test class, we declare mocked types through mock fields and mock parameters, sometimes using one of the
+   <code class="annotation">@Mocked</code> and <code class="annotation">@NonStrict</code> annotations, sometimes by
+   simply letting JMockit infer from the declaration scope if the field or parameter is to be mocked or not.
    By default, in any such case <em>all</em> instance methods which can be called on the mock
    field/parameter, and <em>all</em> constructors and static methods which can be called on the
-   mocked class and its super-classes (except for <code>java.lang.Object</code>) will get mocked.
+   mocked class and its super-classes (except for <code class="annotation">java.lang.Object</code>) will get mocked.
    That is, by default we get a fully mocked type, be it an interface or a class of any kind.
 </p>
 <p>
@@ -1676,11 +1620,10 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <h4 id="staticPartial">Static partial mocking</h4>
 <p>
    Methods and constructors to be mocked can be explicitly specified through the
-   <code>@Mocked(<strong>methods</strong> = {"filter1", "filter2", ...})</code> annotation
-   attribute.
+   <code><span class="annotation">@Mocked</span>(<strong>methods</strong> = {"filter1", "filter2", ...})</code>
+   annotation attribute.
    Each filter value is composed of an optional regular expression (<code>java.util.regex</code>)
-   that matches method names, followed by an also optional parenthesized list of parameter type
-   names.
+   that matches method names, followed by an also optional parenthesized list of parameter type names.
    The following example test shows several ways to use partial mocking.
 </p>
 <pre><code>public class MyTestClass
@@ -1712,26 +1655,25 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 }
 </code></pre>
 <p>
-   For convenience, the <code>@Mocked</code> annotation defines the default <code>value</code>
+   For convenience, the <code class="annotation">@Mocked</code> annotation defines the default <code>value</code>
    attribute as a synonym for the <code>methods</code> attribute.
-   This is what allows us to write <code>@Mocked("nanoTime")</code>, as shown above.
+   This is what allows us to write <code><span class="annotation">@Mocked</span>("nanoTime")</code>, as shown above.
 </p>
 <p>
    The <code>inverse</code> attribute, which by default is equal to <code>false</code>, inverts the
    meaning of the specified mock filters.
-   For example, as <code>@Mocked("nanoTime")</code> or
-   <code>@Mocked(methods = "nanoTime", inverse = false)</code> cause only the
+   For example, as <code><span class="annotation">@Mocked</span>("nanoTime")</code> or
+   <code><span class="annotation">@Mocked</span>(methods = "nanoTime", inverse = false)</code> cause only the
    <code>System#nanoTime()</code> method to be mocked, the inverse specification
-   <code>@Mocked(methods = "nanoTime", inverse = true)</code> cause it to be the only method
-   <em>not</em> mocked in the <code>java.lang.System</code> class.
+   <code><span class="annotation">@Mocked</span>(methods = "nanoTime", inverse = true)</code> cause it to be the only
+   method <em>not</em> mocked in the <code class="type">java.lang.System</code> class.
 </p>
 <p>
    To specify constructors through a mock filter expression, leave the first part (which corresponds
    to method names) empty and specify the constructor parameter type names between parentheses.
    Use commas to separate parameters, if more than one.
    The parameter type name actually can be any unique suffix of the fully qualified type name.
-   In practice, this means that it's almost never necessary to specify any package names for a
-   reference type.
+   In practice, this means that it's almost never necessary to specify any package names for a reference type.
 </p>
 <p>
    Specifying parameter types in a filter expression that targets methods is possible, but usually
@@ -1740,22 +1682,22 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 <p>
    Finally, notice that when the mocked type is a class, a mock filter expression for methods will
    actually match methods defined anywhere in the class hierarchy, from the mocked class up to
-   <code>Object</code> (not itself included).
+   <code class="type">Object</code> (not itself included).
 </p>
 
 <h4 id="dynamicPartial">Dynamic partial mocking</h4>
 <p>
    Static partial mocking has the inconvenience that we need to explicitly specify the
-   methods/constructors to be mocked or not mocked, and do so inside strings instead of in Java
-   code. In short, it entails extra work and is not "refactoring friendly".
+   methods/constructors to be mocked or not mocked, and do so inside strings instead of in Java code.
+   In short, it entails extra work and is not "refactoring friendly".
 </p>
 <p>
    An alternative that avoids both problems is to let JMockit figure out when to execute the real
    implementation of methods/constructors during the <em>replay</em> phase, based on which
    invocations were recorded in an expectation block and which were not.
-   The following example tests demonstrate this feature, which we describe as <em>dynamic partial
-   mocking</em> since the decision of what is mocked is made at runtime, as invocations to mocked
-   types during the replay phase match invocations recorded in expectation blocks.
+   The following example tests demonstrate this feature, which we describe as <em>dynamic partial mocking</em> since
+   the decision of what is mocked is made at runtime, as invocations to mocked types during the replay phase match
+   invocations recorded in expectation blocks.
 </p>
 <pre><code>public final class DynamicPartialMockingTest
 {
@@ -1811,9 +1753,8 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 }
 </code></pre>
 <p>
-   As shown above, the <code>Expectations(Object...)</code> and
-   <code>NonStrictExpectations(Object...)</code> constructors accept one or more classes or objects
-   to be partially mocked.
+   As shown above, the <code>Expectations(Object...)</code> and <code>NonStrictExpectations(Object...)</code>
+   constructors accept one or more classes or objects to be partially mocked.
    If the <code>Class</code> object for a given class is passed, the methods and constructors
    defined in that class are considered for mocking, but <em>not</em> the methods and constructors
    of its super-class (and so on until <code>Object</code>).
@@ -1869,21 +1810,18 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   When using complex APIs where functionality is distributed through many different objects, it is
-   not uncommon to see chained invocations of the form
-   <code>obj1.getObj2(...).getYetAnotherObj().doSomething(...)</code>.
-   In such cases it may be necessary to mock all objects/classes in the chain, starting with
-   <code>obj1</code>.
+   When using complex APIs where functionality is distributed through many different objects, it is not uncommon to see
+   chained invocations of the form <code>obj1.getObj2(...).getYetAnotherObj().doSomething(...)</code>.
+   In such cases it may be necessary to mock all objects/classes in the chain, starting with <code>obj1</code>.
 </p>
 <p>
-   The <code>@Cascading</code> annotation provides this ability. Just like <code>@Mocked</code>, it
-   can be applied to mock fields and mock parameters. Similarly to <code>@NonStrict</code> and
-   <code>@Capturing</code>, the use of <code>@Cascading</code> on a mock field or test method
-   parameter will imply that the type is mocked (this doesn't preclude use of <code>@Mocked</code>
-   on the same field/parameter, however).
+   The <code class="annotation">@Cascading</code> annotation provides this ability.
+   Just like <code class="annotation">@Mocked</code>, it can be applied to mock fields and mock parameters.
+   Similarly to <code class="annotation">@NonStrict</code> and <code class="annotation">@Capturing</code>, the use of
+   <code class="annotation">@Cascading</code> on a mock field or test method parameter will imply that the type is
+   mocked (this doesn't preclude use of <code class="annotation">@Mocked</code> on the same field/parameter, however).
    The following test shows a basic example, where the cascading mocked type is used in expectation
-   and verification blocks. The test involves use of the <code>java.net</code> and
-   <code>java.nio</code> APIs.
+   and verification blocks. The test involves use of the <code>java.net</code> and <code>java.nio</code> APIs.
 </p>
 <pre><code>   @Test
    public void recordAndVerifyExpectationsOnCascadedMocks(@Cascading final Socket mock)
@@ -1918,7 +1856,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   In the test above, since the <code>Socket</code> class was mocked with cascading, any calls to
+   In the test above, since the <code class="type">Socket</code> class was mocked with cascading, any calls to
    methods like <code>getChannel()</code> will return a <em>cascaded mock</em> object whenever they
    occur during the test. The cascaded mock will allow further cascading, so a <code>null</code>
    reference will never be obtained from methods which return object references (except for return
@@ -2136,14 +2074,12 @@ public final class TestedUnit
 </p>
 <p>
    The tests in this example test class exercise the
-   <code>LoginService#login(String accountId, String password)</code> method (our <em>unit under
-   test</em>).
+   <code>LoginService#login(String accountId, String password)</code> method (our <em>unit under test</em>).
    This method first attempts to look up an existing user account from the given login name
    ("accountId", which is expected to be unique among all accounts).
    Since several different tests are needed to fully exercise this unit, a non-strict invocation to
    the <code>UserAccount#find(String accountId)</code> method is recorded for all tests in the
-   class, with an specific login name ("john") and the mock account object as the value to be
-   returned.
+   class, with an specific login name ("john") and the mock account object as the value to be returned.
    Remember, any given test can use multiple expectation and/or verification blocks.
    And such blocks can even be written inside shared "before" and "after" methods, respectively.
 </p>
@@ -2153,21 +2089,19 @@ public final class TestedUnit
    happens as a consequence of such invocations, if any occur.
    The answer is that such invocations are freely <em>allowed</em>, and in the case of
    non-<code>void</code> methods the invocation will return the default value according to the
-   method's return type (<code>0</code> for primitive integers, empty collections and arrays, and so
-   on).
+   method's return type (<code>0</code> for primitive integers, empty collections and arrays, and so on).
 </p>
 <p>
    Another form or reuse exemplified above is shown by the <code>willMatchPassword(boolean)</code>
    method, which contains another reusable expectation block.
    In this case, an invocation to the <code>UserAccount#passwordMatches(String)</code> method is
-   recorded for any password value, with the resulting return value provided as a parameter to the
-   reusable method.
+   recorded for any password value, with the resulting return value provided as a parameter to the reusable method.
 </p>
 <p>
-   Yet another form of reuse for expectation and verification blocks is to create named subclasses
-   instead of anonymous ones.
-   For example, instead of having the <code>willMatchPassword(boolean)</code> method we could have a
-   reusable inner class:
+   Yet another form of reuse for expectation and verification blocks is to create named subclasses instead of anonymous
+   ones.
+   For example, instead of having the <code>willMatchPassword(boolean)</code> method we could have a reusable inner
+   class:
 </p>
 <pre><code>   <strong>final</strong> class PasswordMatching extends NonStrictExpectations
    {

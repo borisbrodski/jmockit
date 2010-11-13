@@ -38,7 +38,7 @@ public final class JMockitVerificationsExampleTest
          DependencyXyz mock; // mock instance created and assigned automatically
 
          {
-            mock.doSomething("test"); returns(123);
+            mock.doSomething("test"); result = 123;
          }
       };
 

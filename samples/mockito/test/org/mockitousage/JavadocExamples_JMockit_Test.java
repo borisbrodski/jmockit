@@ -33,9 +33,9 @@ import mockit.*;
 import org.hamcrest.beans.*;
 import static org.junit.Assert.*;
 
-// Even though JMockit tests often take more lines of code than the equivalent Mockito tests,
-// the number of uses of each mocking API (considering methods/constructors called, fields accessed,
-// and annotations applied) is often less in the JMockit ones.
+// Even though JMockit tests may take more lines of code than the equivalent Mockito tests (mostly because of code
+// formatting style), the number of uses of each mocking API (considering methods/constructors called, fields accessed,
+// and annotations applied) is usually less in the JMockit ones, and never more.
 public final class JavadocExamples_JMockit_Test
 {
    @Mocked List<String> mockedList;

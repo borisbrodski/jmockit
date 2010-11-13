@@ -40,10 +40,16 @@ public final class JMockitExpectationsExampleTest
       new Expectations()
       {
          // This is a mock field; it can optionally be annotated with @Mocked.
-         final DependencyXyz mock = new DependencyXyz();
+         DependencyXyz mock; // a mocked instance is automatically created and assigned
 
          {
-            mock.doSomething("test"); returns(123);
+            new DependencyXyz(); // records an expectation on a constructor invocation
+            mock.doSomething("test"); result = 123;
+            
+            // The expectations above are strict, causing the whole dependency to be strictly verified.
+            // Therefore, invocations not recorded here will be considered unexpected, causing the test
+            // to fail if they occur while exercising the code under test.
+            // Non-strict expectations are also supported.
          }
       };
 

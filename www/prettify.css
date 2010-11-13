@@ -49,13 +49,12 @@ pre .subst, pre .title, .type {
   color: #606;
 }
 
-pre .comment, pre .template_comment, pre .javadoc, pre .diff .header {
+pre .comment, pre .javadoc {
   color: #800;
   font-style: italic;
 }
 
-.annotation, pre .decorator, pre .preprocessor, pre .doctype, pre .pi, pre .chunk, pre .shebang,
-pre .apache .cbracket {
+.annotation, pre .decorator, pre .doctype, pre .pi, pre .chunk {
   color: #808000;
 }
 
@@ -63,13 +62,13 @@ pre .tag, pre .pi {
   background: #efefef;
 }
 
-pre .tag .title, pre .id, pre .attr_selector, pre .pseudo, pre .literal, pre .keyword, pre .hexcolor,
-pre .css .function, pre .ini .title, pre .css .class, pre .list .title, pre .tex .command {
+pre .tag .title, pre .id, pre .pseudo, pre .literal, pre .keyword, pre .hexcolor,
+pre .css .function, pre .ini .title, pre .css .class, pre .list .title {
   font-weight: bold;
   color: #000080;
 }
 
-pre .attribute, pre .rules .keyword, pre .number, pre .date, pre .regexp, pre .tex .special {
+pre .attribute, pre .rules .keyword, pre .number, pre .date, pre .regexp {
   font-weight: bold;
   color: #0000ff;
 }
@@ -78,23 +77,22 @@ pre .number, pre .regexp {
   font-weight: normal;
 }
 
-pre .string, pre .value, pre .filter .argument, pre .css .function .params, pre .apache .tag {
+pre .string, pre .value, pre .filter .argument, pre .css .function .params {
   color: #008000;
   font-weight: bold;
 }
 
-pre .symbol, pre .ruby .symbol .string, pre .ruby .symbol .keyword, pre .ruby .symbol .keymethods,
-pre .char, pre .tex .formula {
+pre .symbol, pre .char {
   color: #000;
   background: #d0eded;
   font-style: italic;
 }
 
-pre .phpdoc, pre .yardoctag, pre .javadoctag {
+pre .javadoctag {
   text-decoration: underline;
 }
 
-pre .variable, pre .envvar, pre .apache .sqbracket, pre .nginx .built_in {
+pre .variable, pre .envvar {
   color: #660e7a;
 }
 

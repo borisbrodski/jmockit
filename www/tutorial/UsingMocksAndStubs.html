@@ -20,10 +20,9 @@
 <p>
    As we have seen, the <a href="StateBasedTesting.html">JMockit Annotations API</a> provides
    methods that can be used to apply <em>mock classes</em> and to <em>stub out</em> classes.
-   There are times when we want to mock or stub out classes for the entire scope of a test class
-   (that is, for all of its test methods), or even for the entire scope of a test suite (that is,
-   for all of its test classes).
-   The <code>mockit.UsingMocksAndStubs</code> annotation provides an easy way to do just that, by
+   There are times when we want to mock or stub out classes for the entire scope of a test class (that is, for all of
+   its test methods), or even for the entire scope of a test suite (that is, for all of its test classes).
+   The <code class="type">mockit.UsingMocksAndStubs</code> annotation provides an easy way to do just that, by
    letting us specify which mock classes to apply and/or which real classes to stub out for a given
    test class, and when JUnit 4 is used, for a given test suite class.
 </p>
@@ -34,11 +33,10 @@
    <img src="UsingMocksAndStubs.png" usemap="#figure1">
 </div>
 <p>
-   The <code>@UsingMocksAndStubs</code> annotation is applied to a test/suite class with a list
-   containing one or more mock classes (themselves annotated with <code>@MockClass</code>) and/or
+   The <code class="annotation">@UsingMocksAndStubs</code> annotation is applied to a test/suite class with a list
+   containing one or more mock classes (themselves annotated with <code class="annotation">@MockClass</code>) and/or
    production classes.
-   When any test in this annotated test class/suite is executed, those mocks and stubs will be in
-   effect.
+   When any test in this annotated test class/suite is executed, those mocks and stubs will be in effect.
 </p>
 <p>
    This ability is particularly useful to prevent code under test from executing some other code
@@ -80,16 +78,15 @@ public final class TestSuite
 {}
 </code></pre>
 <p>
-   In this example, we apply the <code>JDKLoggingMocks</code> and <code>Log4jMocks</code> mock
+   In this example, we apply the <code class="type">JDKLoggingMocks</code> and <code class="type">Log4jMocks</code> mock
    classes, both available in the <code>mockit.integration.logging</code> package.
    With this, any use of the standard <code>java.util.logging</code> API in any test belonging to
    the specified test suite will be mocked/stubbed out so that no actual logging output is produced.
    Any calls in production code like <code>Logger.getLogger(ProductionClass.class.getName())</code>
-   will result in a mock logger object.
-   The same will happen to uses of the Log4J API.
+   will result in a mock logger object. The same will happen to uses of the Log4J API.
 </p>
 <p>
-   The implementation of the <code>mockit.integration.logging.Log4jMocks</code> class makes for some
+   The implementation of the <code class="type">mockit.integration.logging.Log4jMocks</code> class makes for some
    interesting and complex use of the state-based mocking/stubbing API, so we reproduce it here for
    reference (minus the Javadoc documentation).
 </p>
@@ -99,8 +96,7 @@ import org.apache.log4j.spi.*;
 import mockit.*;
 import static mockit.Instantiation.*;
 
-@MockClass(
-   realClass = Logger.class, instantiation = PerMockSetup, stubs = {"trace", "isTraceEnabled"})
+@MockClass(realClass = Logger.class, instantiation = PerMockSetup, stubs = {"trace", "isTraceEnabled"})
 public final class Log4jMocks
 {
    private static final Logger MOCK_LOGGER = new RootLogger(Level.OFF);
@@ -111,21 +107,21 @@ public final class Log4jMocks
    }
 
    @Mock public static Logger getLogger(String name) { return MOCK_LOGGER; }
-   @Mock public static Logger getLogger(Class<?> clazz) { return MOCK_LOGGER; }
+   @Mock public static Logger getLogger(Class&lt;?> clazz) { return MOCK_LOGGER; }
    @Mock public static Logger getRootLogger() { return MOCK_LOGGER; }
    @Mock public static Logger getLogger(String name, LoggerFactory lf) { return MOCK_LOGGER; }
 }
 </code></pre>
 <p>
-   The Log4J API provides several static methods to create loggers, so we have a corresponding mock
-   method for each one of them, which simply returns a global mock instance.
-   The <code>@MockClass</code> annotation only accepts a single "real" class to be mocked, so we use
-   the mock class constructor to stub out the <code>org.apache.log4j.Category</code> class, which
-   <code>org.apache.log4j.Logger</code> extends.
-   As specified in the <code>instantiation</code> attribute, this mock class will be instantiated
-   with the default constructor once <em>per mock setup</em>, which in this case occurs when the
-   <code>@UsingMocksAndStubs</code> annotation is applied to the test suite.
-   We also specified two methods of the <code>Logger</code> class to be stubbed out.
+   The Log4J API provides several static methods to create loggers, so we have a corresponding mock method for each one
+   of them, which simply returns a global mock instance.
+   The <code class="annotation">@MockClass</code> annotation only accepts a single "real" class to be mocked, so we use
+   the mock class constructor to stub out the <code class="type">org.apache.log4j.Category</code> class, which
+   <code class="type">org.apache.log4j.Logger</code> extends.
+   As specified in the <code>instantiation</code> attribute, this mock class will be instantiated with the default
+   constructor once <em>per mock setup</em>, which in this case occurs when the
+   <code class="annotation">@UsingMocksAndStubs</code> annotation is applied to the test suite.
+   We also specified two methods of the <code class="type">Logger</code> class to be stubbed out.
 </p>
 <div class="navigation">
    <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>

@@ -20,10 +20,9 @@
 <p>
    The utility methods described in this chapter are all <code>static</code> and stateless.
    In the end, they simply wrap some of the standard functionality available in the Java
-   <a href="http://java.sun.com/javase/6/docs/api/java/lang/reflect/package-summary.html"
-      target="_blank">Reflection API</a> in a more convenient, higher-level API.
-   These methods can be used in all kinds of tests, not just those which use the JMockit mocking
-   APIs.
+   <a href="http://download.oracle.com/javase/6/docs/api/java/lang/reflect/package-summary.html">Reflection API</a> in
+   a more convenient, higher-level API.
+   These methods can be used in all kinds of tests, not just those which use the JMockit mocking APIs.
 </p>
 <div style="text-align: center;" title="Click for API documentation">
    <map name="figure1">
@@ -44,14 +43,12 @@
    </div>
 </h3>
 <p>
-   The methods described in this section are all from the <code>mockit.Deencapsulation</code> class.
-   To avoid the need to separately import these methods when using the behavior-based mocking API,
-   identical methods are directly available inside <em>expectation</em> and <em>verification</em>
-   blocks (see the <a href="BehaviorBasedTesting.html#deencapsulation">relevant section</a> in that
-   chapter).
-   Therefore, this class is only used outside expectation/verification blocks, in tests written with
-   the <a href="StateBasedTesting.html">state-based mocking API</a>, or in "pure" JUnit/TestNG
-   tests. 
+   The methods described in this section are all from the <code class="type">mockit.Deencapsulation</code> class.
+   To avoid the need to separately import these methods when using the behavior-based mocking API, identical methods are
+   directly available inside <em>expectation</em> and <em>verification</em> blocks (see the
+   <a href="BehaviorBasedTesting.html#deencapsulation">relevant section</a> in that chapter).
+   Therefore, this class is only used outside expectation/verification blocks, in tests written with the
+   <a href="StateBasedTesting.html">state-based mocking API</a>, or in "pure" JUnit/TestNG tests.
 </p>
 <p>
    The following test class will be used for example tests in the sub-sections that follow:
@@ -103,8 +100,7 @@ public final class DeencapsulationTest
 <h4 id="deencapsulatingFields">Getting/setting non-accessible fields by name or type</h4>
 <p>
    The <code>getField</code> and <code>setField</code> methods, for which there are several
-   overloads (variations with different parameters), can be used to access instance and static
-   fields.
+   overloads (variations with different parameters), can be used to access instance and static fields.
    The field to be read or assigned can be specified in two ways: by name or by type.
    In the case of instance fields, the field may be declared in any class along the hierarchy, not
    just in the concrete class of the given owner instance.
@@ -208,8 +204,7 @@ public final class DeencapsulationTest
    }
 </code></pre>
 <p>
-   Note that to create an "inner instance" only the <em>simple name</em> of the inner class must be
-   specified.
+   Note that to create an "inner instance" only the <em>simple name</em> of the inner class must be specified.
    The "outer" class is specified through the required owner instance (the second parameter).
 </p>
 
@@ -222,26 +217,25 @@ public final class DeencapsulationTest
    </div>
 </h3>
 <p>
-   The methods described in this section are all from the <code>mockit.Mockit</code> class.
+   The methods described in this section are all from the <code class="type">mockit.Mockit</code> class.
    A <em>proxy</em> or <em>dynamic proxy</em> is an instance of a class created at runtime through
-   <code>java.lang.reflect.Proxy</code>, which implements a given set of interfaces.
-   For an <em>empty</em> proxy, the created implementation class will have all methods with empty
-   implementations, except for the non-void ones which will return a proper default value according
-   to the method return type (<code>0</code> for primitive integral types, <code>false</code> for
-   <code>boolean</code>, <code>null</code> for reference types, and so on).
+   <code class="type">java.lang.reflect.Proxy</code>, which implements a given set of interfaces.
+   For an <em>empty</em> proxy, the created implementation class will have all methods with empty implementations,
+   except for the non-void ones which will return a proper default value according to the method return type
+   (<code>0</code> for primitive integral types, <code>false</code> for <code>boolean</code>, <code>null</code> for
+   reference types, and so on).
 </p>
 <p>
-   There are three method overloads of name <code>newEmptyProxy</code> which take one or more
-   interface types and return a new instance of a newly created empty proxy class.
+   There are three method overloads of name <code>newEmptyProxy</code> which take one or more interface types and return
+   a new instance of a newly created empty proxy class.
    Most of the time, JMockit will provide better means to create interface implementations, though.
-   For each mocked interface type in an <em>Expectations</em> test, in particular, the proxy
-   instance will be created and assigned to the mock field/parameter transparently.
-   When using the Annotations API, on other hand, it sometimes may be necessary to use one of these
+   For each mocked interface type in an <em>Expectations</em> test, in particular, the proxy instance will be created
+   and assigned to the mock field/parameter transparently.
+   When using the Annotations API, on other hand, it sometimes may be necessary to use one of these methods.
+   A proxy class (empty or not) can always be mocked/redefined later through one of the <code>Mockit.setUpMock</code>
    methods.
-   A proxy class (empty or not) can always be mocked/redefined later through one of the
-   <code>Mockit.setUpMock</code> methods.
-   An example is the <code>findOrderByNumber</code> test in the <code>OrderRepositoryTest</code>
-   sample test class, which can be seen
+   An example is the <code>findOrderByNumber</code> test in the <code class="type">OrderRepositoryTest</code> sample
+   test class, which can be seen
    <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java">here</a>.
 </p>
 <div class="navigation">

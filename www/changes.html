@@ -14,6 +14,28 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
+<h3>Next release</h3>
+
+<p>Release 0.999.4 (November ?, 2010):</p>
+<ul>
+   <li>
+      <strong>Enhancement</strong>: added support for the mocking of the <code>java.lang.Object</code> class through the
+      Expectations API (the <code>wait</code> and <code>notify</code> methods, in particular, can now be mocked by
+      declaring a mock field/parameter of type <code>Object</code>).
+   </li>
+   <li>
+      Fixed a bug where an <code>UnsatisfiedLinkError</code> could occur when mocking native methods from the JRE.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=106">issue 106</a>.
+   </li>
+   <li>
+      Fixed a bug in the matching of expectations for methods containing a "varargs" parameter.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=107">issue 107</a>.
+   </li>
+   <li>
+      General review of API documentation, Tutorial, and other documentation pages.
+   </li>
+</ul>
+
 <h3>Current release</h3>
 
 <p>Release 0.999.3 (October 3, 2010):</p>
