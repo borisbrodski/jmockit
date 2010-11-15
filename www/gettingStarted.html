@@ -216,12 +216,10 @@ public class MyFirstJMockitTest
 <p>
    The smart reader probably already figured out why and when we would have a non-empty verification phase in a test.
    It boils down to the existence or not of non-strict expectations in the test.
-   If all mocked types used in the test have only strict expectations, then all invocations will be
-   implicitly and automatically verified at the end of the test. In this case, there will be no
-   explicit <em>verify</em> phase.
-   If there is at least one mocked type with non-strict expectations, then we can use one or more
-   <em>verification blocks</em> to make sure that the invocations we care about actually occurred
-   during the replay phase.
+   If all mocked types used in the test have only strict expectations, then all invocations will be implicitly and
+   automatically verified at the end of the test. In this case, there will be no explicit <em>verify</em> phase.
+   If there is at least one mocked type with non-strict expectations, then we can use one or more <em>verification
+   blocks</em> to make sure that the invocations we care about actually occurred during the replay phase.
 </p>
 <pre><code>   @Test
    public void aTestMethod(final MyCollaborator mock)
@@ -244,11 +242,12 @@ public class MyFirstJMockitTest
    }
 </code></pre>
 <p>
-   The <em>Verifications API</em> is quite rich and flexible. Besides the <code>Verifications</code> class shown above,
-   which allows some invocations to be verified regardless of their order of execution, we have the
-   <code>VerificationsInOrder</code>, <code>FullVerifications</code>, and <code>FullVerificationsInOrder</code>
-   subclasses. The "InOrder" suffix simply means that the relative order of the invocations appearing inside the
-   verification block will have to match the actual order of execution of corresponding invocations during replay.
+   The <em>Verifications API</em> is quite rich and flexible. Besides the <code class="type">Verifications</code> class
+   shown above, which allows some invocations to be verified regardless of their order of execution, we have the
+   <code class="type">VerificationsInOrder</code>, <code class="type">FullVerifications</code>, and
+   <code class="type">FullVerificationsInOrder</code> subclasses. The "InOrder" suffix simply means that the relative
+   order of the invocations appearing inside the verification block will have to match the actual order of execution of
+   corresponding invocations during replay.
    The "Full" prefix implies that all invocations that occurred during replay must be accounted for (verified) inside
    the verification block (excluding those which are verified implicitly, if any).
 </p>
@@ -297,13 +296,12 @@ public class MyFirstJMockitTest
 <h4 id="moreInfo">More information</h4>
 <p>
    The examples above give only a brief overview of the available mocking APIs. There is much more.
-   The full <a href="tutorial.html">JMockit Tutorial</a> contains an extensive discussion of nearly
-   all methods, fields, annotations, etc., with many examples.
-   The <a href="javadoc/overview-summary.html">API documentation</a> provides a detailed
-   specification for all elements of the mocking APIs.
+   The full <a href="tutorial.html">JMockit Tutorial</a> contains an extensive discussion of nearly all methods, fields,
+   annotations, etc., with many examples.
+   The <a href="javadoc/overview-summary.html">API documentation</a> provides a detailed specification for all elements
+   of the mocking APIs.
    Finally, there are hundreds of JUnit <a href="samples.html">sample tests</a> available under the
    <code>jmockit/samples</code> folder, which use nearly everything that is available in the APIs.
 </p>
-
 </body>
 </html>
