@@ -387,8 +387,10 @@ public final class DynamicPartialMockingTest
       assertEquals("another", list.remove(0));
    }
 
+   public interface AnotherInterface {}
+
    @Test
-   public void attemptToUseDynamicMockingForInvalidTypes()
+   public void attemptToUseDynamicMockingForInvalidTypes(AnotherInterface mockedInterface)
    {
       assertInvalidTypeForDynamicMocking(Dependency.class);
       assertInvalidTypeForDynamicMocking(Test.class);
@@ -400,6 +402,7 @@ public final class DynamicPartialMockingTest
       assertInvalidTypeForDynamicMocking(true);
       assertInvalidTypeForDynamicMocking(2.5);
       assertInvalidTypeForDynamicMocking(Mockit.newEmptyProxy(Dependency.class));
+      assertInvalidTypeForDynamicMocking(mockedInterface);
    }
 
    private void assertInvalidTypeForDynamicMocking(Object classOrObject)

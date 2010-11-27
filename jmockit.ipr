@@ -128,6 +128,9 @@
     <file url="file://$PROJECT_DIR$/lib/slf4j-api-1.5.8.jar" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/main" charset="UTF-8" />
   </component>
+  <component name="EntryPointsManager">
+    <entry_points version="2.0" />
+  </component>
   <component name="FacetAutodetectingManager">
     <autodetection-disabled>
       <facet-type id="web">
@@ -684,29 +687,6 @@
           <option name="m_minLength" value="1" />
           <option name="m_maxLength" value="1" />
         </inspection_tool>
-        <inspection_tool class="UNUSED_SYMBOL" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="LOCAL_VARIABLE" value="true" />
-          <option name="FIELD" value="true" />
-          <option name="METHOD" value="true" />
-          <option name="CLASS" value="true" />
-          <option name="PARAMETER" value="true" />
-          <option name="REPORT_PARAMETER_FOR_PUBLIC_METHODS" value="true" />
-          <option name="INJECTION_ANNOS">
-            <value>
-              <list size="9">
-                <item index="0" class="java.lang.String" itemvalue="mockit.Capturing" />
-                <item index="1" class="java.lang.String" itemvalue="mockit.Cascading" />
-                <item index="2" class="java.lang.String" itemvalue="mockit.Mock" />
-                <item index="3" class="java.lang.String" itemvalue="mockit.MockClass" />
-                <item index="4" class="java.lang.String" itemvalue="mockit.Mocked" />
-                <item index="5" class="java.lang.String" itemvalue="mockit.NonStrict" />
-                <item index="6" class="java.lang.String" itemvalue="org.mockito.Mock" />
-                <item index="7" class="java.lang.String" itemvalue="org.powermock.api.easymock.annotation.Mock" />
-                <item index="8" class="java.lang.String" itemvalue="powermock.examples.tutorial.common.annotation.Inject" />
-              </list>
-            </value>
-          </option>
-        </inspection_tool>
         <inspection_tool class="UnaryPlus" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnconditionalWait" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnconstructableTestCase" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -753,17 +733,6 @@
         <inspection_tool class="UnusedCatchParameter" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_ignoreCatchBlocksWithComments" value="true" />
           <option name="m_ignoreTestCases" value="false" />
-        </inspection_tool>
-        <inspection_tool class="UnusedDeclaration" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="ADD_MAINS_TO_ENTRIES" value="true" />
-          <option name="ADD_APPLET_TO_ENTRIES" value="true" />
-          <option name="ADD_SERVLET_TO_ENTRIES" value="true" />
-          <option name="ADD_NONJAVA_TO_ENTRIES" value="true" />
-          <option name="ADDITIONAL_ANNOTATIONS">
-            <value>
-              <list size="0" />
-            </value>
-          </option>
         </inspection_tool>
         <inspection_tool class="UnusedImport" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnusedLibrary" enabled="true" level="WARNING" enabled_by_default="true" />

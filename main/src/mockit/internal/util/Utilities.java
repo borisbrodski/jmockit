@@ -177,7 +177,7 @@ public final class Utilities
       else {
          Class<?> argClass = arg.getClass();
 
-         if (Proxy.isProxyClass(argClass) || isGeneratedImplementationClass(argClass.getName())) {
+         if (isGeneratedImplementationClass(argClass)) {
             // Assumes that the proxy class implements a single interface.
             argType = argClass.getInterfaces()[0];
          }
@@ -187,6 +187,11 @@ public final class Utilities
       }
 
       return argType;
+   }
+
+   public static boolean isGeneratedImplementationClass(Class<?> mockedType)
+   {
+      return Proxy.isProxyClass(mockedType) || isGeneratedImplementationClass(mockedType.getName());
    }
 
    public static Class<?> getMockedClass(Class<?> aClass)
