@@ -35,6 +35,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
    private final Type[] paramTypes;
    private final Annotation[][] paramAnnotations;
    private final Object[] paramValues;
+   private final List<Object> injectableMocks;
    private final List<Object> nonStrictMocks;
 
    public ParameterTypeRedefinitions(Object objectWithInitializerMethods, Method testMethod)
@@ -43,6 +44,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       paramTypes = testMethod.getGenericParameterTypes();
       paramAnnotations = testMethod.getParameterAnnotations();
       paramValues = new Object[paramTypes.length];
+      injectableMocks = new ArrayList<Object>();
       nonStrictMocks = new ArrayList<Object>();
 
       TestRun.enterNoMockingZone();
@@ -71,6 +73,10 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       paramValues[paramIndex] = mock;
       typeMetadata.mockingCfg = typeRedefinition.mockingCfg;
 
+      if (typeMetadata.injectable) {
+         injectableMocks.add(mock);
+      }
+
       if (typeMetadata.nonStrict) {
          nonStrictMocks.add(mock);
       }
@@ -98,19 +104,13 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       capture.makeSureAllSubtypesAreModified(paramClass, typeMetadata.capturing);
    }
 
-   public Object[] getParameterValues()
-   {
-      return paramValues;
-   }
-
    @Override
    public CaptureOfNewInstancesForParameters getCaptureOfNewInstances()
    {
       return (CaptureOfNewInstancesForParameters) captureOfNewInstances;
    }
 
-   public List<Object> getNonStrictMocks()
-   {
-      return nonStrictMocks;
-   }
+   public Object[] getParameterValues() { return paramValues; }
+   public List<Object> getInjectableMocks() { return injectableMocks; }
+   public List<Object> getNonStrictMocks() { return nonStrictMocks; }
 }

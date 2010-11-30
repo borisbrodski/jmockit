@@ -96,7 +96,7 @@ final class InterfaceImplementationGenerator extends BaseClassModifier
 
       if (!implementedMethods.contains(methodNameAndDesc)) {
          mw = super.visitMethod(ACC_PUBLIC, name, desc, signature, exceptions);
-         generateDirectCallToHandler(interfaceName, access, name, desc, false);
+         generateDirectCallToHandler(interfaceName, access, name, desc, 0);
          generateReturnWithObjectAtTopOfTheStack(desc);
          mw.visitMaxs(1, 0);
 

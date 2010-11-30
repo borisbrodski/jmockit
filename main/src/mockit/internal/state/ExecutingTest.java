@@ -39,6 +39,7 @@ public final class ExecutingTest
 
    private ParameterTypeRedefinitions parameterTypeRedefinitions;
 
+   private final List<Object> injectableMocks = new ArrayList<Object>();
    private final List<Object> nonStrictMocks = new ArrayList<Object>();
    private final List<Object> strictMocks = new ArrayList<Object>();
 
@@ -107,7 +108,31 @@ public final class ExecutingTest
    public void setParameterTypeRedefinitions(ParameterTypeRedefinitions redefinitions)
    {
       parameterTypeRedefinitions = redefinitions;
+      injectableMocks.addAll(redefinitions.getInjectableMocks());
       addNonStrictMocks(redefinitions.getNonStrictMocks());
+   }
+
+   public void clearInjectableMocks()
+   {
+      injectableMocks.clear();
+   }
+
+   public void addInjectableMock(Object mock)
+   {
+      if (!isInjectableMock(mock)) {
+         injectableMocks.add(mock);
+      }
+   }
+
+   public boolean isInjectableMock(Object mock)
+   {
+      for (Object injectableMock : injectableMocks) {
+         if (mock == injectableMock) {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    public void addNonStrictMock(Class<?> mockedClass)

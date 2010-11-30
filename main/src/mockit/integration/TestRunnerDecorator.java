@@ -139,17 +139,14 @@ public class TestRunnerDecorator
       }
    }
 
-   protected final Object[] createInstancesForMockParametersIfAny(
-      Object target, Method testMethod, Object[] params)
+   protected final Object[] createInstancesForMockParametersIfAny(Object target, Method testMethod, Object[] params)
    {
       if (testMethod.getParameterTypes().length == 0) {
          return params;
       }
 
       ParameterTypeRedefinitions redefinitions = new ParameterTypeRedefinitions(target, testMethod);
-
-      ExecutingTest executingTest = TestRun.getExecutingTest();
-      executingTest.setParameterTypeRedefinitions(redefinitions);
+      TestRun.getExecutingTest().setParameterTypeRedefinitions(redefinitions);
 
       return redefinitions.getParameterValues();
    }

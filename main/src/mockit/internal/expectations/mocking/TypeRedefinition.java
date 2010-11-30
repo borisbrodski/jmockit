@@ -24,8 +24,6 @@
  */
 package mockit.internal.expectations.mocking;
 
-import static java.lang.reflect.Modifier.*;
-
 import mockit.external.asm.*;
 import mockit.internal.filtering.*;
 import mockit.internal.util.*;
@@ -72,7 +70,6 @@ final class TypeRedefinition extends BaseTypeRedefinition
    {
       boolean filterResultWhenMatching = !typeMetadata.hasInverseFilters();
       mockingCfg = new MockingConfiguration(typeMetadata.getFilters(), filterResultWhenMatching);
-      mockConstructorInfo = new MockConstructorInfo(objectWithInitializerMethods, typeMetadata);
    }
 
    private void adjustTargetClassIfRealClassNameSpecified()
@@ -87,11 +84,18 @@ final class TypeRedefinition extends BaseTypeRedefinition
    @Override
    ExpectationsModifier createModifier(Class<?> realClass, ClassReader classReader)
    {
-      MockConstructorInfo constructorInfoToUse = isAbstract(targetClass.getModifiers()) ? null : mockConstructorInfo;
+      ExpectationsModifier modifier = new ExpectationsModifier(realClass.getClassLoader(), classReader, mockingCfg);
+      boolean stubOutClassInitialization;
 
-      ExpectationsModifier modifier =
-         new ExpectationsModifier(realClass.getClassLoader(), classReader, mockingCfg, constructorInfoToUse);
-      modifier.setStubOutClassInitialization(typeMetadata.isClassInitializationToBeStubbedOut());
+      if (typeMetadata.injectable) {
+         modifier.setExecutionMode(2);
+         stubOutClassInitialization = false;
+      }
+      else {
+         stubOutClassInitialization = typeMetadata.isClassInitializationToBeStubbedOut();
+      }
+
+      modifier.setStubOutClassInitialization(stubOutClassInitialization);
 
       return modifier;
    }

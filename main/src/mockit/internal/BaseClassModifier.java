@@ -160,7 +160,7 @@ public class BaseClassModifier extends ClassWriter
    }
 
    protected final void generateDirectCallToHandler(
-      String className, int access, String name, String desc, boolean withRealImpl)
+      String className, int access, String name, String desc, int executionType)
    {
       // First argument: the mock instance, if any.
       boolean isStatic = generateCodeToPassThisOrNullIfStaticMethod(access);
@@ -174,8 +174,8 @@ public class BaseClassModifier extends ClassWriter
       // Fourth argument: method signature.
       mw.visitLdcInsn(name + desc);
 
-      // Fifth argument: whether real implementation is available or not
-      mw.visitInsn(ICONST_0 + (withRealImpl ? 1 : 0));
+      // Fifth argument: indicate regular or special modes of execution
+      mw.visitLdcInsn(executionType);
       
       // Sixth argument: call arguments.
       Type[] argTypes = Type.getArgumentTypes(desc);
@@ -183,7 +183,7 @@ public class BaseClassModifier extends ClassWriter
 
       mw.visitMethodInsn(
          INVOKESTATIC, "mockit/internal/expectations/RecordAndReplayExecution", "recordOrReplay",
-         "(Ljava/lang/Object;ILjava/lang/String;Ljava/lang/String;Z[Ljava/lang/Object;)Ljava/lang/Object;");
+         "(Ljava/lang/Object;ILjava/lang/String;Ljava/lang/String;I[Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
    protected final void generateCallToMockingBridge(

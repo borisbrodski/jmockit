@@ -85,11 +85,15 @@ public final class MockingBridge implements InvocationHandler
 
       try {
          int mockAccess = (Integer) args[1];
-         boolean withRealImpl = targetId == RECORD_OR_REPLAY && (Integer) args[5] == 1;
+         int executionMode = 0;
+         
+         if (targetId == RECORD_OR_REPLAY) {
+            executionMode = (Integer) args[5];
+         }
 
          return
             RecordAndReplayExecution.recordOrReplay(
-               mocked, mockAccess, mockClassInternalName, mockName + mockDesc, withRealImpl, mockArgs);
+               mocked, mockAccess, mockClassInternalName, mockName + mockDesc, executionMode, mockArgs);
       }
       finally {
          TestRun.exitNoMockingZone();

@@ -73,11 +73,11 @@ public final class ExpectationsForConstructorsTest
    }
 
    @Test
-   public void mockOnlyOneConstructorSpecifyingUseOfNoArgsSuperConstructor()
+   public void mockOnlyOneConstructor()
    {
       new Expectations()
       {
-         @Mocked("(int): ()")
+         @Mocked("(int)")
          final Collaborator unused = null;
 
          {
@@ -90,11 +90,11 @@ public final class ExpectationsForConstructorsTest
    }
 
    @Test
-   public void mockOnlyNoArgsConstructorSpecifyingUseOfSuperConstructorWithArgs()
+   public void mockOnlyNoArgsConstructor()
    {
       new Expectations()
       {
-         @Mocked("(): (int)")
+         @Mocked("()")
          final Collaborator unused = null;
 
          {
@@ -120,55 +120,18 @@ public final class ExpectationsForConstructorsTest
    }
 
    @Test
-   public void mockSubclassSpecifyingConstructorArgsMethod()
+   public void partiallyMockSubclass()
    {
       new Expectations()
       {
-         @Mocked(methods = "add", constructorArgsMethod = "getConstructorArguments")
-         Collaborator mock;
+         @Mocked("add") Collaborator mock;
 
          {
-            mock.add(5); result = true;
-         }
-
-         @SuppressWarnings({"UnusedDeclaration"})
-         private Object[] getConstructorArguments(int value)
-         {
-            return new Object[] {100};
+            mock.add(5); result = false;
          }
       };
 
-      assertTrue(new Collaborator().add(5));
-   }
-
-   @Test(expected = IllegalArgumentException.class)
-   public void mockSubclassSpecifyingNonExistentConstructorArgsMethod()
-   {
-      new Expectations()
-      {
-         @Mocked(constructorArgsMethod = "nonExistent")
-         Collaborator mock;
-      };
-   }
-
-   @Ignore @Test
-   public void mockAbstractClassSpecifyingConstructorArgsMethod(
-      @Mocked(methods = "doSomething", constructorArgsMethod = "getConstructorArguments")
-      final AbstractCollaborator mock)
-   {
-      new Expectations()
-      {
-         {
-            mock.doSomething();
-         }
-      };
-
-      mock.doSomething();
-   }
-
-   @SuppressWarnings({"UnusedDeclaration"})
-   private Object[] getConstructorArguments(boolean b, int value)
-   {
-      return new Object[] {true, 100};
+      assertEquals(12, new Collaborator(12).value);
+      assertFalse(new Collaborator().add(5));
    }
 }

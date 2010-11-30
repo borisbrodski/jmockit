@@ -76,7 +76,6 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
 
          TypeRedefinition typeRedefinition = redefineTypeForMockField();
          typeMetadata.mockingCfg = typeRedefinition.mockingCfg;
-         typeMetadata.mockConstructorInfo = typeRedefinition.mockConstructorInfo;
          typesRedefined++;
 
          registerCaptureOfNewInstances();

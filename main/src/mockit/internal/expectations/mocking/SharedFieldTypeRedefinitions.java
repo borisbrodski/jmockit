@@ -86,23 +86,33 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
 
    public void assignNewInstancesToMockFields(Object target)
    {
-      TestRun.getExecutingTest().clearNonStrictMocks();
+      ExecutingTest executingTest = TestRun.getExecutingTest();
+      executingTest.clearInjectableMocks();
+      executingTest.clearNonStrictMocks();
 
       for (Entry<MockedType, InstanceFactory> metadataAndFactory : mockInstanceFactories.entrySet()) {
          MockedType metadata = metadataAndFactory.getKey();
          InstanceFactory instanceFactory = metadataAndFactory.getValue();
 
-         assignNewInstanceToMockField(target, metadata, instanceFactory);
+         Object mock = assignNewInstanceToMockField(target, metadata, instanceFactory);
+
+         if (metadata.injectable) {
+            executingTest.addInjectableMock(mock);
+         }
+         
+         if (metadata.nonStrict) {
+            executingTest.addNonStrictMock(mock);
+         }
       }
 
       for (MockedType metadata : finalMockFields) {
          if (metadata.nonStrict) {
-            TestRun.getExecutingTest().addNonStrictMock(metadata.getClassType());
+            executingTest.addNonStrictMock(metadata.getClassType());
          }
       }
    }
 
-   private void assignNewInstanceToMockField(Object target, MockedType metadata, InstanceFactory instanceFactory)
+   private Object assignNewInstanceToMockField(Object target, MockedType metadata, InstanceFactory instanceFactory)
    {
       Field mockField = metadata.field;
       Object mock = Utilities.getFieldValue(mockField, target);
@@ -125,9 +135,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
          }
       }
 
-      if (metadata.nonStrict) {
-         TestRun.getExecutingTest().addNonStrictMock(mock);
-      }
+      return mock;
    }
 
    @Override

@@ -26,7 +26,7 @@ package mockit.internal.expectations.mocking;
 
 import java.lang.reflect.*;
 
-import mockit.internal.util.*;
+import sun.reflect.*;
 
 public interface InstanceFactory
 {
@@ -41,51 +41,27 @@ public interface InstanceFactory
       public Object create() { return emptyProxy; }
    }
 
-   final class AbstractClassInstanceFactory implements InstanceFactory
+   @SuppressWarnings({"UseOfSunClasses"})
+   final class ClassInstanceFactory implements InstanceFactory
    {
-      private final MockConstructorInfo mockConstructorInfo;
-      private final Class<?> subclass;
-
-      AbstractClassInstanceFactory(MockConstructorInfo mockConstructorInfo, Class<?> subclass)
+      private static final ReflectionFactory REFLECTION_FACTORY = ReflectionFactory.getReflectionFactory();
+      private static final Constructor<?> OBJECT_CONSTRUCTOR;
+      static
       {
-         this.mockConstructorInfo = mockConstructorInfo;
-         this.subclass = subclass;
+         try { OBJECT_CONSTRUCTOR = Object.class.getConstructor(); }
+         catch (NoSuchMethodException e) { throw new RuntimeException(e); }
+      }
+
+      private final Constructor<?> fakeConstructor;
+
+      ClassInstanceFactory(Class<?> concreteClass)
+      {
+         fakeConstructor = REFLECTION_FACTORY.newConstructorForSerialization(concreteClass, OBJECT_CONSTRUCTOR);
       }
 
       public Object create()
       {
-         if (mockConstructorInfo != null) {
-            return mockConstructorInfo.newInstance(subclass);
-         }
-
-         Constructor<?> constructor = subclass.getDeclaredConstructors()[0];
-         return Utilities.invoke(constructor);
-      }
-   }
-
-   final class ConcreteClassInstanceFactory implements InstanceFactory
-   {
-      private final Class<?> concreteClass;
-      private final String constructorDesc;
-
-      ConcreteClassInstanceFactory(Class<?> concreteClass, String constructorDesc)
-      {
-         this.concreteClass = concreteClass;
-         this.constructorDesc = constructorDesc;
-      }
-
-      public Object create()
-      {
-         Object[] initArgs = null;
-
-         if (constructorDesc == null) {
-            Constructor<?> constructor = concreteClass.getDeclaredConstructors()[0];
-            return Utilities.invoke(constructor, initArgs);
-         }
-         else {
-            Class<?>[] constructorParamTypes = Utilities.getParameterTypes(constructorDesc);
-            return Utilities.newInstance(concreteClass, constructorParamTypes, initArgs);
-         }
+         try { return fakeConstructor.newInstance(); } catch (Exception e) { throw new RuntimeException(e); }
       }
    }
 

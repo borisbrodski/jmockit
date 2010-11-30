@@ -66,8 +66,7 @@ public final class MockedParametersWithCapturingTest
    }
 
    @Test
-   public void captureInstancesWithoutMockingAnyMethods(
-      @Mocked(capture = 2, methods = "") Service service)
+   public void captureInstancesWithoutMockingAnyMethods(@Mocked(capture = 2, methods = "") Service service)
    {
       assertEquals(0, service.doSomething());
 
@@ -139,35 +138,6 @@ public final class MockedParametersWithCapturingTest
       DerivedClass(String str) { super(str); }
    }
 
-   @Test
-   public void useSpecifiedConstructorToCallSuperUsingLocalMockField()
-   {
-      new Expectations()
-      {
-         @Mocked(methods = "()", constructorArgsMethod = "valueForSuper") DerivedClass mock;
-
-         {
-            assertEquals("mock", mock.str);
-         }
-
-         @SuppressWarnings({"UnusedDeclaration"})
-         Object[] valueForSuper(String s)
-         {
-            return new Object[] {"mock"};
-         }
-      };
-
-      assertEquals("mock", new DerivedClass().str);
-   }
-
-   @Test
-   public void useSpecifiedConstructorToCallSuper(
-      @Mocked(methods = {"()"}, constructorArgsMethod = "valueForSuper") DerivedClass mock)
-   {
-      assertEquals("mock", mock.str);
-      assertEquals("mock", new DerivedClass().str);
-   }
-
    @SuppressWarnings({"UnusedDeclaration"})
    Object[] valueForSuper(String s)
    {
@@ -178,13 +148,13 @@ public final class MockedParametersWithCapturingTest
    public void captureDerivedClass(@Capturing BaseClass service)
    {
       assertNull(new DerivedClass("test").str);
+      assertNull(new DerivedClass() {}.str);
    }
 
    @Test
-   public void captureDerivedClassButWithoutMockingAnything(
-      @Mocked(methods = "", capture = 1) BaseClass mock)
+   public void captureDerivedClassButWithoutMockingAnything(@Mocked(methods = "", capture = 1) BaseClass mock)
    {
-      assertEquals("", mock.str);
+      assertNull(mock.str);
       assertEquals("test", new DerivedClass("test").str);
    }
 }

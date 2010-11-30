@@ -121,8 +121,7 @@ final class ReplayPhase extends Phase
 
       while (true) {
          if (currentExpectation == null) {
-            return
-               handleUnexpectedInvocation(mock, mockClassDesc, mockNameAndDesc, withRealImpl, replayArgs);
+            return handleUnexpectedInvocation(mock, mockClassDesc, mockNameAndDesc, withRealImpl, replayArgs);
          }
 
          ExpectedInvocation invocation = currentExpectation.invocation;

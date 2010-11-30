@@ -65,7 +65,6 @@ abstract class BaseTypeRedefinition
    MockedType typeMetadata;
    InstanceFactory instanceFactory;
    MockingConfiguration mockingCfg;
-   MockConstructorInfo mockConstructorInfo;
    private List<ClassDefinition> mockedClassDefinitions;
 
    BaseTypeRedefinition(Class<?> mockedType) { targetClass = mockedType; }
@@ -171,12 +170,12 @@ abstract class BaseTypeRedefinition
       instanceFactory = new InterfaceInstanceFactory(mock);
    }
 
-   final ExpectationsModifier redefineMethodsAndConstructorsInTargetType()
+   final void redefineMethodsAndConstructorsInTargetType()
    {
-      return redefineClassAndItsSuperClasses(targetClass);
+      redefineClassAndItsSuperClasses(targetClass);
    }
 
-   private ExpectationsModifier redefineClassAndItsSuperClasses(Class<?> realClass)
+   private void redefineClassAndItsSuperClasses(Class<?> realClass)
    {
       ClassReader classReader = createClassReader(realClass);
       ExpectationsModifier modifier = createModifier(realClass, classReader);
@@ -188,8 +187,6 @@ abstract class BaseTypeRedefinition
       if (superClass != null && superClass != Object.class && superClass != Proxy.class) {
          redefineClassAndItsSuperClasses(superClass);
       }
-
-      return modifier;
    }
 
    abstract ExpectationsModifier createModifier(Class<?> realClass, ClassReader classReader);
@@ -240,19 +237,18 @@ abstract class BaseTypeRedefinition
          return;
       }
 
-      if (isAbstract(targetClass.getModifiers())) {
-         redefineMethodsAndConstructorsInTargetType();
-         Class<?> subclass = generateConcreteSubclassForAbstractType();
-         instanceFactory = new AbstractClassInstanceFactory(mockConstructorInfo, subclass);
-      }
-      else if (targetClass.isEnum()) {
+      if (targetClass.isEnum()) {
          instanceFactory = new EnumInstanceFactory(targetClass);
          redefineMethodsAndConstructorsInTargetType();
       }
+      else if (isAbstract(targetClass.getModifiers())) {
+         redefineMethodsAndConstructorsInTargetType();
+         Class<?> subclass = generateConcreteSubclassForAbstractType();
+         instanceFactory = new ClassInstanceFactory(subclass);
+      }
       else {
-         ExpectationsModifier modifier = redefineMethodsAndConstructorsInTargetType();
-         String constructorDesc = modifier.getRedefinedConstructorDesc();
-         instanceFactory = new ConcreteClassInstanceFactory(targetClass, constructorDesc);
+         redefineMethodsAndConstructorsInTargetType();
+         instanceFactory = new ClassInstanceFactory(targetClass);
       }
 
       storeRedefinedClassesInCache(mockedClassId);
@@ -288,7 +284,7 @@ abstract class BaseTypeRedefinition
 
       ClassReader classReader = createClassReader(targetClass);
       SubclassGenerationModifier modifier =
-         new SubclassGenerationModifier(mockConstructorInfo, mockingCfg, targetClass, classReader, subclassName);
+         new SubclassGenerationModifier(mockingCfg, targetClass, classReader, subclassName);
       classReader.accept(modifier, false);
       final byte[] modifiedClass = modifier.toByteArray();
 

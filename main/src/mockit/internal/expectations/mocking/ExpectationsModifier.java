@@ -32,7 +32,6 @@ import static mockit.external.asm.Opcodes.*;
 import mockit.external.asm.Type;
 
 import mockit.external.asm.*;
-import mockit.external.asm.commons.*;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
 import mockit.internal.startup.*;
@@ -56,24 +55,19 @@ final class ExpectationsModifier extends BaseClassModifier
    }};
 
    private final MockingConfiguration mockingCfg;
-   private final MockConstructorInfo mockConstructorInfo;
    private final boolean ignoreStaticMethods;
-   private String redefinedConstructorDesc;
    private String superClassName;
    private String className;
    private String baseClassNameForCapturedInstanceMethods;
-   private boolean enableExecutionOfRealImplementation;
+   private int executionMode;
    private boolean isProxy;
    private String defaultFilters;
    private boolean stubOutClassInitialization;
 
-   ExpectationsModifier(
-      ClassLoader classLoader, ClassReader classReader, MockingConfiguration mockingConfiguration,
-      MockConstructorInfo mockConstructorInfo)
+   ExpectationsModifier(ClassLoader classLoader, ClassReader classReader, MockingConfiguration mockingConfiguration)
    {
       super(classReader);
       mockingCfg = mockingConfiguration;
-      this.mockConstructorInfo = mockConstructorInfo;
       stubOutClassInitialization = true;
       ignoreStaticMethods = false;
       setUseMockingBridge(classLoader);
@@ -83,7 +77,6 @@ final class ExpectationsModifier extends BaseClassModifier
    {
       super(classReader);
       mockingCfg = null;
-      mockConstructorInfo = null;
       stubOutClassInitialization = true;
       ignoreStaticMethods = true;
       setUseMockingBridge(classLoader);
@@ -94,9 +87,9 @@ final class ExpectationsModifier extends BaseClassModifier
       baseClassNameForCapturedInstanceMethods = internalClassName;
    }
 
-   public void enableExecutionOfRealImplementation()
+   public void setExecutionMode(int executionMode)
    {
-      enableExecutionOfRealImplementation = true;
+      this.executionMode = executionMode;
    }
 
    public void setStubOutClassInitialization(boolean stubOutClassInitialization)
@@ -170,7 +163,6 @@ final class ExpectationsModifier extends BaseClassModifier
       boolean visitingConstructor = "<init>".equals(name);
 
       if (visitingConstructor && superClassName != null) {
-         redefinedConstructorDesc = desc;
          generateCallToDefaultOrConfiguredSuperConstructor();
       }
 
@@ -184,9 +176,9 @@ final class ExpectationsModifier extends BaseClassModifier
          return generateCallToHandlerThroughMockingBridge(access, name, desc, internalClassName);
       }
 
-      generateDirectCallToHandler(internalClassName, access, name, desc, enableExecutionOfRealImplementation);
+      generateDirectCallToHandler(internalClassName, access, name, desc, executionMode);
 
-      if (enableExecutionOfRealImplementation) {
+      if (executionMode > 0) {
          generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
          return visitingConstructor ? new DynamicConstructorModifier() : new MethodAdapter(mw);
       }
@@ -206,18 +198,25 @@ final class ExpectationsModifier extends BaseClassModifier
    private boolean isMethodOrConstructorNotToBeMocked(int access, String name)
    {
       return
-         isMethodFromCapturedClassNotToBeMocked(access) || isStaticMethodToBeIgnored(access) ||
+         isConstructorToBeIgnored(name) ||
+         isStaticMethodToBeIgnored(access) ||
+         isMethodFromCapturedClassNotToBeMocked(access) ||
          defaultFilters != null && defaultFilters.contains(name);
    }
 
-   private boolean isMethodFromCapturedClassNotToBeMocked(int access)
+   private boolean isConstructorToBeIgnored(String name)
    {
-      return baseClassNameForCapturedInstanceMethods != null && (isStatic(access) || isPrivate(access));
+      return executionMode == 2 && "<init>".equals(name);
    }
 
    private boolean isStaticMethodToBeIgnored(int access)
    {
       return ignoreStaticMethods && isStatic(access);
+   }
+
+   private boolean isMethodFromCapturedClassNotToBeMocked(int access)
+   {
+      return baseClassNameForCapturedInstanceMethods != null && (isStatic(access) || isPrivate(access));
    }
 
    private void validateModificationOfNativeMethod(int access, String name)
@@ -235,10 +234,7 @@ final class ExpectationsModifier extends BaseClassModifier
 
       String constructorDesc;
 
-      if (mockConstructorInfo != null && mockConstructorInfo.isWithSuperConstructor()) {
-         constructorDesc = generateCallToSuperConstructorUsingTestProvidedArguments();
-      }
-      else if ("java/lang/Object".equals(superClassName)) {
+      if ("java/lang/Object".equals(superClassName)) {
          constructorDesc = "()V";
       }
       else if (mockingCfg != null) {
@@ -253,58 +249,10 @@ final class ExpectationsModifier extends BaseClassModifier
       mw.visitMethodInsn(INVOKESPECIAL, superClassName, "<init>", constructorDesc);
    }
 
-   private String generateCallToSuperConstructorUsingTestProvidedArguments()
-   {
-      Type[] paramTypes = mockConstructorInfo.getParameterTypesForSuperConstructor();
-      Object[] args = mockConstructorInfo.getSuperConstructorArguments();
-      String constructorDesc = Type.getMethodDescriptor(Type.VOID_TYPE, paramTypes);
-      GeneratorAdapter generator = new GeneratorAdapter(mw, 0, constructorDesc);
-      int i = 0;
-
-      for (Type paramType : paramTypes) {
-         Object arg = args[i++];
-         pushParameterValueForSuperConstructorCall(paramType, arg, generator);
-      }
-
-      return constructorDesc;
-   }
-
-   private void pushParameterValueForSuperConstructorCall(Type paramType, Object arg, GeneratorAdapter generator)
-   {
-      switch (paramType.getSort()) {
-         case Type.BOOLEAN: generator.push((Boolean) arg); break;
-         case Type.CHAR:    generator.push((Character) arg); break;
-         case Type.BYTE:    generator.push((Byte) arg); break;
-         case Type.SHORT:   generator.push((Short) arg); break;
-         case Type.INT:     generator.push((Integer) arg); break;
-         case Type.LONG:    generator.push((Long) arg); break;
-         case Type.FLOAT:   generator.push((Float) arg); break;
-         case Type.DOUBLE:  generator.push((Double) arg); break;
-         default: pushObjectValueForSuperConstructorCall(paramType, arg, generator);
-      }
-   }
-
-   private void pushObjectValueForSuperConstructorCall(Type paramType, Object value, GeneratorAdapter generator)
-   {
-      if (value == null || value instanceof String) {
-         generator.push((String) value);
-      }
-      else if (value instanceof Class<?>) {
-         generator.push(paramType);
-      }
-      else {
-         // TODO: get Object value onto stack by calling an static method which returns
-         // the argument value; add the Object argument to a global List, passing the index
-         mw.visitInsn(ACONST_NULL);
-      }
-   }
-
    private MethodVisitor generateCallToHandlerThroughMockingBridge(
       int access, String name, String desc, String internalClassName)
    {
-      generateCallToMockingBridge(
-         MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc,
-         enableExecutionOfRealImplementation ? 1 : 0);
+      generateCallToMockingBridge(MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, executionMode);
       generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
 
       if (isNative(access)) {
@@ -327,11 +275,6 @@ final class ExpectationsModifier extends BaseClassModifier
 
       mw.visitLabel(startOfRealImplementation);
       mw.visitInsn(POP);
-   }
-
-   String getRedefinedConstructorDesc()
-   {
-      return redefinedConstructorDesc;
    }
 
    private final class DynamicConstructorModifier extends MethodAdapter

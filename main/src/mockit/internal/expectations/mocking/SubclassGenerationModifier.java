@@ -31,7 +31,6 @@ import java.util.*;
 import static mockit.external.asm.Opcodes.*;
 
 import mockit.external.asm.*;
-import mockit.external.asm.Type;
 import mockit.external.asm.commons.*;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
@@ -47,19 +46,15 @@ final class SubclassGenerationModifier extends BaseClassModifier
    private String superClassName;
    private String superClassOfSuperClass;
    private String[] initialSuperInterfaces;
-   private final MockConstructorInfo mockConstructorInfo;
-   private boolean defaultConstructorCreated;
    private final List<String> implementedMethods;
 
    SubclassGenerationModifier(
-      MockConstructorInfo mockConstructorInfo, MockingConfiguration mockingConfiguration,
-      Class<?> abstractClass, ClassReader classReader, String subclassName)
+      MockingConfiguration mockingConfiguration, Class<?> abstractClass, ClassReader classReader, String subclassName)
    {
       super(classReader);
       this.mockingConfiguration = mockingConfiguration;
       this.abstractClass = abstractClass;
       this.subclassName = subclassName.replace('.', '/');
-      this.mockConstructorInfo = mockConstructorInfo;
       implementedMethods = new ArrayList<String>();
    }
 
@@ -90,59 +85,13 @@ final class SubclassGenerationModifier extends BaseClassModifier
    @Override
    public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
    {
-      if ("<init>".equals(name)) {
-         if (!defaultConstructorCreated) {
-            generateConstructor(desc);
-            defaultConstructorCreated = true;
-         }
-      }
-      else {
+      if (!"<init>".equals(name)) {
          // Inherits from super-class when non-abstract.
          // Otherwise, creates implementation for abstract method with call to "recordOrReplay".
          generateImplementationIfAbstractMethod(superClassName, access, name, desc, signature, exceptions);
       }
 
       return null;
-   }
-
-   private void generateConstructor(String candidateSuperConstructor)
-   {
-      boolean withSuperConstructor = mockConstructorInfo != null && mockConstructorInfo.isWithSuperConstructor();
-      String newConstructorDesc = withSuperConstructor ? "([Ljava/lang/Object;)V" : "()V";
-
-      mw = super.visitMethod(ACC_PUBLIC, "<init>", newConstructorDesc, null, null);
-      mw.visitVarInsn(ALOAD, 0);
-
-      String superConstructorDesc;
-
-      if (withSuperConstructor) {
-         superConstructorDesc = generateSuperConstructorArguments();
-      }
-      else {
-         pushDefaultValuesForParameterTypes(candidateSuperConstructor);
-         superConstructorDesc = candidateSuperConstructor;
-      }
-
-      mw.visitMethodInsn(INVOKESPECIAL, superClassName, "<init>", superConstructorDesc);
-      mw.visitInsn(RETURN);
-      mw.visitMaxs(1, 0);
-   }
-
-   private String generateSuperConstructorArguments()
-   {
-      mw.visitVarInsn(ALOAD, 1);
-
-      GeneratorAdapter generator = new GeneratorAdapter(mw, ACC_PUBLIC, "()V");
-      Type[] paramTypes = mockConstructorInfo.getParameterTypesForSuperConstructor();
-      int paramIndex = 0;
-
-      for (Type paramType : paramTypes) {
-         generator.push(paramIndex++);
-         generator.arrayLoad(paramType);
-         generator.unbox(paramType);
-      }
-
-      return Type.getMethodDescriptor(Type.VOID_TYPE, paramTypes);
    }
 
    private void generateImplementationIfAbstractMethod(
@@ -170,7 +119,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
          noFiltersToMatch && !isMethodFromObject(name, desc) ||
          !noFiltersToMatch && mockingConfiguration.matchesFilters(name, desc)
       ) {
-         generateDirectCallToHandler(className, access, name, desc, false);
+         generateDirectCallToHandler(className, access, name, desc, 0);
          generateReturnWithObjectAtTopOfTheStack(desc);
          mw.visitMaxs(1, 0);
       }

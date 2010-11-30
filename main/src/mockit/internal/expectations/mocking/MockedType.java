@@ -60,10 +60,10 @@ final class MockedType
    final Capturing capturing;
    final Cascading cascading;
    final boolean nonStrict;
+   final boolean injectable;
    final Type declaredType;
    final String mockId;
    MockingConfiguration mockingCfg;
-   MockConstructorInfo mockConstructorInfo;
 
    MockedType(Field field, boolean fromTestClass)
    {
@@ -74,6 +74,7 @@ final class MockedType
       capturing = field.getAnnotation(Capturing.class);
       cascading = field.getAnnotation(Cascading.class);
       nonStrict = field.isAnnotationPresent(NonStrict.class);
+      injectable = field.isAnnotationPresent(Injectable.class);
       declaredType = field.getGenericType();
       mockId = field.getName();
       registerCascadingIfSpecified();
@@ -96,6 +97,7 @@ final class MockedType
       capturing = getAnnotation(annotationsOnParameter, Capturing.class);
       cascading = getAnnotation(annotationsOnParameter, Cascading.class);
       nonStrict = getAnnotation(annotationsOnParameter, NonStrict.class) != null;
+      injectable = getAnnotation(annotationsOnParameter, Injectable.class) != null;
       declaredType = parameterType;
       mockId = "param" + paramIndex;
       registerCascadingIfSpecified();
@@ -129,7 +131,7 @@ final class MockedType
 
    boolean isMockField()
    {
-      boolean mock = mocked != null || capturing != null || cascading != null || nonStrict;
+      boolean mock = mocked != null || capturing != null || cascading != null || nonStrict || injectable;
 
       return (mock || !fieldFromTestClass && !isPrivate(accessModifiers)) && isMockableType();
    }
@@ -181,11 +183,6 @@ final class MockedType
       }
 
       return mocked.stubOutClassInitialization()[0];
-   }
-
-   String getConstructorArgsMethod()
-   {
-      return mocked == null ? "" : mocked.constructorArgsMethod();
    }
 
    int getMaxInstancesToCapture()
