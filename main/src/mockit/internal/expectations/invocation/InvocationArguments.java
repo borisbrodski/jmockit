@@ -175,8 +175,8 @@ public final class InvocationArguments
          if (
             actual == null && expected != null ||
             actual != null && expected == null ||
-            actual != null && actual != expected &&
-            actual != instanceMap.get(expected) && !actual.equals(expected)
+            actual != null && actual != expected && actual != instanceMap.get(expected) &&
+            !IsEqual.areEqual(actual, expected)
          ) {
             return argumentMismatchMessage(i, expected, actual);
          }

@@ -29,7 +29,7 @@ public final class IsEqual<T> extends BaseMatcher<T>
       description.appendValue(object);
    }
 
-   private static boolean areEqual(Object o1, Object o2)
+   public static boolean areEqual(Object o1, Object o2)
    {
       if (o1 == null) {
          return o2 == null;

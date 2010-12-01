@@ -185,9 +185,7 @@ public final class InstanceSpecificMockingTest
             buf.isDirect(); result = true;
             
             // Calling "getBytes()" here indirectly creates a new ByteBuffer, requiring use of @Injectable.
-            // TODO: use of withEqual is needed because arrays don't get special treatment by default; however, Hamcrest
-            // matchers (used internally by withEqual and other such methods) do so by default; add special treatment.
-            buf.put(withEqual("Test".getBytes())); times = 1;
+            buf.put("Test".getBytes()); times = 1;
          }
       };
 
