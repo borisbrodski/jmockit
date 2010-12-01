@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2007-2009 Rogério Liesenfeld
+ * Copyright (c) 2007-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -34,25 +34,16 @@ import static org.junit.Assert.*;
 
 public final class ConstructorCalledMock_JMockit_Test
 {
-   @Mocked(methods = "rate", constructorArgsMethod = "taxCalculatorValues")
-   private TaxCalculator tc;
-
-   @SuppressWarnings({"UnusedDeclaration"})
-   private Object[] taxCalculatorValues(BigDecimal... values)
+   private final TaxCalculator tc = new TaxCalculator(new BigDecimal("5"), new BigDecimal("15"))
    {
-      BigDecimal[] taxValues = {new BigDecimal("5"), new BigDecimal("15")};
-      return new Object[] {taxValues};
-   }
+      @Override
+      protected BigDecimal rate() { return null; }
+   };
 
    @Test
    public void testTax()
    {
-      new Expectations()
-      {
-         {
-            tc.rate(); result = new BigDecimal("0.20");
-         }
-      };
+      new Expectations(tc) {{ tc.rate(); result = new BigDecimal("0.20"); }};
 
       assertEquals(new BigDecimal("4.00"), tc.tax());
    }
@@ -60,12 +51,7 @@ public final class ConstructorCalledMock_JMockit_Test
    @Test
    public void testTax_ZeroRate()
    {
-      new Expectations()
-      {
-         {
-            tc.rate(); result = BigDecimal.ZERO;
-         }
-      };
+      new Expectations(tc) {{ tc.rate(); result = BigDecimal.ZERO; }};
 
       assertEquals(BigDecimal.ZERO, tc.tax());
    }
