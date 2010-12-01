@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -55,16 +55,13 @@ public final class OrderFindersTest
          ResultSet rs2;
 
          {
-            Database.executeQuery(
-               withEqual("select customer_id from order where number=?"),
-               withEqual(order.getNumber()));
+            Database.executeQuery("select customer_id from order where number=?", order.getNumber());
             result = rs;
 
             rs.next(); result = true;
             rs.getString(1); result = order.getCustomerId();
 
-            Database.executeQuery(
-               withMatch("select .+ from order_item where .+"), withEqual(order.getNumber()));
+            Database.executeQuery(withMatch("select .+ from order_item where .+"), order.getNumber());
             result = rs2;
 
             rs2.next(); result = true;
@@ -84,8 +81,7 @@ public final class OrderFindersTest
    }
 
    @Test
-   public void findOrderByCustomer(@Mocked("loadOrderItems") final OrderRepository repository)
-      throws Exception
+   public void findOrderByCustomer(@Mocked("loadOrderItems") final OrderRepository repository) throws Exception
    {
       final String customerId = "Cust";
       order = new Order(890, customerId);
@@ -93,9 +89,7 @@ public final class OrderFindersTest
       new Expectations()
       {
          {
-            Database.executeQuery(
-               withMatch("select.+from\\s+order.*where.+customer_id\\s*=\\s*\\?"),
-               withEqual(customerId));
+            Database.executeQuery(withMatch("select.+from\\s+order.*where.+customer_id\\s*=\\s*\\?"), customerId);
             result = rs;
 
             rs.next(); result = true;
