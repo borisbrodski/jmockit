@@ -89,6 +89,7 @@ final class TypeRedefinition extends BaseTypeRedefinition
 
       if (typeMetadata.injectable) {
          modifier.setExecutionMode(2);
+         modifier.setIgnoreStaticMethods(true);
          stubOutClassInitialization = false;
       }
       else {

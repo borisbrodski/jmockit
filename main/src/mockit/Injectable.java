@@ -47,22 +47,6 @@ import java.lang.annotation.*;
  * For such a mocked type with mocking restricted to a single instance, <em>static methods</em> and
  * <em>constructors</em> belonging to a mocked class are <em>not</em> mocked; only instance methods are.
  * Static initializers of said classes are <em>not</em> stubbed out by default.
- * <p/>
- * For each mocked type there is at least one <em>target class for mocking</em>, which is derived from the declared type
- * of the mock field or parameter.
- * By default, all instance methods (including those which are {@code final}, {@code private}, {@code abstract}, or
- * {@code native}) in the target classes will be mocked. Mock behavior, however, will only apply to the particular
- * instance of the mock field/parameter which was created by JMockit or (in the case of {@code final} mock fields) by
- * user code.
- * <p/>
- * The following rules are applied when deriving the target classes from a declared mocked class type:
- * <ol>
- * <li>The type is a concrete class: this class and all its super-classes up to but excluding
- * {@code java.lang.Object} will be the target classes for mocking.</li>
- * <li>The type is an <em>abstract class</em>: a concrete subclass is generated with mock implementations for the
- * abstract methods in that class and in all of its super-classes (again, excluding {@code Object}); these super-classes
- * are targeted for mocking of the non-abstract methods.</li>
- * </ol>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

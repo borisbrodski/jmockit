@@ -55,30 +55,20 @@ final class ExpectationsModifier extends BaseClassModifier
    }};
 
    private final MockingConfiguration mockingCfg;
-   private final boolean ignoreStaticMethods;
    private String superClassName;
    private String className;
    private String baseClassNameForCapturedInstanceMethods;
+   private boolean stubOutClassInitialization;
+   private boolean ignoreStaticMethods;
    private int executionMode;
    private boolean isProxy;
    private String defaultFilters;
-   private boolean stubOutClassInitialization;
 
    ExpectationsModifier(ClassLoader classLoader, ClassReader classReader, MockingConfiguration mockingConfiguration)
    {
       super(classReader);
       mockingCfg = mockingConfiguration;
       stubOutClassInitialization = true;
-      ignoreStaticMethods = false;
-      setUseMockingBridge(classLoader);
-   }
-
-   ExpectationsModifier(ClassLoader classLoader, ClassReader classReader)
-   {
-      super(classReader);
-      mockingCfg = null;
-      stubOutClassInitialization = true;
-      ignoreStaticMethods = true;
       setUseMockingBridge(classLoader);
    }
 
@@ -87,14 +77,19 @@ final class ExpectationsModifier extends BaseClassModifier
       baseClassNameForCapturedInstanceMethods = internalClassName;
    }
 
-   public void setExecutionMode(int executionMode)
-   {
-      this.executionMode = executionMode;
-   }
-
    public void setStubOutClassInitialization(boolean stubOutClassInitialization)
    {
       this.stubOutClassInitialization = stubOutClassInitialization;
+   }
+
+   public void setIgnoreStaticMethods(boolean ignoreStaticMethods)
+   {
+      this.ignoreStaticMethods = ignoreStaticMethods;
+   }
+
+   public void setExecutionMode(int executionMode)
+   {
+      this.executionMode = executionMode;
    }
 
    @Override

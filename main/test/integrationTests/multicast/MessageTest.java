@@ -164,9 +164,7 @@ public final class MessageTest
    @Test
    public void sendMessageToMultipleClients(final StatusListener listener) throws Exception
    {
-      final Client[] testClients = {
-         new Client("client1"), new Client("client2"), new Client("client3")
-      };
+      final Client[] testClients = {new Client("client1"), new Client("client2"), new Client("client3")};
 
       new NonStrictExpectations(testClients.length)
       {

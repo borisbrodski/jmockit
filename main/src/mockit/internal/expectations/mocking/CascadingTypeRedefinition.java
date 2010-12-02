@@ -32,6 +32,7 @@ public final class CascadingTypeRedefinition extends BaseTypeRedefinition
    public CascadingTypeRedefinition(Class<?> mockedType)
    {
       super(mockedType);
+      typeMetadata = new MockedType(mockedType);
    }
 
    public Object redefineType()
@@ -42,7 +43,11 @@ public final class CascadingTypeRedefinition extends BaseTypeRedefinition
    @Override
    ExpectationsModifier createModifier(Class<?> realClass, ClassReader classReader)
    {
-      return new ExpectationsModifier(realClass.getClassLoader(), classReader);
+      ExpectationsModifier modifier = new ExpectationsModifier(realClass.getClassLoader(), classReader, null);
+      modifier.setStubOutClassInitialization(false);
+      modifier.setIgnoreStaticMethods(true);
+      modifier.setExecutionMode(2);
+      return modifier;
    }
 
    @Override

@@ -30,6 +30,7 @@ import java.util.*;
 import mockit.*;
 import mockit.external.asm.Type;
 import mockit.internal.expectations.invocation.*;
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class Expectation
@@ -142,8 +143,13 @@ public final class Expectation
 
    private void substituteCascadedMockToBeReturnedIfNeeded(Object value)
    {
-      if (invocation.overrideDefaultCascadedMockIfAny(value)) {
-         recordPhase.setNextInstanceToMatch(null);
+      if (value != null) {
+         Object cascadedMock = invocation.getCascadedMock();
+
+         if (cascadedMock != null) {
+            TestRun.getExecutingTest().substituteCascadedMock(cascadedMock, value);
+            recordPhase.setNextInstanceToMatch(null);
+         }
       }
    }
 

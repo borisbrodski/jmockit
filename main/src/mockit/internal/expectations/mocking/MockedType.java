@@ -115,6 +115,20 @@ final class MockedType
       return null;
    }
 
+   MockedType(Class<?> cascadedType)
+   {
+      field = null;
+      fieldFromTestClass = false;
+      accessModifiers = 0;
+      mocked = null;
+      capturing = null;
+      cascading = null;
+      nonStrict = true;
+      injectable = true;
+      declaredType = cascadedType;
+      mockId = "cascaded_" + cascadedType.getName();
+   }
+
    Class<?> getClassType()
    {
       if (declaredType instanceof Class) {
@@ -209,6 +223,10 @@ final class MockedType
 
       if (isFinal(accessModifiers)) {
          result *= 31;
+      }
+
+      if (injectable) {
+         result *= 37;
       }
 
       if (mocked != null) {

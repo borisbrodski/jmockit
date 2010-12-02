@@ -135,6 +135,16 @@ public final class ExecutingTest
       return false;
    }
 
+   public void substituteCascadedMock(Object oldMock, Object newMock)
+   {
+      for (int i = 0, n = injectableMocks.size(); i < n; i++) {
+         if (injectableMocks.get(i) == oldMock) {
+            injectableMocks.set(i, newMock);
+            return;
+         }
+      }
+   }
+
    public void addNonStrictMock(Class<?> mockedClass)
    {
       String mockedClassDesc = mockedClass.getName().replace('.', '/');

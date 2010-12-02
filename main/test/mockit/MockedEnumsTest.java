@@ -24,6 +24,8 @@
  */
 package mockit;
 
+import java.util.concurrent.*;
+
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -139,5 +141,56 @@ public final class MockedEnumsTest
       };
 
       MyEnum.Second.toString();
+   }
+   
+   @Test
+   public void mockNonAbstractMethodsInEnumWithAbstractMethod(final TimeUnit tm) throws Exception
+   {
+      new Expectations()
+      {{
+         tm.convert(anyLong, TimeUnit.HOURS); result = 1L;
+         tm.sleep(anyLong);
+      }};
+
+      assertEquals(1, tm.convert(1000, TimeUnit.HOURS));
+      tm.sleep(10000);
+   }
+
+   public enum EnumWithValueSpecificMethods
+   {
+      One
+      {
+         @Override public int getValue() { return 1; }
+         @Override public String getDescription() { return "one"; }
+      },
+      Two
+      {
+         @Override public int getValue() { return 2; }
+         @Override public String getDescription() { return "two"; }
+      };
+
+      public abstract int getValue();
+      public String getDescription() { return String.valueOf(getValue()); }
+   }
+
+   @Test
+   public void mockEnumWithValueSpecificMethods(@Capturing EnumWithValueSpecificMethods mockedEnum)
+   {
+      assertSame(EnumWithValueSpecificMethods.One, mockedEnum);
+
+      new NonStrictExpectations()
+      {{
+         // TODO: at a minimum, use of "onInstance" should not be needed here
+         onInstance(EnumWithValueSpecificMethods.One).getValue(); result = 123;
+         EnumWithValueSpecificMethods.Two.getValue(); result = -45;
+
+         onInstance(EnumWithValueSpecificMethods.One).getDescription(); result = "1";
+         EnumWithValueSpecificMethods.Two.getDescription(); result = "2";
+      }};
+
+      assertEquals(123, EnumWithValueSpecificMethods.One.getValue());
+      assertEquals(-45, EnumWithValueSpecificMethods.Two.getValue());
+      assertEquals("1", EnumWithValueSpecificMethods.One.getDescription());
+      assertEquals("2", EnumWithValueSpecificMethods.Two.getDescription());
    }
 }

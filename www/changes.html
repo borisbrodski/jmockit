@@ -19,9 +19,36 @@
 <p>Release 0.999.4 (December 5, 2010):</p>
 <ul>
    <li>
+      <strong>New feature</strong>: improved support for instance-specific mocking, in the form of a new
+      <strong><code>@Injectable</code></strong> annotation. It can be used together with <code>@Mocked</code> or by
+      itself.
+      Previously, it was necessary to use dynamic partial mocking, often combined with calls to
+      <code>onInstance(mock)</code>, in order to restrict mock/stub behavior to a single mocked instance.
+      This is important in cases where the behavior of other instances of the same mocked type could be inadvertently
+      affected. (For example, when mocking standard JRE classes which might be used internally by other JRE classes.)
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=113">issue 113</a>.
+   </li>
+   <li>
+      <strong>Removed</strong> the <code>constructorArgsMethod</code> attribute from the <code>@Mocked</code>
+      annotation. This attribute was only rarely, if ever, actually useful. Existing tests that use it (hopefully no
+      more than a few, if any at all) can be modified to directly instantiate the mocked class with the desired
+      constructor.
+   </li>
+   <li>
+      <strong>Enhancement</strong>: mocked instances automatically created to supply mock fields and parameters are
+      now instantiated without going through any constructor. This avoids certain complications when partial mocking is
+      used, and generally makes the Expectations API more robust. It relates to the previous change item, which allowed
+      the selection of constructors when instantiating mocked classes.
+   </li>
+   <li>
       <strong>Enhancement</strong>: added support for the mocking of the <code>java.lang.Object</code> class through the
       Expectations API (the <code>wait</code> and <code>notify</code> methods, in particular, can now be mocked by
       declaring a mock field/parameter of type <code>Object</code>).
+   </li>
+   <li>
+      <strong>Enhancement</strong>: when matching invocations to expectations, parameters of array type are now compared
+      by value rather than by reference. This applies to arrays having any number of dimensions.
+      Previously, a call to <code>withEqual(arrayValue)</code> was required for this.
    </li>
    <li>
       Fixed a bug where an <code>UnsatisfiedLinkError</code> could occur when mocking native methods from the JRE.

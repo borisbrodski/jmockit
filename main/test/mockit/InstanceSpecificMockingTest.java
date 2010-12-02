@@ -27,8 +27,8 @@ package mockit;
 import java.nio.*;
 import java.util.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 import org.junit.runner.*;
 import org.junit.runners.*;
 
@@ -48,6 +48,8 @@ public final class InstanceSpecificMockingTest
 
       @SuppressWarnings({"UnusedDeclaration"})
       static void doSomething(boolean b, String s) { throw new IllegalStateException(); }
+      
+      ByteBuffer createBuffer() { return null; }
    }
 
    final Collaborator previousInstance = new Collaborator();
@@ -147,8 +149,6 @@ public final class InstanceSpecificMockingTest
       assertThatNewlyCreatedInstanceIsNotMocked();
    }
 
-   @Injectable Hashtable<?, ?> dummy;
-
    @Test
    public void allowInjectableMockOfInterfaceType(@Injectable final Runnable mock)
    {
@@ -168,7 +168,7 @@ public final class InstanceSpecificMockingTest
       assertSame(BlockJUnit4ClassRunner.class, mock.value());
    }
 
-   @Test // TODO: enums with abstract methods (like TimeUnit) are not fully mocked; add tests to MockedEnumsTest
+   @Test
    public void allowInjectableMockOfEnumType(@Injectable final Thread.State mock)
    {
       new Expectations() {{ mock.name(); result = "Test"; }};
@@ -177,8 +177,12 @@ public final class InstanceSpecificMockingTest
    }
 
    @Test
-   public void mockByteBuffer(@Injectable final ByteBuffer buf)
+   public void mockByteBufferAsInjectable(@Injectable final ByteBuffer buf)
    {
+      ByteBuffer realBuf = ByteBuffer.allocateDirect(10);
+      assertNotNull(realBuf);
+      assertEquals(10, realBuf.capacity());
+      
       new NonStrictExpectations()
       {
          {
@@ -191,5 +195,39 @@ public final class InstanceSpecificMockingTest
 
       assertTrue(buf.isDirect());
       buf.put("Test".getBytes());
+   }
+
+   @Test
+   public void mockByteBufferRegularly(@NonStrict ByteBuffer unused)
+   {
+      assertNull(ByteBuffer.allocateDirect(10));
+
+      new FullVerifications()
+      {
+         {
+            ByteBuffer.allocateDirect(anyInt);
+         }
+      };
+   }
+
+   @Test
+   public void mockByteBufferAsCascading(@Cascading ByteBuffer unused)
+   {
+      ByteBuffer cascadedBuf = ByteBuffer.allocateDirect(10);
+      assertNotNull(cascadedBuf);
+      assertEquals(0, cascadedBuf.capacity());
+   }
+   
+   @Test
+   public void mockByteBufferAsCascadedMock(@Cascading Collaborator cascadingMock)
+   {
+      ByteBuffer realBuf1 = ByteBuffer.allocateDirect(10);
+      assertEquals(10, realBuf1.capacity());
+
+      ByteBuffer cascadedBuf = cascadingMock.createBuffer();
+      assertEquals(0, cascadedBuf.capacity());
+
+      ByteBuffer realBuf2 = ByteBuffer.allocateDirect(20);
+      assertEquals(20, realBuf2.capacity());
    }
 }

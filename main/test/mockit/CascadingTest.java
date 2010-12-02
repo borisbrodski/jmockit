@@ -50,9 +50,11 @@ public final class CascadingTest
 
    static class Bar
    {
+      Bar() { throw new RuntimeException(); }
       int doSomething() { return 1; }
       Baz getBaz() { return null; }
       AnEnum getEnum() { return null; }
+      static String staticMethod() { return "notMocked"; }
    }
 
    public interface Baz
@@ -79,6 +81,30 @@ public final class CascadingTest
       assert foo.getIntValue() == 0;
       assert foo.getBooleanValue() == null;
       assert foo.getList().isEmpty();
+   }
+
+   @Test
+   public void verifyThatStaticMethodsAndConstructorsAreNotMockedWhenCascading(@Cascading Foo foo)
+   {
+      foo.getBar();
+      
+      assert "notMocked".equals(Bar.staticMethod());
+      
+      try {
+         new Bar();
+         fail();
+      }
+      catch (RuntimeException ignored) {}
+   }
+
+   @Test
+   public void verifyThatStaticMethodsAndConstructorsAreMockedWhenCascadedMockIsMockedNormally(
+      @Cascading Foo mockFoo, @Mocked Bar mockBar)
+   {
+      assert mockFoo.getBar() != mockBar;
+      assert mockBar.doSomething() == 0;
+      assert Bar.staticMethod() == null;
+      new Bar();
    }
 
    @Test
@@ -199,7 +225,7 @@ public final class CascadingTest
       };
    }
 
-   // Tests using the java.lang.Process and java.lang.ProcessBuilder classes //////////////////////
+   // Tests using the java.lang.Process and java.lang.ProcessBuilder classes //////////////////////////////////////////
 
    @Test
    public void cascadeOnJREClasses() throws Exception
@@ -224,7 +250,7 @@ public final class CascadingTest
       assert process.exitValue() == 1;
    }
 
-   // Tests using java.net classes ////////////////////////////////////////////////////////////////
+   // Tests using java.net classes ////////////////////////////////////////////////////////////////////////////////////
 
    static final class SocketFactory
    {
@@ -237,8 +263,17 @@ public final class CascadingTest
    }
 
    @Test
-   public void cascadeOneLevelWithArgumentMatchers(@Cascading final SocketFactory sf)
-      throws Exception
+   public void mockThroughFinalMockFieldAClassToBeLaterMockedThroughCascading()
+   {
+      new NonStrictExpectations()
+      {
+         // This caused a NPE in later tests which cascade-mocked the Socket class:
+         final Socket s = null;
+      };
+   }
+
+   @Test
+   public void cascadeOneLevelWithArgumentMatchers(@Cascading final SocketFactory sf) throws Exception
    {
       new NonStrictExpectations()
       {
@@ -338,8 +373,7 @@ public final class CascadingTest
    }
 
    @Test
-   public void recordAndVerifyWithMixedCascadeLevels(@Cascading final SocketFactory sf)
-      throws Exception
+   public void recordAndVerifyWithMixedCascadeLevels(@Cascading final SocketFactory sf) throws Exception
    {
       new NonStrictExpectations()
       {
@@ -362,8 +396,7 @@ public final class CascadingTest
    }
 
    @Test
-   public void overrideCascadedMockAndRecordStrictExpectationOnIt(
-      @Cascading final Foo foo, final Bar mockBar)
+   public void overrideCascadedMockAndRecordStrictExpectationOnIt(@Cascading final Foo foo, final Bar mockBar)
    {
       new Expectations()
       {
@@ -395,8 +428,7 @@ public final class CascadingTest
    }
 
    @Test
-   public void overrideTwoCascadedMocksOfTheSameType(
-      @Cascading final Foo foo1, @Cascading final Foo foo2)
+   public void overrideTwoCascadedMocksOfTheSameType(@Cascading final Foo foo1, @Cascading final Foo foo2)
    {
       new Expectations()
       {
@@ -454,8 +486,7 @@ public final class CascadingTest
    }
 
    @Test
-   public void cascadedNonStrictEnumReturningConsecutiveValuesThroughResultField(
-      @Cascading final Foo mock)
+   public void cascadedNonStrictEnumReturningConsecutiveValuesThroughResultField(@Cascading final Foo mock)
    {
       new NonStrictExpectations()
       {
@@ -473,8 +504,7 @@ public final class CascadingTest
    }
 
    @Test
-   public void cascadedNonStrictEnumReturningConsecutiveValuesThroughReturnsMethod(
-      @NonStrict @Cascading final Foo mock)
+   public void cascadedNonStrictEnumReturningConsecutiveValuesThroughReturnsMethod(@NonStrict @Cascading final Foo mock)
    {
       new Expectations()
       {
@@ -490,8 +520,7 @@ public final class CascadingTest
    }
 
    @Test
-   public void cascadedStrictEnumReturningConsecutiveValuesThroughResultField(
-      @Cascading final Foo mock)
+   public void cascadedStrictEnumReturningConsecutiveValuesThroughResultField(@Cascading final Foo mock)
    {
       new Expectations()
       {
@@ -510,8 +539,7 @@ public final class CascadingTest
    }
 
    @Test
-   public void cascadedStrictEnumReturningConsecutiveValuesThroughReturnsMethod(
-      @Cascading final Foo mock)
+   public void cascadedStrictEnumReturningConsecutiveValuesThroughReturnsMethod(@Cascading final Foo mock)
    {
       new Expectations()
       {

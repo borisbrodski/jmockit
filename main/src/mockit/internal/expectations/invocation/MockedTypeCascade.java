@@ -78,6 +78,7 @@ public final class MockedTypeCascade
          mock = TestRun.mockFixture().getNewInstanceForMockedType(mock.getClass());
       }
 
+      TestRun.getExecutingTest().addInjectableMock(mock);
       return mock;
    }
 }
