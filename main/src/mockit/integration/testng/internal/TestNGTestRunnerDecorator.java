@@ -152,10 +152,22 @@ public final class TestNGTestRunnerDecorator extends TestRunnerDecorator
          throw e;
       }
       finally {
+         cleanUpAfterTestMethodExecution();
+      }
+   }
+
+   private void cleanUpAfterTestMethodExecution()
+   {
+      TestRun.enterNoMockingZone();
+
+      try {
          TestRun.resetExpectationsOnAnnotatedMocks();
          TestRun.finishCurrentTestExecution();
          savePoint.get().rollback();
          savePoint.set(null);
+      }
+      finally {
+         TestRun.exitNoMockingZone();
       }
    }
 }

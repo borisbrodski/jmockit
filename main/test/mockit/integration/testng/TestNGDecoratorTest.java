@@ -24,6 +24,7 @@
  */
 package mockit.integration.testng;
 
+import java.io.*;
 import javax.security.auth.login.*;
 
 import static org.testng.Assert.*;
@@ -68,7 +69,7 @@ public final class TestNGDecoratorTest extends BaseTestNGDecoratorTest
       assertEquals("TEST2", new RealClass2().getValue());
       assertEquals("TEST1", new RealClass1().getValue());
    }
-   
+
    @AfterMethod
    public void afterTest()
    {
@@ -112,5 +113,21 @@ public final class TestNGDecoratorTest extends BaseTestNGDecoratorTest
       LoginContext context = new LoginContext("test");
       context.login();
       context.login();
+   }
+
+   @Test
+   public void mockFile()
+   {
+      new Expectations()
+      {
+         final File directory;
+
+         {
+            directory = new File("dirName");
+            directory.mkdir();
+         }
+      };
+
+      new File("dirName").mkdir();
    }
 }
