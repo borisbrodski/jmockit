@@ -1,5 +1,5 @@
 /*
- * JMockit Expectations
+ * JMockit Expectations & Verifications
  * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
@@ -60,6 +60,7 @@ public final class CascadingTest
    public interface Baz
    {
       void runIt();
+      Date getDate();
    }
 
    enum AnEnum { First, Second, Third }
@@ -553,5 +554,67 @@ public final class CascadingTest
       assertSame(AnEnum.First, bar.getEnum());
       assertSame(AnEnum.Second, bar.getEnum());
       assertSame(AnEnum.Third, bar.getEnum());
+   }
+
+   @Test
+   public void overrideLastCascadedObjectWithNonMockedInstance()
+   {
+      final Date newDate = new Date(123);
+      assertEquals(123, newDate.getTime());
+
+      new NonStrictExpectations()
+      {
+         @Cascading Foo foo;
+
+         {
+            foo.getBar().getBaz().getDate();
+            result = newDate;
+         }
+      };
+
+      assertSame(newDate, new Foo().getBar().getBaz().getDate());
+      assertEquals(123, newDate.getTime());
+   }
+
+   @Test
+   public void overrideLastCascadedObjectWithMockedInstance(final Date mockedDate)
+   {
+      Date newDate = new Date(123);
+      assertEquals(0, newDate.getTime());
+
+      new NonStrictExpectations()
+      {
+         @Cascading Foo foo;
+
+         {
+            foo.getBar().getBaz().getDate();
+            result = mockedDate;
+         }
+      };
+
+      assertSame(mockedDate, new Foo().getBar().getBaz().getDate());
+      assertEquals(0, newDate.getTime());
+      assertEquals(0, mockedDate.getTime());
+   }
+
+   @Test
+   public void overrideLastCascadedObjectWithInjectableMockInstance(@Injectable final Date mockDate)
+   {
+      Date newDate = new Date(123);
+      assertEquals(123, newDate.getTime());
+
+      new NonStrictExpectations()
+      {
+         @Cascading Foo foo;
+
+         {
+            foo.getBar().getBaz().getDate();
+            result = mockDate;
+         }
+      };
+
+      assertSame(mockDate, new Foo().getBar().getBaz().getDate());
+      assertEquals(123, newDate.getTime());
+      assertEquals(0, mockDate.getTime());
    }
 }

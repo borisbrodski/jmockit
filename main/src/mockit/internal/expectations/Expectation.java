@@ -141,15 +141,13 @@ public final class Expectation
       }
    }
 
-   private void substituteCascadedMockToBeReturnedIfNeeded(Object value)
+   private void substituteCascadedMockToBeReturnedIfNeeded(Object valueToBeReturned)
    {
-      if (value != null) {
-         Object cascadedMock = invocation.getCascadedMock();
+      Object cascadedMock = invocation.getCascadedMock();
 
-         if (cascadedMock != null) {
-            TestRun.getExecutingTest().substituteCascadedMock(cascadedMock, value);
-            recordPhase.setNextInstanceToMatch(null);
-         }
+      if (valueToBeReturned != null && cascadedMock != null) {
+         TestRun.getExecutingTest().discardCascadedMockWhenInjectable(cascadedMock);
+         recordPhase.setNextInstanceToMatch(null);
       }
    }
 

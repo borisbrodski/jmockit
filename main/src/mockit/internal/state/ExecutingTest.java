@@ -135,11 +135,11 @@ public final class ExecutingTest
       return false;
    }
 
-   public void substituteCascadedMock(Object oldMock, Object newMock)
+   public void discardCascadedMockWhenInjectable(Object oldMock)
    {
       for (int i = 0, n = injectableMocks.size(); i < n; i++) {
          if (injectableMocks.get(i) == oldMock) {
-            injectableMocks.set(i, newMock);
+            injectableMocks.remove(i);
             return;
          }
       }
