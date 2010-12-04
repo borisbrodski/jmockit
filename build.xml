@@ -431,6 +431,8 @@
          <classfileset dir="${sampleDir}/test-classes" includes="**/*Test.class"/>
       </testng>
 
-      <java fork="yes" dir="samples" jar="jmockit-coverage-htmlfull.jar" args=".,LoginService"/>
+      <java fork="yes" dir="samples" jar="jmockit-coverage-htmlfull.jar">
+         <arg value=".,LoginService"/>
+      </java>
    </target>
 </project>
