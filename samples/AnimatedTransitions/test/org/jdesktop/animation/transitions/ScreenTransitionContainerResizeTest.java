@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -41,7 +41,7 @@ import static org.junit.Assert.*;
 @UsingMocksAndStubs({Animator.class, PropertySetter.class})
 public final class ScreenTransitionContainerResizeTest
 {
-   @Mocked("createImage(int, int)") JComponent container;
+   @Mocked("createImage(int, int)") final JComponent container = new JPanel();
    @NonStrict BufferedImage transitionImage;
    @NonStrict AnimationManager manager;
 
@@ -62,7 +62,7 @@ public final class ScreenTransitionContainerResizeTest
    final class CreationOfTransitionImage extends Expectations
    {
       {
-         container.createImage(newSize.width, newSize.height); returns(transitionImage);
+         container.createImage(newSize.width, newSize.height); result = transitionImage;
          manager.recreateImage();
       }
    }
@@ -105,7 +105,7 @@ public final class ScreenTransitionContainerResizeTest
       ComponentListener containerSizeListener = createTransition();
       setField(transition, transitionImage);
 
-      new Expectations() {{ transitionImage.getWidth(); returns(newSize.width); }};
+      new Expectations() {{ transitionImage.getWidth(); result = newSize.width; }};
       new CreationOfTransitionImage();
 
       assertResizingOfContainer(containerSizeListener);
