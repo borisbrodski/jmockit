@@ -9,13 +9,13 @@
       <area shape="rect" coords="37,87,158,114" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Expectations.html"
          title="Base class whose subclasses are defined in test code, and whose instances define a set of expected method/constructor invocations on the mocked types (classes or interfaces) declared through one or more mock fields and/or mock parameters.">
-      <area shape="rect" coords="169,87,261,114" target="_blank"
+      <area shape="rect" coords="608,12,700,39" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Mocked.html"
          title="Indicates an instance field or test method parameter whose value will be a mocked instance.">
-      <area shape="rect" coords="271,87,371,114" target="_blank"
+      <area shape="rect" coords="600,47,700,74" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/NonStrict.html"
          title="For tests using Expectations, indicates a non-strict mocked type for an instance field or test method parameter.">
-      <area shape="rect" coords="154,122,262,149" target="_blank"
+      <area shape="rect" coords="592,82,700,109" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Cascading.html"
          title="Indicates a mocked type where the return types of non-void methods, excluding primitives, String, and collection types, will be mocked automatically if and when an invocation to the method occurs.">
       <area shape="rect" coords="10,163,184,190" target="_blank"
@@ -33,10 +33,10 @@
       <area shape="rect" coords="519,163,700,190" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/FullVerificationsInOrder.html"
          title="A combination of FullVerifications and VerificationsInOrder.">
-      <area shape="rect" coords="595,12,700,38" target="_blank"
+      <area shape="rect" coords="269,87,374,114" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Invocation.html"
          title="A context object representing the current invocation to a mocked method or constructor.">
-      <area shape="rect" coords="603,45,700,72" target="_blank"
+      <area shape="rect" coords="166,87,263,114" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Delegate.html"
          title="An empty interface to be used with the Expectations#result field, in order to allow test code to define invocation results (return values or thrown errors/exceptions) based on test-specific logic.">
 
