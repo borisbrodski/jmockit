@@ -33,27 +33,24 @@ import static orderMngr.service.persistence.Persistence.*;
 import static org.junit.Assert.*;
 
 /**
- * These are integration tests which can optionally be run with Hibernate 3 Emulation, which
- * contains an <em>external mock class</em> providing a <em>fake implementation</em> for the
- * Hibernate 3 API.
+ * These are integration tests which make use of the Hibernate 3 API.
+ * They can be executed with the real thing and access a real database, or with the <strong>Hibernate Emulation</strong>
+ * tool, which contains an <em>external</em> mock class providing a <em>fake implementation</em> of the Hibernate 3 API.
  * <p/>
- * In order for the emulator to be used when running these tests, the usual "-javaagent" JVM
- * argument must be specified as <code>-javaagent:jmockit.jar=hibernate</code> (inserting the
- * correct path to jmockit.jar if necessary), when using a conventional Hibernate configuration
- * (that is, the <code>org.hibernate.Configuration</code> class).
- * Alternatively, when using a HotSpot or JRockit JDK 1.6+ on Windows or Linux, if
- * {@code jmockit-hibernate3emul.jar} is in the classpath then the emulator will be used
- * automatically, without the need for any JVM initialization parameter.
+ * To use the emulator, the usual "-javaagent" JVM argument must be specified as
+ * {@code -javaagent:jmockit.jar=hibernate} (inserting the correct path to jmockit.jar if necessary).
+ * Alternatively, when using a HotSpot/JRockit JDK 1.6+ on Windows or Linux, if {@code jmockit-hibernate3emul.jar} is in
+ * the classpath then the emulator will be used automatically, without the need for any JVM initialization parameter.
  * <p/>
- * If run without the emulator, the tests should still pass, as long as an appropriate Hibernate
- * session factory and the corresponding relational database are available. The use of the emulator
- * allows the tests to be run "in memory", without any access to the real Hibernate implementation,
+ * If run without the emulator, the tests should still pass, as long as an appropriate Hibernate session factory and the
+ * corresponding relational database are available.
+ * The use of emulation allows the tests to run "in memory", without any access to the real Hibernate implementation,
  * and therefore to any real database.
  * <p/>
  * All access to the Hibernate API here and in {@link CustomerManager} goes through the
- * {@link orderMngr.service.persistence.Persistence} static facade, which is only a convenience
- * class. Once the emulator is in use, the Hibernate API can be used from anywhere and all calls to
- * it are transparently redirected to the fake implementation.
+ * {@link orderMngr.service.persistence.Persistence} static facade, which is only a convenience class.
+ * Once the emulator is in use, the Hibernate API can be used from anywhere; all calls to it are transparently
+ * redirected to the fake implementation.
  */
 public final class CustomerTest extends DomainTest
 {
