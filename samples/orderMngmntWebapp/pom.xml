@@ -38,12 +38,8 @@
          <groupId>javax.persistence</groupId><artifactId>persistence-api</artifactId><version>1.0</version>
       </dependency>
       <dependency>
-         <groupId>hibernate</groupId><artifactId>hibernate</artifactId><version>3.0</version>
-         <scope>system</scope><systemPath>C:/Java/hibernate-distribution-3.3.1.GA/hibernate3.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>dom4j</groupId><artifactId>dom4j</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/dom4j-1.6.1.jar</systemPath>
+         <groupId>org.hibernate</groupId><artifactId>hibernate-core</artifactId><version>3.3.1.GA</version>
+         <scope>runtime</scope>
       </dependency>
       <dependency>
          <groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>0</version>
@@ -54,4 +50,11 @@
          <scope>system</scope><systemPath>${basedir}/../lib/slf4j-nop-1.5.8.jar</systemPath>
       </dependency>
    </dependencies>
+
+   <repositories>
+      <repository>
+         <id>JBoss</id><name>JBoss Repository</name>
+         <url>http://repository.jboss.org/maven2</url>
+      </repository>
+   </repositories>
 </project>

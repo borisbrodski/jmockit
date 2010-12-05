@@ -130,9 +130,11 @@
   </component>
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
-    <list size="2">
-      <item index="0" class="java.lang.String" itemvalue="mockit.Mock" />
-      <item index="1" class="java.lang.String" itemvalue="mockit.NonStrict" />
+    <list size="4">
+      <item index="0" class="java.lang.String" itemvalue="mockit.Capturing" />
+      <item index="1" class="java.lang.String" itemvalue="mockit.Cascading" />
+      <item index="2" class="java.lang.String" itemvalue="mockit.Mock" />
+      <item index="3" class="java.lang.String" itemvalue="mockit.NonStrict" />
     </list>
   </component>
   <component name="FacetAutodetectingManager">
@@ -256,7 +258,6 @@
           <option name="m_limit" value="7" />
         </inspection_tool>
         <inspection_tool class="ContinueStatementWithLabel" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ControlFlowStatementWithoutBraces" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConvertJavadoc" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConvertOldAnnotations" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CovariantCompareTo" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -849,6 +850,7 @@
         <w>clinit</w>
         <w>coffeaelectronica</w>
         <w>colspan</w>
+        <w>coords</w>
         <w>covariant</w>
         <w>darkcyan</w>
         <w>darkslategray</w>
@@ -879,6 +881,7 @@
         <w>formatter</w>
         <w>getenv</w>
         <w>github</w>
+        <w>gmail</w>
         <w>google</w>
         <w>googlecode</w>
         <w>goto</w>
@@ -1016,6 +1019,7 @@
         <w>tooltip</w>
         <w>tourdemock</w>
         <w>tremblay</w>
+        <w>tuple</w>
         <w>unbox</w>
         <w>unboxing</w>
         <w>unformatted</w>
@@ -1124,6 +1128,17 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="Maven: antlr:antlr:2.7.6">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/antlr/antlr/2.7.6/antlr-2.7.6.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/antlr/antlr/2.7.6/antlr-2.7.6-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/antlr/antlr/2.7.6/antlr-2.7.6-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: cglib:cglib-nodep:2.1_3">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar!/" />
@@ -1144,6 +1159,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/cglib/cglib-nodep/2.2/cglib-nodep-2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: commons-collections:commons-collections:3.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-collections/commons-collections/3.1/commons-collections-3.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-collections/commons-collections/3.1/commons-collections-3.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-collections/commons-collections/3.1/commons-collections-3.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: commons-collections:commons-collections:3.2">
@@ -1207,12 +1233,27 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="Maven: dom4j:dom4j:1.6.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/dom4j/dom4j/1.6.1/dom4j-1.6.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: hibernate:hibernate:3.0">
       <CLASSES>
-        <root url="jar://C:/Java/hibernate-distribution-3.3.1.GA/hibernate3.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/hibernate/hibernate/3.0/hibernate-3.0.jar!/" />
       </CLASSES>
-      <JAVADOC />
-      <SOURCES />
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/hibernate/hibernate/3.0/hibernate-3.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/hibernate/hibernate/3.0/hibernate-3.0-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Maven: javamail:javamail:1.3.3">
       <CLASSES>
@@ -1250,6 +1291,17 @@
         <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: javax.transaction:jta:1.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/transaction/jta/1.1/jta-1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/transaction/jta/1.1/jta-1.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/transaction/jta/1.1/jta-1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: jta:jta:1.0.1b">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/hibernate3emul/../lib/javaee.jar!/" />
@@ -1266,17 +1318,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit-dep/4.4/junit-dep-4.4-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: junit:junit:3.8.1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: junit:junit:4.8.1">
@@ -1372,6 +1413,17 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+    </library>
+    <library name="Maven: org.hibernate:hibernate-core:3.3.1.GA">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-core/3.3.1.GA/hibernate-core-3.3.1.GA.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-core/3.3.1.GA/hibernate-core-3.3.1.GA-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-core/3.3.1.GA/hibernate-core-3.3.1.GA-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Maven: org.jmock:jmock-junit4:2.5.1">
       <CLASSES>
@@ -1542,6 +1594,17 @@
       <SOURCES>
         <root url="file://C:/Java/unitils-3.1/unitils-mock/src/main/java" />
         <root url="jar://$MAVEN_REPOSITORY$/org/unitils/unitils-mock/3.1/unitils-mock-3.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: xml-apis:xml-apis:1.0.b2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
