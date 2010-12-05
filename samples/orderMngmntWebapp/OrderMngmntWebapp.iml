@@ -16,15 +16,7 @@
     <orderEntry type="library" name="Maven: mockit:jmockit-hibernate3emul:0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.1" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.hibernate:hibernate-core:3.3.1.GA" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: antlr:antlr:2.7.6" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: commons-collections:commons-collections:3.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: dom4j:dom4j:1.6.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: javax.transaction:jta:1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:0" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-nop:0" level="project" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../jmockit-coverage-htmlfull.jar!/" />

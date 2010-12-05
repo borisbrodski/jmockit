@@ -3,9 +3,7 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-   <parent>
-      <groupId>mockit</groupId><artifactId>samples</artifactId><version>1</version>
-   </parent>
+   <parent><groupId>mockit</groupId><artifactId>samples</artifactId><version>1</version></parent>
    <artifactId>orderManagement</artifactId>
    <name>Order Management Sample</name>
 
@@ -37,24 +35,5 @@
       <dependency>
          <groupId>javax.persistence</groupId><artifactId>persistence-api</artifactId><version>1.0</version>
       </dependency>
-      <dependency>
-         <groupId>org.hibernate</groupId><artifactId>hibernate-core</artifactId><version>3.3.1.GA</version>
-         <scope>runtime</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../../lib/slf4j-api-1.5.8.jar</systemPath>
-      </dependency>
-      <dependency>
-         <groupId>org.slf4j</groupId><artifactId>slf4j-nop</artifactId><version>0</version>
-         <scope>system</scope><systemPath>${basedir}/../lib/slf4j-nop-1.5.8.jar</systemPath>
-      </dependency>
    </dependencies>
-
-   <repositories>
-      <repository>
-         <id>JBoss</id><name>JBoss Repository</name>
-         <url>http://repository.jboss.org/maven2</url>
-      </repository>
-   </repositories>
 </project>
