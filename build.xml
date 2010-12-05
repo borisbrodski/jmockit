@@ -285,7 +285,9 @@
                     createjar-coverage-serial, createjar-coverage-merge, createjar-incremental"/>
 
    <target name="createjar-hibernate3emul">
-      <jar destfile="jmockit-hibernate3emul.jar" basedir="hibernate3emul/classes"/>
+      <jar destfile="jmockit-hibernate3emul.jar" basedir="hibernate3emul/classes">
+         <manifest><attribute name="Class-Path" value="jmockit.jar"/></manifest>
+      </jar>
    </target>
 
    <target name="createzip">

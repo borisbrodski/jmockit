@@ -27,12 +27,12 @@
          <version>${jmockit.version}</version><scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>junit</groupId><artifactId>junit</artifactId><version>${junit.version}</version>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
          <groupId>mockit</groupId><artifactId>jmockit-hibernate3emul</artifactId><version>0</version>
          <scope>system</scope><systemPath>${basedir}/../../jmockit-hibernate3emul.jar</systemPath>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId><artifactId>junit</artifactId><version>${junit.version}</version>
+         <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>javax.persistence</groupId><artifactId>persistence-api</artifactId><version>1.0</version>
