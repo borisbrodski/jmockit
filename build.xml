@@ -300,8 +300,6 @@
          encoding="UTF-8"/>
    </target>
 
-   <target name="release" depends="buildAll, createjars, createzip"/>
-
    <!-- Targets for running tests and generating corresponding test reports in HTML -->
    
    <macrodef name="testReport">

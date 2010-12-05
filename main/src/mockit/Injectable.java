@@ -38,15 +38,15 @@ import java.lang.annotation.*;
  * The {@code @Mocked} annotation can be applied at the same, if needed.
  * The default mocking behavior, however, is different in several ways.
  * <p/>
- * Mock fields or parameters with injectable instances can be of any reference type.
- * Note that, while allowed, the use of this annotation is redundant for interfaces or annotations, since their
- * instances always belong to a mock class which cannot possibly have regular (non-mock) instances.
- * It is also redundant for an enum type, since each enum value is unique.
  * For the duration of each test where the mock field/parameter is in scope, <em>only one</em> injectable instance is
  * mocked; other instances of the same mocked type are not affected.
- * For such a mocked type with mocking restricted to a single instance, <em>static methods</em> and
- * <em>constructors</em> belonging to a mocked class are <em>not</em> mocked; only instance methods are.
- * Static initializers of said classes are <em>not</em> stubbed out by default.
+ * For an injectable mocked <em>class</em>, <em>static methods</em> and <em>constructors</em> are <em>not</em> mocked;
+ * only instance methods are. The static initializers of said classes are <em>not</em> stubbed out by default.
+ * <p/>
+ * Mock fields or parameters with injectable instances can be of any reference type.
+ * However, while allowed, the use of this annotation is redundant for interfaces and annotations, since their
+ * instances will belong to a dynamically created mock class.
+ * It is also redundant for an enum type, since each enum value is unique.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
