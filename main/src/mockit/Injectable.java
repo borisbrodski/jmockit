@@ -35,7 +35,7 @@ import java.lang.annotation.*;
  * <p/>
  * The use of this annotation implies that the declared type of the mock field/parameter is a mocked type, just like it
  * would be if annotated with {@linkplain Mocked @Mocked}.
- * The {@code @Mocked} annotation can be applied at the same, if needed.
+ * The {@code @Mocked} annotation can be applied at the same time, if needed.
  * The default mocking behavior, however, is different in several ways.
  * <p/>
  * For the duration of each test where the mock field/parameter is in scope, <em>only one</em> injectable instance is
