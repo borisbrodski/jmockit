@@ -9,6 +9,9 @@
       <area shape="rect" coords="37,87,158,114" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Expectations.html"
          title="Base class whose subclasses are defined in test code, and whose instances define a set of expected method/constructor invocations on the mocked types (classes or interfaces) declared through one or more mock fields and/or mock parameters.">
+      <area shape="rect" coords="478,12,592,45" target="_blank"
+         href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Injectable.html"
+         title="Indicates an instance field of the test class or a parameter of the test method whose value will be an injectable mocked instance.">
       <area shape="rect" coords="608,12,700,39" target="_blank"
          href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/mockit/Mocked.html"
          title="Indicates an instance field or test method parameter whose value will be a mocked instance.">
