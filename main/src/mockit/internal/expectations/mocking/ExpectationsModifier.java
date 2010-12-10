@@ -29,6 +29,8 @@ import java.util.*;
 import static java.lang.reflect.Modifier.*;
 
 import static mockit.external.asm.Opcodes.*;
+import org.objectweb.asm.util.*;
+
 import mockit.external.asm.Type;
 
 import mockit.external.asm.*;
@@ -63,6 +65,7 @@ final class ExpectationsModifier extends BaseClassModifier
    private int executionMode;
    private boolean isProxy;
    private String defaultFilters;
+   public ASMifierMethodVisitor asm;
 
    ExpectationsModifier(ClassLoader classLoader, ClassReader classReader, MockingConfiguration mockingConfiguration)
    {
@@ -96,13 +99,7 @@ final class ExpectationsModifier extends BaseClassModifier
    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       superClassName = superName;
-
-      if (mockingCfg != null) {
-         mockingCfg.setSuperClassName(superName);
-      }
-
       super.visit(version, access, name, signature, superName, interfaces);
-
       isProxy = "java/lang/reflect/Proxy".equals(superName);
 
       if (isProxy) {
@@ -158,7 +155,7 @@ final class ExpectationsModifier extends BaseClassModifier
       boolean visitingConstructor = "<init>".equals(name);
 
       if (visitingConstructor && superClassName != null) {
-         generateCallToDefaultOrConfiguredSuperConstructor();
+         generateCallToSuperConstructor();
       }
 
       String internalClassName = className;
@@ -223,7 +220,7 @@ final class ExpectationsModifier extends BaseClassModifier
       }
    }
 
-   private void generateCallToDefaultOrConfiguredSuperConstructor()
+   private void generateCallToSuperConstructor()
    {
       mw.visitVarInsn(ALOAD, 0);
 
@@ -232,12 +229,8 @@ final class ExpectationsModifier extends BaseClassModifier
       if ("java/lang/Object".equals(superClassName)) {
          constructorDesc = "()V";
       }
-      else if (mockingCfg != null) {
-         Type[] paramTypes = mockingCfg.getSuperConstructorParameterTypes();
-         constructorDesc = generateSuperConstructorArguments(paramTypes);
-      }
       else {
-         constructorDesc = new SuperConstructorCollector(1).findConstructor(superClassName);
+         constructorDesc = SuperConstructorCollector.INSTANCE.findConstructor(superClassName);
          pushDefaultValuesForParameterTypes(constructorDesc);
       }
 
@@ -250,7 +243,7 @@ final class ExpectationsModifier extends BaseClassModifier
       generateCallToMockingBridge(MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, executionMode);
       generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
 
-      if (isNative(access)) {
+      if (isNative(access)) { // TODO: test situations involving native JRE methods
          generateEmptyImplementation(desc);
          return null;
       }

@@ -146,10 +146,6 @@ public final class AnnotationsModifier extends BaseClassModifier
    {
       super.visit(version, access, name, signature, superName, interfaces);
       realSuperClassName = superName;
-
-      if (mockingCfg != null) {
-         mockingCfg.setSuperClassName(superName);
-      }
    }
 
    /**
@@ -277,7 +273,7 @@ public final class AnnotationsModifier extends BaseClassModifier
    {
       mw.visitVarInsn(ALOAD, 0);
 
-      String constructorDesc = new SuperConstructorCollector(1).findConstructor(realSuperClassName);
+      String constructorDesc = SuperConstructorCollector.INSTANCE.findConstructor(realSuperClassName);
       pushDefaultValuesForParameterTypes(constructorDesc);
 
       mw.visitMethodInsn(INVOKESPECIAL, realSuperClassName, "<init>", constructorDesc);

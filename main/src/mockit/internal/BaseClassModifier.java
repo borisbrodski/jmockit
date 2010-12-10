@@ -60,8 +60,7 @@ public class BaseClassModifier extends ClassWriter
    }
 
    @Override
-   public void visit(
-      int version, int access, String name, String signature, String superName, String[] interfaces)
+   public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       super.visit(version, access, name, signature, superName, interfaces);
       modifiedClassName = name;
@@ -160,7 +159,7 @@ public class BaseClassModifier extends ClassWriter
    }
 
    protected final void generateDirectCallToHandler(
-      String className, int access, String name, String desc, int executionType)
+      String className, int access, String name, String desc, int executionMode)
    {
       // First argument: the mock instance, if any.
       boolean isStatic = generateCodeToPassThisOrNullIfStaticMethod(access);
@@ -175,7 +174,7 @@ public class BaseClassModifier extends ClassWriter
       mw.visitLdcInsn(name + desc);
 
       // Fifth argument: indicate regular or special modes of execution
-      mw.visitLdcInsn(executionType);
+      mw.visitLdcInsn(executionMode);
       
       // Sixth argument: call arguments.
       Type[] argTypes = Type.getArgumentTypes(desc);
@@ -248,17 +247,6 @@ public class BaseClassModifier extends ClassWriter
       mw.visitMethodInsn(
          INVOKEINTERFACE, "java/lang/reflect/InvocationHandler", "invoke",
          "(Ljava/lang/Object;Ljava/lang/reflect/Method;[Ljava/lang/Object;)Ljava/lang/Object;");
-   }
-
-   protected final String generateSuperConstructorArguments(Type[] paramTypes)
-   {
-      if (paramTypes == null || paramTypes.length == 0) {
-         return "()V";
-      }
-
-      pushDefaultValuesForParameterTypes(paramTypes);
-
-      return Type.getMethodDescriptor(Type.VOID_TYPE, paramTypes);
    }
 
    private void pushDefaultValuesForParameterTypes(Type[] paramTypes)

@@ -25,6 +25,7 @@
 package mockit.internal.util;
 
 import java.io.*;
+import java.util.*;
 
 import mockit.external.asm.*;
 import mockit.external.asm.commons.*;
@@ -32,56 +33,53 @@ import mockit.internal.*;
 
 public final class SuperConstructorCollector extends EmptyVisitor
 {
-   private final int desiredConstructorNo;
-   private int constructorNo;
-   private String targetConstructorDesc;
+   public static final SuperConstructorCollector INSTANCE = new SuperConstructorCollector();
 
-   public SuperConstructorCollector(int desiredConstructorNo)
+   private final Map<String, String> cache = new HashMap<String, String>();
+   @SuppressWarnings({"FieldAccessedSynchronizedAndUnsynchronized"})
+   private String constructorDesc;
+
+   private SuperConstructorCollector() {}
+
+   public synchronized String findConstructor(String className)
    {
-      this.desiredConstructorNo = desiredConstructorNo;
+      constructorDesc = cache.get(className);
+
+      if (constructorDesc != null) {
+         return constructorDesc;
+      }
+
+      ClassReader cr = createClassReader(className);
+
+      try { cr.accept(this, true); } catch (VisitInterruptedException ignore) {}
+      cache.put(className, constructorDesc);
+      
+      return constructorDesc;
    }
 
-   public String findConstructor(String superClassName)
+   private ClassReader createClassReader(String className)
    {
-      constructorNo = 0;
-      targetConstructorDesc = null;
-
-      ClassReader cr;
-
       try {
-         cr = ClassFile.readClass(superClassName);
+         return ClassFile.readClass(className);
       }
       catch (IOException e) {
-         throw new RuntimeException("Failed to read class file for " + superClassName, e);
+         throw new RuntimeException("Failed to read class file for " + className, e);
       }
-
-      cr.accept(this, true);
-
-      if (targetConstructorDesc == null) {
-         throw new IllegalArgumentException(
-            "Constructor number " + desiredConstructorNo + " not found in " + superClassName);
-      }
-
-      return targetConstructorDesc;
    }
 
    @Override
    public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
    {
       if ("<init>".equals(name)) {
-         constructorNo++;
-
-         if (constructorNo == desiredConstructorNo) {
-            targetConstructorDesc = desc;
-         }
+         constructorDesc = desc;
+         throw VisitInterruptedException.INSTANCE;
       }
 
       return null;
    }
 
    @Override
-   public FieldVisitor visitField(
-      int access, String name, String desc, String signature, Object value)
+   public FieldVisitor visitField(int access, String name, String desc, String signature, Object value)
    {
       return null;
    }

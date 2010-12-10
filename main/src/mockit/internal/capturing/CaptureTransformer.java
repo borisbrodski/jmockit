@@ -31,12 +31,10 @@ import mockit.external.asm.*;
 import mockit.external.asm.commons.*;
 import mockit.internal.*;
 import mockit.internal.state.*;
+import mockit.internal.util.*;
 
 final class CaptureTransformer implements ClassFileTransformer
 {
-   private static final class VisitInterruptedException extends RuntimeException {}
-   private static final VisitInterruptedException INTERRUPT_VISIT = new VisitInterruptedException();
-
    private final CapturedType metadata;
    private final String capturedType;
    private final CaptureOfImplementations modifierFactory;
@@ -125,7 +123,7 @@ final class CaptureTransformer implements ClassFileTransformer
             cr.accept(superTypeCollector, true);
          }
 
-         throw INTERRUPT_VISIT;
+         throw VisitInterruptedException.INSTANCE;
       }
    }
 }

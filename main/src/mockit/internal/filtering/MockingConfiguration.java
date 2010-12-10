@@ -24,18 +24,15 @@
  */
 package mockit.internal.filtering;
 
-import java.util.regex.*;
 import java.util.*;
+import java.util.regex.*;
 
 import mockit.external.asm.*;
-import mockit.internal.util.*;
 
 public final class MockingConfiguration
 {
    private final List<MockFilter> filtersToApply;
    private final boolean desiredFilterResultWhenMatching;
-   private String superClassName;
-   private MockFilter lastFilterMatched;
 
    public MockingConfiguration(List<MockFilter> filters, boolean desiredFilterResultWhenMatching)
    {
@@ -69,11 +66,6 @@ public final class MockingConfiguration
       return filtersToApply == null;
    }
 
-   public void setSuperClassName(String superClassName)
-   {
-      this.superClassName = superClassName;
-   }
-
    public boolean matchesFilters(String name, String desc)
    {
       if (filtersToApply == null) {
@@ -82,90 +74,11 @@ public final class MockingConfiguration
 
       for (MockFilter filter : filtersToApply) {
          if (filter.matches(name, desc)) {
-            lastFilterMatched = filter;
             return desiredFilterResultWhenMatching;
          }
       }
 
-      lastFilterMatched = null;
       return !desiredFilterResultWhenMatching;
-   }
-
-   public Type[] getSuperConstructorParameterTypes()
-   {
-      RegexMockFilter regexFilterMatched;
-      int superConstructorNo;
-
-      if (lastFilterMatched instanceof RegexMockFilter) {
-         regexFilterMatched = (RegexMockFilter) lastFilterMatched;
-         superConstructorNo = regexFilterMatched.superConstructorNo;
-      }
-      else {
-         regexFilterMatched = null;
-         superConstructorNo = 1;
-      }
-
-      if (superConstructorNo > 0) {
-         String constructorDesc = new SuperConstructorCollector(superConstructorNo).findConstructor(superClassName);
-
-         return Type.getArgumentTypes(constructorDesc);
-      }
-
-      //noinspection ConstantConditions
-      if (regexFilterMatched.paramsForSuperConstructor == null) {
-         return null;
-      }
-
-      String[] params = regexFilterMatched.paramsForSuperConstructor;
-      Type[] types = new Type[params.length];
-
-      for (int i = 0; i < params.length; i++) {
-         types[i] = getParameterType(params[i]);
-      }
-
-      return types;
-   }
-
-   private Type getParameterType(String param)
-   {
-      if ("boolean".equals(param)) {
-         return Type.BOOLEAN_TYPE;
-      }
-      else if ("char".equals(param)) {
-         return Type.CHAR_TYPE;
-      }
-      else if ("byte".equals(param)) {
-         return Type.BYTE_TYPE;
-      }
-      else if ("short".equals(param)) {
-         return Type.SHORT_TYPE;
-      }
-      else if ("int".equals(param)) {
-         return Type.INT_TYPE;
-      }
-      else if ("long".equals(param)) {
-         return Type.LONG_TYPE;
-      }
-      else if ("float".equals(param)) {
-         return Type.FLOAT_TYPE;
-      }
-      else if ("double".equals(param)) {
-         return Type.DOUBLE_TYPE;
-      }
-      else if (param.endsWith("[]")) {
-         // TODO: handle arrays
-         return null;
-      }
-      else {
-         return getReferenceParameterType(param);
-      }
-   }
-
-   private Type getReferenceParameterType(String param)
-   {
-      String fqParameterName = param.indexOf('.') < 0 ? "java.lang." + param : param;
-      String parameterDesc = 'L' + fqParameterName.replace('.', '/') + ';';
-      return Type.getType(parameterDesc);
    }
 
    private static final class RegexMockFilter implements MockFilter
@@ -175,8 +88,6 @@ public final class MockingConfiguration
 
       private final Pattern nameRegex;
       private final String[] paramTypeNames;
-      private String[] paramsForSuperConstructor;
-      private int superConstructorNo;
 
       private RegexMockFilter(String filter)
       {
@@ -189,39 +100,12 @@ public final class MockingConfiguration
 
          if (lp == 0) {
             nameRegex = CONSTRUCTOR_NAME_REGEX;
-            parseSuperConstructorSpecification(filter);
          }
          else {
             nameRegex = Pattern.compile(lp < 0 ? filter : filter.substring(0, lp));
          }
 
          paramTypeNames = parseParameterTypes(filter, lp, rp);
-      }
-
-      private void parseSuperConstructorSpecification(String filter)
-      {
-         int cp = filter.indexOf(':');
-
-         if (cp < 0) {
-            superConstructorNo = 1;
-            return;
-         }
-
-         String specification = filter.substring(cp + 1).trim();
-         int rp = specification.length() - 1;
-
-         if (specification.charAt(0) == '(' && specification.charAt(rp) == ')') {
-            paramsForSuperConstructor = parseParameterTypes(specification, 0, rp);
-         }
-         else {
-            try {
-               superConstructorNo = Integer.parseInt(specification);
-            }
-            catch (NumberFormatException e) {
-               throw new IllegalArgumentException(
-                  "Invalid specification for super constructor in filter: " + filter, e);
-            }
-         }
       }
 
       private String[] parseParameterTypes(String filter, int lp, int rp)

@@ -38,9 +38,6 @@ import mockit.*;
 
 public final class ExpectationsTransformer implements ClassFileTransformer
 {
-   private static final class VisitInterruptedException extends RuntimeException {}
-   private static final VisitInterruptedException INTERRUPT_VISIT = new VisitInterruptedException();
-
    private final SuperClassAnalyser superClassAnalyser = new SuperClassAnalyser();
    private final List<String> baseSubclasses;
 
@@ -94,7 +91,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
             try {
                cr.accept(modifier, false);
             }
-            catch (RuntimeException ignore) {
+            catch (VisitInterruptedException ignore) {
                continue;
             }
 
@@ -145,7 +142,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
             }
          }
 
-         throw INTERRUPT_VISIT;
+         throw VisitInterruptedException.INSTANCE;
       }
 
 
@@ -175,12 +172,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
          String className = classOfInterest.replace('/', '.');
          ClassReader cr = ClassFile.createClassFileReader(className);
 
-         try {
-            cr.accept(this, true);
-         }
-         catch (VisitInterruptedException ignore) {
-            // OK
-         }
+         try { cr.accept(this, true); } catch (VisitInterruptedException ignore) {}
 
          return classExtendsBaseSubclass;
       }
@@ -194,7 +186,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
             classExtendsInvocationsClass(superName);
          }
 
-         throw INTERRUPT_VISIT;
+         throw VisitInterruptedException.INSTANCE;
       }
    }
 }

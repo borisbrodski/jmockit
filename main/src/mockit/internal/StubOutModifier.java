@@ -35,7 +35,6 @@ import static mockit.external.asm.Opcodes.*;
 
 public final class StubOutModifier extends BaseClassModifier
 {
-   private final SuperConstructorCollector superConstructors = new SuperConstructorCollector(1);
    private final MockingConfiguration stubbingCfg;
    private String superClassName;
 
@@ -76,7 +75,7 @@ public final class StubOutModifier extends BaseClassModifier
    {
       mw.visitVarInsn(ALOAD, 0);
 
-      String constructorDesc = superConstructors.findConstructor(superClassName);
+      String constructorDesc = SuperConstructorCollector.INSTANCE.findConstructor(superClassName);
       pushDefaultValuesForParameterTypes(constructorDesc);
 
       mw.visitMethodInsn(INVOKESPECIAL, superClassName, "<init>", constructorDesc);

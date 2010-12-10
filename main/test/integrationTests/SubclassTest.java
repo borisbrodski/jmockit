@@ -163,40 +163,11 @@ public final class SubclassTest
    }
 
    @Test
-   public void mockSubclassUsingExpectationsWithSuperConstructorChosenByItsNumber()
+   public void partiallyMockSubclassFilteringInASingleConstructor()
    {
       new Expectations()
       {
-         @Mocked("(String): 1")
-         final SubClass mock = null;
-
-         {
-            new SubClass("test");
-         }
-      };
-
-      new SubClass("test");
-
-      assertTrue(superClassConstructorCalled);
-      assertFalse(subClassConstructorCalled);
-   }
-
-   @Test(expected = IllegalArgumentException.class)
-   public void mockSubclassUsingExpectationsWithNonExistentSuperConstructorNumber()
-   {
-      new Expectations()
-      {
-         @Mocked("(String): 2")
-         final SubClass mock = null;
-      };
-   }
-
-   @Test
-   public void mockSubclassUsingExpectationsWithSuperConstructorChosenByItsSignature()
-   {
-      new Expectations()
-      {
-         @Mocked("(String): (int, java.lang.String)")
+         @Mocked("(String)")
          final SubClass mock = null;
 
          {
