@@ -62,6 +62,13 @@ public class BaseClassModifier extends ClassWriter
    @Override
    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
+      // LDC instructions (see MethodVisitor#visitLdcInsn) are more capable in JVMs with support for class files of
+      // version 49 (Java 1.5) or newer, so we "upgrade" it to avoid a VerifyError:
+      if (version < 49) {
+         //noinspection AssignmentToMethodParameter
+         version = 49;
+      }
+
       super.visit(version, access, name, signature, superName, interfaces);
       modifiedClassName = name;
    }
