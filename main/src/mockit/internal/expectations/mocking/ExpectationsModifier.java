@@ -29,7 +29,6 @@ import java.util.*;
 import static java.lang.reflect.Modifier.*;
 
 import static mockit.external.asm.Opcodes.*;
-import org.objectweb.asm.util.*;
 
 import mockit.external.asm.Type;
 
@@ -65,7 +64,6 @@ final class ExpectationsModifier extends BaseClassModifier
    private int executionMode;
    private boolean isProxy;
    private String defaultFilters;
-   public ASMifierMethodVisitor asm;
 
    ExpectationsModifier(ClassLoader classLoader, ClassReader classReader, MockingConfiguration mockingConfiguration)
    {
@@ -172,7 +170,7 @@ final class ExpectationsModifier extends BaseClassModifier
 
       if (executionMode > 0) {
          generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
-         return visitingConstructor ? new DynamicConstructorModifier() : new MethodAdapter(mw);
+         return visitingConstructor ? new DynamicConstructorModifier() : new DynamicModifier();
       }
 
       generateReturnWithObjectAtTopOfTheStack(desc);
@@ -265,10 +263,25 @@ final class ExpectationsModifier extends BaseClassModifier
       mw.visitInsn(POP);
    }
 
-   private final class DynamicConstructorModifier extends MethodAdapter
+   private class DynamicModifier extends MethodAdapter
    {
-      DynamicConstructorModifier() { super(mw); }
+      DynamicModifier() { super(mw); }
 
+      @Override
+      public final void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int idx)
+      {
+         // For some reason, the start position for "this" gets displaced by bytecode inserted at the beginning,
+         // in a method modified by the EMMA tool. If not treated, this causes a ClassFormatError.
+         if (start.position > end.position) {
+            start.position = end.position;
+         }
+
+         super.visitLocalVariable(name, desc, signature, start, end, idx);
+      }
+   }
+
+   private final class DynamicConstructorModifier extends DynamicModifier
+   {
       @Override
       public void visitMethodInsn(int opcode, String owner, String name, String desc)
       {
