@@ -50,7 +50,7 @@ public final class Label
     /**
      * The position of this label in the code, if known.
      */
-    int position;
+    public int position;
 
     /**
      * If the label position has been updated, after instruction resizing.
