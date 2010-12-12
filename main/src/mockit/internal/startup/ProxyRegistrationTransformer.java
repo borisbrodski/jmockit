@@ -49,7 +49,7 @@ final class ProxyRegistrationTransformer implements ClassFileTransformer
    {
       int p = className.indexOf("$Proxy");
 
-      if (p >= 0 && Utilities.isPositiveDigit(className.charAt(p + 6))) {
+      if (p >= 0 && Utilities.hasPositiveDigit(className, p + 5)) {
          if (p == 0) {
             TestRun.proxyClasses().add(className, classfileBuffer);
          }

@@ -59,7 +59,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    private void findOtherBaseSubclasses(Class<?>[] alreadyLoaded)
    {
       for (Class<?> aClass : alreadyLoaded) {
-         if (!isFinalClass(aClass) && isSubclassFromUserCode(aClass)) {
+         if (!isFinalClass(aClass) && isExpectationsOrVerificationsSubclassFromUserCode(aClass)) {
             String classInternalName = aClass.getName().replace('.', '/');
             baseSubclasses.add(classInternalName);
          }
@@ -71,7 +71,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       return isFinal(aClass.getModifiers()) || Utilities.isAnonymousClass(aClass);
    }
 
-   private boolean isSubclassFromUserCode(Class<?> aClass)
+   private boolean isExpectationsOrVerificationsSubclassFromUserCode(Class<?> aClass)
    {
       return
          aClass != Expectations.class && aClass != NonStrictExpectations.class &&
@@ -84,9 +84,9 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    private void modifyFinalSubclasses(Class<?>[] alreadyLoaded)
    {
       for (Class<?> aClass : alreadyLoaded) {
-         if (isFinalClass(aClass) && isSubclassFromUserCode(aClass)) {
+         if (isFinalClass(aClass) && isExpectationsOrVerificationsSubclassFromUserCode(aClass)) {
             ClassReader cr = ClassFile.createClassFileReader(aClass.getName());
-            EndOfBlockModifier modifier = new EndOfBlockModifier(cr);
+            EndOfBlockModifier modifier = new EndOfBlockModifier(cr, true);
 
             try {
                cr.accept(modifier, false);
@@ -106,10 +106,15 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       byte[] classfileBuffer)
    {
       if (classBeingRedefined == null && TestRun.isRunningTestCode(protectionDomain)) {
-         ClassReader cr = new ClassReader(classfileBuffer);
-         EndOfBlockModifier modifier = new EndOfBlockModifier(cr);
-         cr.accept(modifier, false);
-         return modifier.toByteArray();
+         int p = className.lastIndexOf('$');
+
+         if (p > 0) {
+            boolean isAnonymousClass = Utilities.hasPositiveDigit(className, p);
+            ClassReader cr = new ClassReader(classfileBuffer);
+            ClassWriter modifier = new EndOfBlockModifier(cr, isAnonymousClass);
+            cr.accept(modifier, false);
+            return modifier.toByteArray();
+         }
       }
 
       return null;
@@ -117,29 +122,30 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 
    private final class EndOfBlockModifier extends ClassWriter
    {
+      final boolean isAnonymousClass;
       MethodVisitor mw;
       String classDesc;
 
-      EndOfBlockModifier(ClassReader cr) { super(cr, true); }
+      EndOfBlockModifier(ClassReader cr, boolean isAnonymousClass)
+      {
+         super(cr, true);
+         this.isAnonymousClass = isAnonymousClass;
+      }
 
       @Override
       public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
       {
-         int p = name.indexOf('$');
+         boolean superClassIsKnownInvocationsSubclass = baseSubclasses.contains(superName);
 
-         if (p > 0) {
-            boolean superClassIsKnownInvocationsSubclass = baseSubclasses.contains(superName);
-
-            if (isFinal(access) || Character.isDigit(name.charAt(p + 1))) {
-               if (superClassIsKnownInvocationsSubclass || superClassAnalyser.classExtendsInvocationsClass(superName)) {
-                  super.visit(version, access, name, signature, superName, interfaces);
-                  classDesc = name;
-                  return; // go on and modify the class
-               }
+         if (isFinal(access) || isAnonymousClass) {
+            if (superClassIsKnownInvocationsSubclass || superClassAnalyser.classExtendsInvocationsClass(superName)) {
+               super.visit(version, access, name, signature, superName, interfaces);
+               classDesc = name;
+               return; // go on and modify the class
             }
-            else if (superClassIsKnownInvocationsSubclass) {
-               baseSubclasses.add(name);
-            }
+         }
+         else if (superClassIsKnownInvocationsSubclass) {
+            baseSubclasses.add(name);
          }
 
          throw VisitInterruptedException.INSTANCE;

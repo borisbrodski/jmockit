@@ -770,18 +770,21 @@ public final class Utilities
    {
       String className = aClass.getName();
       int p = className.lastIndexOf('$');
+      return hasPositiveDigit(className, p);
+   }
 
-      if (p > 0 && p + 1 < className.length()) {
-         char c = className.charAt(p + 1);
-         return isPositiveDigit(c);
+   public static boolean hasPositiveDigit(String className, int positionJustBefore)
+   {
+      if (positionJustBefore > 0) {
+         int nextPos = positionJustBefore + 1;
+
+         if (nextPos < className.length()) {
+            char c = className.charAt(nextPos);
+            return c >= '1' && c <= '9';
+         }
       }
 
       return false;
-   }
-
-   public static boolean isPositiveDigit(char c)
-   {
-      return c >= '1' && c <= '9';
    }
 
    public static String objectIdentity(Object obj)

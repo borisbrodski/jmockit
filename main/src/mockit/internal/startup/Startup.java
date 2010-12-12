@@ -140,8 +140,8 @@ public final class Startup
          loadExternalTool(toolSpec, true);
       }
 
-      instrumentation.addTransformer(new ProxyRegistrationTransformer());
-      instrumentation.addTransformer(new ExpectationsTransformer(inst));
+      inst.addTransformer(new ProxyRegistrationTransformer());
+      inst.addTransformer(new ExpectationsTransformer(inst));
    }
 
    private static void loadInternalStartupMocks()
