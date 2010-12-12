@@ -51,7 +51,7 @@ public final class JREMockingTest extends TestCase
 
    // Mocking of native methods ///////////////////////////////////////////////////////////////////////////////////////
 
-   public void testFirstMockingOfNativeMethods(System mockedSystem) throws Exception
+   public void testFirstMockingOfNativeMethods() throws Exception
    {
        new Expectations()
        {
@@ -62,7 +62,7 @@ public final class JREMockingTest extends TestCase
       Thread.sleep(5000);
    }
 
-   public void testSecondMockingOfNativeMethods(System mockedSystem) throws Exception
+   public void testSecondMockingOfNativeMethods() throws Exception
    {
        new Expectations()
        {
@@ -79,20 +79,39 @@ public final class JREMockingTest extends TestCase
        assertTrue(System.currentTimeMillis() > 0);
    }
 
-   public void testDynamicMockingOfNativeMethod(@Injectable final Thread t) throws Exception
+   // When a native instance method is called on a regular instance, there is no way to execute its real
+   // implementation; therefore, dynamic mocking of native methods is not supported.
+   public void testDynamicMockingOfNativeMethod(@Injectable final Thread t)
    {
       new NonStrictExpectations()
       {
          {
-            t.isAlive(); result = true;
+            t.isAlive();
+
+            try {
+               result = true;
+               fail();
+            }
+            catch (IllegalStateException ignore) {
+               // OK
+            }
+         }
+      };
+   }
+
+   @Injectable FileOutputStream stream;
+
+   // This interferes with the test runner if regular mocking is applied.
+   public void testDynamicMockingOfFileOutputStreamThroughMockField() throws Exception
+   {
+      new Expectations()
+      {
+         {
+            stream.write((byte[]) any);
          }
       };
 
-      // When a native instance method is called on a regular instance, there is no way to execute its real
-      // implementation; instead, the method is stubbed out.
-      assertFalse(Thread.currentThread().isAlive());
-
-      assertTrue(t.isAlive());
+      stream.write("Hello world".getBytes());
    }
 
    // Mocking of java.lang.Object methods /////////////////////////////////////////////////////////////////////////////

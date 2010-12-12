@@ -118,8 +118,8 @@ final class ExpectationsModifier extends BaseClassModifier
          isProxy && isConstructorOrSystemMethodNotToBeMocked(name, desc) ||
          isMethodOrConstructorNotToBeMocked(access, name)
       ) {
-         // Copies original without modifications when it's synthetic or abstract, belongs to a
-         // Proxy subclass, or is a static or private method in a captured implementation class.
+         // Copies original without modifications when it's synthetic or abstract, belongs to a Proxy subclass, is a
+         // static or private method in a captured implementation class, or is a native method for dynamic mocking.
          return super.visitMethod(access, name, desc, signature, exceptions);
       }
 
@@ -181,6 +181,7 @@ final class ExpectationsModifier extends BaseClassModifier
          isConstructorToBeIgnored(name) ||
          isStaticMethodToBeIgnored(access) ||
          isMethodFromCapturedClassNotToBeMocked(access) ||
+         isNativeMethodForDynamicMocking(access) ||
          defaultFilters != null && defaultFilters.contains(name);
    }
 
@@ -197,6 +198,11 @@ final class ExpectationsModifier extends BaseClassModifier
    private boolean isMethodFromCapturedClassNotToBeMocked(int access)
    {
       return baseClassNameForCapturedInstanceMethods != null && (isStatic(access) || isPrivate(access));
+   }
+
+   private boolean isNativeMethodForDynamicMocking(int access)
+   {
+      return executionMode > 0 && isNative(access);
    }
 
    private MethodVisitor stubOutClassInitializationIfApplicable(
