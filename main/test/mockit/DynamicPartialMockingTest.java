@@ -80,11 +80,33 @@ public final class DynamicPartialMockingTest
 
       // Mocked:
       Collaborator collaborator = new Collaborator();
+      assertEquals(0, collaborator.value);
       assertEquals(123, collaborator.getValue());
 
       // Not mocked:
       assertTrue(collaborator.simpleOperation(1, "b", null));
       assertEquals(45, new Collaborator(45).value);
+   }
+
+   @Test
+   public void dynamicallyMockAJREClass() throws Exception
+   {
+      new Expectations(ByteArrayOutputStream.class)
+      {
+         {
+            new ByteArrayOutputStream().size(); result = 123;
+         }
+      };
+
+      // Mocked:
+      ByteArrayOutputStream collaborator = new ByteArrayOutputStream();
+      assertNull(Deencapsulation.getField(collaborator, "buf"));
+      assertEquals(123, collaborator.size());
+
+      // Not mocked:
+      ByteArrayOutputStream buf = new ByteArrayOutputStream(200);
+      buf.write(65);
+      assertEquals("A", buf.toString("UTF-8"));
    }
 
    @Test

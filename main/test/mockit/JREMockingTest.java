@@ -49,28 +49,50 @@ public final class JREMockingTest extends TestCase
       assertTrue(f.exists());
    }
 
-   public void testFirstMockingOfNativeMethods(System mockedSystem)
+   // Mocking of native methods ///////////////////////////////////////////////////////////////////////////////////////
+
+   public void testFirstMockingOfNativeMethods(System mockedSystem) throws Exception
    {
        new Expectations()
        {
            // First mocking: puts mocked class in cache, knowing it has native methods to re-register.
            @Mocked("sleep") final Thread unused = null;
        };
+
+      Thread.sleep(5000);
    }
 
-   public void testSecondMockingOfNativeMethods(System mockedSystem)
+   public void testSecondMockingOfNativeMethods(System mockedSystem) throws Exception
    {
        new Expectations()
        {
            // Second mocking: retrieves from cache, no longer knowing it has native methods to re-register.
            @Mocked("sleep") final Thread unused = null;
        };
+
+      Thread.sleep(5000);
    }
 
    public void testUnmockedNativeMethods() throws Exception
    {
        Thread.sleep(10);
        assertTrue(System.currentTimeMillis() > 0);
+   }
+
+   public void testDynamicMockingOfNativeMethod(@Injectable final Thread t) throws Exception
+   {
+      new NonStrictExpectations()
+      {
+         {
+            t.isAlive(); result = true;
+         }
+      };
+
+      // When a native instance method is called on a regular instance, there is no way to execute its real
+      // implementation; instead, the method is stubbed out.
+      assertFalse(Thread.currentThread().isAlive());
+
+      assertTrue(t.isAlive());
    }
 
    // Mocking of java.lang.Object methods /////////////////////////////////////////////////////////////////////////////

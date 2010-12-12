@@ -24,8 +24,6 @@
  */
 package mockit;
 
-import java.util.*;
-
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -42,11 +40,6 @@ public final class MockInvocationTest
       int getValue() { return -1; }
       String doSomething(boolean b, int[] i, String s) { return s + b + i[0]; }
       static boolean staticMethod() { return true; }
-      static boolean staticMethod(int i) { return i > 0; }
-      native long nativeMethod(boolean b);
-      final char finalMethod() { return 's'; }
-      private float privateMethod() { return 1.2F; }
-      void addElements(Collection<String> elements) { elements.add("one element"); }
    }
 
    @Ignore @Test
@@ -84,7 +77,7 @@ public final class MockInvocationTest
       }
    }
 
-//   @Test // TODO: when this test fails, it seems to cause later tests to fail
+   @Ignore @Test // TODO: when this test fails, it seems to cause later tests to fail
    public void mockForConstructorWithContext()
    {
       MockForConstructor mock = new MockForConstructor();

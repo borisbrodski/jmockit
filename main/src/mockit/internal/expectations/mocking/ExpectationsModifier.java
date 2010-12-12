@@ -127,26 +127,16 @@ final class ExpectationsModifier extends BaseClassModifier
       boolean matchesFilters = noFiltersToMatch || mockingCfg.matchesFilters(name, desc);
 
       if ("<clinit>".equals(name)) {
-         if (matchesFilters && stubOutClassInitialization) {
-            // Stub out any class initialization block (unless specified otherwise), to avoid
-            // potential side effects in tests.
-            mw = super.visitMethod(access, name, desc, signature, exceptions);
-            generateEmptyImplementation();
-            return null;
-         }
-         else {
-            return super.visitMethod(access, name, desc, signature, exceptions);
-         }
+         return stubOutClassInitializationIfApplicable(access, name, desc, signature, exceptions, matchesFilters);
       }
 
       if (!matchesFilters || noFiltersToMatch && isMethodFromObject(name, desc)) {
-         // Copies original without modifications if it doesn't pass the filters, or when it's an
-         // override of equals, hashCode, toString or finalize (from java.lang.Object) not
-         // prohibited by any mock filter.
+         // Copies original without modifications if it doesn't pass the filters, or when it's an override of
+         // equals, hashCode, toString or finalize (from java.lang.Object) not prohibited by any mock filter.
          return super.visitMethod(access, name, desc, signature, exceptions);
       }
 
-      // Otherwise, replace original implementation.
+      // Otherwise, replace original implementation with redirect to JMockit.
       validateModificationOfNativeMethod(access, name);
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
 
@@ -170,7 +160,7 @@ final class ExpectationsModifier extends BaseClassModifier
 
       if (executionMode > 0) {
          generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
-         return visitingConstructor ? new DynamicConstructorModifier() : new DynamicModifier();
+         return copyOriginalImplementationCode(access, desc, visitingConstructor);
       }
 
       generateReturnWithObjectAtTopOfTheStack(desc);
@@ -209,6 +199,21 @@ final class ExpectationsModifier extends BaseClassModifier
       return baseClassNameForCapturedInstanceMethods != null && (isStatic(access) || isPrivate(access));
    }
 
+   private MethodVisitor stubOutClassInitializationIfApplicable(
+      int access, String name, String desc, String signature, String[] exceptions, boolean matchesFilters)
+   {
+      mw = super.visitMethod(access, name, desc, signature, exceptions);
+
+      if (matchesFilters && stubOutClassInitialization) {
+         // Stub out any class initialization block (unless specified otherwise),
+         // to avoid potential side effects in tests.
+         generateEmptyImplementation();
+         return null;
+      }
+
+      return mw;
+   }
+
    private void validateModificationOfNativeMethod(int access, String name)
    {
       if (isNative(access) && !Startup.isJava6OrLater()) {
@@ -240,13 +245,7 @@ final class ExpectationsModifier extends BaseClassModifier
    {
       generateCallToMockingBridge(MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, executionMode);
       generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
-
-      if (isNative(access)) { // TODO: test situations involving native JRE methods
-         generateEmptyImplementation(desc);
-         return null;
-      }
-
-      return new MethodAdapter(mw);
+      return copyOriginalImplementationCode(access, desc, false);
    }
 
    private void generateDecisionBetweenReturningOrContinuingToRealImplementation(String desc)
@@ -261,6 +260,16 @@ final class ExpectationsModifier extends BaseClassModifier
 
       mw.visitLabel(startOfRealImplementation);
       mw.visitInsn(POP);
+   }
+
+   private MethodVisitor copyOriginalImplementationCode(int access, String desc, boolean specialTreatmentForConstructor)
+   {
+      if (isNative(access)) {
+         generateEmptyImplementation(desc);
+         return null;
+      }
+
+      return specialTreatmentForConstructor ? new DynamicConstructorModifier() : new DynamicModifier();
    }
 
    private class DynamicModifier extends MethodAdapter
