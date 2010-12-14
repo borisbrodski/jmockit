@@ -59,7 +59,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
    }
 
    @Override
-   protected TypeRedefinition redefineTypeForMockField()
+   protected void redefineTypeForMockField()
    {
       TypeRedefinition typeRedefinition = new TypeRedefinition(parentObject, typeMetadata);
 
@@ -80,8 +80,6 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
       }
 
       targetClasses.add(typeRedefinition.targetClass);
-
-      return typeRedefinition;
    }
 
    public void assignNewInstancesToMockFields(Object target)

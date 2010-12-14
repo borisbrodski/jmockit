@@ -35,7 +35,6 @@ import mockit.*;
 import mockit.external.asm.*;
 import mockit.internal.*;
 import mockit.internal.expectations.mocking.InstanceFactory.*;
-import mockit.internal.filtering.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
@@ -64,7 +63,6 @@ abstract class BaseTypeRedefinition
    Class<?> targetClass;
    MockedType typeMetadata;
    InstanceFactory instanceFactory;
-   MockingConfiguration mockingCfg;
    private List<ClassDefinition> mockedClassDefinitions;
 
    BaseTypeRedefinition(Class<?> mockedType) { targetClass = mockedType; }
@@ -284,7 +282,7 @@ abstract class BaseTypeRedefinition
 
       ClassReader classReader = createClassReader(targetClass);
       SubclassGenerationModifier modifier =
-         new SubclassGenerationModifier(mockingCfg, targetClass, classReader, subclassName);
+         new SubclassGenerationModifier(typeMetadata.mockingCfg, targetClass, classReader, subclassName);
       classReader.accept(modifier, false);
       final byte[] modifiedClass = modifier.toByteArray();
 

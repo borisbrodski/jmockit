@@ -74,8 +74,7 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
       if (typeMetadata.isMockField()) {
          finalField = isFinal(modifiers);
 
-         TypeRedefinition typeRedefinition = redefineTypeForMockField();
-         typeMetadata.mockingCfg = typeRedefinition.mockingCfg;
+         redefineTypeForMockField();
          typesRedefined++;
 
          registerCaptureOfNewInstances();
@@ -84,7 +83,7 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
       typeMetadata = null;
    }
 
-   protected abstract TypeRedefinition redefineTypeForMockField();
+   protected abstract void redefineTypeForMockField();
 
    @Override
    public final CaptureOfNewInstancesForFields getCaptureOfNewInstances()

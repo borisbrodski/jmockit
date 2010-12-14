@@ -24,6 +24,7 @@
  */
 package mockit.internal.util;
 
+import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -790,5 +791,17 @@ public final class Utilities
    public static String objectIdentity(Object obj)
    {
       return obj.getClass().getName() + '@' + Integer.toHexString(System.identityHashCode(obj));
+   }
+
+   public static  <A extends Annotation> A getAnnotation(Annotation[] annotations, Class<A> annotation)
+   {
+      for (Annotation paramAnnotation : annotations) {
+         if (paramAnnotation.annotationType() == annotation) {
+            //noinspection unchecked
+            return (A) paramAnnotation;
+         }
+      }
+
+      return null;
    }
 }

@@ -25,7 +25,6 @@
 package mockit.internal.expectations.mocking;
 
 import mockit.external.asm.*;
-import mockit.internal.filtering.*;
 import mockit.internal.util.*;
 
 final class TypeRedefinition extends BaseTypeRedefinition
@@ -41,7 +40,7 @@ final class TypeRedefinition extends BaseTypeRedefinition
 
    void redefineTypeForFinalField()
    {
-      buildMockingConfigurationFromSpecifiedMetadata();
+      typeMetadata.buildMockingConfiguration();
       adjustTargetClassIfRealClassNameSpecified();
 
       if (targetClass == null || targetClass.isInterface()) {
@@ -60,16 +59,10 @@ final class TypeRedefinition extends BaseTypeRedefinition
 
    Object redefineType()
    {
-      buildMockingConfigurationFromSpecifiedMetadata();
+      typeMetadata.buildMockingConfiguration();
       adjustTargetClassIfRealClassNameSpecified();
 
       return redefineType(typeMetadata.declaredType);
-   }
-
-   private void buildMockingConfigurationFromSpecifiedMetadata()
-   {
-      boolean filterResultWhenMatching = !typeMetadata.hasInverseFilters();
-      mockingCfg = new MockingConfiguration(typeMetadata.getFilters(), filterResultWhenMatching);
    }
 
    private void adjustTargetClassIfRealClassNameSpecified()
@@ -84,7 +77,8 @@ final class TypeRedefinition extends BaseTypeRedefinition
    @Override
    ExpectationsModifier createModifier(Class<?> realClass, ClassReader classReader)
    {
-      ExpectationsModifier modifier = new ExpectationsModifier(realClass.getClassLoader(), classReader, mockingCfg);
+      ExpectationsModifier modifier = 
+         new ExpectationsModifier(realClass.getClassLoader(), classReader, typeMetadata.mockingCfg);
       boolean stubOutClassInitialization;
 
       if (typeMetadata.injectable) {

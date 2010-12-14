@@ -27,6 +27,7 @@ package mockit.internal.expectations.mocking;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import static java.lang.reflect.Modifier.*;
+import static mockit.internal.util.Utilities.getAnnotation;
 
 import mockit.*;
 import mockit.internal.filtering.*;
@@ -103,18 +104,6 @@ final class MockedType
       registerCascadingIfSpecified();
    }
 
-   private <A extends Annotation> A getAnnotation(Annotation[] annotations, Class<A> annotation)
-   {
-      for (Annotation paramAnnotation : annotations) {
-         if (paramAnnotation.annotationType() == annotation) {
-            //noinspection unchecked
-            return (A) paramAnnotation;
-         }
-      }
-
-      return null;
-   }
-
    MockedType(Class<?> cascadedType)
    {
       field = null;
@@ -170,7 +159,13 @@ final class MockedType
       return field == null || isFinal(accessModifiers);
    }
 
-   String[] getFilters()
+   void buildMockingConfiguration()
+   {
+      boolean filterResultWhenMatching = mocked == null || !mocked.inverse();
+      mockingCfg = new MockingConfiguration(getFilters(), filterResultWhenMatching);
+   }
+
+   private String[] getFilters()
    {
       if (mocked == null) {
          return null;
@@ -183,11 +178,6 @@ final class MockedType
       }
 
       return filters;
-   }
-
-   boolean hasInverseFilters()
-   {
-      return mocked != null && mocked.inverse();
    }
 
    boolean isClassInitializationToBeStubbedOut()

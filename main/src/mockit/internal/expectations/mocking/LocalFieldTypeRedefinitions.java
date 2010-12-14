@@ -48,7 +48,7 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
    }
 
    @Override
-   protected TypeRedefinition redefineTypeForMockField()
+   protected void redefineTypeForMockField()
    {
       TypeRedefinition typeRedefinition = new TypeRedefinition(parentObject, typeMetadata);
 
@@ -67,8 +67,6 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
 
       typesAndTargetObjects.put(typeMetadata.declaredType, parentObject);
       targetClasses.add(typeRedefinition.targetClass);
-      
-      return typeRedefinition;
    }
 
    @Override
