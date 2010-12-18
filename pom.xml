@@ -1,6 +1,6 @@
 <project
    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-4.0.0.xsd">
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
    <groupId>mockit</groupId>
@@ -29,7 +29,7 @@
       </license>
    </licenses>
    <developers>
-      <developer><name>Rogério Liesenfeld</name><email>javamockit@yahoo.com</email></developer>
+      <developer><name>Rogério Liesenfeld</name><email>rliesenfeld@gmail.com</email></developer>
    </developers>
 
    <issueManagement><url>http://code.google.com/p/jmockit/issues/list</url></issueManagement>
@@ -55,15 +55,11 @@
       <plugins>
          <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-               <source>1.5</source><target>1.5</target>
-            </configuration>
+            <configuration><source>1.5</source><target>1.5</target></configuration>
          </plugin>
          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-               <disableXmlReport>true</disableXmlReport>
-            </configuration>
+            <configuration><disableXmlReport>true</disableXmlReport></configuration>
          </plugin>
       </plugins>
       <extensions>

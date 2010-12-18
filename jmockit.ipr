@@ -126,6 +126,7 @@
     <option name="ADDITIONAL_OPTIONS_STRING" value="-source 1.5 -target 1.5" />
   </component>
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/build.properties" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lib/commons-logging-1.1.1.jar" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lib/log4j-1.2.15.jar" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lib/slf4j-api-1.5.8.jar" charset="UTF-8" />
@@ -963,6 +964,7 @@
         <w>nano</w>
         <w>nbsp</w>
         <w>nocode</w>
+        <w>nodep</w>
         <w>nonexec</w>
         <w>noninfringement</w>
         <w>notimestamp</w>
@@ -1170,15 +1172,12 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/tutorial/lib/commons-email-1.2.jar!/" />
       </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="Maven: commons-lang:commons-lang:0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/unitils/../lib/commons-lang-2.3.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-email/commons-email/0/commons-email-0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-email/commons-email/0/commons-email-0-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Maven: commons-lang:commons-lang:2.3">
       <CLASSES>
@@ -1191,13 +1190,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.3/commons-lang-2.3-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: commons-logging:commons-logging:0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/commons-logging-1.1.1.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="Maven: commons-logging:commons-logging:1.1.1">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar!/" />
@@ -1209,19 +1201,27 @@
         <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: dom4j:dom4j:0">
+    <library name="Maven: dom4j:dom4j:1.6.1">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/dom4j-1.6.1.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar!/" />
       </CLASSES>
-      <JAVADOC />
-      <SOURCES />
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/dom4j/dom4j/1.6.1/dom4j-1.6.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar!/" />
+      </SOURCES>
     </library>
-    <library name="Maven: javamail:javamail:1.3.3">
+    <library name="Maven: javax.mail:mail:1.4">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../lib/javaee.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/javax/mail/mail/1.4/mail-1.4.jar!/" />
       </CLASSES>
-      <JAVADOC />
-      <SOURCES />
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/mail/mail/1.4/mail-1.4-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/mail/mail/1.4/mail-1.4-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Maven: javax.persistence:persistence-api:1.0">
       <CLASSES>
@@ -1234,13 +1234,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/javax/persistence/persistence-api/1.0/persistence-api-1.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: javax.persistence:persistence-api:2.0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/tutorial/../../lib/javaee.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="Maven: javax.servlet:servlet-api:2.5">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar!/" />
@@ -1252,12 +1245,16 @@
         <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: jta:jta:1.0.1b">
+    <library name="Maven: javax.transaction:jta:1.1">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/hibernate3emul/../lib/javaee.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/javax/transaction/jta/1.1/jta-1.1.jar!/" />
       </CLASSES>
-      <JAVADOC />
-      <SOURCES />
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/transaction/jta/1.1/jta-1.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/transaction/jta/1.1/jta-1.1-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Maven: junit:junit-dep:4.4">
       <CLASSES>
@@ -1270,6 +1267,17 @@
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit-dep/4.4/junit-dep-4.4-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: junit:junit:3.8.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: junit:junit:4.8.1">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.8.1/junit-4.8.1.jar!/" />
@@ -1280,13 +1288,6 @@
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.8.1/junit-4.8.1-sources.jar!/" />
       </SOURCES>
-    </library>
-    <library name="Maven: log4j:log4j:0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/log4j-1.2.15.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
     </library>
     <library name="Maven: log4j:log4j:1.2.15">
       <CLASSES>
@@ -1306,26 +1307,11 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="Maven: mockit:jmockit:0.999.3">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.999.3/jmockit-0.999.3.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/main/pom-javadoc.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.999.3/jmockit-0.999.3-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/main/pom-sources.jar!/" />
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.999.3/jmockit-0.999.3-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: ognl:ognl:2.6.9">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/ognl/ognl/2.6.9/ognl-2.6.9.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/ognl/ognl/2.6.9/ognl-2.6.9-javadoc.jar!/" />
-      </JAVADOC>
+      <JAVADOC />
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/ognl/ognl/2.6.9/ognl-2.6.9-sources.jar!/" />
       </SOURCES>
@@ -1356,8 +1342,12 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2.jar!/" />
       </CLASSES>
-      <JAVADOC />
-      <SOURCES />
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.2/hamcrest-core-1.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.2/hamcrest-core-1.2-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Maven: org.hamcrest:hamcrest-library:1.1">
       <CLASSES>
@@ -1374,8 +1364,12 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2.jar!/" />
       </CLASSES>
-      <JAVADOC />
-      <SOURCES />
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/1.2/hamcrest-library-1.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/1.2/hamcrest-library-1.2-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Maven: org.jmock:jmock-junit4:2.5.1">
       <CLASSES>
@@ -1408,17 +1402,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/jmock/jmock/2.5.1/jmock-2.5.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.mockito:mockito-all:1.8.4">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.8.4/mockito-all-1.8.4.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.8.4/mockito-all-1.8.4-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.8.4/mockito-all-1.8.4-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.mockito:mockito-all:1.8.5">
@@ -1454,13 +1437,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/objenesis/objenesis/1.2/objenesis-1.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.slf4j:slf4j-api:0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../../lib/slf4j-api-1.5.8.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="Maven: org.slf4j:slf4j-api:1.5.8">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8.jar!/" />
@@ -1476,8 +1452,12 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8.jar!/" />
       </CLASSES>
-      <JAVADOC />
-      <SOURCES />
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-nop/0/slf4j-nop-0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-nop/0/slf4j-nop-0-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Maven: org.springframework:spring-asm:3.0.0.RELEASE">
       <CLASSES>
@@ -1557,6 +1537,17 @@
       <SOURCES>
         <root url="file://C:/Java/unitils-3.1/unitils-mock/src/main/java" />
         <root url="jar://$MAVEN_REPOSITORY$/org/unitils/unitils-mock/3.1/unitils-mock-3.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: xml-apis:xml-apis:1.0.b2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar!/" />
       </SOURCES>
     </library>
   </component>

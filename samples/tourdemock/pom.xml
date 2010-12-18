@@ -3,9 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
-   <parent>
-      <artifactId>samples</artifactId><groupId>mockit</groupId><version>1</version>
-   </parent>
+   <parent><artifactId>samples</artifactId><groupId>mockit</groupId><version>1</version></parent>
 
    <artifactId>tourdemock</artifactId>
    <name>Tour de Mock</name>
@@ -28,8 +26,8 @@
 
       <!-- JMockit -->
       <dependency>
-         <groupId>mockit</groupId><artifactId>jmockit</artifactId>
-         <version>${jmockit.version}</version><scope>test</scope>
+         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>${jmockit.version}</version>
+         <scope>test</scope>
       </dependency>
 
       <!-- JUnit -->
@@ -60,7 +58,7 @@
 
       <!-- Mockito -->
       <dependency>
-         <groupId>org.mockito</groupId><artifactId>mockito-all</artifactId><version>1.8.4</version>
+         <groupId>org.mockito</groupId><artifactId>mockito-all</artifactId><version>1.8.5</version>
          <scope>test</scope>
       </dependency>
 

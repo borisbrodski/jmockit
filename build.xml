@@ -1,5 +1,7 @@
-<project name="jmockit" basedir="." default="fullRebuildWithTests">
-   <property file="build.properties"/>
+<project name="jmockit" basedir="." default="fullRebuild">
+   <property name="JUNIT_JAR" value="lib/junit-dep-4.8.2.jar"/>
+   <property name="TESTNG_JAR" value="lib/testng-5.11-jdk15.jar"/>
+
    <loadfile property="version" srcFile="version.txt"/>
 
    <path id="common.classpath">
@@ -12,7 +14,7 @@
       <fileset file="${TESTNG_JAR}"/>
    </path>
 
-   <target name="fullRebuildWithTests" depends="buildAll, createjars, tests, sampleTests"/>
+   <target name="fullRebuild" depends="buildAll, createjars"/>
 
    <!-- Targets for building/compiling the several JMockit components (modules) -->
 
@@ -73,16 +75,6 @@
       <attribute name="outdir" default="classes"/>
       <attribute name="testLibrary" default="${JUNIT_JAR}"/>
       <attribute name="extraclasspathLocation" default=""/>
-      <attribute name="extraLocation1" default=""/>
-      <attribute name="extraLocation2" default=""/>
-      <attribute name="extraLocation3" default=""/>
-      <attribute name="extraLocation4" default=""/>
-      <attribute name="extraLocation5" default=""/>
-      <attribute name="extraLocation6" default=""/>
-      <attribute name="extraLocation7" default=""/>
-      <attribute name="extraLocation8" default=""/>
-      <attribute name="extraLocation9" default=""/>
-      <attribute name="extraLocation10" default=""/>
       <attribute name="extraclasspath" default="none"/>
       <sequential>
          <delete dir="samples/@{module}/@{outdir}" includes="**/*.class" quiet="true"/>
@@ -110,42 +102,24 @@
             </classpath>
             <classpath location="samples/@{module}/@{outdir}"/>
             <classpath location="@{extraclasspathLocation}"/>
-            <classpath location="@{extraLocation1}"/>
-            <classpath location="@{extraLocation2}"/>
-            <classpath location="@{extraLocation3}"/>
-            <classpath location="@{extraLocation4}"/>
-            <classpath location="@{extraLocation5}"/>
-            <classpath location="@{extraLocation6}"/>
-            <classpath location="@{extraLocation7}"/>
-            <classpath location="@{extraLocation8}"/>
-            <classpath location="@{extraLocation9}"/>
-            <classpath location="@{extraLocation10}"/>
             <classpath><fileset dir="." includes="@{extraclasspath}"/></classpath>
          </javac>
       </sequential>
    </macrodef>
 
    <target name="buildEasyMock">
-      <buildSample module="easymock" extralocation1="${EASYMOCK_JAR}"/>
+      <buildSample module="easymock" extraclasspath="samples/lib/easymock*.jar"/>
    </target>
    <target name="buildJMock">
-      <buildSample
-         module="jmock" extraclasspath="lib/hamcrest-*.jar"
-         extralocation1="${JMOCK_HOME}/jmock-2.5.1.jar"
-         extralocation2="${JMOCK_HOME}/jmock-junit4-2.5.1.jar"
-         extralocation3="${JMOCK_HOME}/jmock-legacy-2.5.1.jar"/>
+      <buildSample module="jmock" extraclasspath="lib/hamcrest-*.jar samples/lib/jmock*.jar"/>
    </target>
    <target name="buildMockito">
       <buildSample
-         module="mockito" extraclasspath="lib/hamcrest-*.jar samples/lib/hamcrest-*.jar"
-         extralocation1="${MOCKITO_JAR}"/>
+         module="mockito"
+         extraclasspath="lib/hamcrest-*.jar samples/lib/hamcrest-*.jar samples/lib/mockito*.jar"/>
    </target>
    <target name="buildUnitils">
-      <buildSample
-         module="unitils"
-         extralocation1="${UNITILS_HOME}/unitils-core/unitils-core-3.1.jar"
-         extralocation2="${UNITILS_HOME}/unitils-mock/unitils-mock-3.1.jar"
-         extralocation3="${UNITILS_HOME}/unitils-inject/unitils-inject-3.1.jar"/>
+      <buildSample module="unitils" extraclasspath="samples/lib/unitils*.jar"/>
    </target>
    <target name="buildPowerMock">
       <buildSample module="powermock" extraclasspath="lib/*.jar samples/lib/dom4j-*.jar"/>
@@ -166,22 +140,13 @@
       <buildSample module="TimingFramework" extraclasspath="lib/hamcrest-*.jar"/>
    </target>
    <target name="buildAnimatedTransitions">
-      <buildSample
-         module="AnimatedTransitions" extraclasspathLocation="samples/TimingFramework/classes"/>
+      <buildSample module="AnimatedTransitions" extraclasspathLocation="samples/TimingFramework/classes"/>
    </target>
    <target name="buildTourDeMock">
       <buildSample
          module="tourdemock"
-         extraclasspathlocation="${MOCKITO_JAR}"
-         extralocation1="${EASYMOCK_JAR}"
-         extralocation3="${JMOCK_HOME}/jmock-2.5.1.jar"
-         extralocation4="${JMOCK_HOME}/jmock-junit4-2.5.1.jar"
-         extralocation5="${JMOCK_HOME}/jmock-legacy-2.5.1.jar"
-         extralocation6="${SPRING_HOME}/dist/org.springframework.core-3.0.0.RELEASE.jar"
-         extralocation7="${SPRING_HOME}/dist/org.springframework.test-3.0.0.RELEASE.jar"
-         extralocation8="${UNITILS_HOME}/unitils-core/unitils-core-3.1.jar"
-         extralocation9="${UNITILS_HOME}/unitils-mock/unitils-mock-3.1.jar"
-         extralocation10="${UNITILS_HOME}/unitils-inject/unitils-inject-3.1.jar"/>
+         extraclasspath="samples/lib/easymock*.jar samples/lib/jmock*.jar samples/lib/mockito*.jar
+                         samples/lib/unitils*.jar samples/lib/org.springframework.*.jar"/>
    </target>
 
    <target
@@ -292,12 +257,17 @@
 
    <target name="createzip">
       <zip
-         destfile="jmockit-${version}.zip" basedir=".." includes="${ant.project.name}/**"
+         destfile="jmockit-${version}.zip" basedir=".." includes="jmockit/**"
          excludes="**/*.i*, **/*.zip, **/*.ser, **/Temp.java,
-                   **/target/**, **/classes/**, **/test-classes/**, jmockit/samples/test-output/**,
-                   jmockit/coverage/coverage-report/**, jmockit/samples/*/coverage-report/**,
+                   jmockit/lib/**, jmockit/samples/lib/**, jmockit/samples/unitils/lib/**,
+                   **/target/**, **/classes/**, **/test-classes/**, **/test-output/**,
+                   jmockit/main/JMockitTests.html, jmockit/samples/JMockitSampleTests.html,
+                   jmockit/coverage/coverage-report/**, jmockit/samples/**/coverage-report/**,
                    jmockit/main/coverage-report/**, jmockit/coverage-report/**, **/testRun.properties"
          encoding="UTF-8"/>
+   </target>
+   <target name="createLibsZip">
+      <zip destfile="libs.zip" basedir="." includes="**/lib/**" excludes="samples/tutorial/lib/**"/>
    </target>
 
    <!-- Targets for running tests and generating corresponding test reports in HTML -->
@@ -353,26 +323,18 @@
             <pathelement location="samples/jbossaop/classes"/>
             <pathelement location="samples/jbossaop/test-classes"/>
 
-            <pathelement location="${EASYMOCK_JAR}"/>
             <pathelement location="samples/easymock/classes"/>
             <pathelement location="samples/easymock/test-classes"/>
 
-            <pathelement location="${JMOCK_HOME}/jmock-2.5.1.jar"/>
-            <pathelement location="${JMOCK_HOME}/jmock-junit4-2.5.1.jar"/>
-            <pathelement location="${JMOCK_HOME}/jmock-legacy-2.5.1.jar"/>
             <pathelement location="samples/jmock/classes"/>
             <pathelement location="samples/jmock/test-classes"/>
 
             <pathelement location="samples/powermock/classes"/>
             <pathelement location="samples/powermock/test-classes"/>
 
-            <pathelement location="${MOCKITO_JAR}"/>
             <pathelement location="samples/mockito/classes"/>
             <pathelement location="samples/mockito/test-classes"/>
 
-            <pathelement location="${UNITILS_HOME}/unitils-core/unitils-core-3.1.jar"/>
-            <pathelement location="${UNITILS_HOME}/unitils-mock/unitils-mock-3.1.jar"/>
-            <pathelement location="${UNITILS_HOME}/unitils-inject/unitils-inject-3.1.jar"/>
             <pathelement location="samples/unitils/lib/ognl-2.6.9.jar"/>
             <pathelement location="samples/unitils/classes"/>
             <pathelement location="samples/unitils/test-classes"/>
@@ -391,8 +353,6 @@
             <pathelement location="samples/AnimatedTransitions/classes"/>
             <pathelement location="samples/AnimatedTransitions/test-classes"/>
 
-            <pathelement location="${SPRING_HOME}/dist/org.springframework.core-3.0.0.RELEASE.jar"/>
-            <pathelement location="${SPRING_HOME}/dist/org.springframework.test-3.0.0.RELEASE.jar"/>
             <pathelement location="samples/tourdemock/classes"/>
             <pathelement location="samples/tourdemock/test-classes"/>
          </classpath>
