@@ -1,6 +1,6 @@
 /*
  * JMockit Incremental Testing
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -30,7 +30,7 @@ import java.util.*;
 import java.io.*;
 
 import org.junit.internal.runners.*;
-import org.junit.runner.*;
+import org.junit.runner.Description;
 import org.junit.runner.notification.*;
 import org.junit.runners.*;
 import org.junit.runners.model.*;
@@ -97,7 +97,6 @@ public final class IncrementalJUnit4Runner
             JUnit38ClassRunner runner = (JUnit38ClassRunner) m;
             Description testClassDescription = runner.getDescription();
             Class<?> testClass = testClassDescription.getTestClass();
-
             Iterator<Description> itr = testClassDescription.getChildren().iterator();
 
             while (itr.hasNext()) {
@@ -135,8 +134,7 @@ public final class IncrementalJUnit4Runner
       return shouldRun;
    }
 
-   private Boolean shouldRunTestInCurrentTestRun(
-      Class<? extends Annotation> testAnnotation, Method testMethod)
+   private Boolean shouldRunTestInCurrentTestRun(Class<? extends Annotation> testAnnotation, Method testMethod)
    {
       Boolean shouldRun = testMethods.get(testMethod);
 
@@ -153,20 +151,26 @@ public final class IncrementalJUnit4Runner
       return null;
    }
 
-   private boolean isTestNotApplicableInCurrentTestRun(
-      Class<? extends Annotation> testAnnotation, Method testMethod)
+   private boolean isTestNotApplicableInCurrentTestRun(Class<? extends Annotation> testAnnotation, Method testMethod)
    {
       return 
          (testAnnotation == null || testMethod.getAnnotation(testAnnotation) != null) &&
          new TestFilter(coverageMap).shouldIgnoreTestInCurrentTestRun(testMethod);
    }
 
+   private static final class TestNotApplicable extends RuntimeException
+   {
+      private TestNotApplicable() { super("unaffected by changes since last test run"); }
+      @Override public void printStackTrace(PrintWriter s) {}
+   }
+
+   private static final Throwable NOT_APPLICABLE = new TestNotApplicable();
+
    private void reportTestAsNotApplicableInCurrentTestRun(Method method)
    {
       Class<?> testClass = method.getDeclaringClass();
       Description testDescription = Description.createTestDescription(testClass, method.getName());
 
-      runNotifier.fireTestStarted(testDescription);
-      runNotifier.fireTestFinished(testDescription);
+      runNotifier.fireTestAssumptionFailed(new Failure(testDescription, NOT_APPLICABLE));
    }
 }

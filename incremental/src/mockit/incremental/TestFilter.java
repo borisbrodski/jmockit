@@ -1,6 +1,6 @@
 /*
  * JMockit Incremental Testing
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -66,7 +66,7 @@ public final class TestFilter
    private boolean hasClassFileChangedSinceLastTestRun(String sourceFileName)
    {
       String classFileName = sourceFileName.replace(".java", ".class");
-      String classFilePath = getClass().getResource("/" + classFileName).getPath();
+      String classFilePath = getClass().getResource('/' + classFileName).getPath();
       File classFile = new File(classFilePath);
 
       return classFile.lastModified() > lastTestRun;
