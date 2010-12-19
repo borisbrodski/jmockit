@@ -29,12 +29,12 @@ import mockit.internal.util.*;
 
 final class TypeRedefinition extends BaseTypeRedefinition
 {
-   private final Object objectWithInitializerMethods;
+   private final Object parentObject;
 
-   TypeRedefinition(Object objectWithInitializerMethods, MockedType typeMetadata)
+   TypeRedefinition(Object parentObject, MockedType typeMetadata)
    {
       super(typeMetadata.getClassType());
-      this.objectWithInitializerMethods = objectWithInitializerMethods;
+      this.parentObject = parentObject;
       this.typeMetadata = typeMetadata;
    }
 
@@ -77,20 +77,14 @@ final class TypeRedefinition extends BaseTypeRedefinition
    @Override
    ExpectationsModifier createModifier(Class<?> realClass, ClassReader classReader)
    {
-      ExpectationsModifier modifier = 
+      ExpectationsModifier modifier =
          new ExpectationsModifier(realClass.getClassLoader(), classReader, typeMetadata.mockingCfg);
-      boolean stubOutClassInitialization;
 
       if (typeMetadata.injectable) {
-         modifier.setExecutionMode(2);
-         modifier.setIgnoreStaticMethods(true);
-         stubOutClassInitialization = false;
-      }
-      else {
-         stubOutClassInitialization = typeMetadata.isClassInitializationToBeStubbedOut();
+         modifier.useDynamicMockingForInstanceMethods();
       }
 
-      modifier.setStubOutClassInitialization(stubOutClassInitialization);
+      modifier.setStubOutClassInitialization(typeMetadata);
 
       return modifier;
    }
@@ -98,7 +92,7 @@ final class TypeRedefinition extends BaseTypeRedefinition
    @Override
    String getNameForConcreteSubclassToCreate()
    {
-      Package testPackage = objectWithInitializerMethods.getClass().getPackage();
+      Package testPackage = parentObject.getClass().getPackage();
       String prefix = testPackage == null ? "" : testPackage.getName() + '.';
 
       return prefix + Utilities.GENERATED_SUBCLASS_PREFIX + typeMetadata.mockId;

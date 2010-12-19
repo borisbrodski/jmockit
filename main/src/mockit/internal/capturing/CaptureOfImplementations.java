@@ -33,9 +33,12 @@ import mockit.internal.startup.*;
 
 public abstract class CaptureOfImplementations
 {
-   private final List<CaptureTransformer> captureTransformers = new ArrayList<CaptureTransformer>();
+   private final List<CaptureTransformer> captureTransformers;
 
-   protected CaptureOfImplementations() {}
+   protected CaptureOfImplementations()
+   {
+      captureTransformers = new ArrayList<CaptureTransformer>();
+   }
 
    protected abstract ClassWriter createModifier(ClassLoader cl, ClassReader cr, String capturedTypeDesc);
 

@@ -48,8 +48,6 @@ public final class InstanceSpecificMockingTest
 
       @SuppressWarnings({"UnusedDeclaration"})
       static void doSomething(boolean b, String s) { throw new IllegalStateException(); }
-      
-      ByteBuffer createBuffer() { return null; }
    }
 
    final Collaborator previousInstance = new Collaborator();
@@ -217,9 +215,14 @@ public final class InstanceSpecificMockingTest
       assertNotNull(cascadedBuf);
       assertEquals(0, cascadedBuf.capacity());
    }
-   
+
+   static class BufferFactory
+   {
+      ByteBuffer createBuffer() { return null; }
+   }
+
    @Test
-   public void mockByteBufferAsCascadedMock(@Cascading Collaborator cascadingMock)
+   public void mockByteBufferAsCascadedMock(@Cascading BufferFactory cascadingMock)
    {
       ByteBuffer realBuf1 = ByteBuffer.allocateDirect(10);
       assertEquals(10, realBuf1.capacity());

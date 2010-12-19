@@ -28,7 +28,6 @@ import java.util.*;
 
 import mockit.external.asm.*;
 import mockit.internal.capturing.*;
-import mockit.internal.filtering.*;
 import mockit.internal.util.*;
 
 class CaptureOfNewInstances extends CaptureOfImplementations
@@ -56,27 +55,28 @@ class CaptureOfNewInstances extends CaptureOfImplementations
       }
    }
 
-   final Map<Class<?>, List<Capture>> baseTypeToCaptures = new HashMap<Class<?>, List<Capture>>();
+   final Map<Class<?>, List<Capture>> baseTypeToCaptures;
    Capture captureFound;
 
-   private MockingConfiguration mockingCfg;
-   private boolean stubOutClassInitialization;
+   private MockedType typeMetadata;
 
-   CaptureOfNewInstances() {}
+   CaptureOfNewInstances()
+   {
+      baseTypeToCaptures = new HashMap<Class<?>, List<Capture>>();
+   }
 
    @Override
    public final ClassWriter createModifier(ClassLoader cl, ClassReader cr, String baseTypeDesc)
    {
-      ExpectationsModifier modifier = new ExpectationsModifier(cl, cr, mockingCfg);
-      modifier.setStubOutClassInitialization(stubOutClassInitialization);
-      modifier.setClassNameForInstanceMethods(baseTypeDesc);
+      ExpectationsModifier modifier = new ExpectationsModifier(cl, cr, typeMetadata.mockingCfg);
+      modifier.setStubOutClassInitialization(typeMetadata);
+      modifier.setClassNameForCapturedInstanceMethods(baseTypeDesc);
       return modifier;
    }
 
    final void registerCaptureOfNewInstances(MockedType typeMetadata)
    {
-      mockingCfg = typeMetadata.mockingCfg;
-      stubOutClassInitialization = typeMetadata.isClassInitializationToBeStubbedOut();
+      this.typeMetadata = typeMetadata;
 
       Class<?> baseType = typeMetadata.getClassType();
 

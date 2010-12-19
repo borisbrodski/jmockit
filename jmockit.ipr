@@ -126,7 +126,6 @@
     <option name="ADDITIONAL_OPTIONS_STRING" value="-source 1.5 -target 1.5" />
   </component>
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
-    <file url="file://$PROJECT_DIR$/build.properties" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lib/commons-logging-1.1.1.jar" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lib/log4j-1.2.15.jar" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lib/slf4j-api-1.5.8.jar" charset="UTF-8" />

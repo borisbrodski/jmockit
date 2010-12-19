@@ -60,7 +60,6 @@ final class ExpectationsModifier extends BaseClassModifier
    private String className;
    private String baseClassNameForCapturedInstanceMethods;
    private boolean stubOutClassInitialization;
-   private boolean ignoreStaticMethods;
    private int executionMode;
    private boolean isProxy;
    private String defaultFilters;
@@ -69,28 +68,29 @@ final class ExpectationsModifier extends BaseClassModifier
    {
       super(classReader);
       mockingCfg = mockingConfiguration;
-      stubOutClassInitialization = true;
       setUseMockingBridge(classLoader);
    }
 
-   public void setClassNameForInstanceMethods(String internalClassName)
+   public void setClassNameForCapturedInstanceMethods(String internalClassName)
    {
       baseClassNameForCapturedInstanceMethods = internalClassName;
    }
 
-   public void setStubOutClassInitialization(boolean stubOutClassInitialization)
+   public void setStubOutClassInitialization(MockedType typeMetadata)
    {
-      this.stubOutClassInitialization = stubOutClassInitialization;
+      stubOutClassInitialization = typeMetadata.isClassInitializationToBeStubbedOut();
    }
 
-   public void setIgnoreStaticMethods(boolean ignoreStaticMethods)
+   public void useDynamicMocking()
    {
-      this.ignoreStaticMethods = ignoreStaticMethods;
+      stubOutClassInitialization = true;
+      executionMode = 1;
    }
 
-   public void setExecutionMode(int executionMode)
+   public void useDynamicMockingForInstanceMethods()
    {
-      this.executionMode = executionMode;
+      stubOutClassInitialization = false;
+      executionMode = 2;
    }
 
    @Override
@@ -113,14 +113,10 @@ final class ExpectationsModifier extends BaseClassModifier
    @Override
    public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
    {
-      if (
-         (access & METHOD_ACCESS_MASK) != 0 ||
-         isProxy && isConstructorOrSystemMethodNotToBeMocked(name, desc) ||
-         isMethodOrConstructorNotToBeMocked(access, name)
-      ) {
-         // Copies original without modifications when it's synthetic or abstract, belongs to a Proxy subclass, is a
-         // static or private method in a captured implementation class, or is a native method for dynamic mocking.
-         return super.visitMethod(access, name, desc, signature, exceptions);
+      boolean syntheticOrAbstractMethod = (access & METHOD_ACCESS_MASK) != 0;
+
+      if (syntheticOrAbstractMethod || isProxy && isConstructorOrSystemMethodNotToBeMocked(name, desc)) {
+         return unmodifiedBytecode(access, name, desc, signature, exceptions);
       }
 
       boolean noFiltersToMatch = mockingCfg == null || mockingCfg.isEmpty();
@@ -130,10 +126,12 @@ final class ExpectationsModifier extends BaseClassModifier
          return stubOutClassInitializationIfApplicable(access, name, desc, signature, exceptions, matchesFilters);
       }
 
-      if (!matchesFilters || noFiltersToMatch && isMethodFromObject(name, desc)) {
-         // Copies original without modifications if it doesn't pass the filters, or when it's an override of
-         // equals, hashCode, toString or finalize (from java.lang.Object) not prohibited by any mock filter.
-         return super.visitMethod(access, name, desc, signature, exceptions);
+      if (
+         !matchesFilters ||
+         isMethodFromCapturedClassNotToBeMocked(access) ||
+         noFiltersToMatch && (isMethodFromObject(name, desc) || isMethodOrConstructorNotToBeMocked(access, name))
+      ) {
+         return unmodifiedBytecode(access, name, desc, signature, exceptions);
       }
 
       // Otherwise, replace original implementation with redirect to JMockit.
@@ -156,9 +154,12 @@ final class ExpectationsModifier extends BaseClassModifier
          return generateCallToHandlerThroughMockingBridge(access, name, desc, internalClassName);
       }
 
-      generateDirectCallToHandler(internalClassName, access, name, desc, executionMode);
+      int executionModeForThisCase =
+         executionMode < 2 ? executionMode : visitingConstructor || isStatic(access) ? 0 : 2;
 
-      if (executionMode > 0) {
+      generateDirectCallToHandler(internalClassName, access, name, desc, executionModeForThisCase);
+
+      if (executionModeForThisCase > 0) {
          generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
          return copyOriginalImplementationCode(access, desc, visitingConstructor);
       }
@@ -168,41 +169,16 @@ final class ExpectationsModifier extends BaseClassModifier
       return null;
    }
 
+   private MethodVisitor unmodifiedBytecode(int access, String name, String desc, String signature, String[] exceptions)
+   {
+      return super.visitMethod(access, name, desc, signature, exceptions);
+   }
+
    private boolean isConstructorOrSystemMethodNotToBeMocked(String name, String desc)
    {
       return
          "<init>".equals(name) || isMethodFromObject(name, desc) ||
          "annotationType".equals(name) && "()Ljava/lang/Class;".equals(desc);
-   }
-
-   private boolean isMethodOrConstructorNotToBeMocked(int access, String name)
-   {
-      return
-         isConstructorToBeIgnored(name) ||
-         isStaticMethodToBeIgnored(access) ||
-         isMethodFromCapturedClassNotToBeMocked(access) ||
-         isNativeMethodForDynamicMocking(access) ||
-         defaultFilters != null && defaultFilters.contains(name);
-   }
-
-   private boolean isConstructorToBeIgnored(String name)
-   {
-      return executionMode == 2 && "<init>".equals(name);
-   }
-
-   private boolean isStaticMethodToBeIgnored(int access)
-   {
-      return ignoreStaticMethods && isStatic(access);
-   }
-
-   private boolean isMethodFromCapturedClassNotToBeMocked(int access)
-   {
-      return baseClassNameForCapturedInstanceMethods != null && (isStatic(access) || isPrivate(access));
-   }
-
-   private boolean isNativeMethodForDynamicMocking(int access)
-   {
-      return executionMode > 0 && isNative(access);
    }
 
    private MethodVisitor stubOutClassInitializationIfApplicable(
@@ -218,6 +194,35 @@ final class ExpectationsModifier extends BaseClassModifier
       }
 
       return mw;
+   }
+
+   private boolean isMethodFromCapturedClassNotToBeMocked(int access)
+   {
+      return baseClassNameForCapturedInstanceMethods != null && (isStatic(access) || isPrivate(access));
+   }
+
+   private boolean isMethodOrConstructorNotToBeMocked(int access, String name)
+   {
+      return
+         isConstructorToBeIgnored(name) ||
+         isStaticMethodToBeIgnored(access) ||
+         isNativeMethodForDynamicMocking(access) ||
+         defaultFilters != null && defaultFilters.contains(name);
+   }
+
+   private boolean isConstructorToBeIgnored(String name)
+   {
+      return executionMode == 2 && "<init>".equals(name);
+   }
+
+   private boolean isStaticMethodToBeIgnored(int access)
+   {
+      return executionMode == 2 && isStatic(access);
+   }
+
+   private boolean isNativeMethodForDynamicMocking(int access)
+   {
+      return executionMode > 0 && isNative(access);
    }
 
    private void validateModificationOfNativeMethod(int access, String name)

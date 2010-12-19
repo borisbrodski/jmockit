@@ -183,7 +183,7 @@ final class MockedType
    boolean isClassInitializationToBeStubbedOut()
    {
       if (mocked == null || mocked.stubOutClassInitialization().length == 0) {
-         return STUB_OUT_STATIC_INITIALIZERS;
+         return !injectable && STUB_OUT_STATIC_INITIALIZERS;
       }
 
       return mocked.stubOutClassInitialization()[0];

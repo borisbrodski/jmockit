@@ -113,7 +113,7 @@ public final class DynamicPartialMocking
       ClassReader classReader = new ClassFile(realClass, false).getReader();
 
       ExpectationsModifier modifier = new ExpectationsModifier(realClass.getClassLoader(), classReader, mockingCfg);
-      modifier.setExecutionMode(1);
+      modifier.useDynamicMocking();
 
       classReader.accept(modifier, false);
       byte[] modifiedClass = modifier.toByteArray();

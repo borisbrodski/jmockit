@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -44,9 +44,7 @@ public final class CascadingTypeRedefinition extends BaseTypeRedefinition
    ExpectationsModifier createModifier(Class<?> realClass, ClassReader classReader)
    {
       ExpectationsModifier modifier = new ExpectationsModifier(realClass.getClassLoader(), classReader, null);
-      modifier.setStubOutClassInitialization(false);
-      modifier.setIgnoreStaticMethods(true);
-      modifier.setExecutionMode(2);
+      modifier.useDynamicMockingForInstanceMethods();
       return modifier;
    }
 
