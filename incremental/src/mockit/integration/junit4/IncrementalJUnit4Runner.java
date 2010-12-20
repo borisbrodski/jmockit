@@ -59,14 +59,13 @@ public final class IncrementalJUnit4Runner
       catch (NoSuchMethodException e) {
          throw new RuntimeException(e);
       }
-
-      shouldRunMethod.setAccessible(true);
    }
 
-   private final Properties coverageMap = new Properties();
-   public ParentRunner<?> it;
+   private final Properties coverageMap;
+   private final Map<Method, Boolean> testMethods;
    private RunNotifier runNotifier;
-   private final Map<Method, Boolean> testMethods = new HashMap<Method, Boolean>();
+   private Method testMethod;
+   public ParentRunner<?> it;
 
    public IncrementalJUnit4Runner()
    {
@@ -75,6 +74,9 @@ public final class IncrementalJUnit4Runner
       if (testRunFile.exists() && !testRunFile.canWrite()) {
          throw new IllegalStateException();
       }
+
+      coverageMap = new Properties();
+      testMethods = new HashMap<Method, Boolean>();
    }
 
    @Mock(reentrant = true)
@@ -90,28 +92,13 @@ public final class IncrementalJUnit4Runner
    @Mock(reentrant = true)
    public boolean shouldRun(Object m)
    {
-      Method testMethod = null;
+      testMethod = null;
 
       if (!coverageMap.isEmpty()) {
          if (m instanceof JUnit38ClassRunner) {
-            JUnit38ClassRunner runner = (JUnit38ClassRunner) m;
-            Description testClassDescription = runner.getDescription();
-            Class<?> testClass = testClassDescription.getTestClass();
-            Iterator<Description> itr = testClassDescription.getChildren().iterator();
+            boolean noTestsToRun = verifyTestMethodsInJUnit38TestClassThatShouldRun((JUnit38ClassRunner) m);
 
-            while (itr.hasNext()) {
-               Description testDescription = itr.next();
-               String testMethodName = testDescription.getMethodName();
-               testMethod = Utilities.findPublicVoidMethod(testClass, testMethodName);
-
-               Boolean shouldRun = shouldRunTestInCurrentTestRun(null, testMethod);
-
-               if (shouldRun != null && !shouldRun) {
-                  itr.remove();
-               }
-            }
-
-            if (testClassDescription.getChildren().isEmpty()) {
+            if (noTestsToRun) {
                return false;
             }
          }
@@ -132,6 +119,27 @@ public final class IncrementalJUnit4Runner
       }
 
       return shouldRun;
+   }
+
+   private boolean verifyTestMethodsInJUnit38TestClassThatShouldRun(JUnit38ClassRunner runner)
+   {
+      Description testClassDescription = runner.getDescription();
+      Class<?> testClass = testClassDescription.getTestClass();
+      Iterator<Description> itr = testClassDescription.getChildren().iterator();
+
+      while (itr.hasNext()) {
+         Description testDescription = itr.next();
+         String testMethodName = testDescription.getMethodName();
+         testMethod = Utilities.findPublicVoidMethod(testClass, testMethodName);
+
+         Boolean shouldRun = shouldRunTestInCurrentTestRun(null, testMethod);
+
+         if (shouldRun != null && !shouldRun) {
+            itr.remove();
+         }
+      }
+
+      return testClassDescription.getChildren().isEmpty();
    }
 
    private Boolean shouldRunTestInCurrentTestRun(Class<? extends Annotation> testAnnotation, Method testMethod)
