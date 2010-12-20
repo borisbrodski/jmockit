@@ -44,7 +44,7 @@ public final class CascadingTypeRedefinition extends BaseTypeRedefinition
    ExpectationsModifier createModifier(Class<?> realClass, ClassReader classReader)
    {
       ExpectationsModifier modifier = new ExpectationsModifier(realClass.getClassLoader(), classReader, null);
-      modifier.useDynamicMockingForInstanceMethods();
+      modifier.useDynamicMockingForInstanceMethods(null);
       return modifier;
    }
 

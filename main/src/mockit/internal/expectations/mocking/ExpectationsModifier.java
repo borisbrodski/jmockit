@@ -60,6 +60,7 @@ final class ExpectationsModifier extends BaseClassModifier
    private String className;
    private String baseClassNameForCapturedInstanceMethods;
    private boolean stubOutClassInitialization;
+   private boolean ignoreConstructors;
    private int executionMode;
    private boolean isProxy;
    private String defaultFilters;
@@ -87,9 +88,10 @@ final class ExpectationsModifier extends BaseClassModifier
       executionMode = 1;
    }
 
-   public void useDynamicMockingForInstanceMethods()
+   public void useDynamicMockingForInstanceMethods(MockedType typeMetadata)
    {
       stubOutClassInitialization = false;
+      ignoreConstructors = typeMetadata == null || typeMetadata.getMaxInstancesToCapture() <= 0;
       executionMode = 2;
    }
 
@@ -150,16 +152,15 @@ final class ExpectationsModifier extends BaseClassModifier
          internalClassName = baseClassNameForCapturedInstanceMethods;
       }
 
+      int actualExecutionMode = determineAppropriateExecutionMode(access, visitingConstructor);
+
       if (useMockingBridge) {
-         return generateCallToHandlerThroughMockingBridge(access, name, desc, internalClassName);
+         return generateCallToHandlerThroughMockingBridge(access, name, desc, internalClassName, actualExecutionMode);
       }
 
-      int executionModeForThisCase =
-         executionMode < 2 ? executionMode : visitingConstructor || isStatic(access) ? 0 : 2;
+      generateDirectCallToHandler(internalClassName, access, name, desc, actualExecutionMode);
 
-      generateDirectCallToHandler(internalClassName, access, name, desc, executionModeForThisCase);
-
-      if (executionModeForThisCase > 0) {
+      if (actualExecutionMode > 0) {
          generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
          return copyOriginalImplementationCode(access, desc, visitingConstructor);
       }
@@ -212,7 +213,7 @@ final class ExpectationsModifier extends BaseClassModifier
 
    private boolean isConstructorToBeIgnored(String name)
    {
-      return executionMode == 2 && "<init>".equals(name);
+      return ignoreConstructors && executionMode == 2 && "<init>".equals(name);
    }
 
    private boolean isStaticMethodToBeIgnored(int access)
@@ -251,8 +252,22 @@ final class ExpectationsModifier extends BaseClassModifier
       mw.visitMethodInsn(INVOKESPECIAL, superClassName, "<init>", constructorDesc);
    }
 
+   private int determineAppropriateExecutionMode(int access, boolean visitingConstructor)
+   {
+      if (executionMode == 2) {
+         if (visitingConstructor) {
+            return ignoreConstructors ? 0 : 1;
+         }
+         else if (isStatic(access)) {
+            return 0;
+         }
+      }
+
+      return executionMode;
+   }
+
    private MethodVisitor generateCallToHandlerThroughMockingBridge(
-      int access, String name, String desc, String internalClassName)
+      int access, String name, String desc, String internalClassName, int executionMode)
    {
       generateCallToMockingBridge(MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, executionMode);
       generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);

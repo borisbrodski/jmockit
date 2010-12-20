@@ -59,8 +59,11 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
          Object mock = typeRedefinition.redefineType();
          Utilities.setFieldValue(field, parentObject, mock);
 
+         if (typeMetadata.injectable) {
+            TestRun.getExecutingTest().addInjectableMock(mock);
+         }
+
          if (typeMetadata.nonStrict) {
-            // TODO: in a NonStrictExpectations block this is redundant, so it can be optimized away
             TestRun.getExecutingTest().addNonStrictMock(mock);
          }
       }

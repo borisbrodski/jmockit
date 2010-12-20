@@ -161,16 +161,19 @@ final class MockedType
 
    void buildMockingConfiguration()
    {
-      boolean filterResultWhenMatching = mocked == null || !mocked.inverse();
-      mockingCfg = new MockingConfiguration(getFilters(), filterResultWhenMatching);
+      if (mocked == null) {
+         return;
+      }
+
+      String[] filters = getFilters();
+
+      if (filters.length > 0) {
+         mockingCfg = new MockingConfiguration(filters, !mocked.inverse());
+      }
    }
 
    private String[] getFilters()
    {
-      if (mocked == null) {
-         return null;
-      }
-
       String[] filters = mocked.methods();
 
       if (filters.length == 0) {

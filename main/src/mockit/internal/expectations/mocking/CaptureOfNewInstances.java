@@ -28,6 +28,7 @@ import java.util.*;
 
 import mockit.external.asm.*;
 import mockit.internal.capturing.*;
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 class CaptureOfNewInstances extends CaptureOfImplementations
@@ -100,9 +101,9 @@ class CaptureOfNewInstances extends CaptureOfImplementations
 
       Class<?> mockedClass = mock.getClass();
       List<Capture> captures = baseTypeToCaptures.get(mockedClass);
-      boolean implementationClassModifiedForCaptureOnly = captures == null;
+      boolean constructorModifiedForCaptureOnly = captures == null;
 
-      if (implementationClassModifiedForCaptureOnly) {
+      if (constructorModifiedForCaptureOnly) {
          captures = findCaptures(mockedClass);
 
          if (captures == null) {
@@ -120,7 +121,12 @@ class CaptureOfNewInstances extends CaptureOfImplementations
          }
       }
 
-      return implementationClassModifiedForCaptureOnly;
+      if (captureFound != null && typeMetadata.injectable) {
+         TestRun.getExecutingTest().addInjectableMock(mock);
+         constructorModifiedForCaptureOnly = true;
+      }
+
+      return constructorModifiedForCaptureOnly;
    }
 
    private List<Capture> findCaptures(Class<?> mockedClass)

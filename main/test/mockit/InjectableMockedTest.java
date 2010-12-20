@@ -24,8 +24,8 @@
  */
 package mockit;
 
-import static org.junit.Assert.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public final class InjectableMockedTest
 {
@@ -82,8 +82,7 @@ public final class InjectableMockedTest
    }
 
    @Test
-   public void replaceInjectableInstanceWithCapturedInstanceUsingMockParameter(
-      @Injectable @Mocked(capture = 1) final Collaborator mock)
+   public void mockNextCreatedInstance(@Injectable @Mocked(capture = 1) final Collaborator mock)
    {
       new NonStrictExpectations()
       {
@@ -93,6 +92,7 @@ public final class InjectableMockedTest
       };
 
       Collaborator captured = new Collaborator();
+      assertEquals(0, captured.value);
       assertEquals(0, captured.doSomething(false));
       assertEquals(2, captured.doSomething(true));
 
@@ -104,6 +104,37 @@ public final class InjectableMockedTest
       };
 
       Collaborator notMocked = new Collaborator();
+      assertEquals(101, notMocked.value);
+      assertEquals(-1, notMocked.doSomething(false));
+      assertEquals(1, notMocked.doSomething(true));
+   }
+
+   @Test
+   public void mockSeparatelyTheNextTwoCreatedInstances()
+   {
+      new NonStrictExpectations()
+      {
+         @Injectable @Capturing(maxInstances = 1) Collaborator mock1;
+         @Injectable @Capturing(maxInstances = 1) Collaborator mock2;
+
+         {
+            mock1.doSomething(true); result = 1;
+            mock2.doSomething(false); result = 2;
+         }
+      };
+
+      Collaborator captured1 = new Collaborator();
+      assertEquals(0, captured1.value);
+      assertEquals(0, captured1.doSomething(false));
+      assertEquals(1, captured1.doSomething(true));
+
+      Collaborator captured2 = new Collaborator(123);
+      assertEquals(0, captured2.value);
+      assertEquals(2, captured2.doSomething(false));
+      assertEquals(0, captured2.doSomething(true));
+
+      Collaborator notMocked = new Collaborator();
+      assertEquals(101, notMocked.value);
       assertEquals(-1, notMocked.doSomething(false));
       assertEquals(1, notMocked.doSomething(true));
    }

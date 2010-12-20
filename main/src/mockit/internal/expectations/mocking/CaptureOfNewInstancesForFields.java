@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -36,7 +36,7 @@ final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
 
    boolean captureNewInstanceForApplicableMockField(Object fieldOwner, Object mock)
    {
-      boolean implementationClassModifiedForCaptureOnly = captureNewInstance(fieldOwner, mock);
+      boolean constructorModifiedForCaptureOnly = captureNewInstance(fieldOwner, mock);
 
       if (captureFound != null) {
          Field mockField = captureFound.typeMetadata.field;
@@ -45,7 +45,7 @@ final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
          TestRun.getExecutingTest().substituteMock(previousInstance, mock);
       }
 
-      return implementationClassModifiedForCaptureOnly;
+      return constructorModifiedForCaptureOnly;
    }
 
    void resetCaptureCount(Field mockField)
