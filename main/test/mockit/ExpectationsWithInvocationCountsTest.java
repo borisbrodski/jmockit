@@ -372,4 +372,49 @@ public final class ExpectationsWithInvocationCountsTest
 
       codeUnderTest.doSomethingElse();
    }
+
+   @Test(expected = AssertionError.class)
+   public void expectAtLeastOneInvocationMatchingStrictExpectationButInvokeNone()
+   {
+      new Expectations()
+      {
+         Collaborator a;
+
+         {
+            a.provideSomeService(); maxTimes = -1;
+         }
+      };
+
+      // Do nothing at replay time.
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectOneOrMoreInvocationsFollowedByAnotherWhichWontOccur_maxTimes()
+   {
+      new Expectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.provideSomeService(); maxTimes = -1;
+            mock.simpleOperation(1, null, null);
+         }
+      };
+
+      codeUnderTest.doSomething();
+   }
+
+   @Test(expected = AssertionError.class)
+   public void expectOneOrMoreInvocationsFollowedByAnotherWhichWontOccur_minTimes(final Collaborator mock)
+   {
+      new Expectations()
+      {
+         {
+            mock.simpleOperation(1, anyString, null); minTimes = 1;
+            mock.provideSomeService();
+        }
+      };
+
+      codeUnderTest.doSomethingElse();
+   }
 }

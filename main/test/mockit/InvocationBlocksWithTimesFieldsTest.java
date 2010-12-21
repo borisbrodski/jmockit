@@ -60,7 +60,7 @@ public final class InvocationBlocksWithTimesFieldsTest
       final void simpleOperation(int a, String b, Date c) {}
    }
 
-   // Tests with recorded strict expectations /////////////////////////////////////////////////////
+   // Tests with recorded strict expectations /////////////////////////////////////////////////////////////////////////
 
    @Test
    public void strict_expectTwiceByUsingInvocationCount()
@@ -311,7 +311,7 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomethingElse();
    }
 
-   // Tests with recorded non-strict expectations /////////////////////////////////////////////////
+   // Tests with recorded non-strict expectations /////////////////////////////////////////////////////////////////////
 
    @Test
    public void nonStrict_expectTwiceByUsingInvocationCount()
@@ -529,7 +529,7 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomethingElse();
    }
 
-   // Tests with ordered verifications ////////////////////////////////////////////////////////////
+   // Tests with ordered verifications ////////////////////////////////////////////////////////////////////////////////
 
    @Test
    public void ordered_verifyTwiceByUsingInvocationCount(final Collaborator mock)
@@ -726,7 +726,7 @@ public final class InvocationBlocksWithTimesFieldsTest
       };
    }
 
-   // Tests with unordered verifications //////////////////////////////////////////////////////////
+   // Tests with unordered verifications //////////////////////////////////////////////////////////////////////////////
 
    @Test
    public void unordered_verifyTwiceByUsingInvocationCount(final Collaborator mock)

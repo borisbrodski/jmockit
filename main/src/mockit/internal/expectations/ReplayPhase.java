@@ -235,6 +235,13 @@ final class ReplayPhase extends Phase
          }
       }
 
+      int nextStrictExpectationIndex = currentStrictExpectationIndex + 1;
+
+      if (nextStrictExpectationIndex < getExpectations().size()) {
+         Expectation missingExpectation = getExpectations().get(nextStrictExpectationIndex);
+         return missingExpectation.invocation.errorForMissingInvocation();
+      }
+
       return null;
    }
 }
