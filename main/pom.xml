@@ -36,7 +36,16 @@
          </plugin>
          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
-            <configuration><skipTests>true</skipTests></configuration>
+            <configuration>
+               <testNGArtifactName>none:none</testNGArtifactName>
+               <argLine>-javaagent:"${settings.localRepository}"/mockit/jmockit/0.999.4/jmockit-0.999.4.jar</argLine>
+               <excludes>
+                  <exclude>**/*$*</exclude>
+                  <exclude>**/Base*Test.class</exclude>
+                  <exclude>**/TestNGDecoratorTest.class</exclude>
+                  <exclude>**/MockStateBetweenTestMethodsNGTest.class</exclude>
+               </excludes>
+            </configuration>
          </plugin>
       </plugins>
    </build>

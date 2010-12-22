@@ -750,7 +750,6 @@
         <inspection_tool class="UnusedProperty" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UseOfAWTPeerClass" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UseOfJDBCDriverClass" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="UseOfPropertiesAsHashtable" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UseOfSunClasses" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UtilityClassWithPublicConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="VolatileArrayField" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -1311,7 +1310,9 @@
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/ognl/ognl/2.6.9/ognl-2.6.9.jar!/" />
       </CLASSES>
-      <JAVADOC />
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/ognl/ognl/2.6.9/ognl-2.6.9-javadoc.jar!/" />
+      </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/ognl/ognl/2.6.9/ognl-2.6.9-sources.jar!/" />
       </SOURCES>

@@ -9,6 +9,12 @@
 
    <build>
       <finalName>${artifactId}</finalName>
+      <plugins>
+         <plugin>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration><skip>true</skip></configuration>
+         </plugin>
+      </plugins>
    </build>
 
    <dependencies>

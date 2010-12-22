@@ -18,6 +18,7 @@
       <module>AnimatedTransitions</module>
       <module>orderMngmntWebapp</module>
       <module>tourdemock</module>
+      <module>LoginService</module>
    </modules>
 
    <name>The JMockit Testing Toolkit Samples</name>

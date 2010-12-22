@@ -11,6 +11,8 @@
    <modules>
       <module>main</module>
       <module>coverage</module>
+      <module>hibernate3emul</module>
+      <module>incremental</module>
    </modules>
 
    <name>The JMockit Testing Toolkit</name>
