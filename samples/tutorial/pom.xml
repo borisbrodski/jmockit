@@ -27,7 +27,7 @@
          </exclusions>
       </dependency>
       <dependency>
-         <groupId>commons-email</groupId><artifactId>commons-email</artifactId><version>0</version>
+         <groupId>org.apache.commons</groupId><artifactId>commons-email</artifactId><version>1.2</version>
          <scope>system</scope><systemPath>${basedir}/lib/commons-email-1.2.jar</systemPath>
       </dependency>
    </dependencies>
