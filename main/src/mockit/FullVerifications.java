@@ -41,7 +41,7 @@ package mockit;
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerification">In the Tutorial</a>
  */
-public class FullVerifications extends Verifications
+public abstract class FullVerifications extends Verifications
 {
    /**
     * Begins <em>full</em> verification on the mocked types/instances that can potentially be invoked during the replay

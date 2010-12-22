@@ -36,7 +36,7 @@ import mockit.internal.expectations.*;
  * @see #VerificationsInOrder(int)
  * @see #unverifiedInvocations()
  */
-public class VerificationsInOrder extends Verifications
+public abstract class VerificationsInOrder extends Verifications
 {
    /**
     * Begins <em>in-order</em> verification on the mocked types/instances invoked during the replay phase of the test.

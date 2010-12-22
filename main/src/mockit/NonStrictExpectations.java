@@ -35,7 +35,7 @@ package mockit;
  *
  * @see NonStrict
  */
-public class NonStrictExpectations extends Expectations
+public abstract class NonStrictExpectations extends Expectations
 {
    /**
     * Identical to the corresponding super-constructor {@link Expectations#Expectations()}, except that all expectations

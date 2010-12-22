@@ -99,7 +99,7 @@ import mockit.internal.expectations.*;
  *
  * @see #Expectations()
  */
-public class Expectations extends Invocations
+public abstract class Expectations extends Invocations
 {
    private final RecordAndReplayExecution execution;
 

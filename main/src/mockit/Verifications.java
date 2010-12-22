@@ -76,7 +76,7 @@ import mockit.internal.util.*;
  * @see #Verifications()
  * @see #Verifications(int)
  */
-public class Verifications extends Invocations
+public abstract class Verifications extends Invocations
 {
    final VerificationPhase verificationPhase;
 

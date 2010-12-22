@@ -33,13 +33,13 @@ package mockit;
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerificationInOrder">In the Tutorial</a>
  */
-public class FullVerificationsInOrder extends Verifications
+public abstract class FullVerificationsInOrder extends Verifications
 {
    /**
     * Begins <em>in-order</em> verification for <em>all</em> invocations on the mocked types/instances that can
     * potentially be invoked during the replay phase.
     */
-   public FullVerificationsInOrder()
+   protected FullVerificationsInOrder()
    {
       super(true);
       verificationPhase.setAllInvocationsMustBeVerified();
