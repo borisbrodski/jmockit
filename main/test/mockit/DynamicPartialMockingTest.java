@@ -89,7 +89,7 @@ public final class DynamicPartialMockingTest
    }
 
    @Test
-   public void dynamicallyMockAJREClass() throws Exception
+   public void dynamicallyMockJREClass() throws Exception
    {
       new Expectations(ByteArrayOutputStream.class)
       {
@@ -388,15 +388,16 @@ public final class DynamicPartialMockingTest
    }
 
    @Test
-   public void dynamicallyMockJREClass()
+   public void dynamicallyMockInstanceOfJREClass()
    {
       final List<String> list = new LinkedList<String>();
 
       new NonStrictExpectations(list)
       {
          {
-            list.get(1); result = "an item";
-            list.size(); result = 2;
+            // TODO: do onInstance matching by default for dynamically mocked instances?
+            onInstance(list).get(1); result = "an item";
+            onInstance(list).size(); result = 2;
          }
       };
 
@@ -407,6 +408,11 @@ public final class DynamicPartialMockingTest
       // Use unmocked methods:
       assertTrue(list.add("another"));
       assertEquals("another", list.remove(0));
+
+      List<String> anotherList = new LinkedList<String>();
+      anotherList.add("one");
+      assertEquals("one", anotherList.get(0));
+      assertEquals(1, anotherList.size());
    }
 
    public interface AnotherInterface {}
