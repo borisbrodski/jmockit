@@ -195,7 +195,7 @@ public class BaseClassModifier extends ClassWriter
    protected final void generateCallToMockingBridge(
       int targetId, String mockClassName, int mockAccess, String mockName, String mockDesc, Object extra)
    {
-      generateCodeToInstantiateMockingBridge();
+      generateCodeToObtainInstanceOfMockingBridge();
 
       // First and second "invoke" arguments:
       boolean isStatic = generateCodeToPassThisOrNullIfStaticMethod(mockAccess);
@@ -220,14 +220,11 @@ public class BaseClassModifier extends ClassWriter
       generateCallToMockingBridge();
    }
 
-   protected final void generateCodeToInstantiateMockingBridge()
+   protected final void generateCodeToObtainInstanceOfMockingBridge()
    {
+      mw.visitMethodInsn(INVOKESTATIC, "java/lang/System", "getProperties", "()Ljava/util/Properties;");
       mw.visitLdcInsn("mockit.internal.MockingBridge");
-      mw.visitInsn(ICONST_1);
-      mw.visitMethodInsn(INVOKESTATIC, "java/lang/ClassLoader", "getSystemClassLoader", "()Ljava/lang/ClassLoader;");
-      mw.visitMethodInsn(
-         INVOKESTATIC, "java/lang/Class", "forName", "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
-      mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "newInstance", "()Ljava/lang/Object;");
+      mw.visitMethodInsn(INVOKEVIRTUAL, "java/util/Properties", "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
    private void generateCodeToFillArrayElement(int arrayIndex, Object value)
