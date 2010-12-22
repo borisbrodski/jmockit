@@ -167,7 +167,6 @@
       <profile version="1.0" is_locked="false">
         <option name="myName" value="Project Default" />
         <option name="myLocal" value="false" />
-        <inspection_tool class="AbstractClassWithoutAbstractMethods" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="AbstractMethodCallInConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="AbstractMethodOverridesAbstractMethod" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="AbstractMethodOverridesConcreteMethod" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -1125,15 +1124,6 @@
         <root url="jar://$PROJECT_DIR$/jmockit.jar!/" />
       </SOURCES>
     </library>
-    <library name="Logging APIs">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.5.8.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="Maven: cglib:cglib-nodep:2.1_3">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar!/" />
@@ -1316,6 +1306,13 @@
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/ognl/ognl/2.6.9/ognl-2.6.9-sources.jar!/" />
       </SOURCES>
+    </library>
+    <library name="Maven: org.apache.commons:commons-email:1.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/samples/tutorial/lib/commons-email-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
     </library>
     <library name="Maven: org.easymock:easymock:3.0">
       <CLASSES>
