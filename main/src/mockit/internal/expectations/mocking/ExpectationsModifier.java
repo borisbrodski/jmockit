@@ -62,10 +62,18 @@ final class ExpectationsModifier extends BaseClassModifier
    private boolean isProxy;
    private String defaultFilters;
 
-   ExpectationsModifier(ClassLoader classLoader, ClassReader classReader, MockingConfiguration mockingConfiguration)
+   ExpectationsModifier(ClassLoader classLoader, ClassReader classReader, MockedType typeMetadata)
    {
       super(classReader);
-      mockingCfg = mockingConfiguration;
+      
+      if (typeMetadata == null) {
+         mockingCfg = null;
+      }
+      else {
+         mockingCfg = typeMetadata.mockingCfg;
+         stubOutClassInitialization = typeMetadata.isClassInitializationToBeStubbedOut();
+      }
+
       setUseMockingBridge(classLoader);
    }
 
@@ -74,20 +82,15 @@ final class ExpectationsModifier extends BaseClassModifier
       baseClassNameForCapturedInstanceMethods = internalClassName;
    }
 
-   public void setStubOutClassInitialization(MockedType typeMetadata)
-   {
-      stubOutClassInitialization = typeMetadata.isClassInitializationToBeStubbedOut();
-   }
-
-   public void useDynamicMocking()
+   public void useDynamicMocking(boolean methodsOnly)
    {
       stubOutClassInitialization = true;
+      ignoreConstructors = methodsOnly;
       executionMode = 1;
    }
 
    public void useDynamicMockingForInstanceMethods(MockedType typeMetadata)
    {
-      stubOutClassInitialization = false;
       ignoreConstructors = typeMetadata == null || typeMetadata.getMaxInstancesToCapture() <= 0;
       executionMode = 2;
    }
@@ -210,7 +213,7 @@ final class ExpectationsModifier extends BaseClassModifier
 
    private boolean isConstructorToBeIgnored(String name)
    {
-      return ignoreConstructors && executionMode == 2 && "<init>".equals(name);
+      return ignoreConstructors && "<init>".equals(name);
    }
 
    private boolean isStaticMethodToBeIgnored(int access)

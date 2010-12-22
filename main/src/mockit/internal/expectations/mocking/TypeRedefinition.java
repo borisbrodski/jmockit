@@ -77,14 +77,11 @@ final class TypeRedefinition extends BaseTypeRedefinition
    @Override
    ExpectationsModifier createModifier(Class<?> realClass, ClassReader classReader)
    {
-      ExpectationsModifier modifier =
-         new ExpectationsModifier(realClass.getClassLoader(), classReader, typeMetadata.mockingCfg);
+      ExpectationsModifier modifier = new ExpectationsModifier(realClass.getClassLoader(), classReader, typeMetadata);
 
       if (typeMetadata.injectable) {
          modifier.useDynamicMockingForInstanceMethods(typeMetadata);
       }
-
-      modifier.setStubOutClassInitialization(typeMetadata);
 
       return modifier;
    }

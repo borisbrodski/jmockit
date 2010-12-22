@@ -391,13 +391,14 @@ public final class DynamicPartialMockingTest
    public void dynamicallyMockInstanceOfJREClass()
    {
       final List<String> list = new LinkedList<String>();
+      List<String> anotherList = new LinkedList<String>();
 
-      new NonStrictExpectations(list)
+      new NonStrictExpectations(list, anotherList)
       {
          {
             // TODO: do onInstance matching by default for dynamically mocked instances?
-            onInstance(list).get(1); result = "an item";
-            onInstance(list).size(); result = 2;
+            list.get(1); result = "an item";
+            list.size(); result = 2;
          }
       };
 
@@ -409,7 +410,6 @@ public final class DynamicPartialMockingTest
       assertTrue(list.add("another"));
       assertEquals("another", list.remove(0));
 
-      List<String> anotherList = new LinkedList<String>();
       anotherList.add("one");
       assertEquals("one", anotherList.get(0));
       assertEquals(1, anotherList.size());

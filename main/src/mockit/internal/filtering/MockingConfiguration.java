@@ -34,12 +34,6 @@ public final class MockingConfiguration
    private final List<MockFilter> filtersToApply;
    private final boolean desiredFilterResultWhenMatching;
 
-   public MockingConfiguration(List<MockFilter> filters, boolean desiredFilterResultWhenMatching)
-   {
-      filtersToApply = filters;
-      this.desiredFilterResultWhenMatching = desiredFilterResultWhenMatching;
-   }
-
    public MockingConfiguration(String[] filters, boolean desiredFilterResultWhenMatching)
    {
       filtersToApply = parseMockFilters(filters);
