@@ -40,7 +40,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
 {
    private static final int CLASS_ACCESS_MASK = 0xFFFF - ACC_ABSTRACT;
 
-   private final MockingConfiguration mockingConfiguration;
+   private final MockingConfiguration mockingCfg;
    private final Class<?> abstractClass;
    private final String subclassName;
    private String superClassName;
@@ -52,7 +52,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
       MockingConfiguration mockingConfiguration, Class<?> abstractClass, ClassReader classReader, String subclassName)
    {
       super(classReader);
-      this.mockingConfiguration = mockingConfiguration;
+      mockingCfg = mockingConfiguration;
       this.abstractClass = abstractClass;
       this.subclassName = subclassName.replace('.', '/');
       implementedMethods = new ArrayList<String>();
@@ -113,11 +113,11 @@ final class SubclassGenerationModifier extends BaseClassModifier
    {
       mw = super.visitMethod(ACC_PUBLIC, name, desc, signature, exceptions);
 
-      boolean noFiltersToMatch = mockingConfiguration == null || mockingConfiguration.isEmpty();
+      boolean noFiltersToMatch = mockingCfg == null;
 
       if (
          noFiltersToMatch && !isMethodFromObject(name, desc) ||
-         !noFiltersToMatch && mockingConfiguration.matchesFilters(name, desc)
+         !noFiltersToMatch && mockingCfg.matchesFilters(name, desc)
       ) {
          generateDirectCallToHandler(className, access, name, desc, 0);
          generateReturnWithObjectAtTopOfTheStack(desc);
@@ -163,18 +163,17 @@ final class SubclassGenerationModifier extends BaseClassModifier
       }
 
       @Override
-      public FieldVisitor visitField(
-         int access, String name, String desc, String signature, Object value) { return null; }
+      public FieldVisitor visitField(int access, String name, String desc, String signature, Object value)
+      {
+         return null;
+      }
    }
 
    private final class MethodModifierForSuperclass extends BaseMethodModifier
    {
       String superName;
 
-      MethodModifierForSuperclass(String className)
-      {
-         super(className);
-      }
+      MethodModifierForSuperclass(String className) { super(className); }
 
       @Override
       public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
@@ -200,10 +199,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
    {
       String[] superInterfaces;
 
-      MethodModifierForImplementedInterface(String interfaceName)
-      {
-         super(interfaceName);
-      }
+      MethodModifierForImplementedInterface(String interfaceName) { super(interfaceName); }
 
       @Override
       public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)

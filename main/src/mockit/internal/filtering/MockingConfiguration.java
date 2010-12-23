@@ -42,10 +42,6 @@ public final class MockingConfiguration
 
    private List<MockFilter> parseMockFilters(String[] mockFilters)
    {
-      if (mockFilters == null || mockFilters.length == 0) {
-         return null;
-      }
-
       List<MockFilter> filters = new ArrayList<MockFilter>(mockFilters.length);
 
       for (String mockFilter : mockFilters) {
@@ -55,17 +51,8 @@ public final class MockingConfiguration
       return filters;
    }
 
-   public boolean isEmpty()
-   {
-      return filtersToApply == null;
-   }
-
    public boolean matchesFilters(String name, String desc)
    {
-      if (filtersToApply == null) {
-         return true;
-      }
-
       for (MockFilter filter : filtersToApply) {
          if (filter.matches(name, desc)) {
             return desiredFilterResultWhenMatching;

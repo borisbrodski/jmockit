@@ -121,7 +121,7 @@ final class ExpectationsModifier extends BaseClassModifier
          return unmodifiedBytecode(access, name, desc, signature, exceptions);
       }
 
-      boolean noFiltersToMatch = mockingCfg == null || mockingCfg.isEmpty();
+      boolean noFiltersToMatch = mockingCfg == null;
       boolean matchesFilters = noFiltersToMatch || mockingCfg.matchesFilters(name, desc);
 
       if ("<clinit>".equals(name)) {
