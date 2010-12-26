@@ -85,9 +85,9 @@ public final class SampleServiceImpl_JMockit_Test
 
          {
             // The following mocks are strict, so the order of invocation for them does matter:
-            personService.create(person, businessMessages);
+            personService.create(person, withInstanceLike(businessMessages));
             businessMessages.hasErrors(); result = true;
-            eventService.sendErrorEvent(person, businessMessages);
+            eventService.sendErrorEvent(person, withInstanceLike(businessMessages));
          }
       };
 

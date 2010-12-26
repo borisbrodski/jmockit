@@ -29,6 +29,8 @@ import static java.lang.reflect.Modifier.*;
 
 import static mockit.external.asm.Opcodes.*;
 
+import mockit.internal.state.*;
+
 public abstract class FieldTypeRedefinitions extends TypeRedefinitions
 {
    private static final int FIELD_ACCESS_MASK = ACC_SYNTHETIC + ACC_STATIC;
@@ -83,6 +85,13 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
    }
 
    protected abstract void redefineTypeForMockField();
+
+   protected final void registerMockedClassIfNonStrict()
+   {
+      if (typeMetadata.nonStrict) {
+         TestRun.getExecutingTest().addNonStrictMock(typeMetadata.getClassType());
+      }
+   }
 
    @Override
    public final CaptureOfNewInstancesForFields getCaptureOfNewInstances()

@@ -49,13 +49,7 @@ class TypeRedefinitions
 
    protected final void registerMock(Object mock)
    {
-      if (typeMetadata.injectable) {
-         TestRun.getExecutingTest().addInjectableMock(mock);
-      }
-
-      if (typeMetadata.nonStrict) {
-         TestRun.getExecutingTest().addNonStrictMock(mock);
-      }
+      TestRun.getExecutingTest().registerMock(typeMetadata, mock);
    }
 
    public final void cleanUp()

@@ -27,6 +27,7 @@ package mockit.internal.expectations.mocking;
 import java.lang.reflect.*;
 import java.util.*;
 
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
@@ -53,6 +54,8 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
 
       if (finalField) {
          typeRedefinition.redefineTypeForFinalField();
+         registerMockedClassIfNonStrict();
+         TestRun.getExecutingTest().addFinalLocalMockField(parentObject, typeMetadata);
       }
       else {
          Object mock = typeRedefinition.redefineType();

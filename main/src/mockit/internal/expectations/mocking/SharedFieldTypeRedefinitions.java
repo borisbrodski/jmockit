@@ -101,13 +101,14 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
    private void obtainAndRegisterInstancesOfFinalFields(Object target)
    {
       for (MockedType metadata : finalMockFields) {
-         if (metadata.injectable) {
-            Object mock = Utilities.getFieldValue(metadata.field, target);
-            TestRun.getExecutingTest().addInjectableMock(mock);
-         }
+         Object mock = Utilities.getFieldValue(metadata.field, target);
+         typeMetadata = metadata;
 
-         if (metadata.nonStrict) {
-            TestRun.getExecutingTest().addNonStrictMock(metadata.getClassType());
+         if (mock == null) {
+            registerMockedClassIfNonStrict();
+         }
+         else {
+            registerMock(mock);
          }
       }
    }

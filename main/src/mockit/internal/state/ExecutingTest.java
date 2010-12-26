@@ -30,6 +30,7 @@ import java.util.*;
 import mockit.internal.expectations.*;
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.expectations.mocking.*;
+import mockit.internal.util.*;
 
 public final class ExecutingTest
 {
@@ -39,6 +40,7 @@ public final class ExecutingTest
 
    private ParameterTypeRedefinitions parameterTypeRedefinitions;
 
+   private final Map<MockedType, Object> finalLocalMockFields = new HashMap<MockedType, Object>(2);
    private final List<Object> injectableMocks = new ArrayList<Object>();
    private final List<Object> nonStrictMocks = new ArrayList<Object>();
    private final List<Object> strictMocks = new ArrayList<Object>();
@@ -152,10 +154,10 @@ public final class ExecutingTest
       }
    }
 
-   private boolean containsNonStrictMockedClass(String classDesc)
+   private boolean containsNonStrictMockedClass(Object mockOrClassDesc)
    {
-      for (Object mockClassDesc : nonStrictMocks) {
-         if (classDesc == mockClassDesc) {
+      for (Object nonStrictMock : nonStrictMocks) {
+         if (mockOrClassDesc == nonStrictMock) {
             return true;
          }
       }
@@ -165,11 +167,16 @@ public final class ExecutingTest
 
    public void addNonStrictMock(Object mock)
    {
-      nonStrictMocks.add(mock);
-
-      if (!(mock instanceof Proxy)) {
-         addNonStrictMock(mock.getClass());
+      if (!containsNonStrictMockedClass(mock)) {
+         nonStrictMocks.add(mock);
       }
+
+      addNonStrictMock(mock.getClass());
+   }
+
+   public void addFinalLocalMockField(Object owner, MockedType typeMetadata)
+   {
+      finalLocalMockFields.put(typeMetadata, owner);
    }
 
    public void addStrictMock(Object mock, String mockClassDesc)
@@ -206,10 +213,10 @@ public final class ExecutingTest
    public boolean containsNonStrictMock(int access, Object mock, String mockClassDesc, String mockNameAndDesc)
    {
       boolean staticMethod = Modifier.isStatic(access);
-      boolean constructor = !staticMethod && mockNameAndDesc.startsWith("<init>");
+      boolean notInstanceMethod = staticMethod || mockNameAndDesc.startsWith("<init>");
 
       for (Object nonStrictMock : nonStrictMocks) {
-         if (staticMethod || constructor) {
+         if (notInstanceMethod) {
             if (nonStrictMock == mockClassDesc) {
                return true;
             }
@@ -220,6 +227,37 @@ public final class ExecutingTest
       }
 
       return false;
+   }
+
+   public void registerAdditionalMocksFromFinalLocalMockFieldsIfAny()
+   {
+      if (!finalLocalMockFields.isEmpty()) {
+         for (
+            Iterator<Map.Entry<MockedType, Object>> itr = finalLocalMockFields.entrySet().iterator();
+            itr.hasNext();
+         ) {
+            Map.Entry<MockedType, Object> fieldAndOwner = itr.next();
+            MockedType typeMetadata = fieldAndOwner.getKey();
+            Object mock = Utilities.getFieldValue(typeMetadata.field, fieldAndOwner.getValue());
+
+            // A null field value will occur for invocations executed during initialization of the owner instance.
+            if (mock != null) {
+               registerMock(typeMetadata, mock);
+               itr.remove();
+            }
+         }
+      }
+   }
+
+   public void registerMock(MockedType typeMetadata, Object mock)
+   {
+      if (typeMetadata.injectable) {
+         addInjectableMock(mock);
+      }
+
+      if (typeMetadata.nonStrict) {
+         addNonStrictMock(mock);
+      }
    }
 
    public boolean containsStrictMockForRunningTest(Object mock, String mockClassDesc)
@@ -250,6 +288,7 @@ public final class ExecutingTest
 
    public void clearNonStrictMocks()
    {
+      finalLocalMockFields.clear();
       nonStrictMocks.clear();
    }
 
@@ -314,7 +353,7 @@ public final class ExecutingTest
          parameterTypeRedefinitions = null;
       }
 
-      nonStrictMocks.clear();
+      clearNonStrictMocks();
       strictMocks.clear();
       cascadingTypes.clear();
    }

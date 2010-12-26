@@ -222,7 +222,8 @@ public final class RecordAndReplayExecution
       throws Throwable
    {
       ExecutingTest executingTest = TestRun.getExecutingTest();
-      
+      executingTest.registerAdditionalMocksFromFinalLocalMockFieldsIfAny();
+
       if (executingTest.isShouldIgnoreMockingCallbacks()) {
          return null;
       }

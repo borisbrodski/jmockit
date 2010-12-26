@@ -34,7 +34,7 @@ import mockit.internal.filtering.*;
 import mockit.internal.state.*;
 
 @SuppressWarnings({"ClassWithTooManyFields", "EqualsAndHashcode"})
-final class MockedType
+public final class MockedType
 {
    @SuppressWarnings({"UnusedDeclaration"})
    @Mocked private static final Object DUMMY = null;
@@ -54,14 +54,14 @@ final class MockedType
       STUB_OUT_STATIC_INITIALIZERS = System.getProperty("jmockit-retainStaticInitializers") == null;
    }
 
-   final Field field;
+   public final Field field;
    final boolean fieldFromTestClass;
    private final int accessModifiers;
    private final Mocked mocked;
    final Capturing capturing;
    final Cascading cascading;
-   final boolean nonStrict;
-   final boolean injectable;
+   public final boolean nonStrict;
+   public final boolean injectable;
    final Type declaredType;
    final String mockId;
    MockingConfiguration mockingCfg;

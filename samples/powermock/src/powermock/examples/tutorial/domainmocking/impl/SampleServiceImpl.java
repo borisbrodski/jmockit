@@ -24,7 +24,7 @@ import powermock.examples.tutorial.domainmocking.domain.SampleServiceException;
 
 /**
  * This is a simple service that delegates calls to two stub services. The purpose of this service
- * is to demonstrate that need to mock instantiation of domain objects.
+ * is to demonstrate the need to mock instantiation of domain objects.
  */
 public final class SampleServiceImpl implements SampleService
 {
@@ -57,7 +57,7 @@ public final class SampleServiceImpl implements SampleService
 
       personService.create(person, messages);
 
-      final boolean hasErrors = messages.hasErrors();
+      boolean hasErrors = messages.hasErrors();
 
       if (hasErrors) {
          eventService.sendErrorEvent(person, messages);
