@@ -37,13 +37,12 @@ import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 /**
- * Provides an startup mock that modifies the TestNG 5.9/5.10/5.11 test runner so that it calls back
- * to JMockit for each test execution.
- * When that happens, JMockit will assert any expectations set during the test, including
- * expectations specified through {@link Mock} as well as in {@link Expectations} subclasses.
+ * Provides an startup mock that modifies the TestNG 5.9/5.10/5.11 test runner so that it calls back to JMockit for each
+ * test execution.
+ * When that happens, JMockit will assert any expectations set during the test, including expectations specified through
+ * {@link Mock} as well as in {@link Expectations} subclasses.
  * <p/>
- * This class is not supposed to be accessed from user code. JMockit will automatically load it at
- * startup.
+ * This class is not supposed to be accessed from user code. JMockit will automatically load it at startup.
  */
 @MockClass(realClass = MethodHelper.class)
 public final class TestNGTestRunnerDecorator extends TestRunnerDecorator
@@ -67,7 +66,7 @@ public final class TestNGTestRunnerDecorator extends TestRunnerDecorator
       // In case it isn't a test method, but a before/after method:
       if (!isTestMethod(testClass, method)) {
          if (generateTestIdForNextBeforeMethod && method.isAnnotationPresent(BeforeMethod.class)) {
-            TestRun.generateIdForNextTest();
+            TestRun.prepareForNextTest();
             generateTestIdForNextBeforeMethod = false;
          }
 
@@ -96,7 +95,7 @@ public final class TestNGTestRunnerDecorator extends TestRunnerDecorator
       }
 
       if (generateTestIdForNextBeforeMethod) {
-         TestRun.generateIdForNextTest();
+         TestRun.prepareForNextTest();
       }
 
       TestRun.setRunningIndividualTest(instance);

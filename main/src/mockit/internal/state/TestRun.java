@@ -149,7 +149,7 @@ public final class TestRun
       instance.currentTestClass = testClass;
    }
 
-   public static void generateIdForNextTest()
+   public static void prepareForNextTest()
    {
       instance.testId++;
    }

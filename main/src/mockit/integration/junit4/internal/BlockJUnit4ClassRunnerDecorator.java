@@ -42,13 +42,12 @@ import mockit.internal.util.*;
 // be in the current thread's execution stack at the time the redefinition occurs.
 
 /**
- * Startup mock that modifies the JUnit 4.5+ test runner so that it calls back to JMockit
- * immediately after every test executes. When that happens, JMockit will assert any expectations
- * set during the test, including expectations specified through {@link Mock} as well as in
- * {@link Expectations} subclasses.
+ * Startup mock that modifies the JUnit 4.5+ test runner so that it calls back to JMockit immediately after every test
+ * executes.
+ * When that happens, JMockit will assert any expectations set during the test, including expectations specified through
+ * {@link Mock} as well as in {@link Expectations} subclasses.
  * <p/>
- * This class is not supposed to be accessed from user code. JMockit will automatically load it
- * at startup.
+ * This class is not supposed to be accessed from user code. JMockit will automatically load it at startup.
  */
 @MockClass(realClass = FrameworkMethod.class)
 public final class BlockJUnit4ClassRunnerDecorator extends TestRunnerDecorator
@@ -72,7 +71,7 @@ public final class BlockJUnit4ClassRunnerDecorator extends TestRunnerDecorator
       // In case it isn't a test method, but a before/after method:
       if (it.getAnnotation(Test.class) == null) {
          if (generateTestIdForNextBeforeMethod && it.getAnnotation(Before.class) != null) {
-            TestRun.generateIdForNextTest();
+            TestRun.prepareForNextTest();
             generateTestIdForNextBeforeMethod = false;
          }
 
@@ -94,7 +93,7 @@ public final class BlockJUnit4ClassRunnerDecorator extends TestRunnerDecorator
       }
 
       if (generateTestIdForNextBeforeMethod) {
-         TestRun.generateIdForNextTest();
+         TestRun.prepareForNextTest();
       }
 
       TestRun.setRunningTestMethod(method);

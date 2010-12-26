@@ -35,13 +35,12 @@ import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 /**
- * Provides an startup mock that modifies the JUnit 3.8 test runner so that it calls back to JMockit
- * for each test execution.
- * When that happens, JMockit will assert any expectations set during the test, including
- * expectations specified through {@link Mock} as well as in {@link Expectations} subclasses.
+ * Provides an startup mock that modifies the JUnit 3.8 test runner so that it calls back to JMockit for each test
+ * execution.
+ * When that happens, JMockit will assert any expectations set during the test, including expectations specified through
+ * {@link Mock} as well as in {@link Expectations} subclasses.
  * <p/>
- * This class is not supposed to be accessed from user code. JMockit will automatically load it at
- * startup.
+ * This class is not supposed to be accessed from user code. JMockit will automatically load it at startup.
  */
 @MockClass(realClass = TestCase.class)
 public final class JUnitTestCaseDecorator extends TestRunnerDecorator
@@ -82,7 +81,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       updateTestClassState(it, it.getClass());
 
       TestRun.setRunningIndividualTest(it);
-      TestRun.generateIdForNextTest();
+      TestRun.prepareForNextTest();
 
       try {
          originalRunBare();
