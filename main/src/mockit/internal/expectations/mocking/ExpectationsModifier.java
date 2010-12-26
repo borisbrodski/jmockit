@@ -84,7 +84,7 @@ final class ExpectationsModifier extends BaseClassModifier
 
    public void useDynamicMocking(boolean methodsOnly)
    {
-      stubOutClassInitialization = true;
+      stubOutClassInitialization = !methodsOnly;
       ignoreConstructors = methodsOnly;
       executionMode = 1;
    }
