@@ -45,11 +45,13 @@ public final class PartialMock_JMockit_Test
    @Test
    public void outputOtherText()
    {
+      // Creates an instance normally, to use when recording expectations on instance methods.
       final TextService textService = new TextService();
 
-      new NonStrictExpectations(textService) // "dynamic" partial mocking
+      new NonStrictExpectations(TextService.class) // "dynamic" partial mocking, for all instances of the class
       {
          {
+            // Will match calls to the method on any instance:
             textService.getText(); result = "some other text"; // overrides the original behavior
          }
       };
