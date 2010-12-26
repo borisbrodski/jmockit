@@ -113,8 +113,7 @@ public final class InvocationResults
          currentResult = nextResult;
       }
 
-      Object result =
-         resultToBeProduced.produceResult(invokedObject, invocation, constraints, invocationArgs);
+      Object result = resultToBeProduced.produceResult(invokedObject, invocation, constraints, invocationArgs);
 
       return result;
    }
