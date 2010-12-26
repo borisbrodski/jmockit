@@ -48,7 +48,7 @@ public final class ExecutingTest
    RecordAndReplayExecution getRecordAndReplay(boolean createIfUndefined)
    {
       if (currentRecordAndReplay == null && createIfUndefined) {
-         setRecordAndReplay(new RecordAndReplayExecution(null));
+         setRecordAndReplay(new RecordAndReplayExecution());
       }
 
       return currentRecordAndReplay;
@@ -92,8 +92,7 @@ public final class ExecutingTest
          else {
             // This should only happen if no expectations at all were created by the whole test, but
             // there is one (probably empty) verification block.
-            RecordAndReplayExecution previous = getRecordAndReplay();
-            setRecordAndReplay(new RecordAndReplayExecution(previous));
+            currentRecordAndReplay = new RecordAndReplayExecution();
          }
       }
 

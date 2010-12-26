@@ -51,17 +51,10 @@ public final class RecordAndReplayExecution
    private ReplayPhase replayPhase;
    private VerificationPhase verificationPhase;
 
-   public RecordAndReplayExecution(RecordAndReplayExecution previous)
+   public RecordAndReplayExecution()
    {
-      if (previous == null) {
-         executionState = new PhasedExecutionState();
-         lastExpectationIndexInPreviousReplayPhase = 0;
-      }
-      else {
-         executionState = previous.executionState;
-         lastExpectationIndexInPreviousReplayPhase = previous.getLastExpectationIndexInPreviousReplayPhase();
-      }
-
+      executionState = new PhasedExecutionState();
+      lastExpectationIndexInPreviousReplayPhase = 0;
       redefinitions = null;
       typesAndTargetObjects = new HashMap<Type, Object>(1);
       dynamicPartialMocking = null;
