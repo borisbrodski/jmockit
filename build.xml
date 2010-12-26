@@ -267,7 +267,7 @@
          encoding="UTF-8"/>
    </target>
    <target name="createLibsZip">
-      <zip destfile="jmockit-libs.zip" basedir="." includes="**/lib/**" excludes="samples/tutorial/lib/**"/>
+      <zip destfile="jmockit-libs.zip" basedir="." includes="**/lib/**"/>
    </target>
 
    <!-- Targets for running tests and generating corresponding test reports in HTML -->
