@@ -125,9 +125,11 @@ public final class JREMockingTest extends TestCase
       }
    }
 
-   public void testWaitingWithMockParameter(final Object mockedLock) throws Exception
+   public void testWaitingWithDynamicPartialMocking() throws Exception
    {
-      new Expectations()
+      final Object mockedLock = new Object();
+
+      new Expectations(Object.class)
       {
          {
             mockedLock.wait();
