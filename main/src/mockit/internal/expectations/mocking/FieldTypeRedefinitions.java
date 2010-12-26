@@ -34,7 +34,6 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
    private static final int FIELD_ACCESS_MASK = ACC_SYNTHETIC + ACC_STATIC;
 
    protected Field field;
-   protected MockedType typeMetadata;
    protected boolean finalField;
 
    protected FieldTypeRedefinitions(Object objectWithMockFields)

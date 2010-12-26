@@ -27,7 +27,6 @@ package mockit.internal.expectations.mocking;
 import java.lang.reflect.*;
 import java.util.*;
 
-import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
@@ -58,14 +57,7 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
       else {
          Object mock = typeRedefinition.redefineType();
          Utilities.setFieldValue(field, parentObject, mock);
-
-         if (typeMetadata.injectable) {
-            TestRun.getExecutingTest().addInjectableMock(mock);
-         }
-
-         if (typeMetadata.nonStrict) {
-            TestRun.getExecutingTest().addNonStrictMock(mock);
-         }
+         registerMock(mock);
       }
 
       typesAndTargetObjects.put(typeMetadata.declaredType, parentObject);

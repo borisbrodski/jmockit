@@ -89,30 +89,28 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
       executingTest.clearNonStrictMocks();
 
       for (Entry<MockedType, InstanceFactory> metadataAndFactory : mockInstanceFactories.entrySet()) {
-         MockedType metadata = metadataAndFactory.getKey();
+         typeMetadata = metadataAndFactory.getKey();
          InstanceFactory instanceFactory = metadataAndFactory.getValue();
 
-         Object mock = assignNewInstanceToMockField(target, metadata, instanceFactory);
-
-         if (metadata.injectable) {
-            executingTest.addInjectableMock(mock);
-         }
-         
-         if (metadata.nonStrict) {
-            executingTest.addNonStrictMock(mock);
-         }
+         Object mock = assignNewInstanceToMockField(target, instanceFactory);
+         registerMock(mock);
       }
 
       for (MockedType metadata : finalMockFields) {
+         if (metadata.injectable) {
+            Object mock = Utilities.getFieldValue(metadata.field, target);
+            executingTest.addInjectableMock(mock);
+         }
+
          if (metadata.nonStrict) {
             executingTest.addNonStrictMock(metadata.getClassType());
          }
       }
    }
 
-   private Object assignNewInstanceToMockField(Object target, MockedType metadata, InstanceFactory instanceFactory)
+   private Object assignNewInstanceToMockField(Object target, InstanceFactory instanceFactory)
    {
-      Field mockField = metadata.field;
+      Field mockField = typeMetadata.field;
       Object mock = Utilities.getFieldValue(mockField, target);
 
       if (mock == null) {
@@ -128,7 +126,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
 
          Utilities.setFieldValue(mockField, target, mock);
 
-         if (metadata.getMaxInstancesToCapture() > 0) {
+         if (typeMetadata.getMaxInstancesToCapture() > 0) {
             getCaptureOfNewInstances().resetCaptureCount(mockField);
          }
       }

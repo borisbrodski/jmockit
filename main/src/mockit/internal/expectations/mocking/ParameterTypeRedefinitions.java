@@ -43,8 +43,6 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
    private final Object[] paramValues;
    private final Class<?>[] testedClasses;
    private final MockedType[] mockParameters;
-   private final List<Object> injectableMocks;
-   private final List<Object> nonStrictMocks;
 
    public ParameterTypeRedefinitions(Object owner, Method testMethod)
    {
@@ -59,8 +57,6 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
          paramValues = new Object[n];
          testedClasses = new Class<?>[n];
          mockParameters = new MockedType[n];
-         injectableMocks = new ArrayList<Object>(n);
-         nonStrictMocks = new ArrayList<Object>(n);
 
          boolean hasTestedClass = false;
 
@@ -90,7 +86,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
          return true;
       }
 
-      MockedType typeMetadata = new MockedType(paramIndex, paramType, annotationsOnParameter);
+      typeMetadata = new MockedType(paramIndex, paramType, annotationsOnParameter);
 
       if (typeMetadata.isMockParameter()) {
          mockParameters[paramIndex] = typeMetadata;
@@ -136,29 +132,22 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
    private void redefineAndInstantiateAllMockedTypes()
    {
       for (int i = 0; i < mockParameters.length; i++) {
-         MockedType typeMetadata = mockParameters[i];
+         typeMetadata = mockParameters[i];
 
          if (typeMetadata != null) {
-            paramValues[i] = redefineAndInstantiateMockedType(typeMetadata);
+            paramValues[i] = redefineAndInstantiateMockedType();
          }
       }
    }
 
-   private Object redefineAndInstantiateMockedType(MockedType typeMetadata)
+   private Object redefineAndInstantiateMockedType()
    {
       TypeRedefinition typeRedefinition = new TypeRedefinition(parentObject, typeMetadata);
       Object mock = typeRedefinition.redefineType();
-
-      if (typeMetadata.injectable) {
-         injectableMocks.add(mock);
-      }
-
-      if (typeMetadata.nonStrict) {
-         nonStrictMocks.add(mock);
-      }
+      registerMock(mock);
 
       if (typeMetadata.getMaxInstancesToCapture() > 0) {
-         registerCaptureOfNewInstances(typeMetadata);
+         registerCaptureOfNewInstances();
       }
 
       targetClasses.add(typeRedefinition.targetClass);
@@ -167,7 +156,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       return mock;
    }
 
-   private void registerCaptureOfNewInstances(MockedType typeMetadata)
+   private void registerCaptureOfNewInstances()
    {
       CaptureOfNewInstancesForParameters capture = getCaptureOfNewInstances();
 
@@ -189,6 +178,4 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
    }
 
    public Object[] getParameterValues() { return paramValues; }
-   public List<Object> getInjectableMocks() { return injectableMocks; }
-   public List<Object> getNonStrictMocks() { return nonStrictMocks; }
 }

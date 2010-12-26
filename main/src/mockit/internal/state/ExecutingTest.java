@@ -108,8 +108,6 @@ public final class ExecutingTest
    public void setParameterTypeRedefinitions(ParameterTypeRedefinitions redefinitions)
    {
       parameterTypeRedefinitions = redefinitions;
-      injectableMocks.addAll(redefinitions.getInjectableMocks());
-      addNonStrictMocks(redefinitions.getNonStrictMocks());
    }
 
    public void clearInjectableMocks()
@@ -174,13 +172,6 @@ public final class ExecutingTest
          Class<?> mockedClass = mock.getClass();
          String mockedClassDesc = mockedClass.getName().replace('.', '/');
          nonStrictMocks.add(mockedClassDesc.intern());
-      }
-   }
-
-   public void addNonStrictMocks(List<Object> mocks)
-   {
-      for (Object mock : mocks) {
-         addNonStrictMock(mock);
       }
    }
 

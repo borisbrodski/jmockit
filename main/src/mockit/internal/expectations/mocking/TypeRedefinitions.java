@@ -27,10 +27,12 @@ package mockit.internal.expectations.mocking;
 import java.util.*;
 
 import mockit.internal.capturing.*;
+import mockit.internal.state.*;
 
 class TypeRedefinitions
 {
    protected final Object parentObject;
+   protected MockedType typeMetadata;
    protected int typesRedefined;
    protected final List<Class<?>> targetClasses;
    protected CaptureOfImplementations captureOfNewInstances;
@@ -41,19 +43,19 @@ class TypeRedefinitions
       targetClasses = new ArrayList<Class<?>>(2);
    }
 
-   public final int getTypesRedefined()
-   {
-      return typesRedefined;
-   }
+   public final int getTypesRedefined() { return typesRedefined; }
+   public final List<Class<?>> getTargetClasses() { return targetClasses; }
+   public CaptureOfImplementations getCaptureOfNewInstances() { return captureOfNewInstances; }
 
-   public final List<Class<?>> getTargetClasses()
+   protected final void registerMock(Object mock)
    {
-      return targetClasses;
-   }
+      if (typeMetadata.injectable) {
+         TestRun.getExecutingTest().addInjectableMock(mock);
+      }
 
-   public CaptureOfImplementations getCaptureOfNewInstances()
-   {
-      return captureOfNewInstances;
+      if (typeMetadata.nonStrict) {
+         TestRun.getExecutingTest().addNonStrictMock(mock);
+      }
    }
 
    public final void cleanUp()
