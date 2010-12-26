@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -73,9 +73,9 @@ public final class CompositeEffectTest
       composite.addEffect(effect1);
       composite.addEffect(effect2);
 
-      new Expectations(effect1, effect2)
+      new Expectations(Effect.class)
       {
-         Effect effectSuper;
+         private final Effect effectSuper = new Unchanging();
 
          {
             effect1.setStart(start);
@@ -93,9 +93,9 @@ public final class CompositeEffectTest
       composite.addEffect(effect1);
       composite.addEffect(effect2);
 
-      new Expectations(effect1, effect2)
+      new Expectations(Effect.class)
       {
-         Effect effectSuper;
+         private final Effect effectSuper = new Unchanging();
 
          {
             effect1.setEnd(end);
@@ -113,14 +113,14 @@ public final class CompositeEffectTest
       composite.addEffect(effect1);
       composite.addEffect(effect2);
 
-      new Expectations(effect1, effect2)
+      new Expectations(Effect.class)
       {
-         Effect effectSuper;
+         private final Effect effectSuper = new Unchanging();
 
          {
             effect1.init(animator, composite);
             effect2.init(animator, composite);
-            onInstance(composite); effectSuper.init(animator, null);
+            effectSuper.init(animator, null);
          }
       };
 
@@ -132,10 +132,10 @@ public final class CompositeEffectTest
    {
       composite.addEffect(effect1);
 
-      new Expectations(effect1)
+      new Expectations(Effect.class)
       {
          {
-            effect1.cleanup(animator);
+            onInstance(effect1).cleanup(animator);
          }
       };
 
@@ -150,13 +150,13 @@ public final class CompositeEffectTest
 
       final Graphics2D g2D = null;
 
-      new Expectations(effect1, effect2)
+      new Expectations(Effect.class)
       {
-         Effect effectSuper;
+         private final Effect effectSuper = new Unchanging();
 
          {
-            effect1.setup(g2D);
-            effect2.setup(g2D);
+            onInstance(effect1).setup(g2D);
+            onInstance(effect2).setup(g2D);
             onInstance(composite); effectSuper.setup(g2D);
          }
       };
