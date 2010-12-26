@@ -40,7 +40,7 @@ public final class DynamicPartialMockingTest
       Collaborator() { value = -1; }
       Collaborator(int value) { this.value = value; }
 
-      int getValue() { return value; }
+      final int getValue() { return value; }
 
       @SuppressWarnings({"UnusedDeclaration"})
       final boolean simpleOperation(int a, String b, Date c) { return true; }
@@ -52,14 +52,8 @@ public final class DynamicPartialMockingTest
       {
          return simpleOperation(1, "internal", null);
       }
-   }
-
-   static final class SubCollaborator extends Collaborator
-   {
-      SubCollaborator() { this(1); }
-      SubCollaborator(int value) { super(value); }
-
-      String format() { return String.valueOf(value); }
+      
+      String overridableMethod() { return "base"; }
    }
 
    interface Dependency
@@ -295,6 +289,17 @@ public final class DynamicPartialMockingTest
       assertFalse(collaborator.simpleOperation(1, "", null));
    }
 
+   static final class SubCollaborator extends Collaborator
+   {
+      SubCollaborator() { this(1); }
+      SubCollaborator(int value) { super(value); }
+
+      @Override
+      String overridableMethod() { return super.overridableMethod() + " overridden"; }
+
+      String format() { return String.valueOf(value); }
+   }
+
    @Test(expected = IllegalStateException.class)
    public void dynamicallyMockASubCollaboratorInstance()
    {
@@ -350,6 +355,23 @@ public final class DynamicPartialMockingTest
    }
 
    @Test
+   public void mockTheBaseMethodWhileExercisingTheOverride()
+   {
+      final Collaborator collaborator = new Collaborator();
+      
+      new Expectations(Collaborator.class)
+      {
+         {
+            collaborator.overridableMethod(); result = "";
+            collaborator.overridableMethod(); result = "mocked";
+         }
+      };
+
+      assertEquals("", collaborator.overridableMethod());
+      assertEquals("mocked overridden", new SubCollaborator().overridableMethod());
+   }
+
+   @Test
    public void dynamicallyMockAnAnonymousClassInstanceThroughTheImplementedInterface()
    {
       final Collaborator collaborator = new Collaborator();
@@ -391,12 +413,11 @@ public final class DynamicPartialMockingTest
    public void dynamicallyMockInstanceOfJREClass()
    {
       final List<String> list = new LinkedList<String>();
-      List<String> anotherList = new LinkedList<String>();
+      @SuppressWarnings({"UseOfObsoleteCollectionType"}) List<String> anotherList = new Vector<String>();
 
       new NonStrictExpectations(list, anotherList)
       {
          {
-            // TODO: do onInstance matching by default for dynamically mocked instances?
             list.get(1); result = "an item";
             list.size(); result = 2;
          }
