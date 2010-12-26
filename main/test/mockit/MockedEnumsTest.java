@@ -180,12 +180,11 @@ public final class MockedEnumsTest
 
       new NonStrictExpectations()
       {{
-         // TODO: at a minimum, use of "onInstance" should not be needed here
          onInstance(EnumWithValueSpecificMethods.One).getValue(); result = 123;
-         EnumWithValueSpecificMethods.Two.getValue(); result = -45;
+         onInstance(EnumWithValueSpecificMethods.Two).getValue(); result = -45;
 
          onInstance(EnumWithValueSpecificMethods.One).getDescription(); result = "1";
-         EnumWithValueSpecificMethods.Two.getDescription(); result = "2";
+         onInstance(EnumWithValueSpecificMethods.Two).getDescription(); result = "2";
       }};
 
       assertEquals(123, EnumWithValueSpecificMethods.One.getValue());
