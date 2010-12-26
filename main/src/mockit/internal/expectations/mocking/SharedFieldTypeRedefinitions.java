@@ -84,9 +84,8 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
 
    public void assignNewInstancesToMockFields(Object target)
    {
-      ExecutingTest executingTest = TestRun.getExecutingTest();
-      executingTest.clearInjectableMocks();
-      executingTest.clearNonStrictMocks();
+      TestRun.getExecutingTest().clearInjectableMocks();
+      TestRun.getExecutingTest().clearNonStrictMocks();
 
       for (Entry<MockedType, InstanceFactory> metadataAndFactory : mockInstanceFactories.entrySet()) {
          typeMetadata = metadataAndFactory.getKey();
@@ -96,14 +95,19 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
          registerMock(mock);
       }
 
+      obtainAndRegisterInstancesOfFinalFields(target);
+   }
+
+   private void obtainAndRegisterInstancesOfFinalFields(Object target)
+   {
       for (MockedType metadata : finalMockFields) {
          if (metadata.injectable) {
             Object mock = Utilities.getFieldValue(metadata.field, target);
-            executingTest.addInjectableMock(mock);
+            TestRun.getExecutingTest().addInjectableMock(mock);
          }
 
          if (metadata.nonStrict) {
-            executingTest.addNonStrictMock(metadata.getClassType());
+            TestRun.getExecutingTest().addNonStrictMock(metadata.getClassType());
          }
       }
    }

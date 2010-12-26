@@ -93,7 +93,7 @@ public final class RecordAndReplayExecution
       TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(true);
 
       try {
-         RecordAndReplayExecution previous = TestRun.getExecutingTest().setRecordAndReplay(null);
+         RecordAndReplayExecution previous = TestRun.getExecutingTest().getRecordAndReplay();
          Class<?> enclosingClassForTargetObject = targetObject.getClass().getEnclosingClass();
 
          if (enclosingClassForTargetObject == null) {

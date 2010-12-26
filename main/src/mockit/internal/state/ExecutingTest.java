@@ -48,24 +48,24 @@ public final class ExecutingTest
    RecordAndReplayExecution getRecordAndReplay(boolean createIfUndefined)
    {
       if (currentRecordAndReplay == null && createIfUndefined) {
-         setUpNewRecordAndReplay();
+         setRecordAndReplay(new RecordAndReplayExecution(null));
       }
 
       return currentRecordAndReplay;
    }
 
-   private void setUpNewRecordAndReplay()
-   {
-      RecordAndReplayExecution previous = setRecordAndReplay(null);
-      setRecordAndReplay(new RecordAndReplayExecution(previous));
-   }
-
-   public RecordAndReplayExecution setRecordAndReplay(RecordAndReplayExecution newRecordAndReplay)
+   public RecordAndReplayExecution getRecordAndReplay()
    {
       recordAndReplayForLastTestMethod = null;
       RecordAndReplayExecution previous = currentRecordAndReplay;
-      currentRecordAndReplay = newRecordAndReplay;
+      currentRecordAndReplay = null;
       return previous;
+   }
+
+   public void setRecordAndReplay(RecordAndReplayExecution newRecordAndReplay)
+   {
+      recordAndReplayForLastTestMethod = null;
+      currentRecordAndReplay = newRecordAndReplay;
    }
 
    public boolean isShouldIgnoreMockingCallbacks()
@@ -85,19 +85,19 @@ public final class ExecutingTest
 
    public RecordAndReplayExecution getRecordAndReplayForVerifications()
    {
-      if (currentRecordAndReplay != null) {
-         return currentRecordAndReplay;
+      if (currentRecordAndReplay == null) {
+         if (recordAndReplayForLastTestMethod != null) {
+            currentRecordAndReplay = recordAndReplayForLastTestMethod;
+         }
+         else {
+            // This should only happen if no expectations at all were created by the whole test, but
+            // there is one (probably empty) verification block.
+            RecordAndReplayExecution previous = getRecordAndReplay();
+            setRecordAndReplay(new RecordAndReplayExecution(previous));
+         }
       }
-      else if (recordAndReplayForLastTestMethod != null) {
-         currentRecordAndReplay = recordAndReplayForLastTestMethod;
-         return recordAndReplayForLastTestMethod;
-      }
-      else {
-         // This should only happen if no expectations at all were created by the whole test, but
-         // there is one (probably empty) verification block.
-         setUpNewRecordAndReplay();
-         return currentRecordAndReplay;
-      }
+
+      return currentRecordAndReplay;
    }
 
    public ParameterTypeRedefinitions getParameterTypeRedefinitions()
@@ -169,9 +169,7 @@ public final class ExecutingTest
       nonStrictMocks.add(mock);
 
       if (!(mock instanceof Proxy)) {
-         Class<?> mockedClass = mock.getClass();
-         String mockedClassDesc = mockedClass.getName().replace('.', '/');
-         nonStrictMocks.add(mockedClassDesc.intern());
+         addNonStrictMock(mock.getClass());
       }
    }
 
