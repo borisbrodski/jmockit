@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -41,7 +41,7 @@ import static org.junit.Assert.*;
  * class.
  * The tests use mocks to simulate the interaction between OrderRepository and Database.
  */
-public final class OrderRepositoryTest
+public final class OrderRepository_AnnotationsAPI_Test
 {
    private static PreparedStatement proxyStmt;
    private static ResultSet proxyRS;

@@ -36,13 +36,6 @@
       </dependency>
       <dependency>
          <groupId>mockit</groupId><artifactId>jmockit-hibernate3emul</artifactId><version>${jmockit.version}</version>
-         <scope>system</scope><systemPath>${basedir}/../../jmockit-hibernate3emul.jar</systemPath>
-      </dependency>
-      <dependency>
-         <!-- This is a mystery. This module does not depend on TestNG and in other modules TestNG is optional; but if
-         this omitted, test compilation fails. -->
-         <groupId>org.testng</groupId><artifactId>testng</artifactId><version>5.11</version>
-         <classifier>jdk15</classifier><scope>test</scope>
       </dependency>
    </dependencies>
 </project>

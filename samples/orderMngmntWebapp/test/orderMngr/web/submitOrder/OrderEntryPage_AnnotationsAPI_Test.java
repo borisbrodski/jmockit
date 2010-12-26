@@ -33,7 +33,7 @@ import org.junit.*;
 
 import mockit.*;
 
-public final class OrderEntryPageTest
+public final class OrderEntryPage_AnnotationsAPI_Test
 {
    private final OrderEntryPage page = new OrderEntryPage();
    private int orderNo;

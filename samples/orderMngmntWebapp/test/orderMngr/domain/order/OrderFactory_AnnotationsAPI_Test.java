@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -35,7 +35,7 @@ import mockit.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
-public final class OrderFactoryTest
+public final class OrderFactory_AnnotationsAPI_Test
 {
    @Test
    public void createOrder() throws Exception

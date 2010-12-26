@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -33,7 +33,7 @@ import mockit.*;
 import orderMngr.domain.order.*;
 import static org.junit.Assert.*;
 
-public final class OrderEntryPageTestUsingExpectations
+public final class OrderEntryPage_ExpectationsAPI_Test
 {
    @Test
    public void submitOrder() throws Exception

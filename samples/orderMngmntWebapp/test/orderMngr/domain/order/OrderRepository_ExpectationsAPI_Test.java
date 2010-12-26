@@ -36,7 +36,7 @@ import orderMngr.service.*;
  * Unit tests for the OrderRepository class, which depends on the {@link Database} class.
  * The tests use expectations to simulate the interaction between OrderRepository and Database.
  */
-public final class OrderRepositoryTestUsingExpectations
+public final class OrderRepository_ExpectationsAPI_Test
 {
    @Mocked
    final Database db = null; // only contain static methods, so no instance is needed

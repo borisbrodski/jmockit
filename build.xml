@@ -7,8 +7,6 @@
    <path id="common.classpath">
       <pathelement location="lib/hamcrest-core-1.2.jar"/>
       <pathelement location="lib/commons-logging-1.1.1.jar"/>
-      <pathelement location="lib/log4j-1.2.15.jar"/>
-      <pathelement location="lib/slf4j-api-1.5.8.jar"/>
       <pathelement location="lib/javaee.jar"/>
       <fileset file="${JUNIT_JAR}"/>
       <fileset file="${TESTNG_JAR}"/>
@@ -329,6 +327,9 @@
             <pathelement location="samples/jmock/classes"/>
             <pathelement location="samples/jmock/test-classes"/>
 
+            <pathelement location="samples/powermock/lib/dom4j-1.6.1.jar"/>
+            <pathelement location="samples/powermock/lib/log4j-1.2.15.jar"/>
+            <pathelement location="samples/powermock/lib/slf4j-api-1.5.8.jar"/>
             <pathelement location="samples/powermock/classes"/>
             <pathelement location="samples/powermock/test-classes"/>
 
@@ -365,7 +366,6 @@
             <fileset dir="samples/powermock/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/orderMngmntWebapp/test-classes">
                <include name="**/*Test.class"/>
-               <include name="**/*TestUsingExpectations.class"/>
                <exclude name="orderMngr/service/domain/DomainTest.class"/>
             </fileset>
             <fileset dir="samples/tutorial/test-classes" includes="**/*Test.class"/>

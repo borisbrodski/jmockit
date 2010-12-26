@@ -7,10 +7,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/WEB-INF/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
+    <orderEntry type="library" name="JMockit" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
@@ -25,7 +27,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.1" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
     <orderEntry type="module" module-name="Hibernate3emul" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.testng:testng:jdk15:5.11" level="project" />
   </component>
 </module>
 

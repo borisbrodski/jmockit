@@ -1,6 +1,6 @@
 /*
  * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2010 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -35,41 +35,35 @@ import mockit.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
-public final class OrderFactoryTestUsingVerifications
+public final class OrderFactory_ExpectationsAPI_Test
 {
-   @Mocked(methods = {"equals", "hashCode", "getNumber"}, inverse = true)
-   Order order;
-
-   @Mocked
-   OrderRepository orderRepository;
-
    @Test
    public void createOrder() throws Exception
    {
-      // Test data:
+      final String customerId = "123";
       List<OrderItem> expectedItems = asList(
          new OrderItem("393439493", "Core Java 5 6ed", 2, new BigDecimal("45.00")),
          new OrderItem("04940458", "JUnit Recipes", 1, new BigDecimal("49.95")));
       final List<OrderItem> actualItems = new ArrayList<OrderItem>();
 
-      new NonStrictExpectations()
-      {{
-         order.getItems(); result = actualItems;
-      }};
+      new Expectations()
+      {
+         @Mocked(methods = {"equals", "getNumber"}, inverse = true)
+         final Order order = new Order(anyInt, customerId);
 
-      // Exercises code under test:
-      final String customerId = "123";
-      final Order order = new OrderFactory().createOrder(customerId, expectedItems);
+         {
+            order.getItems(); result = actualItems;
+         }
 
-      // Verify that expected invocations (excluding the ones inside a previous Expectations block)
-      // actually occurred:
-      new Verifications()
-      {{
-         new Order(anyInt, customerId);
-         orderRepository.create(order);
-      }};
+         final OrderRepository orderRepository = new OrderRepository();
 
-      // Conventional JUnit state-based verifications:
+         {
+            orderRepository.create(order);
+         }
+      };
+
+      Order order = new OrderFactory().createOrder(customerId, expectedItems);
+
       assertNotNull(order);
       assertEquals(expectedItems, actualItems);
    }
