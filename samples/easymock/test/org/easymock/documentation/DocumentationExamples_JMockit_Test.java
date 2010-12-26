@@ -43,8 +43,6 @@ public final class DocumentationExamples_JMockit_Test
          {
             mock.voteForRemoval(title);
             returns(42, 42, 42); times = 3;
-            // TODO: change times/repeats(n) so that it stores a repeatCount in the current
-            // InvocationResult? may break existing tests, but seems worth a try
             result = new RuntimeException();
             result = -42;
          }
