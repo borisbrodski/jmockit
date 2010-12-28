@@ -96,7 +96,7 @@ Class Expectations</H2>
 </DL>
 <HR>
 <DL>
-<DT><PRE>public class <B>Expectations</B><DT>extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></DL>
+<DT><PRE>public abstract class <B>Expectations</B><DT>extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></DL>
 </PRE>
 
 <P>
@@ -287,8 +287,8 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TD><CODE><B><A HREF="../mockit/Expectations.html#maxTimes">maxTimes</A></B></CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the maximum number of times that
- invocations matching the current expectation should occur during replay.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the maximum number of times that invocations matching
+ the current expectation should occur during replay.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -296,8 +296,8 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TD><CODE><B><A HREF="../mockit/Expectations.html#minTimes">minTimes</A></B></CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the minimum number of times that
- invocations matching the current expectation should occur during replay.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the minimum number of times that invocations matching
+ the current expectation should occur during replay.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -1110,12 +1110,12 @@ maxTimes</H3>
 <PRE>
 protected static int <B>maxTimes</B></PRE>
 <DL>
-<DD>A non-negative value assigned to this field will be taken as the maximum number of times that
- invocations matching the current expectation should occur during replay.
+<DD>A non-negative value assigned to this field will be taken as the maximum number of times that invocations matching
+ the current expectation should occur during replay.
  A <em>negative</em> value implies there is no upper limit.
  <p/>
- Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long
- as <code>minTimes</code> is assigned first.
+ Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long as <code>minTimes</code>
+ is assigned first.
 <P>
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#times"><CODE>times</CODE></A>, 
@@ -1128,11 +1128,13 @@ minTimes</H3>
 <PRE>
 protected static int <B>minTimes</B></PRE>
 <DL>
-<DD>A non-negative value assigned to this field will be taken as the minimum number of times that
- invocations matching the current expectation should occur during replay.
+<DD>A non-negative value assigned to this field will be taken as the minimum number of times that invocations matching
+ the current expectation should occur during replay.
+ <em>Zero</em> or a <em>negative</em> value implies there is no lower limit.
+ The <em>maximum</em> number of times is automatically adjusted to allow any number of invocations.
  <p/>
- Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long
- as <code>minTimes</code> is assigned first.
+ Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long as <code>minTimes</code>
+ is assigned first.
 <P>
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#times"><CODE>times</CODE></A>, 

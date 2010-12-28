@@ -94,7 +94,7 @@ Class FullVerificationsInOrder</H2>
 </PRE>
 <HR>
 <DL>
-<DT><PRE>public class <B>FullVerificationsInOrder</B><DT>extends <A HREF="../mockit/Verifications.html" title="class in mockit">Verifications</A></DL>
+<DT><PRE>public abstract class <B>FullVerificationsInOrder</B><DT>extends <A HREF="../mockit/Verifications.html" title="class in mockit">Verifications</A></DL>
 </PRE>
 
 <P>
@@ -223,8 +223,8 @@ A combination of <A HREF="../mockit/FullVerifications.html" title="class in mock
 <TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#maxTimes">maxTimes</A></B></CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the maximum number of times that
- invocations matching the current expectation should occur during replay.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the maximum number of times that invocations matching
+ the current expectation should occur during replay.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -232,8 +232,8 @@ A combination of <A HREF="../mockit/FullVerifications.html" title="class in mock
 <TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#minTimes">minTimes</A></B></CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the minimum number of times that
- invocations matching the current expectation should occur during replay.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the minimum number of times that invocations matching
+ the current expectation should occur during replay.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -256,7 +256,7 @@ A combination of <A HREF="../mockit/FullVerifications.html" title="class in mock
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;</CODE></FONT></TD>
+<CODE>protected </CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder()">FullVerificationsInOrder</A></B>()</CODE>
 
 <BR>
@@ -984,12 +984,12 @@ maxTimes</H3>
 <PRE>
 protected static int <B>maxTimes</B></PRE>
 <DL>
-<DD>A non-negative value assigned to this field will be taken as the maximum number of times that
- invocations matching the current expectation should occur during replay.
+<DD>A non-negative value assigned to this field will be taken as the maximum number of times that invocations matching
+ the current expectation should occur during replay.
  A <em>negative</em> value implies there is no upper limit.
  <p/>
- Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long
- as <code>minTimes</code> is assigned first.
+ Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long as <code>minTimes</code>
+ is assigned first.
 <P>
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#times"><CODE>times</CODE></A>, 
@@ -1002,11 +1002,13 @@ minTimes</H3>
 <PRE>
 protected static int <B>minTimes</B></PRE>
 <DL>
-<DD>A non-negative value assigned to this field will be taken as the minimum number of times that
- invocations matching the current expectation should occur during replay.
+<DD>A non-negative value assigned to this field will be taken as the minimum number of times that invocations matching
+ the current expectation should occur during replay.
+ <em>Zero</em> or a <em>negative</em> value implies there is no lower limit.
+ The <em>maximum</em> number of times is automatically adjusted to allow any number of invocations.
  <p/>
- Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long
- as <code>minTimes</code> is assigned first.
+ Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long as <code>minTimes</code>
+ is assigned first.
 <P>
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/FullVerificationsInOrder.html#times"><CODE>times</CODE></A>, 
@@ -1042,7 +1044,7 @@ protected static int <B>times</B></PRE>
 <A NAME="FullVerificationsInOrder()"><!-- --></A><H3>
 FullVerificationsInOrder</H3>
 <PRE>
-public <B>FullVerificationsInOrder</B>()</PRE>
+protected <B>FullVerificationsInOrder</B>()</PRE>
 <DL>
 <DD>Begins <em>in-order</em> verification for <em>all</em> invocations on the mocked types/instances that can
  potentially be invoked during the replay phase.

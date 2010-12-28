@@ -28,7 +28,6 @@ import java.io.*;
 
 import org.junit.*;
 import static org.junit.Assert.*;
-import org.slf4j.*;
 
 public final class MockingOfInternalInstancesTest
 {
@@ -87,7 +86,7 @@ public final class MockingOfInternalInstancesTest
       assertExpectedFileIO();
    }
 
-   @Test
+   @Ignore @Test
    public void stubOutFileCreationWithMockingRestrictedToTestedClass(
       @Tested FileIO fileIO, @Mocked FileWriter fileWriter, @Mocked BufferedWriter bufferedWriter) throws Exception
    {

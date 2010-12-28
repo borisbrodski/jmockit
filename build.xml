@@ -258,8 +258,7 @@
    <target name="createzip">
       <zip
          destfile="jmockit-${version}.zip" basedir=".." includes="jmockit/**"
-         excludes="**/*.i*, **/*.zip, **/*.ser, **/Temp.java,
-                   jmockit/lib/**, jmockit/samples/lib/**, jmockit/samples/unitils/lib/**,
+         excludes="**/*.i*, **/*.zip, **/*.ser, **/Temp.java, jmockit/**/lib/**,
                    **/target/**, **/classes/**, **/test-classes/**, **/test-output/**,
                    jmockit/main/JMockitTests.html, jmockit/samples/JMockitSampleTests.html,
                    jmockit/coverage/coverage-report/**, jmockit/samples/**/coverage-report/**,

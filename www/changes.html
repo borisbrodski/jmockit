@@ -14,23 +14,61 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
-<p>Release 0.999.5 (December 26, 2010):</p>
+<p>Release 0.999.5 (December 28, 2010):</p>
 <ul>
    <li>
-      Fixed conflict with the <strong>EMMA</strong> and <strong>EclEmma</strong> code coverage tools, where a
-      <code>ClassFormatError</code> would occur when dynamic mocking was used.
+      <strong>Fixed</strong> conflict with the <strong>EMMA</strong> and <strong>EclEmma</strong> code coverage tools,
+      where a <code>ClassFormatError</code> would occur when dynamic mocking was used.
       See <a href="http://code.google.com/p/jmockit/issues/detail?id=30">issue 30</a>.
    </li>
    <li>
-      Fixed a bug which prevented classes compiled to Java 1.4 or older from being dynamically mocked (regular mocking
-      was not affected).
+      <strong>Fixed</strong> a bug which prevented classes compiled to Java 1.4 or older from being dynamically mocked
+      (regular mocking was not affected).
       See <a href="http://code.google.com/p/jmockit/issues/detail?id=117">issue 117</a>.
+   </li>
+   <li>
+      <strong>Enhancement</strong>: added support for the use of <code>@Injectable</code> with <strong>captured</strong>
+      mocked instances that are created inside tested code.
+      (Capturing of internal instances is enabled by annotating the mock field/parameter with
+      <code>@Mocked(capture = n)</code> or <code>@Capturing(maxInstances = n)</code>.)
+      This new behavior allows captured instances to "take the place" of the original injectable mock instance.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=119">issue 119</a>.
+   </li>
+   <li>
+      <strong>Fixed</strong> a couple of bugs related to the use of the <code>minTimes</code> and <code>maxTimes</code>
+      fields. See <a href="http://code.google.com/p/jmockit/issues/detail?id=121">issue 121</a>.
+   </li>
+   <li>
+      <strong>Changed</strong> the declaration of <code>mockit.Expectations</code>, <code>mockit.Verifications</code>,
+      etc. to make them <code>abstract</code> base classes, in order to avoid a content assist issue with Eclipse JDT.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=122">issue 122</a>.
+   </li>
+   <li>
+      <strong>Fixed/added</strong> support for <code>final</code> mock fields annotated as <code>@NonStrict</code> or
+      <code>@Injectable</code>, in particular the <strong>local</strong> ones (declared inside an expectation block).
+   </li>
+   <li>
+      Improved the <strong>Ant</strong> and <strong>Maven</strong> build configurations.
+      The Ant "build.properties" file was eliminated.
+      All occurrences of the "system" scope for Maven dependencies were eliminated.
+      Third-party jar files were removed from the SVN repository and from the main toolkit distribution zip file;
+      a separate zip file containing these jars ("jmockit-libs.zip") is now provided for download, for users that want
+      to build the project with Ant.
+      A full Maven build (with tests) of the top-level module ("jmockit/pom.xml") can be successfully performed, without
+      any locally available third-party libraries; the four main modules ("main", "coverage", "hibernate3emul", and
+      "incremental") will be built.
+      The sample test suites can be executed by running the "test" goal on the top-level samples module
+      ("jmockit/samples/pom.xml").
+   </li>
+   <li>
+      Fixed the reporting of tests not (re-)executed when using the incremental testing tool for JUnit 4, so that they
+      are listed as ignored (in a particular test run).
    </li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release 0.999.4 (December 5, 2010):</p>
 <ul>
@@ -85,8 +123,6 @@
       General review of API documentation, Tutorial, and other documentation pages.
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.999.3 (October 3, 2010):</p>
 <ul>
