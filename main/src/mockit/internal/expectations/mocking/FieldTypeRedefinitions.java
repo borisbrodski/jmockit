@@ -109,7 +109,7 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
          captureOfNewInstances = new CaptureOfNewInstancesForFields();
       }
 
-      getCaptureOfNewInstances().registerCaptureOfNewInstances(typeMetadata);
+      getCaptureOfNewInstances().registerCaptureOfNewInstances(typeMetadata, null);
    }
 
    /**

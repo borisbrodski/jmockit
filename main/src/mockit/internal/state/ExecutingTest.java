@@ -40,12 +40,13 @@ public final class ExecutingTest
 
    private ParameterTypeRedefinitions parameterTypeRedefinitions;
 
-   private final Map<MockedType, Object> finalLocalMockFields = new HashMap<MockedType, Object>(2);
+   private final Map<MockedType, Object> finalLocalMockFields = new HashMap<MockedType, Object>(4);
    private final List<Object> injectableMocks = new ArrayList<Object>();
+   private final Map<Object, Object> originalToCapturedInjectableMocks = new IdentityHashMap<Object, Object>(4);
    private final List<Object> nonStrictMocks = new ArrayList<Object>();
    private final List<Object> strictMocks = new ArrayList<Object>();
 
-   private final Map<String, MockedTypeCascade> cascadingTypes = new HashMap<String, MockedTypeCascade>();
+   private final Map<String, MockedTypeCascade> cascadingTypes = new HashMap<String, MockedTypeCascade>(4);
 
    RecordAndReplayExecution getRecordAndReplay(boolean createIfUndefined)
    {
@@ -114,6 +115,7 @@ public final class ExecutingTest
    public void clearInjectableMocks()
    {
       injectableMocks.clear();
+      originalToCapturedInjectableMocks.clear();
    }
 
    public void addInjectableMock(Object mock)
@@ -132,6 +134,19 @@ public final class ExecutingTest
       }
 
       return false;
+   }
+
+   public void addCapturedInstanceForInjectableMock(Object originalInstance, Object capturedInstance)
+   {
+      injectableMocks.add(capturedInstance);
+      originalToCapturedInjectableMocks.put(capturedInstance, originalInstance);
+   }
+
+   public boolean isInjectableInstanceEquivalentToCapturedInstance(Object invokedInstance, Object capturedInstance)
+   {
+      return
+         invokedInstance == originalToCapturedInjectableMocks.get(capturedInstance) ||
+         capturedInstance == originalToCapturedInjectableMocks.get(invokedInstance);
    }
 
    public void discardCascadedMockWhenInjectable(Object oldMock)
@@ -273,17 +288,6 @@ public final class ExecutingTest
       }
 
       return false;
-   }
-
-   // TODO: this should probably be eliminated, since it can't work for pre-created instances
-   public void substituteMock(Object previousInstance, Object newInstance)
-   {
-      for (Object strictMock : strictMocks) {
-         if (strictMock == previousInstance) {
-            strictMocks.add(newInstance);
-            return;
-         }
-      }
    }
 
    public void clearNonStrictMocks()

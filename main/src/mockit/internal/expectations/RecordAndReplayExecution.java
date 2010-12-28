@@ -222,11 +222,12 @@ public final class RecordAndReplayExecution
       throws Throwable
    {
       ExecutingTest executingTest = TestRun.getExecutingTest();
-      executingTest.registerAdditionalMocksFromFinalLocalMockFieldsIfAny();
 
       if (executingTest.isShouldIgnoreMockingCallbacks()) {
-         return null;
+         return executionMode == 0 ? DefaultValues.computeForType(mockDesc) : Void.class;
       }
+
+      executingTest.registerAdditionalMocksFromFinalLocalMockFieldsIfAny();
 
       if (executionMode == 2 && (mock == null || !executingTest.isInjectableMock(mock))) {
          return Void.class;
@@ -238,11 +239,12 @@ public final class RecordAndReplayExecution
          RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(true);
 
          if (mockDesc.startsWith("<init>") && handleCallToConstructor(instance, mock, classDesc)) {
-            return null;
+            return executionMode == 0 || executingTest.isInjectableMock(mock) ? null : Void.class;
          }
 
          if (instance == null) {
-            // This occurs when the mock class constructor is called to instantiate the mock object.
+            // This can occur when a constructor of the mocked class is called in a mock field assignment expression,
+            // or during the restoration of mocked classes that is done between test classes.
             return DefaultValues.computeForReturnType(mockDesc);
          }
 

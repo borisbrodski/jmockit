@@ -29,6 +29,7 @@ import java.util.*;
 import mockit.external.asm.Type;
 
 import mockit.internal.expectations.*;
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class ExpectedInvocation
@@ -147,16 +148,18 @@ public final class ExpectedInvocation
       return Utilities.getClassForType(rt2).isAssignableFrom(Utilities.getClassForType(rt1));
    }
 
-   public boolean isEquivalentInstance(Object mock, Map<Object, Object> instanceMap)
+   public boolean isEquivalentInstance(Object mockedInstance, Map<Object, Object> instanceMap)
    {
-      return mock == instance || mock == instanceMap.get(instance);
+      return
+         mockedInstance == instance || mockedInstance == instanceMap.get(instance) ||
+         TestRun.getExecutingTest().isInjectableInstanceEquivalentToCapturedInstance(instance, mockedInstance);
    }
 
-   // Creation of AssertionError instances for invocation mismatch reporting //////////////////////
+   // Creation of AssertionError instances for invocation mismatch reporting //////////////////////////////////////////
 
-   public ExpectedInvocation(Object mock, String classDesc, String methodNameAndDesc, Object[] args)
+   public ExpectedInvocation(Object mockedInstance, String classDesc, String methodNameAndDesc, Object[] args)
    {
-      instance = mock;
+      instance = mockedInstance;
       matchInstance = false;
       arguments = new InvocationArguments(0, classDesc, methodNameAndDesc, args);
       invocationCause = null;
@@ -223,7 +226,7 @@ public final class ExpectedInvocation
       return desc;
    }
 
-   // Default return value ////////////////////////////////////////////////////////////////////////
+   // Default return value ////////////////////////////////////////////////////////////////////////////////////////////
 
    public Object getDefaultValueForReturnType(TestOnlyPhase phase)
    {

@@ -28,7 +28,6 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.internal.util.*;
-import mockit.internal.state.*;
 
 final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
 {
@@ -40,9 +39,7 @@ final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
 
       if (captureFound != null) {
          Field mockField = captureFound.typeMetadata.field;
-         Object previousInstance = Utilities.getFieldValue(mockField, fieldOwner);
          Utilities.setFieldValue(mockField, fieldOwner, mock);
-         TestRun.getExecutingTest().substituteMock(previousInstance, mock);
       }
 
       return constructorModifiedForCaptureOnly;
@@ -59,7 +56,7 @@ final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
    {
       for (Capture fieldWithCapture : fieldsWithCapture) {
          if (fieldWithCapture.typeMetadata.field == mockField) {
-            fieldWithCapture.instancesCaptured = 0;
+            fieldWithCapture.reset();
          }
       }
    }

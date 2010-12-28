@@ -147,7 +147,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       registerMock(mock);
 
       if (typeMetadata.getMaxInstancesToCapture() > 0) {
-         registerCaptureOfNewInstances();
+         registerCaptureOfNewInstances(mock);
       }
 
       targetClasses.add(typeRedefinition.targetClass);
@@ -156,7 +156,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       return mock;
    }
 
-   private void registerCaptureOfNewInstances()
+   private void registerCaptureOfNewInstances(Object originalInstance)
    {
       CaptureOfNewInstancesForParameters capture = getCaptureOfNewInstances();
 
@@ -165,7 +165,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
          captureOfNewInstances = capture;
       }
 
-      capture.registerCaptureOfNewInstances(typeMetadata);
+      capture.registerCaptureOfNewInstances(typeMetadata, originalInstance);
 
       Class<?> paramClass = typeMetadata.getClassType();
       capture.makeSureAllSubtypesAreModified(paramClass, typeMetadata.capturing);
