@@ -168,42 +168,39 @@ public @interface Mocked
    boolean[] stubOutClassInitialization() default {};
 
    /**
-    * Specifies the number of new instances to <em>capture</em> (by assigning them to the field)
-    * while the test is running, between those instances which are assignable to the mock field and
-    * are created during the test (note this can happen at any moment before the first expected
-    * invocation is recorded, or during the recording and replay phases).
+    * Specifies the number of new instances to <em>capture</em> during test execution, between those instances which are
+    * assignable to the mocked type and are created during the test.
+    * If applied to a non-{@code final} mock field, each captured instance will be assigned to the field, up to the
+    * number specified in the attribute. Otherwise (ie, when applied to a final field or a mock parameter), instances
+    * are still captured but not made directly available to the test.
+    * Note that capture can happen at any moment before the first expected invocation is recorded, or during the
+    * recording and replay phases.
     * <p/>
-    * If {@code capture} is zero (the default), a mock field initially receives a single
-    * instance and then remains with this same instance for the duration of the test; in this case,
-    * no instances created by the test are later captured.
+    * When applied to a mocked <em>class</em>, capture is not restricted to instances of that class. Instances of any
+    * <em>subclass</em> will also be captured. In effect, subclasses will be mocked as well, as long as they have
+    * already been loaded by the JVM or get loaded during test execution.
+    * The same applies to a mocked <em>interface</em>: instances of any implementing class will get captured.
     * <p/>
-    * If the value for this attribute is positive, then whenever an assignable instance is created
-    * during test execution and the specified number of new instances has not been previously
-    * captured, the (non-{@code final}) mock field will be assigned that new instance.
-    * <p/>
-    * It is valid to declare two or more mock fields of the same type with a positive {@code capture}
-    * number for each of them, say {@code n1}, {@code n2}, etc.
-    * In this case, the first {@code n1} new instances will be assigned to the first field, the
+    * It is valid to declare two or more mock fields/parameters of the same type with a positive {@code capture} number
+    * for each of them, say {@code n1}, {@code n2}, etc.
+    * With non-final mock fields, this causes the first {@code n1} new instances to be assigned to the first field, the
     * following {@code n2} new instances to the second, and so on.
-    * <p/>
-    * Notice that this attribute does not apply to {@code final} mock fields, which cannot be reassigned.
     *
     * @see Capturing
     */
    int capture() default 0;
 
    /**
-    * Specify the fully qualified name of the concrete class to be considered as the mocked type
-    * when it cannot be used as the declared type, and the instance automatically created by JMockit
-    * for a super-type wouldn't be appropriate for the test.
+    * Specify the fully qualified name of the concrete class to be considered as the mocked type when it cannot be used
+    * as the declared type, and the instance automatically created by JMockit for a super-type wouldn't be appropriate
+    * for the test.
     * <p/>
     * This attribute can be used with fields that are {@code final} or not.
-    * In the second case it can be used in conjunction with the {@link #capture} attribute, so that
-    * only the specified class is mocked, instead of all classes that implement/extend a given
-    * super-type.
+    * In the second case it can be used in conjunction with the {@link #capture} attribute, so that only the specified
+    * class is mocked, instead of all classes that implement/extend a given super-type.
     * <p/>
-    * Note that this attribute can also be used when the desired concrete class is not accessible to
-    * the test (for example, if it's a private inner class inside the code under test).
+    * Note that this attribute can also be used when the desired concrete class is not accessible to the test (for
+    * example, if it's a private inner class inside the code under test).
     *
     * @see Expectations#newInstance(String, Class[], Object...)
     */
