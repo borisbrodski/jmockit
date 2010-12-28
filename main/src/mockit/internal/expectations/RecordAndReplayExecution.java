@@ -87,11 +87,6 @@ public final class RecordAndReplayExecution
 
       try {
          RecordAndReplayExecution previous = TestRun.getExecutingTest().getRecordAndReplay();
-         Class<?> enclosingClassForTargetObject = targetObject.getClass().getEnclosingClass();
-
-         if (enclosingClassForTargetObject == null) {
-            throw new RuntimeException("Invalid top level Expectations subclass");
-         }
 
          if (previous == null) {
             executionState = new PhasedExecutionState();
