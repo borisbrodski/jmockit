@@ -96,7 +96,7 @@ public final class MockingBridge extends Properties implements InvocationHandler
          Class<?> mockedClass = mocked.getClass();
 
          if (
-            mockedClass == File.class || mockedClass == URL.class ||
+            mockedClass == File.class || mockedClass == URL.class || mockedClass == FileInputStream.class ||
             Vector.class.isInstance(mocked) || Hashtable.class.isInstance(mocked)
          ) {
             StackTraceElement[] st = new Throwable().getStackTrace();
