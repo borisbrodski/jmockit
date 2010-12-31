@@ -8,10 +8,10 @@
    <name>JMockit Incremental Testing</name>
 
    <build>
-      <finalName>${artifactId}</finalName>
+      <finalName>${project.artifactId}</finalName>
       <plugins>
          <plugin>
-            <artifactId>maven-deploy-plugin</artifactId>
+            <artifactId>maven-deploy-plugin</artifactId><version>2.4</version>
             <configuration><skip>true</skip></configuration>
          </plugin>
       </plugins>
@@ -19,7 +19,7 @@
 
    <dependencies>
       <dependency>
-         <groupId>mockit</groupId><artifactId>jmockit-coverage</artifactId><version>${version}</version>
+         <groupId>mockit</groupId><artifactId>jmockit-coverage</artifactId><version>${project.version}</version>
       </dependency>
       <dependency>
          <groupId>junit</groupId><artifactId>junit</artifactId><version>4.8.1</version>
