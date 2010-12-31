@@ -269,9 +269,8 @@ abstract class BaseTypeRedefinition
 
    final void storeRedefinedClassesInCache(Integer mockedClassId)
    {
-      MockedClass mockedClass =
-         new MockedClass(
-            instanceFactory, mockedClassDefinitions.toArray(new ClassDefinition[mockedClassDefinitions.size()]));
+      ClassDefinition[] classDefs = mockedClassDefinitions.toArray(new ClassDefinition[mockedClassDefinitions.size()]);
+      MockedClass mockedClass = new MockedClass(instanceFactory, classDefs);
 
       mockedClasses.put(mockedClassId, mockedClass);
    }
