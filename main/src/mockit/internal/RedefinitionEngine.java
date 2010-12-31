@@ -222,7 +222,7 @@ public final class RedefinitionEngine
          String mockSignatures = new MethodFormatter().friendlyMethodSignatures(constructorName, remainingMocks);
          
          throw new IllegalArgumentException(
-            "Matching real methods not found for the following mocks:\n" + mockSignatures);
+            "Matching real methods not found for the following mocks of " + mockClassName + ":\n" + mockSignatures);
       }
 
       return rcWriter.toByteArray();
