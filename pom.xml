@@ -5,6 +5,7 @@
 
    <groupId>mockit</groupId><artifactId>mockit</artifactId><version>0.999.5</version>
    <packaging>pom</packaging>
+   <prerequisites><maven>2.2.1</maven></prerequisites>
 
    <modules>
       <module>main</module>
@@ -14,7 +15,7 @@
    </modules>
 
    <name>The JMockit Testing Toolkit</name>
-   <url>http://code.google.com/p/jmockit/</url>
+   <url>http://code.google.com/p/jmockit</url>
    <description>
       JMockit is a Java toolkit for developer (unit/integration) testing.
       It contains mocking APIs and other tools, supporting both JUnit and TestNG.
@@ -29,8 +30,9 @@
       </license>
    </licenses>
    <developers>
-      <developer><name>Rogério Liesenfeld</name><email>rliesenfeld@gmail.com</email></developer>
+      <developer><name>Rogério Liesenfeld</name><email>rliesenfeld@gmail.com</email><timezone>-3</timezone></developer>
    </developers>
+   <inceptionYear>2006</inceptionYear>
 
    <issueManagement><url>http://code.google.com/p/jmockit/issues/list</url></issueManagement>
    <mailingLists>
