@@ -28,14 +28,9 @@ import mockit.*;
 import org.hibernate.*;
 import org.hibernate.cfg.*;
 
-@MockClass(realClass = Configuration.class)
+@MockClass(realClass = Configuration.class, stubs = "<clinit>")
 public final class ConfigurationEmul extends Configuration
 {
-   @Mock
-   public static void $clinit()
-   {
-   }
-
    @Mock @Override
    public void reset()
    {
