@@ -223,8 +223,6 @@ public class BaseClassModifier extends ClassWriter
    protected final void generateCodeToObtainInstanceOfMockingBridge()
    {
       mw.visitMethodInsn(INVOKESTATIC, "java/lang/System", "getProperties", "()Ljava/util/Properties;");
-      mw.visitLdcInsn("mockit.internal.MockingBridge");
-      mw.visitMethodInsn(INVOKEVIRTUAL, "java/util/Properties", "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
    private void generateCodeToFillArrayElement(int arrayIndex, Object value)

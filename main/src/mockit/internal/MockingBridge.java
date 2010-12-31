@@ -33,7 +33,7 @@ import mockit.internal.expectations.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
-public final class MockingBridge implements InvocationHandler
+public final class MockingBridge extends Properties implements InvocationHandler
 {
    public static final int RECORD_OR_REPLAY = 1;
    public static final int CALL_CONSTRUCTOR_MOCK = 2;
