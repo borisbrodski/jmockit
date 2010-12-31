@@ -62,25 +62,5 @@
             <configuration><disableXmlReport>true</disableXmlReport></configuration>
          </plugin>
       </plugins>
-      <extensions>
-         <extension>
-            <groupId>org.jvnet.wagon-svn</groupId><artifactId>wagon-svn</artifactId>
-            <version>1.9</version>
-         </extension>
-      </extensions>
    </build>
-
-   <distributionManagement>
-      <repository>
-         <id>java.net-m2-repository</id>
-         <url>java-net:/maven2-repository/trunk/repository/</url>
-      </repository>
-   </distributionManagement>
-
-   <repositories>
-      <repository>
-         <id>maven2-jboss-repository</id>
-         <url>http://repository.jboss.com/maven2/</url>
-      </repository>
-   </repositories>
 </project>

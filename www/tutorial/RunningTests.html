@@ -42,9 +42,8 @@
          <a href="http://testng.org/doc/documentation-main.html#testng-listeners">test listener</a>.
          This can be done by passing <code>-listener mockit.integration.testng.Initializer</code> as a test runner
          argument in the JVM command line.
-         When using Maven, the listener can be specified by configuring the
-         <code>maven-surefire-plugin</code> with a property of name "listener" and a value
-         containing "mockit.integration.testng.Initializer" (see
+         When using Maven, the listener can be specified by configuring the <code>maven-surefire-plugin</code> with a
+         property of name "listener" and a value containing "mockit.integration.testng.Initializer" (see
          <a href="http://maven.apache.org/plugins/maven-surefire-plugin/examples/testng.html">this page</a> for more
          details).
          Another way is to specify the listener in the <code>testng.xml</code> configuration file:
@@ -83,25 +82,23 @@
 &lt;/junit>
 </code></pre>
 <p>
-   For a complete example, see the <strong><code>"sampleTests"</code></strong> target in the
-   <code>build.xml</code> file found inside the full distribution.
+   For a complete example, see the <strong><code>"sampleTests"</code></strong> target in the <code>build.xml</code> file
+   found inside the full distribution.
 </p>
 
 <h3 id="maven">Using JMockit in a Maven project</h3>
 <p>
-   The JMockit artifacts, including a binary jar and a sources jar for each release, are located in
-   the <a href="http://download.java.net/maven/2/">Java.net Maven 2 Repository</a>.
-   Therefore, you might need to add the following to your Maven configuration:
+   The JMockit artifacts, including a binary jar and a sources jar for releases 0.999.5 and newer, are located in the
+   JMockit <a href="http://jmockit.googlecode.com/svn/maven-repo/">SVN repository</a>.
+   Therefore, you will need to add the following repository to your Maven configuration:
 </p>
 <pre class="no-highlight"><code>&lt;repository>
-   &lt;id>maven2-repository.dev.java.net&lt;/id>
-   &lt;name>Java.net Repository for Maven&lt;/name>
-   &lt;url>http://download.java.net/maven/2/&lt;/url>
+   &lt;id>jmockit-svn&lt;/id>
+   &lt;url>http://jmockit.googlecode.com/svn/maven-repo&lt;/url>
 &lt;/repository>
 </code></pre>
 <p>
-   For any project containing JMockit tests, add the following dependency to the
-   <code>pom.xml</code> file:
+   For any project containing JMockit tests, add the following dependency to the <code>pom.xml</code> file:
 </p>
 <pre><code>&lt;dependency>
    &lt;groupId>mockit&lt;/groupId>
@@ -114,9 +111,8 @@
    This dependency should come <em>before</em> the <code>junit</code> dependency, if any.
 </p>
 <p>
-   To run tests with JDK 1.5, you will need to make sure the JVM is started with the
-   <code>-javaagent</code> initialization parameter. This can be done in the Maven Surefire plug-in
-   as follows:
+   To run tests with JDK 1.5, you will need to make sure the JVM is started with the <code>-javaagent</code>
+   initialization parameter. This can be done in the Maven Surefire plug-in as follows:
 </p>
 <pre><code>&lt;plugin>
    &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
@@ -126,17 +122,15 @@
 &lt;/plugin>
 </code></pre>
 <p>
-   Note that the above JVM parameter is not required when running tests on a JDK 1.6+ environment
-   which contains a supported implementation of the Attach API (ie, a HotSpot or JRockit JVM on
-   Windows or Linux).
-   Even if you have to deploy production code in a JDK 1.5 environment, consider using JDK 1.6 in
-   your local development environment; with the proper build/IDE configuration, a JDK 1.6 Java
-   compiler (either "javac" or the Eclipse compiler) can safely be used to compile Java 1.5 code
-   while generating Java 1.5-compliant class files.
+   Note that the above JVM parameter is not required when running tests on a JDK 1.6+ environment which contains a
+   supported implementation of the Attach API (ie, a HotSpot or JRockit JVM on Windows or Linux).
+   Even if you have to deploy production code in a JDK 1.5 environment, consider using JDK 1.6 in your local development
+   environment; with the proper build/IDE configuration, a JDK 1.6 Java compiler (either "javac" or the Eclipse
+   compiler) can safely be used to compile Java 1.5 code while generating Java 1.5-compliant class files.
 </p>
 <p>
-   For information on using JMockit Coverage with Maven, see the
-   <a href="CodeCoverage.html#maven">relevant section</a> in the JMockit Tutorial.
+   For information on using JMockit Coverage with Maven, see the <a href="CodeCoverage.html#maven">relevant section</a>
+   in the JMockit Tutorial.
 </p>
 
 <div class="navigation">
