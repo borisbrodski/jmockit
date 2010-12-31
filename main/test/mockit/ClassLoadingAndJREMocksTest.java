@@ -76,15 +76,14 @@ public final class ClassLoadingAndJREMocksTest
    @Test
    public void mockUpFile()
    {
-      // TODO: this test fails when run alone; mock classes should also support conditional mocking
-      // for JRE classes
+      Foo foo = new Foo();
+
       new MockUp<File>()
       {
          @Mock
          boolean exists() { return true; }
       };
 
-      Foo foo = new Foo();
       assertTrue(foo.checkFile("filePath"));
    }
 

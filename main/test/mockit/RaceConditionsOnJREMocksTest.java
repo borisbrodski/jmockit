@@ -89,11 +89,8 @@ public final class RaceConditionsOnJREMocksTest
    @Test
    public void throwsFileNotFoundExceptionWhenOpeningInputFile() throws Exception
    {
-      new Expectations(stuffHandler)
+      new Expectations(stuffHandler, FileInputStream.class)
       {
-         // TODO: when everything is mocked, an obscure exception occurs
-         @Mocked("(String)") FileInputStream mockFIS;
-
          {
             invoke(stuffHandler, "getStuffType"); result = "*mocked*";
             new FileInputStream(anyString); result = new FileNotFoundException();
@@ -108,10 +105,10 @@ public final class RaceConditionsOnJREMocksTest
    @Test
    public void throwsIOExceptionWhileReadingProperties()
    {
-      new Expectations(stuffHandler)
+      final Properties props = new Properties();
+
+      new Expectations(stuffHandler, props)
       {
-         // TODO: mocking everything in Properties also leads to failure
-         @Mocked("load") Properties props;
          @Mocked("(String)") FileInputStream mockFIS;
 
          {
