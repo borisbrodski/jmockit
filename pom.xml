@@ -47,7 +47,10 @@
       <connection>scm:http://jmockit.googlecode.com/svn/trunk/ jmockit-read-only</connection>
    </scm>
 
-   <properties><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
+   <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <junit.version>4.8.1</junit.version>
+   </properties>
 
    <build>
       <sourceDirectory>src</sourceDirectory>

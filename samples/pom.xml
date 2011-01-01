@@ -22,22 +22,7 @@
    </modules>
 
    <name>The JMockit Testing Toolkit Samples</name>
-   <url>http://code.google.com/p/jmockit/</url>
    <description>Sample test suites for the toolkit</description>
-   <licenses>
-      <license>
-         <name>MIT LICENSE</name>
-         <url>http://www.opensource.org/licenses/mit-license.php</url>
-         <distribution>repo</distribution>
-      </license>
-   </licenses>
-   <developers>
-      <developer><name>Rogério Liesenfeld</name><email>rliesenfeld@gmail.com</email></developer>
-   </developers>
-   <scm>
-      <url>http://code.google.com/p/jmockit/source/browse/trunk</url>
-      <connection>scm:http://jmockit.googlecode.com/svn/trunk/ jmockit-read-only</connection>
-   </scm>
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -53,7 +38,7 @@
       <plugins>
          <plugin>
             <artifactId>maven-compiler-plugin</artifactId><version>2.0.2</version>
-            <configuration><source>1.5</source><target>1.5</target></configuration>
+            <configuration><source>1.6</source><target>1.6</target></configuration>
          </plugin>
          <plugin>
             <artifactId>maven-surefire-plugin</artifactId><version>2.5</version>
