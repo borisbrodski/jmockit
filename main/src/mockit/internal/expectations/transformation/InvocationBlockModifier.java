@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -32,14 +32,16 @@ final class InvocationBlockModifier extends MethodAdapter
 {
    private static final String CLASS_DESC = ActiveInvocations.class.getName().replace('.', '/');
 
-   private final int[] matcherStacks = new int[20];
+   private final int[] matcherStacks;
    private final MethodWriter mw;
    private final String fieldOwner;
    private int matchers;
+   private int stackSizeBeforeLabel;
 
    InvocationBlockModifier(MethodWriter mw, String fieldOwner)
    {
       super(mw);
+      matcherStacks = new int[20];
       this.mw = mw;
       this.fieldOwner = fieldOwner;
    }
@@ -88,7 +90,9 @@ final class InvocationBlockModifier extends MethodAdapter
 
       if (matchers > 0) {
          Type[] argTypes = Type.getArgumentTypes(desc);
-         int stackAfter = mw.stackSize - sumOfSizes(argTypes);
+         int stackSize = mw.stackSize == 0 ? stackSizeBeforeLabel : mw.stackSize;
+         stackSizeBeforeLabel = 0;
+         int stackAfter = stackSize - sumOfSizes(argTypes);
 
          if (stackAfter < matcherStacks[0]) {
             generateCallsToMoveArgMatchers(argTypes, stackAfter);
@@ -97,6 +101,13 @@ final class InvocationBlockModifier extends MethodAdapter
       }
 
       mw.visitMethodInsn(opcode, owner, name, desc);
+   }
+
+   @Override // the Eclipse compiler inserts a Label in the middle of a multi-line statement, clearing mw.stackSize
+   public void visitLabel(Label label)
+   {
+      stackSizeBeforeLabel = mw.stackSize;
+      mw.visitLabel(label);
    }
 
    private int sumOfSizes(Type[] argTypes)

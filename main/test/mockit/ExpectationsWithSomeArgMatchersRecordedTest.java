@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -31,7 +31,7 @@ import org.junit.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
-public final class ExpectationsWithSomeArgumentMatchersRecordedTest
+public final class ExpectationsWithSomeArgMatchersRecordedTest
 {
    @SuppressWarnings({"UnusedDeclaration"})
    static class Collaborator
@@ -44,16 +44,14 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
       void setValues(long value1, byte value2, double value3, short value4) {}
       boolean booleanValues(long value1, byte value2, double value3, short value4) { return true; }
       static void staticSetValues(long value1, byte value2, double value3, short value4) {}
-      static long staticLongValues(long value1, byte value2, double value3, short value4)
-      {
-         return -2;
-      }
+      static long staticLongValues(long value1, byte value2, double value3, short value4) { return -2; }
 
       List<?> complexOperation(Object input1, Object... otherInputs)
       {
          return input1 == null ? Collections.emptyList() : asList(otherInputs);
       }
 
+      final void simpleOperation(int a, String b) {}
       final void simpleOperation(int a, String b, Date c) {}
       long anotherOperation(byte b, long l) { return -1; }
 
@@ -244,5 +242,19 @@ public final class ExpectationsWithSomeArgumentMatchersRecordedTest
       };
 
       assertEquals(2, mock.getAlerts("123", 1, true).size());
+   }
+
+   @Test // failed only when compiled with the Eclipse compiler
+   public void expectationWithMatchersSpanningMultipleLines()
+   {
+      new Expectations()
+      {
+         {
+            mock.simpleOperation(1,
+               (String) withNull());
+         }
+      };
+
+      mock.simpleOperation(1, null);
    }
 }
