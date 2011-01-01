@@ -14,9 +14,26 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
+<h3>Next release</h3>
+
+<p>Release 0.999.6 (January ??, 2011):</p>
+<ul>
+   <li>
+      <strong>Fixed</strong> an issue in test classes compiled with Eclipse, when recording or verifying an invocation
+      with two or more parameters, but with argument matchers used only for some of them <em>and</em> spanning two or
+      more source lines.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=114">issue 114</a>.
+   </li>
+</ul>
+
 <h3>Current release</h3>
 
 <p>Release 0.999.5 (December 28, 2010):</p>
+<p>
+   From this version on, the <strong>Java.net</strong> Maven 2 repository is no longer used.
+   Project artifacts are now deployed <a href="http://jmockit.googlecode.com/svn/maven-repo/">here</a>.
+   Therefore, Maven users should configure the new repository in their <code>pom.xml</code> files.
+</p>
 <ul>
    <li>
       <strong>Fixed</strong> conflict with the <strong>EMMA</strong> and <strong>EclEmma</strong> code coverage tools,
