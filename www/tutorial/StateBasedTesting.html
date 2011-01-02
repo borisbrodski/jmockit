@@ -57,32 +57,31 @@
    The focus when doing this kind of testing is not on the <em>interactions</em> between objects, but on their
    <em>state</em> after the code under test is exercised, and on the data items exchanged between objects.
 </p>
-<p>
-   State verification <em>after</em> the unit under test is exercised is typically done through
-   regular JUnit/TestNG assertions written at the end of each test method.
-   The Annotations API allows a test to do state verification, with those same JUnit/TestNG
-   assertions, <em>during the execution of the tested code</em>.
-   As the tested unit passes data to dependencies through method and constructor invocations, the
-   corresponding mock implementations specified for those dependencies will get called.
-   These implementations (usually defined inside test classes) will then execute the appropriate
-   assertions on the received invocation arguments.
-   In addition, the API allows the test to verify if any given method or constructor of a mocked
-   dependency is called at all, or more generally to verify the actual number of invocations against
-   an specified exact, minimum, or maximum number of invocations.
-</p>
-<div style="text-align: center;" title="Click for API documentation">
+<div style="text-align: center;">
    <map name="figure1">
-      <area shape="rect" coords="328,15,442,42" href="../javadoc/mockit/MockUp.html">
-      <area shape="rect" coords="16,47,100,74" href="../javadoc/mockit/Mockit.html">
-      <area shape="rect" coords="113,47,191,74" href="../javadoc/mockit/Mock.html">
-      <area shape="rect" coords="203,47,313,74" href="../javadoc/mockit/MockClass.html">
-      <area shape="rect" coords="324,47,441,74" href="../javadoc/mockit/Instantiation.html">
+      <area shape="rect" coords="1,1,86,34" href="../javadoc/mockit/Mockit.html">
+      <area shape="rect" coords="93,1,223,34" href="../javadoc/mockit/MockUp.html">
+      <area shape="rect" coords="232,1,307,34" href="../javadoc/mockit/Mock.html">
+      <area shape="rect" coords="315,1,430,34" href="../javadoc/mockit/MockClass.html">
+      <area shape="rect" coords="439,1,574,34" href="../javadoc/mockit/Instantiation.html">
    </map>
    <img src="StateBasedAPI.png" usemap="#figure1">
 </div>
 <p>
-   For the remaining of this chapter, lets say we want to write unit tests for an application that
-   uses the
+   Regular state verification, performed <em>after</em> exercising the unit under test, is typically done through
+   JUnit/TestNG assertions written at the end of each test method.
+   The Annotations API extends the ability of a test to do state verification, by allowing those same JUnit/TestNG
+   assertions to be executed whenever a dependency is invoked from the tested code.
+   As the tested unit passes data to dependencies through method and constructor invocations, the corresponding mock
+   implementations specified for those dependencies get called.
+   These implementations (usually defined inside test classes) will then execute the appropriate assertions on the
+   received invocation arguments.
+   In addition, the API allows the test to verify if any given method or constructor of a mocked dependency is called at
+   all, or more generally to verify the actual number of invocations against an specified exact, minimum, or maximum
+   number of invocations.
+</p>
+<p>
+   For the remaining of this chapter, lets say we want to write unit tests for an application that uses the
    <a href="http://download.oracle.com/javase/6/docs/api/javax/security/auth/login/LoginContext.html">
       javax.security.auth.login.LoginContext</a> class (from the standard JAAS API) in order to authenticate users.
    In this case, we don't want our tests to actually execute any of the real JAAS code, since it may

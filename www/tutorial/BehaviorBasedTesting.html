@@ -80,26 +80,31 @@
    test and the other units it depends upon. Such units of behavior are the classes, methods, and
    constructors defined in production code.
 </p>
+<div style="text-align: center;">
+   <map name="figure1">
+      <area shape="rect" coords="38,84,172,117" href="../javadoc/mockit/Expectations.html">
+      <area shape="rect" coords="2,166,208,199" href="../javadoc/mockit/NonStrictExpectations.html">
+      <area shape="rect" coords="453,84,585,117" href="../javadoc/mockit/Verifications.html">
+      <area shape="rect" coords="227,166,421,199" href="../javadoc/mockit/VerificationsInOrder.html">
+      <area shape="rect" coords="440,166,598,199" href="../javadoc/mockit/FullVerifications.html">
+      <area shape="rect" coords="617,166,838,199" href="../javadoc/mockit/FullVerificationsInOrder.html">
+      <area shape="rect" coords="736,2,838,35" href="../javadoc/mockit/Delegate.html">
+      <area shape="rect" coords="719,51,838,84" href="../javadoc/mockit/Invocation.html">
+      <area shape="rect" coords="2,215,90,248" href="../javadoc/mockit/Tested.html">
+      <area shape="rect" coords="108,215,223,248" href="../javadoc/mockit/Injectable.html">
+      <area shape="rect" coords="298,215,392,248" href="../javadoc/mockit/Mocked.html">
+      <area shape="rect" coords="411,215,518,248" href="../javadoc/mockit/NonStrict.html">
+      <area shape="rect" coords="593,215,707,248" href="../javadoc/mockit/Cascading.html">
+      <area shape="rect" coords="726,215,838,248" href="../javadoc/mockit/Capturing.html">
+   </map>
+   <img src="BehaviorBasedAPI.png" usemap="#figure1">
+</div>
 <p>
    An interaction between two units always takes the form of a method or constructor <em>invocation</em>.
    The set of invocations from a unit under test to its dependencies, together with the argument and
    return values passed between them, define the behavior of interest for the tests of that particular unit.
    In addition, a given test may need to verify the relative order of execution between multiple invocations.
 </p>
-<div style="text-align: center;" title="Click for API documentation">
-   <map name="figure1">
-      <area shape="rect" coords="45,96,167,124" href="../javadoc/mockit/Expectations.html">
-      <area shape="rect" coords="182,96,275,124" href="../javadoc/mockit/Mocked.html">
-      <area shape="rect" coords="288,96,389,124" href="../javadoc/mockit/NonStrict.html">
-      <area shape="rect" coords="19,171,194,199" href="../javadoc/mockit/NonStrictExpectations.html">
-      <area shape="rect" coords="403,96,523,124" href="../javadoc/mockit/Verifications.html">
-      <area shape="rect" coords="212,171,375,199" href="../javadoc/mockit/VerificationsInOrder.html">
-      <area shape="rect" coords="393,171,532,199" href="../javadoc/mockit/FullVerifications.html">
-      <area shape="rect" coords="550,171,732,199" href="../javadoc/mockit/FullVerificationsInOrder.html">
-      <area shape="rect" coords="609,96,708,124" href="../javadoc/mockit/Delegate.html">
-   </map>
-   <img src="BehaviorBasedAPI.png" usemap="#figure1">
-</div>
 
 <h3 id="mocked">
    Mocked types

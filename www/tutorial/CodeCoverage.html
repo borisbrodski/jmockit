@@ -18,21 +18,23 @@
 </h2>
 
 <p>
-   <a href="http://en.wikipedia.org/wiki/Code_coverage"><em>Code coverage</em></a> consists of a set
-   of software metrics that can tell you how much of the production code is covered by a given test
-   suite.
-   It's purely quantitative, and does not say anything about the <em>quality</em> of either the
-   production code or the test code. That said, the examination of code coverage reports will
-   sometimes lead to the discovery of unreachable code which can be eliminated. But more
-   importantly, such reports can be used as a guide for the discovery of missing tests.
-   This is not only useful when creating tests for existing production code, but also when writing
-   tests first, such as in the practice of TDD (Test Driven Development).
+   <a href="http://en.wikipedia.org/wiki/Code_coverage"><em>Code coverage</em></a> consists of a set of software metrics
+   that can tell you how much of the production code is covered by a given test suite.
+   It's purely quantitative, and does not say anything about the <em>quality</em> of either the production code or the
+   test code.
+   That said, the examination of code coverage reports will sometimes lead to the discovery of unreachable code which
+   can be eliminated.
+   But more importantly, such reports can be used as a guide for the discovery of missing tests.
+   This is not only useful when creating tests for existing production code, but also when writing tests first, such as
+   in the practice of TDD (Test Driven Development).
 </p>
+<div style="text-align: center;">
+   <img src="Coverage.png" usemap="#figure1">
+</div>
 <p>
    JMockit Coverage provides two different and complementary code coverage metrics:
    <em>line coverage</em> and <em>path coverage</em>.
-   An example coverage report showing both metrics can be found
-   <a href="../coverage-sample/index.html">here</a>.
+   An example coverage report showing both metrics can be found <a href="../coverage-sample/index.html">here</a>.
 </p>
 
 <h3 id="line">
@@ -69,20 +71,17 @@
    consecutive branching points in the line.
 </p>
 <p>
-   Lets say that <code><strong>NS</strong> >= 1</code> is the number of executable segments on a
-   given line.
+   Lets say that <code><strong>NS</strong> >= 1</code> is the number of executable segments on a given line.
    If <code><strong>NE</strong></code> is the number of segments in that line which were executed at
    least once during a test run (ie, they are <em>covered segments</em>), then we can calculate the
    coverage percentage for the line as <strong><code>100 * NE / NS</code></strong>.
 </p>
 <p>
-   Similarly, the line coverage percentage for a whole source file is calculated from the total
-   number of executable segments and the total number of covered segments, considering all
-   executable lines of code in the file.
-   The percentage for a <em>package</em>, in turn, is calculated from the total and covered numbers
-   of segments in the whole set of source files belonging to the package.
-   Finally, the <em>total code coverage</em> percentage is computed by the same formula on the
-   totals for all packages.
+   Similarly, the line coverage percentage for a whole source file is calculated from the total number of executable
+   segments and the total number of covered segments, considering all executable lines of code in the file.
+   The percentage for a <em>package</em>, in turn, is calculated from the total and covered numbers of segments in the
+   whole set of source files belonging to the package.
+   Finally, the <em>total code coverage</em> percentage is computed by the same formula on the totals for all packages.
 </p>
 
 <h3 id="path">
