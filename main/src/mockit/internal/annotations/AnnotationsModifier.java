@@ -105,7 +105,7 @@ public final class AnnotationsModifier extends BaseClassModifier
       useMockingBridgeForUpdatingMockState = useMockingBridge;
 
       if (
-         !useMockingBridge && mock != null && mock.getClass().isAnonymousClass() && 
+         !useMockingBridge && mock != null && Utilities.isAnonymousClass(mock.getClass()) &&
          realClass.getPackage() != mock.getClass().getPackage()
       ) {
          useMockingBridge = true;
