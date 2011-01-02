@@ -1,6 +1,6 @@
 /*
  * JMockit Annotations
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -29,28 +29,26 @@ import java.lang.reflect.*;
 /**
  * A <em>mock-up</em> for a class or interface, to be used in state-based tests.
  * <p/>
- * One or more <em>mock methods</em>, each one annotated {@linkplain Mock as such} and corresponding
- * to a "real" method or constructor of the mocked class/interface, must be defined in a concrete
- * subclass.
+ * One or more <em>mock methods</em>, each one annotated {@linkplain Mock as such} and corresponding to a "real" method
+ * or constructor of the mocked class/interface, must be defined in a concrete subclass.
  * <p/>
- * This class is particularly useful for the creation on <em>in-line mock classes</em>, defined
- * inside individual test methods as anonymous inner classes.
+ * This class is particularly useful for the creation on <em>in-line mock classes</em>, defined inside individual test
+ * methods as anonymous inner classes.
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#inline">Tutorial</a>
  *
  * @param <T> specifies the class or interface(s) to be mocked
  */
-public class MockUp<T>
+public abstract class MockUp<T>
 {
    private final T mockInstance;
 
    /**
-    * Applies the mock methods defined in the concrete subclass to the class or interface specified
-    * through the type parameter.
+    * Applies the mock methods defined in the concrete subclass to the class or interface specified through the type
+    * parameter.
     * <p/>
-    * When one or more interfaces are specified to be mocked, a mocked proxy class that implements
-    * the interfaces is created, with the proxy instance made available through a call to
-    * {@link #getMockInstance()}.
+    * When one or more interfaces are specified to be mocked, a mocked proxy class that implements the interfaces is
+    * created, with the proxy instance made available through a call to {@link #getMockInstance()}.
     *
     * @see #MockUp(Class)
     */
@@ -96,8 +94,8 @@ public class MockUp<T>
    /**
     * Applies the mock methods defined in the concrete subclass to the given class.
     * <p/>
-    * In most cases, the constructor with no parameters can be used. This variation should be used
-    * only when the real class to be mocked is not accessible or known to the test.
+    * In most cases, the constructor with no parameters can be used. This variation should be used only when the real
+    * class to be mocked is not accessible or known to the test.
     *
     * @see #MockUp()
     */
@@ -108,8 +106,8 @@ public class MockUp<T>
    }
 
    /**
-    * Returns the mock instance created for the interface(s) to be mocked specified by the type
-    * parameter {@code T}, or {@literal null} otherwise (ie, if a class was specified to be mocked).
+    * Returns the mock instance created for the interface(s) to be mocked specified by the type parameter {@code T}, or
+    * {@literal null} otherwise (ie, if a class was specified to be mocked).
     */
    public final T getMockInstance()
    {
