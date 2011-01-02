@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -33,11 +33,9 @@ import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 /**
- * Startup mock which works in conjunction with {@link BlockJUnit4ClassRunnerDecorator} to provide
- * JUnit 4.5+ integration.
+ * Startup mock which works in conjunction with {@link JUnit4TestRunnerDecorator} to provide JUnit 4.5+ integration.
  * <p/>
- * This class is not supposed to be accessed from user code. JMockit will automatically load it at
- * startup.
+ * This class is not supposed to be accessed from user code. JMockit will automatically load it at startup.
  */
 @MockClass(realClass = RunNotifier.class)
 public final class RunNotifierDecorator
