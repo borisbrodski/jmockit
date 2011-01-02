@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -30,7 +30,6 @@ import java.lang.reflect.*;
 
 import mockit.internal.state.*;
 import mockit.internal.util.*;
-import mockit.*;
 
 public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
 {
@@ -51,7 +50,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
       try {
          Class<?> testClass = parentObject.getClass();
          targetClasses.clear();
-         redefineFieldTypes(testClass, !Expectations.class.isAssignableFrom(testClass));
+         redefineFieldTypes(testClass, true);
       }
       finally {
          TestRun.exitNoMockingZone();
@@ -149,5 +148,12 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
       Object fieldOwner = TestRun.getCurrentTestInstance();
 
       return getCaptureOfNewInstances().captureNewInstanceForApplicableMockField(fieldOwner, mock);
+   }
+
+   public void resetCapturingOfNewInstances()
+   {
+      if (captureOfNewInstances != null) {
+         getCaptureOfNewInstances().reset();
+      }
    }
 }

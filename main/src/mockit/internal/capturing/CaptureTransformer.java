@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -26,6 +26,7 @@ package mockit.internal.capturing;
 
 import java.lang.instrument.*;
 import java.security.*;
+import java.util.*;
 
 import mockit.external.asm.*;
 import mockit.external.asm.commons.*;
@@ -39,19 +40,33 @@ final class CaptureTransformer implements ClassFileTransformer
    private final String capturedType;
    private final CaptureOfImplementations modifierFactory;
    private final SuperTypeCollector superTypeCollector;
+   private final Map<String, byte[]> transformedClasses;
    private boolean inactive;
 
-   CaptureTransformer(CapturedType metadata, CaptureOfImplementations modifierFactory)
+   CaptureTransformer(CapturedType metadata, CaptureOfImplementations modifierFactory, boolean forTestClass)
    {
       this.metadata = metadata;
       capturedType = metadata.baseType.getName().replace('.', '/');
       this.modifierFactory = modifierFactory;
       superTypeCollector = new SuperTypeCollector();
+      transformedClasses = forTestClass ? new HashMap<String, byte[]>(2) : null;
    }
 
    void deactivate()
    {
       inactive = true;
+
+      if (transformedClasses != null) {
+         RedefinitionEngine redefinitionEngine = new RedefinitionEngine();
+
+         for (Map.Entry<String, byte[]> classNameAndOriginalBytecode : transformedClasses.entrySet()) {
+            String className = classNameAndOriginalBytecode.getKey();
+            byte[] originalBytecode = classNameAndOriginalBytecode.getValue();
+            redefinitionEngine.restoreToDefinition(className, originalBytecode);
+         }
+
+         transformedClasses.clear();
+      }
    }
 
    public byte[] transform(
@@ -91,7 +106,14 @@ final class CaptureTransformer implements ClassFileTransformer
       ClassWriter modifier = modifierFactory.createModifier(loader, cr, capturedType);
       cr.accept(modifier, false);
 
-      TestRun.mockFixture().addTransformedClass(className, cr.b);
+      byte[] originalBytecode = cr.b;
+
+      if (transformedClasses == null) {
+         TestRun.mockFixture().addTransformedClass(className, originalBytecode);
+      }
+      else {
+         transformedClasses.put(className, originalBytecode);
+      }
 
       return modifier.toByteArray();
    }

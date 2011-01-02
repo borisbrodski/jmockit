@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -100,7 +100,7 @@ class CaptureOfNewInstances extends CaptureOfImplementations
       Class<?> baseType = typeMetadata.getClassType();
 
       if (!typeMetadata.isFinalFieldOrParameter()) {
-         makeSureAllSubtypesAreModified(baseType, typeMetadata.capturing);
+         makeSureAllSubtypesAreModified(typeMetadata);
       }
 
       List<Capture> captures = baseTypeToCaptures.get(baseType);
@@ -178,5 +178,14 @@ class CaptureOfNewInstances extends CaptureOfImplementations
    {
       super.cleanUp();
       baseTypeToCaptures.clear();
+   }
+
+   public final void reset()
+   {
+      for (List<Capture> captures : baseTypeToCaptures.values()) {
+         for (Capture capture : captures) {
+            capture.reset();
+         }
+      }
    }
 }

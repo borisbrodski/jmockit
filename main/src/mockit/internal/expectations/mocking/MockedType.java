@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -55,10 +55,10 @@ public final class MockedType
    }
 
    public final Field field;
-   final boolean fieldFromTestClass;
+   public final boolean fieldFromTestClass;
    private final int accessModifiers;
    private final Mocked mocked;
-   final Capturing capturing;
+   public final Capturing capturing;
    final Cascading cascading;
    public final boolean nonStrict;
    public final boolean injectable;
@@ -118,7 +118,7 @@ public final class MockedType
       mockId = "cascaded_" + cascadedType.getName();
    }
 
-   Class<?> getClassType()
+   public Class<?> getClassType()
    {
       if (declaredType instanceof Class) {
          return (Class<?>) declaredType;

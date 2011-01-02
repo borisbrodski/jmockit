@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -190,7 +190,6 @@ public final class TestRun
 
    public static void finishCurrentTestExecution()
    {
-      instance.currentTestInstance = null;
       instance.runningTestMethod = null;
       instance.executingTest.finishExecution();
    }

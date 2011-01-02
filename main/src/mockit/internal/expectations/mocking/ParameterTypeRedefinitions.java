@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -166,9 +166,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       }
 
       capture.registerCaptureOfNewInstances(typeMetadata, originalInstance);
-
-      Class<?> paramClass = typeMetadata.getClassType();
-      capture.makeSureAllSubtypesAreModified(paramClass, typeMetadata.capturing);
+      capture.makeSureAllSubtypesAreModified(typeMetadata);
    }
 
    @Override

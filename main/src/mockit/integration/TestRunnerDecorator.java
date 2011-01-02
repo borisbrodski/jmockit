@@ -37,6 +37,8 @@ import mockit.*;
  */
 public class TestRunnerDecorator
 {
+   private int previousTestId = -1;
+
    protected final void updateTestClassState(Object target, Class<?> testClass)
    {
       try {
@@ -113,7 +115,7 @@ public class TestRunnerDecorator
 
       if (capturingType != null) {
          CaptureOfImplementationsForTestClass capture = new CaptureOfImplementationsForTestClass();
-         capture.makeSureAllSubtypesAreModified(null, capturingType);
+         capture.makeSureAllSubtypesAreModified(capturingType);
          TestRun.setCaptureOfSubtypes(capture);
       }
    }
@@ -128,14 +130,12 @@ public class TestRunnerDecorator
          TestRun.setSharedFieldTypeRedefinitions(sharedRedefinitions);
       }
       else {
-         // TODO: separate FieldTypeRedefinitions in two classes, one just for mocking of fields,
-         // another just for capturing
-         sharedRedefinitions.cleanUp();
-         sharedRedefinitions.redefineTypesForTestClass();
+//         sharedRedefinitions.resetCapturingOfNewInstances();
       }
 
-      if (target != TestRun.getCurrentTestInstance()) {
+      if (target != TestRun.getCurrentTestInstance() && previousTestId != TestRun.getTestId()) {
          sharedRedefinitions.assignNewInstancesToMockFields(target);
+         previousTestId = TestRun.getTestId();
       }
    }
 
