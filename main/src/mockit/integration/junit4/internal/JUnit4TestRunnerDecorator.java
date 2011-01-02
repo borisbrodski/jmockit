@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -50,7 +50,7 @@ import mockit.internal.util.*;
  * This class is not supposed to be accessed from user code. JMockit will automatically load it at startup.
  */
 @MockClass(realClass = FrameworkMethod.class)
-public final class BlockJUnit4ClassRunnerDecorator extends TestRunnerDecorator
+public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
 {
    public FrameworkMethod it;
    private boolean generateTestIdForNextBeforeMethod;

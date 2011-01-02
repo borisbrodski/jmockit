@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -164,7 +164,7 @@ public final class Startup
       setUpInternalStartupMock(JUnitTestCaseDecorator.class);
 
       setUpInternalStartupMock(RunNotifierDecorator.class);
-      setUpInternalStartupMock(BlockJUnit4ClassRunnerDecorator.class);
+      setUpInternalStartupMock(JUnit4TestRunnerDecorator.class);
 
       setUpInternalStartupMock(TestNGTestRunnerDecorator.class);
 
