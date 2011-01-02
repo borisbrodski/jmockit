@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 
 import mockit.internal.state.*;
 
-public final class CascadingTest
+public final class CascadingParametersAndLocalFieldsTest
 {
    static class Foo
    {
