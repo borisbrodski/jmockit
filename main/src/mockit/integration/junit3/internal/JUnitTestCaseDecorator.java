@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -131,7 +131,19 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       Method testMethod = findTestMethod(testMethodName);
 
       if (testMethod == null) {
-         Assert.fail("Method \"" + testMethodName + "\" not found");
+         try {
+            runTestMethod.invoke(it);
+         }
+         catch (InvocationTargetException e) {
+            e.fillInStackTrace();
+            throw e.getTargetException();
+         }
+         catch (IllegalAccessException e) {
+            e.fillInStackTrace();
+            throw e;
+         }
+
+         return;
       }
 
       TestRun.setRunningTestMethod(testMethod);
