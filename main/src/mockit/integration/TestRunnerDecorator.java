@@ -133,7 +133,7 @@ public class TestRunnerDecorator
 //         sharedRedefinitions.resetCapturingOfNewInstances();
       }
 
-      if (target != TestRun.getCurrentTestInstance() && previousTestId != TestRun.getTestId()) {
+      if (target != TestRun.getCurrentTestInstance() /*&& previousTestId != TestRun.getTestId()*/) {
          sharedRedefinitions.assignNewInstancesToMockFields(target);
          previousTestId = TestRun.getTestId();
       }
