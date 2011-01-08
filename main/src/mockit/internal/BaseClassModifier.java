@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -222,7 +222,15 @@ public class BaseClassModifier extends ClassWriter
 
    protected final void generateCodeToObtainInstanceOfMockingBridge()
    {
-      mw.visitMethodInsn(INVOKESTATIC, "java/lang/System", "getProperties", "()Ljava/util/Properties;");
+      mw.visitLdcInsn("mockit.internal.MockingBridge");
+      mw.visitInsn(ICONST_1);
+      mw.visitMethodInsn(INVOKESTATIC, "java/lang/ClassLoader", "getSystemClassLoader", "()Ljava/lang/ClassLoader;");
+      mw.visitMethodInsn(
+         INVOKESTATIC, "java/lang/Class", "forName", "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
+      mw.visitLdcInsn("MB");
+      mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getField", "(Ljava/lang/String;)Ljava/lang/reflect/Field;");
+      mw.visitInsn(ACONST_NULL);
+      mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Field", "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
    private void generateCodeToFillArrayElement(int arrayIndex, Object value)
