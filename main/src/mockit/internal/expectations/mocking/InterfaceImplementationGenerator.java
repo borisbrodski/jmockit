@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -85,7 +85,10 @@ final class InterfaceImplementationGenerator extends BaseClassModifier
    @Override
    public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
    {
-      generateMethodImplementation(access, name, desc, signature, exceptions);
+      if (name.charAt(0) != '<') { // ignores an eventual "<clinit>" class initialization "method"
+         generateMethodImplementation(access, name, desc, signature, exceptions);
+      }
+
       return null;
    }
 

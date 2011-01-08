@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -66,8 +66,7 @@ public final class ExpectationsTest
    }
 
    @Test(expected = AssertionError.class)
-   public void expectOnlyOneInvocationOnTestScopedMockedTypeButExerciseOthersDuringReplay(
-      final Collaborator mock)
+   public void expectOnlyOneInvocationOnTestScopedMockedTypeButExerciseOthersDuringReplay(final Collaborator mock)
    {
       new Expectations()
       {
@@ -503,5 +502,14 @@ public final class ExpectationsTest
       collaborator.getValue();
       t.start();
       t.join();
+   }
+
+   public interface InterfaceWithStaticInitializer { Object X = "x"; }
+
+   @Test
+   public void mockInterfaceWithStaticInitializer(InterfaceWithStaticInitializer mock)
+   {
+      assertNotNull(mock);
+      assertEquals("x", InterfaceWithStaticInitializer.X);
    }
 }

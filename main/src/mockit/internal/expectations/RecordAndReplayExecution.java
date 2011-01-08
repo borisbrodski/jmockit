@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -219,7 +219,7 @@ public final class RecordAndReplayExecution
       ExecutingTest executingTest = TestRun.getExecutingTest();
 
       if (executingTest.isShouldIgnoreMockingCallbacks()) {
-         return executionMode == 0 ? DefaultValues.computeForType(mockDesc) : Void.class;
+         return executionMode == 0 ? DefaultValues.computeForReturnType(mockDesc) : Void.class;
       }
 
       executingTest.registerAdditionalMocksFromFinalLocalMockFieldsIfAny();
