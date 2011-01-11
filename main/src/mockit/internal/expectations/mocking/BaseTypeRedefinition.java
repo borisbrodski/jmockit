@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -104,14 +104,7 @@ abstract class BaseTypeRedefinition
 
       if (mockClass != null) {
          targetClass = mockClass;
-
-         if (typeMetadata != null && typeMetadata.fieldFromTestClass) {
-            instanceFactory = TestRun.mockFixture().getMockedTypesAndInstances().get(mockClass);
-         }
-         else {
-            createNewMockInstanceFactoryForInterface();
-         }
-
+         createNewMockInstanceFactoryForInterface();
          return;
       }
 

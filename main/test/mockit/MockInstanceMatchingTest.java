@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -25,10 +25,10 @@
 package mockit;
 
 import java.util.concurrent.*;
-
-import org.junit.*;
+import javax.sql.*;
 
 import static org.junit.Assert.*;
+import org.junit.*;
 
 public final class MockInstanceMatchingTest
 {
@@ -37,10 +37,13 @@ public final class MockInstanceMatchingTest
       private int value;
 
       int getValue() { return value; }
+
       void setValue(int value) { this.value = value; }
    }
 
    @Mocked Collaborator mock;
+   @Mocked DataSource mockDS1;
+   @Mocked DataSource mockDS2;
 
    @Test
    public void recordExpectationMatchingOnMockInstance()
@@ -48,7 +51,8 @@ public final class MockInstanceMatchingTest
       new Expectations()
       {
          {
-            onInstance(mock).getValue(); result = 12;
+            onInstance(mock).getValue();
+            result = 12;
          }
       };
 
@@ -63,7 +67,8 @@ public final class MockInstanceMatchingTest
       new Expectations()
       {
          {
-            onInstance(mock).getValue(); result = 12;
+            onInstance(mock).getValue();
+            result = 12;
          }
       };
 
@@ -200,8 +205,7 @@ public final class MockInstanceMatchingTest
    }
 
    @Test
-   public void matchOnTwoMockInstancesWithNonStrictExpectationsAndReplayInDifferentOrder(
-      final Collaborator mock2)
+   public void matchOnTwoMockInstancesWithNonStrictExpectationsAndReplayInDifferentOrder(final Collaborator mock2)
    {
       new NonStrictExpectations()
       {
@@ -344,5 +348,29 @@ public final class MockInstanceMatchingTest
 
       new Collaborator().setValue(1);
       assertEquals(2, mock2.getValue());
+   }
+
+   @Test
+   public void recordExpectationsOnTwoInstancesOfSameMockedInterface() throws Exception
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mockDS1.getLoginTimeout(); result = 1000;
+            mockDS2.getLoginTimeout(); result = 2000;
+         }
+      };
+
+      assertNotSame(mockDS1, mockDS2);
+      assertEquals(1000, mockDS1.getLoginTimeout());
+      assertEquals(2000, mockDS2.getLoginTimeout());
+      mockDS2.setLoginTimeout(3000);
+
+      new Verifications()
+      {
+         {
+            mockDS2.setLoginTimeout(anyInt);
+         }
+      };
    }
 }

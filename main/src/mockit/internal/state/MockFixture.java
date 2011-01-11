@@ -1,6 +1,6 @@
 /*
  * JMockit
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -124,11 +124,6 @@ public final class MockFixture
    public void addRedefinedClass(Class<?> redefinedClass, byte[] modifiedClassfile)
    {
       redefinedClasses.put(redefinedClass, modifiedClassfile);
-   }
-
-   public Map<Class<?>, InstanceFactory> getMockedTypesAndInstances()
-   {
-      return mockedTypesAndInstances;
    }
 
    public void addInstanceForMockedType(Class<?> mockedType, InstanceFactory mockInstanceFactory)
