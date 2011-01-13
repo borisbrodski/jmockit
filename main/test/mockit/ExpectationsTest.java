@@ -512,4 +512,18 @@ public final class ExpectationsTest
       assertNotNull(mock);
       assertEquals("x", InterfaceWithStaticInitializer.X);
    }
+
+   @Test
+   public void recordStrictExpectationsAllowingZeroInvocationsAndReplayNone(final Collaborator mock)
+   {
+      new Expectations()
+      {
+         {
+            mock.provideSomeService(); minTimes = 0;
+            mock.setValue(1); minTimes = 0;
+         }
+      };
+
+      // Don't exercise anything.
+   }
 }

@@ -1,6 +1,6 @@
 /*
  * JMockit Expectations & Verifications
- * Copyright (c) 2006-2010 Rogério Liesenfeld
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -238,8 +238,11 @@ final class ReplayPhase extends Phase
       int nextStrictExpectationIndex = currentStrictExpectationIndex + 1;
 
       if (nextStrictExpectationIndex < getExpectations().size()) {
-         Expectation missingExpectation = getExpectations().get(nextStrictExpectationIndex);
-         return missingExpectation.invocation.errorForMissingInvocation();
+         Expectation nextStrictExpectation = getExpectations().get(nextStrictExpectationIndex);
+
+         if (nextStrictExpectation.constraints.isInvocationCountLessThanMinimumExpected()) {
+            return nextStrictExpectation.invocation.errorForMissingInvocation();
+         }
       }
 
       return null;
