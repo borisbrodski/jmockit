@@ -34,6 +34,12 @@ public final class IsEqual<T> extends BaseMatcher<T>
       if (o1 == null) {
          return o2 == null;
       }
+      else if (o2 == null) {
+         return false;
+      }
+      else if (o1 == o2) {
+         return true;
+      }
       else if (isArray(o1)) {
          return isArray(o2) && areArraysEqual(o1, o2);
       }

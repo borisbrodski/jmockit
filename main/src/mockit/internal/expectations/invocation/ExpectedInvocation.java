@@ -1,26 +1,6 @@
 /*
- * JMockit Expectations & Verifications
- * Copyright (c) 2006-2010 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.invocation;
 
@@ -51,42 +31,45 @@ public final class ExpectedInvocation
       this.matchInstance = matchInstance;
       arguments = new InvocationArguments(access, mockedClassDesc, mockNameAndDesc, args);
       invocationCause = new ExpectationError();
-      defaultReturnValue = UNDEFINED_DEFAULT_RETURN;
+      determineDefaultReturnValueFromMethodSignature();
+   }
+
+   private void determineDefaultReturnValueFromMethodSignature()
+   {
+      String nameAndDesc = getMethodNameAndDescription();
+
+      if ("equals(Ljava/lang/Object;)Z".equals(nameAndDesc)) {
+         defaultReturnValue = instance == getArgumentValues()[0];
+      }
+      else if ("hashCode()I".equals(nameAndDesc)) {
+         defaultReturnValue = System.identityHashCode(instance);
+      }
+      else if ("toString()Ljava/lang/String;".equals(nameAndDesc)) {
+         defaultReturnValue = Utilities.objectIdentity(instance);
+      }
+      else {
+         defaultReturnValue = UNDEFINED_DEFAULT_RETURN;
+      }
    }
 
    // Simple getters //////////////////////////////////////////////////////////////////////////////////////////////////
 
-   public String getClassDesc()
-   {
-      return arguments.classDesc;
-   }
-
-   public String getClassName()
-   {
-      return arguments.classDesc.replace('/', '.');
-   }
-
-   public String getMethodNameAndDescription()
-   {
-      return arguments.methodNameAndDesc;
-   }
-
-   public Object[] getArgumentValues()
-   {
-      return arguments.getValues();
-   }
+   public String getClassDesc() { return arguments.classDesc; }
+   public String getClassName() { return getClassDesc().replace('/', '.'); }
+   public String getMethodNameAndDescription() { return arguments.methodNameAndDesc; }
+   public Object[] getArgumentValues() { return arguments.getValues(); }
 
    // Matching based on instance or mocked type ///////////////////////////////////////////////////////////////////////
 
    public boolean isMatch(String invokedClassDesc, String invokedMethod)
    {
-      return invokedClassDesc.equals(arguments.classDesc) && isMatchingMethod(invokedMethod);
+      return invokedClassDesc.equals(getClassDesc()) && isMatchingMethod(invokedMethod);
    }
 
    public boolean isMatch(Object replayInstance, Map<Object, Object> instanceMap)
    {
       return
-         arguments.methodNameAndDesc.charAt(0) == '<' ||
+         getMethodNameAndDescription().charAt(0) == '<' ||
          !matchInstance || isEquivalentInstance(replayInstance, instanceMap);
    }
 
@@ -95,13 +78,13 @@ public final class ExpectedInvocation
    {
       return
          isMatch(invokedClassDesc, invokedMethod) &&
-         (arguments.methodNameAndDesc.charAt(0) == '<' ||
+         (getMethodNameAndDescription().charAt(0) == '<' ||
           !matchInstance || isEquivalentInstance(replayInstance, instanceMap));
    }
 
    private boolean isMatchingMethod(String invokedMethod)
    {
-      String nameAndDesc = arguments.methodNameAndDesc;
+      String nameAndDesc = getMethodNameAndDescription();
       int i = 0;
 
       // Will return false if the method names or parameters are different:
@@ -235,24 +218,26 @@ public final class ExpectedInvocation
          defaultReturnValue = DefaultValues.computeForType(returnTypeDesc);
 
          if (defaultReturnValue == null && returnTypeDesc.charAt(0) == 'L') {
-            String mockedTypeDesc = getClassDesc();
-            cascadedMock = MockedTypeCascade.getMock(mockedTypeDesc, instance, returnTypeDesc);
-
-            if (cascadedMock != null) {
-               if (phase != null) {
-                  phase.setNextInstanceToMatch(cascadedMock);
-               }
-
-               defaultReturnValue = cascadedMock;
-            }
+            produceCascadedMockIfApplicable(phase, returnTypeDesc);
          }
       }
 
       return defaultReturnValue;
    }
 
-   public Object getCascadedMock()
+   private void produceCascadedMockIfApplicable(TestOnlyPhase phase, String returnTypeDesc)
    {
-      return cascadedMock;
+      String mockedTypeDesc = getClassDesc();
+      cascadedMock = MockedTypeCascade.getMock(mockedTypeDesc, instance, returnTypeDesc);
+
+      if (cascadedMock != null) {
+         if (phase != null) {
+            phase.setNextInstanceToMatch(cascadedMock);
+         }
+
+         defaultReturnValue = cascadedMock;
+      }
    }
+
+   public Object getCascadedMock() { return cascadedMock; }
 }
