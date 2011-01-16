@@ -1,26 +1,6 @@
 /*
- * JMockit
- * Copyright (c) 2006-2010 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package integrationTests;
 
@@ -80,5 +60,67 @@ public final class ClassInitializationTest
       };
 
       assertEquals(1, ClassWhichFailsAtInitialization.value());
+   }
+
+   static class ClassWithStaticInitializer
+   {
+      static final String CONSTANT = new String("not a compile-time constant");
+      static { doSomething(); }
+      static void doSomething() { throw new UnsupportedOperationException("must not execute"); }
+   }
+
+   @Test
+   public void mockClassWithStaticInitializerNotStubbedOut()
+   {
+      new NonStrictExpectations()
+      {
+         @Mocked(stubOutClassInitialization = false)
+         final ClassWithStaticInitializer mock = null;
+      };
+
+      assert ClassWithStaticInitializer.CONSTANT != null;
+      ClassWithStaticInitializer.doSomething();
+   }
+
+   @Test
+   public void useClassWithStaticInitializerNeverStubbedOutAndNotMockedNow()
+   {
+      assert ClassWithStaticInitializer.CONSTANT != null;
+
+      try {
+         ClassWithStaticInitializer.doSomething();
+         fail();
+      }
+      catch (UnsupportedOperationException ignore) {}
+   }
+
+   static class AnotherClassWithStaticInitializer
+   {
+      static final String CONSTANT = new String("not a compile-time constant");
+      static { doSomething(); }
+      static void doSomething() { throw new UnsupportedOperationException("must not execute"); }
+      int getValue() { return -1; }
+   }
+
+   @Test
+   public void mockClassWithStaticInitializerStubbedOut(AnotherClassWithStaticInitializer mock)
+   {
+      assert AnotherClassWithStaticInitializer.CONSTANT == null;
+      AnotherClassWithStaticInitializer.doSomething();
+      assert mock.getValue() == 0;
+   }
+
+   @Test
+   public void useClassWithStaticInitializerPreviouslyStubbedOutButNotMockedNow()
+   {
+      assert AnotherClassWithStaticInitializer.CONSTANT == null;
+
+      try {
+         AnotherClassWithStaticInitializer.doSomething();
+         fail();
+      }
+      catch (UnsupportedOperationException ignore) {}
+
+      assert new AnotherClassWithStaticInitializer().getValue() == -1;
    }
 }
