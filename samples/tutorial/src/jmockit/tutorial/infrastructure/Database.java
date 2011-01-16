@@ -1,37 +1,51 @@
 /*
- * JMockit Samples
- * Copyright (c) 2006-2010 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package jmockit.tutorial.infrastructure;
 
 import java.util.*;
 import javax.persistence.*;
 
+/**
+ * This class is a <em>static facade</em> for persistence operations.
+ * All methods are {@code static}, so it can be statically imported in client classes for maximum usability.
+ * <p/>
+ * All of the persistence operations made available through this facade access a thread-bound <em>persistence
+ * context</em>. In this particular implementation, the standard <strong>JPA</strong> API is used, where
+ * {@code javax.persistence.EntityManager} represents a work unit. Typically, each work unit instance exists only long
+ * enough to perform a single database transaction. Transaction demarcation is not a responsibility of this class,
+ * however, which simply keeps the association between the current thread and a dedicated work unit object (an
+ * {@code EntityManager} instance}.
+ * <p/>
+ * Compared to direct use of an ORM API such as JPA, or to the use of <em>Data Access Objects</em> (the "DAO" pattern),
+ * this <em>static persistence facade</em> pattern has several advantages.
+ * Mainly, client code which needs to perform high-level persistence operations (such as persisting a new entity
+ * instance, deleting an already persisted entity, or finding and loading persistent entities) tends to be simpler and
+ * shorter.
+ * In the case of entity-specific DAO classes, potentially thousands of lines of code are saved, without any real loss
+ * in portability (the facade implementation can adapt to new versions of the ORM API or even a different ORM API; and
+ * consider that switching between an ORM API and plain use of JDBC is not viable anyway, since with JDBC the DAO
+ * classes need to expose methods for the execution of "UPDATE" statements, which are not needed with modern ORM APIs).
+ */
 public final class Database
 {
-   private static final EntityManagerFactory entityManagerFactory =
-      Persistence.createEntityManagerFactory("AppPersistenceUnit");
    private static final ThreadLocal<EntityManager> workUnit = new ThreadLocal<EntityManager>();
+   private static final EntityManagerFactory entityManagerFactory;
+
+   static
+   {
+      EntityManagerFactory factory = null;
+
+      try {
+         factory = Persistence.createEntityManagerFactory("AppPersistenceUnit");
+      }
+      catch (PersistenceException e) {
+         e.printStackTrace();
+      }
+
+      entityManagerFactory = factory;
+   }
 
    private Database() {}
 
@@ -60,8 +74,7 @@ public final class Database
    {
       // Persist the data of a given transient domain entity object, using JPA.
       // (In a web app, this could be scoped to the HTTP request/response cycle, which normally runs
-      // entirely in a single thread - a custom javax.servlet.Filter could close the thread-bound
-      // EntityManager.)
+      // entirely in a single thread - a custom javax.servlet.Filter could close the thread-bound EntityManager.)
       workUnit().persist(data);
    }
 
