@@ -120,8 +120,8 @@ public @interface Mocked
 
    /**
     * Indicates whether <em>static initialization code</em> in the mocked class should be stubbed out or not.
-    * Static initialization includes the execution of all assignments to static fields of the class, as well as the
-    * execution of all static initialization blocks (if any).
+    * Static initialization includes the execution of assignments to static fields of the class and the execution of
+    * static initialization blocks, if any. (Note that compile-time constants are not assigned at runtime.)
     * <p/>
     * The type of this attribute is an array, but <em>at most one</em> {@code boolean} value should be specified;
     * for example, {@code stubOutClassInitialization = false}. If no value is specified for the attribute, then a global
@@ -130,13 +130,14 @@ public @interface Mocked
     * By default, static initialization code in a mocked class <em>is</em> stubbed out.
     * This is usually helpful, as it fully isolates the class under test from a class it depends on, but it can
     * have unexpected consequences due to the fact that the JVM will only initialize a class <em>once</em>.
-    * So, if the static initialization code in a class is stubbed out <em>before</em> this class is instantiated or has
-    * a static method called on it (the events which prompt the JVM to initialize the class), then the original
-    * initialization code will not be there to be executed at the time of static initialization.
+    * So, if the static initialization code in a class is stubbed out <em>before</em> this class is instantiated, or has
+    * a static method called on it, or has a static field whose value is not a compile-time constant accessed (the
+    * events which prompt the JVM to initialize the class), then the original initialization code will not be there to
+    * be executed at the time of static initialization.
     * If desired, this default behavior can be turned off globally by defining the
     * {@code jmockit-retainStaticInitializers} system property. This can be done by passing the
     * {@code -Djmockit-retainStaticInitializers} initialization parameter to the JVM, or by using the proper XML
-    * configuration element in a Ant/Maven build script (note that no value needs to be assigned to the property -
+    * configuration element in an Ant/Maven build script (note that no value needs to be assigned to the property -
     * if one is, it will be ignored).
     */
    boolean[] stubOutClassInitialization() default {};
