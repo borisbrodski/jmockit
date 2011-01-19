@@ -189,7 +189,7 @@
    <!-- Targets for generating component jars and the distribution zip file -->
 
    <target name="createjars"
-           depends="createjar-core, createjars-coverage, createjar-hibernate3emul"/>
+           depends="createjar-core, createjars-coverage, createjar-hibernate3emul, createjar-multicore"/>
 
    <target name="createjar-core">
       <jar destfile="jmockit.jar" manifest="main/META-INF/MANIFEST.MF">
@@ -251,6 +251,12 @@
 
    <target name="createjar-hibernate3emul">
       <jar destfile="jmockit-hibernate3emul.jar" basedir="hibernate3emul/classes">
+         <manifest><attribute name="Class-Path" value="jmockit.jar"/></manifest>
+      </jar>
+   </target>
+
+   <target name="createjar-multicore">
+      <jar destfile="jmockit-multicore.jar" basedir="multicore/classes">
          <manifest><attribute name="Class-Path" value="jmockit.jar"/></manifest>
       </jar>
    </target>

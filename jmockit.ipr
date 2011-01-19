@@ -95,7 +95,7 @@
     <option name="ADDITIONAL_OPTIONS_STRING" value="-source 1.5 -target 1.5" />
   </component>
   <component name="CompilerConfiguration">
-    <option name="DEFAULT_COMPILER" value="Eclipse" />
+    <option name="DEFAULT_COMPILER" value="Javac" />
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -172,7 +172,6 @@
         <inspection_tool class="AccessToNonThreadSafeStaticFieldFromInstance" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="nonThreadSafeTypes" value="java.text.DateFormat,java.util.Calendar" />
         </inspection_tool>
-        <inspection_tool class="AccessToStaticFieldLockedOnInstance" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="AmbiguousMethodCall" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="AnonymousClassVariableHidesContainingMethodVariable" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ArchaicSystemPropertyAccess" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -963,6 +962,7 @@
         <w>mockito</w>
         <w>monospace</w>
         <w>multi</w>
+        <w>multicore</w>
         <w>nano</w>
         <w>nbsp</w>
         <w>nocode</w>
@@ -1063,6 +1063,7 @@
       <module fileurl="file://$PROJECT_DIR$/samples/LoginService/LoginService.iml" filepath="$PROJECT_DIR$/samples/LoginService/LoginService.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/main/Main.iml" filepath="$PROJECT_DIR$/main/Main.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/mockito/Mockito.iml" filepath="$PROJECT_DIR$/samples/mockito/Mockito.iml" group="Samples" />
+      <module fileurl="file://$PROJECT_DIR$/multicore/MultiCore.iml" filepath="$PROJECT_DIR$/multicore/MultiCore.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/orderMngmntWebapp/OrderMngmntWebapp.iml" filepath="$PROJECT_DIR$/samples/orderMngmntWebapp/OrderMngmntWebapp.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/powermock/Powermock.iml" filepath="$PROJECT_DIR$/samples/powermock/Powermock.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/TimingFramework/TimingFramework.iml" filepath="$PROJECT_DIR$/samples/TimingFramework/TimingFramework.iml" group="Samples" />
