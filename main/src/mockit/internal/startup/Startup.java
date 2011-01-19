@@ -131,6 +131,8 @@ public final class Startup
          Class.forName("mockit.internal.expectations.invocation.InvocationResults");
       }
       catch (ClassNotFoundException ignore) {}
+
+      MockingBridge.MB.getClass();
    }
 
    private static void loadInternalStartupMocks()
@@ -148,20 +150,12 @@ public final class Startup
 
    private static void setUpInternalStartupMock(Class<?> mockClass)
    {
-      Object mock;
-
-      //noinspection CatchGenericClass,OverlyBroadCatchBlock
       try {
-         //noinspection ClassNewInstance
-         mock = mockClass.newInstance();
+         new RedefinitionEngine(null, mockClass).setUpStartupMock();
       }
-      catch (Throwable ignored) {
-         // OK, simply ignore the internal startup mock if it can't be loaded for some reason,
-         // such as not having the necessary third-party class files in the classpath.
-         return;
+      catch (TypeNotPresentException ignore) {
+         // OK, ignores the startup mock if the necessary third-party class files are not in the classpath.
       }
-
-      new RedefinitionEngine(mock, mockClass, true).setUpStartupMock();
    }
 
    private static void processAgentArgs(String agentArgs) throws IOException
