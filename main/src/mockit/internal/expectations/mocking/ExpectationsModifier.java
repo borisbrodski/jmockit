@@ -105,7 +105,10 @@ final class ExpectationsModifier extends BaseClassModifier
       boolean matchesFilters = noFiltersToMatch || mockingCfg.matchesFilters(name, desc);
 
       if ("<clinit>".equals(name)) {
-         return stubOutClassInitializationIfApplicable(access, name, desc, signature, exceptions, matchesFilters);
+         return stubOutClassInitializationIfApplicable(access, matchesFilters);
+      }
+      else if (stubOutFinalizeMethod(access, name, desc)) {
+         return null;
       }
 
       if (
@@ -162,10 +165,9 @@ final class ExpectationsModifier extends BaseClassModifier
          "annotationType".equals(name) && "()Ljava/lang/Class;".equals(desc);
    }
 
-   private MethodVisitor stubOutClassInitializationIfApplicable(
-      int access, String name, String desc, String signature, String[] exceptions, boolean matchesFilters)
+   private MethodVisitor stubOutClassInitializationIfApplicable(int access, boolean matchesFilters)
    {
-      mw = super.visitMethod(access, name, desc, signature, exceptions);
+      mw = super.visitMethod(access, "<clinit>", "()V", null, null);
 
       if (matchesFilters && stubOutClassInitialization) {
          // Stub out any class initialization block (unless specified otherwise),
@@ -177,6 +179,17 @@ final class ExpectationsModifier extends BaseClassModifier
       return mw;
    }
 
+   private boolean stubOutFinalizeMethod(int access, String name, String desc)
+   {
+      if ("finalize".equals(name) && "()V".equals(desc)) {
+         mw = super.visitMethod(access, name, desc, null, null);
+         generateEmptyImplementation();
+         return true;
+      }
+      
+      return false;
+   }
+   
    private boolean isMethodFromCapturedClassNotToBeMocked(int access)
    {
       return baseClassNameForCapturedInstanceMethods != null && (isStatic(access) || isPrivate(access));
