@@ -160,20 +160,6 @@ public final class ObjectOverridesTest
    }
 
    @Test
-   public void mockOverrideOfFinalizeMethod()
-   {
-      a.finalize(); // would cause NPE if not mocked
-
-      new FullVerifications()
-      {
-         {
-            a.finalize();
-            b.finalize(); times = 0;
-         }
-      };
-   }
-
-   @Test
    public void mockOverrideOfCloneMethod()
    {
       new Expectations()
