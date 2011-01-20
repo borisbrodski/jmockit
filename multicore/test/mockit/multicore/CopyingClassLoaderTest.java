@@ -17,7 +17,7 @@ public final class CopyingClassLoaderTest
    {
       Class<?> original = A.class;
 
-      Class<?> copy = copyingCL.getCopy(original);
+      Class<?> copy = copyingCL.getCopy(original.getName());
 
       assert original != copy;
       assert original.getClassLoader() == ClassLoader.getSystemClassLoader();
@@ -45,14 +45,14 @@ public final class CopyingClassLoaderTest
    {
       Class<?> original = A.class;
 
-      Class<?> copy = copyingCL.getCopy(original);
+      Class<?> copy = copyingCL.getCopy(original.getName());
 
       Object a = Deencapsulation.newInstance(copy);
       assert a.getClass() == copy;
       assert copyingCL.hasLoadedClass(B.class);
 
       Class<?> bClass = Deencapsulation.invoke(a, "getClassOfDependency");
-      assert bClass != B.class;
+      assert bClass == B.class; // would be different if B was defined outside a "mockit" package
       assert "B".equals(bClass.getSimpleName());
    }
 }

@@ -6,23 +6,35 @@ package integrationTests;
 
 import junit.framework.*;
 
-public final class SecondTest extends TestCase
+public final class JUnit38StyleTest extends TestCase
 {
+   static boolean setUp;
+
+   public JUnit38StyleTest() { super("JUnit 38 test"); }
+
    @Override
-   public void setUp()
+   protected void setUp() throws InterruptedException
    {
       assert getClass().getClassLoader() != ClassLoader.getSystemClassLoader();
+      assert !setUp;
+      setUp = true;
+      Thread.sleep(500);
    }
 
-   public void testAnotherSlowTest1() throws Exception
+   @Override
+   protected void tearDown()
    {
-      Thread.sleep(500);
+      assert setUp;
+      setUp = false;
+   }
+
+   public void test1()
+   {
       A.doSomething();
    }
 
-   public void testAnotherSlowTest2() throws Exception
+   public void test2()
    {
-      Thread.sleep(1500);
       new B().doSomethingElse();
       assert B.counter == 2;
    }
@@ -32,7 +44,7 @@ public final class SecondTest extends TestCase
       public static void doSomething()
       {
          new B().doSomethingElse();
-         assert B.counter == 1 : "counter = " + B.counter;
+         assert B.counter == 1;
       }
    }
 

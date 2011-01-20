@@ -10,32 +10,31 @@ abstract class TestClassRunnerTask implements Callable<Void>
 {
    private static final ThreadLocal<CopyingClassLoader> TASK_CL = new ThreadLocal<CopyingClassLoader>();
 
-   @Override
    public final Void call()
    {
-      Class<?> testClass = getTestClassFromRunner();
+      String testClassName = getTestClassName();
 
-      if (testClass != null) {
+      if (testClassName != null) {
+         Class<?> copyOfTestClass = createCopyOfTestClass(testClassName);
+         
          try {
-            Class<?> copyOfTestClass = createCopyOfTestClass(testClass);
-            executeCopyOfTestClass(copyOfTestClass);
-            return null;
+            prepareCopyOfTestClassForExecution(copyOfTestClass);
          }
          catch (Throwable e) {
             e.printStackTrace();
          }
       }
 
-      executeOriginalTestClass();
+      executeTestClass();
       return null;
    }
 
-   abstract Class<?> getTestClassFromRunner();
+   abstract String getTestClassName();
 
-   private Class<?> createCopyOfTestClass(Class<?> testClass)
+   private Class<?> createCopyOfTestClass(String testClassName)
    {
       CopyingClassLoader cl = getClassLoaderForThisThread();
-      return cl.getCopy(testClass);
+      return cl.getCopy(testClassName);
    }
 
    protected final CopyingClassLoader getClassLoaderForThisThread()
@@ -50,6 +49,6 @@ abstract class TestClassRunnerTask implements Callable<Void>
       return cl;
    }
 
-   abstract void executeCopyOfTestClass(Class<?> testClass) throws Exception;
-   abstract void executeOriginalTestClass();
+   abstract void prepareCopyOfTestClassForExecution(Class<?> testClass) throws Exception;
+   abstract void executeTestClass();
 }

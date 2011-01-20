@@ -19,15 +19,18 @@ final class CopyingClassLoader extends ClassLoader
       super(SYSTEM_CL.getParent());
    }
 
-   Class<?> getCopy(Class<?> aClass)
+   Class<?> getCopy(String className)
    {
-      return findClass(aClass.getName());
+      return findClass(className);
    }
 
    @Override
    protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException
    {
-      if (name.startsWith("org.junit.") || name.startsWith("mockit.") && !name.startsWith("mockit.internal.startup")) {
+      if (
+         name.startsWith("org.junit.") || name.startsWith("junit.framework.") || 
+         name.startsWith("mockit.") && !name.startsWith("mockit.internal.startup")
+      ) {
          assert !resolve;
          return SYSTEM_CL.loadClass(name);
       }

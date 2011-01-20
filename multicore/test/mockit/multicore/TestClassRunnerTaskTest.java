@@ -9,6 +9,8 @@ import java.util.concurrent.*;
 
 import org.junit.*;
 
+import mockit.*;
+
 public final class TestClassRunnerTaskTest
 {
    @Test
@@ -26,25 +28,23 @@ public final class TestClassRunnerTaskTest
    static final class FakeTestClassRunnerTask extends TestClassRunnerTask
    {
       @Override
-      Class<?> getTestClassFromRunner() { return TestClass.class; }
+      String getTestClassName() { return TestClass.class.getName(); }
 
       @Override
-      void executeCopyOfTestClass(Class<?> testClass) throws Exception
+      void prepareCopyOfTestClassForExecution(Class<?> testClass) throws Exception
       {
-         //noinspection ClassNewInstance
-         ((Runnable) testClass.newInstance()).run();
       }
 
       @Override
-      void executeOriginalTestClass()
+      void executeTestClass()
       {
-         throw new IllegalStateException("Should not execute");
+         Runnable runner = Deencapsulation.newInstance(TestClass.class);
+         runner.run();
       }
    }
 
    public static class TestClass implements Runnable
    {
-      @Override
       public void run()
       {
          assertDefinedWithCustomClassLoader();
