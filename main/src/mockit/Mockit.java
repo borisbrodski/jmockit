@@ -534,9 +534,12 @@ public final class Mockit
          addInterface(interfaces, type);
       }
 
-      interfaces.add(EmptyProxy.class);
+      ClassLoader loader = interfaces.get(0).getClassLoader();
 
-      ClassLoader loader = Mockit.class.getClassLoader();
+      if (loader == EmptyProxy.class.getClassLoader()) {
+         interfaces.add(EmptyProxy.class);
+      }
+
       Class<?>[] interfacesArray = interfaces.toArray(new Class<?>[interfaces.size()]);
 
       //noinspection unchecked
