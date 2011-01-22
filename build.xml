@@ -256,7 +256,9 @@
    </target>
 
    <target name="createjar-multicore">
-      <jar destfile="jmockit-multicore.jar" basedir="multicore/classes">
+      <jar destfile="jmockit-multicore.jar">
+         <fileset dir="multicore/src" includes="**/*.java"/>
+         <fileset dir="multicore/classes"/>
          <manifest><attribute name="Class-Path" value="jmockit.jar"/></manifest>
       </jar>
    </target>
