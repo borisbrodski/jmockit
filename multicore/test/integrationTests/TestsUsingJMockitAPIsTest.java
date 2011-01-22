@@ -14,6 +14,12 @@ public final class TestsUsingJMockitAPIsTest
    {
       public void doSomething() { throw new RuntimeException("should not execute"); }
       int getValue() { return -1; }
+      B getB() { return new B(); }
+   }
+
+   static final class B
+   {
+      boolean run(String s) { return s.length() > 0; }
    }
 
    @Test
@@ -40,5 +46,18 @@ public final class TestsUsingJMockitAPIsTest
             mockedA.doSomething();
          }
       };
+   }
+
+   @Test
+   public void cascadedMock(@Cascading final A mock)
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mock.getB().run(anyString); result = true;
+         }
+      };
+
+      assert mock.getB().run("");
    }
 }

@@ -23,6 +23,7 @@ public final class CopyingClassLoaderTest
       assert original.getClassLoader() == ClassLoader.getSystemClassLoader();
       assert copy.getClassLoader() == copyingCL;
       assert !copyingCL.hasLoadedClass(B.class);
+      assert copy.getPackage() != null;
    }
 
    @SuppressWarnings({"UnusedDeclaration"})

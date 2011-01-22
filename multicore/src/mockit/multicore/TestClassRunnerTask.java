@@ -8,8 +8,6 @@ import java.util.concurrent.*;
 
 abstract class TestClassRunnerTask implements Callable<Void>
 {
-   private static final ThreadLocal<CopyingClassLoader> TASK_CL = new ThreadLocal<CopyingClassLoader>();
-
    public final Void call()
    {
       String testClassName = getTestClassName();
@@ -39,14 +37,14 @@ abstract class TestClassRunnerTask implements Callable<Void>
 
    protected final CopyingClassLoader getClassLoaderForThisThread()
    {
-      CopyingClassLoader cl = TASK_CL.get();
+      ClassLoader cl = Thread.currentThread().getContextClassLoader();
 
-      if (cl == null) {
+      if (!(cl instanceof CopyingClassLoader)) {
          cl = new CopyingClassLoader();
-         TASK_CL.set(cl);
+         Thread.currentThread().setContextClassLoader(cl);
       }
 
-      return cl;
+      return (CopyingClassLoader) cl;
    }
 
    abstract void prepareCopyOfTestClassForExecution(Class<?> testClass) throws Exception;

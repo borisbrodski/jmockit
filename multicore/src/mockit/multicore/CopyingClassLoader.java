@@ -28,8 +28,8 @@ final class CopyingClassLoader extends ClassLoader
    protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException
    {
       if (
-         name.startsWith("org.junit.") || name.startsWith("junit.framework.") || 
-         name.startsWith("mockit.") && !name.startsWith("mockit.internal.startup")
+         name.startsWith("org.junit.") || name.startsWith("junit.framework.") ||
+         name.startsWith("mockit.") && !name.startsWith("mockit.integration.logging.")
       ) {
          assert !resolve;
          return SYSTEM_CL.loadClass(name);
@@ -47,8 +47,23 @@ final class CopyingClassLoader extends ClassLoader
          return loadedClass;
       }
 
+      definePackageForCopiedClass(name);
+      
       byte[] classBytecode = ClassFile.createClassFileReader(name).b;
       return defineClass(name, classBytecode, 0, classBytecode.length);
+   }
+
+   private void definePackageForCopiedClass(String name)
+   {
+      int p = name.lastIndexOf('.');
+
+      if (p > 0) {
+         String packageName = name.substring(0, p);
+
+         if (getPackage(packageName) == null) {
+            definePackage(packageName, null, null, null, null, null, null, null);
+         }
+      }
    }
 
    boolean hasLoadedClass(Class<?> aClass)

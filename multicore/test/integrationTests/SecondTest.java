@@ -16,13 +16,13 @@ public final class SecondTest extends TestCase
 
    public void testAnotherSlowTest1() throws Exception
    {
-      Thread.sleep(500);
+      Thread.sleep(400);
       A.doSomething();
    }
 
    public void testAnotherSlowTest2() throws Exception
    {
-      Thread.sleep(1500);
+      Thread.sleep(600);
       new B().doSomethingElse();
       assert B.counter == 2;
    }

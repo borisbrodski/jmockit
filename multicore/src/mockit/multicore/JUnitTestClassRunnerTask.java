@@ -57,7 +57,7 @@ final class JUnitTestClassRunnerTask extends TestClassRunnerTask
       else {
          org.junit.internal.runners.TestClass testClassInfo = new org.junit.internal.runners.TestClass(testClass);
          Deencapsulation.setField(classRunner, "fTestClass", testClassInfo);
-         // TODO: reset JUnit4ClassRunner#fTestMethods?
+         Deencapsulation.setField(classRunner, "fTestMethods", testClassInfo.getTestMethods());
       }
    }
 

@@ -15,5 +15,7 @@ final class MultiCoreTestRunner
       ExecutorService executor = Executors.newFixedThreadPool(numCores);
 
       try { executor.invokeAll(tasks); } catch (InterruptedException ignore) {}
+
+      executor.shutdownNow();
    }
 }
