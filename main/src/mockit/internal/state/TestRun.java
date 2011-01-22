@@ -1,36 +1,20 @@
 /*
- * JMockit
  * Copyright (c) 2006-2011 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.state;
 
 import java.lang.reflect.*;
 import java.net.*;
 import java.security.*;
+import java.util.*;
 
+import static java.util.Collections.*;
+
+import mockit.internal.annotations.*;
+import mockit.internal.capturing.*;
 import mockit.internal.expectations.*;
 import mockit.internal.expectations.mocking.*;
-import mockit.internal.capturing.*;
 
 /**
  * A singleton which stores several data structures which in turn hold global state for individual
@@ -39,7 +23,25 @@ import mockit.internal.capturing.*;
 @SuppressWarnings({"ClassWithTooManyFields"})
 public final class TestRun
 {
-   private static final TestRun instance = new TestRun();
+   private static final TestRun STARTUP_INSTANCE = new TestRun();
+   private static final Map<ClassLoader, TestRun> INSTANCES = synchronizedMap(new HashMap<ClassLoader, TestRun>());
+   static
+   {
+      INSTANCES.put(ClassLoader.getSystemClassLoader(), STARTUP_INSTANCE);
+   }
+   
+   private static TestRun getInstance()
+   {
+      ClassLoader contextCL = Thread.currentThread().getContextClassLoader();
+      TestRun instance = INSTANCES.get(contextCL);
+
+      if (instance == null) {
+         instance = new TestRun();
+         INSTANCES.put(contextCL, instance);
+      }
+
+      return instance;
+   }
 
    private TestRun() {}
 
@@ -73,21 +75,21 @@ public final class TestRun
 
    // Static "getters" for global state ///////////////////////////////////////////////////////////////////////////////
 
-   public static Class<?> getCurrentTestClass() { return instance.currentTestClass; }
+   public static Class<?> getCurrentTestClass() { return getInstance().currentTestClass; }
 
-   public static Object getCurrentTestInstance() { return instance.currentTestInstance; }
+   public static Object getCurrentTestInstance() { return getInstance().currentTestInstance; }
 
-   public static int getTestId() { return instance.testId; }
+   public static int getTestId() { return getInstance().testId; }
 
    public static boolean isInsideNoMockingZone()
    {
-      return instance.noMockingCount.get() > 0;
+      return getInstance().noMockingCount.get() > 0;
    }
 
    public static boolean isRunningTestCode(ProtectionDomain protectionDomain)
    {
-      if (instance.currentTestInstance != null) {
-         return protectionDomain == instance.currentTestClass.getProtectionDomain();
+      if (getInstance().currentTestInstance != null) {
+         return protectionDomain == getInstance().currentTestClass.getProtectionDomain();
       }
 
       if (protectionDomain == null) {
@@ -107,30 +109,30 @@ public final class TestRun
 
    public static CaptureOfImplementationsForTestClass getCaptureOfSubtypes()
    {
-      return instance.captureOfSubtypes;
+      return getInstance().captureOfSubtypes;
    }
 
    public static SharedFieldTypeRedefinitions getSharedFieldTypeRedefinitions()
    {
-      return instance.sharedFieldTypeRedefinitions;
+      return getInstance().sharedFieldTypeRedefinitions;
    }
 
-   public static ProxyClasses proxyClasses() { return instance.proxyClasses; }
+   public static ProxyClasses proxyClasses() { return getInstance().proxyClasses; }
 
-   public static MockFixture mockFixture() { return instance.mockFixture; }
+   public static MockFixture mockFixture() { return getInstance().mockFixture; }
 
-   public static ExecutingTest getExecutingTest() { return instance.executingTest; }
+   public static ExecutingTest getExecutingTest() { return getInstance().executingTest; }
 
    public static RecordAndReplayExecution getRecordAndReplayForRunningTest(boolean create)
    {
-      if (instance.currentTestInstance == null) {
+      if (getInstance().currentTestInstance == null) {
          return null;
       }
 
-      return getExecutingTest().getRecordAndReplay(instance.runningTestMethod != null && create);
+      return getExecutingTest().getRecordAndReplay(getInstance().runningTestMethod != null && create);
    }
 
-   public static MockClasses getMockClasses() { return instance.mockClasses; }
+   public static MockClasses getMockClasses() { return getInstance().mockClasses; }
 
    public static void verifyExpectationsOnAnnotatedMocks()
    {
@@ -146,80 +148,88 @@ public final class TestRun
 
    public static void setCurrentTestClass(Class<?> testClass)
    {
-      instance.currentTestClass = testClass;
+      getInstance().currentTestClass = testClass;
    }
 
    public static void prepareForNextTest()
    {
-      instance.testId++;
+      getInstance().testId++;
    }
 
    public static void setRunningTestMethod(Method runningTestMethod)
    {
-      instance.runningTestMethod = runningTestMethod;
+      getInstance().runningTestMethod = runningTestMethod;
 
       if (runningTestMethod != null) {
-         instance.executingTest.clearRecordAndReplayForVerifications();
+         getInstance().executingTest.clearRecordAndReplayForVerifications();
       }
    }
 
    public static void enterNoMockingZone()
    {
-      instance.noMockingCount.set(1);
+      getInstance().noMockingCount.set(1);
    }
 
    public static void exitNoMockingZone()
    {
-      instance.noMockingCount.set(-1);
+      getInstance().noMockingCount.set(-1);
    }
 
    public static void setRunningIndividualTest(Object testInstance)
    {
-      instance.currentTestInstance = testInstance;
+      getInstance().currentTestInstance = testInstance;
    }
 
    public static void setCaptureOfSubtypes(CaptureOfImplementationsForTestClass captureOfSubtypes)
    {
-      instance.captureOfSubtypes = captureOfSubtypes;
+      getInstance().captureOfSubtypes = captureOfSubtypes;
    }
 
    public static void setSharedFieldTypeRedefinitions(SharedFieldTypeRedefinitions redefinitions)
    {
-      instance.sharedFieldTypeRedefinitions = redefinitions;
+      getInstance().sharedFieldTypeRedefinitions = redefinitions;
    }
 
    public static void finishCurrentTestExecution()
    {
-      instance.runningTestMethod = null;
-      instance.executingTest.finishExecution();
+      getInstance().runningTestMethod = null;
+      getInstance().executingTest.finishExecution();
    }
 
    // Methods to be called only from generated bytecode or from the MockingBridge /////////////////////////////////////
 
    public static Object getMock(int index)
    {
-      return instance.mockClasses.regularMocks.getMock(index);
+      return getMockClasses().regularMocks.getMock(index);
    }
 
    @SuppressWarnings({"UnusedDeclaration"})
    public static Object getStartupMock(int index)
    {
-      return instance.mockClasses.startupMocks.getMock(index);
+      return STARTUP_INSTANCE.mockClasses.startupMocks.getMock(index);
    }
 
    @SuppressWarnings({"UnusedDeclaration"})
    public static Object getMock(Class<?> mockClass, Object mockedInstance)
    {
-      return instance.mockClasses.regularMocks.getMock(mockClass, mockedInstance);
+      return getMockClasses().regularMocks.getMock(mockClass, mockedInstance);
    }
 
    public static boolean updateMockState(String mockClassDesc, int mockIndex)
    {
-      return instance.mockClasses.annotatedMockStates.updateMockState(mockClassDesc, mockIndex);
+      AnnotatedMockStates mockStates = getMockStates(mockClassDesc);
+      return mockStates.updateMockState(mockClassDesc, mockIndex);
+   }
+
+   private static AnnotatedMockStates getMockStates(String mockClassDesc)
+   {
+      AnnotatedMockStates mockStates = getMockClasses().getMockStates();
+      return mockStates.hasStates(mockClassDesc) ? mockStates : STARTUP_INSTANCE.mockClasses.getMockStates();
    }
 
    public static void exitReentrantMock(String mockClassDesc, int mockIndex)
    {
-      instance.mockClasses.annotatedMockStates.exitReentrantMock(mockClassDesc, mockIndex);
+      AnnotatedMockStates mockStates = getMockStates(mockClassDesc);
+      mockStates.exitReentrantMock(mockClassDesc, mockIndex);
    }
 }
