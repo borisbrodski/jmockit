@@ -1,26 +1,6 @@
 /*
- * JMockit Expectations & Verifications
  * Copyright (c) 2006-2011 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
 
@@ -143,16 +123,27 @@ abstract class BaseTypeRedefinition
       String mockClassName = Utilities.GENERATED_IMPLCLASS_PREFIX + mockedInterface.getSimpleName();
       ClassWriter modifier = new InterfaceImplementationGenerator(interfaceReader, mockClassName);
       interfaceReader.accept(modifier, true);
-      final byte[] generatedClass = modifier.toByteArray();
 
-      targetClass = new ClassLoader()
+      targetClass = newImplementationClass(mockedInterface, modifier, mockClassName);
+   }
+
+   private Class<?> newImplementationClass(Class<?> interfaceOrAbstractClass, ClassWriter generator, String implName)
+   {
+      final byte[] generatedBytecode = generator.toByteArray();
+      ClassLoader parentLoader = interfaceOrAbstractClass.getClassLoader();
+
+      if (parentLoader == null) {
+         parentLoader = getClass().getClassLoader();
+      }
+
+      return new ClassLoader(parentLoader)
       {
          @Override
          protected Class<?> findClass(String name)
          {
-            return defineClass(name, generatedClass, 0, generatedClass.length);
+            return defineClass(name, generatedBytecode, 0, generatedBytecode.length);
          }
-      }.findClass(mockClassName);
+      }.findClass(implName);
    }
 
    private void createNewMockInstanceFactoryForInterface()
@@ -276,16 +267,8 @@ abstract class BaseTypeRedefinition
       SubclassGenerationModifier modifier =
          new SubclassGenerationModifier(typeMetadata.mockingCfg, targetClass, classReader, subclassName);
       classReader.accept(modifier, false);
-      final byte[] modifiedClass = modifier.toByteArray();
 
-      return new ClassLoader()
-      {
-         @Override
-         protected Class<?> findClass(String name)
-         {
-            return defineClass(name, modifiedClass, 0, modifiedClass.length);
-         }
-      }.findClass(subclassName);
+      return newImplementationClass(targetClass, modifier, subclassName);
    }
 
    abstract String getNameForConcreteSubclassToCreate();
