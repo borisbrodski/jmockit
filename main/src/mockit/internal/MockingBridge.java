@@ -44,11 +44,11 @@ public final class MockingBridge implements InvocationHandler
    public static final int FIRST_TARGET_WITH_EXTRA_ARG = CALL_INSTANCE_MOCK;
 
    private static final Object[] EMPTY_ARGS = {};
-   
+
    @SuppressWarnings({"UnusedDeclaration"})
    public static final MockingBridge MB = new MockingBridge();
 
-   public Object invoke(Object mocked, Method method, Object[] args) throws Throwable
+   public synchronized Object invoke(Object mocked, Method method, Object[] args) throws Throwable
    {
       if (isCallThatParticipatesInClassLoading(mocked)) {
          return Void.class;
