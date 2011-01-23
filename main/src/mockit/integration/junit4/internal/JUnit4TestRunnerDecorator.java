@@ -40,12 +40,18 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
    {
       Method method = it.getMethod();
       Class<?> testClass = target == null ? method.getDeclaringClass() : target.getClass();
+      TestRun.enterNoMockingZone();
 
-      if (testClass.isAnnotationPresent(SuiteClasses.class)) {
-         setUpClassLevelMocksAndStubs(testClass);
+      try {
+         if (testClass.isAnnotationPresent(SuiteClasses.class)) {
+            setUpClassLevelMocksAndStubs(testClass);
+         }
+         else {
+            updateTestClassState(target, testClass);
+         }
       }
-      else {
-         updateTestClassState(target, testClass);
+      finally {
+         TestRun.exitNoMockingZone();
       }
 
       // In case it isn't a test method, but a before/after method:
