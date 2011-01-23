@@ -4,6 +4,7 @@
  */
 package mockit.multicore;
 
+import static org.junit.Assert.*;
 import org.junit.*;
 
 import mockit.*;
@@ -19,11 +20,11 @@ public final class CopyingClassLoaderTest
 
       Class<?> copy = copyingCL.getCopy(original.getName());
 
-      assert original != copy;
-      assert original.getClassLoader() == ClassLoader.getSystemClassLoader();
-      assert copy.getClassLoader() == copyingCL;
-      assert !copyingCL.hasLoadedClass(B.class);
-      assert copy.getPackage() != null;
+      assertNotSame(original, copy);
+      assertSame(ClassLoader.getSystemClassLoader(), original.getClassLoader());
+      assertSame(copyingCL, copy.getClassLoader());
+      assertFalse(copyingCL.hasLoadedClass(B.class));
+      assertNotNull(copy.getPackage());
    }
 
    @SuppressWarnings({"UnusedDeclaration"})
@@ -49,11 +50,11 @@ public final class CopyingClassLoaderTest
       Class<?> copy = copyingCL.getCopy(original.getName());
 
       Object a = Deencapsulation.newInstance(copy);
-      assert a.getClass() == copy;
-      assert copyingCL.hasLoadedClass(B.class);
+      assertSame(copy, a.getClass());
+      assertTrue(copyingCL.hasLoadedClass(B.class));
 
       Class<?> bClass = Deencapsulation.invoke(a, "getClassOfDependency");
-      assert bClass == B.class; // would be different if B was defined outside a "mockit" package
-      assert "B".equals(bClass.getSimpleName());
+      assertSame(B.class, bClass); // would be different if B was defined outside a "mockit" package
+      assertEquals("B", bClass.getSimpleName());
    }
 }
