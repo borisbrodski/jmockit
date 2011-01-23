@@ -12,7 +12,7 @@ public final class FirstTest
    public void slowTest1() throws Exception
    {
       A.doSomething();
-      Thread.sleep(1000);
+      Thread.sleep(650);
    }
 
    @Test
@@ -20,7 +20,7 @@ public final class FirstTest
    {
       new B().doSomethingElse();
       assert B.counter == 2;
-      Thread.sleep(500);
+      Thread.sleep(350);
    }
 
    public static class A

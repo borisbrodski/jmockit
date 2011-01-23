@@ -10,24 +10,32 @@ import mockit.*;
 
 public final class ThirdTest
 {
-   @Test
-   public void quickTestUsingTheJMockitExpectationsAPI(@Injectable final A mockedA)
-   {
-      mockedA.doSomething();
+   final A a = new A();
 
-      new Verifications()
-      {
-         {
-            mockedA.doSomething();
-         }
-      };
+   @Test
+   public void firstSlowTest() throws Exception
+   {
+      a.doSomething();
+      Thread.sleep(450);
+   }
+
+   @Test
+   public void secondSlowTest() throws Exception
+   {
+      Thread.sleep(250);
+      a.doSomething();
+   }
+
+   @Test
+   public void thirdSlowTest() throws Exception
+   {
+      Thread.sleep(150);
+      a.doSomething();
+      Thread.sleep(150);
    }
 
    public static class A
    {
-      public void doSomething()
-      {
-         throw new RuntimeException("should not execute");
-      }
+      public void doSomething() {}
    }
 }
