@@ -31,8 +31,13 @@ final class CopyingClassLoader extends ClassLoader
          name.startsWith("org.junit.") || name.startsWith("junit.framework.") ||
          name.startsWith("mockit.") && !name.startsWith("mockit.integration.logging.")
       ) {
-         assert !resolve;
-         return SYSTEM_CL.loadClass(name);
+         Class<?> theClass = SYSTEM_CL.loadClass(name);
+
+         if (resolve) {
+            resolveClass(theClass);
+         }
+
+         return theClass;
       }
 
       return super.loadClass(name, resolve);
@@ -74,7 +79,15 @@ final class CopyingClassLoader extends ClassLoader
    @Override
    protected URL findResource(String name)
    {
-      return SYSTEM_CL.getResource(name);
+      URL resource;
+
+      // Somehow, getResource returns null sometimes, but retrying eventually works.
+      do {
+         resource = SYSTEM_CL.getResource(name);
+      }
+      while (resource == null);
+
+      return resource;
    }
 
    @Override
