@@ -16,13 +16,53 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.999.6 (January ??, 2011):</p>
+<p>Release 0.999.6 (January 30, 2011):</p>
 <ul>
+   <li>
+      <strong>Changed</strong> the default mocking behavior for overridden <code>equals</code>, <code>hashCode</code>
+      and <code>toString</code> methods, so that they are mocked by default but still behave according to the standard
+      behavior inherited from <code>java.lang.Object</code>.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=130">issue 130</a>.
+      Although unlikely, this change <em>can</em> cause existing tests to break.
+   </li>
    <li>
       <strong>Fixed</strong> an issue in test classes compiled with Eclipse, when recording or verifying an invocation
       with two or more parameters, but with argument matchers used only for some of them <em>and</em> spanning two or
       more source lines.
       See <a href="http://code.google.com/p/jmockit/issues/detail?id=114">issue 114</a>.
+   </li>
+   <li>
+      <strong>Fixed</strong> potential for conflict between JMockit and other code which happens to reset the global
+      system properties object (with <code>System.setProperties(Properties)</code>), or that expects only
+      <code>String</code> instances to be stored in it.
+      See issues <a href="http://code.google.com/p/jmockit/issues/detail?id=123">123</a> and
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=129">129</a>.
+   </li>
+   <li>
+      <strong>Fixed</strong> a bug which caused the occurrence of an <code>ArrayIndexOutOfBoundsException</code> when
+      mocking an interface containing static initializers.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=127">issue 127</a>.
+   </li>
+   <li>
+      <strong>Fixed</strong> a bug which caused two mock fields for the same mocked interface to receive the same
+      instance instead of two different instances.
+   </li>
+   <li>
+      <strong>Optimized</strong> the handling of mock fields declared at the test class level.
+      The performance gain should be small but noticeable in a test suite with several test classes containing mock
+      fields.
+   </li>
+   <li>
+      Added initial (and still experimental) version of a <strong>new tool</strong>
+      (<a href="http://code.google.com/p/jmockit/issues/detail?id=134">issue 134</a>):
+      the <em><strong>multi-core</strong> test runner</em>. For now, only JUnit is supported.
+      The tool transparently allocates test classes to different CPU cores (when available), so that they are
+      executed in parallel. Code under test does <em>not</em> need to be thread-safe.
+      In a dual-core CPU, this reduces the total time of a test run in half.
+      In a Core i7 processor with hyper-threading the reduction is proportional, ie, it falls to <em>1/8</em> of the
+      regular non-parallel time.
+      To use it, simply add <code>jmockit-multicore.jar</code> to the test execution classpath, <em>before</em> the
+      jar for JUnit (<code>jmockit.jar</code> is not required).
    </li>
 </ul>
 
