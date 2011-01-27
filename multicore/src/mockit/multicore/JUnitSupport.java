@@ -11,8 +11,6 @@ import org.junit.runner.*;
 import org.junit.runner.notification.*;
 import org.junit.runners.*;
 
-import mockit.*;
-
 public final class JUnitSupport
 {
    private final List<Runner> classRunners;
@@ -20,7 +18,7 @@ public final class JUnitSupport
    public JUnitSupport(Runner runner)
    {
       if (runner instanceof Suite && Runtime.getRuntime().availableProcessors() > 1) {
-         List<Runner> runners = Deencapsulation.invoke(runner, "getChildren");
+         List<Runner> runners = Utilities.invoke(runner, "getChildren");
 
          if (runners.size() > 1) {
             classRunners = runners;

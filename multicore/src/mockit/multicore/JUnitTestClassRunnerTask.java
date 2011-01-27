@@ -5,13 +5,12 @@
 package mockit.multicore;
 
 import junit.framework.*;
+import static mockit.multicore.Utilities.*;
 import org.junit.internal.runners.*;
 import org.junit.runner.*;
 import org.junit.runner.notification.*;
 import org.junit.runners.*;
 import org.junit.runners.model.TestClass;
-
-import mockit.*;
 
 @SuppressWarnings({"deprecation"})
 final class JUnitTestClassRunnerTask extends TestClassRunnerTask
@@ -33,11 +32,11 @@ final class JUnitTestClassRunnerTask extends TestClassRunnerTask
          return testClassInfo.getJavaClass().getName();
       }
       else if (classRunner instanceof JUnit38ClassRunner) {
-         TestSuite testClassInfo = Deencapsulation.invoke(classRunner, "getTest");
+         TestSuite testClassInfo = invoke(classRunner, "getTest");
          return testClassInfo.getName();
       }
       else if (classRunner instanceof JUnit4ClassRunner) {
-         org.junit.internal.runners.TestClass testClassInfo = Deencapsulation.invoke(classRunner, "getTestClass");
+         org.junit.internal.runners.TestClass testClassInfo = invoke(classRunner, "getTestClass");
          return testClassInfo.getJavaClass().getName();
       }
 
@@ -48,16 +47,16 @@ final class JUnitTestClassRunnerTask extends TestClassRunnerTask
    void prepareCopyOfTestClassForExecution(Class<?> testClass) throws Exception
    {
       if (classRunner instanceof ParentRunner<?>) {
-         Deencapsulation.setField(classRunner, "fTestClass", new TestClass(testClass));
+         setField(ParentRunner.class, classRunner, "fTestClass", new TestClass(testClass));
       }
       else if (classRunner instanceof JUnit38ClassRunner) {
          TestSuite testSuite = new TestSuite(testClass.asSubclass(TestCase.class));
-         Deencapsulation.invoke(classRunner, "setTest", testSuite);
+         setField(classRunner, "fTest", testSuite);
       }
       else {
          org.junit.internal.runners.TestClass testClassInfo = new org.junit.internal.runners.TestClass(testClass);
-         Deencapsulation.setField(classRunner, "fTestClass", testClassInfo);
-         Deencapsulation.setField(classRunner, "fTestMethods", testClassInfo.getTestMethods());
+         setField(classRunner, "fTestClass", testClassInfo);
+         setField(classRunner, "fTestMethods", testClassInfo.getTestMethods());
       }
    }
 

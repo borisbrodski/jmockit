@@ -8,11 +8,10 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import mockit.internal.*;
-
 final class CopyingClassLoader extends ClassLoader
 {
    private static final ClassLoader SYSTEM_CL = ClassLoader.getSystemClassLoader();
+   private static final byte[] CLASSFILE_BUFFER = new byte[2 * 1024 * 1024];
 
    CopyingClassLoader()
    {
@@ -27,37 +26,68 @@ final class CopyingClassLoader extends ClassLoader
    @Override
    protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException
    {
-      if (
-         name.startsWith("org.junit.") || name.startsWith("junit.framework.") ||
-         name.startsWith("mockit.") && !name.startsWith("mockit.integration.logging.")
-      ) {
-         Class<?> theClass = SYSTEM_CL.loadClass(name);
-
-         if (resolve) {
-            resolveClass(theClass);
+      synchronized (CopyingClassLoader.class) {
+         if (
+            "java.lang.ClassLoader java.io.FilePermission java.util.".contains(name) ||
+            name.startsWith("org.junit.") || name.startsWith("junit.framework.") ||
+            name.startsWith("mockit.") && !name.startsWith("mockit.integration.logging.")
+         ) {
+            Class<?> theClass = SYSTEM_CL.loadClass(name);
+   
+            if (resolve) {
+               resolveClass(theClass);
+            }
+   
+            return theClass;
          }
 
-         return theClass;
+         return super.loadClass(name, resolve);
       }
-
-      return super.loadClass(name, resolve);
    }
 
    @Override
    protected Class<?> findClass(String name)
    {
-      Class<?> loadedClass = findLoadedClass(name);
+      synchronized (CopyingClassLoader.class) {
+         Class<?> loadedClass = findLoadedClass(name);
 
-      if (loadedClass != null) {
-         return loadedClass;
+         if (loadedClass != null) {
+            return loadedClass;
+         }
+
+         definePackageForCopiedClass(name);
+         int bytesRead = readClassFile(name);
+
+         return defineClass(name, CLASSFILE_BUFFER, 0, bytesRead);
       }
-
-      definePackageForCopiedClass(name);
-      
-      byte[] classBytecode = ClassFile.createClassFileReader(name).b;
-      return defineClass(name, classBytecode, 0, classBytecode.length);
    }
 
+   private int readClassFile(String className)
+   {
+      String classFileName = className.replace('.', '/') + ".class";
+      InputStream input = SYSTEM_CL.getResourceAsStream(classFileName);
+      int bytesRead = 0;
+
+      while (true) {
+         int n;
+
+         try {
+            n = input.read(CLASSFILE_BUFFER, bytesRead, CLASSFILE_BUFFER.length - bytesRead);
+         }
+         catch (IOException e) {
+            throw new RuntimeException(e);
+         }
+         
+         if (n == -1) {
+            break;
+         }
+
+         bytesRead += n;
+      }
+      
+      return bytesRead;
+   }
+   
    private void definePackageForCopiedClass(String name)
    {
       int p = name.lastIndexOf('.');
