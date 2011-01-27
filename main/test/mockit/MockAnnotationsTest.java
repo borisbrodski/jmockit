@@ -1,29 +1,10 @@
 /*
- * JMockit Annotations
- * Copyright (c) 2006-2010 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
 
+import java.io.*;
 import java.util.*;
 import javax.security.auth.*;
 import javax.security.auth.callback.*;
@@ -41,7 +22,7 @@ import static org.junit.Assert.*;
 @SuppressWarnings({"JUnitTestMethodWithNoAssertions", "ClassWithTooManyMethods"})
 public final class MockAnnotationsTest
 {
-   // The "code under test" for the tests in this class -------------------------------------------
+   // The "code under test" for the tests in this class ///////////////////////////////////////////////////////////////
 
    private final CodeUnderTest codeUnderTest = new CodeUnderTest();
    private boolean mockExecuted;
@@ -95,7 +76,7 @@ public final class MockAnnotationsTest
       final void simpleOperation(int a, String b, Date c) {}
    }
 
-   // Mocks without expectations ------------------------------------------------------------------
+   // Mocks without expectations //////////////////////////////////////////////////////////////////////////////////////
 
    @Test
    public void mockWithNoExpectationsPassingMockClass()
@@ -263,7 +244,7 @@ public final class MockAnnotationsTest
       static void provideSomeService() {}
    }
 
-   // Mocks WITH expectations ---------------------------------------------------------------------
+   // Mocks WITH expectations /////////////////////////////////////////////////////////////////////////////////////////
 
    @Test
    public void setUpMocksContainingExpectations()
@@ -346,7 +327,7 @@ public final class MockAnnotationsTest
       void provideSomeService() {}
    }
 
-   // Reentrant mocks -----------------------------------------------------------------------------
+   // Reentrant mocks /////////////////////////////////////////////////////////////////////////////////////////////////
 
    @Test(expected = RuntimeException.class)
    public void setUpReentrantMock()
@@ -368,7 +349,7 @@ public final class MockAnnotationsTest
       void provideSomeService() { it.provideSomeService(); }
    }
 
-   // Mocks for constructors and static methods ---------------------------------------------------
+   // Mocks for constructors and static methods ///////////////////////////////////////////////////////////////////////
 
    @Test
    public void setUpMockForConstructor()
@@ -819,7 +800,6 @@ public final class MockAnnotationsTest
          }
          finally {
             it.getSubject();
-//            System.out.println("Login attempted for " + it.getSubject());
          }
       }
 
@@ -845,5 +825,23 @@ public final class MockAnnotationsTest
       public boolean commit() { return true; }
       public boolean abort() { return false; }
       public boolean logout() { return true; }
+   }
+
+   @Test
+   public void mockFileConstructor()
+   {
+      new MockUp<File>()
+      {
+         File it;
+
+         @Mock
+         void $init(String pathName)
+         {
+            Deencapsulation.setField(it, "path", "fixedPrefix/" + pathName);
+         }
+      };
+
+      File f = new File("test");
+      assertEquals("fixedPrefix/test", f.getPath());
    }
 }
