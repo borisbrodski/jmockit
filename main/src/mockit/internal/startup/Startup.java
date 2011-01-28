@@ -81,9 +81,6 @@ public final class Startup
     * real classes. The real classes can be specified in one of two ways: by providing a regular
     * expression matching class names as the tool arguments, or by annotating the external mock
     * class with {@link mockit.MockClass}.</li> </ol>
-    * <p/>
-    * If you encounter a {@link VerifyError} in some test, try running it with the
-    * <code>-noverify</code> JVM parameter.
     *
     * @param agentArgs zero or more <strong>instrumentation tool specifications</strong> (separated
     *                  by semicolons if more than one); each tool specification must be expressed as
@@ -154,7 +151,10 @@ public final class Startup
          new RedefinitionEngine(null, mockClass).setUpStartupMock();
       }
       catch (TypeNotPresentException ignore) {
-         // OK, ignores the startup mock if the necessary third-party class files are not in the classpath.
+         // OK, ignore the startup mock if the necessary third-party class files are not in the classpath.
+      }
+      catch (IllegalArgumentException ignore) {
+         // OK, ignore the startup mock if an incompatible version of the mocked library is present.
       }
    }
 
