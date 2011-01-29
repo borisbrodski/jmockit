@@ -64,6 +64,7 @@ public final class TestRun
    private Object currentTestInstance;
    private Method runningTestMethod;
 
+   private SavePoint savePointForTestClass;
    private CaptureOfImplementationsForTestClass captureOfSubtypes;
    private SharedFieldTypeRedefinitions sharedFieldTypeRedefinitions;
 
@@ -102,6 +103,11 @@ public final class TestRun
       URL location = codeSource.getLocation();
 
       return location != null && !location.getPath().endsWith(".jar");
+   }
+
+   public static SavePoint getSavePointForTestClass()
+   {
+      return getInstance().savePointForTestClass;
    }
 
    public static CaptureOfImplementationsForTestClass getCaptureOfSubtypes()
@@ -171,6 +177,11 @@ public final class TestRun
    public static void setRunningIndividualTest(Object testInstance)
    {
       getInstance().currentTestInstance = testInstance;
+   }
+
+   public static void setSavePointForTestClass(SavePoint savePoint)
+   {
+      getInstance().savePointForTestClass = savePoint;
    }
 
    public static void setCaptureOfSubtypes(CaptureOfImplementationsForTestClass captureOfSubtypes)
