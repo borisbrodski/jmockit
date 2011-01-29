@@ -1,26 +1,6 @@
 /*
- * JMockit
- * Copyright (c) 2006-2009 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
 
@@ -33,24 +13,13 @@ import static org.junit.Assert.*;
 
 public final class CapturingInstancesTest
 {
-   public interface Service
-   {
-      int doSomething();
-   }
-
-   static final class ServiceImpl implements Service
-   {
-      public int doSomething() { return 1; }
-   }
+   public interface Service { int doSomething(); }
+   static final class ServiceImpl implements Service { public int doSomething() { return 1; } }
 
    public static final class TestedUnit
    {
       private final Service service1 = new ServiceImpl();
-      private final Service service2 = new Service()
-      {
-         public int doSomething() { return 2; }
-      };
-
+      private final Service service2 = new Service() { public int doSomething() { return 2; } };
       Observable observable;
 
       public int businessOperation(final boolean b)
@@ -73,8 +42,7 @@ public final class CapturingInstancesTest
       }
    }
 
-   @Mocked(capture = 10)
-   private Service service;
+   @Mocked(capture = 2) Service service;
 
    @Test
    public void captureServiceInstancesCreatedByTestedConstructor()
@@ -88,8 +56,7 @@ public final class CapturingInstancesTest
    }
 
    @Test
-   public void captureAllInternallyCreatedInstances(@Mocked(capture = 1) final Callable<?> callable)
-      throws Exception
+   public void captureAllInternallyCreatedInstances(@Mocked(capture = 1) final Callable<?> callable) throws Exception
    {
       new NonStrictExpectations()
       {
@@ -106,11 +73,6 @@ public final class CapturingInstancesTest
       assertNotNull(unit.observable);
       assertEquals(7, result);
 
-      new Verifications()
-      {
-         {
-            callable.call();
-         }
-      };
+      new Verifications() {{ callable.call(); }};
    }
 }
