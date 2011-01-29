@@ -73,9 +73,6 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
             Utilities.filterStackTrace(t);
             throw t;
          }
-         finally {
-            TestRun.setRunningIndividualTest(null);
-         }
       }
 
       if (generateTestIdForNextBeforeMethod) {

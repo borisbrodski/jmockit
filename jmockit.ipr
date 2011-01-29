@@ -1083,6 +1083,7 @@
         <w>guice</w>
         <w>jcommander</w>
         <w>jmockit</w>
+        <w>mockable</w>
       </words>
     </dictionary>
   </component>
