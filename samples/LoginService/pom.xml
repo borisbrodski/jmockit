@@ -26,8 +26,13 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>org.testng</groupId><artifactId>testng</artifactId><version>5.11</version>
-         <classifier>jdk15</classifier><scope>test</scope>
+         <groupId>org.testng</groupId><artifactId>testng</artifactId><version>5.14.6</version>
+         <scope>test</scope>
+         <exclusions>
+            <exclusion><groupId>org.beanshell</groupId><artifactId>bsh</artifactId></exclusion>
+            <exclusion><groupId>com.google.inject</groupId><artifactId>guice</artifactId></exclusion>
+            <exclusion><groupId>com.beust</groupId><artifactId>jcommander</artifactId></exclusion>
+         </exclusions>
       </dependency>
    </dependencies>
 </project>

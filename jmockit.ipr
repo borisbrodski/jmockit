@@ -96,6 +96,9 @@
   </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
+    <excludeFromCompile>
+      <file url="file://$PROJECT_DIR$/main/src/mockit/integration/testng/internal/TestNGTestRunnerDecorator.java" />
+    </excludeFromCompile>
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -116,8 +119,29 @@
     </wildcardResourcePatterns>
     <annotationProcessing enabled="false" useClasspath="true" />
   </component>
-  <component name="CopyrightManager" default="">
+  <component name="CopyrightManager" default="JMockit">
+    <copyright>
+      <option name="notice" value="Copyright (c) 2006-2011 Rogério Liesenfeld&#10;This file is subject to the terms of the MIT license (see LICENSE.txt)." />
+      <option name="keyword" value="Copyright" />
+      <option name="allowReplaceKeyword" value="" />
+      <option name="myName" value="JMockit" />
+      <option name="myLocal" value="true" />
+    </copyright>
     <module2copyright />
+    <LanguageOptions name="__TEMPLATE__">
+      <option name="fileTypeOverride" value="2" />
+      <option name="relativeBefore" value="true" />
+      <option name="addBlankAfter" value="false" />
+      <option name="fileLocation" value="1" />
+      <option name="block" value="true" />
+      <option name="separateBefore" value="false" />
+      <option name="separateAfter" value="false" />
+      <option name="prefixLines" value="true" />
+      <option name="lenBefore" value="80" />
+      <option name="lenAfter" value="80" />
+      <option name="box" value="false" />
+      <option name="filler" value=" " />
+    </LanguageOptions>
   </component>
   <component name="DependencyValidationManager">
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
@@ -1051,6 +1075,16 @@
         <w>xmpp</w>
       </words>
     </dictionary>
+    <dictionary name="usuario">
+      <words>
+        <w>agentmain</w>
+        <w>beanshell</w>
+        <w>beust</w>
+        <w>guice</w>
+        <w>jcommander</w>
+        <w>jmockit</w>
+      </words>
+    </dictionary>
   </component>
   <component name="ProjectModuleManager">
     <modules>
@@ -1162,17 +1196,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/commons-collections/commons-collections/3.2/commons-collections-3.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: commons-email:commons-email:0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/tutorial/lib/commons-email-1.2.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/commons-email/commons-email/0/commons-email-0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/commons-email/commons-email/0/commons-email-0-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: commons-lang:commons-lang:2.3">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.3/commons-lang-2.3.jar!/" />
@@ -1272,17 +1295,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit-dep/4.4/junit-dep-4.4-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: junit:junit:3.8.1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: junit:junit:4.8.1">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.8.1/junit-4.8.1.jar!/" />
@@ -1303,17 +1315,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/log4j/log4j/1.2.15/log4j-1.2.15-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: mockit:jmockit-hibernate3emul:1">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/orderMngmntWebapp/../../jmockit-hibernate3emul.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit-hibernate3emul/1/jmockit-hibernate3emul-1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit-hibernate3emul/1/jmockit-hibernate3emul-1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: ognl:ognl:2.6.9">
@@ -1360,17 +1361,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.hamcrest:hamcrest-core:1.2">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../../lib/hamcrest-core-1.2.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.2/hamcrest-core-1.2-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.2/hamcrest-core-1.2-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: org.hamcrest:hamcrest-library:1.1">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/1.1/hamcrest-library-1.1.jar!/" />
@@ -1380,17 +1370,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/1.1/hamcrest-library-1.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.hamcrest:hamcrest-library:1.2">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/mockito/../lib/hamcrest-library-1.2.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/1.2/hamcrest-library-1.2-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/1.2/hamcrest-library-1.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.jmock:jmock-junit4:2.5.1">
@@ -1470,17 +1449,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.slf4j:slf4j-nop:0">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/samples/powermock/../lib/slf4j-nop-1.5.8.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-nop/0/slf4j-nop-0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-nop/0/slf4j-nop-0-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: org.springframework:spring-asm:3.0.0.RELEASE">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-asm/3.0.0.RELEASE/spring-asm-3.0.0.RELEASE.jar!/" />
@@ -1514,15 +1482,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/3.0.0.RELEASE/spring-test-3.0.0.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.testng:testng:jdk15:5.11">
+    <library name="Maven: org.testng:testng:5.14.6">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.11/testng-5.11-jdk15.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.14.6/testng-5.14.6.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.11/testng-5.11-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.14.6/testng-5.14.6-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.11/testng-5.11-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.14.6/testng-5.14.6-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.unitils:unitils-core:3.1">

@@ -1,6 +1,6 @@
 <project name="jmockit" basedir="." default="fullRebuild">
    <property name="JUNIT_JAR" value="lib/junit-dep-4.8.2.jar"/>
-   <property name="TESTNG_JAR" value="lib/testng-5.11-jdk15.jar"/>
+   <property name="TESTNG_JAR" value="lib/testng-5.14.6.jar"/>
 
    <loadfile property="version" srcFile="version.txt"/>
 
@@ -390,6 +390,8 @@
          <classpath path="jmockit-coverage-serial.jar"/>
          <classpath refid="common.classpath"/>
          <classpath>
+            <pathelement location="lib/bsh-2.0b1.jar"/>
+            <pathelement location="lib/jcommander-1.5.jar"/>
             <fileset dir="samples" includes="lib/*.jar"/>
             <pathelement location="${sampleDir}/classes"/>
             <pathelement location="${sampleDir}/test-classes"/>

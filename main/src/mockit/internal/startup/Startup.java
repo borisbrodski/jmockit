@@ -11,7 +11,6 @@ import java.util.*;
 import mockit.external.asm.*;
 import mockit.integration.junit3.internal.*;
 import mockit.integration.junit4.internal.*;
-import mockit.integration.testng.internal.*;
 import mockit.internal.*;
 import mockit.internal.expectations.transformation.*;
 import mockit.internal.state.*;
@@ -140,8 +139,6 @@ public final class Startup
       setUpInternalStartupMock(RunNotifierDecorator.class);
       setUpInternalStartupMock(JUnit4TestRunnerDecorator.class);
 
-      setUpInternalStartupMock(TestNGTestRunnerDecorator.class);
-
       TestRun.mockFixture().turnRedefinedClassesIntoFixedOnes();
    }
 
@@ -152,9 +149,6 @@ public final class Startup
       }
       catch (TypeNotPresentException ignore) {
          // OK, ignore the startup mock if the necessary third-party class files are not in the classpath.
-      }
-      catch (IllegalArgumentException ignore) {
-         // OK, ignore the startup mock if an incompatible version of the mocked library is present.
       }
    }
 
