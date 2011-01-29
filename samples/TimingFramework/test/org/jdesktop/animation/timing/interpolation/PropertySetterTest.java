@@ -1,26 +1,6 @@
 /*
- * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.timing.interpolation;
 
@@ -33,8 +13,6 @@ import mockit.*;
 import org.jdesktop.animation.timing.*;
 import static org.junit.Assert.*;
 
-@UsingMocksAndStubs(java.awt.Toolkit.class)
-@Capturing(baseType = TimingSource.class)
 public final class PropertySetterTest
 {
    private static final class Animated
@@ -70,8 +48,7 @@ public final class PropertySetterTest
       int duration = 500;
       Evaluator<Double> evaluator = Evaluator.create(Double.class);
 
-      Animator animator =
-         PropertySetter.createAnimator(duration, new Animated(), "value", evaluator, 1.0, 3.0);
+      Animator animator = PropertySetter.createAnimator(duration, new Animated(), "value", evaluator, 1.0, 3.0);
 
       assertEquals(duration, animator.getDuration());
    }
@@ -82,8 +59,7 @@ public final class PropertySetterTest
       int duration = 500;
       KeyFrames<Integer> keyFrames = new KeyFrames<Integer>(KeyValues.create(0, 2, 4));
 
-      Animator animator =
-         PropertySetter.createAnimator(duration, new Animated(), "value", keyFrames);
+      Animator animator = PropertySetter.createAnimator(duration, new Animated(), "value", keyFrames);
 
       assertEquals(duration, animator.getDuration());
    }
@@ -108,8 +84,7 @@ public final class PropertySetterTest
       final KeyValues<Integer> keyValues = KeyValues.create(3);
       final Integer startValue = 2;
       final Animated animated = new Animated(startValue);
-      PropertySetter<Integer> setter =
-         new PropertySetter<Integer>(animated, "value", new KeyFrames<Integer>(keyValues));
+      PropertySetter<Integer> setter = new PropertySetter<Integer>(animated, "value", new KeyFrames<Integer>(keyValues));
 
       new Expectations(KeyValues.class, Animated.class)
       {

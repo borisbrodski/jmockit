@@ -56,21 +56,25 @@ public class TimingTargetAdapter implements TimingTarget
      * no fraction that makes sense if the animation has no defined length.
      * @see Animator.Direction
      */
+    @Override
     public void timingEvent(float fraction) {}
 
     /**
      * Called when the Animator's animation begins.  This provides a chance
      * for targets to perform any setup required at animation start time.
      */
+    @Override
     public void begin() {}
     
     /**
      * Called when the Animator's animation ends.
      */
+    @Override
     public void end() {}
     
     /**
      * Called when the Animator repeats the animation cycle.
      */
+    @Override
     public void repeat() {}
 }

@@ -1,26 +1,6 @@
 /*
- * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.timing;
 
@@ -30,7 +10,6 @@ import static org.jdesktop.animation.timing.Animator.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-@UsingMocksAndStubs(java.awt.Toolkit.class)
 @Capturing(baseType = TimingSource.class)
 public final class AnimatorRunningTest
 {
@@ -44,8 +23,8 @@ public final class AnimatorRunningTest
    @Before
    public void setUpTest() { setUpMocks(new MockSystem()); }
 
-   private long currentTimeInMillis;
-   private final Animator animator = new Animator(500);
+   long currentTimeInMillis;
+   final Animator animator = new Animator(500);
 
    @Test
    public void testGetTotalElapsedTimeFromGivenTime()
@@ -206,10 +185,9 @@ public final class AnimatorRunningTest
       assertEquals(0, animator.getTimingFraction(), 0.01);
    }
 
-   // This test is for a private method in the Animator class. Usually, such methods should be
-   // covered through other tests targeted at the public methods which use the private one. In
-   // this case, however, there was no obvious way to fully exercise the private method except by
-   // calling it directly.
+   // This test is for a private method in the Animator class. Usually, such methods should be covered through other
+   // tests targeted at the public methods which use the private one. In this case, however, there was no obvious way
+   // to fully exercise the private method except by calling it directly.
    @Test
    public void testClampedBetweenZeroAndOne()
    {
