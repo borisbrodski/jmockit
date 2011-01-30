@@ -4,12 +4,21 @@
  */
 package integrationTests;
 
+import java.awt.Toolkit;
+
 import org.junit.*;
 
 import mockit.*;
 
+@UsingMocksAndStubs(Toolkit.class)
 public final class MoreTestsUsingJMockitAPIsTest
 {
+   @Test
+   public void verifyThatAWTToolkitIsStubbedOut()
+   {
+      assert Toolkit.getDefaultToolkit() == null;
+   }
+
    public static class A
    {
       public void doSomething() { throw new RuntimeException("should not execute"); }

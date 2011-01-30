@@ -28,20 +28,22 @@ final class CopyingClassLoader extends ClassLoader
    {
       synchronized (CopyingClassLoader.class) {
          if (
-            "java.lang.ClassLoader java.io.FilePermission java.util.".contains(name) ||
+            name.startsWith("java.") || name.startsWith("sun.reflect.") ||
             name.startsWith("org.junit.") || name.startsWith("junit.framework.") ||
             name.startsWith("mockit.") && !name.startsWith("mockit.integration.logging.")
          ) {
             Class<?> theClass = SYSTEM_CL.loadClass(name);
-   
+
             if (resolve) {
                resolveClass(theClass);
             }
-   
+
             return theClass;
          }
 
-         return super.loadClass(name, resolve);
+         Class<?> copiedClass = getCopy(name);
+
+         return copiedClass;
       }
    }
 
@@ -58,7 +60,9 @@ final class CopyingClassLoader extends ClassLoader
          definePackageForCopiedClass(name);
          int bytesRead = readClassFile(name);
 
-         return defineClass(name, CLASSFILE_BUFFER, 0, bytesRead);
+         Class<?> copiedClass = defineClass(name, CLASSFILE_BUFFER, 0, bytesRead);
+
+         return copiedClass;
       }
    }
 

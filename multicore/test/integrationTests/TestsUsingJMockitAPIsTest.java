@@ -4,6 +4,8 @@
  */
 package integrationTests;
 
+import java.awt.*;
+
 import org.junit.*;
 
 import mockit.*;
@@ -20,6 +22,12 @@ public final class TestsUsingJMockitAPIsTest
    static final class B
    {
       boolean run(String s) { return s.length() > 0; }
+   }
+
+   @Ignore @Test
+   public void verifyThatAWTToolkitIsUnaffectedByStubbingInPreviousTestClass()
+   {
+      assert Toolkit.getDefaultToolkit().getAWTEventListeners() != null;
    }
 
    @Test
