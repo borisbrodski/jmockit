@@ -28,7 +28,7 @@
             </configuration>
          </plugin>
          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId><version>2.5</version>
+            <artifactId>maven-surefire-plugin</artifactId><version>2.6</version>
             <configuration>
                <excludes><exclude>**/CoverageTest.class</exclude></excludes>
             </configuration>
