@@ -42,36 +42,36 @@
       from the full distribution, or from a SVN checkout.
    </li>
    <li>
-      Add the library file <strong><code>jmockit.jar</code></strong> to your classpath (in your Java
-      IDE project, Ant build file, and so on, as required).
-      When using JUnit 4.5+, verify that <code>jmockit.jar</code> appears <em>before</em> the JUnit jar file in the
-      classpath (this isn't strictly required, but it will provide the greatest ease of use with JUnit and JDK 1.6+).
-      Older versions of JUnit are not supported, but note that JUnit 3.8-style tests are also accepted by JUnit 4.x.
-      <br/>
-      <strong>Eclipse</strong> users: when specifying the order of jars in the classpath, make sure to use the "Order
-      and Export" tab of the "Java Build Path" window.
+      Add the library file <strong><code>jmockit.jar</code></strong> to your classpath (in your Java IDE project, Ant
+      build file, and so on, as required).
    </li>
    <li>
       Depending on your development environment, you <em>may</em> have to do one other thing:
       <ul>
          <li>
-            If you are developing on JDK 1.5, then make sure that <strong><code>-javaagent:jmockit.jar</code></strong>
-            (with the proper absolute or relative path to <code>jmockit.jar</code>) is passed as an initialization
-            parameter to the JVM when running tests.
-            This standard JVM initialization parameter causes it to load on start-up the "Java agent" that JMockit uses
-            internally for bytecode instrumentation.
-            You may have to use this parameter even on a newer JDK 1.6+, if its <em>Attach API</em> implementation is
-            not supported by JMockit: such is the case with the IBM J9 JDK 1.6, the Mac OS X JDKs, and with JDKs for the
-            Solaris OS.
+            When developing on <strong>JDK 1.5</strong>, make sure that
+            "<strong><code>-javaagent:jmockit.jar</code></strong>" (with the proper absolute or relative path to
+            <code>jmockit.jar</code>) is passed as an initialization parameter to the JVM when running tests.
+            This standard parameter causes the JVM to load the "Java agent" that JMockit uses internally for bytecode
+            instrumentation.
+            You may have to use it even on a newer JDK 1.6+, if its <em>Attach API</em> implementation is not supported
+            by JMockit: such is the case with the IBM J9 JDK 1.6, the Mac OS X JDKs, and with JDKs for the Solaris OS.
          </li>
          <li>
-            If you use <strong>TestNG</strong> in a JDK 1.6+ environment and you don't want to use the "-javaagent"
-            parameter as indicated above, then JMockit can be initialized through TestNG-specific configuration.
+            When using <strong>JUnit</strong> (version <strong>4.5</strong> or newer) and JDK 1.6+, verify that
+            <code>jmockit.jar</code> appears <em>before</em> the JUnit jar file in the classpath (this isn't strictly
+            required, but it will provide the greatest ease of use with JUnit and JDK 1.6+).
+            Older versions of JUnit are not supported, but note that JUnit 3.8-style tests are also accepted by JUnit 4.
+            <br/>
+            <strong>Eclipse</strong> users: when specifying the order of jars in the classpath, make sure to use the
+            "Order and Export" tab of the "Java Build Path" window.
+         </li>
+         <li>
+            When using <strong>TestNG</strong> (version <strong>5.14</strong> or newer), the JMockit-TestNG integration
+            must be initialized through TestNG-specific configuration (a JMockit-provided <em>listener</em> for TestNG).
             See <a href="tutorial/RunningTests.html">this page</a> for details.
          </li>
       </ul>
-      When running JUnit test suites with an official Oracle JDK 1.6+ on Windows or Linux, neither of the extra
-      steps above is necessary.
    </li>
    <li>
       Optionally, configure your IDE to find API source code (and consequently the associated Javadoc comments) in this

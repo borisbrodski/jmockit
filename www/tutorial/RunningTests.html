@@ -37,10 +37,10 @@
          and Export" tab of the "Java Build Path" window.
       </li>
       <li>
-         For TestNG test suites, configure TestNG (currently only versions 5.9, 5.10, and 5.11 are supported) with the
+         For TestNG test suites, configure TestNG (version 5.14 or newer) with the
          <code>mockit.integration.testng.Initializer</code>
-         <a href="http://testng.org/doc/documentation-main.html#testng-listeners">test listener</a>.
-         This can be done by passing <code>-listener mockit.integration.testng.Initializer</code> as a test runner
+         <a href="http://testng.org/doc/documentation-main.html#testng-listeners">listener</a>.
+         This can be done by passing "<code>-listener mockit.integration.testng.Initializer</code>" as a test runner
          argument in the JVM command line.
          When using Maven, the listener can be specified by configuring the <code>maven-surefire-plugin</code> with a
          property of name "listener" and a value containing "mockit.integration.testng.Initializer" (see
@@ -56,7 +56,7 @@
    <code>-javaagent:jmockit.jar</code> as a JVM initialization parameter.
    This can easily be done in the "Run/Debug Configuration" for both Eclipse and IntelliJ IDEA.
    (Note that if <code>jmockit.jar</code> is not in the current working directory when running the tests, you will have
-   to insert the appropriate absolute or relative path after the colon, so that the JVM can locate the jar file.)
+   to insert the appropriate absolute or relative path, so that the JVM can locate the jar file.)
 </li>
 </ol>
 
