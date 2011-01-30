@@ -189,12 +189,12 @@
    <!-- Targets for generating component jars and the distribution zip file -->
 
    <target name="createjars"
-           depends="createjar-core, createjars-coverage, createjar-hibernate3emul, createjar-multicore"/>
+           depends="createjar-main, createjars-coverage, createjar-hibernate3emul, createjar-multicore"/>
 
-   <target name="createjar-core">
+   <target name="createjar-main">
       <jar destfile="jmockit.jar" manifest="main/META-INF/MANIFEST.MF">
+         <fileset file="LICENSE.txt"/>
          <fileset file="main/src/jmockit.properties"/>
-         <!--<fileset dir="main" includes="META-INF/services/*"/>-->
          <fileset
             dir="main/src"
             includes="mockit/**/*.java mockit/external/**/*.txt **/attach/**/*.java"/>
@@ -206,8 +206,7 @@
    </target>
 
    <target name="createjar-coverage">
-      <jar
-         destfile="jmockit-coverage.jar" basedir="coverage/classes" excludes="integrationTests/**">
+      <jar destfile="jmockit-coverage.jar" basedir="coverage/classes" excludes="integrationTests/**">
          <manifest>
             <attribute name="Class-Path" value="jmockit.jar"/>
             <attribute name="Implementation-Version" value="${version}"/>
@@ -257,6 +256,7 @@
 
    <target name="createjar-multicore">
       <jar destfile="jmockit-multicore.jar">
+         <fileset file="LICENSE.txt"/>
          <fileset dir="multicore/src" includes="**/*.java"/>
          <fileset dir="multicore/classes"/>
          <manifest><attribute name="Class-Path" value="jmockit.jar"/></manifest>
