@@ -41,7 +41,7 @@
             </executions>
          </plugin>
          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId><version>2.6</version>
+            <artifactId>maven-surefire-plugin</artifactId><version>2.5</version>
             <configuration>
                <testNGArtifactName>none:none</testNGArtifactName>
                <argLine>-javaagent:"${project.build.directory}"/jmockit-${project.version}.jar</argLine>
