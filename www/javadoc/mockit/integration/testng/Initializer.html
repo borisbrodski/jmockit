@@ -72,9 +72,9 @@ function windowTitle()
 </TR>
 <TR>
 <TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
-  SUMMARY:&nbsp;NESTED&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+  SUMMARY:&nbsp;NESTED&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#methods_inherited_from_class_java.lang.Object">METHOD</A></FONT></TD>
 <TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
-DETAIL:&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+DETAIL:&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;METHOD</FONT></TD>
 </TR>
 </TABLE>
 <A NAME="skip-navbar_top"></A>
@@ -92,23 +92,21 @@ Class Initializer</H2>
   <IMG SRC="../../../resources/inherit.gif" ALT="extended by "><B>mockit.integration.testng.Initializer</B>
 </PRE>
 <DL>
-<DT><B>All Implemented Interfaces:</B> <DD>org.testng.ITestListener, org.testng.ITestNGListener</DD>
+<DT><B>All Implemented Interfaces:</B> <DD>org.testng.ITestNGListener</DD>
 </DL>
 <HR>
 <DL>
-<DT><PRE>public final class <B>Initializer</B><DT>extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A><DT>implements org.testng.ITestListener</DL>
+<DT><PRE>public final class <B>Initializer</B><DT>extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A><DT>implements org.testng.ITestNGListener</DL>
 </PRE>
 
 <P>
-A test listener implementation for TestNG that will properly initialize JMockit before any tests
- are executed. This class is useful if running on JDK 1.6+ and the JVM argument
- "-javaagent:jmockit.jar" isn't being used.
+A test listener implementation for TestNG that will properly initialize JMockit before any tests are executed.
  <p/>
  One way to configure TestNG to use this class as a listener is to pass
  "-listener mockit.integration.testng.Initializer" as a command line argument.
- Another way would be through <code>testng.xml</code> configuration.
- Please check the <a href="http://testng.org/doc/documentation-main.html#running-testng">TestNG
- documentation</a> for more details.
+ Another way is through <code>testng.xml</code> configuration.
+ Please check the <a href="http://testng.org/doc/documentation-main.html#running-testng">TestNG documentation</a> for
+ details.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/RunningTests.html">Tutorial</a>
 <P>
@@ -142,62 +140,6 @@ A test listener implementation for TestNG that will properly initialize JMockit 
 <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
 <B>Method Summary</B></FONT></TH>
 </TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../mockit/integration/testng/Initializer.html#onFinish(org.testng.ITestContext)">onFinish</A></B>(org.testng.ITestContext&nbsp;context)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../mockit/integration/testng/Initializer.html#onStart(org.testng.ITestContext)">onStart</A></B>(org.testng.ITestContext&nbsp;context)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../mockit/integration/testng/Initializer.html#onTestFailedButWithinSuccessPercentage(org.testng.ITestResult)">onTestFailedButWithinSuccessPercentage</A></B>(org.testng.ITestResult&nbsp;result)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../mockit/integration/testng/Initializer.html#onTestFailure(org.testng.ITestResult)">onTestFailure</A></B>(org.testng.ITestResult&nbsp;result)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../mockit/integration/testng/Initializer.html#onTestSkipped(org.testng.ITestResult)">onTestSkipped</A></B>(org.testng.ITestResult&nbsp;result)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../mockit/integration/testng/Initializer.html#onTestStart(org.testng.ITestResult)">onTestStart</A></B>(org.testng.ITestResult&nbsp;result)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../mockit/integration/testng/Initializer.html#onTestSuccess(org.testng.ITestResult)">onTestSuccess</A></B>(org.testng.ITestResult&nbsp;result)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TR>
 </TABLE>
 &nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
@@ -226,113 +168,6 @@ Initializer</H3>
 <PRE>
 public <B>Initializer</B>()</PRE>
 <DL>
-</DL>
-
-<!-- ============ METHOD DETAIL ========== -->
-
-<A NAME="method_detail"><!-- --></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2">
-<B>Method Detail</B></FONT></TH>
-</TR>
-</TABLE>
-
-<A NAME="onFinish(org.testng.ITestContext)"><!-- --></A><H3>
-onFinish</H3>
-<PRE>
-public void <B>onFinish</B>(org.testng.ITestContext&nbsp;context)</PRE>
-<DL>
-<DD><DL>
-<DT><B>Specified by:</B><DD><CODE>onFinish</CODE> in interface <CODE>org.testng.ITestListener</CODE></DL>
-</DD>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="onStart(org.testng.ITestContext)"><!-- --></A><H3>
-onStart</H3>
-<PRE>
-public void <B>onStart</B>(org.testng.ITestContext&nbsp;context)</PRE>
-<DL>
-<DD><DL>
-<DT><B>Specified by:</B><DD><CODE>onStart</CODE> in interface <CODE>org.testng.ITestListener</CODE></DL>
-</DD>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="onTestFailedButWithinSuccessPercentage(org.testng.ITestResult)"><!-- --></A><H3>
-onTestFailedButWithinSuccessPercentage</H3>
-<PRE>
-public void <B>onTestFailedButWithinSuccessPercentage</B>(org.testng.ITestResult&nbsp;result)</PRE>
-<DL>
-<DD><DL>
-<DT><B>Specified by:</B><DD><CODE>onTestFailedButWithinSuccessPercentage</CODE> in interface <CODE>org.testng.ITestListener</CODE></DL>
-</DD>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="onTestFailure(org.testng.ITestResult)"><!-- --></A><H3>
-onTestFailure</H3>
-<PRE>
-public void <B>onTestFailure</B>(org.testng.ITestResult&nbsp;result)</PRE>
-<DL>
-<DD><DL>
-<DT><B>Specified by:</B><DD><CODE>onTestFailure</CODE> in interface <CODE>org.testng.ITestListener</CODE></DL>
-</DD>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="onTestSkipped(org.testng.ITestResult)"><!-- --></A><H3>
-onTestSkipped</H3>
-<PRE>
-public void <B>onTestSkipped</B>(org.testng.ITestResult&nbsp;result)</PRE>
-<DL>
-<DD><DL>
-<DT><B>Specified by:</B><DD><CODE>onTestSkipped</CODE> in interface <CODE>org.testng.ITestListener</CODE></DL>
-</DD>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="onTestStart(org.testng.ITestResult)"><!-- --></A><H3>
-onTestStart</H3>
-<PRE>
-public void <B>onTestStart</B>(org.testng.ITestResult&nbsp;result)</PRE>
-<DL>
-<DD><DL>
-<DT><B>Specified by:</B><DD><CODE>onTestStart</CODE> in interface <CODE>org.testng.ITestListener</CODE></DL>
-</DD>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="onTestSuccess(org.testng.ITestResult)"><!-- --></A><H3>
-onTestSuccess</H3>
-<PRE>
-public void <B>onTestSuccess</B>(org.testng.ITestResult&nbsp;result)</PRE>
-<DL>
-<DD><DL>
-<DT><B>Specified by:</B><DD><CODE>onTestSuccess</CODE> in interface <CODE>org.testng.ITestListener</CODE></DL>
-</DD>
-<DD><DL>
-</DL>
-</DD>
 </DL>
 <!-- ========= END OF CLASS DATA ========= -->
 <HR>
@@ -383,9 +218,9 @@ public void <B>onTestSuccess</B>(org.testng.ITestResult&nbsp;result)</PRE>
 </TR>
 <TR>
 <TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
-  SUMMARY:&nbsp;NESTED&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+  SUMMARY:&nbsp;NESTED&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#methods_inherited_from_class_java.lang.Object">METHOD</A></FONT></TD>
 <TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
-DETAIL:&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+DETAIL:&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;METHOD</FONT></TD>
 </TR>
 </TABLE>
 <A NAME="skip-navbar_bottom"></A>
