@@ -104,7 +104,7 @@ public final class Startup
       instrumentation = inst;
 
       preventEventualClassLoadingConflicts();
-      loadInternalStartupMocks();
+      loadInternalStartupMocksForJUnitIntegration();
 
       if (agentArgs != null && agentArgs.length() > 0) {
          processAgentArgs(agentArgs);
@@ -131,24 +131,32 @@ public final class Startup
       MockingBridge.MB.getClass();
    }
 
-   private static void loadInternalStartupMocks()
+   private static void loadInternalStartupMocksForJUnitIntegration()
    {
-      setUpInternalStartupMock(TestSuiteDecorator.class);
-      setUpInternalStartupMock(JUnitTestCaseDecorator.class);
+      if (setUpInternalStartupMock(TestSuiteDecorator.class)) {
+         try {
+            setUpInternalStartupMock(JUnitTestCaseDecorator.class);
+         }
+         catch (VerifyError ignore) {
+            // For some reason, this error occurs when running TestNG tests from Maven.
+         }
 
-      setUpInternalStartupMock(RunNotifierDecorator.class);
-      setUpInternalStartupMock(JUnit4TestRunnerDecorator.class);
+         setUpInternalStartupMock(RunNotifierDecorator.class);
+         setUpInternalStartupMock(JUnit4TestRunnerDecorator.class);
 
-      TestRun.mockFixture().turnRedefinedClassesIntoFixedOnes();
+         TestRun.mockFixture().turnRedefinedClassesIntoFixedOnes();
+      }
    }
 
-   private static void setUpInternalStartupMock(Class<?> mockClass)
+   private static boolean setUpInternalStartupMock(Class<?> mockClass)
    {
       try {
          new RedefinitionEngine(null, mockClass).setUpStartupMock();
+         return true;
       }
       catch (TypeNotPresentException ignore) {
          // OK, ignore the startup mock if the necessary third-party class files are not in the classpath.
+         return false;
       }
    }
 
