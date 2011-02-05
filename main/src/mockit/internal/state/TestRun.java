@@ -59,7 +59,9 @@ public final class TestRun
       }
    };
 
+   // Used only by the Coverage tool:
    private int testId;
+
    private Class<?> currentTestClass;
    private Object currentTestInstance;
    private Method runningTestMethod;
@@ -72,7 +74,7 @@ public final class TestRun
    private final MockFixture mockFixture = new MockFixture();
 
    private final ExecutingTest executingTest = new ExecutingTest();
-   private final MockClasses mockClasses = new MockClasses();
+   private final MockClasses mockClasses = new MockClasses(); //TODO: separate in "regular" and "startup" mock classes
 
    // Static "getters" for global state ///////////////////////////////////////////////////////////////////////////////
 
