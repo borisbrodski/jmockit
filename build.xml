@@ -181,7 +181,7 @@
          <footer><![CDATA[
             <a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>
          ]]></footer>
-         <bottom><![CDATA[<font size=-1>© 2006-2010 Rogério Liesenfeld</font>]]></bottom>
+         <bottom><![CDATA[<font size=-1>© 2006-2011 Rogério Liesenfeld</font>]]></bottom>
       </javadoc>
       <delete file="www/javadoc/constant-values.html"/>
    </target>
