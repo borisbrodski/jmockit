@@ -339,12 +339,12 @@ public final class ExecutingTest
 
    private void clearNonSharedCascadingTypes()
    {
-      Iterator<Map.Entry<String, MockedTypeCascade>> itr = cascadingTypes.entrySet().iterator();
+      Iterator<MockedTypeCascade> itr = cascadingTypes.values().iterator();
 
       while (itr.hasNext()) {
-         Map.Entry<String,MockedTypeCascade> entry = itr.next();
+         MockedTypeCascade cascade = itr.next();
 
-         if (!entry.getValue().mockFieldFromTestClass) {
+         if (!cascade.mockFieldFromTestClass) {
             itr.remove();
          }
       }
