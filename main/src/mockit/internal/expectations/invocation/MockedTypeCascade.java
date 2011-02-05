@@ -13,56 +13,54 @@ import mockit.internal.util.*;
 public final class MockedTypeCascade
 {
    public final boolean mockFieldFromTestClass;
-   private final Map<String, Object> cascadedTypesAndMocks;
+   private final Map<String, Class<?>> cascadedTypesAndMocks;
 
    public MockedTypeCascade(boolean mockFieldFromTestClass)
    {
       this.mockFieldFromTestClass = mockFieldFromTestClass;
-      cascadedTypesAndMocks = new HashMap<String, Object>(4);
+      cascadedTypesAndMocks = new HashMap<String, Class<?>>(4);
    }
 
    static Object getMock(String mockedTypeDesc, Object mockInstance, String returnTypeDesc)
    {
-      String returnTypeName = getReturnTypeNameIfCascadingSupportedForIt(returnTypeDesc);
+      String returnTypeInternalName = getReturnTypeIfCascadingSupportedForIt(returnTypeDesc);
 
-      if (returnTypeName == null) {
+      if (returnTypeInternalName == null) {
          return null;
       }
 
       MockedTypeCascade cascade = TestRun.getExecutingTest().getMockedTypeCascade(mockedTypeDesc, mockInstance);
 
-      return cascade == null ? null : cascade.getCascadedMock(returnTypeName);
+      return cascade == null ? null : cascade.getCascadedMock(returnTypeInternalName);
    }
 
-   private static String getReturnTypeNameIfCascadingSupportedForIt(String typeDesc)
+   private static String getReturnTypeIfCascadingSupportedForIt(String typeDesc)
    {
-      String typeName = typeDesc.substring(1, typeDesc.length() - 1);
+      String typeInternalName = typeDesc.substring(1, typeDesc.length() - 1);
 
-      if (typeName.startsWith("java/lang/") && !typeName.contains("/Process")) {
+      if (typeInternalName.startsWith("java/lang/") && !typeInternalName.contains("/Process")) {
          return null;
       }
       
-      return typeName;
+      return typeInternalName;
    }
 
-   private Object getCascadedMock(String returnTypeName)
+   private Object getCascadedMock(String returnTypeInternalName)
    {
-      Object mock = cascadedTypesAndMocks.get(returnTypeName);
+      Class<?> returnType = cascadedTypesAndMocks.get(returnTypeInternalName);
+
+      if (returnType == null) {
+         String className = returnTypeInternalName.replace('/', '.');
+         returnType = Utilities.loadClass(className);
+
+         cascadedTypesAndMocks.put(returnTypeInternalName, returnType);
+         TestRun.getExecutingTest().addCascadingType(returnTypeInternalName, false);
+      }
+
+      Object mock = TestRun.mockFixture().getNewInstanceForMockedType(returnType);
 
       if (mock == null) {
-         Class<?> returnType = Utilities.loadClass(returnTypeName.replace('/', '.'));
-
-         mock = TestRun.mockFixture().getNewInstanceForMockedType(returnType);
-
-         if (mock == null) {
-            mock = new CascadingTypeRedefinition(returnType).redefineType();
-         }
-
-         cascadedTypesAndMocks.put(returnTypeName, mock);
-         TestRun.getExecutingTest().addCascadingType(returnTypeName, false);
-      }
-      else {
-         mock = TestRun.mockFixture().getNewInstanceForMockedType(mock.getClass());
+         mock = new CascadingTypeRedefinition(returnType).redefineType();
       }
 
       TestRun.getExecutingTest().addInjectableMock(mock);
