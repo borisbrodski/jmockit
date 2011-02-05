@@ -1,26 +1,6 @@
 /*
- * JMockit Samples
- * Copyright (c) 2006-2010 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.transitions;
 
@@ -53,7 +33,7 @@ public final class AnimationManagerInitTest
 
       manager = new AnimationManager(container);
 
-      Map<JComponent, AnimationState> animationStates = getField(manager, Map.class);
+      @SuppressWarnings({"unchecked"}) Map<JComponent, AnimationState> animationStates = getField(manager, Map.class);
       component = new JButton();
       animationStates.put(component, animationState);
 
@@ -85,8 +65,7 @@ public final class AnimationManagerInitTest
       new NonStrictExpectations()
       {
          {
-            // Expect checking of states to remove those components completely outside the
-            // container:
+            // Expect checking of states to remove those components completely outside the container:
             animationState.getStart(); result = componentState;
          }
       };
@@ -143,7 +122,7 @@ public final class AnimationManagerInitTest
    @Test
    public void initForChangingComponent()
    {
-      List<JComponent> changingComponents = getField(manager, List.class);
+      @SuppressWarnings({"unchecked"}) List<JComponent> changingComponents = getField(manager, List.class);
       changingComponents.add(component);
 
       new NonStrictExpectations()
