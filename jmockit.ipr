@@ -1063,6 +1063,7 @@
         <w>value1</w>
         <w>value2</w>
         <w>versioned</w>
+        <w>versioning</w>
         <w>webapp</w>
         <w>webkit</w>
         <w>wiki</w>
@@ -1084,6 +1085,8 @@
         <w>jcommander</w>
         <w>jmockit</w>
         <w>mockable</w>
+        <w>mutators</w>
+        <w>repo</w>
       </words>
     </dictionary>
   </component>
@@ -1360,17 +1363,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/log4j/log4j/1.2.15/log4j-1.2.15-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: mockit:jmockit:0.999.5">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.999.5/jmockit-0.999.5.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.999.5/jmockit-0.999.5-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/mockit/jmockit/0.999.5/jmockit-0.999.5-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: ognl:ognl:2.6.9">

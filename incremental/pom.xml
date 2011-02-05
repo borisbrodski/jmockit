@@ -3,9 +3,8 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-   <parent><groupId>mockit</groupId><artifactId>mockit</artifactId><version>0.999.6</version></parent>
-   <artifactId>jmockit-incremental</artifactId>
-   <version>0.999.5</version>
+   <parent><groupId>mockit</groupId><artifactId>mockit</artifactId><version>0.999.7</version></parent>
+   <artifactId>jmockit-incremental</artifactId><version>0.999.5</version>
    <name>JMockit Incremental Testing</name>
 
    <build>
@@ -14,7 +13,7 @@
 
    <dependencies>
       <dependency>
-         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>${project.version}</version>
+         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>${project.parent.version}</version>
          <optional>true</optional>
       </dependency>
       <dependency>
