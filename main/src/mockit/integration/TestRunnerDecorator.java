@@ -17,6 +17,8 @@ import mockit.*;
  */
 public class TestRunnerDecorator
 {
+   private static SavePoint savePointForTest;
+
    protected final void updateTestClassState(Object target, Class<?> testClass)
    {
       try {
@@ -56,6 +58,11 @@ public class TestRunnerDecorator
 
    public static void cleanUpMocksFromPreviousTestClass()
    {
+      if (savePointForTest != null) {
+         savePointForTest.rollback();
+         savePointForTest = null;
+      }
+
       SavePoint.rollbackForTestClass();
       CaptureOfImplementationsForTestClass capture = TestRun.getCaptureOfSubtypes();
 
@@ -96,6 +103,16 @@ public class TestRunnerDecorator
          capture.makeSureAllSubtypesAreModified(capturingType);
          TestRun.setCaptureOfSubtypes(capture);
       }
+   }
+
+   protected final void prepareForNextTest()
+   {
+      if (savePointForTest != null) {
+         savePointForTest.rollback();
+      }
+
+      savePointForTest = new SavePoint();
+      TestRun.prepareForNextTest();
    }
 
    private void handleMockFieldsForWholeTestClass(Object target)

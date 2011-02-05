@@ -53,12 +53,13 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
    }
 
    private final ThreadLocal<SavePoint> savePoint;
-   private boolean generateTestIdForNextBeforeMethod;
+   private boolean shouldPrepareForNextTest;
 
    public TestNGRunnerDecorator()
    {
       savePoint = new ThreadLocal<SavePoint>();
       Mockit.setUpMocks(MockParameters.class);
+      shouldPrepareForNextTest = true;
    }
 
    public void run(IConfigureCallBack callBack, ITestResult testResult)
@@ -68,9 +69,9 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
 
       updateTestClassState(instance, testClass);
 
-      if (generateTestIdForNextBeforeMethod && testResult.getMethod().isBeforeMethodConfiguration()) {
-         TestRun.prepareForNextTest();
-         generateTestIdForNextBeforeMethod = false;
+      if (shouldPrepareForNextTest && testResult.getMethod().isBeforeMethodConfiguration()) {
+         prepareForNextTest();
+         shouldPrepareForNextTest = false;
       }
 
       TestRun.setRunningIndividualTest(instance);
@@ -85,7 +86,9 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
          throw t;
       }
       finally {
-         TestRun.setRunningIndividualTest(null);
+         if (testResult.getMethod().isAfterMethodConfiguration()) {
+            TestRun.getExecutingTest().setRecordAndReplay(null);
+         }
       }
    }
 
@@ -105,13 +108,13 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
          System.arraycopy(mockParameters, 0, parameters, 0, parameters.length);
       }
 
-      if (generateTestIdForNextBeforeMethod) {
-         TestRun.prepareForNextTest();
+      if (shouldPrepareForNextTest) {
+         prepareForNextTest();
       }
 
       TestRun.setRunningIndividualTest(instance);
       TestRun.setRunningTestMethod(method);
-      generateTestIdForNextBeforeMethod = true;
+      shouldPrepareForNextTest = true;
 
       executeTestMethod(callBack, testResult);
    }

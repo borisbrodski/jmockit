@@ -61,7 +61,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       updateTestClassState(it, it.getClass());
 
       TestRun.setRunningIndividualTest(it);
-      TestRun.prepareForNextTest();
+      prepareForNextTest();
 
       try {
          originalRunBare();
@@ -87,20 +87,27 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
          exception = running;
       }
       finally {
-         TestRun.setRunningTestMethod(null);
-
-         try {
-            tearDownMethod.invoke(it);
-         }
-         catch (Throwable tearingDown) {
-            if (exception == null) {
-               exception = tearingDown;
-            }
-         }
+         exception = performTearDown(exception);
       }
 
       if (exception != null) {
          throw exception;
+      }
+   }
+
+   private Throwable performTearDown(Throwable thrownByTestMethod)
+   {
+      TestRun.setRunningTestMethod(null);
+
+      try {
+         tearDownMethod.invoke(it);
+         return thrownByTestMethod;
+      }
+      catch (Throwable tearingDown) {
+         return thrownByTestMethod == null ? tearingDown : thrownByTestMethod;
+      }
+      finally {
+         TestRun.getExecutingTest().setRecordAndReplay(null);
       }
    }
 

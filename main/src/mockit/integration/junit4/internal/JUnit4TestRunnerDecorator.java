@@ -8,18 +8,14 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import org.junit.*;
-import org.junit.runners.model.*;
 import org.junit.runners.Suite.*;
+import org.junit.runners.model.*;
 
 import mockit.*;
 import mockit.integration.*;
 import mockit.internal.expectations.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
-
-// When loading the java agent on demand (without "-javaagent" in the command line, and therefore
-// not executing "premain"), we can't redefine the actual JUnit test runner because its methods will
-// be in the current thread's execution stack at the time the redefinition occurs.
 
 /**
  * Startup mock that modifies the JUnit 4.5+ test runner so that it calls back to JMockit immediately after every test
@@ -33,13 +29,63 @@ import mockit.internal.util.*;
 public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
 {
    public FrameworkMethod it;
-   private boolean generateTestIdForNextBeforeMethod;
+   private static volatile boolean shouldPrepareForNextTest = true; // TODO: will not work in parallel
 
    @Mock(reentrant = true)
    public Object invokeExplosively(Object target, Object... params) throws Throwable
    {
       Method method = it.getMethod();
       Class<?> testClass = target == null ? method.getDeclaringClass() : target.getClass();
+
+      handleMockingOutsideTestMethods(target, testClass);
+
+      // In case it isn't a test method, but a before/after method:
+      if (it.getAnnotation(Test.class) == null) {
+         if (shouldPrepareForNextTest && it.getAnnotation(Before.class) != null) {
+            prepareForNextTest();
+            shouldPrepareForNextTest = false;
+         }
+
+         TestRun.setRunningIndividualTest(target);
+         TestRun.setRunningTestMethod(null);
+
+         try {
+            return it.invokeExplosively(target, params);
+         }
+         catch (Throwable t) {
+            RecordAndReplayExecution.endCurrentReplayIfAny();
+            Utilities.filterStackTrace(t);
+            throw t;
+         }
+         finally {
+            if (it.getAnnotation(After.class) != null) {
+               TestRun.getExecutingTest().setRecordAndReplay(null);
+            }
+         }
+      }
+
+      if (shouldPrepareForNextTest) {
+         prepareForNextTest();
+      }
+
+      TestRun.setRunningTestMethod(method);
+      shouldPrepareForNextTest = true;
+
+      try {
+         executeTest(target, params);
+         return null; // it's a test method, therefore has void return type
+      }
+      catch (Throwable t) {
+         Utilities.filterStackTrace(t);
+         throw t;
+      }
+      finally {
+         TestRun.finishCurrentTestExecution();
+      }
+   }
+
+   private void handleMockingOutsideTestMethods(Object target, Class<?> testClass)
+   {
       TestRun.enterNoMockingZone();
 
       try {
@@ -52,46 +98,6 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
       }
       finally {
          TestRun.exitNoMockingZone();
-      }
-
-      // In case it isn't a test method, but a before/after method:
-      if (it.getAnnotation(Test.class) == null) {
-         if (generateTestIdForNextBeforeMethod && it.getAnnotation(Before.class) != null) {
-            TestRun.prepareForNextTest();
-            generateTestIdForNextBeforeMethod = false;
-         }
-
-         TestRun.setRunningIndividualTest(target);
-         TestRun.setRunningTestMethod(null);
-
-         try {
-            return it.invokeExplosively(target, params);
-         }
-         catch (Throwable t) {
-            //noinspection ThrowableResultOfMethodCallIgnored
-            RecordAndReplayExecution.endCurrentReplayIfAny();
-            Utilities.filterStackTrace(t);
-            throw t;
-         }
-      }
-
-      if (generateTestIdForNextBeforeMethod) {
-         TestRun.prepareForNextTest();
-      }
-
-      TestRun.setRunningTestMethod(method);
-      generateTestIdForNextBeforeMethod = true;
-
-      try {
-         executeTest(target, params);
-         return null; // it's a test method, therefore has void return type
-      }
-      catch (Throwable t) {
-         Utilities.filterStackTrace(t);
-         throw t;
-      }
-      finally {
-         TestRun.finishCurrentTestExecution();
       }
    }
 
