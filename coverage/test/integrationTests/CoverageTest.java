@@ -1,26 +1,6 @@
 /*
- * JMockit Coverage
- * Copyright (c) 2006-2010 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package integrationTests;
 
@@ -92,8 +72,7 @@ public class CoverageTest extends Assert
       LineCoverageData lineData = fileData.lineToLineData.get(line);
       assertNotNull("Not an executable line", lineData);
       assertEquals("Segments:", expectedSegments, lineData.getNumberOfSegments());
-      assertEquals(
-         "Covered segments:", expectedCoveredSegments, lineData.getNumberOfCoveredSegments());
+      assertEquals("Covered segments:", expectedCoveredSegments, lineData.getNumberOfCoveredSegments());
       assertEquals("Execution count:", expectedExecutionCount, lineData.getExecutionCount());
    }
 
@@ -106,13 +85,11 @@ public class CoverageTest extends Assert
          firstLineOfMethodBody, methodName, methodData.methodName);
    }
 
-   protected final void assertPaths(
-      int expectedPaths, int expectedCoveredPaths, int expectedExecutionCount)
+   protected final void assertPaths(int expectedPaths, int expectedCoveredPaths, int expectedExecutionCount)
    {
       assertEquals("Number of paths:", expectedPaths, methodData.paths.size());
       assertEquals("Number of covered paths:", expectedCoveredPaths, methodData.getCoveredPaths());
-      assertEquals(
-         "Execution count for all paths:", expectedExecutionCount, methodData.getExecutionCount());
+      assertEquals("Execution count for all paths:", expectedExecutionCount, methodData.getExecutionCount());
    }
 
    protected final void assertMethodLines(int startingLine, int endingLine)
@@ -139,8 +116,7 @@ public class CoverageTest extends Assert
       int nextPathIndex = currentPathIndex + 1;
 
       if (methodData != null && nextPathIndex > 0) {
-         assertEquals(
-            "Path " + nextPathIndex + " was not verified;", nextPathIndex, methodData.paths.size());
+         assertEquals("Path " + nextPathIndex + " was not verified;", nextPathIndex, methodData.paths.size());
       }
    }
 
@@ -157,29 +133,25 @@ public class CoverageTest extends Assert
 
    protected static void assertStaticFieldCovered(String fieldName)
    {
-      assertTrue(
-         "Static field " + fieldName + " should be covered", isStaticFieldCovered(fieldName));
+      assertTrue("Static field " + fieldName + " should be covered", isStaticFieldCovered(fieldName));
    }
 
    private static boolean isStaticFieldCovered(String fieldName)
    {
       String classAndFieldNames = testedClassSimpleName + '.' + fieldName;
-      StaticFieldData staticFieldData =
-         fileData.dataCoverageInfo.staticFieldsData.get(classAndFieldNames);
+      StaticFieldData staticFieldData = fileData.dataCoverageInfo.staticFieldsData.get(classAndFieldNames);
 
       return staticFieldData.isCovered();
    }
 
    protected static void assertStaticFieldUncovered(String fieldName)
    {
-      assertFalse(
-         "Static field " + fieldName + " should not be covered", isStaticFieldCovered(fieldName));
+      assertFalse("Static field " + fieldName + " should not be covered", isStaticFieldCovered(fieldName));
    }
 
    protected static void assertInstanceFieldCovered(String fieldName)
    {
-      assertTrue(
-         "Instance field " + fieldName + " should be covered", isInstanceFieldCovered(fieldName));
+      assertTrue("Instance field " + fieldName + " should be covered", isInstanceFieldCovered(fieldName));
    }
 
    private static boolean isInstanceFieldCovered(String fieldName)
@@ -195,13 +167,10 @@ public class CoverageTest extends Assert
 
    protected static void assertInstanceFieldUncovered(String fieldName)
    {
-      assertFalse(
-         "Instance field " + fieldName + " should not be covered",
-         isInstanceFieldCovered(fieldName));
+      assertFalse("Instance field " + fieldName + " should not be covered", isInstanceFieldCovered(fieldName));
    }
 
-   protected static void assertInstanceFieldUncovered(
-      String fieldName, Object... uncoveredInstances)
+   protected static void assertInstanceFieldUncovered(String fieldName, Object... uncoveredInstances)
    {
       String msg = "Instance field " + fieldName + " should not be covered";
       InstanceFieldData fieldData = getInstanceFieldData(fieldName);
@@ -215,13 +184,10 @@ public class CoverageTest extends Assert
       }
    }
 
-   protected static void verifyDataCoverage(
-      int expectedItems, int expectedCoveredItems, int expectedCoverage)
+   protected static void verifyDataCoverage(int expectedItems, int expectedCoveredItems, int expectedCoverage)
    {
       assertEquals("Total data items:", expectedItems, fileData.dataCoverageInfo.getTotalItems());
-      assertEquals(
-         "Covered data items:", expectedCoveredItems, fileData.dataCoverageInfo.getCoveredItems());
-      assertEquals(
-         "Data coverage:", expectedCoverage, fileData.dataCoverageInfo.getCoveragePercentage());
+      assertEquals("Covered data items:", expectedCoveredItems, fileData.dataCoverageInfo.getCoveredItems());
+      assertEquals("Data coverage:", expectedCoverage, fileData.dataCoverageInfo.getCoveragePercentage());
    }
 }
