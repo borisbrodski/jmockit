@@ -27,9 +27,6 @@ public final class AnnotatedMockStates
    {
       MockClassState mockStates = classStates.get(mockClassInternalName);
 
-      // TODO: Normally, this will only happen once, but it is possible to use the same mock class
-      // in two or more calls to Mockit.redefineMethods or Mockit.setUpMock in the same test. Needs
-      // to be tested.
       if (mockStates == null) {
          mockStates = new MockClassState();
          classStates.put(mockClassInternalName, mockStates);

@@ -74,7 +74,7 @@ public final class TestRun
    private final MockFixture mockFixture = new MockFixture();
 
    private final ExecutingTest executingTest = new ExecutingTest();
-   private final MockClasses mockClasses = new MockClasses(); //TODO: separate in "regular" and "startup" mock classes
+   private final MockClasses mockClasses = new MockClasses();
 
    // Static "getters" for global state ///////////////////////////////////////////////////////////////////////////////
 
