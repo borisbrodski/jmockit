@@ -966,8 +966,8 @@
 
 <h4 id="beforeAfter">Using before/after methods</h4>
 <p>
-   In a given test class, we can define instance methods that will run <em>before</em> and
-   <em>after</em> each test method (even when the test throws an error or exception).
+   In a given test class, we can define instance methods that will run <em>before</em> and <em>after</em> each test
+   method (even when the test throws an error or exception).
    In JUnit 3.8, these are the <code>setUp()</code> and <code>tearDown()</code> method overrides.
    In JUnit 4.x we use the <code class="annotation">@Before</code> and <code class="annotation">@After</code>
    annotations on one or more arbitrary instance methods of the test class. The same applies to the
@@ -977,18 +977,12 @@
    Any mock class that can be applied from inside a test method can also be applied from a "before"
    method, using one of the "set-up" methods or by instantiating a mock-up class.
    Such a mock class will remain in effect for the execution of all test methods in the test class.
-   There is a difference, though.
-   When a mock class is applied from inside a test method, the mocked class is restored to its
-   original definition at the end of the test (no matter if the test fails or succeeds).
-   On the other hand, when the mock class is applied from a "before" method, the mocked class will
-   <em>not</em> be automatically restored.
-   Instead, the developer will be responsible for calling the
-   <a href="../javadoc/mockit/Mockit.html#tearDownMocks(java.lang.Class...)">
-      <code>Mockit.tearDownMocks(...)</code></a> method explicitly from inside a corresponding "after" method.
+   The only difference of applying mocks in a "before" method is that they also remain in effect inside "after" methods,
+   if any.
 </p>
 <p>
-   For example, if we wanted to mock the <code class="type">LoginContext</code> class with a mock-up class for a
-   bunch of related tests, we would have the following methods in the test class:
+   For example, if we wanted to mock the <code class="type">LoginContext</code> class with a mock-up class for a bunch
+   of related tests, we would have the following methods in the test class:
 </p>
 <pre><code>public class MyTestClass
 {
@@ -1002,13 +996,6 @@
    }
 
    // test methods that will share the mocks set up above...
-
-   @After
-   public void tearDownSharedMocks()
-   {
-      // Notice that the <em>mocked class</em> is passed in the call, not the mock class.
-      Mockit.tearDownMocks(LoginContext.class);
-   }
 }
 </code></pre>
 <p>

@@ -175,7 +175,7 @@ public final class Mockit
     * After this call, all such mocks are "in effect" until the end of the test method inside which it appears, if this
     * is the case.
     * If the method is a "before"/"setUp" method which executes before all test methods, then the mocks will remain in
-    * effect until they are explicitly {@linkplain #tearDownMocks(Class...) torn down} in an "after"/"tearDown" method.
+    * effect until the end of the test (including any "after"/"tearDown" methods).
     * <p/>
     * Any invocation count constraints specified on mock methods (such as {@code @Mock(invocations = 1)}, for example)
     * will be automatically verified after the code under test is executed.
@@ -219,6 +219,7 @@ public final class Mockit
     * @throws IllegalArgumentException if any mock class fails to specify the corresponding real class using the
     * {@code @MockClass(realClass = ...)} annotation
     *
+    * @see #tearDownMocks(Class[])
     * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java#132">Example</a>
     */
    public static void setUpMocks(Object... mockClassesOrInstances)
@@ -412,9 +413,9 @@ public final class Mockit
     * Consider using {@link #tearDownMocks(Class...)} instead, which lets you restrict the set of real classes to be
     * restored.
     * <p/>
-    * JMockit will automatically restore classes mocked by a test method at the end of that test method's execution, as
-    * well as all classes mocked for the test class as a whole (through a "before class" method or an
-    * {@code @UsingMocksAndStubs} annotation) before the first test in the next test class is executed.
+    * JMockit will automatically restore classes mocked by a test at the end of its execution, as well as all classes
+    * mocked for the test class as a whole (through a "before class" method or an {@code @UsingMocksAndStubs}
+    * annotation) before the first test in the next test class is executed.
     *
     * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/serviceA/ServiceATest.java#56">Example</a>
     */
@@ -437,13 +438,9 @@ public final class Mockit
     * <p/>
     * Notice that if one of the given real classes has a mock class applied at the level of the test class, calling this
     * method would negate the application of that mock class.
-    * JMockit will automatically restore classes mocked by a test method at the end of that test method's execution, as
-    * well as all classes mocked for the test class as a whole (through a "before class" method or an
-    * {@code @UsingMocksAndStubs} annotation) before the first test in the next test class is executed.
-    * <p/>
-    * In practice, this method should only be used inside "after" methods ({@code tearDown()} in a JUnit 3.8 test
-    * class), since mock classes set up in a "before" or {@code setUp()} method are <em>not</em> automatically
-    * discarded.
+    * JMockit will automatically restore classes mocked by a test at the end of its execution, as well as all classes
+    * mocked for the test class as a whole (through a "before class" method or an {@code @UsingMocksAndStubs}
+    * annotation) before the first test in the next test class is executed.
     *
     * @param realClasses one or more real classes from production code, which may have mocked methods
     */
