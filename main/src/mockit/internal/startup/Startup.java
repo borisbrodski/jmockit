@@ -6,7 +6,6 @@ package mockit.internal.startup;
 
 import java.io.*;
 import java.lang.instrument.*;
-import java.util.*;
 
 import mockit.external.asm.*;
 import mockit.integration.junit3.internal.*;
@@ -16,9 +15,9 @@ import mockit.internal.expectations.transformation.*;
 import mockit.internal.state.*;
 
 /**
- * This is the "agent class" that initializes the JMockit "Java agent". It is not intended for use
- * in client code. It must be public, however, so the JVM can call the <code>premain</code> method,
- * which as the name implies is called <strong>before</strong> the <code>main</main> method.
+ * This is the "agent class" that initializes the JMockit "Java agent". It is not intended for use in client code.
+ * It must be public, however, so the JVM can call the {@code premain} method, which as the name implies is called
+ * <em>before</em> the {@code main} method.
  *
  * @see #premain(String, Instrumentation)
  */
@@ -29,63 +28,33 @@ public final class Startup
 
    private static Instrumentation instrumentation;
    private static boolean initializedOnDemand;
-   private static final Properties startupTools = new Properties();
-   private static final List<String> defaultTools = new ArrayList<String>();
-
-   static
-   {
-      InputStream properties = Startup.class.getResourceAsStream("/jmockit.properties");
-
-      try {
-         startupTools.load(properties);
-      }
-      catch (IOException e) {
-         throw new RuntimeException(e);
-      }
-      finally {
-         try { properties.close(); } catch (IOException ignore) {}
-      }
-
-      String[] defaultToolsArray;
-      String specifiedTools = System.getProperty("jmockit-tools");
-
-      if (specifiedTools != null) {
-         defaultToolsArray = specifiedTools.split(",");
-      }
-      else {
-         defaultToolsArray = startupTools.getProperty("defaultTools", "").split("\\s+");
-      }
-
-      Collections.addAll(defaultTools, defaultToolsArray);
-   }
 
    private Startup() {}
 
    public static boolean isJava6OrLater() { return jdk6OrLater; }
 
    /**
-    * This method must only be called by the JVM, to provide the instrumentation object. In order
-    * for this to occur, the JVM must be started with "-javaagent:jmockit.jar" as a command line
-    * parameter (assuming the jar file is in the current directory).
+    * This method must only be called by the JVM, to provide the instrumentation object.
+    * In order for this to occur, the JVM must be started with "-javaagent:jmockit.jar" as a command line parameter
+    * (assuming the jar file is in the current directory).
     * <p/>
-    * It is also possible to load other <strong>instrumentation tools</strong> at this time,
-    * according to any agent arguments provided as "-javaagent:jmockit.jar=agentArgs" in the JVM
-    * command line. There are two types of instrumentation tools: <ol> <li>A {@link
-    * ClassFileTransformer class file transformer}, which will be instantiated and added to the JVM
-    * instrumentation service. Such a class must be public and have a public constructor accepting
-    * two parameters: the first of type <code>Map&lt;String, byte[]></code>, which will receive a
-    * map for storing the transformed classes; and the second of type <code>String</code>, which
-    * will receive any tool arguments. </li> <li>An <strong>external mock</strong>, which can be any
-    * class with a public no-args constructor. Such a class will be used to redefine one or more
-    * real classes. The real classes can be specified in one of two ways: by providing a regular
-    * expression matching class names as the tool arguments, or by annotating the external mock
-    * class with {@link mockit.MockClass}.</li> </ol>
+    * It is also possible to load other <em>instrumentation tools</em> at this time, according to any agent
+    * arguments provided as "-javaagent:jmockit.jar=agentArgs" in the JVM command line.
+    * There are two types of instrumentation tools:
+    * <ol>
+    * <li>A {@link ClassFileTransformer class file transformer}, which will be instantiated and added to the JVM
+    * instrumentation service. Such a class must be public and have a public constructor accepting two parameters: the
+    * first of type {@code Map&lt;String, byte[]>}, which will receive a map for storing the transformed classes; and
+    * the second of type {@code String}, which will receive any tool arguments.</li>
+    * <li>An <em>external mock</em>, which can be any class with a public no-args constructor.
+    * Such a class will be used to redefine one or more real classes.
+    * The real classes can be specified in one of two ways: by providing a regular expression matching class names as
+    * the tool arguments, or by annotating the external mock class with {@link mockit.MockClass}.</li>
+    * </ol>
     *
-    * @param agentArgs zero or more <strong>instrumentation tool specifications</strong> (separated
-    *                  by semicolons if more than one); each tool specification must be expressed as
-    *                  "&lt;tool class name>[=tool arguments]", where the class names are fully
-    *                  qualified, and the corresponding class files must be present in the
-    *                  classpath; the part between square brackets is optional
+    * @param agentArgs zero or more <em>instrumentation tool specifications</em> (separated by semicolons if more than
+    *                  one); each tool specification must be expressed as "&lt;tool class name>[=tool arguments]", with
+    *                  fully qualified class names for classes available in the classpath; tool arguments are optional
     * @param inst      the instrumentation service provided by the JVM
     */
    public static void premain(String agentArgs, Instrumentation inst) throws Exception
@@ -103,15 +72,17 @@ public final class Startup
    {
       instrumentation = inst;
 
+      StartupConfiguration config = new StartupConfiguration();
+
       preventEventualClassLoadingConflicts();
       loadInternalStartupMocksForJUnitIntegration();
 
       if (agentArgs != null && agentArgs.length() > 0) {
-         processAgentArgs(agentArgs);
+         processAgentArgs(config, agentArgs);
       }
 
-      for (String toolSpec : defaultTools) {
-         loadExternalTool(toolSpec, true);
+      for (String toolSpec : config.defaultTools) {
+         loadExternalTool(config, toolSpec, true);
       }
 
       inst.addTransformer(new JMockitTransformer());
@@ -160,36 +131,25 @@ public final class Startup
       }
    }
 
-   private static void processAgentArgs(String agentArgs) throws IOException
+   private static void processAgentArgs(StartupConfiguration config, String agentArgs) throws IOException
    {
       String[] externalToolSpecs = agentArgs.split("\\s*;\\s*");
 
       for (String toolSpec : externalToolSpecs) {
-         loadExternalTool(toolSpec, false);
+         loadExternalTool(config, toolSpec, false);
       }
    }
 
-   private static void loadExternalTool(String toolSpec, boolean byDefault) throws IOException
+   private static void loadExternalTool(StartupConfiguration config, String toolSpec, boolean byDefault)
+      throws IOException
    {
-      String[] classAndArgs = toolSpec.split("\\s*=\\s*");
-      String toolClassName = classAndArgs[0];
-      String toolArgs = classAndArgs.length == 1 ? null : classAndArgs[1];
-
-      if (!byDefault) {
-         defaultTools.remove(toolClassName);
-      }
-
-      String toolKey = "startupTools." + toolClassName;
-      
-      if (startupTools.containsKey(toolKey)) {
-         toolClassName = startupTools.getProperty(toolKey);
-      }
+      config.extractClassNameAndArgumentsFromToolSpecification(toolSpec, byDefault);
 
       ClassReader cr;
 
       if (byDefault) {
          try {
-            cr = ClassFile.readClass(toolClassName);
+            cr = ClassFile.readClass(config.toolClassName);
          }
          catch (IOException ignore) {
             // OK, don't load if not in the classpath.
@@ -197,15 +157,15 @@ public final class Startup
          }
       }
       else {
-         cr = ClassFile.readClass(toolClassName);
+         cr = ClassFile.readClass(config.toolClassName);
       }
 
-      loadExternalTool(toolClassName, toolArgs, cr);
+      loadExternalTool(config, cr);
    }
 
-   private static void loadExternalTool(String toolClassName, String toolArgs, ClassReader cr)
+   private static void loadExternalTool(StartupConfiguration config, ClassReader cr)
    {
-      ToolLoader toolLoader = new ToolLoader(toolClassName, toolArgs);
+      ToolLoader toolLoader = new ToolLoader(config.toolClassName, config.toolArguments);
 
       try {
          cr.accept(toolLoader, true);
@@ -214,8 +174,7 @@ public final class Startup
          return;
       }
 
-      String toolArgsDescription = toolArgs == null ? "" : '=' + toolArgs;
-      System.out.println("JMockit: loaded external tool " + toolClassName + toolArgsDescription);
+      System.out.println("JMockit: loaded external tool " + config);
    }
 
    public static Instrumentation instrumentation()
