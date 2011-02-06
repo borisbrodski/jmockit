@@ -208,7 +208,6 @@ public final class ExpectationsUsingMockedTest
    static class ClassWithStaticInitializer
    {
       static boolean initialized = true;
-
       static int initialized() { return initialized ? 1 : -1; }
    }
 
@@ -226,15 +225,28 @@ public final class ExpectationsUsingMockedTest
    static class ClassWithStaticInitializer2
    {
       static boolean initialized = true;
-
       static int initialized() { return initialized ? 1 : -1; }
    }
 
    @Test
-   public void stubOutStaticInitializersByDefault(@Mocked ClassWithStaticInitializer2 unused)
+   public void stubOutStaticInitializersWhenSpecified(
+      @Mocked(stubOutClassInitialization = true) ClassWithStaticInitializer2 unused)
    {
       assertEquals(0, ClassWithStaticInitializer2.initialized());
       assertFalse(ClassWithStaticInitializer2.initialized);
+   }
+
+   static class ClassWithStaticInitializer3
+   {
+      static boolean initialized = true;
+      static int initialized() { return initialized ? 1 : -1; }
+   }
+
+   @Test
+   public void doNotStubOutStaticInitializersByDefault(@Mocked ClassWithStaticInitializer3 unused)
+   {
+      assertEquals(0, ClassWithStaticInitializer3.initialized());
+      assertTrue(ClassWithStaticInitializer3.initialized);
    }
 
    static class AnotherClassWithStaticInitializer
@@ -249,7 +261,7 @@ public final class ExpectationsUsingMockedTest
    {
       new Expectations()
       {
-         @Mocked(methods = "<clinit>", inverse = true)
+         @Mocked(methods = "<clinit>", inverse = true, stubOutClassInitialization = true)
          final AnotherClassWithStaticInitializer unused = null;
       };
 

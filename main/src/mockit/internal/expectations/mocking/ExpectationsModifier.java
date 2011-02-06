@@ -64,7 +64,6 @@ final class ExpectationsModifier extends BaseClassModifier
 
    public void useDynamicMocking(boolean methodsOnly)
    {
-      stubOutClassInitialization = !methodsOnly;
       ignoreConstructors = methodsOnly;
       executionMode = 1;
    }
@@ -105,7 +104,7 @@ final class ExpectationsModifier extends BaseClassModifier
       boolean matchesFilters = noFiltersToMatch || mockingCfg.matchesFilters(name, desc);
 
       if ("<clinit>".equals(name)) {
-         return stubOutClassInitializationIfApplicable(access, matchesFilters);
+         return stubOutClassInitializationIfApplicable(access, noFiltersToMatch, matchesFilters);
       }
       else if (stubOutFinalizeMethod(access, name, desc)) {
          return null;
@@ -165,13 +164,11 @@ final class ExpectationsModifier extends BaseClassModifier
          "annotationType".equals(name) && "()Ljava/lang/Class;".equals(desc);
    }
 
-   private MethodVisitor stubOutClassInitializationIfApplicable(int access, boolean matchesFilters)
+   private MethodVisitor stubOutClassInitializationIfApplicable(int access, boolean noFilters, boolean matchesFilters)
    {
       mw = super.visitMethod(access, "<clinit>", "()V", null, null);
 
-      if (matchesFilters && stubOutClassInitialization) {
-         // Stub out any class initialization block (unless specified otherwise),
-         // to avoid potential side effects in tests.
+      if (!noFilters && matchesFilters || noFilters && stubOutClassInitialization) {
          generateEmptyImplementation();
          return null;
       }

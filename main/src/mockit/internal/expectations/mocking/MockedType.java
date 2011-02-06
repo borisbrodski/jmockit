@@ -19,7 +19,6 @@ public final class MockedType
    @SuppressWarnings({"UnusedDeclaration"})
    @Mocked private static final Object DUMMY = null;
    private static final int DUMMY_HASHCODE;
-   private static final boolean STUB_OUT_STATIC_INITIALIZERS;
 
    static
    {
@@ -31,7 +30,6 @@ public final class MockedType
       catch (NoSuchFieldException ignore) {}
 
       DUMMY_HASHCODE = h;
-      STUB_OUT_STATIC_INITIALIZERS = System.getProperty("jmockit-retainStaticInitializers") == null;
    }
 
    public final Field field;
@@ -165,11 +163,7 @@ public final class MockedType
 
    boolean isClassInitializationToBeStubbedOut()
    {
-      if (mocked == null || mocked.stubOutClassInitialization().length == 0) {
-         return !injectable && STUB_OUT_STATIC_INITIALIZERS;
-      }
-
-      return mocked.stubOutClassInitialization()[0];
+      return mocked != null && mocked.stubOutClassInitialization();
    }
 
    int getMaxInstancesToCapture()

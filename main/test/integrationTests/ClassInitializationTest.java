@@ -103,7 +103,8 @@ public final class ClassInitializationTest
    }
 
    @Test
-   public void mockClassWithStaticInitializerStubbedOut(AnotherClassWithStaticInitializer mock)
+   public void mockClassWithStaticInitializerStubbedOut(
+      @Mocked(stubOutClassInitialization = true) AnotherClassWithStaticInitializer mock)
    {
       assert AnotherClassWithStaticInitializer.CONSTANT == null;
       AnotherClassWithStaticInitializer.doSomething();
