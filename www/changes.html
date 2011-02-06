@@ -19,8 +19,34 @@
 <p>Release 0.999.7 (February ??, 2011):</p>
 <ul>
    <li>
-      Fixed robustness issues when recording expectations in "before" methods, or when verifying expectations in
-      "after" methods.
+      <strong>Breaking API change</strong>: The default value for the
+      <strong><code>stubOutClassInitialization</code></strong> attribute of the <code>@Mocked</code> annotation is now
+      <strong><code>false</code></strong>.
+      The <code>jmockit-retainStaticInitializers</code> system property is no longer supported, given that in practice
+      it was only used to change the global default for that attribute to <code>false</code>.
+      This change can break existing tests which happened to mock a class containing static initialization code, when
+      such code performed operations that could potentially fail in the test environment (such as connecting to a remote
+      database, for example).
+      In such a case, the <code>@Mocked(stubOutClassInitialization = true)</code> annotation will have to be applied to
+      the appropriate mock field/parameter.
+   </li>
+   <li>
+      <strong>Enhancement</strong>: Fixed robustness issues when recording expectations in "before" methods, or when
+      verifying expectations in "after" methods.
+      If any mock classes are set up in a "before"/setUp method, they will now be torn down automatically at the end of
+      the test (previously, this required a call to <code>Mockit.tearDownMocks(...)</code> in an "after"/tearDown
+      method.
+   </li>
+   <li>
+      <strong>Enhancement</strong>: Added support for the definition of <em>system properties</em> in a custom
+      <code>jmockit.properties</code> file.
+      (The default version of this file can be found inside <code>jmockit.jar</code>.)
+      Several tools in the JMockit toolkit allow configuration through "jmockit-xyz" system properties, which previously
+      had to be defined with the "-D" JVM parameter (or the equivalent Ant/Maven XML code).
+      Now such properties can also be defined by adding a <code>[jmockit-]xyz=some value</code> line in the custom
+      properties file, which should be added to the classpath <em>before</em> <code>jmockit.jar</code> in order to
+      override it. The "jmockit-" prefix is optional when using the file, but will be added in the actual system
+      property so that tools can always look for "jmockit-xyz" properties.
    </li>
 </ul>
 
