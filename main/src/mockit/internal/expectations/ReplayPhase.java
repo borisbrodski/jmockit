@@ -66,7 +66,7 @@ final class ReplayPhase extends Phase
    private void createExpectationIfNonStrictInvocation(
       Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
-      if (!TestRun.getExecutingTest().containsStrictMockForRunningTest(mock, mockClassDesc)) {
+      if (!TestRun.getExecutingTest().isStrictInvocation(mock, mockClassDesc, mockNameAndDesc)) {
          ExpectedInvocation invocation =
             new ExpectedInvocation(mock, mockAccess, mockClassDesc, mockNameAndDesc, false, args);
          nonStrictExpectation = new Expectation(null, invocation, true);

@@ -4,7 +4,6 @@
  */
 package mockit.internal.state;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.internal.expectations.*;
@@ -205,13 +204,16 @@ public final class ExecutingTest
       return false;
    }
 
-   public boolean containsNonStrictMock(int access, Object mock, String mockClassDesc, String mockNameAndDesc)
+   public boolean isNonStrictInvocation(Object mock, String mockClassDesc, String mockNameAndDesc)
    {
-      boolean staticMethod = Modifier.isStatic(access);
-      boolean notInstanceMethod = staticMethod || mockNameAndDesc.startsWith("<init>");
+      boolean instanceMethod = isInstanceMethod(mock, mockNameAndDesc);
+
+      if (instanceMethod && isOverrideOfObjectMethod(mockNameAndDesc)) {
+         return true;
+      }
 
       for (Object nonStrictMock : nonStrictMocks) {
-         if (notInstanceMethod) {
+         if (!instanceMethod) {
             if (nonStrictMock == mockClassDesc) {
                return true;
             }
@@ -222,6 +224,16 @@ public final class ExecutingTest
       }
 
       return false;
+   }
+
+   private boolean isInstanceMethod(Object mock, String mockNameAndDesc)
+   {
+      return mock != null && mockNameAndDesc.charAt(0) != '<';
+   }
+
+   private boolean isOverrideOfObjectMethod(String mockNameAndDesc)
+   {
+      return "equals(Ljava/lang/Object;)Z hashCode()I toString()Ljava/lang/String;".contains(mockNameAndDesc);
    }
 
    public void registerAdditionalMocksFromFinalLocalMockFieldsIfAny()
@@ -255,8 +267,12 @@ public final class ExecutingTest
       }
    }
 
-   public boolean containsStrictMockForRunningTest(Object mock, String mockClassDesc)
+   public boolean isStrictInvocation(Object mock, String mockClassDesc, String mockNameAndDesc)
    {
+      if (isInstanceMethod(mock, mockNameAndDesc) && isOverrideOfObjectMethod(mockNameAndDesc)) {
+         return false;
+      }
+
       for (Object strictMock : strictMocks) {
          if (strictMock == mock) {
             return true;

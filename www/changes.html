@@ -31,6 +31,13 @@
       the appropriate mock field/parameter.
    </li>
    <li>
+      <strong>Changed</strong> the treatment for expectations recorded on overridden <code>equals</code>,
+      <code>hashCode</code> and <code>toString</code> methods so they are always considered <em>non-strict</em>, even
+      when the recording is done on an otherwise <em>strict</em> mocked instance.
+      This allows such methods to be invoked freely while still having strict verification of expected/unexpected
+      invocations on a strict mock.
+   </li>
+   <li>
       <strong>Enhancement</strong>: Fixed robustness issues when recording expectations in "before" methods, or when
       verifying expectations in "after" methods.
       If any mock classes are set up in a "before"/setUp method, they will now be torn down automatically at the end of

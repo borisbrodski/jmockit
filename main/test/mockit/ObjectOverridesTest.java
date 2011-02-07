@@ -75,6 +75,9 @@ public final class ObjectOverridesTest
          try { theClone = (ClassWithObjectOverrides) super.clone(); } catch (CloneNotSupportedException ignore) {}
          return theClone;
       }
+
+      int getIntValue() { return -1; }
+      void doSomething() { throw new RuntimeException(); }
    }
 
    @Mocked ClassWithObjectOverrides a;
@@ -170,5 +173,61 @@ public final class ObjectOverridesTest
       };
 
       assert a.clone() == b;
+   }
+
+   @Test
+   public void allowAnyInvocationsOnOverriddenObjectMethodsForStrictMocks()
+   {
+      new Expectations()
+      {
+         {
+            a.getIntValue(); result = 58;
+            b.doSomething();
+         }
+      };
+
+      assert !a.equals(b);
+      assert a.hashCode() != b.hashCode();
+      assert a.getIntValue() == 58;
+      assert a.equals(a);
+      String bStr = b.toString();
+      b.doSomething();
+      assert !b.equals(a);
+      String aStr = a.toString();
+      assert !aStr.equals(bStr);
+
+      new Verifications()
+      {
+         {
+            a.equals(b);
+            b.hashCode(); times = 1;
+            a.toString();
+            b.equals(null); times = 0;
+         }
+      };
+
+      new VerificationsInOrder()
+      {
+         {
+            b.equals(a);
+            a.toString();
+         }
+      };
+   }
+
+   @Test
+   public void recordExpectationsOnOverriddenObjectMethodAsNonStrictEvenInsideStrictExpectationBlock()
+   {
+      new Expectations()
+      {
+         {
+            a.doSomething();
+            a.hashCode(); result = 1;
+            a.equals(any);
+            a.toString();
+         }
+      };
+
+      a.doSomething();
    }
 }
