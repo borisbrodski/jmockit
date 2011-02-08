@@ -135,7 +135,7 @@ public final class ExpectedInvocation
    {
       return
          mockedInstance == instance || mockedInstance == instanceMap.get(instance) ||
-         TestRun.getExecutingTest().isInjectableInstanceEquivalentToCapturedInstance(instance, mockedInstance);
+         TestRun.getExecutingTest().isInvokedInstanceEquivalentToCapturedInstance(instance, mockedInstance);
    }
 
    // Creation of AssertionError instances for invocation mismatch reporting //////////////////////////////////////////

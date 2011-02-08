@@ -21,7 +21,7 @@ public final class ExecutingTest
 
    private final Map<MockedType, Object> finalLocalMockFields = new HashMap<MockedType, Object>(4);
    private final List<Object> injectableMocks = new ArrayList<Object>();
-   private final Map<Object, Object> originalToCapturedInjectableMocks = new IdentityHashMap<Object, Object>(4);
+   private final Map<Object, Object> originalToCapturedInstance = new IdentityHashMap<Object, Object>(4);
    private final List<Object> nonStrictMocks = new ArrayList<Object>();
    private final List<Object> strictMocks = new ArrayList<Object>();
 
@@ -50,15 +50,8 @@ public final class ExecutingTest
       currentRecordAndReplay = newRecordAndReplay;
    }
 
-   public boolean isShouldIgnoreMockingCallbacks()
-   {
-      return shouldIgnoreMockingCallbacks;
-   }
-
-   public void setShouldIgnoreMockingCallbacks(boolean flag)
-   {
-      shouldIgnoreMockingCallbacks = flag;
-   }
+   public boolean isShouldIgnoreMockingCallbacks() { return shouldIgnoreMockingCallbacks; }
+   public void setShouldIgnoreMockingCallbacks(boolean flag) { shouldIgnoreMockingCallbacks = flag; }
 
    public void clearRecordAndReplayForVerifications()
    {
@@ -81,20 +74,15 @@ public final class ExecutingTest
       return currentRecordAndReplay;
    }
 
-   public ParameterTypeRedefinitions getParameterTypeRedefinitions()
-   {
-      return parameterTypeRedefinitions;
-   }
-
+   public ParameterTypeRedefinitions getParameterTypeRedefinitions() { return parameterTypeRedefinitions; }
    public void setParameterTypeRedefinitions(ParameterTypeRedefinitions redefinitions)
-   {
-      parameterTypeRedefinitions = redefinitions;
-   }
+   { parameterTypeRedefinitions = redefinitions; }
 
-   public void clearInjectableMocks()
+   public void clearInjectableAndNonStrictMocks()
    {
       injectableMocks.clear();
-      originalToCapturedInjectableMocks.clear();
+      clearNonStrictMocks();
+      originalToCapturedInstance.clear();
    }
 
    public void addInjectableMock(Object mock)
@@ -118,14 +106,19 @@ public final class ExecutingTest
    public void addCapturedInstanceForInjectableMock(Object originalInstance, Object capturedInstance)
    {
       injectableMocks.add(capturedInstance);
-      originalToCapturedInjectableMocks.put(capturedInstance, originalInstance);
+      addCapturedInstance(originalInstance, capturedInstance);
    }
 
-   public boolean isInjectableInstanceEquivalentToCapturedInstance(Object invokedInstance, Object capturedInstance)
+   public void addCapturedInstance(Object originalInstance, Object capturedInstance)
+   {
+      originalToCapturedInstance.put(capturedInstance, originalInstance);
+   }
+
+   public boolean isInvokedInstanceEquivalentToCapturedInstance(Object invokedInstance, Object capturedInstance)
    {
       return
-         invokedInstance == originalToCapturedInjectableMocks.get(capturedInstance) ||
-         capturedInstance == originalToCapturedInjectableMocks.get(invokedInstance);
+         invokedInstance == originalToCapturedInstance.get(capturedInstance) ||
+         capturedInstance == originalToCapturedInstance.get(invokedInstance);
    }
 
    public void discardCascadedMockWhenInjectable(Object oldMock)

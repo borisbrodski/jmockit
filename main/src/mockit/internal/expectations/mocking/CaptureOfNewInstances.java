@@ -126,6 +126,9 @@ class CaptureOfNewInstances extends CaptureOfImplementations
 
          constructorModifiedForCaptureOnly = true;
       }
+      else if (captureFound != null) {
+         TestRun.getExecutingTest().addCapturedInstance(captureFound.originalMockInstance, mock);
+      }
 
       return constructorModifiedForCaptureOnly;
    }

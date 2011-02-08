@@ -1,26 +1,6 @@
 /*
- * JMockit
- * Copyright (c) 2006-2010 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
 
@@ -34,10 +14,7 @@ import mockit.CapturingImplementationsTest.*;
 @Capturing(baseType = ServiceToBeStubbedOut.class)
 public final class CapturingImplementationsTest
 {
-   interface ServiceToBeStubbedOut
-   {
-      int doSomething();
-   }
+   interface ServiceToBeStubbedOut { int doSomething(); }
 
    static final class ServiceLocator
    {
@@ -46,10 +23,7 @@ public final class CapturingImplementationsTest
       {
          ServiceToBeStubbedOut service = new ServiceToBeStubbedOut()
          {
-            public int doSomething()
-            {
-               return 10;
-            }
+            public int doSomething() { return 10; }
          };
 
          //noinspection unchecked
@@ -64,10 +38,7 @@ public final class CapturingImplementationsTest
       assertEquals(0, service.doSomething());
    }
 
-   public interface Service
-   {
-      int doSomething();
-   }
+   public interface Service { int doSomething(); }
 
    static final class ServiceImpl implements Service
    {
@@ -110,10 +81,7 @@ public final class CapturingImplementationsTest
       assertEquals(2, new ServiceImpl().doSomething());
    }
 
-   public interface AnotherService
-   {
-      int doSomethingElse();
-   }
+   public interface AnotherService { int doSomethingElse(); }
 
    static final class ServiceImpl2 implements AnotherService
    {
@@ -126,8 +94,7 @@ public final class CapturingImplementationsTest
    }
 
    @Test
-   public void captureImplementationByClassName(
-      @Capturing(classNames = ".+ServiceImpl2") AnotherService mock)
+   public void captureImplementationByClassName(@Capturing(classNames = ".+ServiceImpl2") AnotherService mock)
    {
       assertEquals(0, new ServiceImpl2().doSomethingElse());
       assertEquals(3, new ServiceImpl3().doSomethingElse());
@@ -195,8 +162,7 @@ public final class CapturingImplementationsTest
    }
 
    @Test
-   public void captureGeneratedMockSubclass(
-      @Capturing final AbstractService mock1, final AbstractService mock2)
+   public void captureGeneratedMockSubclass(@Capturing final AbstractService mock1, final AbstractService mock2)
    {
       new NonStrictExpectations()
       {
@@ -208,7 +174,7 @@ public final class CapturingImplementationsTest
 
       assertFalse(mock2.doSomething());
       assertTrue(mock1.doSomething());
-      assertFalse(new DefaultServiceImpl().doSomething());
+      assertTrue(new DefaultServiceImpl().doSomething());
    }
 
    static class AtomicFieldHolder

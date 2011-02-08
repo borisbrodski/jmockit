@@ -63,9 +63,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
 
    public void assignNewInstancesToMockFields(Object target)
    {
-      ExecutingTest executingTest = TestRun.getExecutingTest();
-      executingTest.clearInjectableMocks();
-      executingTest.clearNonStrictMocks();
+      TestRun.getExecutingTest().clearInjectableAndNonStrictMocks();
 
       for (Entry<MockedType, InstanceFactory> metadataAndFactory : mockInstanceFactories.entrySet()) {
          typeMetadata = metadataAndFactory.getKey();

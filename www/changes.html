@@ -55,6 +55,11 @@
       override it. The "jmockit-" prefix is optional when using the file, but will be added in the actual system
       property so that tools can always look for "jmockit-xyz" properties.
    </li>
+   <li>
+      <strong>Fixed</strong> a bug which prevented <em>non-strict</em> invocations from being properly matched during
+      replay, when <em>capturing</em> internally created instances for two or more mock fields (or two or more mock
+      parameters) of the same regular (non-injectable) mocked type.
+   </li>
 </ul>
 
 <h3>Current release</h3>
