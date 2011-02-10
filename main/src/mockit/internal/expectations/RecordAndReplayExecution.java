@@ -201,7 +201,11 @@ public final class RecordAndReplayExecution
       ExecutingTest executingTest = TestRun.getExecutingTest();
 
       if (executingTest.isShouldIgnoreMockingCallbacks() || LOCK.isHeldByCurrentThread()) {
-         return executionMode == 0 ? DefaultValues.computeForReturnType(mockDesc) : Void.class;
+         if (executionMode == 0) {
+            return DefaultValues.computeForReturnType(mockDesc);
+         }
+
+         return mock != null && "equals(Ljava/lang/Object;)Z".equals(mockDesc) ? false : Void.class;
       }
 
       executingTest.registerAdditionalMocksFromFinalLocalMockFieldsIfAny();
