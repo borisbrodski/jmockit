@@ -1,26 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2010 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
 
@@ -116,9 +96,8 @@ public abstract class Expectations extends Invocations
     * If the current expectation is for a method which actually <em>returns</em> an exception or error (as opposed to
     * <em>throwing</em> one), then the {@link #returns(Object)} method should be used instead.
     * <p/>
-    * If the value assigned to the field is of a type assignable to {@link java.util.Collection} or to
-    * {@link java.util.Iterator}, then it is taken as a sequence of <em>consecutive results</em> for the current
-    * expectation.
+    * If the value assigned to the field is an array or of a type assignable to {@link Iterable} or to {@link Iterator},
+    * then it is taken as a sequence of <em>consecutive results</em> for the current expectation.
     * Another way to specify consecutive results is to simply write multiple consecutive assignments to the field.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#results">In the Tutorial</a>
@@ -227,52 +206,43 @@ public abstract class Expectations extends Invocations
    // Methods for setting expected return values //////////////////////////////////////////////////////////////////////
 
    /**
-    * Specifies that the previously recorded method invocation will return a given value.
+    * Specifies that the previously recorded method invocation will return a given value during replay.
     * <p/>
-    * More than one return value can be specified for the same invocation by simply calling this
-    * method multiple times, with the desired consecutive values to be later returned.
-    * For an strict expectation, the maximum number of expected invocations is automatically
-    * adjusted so that one invocation for each return value is allowed.
-    * If even more invocations are explicitly allowed then the last recorded return value is used
-    * for all remaining invocations during the replay phase.
+    * More than one return value can be specified for the same invocation by simply calling this method multiple times,
+    * with the desired consecutive values to be later returned.
+    * For an strict expectation, the maximum number of expected invocations is automatically adjusted so that one
+    * invocation for each return value is allowed; if a larger number of invocations is explicitly allowed then the last
+    * recorded return value is used for all remaining invocations during the replay phase.
     * <p/>
-    * If the recorded invocation is for a method that does <em>not</em> return a
-    * {@linkplain Collection collection} or {@linkplain Iterator iterator}, then a collection (of
-    * any concrete type) or an iterator can be passed as argument to this method.
-    * In the first case, the elements inside the collection will be successively returned by
-    * sequential invocations to the recorded method, with the maximum number of invocations
-    * automatically adjusted to the number of elements in the collection.
-    * In the second case, each invocation to the recorded method will cause the next value from the
-    * iterator to be returned, until no more elements remain, without any predefined upper limit.
-    * For a recorded method that does return a collection or iterator, passing a collection/iterator
-    * to this method will have the regular effect of causing the collection/iterator to be later
-    * returned, as expected.
+    * It's also possible to specify a sequence of values to be returned by consecutive invocations, by simply passing
+    * an array, a {@linkplain Collection collection}, an {@linkplain Iterable iterable}, or an
+    * {@linkplain Iterator iterator}.
+    * The return type of the recorded method, however, must <em>not</em> be of one of these type non-singular types.
+    * If it is, the multi-valued argument will be returned by a single invocation at replay time.
     * <p/>
-    * For a non-void method, if no return value is recorded then all invocations to it will return
-    * the appropriate default value according to the method return type:
+    * For a non-void method, if no return value is recorded then all invocations to it will return the appropriate
+    * default value according to the method return type:
     * <ul>
-    * <li>Primitive: the standard default value is returned (ie {@code false} for
-    * {@code boolean}, '\0' for {@code char}, {@code 0} for {@code int}, and so on).</li>
-    * <li>{@code java.util.Collection} or {@code java.util.List}: returns
-    * {@link Collections#EMPTY_LIST}</li>
+    * <li>Primitive: the standard default value is returned (ie {@code false} for {@code boolean}, '\0' for
+    * {@code char}, {@code 0} for {@code int}, and so on).</li>
+    * <li>{@code java.util.Collection} or {@code java.util.List}: returns {@link Collections#EMPTY_LIST}</li>
     * <li>{@code java.util.Set}: returns {@link Collections#EMPTY_SET}.</li>
     * <li>{@code java.util.SortedSet}: returns an unmodifiable empty sorted set.</li>
     * <li>{@code java.util.Map}: returns {@link Collections#EMPTY_MAP}.</li>
     * <li>{@code java.util.SortedMap}: returns an unmodifiable empty sorted map.</li>
-    * <li>A reference type (including {@code String} and wrapper types for primitives, and excluding
-    * the exact collection types above): returns {@code null}.</li>
+    * <li>A reference type (including {@code String} and wrapper types for primitives, and excluding the exact
+    * collection types above): returns {@code null}.</li>
     * <li>An array type: an array with zero elements (empty) in each dimension is returned.</li>
     * </ul>
-    * The actual value(s) to be returned can be determined at replay time through a
-    * {@link Delegate} instance, typically created as an anonymous class at the point this
-    * method is called.
+    * Finally, value(s) to be returned can also be determined at replay time through a {@link Delegate} instance passed
+    * as argument to this method (typically created as an anonymous class).
     *
-    * @param value the value to be returned when the method is replayed; must be compatible with the
-    * method's return type
+    * @param value the value to be returned when the method is replayed; must be compatible with the method's return
+    * type
     *
     * @throws IllegalStateException if not currently recording an invocation
-    * @throws IllegalArgumentException if the given return value is not {@code null} but the
-    * preceding mock invocation is to a constructor or {@code void} method
+    * @throws IllegalArgumentException if the given return value is not {@code null} but the preceding mock invocation
+    * is to a constructor or {@code void} method
     *
     * @see #result
     * @see #returns(Object, Object...)
@@ -283,34 +253,31 @@ public abstract class Expectations extends Invocations
    }
 
    /**
-    * Equivalent to calling {@link #returns(Object)} two or more times in sequence, except when the
-    * associated method can return a collection of values, an iterator, or an array.
-    * Specifically, the following situations receive special treatment, according to the declared
-    * return type of said method:
+    * Equivalent to calling {@link #returns(Object)} two or more times in sequence, except when the associated method
+    * can return a collection or iterable, an iterator, or an array.
+    * Specifically, the following situations receive special treatment, according to the declared return type of said
+    * method:
     * <ol>
-    * <li>If the return type is iterable and can receive a {@link List} value, then the given
-    * sequence of values will be converted into an {@code ArrayList}; this list will then be
-    * returned by matching invocations at replay time.</li>
-    * <li>If the return type is {@code SortedSet} or a sub-type, then the given sequence of values
-    * will be converted into a {@code TreeSet}; otherwise, if it is {@code Set} or a sub-type, then
-    * a {@code LinkedHashSet} will be created to hold the values;
-    * the set will then be returned by matching invocations at replay time.</li>
-    * <li>If the return type is {@code Iterator} or a sub-type, then the given sequence of values
-    * will be converted into a {@code List} and the iterator created from this list will be returned
-    * by matching invocations at replay time.</li>
-    * <li>If the return type is an array, then the given sequence of values will be converted to an
-    * array of the same type, which will be returned by matching invocations at replay time.</li>
+    * <li>If the return type is iterable and can receive a {@link List} value, then the given sequence of values will be
+    * converted into an {@code ArrayList}; this list will then be returned by matching invocations at replay time.</li>
+    * <li>If the return type is {@code SortedSet} or a sub-type, then the given sequence of values will be converted
+    * into a {@code TreeSet}; otherwise, if it is {@code Set} or a sub-type, then a {@code LinkedHashSet} will be
+    * created to hold the values; the set will then be returned by matching invocations at replay time.</li>
+    * <li>If the return type is {@code Iterator} or a sub-type, then the given sequence of values will be converted into
+    * a {@code List} and the iterator created from this list will be returned by matching invocations at replay
+    * time.</li>
+    * <li>If the return type is an array, then the given sequence of values will be converted to an array of the same
+    * type, which will be returned by matching invocations at replay time.</li>
     * </ol>
-    * The current expectation will have its upper invocation count automatically set to the total
-    * number of values specified to be returned. This upper limit can be overridden through the
-    * {@code maxTimes} field, if necessary.
+    * The current expectation will have its upper invocation count automatically set to the total number of values
+    * specified to be returned. This upper limit can be overridden through the {@code maxTimes} field, if necessary.
     *
     * @param firstValue the first value to be returned in the replay phase
     * @param remainingValues the remaining values to be returned, in the same order
     *
     * @throws IllegalStateException if not currently recording an invocation
-    * @throws IllegalArgumentException if one of the given return values is not {@code null} but the
-    * preceding mock invocation is to a constructor or {@code void} method
+    * @throws IllegalArgumentException if one of the given return values is not {@code null} but the preceding mock
+    * invocation is to a constructor or {@code void} method
     */
    protected final void returns(Object firstValue, Object... remainingValues)
    {

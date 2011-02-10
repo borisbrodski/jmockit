@@ -38,6 +38,11 @@
       invocations on a strict mock.
    </li>
    <li>
+      <strong>Enhancement</strong>: The <code>result</code> field and the <code>returns(Object)</code> method (both
+      available in expectation blocks) now also accept <em>arrays</em> and <code>Iterable</code>'s containing values to
+      be returned by consecutive invocations (<em>collections</em> and <em>iterators</em> were already supported).
+   </li>
+   <li>
       <strong>Enhancement</strong>: Fixed robustness issues when recording expectations in "before" methods, or when
       verifying expectations in "after" methods.
       If any mock classes are set up in a "before"/setUp method, they will now be torn down automatically at the end of

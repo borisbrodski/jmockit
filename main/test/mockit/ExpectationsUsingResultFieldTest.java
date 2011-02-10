@@ -1,26 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2010 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
 
@@ -31,7 +11,7 @@ import org.junit.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
-public final class ExpectationsUsingResultFieldsTest
+public final class ExpectationsUsingResultFieldTest
 {
    @SuppressWarnings({"ClassWithTooManyMethods"})
    static class Collaborator
@@ -341,7 +321,63 @@ public final class ExpectationsUsingResultFieldsTest
    }
 
    @Test
-   public void returnsForMethodsThatReturnCollections()
+   public void returnsMultipleValuesInSequenceUsingArray(@Injectable final Collaborator collaborator)
+   {
+      final boolean[] arrayOfBooleanPrimitives = {true, false};
+      final Boolean[] arrayOfBooleanWrappers = {Boolean.TRUE, Boolean.FALSE};
+      final int[] intArray = {1, 2, 3};
+      final Character[] charArray = {'a', 'b', 'c'};
+
+      new Expectations()
+      {
+         {
+            collaborator.getBooleanValue(); result = arrayOfBooleanPrimitives;
+            collaborator.getBooleanWrapper(); result = arrayOfBooleanWrappers;
+            collaborator.getValue(); result = intArray;
+            collaborator.getCharValue(); result = charArray;
+         }
+      };
+
+      assertTrue(collaborator.getBooleanValue());
+      assertFalse(collaborator.getBooleanValue());
+
+      assertTrue(collaborator.getBooleanWrapper());
+      assertFalse(collaborator.getBooleanWrapper());
+
+      assertEquals(1, collaborator.getValue());
+      assertEquals(2, collaborator.getValue());
+      assertEquals(3, collaborator.getValue());
+
+      assertEquals('a', collaborator.getCharValue());
+      assertEquals('b', collaborator.getCharValue());
+      assertEquals('c', collaborator.getCharValue());
+   }
+
+   @Test
+   public void returnsMultipleValuesInSequenceUsingIterable(@Injectable final Collaborator collaborator)
+   {
+      final Iterable<Integer> intValues = new Iterable<Integer>()
+      {
+         public Iterator<Integer> iterator()
+         {
+            return asList(3, 2, 1).iterator();
+         }
+      };
+
+      new Expectations()
+      {
+         {
+            collaborator.getValue(); result = intValues;
+         }
+      };
+
+      assertEquals(3, collaborator.getValue());
+      assertEquals(2, collaborator.getValue());
+      assertEquals(1, collaborator.getValue());
+   }
+
+   @Test
+   public void returnsSpecifiedCollectionsForMethodsThatReturnCollections()
    {
       final Collaborator collaborator = new Collaborator();
       final Collection<String> strCol = asList("ab", "cde");
@@ -366,7 +402,7 @@ public final class ExpectationsUsingResultFieldsTest
    }
 
    @Test
-   public void returnsForMethodThatReturnsIterator()
+   public void returnsSpecifiedIteratorForMethodThatReturnsIterator()
    {
       final Collaborator collaborator = new Collaborator();
       final Iterator<String> itr = asList("ab", "cde").iterator();
@@ -468,5 +504,54 @@ public final class ExpectationsUsingResultFieldsTest
             result = "test";
          }
       };
+   }
+
+   @Test
+   public void recordReturnValuesMixedWithThrowablesForNonVoidMethod()
+   {
+      new NonStrictExpectations()
+      {
+         Collaborator mock;
+
+         {
+            mock.getString();
+            result = asList("Abc", new IllegalStateException(), "DEF", null, new UnknownError());
+         }
+      };
+
+      Collaborator c = new Collaborator();
+      assertEquals("Abc", c.getString());
+      try { c.getString(); fail(); } catch (IllegalStateException ignored) {}
+      assertEquals("DEF", c.getString());
+      assertNull(c.getString());
+      try { c.getString(); fail(); } catch (UnknownError ignored) {}
+      try { c.getString(); fail(); } catch (UnknownError ignored) {}
+   }
+
+   @Test
+   public void recordExceptionFollowedByNullReturnValueForVoidMethod(final Collaborator mock)
+   {
+      new Expectations()
+      {
+         {
+            // One way of doing it:
+            mock.provideSomeService();
+            result = new IllegalArgumentException();
+            result = null;
+
+            // Another way:
+            mock.provideSomeService();
+            result = asList(new IllegalArgumentException(), null);
+
+            // Yet another way:
+            mock.provideSomeService();
+            result = asList(new IllegalArgumentException(), null).iterator();
+         }
+      };
+
+      for (int i = 0; i < 3; i++) {
+         try { mock.provideSomeService(); fail(); } catch (IllegalArgumentException ignored) {}
+         mock.provideSomeService();
+      }
    }
 }

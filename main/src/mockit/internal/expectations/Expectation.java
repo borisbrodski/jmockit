@@ -1,26 +1,6 @@
 /*
- * JMockit Expectations
- * Copyright (c) 2006-2010 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations;
 
@@ -57,11 +37,15 @@ public final class Expectation
 
    public InvocationResults getResults()
    {
+      createResultsHolderIfNotYetCreated();
+      return results;
+   }
+
+   private void createResultsHolderIfNotYetCreated()
+   {
       if (results == null) {
          results = new InvocationResults(invocation, constraints);
       }
-
-      return results;
    }
 
    Object produceResult(Object invokedObject, Object[] invocationArgs) throws Throwable
@@ -80,15 +64,20 @@ public final class Expectation
 
    public void addReturnValueOrValues(Object value)
    {
-      boolean valueIsACollection = value instanceof Collection<?>;
+      createResultsHolderIfNotYetCreated();
 
-      if ((valueIsACollection || value instanceof Iterator<?>) && !hasReturnValueOfType(value.getClass())) {
-         if (valueIsACollection) {
-            Collection<?> values = (Collection<?>) value;
-            getResults().addReturnValues(values.toArray(new Object[values.size()]));
+      boolean valueIsArray = value != null && value.getClass().isArray();
+      boolean valueIsIterable = value instanceof Iterable<?>;
+
+      if ((valueIsArray || valueIsIterable || value instanceof Iterator<?>) && hasReturnOfDifferentType(value)) {
+         if (valueIsArray) {
+            results.addReturnValues(value);
+         }
+         else if (valueIsIterable) {
+            results.addReturnValues((Iterable<?>) value);
          }
          else {
-            getResults().addDeferredReturnValues((Iterator<?>) value);
+            results.addDeferredReturnValues((Iterator<?>) value);
          }
 
          return;
@@ -101,13 +90,13 @@ public final class Expectation
    {
       validateReturnValues(value, (Object) null);
       substituteCascadedMockToBeReturnedIfNeeded(value);
-      getResults().addReturnValue(value);
+      results.addReturnValue(value);
    }
 
-   private boolean hasReturnValueOfType(Class<?> typeToBeReturned)
+   private boolean hasReturnOfDifferentType(Object valueToBeReturned)
    {
       Class<?> returnClass = getReturnType();
-      return returnClass != null && returnClass.isAssignableFrom(typeToBeReturned);
+      return returnClass == null || !returnClass.isAssignableFrom(valueToBeReturned.getClass());
    }
 
    private Class<?> getReturnType()
@@ -248,19 +237,25 @@ public final class Expectation
 
    public void addResult(Object value)
    {
+      createResultsHolderIfNotYetCreated();
+
       if (value instanceof Throwable) {
-         getResults().addThrowable((Throwable) value);
+         results.addThrowable((Throwable) value);
          return;
       }
 
-      boolean valueIsACollection = value instanceof Collection<?>;
+      boolean valueIsArray = value != null && value.getClass().isArray();
+      boolean valueIsIterable = value instanceof Iterable<?>;
 
-      if ((valueIsACollection || value instanceof Iterator<?>) && !hasReturnValueOfType(value.getClass())) {
-         if (valueIsACollection) {
-            getResults().addResults((Collection<?>) value);
+      if ((valueIsArray || valueIsIterable || value instanceof Iterator<?>) && hasReturnOfDifferentType(value)) {
+         if (valueIsArray) {
+            results.addResults(value);
+         }
+         else if (valueIsIterable) {
+            results.addResults((Iterable<?>) value);
          }
          else {
-            getResults().addDeferredResults((Iterator<?>) value);
+            results.addDeferredResults((Iterator<?>) value);
          }
 
          return;
