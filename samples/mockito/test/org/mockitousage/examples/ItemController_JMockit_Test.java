@@ -1,26 +1,6 @@
 /*
- * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.mockitousage.examples;
 
@@ -32,18 +12,17 @@ import mockit.*;
 
 import static org.junit.Assert.*;
 
+/**
+ * These tests are equivalent to the ones in {@link ItemControllerTest}.
+ * <p/>
+ * Mockito has the {@code @InjectMocks} annotation which is similar to JMockit's {@code @Tested}, but it does not
+ * support constructor injection.
+ */
 public final class ItemController_JMockit_Test
 {
-   ItemController itemController;
-   @NonStrict ItemService itemService;
-   Map<String, Object> modelMap;
-
-   @Before
-   public void setUp()
-   {
-      itemController = new ItemController(itemService);
-      modelMap = new HashMap<String, Object>();
-   }
+   @Tested ItemController itemController;
+   @Injectable @NonStrict ItemService itemService;
+   final Map<String, Object> modelMap = new HashMap<String, Object>();
 
    @Test
    public void testViewItem() throws Exception

@@ -1,47 +1,19 @@
 /*
- * JMockit Expectations & Verifications
  * Copyright (c) 2006-2011 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
 
 import java.lang.annotation.*;
-import java.lang.instrument.*;
 import java.lang.reflect.*;
-import java.lang.reflect.Type;
-import java.util.*;
 
-import mockit.*;
-import mockit.external.asm.*;
-import mockit.internal.*;
 import mockit.internal.state.*;
-import mockit.internal.util.*;
 
 public final class ParameterTypeRedefinitions extends TypeRedefinitions
 {
    private final Type[] paramTypes;
    private final Annotation[][] paramAnnotations;
    private final Object[] paramValues;
-   private final Class<?>[] testedClasses;
    private final MockedType[] mockParameters;
 
    public ParameterTypeRedefinitions(Object owner, Method testMethod)
@@ -55,81 +27,32 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
          paramAnnotations = testMethod.getParameterAnnotations();
          int n = paramTypes.length;
          paramValues = new Object[n];
-         testedClasses = new Class<?>[n];
          mockParameters = new MockedType[n];
 
-         boolean hasTestedClass = false;
-
          for (int i = 0; i < n; i++) {
-            hasTestedClass |= discoverTestedOrMockedTypeAssociatedWithSpecialParameter(i);
+            getMockedTypeFromMockParameterDeclaration(i);
          }
 
-         if (hasTestedClass) {
-            redefineAndInstantiateAllTestedClasses();
-         }
-         else {
-            redefineAndInstantiateAllMockedTypes();
-         }
+         redefineAndInstantiateMockedTypes();
       }
       finally {
          TestRun.exitNoMockingZone();
       }
    }
 
-   private boolean discoverTestedOrMockedTypeAssociatedWithSpecialParameter(int paramIndex)
+   private void getMockedTypeFromMockParameterDeclaration(int paramIndex)
    {
       Type paramType = paramTypes[paramIndex];
       Annotation[] annotationsOnParameter = paramAnnotations[paramIndex];
-
-      if (Utilities.getAnnotation(annotationsOnParameter, Tested.class) != null) {
-         testedClasses[paramIndex] = (Class<?>) paramType;
-         return true;
-      }
 
       typeMetadata = new MockedType(paramIndex, paramType, annotationsOnParameter);
 
       if (typeMetadata.isMockParameter()) {
          mockParameters[paramIndex] = typeMetadata;
       }
-
-      return false;
    }
 
-   private void redefineAndInstantiateAllTestedClasses()
-   {
-      List<MockedType> mockedTypes = new ArrayList<MockedType>(mockParameters.length);
-
-      for (MockedType mockParameter : mockParameters) {
-         if (mockParameter != null) {
-            mockedTypes.add(mockParameter);
-         }
-      }
-
-      for (int i = 0; i < testedClasses.length; i++) {
-         Class<?> testedClass = testedClasses[i];
-
-         if (testedClass != null) {
-            paramValues[i] = redefineAndInstantiateTestedClass(testedClass, mockedTypes);
-         }
-      }
-   }
-
-   private Object redefineAndInstantiateTestedClass(Class<?> testedClass, List<MockedType> mockedTypes)
-   {
-      Object tested = Utilities.newInstanceUsingDefaultConstructor(testedClass);
-
-      ClassReader cr = ClassFile.createClassFileReader(testedClass.getName());
-      TestedClassModifier modifier = new TestedClassModifier(cr, mockedTypes);
-      cr.accept(modifier, false);
-      byte[] modifiedClass = modifier.toByteArray();
-
-      ClassDefinition classDefinition = new ClassDefinition(testedClass, modifiedClass);
-      RedefinitionEngine.redefineClasses(classDefinition);
-
-      return tested;
-   }
-
-   private void redefineAndInstantiateAllMockedTypes()
+   private void redefineAndInstantiateMockedTypes()
    {
       for (int i = 0; i < mockParameters.length; i++) {
          typeMetadata = mockParameters[i];

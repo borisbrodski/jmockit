@@ -10,6 +10,7 @@ import mockit.internal.expectations.mocking.*;
 import mockit.internal.capturing.*;
 import mockit.internal.state.*;
 import mockit.*;
+import mockit.internal.util.*;
 
 /**
  * Base class for "test runner decorators", which provide integration between JMockit and specific
@@ -34,6 +35,7 @@ public class TestRunnerDecorator
       }
       catch (RuntimeException e) {
          SavePoint.rollbackForTestClass();
+         Utilities.filterStackTrace(e);
          throw e;
       }
    }
@@ -132,6 +134,9 @@ public class TestRunnerDecorator
 
    protected final Object[] createInstancesForMockParametersIfAny(Object target, Method testMethod, Object[] params)
    {
+      TestedClassRedefinitions testedClasses = TestRun.getSharedFieldTypeRedefinitions().getTestedClassRedefinitions();
+      testedClasses.assignNewInstancesToTestedFields(target);
+
       if (testMethod.getParameterTypes().length == 0) {
          return params;
       }

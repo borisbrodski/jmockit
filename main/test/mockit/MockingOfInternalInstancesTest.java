@@ -67,12 +67,4 @@ public final class MockingOfInternalInstancesTest
       fileIO.writeToFile(FILE_NAME);
       assertExpectedFileIO();
    }
-
-   @Ignore @Test
-   public void stubOutFileCreationWithMockingRestrictedToTestedClass(
-      @Tested FileIO fileIO, @Mocked FileWriter fileWriter, @Mocked BufferedWriter bufferedWriter) throws Exception
-   {
-      fileIO.writeToFile(FILE_NAME);
-      assertExpectedFileIO();
-   }
 }

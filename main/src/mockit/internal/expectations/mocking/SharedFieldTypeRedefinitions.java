@@ -13,6 +13,7 @@ import mockit.internal.util.*;
 
 public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
 {
+   private TestedClassRedefinitions testedClassRedefinitions;
    private final Map<MockedType, InstanceFactory> mockInstanceFactories;
    private final List<MockedType> finalMockFields;
 
@@ -28,6 +29,9 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
       TestRun.enterNoMockingZone();
 
       try {
+         testedClassRedefinitions = new TestedClassRedefinitions();
+         testedClassRedefinitions.redefineTestedClasses(parentObject);
+
          Class<?> testClass = parentObject.getClass();
          targetClasses.clear();
          redefineFieldTypes(testClass, true);
@@ -128,4 +132,6 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
 
       return getCaptureOfNewInstances().captureNewInstanceForApplicableMockField(fieldOwner, mock);
    }
+
+   public TestedClassRedefinitions getTestedClassRedefinitions() { return testedClassRedefinitions; }
 }
