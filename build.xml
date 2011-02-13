@@ -1,6 +1,7 @@
 <project name="jmockit" basedir="." default="fullRebuild">
    <property name="JUNIT_JAR" value="lib/junit-dep-4.8.2.jar"/>
    <property name="TESTNG_JAR" value="lib/testng-5.14.6.jar"/>
+   <taskdef resource="testngtasks" classpath="${TESTNG_JAR}"/>
 
    <loadfile property="version" srcFile="version.txt"/>
 
@@ -307,7 +308,7 @@
                <include name="**/*Test.class"/>
                <exclude name="**/*CodeUnderTest.class"/>
                <exclude name="**/Base*Test.class"/>
-               <exclude name="**/TestNGDecoratorTest.class"/>
+               <exclude name="mockit/integration/testng/*Test.class"/>
                <exclude name="**/MockStateBetweenTestMethodsNGTest.class"/>
                <exclude name="**/ExecutingTest.class"/>
             </fileset>
@@ -315,11 +316,23 @@
          <formatter type="xml"/>
       </junit>
       <testReport name="main/JMockitTests"/>
+
+      <testng workingdir="main" listener="mockit.integration.testng.Initializer">
+         <classpath refid="common.classpath"/>
+         <classpath path="jmockit.jar"/>
+         <classpath>
+            <pathelement location="lib/bsh-2.0b1.jar"/>
+            <pathelement location="lib/jcommander-1.5.jar"/>
+            <pathelement location="main/test-classes"/>
+         </classpath>
+         <classfileset
+            dir="main/test-classes"
+            includes="mockit/integration/testng/*Test.class **/MockStateBetweenTestMethodsNGTest.class"
+            excludes="mockit/integration/testng/BaseTestNGDecoratorTest.class"/>
+      </testng>
    </target>
 
    <target name="sampleTests">
-      <taskdef resource="testngtasks" classpath="${TESTNG_JAR}"/>
-
       <junit fork="yes" forkmode="once" dir="samples">
          <classpath path="jmockit.jar"/>
          <classpath path="jmockit-coverage-serial.jar"/>
@@ -386,9 +399,9 @@
 
       <property name="sampleDir" value="samples/LoginService"/>
       <testng workingdir="${sampleDir}" listener="mockit.integration.testng.Initializer">
+         <classpath refid="common.classpath"/>
          <classpath path="jmockit.jar"/>
          <classpath path="jmockit-coverage-serial.jar"/>
-         <classpath refid="common.classpath"/>
          <classpath>
             <pathelement location="lib/bsh-2.0b1.jar"/>
             <pathelement location="lib/jcommander-1.5.jar"/>
