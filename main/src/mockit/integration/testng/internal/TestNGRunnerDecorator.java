@@ -49,7 +49,7 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
 
       Test testMetadata = method.getAnnotation(Test.class);
 
-      return testMetadata.dataProvider().length() > 0;
+      return testMetadata != null && testMetadata.dataProvider().length() > 0;
    }
 
    private final ThreadLocal<SavePoint> savePoint;
