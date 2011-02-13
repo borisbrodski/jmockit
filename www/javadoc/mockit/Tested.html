@@ -91,9 +91,37 @@ Annotation Type Tested</H2>
 <DL>
 <DT><PRE><FONT SIZE="-1"><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation">@Documented</A>
 <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</A>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>=<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation">RUNTIME</A>)
-<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</A>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>={<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#FIELD" title="class or interface in java.lang.annotation">FIELD</A>,<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#PARAMETER" title="class or interface in java.lang.annotation">PARAMETER</A>})
+<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</A>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>=<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#FIELD" title="class or interface in java.lang.annotation">FIELD</A>)
 </FONT>public @interface <B>Tested</B></DL>
 </PRE>
+
+<P>
+Indicates a class to be tested in isolation from selected dependencies.
+ This annotation is only applicable to instance fields of a test class.
+ <p/>
+ If the tested class has a super-class (apart from <code>Object</code>), it's also considered to be tested,
+ <em>provided</em> both classes have the same <A HREF="http://download.oracle.com/javase/6/docs/api/java/security/ProtectionDomain.html?is-external=true" title="class or interface in java.security">protection domain</A>.
+ This also applies to the super-class of the super-class, up to but not including the first super-class with a
+ different protection domain.
+ (In practice, this rule about protection domains means that super-classes defined by the JRE or by a third-party
+ library will be excluded from consideration, as they should be.)
+ <p/>
+ If the tested field is not <code>final</code> and its value remains <code>null</code> at the time a test method is about to be
+ executed, then a suitable instance of the tested class will be created and assigned to the field.
+ The instantiation will only succeed if the tested class has a single public constructor, and all parameters to this
+ constructor (if any) can be satisfied with the instances available in <A HREF="../mockit/Injectable.html" title="annotation in mockit">injectable</A> mock fields
+ of the test class.
+ <p/>
+ Whenever the tested object is created automatically, <em>field injection</em> is also performed.
+ Only non-<code>final</code> fields which remain <code>null</code> at this time are considered, between those declared in the
+ tested class itself or in a tested super-class.
+ For each such field, the mock instance currently available in an <A HREF="../mockit/Injectable.html" title="annotation in mockit">injectable</A> mock field of the
+ <em>same</em> type will be injected.
+ If there is more than one field of a given type, then the field to be injected is matched to a suitable mock field
+ <em>by name</em>.
+ If no matching injectable mock field exists in the test class, the target field in the tested class will be left
+ with the <code>null</code> reference.
+<P>
 
 <P>
 

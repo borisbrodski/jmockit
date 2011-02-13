@@ -554,7 +554,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 <TD><CODE><B><A HREF="../mockit/Expectations.html#returns(java.lang.Object)">returns</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;value)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies that the previously recorded method invocation will return a given value.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies that the previously recorded method invocation will return a given value during replay.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -563,8 +563,8 @@ Base class whose subclasses are defined in test code, and whose instances define
         <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;remainingValues)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Equivalent to calling <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> two or more times in sequence, except when the
- associated method can return a collection of values, an iterator, or an array.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Equivalent to calling <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> two or more times in sequence, except when the associated method
+ can return a collection or iterable, an iterator, or an array.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -898,9 +898,8 @@ protected static <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang
  If the current expectation is for a method which actually <em>returns</em> an exception or error (as opposed to
  <em>throwing</em> one), then the <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> method should be used instead.
  <p/>
- If the value assigned to the field is of a type assignable to <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util"><CODE>Collection</CODE></A> or to
- <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util"><CODE>Iterator</CODE></A>, then it is taken as a sequence of <em>consecutive results</em> for the current
- expectation.
+ If the value assigned to the field is an array or of a type assignable to <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang"><CODE>Iterable</CODE></A> or to <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util"><CODE>Iterator</CODE></A>,
+ then it is taken as a sequence of <em>consecutive results</em> for the current expectation.
  Another way to specify consecutive results is to simply write multiple consecutive assignments to the field.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#results">In the Tutorial</a>
@@ -1317,53 +1316,44 @@ returns</H3>
 <PRE>
 protected final void <B>returns</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;value)</PRE>
 <DL>
-<DD>Specifies that the previously recorded method invocation will return a given value.
+<DD>Specifies that the previously recorded method invocation will return a given value during replay.
  <p/>
- More than one return value can be specified for the same invocation by simply calling this
- method multiple times, with the desired consecutive values to be later returned.
- For an strict expectation, the maximum number of expected invocations is automatically
- adjusted so that one invocation for each return value is allowed.
- If even more invocations are explicitly allowed then the last recorded return value is used
- for all remaining invocations during the replay phase.
+ More than one return value can be specified for the same invocation by simply calling this method multiple times,
+ with the desired consecutive values to be later returned.
+ For an strict expectation, the maximum number of expected invocations is automatically adjusted so that one
+ invocation for each return value is allowed; if a larger number of invocations is explicitly allowed then the last
+ recorded return value is used for all remaining invocations during the replay phase.
  <p/>
- If the recorded invocation is for a method that does <em>not</em> return a
- <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">collection</A> or <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">iterator</A>, then a collection (of
- any concrete type) or an iterator can be passed as argument to this method.
- In the first case, the elements inside the collection will be successively returned by
- sequential invocations to the recorded method, with the maximum number of invocations
- automatically adjusted to the number of elements in the collection.
- In the second case, each invocation to the recorded method will cause the next value from the
- iterator to be returned, until no more elements remain, without any predefined upper limit.
- For a recorded method that does return a collection or iterator, passing a collection/iterator
- to this method will have the regular effect of causing the collection/iterator to be later
- returned, as expected.
+ It's also possible to specify a sequence of values to be returned by consecutive invocations, by simply passing
+ an array, a <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">collection</A>, an <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">iterable</A>, or an
+ <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">iterator</A>.
+ The return type of the recorded method, however, must <em>not</em> be of one of these type non-singular types.
+ If it is, the multi-valued argument will be returned by a single invocation at replay time.
  <p/>
- For a non-void method, if no return value is recorded then all invocations to it will return
- the appropriate default value according to the method return type:
+ For a non-void method, if no return value is recorded then all invocations to it will return the appropriate
+ default value according to the method return type:
  <ul>
- <li>Primitive: the standard default value is returned (ie <code>false</code> for
- <code>boolean</code>, '\0' for <code>char</code>, <code>0</code> for <code>int</code>, and so on).</li>
- <li><code>java.util.Collection</code> or <code>java.util.List</code>: returns
- <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_LIST" title="class or interface in java.util"><CODE>Collections.EMPTY_LIST</CODE></A></li>
+ <li>Primitive: the standard default value is returned (ie <code>false</code> for <code>boolean</code>, '\0' for
+ <code>char</code>, <code>0</code> for <code>int</code>, and so on).</li>
+ <li><code>java.util.Collection</code> or <code>java.util.List</code>: returns <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_LIST" title="class or interface in java.util"><CODE>Collections.EMPTY_LIST</CODE></A></li>
  <li><code>java.util.Set</code>: returns <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_SET" title="class or interface in java.util"><CODE>Collections.EMPTY_SET</CODE></A>.</li>
  <li><code>java.util.SortedSet</code>: returns an unmodifiable empty sorted set.</li>
  <li><code>java.util.Map</code>: returns <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/Collections.html?is-external=true#EMPTY_MAP" title="class or interface in java.util"><CODE>Collections.EMPTY_MAP</CODE></A>.</li>
  <li><code>java.util.SortedMap</code>: returns an unmodifiable empty sorted map.</li>
- <li>A reference type (including <code>String</code> and wrapper types for primitives, and excluding
- the exact collection types above): returns <code>null</code>.</li>
+ <li>A reference type (including <code>String</code> and wrapper types for primitives, and excluding the exact
+ collection types above): returns <code>null</code>.</li>
  <li>An array type: an array with zero elements (empty) in each dimension is returned.</li>
  </ul>
- The actual value(s) to be returned can be determined at replay time through a
- <A HREF="../mockit/Delegate.html" title="interface in mockit"><CODE>Delegate</CODE></A> instance, typically created as an anonymous class at the point this
- method is called.
+ Finally, value(s) to be returned can also be determined at replay time through a <A HREF="../mockit/Delegate.html" title="interface in mockit"><CODE>Delegate</CODE></A> instance passed
+ as argument to this method (typically created as an anonymous class).
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>value</CODE> - the value to be returned when the method is replayed; must be compatible with the
- method's return type
+<DT><B>Parameters:</B><DD><CODE>value</CODE> - the value to be returned when the method is replayed; must be compatible with the method's return
+ type
 <DT><B>Throws:</B>
 <DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalStateException.html?is-external=true" title="class or interface in java.lang">IllegalStateException</A></CODE> - if not currently recording an invocation
-<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if the given return value is not <code>null</code> but the
- preceding mock invocation is to a constructor or <code>void</code> method<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#result"><CODE>result</CODE></A>, 
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if the given return value is not <code>null</code> but the preceding mock invocation
+ is to a constructor or <code>void</code> method<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#result"><CODE>result</CODE></A>, 
 <A HREF="../mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)"><CODE>returns(Object, Object...)</CODE></A></DL>
 </DD>
 </DL>
@@ -1375,34 +1365,31 @@ returns</H3>
 protected final void <B>returns</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;firstValue,
                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;remainingValues)</PRE>
 <DL>
-<DD>Equivalent to calling <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> two or more times in sequence, except when the
- associated method can return a collection of values, an iterator, or an array.
- Specifically, the following situations receive special treatment, according to the declared
- return type of said method:
+<DD>Equivalent to calling <A HREF="../mockit/Expectations.html#returns(java.lang.Object)"><CODE>returns(Object)</CODE></A> two or more times in sequence, except when the associated method
+ can return a collection or iterable, an iterator, or an array.
+ Specifically, the following situations receive special treatment, according to the declared return type of said
+ method:
  <ol>
- <li>If the return type is iterable and can receive a <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util"><CODE>List</CODE></A> value, then the given
- sequence of values will be converted into an <code>ArrayList</code>; this list will then be
- returned by matching invocations at replay time.</li>
- <li>If the return type is <code>SortedSet</code> or a sub-type, then the given sequence of values
- will be converted into a <code>TreeSet</code>; otherwise, if it is <code>Set</code> or a sub-type, then
- a <code>LinkedHashSet</code> will be created to hold the values;
- the set will then be returned by matching invocations at replay time.</li>
- <li>If the return type is <code>Iterator</code> or a sub-type, then the given sequence of values
- will be converted into a <code>List</code> and the iterator created from this list will be returned
- by matching invocations at replay time.</li>
- <li>If the return type is an array, then the given sequence of values will be converted to an
- array of the same type, which will be returned by matching invocations at replay time.</li>
+ <li>If the return type is iterable and can receive a <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util"><CODE>List</CODE></A> value, then the given sequence of values will be
+ converted into an <code>ArrayList</code>; this list will then be returned by matching invocations at replay time.</li>
+ <li>If the return type is <code>SortedSet</code> or a sub-type, then the given sequence of values will be converted
+ into a <code>TreeSet</code>; otherwise, if it is <code>Set</code> or a sub-type, then a <code>LinkedHashSet</code> will be
+ created to hold the values; the set will then be returned by matching invocations at replay time.</li>
+ <li>If the return type is <code>Iterator</code> or a sub-type, then the given sequence of values will be converted into
+ a <code>List</code> and the iterator created from this list will be returned by matching invocations at replay
+ time.</li>
+ <li>If the return type is an array, then the given sequence of values will be converted to an array of the same
+ type, which will be returned by matching invocations at replay time.</li>
  </ol>
- The current expectation will have its upper invocation count automatically set to the total
- number of values specified to be returned. This upper limit can be overridden through the
- <code>maxTimes</code> field, if necessary.
+ The current expectation will have its upper invocation count automatically set to the total number of values
+ specified to be returned. This upper limit can be overridden through the <code>maxTimes</code> field, if necessary.
 <P>
 <DD><DL>
 <DT><B>Parameters:</B><DD><CODE>firstValue</CODE> - the first value to be returned in the replay phase<DD><CODE>remainingValues</CODE> - the remaining values to be returned, in the same order
 <DT><B>Throws:</B>
 <DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalStateException.html?is-external=true" title="class or interface in java.lang">IllegalStateException</A></CODE> - if not currently recording an invocation
-<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if one of the given return values is not <code>null</code> but the
- preceding mock invocation is to a constructor or <code>void</code> method</DL>
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if one of the given return values is not <code>null</code> but the preceding mock
+ invocation is to a constructor or <code>void</code> method</DL>
 </DD>
 </DL>
 <HR>

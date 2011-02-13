@@ -32,7 +32,7 @@
             </configuration>
          </plugin>
          <plugin>
-            <artifactId>maven-source-plugin</artifactId><version>2.1</version>
+            <artifactId>maven-source-plugin</artifactId><version>2.1.2</version>
             <executions>
                <execution>
                   <id>attach-sources</id>
@@ -48,7 +48,7 @@
                <excludes>
                   <exclude>**/*$*</exclude>
                   <exclude>**/Base*Test.class</exclude>
-                  <exclude>**/TestNGDecoratorTest.class</exclude>
+                  <exclude>**/testng/*Test.class</exclude>
                   <exclude>**/MockStateBetweenTestMethodsNGTest.class</exclude>
                </excludes>
             </configuration>

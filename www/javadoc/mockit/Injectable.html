@@ -111,11 +111,6 @@ Indicates an instance field of the test class or a parameter of the test method 
  mocked; other instances of the same mocked type are not affected.
  For an injectable mocked <em>class</em>, <em>static methods</em> and <em>constructors</em> are <em>not</em> mocked;
  only instance methods are. The static initializers of said classes are <em>not</em> stubbed out by default.
- <p/>
- Mock fields or parameters with injectable instances can be of any reference type.
- However, while allowed, the use of this annotation is redundant for interfaces and annotations, since their
- instances will belong to a dynamically created mock class.
- It is also redundant for an enum type, since each enum value is unique.
 <P>
 
 <P>
