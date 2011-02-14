@@ -35,7 +35,8 @@ public final class BasicClassMockTest extends EasyMockSupport
    public void testPrintContent()
    {
       printer.print("Hello world");
-      EasyMock.replay(printer);
+
+      replayAll();
 
       document.setContent("Hello world");
       document.print();
