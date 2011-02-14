@@ -14,164 +14,247 @@
     <caption><code>..\orderMngmntWebapp\src\orderMngr\web\submitOrder\OrderEntryPage.java</code></caption>
     <tr class='click' onclick='showHideLines(this)'>
       <td class='line'></td><td>&nbsp;</td><td class='comment'>/*
- * JMockit Samples
- * Copyright (c) 2006-2009 Rogério Liesenfeld
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 </td></tr>
     <tr>
-      <td class='line'>25</td><td>&nbsp;</td>
+      <td class='line'>5</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>package orderMngr.web.submitOrder;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>6</td><td colspan='2'></td>
+    </tr>
+    <tr>
+      <td class='line'>7</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.math.*;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>8</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import java.util.*;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>9</td><td colspan='2'></td>
+    </tr>
+    <tr>
+      <td class='line'>10</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>import orderMngr.domain.order.*;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>11</td><td colspan='2'></td>
+    </tr>
+    <tr>
+      <td class='line'>12</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l12s0'>public final class OrderEntryPage</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 21        </ol>
+      </td>
+    </tr>
+    <tr>
+      <td class='line'>13</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>{</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>14</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // Data accumulated before submitting the order:</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>15</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private String <span class='instance covered' title='Reads: 3 Writes: 2'>customerId</span>;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>16</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private List&lt;OrderItem> <span class='instance covered' title='Reads: 15 Writes: 6'>orderItems</span>;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>17</td><td colspan='2'></td>
+    </tr>
+    <tr>
+      <td class='line'>18</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // Parameters for adding an order item:</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>19</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private String <span class='instance covered' title='Reads: 1 Writes: 1'>productId</span>;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>20</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private String <span class='instance covered' title='Reads: 1 Writes: 1'>productDescription</span>;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>21</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private int <span class='instance covered' title='Reads: 1 Writes: 1'>quantity</span>;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>22</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private BigDecimal <span class='instance covered' title='Reads: 1 Writes: 1'>unitPrice</span>;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>23</td><td colspan='2'></td>
+    </tr>
+    <tr>
+      <td class='line'>24</td><td>&nbsp;</td>
+      <td><pre class='comment'>   // Item index for removing an item:</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>25</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   private int <span class='instance covered' title='Reads: 2 Writes: 2'>itemToRemove</span>;</pre></td>
     </tr>
     <tr>
       <td class='line'>26</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>27</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>import java.math.*;</pre></td>
+      <td><pre class='comment'>   // Resulting data when the order is submitted:</pre></td>
     </tr>
     <tr>
       <td class='line'>28</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>import java.util.*;</pre></td>
+      <td><pre class='prettyprint'>   private int <span class='instance covered' title='Reads: 5 Writes: 2'>orderNo</span>;</pre></td>
     </tr>
     <tr>
       <td class='line'>29</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>30</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>import orderMngr.domain.order.*;</pre></td>
+      <td><pre class='prettyprint'>   public void load()</pre></td>
     </tr>
     <tr>
-      <td class='line'>31</td><td colspan='2'></td>
+      <td class='line'>31</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
       <td class='line'>32</td><td class='count'>6</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l32s0'>public final class OrderEntryPage</pre>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l32s0'>      orderItems = new ArrayList&lt;OrderItem>(5);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 41        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 39</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 67</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 83</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeItemWithInvalidIndex: 96</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrderWithMissingData: 106</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 22        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>33</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>{</pre></td>
+      <td><pre class='comment'>      // use some web MVC framework service to retrieve item data, either from request parameters</pre></td>
     </tr>
     <tr>
       <td class='line'>34</td><td>&nbsp;</td>
-      <td><pre class='comment'>   // Data accumulated before submitting the order:</pre></td>
+      <td><pre class='comment'>      // or from the HTTPSession</pre></td>
     </tr>
     <tr>
-      <td class='line'>35</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   private String <span class='instance covered' title='Reads: 3 Writes: 2'>customerId</span>;</pre></td>
+      <td class='line'>35</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l35s0'>   }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 39</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 67</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 83</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeItemWithInvalidIndex: 96</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrderWithMissingData: 106</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 22        </ol>
+      </td>
     </tr>
     <tr>
-      <td class='line'>36</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   private List&lt;OrderItem> <span class='instance covered' title='Reads: 15 Writes: 6'>orderItems</span>;</pre></td>
+      <td class='line'>36</td><td colspan='2'></td>
     </tr>
     <tr>
-      <td class='line'>37</td><td colspan='2'></td>
+      <td class='line'>37</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public void setCustomerId(String customerId)</pre></td>
     </tr>
     <tr>
       <td class='line'>38</td><td>&nbsp;</td>
-      <td><pre class='comment'>   // Parameters for adding an order item:</pre></td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='line'>39</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   private String <span class='instance covered' title='Reads: 1 Writes: 1'>productId</span>;</pre></td>
+      <td class='line'>39</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l39s0'>      this.customerId = customerId;</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 40</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 25        </ol>
+      </td>
     </tr>
     <tr>
-      <td class='line'>40</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   private String <span class='instance covered' title='Reads: 1 Writes: 1'>productDescription</span>;</pre></td>
+      <td class='line'>40</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l40s0'>   }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 40</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 25        </ol>
+      </td>
     </tr>
     <tr>
-      <td class='line'>41</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   private int <span class='instance covered' title='Reads: 1 Writes: 1'>quantity</span>;</pre></td>
+      <td class='line'>41</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>42</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   private BigDecimal <span class='instance covered' title='Reads: 1 Writes: 1'>unitPrice</span>;</pre></td>
+      <td><pre class='prettyprint'>   public List&lt;OrderItem> getOrderItems()</pre></td>
     </tr>
     <tr>
-      <td class='line'>43</td><td colspan='2'></td>
+      <td class='line'>43</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='line'>44</td><td>&nbsp;</td>
-      <td><pre class='comment'>   // Item index for removing an item:</pre></td>
+      <td class='line'>44</td><td class='count'>9</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l44s0'>      return orderItems;</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 41, 44</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 70, 71</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 84, 88</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeItemWithInvalidIndex: 97</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 26, 31        </ol>
+      </td>
     </tr>
     <tr>
       <td class='line'>45</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   private int <span class='instance covered' title='Reads: 2 Writes: 2'>itemToRemove</span>;</pre></td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
       <td class='line'>46</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>47</td><td>&nbsp;</td>
-      <td><pre class='comment'>   // Resulting data when the order is submitted:</pre></td>
+      <td><pre class='prettyprint'>   public void setProductId(String productId)</pre></td>
     </tr>
     <tr>
       <td class='line'>48</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   private int <span class='instance covered' title='Reads: 5 Writes: 2'>orderNo</span>;</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>49</td><td colspan='2'></td>
-    </tr>
-    <tr>
-      <td class='line'>50</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   public void load()</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>51</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='line'>52</td><td class='count'>6</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l52s0'>      orderItems = new ArrayList&lt;OrderItem>(5);</pre>
+      <td class='line'>49</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l49s0'>      this.productId = productId;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 59</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 87</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 103</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeItemWithInvalidIndex: 116</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrderWithMissingData: 126</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 42        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 59        </ol>
       </td>
     </tr>
     <tr>
+      <td class='line'>50</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l50s0'>   }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 59        </ol>
+      </td>
+    </tr>
+    <tr>
+      <td class='line'>51</td><td colspan='2'></td>
+    </tr>
+    <tr>
+      <td class='line'>52</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   public void setProductDescription(String productDescription)</pre></td>
+    </tr>
+    <tr>
       <td class='line'>53</td><td>&nbsp;</td>
-      <td><pre class='comment'>      // use some web MVC framework service to retrieve item data, either from request parameters</pre></td>
+      <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='line'>54</td><td>&nbsp;</td>
-      <td><pre class='comment'>      // or from the HTTPSession</pre></td>
+      <td class='line'>54</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l54s0'>      this.productDescription = productDescription;</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 61        </ol>
+      </td>
     </tr>
     <tr>
-      <td class='line'>55</td><td class='count'>6</td>
+      <td class='line'>55</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l55s0'>   }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 59</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 87</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 103</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeItemWithInvalidIndex: 116</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrderWithMissingData: 126</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 42        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 61        </ol>
       </td>
     </tr>
     <tr>
@@ -179,26 +262,24 @@
     </tr>
     <tr>
       <td class='line'>57</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   public void setCustomerId(String customerId)</pre></td>
+      <td><pre class='prettyprint'>   public void setQuantity(int quantity)</pre></td>
     </tr>
     <tr>
       <td class='line'>58</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='line'>59</td><td class='count'>2</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l59s0'>      this.customerId = customerId;</pre>
+      <td class='line'>59</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l59s0'>      this.quantity = quantity;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 60</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 45        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 63        </ol>
       </td>
     </tr>
     <tr>
-      <td class='line'>60</td><td class='count'>2</td>
+      <td class='line'>60</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l60s0'>   }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 60</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 45        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 63        </ol>
       </td>
     </tr>
     <tr>
@@ -206,50 +287,51 @@
     </tr>
     <tr>
       <td class='line'>62</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   public List&lt;OrderItem> getOrderItems()</pre></td>
+      <td><pre class='prettyprint'>   public void setUnitPrice(BigDecimal unitPrice)</pre></td>
     </tr>
     <tr>
       <td class='line'>63</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='line'>64</td><td class='count'>9</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l64s0'>      return orderItems;</pre>
+      <td class='line'>64</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l64s0'>      this.unitPrice = unitPrice;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 61, 64</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 90, 91</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 104, 108</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeItemWithInvalidIndex: 117</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 46, 51        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 65        </ol>
       </td>
     </tr>
     <tr>
-      <td class='line'>65</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   }</pre></td>
+      <td class='line'>65</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l65s0'>   }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 65        </ol>
+      </td>
     </tr>
     <tr>
       <td class='line'>66</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>67</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   public void setProductId(String productId)</pre></td>
+      <td><pre class='prettyprint'>   public void setItemToRemove(int itemToRemove)</pre></td>
     </tr>
     <tr>
       <td class='line'>68</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='line'>69</td><td class='count'>1</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l69s0'>      this.productId = productId;</pre>
+      <td class='line'>69</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l69s0'>      this.itemToRemove = itemToRemove;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 79        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 82</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeItemWithInvalidIndex: 95        </ol>
       </td>
     </tr>
     <tr>
-      <td class='line'>70</td><td class='count'>1</td>
+      <td class='line'>70</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l70s0'>   }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 79        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 82</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeItemWithInvalidIndex: 95        </ol>
       </td>
     </tr>
     <tr>
@@ -257,32 +339,31 @@
     </tr>
     <tr>
       <td class='line'>72</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   public void setProductDescription(String productDescription)</pre></td>
+      <td><pre class='prettyprint'>   public int getOrderNo()</pre></td>
     </tr>
     <tr>
       <td class='line'>73</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='line'>74</td><td class='count'>1</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l74s0'>      this.productDescription = productDescription;</pre>
+      <td class='line'>74</td><td class='count'>5</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l74s0'>      return orderNo;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 81        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 43, 46</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrderWithMissingData: 113</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 27, 43        </ol>
       </td>
     </tr>
     <tr>
-      <td class='line'>75</td><td class='count'>1</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l75s0'>   }</pre>
-        <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 81        </ol>
-      </td>
+      <td class='line'>75</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>   }</pre></td>
     </tr>
     <tr>
       <td class='line'>76</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>77</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   public void setQuantity(int quantity)</pre></td>
+      <td><pre class='prettyprint'>   public void addItem()</pre></td>
     </tr>
     <tr>
       <td class='line'>78</td><td>&nbsp;</td>
@@ -290,190 +371,89 @@
     </tr>
     <tr>
       <td class='line'>79</td><td class='count'>1</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l79s0'>      this.quantity = quantity;</pre>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l79s0'>      OrderItem item = new OrderItem(productId, productDescription, quantity, unitPrice);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 83        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 68        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>80</td><td class='count'>1</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l80s0'>   }</pre>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l80s0'>      orderItems.add(item);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 83        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 68        </ol>
       </td>
     </tr>
     <tr>
-      <td class='line'>81</td><td colspan='2'></td>
+      <td class='line'>81</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l81s0'>   }</pre>
+        <ol style='display: none;'>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 68        </ol>
+      </td>
     </tr>
     <tr>
-      <td class='line'>82</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   public void setUnitPrice(BigDecimal unitPrice)</pre></td>
+      <td class='line'>82</td><td colspan='2'></td>
     </tr>
     <tr>
       <td class='line'>83</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   {</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>84</td><td class='count'>1</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l84s0'>      this.unitPrice = unitPrice;</pre>
-        <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 85        </ol>
-      </td>
-    </tr>
-    <tr>
-      <td class='line'>85</td><td class='count'>1</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l85s0'>   }</pre>
-        <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 85        </ol>
-      </td>
-    </tr>
-    <tr>
-      <td class='line'>86</td><td colspan='2'></td>
-    </tr>
-    <tr>
-      <td class='line'>87</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   public void setItemToRemove(int itemToRemove)</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>88</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   {</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>89</td><td class='count'>2</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l89s0'>      this.itemToRemove = itemToRemove;</pre>
-        <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 102</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeItemWithInvalidIndex: 115        </ol>
-      </td>
-    </tr>
-    <tr>
-      <td class='line'>90</td><td class='count'>2</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l90s0'>   }</pre>
-        <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 102</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeItemWithInvalidIndex: 115        </ol>
-      </td>
-    </tr>
-    <tr>
-      <td class='line'>91</td><td colspan='2'></td>
-    </tr>
-    <tr>
-      <td class='line'>92</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   public int getOrderNo()</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>93</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   {</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>94</td><td class='count'>5</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l94s0'>      return orderNo;</pre>
-        <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 63, 66</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrderWithMissingData: 133</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 47, 63        </ol>
-      </td>
-    </tr>
-    <tr>
-      <td class='line'>95</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   }</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>96</td><td colspan='2'></td>
-    </tr>
-    <tr>
-      <td class='line'>97</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   public void addItem()</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>98</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>   {</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>99</td><td class='count'>1</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l99s0'>      OrderItem item = new OrderItem(productId, productDescription, quantity, unitPrice);</pre>
-        <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 88        </ol>
-      </td>
-    </tr>
-    <tr>
-      <td class='line'>100</td><td class='count'>1</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l100s0'>      orderItems.add(item);</pre>
-        <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 88        </ol>
-      </td>
-    </tr>
-    <tr>
-      <td class='line'>101</td><td class='count'>1</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l101s0'>   }</pre>
-        <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#addItemToEmptyList: 88        </ol>
-      </td>
-    </tr>
-    <tr>
-      <td class='line'>102</td><td colspan='2'></td>
-    </tr>
-    <tr>
-      <td class='line'>103</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public void removeItem()</pre></td>
     </tr>
     <tr>
-      <td class='line'>104</td><td>&nbsp;</td>
+      <td class='line'>84</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='line'>105</td><td class='count'>2</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l105s0'>      orderItems.remove(itemToRemove);</pre>
+      <td class='line'>85</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l85s0'>      orderItems.remove(itemToRemove);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 106</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeItemWithInvalidIndex: 119        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 86</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeItemWithInvalidIndex: 99        </ol>
       </td>
     </tr>
     <tr>
-      <td class='line'>106</td><td class='count'>1</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l106s0'>   }</pre>
+      <td class='line'>86</td><td class='count'>1</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l86s0'>   }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 106        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#removeOnlyItem: 86        </ol>
       </td>
     </tr>
     <tr>
-      <td class='line'>107</td><td colspan='2'></td>
+      <td class='line'>87</td><td colspan='2'></td>
     </tr>
     <tr>
-      <td class='line'>108</td><td>&nbsp;</td>
+      <td class='line'>88</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public void submitOrder() throws Exception</pre></td>
     </tr>
     <tr>
-      <td class='line'>109</td><td>&nbsp;</td>
+      <td class='line'>89</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   {</pre></td>
     </tr>
     <tr>
-      <td class='line'>110</td><td class='count'>3</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l110s0'>      Order order = new OrderFactory().createOrder(customerId, orderItems);</pre>
+      <td class='line'>90</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l90s0'>      Order order = new OrderFactory().createOrder(customerId, orderItems);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 64</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrderWithMissingData: 129</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 61        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 44</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrderWithMissingData: 109</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 41        </ol>
       </td>
     </tr>
     <tr>
-      <td class='line'>111</td><td class='count'>2</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l111s0'>      orderNo = order.getNumber();</pre>
+      <td class='line'>91</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l91s0'>      orderNo = order.getNumber();</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 64</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 61        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 44</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 41        </ol>
       </td>
     </tr>
     <tr>
-      <td class='line'>112</td><td class='count'>2</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l112s0'>   }</pre>
+      <td class='line'>92</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l92s0'>   }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 64</li>
-          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 61        </ol>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_AnnotationsAPI_Test#submitOrder: 44</li>
+          <li>orderMngr.web.submitOrder.OrderEntryPage_ExpectationsAPI_Test#submitOrder: 41        </ol>
       </td>
     </tr>
     <tr>
-      <td class='line'>113</td><td>&nbsp;</td>
+      <td class='line'>93</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>}</pre></td>
     </tr>
   </table>
