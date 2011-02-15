@@ -42,15 +42,15 @@ public final class JREMockingTest extends TestCase
       Thread.sleep(5000);
    }
 
-   public void testSecondMockingOfNativeMethods() throws Exception
+   public void testSecondMockingOfNativeMethods(@Mocked("isAlive") final Thread mock)
    {
        new Expectations()
-       {
+       {{
            // Second mocking: retrieves from cache, no longer knowing it has native methods to re-register.
-           @Mocked("sleep") final Thread unused = null;
-       };
+           mock.isAlive(); result = true;
+       }};
 
-      Thread.sleep(5000);
+      assertTrue(mock.isAlive());
    }
 
    public void testUnmockedNativeMethods() throws Exception
