@@ -177,7 +177,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
 
    private AssertionError verifyMultipleIterations()
    {
-      int n = expectationsVerified.size();
+      int n = getExpectationsVerified().size();
 
       for (int i = 1; i < numberOfIterations; i++) {
          AssertionError error = verifyNextIterationOfWholeBlockOfInvocations(n);
@@ -193,7 +193,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
    private AssertionError verifyNextIterationOfWholeBlockOfInvocations(int n)
    {
       for (int i = 0; i < n; i++) {
-         Expectation verified = expectationsVerified.get(i);
+         Expectation verified = getExpectationsVerified().get(i);
          ExpectedInvocation invocation = verified.invocation;
 
          argMatchers = invocation.arguments.getMatchers();

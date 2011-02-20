@@ -13,6 +13,7 @@ final class PhasedExecutionState
 {
    final List<Expectation> expectations;
    final List<Expectation> nonStrictExpectations;
+   final List<Expectation> expectationsVerified;
    final Map<Object, Object> instanceMap;
    private List<Class<?>> mockedTypesToMatchOnInstances;
 
@@ -20,6 +21,7 @@ final class PhasedExecutionState
    {
       expectations = new ArrayList<Expectation>();
       nonStrictExpectations = new ArrayList<Expectation>();
+      expectationsVerified = new ArrayList<Expectation>();
       instanceMap = new IdentityHashMap<Object, Object>();
    }
 

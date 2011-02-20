@@ -13,7 +13,6 @@ public abstract class VerificationPhase extends TestOnlyPhase
 {
    final List<Expectation> expectationsInReplayOrder;
    final List<Object[]> invocationArgumentsInReplayOrder;
-   protected final List<Expectation> expectationsVerified;
    private boolean allInvocationsDuringReplayMustBeVerified;
    private Object[] mockedTypesAndInstancesToFullyVerify;
    protected AssertionError pendingError;
@@ -25,13 +24,11 @@ public abstract class VerificationPhase extends TestOnlyPhase
       super(recordAndReplay);
       this.expectationsInReplayOrder = expectationsInReplayOrder;
       this.invocationArgumentsInReplayOrder = invocationArgumentsInReplayOrder;
-      expectationsVerified = new ArrayList<Expectation>();
    }
 
-   public final void setAllInvocationsMustBeVerified()
-   {
-      allInvocationsDuringReplayMustBeVerified = true;
-   }
+   public List<Expectation> getExpectationsVerified() { return recordAndReplay.executionState.expectationsVerified; }
+
+   public final void setAllInvocationsMustBeVerified() { allInvocationsDuringReplayMustBeVerified = true; }
 
    public final void setMockedTypesToFullyVerify(Object[] mockedTypesAndInstancesToFullyVerify)
    {
@@ -96,7 +93,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
          }
 
          if (error == null) {
-            expectationsVerified.add(expectation);
+            getExpectationsVerified().add(expectation);
             return true;
          }
       }
@@ -170,7 +167,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
    private AssertionError validateThatAllInvocationsWereVerified()
    {
       List<Expectation> notVerified = new ArrayList<Expectation>(expectationsInReplayOrder);
-      notVerified.removeAll(expectationsVerified);
+      notVerified.removeAll(getExpectationsVerified());
       discardExpectationsThatWillBeVerifiedImplicitly(notVerified);
 
       if (!notVerified.isEmpty()) {

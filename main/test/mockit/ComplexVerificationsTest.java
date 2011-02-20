@@ -180,7 +180,7 @@ public class ComplexVerificationsTest
       }};
    }
 
-   @Ignore @Test
+   @Test
    public void usingNonStrictExpectationsOnlyWithoutDuplicateInvocations(final A a, final B b, final C c)
    {
       new NonStrictExpectations()
@@ -214,18 +214,24 @@ public class ComplexVerificationsTest
    @Test
    public void testFewerRequirementsUsingNonStrictExpectationsOnly(final A a, final B b, final C c)
    {
+      // Requirements to meet: only 1b, 3b, 4, 6b and 6c.
+
       new NonStrictExpectations()
       {{
+         // Meets requirement 1b.
          new A(); times = 1;
          new B(); times = 1;
          new C(); times = 1;
          a.result(); result = 42;
+
+         // Meets requirements 3b and 4.
          b.foo(); times = input.length;
          c.bar(); times = input.length;
       }};
 
       assertEquals(42, testedMethod());
 
+      // Meets requirements 6b and 6c.
       new FullVerifications(b, c) {};
    }
 }

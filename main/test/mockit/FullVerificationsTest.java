@@ -91,6 +91,27 @@ public final class FullVerificationsTest
       }};
    }
 
+   @Test
+   public void verifyAllInvocationsExceptThoseAlreadyVerifiedInAPreviousVerificationBlock()
+   {
+      exerciseCodeUnderTest();
+
+      new Verifications()
+      {{
+         mock.setSomething(45);
+         mock.editABunchMoreStuff();
+      }};
+
+      new FullVerifications()
+      {{
+         mock.prepare();
+         mock.setSomething(123);
+         mock.setSomethingElse(anyChar);
+         mock.notifyBeforeSave();
+         mock.save();
+      }};
+   }
+
    @Test(expected = AssertionError.class)
    public void verifyAllInvocationsWithOneMissing()
    {

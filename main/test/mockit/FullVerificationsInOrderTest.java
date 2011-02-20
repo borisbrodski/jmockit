@@ -102,6 +102,27 @@ public final class FullVerificationsInOrderTest
    }
 
    @Test
+   public void verifyAllInvocationsExceptThoseAlreadyVerifiedInAPreviousVerificationBlock()
+   {
+      exerciseCodeUnderTest();
+
+      new VerificationsInOrder()
+      {{
+         mock.setSomething(45);
+         mock.editABunchMoreStuff();
+      }};
+
+      new FullVerificationsInOrder()
+      {{
+         mock.prepare();
+         mock.setSomething(123);
+         mock.setSomethingElse(anyChar);
+         mock.notifyBeforeSave();
+         mock.save();
+      }};
+   }
+
+   @Test
    public void verifyInvocationsWithOneRecordedButNotReplayed()
    {
       new NonStrictExpectations()
