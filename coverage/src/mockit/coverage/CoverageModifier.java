@@ -15,8 +15,7 @@ import mockit.external.asm.*;
 
 final class CoverageModifier extends ClassWriter
 {
-   private static final Map<String, CoverageModifier> INNER_CLASS_MODIFIERS =
-      new HashMap<String, CoverageModifier>();
+   private static final Map<String, CoverageModifier> INNER_CLASS_MODIFIERS = new HashMap<String, CoverageModifier>();
    private static final int FIELD_MODIFIERS_TO_IGNORE = ACC_FINAL + ACC_SYNTHETIC;
 
    static byte[] recoverModifiedByteCodeIfAvailable(String innerClassName)
@@ -48,8 +47,7 @@ final class CoverageModifier extends ClassWriter
    }
 
    @Override
-   public void visit(
-      int version, int access, String name, String signature, String superName, String[] interfaces)
+   public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       if ((access & ACC_SYNTHETIC) != 0) {
          throw new VisitInterruptedException();
@@ -112,10 +110,9 @@ final class CoverageModifier extends ClassWriter
    }
 
    @Override
-   public FieldVisitor visitField(
-      int access, String name, String desc, String signature, Object value)
+   public FieldVisitor visitField(int access, String name, String desc, String signature, Object value)
    {
-      if ((access & FIELD_MODIFIERS_TO_IGNORE) == 0) {
+      if (fileData != null && (access & FIELD_MODIFIERS_TO_IGNORE) == 0) {
          fileData.dataCoverageInfo.addField(simpleClassName, name, (access & ACC_STATIC) != 0);
       }
 
@@ -123,12 +120,11 @@ final class CoverageModifier extends ClassWriter
    }
 
    @Override
-   public MethodVisitor visitMethod(
-      int access, String name, String desc, String signature, String[] exceptions)
+   public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
    {
       MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 
-      if ((access & ACC_SYNTHETIC) != 0) {
+      if (fileData == null || (access & ACC_SYNTHETIC) != 0) {
          return mv;
       }
 
@@ -194,8 +190,7 @@ final class CoverageModifier extends ClassWriter
       {
          mw.visitLdcInsn(sourceFileName);
          pushCurrentLineOnTheStack();
-         mw.visitMethodInsn(
-            INVOKESTATIC, DATA_RECORDING_CLASS, "lineExecuted", "(Ljava/lang/String;I)V");
+         mw.visitMethodInsn(INVOKESTATIC, DATA_RECORDING_CLASS, "lineExecuted", "(Ljava/lang/String;I)V");
       }
 
       private void pushCurrentLineOnTheStack()
@@ -302,8 +297,7 @@ final class CoverageModifier extends ClassWriter
          mw.visitLdcInsn(sourceFileName);
          pushCurrentLineOnTheStack();
          mw.visitIntInsn(SIPUSH, branchIndex);
-         mw.visitMethodInsn(
-            INVOKESTATIC, DATA_RECORDING_CLASS, methodName, "(Ljava/lang/String;II)V");
+         mw.visitMethodInsn(INVOKESTATIC, DATA_RECORDING_CLASS, methodName, "(Ljava/lang/String;II)V");
       }
 
       @Override
@@ -426,8 +420,7 @@ final class CoverageModifier extends ClassWriter
             mw.visitLdcInsn(sourceFileName);
             mw.visitLdcInsn(nodeBuilder.firstLine);
             mw.visitIntInsn(SIPUSH, nodeIndex);
-            mw.visitMethodInsn(
-               INVOKESTATIC, DATA_RECORDING_CLASS, "nodeReached", "(Ljava/lang/String;II)V");
+            mw.visitMethodInsn(INVOKESTATIC, DATA_RECORDING_CLASS, "nodeReached", "(Ljava/lang/String;II)V");
          }
       }
 
@@ -580,8 +573,7 @@ final class CoverageModifier extends ClassWriter
          String methodToCall = getField ? "fieldRead" : "fieldAssigned";
          String methodDesc =
             isStatic ?
-               "(Ljava/lang/String;Ljava/lang/String;)V" : 
-               "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V";
+               "(Ljava/lang/String;Ljava/lang/String;)V" : "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V";
 
          mw.visitMethodInsn(INVOKESTATIC, DATA_RECORDING_CLASS, methodToCall, methodDesc);
       }
@@ -664,13 +656,11 @@ final class CoverageModifier extends ClassWriter
       @Override
       public void visitMethodInsn(int opcode, String owner, String name, String desc)
       {
-         // This is to ignore bytecode belonging to a static initialization block inserted in a
-         // regular line of code by the Java compiler when the class contains at least one "assert"
-         // statement. Otherwise, that line of code would always appear as partially covered when
-         // running with assertions enabled.
+         // This is to ignore bytecode belonging to a static initialization block inserted in a regular line of code by
+         // the Java compiler when the class contains at least one "assert" statement. Otherwise, that line of code
+         // would always appear as partially covered when running with assertions enabled.
          assertFoundInCurrentLine =
-            opcode == INVOKEVIRTUAL &&
-            "java/lang/Class".equals(owner) && "desiredAssertionStatus".equals(name);
+            opcode == INVOKEVIRTUAL && "java/lang/Class".equals(owner) && "desiredAssertionStatus".equals(name);
 
          super.visitMethodInsn(opcode, owner, name, desc);
       }

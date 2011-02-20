@@ -1092,12 +1092,14 @@
         <w>agentmain</w>
         <w>beanshell</w>
         <w>beust</w>
+        <w>dflt</w>
         <w>guice</w>
         <w>jcommander</w>
         <w>jmockit</w>
         <w>matchers</w>
         <w>mockable</w>
         <w>mutators</w>
+        <w>opcode</w>
         <w>repo</w>
         <w>varargs</w>
       </words>
