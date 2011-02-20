@@ -91,7 +91,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
             invocationCount++;
 
             if (invocationCount > maxInvocations) {
-               if (maxInvocations >= 0 && numberOfIterations == 1) {
+               if (maxInvocations >= 0 && numberOfIterations <= 1) {
                   pendingError = nextExpectation.invocation.errorForUnexpectedInvocation();
                   return;
                }
@@ -116,8 +116,9 @@ public final class OrderedVerificationPhase extends VerificationPhase
       }
 
       if (maxInvocations >= 0) {
+         int multiplier = numberOfIterations <= 1 ? 1 : numberOfIterations;
          //noinspection ReuseOfLocalVariable
-         n = currentExpectation.constraints.invocationCount - maxInvocations * numberOfIterations;
+         n = currentExpectation.constraints.invocationCount - maxInvocations * multiplier;
 
          if (n > 0) {
             pendingError = invocation.errorForUnexpectedInvocations(n);

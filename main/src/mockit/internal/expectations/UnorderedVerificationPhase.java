@@ -37,8 +37,14 @@ final class UnorderedVerificationPhase extends VerificationPhase
       }
 
       if (currentExpectation != null) {
-         currentExpectation.constraints.setLimits(numberOfIterations, -1);
-         pendingError = currentExpectation.verifyConstraints();
+         int minInvocations = 1;
+         int maxInvocations = -1;
+
+         if (numberOfIterations > 0) {
+            minInvocations = maxInvocations = numberOfIterations;
+         }
+
+         pendingError = currentExpectation.verifyConstraints(minInvocations, maxInvocations);
       }
    }
 
@@ -62,10 +68,10 @@ final class UnorderedVerificationPhase extends VerificationPhase
    public void handleInvocationCountConstraint(int minInvocations, int maxInvocations)
    {
       Expectation expectation = getCurrentExpectation();
-      expectation.constraints.setLimits(numberOfIterations * minInvocations, numberOfIterations * maxInvocations);
+      int multiplier = numberOfIterations <= 1 ? 1: numberOfIterations;
 
       pendingError = null;
-      AssertionError error = expectation.verifyConstraints();
+      AssertionError error = expectation.verifyConstraints(multiplier * minInvocations, multiplier * maxInvocations);
 
       if (error != null) {
          pendingError = error;

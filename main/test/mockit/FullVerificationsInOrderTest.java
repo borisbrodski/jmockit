@@ -312,13 +312,25 @@ public final class FullVerificationsInOrderTest
    }
 
    @Test(expected = AssertionError.class)
-   public void verifySingleInvocationInBlockWithWrongNumberOfIterations()
+   public void verifySingleInvocationInBlockWithLargerNumberOfIterations()
    {
       mock.setSomething(123);
 
       new FullVerificationsInOrder(3)
       {{
          mock.setSomething(123);
+      }};
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyMultipleInvocationsInBlockWithSmallerNumberOfIterations()
+   {
+      mock.setSomething(123);
+      mock.setSomething(45);
+
+      new FullVerificationsInOrder(1)
+      {{
+         mock.setSomething(anyInt);
       }};
    }
 

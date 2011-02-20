@@ -174,7 +174,7 @@ final class ReplayPhase extends Phase
       currentExpectation =
          currentStrictExpectationIndex < expectations.size() ? expectations.get(currentStrictExpectationIndex) : null;
 
-      if (expectationBlock.numberOfIterations == 1) {
+      if (expectationBlock.numberOfIterations <= 1) {
          if (currentExpectation != null && currentExpectation.recordPhase != expectationBlock) {
             initialStrictExpectationIndexForCurrentBlock = currentStrictExpectationIndex;
          }

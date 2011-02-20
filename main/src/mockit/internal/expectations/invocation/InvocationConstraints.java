@@ -70,16 +70,21 @@ public final class InvocationConstraints
       return minInvocations <= invocationCount && (invocationCount <= maxInvocations || maxInvocations < 0);
    }
 
-   public AssertionError verify(ExpectedInvocation invocation)
+   public AssertionError verify(ExpectedInvocation invocation, int minInvocations, int maxInvocations)
    {
-      AssertionError error = verifyLowerLimit(invocation);
+      AssertionError error = verifyLowerLimit(invocation, minInvocations);
 
-      return error != null ? error : verifyUpperLimit(invocation);
+      return error != null ? error : verifyUpperLimit(invocation, maxInvocations);
    }
 
-   private AssertionError verifyLowerLimit(ExpectedInvocation invocation)
+   private AssertionError verifyLowerLimit(ExpectedInvocation invocation, int minInvocations)
    {
-      return invocationCount < minInvocations ? errorForMissingExpectations(invocation) : null;
+      return invocationCount < minInvocations ? errorForMissingExpectations(invocation, minInvocations) : null;
+   }
+
+   private AssertionError errorForMissingExpectations(ExpectedInvocation invocation, int minInvocations)
+   {
+      return invocation.errorForMissingInvocations(minInvocations - invocationCount) ;
    }
 
    public AssertionError errorForMissingExpectations(ExpectedInvocation invocation)
@@ -87,7 +92,7 @@ public final class InvocationConstraints
       return invocation.errorForMissingInvocations(minInvocations - invocationCount) ;
    }
 
-   private AssertionError verifyUpperLimit(ExpectedInvocation invocation)
+   private AssertionError verifyUpperLimit(ExpectedInvocation invocation, int maxInvocations)
    {
       if (maxInvocations >= 0) {
          int n = invocationCount - maxInvocations;

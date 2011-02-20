@@ -18,7 +18,6 @@ public abstract class TestOnlyPhase extends Phase
    TestOnlyPhase(RecordAndReplayExecution recordAndReplay)
    {
       super(recordAndReplay);
-      numberOfIterations = 1;
    }
 
    public final void setNumberOfIterations(int numberOfIterations)
@@ -61,7 +60,12 @@ public abstract class TestOnlyPhase extends Phase
 
    public void setMaxInvocationCount(int maxInvocations)
    {
-      int currentMinimum = getCurrentExpectation().constraints.minInvocations / numberOfIterations;
+      int currentMinimum = getCurrentExpectation().constraints.minInvocations;
+
+      if (numberOfIterations > 0) {
+         currentMinimum /= numberOfIterations;
+      }
+
       int minInvocations = maxInvocations < 0 ? currentMinimum : Math.min(currentMinimum, maxInvocations);
 
       handleInvocationCountConstraint(minInvocations, maxInvocations);

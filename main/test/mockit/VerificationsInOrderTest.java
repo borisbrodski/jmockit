@@ -284,13 +284,40 @@ public final class VerificationsInOrderTest
    }
 
    @Test(expected = AssertionError.class)
-   public void verifySimpleInvocationInBlockWithWrongNumberOfIterations()
+   public void verifySingleInvocationInBlockWithLargerNumberOfIterations()
    {
       mock.setSomething(123);
 
       new VerificationsInOrder(3)
       {{
          mock.setSomething(123);
+      }};
+   }
+
+   @Test
+   public void verifyMultipleInvocationsInBlockWithSmallerNumberOfIterations()
+   {
+      mock.setSomething(-67);
+      mock.setSomething(123);
+      mock.setSomething(45);
+
+      new VerificationsInOrder(2)
+      {{
+         mock.setSomething(anyInt);
+      }};
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyMultipleInvocationsInIteratingBlockContainingDuplicateVerificationThatCannotBeSatisfied()
+   {
+      mock.setSomething(-67);
+      mock.setSomething(123);
+      mock.setSomething(45);
+
+      new VerificationsInOrder(2)
+      {{
+         mock.setSomething(anyInt);
+         mock.setSomething(anyInt);
       }};
    }
 

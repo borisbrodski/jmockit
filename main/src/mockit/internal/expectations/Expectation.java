@@ -57,9 +57,9 @@ public final class Expectation
       return results.produceResult(invokedObject, invocationArgs);
    }
 
-   AssertionError verifyConstraints()
+   AssertionError verifyConstraints(int minInvocations, int maxInvocations)
    {
-      return constraints.verify(invocation);
+      return constraints.verify(invocation, minInvocations, maxInvocations);
    }
 
    public void addReturnValueOrValues(Object value)

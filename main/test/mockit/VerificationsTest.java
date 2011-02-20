@@ -180,13 +180,26 @@ public final class VerificationsTest
    }
 
    @Test(expected = AssertionError.class)
-   public void verifySimpleInvocationInBlockWithWrongNumberOfIterations()
+   public void verifySingleInvocationInBlockWithLargerNumberOfIterations()
    {
       mock.setSomething(123);
 
       new Verifications(3)
       {{
          mock.setSomething(123);
+      }};
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyMultipleInvocationsInBlockWithSmallerNumberOfIterations()
+   {
+      mock.setSomething(45);
+      mock.setSomething(123);
+      mock.setSomething(-1015);
+
+      new Verifications(2)
+      {{
+         mock.setSomething(anyInt);
       }};
    }
 

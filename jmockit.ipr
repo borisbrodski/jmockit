@@ -157,6 +157,16 @@
   </component>
   <component name="FacetAutodetectingManager">
     <autodetection-disabled>
+      <facet-type id="hibernate">
+        <modules>
+          <module name="OrderMngmntWebapp" />
+        </modules>
+      </facet-type>
+      <facet-type id="jpa">
+        <modules>
+          <module name="Tutorial" />
+        </modules>
+      </facet-type>
       <facet-type id="web">
         <modules>
           <module name="OrderMngmntWebapp" />
@@ -497,9 +507,7 @@
         <inspection_tool class="ModuleWithTooManyClasses" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="limit" value="100" />
         </inspection_tool>
-        <inspection_tool class="MultipleDeclaration" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="ignoreForLoopDeclarations" value="true" />
-        </inspection_tool>
+        <inspection_tool class="MultipleDeclaration" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MultipleExceptionsDeclaredOnTestMethod" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MultipleTypedDeclaration" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NakedNotify" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -1087,9 +1095,11 @@
         <w>guice</w>
         <w>jcommander</w>
         <w>jmockit</w>
+        <w>matchers</w>
         <w>mockable</w>
         <w>mutators</w>
         <w>repo</w>
+        <w>varargs</w>
       </words>
     </dictionary>
   </component>

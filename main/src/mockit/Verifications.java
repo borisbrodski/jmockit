@@ -72,13 +72,21 @@ public abstract class Verifications extends Invocations
     * Begins verification on the mocked types/instances invoked during the replay phase of the test, considering that
     * such invocations occurred in a given number of iterations.
     * <p/>
-    * The effect of specifying a number of iterations larger than 1 (one) is equivalent to multiplying by that number
-    * the lower and upper invocation count limits for each invocation inside the verification block.
+    * The effect of specifying a (positive) number of iterations is equivalent to setting to that number the lower and
+    * upper invocation count limits for each expectation verified inside the block.
+    * If, however, the lower/upper limit is explicitly specified for an expectation, the given number of iterations
+    * becomes a multiplier.
+    * When not specified, at least one matching invocation will be required to have occurred; therefore, specifying
+    * <em>1 (one)</em> iteration is different from not specifying the number of iterations at all.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#iterations">In the Tutorial</a>
     *
     * @param numberOfIterations the positive number of iterations for the whole set of invocations verified inside the
-    * block; when not specified, 1 (one) iteration is assumed
+    * block
+    *
+    * @see #times
+    * @see #minTimes
+    * @see #maxTimes
     */
    protected Verifications(int numberOfIterations)
    {
