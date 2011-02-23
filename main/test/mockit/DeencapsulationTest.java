@@ -66,6 +66,7 @@ public final class DeencapsulationTest
       assertSame(anInstance.baseSet, listValue);
    }
 
+   @SuppressWarnings({"unchecked"})
    @Test
    public void getInstanceFieldByType()
    {
@@ -93,6 +94,7 @@ public final class DeencapsulationTest
       getField(anInstance, int.class);
    }
 
+   @SuppressWarnings({"unchecked"})
    @Test
    public void getInheritedInstanceFieldByType()
    {
@@ -229,9 +231,25 @@ public final class DeencapsulationTest
    @Test
    public void invokeInstanceMethodWithMultipleParameters()
    {
-      Object result = invoke(anInstance, "instanceMethod", (short) 7, "abc", true);
+      assertNull(invoke(anInstance, "instanceMethod", (short) 7, "abc", true));
 
-      assertNull(result);
+      String result = invoke(anInstance, "instanceMethod", (short) 7, new StringBuilder("abc"), true);
+      assertEquals("abc", result);
+   }
+
+   @Test
+   public void invokeInstanceMethodWithNullArgumentsSpecifiedThroughClassLiterals()
+   {
+      assertNull(invoke(anInstance, "instanceMethod", (short) 7, String.class, Boolean.class));
+
+      String result = invoke(anInstance, "instanceMethod", (short) 7, StringBuilder.class, true);
+      assertEquals("null", result);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void invokeInstanceMethodWithInvalidNullArgument()
+   {
+      invoke(anInstance, "instanceMethod", (short) 7, null, true);
    }
 
    @Test
@@ -259,9 +277,10 @@ public final class DeencapsulationTest
    @Test
    public void invokeStaticMethodWithMultipleParameters()
    {
-      Object result = invoke(Subclass.class, "staticMethod", (short) 7, "abc", true);
+      assertNull(invoke(Subclass.class, "staticMethod", (short) 7, "abc", true));
 
-      assertNull(result);
+      String result = invoke(Subclass.class, "staticMethod", (short) 7, new StringBuilder("abc"), true);
+      assertEquals("abc", result);
    }
 
    @Test
@@ -270,6 +289,21 @@ public final class DeencapsulationTest
       Object result = invoke(Subclass.class.getName(), "staticMethod", (short) 7, "abc", true);
 
       assertNull(result);
+   }
+
+   @Test
+   public void invokeStaticMethodWithNullArgumentsSpecifiedThroughClassLiterals()
+   {
+      assertNull(invoke(anInstance, "staticMethod", (short) 7, String.class, Boolean.class));
+
+      String result = invoke(anInstance, "staticMethod", (short) 7, StringBuilder.class, true);
+      assertEquals("null", result);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void invokeStaticMethodWithInvalidNullArgument()
+   {
+      invoke(anInstance, "staticMethod", (short) 7, null, true);
    }
 
    @Test
@@ -293,8 +327,7 @@ public final class DeencapsulationTest
    @Test
    public void newInstanceByNameUsingMultipleArgsConstructorFromSpecifiedParameterTypes()
    {
-      Subclass instance =
-         newInstance(Subclass.class.getName(), new Class<?>[] {int.class, String.class}, 1, "XYZ");
+      Subclass instance = newInstance(Subclass.class.getName(), new Class<?>[] {int.class, String.class}, 1, "XYZ");
 
       assertNotNull(instance);
       assertEquals(1, instance.getIntField());
@@ -304,8 +337,7 @@ public final class DeencapsulationTest
    @Test
    public void newInstanceUsingMultipleArgsConstructorFromSpecifiedParameterTypes()
    {
-      BaseClass instance =
-         newInstance(Subclass.class, new Class<?>[] {int.class, String.class}, 1, "XYZ");
+      BaseClass instance = newInstance(Subclass.class, new Class<?>[] {int.class, String.class}, 1, "XYZ");
 
       assertNotNull(instance);
    }
@@ -324,6 +356,12 @@ public final class DeencapsulationTest
       assertNotNull(instance);
       assertEquals(590, instance.getIntField());
       assertEquals("", instance.getStringField());
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void newInstanceByNameUsingMultipleArgsConstructorWithInvalidNullArgument()
+   {
+      newInstance(Subclass.class.getName(), 590, null);
    }
 
    @Test
@@ -365,6 +403,12 @@ public final class DeencapsulationTest
       Object innerInstance = newInnerInstance("InnerClass", anInstance, true, 5L, "");
 
       assertTrue(innerClass.isInstance(innerInstance));
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void newInnerInstanceByNameUsingMultipleArgsConstructorWithInvalidNullArguments()
+   {
+      newInnerInstance("InnerClass", anInstance, false, null, null);
    }
 
    @Test

@@ -6,6 +6,7 @@ package mockit;
 
 import java.util.*;
 
+@SuppressWarnings({"UnusedDeclaration"})
 final class Subclass extends BaseClass
 {
    final int INITIAL_VALUE = new Random().nextInt();
@@ -29,9 +30,11 @@ final class Subclass extends BaseClass
 
    private static Boolean anStaticMethod() { return true; }
    private static void staticMethod(short s, String str, Boolean b) {}
+   private static String staticMethod(short s, StringBuilder str, boolean b) { return String.valueOf(str); }
 
    private long aMethod() { return 567L; }
    private void instanceMethod(short s, String str, Boolean b) {}
+   private String instanceMethod(short s, StringBuilder str, boolean b) { return String.valueOf(str); }
 
    int getIntField() { return intField; }
    void setIntField(int intField) { this.intField = intField; }
