@@ -4,12 +4,11 @@
  */
 package org.jdesktop.animation.timing.triggers;
 
+import org.jdesktop.animation.timing.*;
+import static org.junit.Assert.*;
 import org.junit.*;
 
 import mockit.*;
-
-import org.jdesktop.animation.timing.*;
-import static org.junit.Assert.*;
 
 public final class TimingTriggerTest
 {
@@ -20,17 +19,14 @@ public final class TimingTriggerTest
 
       new Expectations(TimingTrigger.class)
       {
-         @Mocked(capture = 2)
-         TimingTrigger timingTrigger;
-
          {
             source.addTarget(new TimingTrigger(target, event, false));
-            endRecording();
-
-            TimingTrigger triggerAdded = TimingTrigger.addTrigger(source, target, event);
-            assertSame(timingTrigger, triggerAdded);
          }
       };
+
+      TimingTrigger triggerAdded = TimingTrigger.addTrigger(source, target, event);
+
+      assertNotNull(triggerAdded);
    }
 
    @Test
@@ -40,18 +36,14 @@ public final class TimingTriggerTest
 
       new Expectations(TimingTrigger.class)
       {
-         @Mocked(capture = 2)
-         TimingTrigger timingTrigger;
-
          {
-            timingTrigger = new TimingTrigger(target, event, true);
-            source.addTarget(timingTrigger);
-            endRecording();
-
-            TimingTrigger triggerAdded = TimingTrigger.addTrigger(source, target, event, true);
-            assertSame(timingTrigger, triggerAdded);
+            source.addTarget(new TimingTrigger(target, event, true));
          }
       };
+
+      TimingTrigger triggerAdded = TimingTrigger.addTrigger(source, target, event, true);
+
+      assertNotNull(triggerAdded);
    }
 
    @Test

@@ -110,19 +110,6 @@ public final class ExpectationsTest
       mock.setValue(2);
    }
 
-   @Test
-   public void expectNothingWithExplicitEndRecording()
-   {
-      new Expectations()
-      {
-         Collaborator mock;
-
-         {
-            endRecording();
-         }
-      };
-   }
-
    @Test(expected = IllegalStateException.class)
    public void expectNothingWithNoMockedTypesInScope()
    {
@@ -306,12 +293,7 @@ public final class ExpectationsTest
       new Expectations()
       {
          Collaborator mock;
-
-         {
-            endRecording();
-            mock.setValue(withNotEqual(5));
-         }
-      };
+      }.withNotEqual(5);
    }
 
    @Test

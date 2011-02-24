@@ -11,11 +11,12 @@ import java.util.*;
 import javax.swing.*;
 
 import static mockit.Deencapsulation.*;
-import static org.junit.Assert.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 import mockit.*;
 
+@SuppressWarnings({"unchecked"})
 public final class AnimationManagerTest
 {
    @BeforeClass
@@ -39,8 +40,7 @@ public final class AnimationManagerTest
    }
 
    @Test
-   public void recreateImageForContainerOfSizeNotZeroAndBackgroundStillUndefined(
-      final JComponent container)
+   public void recreateImageForContainerOfSizeNotZeroAndBackgroundStillUndefined(final JComponent container)
    {
       new NonStrictExpectations()
       {
@@ -174,7 +174,7 @@ public final class AnimationManagerTest
    }
 
    @Test
-   public void setupEndForComponentWithoutStartState()
+   public void setupEndForComponentWithoutStartState(@Mocked("(ComponentState, boolean)") AnimationState animationState)
    {
       final JButton component = new JButton();
       JComponent container = new JPanel();
@@ -185,20 +185,18 @@ public final class AnimationManagerTest
 
       new Expectations(manager)
       {
-         @Mocked("(ComponentState, boolean)") final AnimationState animationState;
-         @Mocked("(JComponent)") final ComponentState componentState;
+         @Mocked("(JComponent)") ComponentState componentState;
 
          {
-            componentState = new ComponentState(component);
-            animationState = new AnimationState(componentState, false);
-            endRecording();
-
-            manager.setupEnd();
-
-            Map<JComponent, AnimationState> compAnimStates = getField(manager, Map.class);
-            assertSame(animationState.getComponent(), compAnimStates.get(component).getComponent());
+            new ComponentState(component);
+            new AnimationState(componentState, false);
          }
       };
+
+      manager.setupEnd();
+
+      Map<JComponent, AnimationState> compAnimStates = getField(manager, Map.class);
+      assertSame(animationState.getComponent(), compAnimStates.get(component).getComponent());
 
       List<JComponent> changingComponents = getField(manager, List.class);
       assertTrue(changingComponents.contains(component));
@@ -231,37 +229,34 @@ public final class AnimationManagerTest
    }
 
    @Test
-   public void setupEndForComponentWithDifferentStartAndEndStates()
+   public void setupEndForComponentWithDifferentStartAndEndStates(
+      @Mocked("(ComponentState, boolean)") final AnimationState animationState)
    {
       final JButton component = new JButton();
-      final JComponent container = new JPanel();
+      JComponent container = new JPanel();
       container.add(component);
       component.setVisible(true);
 
+      // Creates the start state for the component and registers it in the manager.
+      AnimationManager manager = new AnimationManager(container);
+      Map<JComponent, AnimationState> compAnimStates = getField(manager, Map.class);
+      compAnimStates.put(component, animationState);
+      animationState.setStart(new ComponentState(component));
+      component.setLocation(100, 50);
+
       new Expectations()
       {
-         @Mocked("(ComponentState, boolean)") AnimationState animationState;
-
          {
-            // Creates the start state for the component and registers it in the manager.
-            AnimationManager manager = new AnimationManager(container);
-            Map<JComponent, AnimationState> compAnimStates = getField(manager, Map.class);
-            compAnimStates.put(component, animationState);
-            animationState.setStart(new ComponentState(component));
-            component.setLocation(100, 50);
-
-            // Expectations:
             animationState.setEnd(new ComponentState(component));
-            endRecording();
-
-            manager.setupEnd();
-
-            assertEquals(1, compAnimStates.size());
-
-            List<JComponent> changingComponents = getField(manager, List.class);
-            assertTrue(changingComponents.contains(component));
          }
       };
+
+      manager.setupEnd();
+
+      assertEquals(1, compAnimStates.size());
+
+      List<JComponent> changingComponents = getField(manager, List.class);
+      assertTrue(changingComponents.contains(component));
    }
 
    @Test
