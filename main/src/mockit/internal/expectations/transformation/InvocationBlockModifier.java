@@ -83,13 +83,6 @@ final class InvocationBlockModifier extends MethodAdapter
       mw.visitMethodInsn(opcode, owner, name, desc);
    }
 
-   @Override // the Eclipse compiler inserts a Label in the middle of a multi-line statement, clearing mw.stackSize
-   public void visitLabel(Label label)
-   {
-      stackSizeBeforeLabel = mw.stackSize;
-      mw.visitLabel(label);
-   }
-
    private int sumOfSizes(Type[] argTypes)
    {
       int sum = 0;
@@ -125,6 +118,23 @@ final class InvocationBlockModifier extends MethodAdapter
       mw.visitIntInsn(SIPUSH, originalMatcherIndex);
       mw.visitIntInsn(SIPUSH, toIndex);
       mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "moveArgMatcher", "(II)V");
+   }
+
+   @Override // the Eclipse compiler inserts a Label in the middle of a multi-line statement, clearing mw.stackSize
+   public void visitLabel(Label label)
+   {
+      stackSizeBeforeLabel = mw.stackSize;
+      mw.visitLabel(label);
+   }
+
+   @Override
+   public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index)
+   {
+      // In classes instrumented with EMMA some local variable information can be lost, so we discard it entirely to
+      // avoid a ClassFormatError.
+      if (end.position > 0) {
+         super.visitLocalVariable(name, desc, signature, start, end, index);
+      }
    }
 
    @Override
