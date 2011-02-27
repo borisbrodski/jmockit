@@ -297,11 +297,14 @@ final class ExpectationsModifier extends BaseClassModifier
       {
          // For some reason, the start position for "this" gets displaced by bytecode inserted at the beginning,
          // in a method modified by the EMMA tool. If not treated, this causes a ClassFormatError.
-         if (start.position > end.position) {
+         if (end.position > 0 && start.position > end.position) {
             start.position = end.position;
          }
 
-         super.visitLocalVariable(name, desc, signature, start, end, idx);
+         // Ignores any local variable with required information missing, to avoid a VerifyError/ClassFormatError.
+         if (start.position > 0 && end.position > 0) {
+            super.visitLocalVariable(name, desc, signature, start, end, idx);
+         }
       }
    }
 
