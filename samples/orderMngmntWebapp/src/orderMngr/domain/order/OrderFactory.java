@@ -30,13 +30,11 @@ public final class OrderFactory
       return order;
    }
 
-   private void validateOrderItems(List<OrderItem> items)
-      throws InvalidOrderItem, DuplicateOrderItem
+   private void validateOrderItems(List<OrderItem> items) throws InvalidOrderItem, DuplicateOrderItem
    {
       for (OrderItem item : items) {
          if (item.getQuantity() <= 0 || item.getUnitPrice().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new InvalidOrderItem(
-               "Quantity=" + item.getQuantity() + ", Unit Price=" + item.getUnitPrice());
+            throw new InvalidOrderItem("Quantity=" + item.getQuantity() + ", Unit Price=" + item.getUnitPrice());
          }
 
          if (new HashSet<OrderItem>(items).size() < items.size()) {

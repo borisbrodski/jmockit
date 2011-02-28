@@ -39,31 +39,28 @@ public final class OrderFactory_AnnotationsAPI_Test
       Order order = new OrderFactory().createOrder(customerId, items);
 
       assertNotNull(order);
-      assertEquals(items, mockOrder.getItems());
+      assertEquals(items, mockOrder.items);
    }
 
    static final class MockOrder extends MockUp<Order>
    {
-      static String expectedCustomerId;
+      final String expectedCustomerId;
       final Collection<OrderItem> items = new ArrayList<OrderItem>();
 
       MockOrder(String customerId) { expectedCustomerId = customerId; }
 
       @Mock(invocations = 1)
-      void $init(int number, String actualCustomerId) // TODO: can't be a mock constructor; check it
+      void $init(int number, String actualCustomerId)
       {
          assertTrue(number > 0);
          assertEquals(expectedCustomerId, actualCustomerId);
       }
 
       @Mock(invocations = 1)
-      Collection<OrderItem> getItems()
-      {
-         return items;
-      }
+      Collection<OrderItem> getItems() { return items; }
    }
 
-   // The following tests are here just for completeness, since they have no need for mocks.
+   // The following tests are here just for completeness, since they have no need for mocking.
 
    @Test(expected = MissingOrderItems.class)
    public void createOrderWithEmptyItemList() throws Exception
@@ -74,8 +71,7 @@ public final class OrderFactory_AnnotationsAPI_Test
    @Test(expected = InvalidOrderItem.class)
    public void createOrderWithInvalidItemQuantity() throws Exception
    {
-      List<OrderItem> items = asList(
-         new OrderItem("393439493", "Core Java 5 6ed", 0, new BigDecimal("45.00")));
+      List<OrderItem> items = asList(new OrderItem("393439493", "Core Java 5 6ed", 0, new BigDecimal("45.00")));
 
       new OrderFactory().createOrder("45", items);
    }
@@ -83,8 +79,7 @@ public final class OrderFactory_AnnotationsAPI_Test
    @Test(expected = InvalidOrderItem.class)
    public void createOrderWithInvalidItemUnitPrice() throws Exception
    {
-      List<OrderItem> items = asList(
-         new OrderItem("393439493", "Core Java 5 6ed", 1, new BigDecimal("-5.20")));
+      List<OrderItem> items = asList(new OrderItem("393439493", "Core Java 5 6ed", 1, new BigDecimal("-5.20")));
 
       new OrderFactory().createOrder("45", items);
    }

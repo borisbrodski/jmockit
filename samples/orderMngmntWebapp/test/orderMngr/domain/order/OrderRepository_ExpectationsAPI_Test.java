@@ -54,8 +54,7 @@ public final class OrderRepository_ExpectationsAPI_Test
       new Expectations()
       {
          {
-            Database.executeInsertUpdateOrDelete(
-               withPrefix("update order "), order.getCustomerId(), order.getNumber());
+            Database.executeInsertUpdateOrDelete(withPrefix("update order "), order.getCustomerId(), order.getNumber());
          }
       };
 
@@ -70,8 +69,7 @@ public final class OrderRepository_ExpectationsAPI_Test
       new Expectations()
       {
          {
-            Database.executeInsertUpdateOrDelete(
-               withPrefix("delete from order "), order.getNumber());
+            Database.executeInsertUpdateOrDelete(withPrefix("delete from order "), order.getNumber());
          }
       };
 

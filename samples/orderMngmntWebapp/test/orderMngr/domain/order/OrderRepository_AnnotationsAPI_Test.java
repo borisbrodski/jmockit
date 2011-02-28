@@ -17,8 +17,7 @@ import orderMngr.service.*;
 import static org.junit.Assert.*;
 
 /**
- * State-based unit tests for the OrderRepository class, which depends on the {@linkplain Database}
- * class.
+ * State-based unit tests for the OrderRepository class, which depends on the {@linkplain Database} class.
  * The tests use mocks to simulate the interaction between OrderRepository and Database.
  */
 public final class OrderRepository_AnnotationsAPI_Test
@@ -212,8 +211,7 @@ public final class OrderRepository_AnnotationsAPI_Test
       public ResultSet executeQuery(String sql, Object... args)
       {
          assertTrue(
-            "Invalid Order query: " + sql,
-            sql.matches("select.+from\\s+order.*where.+customer_id\\s*=\\s*\\?"));
+            "Invalid Order query: " + sql, sql.matches("select.+from\\s+order.*where.+customer_id\\s*=\\s*\\?"));
          assertEquals(1, args.length);
          assertEquals("Cust", args[0]);
 

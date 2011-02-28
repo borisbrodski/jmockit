@@ -21,8 +21,7 @@ public final class OrderRepository
 
       for (OrderItem item : order.getItems()) {
          Database.executeInsertUpdateOrDelete(
-            "insert into order_item (order_no, product_id, product_desc, quantity, unit_price) " +
-            "values (?, ?, ?, ?, ?)",
+            "insert into order_item (order_no, product_id, product_desc, quantity, unit_price) values (?, ?, ?, ?, ?)",
             orderNo, item.getProductId(), item.getProductDescription(), item.getQuantity(),
             item.getUnitPrice());
       }
@@ -73,8 +72,8 @@ public final class OrderRepository
    {
       ResultSet result =
          executeQuery(
-            "select product_id, product_desc, quantity, unit_price from order_item " +
-            "where order_number=?", order.getNumber());
+            "select product_id, product_desc, quantity, unit_price from order_item where order_number=?",
+            order.getNumber());
 
       try {
          Collection<OrderItem> items = order.getItems();
@@ -85,8 +84,7 @@ public final class OrderRepository
             int quantity = result.getInt(3);
             BigDecimal unitPrice = result.getBigDecimal(4);
 
-            OrderItem item =
-               new OrderItem(order, productId, productDescription, quantity, unitPrice);
+            OrderItem item = new OrderItem(order, productId, productDescription, quantity, unitPrice);
             items.add(item);
          }
       }
