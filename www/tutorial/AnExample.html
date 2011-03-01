@@ -526,19 +526,19 @@ public final class MyBusinessService_AnnotationsAPI_Test
    annotation.
 </p>
 <p>
-   Constructors in a mock class (not shown above) can also be mocks, but it is usually better to use the special method
-   name <code>$init</code> for that. A mock method named <code>$clinit</code> will provide a mock implementation for the
-   static initialization block of the real class, if any.
+   Constructors can be mocked with mock methods named "<strong><code>$init</code></strong>" and having the same
+   parameters as the constructor to be mocked.
+   A mock method named "<strong><code>$clinit</code></strong>" will provide a mock implementation for the static
+   initialization block of the real class, if any.
 </p>
 <p>
    The <code class="annotation">@Mock</code> annotation can optionally specify exact/min/max constraints on the
-   expected/allowed number of invocations to the corresponding real method.
+   expected/allowed number of invocations to the corresponding real method/constructor.
    <br/>
-   Another attribute of this annotation is <code>reentrant</code> (boolean with default of false),
-   which allows a mock method to call back to the real method, causing its real implementation to
-   be executed. For that, an instance field named <code>it</code> must be defined in the mock
-   class, and have the same type as the real class. (This is a powerful AOP-like feature which
-   should be used sparingly, though.)
+   Another attribute of this annotation is <code>reentrant</code> (boolean with default of false), which allows a mock
+   method to call back to the real method, causing its real implementation to be executed.
+   For that, an instance field named <code>it</code> must be defined in the mock class, and have the same type as the
+   real class. (This is a powerful AOP-like feature which should be used sparingly, though.)
 </p>
 <p>
    Typically, the vast majority of tests can be written with the Expectations & Verifications API.

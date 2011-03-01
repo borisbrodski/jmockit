@@ -5,14 +5,15 @@
 package integrationTests;
 
 import java.io.*;
-import static java.util.Arrays.*;
 import java.util.*;
+
+import static java.util.Arrays.*;
 import static java.util.Collections.*;
+import static mockit.Mockit.*;
+import static org.junit.Assert.*;
+import org.junit.*;
 
 import mockit.*;
-import static mockit.Mockit.*;
-import org.junit.*;
-import static org.junit.Assert.*;
 
 @SuppressWarnings({"UnusedDeclaration", "ClassWithTooManyMethods"})
 public final class CTest
@@ -119,13 +120,12 @@ public final class CTest
       assertEquals(1, DefaultConstructorMock.x);
    }
 
-   @SuppressWarnings({"UtilityClassWithPublicConstructor"})
    public static class DefaultConstructorMock
    {
       static int x;
 
       @Mock
-      public DefaultConstructorMock() { x = 1; }
+      public void $init() { x = 1; }
    }
 
    @Test
@@ -141,7 +141,7 @@ public final class CTest
    public static class F2
    {
       @Mock
-      public F2(String someValue)
+      public void $init(String someValue)
       {
          // do nothing
       }

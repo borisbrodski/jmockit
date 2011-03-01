@@ -4,12 +4,11 @@
  */
 package integrationTests;
 
+import static mockit.Mockit.*;
+import static org.junit.Assert.*;
 import org.junit.*;
 
 import mockit.*;
-
-import static mockit.Mockit.*;
-import static org.junit.Assert.*;
 
 public final class SubclassTest
 {
@@ -117,7 +116,7 @@ public final class SubclassTest
    public static final class SubClassMockWithAnnotations
    {
       @Mock(invocations = 1)
-      public SubClassMockWithAnnotations(String name)
+      public void $init(String name)
       {
          assertNotNull(name);
          mockConstructorCalled = true;

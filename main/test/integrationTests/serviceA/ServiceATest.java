@@ -4,13 +4,12 @@
  */
 package integrationTests.serviceA;
 
-import org.junit.*;
-
-import mockit.*;
-
 import integrationTests.serviceB.*;
 import static mockit.Mockit.*;
 import static org.junit.Assert.*;
+import org.junit.*;
+
+import mockit.*;
 
 public final class ServiceATest
 {
@@ -122,7 +121,7 @@ public final class ServiceATest
    static class MockServiceBHelper
    {
       @Mock(invocations = 0)
-      MockServiceBHelper()
+      void $init()
       {
          throw new IllegalStateException("should not be created");
       }

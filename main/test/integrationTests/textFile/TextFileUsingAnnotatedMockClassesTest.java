@@ -6,14 +6,13 @@ package integrationTests.textFile;
 
 import java.util.*;
 
-import org.junit.*;
-
-import mockit.*;
-
 import integrationTests.textFile.TextFile.*;
 import static mockit.Mockit.*;
 import static org.hamcrest.core.IsEqual.*;
 import static org.junit.Assert.*;
+import org.junit.*;
+
+import mockit.*;
 
 public final class TextFileUsingAnnotatedMockClassesTest
 {
@@ -29,7 +28,7 @@ public final class TextFileUsingAnnotatedMockClassesTest
    static class MockTextReader
    {
       @Mock(invocations = 1)
-      MockTextReader(String fileName)
+      void $init(String fileName)
       {
          assertThat(fileName, equalTo("file"));
       }

@@ -7,26 +7,19 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * Used inside a <em>mock class</em> to indicate a <em>mock method</em> or <em>mock constructor</em>, with optional
- * <em>expectations</em> on the number of invocations while the mock is in effect.
+ * Used inside a <em>mock class</em> to indicate a <em>mock method</em>, with optional <em>expectations</em> on the
+ * number of invocations while the mock is in effect.
  * (A mock will be in effect from the time a real method/constructor is mocked to the time it is restored to its
  * original definition.)
  * <p/>
  * This annotation can also be applied to the special methods <strong>{@code void $init(...)}</strong> and
  * <strong>{@code void $clinit()}</strong>, which correspond to constructors and to class initializers, respectively.
  * In the latter case, this is the only way to mock a static <em>class initialization block</em>.
- * Notice that it makes no difference if the real class contains more than one static initialization
- * block, because the Java compiler will always merge the sequence of static blocks into a single
- * internal "&lt;clinit>" static method in the class file.
- * <p/>
- * Mock methods named {@code $init} will apply to the corresponding constructor in the real class (by matching the
- * declared parameters).
- * The advantages of mocking a constructor this way instead of using an actual mock constructor are three:
- * 1) the {@code it} field can be used in the {@code $init} method, while in a mock constructor such field would not be
- * set before the mock constructor was called;
- * 2) the {@code $init} method will be called on the mock instance if one is provided by the test, contrary to a mock
- * constructor which is always called on a new mock instance;
- * and 3) the {@code $init} method can be static, which a constructor cannot.
+ * (Notice that it makes no difference if the real class contains more than one static initialization block, because the
+ * Java compiler will always merge the sequence of static blocks into a single internal "&lt;clinit>" static method in
+ * the class file.)
+ * Mock methods named {@code $init} will apply to the corresponding constructor in the real class, by matching the
+ * declared parameters.
  * <p/>
  * Finally, a note about <em>instance initialization blocks</em>. The Java compiler does not preserve instance
  * initializers as separate elements in the class file, instead inserting any statements in such blocks into each and
@@ -44,11 +37,11 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.CONSTRUCTOR, ElementType.METHOD})
+@Target(ElementType.METHOD)
 public @interface Mock
 {
    /**
-    * Number of expected invocations of the mock method/constructor.
+    * Number of expected invocations of the mock method.
     * If 0 (zero), no invocations will be expected.
     * A negative value (the default) means there is no expectation on the number of invocations;
     * that is, the mock can be called any number of times or not at all during any test which uses it.
@@ -59,8 +52,7 @@ public @interface Mock
    int invocations() default -1;
 
    /**
-    * Minimum number of expected invocations of the mock method/constructor, starting from 0
-    * (zero, which is the default).
+    * Minimum number of expected invocations of the mock method, starting from 0 (zero, which is the default).
     * 
     * @see #invocations
     * @see #maxInvocations
@@ -68,7 +60,7 @@ public @interface Mock
    int minInvocations() default 0;
 
    /**
-    * Maximum number of expected invocations of the mock method/constructor, if positive.
+    * Maximum number of expected invocations of the mock method, if positive.
     * If zero the mock is not expected to be called at all.
     * A negative value (the default) means there is no expectation on the maximum number of invocations.
     * 

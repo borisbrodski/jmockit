@@ -11,13 +11,12 @@ import javax.security.auth.callback.*;
 import javax.security.auth.login.*;
 import javax.security.auth.spi.*;
 
-import org.junit.*;
-
-import mockit.internal.state.*;
-
 import static mockit.Deencapsulation.*;
 import static mockit.Mockit.*;
 import static org.junit.Assert.*;
+import org.junit.*;
+
+import mockit.internal.state.*;
 
 @SuppressWarnings({"JUnitTestMethodWithNoAssertions", "ClassWithTooManyMethods"})
 public final class MockAnnotationsTest
@@ -363,7 +362,7 @@ public final class MockAnnotationsTest
    static class MockCollaboratorWithConstructorMock
    {
       @Mock(invocations = 1)
-      MockCollaboratorWithConstructorMock(int value)
+      void $init(int value)
       {
          assertEquals(5, value);
       }
@@ -401,7 +400,7 @@ public final class MockAnnotationsTest
    static class MockSubCollaborator
    {
       @Mock(invocations = 1)
-      MockSubCollaborator() {}
+      void $init() {}
 
       @SuppressWarnings({"UnusedDeclaration"})
       native void doNothing();
@@ -491,7 +490,7 @@ public final class MockAnnotationsTest
       MockLoginContextWithoutAnnotation() {}
 
       @Mock
-      public MockLoginContextWithoutAnnotation(String name, CallbackHandler callbackHandler)
+      public void $init(String name, CallbackHandler callbackHandler)
       {
          assertEquals("test", name);
          assertNull(callbackHandler);
@@ -504,7 +503,7 @@ public final class MockAnnotationsTest
    @Test
    public void mockJREMethodAndConstructorUsingAnnotatedMockClass() throws Exception
    {
-      Mockit.setUpMocks(new MockLoginContext("test", null));
+      Mockit.setUpMocks(new MockLoginContext());
 
       new LoginContext("test", (CallbackHandler) null).login();
    }
@@ -513,7 +512,7 @@ public final class MockAnnotationsTest
    public static class MockLoginContext
    {
       @Mock(invocations = 1)
-      public MockLoginContext(String name, CallbackHandler callbackHandler)
+      public void $init(String name, CallbackHandler callbackHandler)
       {
          assertEquals("test", name);
          assertNull(callbackHandler);

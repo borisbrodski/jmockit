@@ -211,15 +211,13 @@ public final class MockitTest
    {
       SomeInterface proxy = Mockit.newEmptyProxy(SomeInterface.class);
 
-      assertEquals(
-         proxy.getClass().getName() + '@' + Integer.toHexString(proxy.hashCode()),
-         proxy.toString());
+      assertEquals(proxy.getClass().getName() + '@' + Integer.toHexString(proxy.hashCode()), proxy.toString());
    }
 
    @Test
    public void mockJREMethodAndConstructor() throws Exception
    {
-      Mockit.setUpMock(LoginContext.class, new MockLoginContext("test", null));
+      Mockit.setUpMock(LoginContext.class, new MockLoginContext());
 
       new LoginContext("test", (CallbackHandler) null).login();
    }
@@ -227,7 +225,7 @@ public final class MockitTest
    public static class MockLoginContext
    {
       @Mock
-      public MockLoginContext(String name, CallbackHandler callbackHandler)
+      public void $init(String name, CallbackHandler callbackHandler)
       {
          assertEquals("test", name);
          assertNull(callbackHandler);
