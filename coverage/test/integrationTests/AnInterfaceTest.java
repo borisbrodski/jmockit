@@ -26,13 +26,13 @@ public final class AnInterfaceTest extends CoverageTest
       tested.doSomething("test", true);
 
       assertTrue(fileData.lineToLineData.isEmpty());
+      assertEquals(-1, fileData.getCodeCoveragePercentage());
       assertEquals(0, fileData.getTotalSegments());
       assertEquals(0, fileData.getCoveredSegments());
-      assertEquals(-1, fileData.getCodeCoveragePercentage());
 
       assertTrue(fileData.firstLineToMethodData.isEmpty());
+      assertEquals(-1, fileData.getPathCoveragePercentage());
       assertEquals(0, fileData.getTotalPaths());
       assertEquals(0, fileData.getCoveredPaths());
-      assertEquals(-1, fileData.getPathCoveragePercentage());
    }
 }

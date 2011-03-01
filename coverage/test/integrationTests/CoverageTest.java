@@ -7,13 +7,12 @@ package integrationTests;
 import java.lang.reflect.*;
 import java.util.*;
 
+import static java.lang.reflect.Modifier.*;
 import org.junit.*;
 
 import mockit.coverage.data.*;
 import mockit.coverage.data.dataItems.*;
 import mockit.coverage.paths.*;
-
-import static java.lang.reflect.Modifier.*;
 
 public class CoverageTest extends Assert
 {
@@ -33,7 +32,7 @@ public class CoverageTest extends Assert
       fileData = data.get(classFilePath);
       assertNotNull("FileCoverageData not found for " + classFilePath);
 
-      if (!testedClass.isEnum() && !isAbstract(testedClass.getModifiers())) {
+      if (!testedClass.isEnum() && !isAbstract(testedClass.getModifiers()) && !isFinal(testedField.getModifiers())) {
          testedField.setAccessible(true);
 
          if (testedField.get(this) == null) {

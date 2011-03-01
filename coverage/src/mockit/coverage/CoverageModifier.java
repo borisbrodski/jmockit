@@ -24,6 +24,7 @@ final class CoverageModifier extends ClassWriter
       return modifier == null ? null : modifier.toByteArray();
    }
 
+   private String internalClassName;
    private String simpleClassName;
    private String sourceFileName;
    private FileCoverageData fileData;
@@ -42,6 +43,7 @@ final class CoverageModifier extends ClassWriter
       super(cr, true);
       sourceFileName = other.sourceFileName;
       fileData = other.fileData;
+      internalClassName = other.internalClassName;
       this.simpleClassName = simpleClassName;
       forInnerClass = true;
    }
@@ -54,6 +56,7 @@ final class CoverageModifier extends ClassWriter
       }
 
       if (!forInnerClass) {
+         internalClassName = name;
          int p = name.lastIndexOf('/');
 
          if (p < 0) {
@@ -92,7 +95,7 @@ final class CoverageModifier extends ClassWriter
    {
       super.visitInnerClass(internalName, outerName, innerName, access);
 
-      if (forInnerClass || (access & ACC_SYNTHETIC) != 0 || access == ACC_STATIC + ACC_ENUM) {
+      if (forInnerClass || isSyntheticOrEnumClass(access) || !isNestedInsideClassBeingModified(outerName)) {
          return;
       }
 
@@ -107,6 +110,23 @@ final class CoverageModifier extends ClassWriter
       catch (IOException e) {
          e.printStackTrace();
       }
+   }
+
+   private boolean isSyntheticOrEnumClass(int access)
+   {
+      return (access & ACC_SYNTHETIC) != 0 || access == ACC_STATIC + ACC_ENUM;
+   }
+
+   private boolean isNestedInsideClassBeingModified(String outerName)
+   {
+      if (outerName == null) {
+         return false;
+      }
+
+      int p = outerName.indexOf('$');
+      String outerClassName = p < 0 ? outerName : outerName.substring(0, p);
+
+      return outerClassName.equals(internalClassName);
    }
 
    @Override
