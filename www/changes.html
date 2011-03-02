@@ -14,12 +14,54 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
+<h3>Next release</h3>
+
+<p>Release 0.999.8 (March ??, 2011):</p>
+<ul>
+   <li>
+      Dropped support for <em>mock constructors</em> in the <strong>Annotations API</strong>, to avoid confusion and
+      simplify the documentation.
+      Constructors in a target class can still be mocked with mock methods named "<code>$init</code>"
+      (which already was the recommended way).
+      Therefore, any mock classes containing constructors annotated with <code>@Mock</code> must be changed to use
+      <code>void $init</code> methods instead.
+   </li>
+   <li>
+      <strong>Deprecated</strong> the <strong><code>endRecording()</code></strong> method of the
+      <code>Expectations</code> class.
+      Normally, this method would only be used in rare situations, and with <em>local</em> mock fields.
+      Any such tests should be changed to make use of <em>mock parameters</em> or mock fields of the test class instead.
+   </li>
+   <li>
+      <strong>Enhancement</strong>: in tests containing two or more <em>verification blocks</em>, an expectation
+      verified in a given block won't need to be repeated in a later <em>full</em> verification block.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=137">issue 137</a>.
+   </li>
+   <li>
+      <strong>Fixed</strong> a bug where an unordered verification block specifying a fixed number of iterations would
+      fail to catch an unexpected invocation.
+   </li>
+   <li>
+      Implemented workarounds for issues caused by the lack of required debug information in classes instrumented by the
+      <strong>EMMA/EclEmma</strong> tool.
+      See issues <a href="http://code.google.com/p/jmockit/issues/detail?id=141">135</a> and
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=141">141</a>.
+   </li>
+   <li>
+      <strong>JMockit Coverage</strong>: Fixed a couple of bugs which caused failures in specific situations
+      (one only affected classes compiled without debug information; the other only affected classes containing uses of
+      nested classes defined in <em>other</em> classes).
+      See issues <a href="http://code.google.com/p/jmockit/issues/detail?id=138">138</a> and
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=142">142</a>.
+   </li>
+</ul>
+
 <h3>Current release</h3>
 
 <p>Release 0.999.7 (February 13, 2011):</p>
 <ul>
    <li>
-      <strong>New feature</strong>: created the <strong><code>@Tested</code></strong> annotation for tested classes,
+      <strong>New feature</strong>: Created the <strong><code>@Tested</code></strong> annotation for tested classes,
       with support for <em>constructor</em> and <em>field</em> injection of <code>@Injectable</code> mocks.
    </li>
    <li>
