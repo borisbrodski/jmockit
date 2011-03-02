@@ -7,8 +7,8 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * Indicates a mock class containing one or more mock methods/constructors, each one of them
- * properly indicated as {@linkplain Mock such}.
+ * Indicates a mock class containing one or more mock methods, each one of them properly indicated as
+ * {@linkplain Mock such}.
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#MockClass">Tutorial</a>
  *
@@ -23,41 +23,39 @@ import java.lang.annotation.*;
 public @interface MockClass
 {
    /**
-    * The real class whose methods/constructors will be redefined with the corresponding
-    * methods/constructors in the mock class.
+    * The real class whose methods/constructors will be redefined according to the corresponding mock methods in the
+    * mock class.
     * <p/>
     * Alternatively, the {@code Class} object provided can point to an interface.
-    * In that case, a proxy implementation class will be created and then used as the target class
-    * for mocking.
-    * The only way for a test to use such a mocked class will be through the proxy instance returned
-    * by {@link Mockit#setUpMock(Object)}, so it only makes sense to use an interface for this
-    * attribute when the mock class is set up through that method.
+    * In that case, a proxy implementation class will be created and then used as the target class for mocking.
+    * The only way for a test to use such a mocked class will be through the proxy instance returned by
+    * {@link Mockit#setUpMock(Object)}, so it only makes sense to use an interface for this attribute when the mock
+    * class is set up through that method.
     */
    Class<?> realClass();
 
    /**
-    * One or more stubbing filters which specify the set of methods and constructors in the real
-    * class that are to be stubbed out with empty implementations.
+    * One or more stubbing filters which specify the set of methods and constructors in the real class that are to be
+    * stubbed out with empty implementations.
     * <p/>
-    * Each filter must follow the syntax <strong>{@code [nameRegex][(paramTypeName...)]}</strong>,
-    * where {@code nameRegex} is a {@linkplain java.util.regex.Pattern regular expression} for
-    * matching method names, and {@code paramTypeName} is the name of a primitive or reference
-    * parameter type. Actually, any <em>suffix</em> of the type name is enough, like "String"
-    * instead of the full class name "java.lang.String".
+    * Each filter must follow the syntax <strong>{@code [nameRegex][(paramTypeName...)]}</strong>, where
+    * {@code nameRegex} is a {@linkplain java.util.regex.Pattern regular expression} for matching method names, and
+    * {@code paramTypeName} is the name of a primitive or reference parameter type.
+    * Actually, any <em>suffix</em> of the type name is enough, like "String" instead of the full class name
+    * "java.lang.String".
     * If {@code nameRegex} is omitted the filter matches only constructors.
     * If {@code (paramTypeName...)} is omitted the filter matches methods with any parameters.
     * <p/>
-    * Note that an empty filter ({@code stubs = ""}) will match <em>no</em> methods or constructors
-    * in the real class, or <em>all</em> methods and constructors if used with
-    * {@code inverse = true}.
+    * Note that an empty filter ({@code stubs = ""}) will match <em>no</em> methods or constructors in the real class,
+    * or <em>all</em> methods and constructors if used with {@code inverse = true}.
     * <p/>
     * To specify the static initializers of the class, inform the filter "&lt;clinit>".
     */
    String[] stubs() default {};
 
    /**
-    * Indicates whether the stubbing filters are to be inverted or not. If inverted, only the
-    * methods and constructors matching them are <strong>not</strong> stubbed out.
+    * Indicates whether the stubbing filters are to be inverted or not.
+    * If inverted, only the methods and constructors matching them are <strong>not</strong> stubbed out.
     */
    boolean inverse() default false;
 

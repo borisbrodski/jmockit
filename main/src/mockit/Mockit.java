@@ -13,42 +13,37 @@ import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 /**
- * Provides static methods for the mocking and stubbing of arbitrary classes from production code,
- * according to specified <em>mock classes</em> defined in test code.
+ * Provides static methods for the mocking and stubbing of arbitrary classes from production code, according to
+ * specified <em>mock classes</em> defined in test code.
  * Such methods are intended to be called from test code only.
  * <p/>
- * Once mocked, a "real" method defined in a production class will behave (during test execution) as
- * if its implementation was replaced by a call to the corresponding <em>mock method</em> in the
- * mock class.
- * Whatever value this mock method returns will be the value returned by the call to the mocked
- * method.
- * The mock method can also throw an exception or error, which will then be propagated to the caller
- * of the mocked "real" method.
- * Therefore, while mocked the original code in the real method is never executed (actually, there's
- * still a way to execute the real implementation, although not normally used for testing purposes).
- * The same basic rules apply to constructors, which can be mocked by corresponding <em>mock
- * constructors</em> or by special mock methods.
+ * Once mocked, a "real" method defined in a production class will behave (during test execution) as if its
+ * implementation was replaced by a call to the corresponding <em>mock method</em> in the mock class.
+ * Whatever value this mock method returns will be the value returned by the call to the mocked method.
+ * The mock method can also throw an exception or error, which will then be propagated to the caller of the mocked
+ * "real" method.
+ * Therefore, while mocked the original code in the real method is never executed (actually, there's still a way to
+ * execute the real implementation, although not normally used for testing purposes).
+ * The same basic rules apply to constructors, which can be mocked by mock methods with the special name "$init".
  * <p/>
  * The methods in this class can be divided in the following groups:
  * <ul>
  * <li>
- * <strong>Stubbing API</strong>: {@link #stubOut(Class...)},
- * {@link #stubOutClass(Class, String...)}, and {@link #stubOutClass(Class, boolean, String...)}.
+ * <strong>Stubbing API</strong>: {@link #stubOut(Class...)}, {@link #stubOutClass(Class, String...)}, and
+ * {@link #stubOutClass(Class, boolean, String...)}.
  * </li>
  * <li>
- * <strong>Annotations API</strong> for state-oriented mocking: {@link MockUp},
- * {@link #setUpMocks(Object...)}, {@link #setUpMock(Class, Class)} and its several overloads,
- * {@link #setUpStartupMocks(Object...)}, {@link #setUpMocksAndStubs(Class...)}, and
- * {@link #tearDownMocks(Class...)} / {@link #tearDownMocks()}.
+ * <strong>Annotations API</strong> for state-oriented mocking: {@link MockUp}, {@link #setUpMocks(Object...)},
+ * {@link #setUpMock(Class, Class)} and its several overloads, {@link #setUpStartupMocks(Object...)},
+ * {@link #setUpMocksAndStubs(Class...)}, and {@link #tearDownMocks(Class...)} / {@link #tearDownMocks()}.
  * </li>
  * <li>
  * <strong>Proxy-based utilities</strong>:
  * {@link #newEmptyProxy(ClassLoader, Class)} and its overloads.
- * These are merely convenience methods that create empty implementation classes for one or more
- * interfaces, where all implemented methods do nothing beyond returning a default value according
- * to the return type of each interface method.
- * The created classes can be mocked through the Annotations API, and its instances passed to code
- * under test.
+ * These are merely convenience methods that create empty implementation classes for one or more interfaces, where all
+ * implemented methods do nothing beyond returning a default value according to the return type of each interface
+ * method.
+ * The created classes can be mocked through the Annotations API, and its instances passed to code under test.
  * </li>
  * </ul>
  * Tutorial:
@@ -187,13 +182,10 @@ public final class Mockit
     * The {@code throws} clause may differ in any way.
     * Note also that the mock method can be static or not, independently of the real method being static or not.
     * <p/>
-    * A constructor in the real class can be mocked by a corresponding <strong>mock constructor</strong> in the mock
-    * class, declared with the same signature.
-    * However, since a constructor can only be called on a freshly created instance, it is generally recommended to
-    * declare a mock method of name {@code $init} instead (which can also be {@code static}).
-    * This method should have {@code void} return type and must have the same declared parameters as the mocked
-    * constructor. It will be called for each new instance of the real class that is created through a call to that
-    * constructor, with whatever arguments are passed to it.
+    * A constructor in the real class can be mocked by a corresponding mock method of name {@code $init}, declared
+    * with the same parameters and with {@code void} return type.
+    * It will be called for each new instance of the real class that is created through a call to that constructor, with
+    * whatever arguments are passed to it.
     * <p/>
     * <strong>Class initializers</strong> of the real class (one or more {@code static} initialization blocks plus all
     * assignments to {@code static} fields) can be mocked by providing a mock method named {@code $clinit} in the mock
@@ -304,7 +296,7 @@ public final class Mockit
     * of by creating a {@link Proxy} for an interface.
     *
     * @param realClass the class to be mocked that is used by code under test
-    * @param mock an instance of the class containing the mock methods/constructors for the real class
+    * @param mock an instance of the class containing the mock methods for the real class
     *
     * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java#134">Example</a>
     */
@@ -331,7 +323,7 @@ public final class Mockit
     * configuration or by creating a {@link Proxy} for an interface.
     *
     * @param realClass the class to be mocked that is used by code under test
-    * @param mockClass the class containing the mock methods/constructors for the real class
+    * @param mockClass the class containing the mock methods for the real class
     *
     * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#171">Example</a>
     */
@@ -368,7 +360,7 @@ public final class Mockit
     *
     * @see #setUpMock(Class, Object)
     * @see #setUpMocks(Object...)
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#698">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#678">Example</a>
     */
    public static <T> T setUpMock(Object mockClassOrInstance)
    {
