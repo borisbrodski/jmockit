@@ -6,16 +6,16 @@ package mockit.internal.annotations;
 
 import java.lang.reflect.*;
 
+import static mockit.external.asm.Opcodes.*;
+
 import mockit.*;
 import mockit.external.asm.*;
 import mockit.external.asm.commons.*;
 import mockit.internal.*;
 
-import static mockit.external.asm.Opcodes.*;
-
 /**
- * Responsible for collecting the signatures of all methods and constructors defined in a given mock
- * class which are explicitly annotated as {@link mockit.Mock mocks}.
+ * Responsible for collecting the signatures of all methods defined in a given mock class which are explicitly annotated
+ * as {@link mockit.Mock mocks}.
  */
 public final class AnnotatedMockMethodCollector extends EmptyVisitor
 {
@@ -69,15 +69,12 @@ public final class AnnotatedMockMethodCollector extends EmptyVisitor
    }
 
    /**
-    * Adds the method or constructor specified to the set of mock methods, representing it as
-    * <code>name + desc</code>, as long as it's appropriate for such method or constructor to be a
-    * mock, as indicated by its access modifiers and by the presence of the {@link Mock} annotation.
+    * Adds the method specified to the set of mock methods, representing it as <code>name + desc</code>, as long as it's
+    * appropriate for such method to be a mock, as indicated by its access modifiers and by the presence of the
+    * {@link Mock} annotation.
     *
-    * @param access access modifiers, indicating "public", "static", and so on
-    * @param name the method or constructor name
-    * @param methodDesc internal JVM description of parameters and return type
-    * @param signature generic signature for a Java 5 generic method, ignored since redefinition
-    * only needs to consider the "erased" signature
+    * @param signature generic signature for a Java 5 generic method, ignored since redefinition only needs to consider
+    * the "erased" signature
     * @param exceptions zero or more thrown exceptions in the method "throws" clause, also ignored
     */
    @Override
