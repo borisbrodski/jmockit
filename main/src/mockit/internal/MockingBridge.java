@@ -16,12 +16,11 @@ import mockit.internal.util.*;
 public final class MockingBridge implements InvocationHandler
 {
    public static final int RECORD_OR_REPLAY = 1;
-   public static final int CALL_CONSTRUCTOR_MOCK = 2;
    public static final int CALL_STATIC_MOCK = 3;
    public static final int CALL_INSTANCE_MOCK = 4;
    public static final int UPDATE_MOCK_STATE = 5;
    public static final int EXIT_REENTRANT_MOCK = 6;
-   public static final int FIRST_TARGET_WITH_EXTRA_ARG = CALL_INSTANCE_MOCK;
+   private static final int FIRST_TARGET_WITH_EXTRA_ARG = CALL_INSTANCE_MOCK;
 
    private static final Object[] EMPTY_ARGS = {};
 
@@ -114,13 +113,6 @@ public final class MockingBridge implements InvocationHandler
       Object mocked, int targetId,
       String mockClassInternalName, String mockName, String mockDesc, int mockIndex, Object[] mockArgs)
    {
-      if (targetId == CALL_CONSTRUCTOR_MOCK) {
-         String mockClassName = getMockClassName(mockClassInternalName);
-         Class<?>[] paramClasses = Utilities.getParameterTypes(mockDesc);
-         Utilities.newInstance(mockClassName, paramClasses, mockArgs);
-         return null;
-      }
-
       Class<?> mockClass;
       Object mock;
 

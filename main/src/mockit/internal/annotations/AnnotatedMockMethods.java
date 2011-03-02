@@ -9,8 +9,8 @@ import java.util.*;
 import mockit.internal.state.*;
 
 /**
- * A container for the mock methods and constructors "collected" from a mock class, separated in two
- * sets: one with all the mock methods, and another with just the subset of static methods.
+ * A container for the mock methods "collected" from a mock class, separated in two sets: one with all the mock methods,
+ * and another with just the subset of static methods.
  */
 public final class AnnotatedMockMethods
 {
@@ -20,15 +20,14 @@ public final class AnnotatedMockMethods
    private boolean withInvocationParameter;
 
    /**
-    * The set of public mock methods and constructors in a mock class. Each one is represented by
-    * the concatenation of its name ("&lt;init>" in the case of a constructor) with the internal JVM
-    * description of its parameters and return type.
+    * The set of public mock methods in a mock class. Each one is represented by the concatenation of its name with the
+    * internal JVM description of its parameters and return type.
     */
    final List<String> methods = new ArrayList<String>(20);
 
    /**
-    * The subset of static methods between the {@link #methods mock methods} in a mock class. This
-    * is needed when generating calls for the mock methods.
+    * The subset of static methods between the {@link #methods mock methods} in a mock class.
+    * This is needed when generating calls for the mock methods.
     */
    private final Collection<String> staticMethods = new ArrayList<String>(20);
 
@@ -41,9 +40,9 @@ public final class AnnotatedMockMethods
       this.realClass = realClass;
    }
 
-   public String addMethod(boolean fromSuperclass, String name, String desc, boolean isStatic)
+   public String addMethod(boolean fromSuperClass, String name, String desc, boolean isStatic)
    {
-      if (fromSuperclass && isMethodAlreadyAdded(name, desc)) {
+      if (fromSuperClass && isMethodAlreadyAdded(name, desc)) {
          return null;
       }
 

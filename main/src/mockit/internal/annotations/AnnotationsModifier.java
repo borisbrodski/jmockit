@@ -52,22 +52,20 @@ public final class AnnotationsModifier extends BaseClassModifier
    /**
     * Initializes the modifier for a given real/mock class pair.
     * <p/>
-    * If a mock instance is provided, it will receive calls for any instance methods defined in the
-    * mock class. If not, a new instance will be created for such calls. In the first case, the mock
-    * instance will need to be recovered by the modified bytecode inside the real method. To enable
-    * this, the given mock instance is added to the end of a global list made available through
-    * {@link mockit.internal.state.TestRun#getMock(int)}.
+    * If a mock instance is provided, it will receive calls for any instance methods defined in the mock class.
+    * If not, a new instance will be created for such calls. In the first case, the mock instance will need to be
+    * recovered by the modified bytecode inside the real method. To enable this, the given mock instance is added to the
+    * end of a global list made available through {@link mockit.internal.state.TestRun#getMock(int)}.
     *
     * @param cr the class file reader for the real class
     * @param mock an instance of the mock class or null to create one
-    * @param mockMethods contains the set of mock methods collected from the mock class; each
-    * mock method is identified by a pair composed of "name" and "desc", where "name" is the method
-    * name or "<init>" for a constructor, and "desc" is the JVM's internal description of the
-    * parameters; once the real class modification is complete this set will be empty, unless no
-    * corresponding real method was found for any of its methods identifiers
+    * @param mockMethods contains the set of mock methods collected from the mock class; each mock method is identified
+    * by a pair composed of "name" and "desc", where "name" is the method name, and "desc" is the JVM internal
+    * description of the parameters; once the real class modification is complete this set will be empty, unless no
+    * corresponding real method was found for any of its method identifiers
     *
-    * @throws IllegalArgumentException if no mock instance is given but the mock class is an inner
-    * class, which cannot be instantiated since the enclosing instance is not known
+    * @throws IllegalArgumentException if no mock instance is given but the mock class is an inner class, which cannot
+    * be instantiated since the enclosing instance is not known
     */
    public AnnotationsModifier(
       ClassReader cr, Class<?> realClass, Object mock, AnnotatedMockMethods mockMethods,
@@ -129,16 +127,16 @@ public final class AnnotationsModifier extends BaseClassModifier
    }
 
    /**
-    * If the specified method has a mock definition, then generates bytecode to redirect calls made
-    * to it to the mock method. If it has no mock, does nothing.
+    * If the specified method has a mock definition, then generates bytecode to redirect calls made to it to the mock
+    * method. If it has no mock, does nothing.
     *
     * @param access not relevant
     * @param name together with desc, used to identity the method in given set of mock methods
     * @param signature not relevant
     * @param exceptions not relevant
     *
-    * @return null if the method was redefined, otherwise a MethodWriter that writes out the visited
-    * method code without changes
+    * @return null if the method was redefined, otherwise a MethodWriter that writes out the visited method code without
+    * changes
     */
    @Override
    public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
@@ -147,9 +145,7 @@ public final class AnnotationsModifier extends BaseClassModifier
          return super.visitMethod(access, name, desc, signature, exceptions);
       }
 
-      boolean hasMock = hasMock(name, desc) || hasMockWithAlternativeName(name, desc);
-
-      if (!hasMock) {
+      if (!hasMock(name, desc)) {
          return
             shouldCopyOriginalMethodBytecode(access, name, desc, signature, exceptions) ?
                super.visitMethod(access, name, desc, signature, exceptions) : null;
@@ -179,44 +175,40 @@ public final class AnnotationsModifier extends BaseClassModifier
 
    private boolean hasMock(String name, String desc)
    {
-      mockName = name;
-      boolean hasMock = annotatedMocks.containsMethod(name, desc);
+      if ("<init>".equals(name)) {
+         mockName = "$init";
+      }
+      else if ("<clinit>".equals(name)) {
+         mockName = "$clinit";
+      }
+      else {
+         mockName = name;
+      }
+
+      boolean hasMock = annotatedMocks.containsMethod(mockName, desc);
 
       if (hasMock) {
-         mockIsStatic = annotatedMocks.containsStaticMethod(name, desc);
+         mockIsStatic = annotatedMocks.containsStaticMethod(mockName, desc);
       }
 
       return hasMock;
-   }
-
-   private boolean hasMockWithAlternativeName(String name, String desc)
-   {
-      if ("<init>".equals(name)) {
-         return hasMock("$init", desc);
-      }
-      else if ("<clinit>".equals(name)) {
-         return hasMock("$clinit", desc);
-      }
-
-      return false;
    }
 
    private boolean shouldCopyOriginalMethodBytecode(
       int access, String name, String desc, String signature, String[] exceptions)
    {
       if ((access & IGNORED_ACCESS) == 0 && mockingCfg != null && mockingCfg.matchesFilters(name, desc)) {
-         mockName = name;
          startModifiedMethodVersion(access, name, desc, signature, exceptions);
-         generateEmptyStubImplementation(desc);
+         generateEmptyStubImplementation(name, desc);
          return false;
       }
 
       return true;
    }
 
-   private void generateEmptyStubImplementation(String desc)
+   private void generateEmptyStubImplementation(String name, String desc)
    {
-      if ("<init>".equals(mockName)) {
+      if ("<init>".equals(name)) {
          generateCallToSuper();
       }
 
@@ -242,7 +234,7 @@ public final class AnnotationsModifier extends BaseClassModifier
 
    private void generateCallsForMockExecution(int access, String desc)
    {
-      if ("<init>".equals(mockName) || "$init".equals(mockName)) {
+      if ("$init".equals(mockName)) {
          generateCallToSuper();
       }
 
@@ -282,7 +274,7 @@ public final class AnnotationsModifier extends BaseClassModifier
          mw.visitLabel(l0);
       }
 
-      generateCallToMockMethodOrConstructor(access, desc);
+      generateCallToMockMethod(access, desc);
 
       if (afterCallToMock != null) {
          mw.visitLabel(l1);
@@ -327,42 +319,16 @@ public final class AnnotationsModifier extends BaseClassModifier
       return afterCallToMock;
    }
 
-   private void generateCallToMockMethodOrConstructor(int access, String desc)
+   private void generateCallToMockMethod(int access, String desc)
    {
       methodOrConstructorDesc = desc;
 
-      if ("<init>".equals(mockName)) {
-         // Note: trying to call a constructor on a getMock(i) instance doesn't work (for reasons
-         // not clear), and it's also not possible to set the "it" field before calling the mock
-         // constructor; so, we do the only thing that can be done for mock constructors, which is
-         // to instantiate a new mock object and then call the mock constructor on it.
-         generateInstantiationAndConstructorCall(access);
-      }
-      else if (mockIsStatic) {
+      if (mockIsStatic) {
          generateStaticMethodCall(access);
       }
       else {
          generateInstanceMethodCall(access);
       }
-   }
-
-   private void generateInstantiationAndConstructorCall(int access)
-   {
-      if (useMockingBridge) {
-         generateCallToMockingBridge(
-            MockingBridge.CALL_CONSTRUCTOR_MOCK, annotatedMocks.getMockClassInternalName(), access,
-            mockName, methodOrConstructorDesc, null);
-         return;
-      }
-
-      generateMockObjectInstantiation();
-
-      // Generate a call to the mock constructor, with the real constructor's arguments.
-      initialVar = 1;
-      generateMethodOrConstructorArguments();
-      mw.visitMethodInsn(INVOKESPECIAL, annotatedMocks.getMockClassInternalName(), "<init>", methodOrConstructorDesc);
-
-      mw.visitInsn(POP);
    }
 
    private void generateStaticMethodCall(int access)
