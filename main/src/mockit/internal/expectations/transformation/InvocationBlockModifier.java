@@ -16,7 +16,6 @@ final class InvocationBlockModifier extends MethodAdapter
    private final MethodWriter mw;
    private final String fieldOwner;
    private int matchers;
-   private int stackSizeBeforeLabel;
 
    InvocationBlockModifier(MethodWriter mw, String fieldOwner)
    {
@@ -51,7 +50,7 @@ final class InvocationBlockModifier extends MethodAdapter
          else if (name.startsWith("any")) {
             mw.visitFieldInsn(GETSTATIC, owner, name, desc);
             mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addArgMatcher", "()V");
-            matcherStacks[matchers++] = mw.stackSize;
+            matcherStacks[matchers++] = mw.stackSize2;
             return;
          }
       }
@@ -64,14 +63,13 @@ final class InvocationBlockModifier extends MethodAdapter
    {
       if (opcode == INVOKEVIRTUAL && owner.equals(fieldOwner) && name.startsWith("with")) {
          mw.visitMethodInsn(INVOKEVIRTUAL, owner, name, desc);
-         matcherStacks[matchers++] = mw.stackSize;
+         matcherStacks[matchers++] = mw.stackSize2;
          return;
       }
 
       if (matchers > 0) {
          Type[] argTypes = Type.getArgumentTypes(desc);
-         int stackSize = mw.stackSize == 0 ? stackSizeBeforeLabel : mw.stackSize;
-         stackSizeBeforeLabel = 0;
+         int stackSize = mw.stackSize2;
          int stackAfter = stackSize - sumOfSizes(argTypes);
 
          if (stackAfter < matcherStacks[0]) {
@@ -118,13 +116,6 @@ final class InvocationBlockModifier extends MethodAdapter
       mw.visitIntInsn(SIPUSH, originalMatcherIndex);
       mw.visitIntInsn(SIPUSH, toIndex);
       mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "moveArgMatcher", "(II)V");
-   }
-
-   @Override // the Eclipse compiler inserts a Label in the middle of a multi-line statement, clearing mw.stackSize
-   public void visitLabel(Label label)
-   {
-      stackSizeBeforeLabel = mw.stackSize;
-      mw.visitLabel(label);
    }
 
    @Override

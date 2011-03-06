@@ -229,7 +229,10 @@ public final class MethodWriter implements MethodVisitor
      * Label#beginStackSize beginStackSize} of the current basic block plus
      * <tt>stackSize</tt>.
      */
-    public int stackSize;
+    private int stackSize;
+
+    // Created to avoid issues with the Eclipse compiler.
+    public int stackSize2;
 
     /**
      * The (relative) maximum stack size after the last visited instruction.
@@ -612,11 +615,7 @@ public final class MethodWriter implements MethodVisitor
     public void visitInsn(int opcode) {
         if (computeMaxs) {
             // updates current and max stack sizes
-            int size = stackSize + SIZE[opcode];
-            if (size > maxStackSize) {
-                maxStackSize = size;
-            }
-            stackSize = size;
+            updateCurrentAndMaxStackSizes(SIZE[opcode]);
             // if opcode == ATHROW or xRETURN, ends current block (no successor)
             if (opcode >= Opcodes.IRETURN && opcode <= Opcodes.RETURN || opcode == Opcodes.ATHROW)
             {
@@ -634,11 +633,7 @@ public final class MethodWriter implements MethodVisitor
         if (computeMaxs && opcode != Opcodes.NEWARRAY) {
             // updates current and max stack sizes only if opcode == NEWARRAY
             // (stack size variation = 0 for BIPUSH or SIPUSH)
-            int size = stackSize + 1;
-            if (size > maxStackSize) {
-                maxStackSize = size;
-            }
-            stackSize = size;
+            updateCurrentAndMaxStackSizes(1);
         }
         // adds the instruction to the bytecode of the method
         if (opcode == Opcodes.SIPUSH) {
@@ -658,11 +653,7 @@ public final class MethodWriter implements MethodVisitor
                     currentBlock = null;
                 }
             } else { // xLOAD or xSTORE
-                int size = stackSize + SIZE[opcode];
-                if (size > maxStackSize) {
-                    maxStackSize = size;
-                }
-                stackSize = size;
+               updateCurrentAndMaxStackSizes(SIZE[opcode]);
             }
             // updates max locals
             int n;
@@ -699,11 +690,7 @@ public final class MethodWriter implements MethodVisitor
         if (computeMaxs && opcode == Opcodes.NEW) {
             // updates current and max stack sizes only if opcode == NEW
             // (stack size variation = 0 for ANEWARRAY, CHECKCAST, INSTANCEOF)
-            int size = stackSize + 1;
-            if (size > maxStackSize) {
-                maxStackSize = size;
-            }
-            stackSize = size;
+            updateCurrentAndMaxStackSizes(1);
         }
         // adds the instruction to the bytecode of the method
         code.put12(opcode, cw.newClass(desc));
@@ -712,29 +699,25 @@ public final class MethodWriter implements MethodVisitor
     public void visitFieldInsn(int opcode, String owner, String name, String desc)
     {
         if (computeMaxs) {
-            int size;
+            int sizeVariation;
             // computes the stack size variation
             char c = desc.charAt(0);
             switch (opcode) {
                 case Opcodes.GETSTATIC:
-                    size = stackSize + (c == 'D' || c == 'J' ? 2 : 1);
+                    sizeVariation = c == 'D' || c == 'J' ? 2 : 1;
                     break;
                 case Opcodes.PUTSTATIC:
-                    size = stackSize + (c == 'D' || c == 'J' ? -2 : -1);
+                    sizeVariation = c == 'D' || c == 'J' ? -2 : -1;
                     break;
                 case Opcodes.GETFIELD:
-                    size = stackSize + (c == 'D' || c == 'J' ? 1 : 0);
+                    sizeVariation = c == 'D' || c == 'J' ? 1 : 0;
                     break;
                 // case Constants.PUTFIELD:
                 default:
-                    size = stackSize + (c == 'D' || c == 'J' ? -3 : -2);
+                    sizeVariation = c == 'D' || c == 'J' ? -3 : -2;
                     break;
             }
-            // updates current and max stack sizes
-            if (size > maxStackSize) {
-                maxStackSize = size;
-            }
-            stackSize = size;
+            updateCurrentAndMaxStackSizes(sizeVariation);
         }
         // adds the instruction to the bytecode of the method
         code.put12(opcode, cw.newField(owner, name, desc));
@@ -761,17 +744,13 @@ public final class MethodWriter implements MethodVisitor
                 // future
                 i.intVal = argSize;
             }
-            int size;
+            int sizeVariation;
             if (opcode == Opcodes.INVOKESTATIC) {
-                size = stackSize - (argSize >> 2) + (argSize & 0x03) + 1;
+                sizeVariation = -(argSize >> 2) + (argSize & 0x03) + 1;
             } else {
-                size = stackSize - (argSize >> 2) + (argSize & 0x03);
+                sizeVariation = -(argSize >> 2) + (argSize & 0x03);
             }
-            // updates current and max stack sizes
-            if (size > maxStackSize) {
-                maxStackSize = size;
-            }
-            stackSize = size;
+            updateCurrentAndMaxStackSizes(sizeVariation);
         }
         // adds the instruction to the bytecode of the method
         if (itf) {
@@ -860,21 +839,21 @@ public final class MethodWriter implements MethodVisitor
         resize |= label.resolve(code.length, code.data);
     }
 
+    private void updateCurrentAndMaxStackSizes(int sizeVariation)
+    {
+        int size = stackSize + sizeVariation;
+        if (size > maxStackSize) {
+            maxStackSize = size;
+        }
+        stackSize = size;
+        stackSize2 += sizeVariation;
+    }
+
     public void visitLdcInsn(Object cst) {
         Item i = cw.newConstItem(cst);
         if (computeMaxs) {
-            int size;
-            // computes the stack size variation
-            if (i.type == ClassWriter.LONG || i.type == ClassWriter.DOUBLE) {
-                size = stackSize + 2;
-            } else {
-                size = stackSize + 1;
-            }
-            // updates current and max stack sizes
-            if (size > maxStackSize) {
-                maxStackSize = size;
-            }
-            stackSize = size;
+           int sizeVariation = i.type == ClassWriter.LONG || i.type == ClassWriter.DOUBLE ? 2 : 1;
+           updateCurrentAndMaxStackSizes(sizeVariation);
         }
         // adds the instruction to the bytecode of the method
         int index = i.index;
@@ -909,7 +888,7 @@ public final class MethodWriter implements MethodVisitor
     {
         if (computeMaxs) {
             // updates current stack size (max stack size unchanged)
-            --stackSize;
+            updateCurrentAndMaxStackSizes(-1);
             // ends current block (with many new successors)
             if (currentBlock != null) {
                 currentBlock.maxStackSize = maxStackSize;
@@ -937,7 +916,7 @@ public final class MethodWriter implements MethodVisitor
     {
         if (computeMaxs) {
             // updates current stack size (max stack size unchanged)
-            --stackSize;
+            updateCurrentAndMaxStackSizes(-1);
             // ends current block (with many new successors)
             if (currentBlock != null) {
                 currentBlock.maxStackSize = maxStackSize;
@@ -966,7 +945,7 @@ public final class MethodWriter implements MethodVisitor
         if (computeMaxs) {
             // updates current stack size (max stack size unchanged because
             // stack size variation always negative or null)
-            stackSize += 1 - dims;
+            updateCurrentAndMaxStackSizes(1 - dims);
         }
         // adds the instruction to the bytecode of the method
         code.put12(Opcodes.MULTIANEWARRAY, cw.newClass(desc)).putByte(dims);

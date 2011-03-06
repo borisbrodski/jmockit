@@ -224,7 +224,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       assertEquals(2, mock.getAlerts("123", 1, true).size());
    }
 
-   @Test // failed only when compiled with the Eclipse compiler
+   // The following tests failed only when compiled with the Eclipse compiler /////////////////////////////////////////
+
+   @Test
    public void expectationWithMatchersSpanningMultipleLines()
    {
       new Expectations()
@@ -236,5 +238,65 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       };
 
       mock.simpleOperation(1, null);
+   }
+
+   @Test
+   public void expectationWithMatcherInSecondLineAndConstantArgumentInThirdLine()
+   {
+      new Expectations()
+      {{
+         mock.simpleOperation(
+            anyInt,
+            "test");
+      }};
+
+      mock.simpleOperation(123, "test");
+   }
+
+   @Test
+   public void expectationsWithPartialMatchersInEveryCombinationForMethodWithThreeParameters()
+   {
+      final Date now = new Date();
+
+      new Expectations()
+      {
+         {
+            // Expectations with one matcher:
+            mock.simpleOperation(
+               anyInt,
+               "test", null);
+            mock.simpleOperation(-2, anyString,
+               null);
+            mock.simpleOperation(
+               0,
+               "test", (Date) withNotNull());
+            mock.simpleOperation(
+               1,
+               null,
+               (Date) withNull());
+            mock.simpleOperation(
+               0, "test",
+               (Date) any);
+
+            // Expectations with two matchers:
+            mock.simpleOperation(-3, anyString,
+               (Date) any);
+            mock.simpleOperation(
+               withNotEqual(0), anyString,
+               now);
+            mock.simpleOperation(anyInt,
+               "",
+               (Date) any);
+         }
+      };
+
+      mock.simpleOperation(123, "test", null);
+      mock.simpleOperation(-2, "", now);
+      mock.simpleOperation(0, "test", now);
+      mock.simpleOperation(1, "test", null);
+      mock.simpleOperation(0, "test", null);
+      mock.simpleOperation(-3, "xyz", now);
+      mock.simpleOperation(123, null, now);
+      mock.simpleOperation(123, "", null);
    }
 }
