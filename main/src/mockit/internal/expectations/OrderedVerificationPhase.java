@@ -76,23 +76,23 @@ public final class OrderedVerificationPhase extends VerificationPhase
    @Override
    public void handleInvocationCountConstraint(int minInvocations, int maxInvocations)
    {
+      if (pendingError != null && minInvocations > 0) {
+         return;
+      }
+
       ExpectedInvocation invocation = currentExpectation.invocation;
-      Object mock = invocation.instance;
-      String mockClassDesc = invocation.getClassDesc();
-      String mockNameAndDesc = invocation.getMethodNameAndDescription();
-      Object[] args = invocation.arguments.getValues();
       argMatchers = invocation.arguments.getMatchers();
       int invocationCount = 1;
 
       while (replayIndex < expectationCount) {
-         Expectation nextExpectation = expectationsInReplayOrder.get(replayIndex);
+         Expectation expectation = expectationsInReplayOrder.get(replayIndex);
 
-         if (matches(mock, mockClassDesc, mockNameAndDesc, args, nextExpectation)) {
+         if (matchesCurrentExpectation(expectation)) {
             invocationCount++;
 
             if (invocationCount > maxInvocations) {
                if (maxInvocations >= 0 && numberOfIterations <= 1) {
-                  pendingError = nextExpectation.invocation.errorForUnexpectedInvocation();
+                  pendingError = expectation.invocation.errorForUnexpectedInvocation();
                   return;
                }
 
@@ -127,6 +127,21 @@ public final class OrderedVerificationPhase extends VerificationPhase
       }
 
       pendingError = null;
+   }
+
+   private boolean matchesCurrentExpectation(Expectation expectation)
+   {
+      if (expectation == currentExpectation) {
+         return true;
+      }
+
+      ExpectedInvocation invocation = currentExpectation.invocation;
+      Object mock = invocation.instance;
+      String mockClassDesc = invocation.getClassDesc();
+      String mockNameAndDesc = invocation.getMethodNameAndDescription();
+      Object[] args = invocation.arguments.getValues();
+
+      return matches(mock, mockClassDesc, mockNameAndDesc, args, expectation);
    }
 
    @Override

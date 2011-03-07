@@ -46,7 +46,7 @@ public final class VerificationsInOrderTest
    }
 
    @Test(expected = AssertionError.class)
-   public void verifyUnrecordedInvocationThatShouldHappenButDoesnt()
+   public void verifyUnrecordedInvocationThatShouldHappenButDoesNot()
    {
       mock.setSomething(1);
 
@@ -57,7 +57,19 @@ public final class VerificationsInOrderTest
    }
 
    @Test(expected = AssertionError.class)
-   public void verifyRecordedInvocationThatShouldHappenButDoesnt()
+   public void verifyUnrecordedInvocationThatShouldHappenExactlyOnceButDoesNot()
+   {
+      mock.setSomething(1);
+
+      new VerificationsInOrder()
+      {{
+         mock.setSomething(2);
+         times = 1;
+      }};
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyRecordedInvocationThatShouldHappenButDoesNot()
    {
       new NonStrictExpectations()
       {
@@ -202,7 +214,8 @@ public final class VerificationsInOrderTest
 
       new VerificationsInOrder()
       {{
-         mock.setSomething(123); times = 2;
+         mock.setSomething(123);
+         times = 2;
       }};
    }
 
