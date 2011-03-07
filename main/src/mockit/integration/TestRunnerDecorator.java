@@ -134,12 +134,16 @@ public class TestRunnerDecorator
 
    protected final Object[] createInstancesForMockParametersIfAny(Object target, Method testMethod, Object[] params)
    {
+      SharedFieldTypeRedefinitions sharedFields = TestRun.getSharedFieldTypeRedefinitions();
+
+      if (sharedFields == null) {
+         return params;
+      }
+
       TestRun.enterNoMockingZone();
 
       try {
-         TestedClassRedefinitions testedClasses =
-            TestRun.getSharedFieldTypeRedefinitions().getTestedClassRedefinitions();
-         testedClasses.assignNewInstancesToTestedFields(target);
+         sharedFields.getTestedClassRedefinitions().assignNewInstancesToTestedFields(target);
 
          if (testMethod.getParameterTypes().length == 0) {
             return params;
