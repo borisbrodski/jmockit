@@ -43,7 +43,9 @@ import java.io.IOException;
  */
 public class ClassReader
 {
-    /**
+    private static final Attribute[] NO_ATTRIBUTES = new Attribute[0];
+
+   /**
      * The class to be parsed. <i>The content of this array must not be
      * modified. This field is intended for {@link Attribute} sub classes, and
      * is normally not needed by class generators or adapters.</i>
@@ -297,7 +299,7 @@ public class ClassReader
      */
     public void accept(final ClassVisitor classVisitor, final boolean skipDebug)
     {
-        accept(classVisitor, new Attribute[0], skipDebug);
+        accept(classVisitor, NO_ATTRIBUTES, skipDebug);
     }
 
     /**
