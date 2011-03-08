@@ -201,11 +201,7 @@ public final class RecordAndReplayExecution
       ExecutingTest executingTest = TestRun.getExecutingTest();
 
       if (executingTest.isShouldIgnoreMockingCallbacks() || LOCK.isHeldByCurrentThread()) {
-         if (executionMode == 0) {
-            return DefaultValues.computeForReturnType(mockDesc);
-         }
-
-         return mock != null && "equals(Ljava/lang/Object;)Z".equals(mockDesc) ? false : Void.class;
+         return defaultReturnValueForReentrantExecution(mock, mockDesc, executionMode);
       }
 
       executingTest.registerAdditionalMocksFromFinalLocalMockFieldsIfAny();
@@ -242,6 +238,23 @@ public final class RecordAndReplayExecution
       finally {
          LOCK.unlock();
       }
+   }
+
+   private static Object defaultReturnValueForReentrantExecution(Object mock, String nameAndDesc, int executionMode)
+   {
+      if (mock != null) {
+         if ("toString()Ljava/lang/String;".equals(nameAndDesc)) {
+            return Utilities.objectIdentity(mock);
+         }
+         else if ("equals(Ljava/lang/Object;)Z".equals(nameAndDesc)) {
+            return false;
+         }
+         else if ("hashCode()I".equals(nameAndDesc)) {
+            return System.identityHashCode(mock);
+         }
+      }
+
+      return executionMode == 0 ? DefaultValues.computeForReturnType(nameAndDesc) : Void.class;
    }
 
    private static boolean handleCallToConstructor(RecordAndReplayExecution instance, Object mock, String classDesc)

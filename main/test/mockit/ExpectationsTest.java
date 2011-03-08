@@ -5,6 +5,7 @@
 package mockit;
 
 import java.io.*;
+import java.net.*;
 
 import org.junit.*;
 
@@ -22,6 +23,8 @@ public final class ExpectationsTest
       private static String doInternal() { return "123"; }
 
       void provideSomeService() {}
+
+      String doSomething(URL url) { return url.toString(); }
 
       int getValue() { return value; }
       void setValue(int value) { this.value = value; }
@@ -487,5 +490,31 @@ public final class ExpectationsTest
       };
 
       // Don't exercise anything.
+   }
+
+   @Test
+   public void recordingExpectationOnMethodWithOneArgumentButReplayingWithAnotherShouldProduceUsefulErrorMessage(
+      final Collaborator mock) throws Exception
+   {
+      final URL expectedURL = new URL("http://expected");
+
+      new Expectations()
+      {
+         {
+            mock.doSomething(expectedURL);
+         }
+      };
+
+      mock.doSomething(expectedURL);
+
+      URL anotherURL = new URL("http://another");
+
+      try {
+         mock.doSomething(anotherURL);
+         fail();
+      }
+      catch (AssertionError e) {
+         assertTrue(e.getMessage().contains(anotherURL.toString()));
+      }
    }
 }

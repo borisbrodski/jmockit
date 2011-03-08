@@ -214,22 +214,8 @@ public final class InvocationArguments
          message.append('\'').append(parameterValue).append('\'');
       }
       else {
-         message.append(getParameterValueAsString(parameterValue));
+         message.append(parameterValue);
       }
-   }
-
-   private String getParameterValueAsString(Object parameterValue)
-   {
-      if (parameterValue instanceof SelfDescribing || parameterValue instanceof Description) {
-         return parameterValue.toString();
-      }
-
-      if (parameterValue instanceof Number || parameterValue instanceof Boolean) {
-         return parameterValue.toString();
-      }
-
-      // Other toString() implementations may result in an Error, so we take the safe path.
-      return Utilities.objectIdentity(parameterValue);
    }
 
    @Override
