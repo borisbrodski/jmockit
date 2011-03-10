@@ -35,6 +35,12 @@ public final class TestRun
       ClassLoader contextCL = Thread.currentThread().getContextClassLoader();
       TestRun instance = INSTANCES.get(contextCL);
 
+      // Certain runtime environments (OpenEJB, at least) change the context class loader to a child of the system
+      // class loader, so we try looking up the parent class loader before creating a new TestRun instance.
+      if (instance == null) {
+         instance = INSTANCES.get(contextCL.getParent());
+      }
+
       if (instance == null) {
          instance = new TestRun();
          INSTANCES.put(contextCL, instance);
