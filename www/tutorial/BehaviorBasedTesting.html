@@ -54,6 +54,7 @@
          <li><a href="#FullVerification">Full verification</a></li>
          <li><a href="#FullVerificationInOrder">Full verification in order</a></li>
          <li><a href="#restrictedFullVerifications">Restricting the set of mocked types to be fully verified</a></li>
+         <li><a href="#emptyFullVerifications">Verifying that no invocations occurred</a></li>
          <li><a href="#unspecifiedInvocations">Verifying unspecified invocations that should not happen</a></li>
          <li><a href="#iterations">Verifying iterations</a></li>
       </ol>
@@ -1274,6 +1275,45 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    For example, the <code>new FullVerificationsInOrder(AnotherDependency.class) { ... }</code> block would only make
    sure that all invocations to the mocked <code class="type">AnotherDependency</code> class were verified.
 </p>
+
+<h4 id="emptyFullVerifications">Verifying that no invocations occurred</h4>
+<p>
+   To verify that <em>no</em> invocations at all occurred on the non-strict mocked types/instances used in a test, add
+   an <em>empty</em> full verification block to it.
+   As always, note that any expectations that were <em>recorded</em> as expected through an specified
+   <code>times/minTimes</code> constraint are verified implicitly and therefore disregarded by the full verification
+   block; in such a case the empty verification block will verify that no <em>other</em> invocations occurred.
+   Additionally, if any expectations were verified in a <em>previous</em> verification block in the same test, they are
+   also disregarded by the full verification block.
+</p>
+<p>
+   If the test uses two or more mocked types/instances and you want to verify that no invocations occurred for some of
+   them, specify the desired mocked types and/or instances in the constructor to the empty verification block.
+   An example test follows.
+</p>
+<pre><code>   @Test
+   public void verifyNoInvocationsOnOneOfTwoMockedDependenciesBeyondThoseRecordedAsExpected(
+      final Dependency mock1, final AnotherDependency mock2)
+   {
+      new NonStrictExpectations()
+      {{
+         // These two are recorded as expected:
+         mock1.setSomething(<em>anyInt</em>); <em>minTimes</em> = 1;
+         mock2.doSomething(); <em>times</em> = 1;
+      }};
+
+      // Inside code under test:
+      mock1.prepare();
+      mock1.setSomething(1);
+      mock1.setSomething(2);
+      mock1.save();
+      mock2.doSomething();
+
+      // Will verify that no invocations other than to "doSomething()" occurred on mock2:
+      <strong>new FullVerifications(mock2) {};</strong>
+   }
+
+</code></pre>
 
 <h4 id="unspecifiedInvocations">Verifying unspecified invocations that should not happen</h4>
 <p>

@@ -6,6 +6,7 @@ package mockit;
 
 import java.util.concurrent.*;
 
+import static org.junit.Assert.*;
 import org.junit.*;
 
 @SuppressWarnings({"UnusedDeclaration"})
@@ -318,5 +319,47 @@ public final class RestrictedFullVerificationsTest
             mock2.getValue();
          }
       };
+   }
+
+   @Test
+   public void verifyNoInvocationsOccurredOnOneOfTwoMockedDependencies(AnotherDependency mock2)
+   {
+      mock2.doSomething();
+
+      new FullVerifications(mock) {};
+   }
+
+   @Test
+   public void verifyNoInvocationsOccurredOnMockedDependencyWithOneHavingOccurred(AnotherDependency mock2)
+   {
+      mock2.doSomething();
+      mock.editABunchMoreStuff();
+
+      try {
+         new FullVerifications(mock) {};
+         fail();
+      }
+      catch (AssertionError e) {
+         assertTrue(e.getMessage().contains("editABunchMoreStuff()"));
+      }
+   }
+
+   @Test
+   public void verifyNoInvocationsOnOneOfTwoMockedDependenciesBeyondThoseRecordedAsExpected(
+      final AnotherDependency mock2)
+   {
+      new NonStrictExpectations()
+      {{
+         mock.setSomething(anyInt); minTimes = 1;
+         mock2.doSomething(); times = 1;
+      }};
+
+      mock.prepare();
+      mock.setSomething(1);
+      mock.setSomething(2);
+      mock.save();
+      mock2.doSomething();
+
+      new FullVerifications(mock2) {};
    }
 }

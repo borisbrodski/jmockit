@@ -4,6 +4,7 @@
  */
 package mockit;
 
+import static org.junit.Assert.*;
 import org.junit.*;
 
 @SuppressWarnings({"UnusedDeclaration"})
@@ -331,5 +332,57 @@ public final class FullVerificationsTest
          mock.notifyBeforeSave();
          mock.save(); times = 1;
       }};
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyNoInvocationsOccurredOnMockedDependencyWithOneHavingOccurred()
+   {
+      mock.editABunchMoreStuff();
+
+      new FullVerifications() {};
+   }
+
+   @Test
+   public void verifyNoInvocationsOnMockedDependencyBeyondThoseRecordedAsExpected()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.prepare(); times = 1;
+      }};
+
+      new NonStrictExpectations()
+      {{
+         mock.setSomething(anyInt); minTimes = 1;
+         mock.save(); times = 1;
+      }};
+
+      mock.prepare();
+      mock.setSomething(1);
+      mock.setSomething(2);
+      mock.save();
+
+      new FullVerifications() {};
+   }
+
+   @Test
+   public void verifyNoInvocationsOnMockedDependencyBeyondThoseRecordedAsExpectedWithOneHavingOccurred()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.prepare(); times = 1;
+         mock.save(); minTimes = 1;
+      }};
+
+      mock.prepare();
+      mock.editABunchMoreStuff();
+      mock.save();
+
+      try {
+         new FullVerifications() {};
+         fail();
+      }
+      catch (AssertionError e) {
+         assertTrue(e.getMessage().contains("editABunchMoreStuff()"));
+      }
    }
 }
