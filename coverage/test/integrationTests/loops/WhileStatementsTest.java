@@ -48,4 +48,22 @@ public final class WhileStatementsTest extends CoverageTest
 //      assertPath(3, 2);
 //      assertPath(3, 1);
    }
+
+   @Test
+   public void doWhileInSeparateLines()
+   {
+      tested.doWhileInSeparateLines();
+
+      assertLines(58, 63, 4);
+      assertLine(58, 1, 1, 1);
+      assertLine(61, 1, 1, 3);
+      assertLine(62, 1, 1, 3);
+      assertLine(63, 1, 1, 1);
+
+      findMethodData(58, "doWhileInSeparateLines");
+      assertMethodLines(58, 63);
+//      assertPaths(2, 1, 3);
+//      assertPath(4, 0);
+//      assertPath(4, 0);
+   }
 }
