@@ -92,31 +92,24 @@ Annotation Type Mock</H2>
 <DT><PRE><FONT SIZE="-1"><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation">@Documented</A>
 <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Inherited.html?is-external=true" title="class or interface in java.lang.annotation">@Inherited</A>
 <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</A>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>=<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation">RUNTIME</A>)
-<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</A>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>={<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#CONSTRUCTOR" title="class or interface in java.lang.annotation">CONSTRUCTOR</A>,<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation">METHOD</A>})
+<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</A>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>=<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation">METHOD</A>)
 </FONT>public @interface <B>Mock</B></DL>
 </PRE>
 
 <P>
-Used inside a <em>mock class</em> to indicate a <em>mock method</em> or <em>mock constructor</em>, with optional
- <em>expectations</em> on the number of invocations while the mock is in effect.
+Used inside a <em>mock class</em> to indicate a <em>mock method</em>, with optional <em>expectations</em> on the
+ number of invocations while the mock is in effect.
  (A mock will be in effect from the time a real method/constructor is mocked to the time it is restored to its
  original definition.)
  <p/>
  This annotation can also be applied to the special methods <strong><code>void $init(...)</code></strong> and
  <strong><code>void $clinit()</code></strong>, which correspond to constructors and to class initializers, respectively.
  In the latter case, this is the only way to mock a static <em>class initialization block</em>.
- Notice that it makes no difference if the real class contains more than one static initialization
- block, because the Java compiler will always merge the sequence of static blocks into a single
- internal "&lt;clinit>" static method in the class file.
- <p/>
- Mock methods named <code>$init</code> will apply to the corresponding constructor in the real class (by matching the
- declared parameters).
- The advantages of mocking a constructor this way instead of using an actual mock constructor are three:
- 1) the <code>it</code> field can be used in the <code>$init</code> method, while in a mock constructor such field would not be
- set before the mock constructor was called;
- 2) the <code>$init</code> method will be called on the mock instance if one is provided by the test, contrary to a mock
- constructor which is always called on a new mock instance;
- and 3) the <code>$init</code> method can be static, which a constructor cannot.
+ (Notice that it makes no difference if the real class contains more than one static initialization block, because the
+ Java compiler will always merge the sequence of static blocks into a single internal "&lt;clinit>" static method in
+ the class file.)
+ Mock methods named <code>$init</code> will apply to the corresponding constructor in the real class, by matching the
+ declared parameters.
  <p/>
  Finally, a note about <em>instance initialization blocks</em>. The Java compiler does not preserve instance
  initializers as separate elements in the class file, instead inserting any statements in such blocks into each and
@@ -150,7 +143,7 @@ Used inside a <em>mock class</em> to indicate a <em>mock method</em> or <em>mock
 <TD><CODE><B><A HREF="../mockit/Mock.html#invocations()">invocations</A></B></CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Number of expected invocations of the mock method/constructor.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Number of expected invocations of the mock method.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -158,7 +151,7 @@ Used inside a <em>mock class</em> to indicate a <em>mock method</em> or <em>mock
 <TD><CODE><B><A HREF="../mockit/Mock.html#maxInvocations()">maxInvocations</A></B></CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maximum number of expected invocations of the mock method/constructor, if positive.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maximum number of expected invocations of the mock method, if positive.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -166,8 +159,7 @@ Used inside a <em>mock class</em> to indicate a <em>mock method</em> or <em>mock
 <TD><CODE><B><A HREF="../mockit/Mock.html#minInvocations()">minInvocations</A></B></CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Minimum number of expected invocations of the mock method/constructor, starting from 0
- (zero, which is the default).</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Minimum number of expected invocations of the mock method, starting from 0 (zero, which is the default).</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -186,7 +178,7 @@ invocations</H3>
 <PRE>
 public abstract int <B>invocations</B></PRE>
 <DL>
-<DD>Number of expected invocations of the mock method/constructor.
+<DD>Number of expected invocations of the mock method.
  If 0 (zero), no invocations will be expected.
  A negative value (the default) means there is no expectation on the number of invocations;
  that is, the mock can be called any number of times or not at all during any test which uses it.
@@ -210,7 +202,7 @@ maxInvocations</H3>
 <PRE>
 public abstract int <B>maxInvocations</B></PRE>
 <DL>
-<DD>Maximum number of expected invocations of the mock method/constructor, if positive.
+<DD>Maximum number of expected invocations of the mock method, if positive.
  If zero the mock is not expected to be called at all.
  A negative value (the default) means there is no expectation on the maximum number of invocations.
 <P>
@@ -231,8 +223,7 @@ minInvocations</H3>
 <PRE>
 public abstract int <B>minInvocations</B></PRE>
 <DL>
-<DD>Minimum number of expected invocations of the mock method/constructor, starting from 0
- (zero, which is the default).
+<DD>Minimum number of expected invocations of the mock method, starting from 0 (zero, which is the default).
 <P>
 <DD><DL>
 </DL>

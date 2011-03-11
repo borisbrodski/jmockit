@@ -14,9 +14,9 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
-<p>Release 0.999.8 (March 1?, 2011):</p>
+<p>Release 0.999.8 (March 11, 2011):</p>
 <ul>
    <li>
       Dropped support for <em>mock constructors</em> in the <strong>Annotations API</strong>, to avoid confusion and
@@ -31,6 +31,12 @@
       <code>Expectations</code> class.
       Normally, this method would only be used in rare situations, and with <em>local</em> mock fields.
       Any such tests should be changed to make use of <em>mock parameters</em> or mock fields of the test class instead.
+   </li>
+   <li>
+      <strong>Enhancement</strong>: When generating an error message for unexpected or missing invocations, custom
+      <code>toString()</code> methods on non-mocked arguments will always be called to provide a more useful/readable
+      message.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=146">issue 146</a>.
    </li>
    <li>
       <strong>Enhancement</strong>: in tests containing two or more <em>verification blocks</em>, an expectation
@@ -56,12 +62,13 @@
    </li>
    <li>
       <strong>Fixed</strong> a few other small bugs.
-      See issues <a href="http://code.google.com/p/jmockit/issues/detail?id=143">143</a> and
-      <a href="http://code.google.com/p/jmockit/issues/detail?id=144">144</a>.
+      See issues <a href="http://code.google.com/p/jmockit/issues/detail?id=143">143</a>,
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=144">144</a>, and
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=147">147</a>.
    </li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release 0.999.7 (February 13, 2011):</p>
 <ul>
@@ -117,8 +124,6 @@
       parameters) of the same regular (non-injectable) mocked type.
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.999.6 (January 30, 2011):</p>
 <ul>

@@ -101,8 +101,7 @@ Enum Instantiation</H2>
 </PRE>
 
 <P>
-Defines the lifetime of the instances automatically created for a
- <A HREF="../mockit/MockClass.html" title="annotation in mockit">mock class</A>.
+Defines the lifetime of the instances automatically created for a <A HREF="../mockit/MockClass.html" title="annotation in mockit">mock class</A>.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#instantiation">Tutorial</a>
 <P>
@@ -123,25 +122,24 @@ Defines the lifetime of the instances automatically created for a
 <TD><CODE><B><A HREF="../mockit/Instantiation.html#PerMockedInstance">PerMockedInstance</A></B></CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A new instance of the mock class is created for each instance of the real class that was
- mocked, but only when the first instance mock method needs to be called from a mocked
- method or constructor.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A new instance of the mock class is created for each instance of the real class that was mocked, but only when the
+ first instance mock method needs to be called from a mocked method or constructor.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD><CODE><B><A HREF="../mockit/Instantiation.html#PerMockInvocation">PerMockInvocation</A></B></CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The mock class is instantiated every time an instance mock method is about to be called
- from a mocked method in the real class; that is, each time a mocked method or constructor
- is executed, if it has a corresponding instance mock method.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The mock class is instantiated every time an instance mock method is about to be called from a mocked method in
+ the real class; that is, each time a mocked method or constructor is executed, if it has a corresponding instance
+ mock method.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD><CODE><B><A HREF="../mockit/Instantiation.html#PerMockSetup">PerMockSetup</A></B></CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The mock class is instantiated once every time it's set up through a method like
- <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>Mockit.setUpMocks(Object...)</CODE></A>, or for each test class to which the mock class is
- applied through the <A HREF="../mockit/UsingMocksAndStubs.html" title="annotation in mockit"><CODE>UsingMocksAndStubs</CODE></A> annotation.</TD>
+ <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>Mockit.setUpMocks(Object...)</CODE></A>, or for each test class to which the mock class is applied through the
+ <A HREF="../mockit/UsingMocksAndStubs.html" title="annotation in mockit"><CODE>UsingMocksAndStubs</CODE></A> annotation.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -207,13 +205,11 @@ PerMockedInstance</H3>
 <PRE>
 public static final <A HREF="../mockit/Instantiation.html" title="enum in mockit">Instantiation</A> <B>PerMockedInstance</B></PRE>
 <DL>
-<DD>A new instance of the mock class is created for each instance of the real class that was
- mocked, but only when the first instance mock method needs to be called from a mocked
- method or constructor.
+<DD>A new instance of the mock class is created for each instance of the real class that was mocked, but only when the
+ first instance mock method needs to be called from a mocked method or constructor.
  <p/>
- This same instance of the mock class is then used to redirect each call to a mocked
- instance method on the same instance of the real class (static mock methods are never
- called on any instance of the mock class, of course).
+ This same instance of the mock class is then used to redirect each call to a mocked instance method on the same
+ instance of the real class (static mock methods are never called on any instance of the mock class, of course).
 <P>
 <DL>
 </DL>
@@ -225,12 +221,12 @@ PerMockInvocation</H3>
 <PRE>
 public static final <A HREF="../mockit/Instantiation.html" title="enum in mockit">Instantiation</A> <B>PerMockInvocation</B></PRE>
 <DL>
-<DD>The mock class is instantiated every time an instance mock method is about to be called
- from a mocked method in the real class; that is, each time a mocked method or constructor
- is executed, if it has a corresponding instance mock method.
+<DD>The mock class is instantiated every time an instance mock method is about to be called from a mocked method in
+ the real class; that is, each time a mocked method or constructor is executed, if it has a corresponding instance
+ mock method.
  <p/>
- This new instance will be used only for that particular execution of the mocked method or
- constructor, being discarded as soon as the mock method returns from the call.
+ This new instance will be used only for that particular execution of the mocked method or constructor, being
+ discarded as soon as the mock method returns from the call.
 <P>
 <DL>
 </DL>
@@ -243,17 +239,16 @@ PerMockSetup</H3>
 public static final <A HREF="../mockit/Instantiation.html" title="enum in mockit">Instantiation</A> <B>PerMockSetup</B></PRE>
 <DL>
 <DD>The mock class is instantiated once every time it's set up through a method like
- <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>Mockit.setUpMocks(Object...)</CODE></A>, or for each test class to which the mock class is
- applied through the <A HREF="../mockit/UsingMocksAndStubs.html" title="annotation in mockit"><CODE>UsingMocksAndStubs</CODE></A> annotation.
+ <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>Mockit.setUpMocks(Object...)</CODE></A>, or for each test class to which the mock class is applied through the
+ <A HREF="../mockit/UsingMocksAndStubs.html" title="annotation in mockit"><CODE>UsingMocksAndStubs</CODE></A> annotation.
  <p/>
- In the first case, the instance lifetime will be limited to the scope in which that set up
- applies: a single test method (if called directly from the test method or from a
- <code>setUp/@Before/@BeforeMethod</code> method), the whole test class (if called from a
- <code>@BeforeClass</code> method), or the whole test suite (if called from
+ In the first case, the instance lifetime will be limited to the scope in which that set up applies: a single test
+ method (if called directly from the test method or from a <code>setUp/@Before/@BeforeMethod</code> method), the whole
+ test class (if called from a <code>@BeforeClass</code> method), or the whole test suite (if called from
  <code>@BeforeClass</code> method in a JUnit 4 <code>@Suite</code> class, for example).
  <p/>
- This same instance of the mock class is then used to redirect each call to a mocked method
- or constructor (provided the mock method is not static, of course).
+ This same instance of the mock class is then used to redirect each call to a mocked method or constructor
+ (provided the mock method is not static, of course).
 <P>
 <DL>
 </DL>

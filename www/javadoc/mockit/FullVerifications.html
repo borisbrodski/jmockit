@@ -1068,12 +1068,18 @@ protected <B>FullVerifications</B>(int&nbsp;numberOfIterations)</PRE>
 <DD>Begins <em>full</em> verification on the mocked types/instances invoked during the replay phase of the test,
  considering that such invocations occurred in a given number of iterations.
  <p/>
- The effect of specifying a number of iterations larger than 1 (one) is equivalent to multiplying by that number
- the lower and upper invocation count limits for each invocation inside the verification block.
+ The effect of specifying a (positive) number of iterations is equivalent to setting to that number the lower and
+ upper invocation count limits for each expectation verified inside the block.
+ If, however, the lower/upper limit is explicitly specified for an expectation, the given number of iterations
+ becomes a multiplier.
+ When not specified, at least one matching invocation will be required to have occurred; therefore, specifying
+ <em>1 (one)</em> iteration is different from not specifying the number of iterations at all.
 <P>
 <DL>
 <DT><B>Parameters:</B><DD><CODE>numberOfIterations</CODE> - the positive number of iterations for the whole set of invocations verified inside the
- block; when not specified, 1 (one) iteration is assumed</DL>
+ block<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerifications.html#times"><CODE>times</CODE></A>, 
+<A HREF="../mockit/FullVerifications.html#minTimes"><CODE>minTimes</CODE></A>, 
+<A HREF="../mockit/FullVerifications.html#maxTimes"><CODE>maxTimes</CODE></A></DL>
 </DL>
 <HR>
 
@@ -1087,7 +1093,8 @@ protected <B>FullVerifications</B>(int&nbsp;numberOfIterations,
  mocked instances.
 <P>
 <DL>
-<DT><B>Parameters:</B><DD><CODE>mockedTypesAndInstancesToVerify</CODE> - one or more of the mocked types (ie, <code>Class</code> objects) and/or mocked
+<DT><B>Parameters:</B><DD><CODE>numberOfIterations</CODE> - the positive number of iterations for the whole set of invocations verified inside the
+ block<DD><CODE>mockedTypesAndInstancesToVerify</CODE> - one or more of the mocked types (ie, <code>Class</code> objects) and/or mocked
  instances that are in scope for the test; for a given mocked <em>instance</em>, all classes up to (but not
  including) <code>java.lang.Object</code> are considered</DL>
 </DL>

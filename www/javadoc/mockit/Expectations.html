@@ -365,14 +365,6 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#endRecording()">endRecording</A></B>()</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ends the recording of expected invocations.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected 
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
 <TR ALIGN="right" VALIGN="">
@@ -1266,27 +1258,6 @@ protected <B>Expectations</B>(<A HREF="http://download.oracle.com/javase/6/docs/
 <B>Method Detail</B></FONT></TH>
 </TR>
 </TABLE>
-
-<A NAME="endRecording()"><!-- --></A><H3>
-endRecording</H3>
-<PRE>
-public final void <B>endRecording</B>()</PRE>
-<DL>
-<DD>Ends the recording of expected invocations.
- After this, the mock fields will be in the <strong>replay</strong> phase, when invocations are
- verified against previously recorded invocations.
- <p/>
- <strong>Warning</strong>:
- This method is called automatically as soon as the initialization of an expectation block is
- complete, so usually tests should not explicitly call it. There may be some rare situations,
- however, where ending the recording phase while still inside an expectation block will be
- convenient.
-<P>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
 
 <A NAME="notStrict()"><!-- --></A><H3>
 notStrict</H3>
