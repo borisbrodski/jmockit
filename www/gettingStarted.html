@@ -89,7 +89,7 @@
 <h3 id="mockingAPIs">Using the mocking APIs</h3>
 <p>
    The JMockit mocking APIs can be used in tests written with any of the popular testing frameworks:
-   JUnit 3.8, JUnit 4 (version 4.5 or newer) and TestNG (versions 5.9, 5.10, and 5.11, currently).
+   JUnit 3.8, JUnit 4 (version 4.5 or newer) and TestNG (version 5.14 or newer).
    Lets now see how mocking is done with the available JMockit APIs, which are all imported from the
    <code>mockit</code> package.
 </p>
@@ -119,7 +119,7 @@ public class MyFirstJMockitTest
       // They should <strong>not</strong> be reassigned, however.
    }
 
-   @Test // a method parameter is by default a "mock parameter"; annotations optional
+   @Test // a method parameter is by default a "mock parameter" (<code class="annotation">@Mocked</code> is implied)
    public void anotherTestMethod(YetAnotherDependency testSpecificMock)
    {
       ...
@@ -141,7 +141,8 @@ public class MyFirstJMockitTest
 </p>
 <p>
    Although optional, mock parameters can also be annotated with <code class="annotation">@Mocked</code> and/or
-   <code class="annotation">@Injectable</code>.
+   <code class="annotation">@Injectable</code>. (The <code class="annotation">@Mocked</code> annotation is always
+   implied, even when <code class="annotation">@Injectable</code> or some other annotation is used.)
    Instance fields of the test class which are <em>not</em> annotated, on the other hand, will not be mocked.
    Therefore, the use of an annotation for <em>mock</em> fields of the test class is required.
 </p>
