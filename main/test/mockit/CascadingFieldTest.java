@@ -20,6 +20,8 @@ public final class CascadingFieldTest
       void doSomething(String s) { throw new RuntimeException(s); }
       int getIntValue() { return 1; }
       private Boolean getBooleanValue() { return true; }
+      String getStringValue() { return "abc"; }
+      public final Date getDate() { return null; }
       final List<Integer> getList() { return null; }
    }
 
@@ -28,6 +30,7 @@ public final class CascadingFieldTest
       Bar() { throw new RuntimeException(); }
       int doSomething() { return 1; }
       boolean isDone() { return false; }
+      Short getShort() { return 1; }
    }
 
    @Cascading Foo foo;
@@ -48,18 +51,16 @@ public final class CascadingFieldTest
       assertEquals(0, foo.getBar().doSomething());
       assertEquals(0, Foo.globalBar().doSomething());
       assertNotSame(foo.getBar(), Foo.globalBar());
+      assertNull(foo.getBar().getShort());
 
       foo.doSomething("test");
       assertEquals(0, foo.getIntValue());
       assertNull(foo.getBooleanValue());
+      assertNull(foo.getStringValue());
+      assertNotNull(foo.getDate());
       assertTrue(foo.getList().isEmpty());
 
-      new Verifications()
-      {
-         {
-            foo.doSomething(anyString);
-         }
-      };
+      new Verifications() {{ foo.doSomething(anyString); }};
    }
 
    @Test
