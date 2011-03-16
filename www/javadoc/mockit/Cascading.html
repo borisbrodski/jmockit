@@ -96,11 +96,11 @@ Annotation Type Cascading</H2>
 </PRE>
 
 <P>
-Indicates a <A HREF="../mockit/Mocked.html" title="annotation in mockit">mocked type</A> where the return types of non-<code>void</code> methods,
- excluding primitives, <code>String</code>, and collection types, will be automatically mocked if and
- when a invocation to the method occurs.
- Instead of returning the default null reference, such methods will return a mock
- instance on which further invocations can be made.
+Indicates a <A HREF="../mockit/Mocked.html" title="annotation in mockit">mocked type</A> where methods which return a reference type, excluding <code>String</code>,
+ primitive wrappers, and collection types, will be automatically mocked if and when an invocation to the method
+ occurs.
+ Instead of returning the default null reference, such methods will return a mocked instance of the return
+ type on which further invocations can be made.
  This behavior automatically cascades to those mocked return types.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#cascading">In the Tutorial</a>

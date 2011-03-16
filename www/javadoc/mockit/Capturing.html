@@ -97,18 +97,16 @@ Annotation Type Capturing</H2>
 </PRE>
 
 <P>
-Indicates a test class, an instance field declared in a test class, or a test method parameter
- which will capture all implementations of a given base type (usually an interface or abstract
- class).
+Indicates a test class, an instance field declared in a test class, or a test method parameter which will capture all
+ implementations of a given base type (usually an interface or abstract class).
  <p/>
  When applied to a test class, each class implementing/extending the explicitly specified
  <A HREF="../mockit/Capturing.html#baseType()">base type</A> will be stubbed out for the whole test class.
  <p/>
- When applied to an instance field or test method parameter, the declared type of the field or
- parameter will be considered a mocked type, just as it would be if annotated with
- <A HREF="../mockit/Mocked.html" title="annotation in mockit"><CODE>@Mocked</CODE></A>.
- Each class implementing (in case the mocked type is an interface) or extending (in case the
- mocked type is a class) the mocked type will also be mocked.
+ When applied to an instance field or test method parameter, the declared type of the field or parameter will be
+ considered a mocked type, just as it would be if annotated with <A HREF="../mockit/Mocked.html" title="annotation in mockit"><CODE>@Mocked</CODE></A>.
+ Each class implementing (in case the mocked type is an interface) or extending (in case the mocked type is a class)
+ the mocked type will also be mocked.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/CapturingImplementations.html">Tutorial</a>
  <br/>Sample tests:
@@ -163,10 +161,9 @@ Indicates a test class, an instance field declared in a test class, or a test me
 <TD><CODE><B><A HREF="../mockit/Capturing.html#maxInstances()">maxInstances</A></B></CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When the annotation is applied to an instance field, this attribute specifies the maximum
- number of new instances to <em>capture</em> (by assigning them to the field) while the test is
- running, between those instances which are assignable to the mocked type and are created
- during the test.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When the annotation is applied to an instance field, this attribute specifies the maximum number of new instances
+ to <em>capture</em> (by assigning them to the field) while the test is running, between those instances which are
+ assignable to the mocked type and are created during the test.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -178,15 +175,14 @@ public abstract <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/
 <DL>
 <DD>Specifies the base interface/class type whose implementations to capture at runtime.
  <p/>
- Any classes implementing this base type will be fully mocked or
- <A HREF="../mockit/Mockit.html#stubOut(java.lang.Class...)">stubbed out</A> when loaded by the JVM during test execution
- (they are mocked if the annotation is applied to a field or parameter, and stubbed out if
- applied to a test class).
+ Any classes implementing this base type will be fully mocked or <A HREF="../mockit/Mockit.html#stubOut(java.lang.Class...)">stubbed out</A>
+ when loaded by the JVM during test execution (they are mocked if the annotation is applied to a field or
+ parameter, and stubbed out if applied to a test class).
  Any already loaded implementations of the base type will also be mocked or stubbed out.
  <p/>
- This attribute is mandatory for test classes, and optional for instance fields and test method
- parameters. In the case of fields and parameters, the base type will be the declared field or
- parameter type, if this attribute is left unspecified.
+ This attribute is mandatory for test classes, and optional for instance fields and test method parameters.
+ In the case of fields and parameters, the base type will be the declared field or parameter type, if this
+ attribute is left unspecified.
 <P>
 <DD><DL>
 </DL>
@@ -205,11 +201,10 @@ classNames</H3>
 public abstract <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>[] <B>classNames</B></PRE>
 <DL>
 <DD>One or more implementation class filters.
- Only classes which implement/extend the base type and match at least one filter will be
- considered.
+ Only classes which implement/extend the base type and match at least one filter will be considered.
  <p/>
- Each filter must contain a <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex">regular expression</A> for
- matching fully qualified class names.
+ Each filter must contain a <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex">regular expression</A> for matching fully qualified
+ class names.
 <P>
 <DD><DL>
 </DL>
@@ -246,25 +241,22 @@ maxInstances</H3>
 <PRE>
 public abstract int <B>maxInstances</B></PRE>
 <DL>
-<DD>When the annotation is applied to an instance field, this attribute specifies the maximum
- number of new instances to <em>capture</em> (by assigning them to the field) while the test is
- running, between those instances which are assignable to the mocked type and are created
- during the test.
+<DD>When the annotation is applied to an instance field, this attribute specifies the maximum number of new instances
+ to <em>capture</em> (by assigning them to the field) while the test is running, between those instances which are
+ assignable to the mocked type and are created during the test.
  <p/>
  If <code>maxInstances</code> is zero (or negative), no instances created by a test are captured.
  <p/>
- If the value for this attribute is positive or unspecified (the default is 
- <code>Integer.MAX_VALUE</code>), then whenever an assignable instance is created
- during test execution and the specified number of new instances has not been previously
- assigned, the (non-<code>final</code>) mock field will be assigned that new instance.
+ If the value for this attribute is positive or unspecified (the default is <code>Integer.MAX_VALUE</code>), then
+ whenever an assignable instance is created during test execution and the specified number of new instances has not
+ been previously assigned, the (non-<code>final</code>) mock field will be assigned that new instance.
  <p/>
- It is valid to declare two or more fields of the same mocked type with a positive number of
- <code>maxInstances</code> for each one of them, say <code>n1</code>, <code>n2</code>, etc.
- In this case, the first <code>n1</code> new instances will be assigned to the first field,
- the following <code>n2</code> new instances to the second, and so on.
+ It is valid to declare two or more fields of the same mocked type with a positive number of <code>maxInstances</code>
+ for each one of them, say <code>n1</code>, <code>n2</code>, etc.
+ In this case, the first <code>n1</code> new instances will be assigned to the first field, the following <code>n2</code> new
+ instances to the second, and so on.
  <p/>
- Notice that this attribute does not apply to <code>final</code> mock fields, which cannot be
- reassigned.
+ Notice that this attribute does not apply to <code>final</code> mock fields, which cannot be reassigned.
 <P>
 <DD><DL>
 </DL>
