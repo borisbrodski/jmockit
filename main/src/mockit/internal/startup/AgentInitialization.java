@@ -9,11 +9,11 @@ import java.net.*;
 import java.security.*;
 import java.util.regex.*;
 
-public final class AgentInitialization
+final class AgentInitialization
 {
    private static final Pattern JAR_REGEX = Pattern.compile(".*jmockit[-.\\d]*.jar");
 
-   public void initializeAccordingToJDKVersion()
+   void initializeAccordingToJDKVersion()
    {
       String jarFilePath = discoverPathToJarFile();
 
@@ -22,8 +22,8 @@ public final class AgentInitialization
       }
       else if ("1.5".equals(Startup.javaSpecVersion)) {
          throw new IllegalStateException(
-            "JMockit has not been initialized. Check that your Java 5 VM has been started " +
-            "with the -javaagent:" + jarFilePath + " command line option.");
+            "JMockit has not been initialized. Check that your Java 5 VM has been started with the -javaagent:" +
+            jarFilePath + " command line option.");
       }
       else {
          throw new IllegalStateException("JMockit requires a Java 5 VM or later.");
@@ -44,8 +44,8 @@ public final class AgentInitialization
       }
 
       throw new IllegalStateException(
-         "No jar file with name ending in \"jmockit.jar\" or \"jmockit-nnn.jar\" (where \"nnn\" " +
-         "is a version number) found in the classpath");
+         "No jar file with name ending in \"jmockit.jar\" or \"jmockit-nnn.jar\" (where \"nnn\" is a version number) " +
+         "found in the classpath");
    }
 
    private String findPathToJarFileFromClasspath()
