@@ -11,10 +11,7 @@ public abstract class Phase
    final RecordAndReplayExecution recordAndReplay;
    Expectation currentExpectation;
 
-   Phase(RecordAndReplayExecution recordAndReplay)
-   {
-      this.recordAndReplay = recordAndReplay;
-   }
+   Phase(RecordAndReplayExecution recordAndReplay) { this.recordAndReplay = recordAndReplay; }
 
    public final Expectation getCurrentExpectation()
    {
@@ -27,20 +24,7 @@ public abstract class Phase
       return currentExpectation;
    }
 
-   final List<Expectation> getExpectations()
-   {
-      return recordAndReplay.executionState.expectations;
-   }
-
-   final List<Expectation> getNonStrictExpectations()
-   {
-      return recordAndReplay.executionState.nonStrictExpectations;
-   }
-
-   final Map<Object, Object> getInstanceMap()
-   {
-      return recordAndReplay.executionState.instanceMap;
-   }
+   final Map<Object, Object> getInstanceMap() { return recordAndReplay.executionState.instanceMap; }
 
    abstract Object handleInvocation(
       Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, boolean withRealImpl, Object[] args)

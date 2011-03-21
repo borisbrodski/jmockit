@@ -23,9 +23,8 @@ final class UnorderedVerificationPhase extends VerificationPhase
    protected void findNonStrictExpectation(Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
       aggregate = null;
-      List<Expectation> expectations = getNonStrictExpectations();
 
-      for (Expectation expectation : expectations) {
+      for (Expectation expectation : recordAndReplay.executionState.nonStrictExpectations) {
          if (matches(mock, mockClassDesc, mockNameAndDesc, args, expectation)) {
             if (argMatchers == null) {
                currentExpectation = expectation;

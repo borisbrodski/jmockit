@@ -43,6 +43,8 @@ final class ReplayPhase extends Phase
       }
    }
 
+   private List<Expectation> getExpectations() { return recordAndReplay.executionState.expectations; }
+
    @Override
    Object handleInvocation(
       Object mock, int mockAccess, String mockClsDesc, String mockDesc, boolean withRealImpl, Object[] args)
@@ -204,9 +206,7 @@ final class ReplayPhase extends Phase
          return strict.invocation.errorForMissingInvocation();
       }
 
-      List<Expectation> nonStrictExpectations = getNonStrictExpectations();
-
-      for (Expectation nonStrict : nonStrictExpectations) {
+      for (Expectation nonStrict : recordAndReplay.executionState.nonStrictExpectations) {
          InvocationConstraints constraints = nonStrict.constraints;
 
          if (constraints.isInvocationCountLessThanMinimumExpected()) {

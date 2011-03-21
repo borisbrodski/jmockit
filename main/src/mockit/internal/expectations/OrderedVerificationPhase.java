@@ -181,7 +181,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
          return new AssertionError("Unexpected invocations after" + currentExpectation.invocation);
       }
 
-      AssertionError error = verifyMultipleIterations();
+      AssertionError error = verifyRemainingIterations();
 
       if (error != null) {
          return error;
@@ -190,12 +190,12 @@ public final class OrderedVerificationPhase extends VerificationPhase
       return super.endVerification();
    }
 
-   private AssertionError verifyMultipleIterations()
+   private AssertionError verifyRemainingIterations()
    {
-      int n = getExpectationsVerified().size();
+      int expectationsVerifiedInFirstIteration = getExpectationsVerified().size();
 
       for (int i = 1; i < numberOfIterations; i++) {
-         AssertionError error = verifyNextIterationOfWholeBlockOfInvocations(n);
+         AssertionError error = verifyNextIterationOfWholeBlockOfInvocations(expectationsVerifiedInFirstIteration);
 
          if (error != null) {
             return error;
@@ -205,11 +205,12 @@ public final class OrderedVerificationPhase extends VerificationPhase
       return null;
    }
 
-   private AssertionError verifyNextIterationOfWholeBlockOfInvocations(int n)
+   private AssertionError verifyNextIterationOfWholeBlockOfInvocations(int expectationsVerifiedInFirstIteration)
    {
-      for (int i = 0; i < n; i++) {
-         Expectation verified = getExpectationsVerified().get(i);
-         ExpectedInvocation invocation = verified.invocation;
+      List<Expectation> expectationsVerified = getExpectationsVerified();
+
+      for (int i = 0; i < expectationsVerifiedInFirstIteration; i++) {
+         ExpectedInvocation invocation = expectationsVerified.get(i).invocation;
 
          argMatchers = invocation.arguments.getMatchers();
          handleInvocation(
@@ -225,4 +226,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
 
       return null;
    }
+
+   @Override
+   boolean shouldDiscardInformationAboutVerifiedInvocationOnceUsed() { return true; }
 }

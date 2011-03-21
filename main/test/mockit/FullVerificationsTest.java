@@ -20,7 +20,7 @@ public final class FullVerificationsTest
       public void save() {}
    }
 
-   @Mocked private Dependency mock;
+   @Mocked Dependency mock;
 
    private void exerciseCodeUnderTest()
    {
@@ -202,7 +202,7 @@ public final class FullVerificationsTest
    }
 
    @Test(expected = AssertionError.class)
-   public void verifyUnrecordedInvocationThatShouldHappenButDoesnt()
+   public void verifyUnrecordedInvocationThatShouldHappenButDoesNot()
    {
       mock.setSomething(1);
 
@@ -213,7 +213,7 @@ public final class FullVerificationsTest
    }
 
    @Test(expected = AssertionError.class)
-   public void verifyRecordedInvocationThatShouldHappenButDoesnt()
+   public void verifyRecordedInvocationThatShouldHappenButDoesNot()
    {
       new NonStrictExpectations()
       {{
@@ -226,6 +226,48 @@ public final class FullVerificationsTest
       {{
          mock.notifyBeforeSave();
       }};
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyAllInvocationsWithExpectationRecordedButOneInvocationUnverified()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.setSomething(anyInt);
+      }};
+
+      mock.setSomething(123);
+      mock.editABunchMoreStuff();
+      mock.setSomething(45);
+
+      new FullVerifications()
+      {{
+         mock.setSomething(withNotEqual(123));
+         mock.editABunchMoreStuff();
+      }};
+   }
+
+   @Ignore @Test
+   public void verifyTwoInvocationsWithIteratingBlockHavingExpectationRecordedAndSecondInvocationUnverified()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.setSomething(anyInt);
+      }};
+
+      mock.setSomething(123);
+      mock.setSomething(45);
+
+      try {
+         new FullVerifications(2)
+         {{
+            mock.setSomething(123);
+         }};
+         fail();
+      }
+      catch (AssertionError e) {
+         assertTrue(e.getMessage().contains("Missing 1 invocation"));
+      }
    }
 
    @Test(expected = AssertionError.class)

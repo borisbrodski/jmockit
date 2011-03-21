@@ -175,7 +175,7 @@ public final class FullVerificationsInOrderTest
       }};
    }
 
-   @Ignore @Test(expected = AssertionError.class)
+   @Test(expected = AssertionError.class)
    public void verifyAllInvocationsWithExpectationRecordedButOneInvocationUnverified()
    {
       new NonStrictExpectations()
@@ -191,6 +191,23 @@ public final class FullVerificationsInOrderTest
       {{
          mock.setSomething(anyInt);
          mock.editABunchMoreStuff();
+      }};
+   }
+
+   @Ignore @Test(expected = AssertionError.class)
+   public void verifyTwoInvocationsWithIteratingBlockHavingExpectationRecordedAndSecondInvocationUnverified()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.setSomething(anyInt);
+      }};
+
+      mock.setSomething(123);
+      mock.setSomething(45);
+
+      new FullVerificationsInOrder(2)
+      {{
+         mock.setSomething(123);
       }};
    }
 

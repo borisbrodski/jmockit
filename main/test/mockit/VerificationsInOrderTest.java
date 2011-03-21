@@ -136,6 +136,21 @@ public final class VerificationsInOrderTest
       }};
    }
 
+   @Ignore @Test
+   public void verifyInvocationRecordedWithArgumentMatcherHavingExactInvocationCountsInTheVerifications()
+   {
+      new NonStrictExpectations() {{ mock.setSomething(anyInt); }};
+
+      mock.setSomething(1);
+      mock.setSomething(2);
+
+      new VerificationsInOrder()
+      {{
+         mock.setSomething(1); times = 1;
+         mock.setSomething(2); times = 1;
+      }};
+   }
+
    @Test
    public void verifyInvocationThatIsAllowedToHappenAnyNumberOfTimesAndHappensOnce()
    {

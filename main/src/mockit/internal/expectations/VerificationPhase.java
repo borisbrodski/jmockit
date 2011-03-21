@@ -6,6 +6,7 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
+import mockit.external.hamcrest.*;
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.util.*;
 
@@ -26,7 +27,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
       this.invocationArgumentsInReplayOrder = invocationArgumentsInReplayOrder;
    }
 
-   public List<Expectation> getExpectationsVerified() { return recordAndReplay.executionState.expectationsVerified; }
+   final List<Expectation> getExpectationsVerified() { return recordAndReplay.executionState.expectationsVerified; }
 
    public final void setAllInvocationsMustBeVerified() { allInvocationsDuringReplayMustBeVerified = true; }
 
@@ -94,6 +95,8 @@ public abstract class VerificationPhase extends TestOnlyPhase
 
          if (error == null) {
             getExpectationsVerified().add(expectation);
+            recordAndReplay.executionState.argsVerified.add(args);
+            recordAndReplay.executionState.argMatchersVerified.add(argMatchers);
             return true;
          }
       }
@@ -166,9 +169,19 @@ public abstract class VerificationPhase extends TestOnlyPhase
 
    private AssertionError validateThatAllInvocationsWereVerified()
    {
-      List<Expectation> notVerified = new ArrayList<Expectation>(expectationsInReplayOrder);
-      notVerified.removeAll(getExpectationsVerified());
-      discardExpectationsThatWillBeVerifiedImplicitly(notVerified);
+      List<Expectation> notVerified = new ArrayList<Expectation>();
+
+      for (int i = 0; i < expectationsInReplayOrder.size(); i++) {
+         Expectation replayExpectation = expectationsInReplayOrder.get(i);
+
+         if (replayExpectation.constraints.minInvocations <= 0) {
+            Object[] replayArgs = invocationArgumentsInReplayOrder.get(i);
+
+            if (!wasVerified(replayExpectation, replayArgs)) {
+               notVerified.add(replayExpectation);
+            }
+         }
+      }
 
       if (!notVerified.isEmpty()) {
          if (mockedTypesAndInstancesToFullyVerify == null) {
@@ -182,16 +195,36 @@ public abstract class VerificationPhase extends TestOnlyPhase
       return null;
    }
 
-   private void discardExpectationsThatWillBeVerifiedImplicitly(List<Expectation> unverified)
+   private boolean wasVerified(Expectation replayExpectation, Object[] replayArgs)
    {
-      for (Iterator<Expectation> itr = unverified.iterator(); itr.hasNext(); ) {
-         Expectation expectation = itr.next();
+      InvocationArguments invokedArgs = replayExpectation.invocation.arguments;
+      List<Expectation> expectationsVerified = getExpectationsVerified();
+      List<Object[]> argsVerified = recordAndReplay.executionState.argsVerified;
+      List<List<Matcher<?>>> argMatchersVerified = recordAndReplay.executionState.argMatchersVerified;
 
-         if (expectation.constraints.minInvocations > 0) {
-            itr.remove();
+      for (int j = 0; j < expectationsVerified.size(); j++) {
+         if (expectationsVerified.get(j) == replayExpectation) {
+            Object[] storedArgs = invokedArgs.prepareForVerification(argsVerified.get(j), argMatchersVerified.get(j));
+            AssertionError error = invokedArgs.assertMatch(replayArgs, getInstanceMap());
+            invokedArgs.setValuesWithNoMatchers(storedArgs);
+
+            if (error == null) {
+               if (shouldDiscardInformationAboutVerifiedInvocationOnceUsed()) {
+                  expectationsVerified.remove(j);
+                  argsVerified.remove(j);
+                  argMatchersVerified.remove(j);
+               }
+
+               return true;
+            }
          }
       }
+
+      invokedArgs.setValuesWithNoMatchers(replayArgs);
+      return false;
    }
+
+   boolean shouldDiscardInformationAboutVerifiedInvocationOnceUsed() { return false; }
 
    private AssertionError validateThatUnverifiedInvocationsAreAllowed(List<Expectation> unverified)
    {

@@ -6,6 +6,7 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
+import mockit.external.hamcrest.*;
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.util.*;
 
@@ -14,6 +15,8 @@ final class PhasedExecutionState
    final List<Expectation> expectations;
    final List<Expectation> nonStrictExpectations;
    final List<Expectation> expectationsVerified;
+   final List<Object[]> argsVerified;
+   final List<List<Matcher<?>>> argMatchersVerified;
    final Map<Object, Object> instanceMap;
    private List<Class<?>> mockedTypesToMatchOnInstances;
 
@@ -22,6 +25,8 @@ final class PhasedExecutionState
       expectations = new ArrayList<Expectation>();
       nonStrictExpectations = new ArrayList<Expectation>();
       expectationsVerified = new ArrayList<Expectation>();
+      argsVerified = new ArrayList<Object[]>();
+      argMatchersVerified = new ArrayList<List<Matcher<?>>>();
       instanceMap = new IdentityHashMap<Object, Object>();
    }
 

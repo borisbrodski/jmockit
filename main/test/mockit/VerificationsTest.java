@@ -25,7 +25,7 @@ public final class VerificationsTest
       private static void privateStaticMethod(String s, boolean b) {}
    }
 
-   @Mocked private Dependency mock;
+   @Mocked Dependency mock;
 
    private void exerciseCodeUnderTest()
    {
@@ -112,6 +112,21 @@ public final class VerificationsTest
    }
 
    @Test
+   public void verifyRecordedInvocationWithExactInvocationCountUsingArgumentMatchers()
+   {
+      new NonStrictExpectations() {{ mock.setSomething(anyInt); }};
+
+      mock.setSomething(1);
+      mock.setSomething(2);
+
+      new Verifications()
+      {{
+         mock.setSomething(anyInt);
+         times = 2;
+      }};
+   }
+
+   @Test
    public void verifyUnrecordedInvocationThatIsAllowedToHappenAnyNoOfTimesAndDoesNotHappen()
    {
       mock.prepare();
@@ -126,7 +141,7 @@ public final class VerificationsTest
    }
 
    @Test(expected = AssertionError.class)
-   public void verifyUnrecordedInvocationThatShouldHappenButDoesnt()
+   public void verifyUnrecordedInvocationThatShouldHappenButDoesNot()
    {
       mock.setSomething(1);
 
@@ -255,6 +270,23 @@ public final class VerificationsTest
          newInstance(Dependency.class.getName(), 9);
          invoke(mock, "privateMethod");
          invoke(Dependency.class, "privateStaticMethod", "test", true);
+      }};
+   }
+
+   @Ignore @Test(expected = AssertionError.class)
+   public void verifyTwoInvocationsWithIteratingBlockHavingExpectationRecordedAndSecondInvocationUnverified()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.setSomething(anyInt);
+      }};
+
+      mock.setSomething(123);
+      mock.setSomething(45);
+
+      new Verifications(2)
+      {{
+         mock.setSomething(123);
       }};
    }
 }
