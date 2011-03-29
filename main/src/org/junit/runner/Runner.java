@@ -19,12 +19,7 @@ import org.junit.runner.notification.RunNotifier;
  * @see org.junit.runner.RunWith
  */
 public abstract class Runner implements Describable {
-   static
-   {
-      if ("1.6 1.7".contains(System.getProperty("java.specification.version"))) {
-         mockit.internal.startup.Startup.initializeIfNeeded();
-      }
-   }
+      static { mockit.internal.startup.Startup.initializeIfPossible(); }
    
 	/* (non-Javadoc)
 	 * @see org.junit.runner.Describable#getDescription()

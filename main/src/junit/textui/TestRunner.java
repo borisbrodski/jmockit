@@ -24,12 +24,7 @@ import junit.runner.*;
  * summary at the end.</p>
  */
 public class TestRunner extends BaseTestRunner {
-   static
-   {
-      if ("1.6 1.7".contains(System.getProperty("java.specification.version"))) {
-         mockit.internal.startup.Startup.initializeIfNeeded();
-      }
-   }
+      static { mockit.internal.startup.Startup.initializeIfPossible(); }
 
 	private ResultPrinter fPrinter;
 

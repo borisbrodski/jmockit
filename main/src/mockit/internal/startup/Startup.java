@@ -216,4 +216,11 @@ public final class Startup
 
       return false;
    }
+
+   public static void initializeIfPossible()
+   {
+      if (jdk6OrLater) {
+         initializeIfNeeded();
+      }
+   }
 }
