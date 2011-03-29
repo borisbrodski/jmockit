@@ -178,4 +178,22 @@ public final class MockUpTest
       new GenericClass<StringBuilder>().methodWithGenericParameter(s);
       assertEquals("mock", s.toString());
    }
+
+   public interface GenericInterface<T> { void method(T t); }
+   public interface ConcreteInterface extends GenericInterface<Long> {}
+
+   @Ignore @Test
+   public void mockMethodOfSubInterfaceWithGenericTypeArgument()
+   {
+      ConcreteInterface mock = new MockUp<ConcreteInterface>()
+      {
+         @Mock(invocations = 1)
+         public void method(Long l)
+         {
+            assertTrue(l > 0);
+         }
+      }.getMockInstance();
+
+      mock.method(123L);
+   }
 }
