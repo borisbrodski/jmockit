@@ -4,7 +4,7 @@
  */
 
 /**
- * Provides integration with <em>TestNG</em> test runners, for versions 5.9+.
+ * Provides integration with <em>TestNG</em> test runners, for versions 5.14+.
  * Contains the {@link mockit.integration.testng.Initializer} test listener class that can be specified to TestNG at
  * startup, as well as the "startup mock" implementation for integration with the TestNG test runner.
  * <p/>
@@ -15,17 +15,13 @@
  * before the execution of a test ends (specifically, immediately after the execution of the test method).
  * </li>
  * <li>
- * Any mock classes applied with the Annotations API from inside a test method will be discarded right after the
- * execution of the test method, so it is not necessary to explicitly call {@link mockit.Mockit#tearDownMocks()},
- * be it from inside the test method itself or from an {@code @AfterMethod}/{@code @After} method.
- * The same is <em>not</em> true for mock classes applied in a {@code @BeforeMethod}/{@code @Before} method, however:
- * you <em>will</em> need to explicitly tear down those mock classes in an {@code @AfterMethod}/{@code @After} method,
- * so that the mocked real classes are properly restored to their original definitions.
+ * Any mock classes applied with the Annotations API from inside a method annotated as a {@code @Test} or a
+ * {@code @BeforeMethod} will be discarded right after the execution of the test or the test method, respectively.
  * </li>
  * <li>
  * Any {@linkplain mockit.MockClass mock class} set up for the whole test class (either through a call to
  * {@link mockit.Mockit#setUpMocks} from inside a {@code @BeforeClass} method, or by annotating the test class with
- * {@link mockit.UsingMocksAndStubs}) will only apply to the test methods in this same test class.
+ * {@link mockit.UsingMocksAndStubs}) will only apply to the tests in this same test class.
  * That is, you should not explicitly tell JMockit to restore the mocked classes in an {@code @AfterClass} method.
  * </li>
  * <li>
