@@ -10,6 +10,7 @@ import java.lang.instrument.*;
 import mockit.external.asm.*;
 import mockit.integration.junit3.internal.*;
 import mockit.integration.junit4.internal.*;
+import mockit.integration.testng.internal.*;
 import mockit.internal.*;
 import mockit.internal.expectations.transformation.*;
 import mockit.internal.state.*;
@@ -59,16 +60,16 @@ public final class Startup
     */
    public static void premain(String agentArgs, Instrumentation inst) throws Exception
    {
-      initialize(agentArgs, inst);
+      initialize(true, agentArgs, inst);
    }
 
    @SuppressWarnings({"UnusedDeclaration"})
    public static void agentmain(String agentArgs, Instrumentation inst) throws Exception
    {
-      initialize(agentArgs, inst);
+      initialize(false, agentArgs, inst);
    }
 
-   private static void initialize(String agentArgs, Instrumentation inst) throws IOException
+   private static void initialize(boolean initializeTestNG, String agentArgs, Instrumentation inst) throws IOException
    {
       instrumentation = inst;
 
@@ -76,6 +77,10 @@ public final class Startup
 
       preventEventualClassLoadingConflicts();
       loadInternalStartupMocksForJUnitIntegration();
+
+      if (initializeTestNG) {
+         try { setUpInternalStartupMock(MockTestNG.class); } catch (Error ignored) {}
+      }
 
       if (agentArgs != null && agentArgs.length() > 0) {
          processAgentArgs(config, agentArgs);
@@ -196,16 +201,19 @@ public final class Startup
       }
    }
 
-   public static void initializeIfNeeded()
+   public static boolean initializeIfNeeded()
    {
       if (instrumentation == null) {
          try {
             new AgentInitialization().initializeAccordingToJDKVersion();
+            return true;
          }
          catch (RuntimeException e) {
             e.printStackTrace(); // makes sure the exception gets printed at least once
             throw e;
          }
       }
+
+      return false;
    }
 }
