@@ -14,6 +14,16 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
+<h3>Next release</h3>
+
+<p>Release 0.999.9 (April ??, 2011):</p>
+<ul>
+   <li>
+      <strong>TestNG integration</strong> no longer requires the <code>mockit.integration.testng.Initializer</code>
+      listener to be configured, as long as the <code>-javaagent:jmockit.jar</code> JVM parameter is specified.
+   </li>
+</ul>
+
 <h3>Current release</h3>
 
 <p>Release 0.999.8 (March 11, 2011):</p>
@@ -592,13 +602,11 @@
       </ul>
    </li>
    <li>
-      Fixed an issue introduced in the previous release, when <em>static initializers</em> became
-      stubbed out by default (Expectations API): mock filters (where <code>"&lt;clinit>"</code>
-      specifies static initializers) were not considering the inclusion/exclusion of static
-      initializers.
-      In particular, the empty filter <code>@Mocked("")</code> previously excluded all methods and
-      constructors from being mocked, but still caused static initializers to be stubbed out;
-      now they are also ignored.
+      Fixed an issue introduced in the previous release, when <em>static initializers</em> became stubbed out by default
+      (Expectations API): mock filters (where <code>"&lt;clinit>"</code> specifies static initializers) were not
+      considering the inclusion/exclusion of static initializers.
+      In particular, the empty filter <code>@Mocked("")</code> previously excluded all methods and constructors from
+      being mocked, but still caused static initializers to be stubbed out; now they are also ignored.
    </li>
    <li>
       Bugs fixed in JMockit Coverage: certain source code constructs could cause a NPE to be thrown
