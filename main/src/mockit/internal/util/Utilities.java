@@ -715,6 +715,12 @@ public final class Utilities
       }
 
       t.setStackTrace(filteredST.toArray(new StackTraceElement[filteredST.size()]));
+
+      Throwable cause = t.getCause();
+
+      if (cause != null) {
+         filterStackTrace(cause);
+      }
    }
 
    public static void throwCheckedException(Exception exceptionToThrow)

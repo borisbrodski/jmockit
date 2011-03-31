@@ -30,7 +30,14 @@ public class TestRunnerDecorator
          }
       }
       catch (Error e) {
-         SavePoint.rollbackForTestClass();
+         try {
+            SavePoint.rollbackForTestClass();
+         }
+         catch (Error err) {
+            Utilities.filterStackTrace(err);
+            throw err;
+         }
+
          throw e;
       }
       catch (RuntimeException e) {
