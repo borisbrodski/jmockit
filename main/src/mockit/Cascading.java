@@ -19,8 +19,8 @@ import java.lang.annotation.*;
  * Sample tests:
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/jbossaop/test/jbossaop/testing/bank/BankBusinessTest.java"
  * >BankBusinessTest</a>,
- * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/CascadingTest.java"
- * >CascadingTest</a>
+ * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/CascadingFieldTest.java"
+ * >CascadingFieldTest</a>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
