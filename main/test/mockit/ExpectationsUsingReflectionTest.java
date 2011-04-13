@@ -105,8 +105,7 @@ public final class ExpectationsUsingReflectionTest
    }
 
    @Test
-   public void expectMethodInvocationWithProxyArgument(
-      final Collaborator mock, final BusinessInterface proxyArg)
+   public void expectMethodInvocationWithProxyArgument(final Collaborator mock, final BusinessInterface proxyArg)
    {
       new Expectations()
       {
