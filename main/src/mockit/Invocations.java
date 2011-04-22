@@ -577,7 +577,7 @@ abstract class Invocations
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
     *
-    * @param fieldOwner the instance on which the invocation is to be done; must not be null
+    * @param objectWithMethod the instance on which the invocation is to be done; must not be null
     * @param methodName the name of the expected method
     * @param methodArgs zero or more non-null expected parameter values for the invocation; if a
     * null value needs to be passed, the Class object for the parameter type must be passed instead
@@ -586,10 +586,10 @@ abstract class Invocations
     *
     * @see #invoke(Class, String, Object...)
     */
-   protected final <T> T invoke(Object fieldOwner, String methodName, Object... methodArgs)
+   protected final <T> T invoke(Object objectWithMethod, String methodName, Object... methodArgs)
    {
       //noinspection unchecked
-      return (T) Utilities.invoke(fieldOwner.getClass(), fieldOwner, methodName, methodArgs);
+      return (T) Utilities.invoke(objectWithMethod.getClass(), objectWithMethod, methodName, methodArgs);
    }
 
    /**
