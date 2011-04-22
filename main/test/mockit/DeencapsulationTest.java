@@ -291,6 +291,12 @@ public final class DeencapsulationTest
       assertNull(result);
    }
 
+   @Test(expected = IllegalArgumentException.class)
+   public void invokeMethodByClassNameOnUnavailableClass()
+   {
+      invoke("abc.xyz.NoClass", "aMethod");
+   }
+
    @Test
    public void invokeStaticMethodWithNullArgumentsSpecifiedThroughClassLiterals()
    {
@@ -304,6 +310,18 @@ public final class DeencapsulationTest
    public void invokeStaticMethodWithInvalidNullArgument()
    {
       invoke(anInstance, "staticMethod", (short) 7, null, true);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void invokeInstanceMethodAsAnStaticMethod()
+   {
+      invoke(anInstance.getClass(), "instanceMethod", (short) 7, "test", true);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void invokeInstanceMethodAsAnStaticMethodUsingClassName()
+   {
+      invoke(anInstance.getClass().getName(), "instanceMethod", (short) 7, "test", true);
    }
 
    @Test

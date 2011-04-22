@@ -224,6 +224,11 @@ public final class Utilities
       Class<?>[] argTypes = getArgumentTypesFromArgumentValues(methodArgs);
       Method method = findCompatibleMethod(theClass, methodName, argTypes);
 
+      if (targetInstance == null && !isStatic(method.getModifiers())) {
+         throw new IllegalArgumentException(
+            "Attempted to invoke non-static method without an instance to invoke it on");
+      }
+
       T result = (T) invoke(targetInstance, method, methodArgs);
       return result;
    }
