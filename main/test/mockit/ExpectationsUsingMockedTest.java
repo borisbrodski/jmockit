@@ -303,4 +303,23 @@ public final class ExpectationsUsingMockedTest
 
       assert new InnerClass().getValue() == 123;
    }
+
+   static final class ClassWithNative
+   {
+      int doSomething() { return nativeMethod(); }
+      private native int nativeMethod();
+   }
+
+   @Test
+   public void partiallyMockNativeMethod(@Mocked("nativeMethod") final ClassWithNative mock)
+   {
+      new Expectations()
+      {
+         {
+            mock.nativeMethod(); result = 123;
+         }
+      };
+
+      assertEquals(123, mock.doSomething());
+   }
 }

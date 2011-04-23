@@ -622,4 +622,28 @@ public final class DynamicPartialMockingTest
       assertEquals(2, ClassWithStaticInitializer.doSomething());
       assertTrue(ClassWithStaticInitializer.initialized);
    }
+
+   static final class ClassWithNative
+   {
+      int doSomething() { return nativeMethod(); }
+      private native int nativeMethod();
+   }
+
+   // Native methods are currently ignored when using dynamic mocking. It should be possible, however, to support it by
+   // mocking such methods normally at first, then restoring them at the end of the expectation block if no expectations
+   // were recorded; "onInstance" matching would not work, though.
+   @Ignore @Test
+   public void partiallyMockNativeMethod()
+   {
+      final ClassWithNative mock = new ClassWithNative();
+
+      new Expectations(mock)
+      {
+         {
+            mock.nativeMethod(); result = 123;
+         }
+      };
+
+      assertEquals(123, mock.doSomething());
+   }
 }
