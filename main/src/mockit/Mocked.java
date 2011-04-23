@@ -7,14 +7,16 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * Indicates an instance field or test method parameter whose value will be a mocked instance.
+ * Indicates an instance <em>field</em> or test method <em>parameter</em> whose value will be a mocked instance.
  * Such fields or parameters can be of any type, except for primitive and array types.
+ * The declared type of the <em>mock field</em> or <em>mock parameter</em> is the <em>mocked type</em> (unless
+ * {@linkplain #realClassName specified otherwise}).
  * For the duration of each test where such a <em>mocked type</em> is in scope, all new instances of that type, as well
  * as those previously existing, will also be mocked.
  * <em>Static methods</em> and <em>constructors</em> belonging to a mocked class type are mocked as well, just like
  * instance methods.
- * Static initializers (including assignments to static fields) are stubbed out by default
- * (however, specifying {@code stubOutClassInitialization = false} overrides this default).
+ * Static <em>class initializers</em> (including assignments to static fields) of a mocked class are <em>not</em>
+ * stubbed out by default, but they will be if {@linkplain #stubOutClassInitialization specified}.
  * <p/>
  * In the case of an instance field, it can be declared in a test class, in a super-class of a test class, or in an
  * {@link Expectations} subclass.

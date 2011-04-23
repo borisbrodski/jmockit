@@ -456,7 +456,7 @@ Base class whose subclasses are defined in test code, and whose instances define
 </TR>
 </TABLE>
 </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Expectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)">invoke</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
+<TD><CODE><B><A HREF="../mockit/Expectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)">invoke</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;objectWithMethod,
        <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
        <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</CODE>
 
@@ -1454,7 +1454,7 @@ protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://download.oracle.com/ja
 <A NAME="invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><!-- --></A><H3>
 invoke</H3>
 <PRE>
-protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
+protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;objectWithMethod,
                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</PRE>
 <DL>
@@ -1470,7 +1470,7 @@ protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://download.oracle.com/ja
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the instance on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the invocation; if a
+<DT><B>Parameters:</B><DD><CODE>objectWithMethod</CODE> - the instance on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the invocation; if a
  null value needs to be passed, the Class object for the parameter type must be passed instead
 <DT><B>Returns:</B><DD>the return value from the invoked method, wrapped if primitive<DT><B>See Also:</B><DD><A HREF="../mockit/Expectations.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><CODE>invoke(Class, String, Object...)</CODE></A></DL>
 </DD>
