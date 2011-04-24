@@ -14,6 +14,7 @@ import org.apache.commons.mail.*;
 
 public final class MyBusinessService_VerificationsAPI_Test
 {
+   @Tested MyBusinessService service;
    @Mocked(stubOutClassInitialization = true) Database onlyStatics;
    @Capturing Email email; // concrete subclass mocked on demand, when loaded
 
@@ -24,7 +25,7 @@ public final class MyBusinessService_VerificationsAPI_Test
    {
       // No expectations recorded in this case.
       
-      new MyBusinessService().doBusinessOperationXyz(data);
+      service.doBusinessOperationXyz(data);
 
       new Verifications()
       {
@@ -44,7 +45,7 @@ public final class MyBusinessService_VerificationsAPI_Test
          }
       };
 
-      new MyBusinessService().doBusinessOperationXyz(data);
+      service.doBusinessOperationXyz(data);
 
       new VerificationsInOrder()
       {
