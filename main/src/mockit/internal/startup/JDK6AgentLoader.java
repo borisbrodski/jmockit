@@ -77,10 +77,8 @@ final class JDK6AgentLoader
       catch (IOException e) {
          throw new RuntimeException(e);
       }
-      catch (UnsatisfiedLinkError ignore) {
-         //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
-         throw new IllegalStateException(
-            "Unable to load Java agent; please add lib/tools.jar from your JDK to the classpath");
+      catch (UnsatisfiedLinkError e) {
+         throw new IllegalStateException("Native library for Attach API not available in this JRE", e);
       }
    }
 
