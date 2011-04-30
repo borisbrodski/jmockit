@@ -28,7 +28,7 @@ final class InvocationBlockModifier extends MethodAdapter
    @Override
    public void visitFieldInsn(int opcode, String owner, String name, String desc)
    {
-      if ((opcode == GETSTATIC || opcode == PUTSTATIC) && fieldOwner.equals(owner)) {
+      if ((opcode == GETSTATIC || opcode == PUTSTATIC) && isFieldDefinedByInvocationBlock(owner)) {
          if (opcode == PUTSTATIC) {
             if ("result".equals(name)) {
                mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addResult", "(Ljava/lang/Object;)V");
@@ -56,6 +56,15 @@ final class InvocationBlockModifier extends MethodAdapter
       }
 
       mw.visitFieldInsn(opcode, owner, name, desc);
+   }
+
+   private boolean isFieldDefinedByInvocationBlock(String owner)
+   {
+      return
+         fieldOwner.equals(owner) ||
+         ("mockit/Expectations mockit/NonStrictExpectations " +
+          "mockit/Verifications mockit/VerificationsInOrder " +
+          "mockit/FullVerifications mockit/FullVerificationsInOrder").contains(owner);
    }
 
    @Override

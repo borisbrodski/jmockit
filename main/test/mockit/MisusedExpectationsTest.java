@@ -174,9 +174,7 @@ public final class MisusedExpectationsTest
       boolean doIt() { return true; }
    }
 
-   public static class SubFoo extends Foo
-   {
-   }
+   public static class SubFoo extends Foo {}
 
    @Test//(expected = IllegalArgumentException.class)
    public void recordDuplicateInvocationOnTwoDynamicMocksOfDifferentTypesButSharedBaseClass()
@@ -211,5 +209,61 @@ public final class MisusedExpectationsTest
       catch (IllegalStateException ignored) {
          // OK
       }
+   }
+
+   @SuppressWarnings({"UnusedParameters"})
+   static class BlahBlah
+   {
+      int value() { return 0; }
+      void setValue(int value) {}
+      String doSomething(boolean b) { return ""; }
+      void doSomethingElse(Object o) {}
+   }
+
+   @SuppressWarnings({"StaticFieldReferencedViaSubclass"})
+   @Test
+   public void accessSpecialFieldsInExpectationBlockThroughClassQualifierInsteadOfDirecly(final BlahBlah mock)
+   {
+      new NonStrictExpectations()
+      {
+         {
+            mock.value(); Expectations.result = 123; Expectations.minTimes = 1; Expectations.maxTimes = 2;
+
+            mock.doSomething(Expectations.anyBoolean); NonStrictExpectations.result = "test";
+            NonStrictExpectations.times = 1;
+
+            mock.setValue(withNotEqual(0));
+         }
+      };
+
+      assertEquals(123, mock.value());
+      assertEquals("test", mock.doSomething(true));
+      mock.setValue(1);
+   }
+
+   boolean verified;
+
+   @SuppressWarnings({"StaticFieldReferencedViaSubclass"})
+   @Test
+   public void accessSpecialFieldsInVerificationBlockThroughClassQualifierInsteadOfDirecly(final BlahBlah mock)
+   {
+      assertNull(mock.doSomething(true));
+      mock.setValue(1);
+
+      new Verifications()
+      {
+         {
+            mock.doSomething(false); Verifications.times = 0;
+
+            mock.doSomethingElse(Expectations.any); FullVerificationsInOrder.maxTimes = 0;
+
+            mock.setValue(FullVerifications.anyInt); VerificationsInOrder.forEachInvocation = new Object()
+            {
+               void setValue(int v) { assertTrue(v > 0); verified = true; }
+            };
+         }
+      };
+
+      assertTrue(verified);
    }
 }
