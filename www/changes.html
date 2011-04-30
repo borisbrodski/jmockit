@@ -16,11 +16,17 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.999.9 (April ??, 2011):</p>
+<p>Release 0.999.9 (May ??, 2011):</p>
 <ul>
    <li>
+      <strong>Removed</strong> the <strong><code>endRecording()</code></strong> method of the <code>Expectations</code>
+      class. This method was deprecated in the previous release. Existing tests still using it will have to be changed
+      as described in the deprecation comment.
+   </li>
+   <li>
       <strong>TestNG integration</strong> no longer requires the <code>mockit.integration.testng.Initializer</code>
-      listener to be configured, as long as the <code>-javaagent:jmockit.jar</code> JVM parameter is specified.
+      listener to be configured, <em>as long as</em> the "<code>-javaagent:jmockit.jar</code>" JVM parameter is
+      specified. Otherwise, the listener is still needed.
    </li>
 </ul>
 

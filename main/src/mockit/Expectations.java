@@ -303,22 +303,4 @@ public abstract class Expectations extends Invocations
    {
       getCurrentPhase().setNotStrict();
    }
-
-   // Other methods ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Ends the recording of expected invocations.
-    * After this, the mock fields will be in the <strong>replay</strong> phase, when invocations are
-    * verified against previously recorded invocations.
-    *
-    * @deprecated This method is called automatically as soon as the initialization of an expectation block is
-    * complete, so tests should not explicitly call it.
-    * Besides, it would only be used with <strong>local</strong> mock fields; instead, mock parameters of the test
-    * method or mock fields of the test class should be used. The method will be removed before JMockit 1.0 is released.
-    */
-   @Deprecated
-   public final void endRecording()
-   {
-      execution.endRecording();
-   }
 }

@@ -327,14 +327,6 @@ public final class RecordAndReplayExecution
       return verification;
    }
 
-   public void endRecording()
-   {
-      if (replayPhase == null) {
-         recordPhase = null;
-         replayPhase = new ReplayPhase(this);
-      }
-   }
-
    public VerificationPhase startVerifications(boolean inOrder)
    {
       if (replayPhase == null) {
@@ -359,7 +351,7 @@ public final class RecordAndReplayExecution
 
    private AssertionError endExecution()
    {
-      endRecording();
+      switchFromRecordToReplayIfNotYet();
 
       if (redefinitions != null) {
          redefinitions.cleanUp();
@@ -379,6 +371,14 @@ public final class RecordAndReplayExecution
       return error;
    }
 
+   private void switchFromRecordToReplayIfNotYet()
+   {
+      if (replayPhase == null) {
+         recordPhase = null;
+         replayPhase = new ReplayPhase(this);
+      }
+   }
+
    public TestOnlyPhase getCurrentTestOnlyPhase()
    {
       return recordPhase != null ? recordPhase : verificationPhase;
@@ -387,7 +387,7 @@ public final class RecordAndReplayExecution
    public void endInvocations()
    {
       if (verificationPhase == null) {
-         endRecording();
+         switchFromRecordToReplayIfNotYet();
       }
       else {
          AssertionError error = verificationPhase.endVerification();
