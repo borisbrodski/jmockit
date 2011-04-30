@@ -37,7 +37,7 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
             return value;
          }
 
-         return isMethodWithParametersProvidedByTestNG(method) ? null : "";
+         return method == null || isMethodWithParametersProvidedByTestNG(method) ? null : "";
       }
    }
 
