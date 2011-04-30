@@ -17,6 +17,16 @@ public final class VerificationsInOrderTest
       public void notifyBeforeSave() {}
       public void prepare() {}
       public void save() {}
+      void doSomething(ClassWithHashCode h) {}
+   }
+
+   static final class ClassWithHashCode
+   {
+      @Override
+      public boolean equals(Object obj) { return obj instanceof ClassWithHashCode && this == obj; }
+
+      @Override
+      public int hashCode() { return 123; }
    }
 
    @Mocked Dependency mock;
@@ -361,7 +371,7 @@ public final class VerificationsInOrderTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test
    public void verifyWithIndividualInvocationCountsForNonConsecutiveInvocations()
    {
       exerciseCodeUnderTest();
@@ -371,6 +381,22 @@ public final class VerificationsInOrderTest
          mock.prepare(); times = 1;
          mock.setSomething(anyInt); times = 2;
       }};
+   }
+
+   @Test
+   public void verifyUsingInvocationCountConstraintAndArgumentMatcherOnObjectWithMockedHashCode(
+      ClassWithHashCode wh)
+   {
+      mock.doSomething(null);
+      mock.doSomething(wh);
+
+      new VerificationsInOrder()
+      {
+         {
+            mock.doSomething((ClassWithHashCode) withNull()); times = 1;
+            mock.doSomething((ClassWithHashCode) withNotNull());
+         }
+      };
    }
 
    @Test(expected = AssertionError.class)

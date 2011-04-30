@@ -73,6 +73,7 @@ public final class OrderedVerificationPhase extends VerificationPhase
       unverifiedExpectationsFixed = true;
    }
 
+   @SuppressWarnings({"OverlyComplexMethod"})
    @Override
    public void handleInvocationCountConstraint(int minInvocations, int maxInvocations)
    {
@@ -99,11 +100,12 @@ public final class OrderedVerificationPhase extends VerificationPhase
                break;
             }
 
-            replayIndex++;
          }
-         else {
+         else if (invocationCount >= minInvocations) {
             break;
          }
+
+         replayIndex++;
       }
 
       argMatchers = null;
