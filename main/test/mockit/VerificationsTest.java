@@ -6,9 +6,9 @@ package mockit;
 
 import org.junit.*;
 
-@SuppressWarnings({"UnusedDeclaration"})
 public final class VerificationsTest
 {
+   @SuppressWarnings({"UnusedParameters"})
    public static class Dependency
    {
       public Dependency() {}
