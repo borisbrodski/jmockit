@@ -104,7 +104,7 @@ final class PhasedExecutionState
          if (
             invocation.isMatch(mockClassDesc, mockNameAndDesc) &&
             invocation.isMatch(mock, instanceMap) &&
-            invocation.arguments.assertMatch(args, instanceMap) == null
+            invocation.arguments.isMatch(args, instanceMap)
          ) {
             return nonStrict;
          }

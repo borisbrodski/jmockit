@@ -15,6 +15,7 @@ import mockit.internal.util.*;
 public final class InvocationArguments
 {
    private static final Object[] NULL_VARARGS = new Object[0];
+   private static final Matcher<?> ANYTHING = new IsAnything();
 
    final String classDesc;
    final String methodNameAndDesc;
@@ -30,10 +31,7 @@ public final class InvocationArguments
       invocationArgs = args;
    }
 
-   public Object[] getValues()
-   {
-      return invocationArgs;
-   }
+   public Object[] getValues() { return invocationArgs; }
 
    public void setValuesWithNoMatchers(Object[] argsToVerify)
    {
@@ -41,15 +39,8 @@ public final class InvocationArguments
       matchers = null;
    }
 
-   public List<Matcher<?>> getMatchers()
-   {
-      return matchers;
-   }
-
-   public void setMatchers(List<Matcher<?>> matchers)
-   {
-      this.matchers = matchers;
-   }
+   public List<Matcher<?>> getMatchers() { return matchers; }
+   public void setMatchers(List<Matcher<?>> matchers) { this.matchers = matchers; }
 
    public Object[] prepareForVerification(Object[] argsToVerify, List<Matcher<?>> matchers)
    {
@@ -57,6 +48,121 @@ public final class InvocationArguments
       invocationArgs = argsToVerify;
       this.matchers = matchers;
       return replayArgs;
+   }
+
+   public boolean isMatch(Object[] replayArgs, Map<Object, Object> instanceMap)
+   {
+      if (matchers == null) {
+         return areEqual(replayArgs, instanceMap);
+      }
+
+      int argCount = replayArgs.length;
+      Object[] replayVarArgs = replayArgs;
+      Object[] invocationVarArgs = invocationArgs;
+      int varArgsCount = 0;
+
+      if (isVarargsMethod()) {
+         invocationVarArgs = getVarArgs(invocationArgs);
+         replayVarArgs = getVarArgs(replayArgs);
+
+         if (invocationVarArgs != NULL_VARARGS) {
+            varArgsCount = replayVarArgs.length;
+
+            if (varArgsCount != invocationVarArgs.length) {
+               return false;
+            }
+         }
+
+         argCount--;
+      }
+
+      int n = argCount + varArgsCount;
+
+      for (int i = 0; i < n; i++) {
+         Object actual = getArgument(replayArgs, replayVarArgs, argCount, i);
+         Matcher<?> expected = i < matchers.size() ? matchers.get(i) : null;
+
+         if (expected == null) {
+            Object arg = getArgument(invocationArgs, invocationVarArgs, argCount, i);
+            expected = arg == null ? ANYTHING : new IsEqual<Object>(arg);
+         }
+
+         if (!expected.matches(actual)) {
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   private boolean areEqual(Object[] replayArgs, Map<Object, Object> instanceMap)
+   {
+      int argCount = replayArgs.length;
+
+      if (!isVarargsMethod()) {
+         return areEqual(invocationArgs, replayArgs, argCount, instanceMap);
+      }
+
+      if (!areEqual(invocationArgs, replayArgs, argCount - 1, instanceMap)) {
+         return false;
+      }
+
+      Object[] expectedValues = getVarArgs(invocationArgs);
+      Object[] actualValues = getVarArgs(replayArgs);
+
+      return
+         expectedValues.length == actualValues.length &&
+         areEqual(expectedValues, actualValues, expectedValues.length, instanceMap);
+   }
+
+   private boolean isVarargsMethod() { return (methodAccess & Opcodes.ACC_VARARGS) != 0; }
+
+   private Object[] getVarArgs(Object[] args)
+   {
+      Object lastArg = args[args.length - 1];
+
+      if (lastArg == null)
+      {
+         return NULL_VARARGS;
+      }
+      else if (lastArg instanceof Object[]) {
+         return (Object[]) lastArg;
+      }
+
+      int varArgsLength = Array.getLength(lastArg);
+      Object[] results = new Object[varArgsLength];
+
+      for (int i = 0; i < varArgsLength; i++)
+      {
+         results[i] = Array.get(lastArg, i);
+      }
+
+      return results;
+   }
+
+   private boolean areEqual(Object[] expectedValues, Object[] actualValues, int count, Map<Object, Object> instanceMap)
+   {
+      for (int i = 0; i < count; i++) {
+         if (isNotEqual(expectedValues[i], actualValues[i], instanceMap)) {
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   private boolean isNotEqual(Object expected, Object actual, Map<Object, Object> instanceMap)
+   {
+      return
+         actual == null && expected != null ||
+         actual != null && expected == null ||
+         actual != null && actual != expected && actual != instanceMap.get(expected) &&
+         !IsEqual.areEqual(actual, expected);
+   }
+
+   private Object getArgument(Object[] regularArgs, Object[] varArgs, int regularArgCount, int i)
+   {
+      return i < regularArgCount ? regularArgs[i] : varArgs[i - regularArgCount];
    }
 
    public AssertionError assertMatch(Object[] replayArgs, Map<Object, Object> instanceMap)
@@ -70,7 +176,7 @@ public final class InvocationArguments
       Object[] invocationVarArgs = invocationArgs;
       int varArgsCount = 0;
 
-      if ((methodAccess & Opcodes.ACC_VARARGS) != 0) {
+      if (isVarargsMethod()) {
          invocationVarArgs = getVarArgs(invocationArgs);
          replayVarArgs = getVarArgs(replayArgs);
 
@@ -93,7 +199,7 @@ public final class InvocationArguments
 
          if (expected == null) {
             Object arg = getArgument(invocationArgs, invocationVarArgs, argCount, i);
-            expected = arg == null ? new IsAnything() : new IsEqual<Object>(arg);
+            expected = arg == null ? ANYTHING : new IsEqual<Object>(arg);
          }
 
          if (!expected.matches(actual)) {
@@ -104,16 +210,11 @@ public final class InvocationArguments
       return null;
    }
 
-   private Object getArgument(Object[] regularArgs, Object[] varArgs, int regularArgCount, int i)
-   {
-      return i < regularArgCount ? regularArgs[i] : varArgs[i - regularArgCount];
-   }
-
    private AssertionError assertEquality(Object[] replayArgs, Map<Object, Object> instanceMap)
    {
       int argCount = replayArgs.length;
 
-      if ((methodAccess & Opcodes.ACC_VARARGS) == 0) {
+      if (!isVarargsMethod()) {
          return assertEquals(invocationArgs, replayArgs, argCount, instanceMap);
       }
 
@@ -152,40 +253,12 @@ public final class InvocationArguments
          Object expected = expectedValues[i];
          Object actual = actualValues[i];
 
-         if (
-            actual == null && expected != null ||
-            actual != null && expected == null ||
-            actual != null && actual != expected && actual != instanceMap.get(expected) &&
-            !IsEqual.areEqual(actual, expected)
-         ) {
+         if (isNotEqual(expected, actual, instanceMap)) {
             return argumentMismatchMessage(i, expected, actual);
          }
       }
 
       return null;
-   }
-
-   private Object[] getVarArgs(Object[] args)
-   {
-      Object lastArg = args[args.length - 1];
-
-      if (lastArg == null)
-      {
-         return NULL_VARARGS;
-      }
-      else if (lastArg instanceof Object[]) {
-         return (Object[]) lastArg;
-      }
-
-      int varArgsLength = Array.getLength(lastArg);
-      Object[] results = new Object[varArgsLength];
-
-      for (int i = 0; i < varArgsLength; i++)
-      {
-         results[i] = Array.get(lastArg, i);
-      }
-
-      return results;
    }
 
    private AssertionError argumentMismatchMessage(int paramIndex, Object expected, Object actual)

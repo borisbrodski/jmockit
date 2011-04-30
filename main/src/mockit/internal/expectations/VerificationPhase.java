@@ -87,13 +87,13 @@ public abstract class VerificationPhase extends TestOnlyPhase
          Object[] argsToVerify =
             argMatchers == null ? args : invocation.arguments.prepareForVerification(args, argMatchers);
 
-         AssertionError error = invocation.arguments.assertMatch(argsToVerify, instanceMap);
+         boolean argumentsMatch = invocation.arguments.isMatch(argsToVerify, instanceMap);
 
          if (argMatchers != null) {
             invocation.arguments.setValuesWithNoMatchers(argsToVerify);
          }
 
-         if (error == null) {
+         if (argumentsMatch) {
             getExpectationsVerified().add(expectation);
             recordAndReplay.executionState.argsVerified.add(args);
             recordAndReplay.executionState.argMatchersVerified.add(argMatchers);
@@ -205,10 +205,10 @@ public abstract class VerificationPhase extends TestOnlyPhase
       for (int j = 0; j < expectationsVerified.size(); j++) {
          if (expectationsVerified.get(j) == replayExpectation) {
             Object[] storedArgs = invokedArgs.prepareForVerification(argsVerified.get(j), argMatchersVerified.get(j));
-            AssertionError error = invokedArgs.assertMatch(replayArgs, getInstanceMap());
+            boolean argumentsMatch = invokedArgs.isMatch(replayArgs, getInstanceMap());
             invokedArgs.setValuesWithNoMatchers(storedArgs);
 
-            if (error == null) {
+            if (argumentsMatch) {
                if (shouldDiscardInformationAboutVerifiedInvocationOnceUsed()) {
                   expectationsVerified.remove(j);
                   argsVerified.remove(j);
