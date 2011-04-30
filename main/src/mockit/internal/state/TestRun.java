@@ -5,8 +5,6 @@
 package mockit.internal.state;
 
 import java.lang.reflect.*;
-import java.net.*;
-import java.security.*;
 import java.util.*;
 
 import static java.util.Collections.*;
@@ -91,27 +89,6 @@ public final class TestRun
    public static Object getCurrentTestInstance() { return getInstance().currentTestInstance; }
 
    public static int getTestId() { return getInstance().testId; }
-
-   public static boolean isRunningTestCode(ProtectionDomain protectionDomain)
-   {
-      if (getInstance().currentTestInstance != null) {
-         return protectionDomain == getInstance().currentTestClass.getProtectionDomain();
-      }
-
-      if (protectionDomain == null) {
-         return false;
-      }
-
-      CodeSource codeSource = protectionDomain.getCodeSource();
-
-      if (codeSource == null) {
-         return false;
-      }
-
-      URL location = codeSource.getLocation();
-
-      return location != null && !location.getPath().endsWith(".jar");
-   }
 
    public static SavePoint getSavePointForTestClass()
    {

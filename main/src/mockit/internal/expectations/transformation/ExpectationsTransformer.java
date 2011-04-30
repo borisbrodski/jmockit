@@ -5,16 +5,16 @@
 package mockit.internal.expectations.transformation;
 
 import java.lang.instrument.*;
-import static java.lang.reflect.Modifier.*;
 import java.security.*;
 import java.util.*;
 
+import static java.lang.reflect.Modifier.*;
+
+import mockit.*;
 import mockit.external.asm.*;
 import mockit.external.asm.commons.*;
-import mockit.internal.state.*;
 import mockit.internal.*;
 import mockit.internal.util.*;
-import mockit.*;
 
 public final class ExpectationsTransformer implements ClassFileTransformer
 {
@@ -85,16 +85,29 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
       byte[] classfileBuffer)
    {
-      if (classBeingRedefined == null && TestRun.isRunningTestCode(protectionDomain)) {
-         int p = className.lastIndexOf('$');
+      if (classBeingRedefined == null && protectionDomain != null) {
+         ClassReader cr = new ClassReader(classfileBuffer);
+         int v = cr.getItem(cr.readUnsignedShort(cr.header + 4));
 
-         if (p > 0) {
-            boolean isAnonymousClass = Utilities.hasPositiveDigit(className, p);
-            ClassReader cr = new ClassReader(classfileBuffer);
-            ClassWriter modifier = new EndOfBlockModifier(cr, isAnonymousClass);
-            cr.accept(modifier, false);
-            return modifier.toByteArray();
+         if (v == 0) {
+            return null;
          }
+
+         String superClassName = cr.readUTF8(v, new char[120]);
+
+         if (
+            !baseSubclasses.contains(superClassName) &&
+            !superClassName.endsWith("Expectations") && !superClassName.endsWith("Verifications")
+         ) {
+            return null;
+         }
+
+         int p = className.lastIndexOf('$');
+         boolean isAnonymousClass = p > 0 && Utilities.hasPositiveDigit(className, p);
+
+         ClassWriter modifier = new EndOfBlockModifier(cr, isAnonymousClass);
+         cr.accept(modifier, false);
+         return modifier.toByteArray();
       }
 
       return null;
@@ -116,21 +129,25 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
       {
          boolean superClassIsKnownInvocationsSubclass = baseSubclasses.contains(superName);
+         boolean modifyTheClass = false;
 
          if (isFinal(access) || isAnonymousClass) {
             if (superClassIsKnownInvocationsSubclass || superClassAnalyser.classExtendsInvocationsClass(superName)) {
-               super.visit(version, access, name, signature, superName, interfaces);
-               classDesc = name;
-               return; // go on and modify the class
+               modifyTheClass = true;
             }
          }
          else if (superClassIsKnownInvocationsSubclass) {
             baseSubclasses.add(name);
+            modifyTheClass = true;
          }
 
-         throw VisitInterruptedException.INSTANCE;
-      }
+         if (!modifyTheClass) {
+            throw VisitInterruptedException.INSTANCE;
+         }
 
+         super.visit(version, access, name, signature, superName, interfaces);
+         classDesc = name;
+      }
 
       @Override
       public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
