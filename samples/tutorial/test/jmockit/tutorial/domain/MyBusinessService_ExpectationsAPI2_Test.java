@@ -41,10 +41,12 @@ public final class MyBusinessService_ExpectationsAPI2_Test
    @Test(expected = EmailException.class)
    public void doBusinessOperationXyzWithInvalidEmailAddress() throws Exception
    {
-      new Expectations() { @Input EmailException onInvalidEmail; };
+      new NonStrictExpectations() {
+         @Input EmailException onInvalidEmail;
+
+         { email.send(); times = 0; }
+      };
 
       service.doBusinessOperationXyz(data);
-
-      new Verifications() {{ email.send(); times = 0; }};
    }
 }
