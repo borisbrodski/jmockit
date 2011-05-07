@@ -62,7 +62,7 @@
          <optional>true</optional>
       </dependency>
       <dependency>
-         <groupId>org.testng</groupId><artifactId>testng</artifactId><version>6.0</version>
+         <groupId>org.testng</groupId><artifactId>testng</artifactId><version>6.0.1</version>
          <optional>true</optional>
          <exclusions>
             <exclusion><groupId>org.beanshell</groupId><artifactId>bsh</artifactId></exclusion>
