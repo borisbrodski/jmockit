@@ -9,6 +9,7 @@ import static java.lang.reflect.Modifier.*;
 
 import static mockit.external.asm.Opcodes.*;
 
+import mockit.*;
 import mockit.internal.state.*;
 
 public abstract class FieldTypeRedefinitions extends TypeRedefinitions
@@ -41,9 +42,14 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
          int fieldModifiers = candidateField.getModifiers();
 
          if ((fieldModifiers & FIELD_ACCESS_MASK) == 0) {
-            field = candidateField;
-            redefineFieldType(isTestClass, fieldModifiers);
-            field = null;
+            if (candidateField.isAnnotationPresent(Input.class)) {
+               TestRun.getExecutingTest().defaultResults.add(candidateField, parentObject);
+            }
+            else {
+               field = candidateField;
+               redefineFieldType(isTestClass, fieldModifiers);
+               field = null;
+            }
          }
       }
    }

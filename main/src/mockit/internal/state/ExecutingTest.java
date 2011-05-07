@@ -11,6 +11,7 @@ import mockit.internal.expectations.invocation.*;
 import mockit.internal.expectations.mocking.*;
 import mockit.internal.util.*;
 
+@SuppressWarnings({"ClassWithTooManyFields"})
 public final class ExecutingTest
 {
    private RecordAndReplayExecution currentRecordAndReplay;
@@ -26,6 +27,7 @@ public final class ExecutingTest
    private final List<Object> strictMocks = new ArrayList<Object>();
 
    private final Map<String, MockedTypeCascade> cascadingTypes = new HashMap<String, MockedTypeCascade>(4);
+   public final DefaultResults defaultResults = new DefaultResults();
 
    RecordAndReplayExecution getRecordAndReplay(boolean createIfUndefined)
    {
@@ -344,6 +346,7 @@ public final class ExecutingTest
       clearNonStrictMocks();
       strictMocks.clear();
       clearNonSharedCascadingTypes();
+      defaultResults.clear();
    }
 
    private void clearNonSharedCascadingTypes()

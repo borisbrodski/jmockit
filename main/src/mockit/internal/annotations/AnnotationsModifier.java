@@ -301,7 +301,7 @@ public final class AnnotationsModifier extends BaseClassModifier
 
          if (useMockingBridgeForUpdatingMockState) {
             generateCallToMockingBridge(
-               MockingBridge.UPDATE_MOCK_STATE, mockClassDesc, ACC_STATIC, null, null, mockStateIndex);
+               MockingBridge.UPDATE_MOCK_STATE, mockClassDesc, ACC_STATIC, null, null, null, null, mockStateIndex);
             mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z");
          }
          else {
@@ -337,7 +337,7 @@ public final class AnnotationsModifier extends BaseClassModifier
 
       if (useMockingBridge) {
          generateCallToMockingBridge(
-            MockingBridge.CALL_STATIC_MOCK, mockClassName, access, mockName, methodOrConstructorDesc, null);
+            MockingBridge.CALL_STATIC_MOCK, mockClassName, access, mockName, methodOrConstructorDesc, null, null, null);
       }
       else {
          initialVar = initialLocalVariableIndexForRealMethod(access);
@@ -352,7 +352,7 @@ public final class AnnotationsModifier extends BaseClassModifier
       if (useMockingBridge) {
          generateCallToMockingBridge(
             MockingBridge.CALL_INSTANCE_MOCK, annotatedMocks.getMockClassInternalName(), access,
-            mockName, methodOrConstructorDesc, mockInstanceIndex);
+            mockName, methodOrConstructorDesc, null, null, mockInstanceIndex);
          return;
       }
 
@@ -470,7 +470,7 @@ public final class AnnotationsModifier extends BaseClassModifier
 
       if (useMockingBridgeForUpdatingMockState) {
          generateCallToMockingBridge(
-            MockingBridge.EXIT_REENTRANT_MOCK, mockClassDesc, ACC_STATIC, null, null, mockStateIndex);
+            MockingBridge.EXIT_REENTRANT_MOCK, mockClassDesc, ACC_STATIC, null, null, null, null, mockStateIndex);
          mw.visitInsn(POP);
       }
       else {

@@ -621,7 +621,7 @@ public final class Utilities
       return desiredClass.isAssignableFrom(fieldClass) || fieldClass.isAssignableFrom(desiredClass);
    }
 
-   private static Class<?> getClassType(Type declaredType)
+   public static Class<?> getClassType(Type declaredType)
    {
       if (declaredType instanceof ParameterizedType) {
          return (Class<?>) ((ParameterizedType) declaredType).getRawType();

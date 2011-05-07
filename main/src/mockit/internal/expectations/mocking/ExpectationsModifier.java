@@ -137,10 +137,12 @@ final class ExpectationsModifier extends BaseClassModifier
       int actualExecutionMode = determineAppropriateExecutionMode(access, visitingConstructor);
 
       if (useMockingBridge) {
-         return generateCallToHandlerThroughMockingBridge(access, name, desc, internalClassName, actualExecutionMode);
+         return
+            generateCallToHandlerThroughMockingBridge(
+               access, name, desc, signature, exceptions, internalClassName, actualExecutionMode);
       }
 
-      generateDirectCallToHandler(internalClassName, access, name, desc, actualExecutionMode);
+      generateDirectCallToHandler(internalClassName, access, name, desc, signature, exceptions, actualExecutionMode);
 
       if (actualExecutionMode > 0) {
          generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
@@ -257,9 +259,12 @@ final class ExpectationsModifier extends BaseClassModifier
    }
 
    private MethodVisitor generateCallToHandlerThroughMockingBridge(
-      int access, String name, String desc, String internalClassName, int executionMode)
+      int access, String name, String desc, String genericSignature, String[] exceptions, String internalClassName,
+      int executionMode)
    {
-      generateCallToMockingBridge(MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, executionMode);
+      generateCallToMockingBridge(
+         MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, genericSignature, exceptions,
+         executionMode);
       generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
       return copyOriginalImplementationCode(access, desc, false);
    }

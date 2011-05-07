@@ -34,7 +34,7 @@ public final class MockingBridge implements InvocationHandler
       }
 
       int targetId = (Integer) args[0];
-      int mockIndex = targetId < FIRST_TARGET_WITH_EXTRA_ARG ? -1 : (Integer) args[5];
+      int mockIndex = targetId < FIRST_TARGET_WITH_EXTRA_ARG ? -1 : (Integer) args[7];
       String mockClassInternalName = (String) args[2];
 
       if (targetId == UPDATE_MOCK_STATE) {
@@ -47,6 +47,8 @@ public final class MockingBridge implements InvocationHandler
 
       String mockName = (String) args[3];
       String mockDesc = (String) args[4];
+      String genericSignature = (String) args[5];
+      String exceptions = (String) args[6];
       Object[] mockArgs = extractMockArguments(targetId, args);
 
       if (targetId != RECORD_OR_REPLAY) {
@@ -61,11 +63,12 @@ public final class MockingBridge implements InvocationHandler
 
       try {
          int mockAccess = (Integer) args[1];
-         int executionMode = (Integer) args[5];
+         int executionMode = (Integer) args[7];
 
          return
             RecordAndReplayExecution.recordOrReplay(
-               mocked, mockAccess, mockClassInternalName, mockName + mockDesc, executionMode, mockArgs);
+               mocked, mockAccess, mockClassInternalName, mockName + mockDesc, genericSignature, exceptions,
+               executionMode, mockArgs);
       }
       finally {
          TestRun.exitNoMockingZone();
@@ -98,7 +101,7 @@ public final class MockingBridge implements InvocationHandler
 
    private static Object[] extractMockArguments(int targetId, Object[] args)
    {
-      int i = targetId > RECORD_OR_REPLAY && targetId < FIRST_TARGET_WITH_EXTRA_ARG ? 5 : 6;
+      int i = targetId > RECORD_OR_REPLAY && targetId < FIRST_TARGET_WITH_EXTRA_ARG ? 7 : 8;
 
       if (args.length > i) {
          Object[] mockArgs = new Object[args.length - i];

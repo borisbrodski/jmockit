@@ -99,7 +99,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
          noFiltersToMatch && !isMethodFromObject(name, desc) ||
          !noFiltersToMatch && mockingCfg.matchesFilters(name, desc)
       ) {
-         generateDirectCallToHandler(className, access, name, desc, 0);
+         generateDirectCallToHandler(className, access, name, desc, signature, exceptions, 0);
          generateReturnWithObjectAtTopOfTheStack(desc);
          mw.visitMaxs(1, 0);
       }

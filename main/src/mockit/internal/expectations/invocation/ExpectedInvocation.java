@@ -27,9 +27,16 @@ public final class ExpectedInvocation
    public ExpectedInvocation(
       Object mock, int access, String mockedClassDesc, String mockNameAndDesc, boolean matchInstance, Object[] args)
    {
+      this(mock, access, mockedClassDesc, mockNameAndDesc, matchInstance, null, null, args);
+   }
+
+   public ExpectedInvocation(
+      Object mock, int access, String mockedClassDesc, String mockNameAndDesc, boolean matchInstance,
+      String genericSignature, String exceptions, Object[] args)
+   {
       instance = mock;
       this.matchInstance = matchInstance;
-      arguments = new InvocationArguments(access, mockedClassDesc, mockNameAndDesc, args);
+      arguments = new InvocationArguments(access, mockedClassDesc, mockNameAndDesc, genericSignature, exceptions, args);
       invocationCause = new ExpectationError();
       determineDefaultReturnValueFromMethodSignature();
    }
@@ -144,7 +151,7 @@ public final class ExpectedInvocation
    {
       instance = mockedInstance;
       matchInstance = false;
-      arguments = new InvocationArguments(0, classDesc, methodNameAndDesc, args);
+      arguments = new InvocationArguments(0, classDesc, methodNameAndDesc, null, null, args);
       invocationCause = null;
    }
 
@@ -214,11 +221,16 @@ public final class ExpectedInvocation
    public Object getDefaultValueForReturnType(TestOnlyPhase phase)
    {
       if (defaultReturnValue == UNDEFINED_DEFAULT_RETURN) {
-         String returnTypeDesc = DefaultValues.getReturnTypeDesc(getMethodNameAndDescription());
-         defaultReturnValue = DefaultValues.computeForType(returnTypeDesc);
+         defaultReturnValue =
+            TestRun.getExecutingTest().defaultResults.get(arguments.getGenericSignature(), arguments.exceptions);
 
-         if (defaultReturnValue == null && returnTypeDesc.charAt(0) == 'L') {
-            produceCascadedMockIfApplicable(phase, returnTypeDesc);
+         if (defaultReturnValue == null) {
+            String returnTypeDesc = DefaultValues.getReturnTypeDesc(arguments.methodNameAndDesc);
+            defaultReturnValue = DefaultValues.computeForType(returnTypeDesc);
+
+            if (defaultReturnValue == null && returnTypeDesc.charAt(0) == 'L') {
+               produceCascadedMockIfApplicable(phase, returnTypeDesc);
+            }
          }
       }
 

@@ -47,13 +47,14 @@ final class ReplayPhase extends Phase
 
    @Override
    Object handleInvocation(
-      Object mock, int mockAccess, String mockClsDesc, String mockDesc, boolean withRealImpl, Object[] args)
-      throws Throwable
+      Object mock, int mockAccess, String mockClsDesc, String mockDesc, String genericSignature, String exceptions,
+      boolean withRealImpl, Object[] args) throws Throwable
    {
       nonStrictExpectation = recordAndReplay.executionState.findNonStrictExpectation(mock, mockClsDesc, mockDesc, args);
 
       if (nonStrictExpectation == null) {
-         createExpectationIfNonStrictInvocation(mock, mockAccess, mockClsDesc, mockDesc, args);
+         createExpectationIfNonStrictInvocation(
+            mock, mockAccess, mockClsDesc, mockDesc, genericSignature, exceptions, args);
       }
 
       if (nonStrictExpectation != null) {
@@ -66,11 +67,13 @@ final class ReplayPhase extends Phase
    }
 
    private void createExpectationIfNonStrictInvocation(
-      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, Object[] args)
+      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, String genericSignature,
+      String exceptions, Object[] args)
    {
       if (!TestRun.getExecutingTest().isStrictInvocation(mock, mockClassDesc, mockNameAndDesc)) {
          ExpectedInvocation invocation =
-            new ExpectedInvocation(mock, mockAccess, mockClassDesc, mockNameAndDesc, false, args);
+            new ExpectedInvocation(
+               mock, mockAccess, mockClassDesc, mockNameAndDesc, false, genericSignature, exceptions, args);
          nonStrictExpectation = new Expectation(null, invocation, true);
          recordAndReplay.executionState.addExpectation(nonStrictExpectation, true);
       }

@@ -27,6 +27,6 @@ public abstract class Phase
    final Map<Object, Object> getInstanceMap() { return recordAndReplay.executionState.instanceMap; }
 
    abstract Object handleInvocation(
-      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, boolean withRealImpl, Object[] args)
-      throws Throwable;
+      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, String genericSignature,
+      String exceptions, boolean withRealImpl, Object[] args) throws Throwable;
 }

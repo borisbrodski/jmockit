@@ -146,7 +146,8 @@ public class BaseClassModifier extends ClassWriter
    }
 
    protected final void generateDirectCallToHandler(
-      String className, int access, String name, String desc, int executionMode)
+      String className, int access, String name, String desc, String genericSignature, String[] exceptions,
+      int executionMode)
    {
       // First argument: the mock instance, if any.
       boolean isStatic = generateCodeToPassThisOrNullIfStaticMethod(access);
@@ -160,7 +161,14 @@ public class BaseClassModifier extends ClassWriter
       // Fourth argument: method signature.
       mw.visitLdcInsn(name + desc);
 
-      // Fifth argument: indicate regular or special modes of execution
+      // Fifth argument: generic signature, or null if none.
+      generateInstructionToLoadNullableString(genericSignature);
+
+      // Sixth argument: checked exceptions thrown, or null if none.
+      String exceptionsStr = getListOfExceptionsAsSingleString(exceptions);
+      generateInstructionToLoadNullableString(exceptionsStr);
+
+      // Seventh argument: indicate regular or special modes of execution.
       mw.visitLdcInsn(executionMode);
       
       // Sixth argument: call arguments.
@@ -169,11 +177,43 @@ public class BaseClassModifier extends ClassWriter
 
       mw.visitMethodInsn(
          INVOKESTATIC, "mockit/internal/expectations/RecordAndReplayExecution", "recordOrReplay",
-         "(Ljava/lang/Object;ILjava/lang/String;Ljava/lang/String;I[Ljava/lang/Object;)Ljava/lang/Object;");
+         "(Ljava/lang/Object;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I" +
+         "[Ljava/lang/Object;)Ljava/lang/Object;");
+   }
+
+   private void generateInstructionToLoadNullableString(String text)
+   {
+      if (text == null) {
+         mw.visitInsn(ACONST_NULL);
+      }
+      else {
+         mw.visitLdcInsn(text);
+      }
+   }
+
+   private String getListOfExceptionsAsSingleString(String[] exceptions)
+   {
+      if (exceptions == null) {
+         return null;
+      }
+      else if (exceptions.length == 1) {
+         return exceptions[0];
+      }
+
+      StringBuilder buf = new StringBuilder(200);
+      String sep = "";
+
+      for (String exception : exceptions) {
+         buf.append(sep).append(exception);
+         sep = " ";
+      }
+
+      return buf.toString();
    }
 
    protected final void generateCallToMockingBridge(
-      int targetId, String mockClassName, int mockAccess, String mockName, String mockDesc, Object extra)
+      int targetId, String mockClassName, int mockAccess, String mockName, String mockDesc, String genericSignature,
+      String[] exceptions, Object extra)
    {
       generateCodeToObtainInstanceOfMockingBridge();
 
@@ -183,7 +223,7 @@ public class BaseClassModifier extends ClassWriter
 
       // Create array for call arguments (third "invoke" argument):
       Type[] argTypes = mockDesc == null ? NO_ARGS : Type.getArgumentTypes(mockDesc);
-      generateCodeToCreateArrayOfObject(5 + (extra == null ? 0 : 1) + argTypes.length);
+      generateCodeToCreateArrayOfObject(7 + (extra == null ? 0 : 1) + argTypes.length);
 
       int i = 0;
       generateCodeToFillArrayElement(i++, targetId);
@@ -191,6 +231,8 @@ public class BaseClassModifier extends ClassWriter
       generateCodeToFillArrayElement(i++, mockClassName);
       generateCodeToFillArrayElement(i++, mockName);
       generateCodeToFillArrayElement(i++, mockDesc);
+      generateCodeToFillArrayElement(i++, genericSignature);
+      generateCodeToFillArrayElement(i++, getListOfExceptionsAsSingleString(exceptions));
 
       if (extra != null) {
          generateCodeToFillArrayElement(i++, extra);
@@ -216,7 +258,7 @@ public class BaseClassModifier extends ClassWriter
    private void generateCodeToFillArrayElement(int arrayIndex, Object value)
    {
       mw.visitInsn(DUP);
-      mw.visitInsn(ICONST_0 + arrayIndex);
+      mw.visitIntInsn(BIPUSH, arrayIndex);
 
       if (value == null) {
          mw.visitInsn(ACONST_NULL);

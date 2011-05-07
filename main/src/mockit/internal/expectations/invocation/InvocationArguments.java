@@ -19,18 +19,24 @@ public final class InvocationArguments
 
    final String classDesc;
    final String methodNameAndDesc;
+   final String genericSignature;
+   final String[] exceptions;
    private final int methodAccess;
    private Object[] invocationArgs;
    private List<Matcher<?>> matchers;
 
-   InvocationArguments(int access, String classDesc, String methodNameAndDesc, Object[] args)
+   InvocationArguments(
+      int access, String classDesc, String methodNameAndDesc, String genericSignature, String exceptions, Object[] args)
    {
       methodAccess = access;
       this.classDesc = classDesc;
       this.methodNameAndDesc = methodNameAndDesc;
+      this.genericSignature = genericSignature;
+      this.exceptions = exceptions == null ? null : exceptions.split(" ");
       invocationArgs = args;
    }
 
+   public String getGenericSignature() { return genericSignature == null ? methodNameAndDesc : genericSignature; }
    public Object[] getValues() { return invocationArgs; }
 
    public void setValuesWithNoMatchers(Object[] argsToVerify)
