@@ -46,7 +46,7 @@
       build file, and so on, as required).
    </li>
    <li>
-      Depending on your development environment, you <em>may</em> have to do one other thing:
+      Depending on your development/build environment, you have to do one other thing:
       <ul>
          <li>
             When developing on <strong>JDK 1.5</strong>, make sure that
@@ -58,13 +58,13 @@
             by JMockit: such is the case with the IBM J9 JDK 1.6, the Mac OS X JDKs, and with JDKs for the Solaris OS.
          </li>
          <li>
-            When using <strong>JUnit</strong> (version <strong>4.5</strong> or newer) and JDK 1.6+, verify that
+            When using <strong>JUnit</strong> (version <strong>4.5</strong> or newer) <em>and</em> JDK 1.6+, verify that
             <code>jmockit.jar</code> appears <em>before</em> the JUnit jar file in the classpath (this isn't strictly
             required, but it will provide the greatest ease of use with JUnit and JDK 1.6+).
-            Older versions of JUnit are not supported, but note that JUnit 3.8-style tests are also accepted by JUnit 4.
             <br/>
             <strong>Eclipse</strong> users: when specifying the order of jars in the classpath, make sure to use the
-            "Order and Export" tab of the "Java Build Path" window.
+            "Order and Export" tab of the "Java Build Path" window. Also, make sure the Eclipse project uses a JDK
+            installation instead of a plain JRE.
          </li>
          <li>
             When using <strong>TestNG</strong> (version <strong>5.14</strong> or newer), the JMockit-TestNG integration
@@ -74,8 +74,8 @@
       </ul>
    </li>
    <li>
-      Optionally, configure your IDE to find API source code (and consequently the associated Javadoc comments) in this
-      same <code>jmockit.jar</code> file.
+      Optionally, configure your IDE to find API source code and Javadoc comments in this same <code>jmockit.jar</code>
+      file.
       API documentation in HTML is also available in the <code>jmockit/www/javadoc</code> directory, as well as
       <a href="http://jmockit.googlecode.com/svn/trunk/www/javadoc/overview-summary.html">on-line</a>.
    </li>
