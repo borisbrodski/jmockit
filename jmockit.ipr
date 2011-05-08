@@ -275,7 +275,9 @@
         <inspection_tool class="ComparisonToNaN" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConditionSignal" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConditionalExpressionWithIdenticalBranches" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ConfusingElse" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="ConfusingElse" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="reportWhenNoStatementFollow" value="false" />
+        </inspection_tool>
         <inspection_tool class="ConfusingFloatingPointLiteral" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConfusingMainMethod" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConfusingOctalEscape" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -392,7 +394,9 @@
         <inspection_tool class="InstantiationOfUtilityClass" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="IntLiteralMayBeLongLiteral" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="IntegerDivisionInFloatingPointContext" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="IntegerMultiplicationImplicitCastToLong" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="IntegerMultiplicationImplicitCastToLong" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreNonOverflowingCompileTimeConstants" value="true" />
+        </inspection_tool>
         <inspection_tool class="IteratorHasNextCallsIteratorNext" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="IteratorNextDoesNotThrowNoSuchElementException" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="JDBCExecuteWithNonConstantString" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -486,10 +490,6 @@
         <inspection_tool class="MethodOverridesPackageLocalMethod" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MethodOverridesPrivateMethod" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MethodReturnAlwaysConstant" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="MismatchedCollectionQueryUpdate" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="queries" value="copyInto,drainTo,propertyNames,save,store,write" />
-          <option name="updates" value="add,clear,drainTo,insert,load,offer,poll,push,put,remove,replace,retain,set,take,redefine" />
-        </inspection_tool>
         <inspection_tool class="MisorderedAssertEqualsParameters" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MissingDeprecatedAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MissingOverrideAnnotation" enabled="true" level="WARNING" enabled_by_default="true">
@@ -544,6 +544,7 @@
         </inspection_tool>
         <inspection_tool class="NonReproducibleMathCall" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NonSerializableFieldInSerializableClass" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreAnonymousInnerClasses" value="false" />
           <option name="superClassString" value="java.awt.Component,javax.servlet.http.HttpServlet,javax.swing.table.AbstractTableModel" />
         </inspection_tool>
         <inspection_tool class="NonSerializableObjectBoundToHttpSession" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -635,12 +636,15 @@
         <inspection_tool class="SerialPersistentFieldsWithWrongSignature" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SerialVersionUIDNotStaticFinal" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SerializableHasSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreAnonymousInnerClasses" value="false" />
           <option name="superClassString" value="java.awt.Component,java.lang.Exception,java.util.HashMap,java.lang.AssertionError,java.util.ArrayList,javax.servlet.http.HttpServlet,javax.swing.table.AbstractTableModel,mockit.internal.MockingBridge" />
         </inspection_tool>
         <inspection_tool class="SerializableInnerClassHasSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreAnonymousInnerClasses" value="false" />
           <option name="superClassString" value="java.awt.Component" />
         </inspection_tool>
         <inspection_tool class="SerializableInnerClassWithNonSerializableOuterClass" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreAnonymousInnerClasses" value="false" />
           <option name="superClassString" value="java.awt.Component" />
         </inspection_tool>
         <inspection_tool class="SerializableWithUnconstructableAncestor" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -764,7 +768,9 @@
         </inspection_tool>
         <inspection_tool class="UnnecessaryInheritDoc" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryInterfaceModifier" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="UnnecessaryJavaDocLink" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryJavaDocLink" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreInlineLinkToSuper" value="false" />
+        </inspection_tool>
         <inspection_tool class="UnnecessaryLocalVariable" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_ignoreImmediatelyReturnedVariables" value="true" />
           <option name="m_ignoreAnnotatedVariables" value="false" />

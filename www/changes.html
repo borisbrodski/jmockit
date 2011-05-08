@@ -19,6 +19,14 @@
 <p>Release 0.999.9 (May ??, 2011):</p>
 <ul>
    <li>
+      <strong>New feature</strong>: expectation blocks can now specify <em>default results</em> for mocked
+      methods/constructors, without specifying anything but the return type (for default return values) or a checked
+      exception from the <code>throws</code> clause.
+      Each default result is specified through an instance field annotated with <strong><code>@Input</code></strong>.
+      See <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/test/jmockit/tutorial/
+domain/MyBusinessService_ExpectationsAPI2_Test.java">here</a> for examples.
+   </li>
+   <li>
       <strong>Removed</strong> the <strong><code>endRecording()</code></strong> method of the <code>Expectations</code>
       class. This method was deprecated in the previous release. Existing tests still using it will have to be changed
       as described in the deprecation comment.

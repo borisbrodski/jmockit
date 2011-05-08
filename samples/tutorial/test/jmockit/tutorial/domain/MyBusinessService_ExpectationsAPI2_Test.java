@@ -27,6 +27,7 @@ public final class MyBusinessService_ExpectationsAPI2_Test
    public void doBusinessOperationXyz() throws Exception
    {
       new Expectations() {
+         // Any mocked method returning the input field type will return the given field value:
          @Input final List<EntityX> items = asList(new EntityX(1, "AX5", "someone@somewhere.com"));
       };
 
@@ -42,6 +43,7 @@ public final class MyBusinessService_ExpectationsAPI2_Test
    public void doBusinessOperationXyzWithInvalidEmailAddress() throws Exception
    {
       new NonStrictExpectations() {
+         // Any mocked method/constructor with this exception type in the throws clause will throw it:
          @Input EmailException onInvalidEmail;
 
          { email.send(); times = 0; }
