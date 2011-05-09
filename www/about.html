@@ -6,6 +6,7 @@
    <link rel="stylesheet" type="text/css" href="prettify.css"/>
    <script type="text/javascript" src="highlight.pack.js"></script>
    <script type="text/javascript">hljs.initHighlightingOnLoad()</script>
+   <style type="text/css">#sections div { width: 20%; float: left; }</style>
 </head>
 <body>
 <h2>
@@ -15,13 +16,12 @@
 <p>
    JMockit is open-source software licensed under the
    <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.
-   It is a collection of tools and APIs for use in <em>developer testing</em>, that is, tests
-   written by developers using a testing framework such as <a href="http://junit.org">JUnit</a> or
-   <a href="http://testng.org">TestNG</a>.
+   It is a collection of tools and APIs for use in <em>developer testing</em>, that is, tests written by developers
+   using a testing framework such as <a href="http://junit.org">JUnit</a> or <a href="http://testng.org">TestNG</a>.
    The tools rely on the Java 5 SE instrumentation feature (the
    <a href="http://download.oracle.com/javase/6/docs/api/java/lang/instrument/package-summary.html"
-      >java.lang.instrument</a> package), internally using the
-   <a href="http://asm.objectweb.org">ASM</a> library to modify bytecode at runtime.
+      >java.lang.instrument</a> package), internally using the <a href="http://asm.objectweb.org">ASM</a> library to
+   modify bytecode at runtime.
    Therefore, tests using JMockit must be run under a Java 5+ SE JVM.
 </p>
 <hr/>
@@ -34,15 +34,13 @@
    used while running test suites.
    The figure below is a clickable map with links to detailed documentation pages.
 </p>
-<table width="100%">
-<tr>
-   <td align="center"><a href="#expectations">JMockit Expectations</a></td>
-   <td align="center"><a href="#verifications">JMockit Verifications</a></td>
-   <td align="center"><a href="#annotations">JMockit Annotations</a></td>
-   <td align="center"><a href="#coverage">JMockit Coverage</a></td>
-   <td align="center"><a href="#hibernate">JMockit Hibernate Emulation</a></td>
-</tr>
-</table>
+<div id="sections" style="margin-bottom: 32px">
+   <div><a href="#expectations">JMockit Expectations</a></div>
+   <div><a href="#verifications">JMockit Verifications</a></div>
+   <div><a href="#annotations">JMockit Annotations</a></div>
+   <div><a href="#coverage">JMockit Coverage</a></div>
+   <div><a href="#hibernate">JMockit Hibernate Emulation</a></div>
+</div>
 <br/>
 <div style="text-align: center;" title="Click on titles to open Tutorial/API">
    <map name="figure1">
@@ -122,7 +120,7 @@
    <li>
       The dependencies of each class to be tested must either be obtained through configurable instance creation methods
       (factories or a <em>Service Locator</em>), or be exposed for
-      <a href="http://en.wikipedia.org/wiki/Dependency_injection">dependency injection</a>.
+      <a href="http://martinfowler.com/articles/injection.html">dependency injection</a>.
       Otherwise, unit tests won't be able to pass mock implementations of dependencies to the unit under test.
    </li>
    <li>
@@ -134,13 +132,19 @@
 <h4 id="productionCode">Design considerations for production code</h4>
 <p>
    The problem with imposing restrictions on the design of production code is that there are good reasons for making
-   classes <code>final</code>, for directly obtaining instances of collaborators with the <code>new</code> operator, and
-   for using APIs based on <code>static</code> methods.
+   classes and methods <code>final</code>, for directly obtaining instances of collaborators with the <code>new</code>
+   operator, and for using APIs based on <code>static</code> methods.
    There is nothing inherently wrong with using these three Java language keywords, after all.
 </p>
 <p>
    In the first case, declaring classes or methods <code>final</code> makes it clear that they are not intended for
    extension by subclassing.
+   For example, in a correct application of the <a href="http://en.wikipedia.org/wiki/Template_method_pattern">Template
+   Method</a> design pattern, the "template" method itself (which implements an algorithm calling one or more
+   overridable methods) must <em>not</em> be overridable.
+   Also, from the point of view of API design, <code>final</code> classes are the only ones which can be safely evolved.
+   For more on this, see <a href="http://www.gotw.ca/publications/mill18.htm">this article</a>.
+   <br/>
    In practice, most classes and methods in an application or even in a reusable class library are not designed with
    extension by subclassing in mind, so it makes sense to declare them as <code>final</code>; probably that's why most
    other OO languages (C++, C#, etc.) make all methods non-overridable by default.
@@ -156,6 +160,9 @@
    For an authoritative discussion on design for extension (which defends the judicious use of <code>final</code> for
    classes and methods), I refer readers to "Item 17: Design and document for inheritance or else prohibit it" in the
    <a href="http://www.amazon.com/Effective-Java-2nd-Joshua-Bloch/dp/0321356683">Effective Java</a> book.
+   Another book which strongly recommends the use of <code>final</code> for classes and methods is
+   <a href="http://www.amazon.com/Practical-API-Design-Confessions-Framework/dp/1430209739">Practical API Design</a>
+   (see "Make Everything Final", in chapter 5).
 </p>
 <p>
    In the second case, directly instantiating dependencies with <code>new</code> facilitates the use of stateful
@@ -169,7 +176,7 @@
    rare (at least in my experience).
    <br/>
    Related to this issue, I think, there is an widely observed misunderstanding of just what the phrase <cite>Program to
-   an interface, not an implementation</cite> actually means.
+   an interface, not an implementation</cite> (from the famous "Design Patterns" book) actually means.
    Many seem to think that one should <em>create</em> a new separate Java interface (or abstract class) for any concrete
    class which don't yet implement one. In reality, it was only meant as a recommendation to avoid declaring variables,
    fields, parameters or return types as the implementation type <em>when an abstract type already exists</em> (for
@@ -236,8 +243,8 @@
 </p>
 <p>
    In the following discussion, five different mocking toolkits (besides JMockit) are considered, all in their latest
-   stable releases as of November 10, 2010: <strong>EasyMock 3.0</strong>, <strong>jMock 2.5.1</strong>,
-   <strong>PowerMock 1.4.6</strong>, <strong>Mockito 1.8.5</strong>, and <strong>Unitils 3.1</strong>.
+   stable releases as of May 9, 2011: <strong>EasyMock 3.0</strong>, <strong>jMock 2.5.1</strong>,
+   <strong>Mockito 1.8.5</strong>, <strong>PowerMock 1.4.9</strong>, and <strong>Unitils 3.1</strong>.
    The code snippets below come from the sample JMockit test suites that compare the JMockit approach with those other
    toolkits.
 </p>
@@ -253,22 +260,21 @@
       <code>@Mock</code> annotation for instance fields).
       Unitils follows the declarative approach, but using a generic type for declaring mock fields, eg
       <code>Mock&lt;MessageService> mockMessageService</code>.
-      The approach in JMockit Expectations is always declarative, with the use of coding conventions and the
-      <code>@Mocked</code> annotation for instance fields as well as for <em>test method parameters</em> (the use of
-      parameters to declare mocks is a feature unique to JMockit, and as examples will show, an extremely convenient
-      one).
+      The approach in JMockit Expectations is always declarative, with the use of coding conventions and annotations for
+      instance fields as well as for <em>test method parameters</em> (the use of parameters to declare mocks is a
+      feature unique to JMockit, and as examples will show, an extremely convenient one).
    </li>
    <li>
-      When recording or verifying invocations on mocks, all those five APIs require mixing extra mocking API calls with
-      regular calls to mocked methods. Some examples, with extra API calls in bold:
+      When recording or verifying invocations on mocks, all other mocking APIs require mixing extra mocking API calls
+      with regular calls to mocked methods. Some examples, with extra API calls in bold:
       <code><strong>expect</strong>(mock.voteForRemoval("Document"))</code> in EasyMock;
       <code><strong>oneOf</strong>(subscriber).receive(message)</code> in jMock;
       <code><strong>expect</strong>(myServiceMock.getAllPersons())</code> in PowerMock;
       <code><strong>when</strong>(mockedList.get(0))</code> and <code><strong>verify</strong>(mockedList).get(0)</code>
       in Mockito;
       <code>mockMessageService.<strong>assertInvoked()</strong>.sendMessage(alert1)</code> in Unitils.
-      In JMockit Expectations, you always call the mocked method directly, without any need to wrap or chain it with a
-      mocking API specific call (there is only one exception to this, but it is rarely used).
+      In the JMockit Expectations & Verifications API, you always call the mocked method directly, without any need to
+      wrap or chain it with a mocking API specific call (there is only one exception to this, but it is rarely used).
    </li>
    <li>
       Just like with the other mocking APIs, there are calls in the JMockit Expectations API that need to be made for
@@ -280,7 +286,7 @@
       can easily exceed the maximum line length, therefore requiring line wrapping at odd places.
       In addition, method chaining may require a different API when setting return values or thrown exceptions for
       <code>void</code> methods, since calls to such methods cannot be wrapped in an API call like
-      <code>expect(&lt;call to mocked method>)</code>; both EasyMock and Mockito suffer from this problem, though that
+      <code>expect(&lt;call to mocked method>)</code>; both EasyMock and Mockito suffer from this problem, although that
       is not the case with jMock or Unitils.
    </li>
    <li>
@@ -315,7 +321,7 @@
       instance must be passed as argument in a call to the <code>Mockery#checking</code> method, which transitions the
       test from <em>record</em> to <em>replay</em>.
       <br/>
-      The JMockit Expectations/Verifications API relies on the instance initialization of anonymous inner classes to
+      The JMockit Expectations & Verifications API relies on the instance initialization of anonymous inner classes to
       demarcate the <em>record</em> and <em>verify</em> phases.
       This does require extra indentation levels and curly braces, but the advantages are big: the explicit
       expectation/verification blocks avoid repetition of method calls like "expect(...)" and "verify(...)", while
@@ -324,15 +330,16 @@
    </li>
 </ul>
 <p>
-   There are other less dramatic differences in style between the JMockit Expectations API and the other mocking APIs,
-   but the above items should be enough to show that many possibilities exist in the realm of mocking API design.
+   There are other less dramatic differences in style between JMockit and other mocking APIs, but the above items should
+   be enough to show that many possibilities exist in the realm of mocking API design.
 </p>
 
 <h3 id="alternativeTools">Alternative mocking tools</h3>
 <p>
    There are now other mocking tools for Java which also overcome the limitations of the conventional ones, between them
-   <a href="http://code.google.com/p/powermock">PowerMock</a>, <a href="https://jeasytest.dev.java.net">jEasyTest</a>,
-   and <a href="https://mockinject.dev.java.net">MockInject</a>.
+   <a href="http://code.google.com/p/powermock">PowerMock</a>,
+   <a href="http://java.net/projects/jeasytest">jEasyTest</a>, and
+   <a href="http://mockinject.codehaus.org">MockInject</a>.
    The one that comes closest to the feature set of JMockit is PowerMock, so I will briefly evaluate it here (besides,
    the other two are more limited and don't seem to be actively developed anymore).
 </p>
@@ -364,7 +371,7 @@
    <code>@Mocked</code> annotation often won't be needed).
 </li>
 <li>
-   Several capabilities available in JMockit, such as support for mocking <code>equals</code> and <code>hashCode</code>,
+   Some capabilities available in JMockit, such as support for mocking <code>equals</code> and <code>hashCode</code>,
    overridden methods, and others, are currently not supported in PowerMock.
    Also, there is no equivalent to JMockit's ability to capture instances and mock implementations of specified base
    types as the test executes, without the test code itself having any knowledge of the actual implementation classes.
@@ -414,34 +421,32 @@
    used, resulting in code like <code>onInstance(mock).mockedMethod(args)</code>; most tests won't need to use this,
    though.)
    <br/>
-   Just like other mocking tools which rely on method chaining/wrapping, Mockito also runs into
-   inconsistent syntax when stubbing <code>void</code> methods.
-   For example, you write <code>when(mockedList.get(1)).thenThrow(new RuntimeException());</code>
-   for a non-<code>void</code> method, and
-   <code>doThrow(new RuntimeException()).when(mockedList).clear();</code> for a <code>void</code> one.
-   With JMockit, it's always the same syntax: 
+   Just like other mocking tools which rely on method chaining/wrapping, Mockito also runs into inconsistent syntax when
+   stubbing <code>void</code> methods.
+   For example, you write <code>when(mockedList.get(1)).thenThrow(new RuntimeException());</code> for a
+   non-<code>void</code> method, and <code>doThrow(new RuntimeException()).when(mockedList).clear();</code> for a
+   <code>void</code> one.
+   With JMockit, it's always the same syntax:
    <code>mockedList.clear(); <em>result</em> = new RuntimeException();</code>.
    <br/>
-   Yet another inconsistency occurs in the use of Mockito <em>spies</em>: "mocks" that allow the
-   real methods to be executed on the spied instance.
+   Yet another inconsistency occurs in the use of Mockito <em>spies</em>: "mocks" that allow the real methods to be
+   executed on the spied instance.
    For example, if <code>spy</code> refers to an empty <code>List</code>, then instead of writing
-   <code>when(spy.get(0)).thenReturn("foo")</code> you will need to write
-   <code>doReturn("foo").when(spy).get(0)</code>.
-   With JMockit, the <em>dynamic mocking</em> feature provides similar functionality to spies,
-   but without this issue since real methods only get executed during the <em>replay</em> phase.
+   <code>when(spy.get(0)).thenReturn("foo")</code> you will need to write <code>doReturn("foo").when(spy).get(0)</code>.
+   With JMockit, the <em>dynamic mocking</em> feature provides similar functionality to spies, but without this issue
+   since real methods only get executed during the <em>replay</em> phase.
 </li>
 <li>
-   In EasyMock and jMock, the first mocking APIs for Java, the focus was entirely on the recording
-   of <em>expected invocations</em> of mocked methods, for mock objects that (by default) do not
-   allow unexpected invocations.
-   Those APIs also provide the recording of <em>allowed invocations</em> for mock objects that do
-   allow unexpected invocations, but this was treated as a second-class feature.
-   Additionally, with these tools there is no way to explicitly verify invocations to mocks after
-   the code under test is exercised. All such verifications are performed implicitly and automatically.
+   In EasyMock and jMock, the first mocking APIs for Java, the focus was entirely on the recording of <em>expected
+   invocations</em> of mocked methods, for mock objects that (by default) do not allow unexpected invocations.
+   Those APIs also provide the recording of <em>allowed invocations</em> for mock objects that do allow unexpected
+   invocations, but this was treated as a second-class feature.
+   Additionally, with these tools there is no way to explicitly verify invocations to mocks after the code under test is
+   exercised. All such verifications are performed implicitly and automatically.
    <br/>
    In Mockito (and also in Unitils Mock), the opposite viewpoint is taken.
-   All invocations to mock objects that may happen during the test, whether recorded or not, are
-   <em>allowed</em>, never <em>expected</em>.
+   All invocations to mock objects that may happen during the test, whether recorded or not, are <em>allowed</em>, never
+   <em>expected</em>.
    Verification is performed explicitly after the code under test is exercised, never automatically.
    <br/>
    Both approaches are too extreme, and consequently less than optimal.
@@ -449,10 +454,9 @@
    combination of <em>strict</em> (expected by default) and <em>non-strict</em> (allowed by default) mock invocations
    for each test.
    <br/>
-   To be more clear, the Mockito API has the following shortcoming. If you need to verify that a
-   certain invocation to a non-<code>void</code> mocked method happened during the test, but the
-   test requires a return value from that method that is different from the default for the return
-   type, then the Mockito test will have duplicate code: a
+   To be more clear, the Mockito API has the following shortcoming. If you need to verify that an invocation to a
+   non-<code>void</code> mocked method happened during the test, but the test requires a return value from that method
+   that is different from the default for the return type, then the Mockito test will have duplicate code: a
    <code>when(mock.someMethod()).thenReturn(xyz)</code> call in the <em>record</em> phase, and a
    <code>verify(mock).someMethod()</code> in the <em>verify</em> phase.
    With JMockit, a <em>strict</em> expectation can always be recorded, which won't have to be explicitly verified.
