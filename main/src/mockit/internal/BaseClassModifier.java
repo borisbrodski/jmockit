@@ -44,7 +44,7 @@ public class BaseClassModifier extends ClassWriter
    {
       // LDC instructions (see MethodVisitor#visitLdcInsn) are more capable in JVMs with support for class files of
       // version 49 (Java 1.5) or newer, so we "upgrade" it to avoid a VerifyError:
-      if (version < 49) {
+      if ((version & 0xFFFF) < 49) {
          //noinspection AssignmentToMethodParameter
          version = 49;
       }
