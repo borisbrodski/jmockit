@@ -120,4 +120,11 @@ final class PhasedExecutionState
          nonStrictExpectations.add(expectation);
       }
    }
+
+   void addVerified(Expectation expectation, Object[] args, List<Matcher<?>> argMatchers)
+   {
+      expectationsVerified.add(expectation);
+      argsVerified.add(args);
+      argMatchersVerified.add(argMatchers);
+   }
 }

@@ -95,9 +95,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
          }
 
          if (argumentsMatch) {
-            getExpectationsVerified().add(expectation);
-            recordAndReplay.executionState.argsVerified.add(args);
-            recordAndReplay.executionState.argMatchersVerified.add(argMatchers);
+            recordAndReplay.executionState.addVerified(expectation, args, argMatchers);
             return true;
          }
       }
@@ -143,7 +141,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
          constraints.invocationCount = invocationIndex + 1;
 
          try {
-            handler.evaluateInvocation(expectation, replayArgs);
+            handler.invokeMethodOnTargetObject(expectation.invocation.instance, expectation.constraints, replayArgs);
          }
          finally {
             constraints.invocationCount = originalCount;

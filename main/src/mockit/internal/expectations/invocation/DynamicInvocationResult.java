@@ -35,7 +35,8 @@ abstract class DynamicInvocationResult extends InvocationResult
       numberOfRegularParameters = hasInvocationParameter ? n - 1 : n;
    }
 
-   final Object invokeMethodOnTargetObject(Object mockOrRealObject, InvocationConstraints constraints, Object[] args)
+   public final Object invokeMethodOnTargetObject(
+      Object mockOrRealObject, InvocationConstraints constraints, Object[] args)
    {
       Object result;
 
