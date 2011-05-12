@@ -44,8 +44,7 @@ public final class ActiveInvocations
       RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
 
       if (instance != null) {
-         Expectation expectation = instance.getRecordPhase().getCurrentExpectation();
-         expectation.addResult(result);
+         instance.getRecordPhase().addResult(result);
       }
    }
 

@@ -197,11 +197,6 @@ abstract class Invocations
 
    abstract TestOnlyPhase getCurrentPhase();
 
-   final Expectation getCurrentExpectation()
-   {
-      return getCurrentPhase().getCurrentExpectation();
-   }
-
    /**
     * Specify that the next invocation on the given mocked instance must match a corresponding invocation on the
     * <em>same</em> instance in the replay phase.

@@ -18,6 +18,21 @@ public final class RecordPhase extends TestOnlyPhase
       this.nonStrict = nonStrict;
    }
 
+   public void addResult(Object result)
+   {
+      getCurrentExpectation().addResult(result);
+   }
+
+   public void addReturnValueOrValues(Object value)
+   {
+      getCurrentExpectation().addReturnValueOrValues(value);
+   }
+
+   public void addSequenceOfReturnValues(Object firstValue, Object[] remainingValues)
+   {
+      getCurrentExpectation().addSequenceOfReturnValues(firstValue, remainingValues);
+   }
+
    public void setNotStrict()
    {
       recordAndReplay.executionState.makeNonStrict(currentExpectation);

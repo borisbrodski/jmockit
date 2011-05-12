@@ -249,7 +249,7 @@ public abstract class Expectations extends Invocations
     */
    protected final void returns(Object value)
    {
-      getCurrentExpectation().addReturnValueOrValues(value);
+      getCurrentPhase().addReturnValueOrValues(value);
    }
 
    /**
@@ -281,7 +281,7 @@ public abstract class Expectations extends Invocations
     */
    protected final void returns(Object firstValue, Object... remainingValues)
    {
-      getCurrentExpectation().addSequenceOfReturnValues(firstValue, remainingValues);
+      getCurrentPhase().addSequenceOfReturnValues(firstValue, remainingValues);
    }
 
    // Methods for defining expectation strictness /////////////////////////////////////////////////////////////////////

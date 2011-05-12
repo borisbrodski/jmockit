@@ -13,7 +13,7 @@ import mockit.internal.expectations.invocation.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
-public final class Expectation
+final class Expectation
 {
    final RecordPhase recordPhase;
    final ExpectedInvocation invocation;
@@ -35,7 +35,7 @@ public final class Expectation
       results = other.results;
    }
 
-   public InvocationResults getResults()
+   InvocationResults getResults()
    {
       createResultsHolderIfNotYetCreated();
       return results;
@@ -62,7 +62,7 @@ public final class Expectation
       return constraints.verify(invocation, minInvocations, maxInvocations);
    }
 
-   public void addReturnValueOrValues(Object value)
+   void addReturnValueOrValues(Object value)
    {
       createResultsHolderIfNotYetCreated();
 
@@ -140,7 +140,7 @@ public final class Expectation
       }
    }
 
-   public void addSequenceOfReturnValues(Object firstValue, Object[] remainingValues)
+   void addSequenceOfReturnValues(Object firstValue, Object[] remainingValues)
    {
       validateReturnValues(firstValue, remainingValues);
 
@@ -235,7 +235,7 @@ public final class Expectation
       results.addReturnValue(values);
    }
 
-   public void addResult(Object value)
+   void addResult(Object value)
    {
       createResultsHolderIfNotYetCreated();
 
