@@ -98,7 +98,8 @@ public final class DelegateInvocationTest
             {
                void doSomething(Invocation invocation, Boolean b, int[] i, String s)
                {
-                  assertSame(collaborator, invocation.getInvokedInstance());
+                  Collaborator instance = invocation.getInvokedInstance();
+                  assertSame(collaborator, instance);
                   assertEquals(1, invocation.getInvocationCount());
                   assertTrue(b);
                   assertNull(i);
@@ -237,6 +238,7 @@ public final class DelegateInvocationTest
       new Expectations()
       {
          {
+            //noinspection unchecked
             mock.addElements((Collection<String>) any);
             forEachInvocation = new Object()
             {

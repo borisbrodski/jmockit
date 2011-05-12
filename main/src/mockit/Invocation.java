@@ -7,8 +7,8 @@ package mockit;
 /**
  * A context object representing the current invocation to a mocked method or constructor.
  * <p/>
- * When used as the type of the first parameter on a {@link Delegate} method, all invocations to the
- * delegate method will receive an appropriate instance.
+ * When used as the type of the first parameter on a {@link Delegate} method, all invocations to the delegate method
+ * will receive an appropriate instance.
  * Similarly, it can be used in the handler method of an instance assigned to the
  * {@linkplain mockit.Invocations#forEachInvocation forEachInvocation} field.
  * <p/>
@@ -26,8 +26,7 @@ public class Invocation
    /**
     * For internal use only.
     */
-   protected Invocation(
-      Object invokedInstance, int invocationCount, int minInvocations, int maxInvocations)
+   protected Invocation(Object invokedInstance, int invocationCount, int minInvocations, int maxInvocations)
    {
       this.invokedInstance = invokedInstance;
       this.invocationCount = invocationCount;
@@ -36,16 +35,16 @@ public class Invocation
    }
 
    /**
-    * Returns the target instance on which the current invocation was made, if any (if the method
-    * invoked is {@code static} then there is no instance and {@literal null} is returned).
+    * Returns the target instance on which the current invocation was made, if any (if the method invoked is
+    * {@code static} then there is no instance and {@literal null} is returned).
     * <p/>
-    * Note that this instance can either be a mock instance (for example, the instance automatically
-    * created by JMockit and assigned to a mock field or passed as the argument value for a mock
-    * parameter), or a "real" instance created by code under test for a mocked type.
+    * Note that this instance can either be the mocked instance originally created by JMockit and assigned to a mock
+    * field or passed as a mock parameter, or an instance created by the code under test.
     */
-   public final Object getInvokedInstance()
+   public final <T> T getInvokedInstance()
    {
-      return invokedInstance;
+      //noinspection unchecked
+      return (T) invokedInstance;
    }
 
    /**
@@ -68,8 +67,8 @@ public class Invocation
    /**
     * Returns the minimum invocation count for the current expectation.
     * <p/>
-    * This call will return the value specified through the {@link Expectations#times} or
-    * {@link Expectations#minTimes} field, if that was the case.
+    * This call will return the value specified through the {@link Expectations#times} or {@link Expectations#minTimes}
+    * field, if that was the case.
     */
    public final int getMinInvocations()
    {
@@ -79,8 +78,8 @@ public class Invocation
    /**
     * Sets the minimum invocation count for the current expectation.
     * <p/>
-    * This call can be used to override the value set on the {@link Expectations#times} or
-    * {@link Expectations#minTimes} field.
+    * This call can be used to override the value set on the {@link Expectations#times} or {@link Expectations#minTimes}
+    * field.
     */
    public final void setMinInvocations(int minInvocations)
    {
@@ -90,8 +89,8 @@ public class Invocation
    /**
     * Returns the maximum invocation count for the current expectation (-1 indicates unlimited).
     * <p/>
-    * This call will return the value specified through the {@link Expectations#times} or
-    * {@link Expectations#maxTimes} field, if that was the case.
+    * This call will return the value specified through the {@link Expectations#times} or {@link Expectations#maxTimes}
+    * field, if that was the case.
     */
    public final int getMaxInvocations()
    {
@@ -101,8 +100,8 @@ public class Invocation
    /**
     * Sets the maximum invocation count for the current expectation.
     * <p/>
-    * This call can be used to override the value set on the {@link Expectations#times} or
-    * {@link Expectations#maxTimes} field.
+    * This call can be used to override the value set on the {@link Expectations#times} or {@link Expectations#maxTimes}
+    * field.
     */
    public final void setMaxInvocations(int maxInvocations)
    {
