@@ -58,7 +58,7 @@ import mockit.internal.util.*;
  */
 public abstract class Verifications extends Invocations
 {
-   final VerificationPhase verificationPhase;
+   final BaseVerificationPhase verificationPhase;
 
    /**
     * Begins verification on the mocked types/instances invoked during the replay phase of the test.
@@ -139,7 +139,7 @@ public abstract class Verifications extends Invocations
    }
 
    @Override
-   final VerificationPhase getCurrentPhase()
+   final BaseVerificationPhase getCurrentPhase()
    {
       return verificationPhase;
    }

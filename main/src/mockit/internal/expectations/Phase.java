@@ -6,14 +6,14 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
-public abstract class Phase
+abstract class Phase
 {
    final RecordAndReplayExecution recordAndReplay;
    Expectation currentExpectation;
 
    Phase(RecordAndReplayExecution recordAndReplay) { this.recordAndReplay = recordAndReplay; }
 
-   public final Expectation getCurrentExpectation()
+   final Expectation getCurrentExpectation()
    {
       if (currentExpectation == null) {
          throw new IllegalStateException(

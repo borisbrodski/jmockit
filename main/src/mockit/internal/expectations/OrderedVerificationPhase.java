@@ -8,7 +8,7 @@ import java.util.*;
 
 import mockit.internal.expectations.invocation.*;
 
-public final class OrderedVerificationPhase extends VerificationPhase
+public final class OrderedVerificationPhase extends BaseVerificationPhase
 {
    private final int expectationCount;
    private boolean unverifiedExpectationsLeftBehind;

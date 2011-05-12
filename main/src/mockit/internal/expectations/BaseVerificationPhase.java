@@ -10,7 +10,7 @@ import mockit.external.hamcrest.*;
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.util.*;
 
-public abstract class VerificationPhase extends TestOnlyPhase
+public abstract class BaseVerificationPhase extends TestOnlyPhase
 {
    final List<Expectation> expectationsInReplayOrder;
    final List<Object[]> invocationArgumentsInReplayOrder;
@@ -18,7 +18,7 @@ public abstract class VerificationPhase extends TestOnlyPhase
    private Object[] mockedTypesAndInstancesToFullyVerify;
    protected AssertionError pendingError;
 
-   protected VerificationPhase(
+   protected BaseVerificationPhase(
       RecordAndReplayExecution recordAndReplay,
       List<Expectation> expectationsInReplayOrder, List<Object[]> invocationArgumentsInReplayOrder)
    {

@@ -8,7 +8,7 @@ import java.util.*;
 
 import mockit.internal.expectations.invocation.*;
 
-final class UnorderedVerificationPhase extends VerificationPhase
+final class UnorderedVerificationPhase extends BaseVerificationPhase
 {
    private Expectation aggregate;
 

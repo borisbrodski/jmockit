@@ -29,7 +29,7 @@ public final class RecordAndReplayExecution
 
    private RecordPhase recordPhase;
    private ReplayPhase replayPhase;
-   private VerificationPhase verificationPhase;
+   private BaseVerificationPhase verificationPhase;
 
    public RecordAndReplayExecution()
    {
@@ -316,7 +316,7 @@ public final class RecordAndReplayExecution
          return recordPhase;
       }
 
-      VerificationPhase verification = verificationPhase;
+      BaseVerificationPhase verification = verificationPhase;
 
       if (verification == null) {
          if (failureState.getErrorThrown() != null) {
@@ -330,7 +330,7 @@ public final class RecordAndReplayExecution
       return verification;
    }
 
-   public VerificationPhase startVerifications(boolean inOrder)
+   public BaseVerificationPhase startVerifications(boolean inOrder)
    {
       if (replayPhase == null) {
          throw new IllegalStateException("Not in the replay phase yet");
