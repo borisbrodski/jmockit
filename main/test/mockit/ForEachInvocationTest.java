@@ -77,6 +77,7 @@ public final class ForEachInvocationTest
       new Verifications()
       {
          {
+            //noinspection unchecked
             mock.addElements((Collection<String>) any);
             forEachInvocation = new Object()
             {
@@ -546,8 +547,6 @@ public final class ForEachInvocationTest
                assertEquals("test", s);
             }
          };
-
-         mock.doSomething(1);
       }};
    }
 }

@@ -94,14 +94,6 @@ public final class MockedParametersWithCapturingTest
             service.doSomethingElse(anyInt); times = 2;
          }
       };
-
-      new VerificationsInOrder()
-      {
-         {
-            service.doSomethingElse(5);
-            service.doSomethingElse(-1);
-         }
-      };
    }
 
    static class BaseClass

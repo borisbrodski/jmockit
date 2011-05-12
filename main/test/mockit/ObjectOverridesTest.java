@@ -172,8 +172,8 @@ public final class ObjectOverridesTest
       new VerificationsInOrder()
       {
          {
+            a.hashCode();
             b.equals(a);
-            a.toString();
          }
       };
    }

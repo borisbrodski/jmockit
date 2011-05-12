@@ -16,8 +16,8 @@ import mockit.internal.util.*;
 public final class Expectation
 {
    final RecordPhase recordPhase;
-   public final ExpectedInvocation invocation;
-   public final InvocationConstraints constraints;
+   final ExpectedInvocation invocation;
+   final InvocationConstraints constraints;
    private InvocationResults results;
 
    Expectation(RecordPhase recordPhase, ExpectedInvocation invocation, boolean nonStrict)
@@ -264,7 +264,7 @@ public final class Expectation
       addSingleReturnValue(value);
    }
 
-   public void setCustomErrorMessage(CharSequence message)
+   void setCustomErrorMessage(CharSequence message)
    {
       invocation.customErrorMessage = message;
    }

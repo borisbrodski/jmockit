@@ -20,9 +20,25 @@ public final class OrderedVerificationPhase extends VerificationPhase
       RecordAndReplayExecution recordAndReplay,
       List<Expectation> expectationsInReplayOrder, List<Object[]> invocationArgumentsInReplayOrder)
    {
-      super(recordAndReplay, expectationsInReplayOrder, invocationArgumentsInReplayOrder);
-      expectationCount = expectationsInReplayOrder.size();
+      super(
+         recordAndReplay,
+         new ArrayList<Expectation>(expectationsInReplayOrder),
+         new ArrayList<Object[]>(invocationArgumentsInReplayOrder));
+      discardExpectationsAndArgumentsAlreadyVerified();
+      expectationCount = super.expectationsInReplayOrder.size();
       indexIncrement = 1;
+   }
+
+   private void discardExpectationsAndArgumentsAlreadyVerified()
+   {
+      for (Expectation expectation : getExpectationsVerified()) {
+         int i = expectationsInReplayOrder.indexOf(expectation);
+
+         if (i >= 0) {
+            expectationsInReplayOrder.remove(i);
+            invocationArgumentsInReplayOrder.remove(i);
+         }
+      }
    }
 
    @Override
