@@ -27,7 +27,12 @@
          <li><a href="#multipleInterfaces">Mocking multiple interfaces at the same time</a></li>
       </ol>
    </li>
-   <li><a href="#results">Recording results for an expectation</a></li>
+   <li>
+      <a href="#results">Recording results for an expectation</a>
+      <ol>
+         <li><a href="#defaultResults">Specifying default results</a></li>
+      </ol>
+   </li>
    <li><a href="#onInstance">Matching invocations to specific instances</a></li>
    <li>
       <a href="#hamcrest">Constraint-based matching of argument values</a>
@@ -75,11 +80,10 @@
 </ol>
 
 <p>
-   In the JMockit toolkit, the <code>Expectations & Verifications</code> APIs provide rich support
-   for the creation of <em>behavior-based</em> unit tests.
-   The focus when doing this kind of testing is on the <em>interactions</em> between the unit under
-   test and the other units it depends upon. Such units of behavior are the classes, methods, and
-   constructors defined in production code.
+   In the JMockit toolkit, the <code>Expectations & Verifications</code> APIs provide rich support for the creation of
+   <em>behavior-based</em> unit tests.
+   The focus when doing this kind of testing is on the <em>interactions</em> between the unit under test and the other
+   units it depends upon. Such units of behavior are the classes, methods, and constructors defined in production code.
 </p>
 <div style="text-align: center;">
    <map name="figure1">
@@ -118,12 +122,12 @@
    </div>
 </h3>
 <p>
-   The methods and constructors which are invoked from the unit under test, and which belong to a
-   dependency of that unit, will be our regular targets for <em>mocking</em>.
+   The methods and constructors which are invoked from the unit under test, and which belong to a dependency of that
+   unit, will be our regular targets for <em>mocking</em>.
    We tell JMockit what needs to be mocked by specifying <em>mocked types</em>.
    A mocked type should be the type of a dependency of the unit under test.
-   Such a type can be any reference type: an interface, an abstract class, a concrete class, a
-   <code>final</code> class, and so on (more on this later).
+   Such a type can be any reference type: an interface, an abstract class, a concrete class, a <code>final</code> class,
+   and so on (more on this later).
 </p>
 <p>
    By default, all methods and constructors (in case of a class) of the mocked type will be mocked.
@@ -132,15 +136,14 @@
    Therefore, inherited methods will automatically be mocked as well.
 </p>
 <p>
-   When a method or constructor is mocked, its original implementation code won't be executed on
-   invocations from the test. Instead, the call will be redirected to JMockit so it can be dealt
-   with in the manner that was explicitly or implicitly specified in the test method, as we will see
-   in the remaining of this chapter.
+   When a method or constructor is mocked, its original implementation code won't be executed on invocations from the
+   test. Instead, the call will be redirected to JMockit so it can be dealt with in the manner that was explicitly or
+   implicitly specified in the test method, as we will see in the remaining of this chapter.
 </p>
 <p>
    The following example test serves as a basic illustration for the declaration of mocked types.
-   In this tutorial, we use many code snippets like this, where the parts in bold font are the
-   current focus of explanation.
+   In this tutorial, we use many code snippets like this, where the parts in bold font are the current focus of
+   explanation.
 </p>
 <pre><code>   @Test
    public void doBusinessOperationXyz()
@@ -174,26 +177,25 @@
    </div>
 </h3>
 <p>
-   An <em>expectation</em> is a set of invocations to an specific mocked method/constructor that is
-   relevant for a given test.
-   An expectation may encompass multiple different invocations to the same method or constructor,
-   but it does not have to encompass <em>all</em> such invocations that occur during the test execution.
+   An <em>expectation</em> is a set of invocations to an specific mocked method/constructor that is relevant for a given
+   test.
+   An expectation may encompass multiple different invocations to the same method or constructor, but it does not have
+   to encompass <em>all</em> such invocations that occur during the test execution.
 </p>
 <p>
-   Besides being associated with an specific method or constructor, each expectation will specify
-   argument values for the corresponding method/constructor invocations, when there are one or more
-   invocation parameters involved.
+   Besides being associated with an specific method or constructor, each expectation will specify argument values for
+   the corresponding method/constructor invocations, when there are one or more invocation parameters involved.
    For each parameter, an exact argument value may be specified, according to the parameter type.
    For example, the value <code>"test string"</code> for an <code>String</code> parameter.
    As we will see later, instead of specifying exact argument values, we can specify constraints on such values, which
    will match whole sets of different argument values, for one or more actual invocations.
 </p>
 <p>
-   The example below shows an expectation for <code>someMethod(int, String)</code>, which will match
-   an invocation to this method that should receive the exact argument values as specified.
+   The example below shows an expectation for <code>someMethod(int, String)</code>, which will match an invocation to
+   this method that should receive the exact argument values as specified.
    Notice that the expectation itself is specified through an invocation to the mocked method.
-   This invocation, however, does not count as one of the "real" invocations we are interested in
-   testing. It's only there so that the expectation can be specified.
+   This invocation, however, does not count as one of the "real" invocations we are interested in testing.
+   It's only there so that the expectation can be specified.
 </p>
 <pre><code>   @Test
    public void doBusinessOperationXyz()
@@ -218,8 +220,8 @@
    }
 </code></pre>
 <p>
-   We will see more about expectations later, after we understand the differences between
-   <em>recording</em> and <em>verifying</em> individual invocations.
+   We will see more about expectations later, after we understand the differences between <em>recording</em> and
+   <em>verifying</em> individual invocations.
 </p>
 
 <h3 id="model">
@@ -250,17 +252,18 @@
    }
 </code></pre>
 <p>
-   First, we have a preparation phase, where objects and data items needed for the test are created
-   or obtained from somewhere else. Then, the unit under test is exercised. Finally, the results
-   from exercising the tested unit are compared with the expected results.
+   First, we have a preparation phase, where objects and data items needed for the test are created or obtained from
+   somewhere else.
+   Then, the unit under test is exercised. Finally, the results from exercising the tested unit are compared with the
+   expected results.
 </p>
 <p>
-   This model of three phases is also known as the <em>Arrange, Act, Assert syntax</em>, or "AAA"
-   for short. Different words, but the meaning is exactly the same.
+   This model of three phases is also known as the <em>Arrange, Act, Assert syntax</em>, or "AAA" for short.
+   Different words, but the meaning is exactly the same.
 </p>
 <p>
-   In the context of behavior-based testing with mocks, we can identify the following alternative
-   phases, which are directly related to the three previously described conventional testing phases.
+   In the context of behavior-based testing with mocks, we can identify the following alternative phases, which are
+   directly related to the three previously described conventional testing phases.
 </p>
 <ol>
    <li>
@@ -268,14 +271,14 @@
       This happens during test preparation, <em>before</em> the invocations we want to test are executed.
    </li>
    <li>
-      The <strong><em>replay</em></strong> phase, during which the mock invocations of interest have
-      a chance to be executed, as the unit under test is exercised.
-      The invocations to mocked methods/constructors previously recorded will now be
-      <em>replayed</em>. Often there isn't a one-to-one mapping between invocations recorded and replayed.
+      The <strong><em>replay</em></strong> phase, during which the mock invocations of interest have a chance to be
+      executed, as the unit under test is exercised.
+      The invocations to mocked methods/constructors previously recorded will now be <em>replayed</em>.
+      Often there isn't a one-to-one mapping between invocations recorded and replayed.
    </li>
    <li>
-      The <strong><em>verify</em></strong> phase, during which invocations can be <em>verified</em>
-      to have occurred as expected or not.
+      The <strong><em>verify</em></strong> phase, during which invocations can be <em>verified</em> to have occurred as
+      expected or not.
       This happens during test verification, <em>after</em> the invocations under test had a chance to be executed.
    </li>
 </ol>
@@ -358,9 +361,9 @@ public class SomeTest
 }
 </code></pre>
 <p>
-   There are other variations to the above templates, but the essence is that the expectation blocks
-   belong to the <em>record</em> phase and come before the unit under test is exercised, while the
-   verification blocks belong to the <em>verify</em> phase.
+   There are other variations to the above templates, but the essence is that the expectation blocks belong to the
+   <em>record</em> phase and come before the unit under test is exercised, while the verification blocks belong to the
+   <em>verify</em> phase.
    A test method can contain any number of expectation blocks, including none. The same is true for verification blocks.
 </p>
 <p>
@@ -392,31 +395,30 @@ public class SomeTest
    class might have that are not intended for mocking.
 </p>
 <p>
-   All kinds of Java types are valid for mock fields and parameters, except for primitive types and
-   for array types. So, to make it clear, the following reference types are valid: interfaces,
-   concrete classes, <code>abstract</code> classes, <code>final</code> classes, <code>enum</code>
-   types, and annotation types.
-   Note that this includes reference types from the JRE (belonging to one of the standard packages,
-   like <code>java.lang</code>, <code>java.util</code>, and so on).
+   All kinds of Java types are valid for mock fields and parameters, except for primitive types and for array types.
+   So, to make it clear, the following reference types are valid: interfaces, concrete classes, <code>abstract</code>
+   classes, <code>final</code> classes, <code>enum</code> types, and annotation types.
+   Note that this includes reference types from the JRE (belonging to one of the standard packages, like
+   <code>java.lang</code>, <code>java.util</code>, and so on).
 </p>
 <p>
-   For a mock parameter, an instance of the declared type will be automatically created by JMockit
-   and passed in the call to the test method. It will never be <code>null</code>.
+   For a mock parameter, an instance of the declared type will be automatically created by JMockit and passed in the
+   call to the test method. It will never be <code>null</code>.
 </p>
 <p>
-   For a mock field, an instance of the declared type will be automatically created by JMockit
-   and assigned to the field, unless it's a <code>final</code> field.
-   In this case, a value should be assigned to the field explicitly in test code. Such a value can
-   be <code>null</code>, though, which is perfectly valid for a mocked class if only constructors
-   and static methods are going to be called on it.
+   For a mock field, an instance of the declared type will be automatically created by JMockit and assigned to the
+   field, unless it's a <code>final</code> field.
+   In this case, a value should be assigned to the field explicitly in test code. Such a value can be <code>null</code>,
+   though, which is perfectly valid for a mocked class if only constructors and static methods are going to be called on
+   it.
 </p>
 <p>
    The mocked instances created by JMockit can be used normally in test code, and/or passed to the code under test.
-   Differently from other mocking APIs, though, these <em>mocked</em> objects don't have to be the
-   ones used by the unit under test when it calls instance methods on its dependencies.
+   Differently from other mocking APIs, though, these <em>mocked</em> objects don't have to be the ones used by the unit
+   under test when it calls instance methods on its dependencies.
    By default, JMockit does not care on which object a mocked instance method is called.
-   This is what allows the transparent mocking of instances created directly inside code under test
-   through invocations to constructors using the <code>new</code> operator.
+   This is what allows the transparent mocking of instances created directly inside code under test through invocations
+   to constructors using the <code>new</code> operator.
    The classes instantiated must be covered by mocked types declared in test code, that's all.
 </p>
 <p>
@@ -432,10 +434,10 @@ public class SomeTest
 <p>
    Suppose the unit under test needs to be given an object which implements two or more interfaces.
    Can we get a mocked instance which satisfies this requirement?
-   One way to do it would be to create a test-specific interface which extends all the interfaces
-   required by the tested unit, and then use that as the mocked type.
-   There is a better way though, which does not require the definition of a new interface, as the
-   following example tests show.
+   One way to do it would be to create a test-specific interface which extends all the interfaces required by the tested
+   unit, and then use that as the mocked type.
+   There is a better way though, which does not require the definition of a new interface, as the following example
+   tests show.
 </p>
 <pre><code>interface Dependency // an arbitrary custom interface
 {
@@ -501,10 +503,10 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   For a given method with non-<code>void</code> return type, a return value can be recorded through
-   the <code>Expectations#result</code> field or through the <code>Expectations#returns(...)</code> method.
-   When the method gets called in the replay phase, the specified return value will be returned to
-   the caller (which normally is the unit under test).
+   For a given method with non-<code>void</code> return type, a return value can be recorded through the
+   <code>Expectations#result</code> field or through the <code>Expectations#returns(...)</code> method.
+   When the method gets called in the replay phase, the specified return value will be returned to the caller (which
+   normally is the unit under test).
 </p>
 <p>
    If the test instead needs an exception or error to be thrown when the method is invoked, then the <code>result</code>
@@ -515,28 +517,25 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    Note that recording exceptions/errors to be thrown is applicable to mocked methods as well as to mocked constructors.
 </p>
 <p>
-   Multiple consecutive results (values to return and/or throwables to throw) can be recorded for
-   the same expectation, by simply assigning the <code>result</code> field multiple times after the
-   mock invocation that creates the expectation.
-   The recording of multiple return values and/or exceptions/errors to be thrown can be freely mixed
-   for the same expectation.
-   In the case of recording multiple consecutive return values for a given expectation, a single
-   call to the <code>returns(Object, Object...)</code> method can be made to specify more than one return value.
-   This is the only situation where the <code>result</code> field cannot be used; note that this
-   <code>returns</code> method is an overload which takes a <em>varargs</em> argument for
-   consecutive values after the first one.
+   Multiple consecutive results (values to return and/or throwables to throw) can be recorded for the same expectation,
+   by simply assigning the <code>result</code> field multiple times after the mock invocation that creates the
+   expectation.
+   The recording of multiple return values and/or exceptions/errors to be thrown can be freely mixed for the same
+   expectation.
+   In the case of recording multiple consecutive return values for a given expectation, a single call to the
+   <code>returns(Object, Object...)</code> method can be made to specify more than one return value.
+   This is the only situation where the <code>result</code> field cannot be used; note that this <code>returns</code>
+   method is an overload which takes a <em>varargs</em> argument for consecutive values after the first one.
    For more details about this ability, see the corresponding
    <a href="../javadoc/mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">API documentation</a>.
 </p>
 <p>
    The following example test records expectations for two methods defined in a mocked class.
-   The first one specifies that the unit under test should first invoke
-   <code>intReturningMethod()</code> on an instance (any instance) of the mocked class, which will
-   then return the value <code>5</code>.
-   The second one specifies that the unit under test should then invoke
-   <code>stringReturningMethod()</code> three times, with the first two calls resulting in the
-   return values of <code>"str1"</code> and <code>"str2"</code>, and the third call causing an
-   <code class="type">IllegalStateException</code> instance to be thrown.
+   The first one specifies that the unit under test should first invoke <code>intReturningMethod()</code> on an instance
+   (any instance) of the mocked class, which will then return the value <code>5</code>.
+   The second one specifies that the unit under test should then invoke <code>stringReturningMethod()</code> three
+   times, with the first two calls resulting in the return values of <code>"str1"</code> and <code>"str2"</code>, and
+   the third call causing an <code class="type">IllegalStateException</code> instance to be thrown.
 </p>
 <pre><code>   @Test
    public void someTestMethod()
@@ -557,14 +556,81 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   The example above actually contains three different expectations. The call to the
-   <code>DependencyAbc()</code> constructor in the mock field assignment turns out to also be a mock
+   The example above actually contains three different expectations.
+   The call to the <code>DependencyAbc()</code> constructor in the mock field assignment turns out to also be a mock
    invocation inside the expectation block, and as such it also defines an expectation.
    In fact, there was no need to call the constructor in the field assignment.
-   Moving <code>new DependencyAbc();</code> to the beginning of the instance initialization block
-   and leaving the mock field unassigned would have worked just as well.
-   Often, however, it's not desirable or important to specify all these method and constructor
-   invocations in a given test. We will soon address this issue.
+   Moving <code>new DependencyAbc();</code> to the beginning of the instance initialization block and leaving the mock
+   field unassigned would have worked just as well.
+   Often, however, it's not desirable or important to specify all these method and constructor invocations in a given
+   test. We will soon address this issue.
+</p>
+
+<h4 id="defaultResults">Specifying default results</h4>
+<p>
+   Whenever an invocation to a mocked non-<code>void</code> method fails to match any recorded expectation, a default
+   return value needs to be provided.
+   JMockit will always supply a reasonable return value, according to the declared return type of the method:
+   <code>0</code> (zero) for an integral primitive type, <code>false</code> for <code>boolean</code>, an empty
+   collection or array, or the <code>null</code> reference for reference types (including <code>String</code> and the
+   primitive wrapper classes).
+   Mocked constructors and <code>void</code> methods also have a "default result", which is to simply return without
+   throwing any exception or error.
+   (Note, however, that when an invocation is deemed to be <em>unexpected</em>, an <code>AssertionError</code> is
+   thrown instead of returning a value.)
+</p>
+<p>
+   It's possible to explicitly override such default results in an expectation block, by declaring <em>input
+   fields</em>. Such (instance) fields must be annotated with <code>@Input</code>. Here is an example.
+</p>
+<pre><code>   @Test
+   public void someTestMethod()
+   {
+      new NonStrictExpectations()
+      {
+         DependencyAbc mock; // a mock field, assigned automatically
+
+         // The <strong>names</strong> of input fields are merely for documentation.
+         <strong>@Input</strong> final int defaultIntReturn = 5;
+         <strong>@Input</strong> Socket aSocket;
+         <strong>@Input</strong> FileNotFoundException onFileOpen;
+
+         {
+            abc.stringReturningMethod(); returns("str1", "str2");
+         }
+      };
+
+      new UnitUnderTest().doSomething();
+   }
+</code></pre>
+<p>
+   In the case of return values, the declared type of the field must be the same as the return type of interest; any
+   non-<code>void</code> methods having this return type will return the value assigned to the input field,
+   <em>each</em> time they get invoked by the code under test, provided they are allowed to occur and there is no
+   matching recorded expectation.
+   In the example above, any method belonging to <code>DependencyAbc</code> which returns an <code>int</code> will
+   return the value <code>5</code>; any method returning a <code>Socket</code> will return a socket object instantiated
+   automatically with the <code>java.net.Socket</code> public no-args constructor (if a custom instance was needed, we
+   could have it explicitly instantiated and assigned to the field).
+</p>
+<p>
+   Methods or constructors that declare to throw <em>checked</em> exceptions can have one such exception specified as
+   the default result, by simply declaring an input field of the desired exception type. An exception instance can be
+   directly instantiated and assigned to the field; if none is, then JMockit will do so automatically using the public
+   no-args constructor of the exception class.
+   In the example test, if <code>DependencyAbc</code> has a method or constructor with
+   <code>java.io.FileNotFoundException</code> in its <code>throws</code> clause, it will cause this exception to be
+   thrown whenever a non-recorded invocation occurs during the test.
+</p>
+<p>
+   Note that this mechanism depends only on <em>return types</em> or <em>throws clauses</em>, not on method names or
+   parameters, or even on which mocked class or instance an invocation occurs.
+   For many methods in production code, we often find that <em>only one</em> value of a certain type is needed for a
+   given test of the method (particularly when it's a <em>reference</em> type, less so when it's a primitive or
+   <code>String</code>).
+   This property allows us to write a shorter test, where a "mere" default result is specified instead of having to
+   record an expectation and deal with full method/constructor signatures.
+   When more precision is required for a given test, a suitable expectation will have to be recorded, naturally.
 </p>
 
 <h3 id="onInstance">
