@@ -31,8 +31,8 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
 
    private void discardExpectationsAndArgumentsAlreadyVerified()
    {
-      for (Expectation expectation : getExpectationsVerified()) {
-         int i = expectationsInReplayOrder.indexOf(expectation);
+      for (VerifiedExpectation verified : recordAndReplay.executionState.verifiedExpectations) {
+         int i = expectationsInReplayOrder.indexOf(verified.expectation);
 
          if (i >= 0) {
             expectationsInReplayOrder.remove(i);
@@ -115,7 +115,6 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
 
                break;
             }
-
          }
          else if (invocationCount >= minInvocations) {
             break;
@@ -210,7 +209,7 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
 
    private AssertionError verifyRemainingIterations()
    {
-      int expectationsVerifiedInFirstIteration = getExpectationsVerified().size();
+      int expectationsVerifiedInFirstIteration = recordAndReplay.executionState.verifiedExpectations.size();
 
       for (int i = 1; i < numberOfIterations; i++) {
          AssertionError error = verifyNextIterationOfWholeBlockOfInvocations(expectationsVerifiedInFirstIteration);
@@ -225,10 +224,10 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
 
    private AssertionError verifyNextIterationOfWholeBlockOfInvocations(int expectationsVerifiedInFirstIteration)
    {
-      List<Expectation> expectationsVerified = getExpectationsVerified();
+      List<VerifiedExpectation> expectationsVerified = recordAndReplay.executionState.verifiedExpectations;
 
       for (int i = 0; i < expectationsVerifiedInFirstIteration; i++) {
-         ExpectedInvocation invocation = expectationsVerified.get(i).invocation;
+         ExpectedInvocation invocation = expectationsVerified.get(i).expectation.invocation;
 
          argMatchers = invocation.arguments.getMatchers();
          handleInvocation(

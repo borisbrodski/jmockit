@@ -27,8 +27,6 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
       this.invocationArgumentsInReplayOrder = invocationArgumentsInReplayOrder;
    }
 
-   final List<Expectation> getExpectationsVerified() { return recordAndReplay.executionState.expectationsVerified; }
-
    public final void setAllInvocationsMustBeVerified() { allInvocationsDuringReplayMustBeVerified = true; }
 
    public final void setMockedTypesToFullyVerify(Object[] mockedTypesAndInstancesToFullyVerify)
@@ -95,7 +93,8 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
          }
 
          if (argumentsMatch) {
-            recordAndReplay.executionState.addVerified(expectation, args, argMatchers);
+            recordAndReplay.executionState.verifiedExpectations.add(
+               new VerifiedExpectation(expectation, args, argMatchers));
             return true;
          }
       }
@@ -197,21 +196,19 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
    private boolean wasVerified(Expectation replayExpectation, Object[] replayArgs)
    {
       InvocationArguments invokedArgs = replayExpectation.invocation.arguments;
-      List<Expectation> expectationsVerified = getExpectationsVerified();
-      List<Object[]> argsVerified = recordAndReplay.executionState.argsVerified;
-      List<List<Matcher<?>>> argMatchersVerified = recordAndReplay.executionState.argMatchersVerified;
+      List<VerifiedExpectation> expectationsVerified = recordAndReplay.executionState.verifiedExpectations;
 
       for (int j = 0; j < expectationsVerified.size(); j++) {
-         if (expectationsVerified.get(j) == replayExpectation) {
-            Object[] storedArgs = invokedArgs.prepareForVerification(argsVerified.get(j), argMatchersVerified.get(j));
+         VerifiedExpectation verified = expectationsVerified.get(j);
+
+         if (verified.expectation == replayExpectation) {
+            Object[] storedArgs = invokedArgs.prepareForVerification(verified.arguments, verified.argMatchers);
             boolean argumentsMatch = invokedArgs.isMatch(replayArgs, getInstanceMap());
             invokedArgs.setValuesWithNoMatchers(storedArgs);
 
             if (argumentsMatch) {
                if (shouldDiscardInformationAboutVerifiedInvocationOnceUsed()) {
                   expectationsVerified.remove(j);
-                  argsVerified.remove(j);
-                  argMatchersVerified.remove(j);
                }
 
                return true;
