@@ -20,6 +20,7 @@ public final class InputTest
       short getShort() { return 56; }
       int getAnotherInt(String s) { return s.hashCode(); }
       String getString() { return ""; }
+      private String getAnotherString() { return ""; }
       List<Integer> getListOfIntegers() { return null; }
       List<Boolean> getListOfBooleans() { return null; }
       static Map<String, List<Long>> getMapFromStringToListOfLongs() { return null; }
@@ -33,7 +34,7 @@ public final class InputTest
    @Test
    public void specifyDefaultReturnValues()
    {
-      new Expectations()
+      new NonStrictExpectations()
       {
          @Input final int someIntValue = 123;
          @Input String uniqueId = "Abc5"; // fields not required to be final
@@ -45,12 +46,19 @@ public final class InputTest
             put("two", asList(10L, 20L));
          }};
          @Input Socket aSocket; // created with public no-args constructor and automatically assigned
+
+         {
+            mock.getAnotherInt("c"); result = 45;
+            mock.getAnotherString(); result = null;
+         }
       };
 
       assertEquals(123, mock.getInt());
       assertEquals(0, mock.getShort());
       assertEquals(123, mock.getAnotherInt("a"));
+      assertEquals(45, mock.getAnotherInt("c"));
       assertEquals("Abc5", mock.getString());
+      assertNull(mock.getAnotherString());
       assertEquals(asList(4, 56, 278), mock.getListOfIntegers());
       assertEquals(asList(true, false, true), mock.getListOfBooleans());
       assertNotNull(mock.getSocket());
@@ -65,6 +73,7 @@ public final class InputTest
       assertEquals("Abc5", mock.getString());
       assertEquals(123, mock.getInt());
       assertEquals(123, mock.getAnotherInt("b"));
+      assertNull(mock.getAnotherString());
    }
 
    @Test
