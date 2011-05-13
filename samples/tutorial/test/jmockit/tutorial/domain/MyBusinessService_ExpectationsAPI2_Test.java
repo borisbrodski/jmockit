@@ -43,7 +43,7 @@ public final class MyBusinessService_ExpectationsAPI2_Test
    public void doBusinessOperationXyzWithInvalidEmailAddress() throws Exception
    {
       new NonStrictExpectations() {
-         // Any mocked method/constructor with this exception type in the throws clause will throw it:
+         // Any mocked method/constructor with this exception in the throws clause will throw it:
          @Input EmailException onInvalidEmail;
 
          { email.send(); times = 0; }
