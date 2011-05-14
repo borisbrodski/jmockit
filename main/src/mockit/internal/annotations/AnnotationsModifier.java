@@ -229,7 +229,18 @@ public final class AnnotationsModifier extends BaseClassModifier
       }
 
       generateCallToMock(access, desc);
-      return new MethodAdapter(mw);
+
+      return new MethodAdapter(mw)
+      {
+         @Override
+         public void visitLocalVariable(String name, String desc2, String signature, Label start, Label end, int index)
+         {
+            // Discards debug info with missing information, to avoid a ClassFormatError (happens with EMMA).
+            if (end.position > 0) {
+               mw.visitLocalVariable(name, desc2, signature, start, end, index);
+            }
+         }
+      };
    }
 
    private void generateCallsForMockExecution(int access, String desc)
