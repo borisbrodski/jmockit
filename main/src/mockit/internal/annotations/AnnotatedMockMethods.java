@@ -14,7 +14,7 @@ import mockit.internal.state.*;
  */
 public final class AnnotatedMockMethods
 {
-   String mockClassInternalName;
+   private String mockClassInternalName;
    private boolean isInnerMockClass;
    private boolean withItField;
    private boolean withInvocationParameter;
@@ -23,21 +23,24 @@ public final class AnnotatedMockMethods
     * The set of public mock methods in a mock class. Each one is represented by the concatenation of its name with the
     * internal JVM description of its parameters and return type.
     */
-   final List<String> methods = new ArrayList<String>(20);
+   private final List<String> methods;
 
    /**
     * The subset of static methods between the {@link #methods mock methods} in a mock class.
     * This is needed when generating calls for the mock methods.
     */
-   private final Collection<String> staticMethods = new ArrayList<String>(20);
+   private final Collection<String> staticMethods;
 
    final Class<?> realClass;
    private MockClassState mockStates;
-   private int indexForMockExpectations = -1;
+   private int indexForMockExpectations;
 
    public AnnotatedMockMethods(Class<?> realClass)
    {
+      methods = new ArrayList<String>(20);
+      staticMethods = new ArrayList<String>(20);
       this.realClass = realClass;
+      indexForMockExpectations = -1;
    }
 
    public String addMethod(boolean fromSuperClass, String name, String desc, boolean isStatic)
