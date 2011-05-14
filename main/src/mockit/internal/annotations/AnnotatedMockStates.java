@@ -15,13 +15,19 @@ public final class AnnotatedMockStates
     * For each mock class containing @Mock annotations with at least one invocation expectation
     * specified or at least one reentrant mock, a runtime state will be kept here.
     */
-   private final Map<String, MockClassState> classStates = new HashMap<String, MockClassState>(8);
+   private final Map<String, MockClassState> classStates;
 
    /**
     * For each annotated mock method with at least one invocation expectation, its mock state will
     * also be kept here, as an optimization.
     */
-   private final Set<MockState> mockStatesWithExpectations = new LinkedHashSet<MockState>(10);
+   private final Set<MockState> mockStatesWithExpectations;
+
+   public AnnotatedMockStates()
+   {
+      classStates = new HashMap<String, MockClassState>(8);
+      mockStatesWithExpectations = new LinkedHashSet<MockState>(10);
+   }
 
    MockClassState addClassState(String mockClassInternalName)
    {

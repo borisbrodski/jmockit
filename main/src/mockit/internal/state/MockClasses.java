@@ -8,22 +8,18 @@ import mockit.internal.annotations.*;
 
 public final class MockClasses
 {
-   final MockInstances regularMocks = new MockInstances();
-   final MockInstances startupMocks = new MockInstances();
-   private final AnnotatedMockStates annotatedMockStates = new AnnotatedMockStates();
+   final MockInstances regularMocks;
+   final MockInstances startupMocks;
+   private final AnnotatedMockStates annotatedMockStates;
 
-   public MockInstances getRegularMocks()
+   MockClasses()
    {
-      return regularMocks;
+      regularMocks = new MockInstances();
+      startupMocks = new MockInstances();
+      annotatedMockStates = new AnnotatedMockStates();
    }
 
-   public MockInstances getMocks(boolean forStartup)
-   {
-      return forStartup ? startupMocks : regularMocks;
-   }
-
-   public AnnotatedMockStates getMockStates()
-   {
-      return annotatedMockStates;
-   }
+   public MockInstances getRegularMocks() { return regularMocks; }
+   public MockInstances getMocks(boolean forStartup) { return forStartup ? startupMocks : regularMocks; }
+   public AnnotatedMockStates getMockStates() { return annotatedMockStates; }
 }
