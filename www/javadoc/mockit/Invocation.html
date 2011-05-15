@@ -99,8 +99,8 @@ Class Invocation</H2>
 <P>
 A context object representing the current invocation to a mocked method or constructor.
  <p/>
- When used as the type of the first parameter on a <A HREF="../mockit/Delegate.html" title="interface in mockit"><CODE>Delegate</CODE></A> method, all invocations to the
- delegate method will receive an appropriate instance.
+ When used as the type of the first parameter on a <A HREF="../mockit/Delegate.html" title="interface in mockit"><CODE>Delegate</CODE></A> method, all invocations to the delegate method
+ will receive an appropriate instance.
  Similarly, it can be used in the handler method of an instance assigned to the
  forEachInvocation field.
  <p/>
@@ -161,12 +161,19 @@ A context object representing the current invocation to a mocked method or const
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></CODE></FONT></TD>
+<CODE>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
+<TR ALIGN="right" VALIGN="">
+<TD NOWRAP><FONT SIZE="-1">
+<CODE>&lt;T&gt; T</CODE></FONT></TD>
+</TR>
+</TABLE>
+</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../mockit/Invocation.html#getInvokedInstance()">getInvokedInstance</A></B>()</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the target instance on which the current invocation was made, if any (if the method
- invoked is <code>static</code> then there is no instance and null is returned).</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the target instance on which the current invocation was made, if any (if the method invoked is
+ <code>static</code> then there is no instance and null is returned).</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -275,14 +282,13 @@ public final int <B>getInvocationIndex</B>()</PRE>
 <A NAME="getInvokedInstance()"><!-- --></A><H3>
 getInvokedInstance</H3>
 <PRE>
-public final <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A> <B>getInvokedInstance</B>()</PRE>
+public final &lt;T&gt; T <B>getInvokedInstance</B>()</PRE>
 <DL>
-<DD>Returns the target instance on which the current invocation was made, if any (if the method
- invoked is <code>static</code> then there is no instance and null is returned).
+<DD>Returns the target instance on which the current invocation was made, if any (if the method invoked is
+ <code>static</code> then there is no instance and null is returned).
  <p/>
- Note that this instance can either be a mock instance (for example, the instance automatically
- created by JMockit and assigned to a mock field or passed as the argument value for a mock
- parameter), or a "real" instance created by code under test for a mocked type.
+ Note that this instance can either be the mocked instance originally created by JMockit and assigned to a mock
+ field or passed as a mock parameter, or an instance created by the code under test.
 <P>
 <DD><DL>
 </DL>
@@ -297,8 +303,8 @@ public final int <B>getMaxInvocations</B>()</PRE>
 <DL>
 <DD>Returns the maximum invocation count for the current expectation (-1 indicates unlimited).
  <p/>
- This call will return the value specified through the <CODE>Invocations.times</CODE> or
- <CODE>Invocations.maxTimes</CODE> field, if that was the case.
+ This call will return the value specified through the <CODE>Invocations.times</CODE> or <CODE>Invocations.maxTimes</CODE>
+ field, if that was the case.
 <P>
 <DD><DL>
 </DL>
@@ -313,8 +319,8 @@ public final int <B>getMinInvocations</B>()</PRE>
 <DL>
 <DD>Returns the minimum invocation count for the current expectation.
  <p/>
- This call will return the value specified through the <CODE>Invocations.times</CODE> or
- <CODE>Invocations.minTimes</CODE> field, if that was the case.
+ This call will return the value specified through the <CODE>Invocations.times</CODE> or <CODE>Invocations.minTimes</CODE>
+ field, if that was the case.
 <P>
 <DD><DL>
 </DL>
@@ -329,8 +335,8 @@ public final void <B>setMaxInvocations</B>(int&nbsp;maxInvocations)</PRE>
 <DL>
 <DD>Sets the maximum invocation count for the current expectation.
  <p/>
- This call can be used to override the value set on the <CODE>Invocations.times</CODE> or
- <CODE>Invocations.maxTimes</CODE> field.
+ This call can be used to override the value set on the <CODE>Invocations.times</CODE> or <CODE>Invocations.maxTimes</CODE>
+ field.
 <P>
 <DD><DL>
 </DL>
@@ -345,8 +351,8 @@ public final void <B>setMinInvocations</B>(int&nbsp;minInvocations)</PRE>
 <DL>
 <DD>Sets the minimum invocation count for the current expectation.
  <p/>
- This call can be used to override the value set on the <CODE>Invocations.times</CODE> or
- <CODE>Invocations.minTimes</CODE> field.
+ This call can be used to override the value set on the <CODE>Invocations.times</CODE> or <CODE>Invocations.minTimes</CODE>
+ field.
 <P>
 <DD><DL>
 </DL>

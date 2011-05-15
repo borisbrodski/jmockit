@@ -4,7 +4,7 @@
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <TITLE>
-Injectable (JMockit Toolkit API Documentation)
+Input (JMockit Toolkit API Documentation)
 </TITLE>
 
 
@@ -14,7 +14,7 @@ Injectable (JMockit Toolkit API Documentation)
 function windowTitle()
 {
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="Injectable (JMockit Toolkit API Documentation)";
+        parent.document.title="Input (JMockit Toolkit API Documentation)";
     }
 }
 </SCRIPT>
@@ -51,11 +51,11 @@ function windowTitle()
 
 <TR>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="../mockit/FullVerificationsInOrder.html" title="class in mockit"><B>PREV CLASS</B></A>&nbsp;
-&nbsp;<A HREF="../mockit/Input.html" title="annotation in mockit"><B>NEXT CLASS</B></A></FONT></TD>
+&nbsp;<A HREF="../mockit/Injectable.html" title="annotation in mockit"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../mockit/Instantiation.html" title="enum in mockit"><B>NEXT CLASS</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-  <A HREF="../index.html?mockit/Injectable.html" target="_top"><B>FRAMES</B></A>  &nbsp;
-&nbsp;<A HREF="Injectable.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
+  <A HREF="../index.html?mockit/Input.html" target="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Input.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
 &nbsp;<SCRIPT type="text/javascript">
   <!--
   if(window==top) {
@@ -86,31 +86,22 @@ DETAIL:&nbsp;ELEMENT</FONT></TD>
 <FONT SIZE="-1">
 mockit</FONT>
 <BR>
-Annotation Type Injectable</H2>
+Annotation Type Input</H2>
 <HR>
 <DL>
-<DT><PRE><FONT SIZE="-1"><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation">@Documented</A>
-<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</A>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>=<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation">RUNTIME</A>)
-<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</A>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>={<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#FIELD" title="class or interface in java.lang.annotation">FIELD</A>,<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#PARAMETER" title="class or interface in java.lang.annotation">PARAMETER</A>})
-</FONT>public @interface <B>Injectable</B></DL>
+<DT><PRE><FONT SIZE="-1"><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</A>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Retention.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>=<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation">RUNTIME</A>)
+<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</A>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/Target.html?is-external=true#value()" title="class or interface in java.lang.annotation">value</A>=<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/annotation/ElementType.html?is-external=true#FIELD" title="class or interface in java.lang.annotation">FIELD</A>)
+</FONT>public @interface <B>Input</B></DL>
 </PRE>
 
 <P>
-Indicates an instance field of the test class or a parameter of the test method whose value will be an <em>injectable
- mocked instance</em>.
- Such instances can be said to be proper <em>mock objects</em>, in contrast to the <em>mocked instances</em> of a
- regular mocked type.
- The intent is that these mock objects will be passed/injected into the tested object/unit.
+Indicates an instance field holding either a default return value for a given return type, or a checked exception
+ instance to be thrown for a given checked exception type.
+ If the field is not explicitly assigned a value, then one will be created and assigned automatically, provided the
+ declared type of the field is a class having a public no-args constructor.
  <p/>
- The use of this annotation implies that the declared type of the mock field/parameter is a mocked type, just like it
- would be if annotated with <A HREF="../mockit/Mocked.html" title="annotation in mockit">@Mocked</A>.
- The <code>@Mocked</code> annotation can be applied at the same time, if needed.
- The default mocking behavior, however, is different in several ways.
- <p/>
- For the duration of each test where the mock field/parameter is in scope, <em>only one</em> injectable instance is
- mocked; other instances of the same mocked type are not affected.
- For an injectable mocked <em>class</em>, <em>static methods</em> and <em>constructors</em> are <em>not</em> mocked;
- only instance methods are. The static initializers of said classes are <em>not</em> stubbed out by default.
+ This annotation is only relevant inside expectation blocks, and only applies to mocked methods/constructors for which
+ no matching expectation is recorded.
 <P>
 
 <P>
@@ -146,11 +137,11 @@ Indicates an instance field of the test class or a parameter of the test method 
 
 <TR>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="../mockit/FullVerificationsInOrder.html" title="class in mockit"><B>PREV CLASS</B></A>&nbsp;
-&nbsp;<A HREF="../mockit/Input.html" title="annotation in mockit"><B>NEXT CLASS</B></A></FONT></TD>
+&nbsp;<A HREF="../mockit/Injectable.html" title="annotation in mockit"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../mockit/Instantiation.html" title="enum in mockit"><B>NEXT CLASS</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-  <A HREF="../index.html?mockit/Injectable.html" target="_top"><B>FRAMES</B></A>  &nbsp;
-&nbsp;<A HREF="Injectable.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
+  <A HREF="../index.html?mockit/Input.html" target="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Input.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
 &nbsp;<SCRIPT type="text/javascript">
   <!--
   if(window==top) {

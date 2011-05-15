@@ -524,8 +524,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    expectation.
    In the case of recording multiple consecutive return values for a given expectation, a single call to the
    <code>returns(Object, Object...)</code> method can be made to specify more than one return value.
-   This is the only situation where the <code>result</code> field cannot be used; note that this <code>returns</code>
-   method is an overload which takes a <em>varargs</em> argument for consecutive values after the first one.
+   The <code>result</code> field can also be used, by assigning it a list or array of the consecutive values.
    For more details about this ability, see the corresponding
    <a href="../javadoc/mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">API documentation</a>.
 </p>
