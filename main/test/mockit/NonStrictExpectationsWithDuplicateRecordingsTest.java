@@ -15,7 +15,8 @@ public final class NonStrictExpectationsWithDuplicateRecordingsTest
       void setValue(int value) {}
       String doSomething(boolean b) { return ""; }
       String doSomething(String s) { return ""; }
-      long doSomething(Long o) { return -1L; }
+      long doSomething(Long l) { return -1L; }
+      long doSomething(Long l, Object o) { return 1L; }
       boolean doSomething(int i) { return true; }
       int doSomething(char c) { return 123; }
    }
@@ -42,7 +43,6 @@ public final class NonStrictExpectationsWithDuplicateRecordingsTest
    {
       new NonStrictExpectations()
       {{
-         // Ok when recorded from most specific to least specific:
          mock.setValue(1);
          mock.setValue(anyInt); result = new UnknownError();
       }};
@@ -62,6 +62,25 @@ public final class NonStrictExpectationsWithDuplicateRecordingsTest
 
       assertEquals(1, mock.doSomething('W'));
       assertEquals(2, mock.doSomething('x'));
+   }
+
+   @Test
+   public void recordSameMethodWithIdenticalArgumentMatchers()
+   {
+      new NonStrictExpectations()
+      {{
+         mock.doSomething(anyInt); result = false;
+         mock.doSomething(anyInt); result = true; // overrides the previous expectation
+
+         mock.doSomething(withNotEqual(5L), withInstanceOf(String.class)); result = 1L;
+         mock.doSomething(withNotEqual(5L), withInstanceOf(String.class)); result = 2L; // same here
+      }};
+
+      assertTrue(mock.doSomething(1));
+      assertTrue(mock.doSomething(0));
+
+      assertEquals(2, mock.doSomething(null, "test 1"));
+      assertEquals(2, mock.doSomething(1L, "test 2"));
    }
 
    @Test
@@ -98,7 +117,7 @@ public final class NonStrictExpectationsWithDuplicateRecordingsTest
    }
 
    @Test
-   public void recordSameMethodWithExactArgumentAndArgMatcherButInWrongOrder()
+   public void recordSameMethodWithExactArgumentAndArgMatcher()
    {
       new NonStrictExpectations()
       {{
@@ -106,8 +125,8 @@ public final class NonStrictExpectationsWithDuplicateRecordingsTest
          mock.doSomething(1); result = true;
       }};
 
-      assertFalse(mock.doSomething(1)); // not ok, matches two but most specific comes last
-      assertFalse(mock.doSomething(2)); // ok, matches only one expectation
+      assertTrue(mock.doSomething(1)); // matches last recorded expectation
+      assertFalse(mock.doSomething(2)); // matches only one expectation
    }
 
    @Test

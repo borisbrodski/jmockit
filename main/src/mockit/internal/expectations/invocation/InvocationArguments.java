@@ -316,4 +316,28 @@ public final class InvocationArguments
 
       return desc.toString();
    }
+
+   public boolean hasEquivalentMatchers(InvocationArguments other)
+   {
+      List<Matcher<?>> otherMatchers = other.matchers;
+
+      if (otherMatchers == null || otherMatchers.size() != matchers.size()) {
+         return false;
+      }
+
+      for (int i = 0; i < matchers.size(); i++) {
+         Matcher<?> matcher = matchers.get(i);
+         Matcher<?> otherMatcher = otherMatchers.get(i);
+
+         if (
+            matcher != otherMatcher &&
+            (matcher.getClass() != otherMatcher.getClass() ||
+             matcher.matches(other.invocationArgs[i]) != otherMatcher.matches(invocationArgs[i]))
+         ) {
+            return false;
+         }
+      }
+
+      return true;
+   }
 }

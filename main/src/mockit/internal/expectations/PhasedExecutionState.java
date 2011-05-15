@@ -53,7 +53,7 @@ final class PhasedExecutionState
    {
       ExpectedInvocation invocation = expectation.invocation;
       forceMatchingOnMockInstanceIfRequired(invocation);
-      removeMatchingExpectationsCreatedBeforeRecordPhase(invocation);
+      removeMatchingExpectationsCreatedBefore(invocation);
 
       if (nonStrict) {
          nonStrictExpectations.add(expectation);
@@ -78,15 +78,45 @@ final class PhasedExecutionState
       }
    }
 
-   private void removeMatchingExpectationsCreatedBeforeRecordPhase(ExpectedInvocation invocation)
+   private void removeMatchingExpectationsCreatedBefore(ExpectedInvocation invocation)
    {
-      Expectation previousExpectation = findNonStrictExpectation(
-         invocation.instance, invocation.getClassDesc(), invocation.getMethodNameAndDescription(),
-         invocation.getArgumentValues());
+      Expectation previousExpectation = findPreviousNonStrictExpectation(invocation);
 
-      if (previousExpectation != null && previousExpectation.recordPhase == null) {
+      if (previousExpectation != null) {
          nonStrictExpectations.remove(previousExpectation);
+         invocation.copyDefaultReturnValue(previousExpectation.invocation);
       }
+   }
+
+   private Expectation findPreviousNonStrictExpectation(ExpectedInvocation newInvocation)
+   {
+      Object mock = newInvocation.instance;
+      String mockClassDesc = newInvocation.getClassDesc();
+      String mockNameAndDesc = newInvocation.getMethodNameAndDescription();
+      InvocationArguments arguments = newInvocation.arguments;
+      Object[] argValues = arguments.getValues();
+      boolean newInvocationWithMatchers = arguments.getMatchers() != null;
+
+      for (int i = 0, n = nonStrictExpectations.size(); i < n; i++) {
+         Expectation previousExpectation = nonStrictExpectations.get(i);
+         ExpectedInvocation previousInvocation = previousExpectation.invocation;
+
+         if (
+            isInvocationToSameMethodOrConstructor(mock, mockClassDesc, mockNameAndDesc, previousInvocation) &&
+            (newInvocationWithMatchers && arguments.hasEquivalentMatchers(previousInvocation.arguments) ||
+             !newInvocationWithMatchers && previousInvocation.arguments.isMatch(argValues, instanceMap))
+         ) {
+            return previousExpectation;
+         }
+      }
+
+      return null;
+   }
+
+   private boolean isInvocationToSameMethodOrConstructor(
+      Object mock, String mockClassDesc, String mockNameAndDesc, ExpectedInvocation invocation)
+   {
+      return invocation.isMatch(mockClassDesc, mockNameAndDesc) && invocation.isMatch(mock, instanceMap);
    }
 
    Expectation findNonStrictExpectation(Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
@@ -97,8 +127,7 @@ final class PhasedExecutionState
          ExpectedInvocation invocation = nonStrict.invocation;
 
          if (
-            invocation.isMatch(mockClassDesc, mockNameAndDesc) &&
-            invocation.isMatch(mock, instanceMap) &&
+            isInvocationToSameMethodOrConstructor(mock, mockClassDesc, mockNameAndDesc, invocation) &&
             invocation.arguments.isMatch(args, instanceMap)
          ) {
             return nonStrict;

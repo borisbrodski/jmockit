@@ -252,4 +252,6 @@ public final class ExpectedInvocation
    }
 
    public Object getCascadedMock() { return cascadedMock; }
+
+   public void copyDefaultReturnValue(ExpectedInvocation other) { defaultReturnValue = other.defaultReturnValue; }
 }

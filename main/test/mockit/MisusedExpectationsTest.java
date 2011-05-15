@@ -68,32 +68,32 @@ public final class MisusedExpectationsTest
       assertEquals(4, mock.value());
    }
 
-   @Test//(expected = IllegalArgumentException.class)
+   @Test
    public void recordDuplicateInvocationWithNoArguments()
    {
       new NonStrictExpectations()
       {{
          mock.value(); result = 1;
-         mock.value(); result = 2;
+         mock.value(); result = 2; // second recording overrides the first
       }};
 
-      assertEquals(1, mock.value());
-      assertEquals(1, mock.value());
+      assertEquals(2, mock.value());
+      assertEquals(2, mock.value());
    }
 
-   @Test//(expected = IllegalArgumentException.class)
+   @Test
    public void recordDuplicateInvocationWithArgumentMatcher()
    {
       new NonStrictExpectations()
       {{
-         mock.setValue(anyInt);
          mock.setValue(anyInt); result = new UnknownError();
+         mock.setValue(anyInt); // overrides the previous one
       }};
 
       mock.setValue(3);
    }
 
-   @Test//(expected = IllegalArgumentException.class)
+   @Test
    public void recordDuplicateInvocationInSeparateNonStrictExpectationBlocks()
    {
       new NonStrictExpectations()
@@ -103,10 +103,10 @@ public final class MisusedExpectationsTest
 
       new NonStrictExpectations()
       {{
-         mock.value(); result = 2;
+         mock.value(); result = 2; // overrides the previous expectation
       }};
 
-      assertEquals(1, mock.value());
+      assertEquals(2, mock.value());
    }
 
    @Test(expected = AssertionError.class)
@@ -176,7 +176,7 @@ public final class MisusedExpectationsTest
 
    public static class SubFoo extends Foo {}
 
-   @Test//(expected = IllegalArgumentException.class)
+   @Test
    public void recordDuplicateInvocationOnTwoDynamicMocksOfDifferentTypesButSharedBaseClass()
    {
       final Foo f1 = new Foo();
@@ -189,8 +189,8 @@ public final class MisusedExpectationsTest
          f2.doIt(); result = false;
       }};
 
-      assertTrue(f1.doIt());
-      assertTrue(f2.doIt());
+      assertFalse(f1.doIt());
+      assertFalse(f2.doIt());
    }
 
    @BeforeClass
@@ -222,7 +222,7 @@ public final class MisusedExpectationsTest
 
    @SuppressWarnings({"StaticFieldReferencedViaSubclass"})
    @Test
-   public void accessSpecialFieldsInExpectationBlockThroughClassQualifierInsteadOfDirecly(final BlahBlah mock)
+   public void accessSpecialFieldsInExpectationBlockThroughClassQualifierInsteadOfDirectly(final BlahBlah mock)
    {
       new NonStrictExpectations()
       {
@@ -245,7 +245,7 @@ public final class MisusedExpectationsTest
 
    @SuppressWarnings({"StaticFieldReferencedViaSubclass"})
    @Test
-   public void accessSpecialFieldsInVerificationBlockThroughClassQualifierInsteadOfDirecly(final BlahBlah mock)
+   public void accessSpecialFieldsInVerificationBlockThroughClassQualifierInsteadOfDirectly(final BlahBlah mock)
    {
       assertNull(mock.doSomething(true));
       mock.setValue(1);

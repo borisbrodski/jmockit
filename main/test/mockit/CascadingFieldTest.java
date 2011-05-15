@@ -68,4 +68,77 @@ public final class CascadingFieldTest
    {
       assertTrue(foo.getBar().isDone());
    }
+
+   @Test
+   public void recordUnambiguousStrictExpectationsProducingDifferentCascadedInstances()
+   {
+      new Expectations()
+      {
+         {
+            Bar c1 = Foo.globalBar();
+            c1.isDone(); result = true;
+            Bar c2 = Foo.globalBar();
+            c2.doSomething(); result = 5;
+            assertNotSame(c1, c2);
+         }
+      };
+
+      Bar b1 = Foo.globalBar();
+      assertTrue(b1.isDone());
+      Bar b2 = Foo.globalBar();
+      assertEquals(5, b2.doSomething());
+      assertNotSame(b1, b2);
+   }
+
+   @Test
+   public void recordUnambiguousNonStrictExpectationsProducingDifferentCascadedInstances(
+      @Cascading final Foo foo1, @Cascading final Foo foo2)
+   {
+      new NonStrictExpectations()
+      {
+         {
+            Date c1 = foo1.getDate();
+            Date c2 = foo2.getDate();
+            assertNotSame(c1, c2);
+         }
+      };
+
+      Date d1 = foo1.getDate();
+      Date d2 = foo2.getDate();
+      assertNotSame(d1, d2);
+   }
+
+   @Test
+   public void recordAmbiguousNonStrictExpectationsOnInstanceMethodProducingTheSameCascadedInstance()
+   {
+      new NonStrictExpectations()
+      {
+         {
+            Bar c1 = foo.getBar();
+            Bar c2 = foo.getBar();
+            assertSame(c1, c2);
+         }
+      };
+
+      Bar b1 = foo.getBar();
+      Bar b2 = foo.getBar();
+      assertSame(b1, b2);
+   }
+
+   @Test
+   public void recordAmbiguousNonStrictExpectationsOnStaticMethodProducingTheSameCascadedInstance()
+   {
+      new NonStrictExpectations()
+      {
+         {
+            Bar c1 = Foo.globalBar();
+            Bar c2 = Foo.globalBar();
+            assertSame(c1, c2);
+         }
+      };
+
+      Bar b1 = Foo.globalBar();
+      Bar b2 = Foo.globalBar();
+      assertSame(b1, b2);
+   }
 }
