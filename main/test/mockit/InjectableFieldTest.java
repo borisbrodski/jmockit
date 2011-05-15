@@ -56,4 +56,16 @@ public final class InjectableFieldTest
 
       foo.doSomething("test");
    }
+
+   @Test
+   public void overrideExpectationRecordedInBeforeMethod()
+   {
+      new NonStrictExpectations()
+      {{
+         foo.getIntValue(); result = 45;
+      }};
+
+      assertEquals(45, foo.getIntValue());
+      foo.doSomething("sdf");
+   }
 }
