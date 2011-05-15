@@ -15,14 +15,16 @@ final class InvocationBlockModifier extends MethodAdapter
    private final int[] matcherStacks;
    private final MethodWriter mw;
    private final String fieldOwner;
+   private final boolean callEndInvocations;
    private int matchers;
 
-   InvocationBlockModifier(MethodWriter mw, String fieldOwner)
+   InvocationBlockModifier(MethodWriter mw, String fieldOwner, boolean callEndInvocations)
    {
       super(mw);
       matcherStacks = new int[20];
       this.mw = mw;
       this.fieldOwner = fieldOwner;
+      this.callEndInvocations = callEndInvocations;
    }
 
    @Override
@@ -140,7 +142,7 @@ final class InvocationBlockModifier extends MethodAdapter
    @Override
    public void visitInsn(int opcode)
    {
-      if (opcode == RETURN) {
+      if (opcode == RETURN && callEndInvocations) {
          mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "endInvocations", "()V");
       }
 

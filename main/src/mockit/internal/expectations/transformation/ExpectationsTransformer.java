@@ -116,6 +116,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    private final class EndOfBlockModifier extends ClassWriter
    {
       final boolean isAnonymousClass;
+      boolean isFinalClass;
       MethodVisitor mw;
       String classDesc;
 
@@ -132,6 +133,8 @@ public final class ExpectationsTransformer implements ClassFileTransformer
          boolean modifyTheClass = false;
 
          if (isFinal(access) || isAnonymousClass) {
+            isFinalClass = true;
+
             if (superClassIsKnownInvocationsSubclass || superClassAnalyser.classExtendsInvocationsClass(superName)) {
                modifyTheClass = true;
             }
@@ -155,7 +158,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
          mw = super.visitMethod(access, name, desc, signature, exceptions);
 
          if ("<init>".equals(name)) {
-            return new InvocationBlockModifier((MethodWriter) mw, classDesc);
+            return new InvocationBlockModifier((MethodWriter) mw, classDesc, isFinalClass);
          }
 
          return mw;

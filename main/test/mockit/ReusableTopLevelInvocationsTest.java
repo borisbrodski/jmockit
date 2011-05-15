@@ -7,6 +7,7 @@ package mockit;
 import java.io.*;
 
 import org.junit.*;
+import static org.junit.Assert.assertTrue;
 
 final class FinalReusableExpectations extends Expectations
 {
@@ -46,12 +47,15 @@ public final class ReusableTopLevelInvocationsTest
    @Test
    public void useTopLevelAndNonFinalExpectationsSubclass() throws Exception
    {
-      PrintWriter pw = new PrintWriter(System.out);
+      final PrintWriter pw = new PrintWriter(System.out);
 
-      new NonFinalReusableExpectations() {};
+      new NonFinalReusableExpectations() {{
+         pw.checkError(); result = true;
+      }};
 
       pw.flush();
       pw.flush();
+      assertTrue(pw.checkError());
    }
 
    @Test(expected = AssertionError.class)

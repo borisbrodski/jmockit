@@ -116,7 +116,7 @@ public final class ProviderServiceImpl_JMockit_Test
    // fields and corresponding set of tests. The advantage then would be that each test class could
    // define common fields and methods at the class level.
 
-   static class ExpectationsWithRealProviderService extends Expectations
+   static class RealProviderServiceExpectations extends Expectations
    {
       private final ProviderService providerService;
       @Mocked protected ProviderDao providerDao;
@@ -141,10 +141,11 @@ public final class ProviderServiceImpl_JMockit_Test
       final Set<ServiceArtifact> serviceArtifacts = new HashSet<ServiceArtifact>();
       serviceArtifacts.add(new ServiceArtifact(expectedId, expectedName));
 
-      ExpectationsWithRealProviderService expectations = new ExpectationsWithRealProviderService()
+      RealProviderServiceExpectations expectations = new RealProviderServiceExpectations()
       {
          {
-            providerDao.getAllServiceProducers(); result = serviceArtifacts;
+            providerDao.getAllServiceProducers();
+            result = serviceArtifacts;
          }
       };
 
@@ -157,7 +158,7 @@ public final class ProviderServiceImpl_JMockit_Test
    @Test
    public void getAllServiceProducersOnEmptyProviderService()
    {
-      ExpectationsWithRealProviderService expectations = new ExpectationsWithRealProviderService()
+      RealProviderServiceExpectations expectations = new RealProviderServiceExpectations()
       {
          {
             providerDao.getAllServiceProducers(); result = new HashSet<ServiceArtifact>();
