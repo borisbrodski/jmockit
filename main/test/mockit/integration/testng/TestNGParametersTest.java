@@ -13,14 +13,14 @@ public final class TestNGParametersTest
    String p2;
 
    @Parameters({"p1", "p2"})
-   public TestNGParametersTest(String p1, String p2)
+   public TestNGParametersTest(@Optional("Abc") String p1, @Optional("XPTO") String p2)
    {
       this.p1 = p1;
       this.p2 = p2;
    }
 
    @BeforeClass @Parameters("p1")
-   void setUpClass(String param)
+   void setUpClass(@Optional("Abc") String param)
    {
       assertEquals(param, "Abc");
       assertEquals(param, p1);
@@ -33,7 +33,7 @@ public final class TestNGParametersTest
    }
 
    @BeforeMethod @Parameters("param2")
-   void setUp(String param)
+   void setUp(@Optional("XYZ5") String param)
    {
       assertEquals(param, "XYZ5");
    }
@@ -60,7 +60,7 @@ public final class TestNGParametersTest
    }
 
    @AfterClass @Parameters("p2")
-   void tearDownClass(String param)
+   void tearDownClass(@Optional("XPTO") String param)
    {
       assertEquals(param, "XPTO");
       assertEquals(param, p2);
