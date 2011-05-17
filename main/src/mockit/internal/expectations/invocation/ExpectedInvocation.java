@@ -157,12 +157,12 @@ public final class ExpectedInvocation
 
    public AssertionError errorForUnexpectedInvocation()
    {
-      return newErrorWithCause("Unexpected invocation", "Unexpected invocation of");
+      return newErrorWithCause("Unexpected invocation", "Unexpected invocation of" + this);
    }
 
-   private AssertionError newErrorWithCause(String title, String message)
+   private AssertionError newErrorWithCause(String titleForCause, String initialMessage)
    {
-      String errorMessage = message + toString();
+      String errorMessage = initialMessage;
 
       if (customErrorMessage != null) {
          errorMessage = customErrorMessage + "\n" + errorMessage;
@@ -171,7 +171,7 @@ public final class ExpectedInvocation
       AssertionError error = new AssertionError(errorMessage);
 
       if (invocationCause != null) {
-         invocationCause.defineCause(title, error);
+         invocationCause.defineCause(titleForCause, error);
       }
 
       return error;
@@ -179,29 +179,44 @@ public final class ExpectedInvocation
 
    public AssertionError errorForMissingInvocation()
    {
-      return newErrorWithCause("Missing invocation",  "Missing invocation of");
+      return newErrorWithCause("Missing invocation", "Missing invocation of" + this);
    }
 
    public AssertionError errorForMissingInvocations(int totalMissing)
    {
-      String plural = totalMissing == 1 ? "" : "s";
-      return newErrorWithCause("Missing invocations", "Missing " + totalMissing + " invocation" + plural + " to");
+      String message = "Missing " + totalMissing + invocationsToThis(totalMissing);
+      return newErrorWithCause("Missing invocations", message);
+   }
+
+   private String invocationsToThis(int invocations)
+   {
+      String prefix = invocations == 1 ? " invocation to" : " invocations to";
+      return prefix + this;
    }
 
    public AssertionError errorForUnexpectedInvocation(Object mock, String invokedClassDesc, String invokedMethod)
    {
       String instanceDescription = mock == null ? "" : "\non instance: " + Utilities.objectIdentity(mock);
-
-      return newErrorWithCause(
-         "Unexpected invocation",
-         "Unexpected invocation of:\n" + new MethodFormatter(invokedClassDesc, invokedMethod) +
-         instanceDescription + "\nwhen was expecting an invocation of");
+      String message =
+         "Unexpected invocation of:\n" + new MethodFormatter(invokedClassDesc, invokedMethod) + instanceDescription +
+         "\nwhen was expecting an invocation of" + this;
+      return newErrorWithCause("Unexpected invocation", message);
    }
 
    public AssertionError errorForUnexpectedInvocations(int totalUnexpected)
    {
-      String plural = totalUnexpected == 1 ? "" : "s";
-      return newErrorWithCause("Unexpected invocations", totalUnexpected + " unexpected invocation" + plural + " to");
+      String message = totalUnexpected + " unexpected" + invocationsToThis(totalUnexpected);
+      return newErrorWithCause("Unexpected invocations", message);
+   }
+
+   public AssertionError errorForUnexpectedInvocationBeforeAnother(ExpectedInvocation another)
+   {
+      return newErrorWithCause("Unexpected invocation" + this, "Unexpected invocation before" + another);
+   }
+
+   public AssertionError errorForUnexpectedInvocationAfterAnother(ExpectedInvocation another)
+   {
+      return newErrorWithCause("Unexpected invocation" + this, "Unexpected invocation after" + another);
    }
 
    @Override

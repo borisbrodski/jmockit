@@ -7,14 +7,16 @@ package mockit;
 import mockit.internal.expectations.*;
 
 /**
- * Same as {@link Verifications}, but checking that invocations in the replay phase occurred in the
- * same order as specified in this <em>ordered</em> verification block.
+ * Same as {@link Verifications}, but checking that invocations in the replay phase occurred in the same order as
+ * specified in this <em>ordered</em> verification block.
  * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#VerificationInOrder">In the Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#VerificationInOrder">In the
+ * Tutorial</a>
  *
  * @see #VerificationsInOrder()
  * @see #VerificationsInOrder(int)
  * @see #unverifiedInvocations()
+ * @see #verifiedInvocations(Verifications)
  */
 public abstract class VerificationsInOrder extends Verifications
 {
@@ -64,12 +66,32 @@ public abstract class VerificationsInOrder extends Verifications
     * but only have the same relative order as the verification calls.
     * <p/>
     * Finally, notice that you can combine an ordered block that verifies the position of some calls relative to others,
-    * with an unordered block which verifies some or all of those other invocations.
-    * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#partiallyOrdered">In the Tutorial</a>
+    * with a previous unordered block which verifies some or all of those other invocations.
+    *
+    * @see #verifiedInvocations(Verifications)
+    * @see <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#partiallyOrdered">In
+    * the Tutorial</a>
     */
    protected final void unverifiedInvocations()
    {
       ((OrderedVerificationPhase) verificationPhase).fixPositionOfUnverifiedExpectations();
+   }
+
+   /**
+    * Accounts for a sequence of non-strict invocations executed in the replay phase that have already been explicitly
+    * verified in a previous verification block.
+    *
+    * @param alreadyVerified an unordered verification block describing a group of already verified invocations
+    *
+    * @throws IllegalArgumentException if the given verifications are ordered
+    *
+    * @see #unverifiedInvocations()
+    * @see <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#partiallyOrdered">In
+    * the Tutorial</a>
+    */
+   protected final void verifiedInvocations(Verifications alreadyVerified)
+   {
+      ((OrderedVerificationPhase) verificationPhase).checkOrderOfVerifiedInvocations(
+         alreadyVerified.verificationPhase);
    }
 }

@@ -6,7 +6,6 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
-import mockit.external.hamcrest.*;
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.util.*;
 
@@ -93,13 +92,18 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
          }
 
          if (argumentsMatch) {
-            recordAndReplay.executionState.verifiedExpectations.add(
-               new VerifiedExpectation(expectation, args, argMatchers));
+            int replayIndex = expectationsInReplayOrder.indexOf(expectation);
+            addVerifiedExpectation(new VerifiedExpectation(expectation, args, argMatchers, replayIndex));
             return true;
          }
       }
 
       return false;
+   }
+
+   void addVerifiedExpectation(VerifiedExpectation verifiedExpectation)
+   {
+      recordAndReplay.executionState.verifiedExpectations.add(verifiedExpectation);
    }
 
    @Override
@@ -165,14 +169,14 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
       return null;
    }
 
-   private AssertionError validateThatAllInvocationsWereVerified()
+   final AssertionError validateThatAllInvocationsWereVerified()
    {
       List<Expectation> notVerified = new ArrayList<Expectation>();
 
       for (int i = 0; i < expectationsInReplayOrder.size(); i++) {
          Expectation replayExpectation = expectationsInReplayOrder.get(i);
 
-         if (replayExpectation.constraints.minInvocations <= 0) {
+         if (replayExpectation != null && replayExpectation.constraints.minInvocations <= 0) {
             Object[] replayArgs = invocationArgumentsInReplayOrder.get(i);
 
             if (!wasVerified(replayExpectation, replayArgs)) {

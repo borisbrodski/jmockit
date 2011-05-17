@@ -10,6 +10,7 @@ import mockit.internal.expectations.invocation.*;
 
 final class UnorderedVerificationPhase extends BaseVerificationPhase
 {
+   final List<VerifiedExpectation> verifiedExpectations;
    private Expectation aggregate;
 
    UnorderedVerificationPhase(
@@ -17,6 +18,7 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
       List<Expectation> expectationsInReplayOrder, List<Object[]> invocationArgumentsInReplayOrder)
    {
       super(recordAndReplay, expectationsInReplayOrder, invocationArgumentsInReplayOrder);
+      verifiedExpectations = new ArrayList<VerifiedExpectation>();
    }
 
    @Override
@@ -64,6 +66,13 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
    }
 
    @Override
+   void addVerifiedExpectation(VerifiedExpectation verifiedExpectation)
+   {
+      super.addVerifiedExpectation(verifiedExpectation);
+      verifiedExpectations.add(verifiedExpectation);
+   }
+
+   @Override
    public void handleInvocationCountConstraint(int minInvocations, int maxInvocations)
    {
       Expectation expectation = getCurrentExpectation();
@@ -96,5 +105,18 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
             i++;
          }
       }
+   }
+
+   VerifiedExpectation firstExpectationVerified()
+   {
+      VerifiedExpectation first = null;
+
+      for (VerifiedExpectation expectation : verifiedExpectations) {
+         if (first == null || expectation.replayIndex < first.replayIndex) {
+            first = expectation;
+         }
+      }
+
+      return first;
    }
 }
