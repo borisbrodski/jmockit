@@ -14,9 +14,9 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
-<p>Release 0.999.9 (May 1?, 2011):</p>
+<p>Release 0.999.9 (May 17, 2011):</p>
 <ul>
    <li>
       <strong>New feature</strong>: expectation blocks can now specify <em>default results</em> for mocked
@@ -42,6 +42,12 @@ domain/MyBusinessService_ExpectationsAPI2_Test.java">here</a> for examples.
       See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=155">155</a>.
    </li>
    <li>
+      <strong>Enhancement</strong>: added the <strong><code>verifiedInvocations(Verifications)</code></strong> method to
+      the <code>VerificationsInOrder</code> class. With this, new scenarios involving <em>partially ordered
+      verification</em> are now supported.
+      See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=153">153</a>.
+   </li>
+   <li>
       <strong>Removed</strong> the <strong><code>endRecording()</code></strong> method of the <code>Expectations</code>
       class. This method was deprecated in the previous release. Existing tests still using it will have to be changed
       as described in the deprecation comment.
@@ -56,13 +62,14 @@ domain/MyBusinessService_ExpectationsAPI2_Test.java">here</a> for examples.
       <a href="http://code.google.com/p/jmockit/issues/detail?id=156">156</a>,
       <a href="http://code.google.com/p/jmockit/issues/detail?id=157">157</a>,
       <a href="http://code.google.com/p/jmockit/issues/detail?id=160">160</a>,
-      <a href="http://code.google.com/p/jmockit/issues/detail?id=163">163</a>.
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=163">163</a>,
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=164">164</a>.
       Also, handled a situation where a <code>ClassFormatError</code> would occur in classes instrumented by the
       EMMA code coverage tool, when they were mocked with <em>reentrant</em> mock methods (Annotations API).
    </li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release 0.999.8 (March 11, 2011):</p>
 <ul>
@@ -115,8 +122,6 @@ domain/MyBusinessService_ExpectationsAPI2_Test.java">here</a> for examples.
       <a href="http://code.google.com/p/jmockit/issues/detail?id=147">147</a>.
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.999.7 (February 13, 2011):</p>
 <ul>
