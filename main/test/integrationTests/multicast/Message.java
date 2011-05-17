@@ -6,7 +6,6 @@ package integrationTests.multicast;
 
 import java.io.*;
 import java.net.*;
-import static javax.swing.SwingUtilities.*;
 
 public final class Message
 {
@@ -71,11 +70,7 @@ public final class Message
       private void sendMessage(OutputStream output)
       {
          new PrintWriter(output, true).println(contents);
-
-         invokeLater(new Runnable()
-         {
-            public void run() { listener.messageSent(client); }
-         });
+         listener.messageSent(client);
       }
 
       private void readRequiredReceipts(InputStream input) throws IOException
@@ -84,17 +79,11 @@ public final class Message
 
          // Wait for display receipt:
          in.readLine();
-         invokeLater(new Runnable()
-         {
-            public void run() { listener.messageDisplayedByClient(client); }
-         });
+         listener.messageDisplayedByClient(client);
 
          // Wait for read receipt:
          in.readLine();
-         invokeLater(new Runnable()
-         {
-            public void run() { listener.messageReadByClient(client); }
-         });
+         listener.messageReadByClient(client);
       }
    }
 }

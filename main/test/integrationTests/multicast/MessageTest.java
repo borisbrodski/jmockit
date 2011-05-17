@@ -6,7 +6,9 @@ package integrationTests.multicast;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
+import static java.util.Arrays.asList;
 import org.junit.*;
 
 import mockit.*;
@@ -18,10 +20,9 @@ public final class MessageTest
    static final String testContents = "hello there";
 
    @Test
-   public void sendMessageToSingleClient() throws Exception
+   public void sendMessageToSingleClient()
    {
       final Client theClient = new Client("client1");
-      Client[] testClient = {theClient};
 
       new MockUp<Socket>()
       {
@@ -74,22 +75,55 @@ public final class MessageTest
          }
       }.getMockInstance();
 
-      new Message(testClient, testContents, listener).dispatch();
-
-      allowSomeTimeForAllEventsToBeReceived();
+      exerciseCodeUnderTest(listener, theClient);
    }
 
-   // Waits a fixed time for all threads to finish - not elegant, but easy.
-   private void allowSomeTimeForAllEventsToBeReceived() throws InterruptedException
+   private void exerciseCodeUnderTest(StatusListener listener, Client... to)
    {
-      Thread.sleep(250);
+      final Message message = new Message(to, testContents, listener);
+
+      new TaskExecution()
+      {
+         public void run() { message.dispatch(); }
+      };
+   }
+
+   // A general-purpose utility class that waits for background task completion.
+   abstract static class TaskExecution implements Runnable
+   {
+      {
+         List<Thread> tasksBefore = getActiveTasks();
+
+         try {
+            //noinspection OverriddenMethodCallDuringObjectConstruction
+            run();
+         }
+         finally {
+            waitForCompletionOfNewTasks(tasksBefore);
+         }
+      }
+
+      private List<Thread> getActiveTasks()
+      {
+         Thread[] tasks = new Thread[2 * Thread.activeCount()];
+         Thread.enumerate(tasks);
+         return new ArrayList<Thread>(asList(tasks));
+      }
+
+      private void waitForCompletionOfNewTasks(List<Thread> tasksBefore)
+      {
+         List<Thread> tasksAfter = getActiveTasks();
+         tasksAfter.removeAll(tasksBefore);
+
+         for (Thread task : tasksAfter) {
+            try { task.join(); } catch (InterruptedException ignore) {}
+         }
+      }
    }
 
    @Test
-   public void sendMessageToTwoClients() throws Exception
+   public void sendMessageToTwoClients()
    {
-      Client[] testClients = {new Client("client1"), new Client("client2")};
-
       new MockUp<Socket>()
       {
          @Mock(invocations = 2)
@@ -136,9 +170,7 @@ public final class MessageTest
          }
       }.getMockInstance();
 
-      new Message(testClients, testContents, listener).dispatch();
-
-      allowSomeTimeForAllEventsToBeReceived();
+      exerciseCodeUnderTest(listener, new Client("client1"), new Client("client2"));
    }
 
    @Test
@@ -157,9 +189,7 @@ public final class MessageTest
          }
       };
 
-      new Message(testClients, testContents, listener).dispatch();
-
-      allowSomeTimeForAllEventsToBeReceived();
+      exerciseCodeUnderTest(listener, testClients);
 
       for (final Client client : testClients) {
          new VerificationsInOrder()
@@ -190,9 +220,7 @@ public final class MessageTest
          }
       };
 
-      new Message(testClients, testContents, listener).dispatch();
-
-      allowSomeTimeForAllEventsToBeReceived();
+      exerciseCodeUnderTest(listener, testClients);
 
       for (final Client client : testClients) {
          new VerificationsInOrder()
