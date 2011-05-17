@@ -27,13 +27,14 @@ public final class MockingBridge implements InvocationHandler
    @SuppressWarnings({"UnusedDeclaration"})
    public static final MockingBridge MB = new MockingBridge();
 
-   public synchronized Object invoke(Object mocked, Method method, Object[] args) throws Throwable
+   public Object invoke(Object mocked, Method method, Object[] args) throws Throwable
    {
-      if (isCallThatParticipatesInClassLoading(mocked)) {
-         return Void.class;
+      int targetId = (Integer) args[0];
+
+      if (mocked != null && instanceOfClassThatParticipatesInClassLoading(mocked) && wasCalledDuringClassLoading()) {
+         return targetId == UPDATE_MOCK_STATE ? false : Void.class;
       }
 
-      int targetId = (Integer) args[0];
       int mockIndex = targetId < FIRST_TARGET_WITH_EXTRA_ARG ? -1 : (Integer) args[7];
       String mockClassInternalName = (String) args[2];
 
@@ -75,24 +76,23 @@ public final class MockingBridge implements InvocationHandler
       }
    }
 
-   private static boolean isCallThatParticipatesInClassLoading(Object mocked)
+   private static boolean instanceOfClassThatParticipatesInClassLoading(Object mocked)
    {
-      if (mocked != null) {
-         Class<?> mockedClass = mocked.getClass();
+      Class<?> mockedClass = mocked.getClass();
+      return
+         mockedClass == File.class || mockedClass == URL.class || mockedClass == FileInputStream.class ||
+         Vector.class.isInstance(mocked) || Hashtable.class.isInstance(mocked);
+   }
 
-         if (
-            mockedClass == File.class || mockedClass == URL.class || mockedClass == FileInputStream.class ||
-            Vector.class.isInstance(mocked) || Hashtable.class.isInstance(mocked)
-         ) {
-            StackTraceElement[] st = new Throwable().getStackTrace();
+   private static boolean wasCalledDuringClassLoading()
+   {
+      StackTraceElement[] st = new Throwable().getStackTrace();
 
-            for (int i = 3; i < st.length; i++) {
-               StackTraceElement ste = st[i];
+      for (int i = 3; i < st.length; i++) {
+         StackTraceElement ste = st[i];
 
-               if ("ClassLoader.java".equals(ste.getFileName()) && "loadClass".equals(ste.getMethodName())) {
-                  return true;
-               }
-            }
+         if ("ClassLoader.java".equals(ste.getFileName()) && "loadClass".equals(ste.getMethodName())) {
+            return true;
          }
       }
 

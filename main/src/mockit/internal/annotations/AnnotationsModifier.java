@@ -270,7 +270,7 @@ public final class AnnotationsModifier extends BaseClassModifier
 
    private void generateCallToMock(int access, String desc)
    {
-      Label afterCallToMock = generateCallToUpdateMockStateIfAny();
+      Label afterCallToMock = generateCallToUpdateMockStateIfAny(access);
       Label l1 = null;
       Label l2 = null;
       Label l3 = null;
@@ -302,7 +302,7 @@ public final class AnnotationsModifier extends BaseClassModifier
       }
    }
 
-   private Label generateCallToUpdateMockStateIfAny()
+   private Label generateCallToUpdateMockStateIfAny(int access)
    {
       int mockStateIndex = annotatedMocks.getIndexForMockExpectations();
       Label afterCallToMock = null;
@@ -312,7 +312,7 @@ public final class AnnotationsModifier extends BaseClassModifier
 
          if (useMockingBridgeForUpdatingMockState) {
             generateCallToMockingBridge(
-               MockingBridge.UPDATE_MOCK_STATE, mockClassDesc, ACC_STATIC, null, null, null, null, mockStateIndex);
+               MockingBridge.UPDATE_MOCK_STATE, mockClassDesc, access, null, null, null, null, mockStateIndex);
             mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z");
          }
          else {

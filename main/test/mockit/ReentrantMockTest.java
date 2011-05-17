@@ -4,10 +4,11 @@
  */
 package mockit;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import java.io.*;
 
 import static mockit.Mockit.*;
+import static org.junit.Assert.*;
+import org.junit.*;
 
 public final class ReentrantMockTest
 {
@@ -145,6 +146,7 @@ public final class ReentrantMockTest
          synchronized (MultiThreadedMock.class) {
             if (nobodyEntered) {
                nobodyEntered = false;
+               //noinspection WaitNotInLoop
                MultiThreadedMock.class.wait(5000);
             }
             else {
@@ -181,5 +183,87 @@ public final class ReentrantMockTest
 
       assertEquals("fake value", first.toString());
       assertEquals("fake value", second.toString());
+   }
+
+   static final class RealClass2
+   {
+      int firstMethod() { return 1; }
+      int secondMethod() { return 2; }
+   }
+
+   @Test
+   public void reentrantMockForNonJREClassWhichCallsAnotherFromADifferentThread()
+   {
+      new MockUp<RealClass2>()
+      {
+         RealClass2 it;
+         int value;
+
+         @Mock(reentrant = true)
+         int firstMethod() { return it.firstMethod(); }
+
+         @Mock(reentrant = true)
+         int secondMethod() throws InterruptedException
+         {
+            Thread t = new Thread() {
+               @Override
+               public void run() { value = it.firstMethod(); }
+            };
+            t.start();
+            t.join();
+            return value;
+         }
+      };
+
+      RealClass2 r = new RealClass2();
+      assertEquals(1, r.firstMethod());
+      assertEquals(1, r.secondMethod());
+   }
+
+   @Test
+   public void reentrantMockForJREClassWhichCallsAnotherFromADifferentThread()
+   {
+      System.setProperty("a", "1");
+      System.setProperty("b", "2");
+
+      new MockUp<System>()
+      {
+         String property;
+
+         @Mock(reentrant = true)
+         String getProperty(String key) { return System.getProperty(key); }
+
+         @Mock(reentrant = true)
+         String clearProperty(final String key) throws InterruptedException
+         {
+            Thread t = new Thread() {
+               @Override
+               public void run() { property = System.getProperty(key); }
+            };
+            t.start();
+            t.join();
+            return property;
+         }
+      };
+
+      assertEquals("1", System.getProperty("a"));
+      assertEquals("2", System.clearProperty("b"));
+   }
+
+   @Test
+   public void mockFileAndForceJREToCallReentrantMockedMethod()
+   {
+      new MockUp<File>()
+      {
+         File it;
+
+         @Mock(reentrant = true)
+         boolean exists() { return !it.exists(); }
+      };
+
+      // Cause the JVM/JRE to load a new class, calling the mocked File#exists() method in the process:
+      new Runnable() { public void run() {} };
+
+      assertTrue(new File("noFile").exists());
    }
 }
