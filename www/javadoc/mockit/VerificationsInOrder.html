@@ -98,17 +98,19 @@ Class VerificationsInOrder</H2>
 </PRE>
 
 <P>
-Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Verifications</CODE></A>, but checking that invocations in the replay phase occurred in the
- same order as specified in this <em>ordered</em> verification block.
+Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Verifications</CODE></A>, but checking that invocations in the replay phase occurred in the same order as
+ specified in this <em>ordered</em> verification block.
  <p/>
- <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#VerificationInOrder">In the Tutorial</a>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#VerificationInOrder">In the
+ Tutorial</a>
 <P>
 
 <P>
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#VerificationsInOrder()"><CODE>VerificationsInOrder()</CODE></A>, 
 <A HREF="../mockit/VerificationsInOrder.html#VerificationsInOrder(int)"><CODE>VerificationsInOrder(int)</CODE></A>, 
-<A HREF="../mockit/VerificationsInOrder.html#unverifiedInvocations()"><CODE>unverifiedInvocations()</CODE></A></DL>
+<A HREF="../mockit/VerificationsInOrder.html#unverifiedInvocations()"><CODE>unverifiedInvocations()</CODE></A>, 
+<A HREF="../mockit/VerificationsInOrder.html#verifiedInvocations(mockit.Verifications)"><CODE>verifiedInvocations(Verifications)</CODE></A></DL>
 <HR>
 
 <P>
@@ -1101,12 +1103,12 @@ protected final void <B>unverifiedInvocations</B>()</PRE>
  but only have the same relative order as the verification calls.
  <p/>
  Finally, notice that you can combine an ordered block that verifies the position of some calls relative to others,
- with an unordered block which verifies some or all of those other invocations.
- <p/>
- <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#partiallyOrdered">In the Tutorial</a>
+ with a previous unordered block which verifies some or all of those other invocations.
 <P>
 <DD><DL>
-</DL>
+<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#verifiedInvocations(mockit.Verifications)"><CODE>verifiedInvocations(Verifications)</CODE></A>, 
+<a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#partiallyOrdered">In
+ the Tutorial</a></DL>
 </DD>
 </DL>
 <HR>
@@ -1120,7 +1122,9 @@ protected final void <B>verifiedInvocations</B>(<A HREF="../mockit/Verifications
  verified in a previous verification block.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>alreadyVerified</CODE> - a verification block describing the group of already verified invocations<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#unverifiedInvocations()"><CODE>unverifiedInvocations()</CODE></A>, 
+<DT><B>Parameters:</B><DD><CODE>alreadyVerified</CODE> - an unordered verification block describing a group of already verified invocations
+<DT><B>Throws:</B>
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if the given verifications are ordered<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#unverifiedInvocations()"><CODE>unverifiedInvocations()</CODE></A>, 
 <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#partiallyOrdered">In
  the Tutorial</a></DL>
 </DD>
