@@ -42,14 +42,20 @@ public class BaseClassModifier extends ClassWriter
    @Override
    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
-      // LDC instructions (see MethodVisitor#visitLdcInsn) are more capable in JVMs with support for class files of
-      // version 49 (Java 1.5) or newer, so we "upgrade" it to avoid a VerifyError:
-      if ((version & 0xFFFF) < 49) {
-         //noinspection AssignmentToMethodParameter
-         version = 49;
+      int modifiedVersion = version;
+      int originalVersion = version & 0xFFFF;
+
+      if (originalVersion < 49) {
+         // LDC instructions (see MethodVisitor#visitLdcInsn) are more capable in JVMs with support for class files of
+         // version 49 (Java 1.5) or newer, so we "upgrade" it to avoid a VerifyError:
+         modifiedVersion = 49;
+      }
+      else if (originalVersion == 51) {
+         // For some unknown reason the Java 7 JVM throws a VerifyError for the bytecode generated for dynamic mocking:
+         modifiedVersion = 50;
       }
 
-      super.visit(version, access, name, signature, superName, interfaces);
+      super.visit(modifiedVersion, access, name, signature, superName, interfaces);
       modifiedClassName = name;
    }
 
