@@ -11,12 +11,20 @@ import mockit.*;
 
 public final class TestNGExpectationsTest
 {
+   public static final class TestedClass
+   {
+      private final MockedClass dependency;
+      public TestedClass(MockedClass dependency) { this.dependency = dependency; }
+      public boolean doSomething(int i) { return dependency.doSomething(i); }
+   }
+
    public static class MockedClass
    {
       public String getValue() { return "REAL"; }
       public boolean doSomething(int i) { return i > 0; }
    }
 
+   @Tested TestedClass tested;
    @Injectable MockedClass mock;
 
    @BeforeMethod
@@ -41,7 +49,7 @@ public final class TestNGExpectationsTest
 
       assertTrue(mock.doSomething(5));
       assertEquals("mocked", mock.getValue());
-      assertTrue(mock.doSomething(-5));
+      assertTrue(tested.doSomething(-5));
 
       new FullVerifications()
       {
@@ -56,7 +64,7 @@ public final class TestNGExpectationsTest
    public void testSomethingElse()
    {
       assertEquals("mocked", mock.getValue());
-      assertFalse(mock.doSomething(41));
+      assertFalse(tested.doSomething(41));
 
       new FullVerificationsInOrder()
       {

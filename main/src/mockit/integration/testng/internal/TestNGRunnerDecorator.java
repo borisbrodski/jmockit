@@ -100,11 +100,11 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
       updateTestClassState(instance, testClass);
       savePoint.set(new SavePoint());
 
-      Method method = testResult.getMethod().getMethod();
+      @SuppressWarnings({"deprecation"}) Method method = testResult.getMethod().getMethod();
 
       if (!isMethodWithParametersProvidedByTestNG(method)) {
          Object[] parameters = testResult.getParameters();
-         Object[] mockParameters = createInstancesForMockParametersIfAny(this, method, parameters);
+         Object[] mockParameters = createInstancesForMockParametersIfAny(instance, method, parameters);
          System.arraycopy(mockParameters, 0, parameters, 0, parameters.length);
       }
 
