@@ -180,7 +180,7 @@ public final class InstanceSpecificMockingTest
    {
       assertNull(ByteBuffer.allocateDirect(10));
 
-      new FullVerifications()
+      new Verifications()
       {
          {
             ByteBuffer.allocateDirect(anyInt);
