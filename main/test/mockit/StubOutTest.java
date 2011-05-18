@@ -89,11 +89,16 @@ public final class StubOutTest
       YetAnotherRealClass() { value = 123; }
       YetAnotherRealClass(int value) { this.value = value; }
 
-      public String doSomething(RealClass a, AnotherRealClass b)
+      public String doSomething(DoSomething a, AnotherRealClass b)
       {
          a.doSomething();
          return b.getText(false);
       }
+   }
+
+   static class DoSomething
+   {
+      int doSomething() { return 1; }
    }
 
    @Test
@@ -125,7 +130,7 @@ public final class StubOutTest
       assertEquals(0, new YetAnotherRealClass(45).value);
       YetAnotherRealClass obj = new YetAnotherRealClass();
       assertEquals(0, obj.value);
-      assertEquals("false", obj.doSomething(new RealClass(), new AnotherRealClass()));
+      assertEquals("false", obj.doSomething(new DoSomething(), new AnotherRealClass()));
    }
    
    @Test
@@ -137,7 +142,7 @@ public final class StubOutTest
       assertEquals(0, new YetAnotherRealClass(45).value);
       YetAnotherRealClass obj = new YetAnotherRealClass();
       assertEquals(0, obj.value);
-      assertEquals("false", obj.doSomething(new RealClass(), new AnotherRealClass()));
+      assertEquals("false", obj.doSomething(new DoSomething(), new AnotherRealClass()));
    }
 
    @Test
