@@ -76,8 +76,7 @@ public final class AlertServiceTest extends UnitilsJUnit4
    @Test(expected = IllegalArgumentException.class)
    public void attemptToGetScheduledAlertsWithInvalidArguments()
    {
-      mockSchedulerService.raises(IllegalArgumentException.class).getScheduledAlerts(
-         "123", 1, true);
+      mockSchedulerService.raises(IllegalArgumentException.class).getScheduledAlerts("123", 1, true);
 
       alertService.sendScheduledAlerts();
    }
@@ -97,6 +96,7 @@ public final class AlertServiceTest extends UnitilsJUnit4
    {
       mockSchedulerService.performs(new MockBehavior()
       {
+         @Override
          public Object execute(ProxyInvocation mockInvocation)
          {
             List<Object> args = mockInvocation.getArguments();
