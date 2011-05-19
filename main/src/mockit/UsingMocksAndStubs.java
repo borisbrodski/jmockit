@@ -9,27 +9,26 @@ import java.lang.annotation.*;
 /**
  * Indicates one or more {@linkplain #value() classes} to be mocked or stubbed out.
  * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/UsingMocksAndStubs.html">Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/UsingMocksAndStubs.html">In the Tutorial</a>
  *
  * @see MockClass
  * @see Mockit#setUpMocks
  * @see Mockit#stubOut
  */
-@Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface UsingMocksAndStubs
 {
    /**
-    * A mix of mock and real classes from which the set of methods and constructors to be mocked or
-    * stubbed out is obtained.
+    * A mix of mock and real classes from which the set of methods and constructors to be mocked or stubbed out is
+    * obtained.
     * <p/>
     * A mock class is one {@linkplain MockClass annotated as such}.
     * It can define mocks and/or stubs for individual methods/constructors in a real class.
     * <p/>
-    * A "real class" is any class not annotated with {@link MockClass} which will have all of its
-    * methods and constructors, as well static initializers, stubbed out.
+    * A "real class" is any class not annotated with {@link MockClass} which will have all of its methods and
+    * constructors, as well static initializers, stubbed out.
     */
    Class<?>[] value();
 }

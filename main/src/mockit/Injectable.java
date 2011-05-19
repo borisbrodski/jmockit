@@ -21,9 +21,8 @@ import java.lang.annotation.*;
  * For the duration of each test where the mock field/parameter is in scope, <em>only one</em> injectable instance is
  * mocked; other instances of the same mocked type are not affected.
  * For an injectable mocked <em>class</em>, <em>static methods</em> and <em>constructors</em> are <em>not</em> mocked;
- * only instance methods are. The static initializers of said classes are <em>not</em> stubbed out by default.
+ * only instance methods are.
  */
-@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 public @interface Injectable

@@ -67,7 +67,8 @@ import java.lang.annotation.*;
  * abstract methods in that class and in all of its super-classes (again, excluding {@code Object}); these super-classes
  * are also targeted for mocking of non-abstract methods and constructors.</li>
  * </ol>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#declaration">Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#declaration">In the
+ * Tutorial</a>
  *
  * @see #methods
  * @see #inverse
@@ -75,7 +76,6 @@ import java.lang.annotation.*;
  * @see #capture
  * @see #realClassName
  */
-@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 public @interface Mocked

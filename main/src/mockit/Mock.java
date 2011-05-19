@@ -26,7 +26,7 @@ import java.lang.annotation.*;
  * every constructor, right after the necessary call to the super-class constructor.
  * Therefore, it is not possible to separately mock instance initialization blocks.
  * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#mocks">Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#mocks">In the Tutorial</a>
  *
  * @see #invocations
  * @see #minInvocations
@@ -34,7 +34,6 @@ import java.lang.annotation.*;
  * @see #reentrant
  * @see MockClass
  */
-@Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

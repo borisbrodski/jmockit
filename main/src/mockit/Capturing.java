@@ -18,8 +18,9 @@ import java.lang.annotation.*;
  * Each class implementing (in case the mocked type is an interface) or extending (in case the mocked type is a class)
  * the mocked type will also be mocked.
  * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/CapturingImplementations.html">Tutorial</a>
- * <br/>Sample tests:
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/CapturingImplementations.html">In the Tutorial</a>
+ * <p/>
+ * Sample tests:
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/SubclassTest.java">SubclassTest</a>,
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/CapturingImplementationsTest.java">CapturingImplementationsTest</a>,
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/TimingFramework/test/org/jdesktop/animation/timing/interpolation/PropertySetterTest.java">PropertySetterTest</a>
@@ -28,7 +29,6 @@ import java.lang.annotation.*;
  * @see #inverse
  * @see #maxInstances
  */
-@Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER})

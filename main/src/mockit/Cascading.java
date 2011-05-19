@@ -14,7 +14,8 @@ import java.lang.annotation.*;
  * type on which further invocations can be made.
  * This behavior automatically cascades to those mocked return types.
  * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#cascading">In the Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#cascading">In the
+ * Tutorial</a>
  * <p/>
  * Sample tests:
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/jbossaop/test/jbossaop/testing/bank/BankBusinessTest.java"
@@ -22,7 +23,6 @@ import java.lang.annotation.*;
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/CascadingFieldTest.java"
  * >CascadingFieldTest</a>
  */
-@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 public @interface Cascading

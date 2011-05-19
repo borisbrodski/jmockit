@@ -33,7 +33,6 @@ import java.lang.annotation.*;
  * If no matching injectable mock field exists in the test class, the target field in the tested class will be left
  * with the {@code null} reference.
  */
-@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Tested

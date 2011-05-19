@@ -14,6 +14,9 @@ import java.lang.annotation.*;
  * <p/>
  * This annotation is only relevant inside expectation blocks, and only applies to mocked methods/constructors for which
  * no matching expectation is recorded.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#defaultResults">In the
+ * Tutorial</a>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
