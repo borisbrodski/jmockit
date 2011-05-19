@@ -122,23 +122,28 @@
    </div>
 </h3>
 <p>
-   The methods and constructors which are invoked from the unit under test, and which belong to a dependency of that
-   unit, will be our regular targets for <em>mocking</em>.
-   We tell JMockit what needs to be mocked by specifying <em>mocked types</em>.
-   A mocked type should be the type of a dependency of the unit under test.
-   Such a type can be any reference type: an interface, an abstract class, a concrete class, a <code>final</code> class,
-   and so on (more on this later).
+   Methods and constructors invoked from the unit under test, and which belong to a dependency/collaborator of said
+   unit, are the usual targets for <em>mocking</em>.
+   We specify which particular dependencies are to be mocked for a given test (or tests) by declaring their types as
+   being <em>mocked types</em>.
+   That is, a mocked type should be the type of a dependency of the unit under test.
+   Such a type can be any reference type: an interface, an <code>abstract</code> class, a concrete class, a
+   <code>final</code> class, and so on.
 </p>
 <p>
-   By default, all methods and constructors (in case of a class) of the mocked type will be mocked.
+   By default, <em>all</em> methods of the mocked type will be mocked for the duration of the test.
    If the declared mocked type is a class, then all of its super-classes up to but not including
    <code>java.lang.Object</code> will also be mocked, recursively.
    Therefore, inherited methods will automatically be mocked as well.
+   Also in the case of a class, all of its <em>constructors</em> will get mocked.
+   Even more, whatever Java language modifiers apply to the methods/constructors of a mocked class, they still get
+   mocked: <code>private</code>, <code>static</code>, <code>final</code>, <code>native</code>, it doesn't matter.
 </p>
 <p>
-   When a method or constructor is mocked, its original implementation code won't be executed on invocations from the
-   test. Instead, the call will be redirected to JMockit so it can be dealt with in the manner that was explicitly or
-   implicitly specified in the test method, as we will see in the remaining of this chapter.
+   When a method or constructor is mocked, its original implementation code won't be executed for invocations occurring
+   during the test.
+   Instead, the call will be redirected to JMockit so it can be dealt with in the manner that was explicitly or
+   implicitly specified for the test.
 </p>
 <p>
    The following example test serves as a basic illustration for the declaration of mocked types.
@@ -165,6 +170,14 @@
       ...
    }
 </code></pre>
+<p>
+   As we will shortly see, there are several ways to declare mocked types, and also several ways in which the exact
+   semantics of mocking can be modified to suit the needs of a particular test or group of tests.
+   In most cases, such variations are specified through special annotations and their attributes:
+   <code class="annotation">@Mocked</code>, <code class="annotation">@NonStrict</code>,
+   <code class="annotation">@Injectable</code>, etc.
+   These annotations can be applied to instance fields in a test class and to test method parameters.
+</p>
 
 <h3 id="expectation">
    Expectations
@@ -179,23 +192,28 @@
 <p>
    An <em>expectation</em> is a set of invocations to an specific mocked method/constructor that is relevant for a given
    test.
-   An expectation may encompass multiple different invocations to the same method or constructor, but it does not have
-   to encompass <em>all</em> such invocations that occur during the test execution.
+   An expectation may cover multiple different invocations to the same method or constructor, but it doesn't have to
+   cover <em>all</em> such invocations that occur during the test execution.
+   Whether a particular invocation matches a given expectation or not will depend not only on the method/constructor
+   signature but also on runtime aspects such as the instance on which the method is invoked, arguments values, and/or
+   the number of invocations already matched.
+   Therefore, several types of matching <em>constraints</em> can (optionally) be specified for a given expectation.
 </p>
 <p>
-   Besides being associated with an specific method or constructor, each expectation will specify argument values for
-   the corresponding method/constructor invocations, when there are one or more invocation parameters involved.
-   For each parameter, an exact argument value may be specified, according to the parameter type.
-   For example, the value <code>"test string"</code> for an <code>String</code> parameter.
-   As we will see later, instead of specifying exact argument values, we can specify constraints on such values, which
-   will match whole sets of different argument values, for one or more actual invocations.
+   When we have one or more invocation parameters involved, an exact argument value may be specified for each parameter.
+   For example, the value <code>"test string"</code> could be specified for a <code>String</code> parameter, causing the
+   expectation to match only those invocations with this exact value in the corresponding parameter.
+   As we will see later, instead of specifying exact argument values, we can specify more relaxed constraints which will
+   match whole sets of different argument values.
 </p>
 <p>
-   The example below shows an expectation for <code>someMethod(int, String)</code>, which will match an invocation to
-   this method that should receive the exact argument values as specified.
-   Notice that the expectation itself is specified through an invocation to the mocked method.
+   The example below shows an expectation for <code>Dependency#someMethod(int, String)</code>, which will match an
+   invocation to this method with the exact argument values as specified.
+   Notice that the expectation itself is specified through an isolated invocation to the mocked method.
+   There are no special API methods involved, as is common in other mocking APIs.
    This invocation, however, does not count as one of the "real" invocations we are interested in testing.
-   It's only there so that the expectation can be specified.
+   It's only there so that the expectation can be specified. As such, the real implementation code behind the method
+   (or constructor) will not be executed.
 </p>
 <pre><code>   @Test
    public void doBusinessOperationXyz()
@@ -243,8 +261,7 @@
    {
       // 1. Preparation: whatever is required before the unit under test can be exercised.
       ...
-      // 2. The unit under test is exercised, normally by calling a non-private method
-      //    or constructor.
+      // 2. The unit under test is exercised, usually by calling a public method.
       ...
       // 3. Verification: whatever needs to be checked to make sure the exercised unit
       //    did its job.
@@ -259,11 +276,12 @@
 </p>
 <p>
    This model of three phases is also known as the <em>Arrange, Act, Assert syntax</em>, or "AAA" for short.
-   Different words, but the meaning is exactly the same.
+   Different words, but the meaning is the same.
 </p>
 <p>
-   In the context of behavior-based testing with mocks, we can identify the following alternative phases, which are
-   directly related to the three previously described conventional testing phases.
+   In the context of behavior-based testing with mocked types (and their mocked instances), we can identify the
+   following alternative phases, which are directly related to the three previously described conventional testing
+   phases:
 </p>
 <ol>
    <li>
@@ -278,7 +296,7 @@
    </li>
    <li>
       The <strong><em>verify</em></strong> phase, during which invocations can be <em>verified</em> to have occurred as
-      expected or not.
+      expected.
       This happens during test verification, <em>after</em> the invocations under test had a chance to be executed.
    </li>
 </ol>
@@ -386,7 +404,7 @@ public class SomeTest
    A mocked type can be introduced either through an instance field or a parameter declaration.
    In the first case, the field belongs to the test class or to a <code class="type">mockit.Expectations</code>
    subclass (a local field inside an expectation block).
-   In the second case, the parameter belongs to a test method.
+   In the second case, the parameter necessarily belongs to a test method.
 </p>
 <p>
    In all cases, a mock field/parameter declaration can use the <code class="type">mockit.Mocked</code> annotation.
