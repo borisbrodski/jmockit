@@ -27,6 +27,19 @@ public final class InputTest
       Socket getSocket() { return null; }
       void throwSocketException() throws SocketException, IllegalAccessException {}
       <E> List<E> genericMethod() { return null; }
+      Collaborator parent() { return null; }
+      ClassLackingNoArgsConstructor someMethod() { return new ClassLackingNoArgsConstructor(123); }
+      ClassWhoseConstructorFails willAlwaysFail() { return new ClassWhoseConstructorFails(); }
+   }
+
+   static final class ClassLackingNoArgsConstructor
+   {
+      ClassLackingNoArgsConstructor(int i) { assert i >= 0; }
+   }
+
+   public static final class ClassWhoseConstructorFails
+   {
+      public ClassWhoseConstructorFails() { throw new UnsupportedOperationException(); }
    }
 
    @Mocked Collaborator mock;
@@ -98,5 +111,89 @@ public final class InputTest
       };
 
       mock.throwSocketException();
+   }
+
+   @Test
+   public void instantiateClassWhoseNoArgsConstructorIsNotPublic()
+   {
+      new Expectations() {
+         @Input Collaborator parent;
+      };
+
+      assertNotNull(mock.parent());
+   }
+
+   @Test(expected = InstantiationException.class)
+   public void attemptToInstantiateClassLackingANoArgsConstructor() throws Throwable
+   {
+      new Expectations() {
+         @Input ClassLackingNoArgsConstructor fail;
+      };
+
+      try {
+         mock.someMethod();
+         fail();
+      }
+      catch (RuntimeException e) {
+         throw e.getCause();
+      }
+   }
+
+   @Test(expected = UnsupportedOperationException.class)
+   public void attemptToInstantiateClassWhoseConstructorFails()
+   {
+      new Expectations() {
+         @Input ClassWhoseConstructorFails fail;
+      };
+
+      mock.willAlwaysFail();
+   }
+
+   public static final class DependencyAbc
+   {
+      int intReturningMethod() { return -1; }
+
+      @SuppressWarnings({"RedundantThrowsDeclaration"})
+      String stringReturningMethod() throws SomeCheckedException { return ""; }
+   }
+
+   public static final class SomeCheckedException extends Exception {}
+
+   public static class UnitUnderTest
+   {
+      private final DependencyAbc abc = new DependencyAbc();
+
+      public void doSomething()
+      {
+         int n = abc.intReturningMethod();
+
+         for (int i = 0; i < n; i++) {
+            String s;
+
+            try {
+               s = abc.stringReturningMethod();
+            }
+            catch (SomeCheckedException e) {
+               // somehow handle the exception
+               s = "Abc";
+            }
+
+            // do some other stuff
+            s.toCharArray();
+         }
+      }
+   }
+
+   @Test
+   public void doSomethingHandlesSomeCheckedException()
+   {
+      new Expectations() {
+         DependencyAbc abc;
+
+         @Input int iterations = 3;
+         @Input SomeCheckedException onFirstIteration;
+      };
+
+      new UnitUnderTest().doSomething();
    }
 }

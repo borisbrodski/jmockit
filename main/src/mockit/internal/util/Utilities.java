@@ -742,8 +742,12 @@ public final class Utilities
          //noinspection ClassNewInstance
          return aClass.newInstance();
       }
-      catch (InstantiationException ignore) { return null; }
-      catch (IllegalAccessException ignored) { return null; }
+      catch (InstantiationException ie) {
+         throw new RuntimeException(ie);
+      }
+      catch (IllegalAccessException ignore) {
+         return newInstance(aClass);
+      }
    }
 
    private static final class ThrowOfCheckedException
