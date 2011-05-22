@@ -587,10 +587,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    mocked constructors in a given test. We will address this issue later.)
 </p>
 <pre><code>   @Test
-   public void doSomethingHandlesSomeCheckedException()
+   public void doSomethingHandlesSomeCheckedException() throws Exception
    {
-      new Expectations()
-      {
+      new Expectations() {
          DependencyAbc abc;
 
          {
@@ -625,23 +624,22 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    return value needs to be provided.
    JMockit will always supply a reasonable return value, according to the declared return type of the method:
    <code>0</code> (zero) for an integral primitive type, <code>false</code> for <code>boolean</code>, an empty
-   collection or array, or the <code>null</code> reference for reference types (including <code>String</code> and the
-   primitive wrapper classes).
+   collection or array, or <code>null</code> for reference types (including <code>String</code> and the primitive
+   wrapper classes).
    Mocked constructors and <code>void</code> methods also have a "default result", which is to simply return without
    throwing any exception or error.
-   (Note, however, that when an invocation is deemed to be <em>unexpected</em>, an <code>AssertionError</code> is
-   thrown instead of returning a value.)
+   (Unless the invocation occurring during replay is found to be <em>unexpected</em>, in which case JMockit
+   automatically throws an <code>AssertionError</code> to cause a test failure.)
 </p>
 <p>
-   It's possible to explicitly override such default results in an expectation block, by declaring <em>input
-   fields</em>. Such (instance) fields must be annotated with <code>@Input</code>. Here is an example.
+   We can explicitly override such default results in an expectation block, by declaring <em>indirect input</em> fields.
+   Such (instance) fields must be annotated with <code class="annotation">@Input</code>. Here is an example.
 </p>
 <pre><code>   @Test
    public void someTestMethod()
    {
-      new NonStrictExpectations()
-      {
-         DependencyAbc mock; // a mock field, assigned automatically
+      new NonStrictExpectations() {
+         DependencyAbc mock;
 
          // The <strong>names</strong> of input fields are merely for documentation.
          <strong>@Input</strong> final int defaultIntReturn = 5;
@@ -657,17 +655,17 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   In the case of return values, the declared type of the field must be the same as the return type of interest; any
-   non-<code>void</code> methods having this return type will return the value assigned to the input field,
-   <em>each</em> time they get invoked by the code under test, provided they are allowed to occur and there is no
-   matching recorded expectation.
+   In the case of return values, the declared type of the field must be the same as the return type of interest.
+   Any methods with this return type will return the value assigned to the input field.
+   This will happen every time the mocked method gets invoked by code under test, provided such invocations are
+   allowed to occur and there is no recorded expectation matching them.
    In the example above, any method belonging to <code>DependencyAbc</code> which returns an <code>int</code> will
-   return the value <code>5</code>; any method returning a <code>Socket</code> will return a socket object instantiated
-   automatically with the <code>java.net.Socket</code> public no-args constructor (if a custom instance was needed, we
-   could have it explicitly instantiated and assigned to the field).
+   always return the value <code>5</code>; any method returning a <code>Socket</code> will return a socket object
+   instantiated automatically with the <code>java.net.Socket</code> public no-args constructor (if a custom instance was
+   needed, we could have it explicitly instantiated and assigned to the field).
 </p>
 <p>
-   Methods or constructors that declare to throw <em>checked</em> exceptions can have one such exception specified as
+   Methods and constructors that declare to throw <em>checked</em> exceptions can have one such exception specified as
    the default result, by simply declaring an input field of the desired exception type. An exception instance can be
    directly instantiated and assigned to the field; if none is, then JMockit will do so automatically using the public
    no-args constructor of the exception class.
@@ -676,15 +674,31 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    thrown whenever a non-recorded invocation occurs during the test.
 </p>
 <p>
-   Note that this mechanism depends only on <em>return types</em> or <em>throws clauses</em>, not on method names or
-   parameters, or even on which mocked class or instance an invocation occurs.
+   Note that this mechanism depends only on <em>return types</em> and <em><code>throws</code> clauses</em>, not on
+   method names or parameters, or even on which mocked class or instance an invocation occurs.
    For many methods in production code, we often find that <em>only one</em> value of a certain type is needed for a
-   given test of the method (particularly when it's a <em>reference</em> type, less so when it's a primitive or
-   <code>String</code>).
+   given test where the method is called (particularly when it's a <em>reference</em> type, less so when it's a
+   primitive or <code>String</code>).
    This property allows us to write a shorter test, where a "mere" default result is specified instead of having to
    record an expectation and deal with full method/constructor signatures.
-   When more precision is required for a given test, a suitable expectation will have to be recorded, naturally.
+   (Of course, when more precision is required for a given test, a suitable expectation will have to be recorded.)
+   The following example test is equivalent to its original version shown before, assuming we don't  really need to
+   catch the exception only in the third iteration of the loop inside the tested method; if we do, then recording an
+   explicit expectation for <code>stringReturningMethod()</code> will be necessary.
 </p>
+<pre><code>   @Test
+   public void doSomethingHandlesSomeCheckedException()
+   {
+      new Expectations() {
+         DependencyAbc abc;
+
+(2)      @Input int iterations = 3;
+(3)      @Input SomeCheckedException onFirstIteration;
+      };
+
+      new UnitUnderTest().doSomething();
+   }
+</code></pre>
 
 <h3 id="onInstance">
    Matching invocations to specific instances
