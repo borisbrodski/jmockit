@@ -4,6 +4,7 @@
  */
 package mockit;
 
+import java.io.*;
 import java.nio.*;
 import java.util.*;
 
@@ -212,5 +213,48 @@ public final class InstanceSpecificMockingTest
 
       ByteBuffer realBuf2 = ByteBuffer.allocateDirect(20);
       assertEquals(20, realBuf2.capacity());
+   }
+
+   public static final class ConcatenatingInputStream extends InputStream
+   {
+      private final Queue<InputStream> sequentialInputs;
+      private InputStream currentInput;
+
+      public ConcatenatingInputStream(InputStream... sequentialInputs)
+      {
+         this.sequentialInputs = new LinkedList<InputStream>(Arrays.asList(sequentialInputs));
+         currentInput = this.sequentialInputs.poll();
+      }
+
+      @Override
+      public int read() throws IOException
+      {
+         if (currentInput == null) return -1;
+
+         int nextByte = currentInput.read();
+
+         if (nextByte >= 0) {
+            return nextByte;
+         }
+
+         currentInput = sequentialInputs.poll();
+         return read();
+      }
+   }
+
+   @Test
+   public void concatenateInputStreams(@Injectable final InputStream input1, @Injectable final InputStream input2)
+      throws Exception
+   {
+      new Expectations() {{
+         input1.read(); returns(1, 2, -1);
+         input2.read(); returns(3, -1);
+      }};
+
+      InputStream concatenatedInput = new ConcatenatingInputStream(input1, input2);
+      byte[] buf = new byte[3];
+      concatenatedInput.read(buf);
+
+      assertArrayEquals(new byte[] {1, 2, 3}, buf);
    }
 }
