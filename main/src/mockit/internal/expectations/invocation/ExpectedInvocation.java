@@ -236,16 +236,18 @@ public final class ExpectedInvocation
    public Object getDefaultValueForReturnType(TestOnlyPhase phase)
    {
       if (defaultReturnValue == UNDEFINED_DEFAULT_RETURN) {
-         defaultReturnValue =
+         Object indirectInput =
             TestRun.getExecutingTest().defaultResults.get(arguments.getGenericSignature(), arguments.exceptions);
 
-         if (defaultReturnValue == null) {
-            String returnTypeDesc = DefaultValues.getReturnTypeDesc(arguments.methodNameAndDesc);
-            defaultReturnValue = DefaultValues.computeForType(returnTypeDesc);
+         if (indirectInput != null) {
+            return indirectInput;
+         }
 
-            if (defaultReturnValue == null && returnTypeDesc.charAt(0) == 'L') {
-               produceCascadedMockIfApplicable(phase, returnTypeDesc);
-            }
+         String returnTypeDesc = DefaultValues.getReturnTypeDesc(arguments.methodNameAndDesc);
+         defaultReturnValue = DefaultValues.computeForType(returnTypeDesc);
+
+         if (defaultReturnValue == null && returnTypeDesc.charAt(0) == 'L') {
+            produceCascadedMockIfApplicable(phase, returnTypeDesc);
          }
       }
 

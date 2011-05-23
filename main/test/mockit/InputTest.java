@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.*;
 
 import static java.util.Arrays.*;
-import static org.junit.Assert.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public final class InputTest
 {
@@ -147,6 +147,78 @@ public final class InputTest
       };
 
       mock.willAlwaysFail();
+   }
+
+   @Test
+   public void multipleInputFieldsOfTheSameReturnType()
+   {
+      new Expectations() {
+         @Input int first = 1;
+         @Input int second = 2;
+      };
+
+      assertEquals(1, mock.getInt());
+      assertEquals(2, mock.getAnotherInt("2"));
+      assertEquals(2, mock.getInt());
+   }
+
+   @Test
+   public void multipleInputFieldsOfTheSameReturnTypeWithFixedNumberOfInvocationsOnTheFirst()
+   {
+      new Expectations() {
+         @Input(invocations = 2) String first = "Abc";
+         @Input String second = "Xyz";
+      };
+
+      assertEquals("Abc", mock.getString());
+      assertEquals("Abc", mock.getAnotherString());
+      assertEquals("Xyz", mock.getAnotherString());
+      assertEquals("Xyz", mock.getString());
+      assertEquals("Xyz", mock.getString());
+   }
+
+   @Test
+   public void multipleInputFieldsOfTheSameReturnTypeWithFixedNumbersOfInvocationsOnBoth()
+   {
+      new Expectations() {
+         @Input(invocations = 2) String first = "Abc";
+         @Input(invocations = 3) String second = "Xyz";
+      };
+
+      assertEquals("Abc", mock.getString());
+      assertEquals("Abc", mock.getAnotherString());
+      assertEquals("Xyz", mock.getAnotherString());
+      assertEquals("Xyz", mock.getString());
+      assertEquals("Xyz", mock.getString());
+      assertNull(mock.getAnotherString());
+      assertNull(mock.getString());
+   }
+
+   @Test
+   public void multipleInputFieldsOfTheSameCheckedExceptionType() throws IllegalAccessException
+   {
+      new Expectations() {
+         @Input SocketException first;
+         @Input final SocketException second = new SocketException("second one");
+      };
+
+      try {
+         mock.throwSocketException();
+         fail();
+      }
+      catch (SocketException e) {
+         assertNull(e.getMessage());
+      }
+
+      for (int i = 1; i < 3; i++) {
+         try {
+            mock.throwSocketException();
+            fail();
+         }
+         catch (SocketException e) {
+            assertEquals("second one", e.getMessage());
+         }
+      }
    }
 
    public static final class DependencyAbc

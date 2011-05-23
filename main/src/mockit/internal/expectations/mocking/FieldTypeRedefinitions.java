@@ -37,13 +37,14 @@ public abstract class FieldTypeRedefinitions extends TypeRedefinitions
       }
 
       Field[] fields = classWithMockFields.getDeclaredFields();
+      DefaultResults defaultResults = TestRun.getExecutingTest().defaultResults;
 
       for (Field candidateField : fields) {
          int fieldModifiers = candidateField.getModifiers();
 
          if ((fieldModifiers & FIELD_ACCESS_MASK) == 0) {
             if (candidateField.isAnnotationPresent(Input.class)) {
-               TestRun.getExecutingTest().defaultResults.add(candidateField, parentObject);
+               defaultResults.add(candidateField, parentObject);
             }
             else {
                field = candidateField;

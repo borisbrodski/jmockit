@@ -7,6 +7,7 @@ package mockit.internal.state;
 import java.lang.reflect.*;
 import java.util.*;
 
+import mockit.*;
 import mockit.external.asm.Type;
 import mockit.internal.util.*;
 
@@ -14,16 +15,28 @@ public final class DefaultResults
 {
    private Map<String, ResultExtractor> defaultResults;
 
-   private static final class ResultExtractor
+   private final class ResultExtractor
    {
       final Field inputField;
       final Object fieldOwner;
+      ResultExtractor next;
+      volatile int invocationsRemaining;
       volatile Object valueCache;
 
       ResultExtractor(Field inputField, Object fieldOwner)
       {
          this.inputField = inputField;
          this.fieldOwner = fieldOwner;
+         invocationsRemaining = inputField.getAnnotation(Input.class).invocations();
+      }
+
+      void chainNextOne(ResultExtractor next)
+      {
+         this.next = next;
+
+         if (invocationsRemaining == Integer.MAX_VALUE) {
+            invocationsRemaining = 1;
+         }
       }
 
       void extractException()
@@ -34,6 +47,11 @@ public final class DefaultResults
 
       Object getInputFieldValue()
       {
+         if (invocationsRemaining <= 0) {
+            return next == null ? null : next.getInputFieldValue();
+         }
+
+         invocationsRemaining--;
          Object valueFromCache = valueCache;
 
          if (valueFromCache != null) {
@@ -83,7 +101,14 @@ public final class DefaultResults
          defaultResults = new HashMap<String, ResultExtractor>();
       }
 
-      defaultResults.put(resultTypeDesc, resultExtractor);
+      ResultExtractor previousExtractor = defaultResults.get(resultTypeDesc);
+
+      if (previousExtractor == null) {
+         defaultResults.put(resultTypeDesc, resultExtractor);
+      }
+      else {
+         previousExtractor.chainNextOne(resultExtractor);
+      }
    }
 
    public Object get(String signature, String[] exceptions)
