@@ -139,23 +139,32 @@ public class TestRunnerDecorator
       }
    }
 
-   protected final Object[] createInstancesForMockParametersIfAny(Object target, Method testMethod, Object[] params)
+   protected final void createInstancesForTestedFields(Object target)
    {
-      SharedFieldTypeRedefinitions sharedFields = TestRun.getSharedFieldTypeRedefinitions();
+      TestedClassInstantiations testedClasses =
+         TestRun.getSharedFieldTypeRedefinitions().getTestedClassInstantiations();
 
-      if (sharedFields == null) {
-         return params;
+      if (testedClasses != null) {
+         TestRun.enterNoMockingZone();
+
+         try {
+            testedClasses.assignNewInstancesToTestedFields(target);
+         }
+         finally {
+            TestRun.exitNoMockingZone();
+         }
+      }
+   }
+
+   protected final Object[] createInstancesForMockParameters(Object target, Method testMethod)
+   {
+      if (testMethod.getParameterTypes().length == 0) {
+         return null;
       }
 
       TestRun.enterNoMockingZone();
 
       try {
-         sharedFields.getTestedClassRedefinitions().assignNewInstancesToTestedFields(target);
-
-         if (testMethod.getParameterTypes().length == 0) {
-            return params;
-         }
-
          ParameterTypeRedefinitions redefinitions = new ParameterTypeRedefinitions(target, testMethod);
          TestRun.getExecutingTest().setParameterTypeRedefinitions(redefinitions);
 

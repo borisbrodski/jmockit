@@ -102,10 +102,15 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
 
       @SuppressWarnings({"deprecation"}) Method method = testResult.getMethod().getMethod();
 
+      createInstancesForTestedFields(instance);
+
       if (!isMethodWithParametersProvidedByTestNG(method)) {
          Object[] parameters = testResult.getParameters();
-         Object[] mockParameters = createInstancesForMockParametersIfAny(instance, method, parameters);
-         System.arraycopy(mockParameters, 0, parameters, 0, parameters.length);
+         Object[] mockParameters = createInstancesForMockParameters(instance, method);
+
+         if (mockParameters != null) {
+            System.arraycopy(mockParameters, 0, parameters, 0, parameters.length);
+         }
       }
 
       if (shouldPrepareForNextTest) {

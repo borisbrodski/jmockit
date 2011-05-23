@@ -135,10 +135,12 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
 
       TestRun.setRunningTestMethod(testMethod);
       SavePoint savePoint = new SavePoint();
-      Object[] args = createInstancesForMockParametersIfAny(it, testMethod, Utilities.NO_ARGS);
+
+      createInstancesForTestedFields(it);
+      Object[] args = createInstancesForMockParameters(it, testMethod);
 
       try {
-         if (args.length == 0) {
+         if (args == null) {
             runTestMethod.invoke(it);
          }
          else {

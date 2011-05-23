@@ -101,17 +101,17 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
       }
    }
 
-   private void executeTest(Object target, Object... params) throws Throwable
+   private void executeTest(Object target, Object... parameters) throws Throwable
    {
       SavePoint savePoint = new SavePoint();
       boolean nothingThrownByTest = false;
 
       try {
-         //noinspection AssignmentToMethodParameter
-         params = createInstancesForMockParametersIfAny(target, it.getMethod(), params);
+         createInstancesForTestedFields(target);
+         Object[] mockParameters = createInstancesForMockParameters(target, it.getMethod());
 
          TestRun.setRunningIndividualTest(target);
-         it.invokeExplosively(target, params);
+         it.invokeExplosively(target, mockParameters == null ? parameters : mockParameters);
          nothingThrownByTest = true;
       }
       finally {
