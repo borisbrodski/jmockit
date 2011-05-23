@@ -24,6 +24,7 @@
    <li>
       <a href="#declaration">Declaring and using mocked types</a>
       <ol>
+         <li><a href="#mockedInstances">Mocked instances</a></li>
          <li><a href="#multipleInterfaces">Mocking multiple interfaces at the same time</a></li>
       </ol>
    </li>
@@ -33,7 +34,13 @@
          <li><a href="#defaultResults">Specifying default results</a></li>
       </ol>
    </li>
-   <li><a href="#onInstance">Matching invocations to specific instances</a></li>
+   <li>
+      <a href="#instanceSpecificMatching">Matching invocations to specific instances</a>
+      <ol>
+         <li><a href="#onInstance">The <code>onInstance(m)</code> constraint</a></li>
+         <li><a href="#injectable">Injectable mocked instances</a></li>
+      </ol>
+   </li>
    <li>
       <a href="#hamcrest">Constraint-based matching of argument values</a>
       <ol>
@@ -442,6 +449,8 @@ public class SomeTest
    This value can be <code>null</code>, though, which is perfectly valid for a mocked class if only constructors and
    static methods are going to be called on it.
 </p>
+
+<h4 id="mockedInstances">Mocked instances</h4>
 <p>
    The mocked instances created by JMockit can be used normally in test code (for the recording and verification of
    expectations), and/or passed to the code under test. Or they may simply go unused.
@@ -519,7 +528,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#declaration"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#onInstance"><img align="right" src="go-down.png" title="Next section"></a>
+      <a href="#instanceSpecificMatching"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
@@ -700,7 +709,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 
-<h3 id="onInstance">
+<h3 id="instanceSpecificMatching">
    Matching invocations to specific instances
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
@@ -711,43 +720,136 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   On the previous section we mentioned that a recorded invocation like <code>abc.intReturningMethod();</code> would
-   actually match invocations to <code>DependencyAbc#intReturningMethod()</code> on <em>any</em> instance of the mocked
-   <code>DependencyAbc</code> class.
-   In most cases, this won't really matter and can be safely ignored.
-   But what if we need to verify that the invocation occurs on a specific instance?
-   We use the <code>Expectations#onInstance(mockObject)</code> method when recording the invocation,
-   as the next example shows.
+   Previously, we explained that an expectation recorded on a mocked instance, such as
+   <code><strong>abc</strong>.intReturningMethod(); <em>result</em> = 3;</code> would actually match invocations to
+   <code>DependencyAbc#intReturningMethod()</code> on <em>any</em> instance of the mocked <code>DependencyAbc</code>
+   class.
+   In most cases, tested code uses a <em>single</em> instance of a given dependency, so this won't really matter and can
+   be safely ignored, whether the mocked instance is <em>passed into</em> tested code or <em>created inside</em> it.
+   But what if we need to verify that invocations occur on a <em>specific</em> instance, between the several/many ones
+   that happen to be used by code under test?
+   JMockit actually provides a few different ways to constrain the matching of expectations on specific mocked
+   instances, as we shall see.
+</p>
+
+<h4 id="onInstance">The <code>onInstance(m)</code> constraint</h4>
+<p>
+   We can use the <code>Expectations#onInstance(mockObject)</code> method when recording an expectation, as the next
+   example shows.
 </p>
 <pre><code>   @Test
    public void matchOnMockInstance(final Collaborator <strong>mock</strong>)
    {
-      new Expectations()
-      {
-         {
-            <strong>onInstance(mock)</strong>.getValue(); <em>result</em> = 12;
-         }
-      };
+      new Expectations() {{
+         <strong>onInstance(mock)</strong>.getValue(); <em>result</em> = 12;
+      }};
 
-      // Exercise unit under test with the mocked instance passed from the test:
+      // Exercise unit under test with mocked instance passed from the test:
       int result = <strong>mock</strong>.getValue();
-
       assertEquals(12, result);
+
+      // If another instance is created inside code under test...
+      Collaborator another = new Collaborator();
+
+      // ...we won't get the recorded result, but the default one:
+      assertEquals(0, another.getValue());
    }
 </code></pre>
 <p>
-   The test above will only pass if the unit under test invokes <code>getValue()</code> on the exact
-   same mock instance on which the recording invocation was made.
-   This is typically useful when the unit under test makes calls on two or more different instances
-   of the same type, and the test wants to verify that each invocation occurred on the proper instance.
-   In fact, whenever two or more mocks of the exact same type are in scope for a given test, JMockit
-   will automatically apply "onInstance" matching to all invocations made on those mocks.
-   Therefore, in such common situations it isn't necessary to explicitly use the <code>onInstance(mock)</code> method.
+   The test above will only pass if the unit under test (here embedded in the test method itself, for brevity)
+   invokes <code>getValue()</code> on the exact same instance on which the recording invocation was made.
+   This is typically useful when the unit under test makes calls on two or more different instances of the same type,
+   and the test wants to verify that each invocation occurred on the proper instance.
 </p>
 <p>
-   In practice, this matching specifier method will rarely be used.
-   For a real-world example of this functionality, see the <code>CompositeEffectTest#testInit</code>
-   test from the <em>Timing Framework</em> sample test suite.
+   To avoid the need to use <code>onInstance(m)</code> on every expectation when testing code which uses multiple
+   instances of the same type in different ways, JMockit automatically infers the need for "onInstance" matching based
+   on the set of mocked types in scope.
+   Specifically, whenever two or more mock fields/parameters of the exact same type are in scope for a given test,
+   invocations to instance methods made on their (automatically) assigned instances will always match expectations
+   recorded on those same instances.
+   Therefore, in such common situations it isn't necessary to explicitly use the <code>onInstance(m)</code> method.
+</p>
+
+<h4 id="injectable">Injectable mocked instances</h4>
+<p>
+   Suppose we need to test code which works with multiple instances of a given class.
+   If we declare said class to be mocked, then all of its instances will be equally affected: they all become mocked
+   instances, so that any instance method invoked on them gets handled according to our mocking specifications.
+   However, what if we need <em>only one</em> (or a few) of those instances to be mocked, while invocations made on
+   other instances continue to execute the original, "real" implementation?
+   This is where the <code class="annotation">@Injectable</code> annotation can help.
+   (It has other uses too, which we'll address later.)
+</p>
+<p>
+   By simply declaring a mock field or mock parameter as <code class="annotation">@Injectable</code>, we get an
+   "exclusive" mocked instance; any other instance of the same mocked type, unless associated with a separate mock
+   field/parameter, will remain as a regular, non-mocked instance.
+   Since an injectable mocked instance is used to preserve the original implementation on other instances, it follows
+   that <code>static</code> methods and constructors are <em>also</em> excluded from being mocked.
+   After all, a <code>static</code> method is not associated with any instance of the class, while a constructor is
+   only associated with a newly created (and therefore different) instance.
+</p>
+<p>
+   For an example, lets say we have the following class to be tested.
+</p>
+<pre><code>public static final class ConcatenatingInputStream extends InputStream
+{
+   private final Queue&lt;InputStream> sequentialInputs;
+   private InputStream currentInput;
+
+   public ConcatenatingInputStream(InputStream... sequentialInputs)
+   {
+      this.sequentialInputs = new LinkedList&lt;InputStream>(Arrays.asList(sequentialInputs));
+      currentInput = this.sequentialInputs.poll();
+   }
+
+   @Override
+   public int read() throws IOException
+   {
+      if (currentInput == null) return -1;
+
+      int nextByte = currentInput.read();
+
+      if (nextByte >= 0) {
+         return nextByte;
+      }
+
+      currentInput = sequentialInputs.poll();
+      return read();
+   }
+}
+</code></pre>
+<p>
+   This class could easily be tested without mocking by using <code>ByteArrayInputStream</code> objects for input, but
+   lets say we want to make sure that the <code>InputStream#read()</code> method is properly invoked on each input
+   stream passed in the constructor.
+   The following test will achieve this.
+</p>
+<pre><code>   @Test
+   public void concatenateInputStreams(
+      @Injectable final InputStream input1, @Injectable final InputStream input2)
+      throws Exception
+   {
+      new Expectations() {{
+         input1.read(); returns(1, 2, -1);
+         input2.read(); returns(3, -1);
+      }};
+
+      InputStream concatenatedInput = new ConcatenatingInputStream(input1, input2);
+      byte[] buf = new byte[3];
+      concatenatedInput.read(buf);
+
+      assertArrayEquals(new byte[] {1, 2, 3}, buf);
+   }
+</code></pre>
+<p>
+   Note that the use of <code class="annotation">@Injectable</code> is indeed necessary here, since the class under test
+   extends the mocked class, and the method called to exercise the former is defined in the latter.
+   If <code>InputStream</code> was mocked "normally", the <code>read(byte[])</code> method would always be mocked,
+   regardless of the instance on which it is called.
+   (Well, we could still write a test without injectable instances if <em>only</em> the overriding <code>read()</code>
+   method was called by the test.)
 </p>
 
 <h3 id="hamcrest">
@@ -756,7 +858,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
-      <a href="#onInstance"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#instanceSpecificMatching"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#constraints"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>

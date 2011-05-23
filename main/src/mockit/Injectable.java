@@ -22,6 +22,9 @@ import java.lang.annotation.*;
  * mocked; other instances of the same mocked type are not affected.
  * For an injectable mocked <em>class</em>, <em>static methods</em> and <em>constructors</em> are <em>not</em> mocked;
  * only instance methods are.
+ * <p/>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#injectable">In the
+ * Tutorial</a>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
