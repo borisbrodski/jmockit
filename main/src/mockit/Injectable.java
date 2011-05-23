@@ -23,6 +23,12 @@ import java.lang.annotation.*;
  * For an injectable mocked <em>class</em>, <em>static methods</em> and <em>constructors</em> are <em>not</em> mocked;
  * only instance methods are.
  * <p/>
+ * When used in combination with {@linkplain Tested @Tested}, the values assigned (explicitly in test code or
+ * automatically by JMockit) to injectable fields of the test class will be used for automatic injection into the tested
+ * object.
+ * Additionally, this annotation can be applied to non-mocked fields of primitive or array type, which will also be used
+ * for injection.
+ * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#injectable">In the
  * Tutorial</a>
  */

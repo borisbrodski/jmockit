@@ -7,18 +7,13 @@ package mockit;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-public final class TestedClassWithConstructorDITest
+public final class TestedClassWithConstructorDI1Test
 {
    public static final class TestedClass
    {
       private final Dependency dependency;
-
       public TestedClass(Dependency dependency) { this.dependency = dependency; }
-
-      public boolean doSomeOperation()
-      {
-         return dependency.doSomething() > 0;
-      }
+      public boolean doSomeOperation() { return dependency.doSomething() > 0; }
    }
 
    static class Dependency
@@ -32,12 +27,9 @@ public final class TestedClassWithConstructorDITest
    @Test
    public void exerciseTestedObjectWithDependencyInjectedThroughConstructor()
    {
-      new Expectations()
-      {
-         {
-            mock.doSomething(); result = 23;
-         }
-      };
+      new Expectations() {{
+         mock.doSomething(); result = 23;
+      }};
 
       assertTrue(tested.doSomeOperation());
    }

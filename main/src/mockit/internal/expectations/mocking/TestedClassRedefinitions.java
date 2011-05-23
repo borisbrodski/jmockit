@@ -6,27 +6,26 @@ package mockit.internal.expectations.mocking;
 
 import java.lang.instrument.*;
 import java.lang.reflect.*;
-import java.lang.reflect.Type;
 import java.util.*;
-
-import static mockit.internal.util.Utilities.*;
 
 import mockit.*;
 import mockit.external.asm.*;
 import mockit.internal.*;
 
-public final class TestedClassRedefinitions
+final class TestedClassRedefinitions
 {
-   private final List<Field> testedFields;
+   final List<Field> testedFields;
+   final List<MockedType> injectableFields;
    private final List<MockedType> mockedTypes;
 
-   public TestedClassRedefinitions()
+   TestedClassRedefinitions()
    {
       testedFields = new LinkedList<Field>();
+      injectableFields = new ArrayList<MockedType>();
       mockedTypes = new ArrayList<MockedType>();
    }
 
-   public boolean redefineTestedClasses(Object objectWithTestedFields)
+   boolean redefineTestedClasses(Object objectWithTestedFields)
    {
       for (Field field: objectWithTestedFields.getClass().getDeclaredFields()) {
          if (field.isAnnotationPresent(Tested.class)) {
@@ -34,6 +33,10 @@ public final class TestedClassRedefinitions
          }
          else {
             MockedType mockedType = new MockedType(field, true);
+
+            if (mockedType.injectable) {
+               injectableFields.add(mockedType);
+            }
 
             if (mockedType.isMockField()) {
                mockedTypes.add(mockedType);
@@ -57,141 +60,5 @@ public final class TestedClassRedefinitions
 
       ClassDefinition classDefinition = new ClassDefinition(testedClass, modifiedClass);
       RedefinitionEngine.redefineClasses(classDefinition);
-   }
-
-   public void assignNewInstancesToTestedFields(Object objectWithMockFields)
-   {
-      for (Field testedField : testedFields) {
-         Object testedObject = getFieldValue(testedField, objectWithMockFields);
-
-         if (testedObject == null) {
-            Class<?> testedClass = testedField.getType();
-            Constructor<?>[] publicConstructors = testedClass.getConstructors();
-
-            if (publicConstructors.length == 1) {
-               Object newTestedObject = instantiateWithPublicConstructor(objectWithMockFields, publicConstructors[0]);
-               injectMocksIntoFieldsThatAreStillNull(objectWithMockFields, testedClass, newTestedObject);
-               setFieldValue(testedField, objectWithMockFields, newTestedObject);
-            }
-         }
-      }
-   }
-
-   private Object instantiateWithPublicConstructor(Object objectWithMockFields, Constructor<?> constructor)
-   {
-      Object[] mockArguments = obtainInjectableMocks(objectWithMockFields, constructor.getGenericParameterTypes());
-      return invoke(constructor, mockArguments);
-   }
-
-   private Object[] obtainInjectableMocks(Object parentObject, Type[] parameterTypes)
-   {
-      int n = parameterTypes.length;
-      Object[] parameterValues = new Object[n];
-
-      for (int i = 0; i < n; i++) {
-         Type declaredType = parameterTypes[i];
-         int position = findPositionForMockField(parameterTypes, i, declaredType);
-         parameterValues[i] = getRequiredMockObject(parentObject, declaredType, position);
-      }
-
-      return parameterValues;
-   }
-
-   private int findPositionForMockField(Type[] parameterTypes, int n, Type declaredType)
-   {
-      int pos = 0;
-
-      for (int i = 0; i <= n; i++) {
-         if (parameterTypes[i] == declaredType) {
-            pos++;
-         }
-      }
-
-      return pos;
-   }
-
-   private Object getRequiredMockObject(Object parentObject, Type declaredType, int atPosition)
-   {
-      MockedType mockedType = findInjectableMockedType(declaredType, atPosition);
-
-      if (mockedType == null) {
-         throw new IllegalArgumentException("No injectable mock field of " + declaredType);
-      }
-
-      Object mock = getFieldValue(mockedType.field, parentObject);
-
-      if (mock == null) {
-         throw new IllegalArgumentException("No injectable mock instance available of " + declaredType);
-      }
-
-      return mock;
-   }
-
-   private MockedType findInjectableMockedType(Type declaredType, int atPosition)
-   {
-      int currentPosition = 0;
-
-      for (MockedType mockedType : mockedTypes) {
-         if (mockedType.injectable && mockedType.declaredType == declaredType) {
-            currentPosition++;
-
-            if (currentPosition == atPosition) {
-               return mockedType;
-            }
-         }
-      }
-
-      return null;
-   }
-
-   private void injectMocksIntoFieldsThatAreStillNull(Object objectWithMockFields, Class<?> testedClass, Object tested)
-   {
-      Class<?> superClass = testedClass.getSuperclass();
-
-      if (superClass != null && superClass.getProtectionDomain() == testedClass.getProtectionDomain()) {
-         injectMocksIntoFieldsThatAreStillNull(objectWithMockFields, superClass, tested);
-      }
-
-      for (Field field : testedClass.getDeclaredFields()) {
-         if (getFieldValue(field, tested) == null) {
-            Object mock = getMockObjectIfAvailable(objectWithMockFields, field);
-            setFieldValue(field, tested, mock);
-         }
-      }
-   }
-
-   private Object getMockObjectIfAvailable(Object parentObject, Field fieldToBeInjected)
-   {
-      MockedType mockedType = findInjectableMockedType(fieldToBeInjected);
-      return mockedType == null ? null : getFieldValue(mockedType.field, parentObject);
-   }
-
-   private MockedType findInjectableMockedType(Field fieldToBeInjected)
-   {
-      Type declaredType = fieldToBeInjected.getGenericType();
-      String fieldName = fieldToBeInjected.getName();
-      boolean multipleFieldsOfSameTypeFound = false;
-      MockedType found = null;
-
-      for (MockedType mockedType : mockedTypes) {
-         if (mockedType.injectable && mockedType.declaredType == declaredType) {
-            if (found == null) {
-               found = mockedType;
-            }
-            else {
-               multipleFieldsOfSameTypeFound = true;
-
-               if (fieldName.equals(mockedType.field.getName())) {
-                  return mockedType;
-               }
-            }
-         }
-      }
-
-      if (multipleFieldsOfSameTypeFound && !fieldName.equals(found.field.getName())) {
-         return null;
-      }
-
-      return found;
    }
 }
