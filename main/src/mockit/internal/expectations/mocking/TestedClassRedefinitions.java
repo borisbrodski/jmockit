@@ -89,15 +89,30 @@ public final class TestedClassRedefinitions
       Object[] parameterValues = new Object[n];
 
       for (int i = 0; i < n; i++) {
-         parameterValues[i] = getRequiredMockObject(parentObject, parameterTypes[i]);
+         Type declaredType = parameterTypes[i];
+         int position = findPositionForMockField(parameterTypes, i, declaredType);
+         parameterValues[i] = getRequiredMockObject(parentObject, declaredType, position);
       }
 
       return parameterValues;
    }
 
-   private Object getRequiredMockObject(Object parentObject, Type declaredType)
+   private int findPositionForMockField(Type[] parameterTypes, int n, Type declaredType)
    {
-      MockedType mockedType = findInjectableMockedType(declaredType);
+      int pos = 0;
+
+      for (int i = 0; i <= n; i++) {
+         if (parameterTypes[i] == declaredType) {
+            pos++;
+         }
+      }
+
+      return pos;
+   }
+
+   private Object getRequiredMockObject(Object parentObject, Type declaredType, int atPosition)
+   {
+      MockedType mockedType = findInjectableMockedType(declaredType, atPosition);
 
       if (mockedType == null) {
          throw new IllegalArgumentException("No injectable mock field of " + declaredType);
@@ -112,11 +127,17 @@ public final class TestedClassRedefinitions
       return mock;
    }
 
-   private MockedType findInjectableMockedType(Type declaredType)
+   private MockedType findInjectableMockedType(Type declaredType, int atPosition)
    {
+      int currentPosition = 0;
+
       for (MockedType mockedType : mockedTypes) {
          if (mockedType.injectable && mockedType.declaredType == declaredType) {
-            return mockedType;
+            currentPosition++;
+
+            if (currentPosition == atPosition) {
+               return mockedType;
+            }
          }
       }
 

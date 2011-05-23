@@ -22,6 +22,8 @@ import java.lang.annotation.*;
  * The instantiation will only succeed if the tested class has a single public constructor, and all parameters to this
  * constructor (if any) can be satisfied with the instances available in {@linkplain Injectable injectable} mock fields
  * of the test class.
+ * When injection is performed through a constructor, there must be one injectable mock field for each parameter of the
+ * constructor, having the same type and declared in the same relative order as the corresponding parameter.
  * <p/>
  * Whenever the tested object is created automatically, <em>field injection</em> is also performed.
  * Only non-{@code final} fields which remain {@code null} at this time are considered, between those declared in the
