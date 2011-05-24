@@ -1022,9 +1022,11 @@
     </dictionary>
     <dictionary name="rogerio.liesenfeld">
       <words>
+        <w>generifying</w>
         <w>junit</w>
         <w>nullable</w>
         <w>overridable</w>
+        <w>reusability</w>
         <w>subclassing</w>
         <w>toolkits</w>
       </words>
@@ -1304,7 +1306,7 @@
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="JDK 1.6.0" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="JDK 1.7" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
   <component name="SvnBranchConfigurationManager">

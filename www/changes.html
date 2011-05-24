@@ -14,6 +14,35 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
+<h3>Next release</h3>
+
+<p>Release 0.999.10 (Jul ?, 2011):</p>
+<ul>
+   <li>
+      Tested and adapted JMockit to run on <strong>JDK 7</strong>.
+   </li>
+   <li>
+      Enhanced <strong>injection</strong> support for <code>@Tested</code> fields:
+      <code>@Injectable</code> fields of non-mockable types (primitives and arrays) are now considered when injecting
+      values into the tested object;
+      multiple parameters of the same type are now supported when doing constructor injection, by taking values from
+      matching injectable fields declared in the same relative order;
+      a "varargs" constructor parameter is now supported, taking the values of all injectable fields having the same
+      type.
+   </li>
+   <li>
+      Several enhancements made to <strong><code>@Input</code> fields</strong>:
+      multiple fields of the same type can be declared, allowing consecutive results to be specified;
+      the new <code>invocations = <em>n</em></code> attribute can be used to specify a fixed number of matching
+      invocations for a given input field;
+      auto-instantiation of values can be done with a non-public no-args constructor.
+   </li>
+   <li>
+      Fully reviewed the Tutorial chapter on <a href="tutorial/BehaviorBasedTesting.html">behavior-based testing</a>,
+      with new coverage on the <code>@Injectable</code> and <code>@Tested</code> annotations.
+   </li>
+</ul>
+
 <h3>Current release</h3>
 
 <p>Release 0.999.9 (May 17, 2011):</p>
@@ -1043,19 +1072,17 @@ domain/MyBusinessService_ExpectationsAPI2_Test.java">here</a> for examples.
 <ul>
    <li>
       <strong>New features</strong> that improve the use of
-      <a href="tutorial/BehaviorBasedTesting.html#hamcrest">argument matching constraints</a>
-      with the Expectations/Verifications API:
+      <a href="tutorial/BehaviorBasedTesting.html#argumentMatching">argument matching constraints</a> with the
+      Expectations/Verifications API:
       <ol>
          <li>
-            It is no longer necessary to specify matchers for <em>all</em> arguments in an
-            invocation.
-            Regular arguments will be matched on equality, as they would if no explicit matchers at
-            all were used.
+            It is no longer necessary to specify matchers for <em>all</em> arguments in an invocation.
+            Regular arguments will be matched on equality, as they would if no explicit matchers at all were used.
          </li>
          <li>
             Argument matching <em>fields</em> were added to the <code>mockit.Invocations</code> base
-            class; they are equivalent to the <code>T withAny()</code>/<code>T withAny(T)</code>
-            methods: <code>any</code>, <code>anyInt</code>, <code>anyBoolean</code>, etc.
+            class; they are equivalent to the <code>T withAny()</code>/<code>T withAny(T)</code> methods:
+            <code>any</code>, <code>anyInt</code>, <code>anyBoolean</code>, etc.
          </li>
          <li>
             The <code>null</code> reference can now be used to match any object reference, instead
@@ -1071,9 +1098,8 @@ domain/MyBusinessService_ExpectationsAPI2_Test.java">here</a> for examples.
       original code (see <a href="http://code.google.com/p/jmockit/issues/detail?id=2">issue 2</a>).
    </li>
    <li>
-      Enhancement: <code>Delegate</code> implementation classes can now define a method named
-      differently from the recorded method to which the delegation applies, provided it's the only
-      method in the delegate class.
+      Enhancement: <code>Delegate</code> implementation classes can now define a method named differently from the
+      recorded method to which the delegation applies, provided it's the only method in the delegate class.
    </li>
    <li>
       Enhancement: in the Annotations API, the method <code>Mockit.setUpMock(Object)</code> now also
@@ -1592,17 +1618,16 @@ domain/MyBusinessService_ExpectationsAPI2_Test.java">here</a> for examples.
    </li>
    <li>
       Enhancement in the reusability of <code>Expectations/NonStrictExpectations</code> subclasses:
-      now all such subclasses that are nested and <code>final</code>, even those that extend an
-      intermediate <code>Expectations/NonStrictExpectations</code> subclass, will automatically call
-      <code>endRecording()</code> at the end of the initialization block;
-      those subclasses which are not <code>final</code> (and are nested or not) will be considered
-      as intended for reuse through extension in individual tests, and therefore won't call
-      <code>endRecording()</code> at the end of their own instance initialization.
+      now all such subclasses that are nested and <code>final</code>, even those that extend an intermediate
+      <code>Expectations/NonStrictExpectations</code> subclass, will automatically call <code>endRecording()</code> at
+      the end of the initialization block;
+      those subclasses which are not <code>final</code> (and are nested or not) will be considered as intended for reuse
+      through extension in individual tests, and therefore won't call <code>endRecording()</code> at the end of their
+      own instance initialization.
    </li>
    <li>
-      Attempts to mock native methods when running under JDK 1.5 (which doesn't support the
-      redefinition of such methods, contrary to JDK 1.6) will now cause a user friendly exception to
-      be thrown.
+      Attempts to mock native methods when running under JDK 1.5 (which doesn't support the redefinition of such
+      methods, contrary to JDK 1.6) will now cause a user friendly exception to be thrown.
    </li>
    <li>
       A few bug fixes for less common situations.
