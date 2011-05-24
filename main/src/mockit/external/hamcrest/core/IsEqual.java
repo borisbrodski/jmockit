@@ -40,12 +40,17 @@ public final class IsEqual<T> extends BaseMatcher<T>
       else if (o1 == o2) {
          return true;
       }
-      else if (isArray(o1)) {
+
+      return areEqualWhenNonNull(o1, o2);
+   }
+
+   public static boolean areEqualWhenNonNull(Object o1, Object o2)
+   {
+      if (isArray(o1)) {
          return isArray(o2) && areArraysEqual(o1, o2);
       }
-      else {
-         return o1.equals(o2);
-      }
+
+      return o1.equals(o2);
    }
 
    private static boolean areArraysEqual(Object o1, Object o2)

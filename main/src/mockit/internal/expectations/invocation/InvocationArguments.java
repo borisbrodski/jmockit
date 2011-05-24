@@ -163,7 +163,7 @@ public final class InvocationArguments
          actual == null && expected != null ||
          actual != null && expected == null ||
          actual != null && actual != expected && actual != instanceMap.get(expected) &&
-         !IsEqual.areEqual(actual, expected);
+         !IsEqual.areEqualWhenNonNull(actual, expected);
    }
 
    private Object getArgument(Object[] regularArgs, Object[] varArgs, int regularArgCount, int i)
@@ -291,6 +291,10 @@ public final class InvocationArguments
       }
       else if (parameterValue instanceof Character) {
          message.append('\'').append(parameterValue).append('\'');
+      }
+      else if (parameterValue.getClass().isArray()) {
+         String desc = Arrays.deepToString(new Object[] {parameterValue});
+         message.append(desc.substring(1, desc.length() - 1));
       }
       else {
          message.append(parameterValue);

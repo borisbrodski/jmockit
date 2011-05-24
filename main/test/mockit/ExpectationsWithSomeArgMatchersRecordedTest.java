@@ -33,10 +33,11 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
 
       final void simpleOperation(int a, String b) {}
       final void simpleOperation(int a, String b, Date c) {}
-      long anotherOperation(byte b, long l) { return -1; }
+      long anotherOperation(byte b, Long l) { return -1; }
 
       static void staticVoidMethod(long l, char c, double d) {}
       static boolean staticBooleanMethod(boolean b, String s, int[] array) { return false; }
+      void methodWithArrayParameters(char[][] c, String[] s, Object[][][] matrix) {}
    }
 
    @Mocked Collaborator mock;
@@ -44,6 +45,8 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
    @Test
    public void useMatcherOnlyForOneArgument()
    {
+      final Object o = new Object();
+
       new Expectations()
       {
          {
@@ -53,10 +56,15 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
             mock.simpleOperation(12, "arg", (Date) withNotNull());
 
             mock.anotherOperation((byte) 0, anyLong); result = 123L;
-            mock.anotherOperation(anyByte, 5); result = -123L;
+            mock.anotherOperation(anyByte, 5L); result = -123L;
 
             Collaborator.staticVoidMethod(34L, anyChar, 5.0);
             Collaborator.staticBooleanMethod(true, withSuffix("end"), null); result = true;
+            Collaborator.staticBooleanMethod(true, "", new int[] {1, 2, 3}); result = true;
+
+            char[][] chars = {{'a', 'b'}, {'X', 'Y', 'Z'}};
+            Object[][][] matrix = {null, {{1, 'X', "test"}}, {{o}}};
+            mock.methodWithArrayParameters(chars, (String[]) any, matrix);
          }
       };
 
@@ -65,11 +73,15 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       mock.simpleOperation(1, "", null);
       mock.simpleOperation(12, "arg", new Date());
 
-      assertEquals(123L, mock.anotherOperation((byte) 0, 5));
-      assertEquals(-123L, mock.anotherOperation((byte) 3, 5));
+      assertEquals(123L, mock.anotherOperation((byte) 0, 5L));
+      assertEquals(-123L, mock.anotherOperation((byte) 3, 5L));
 
       Collaborator.staticVoidMethod(34L, '8', 5.0);
       assertTrue(Collaborator.staticBooleanMethod(true, "start-end", null));
+      assertTrue(Collaborator.staticBooleanMethod(true, "", new int[] {1, 2, 3}));
+
+      mock.methodWithArrayParameters(
+         new char[][] {{'a', 'b'}, {'X', 'Y', 'Z'}}, null, new Object[][][] {null, {{1, 'X', "test"}}, {{o}}});
    }
 
    @Test(expected = AssertionError.class)
