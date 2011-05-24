@@ -35,15 +35,16 @@
       </ol>
    </li>
    <li>
-      <a href="#instanceSpecificMatching">Matching invocations to specific instances</a>
+      <a href="#instanceMatching">Matching invocations to specific instances</a>
       <ol>
          <li><a href="#onInstance">The <code>onInstance(m)</code> constraint</a></li>
          <li><a href="#injectable">Injectable mocked instances</a></li>
       </ol>
    </li>
    <li>
-      <a href="#hamcrest">Constraint-based matching of argument values</a>
+      <a href="#argumentMatching">Flexible matching of argument values</a>
       <ol>
+         <li><a href="#withMethods">Using the "with" methods for argument matching</a></li>
          <li><a href="#matcherFields">Using the "any" <em>fields</em> for argument matching</a></li>
          <li><a href="#nullAsMatcher">Using the <code>null</code> value to match any object reference</a></li>
          <li><a href="#varargs">Matching values passed through a <em>varargs</em> parameter</a></li>
@@ -528,7 +529,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#declaration"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#instanceSpecificMatching"><img align="right" src="go-down.png" title="Next section"></a>
+      <a href="#instanceMatching"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
@@ -709,14 +710,14 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 
-<h3 id="instanceSpecificMatching">
+<h3 id="instanceMatching">
    Matching invocations to specific instances
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#results"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#hamcrest"><img align="right" src="go-down.png" title="Next section"></a>
+      <a href="#argumentMatching"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
@@ -852,64 +853,70 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    method was called by the test.)
 </p>
 
-<h3 id="hamcrest">
-   Constraint-based matching of argument values
+<h3 id="argumentMatching">
+   Flexible matching of argument values
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
-      <a href="#instanceSpecificMatching"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#instanceMatching"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#constraints"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
-   In both the <em>record</em> and <em>verify</em> phases, an invocation to a mocked method or
-   constructor identifies an expectation.
-   If the method/constructor has one or more parameters, then a recorded/verified invocation like
-   <code>doSomething(1, "s", true);</code> will only match an invocation in the <em>replay</em>
-   phase if it has identical argument values.
+   In both the <em>record</em> and <em>verify</em> phases, an invocation to a mocked method or constructor identifies an
+   expectation.
+   If the method/constructor has one or more parameters, then a recorded/verified expectation like
+   <code>doSomething(1, "s", true);</code> will only match an invocation in the <em>replay</em> phase if it has
+   <em>equal</em> argument values.
+   For arguments that are regular objects (not primitives or arrays), the <code>equals(Object)</code> method is used for
+   equality checking.
+   For parameters of array type, equality checking extends to individual elements; therefore, two different array
+   instances having the same length in each dimension and equal corresponding elements are considered to be equal.
 </p>
 <p>
-   In a given test, we often don't know exactly what those argument values will be, or they simply
-   aren't essential for what is being tested.
-   So, to allow a recorded or verified invocation to match a whole set of replayed invocations with
-   different argument values, we can specify flexible <em>argument matching constraints</em> instead
-   of equal argument values.
-   This is done through a set of <code>withXyz(...)</code> methods of the
-   <code class="type">mockit.Invocations</code> base class (which both <code class="type">mockit.Expectations</code> and
-   <code class="type">mockit.Verifications</code> extend), where "Xyz" describes the specific matching constraint.
-   See examples below.
+   In a given test, we often don't know exactly what those argument values will be, or they simply aren't essential for
+   what is being tested.
+   So, to allow a recorded or verified invocation to match a whole set of replayed invocations with different argument
+   values, we can specify flexible <em>argument matching constraints</em> instead of actual argument values.
+   This is done by using <code>withXyz(...)</code> methods and/or <code>anyXyz</code> <em>fields</em>.
+   The "with" methods and "any" fields are all defined in the <code class="type">mockit.Invocations</code> base class,
+   which both <code class="type">mockit.Expectations</code> and <code class="type">mockit.Verifications</code> extend.
+   Therefore, they can be used in expectation as well as verification blocks.
+</p>
+
+<h4 id="withMethods">Using the "with" methods for argument matching</h4>
+<p>
+   When recording or verifying an expectation, calls to the <code>withXyz(...)</code> methods can occur for any subset
+   of the arguments passed in the invocation.
+   They can be freely mixed with regular argument-passing (using literal values, local variables, etc.).
+   The only requirement is that such calls appear inside the recorded/verified invocation statement, rather than before
+   it.
+   It's not possible, for example, to first assign the result of a call to <code>withNotEqual(val)</code> to a local
+   variable and then use the variable in the invocation statement.
+   An example test using some of the "with" methods is shown below.
 </p>
 <pre><code>   @Test
    public void someTestMethod(@NonStrict final DependencyAbc abc)
    {
       final DataItem item = new DataItem(...);
 
-      new Expectations()
-      {
-         {
-            // Will match "new DependencyAbc(int)" invocations with any int-valued argument.
-            new DependencyAbc(<strong>withAny(0)</strong>);
+      new Expectations() {{
+         // Will match "voidMethod(String, List)" invocations with the first argument
+         // equal to "str" and the second not null.
+         abc.voidMethod(<strong>"str", (List&lt;?>) withNotNull()</strong>);
 
-            // Will match "voidMethod(String, List)" invocations with the first argument
-            // equal to "str" and the second not null.
-            abc.voidMethod(<strong>"str", (List&lt;?>) withNotNull()</strong>);
-
-            // Will match invocations to DependencyAbc#stringReturningMethod(DataItem, String)
-            // with the first argument pointing to "item" and the second one containing "xyz".
-            abc.stringReturningMethod(<strong>withSameInstance(item), withSubstring("xyz")</strong>);
-         }
-      };
+         // Will match invocations to DependencyAbc#stringReturningMethod(DataItem, String)
+         // with the first argument pointing to "item" and the second one containing "xyz".
+         abc.stringReturningMethod(<strong>withSameInstance(item), withSubstring("xyz")</strong>);
+      }};
 
       new UnitUnderTest().doSomething(item);
 
-      new Verifications()
-      {
-         {
-            // Matches invocations to the specified method with any long-valued argument.
-            abc.anotherVoidMethod(<strong>(long) withAny()</strong>);
-         }
-      };
+      new Verifications() {{
+         // Matches invocations to the specified method with any long-valued argument.
+         abc.anotherVoidMethod(<strong>withAny(1L)</strong>);
+      }};
    }
 </code></pre>
 <p>
@@ -927,57 +934,48 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 
 <h4 id="matcherFields">Using the "any" <em>fields</em> for argument matching</h4>
 <p>
-   For the <code>withAny(?)</code> methods that take no arguments or take one only to designate
-   the parameter type, there is a set of special <em>argument matching fields</em> that are
-   available to expectation and verification blocks.
-   Using these "any" fields will have the same effect as using the corresponding "withAny" method, as demonstrated
-   below.
+   The most common argument matching constraint tends also to be the <em>least</em> restrictive one: to match
+   invocations with <em>any</em> value for a given parameter (of the proper parameter type, of course).
+   For such cases we have a whole set of special <em>argument matching fields</em>, one for each primitive type (and the
+   corresponding wrapper class), one for strings, and a "universal" one of type <code>Object</code>.
+   The test below demonstrates some uses.
 </p>
 <pre><code>   @Test
    public void someTestMethod(@NonStrict final DependencyAbc abc)
    {
       final DataItem item = new DataItem(...);
 
-      new Expectations()
-      {
-         {
-            // Will match "new DependencyAbc(int)" invocations with any int-valued argument.
-            new DependencyAbc(<strong><em>anyInt</em></strong>);
-
-            // Will match "voidMethod(String, List)" invocations where the first argument is
-            // "str" but the second can be anything.
-            abc.voidMethod(<strong>"str", (List&lt;?>) <em>any</em></strong>);
-         }
-      };
+      new Expectations() {{
+         // Will match "voidMethod(String, List)" invocations where the first argument is
+         // any string and the second any list.
+         abc.voidMethod(<strong><em>anyString</em>, (List&lt;?>) <em>any</em></strong>);
+      }};
 
       new UnitUnderTest().doSomething(item);
 
-      new Verifications()
-      {
-         {
-            // Matches invocations to the specified method with any long-valued argument.
-            abc.anotherVoidMethod(<strong><em>anyLong</em></strong>);
-         }
-      };
+      new Verifications() {{
+         // Matches invocations to the specified method with any value of type long or Long.
+         abc.anotherVoidMethod(<strong><em>anyLong</em></strong>);
+      }};
    }
 </code></pre>
 <p>
+   The same requirement of having calls to "with" methods inside the invocation statement applies in the case of
+   accesses to "any" fields: they must appear at the actual argument positions in the invocation stament, not before.
    Again, see the <a href="../javadoc/mockit/Expectations.html#anyInt">API documentation</a> for
    more details on argument matching fields.
 </p>
 
 <h4 id="nullAsMatcher">Using the <code>null</code> value to match any object reference</h4>
 <p>
-   When using at least one argument matching method or field for a given expectation, we can specify
-   that any object reference be accepted for a parameter of reference type by simply passing the
-   <code>null</code> value instead of a <code>withAny()</code> or <code>any</code> argument matcher.
+   When using at least one argument matching method or field for a given expectation, we can use a "shortcut" to specify
+   that any object reference should be accepted (for a parameter of reference type).
+   Simply pass the <code>null</code> value instead of a <code>withAny(x)</code> or <code>any</code> argument matcher.
    In particular, this avoids the need to cast the value to the declared parameter type.
-   However, bear in mind that this behavior is only applicable when <em>at least one</em> explicit
-   argument matcher (either a "with" method or an "any" field) is used for the expectation.
-   When passed in an invocation that uses no matchers, the <code>null</code> value will match only
-   the <code>null</code> reference.
-</p>
-<p>
+   However, bear in mind that this behavior is only applicable when <em>at least one</em> explicit argument matcher
+   (either a "with" method or an "any" field) is used for the expectation.
+   When passed in an invocation that uses no matchers, the <code>null</code> value will match only the <code>null</code>
+   reference.
    In the previous test, we could therefore have written:
 </p>
 <pre><code>   @Test
@@ -985,33 +983,45 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    {
       ...
 
-      new Expectations()
-      {
-         {
-            ...
-            abc.voidMethod(<strong>withEqual("str"), null</strong>);
-         }
-      };
+      new Expectations() {{
+         abc.voidMethod(<em>anyString</em>, <strong>null</strong>);
+      }};
 
       ...
    }
 </code></pre>
 <p>
-   When one or more explicit matchers are present and the <code>null</code> reference must be
-   matched for a given parameter, the <code>withNull()</code> method should be used.
+   When one or more argument matchers are used and the <code>null</code> reference must be matched for a given
+   parameter, the <code>withNull()</code> method should be used.
 </p>
 <p>
-   In conclusion, there are two <em>modes</em> for argument matching: the basic one where no
-   matching constraints are specified and all arguments must be equal, and the one where matching
-   constraints are specified for some or all parameters.
+   In conclusion, there are two <em>modes</em> for argument matching: the basic one where no matching constraints are
+   specified and all arguments must be equal, and the one where matching constraints are specified for some or all
+   parameters.
    The meaning of the <code>null</code> value is different for each mode, which may lead to confusion at times.
-   For complex invocations where multiple arguments are involved, though, the benefits of being able
-   to use "any" fields and the <code>null</code> reference should outweigh the additional API complexity.
+   For complex invocations where multiple arguments are involved, though, the benefits of being able to use "any" fields
+   and the <code>null</code> reference should outweigh the additional API complexity.
 </p>
 
 <h4 id="varargs">Matching values passed through a <em>varargs</em> parameter</h4>
 <p>
-   <del>to be written</del>
+   Occasionally we may need to deal with expectations for "varargs" methods or constructors.
+   It's valid to pass regular values as a varargs argument, and <em>also</em> valid to use the "with"/"any" matchers
+   for such values.
+   However, it's <em>not</em> valid to combine both kinds of value-passing for the same expectation, when targeting a
+   varargs parameter.
+   We need to either use <em>only</em> regular values or <em>only</em> values obtained through argument matchers.
+</p>
+<p>
+   In case we want to match invocations where the varargs parameter receives any number of values (including zero),
+   we can specify an expectation with the <strong><code>(Object[]) any</code></strong> constraint for the final varargs
+   parameter.
+</p>
+<p>
+   Probably the best way to understand the exact semantics of varargs matching (since there is no specific API involved)
+   is to look at or experiment with actual tests.
+   <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/ExpectationsWithVarArgsMatchersTest.java">This</a>
+   test class demonstrates virtually all possibilities.
 </p>
 
 <h3 id="constraints">
@@ -1020,48 +1030,45 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
-      <a href="#hamcrest"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#argumentMatching"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#strictness"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
-   So far, we saw that besides an associated method or constructor, an expectation can have a list
-   of invocation results (a mix of return values for non-void methods, and/or thrown
-   exceptions/errors) and also an argument matcher for each method/constructor parameter.
-   Given that the unit under test can call the same method or constructor multiple times, with
-   different or identical arguments, we need a way to account for all those separate invocations.
-   One way, as already seen, is to simply record one separate invocation for each expected
-   invocation; another is to record two or more expected results (each either a return value or a
-   thrown exception/error) following a single mock invocation.
+   So far, we saw that besides an associated method or constructor, an expectation can have invocation results and
+   argument matchers.
+   Given that the unit under test can call the same method or constructor multiple times with different or identical
+   arguments, we need a way to account for all those separate invocations.
+   One way, as already seen, is to simply record one separate expectation for each expected invocation, in the same
+   order as the invocations should be replayed; another is to record two or more expected results (each either a return
+   value or a thrown exception/error) following a single mock invocation.
 </p>
 <p>
-   Yet another way, particularly useful for <code>void</code> methods or when the test doesn't care
-   about specific return values, is to specify an <em>invocation count constraint</em> for a given expectation.
-   The API has several fields just for that: <code>times</code>, <code>minTimes</code>, and <code>maxTimes</code>.
+   Yet another way is to specify an <em>invocation count constraint</em> for a given expectation.
+   The mocking API provides three special fields just for that: <strong><code>times</code></strong>,
+   <strong><code>minTimes</code></strong>, and <strong><code>maxTimes</code></strong>.
    These fields belong to the <code class="type">mockit.Invocations</code> class, the non-public base class for
    both <code class="type">mockit.Expectations</code> and <code class="type">mockit.Verifications</code>.
-   Therefore, an invocation count constraint can be specified either when recording or when verifying invocations.
-   In either case, the method or constructor associated with the expectation will be constrained to
-   have a number of invocations made by the unit under test that falls in the specified range.
+   Therefore, an invocation count constraint can be specified either when recording or when verifying expectations.
+   In either case, the method or constructor associated with the expectation will be constrained to receive a number of
+   invocations that falls in the specified range.
    Any invocations less or more than the expected lower or upper limit, respectively, and the test
    execution will automatically fail.
+   Lets see some example tests.
 </p>
 <pre><code>   @Test
    public void someTestMethod(final DependencyAbc abc)
    {
-      new Expectations()
-      {
-         {
-            // By default, one invocation is expected, ie "times = 1;":
-            new DependencyAbc();
+      new Expectations() {{
+         // By default, one invocation is expected, i.e. "times = 1":
+         new DependencyAbc();
 
-            // At least two invocations are expected:
-            abc.voidMethod(); <strong><em>minTimes</em> = 2;</strong>
+         // At least two invocations are expected:
+         abc.voidMethod(); <strong><em>minTimes</em> = 2;</strong>
 
-            // 1 to 5 invocations are expected:
-            abc.stringReturningMethod(); <strong><em>minTimes</em> = 1; <em>maxTimes</em> = 5;</strong>
-         }
-      };
+         // 1 to 5 invocations are expected:
+         abc.stringReturningMethod(); <strong><em>minTimes</em> = 1; <em>maxTimes</em> = 5;</strong>
+      }};
 
       new UnitUnderTest().doSomething();
    }
@@ -1071,18 +1078,23 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    {
       new UnitUnderTest().doSomething();
 
-      new Verifications()
-      {
-         {
-            // Verifies that zero or one invocations occurred, with the specified argument value:
-            abc.anotherVoidMethod(3); <strong><em>maxTimes</em> = 1;</strong>
+      new Verifications() {{
+         // Verifies that zero or one invocations occurred, with the specified argument value:
+         abc.anotherVoidMethod(3); <strong><em>maxTimes</em> = 1;</strong>
 
-            // Verifies the occurrence of at least one invocation with the specified arguments:
-            DependencyAbc.someStaticMethod("test", false); // "minTimes = 1" is implied
-         }
-      };
+         // Verifies the occurrence of at least one invocation with the specified arguments:
+         DependencyAbc.someStaticMethod("test", false); // "minTimes = 1" is implied
+      }};
    }
 </code></pre>
+<p>
+   Unlike the <code>result</code> field, each of these three fields can be specified at most once for a given
+   expectation.
+   Any non-negative integer value is valid for any of the invocation count constraints.
+   If <code><em>times</em> = <strong>0</strong></code> or <code><em>maxTimes</em> = <strong>0</strong></code> is
+   specified, the first invocation matching the expectation to occur during replay (if any) will cause the test to fail.
+   For more, see the <a href="../javadoc/mockit/Expectations.html#times">API documentation</a>.
+</p>
 
 <h3 id="strictness">
    <em>Strict</em> and <em>non-strict</em> expectations
@@ -1095,55 +1107,58 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   Expectations recorded inside a <code>new Expectations() {...}</code> block are all
-   <em>strict</em> by default, meaning that the invocations they specify are <em>expected</em> to
-   occur during the <em>replay</em> phase, and in the same order as they were recorded.
-   Even more, only these explicitly recorded expected invocations will be allowed to occur.
+   Expectations recorded inside a <code>new Expectations() {...}</code> block are all <em>strict</em> by default, unless
+   specified otherwise.
+   What this means is that the invocations they specify are <em>expected</em> to occur during the <em>replay</em> phase,
+   and in the <em>same</em> order as they were recorded;
+   additionally, <em>only</em> these invocations are allowed to occur.
    Any <em>unexpected</em> invocations that were not recorded will automatically cause the test to fail.
 </p>
 <p>
-   The <code class="type">mockit.NonStrictExpectations</code> class (which extends
-   <code class="type">mockit.Expectations</code>), as the name indicates, is used when we want to record
-   <em>non-strict</em> (or <em>loose</em>) expectations.
-   Inside such a block, all invocations to mocked types will be <em>allowed</em> to occur during the
-   replay phase, not <em>expected</em>. That is, by default they may or may not occur during replay.
-   In addition, they don't have to occur in the same order as they were recorded.
+   On the other hand, when we want to record <em>non-strict</em> (or <em>loose</em>) expectations, the
+   <code class="type">mockit.NonStrictExpectations</code> subclass can be used.
+   Inside a non-strict expectation block, all invocations to mocked types will be <em>allowed</em> to occur during the
+   replay phase, not <em>expected</em>.
+   That is, by default they may or may not occur during replay without causing the test to fail on their own.
+   Also, they don't have to occur in the same order as they were recorded.
 </p>
 <p>
-   By default, an invocation recorded as an strict expectation will be expected to match exactly one
-   invocation in the replay phase. That is, the expectation will have an invocation count constraint
-   of <code>1</code>, as if it was followed by <code><em>times</em> = 1</code> assignment.
-   An invocation recorded as non-strict, on the other hand, will by default be allowed to match any
-   number of invocations in the replay phase. That is, its invocation count constraint will have a
-   lower limit of <code>0</code> and an unbounded upper limit, as if followed by a <code>minTimes = 0</code> assignment.
-   In either case, however, the default invocation count constraint can be overridden by an explicit
-   one (that is, an explicit assignment to one of the <code>times/minTimes/maxTimes</code> fields).
+   By default, a strict expectation will match exactly one invocation in the replay phase.
+   That is, the expectation will have an implicit invocation count constraint of <code>1</code>, as if it was followed
+   by a <code><em>times</em> = 1</code> constraint.
+   An expectation recorded as non-strict, on the other hand, will by default be allowed to match any number of
+   invocations in the replay phase.
+   That is, its implicit invocation count constraint will have a lower limit of <code>0</code> and an unbounded upper
+   limit, as if specified as <code>minTimes = 0</code>.
+   In either case, however, the implicit invocation count constraint can be overridden by an explicit one (that is, an
+   explicit assignment to one of the <code>times/minTimes/maxTimes</code> fields).
+   So, a strict expectation can be made to allow an arbitrary number of invocations, while a non-strict one can be made
+   to disallow unexpected invocations, when needed.
 </p>
 <p>
-   Notice that in the case of strict expectations, all the invocations occurring in the replay phase
-   which match a recorded strict expectation are implicitly verified.
-   The remaining invocations will be considered unexpected (and fail the test), unless the
-   associated mocked type is not strict.
-   So, the use of strict expectations which are verified implicitly precludes the use of
-   verification blocks, which are used for explicit verification of invocations.
-   In fact, inside a <code>new Verifications() {...}</code> block only invocations matching
-   recorded non-strict expectations are permitted, as well as invocations to non-strict mocked types
-   for which no expectation was explicitly recorded.
+   Note that in the case of strict expectations, all the invocations occurring in the replay phase which match a
+   recorded strict expectation are implicitly verified.
+   The remaining invocations will be considered unexpected (and fail the test), unless the associated mocked type is not
+   strict.
+   So, the use of strict expectations which are verified implicitly precludes the use of verification blocks, which are
+   used for explicit verification of invocations.
+   In fact, inside a <code>new Verifications() {...}</code> block only invocations matching recorded non-strict
+   expectations are permitted, as well as invocations to non-strict mocked types for which no expectation was explicitly
+   recorded.
 </p>
 <p>
-   To allow mixing strict and non-strict expectations inside an strict expectation block, we can
-   apply the <code class="type">mockit.NonStrict</code> annotation to a mock field or parameter.
-   Any invocation to such a mocked type will be considered as belonging to a non-strict expectation,
-   and all unrecorded invocations in the replay phase will be allowed (that is, they will never be
-   considered as unexpected, and therefore will not cause the test to fail).
-   This is particularly useful to avoid the need to record invocations to constructors, or to any
-   uninteresting methods.
+   To allow mixing strict and non-strict expectations inside an strict expectation block, we can apply the
+   <code class="type">mockit.NonStrict</code> annotation to a mock field or parameter.
+   Any invocation to such a mocked type will be considered as belonging to a non-strict expectation, and all unrecorded
+   invocations in the replay phase will be allowed (that is, they will never be considered as unexpected, and therefore
+   will not cause the test to fail).
+   This is particularly useful to avoid the need to record invocations to constructors, or to any uninteresting methods.
 </p>
 <p>
-   Inside an strict expectation block, an individual invocation can be explicitly marked as
-   non-strict through a <code>notStrict()</code> call following the invocation.
-   Most of the time, it will be easier to use a non-strict expectation block or a mock
-   field/parameter annotated as non-strict, though.
+   Inside an strict expectation block, an individual invocation can be explicitly marked as non-strict through a
+   <code>notStrict()</code> call following the invocation.
+   Most of the time, it will be easier to use a non-strict expectation block or a mock field/parameter annotated as
+   non-strict, though.
 </p>
 <p>
    So, how do we choose between strict and non-strict expectations for a given test?

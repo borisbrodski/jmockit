@@ -28,9 +28,8 @@ abstract class Invocations
    /**
     * Matches any {@code Object} reference for the relevant parameter.
     * Note that the use of this field will usually require a cast to the specific parameter type.
-    * If there is any other parameter for which an argument matching constraint can be specified,
-    * though, the {@code null} reference can be passed instead, as it will also match any
-    * reference during the replay phase.
+    * If there is any other parameter for which an argument matching constraint can be specified, though, the
+    * {@code null} reference can be passed instead, as it will also match any reference during the replay phase.
     * <p/>
     * Note: in invocations to <em>non-accessible</em> methods or constructors (for example, with
     * {@link #invoke(Object, String, Object...)}), use {@link #withAny} instead.
@@ -58,11 +57,11 @@ abstract class Invocations
    /**
     * Matches any {@code int} or {@code Integer} value for the relevant parameter.
     * <p/>
-    * When used as argument for a method/constructor invocation in the recording or verification
-    * phase of a test, specifies the matching of <em>any</em> value passed as argument to
-    * corresponding invocations in the replay phase.
+    * When used as argument for a method/constructor invocation in the recording or verification phase of a test,
+    * specifies the matching of <em>any</em> value passed as argument to corresponding invocations in the replay phase.
     * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#hamcrest">In the Tutorial</a>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#argumentMatching">In the
+    * Tutorial</a>
     */
    protected static final Integer anyInt = 0;
 
@@ -138,7 +137,8 @@ abstract class Invocations
     * Just like with {@linkplain mockit.Delegate delegate classes}, the handler method can declare its first parameter
     * as being of type {@link mockit.Invocation}.
     * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#forEachInvocation">In the Tutorial</a>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#forEachInvocation">In the
+    * Tutorial</a>
     */
    protected static Object forEachInvocation;
 
@@ -146,7 +146,8 @@ abstract class Invocations
     * A non-negative value assigned to this field will be taken as the exact number of times that
     * invocations matching the current expectation should occur during replay.
     * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#constraints">In the Tutorial</a>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#constraints">In the
+    * Tutorial</a>
     *
     * @see #minTimes
     * @see #maxTimes
@@ -224,7 +225,8 @@ abstract class Invocations
     * This is valid only if the instance to be matched is assignable to the mocked type, and typically occurs when
     * partially mocking a class hierarchy.
     * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#onInstance">In the Tutorial</a>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#onInstance">In the
+    * Tutorial</a>
     *
     * @return the given mocked instance, allowing the invocation to be recorded/verified to immediately follow the call
     * to this method
@@ -244,25 +246,23 @@ abstract class Invocations
    /**
     * Adds a custom argument matcher for a parameter in the current invocation.
     * <p/>
-    * The given matcher can be any existing <strong>Hamcrest</strong> matcher or a user provided
-    * one.
-    * Additionally, it can be an instance of an arbitrary <em>invocation handler</em> class, similar
-    * to those used with the {@link #forEachInvocation} field.
-    * In this case, the non-{@code private} <em>handler method</em> must have a single parameter of
-    * a type capable of receiving the relevant argument values.
-    * The name of this handler method does not matter. Its return type, on the other hand, should
-    * either be {@code boolean} or {@code void}. In the first case, a return value of
-    * {@code true} will indicate a successful match for the actual invocation argument at replay
-    * time, while a return of {@code false} will cause the test to fail. In the second case, instead
-    * of returning a value the invocation handler method should validate the actual invocation 
-    * argument through an {@code assert} statement or a JUnit/TestNG assertion.
+    * The given matcher can be any existing <strong>Hamcrest</strong> matcher or a user provided one.
+    * Additionally, it can be an instance of an arbitrary <em>invocation handler</em> class, similar to those used with
+    * the {@link #forEachInvocation} field.
+    * In this case, the non-{@code private} <em>handler method</em> must have a single parameter of a type capable of
+    * receiving the relevant argument values.
+    * The name of this handler method does not matter. Its return type, on the other hand, should either be
+    * {@code boolean} or {@code void}. In the first case, a return value of {@code true} will indicate a successful
+    * match for the actual invocation argument at replay time, while a return of {@code false} will cause the test to
+    * fail. In the second case, instead of returning a value the invocation handler method should validate the actual
+    * invocation argument through an {@code assert} statement or a JUnit/TestNG assertion.
     * <p/>
     * For additional details, refer to {@link #withEqual(Object)}.
     *
-    * @param argValue an arbitrary value of the proper type, necessary to provide a valid argument
-    * to the invocation parameter
-    * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher}
-    * interface, or any other instance with an appropriate invocation handler method
+    * @param argValue an arbitrary value of the proper type, necessary to provide a valid argument to the invocation
+    * parameter
+    * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher} interface, or any
+    * other instance with an appropriate invocation handler method
     *
     * @return the given {@code argValue}
     */
@@ -274,14 +274,13 @@ abstract class Invocations
 
    /**
     * Adds a custom argument matcher for a parameter in the current invocation.
-    * This works like {@link #with(Object, Object)}, but attempting to extract the argument value
-    * from the supplied argument matcher.
+    * This works like {@link #with(Object, Object)}, but attempting to extract the argument value from the supplied
+    * argument matcher.
     *
-    * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher}
-    * interface, or any other instance with an appropriate invocation handler method
+    * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher} interface, or any
+    * other instance with an appropriate invocation handler method
     *
-    * @return the value recorded inside the given argument matcher, or {@code null} if no such value
-    * could be determined
+    * @return the value recorded inside the given argument matcher, or {@code null} if no such value could be determined
     */
    protected final <T> T with(Object argumentMatcher)
    {
@@ -303,13 +302,11 @@ abstract class Invocations
     * Same as {@link #withEqual(Object)}, but matching any argument value of the appropriate type.
     * <p/>
     * Consider using instead the "anyXyz" field appropriate to the parameter type:
-    * {@link #anyBoolean}, {@link #anyByte}, {@link #anyChar}, {@link #anyDouble},
-    * {@link #anyFloat}, {@link #anyInt}, {@link #anyLong}, {@link #anyShort}, {@link #anyString},
-    * or {@link #any} for other reference types.
+    * {@link #anyBoolean}, {@link #anyByte}, {@link #anyChar}, {@link #anyDouble}, {@link #anyFloat}, {@link #anyInt},
+    * {@link #anyLong}, {@link #anyShort}, {@link #anyString}, or {@link #any} for other reference types.
     * <p/>
     * Note: when using {@link #invoke(Object, String, Object...)}, etc., it's valid to pass
-    * {@code withAny(ParameterType.class)} if an actual instance of the parameter type cannot be
-    * created.
+    * {@code withAny(ParameterType.class)} if an actual instance of the parameter type cannot be created.
     *
     * @param arg an arbitrary value which will match any argument value in the replay phase
     *
@@ -322,15 +319,15 @@ abstract class Invocations
    }
 
    /**
-    * When called as argument for a method/constructor invocation in the recording or verification
-    * phase of a test, creates a new matcher that will check if the given value is
-    * {@link Object#equals(Object) equal} to the corresponding invocation argument in the replay
-    * phase.
+    * When called as argument for a method/constructor invocation in the recording or verification phase of a test,
+    * creates a new matcher that will check if the given value is {@link Object#equals(Object) equal} to the
+    * corresponding invocation argument in the replay phase.
     * <p/>
-    * The matcher is added to the end of the list of argument matchers for the invocation being
-    * recorded/verified. It cannot be reused for a different parameter.
+    * The matcher is added to the end of the list of argument matchers for the invocation being recorded/verified.
+    * It cannot be reused for a different parameter.
     * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#hamcrest">In the Tutorial</a>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#argumentMatching">In the
+    * Tutorial</a>
     *
     * @param arg the expected argument value
     *
@@ -344,8 +341,8 @@ abstract class Invocations
    }
 
    /**
-    * Same as {@link #withEqual(Object)}, but checking that a numeric invocation argument in the
-    * replay phase is sufficiently close to the given value.
+    * Same as {@link #withEqual(Object)}, but checking that a numeric invocation argument in the replay phase is
+    * sufficiently close to the given value.
     */
    protected final double withEqual(double value, double delta)
    {
@@ -354,8 +351,8 @@ abstract class Invocations
    }
 
    /**
-    * Same as {@link #withEqual(Object)}, but checking that a numeric invocation argument in the
-    * replay phase is sufficiently close to the given value.
+    * Same as {@link #withEqual(Object)}, but checking that a numeric invocation argument in the replay phase is
+    * sufficiently close to the given value.
     */
    protected final float withEqual(float value, double delta)
    {
@@ -364,11 +361,11 @@ abstract class Invocations
    }
 
    /**
-    * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay
-    * phase is an instance of the same class as the given object.
+    * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay phase is an instance of
+    * the same class as the given object.
     * <p/>
-    * Equivalent to a call <code>withInstanceOf(arg.getClass())</code>, except that it returns
-    * {@code arg} instead of {@code null}.
+    * Equivalent to a call <code>withInstanceOf(arg.getClass())</code>, except that it returns {@code arg} instead of
+    * {@code null}.
     */
    protected final <T> T withInstanceLike(T object)
    {
@@ -377,11 +374,10 @@ abstract class Invocations
    }
 
    /**
-    * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay
-    * phase is an instance of the given class.
+    * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay phase is an instance of
+    * the given class.
     *
-    * @return always null; if you need a specific return value, use
-    * {@link #withInstanceLike(Object)}
+    * @return always null; if you need a specific return value, use {@link #withInstanceLike(Object)}
     */
    protected final <T> T withInstanceOf(Class<T> argClass)
    {
@@ -390,8 +386,8 @@ abstract class Invocations
    }
 
    /**
-    * Same as {@link #withEqual(Object)}, but checking that the invocation argument in the replay
-    * phase is different from the given value.
+    * Same as {@link #withEqual(Object)}, but checking that the invocation argument in the replay phase is different
+    * from the given value.
     */
    protected final <T> T withNotEqual(T arg)
    {
@@ -401,8 +397,8 @@ abstract class Invocations
    }
 
    /**
-    * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay
-    * phase is not {@code null}.
+    * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay phase is not
+    * {@code null}.
     *
     * @return always {@code null}
     */
@@ -413,8 +409,7 @@ abstract class Invocations
    }
 
    /**
-    * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay
-    * phase is {@code null}.
+    * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay phase is {@code null}.
     *
     * @return always {@code null}
     */
@@ -425,8 +420,8 @@ abstract class Invocations
    }
 
    /**
-    * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay
-    * phase is the exact same instance as the one in the recorded/verified invocation.
+    * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay phase is the exact same
+    * instance as the one in the recorded/verified invocation.
     */
    protected final <T> T withSameInstance(T object)
    {
@@ -438,8 +433,8 @@ abstract class Invocations
    // Text-related matchers ///////////////////////////////////////////////////////////////////////////////////////////
 
    /**
-    * Same as {@link #withEqual(Object)}, but checking that a textual invocation argument in the
-    * replay phase contains the given text as a substring.
+    * Same as {@link #withEqual(Object)}, but checking that a textual invocation argument in the replay phase contains
+    * the given text as a substring.
     */
    protected final <T extends CharSequence> T withSubstring(T text)
    {
@@ -448,8 +443,8 @@ abstract class Invocations
    }
 
    /**
-    * Same as {@link #withEqual(Object)}, but checking that a textual invocation argument in the
-    * replay phase starts with the given text.
+    * Same as {@link #withEqual(Object)}, but checking that a textual invocation argument in the replay phase starts
+    * with the given text.
     */
    protected final <T extends CharSequence> T withPrefix(T text)
    {
@@ -458,8 +453,8 @@ abstract class Invocations
    }
 
    /**
-    * Same as {@link #withEqual(Object)}, but checking that a textual invocation argument in the
-    * replay phase ends with the given text.
+    * Same as {@link #withEqual(Object)}, but checking that a textual invocation argument in the replay phase ends with
+    * the given text.
     */
    protected final <T extends CharSequence> T withSuffix(T text)
    {
@@ -468,11 +463,11 @@ abstract class Invocations
    }
 
    /**
-    * Same as {@link #withEqual(Object)}, but checking that a textual invocation argument in the
-    * replay phase matches the given {@link Pattern regular expression}.
+    * Same as {@link #withEqual(Object)}, but checking that a textual invocation argument in the replay phase matches
+    * the given {@link Pattern regular expression}.
     * <p/>
-    * Note that this can be used for any string comparison, including case insensitive ones (with
-    * {@code "(?i)"} in the regex).
+    * Note that this can be used for any string comparison, including case insensitive ones (with {@code "(?i)"} in the
+    * regex).
     *
     * @see Pattern#compile(String, int)
     */
@@ -504,7 +499,8 @@ abstract class Invocations
     * This is useful for invoking non-accessible constructors (private ones, for example) from the
     * test, which otherwise could not be called normally.
     * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
+    * Tutorial</a>
     *
     * @param className the fully qualified name of the desired class (which should not be accessible
     * to the test; otherwise just refer to it in code)
@@ -570,7 +566,8 @@ abstract class Invocations
     * would be too difficult by indirect means. Note that in such a case the target instance will actually be a "real"
     * (non-mocked) object, not a mocked instance.
     * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
+    * Tutorial</a>
     *
     * @param objectWithMethod the instance on which the invocation is to be done; must not be null
     * @param methodName the name of the expected method
@@ -614,7 +611,8 @@ abstract class Invocations
    /**
     * Gets the value of a non-accessible field from a given object.
     * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
+    * Tutorial</a>
     *
     * @param fieldOwner the instance from which to get the field value
     * @param fieldName the name of the field to get
@@ -676,7 +674,8 @@ abstract class Invocations
    /**
     * Sets the value of a non-accessible field on a given object.
     * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the Tutorial</a>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
+    * Tutorial</a>
     *
     * @param fieldOwner the instance on which to set the field value
     * @param fieldName the name of the field to set
