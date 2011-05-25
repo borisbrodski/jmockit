@@ -15,8 +15,7 @@ public final class LoginService
    private UserAccount account;
 
    public void login(String accountId, String password)
-      throws UserAccountNotFoundException, UserAccountRevokedException,
-      AccountLoginLimitReachedException
+      throws UserAccountNotFoundException, UserAccountRevokedException, AccountLoginLimitReachedException
    {
       account = UserAccount.find(accountId);
 
@@ -32,8 +31,7 @@ public final class LoginService
       }
    }
 
-   private void registerNewLogin()
-      throws AccountLoginLimitReachedException, UserAccountRevokedException
+   private void registerNewLogin() throws AccountLoginLimitReachedException, UserAccountRevokedException
    {
       if (account.isLoggedIn()) {
          throw new AccountLoginLimitReachedException();

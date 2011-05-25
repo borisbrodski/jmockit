@@ -178,40 +178,35 @@ public final class MessageTest
    {
       final Client[] testClients = {new Client("client1"), new Client("client2"), new Client("client3")};
 
-      new NonStrictExpectations(testClients.length)
-      {
+      new NonStrictExpectations(testClients.length) {
          final Socket con = new Socket(withPrefix("client"), anyInt);
 
          {
             con.getOutputStream(); result = new ByteArrayOutputStream();
             con.getInputStream(); result = new ByteArrayInputStream("reply1\nreply2\n".getBytes());
-            con.close();
+            con.close(); times = 1;
          }
       };
 
       exerciseCodeUnderTest(listener, testClients);
 
       for (final Client client : testClients) {
-         new VerificationsInOrder()
-         {
-            {
-               // TODO: try creating a "setMaxDelay(msBeforeTimeout)" method that allows a given
-               // max time for the verification block to be fully satisfied.
-               listener.messageSent(client);
-               listener.messageDisplayedByClient(client);
-               listener.messageReadByClient(client);
-            }
-         };
+         new VerificationsInOrder() {{
+            // TODO: try creating a "setMaxDelay(msBeforeTimeout)" method that allows a given
+            // max time for the verification block to be fully satisfied.
+            listener.messageSent(client);
+            listener.messageDisplayedByClient(client);
+            listener.messageReadByClient(client);
+         }};
       }
    }
 
    @Test
    public void sendMessageToMultipleClients_minimal(final StatusListener listener) throws Exception
    {
-      final Client[] testClients = {new Client("client1"), new Client("client2")};
+      Client[] testClients = {new Client("client1"), new Client("client2")};
 
-      new NonStrictExpectations(testClients.length)
-      {
+      new NonStrictExpectations() {
          Socket con;
 
          {
@@ -223,14 +218,11 @@ public final class MessageTest
       exerciseCodeUnderTest(listener, testClients);
 
       for (final Client client : testClients) {
-         new VerificationsInOrder()
-         {
-            {
-               listener.messageSent(client);
-               listener.messageDisplayedByClient(client);
-               listener.messageReadByClient(client);
-            }
-         };
+         new VerificationsInOrder() {{
+            listener.messageSent(client);
+            listener.messageDisplayedByClient(client);
+            listener.messageReadByClient(client);
+         }};
       }
    }
 }

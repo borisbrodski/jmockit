@@ -12,18 +12,13 @@ import jmockit.loginExample.domain.userAccount.*;
 
 public final class LoginServiceTest
 {
+   @Tested LoginService service;
    @Mocked UserAccount account;
-   LoginService service;
 
    @BeforeMethod
    public void init()
    {
-      service = new LoginService();
-
-      new NonStrictExpectations()
-      {{
-         UserAccount.find("john"); result = account;
-      }};
+      new NonStrictExpectations() {{ UserAccount.find("john"); result = account; }};
    }
 
    @Test
@@ -33,18 +28,12 @@ public final class LoginServiceTest
 
       service.login("john", "password");
 
-      new Verifications()
-      {{
-         account.setLoggedIn(true);
-      }};
+      new Verifications() {{ account.setLoggedIn(true); }};
    }
 
    private void willMatchPassword(final boolean match)
    {
-      new NonStrictExpectations()
-      {{
-         account.passwordMatches(anyString); result = match;
-      }};
+      new NonStrictExpectations() {{ account.passwordMatches(anyString); result = match; }};
    }
 
    @Test
@@ -56,10 +45,7 @@ public final class LoginServiceTest
          service.login("john", "password");
       }
 
-      new Verifications()
-      {{
-         account.setRevoked(true);
-      }};
+      new Verifications() {{ account.setRevoked(true); }};
    }
 
    @Test
@@ -69,10 +55,7 @@ public final class LoginServiceTest
 
       service.login("john", "password");
 
-      new Verifications()
-      {{
-         account.setLoggedIn(true); times = 0;
-      }};
+      new Verifications() {{ account.setLoggedIn(true); times = 0; }};
    }
 
    @Test
@@ -81,8 +64,7 @@ public final class LoginServiceTest
    {
       willMatchPassword(false);
 
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          UserAccount.find("roger"); result = secondAccount;
          secondAccount.passwordMatches(anyString); result = false;
       }};
@@ -107,10 +89,7 @@ public final class LoginServiceTest
    {
       willMatchPassword(true);
 
-      new NonStrictExpectations()
-      {{
-         account.isLoggedIn(); result = true;
-      }};
+      new NonStrictExpectations() {{ account.isLoggedIn(); result = true; }};
 
       service.login("john", "password");
    }
@@ -118,10 +97,7 @@ public final class LoginServiceTest
    @Test(expectedExceptions = UserAccountNotFoundException.class)
    public void throwExceptionIfAccountNotFound() throws Exception
    {
-      new NonStrictExpectations()
-      {{
-         UserAccount.find("roger"); result = null;
-      }};
+      new NonStrictExpectations() {{ UserAccount.find("roger"); result = null; }};
 
       new LoginService().login("roger", "password");
    }
@@ -131,10 +107,7 @@ public final class LoginServiceTest
    {
       willMatchPassword(true);
 
-      new NonStrictExpectations()
-      {{
-         account.isRevoked(); result = true;
-      }};
+      new NonStrictExpectations() {{ account.isRevoked(); result = true; }};
 
       service.login("john", "password");
    }
@@ -142,8 +115,7 @@ public final class LoginServiceTest
    @Test
    public void resetBackToInitialStateAfterSuccessfulLogin() throws Exception
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          account.passwordMatches(anyString); returns(false, false, true, false);
       }};
 

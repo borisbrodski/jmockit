@@ -1040,8 +1040,8 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    Given that the unit under test can call the same method or constructor multiple times with different or identical
    arguments, we need a way to account for all those separate invocations.
    One way, as already seen, is to simply record one separate expectation for each expected invocation, in the same
-   order as the invocations should be replayed; another is to record two or more expected results (each either a return
-   value or a thrown exception/error) following a single mock invocation.
+   order as the invocations should be replayed; another is to record two or more consecutive results for a single
+   expectation.
 </p>
 <p>
    Yet another way is to specify an <em>invocation count constraint</em> for a given expectation.
@@ -1136,8 +1136,8 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    to disallow unexpected invocations, when needed.
 </p>
 <p>
-   Note that in the case of strict expectations, all the invocations occurring in the replay phase which match a
-   recorded strict expectation are implicitly verified.
+   Note that in the case of strict expectations, all matching invocations occurring during replay are
+   <em>implicitly</em> verified.
    The remaining invocations will be considered unexpected (and fail the test), unless the associated mocked type is not
    strict.
    So, the use of strict expectations which are verified implicitly precludes the use of verification blocks, which are
@@ -1147,80 +1147,78 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    recorded.
 </p>
 <p>
-   To allow mixing strict and non-strict expectations inside an strict expectation block, we can apply the
-   <code class="type">mockit.NonStrict</code> annotation to a mock field or parameter.
+   To allow mixing strict and non-strict expectations inside a <code>new Expectations() {...}</code> block, we can apply
+   the <code class="type">mockit.NonStrict</code> annotation to a mock field or parameter.
    Any invocation to such a mocked type will be considered as belonging to a non-strict expectation, and all unrecorded
    invocations in the replay phase will be allowed (that is, they will never be considered as unexpected, and therefore
    will not cause the test to fail).
    This is particularly useful to avoid the need to record invocations to constructors, or to any uninteresting methods.
 </p>
 <p>
-   Inside an strict expectation block, an individual invocation can be explicitly marked as non-strict through a
-   <code>notStrict()</code> call following the invocation.
+   Inside an expectation block, an individual expectation can be explicitly marked as non-strict through a
+   <code>notStrict()</code> call following the invocation statement.
    Most of the time, it will be easier to use a non-strict expectation block or a mock field/parameter annotated as
    non-strict, though.
 </p>
 <p>
    So, how do we choose between strict and non-strict expectations for a given test?
-   There is really no general-purpose answer to this question. It will depend on the particulars of
-   the unit under test, and on personal preferences. Also, keep in mind that a test can mix both
-   kinds of expectations, so there is a lot of flexibility in using them.
+   There is really no general-purpose answer to this question.
+   It will depend on the particulars of the unit under test, and on personal preferences.
+   Also, keep in mind that a test can mix both kinds of expectations, so there is a lot of flexibility in using them.
 </p>
 
 <h4 id="strictMocks">Strict and non-strict <em>mocks</em></h4>
 <p>
-   It's usually best to think about <em>strictness</em> at the level of individual expectations, not
-   at the level of mocked instances or types.
+   It's usually best to think about <em>strictness</em> at the level of individual expectations, not at the level of
+   mocked instances or types.
    That said, it is also correct to say that a given mocked instance (or mocked type) is strict or non-strict.
    All it means, really, is that all expectations associated to that particular instance/type have the same strictness.
-   On the other hand, it's perfectly valid to record both strict and non-strict expectations for
-   the same mocked instance or type, in the same test.
-   And when using mock fields declared at the test class level, it's possible that a given mocked
-   instance will be entirely strict in one test and entirely non-strict in another, in the same test class.
+   On the other hand, it's perfectly valid to record both strict and non-strict expectations for the same mocked
+   instance or type, in the same test.
+   And when using mock fields declared at the test class level, it's possible that a given mocked instance will be
+   entirely strict in one test and entirely non-strict in another, in the same test class.
 </p>
 <p>
-   The JMockit Expectations API lets you specify that a given recorded expectation should be
-   non-strict (through the <code>notStrict()</code> method), that all expectations for a particular
-   mock should be non-strict (by annotating the mock field or parameter with
-   <code class="annotation">@NonStrict</code>), and that all expectations recorded inside a particular block should be
-   non-strict (by extending the <code class="type">NonStrictExpectations</code> base class).
-   That's it. There is no way to specify that a given expectation, a mock, or a whole expectation block should be
-   <em>strict</em>.
+   To recapitulate, we can specify the lack of strictness in three different ways:
+   1) that a given recorded expectation in an otherwise strict expectation block should be non-strict, by calling the
+   <code>notStrict()</code> method;
+   2) that all expectations for a particular mocked type/instance should be non-strict, by annotating the mock field or
+   parameter with <code class="annotation">@NonStrict</code>;
+   and 3) that all expectations recorded should be non-strict, by using the
+   <code class="type">NonStrictExpectations</code> class.
 </p>
 <p>
-   Strict expectations are recorded and verified <em>by default</em>, when we do <em>not</em>
-   specify that they should be non-strict. For an expectation to be strict, it needs to be recorded
-   inside an expectation block not derived from <code class="type">NonStrictExpectations</code>, for a mocked
-   type not annotated as <code class="annotation">@NonStrict</code>.
+   On the other hand, there is no explicit way to specify that a given expectation, a mocked type/instance, or a whole
+   expectation block should be <em>strict</em>.
+   Recorded expectations are considered strict <em>by default</em>, when we do <em>not</em> specify that they should be
+   non-strict.
+   So, for an expectation to be strict, it needs to be recorded inside an expectation block not derived from
+   <code class="type">NonStrictExpectations</code>, for a mocked type not annotated as
+   <code class="annotation">@NonStrict</code>.
+   The associated mocked type and its instances will then be considered to be strictly verified as a whole, except for
+   those invocations matching an expectation explicitly recorded as <code>notStrict()</code>.
 </p>
 <p>
-   Remember that <em>unexpected invocations</em> can only be detected for so-called <em>strict mocks</em>, or for
-   expectations with an specified maximum invocation count constraint.
-   So, how do we obtain a mocked instance/type where all unrecorded expectations are considered to
-   be strict (and therefore cause matching invocations at replay time to throw an "unexpected
-   invocation" error)? Simple: by recording at least one <em>strict</em> expectation on the mocked
-   instance/type. Note that this rules out the use of empty expectation blocks.
-   If you need to specify that no invocations are allowed on a given mock, then either record a
-   strict expectation with a <code>times = 0</code> constraint or use a
-   <code>FullVerifications</code> block (explained in the next section).
+   Finally, note that when <em>no</em> expectations are recorded in a test for a given mocked type, it is automatically
+   assumed to be fully non-strict (as if the mock field/parameter was annotated as
+   <code class="annotation">@NonStrict</code>).
 </p>
 
 <h4 id="iteratedExpectations">Iterated expectations</h4>
 <p>
-   When a sequence of consecutive invocations is recorded with strict expectations (the relative
-   order between invocations is irrelevant with <em>non-strict</em> expectations), the whole
-   sequence is expected to occur exactly once during the replay phase.
+   When a sequence of consecutive invocations is recorded with strict expectations (the relative order between
+   invocations is irrelevant with <em>non-strict</em> expectations), the whole sequence is expected to occur exactly
+   <em>once</em> during the replay phase.
    Consider, however, the case where the tested code executes those invocations in a loop (or any kind of iteration).
-   Assuming that the number of iterations is known in the test, we can still record those
-   expectations with a single invocation to each method/constructor called inside the loop (that is,
-   without writing a loop or repeating the expectations inside the expectation block).
+   Assuming that the number of iterations is known in the test, we can still record those expectations with a single
+   invocation to each method/constructor called inside the loop (that is, without writing a loop or repeating the
+   expectations inside the expectation block).
    The next test demonstrates this feature, using the <code>Expectations(int numberOfIterations)</code> constructor.
 </p>
 <pre><code>   @Test
    public void recordStrictInvocationsInIteratingBlock(final Collaborator mock)
    {
-      new <strong>Expectations(2)</strong>
-      {{
+      new <strong>Expectations(2)</strong> {{
          mock.setSomething(<em>anyInt</em>);
          mock.save();
       }};
@@ -1233,9 +1231,10 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   The ability to specify how many iterations are expected for a group of invocations is typically
-   used with strict expectations, but it also applies to non-strict expectations.
-   There is also a <code>NonStrictExpectations(int numberOfIterations)</code> constructor.
+   This ability to specify the number of iterations for a group of invocations also applies to non-strict expectations.
+   However, in this case the specified number of iterations is merely used as a <em>multiplier</em> for the upper and
+   lower limits of invocation count constraints (both implicit and explicit ones).
+   Non-strict expectations with no specified invocation count constraint, therefore, are not affected.
 </p>
 
 <h3 id="verification">
@@ -2301,28 +2300,21 @@ public final class TestedUnit
    </div>
 </h3>
 <p>
-   The simplest form of test code reuse with JMockit is the declaration of mock fields at the test
-   class level.
-   As the next example shows, the objects that are automatically created and assigned to such fields
-   (when they aren't declared to be <code>final</code>, that is) can be used in any number of test
-   methods.
-   (The complete source code for this example can be found under "mockit/samples/LoginService", in
-   the full distribution.)
+   The simplest form of test code reuse with JMockit is the declaration of mock fields at the test class level.
+   As the next example shows, the objects that are created and assigned to such fields (by JMockit or explicit test
+   code) can be used in any number of test methods.
+   The complete source code for this example can be found under
+   <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/LoginService">jmockit/samples/LoginService</a>.
 </p>
 <pre><code>public final class LoginServiceTest
 {
+   @Tested LoginService service;
    <strong>@Mocked UserAccount account;</strong>
-   LoginService service;
 
    @Before
    public void init()
    {
-      service = new LoginService();
-
-      new NonStrictExpectations()
-      {{
-         UserAccount.find("john"); <em>result</em> = <strong>account</strong>;
-      }};
+      new NonStrictExpectations() {{ UserAccount.find("john"); <em>result</em> = <strong>account</strong>; }};
    }
 
    @Test
@@ -2332,18 +2324,12 @@ public final class TestedUnit
 
       service.login("john", "password");
 
-      new Verifications()
-      {{
-         <strong>account</strong>.setLoggedIn(true);
-      }};
+      new Verifications() {{ <strong>account</strong>.setLoggedIn(true); }};
    }
 
    private void willMatchPassword(final boolean match)
    {
-      new NonStrictExpectations()
-      {{
-         <strong>account</strong>.passwordMatches(<em>anyString</em>); <em>result</em> = match;
-      }};
+      new NonStrictExpectations() {{ <strong>account</strong>.passwordMatches(<em>anyString</em>); <em>result</em> = match; }};
    }
 
    @Test
@@ -2353,44 +2339,28 @@ public final class TestedUnit
 
       service.login("john", "password");
 
-      new Verifications()
-      {{
-         <strong>account</strong>.setLoggedIn(true); <em>times</em> = 0;
-      }};
+      new Verifications() {{ <strong>account</strong>.setLoggedIn(true); <em>times</em> = 0; }};
    }
 
    // other tests that use the "account" mock field
 }
 </code></pre>
 <p>
-   In the above test class, we have two instance fields, one of them a mock field that is assigned
-   automatically by JMockit for each test, and the other a regular non-mock field which is assigned
-   manually in a test setup method.
-</p>
-<p>
-   The tests in this example test class exercise the
-   <code>LoginService#login(String accountId, String password)</code> method (our <em>unit under test</em>).
-   This method first attempts to look up an existing user account from the given login name
-   ("accountId", which is expected to be unique among all accounts).
-   Since several different tests are needed to fully exercise this unit, a non-strict invocation to
-   the <code>UserAccount#find(String accountId)</code> method is recorded for all tests in the
-   class, with an specific login name ("john") and the mock account object as the value to be returned.
+   The tests in this example test class exercise the <code>LoginService#login(String accountId, String password)</code>
+   method (our <em>unit under test</em>).
+   This method first attempts to look up an existing user account from the given login name ("accountId", which is
+   expected to be unique among all accounts).
+   Since several different tests are needed to fully exercise this unit, a non-strict invocation to the
+   <code>UserAccount#find(String accountId)</code> method is recorded for all tests in the class, with an specific login
+   name ("john") and the mocked account as the value to be returned.
    Remember, any given test can use multiple expectation and/or verification blocks.
-   And such blocks can even be written inside shared "before" and "after" methods, respectively.
+   Such blocks can also be written inside shared "before" and "after" methods, respectively.
 </p>
 <p>
-   Since the object assigned to a mock field of the test class is available <em>anywhere</em> in the
-   class, not just inside expectation/verification blocks, there is the question of just what
-   happens as a consequence of such invocations, if any occur.
-   The answer is that such invocations are freely <em>allowed</em>, and in the case of
-   non-<code>void</code> methods the invocation will return the default value according to the
-   method's return type (<code>0</code> for primitive integers, empty collections and arrays, and so on).
-</p>
-<p>
-   Another form or reuse exemplified above is shown by the <code>willMatchPassword(boolean)</code>
-   method, which contains another reusable expectation block.
-   In this case, an invocation to the <code>UserAccount#passwordMatches(String)</code> method is
-   recorded for any password value, with the resulting return value provided as a parameter to the reusable method.
+   Another form or reuse exemplified above is shown by the <code>willMatchPassword(boolean)</code> method, which
+   contains another reusable expectation block.
+   In this case, an invocation to the <code>UserAccount#passwordMatches(String)</code> method is recorded for any
+   password value, with the resulting return value provided as a parameter to the reusable method.
 </p>
 <p>
    Yet another form of reuse for expectation and verification blocks is to create named subclasses instead of anonymous
@@ -2415,11 +2385,16 @@ public final class TestedUnit
    }
 </code></pre>
 <p>
-   It's important that such classes be declared as <code>final</code>, unless they are intended
-   to be used as base classes for further extension inside individual test methods.
-   They can also be static nested classes and even top-level public classes, and therefore reused in
-   any number of separate test classes.
+   It's important that such classes be declared to be <strong><code>final</code></strong>, unless they are intended to
+   be used as base classes for further extension.
+   Such non-<code>final</code> base classes must have names ending in "<code>Expectations</code>" or
+   "<code>Verifications</code>", however; otherwise they won't be recognized as such by JMockit.
 </p>
+<p>
+   Finally, reusable <code>Expectations</code>/<code>Verifications</code> subclasses can also be top-level classes,
+   allowing them to be reused in any number of test classes.
+</p>
+
 <div class="navigation">
    <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
    <a href="StateBasedTesting.html"><img align="right" src="go-next.png" title="Next chapter"></a>
