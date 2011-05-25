@@ -8,7 +8,7 @@ import java.util.*;
 
 import org.junit.*;
 
-import jmockit.tutorial.domain.MyBusinessService_AnnotationsAPI_Test.*;
+import jmockit.tutorial.domain.MyBusinessService_MockupsAPI_Test.*;
 import org.apache.commons.mail.*;
 import static org.junit.Assert.*;
 
@@ -17,7 +17,7 @@ import mockit.*;
 import jmockit.tutorial.infrastructure.*;
 
 @UsingMocksAndStubs({MockDatabase.class, Email.class})
-public final class MyBusinessService_AnnotationsAPI_Test
+public final class MyBusinessService_MockupsAPI_Test
 {
    @MockClass(realClass = Database.class, stubs = "<clinit>")
    public static class MockDatabase

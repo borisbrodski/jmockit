@@ -103,7 +103,7 @@ public final class SubclassTest
    @Test
    public void mockSubclassUsingSetUpMocks()
    {
-      setUpMocks(SubClassMockWithAnnotations.class);
+      setUpMocks(SubClassMockWithMockups.class);
 
       new SubClass("test");
 
@@ -113,7 +113,7 @@ public final class SubclassTest
    }
 
    @MockClass(realClass = SubClass.class)
-   public static final class SubClassMockWithAnnotations
+   public static final class SubClassMockWithMockups
    {
       @Mock(invocations = 1)
       public void $init(String name)

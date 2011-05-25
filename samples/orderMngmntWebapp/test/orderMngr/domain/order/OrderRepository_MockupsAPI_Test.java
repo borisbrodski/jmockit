@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
  * State-based unit tests for the OrderRepository class, which depends on the {@linkplain Database} class.
  * The tests use mocks to simulate the interaction between OrderRepository and Database.
  */
-public final class OrderRepository_AnnotationsAPI_Test
+public final class OrderRepository_MockupsAPI_Test
 {
    private static PreparedStatement proxyStmt;
    private static ResultSet proxyRS;

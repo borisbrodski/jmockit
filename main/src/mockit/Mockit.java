@@ -33,7 +33,7 @@ import mockit.internal.util.*;
  * {@link #stubOutClass(Class, boolean, String...)}.
  * </li>
  * <li>
- * <strong>Annotations API</strong> for state-oriented mocking: {@link MockUp}, {@link #setUpMocks(Object...)},
+ * <strong>Mockups API</strong> for state-oriented mocking: {@link MockUp}, {@link #setUpMocks(Object...)},
  * {@link #setUpMock(Class, Class)} and its several overloads, {@link #setUpStartupMocks(Object...)},
  * {@link #setUpMocksAndStubs(Class...)}, and {@link #tearDownMocks(Class...)} / {@link #tearDownMocks()}.
  * </li>
@@ -43,7 +43,7 @@ import mockit.internal.util.*;
  * These are merely convenience methods that create empty implementation classes for one or more interfaces, where all
  * implemented methods do nothing beyond returning a default value according to the return type of each interface
  * method.
- * The created classes can be mocked through the Annotations API, and its instances passed to code under test.
+ * The created classes can be mocked through the Mockups API, and its instances passed to code under test.
  * </li>
  * </ul>
  * Tutorial:
@@ -398,7 +398,7 @@ public final class Mockit
     * test suite.
     * <p/>
     * Notice that a call to this method will tear down <em>all</em> mock classes that were applied through use of the
-    * Annotations API that are still in effect, as well as any mock classes or stubs applied to the current test class
+    * Mockups API that are still in effect, as well as any mock classes or stubs applied to the current test class
     * through {@code @UsingMocksAndStubs}.
     * In other words, it would effectively prevent mocks to be set up at the test class and test suite levels.
     * So, use it only if necessary and if it won't discard mock classes that should remain in effect.
@@ -449,7 +449,7 @@ public final class Mockit
     * loader (usually, when it's a JRE class).
     * Therefore, you should only use this method for application-defined interfaces.
     * <p/>
-    * This method is just a convenience for some uses of the <em>Annotations</em> API.
+    * This method is just a convenience for some uses of the <em>Mockups</em> API.
     * In <em>JMockit Expectations</em> in particular, mocked instances will be automatically created and assigned to any
     * mock fields or parameters.
     *
@@ -471,7 +471,7 @@ public final class Mockit
     * for equality; {@code hashCode} is implemented to return the identity hash code for the proxy instance; and
     * {@code toString} returns the standard string representation that {@code Object#toString} would have returned.
     * <p/>
-    * This method is just a convenience for some uses of the <em>Annotations</em> API.
+    * This method is just a convenience for some uses of the <em>Mockups</em> API.
     * In <em>JMockit Expectations</em> in particular, mocked instances will be automatically created and assigned to any
     * mock fields or parameters.
     *
@@ -505,7 +505,7 @@ public final class Mockit
     * for equality; {@code hashCode} is implemented to return the identity hash code for the proxy instance; and
     * {@code toString} returns the standard string representation that {@code Object#toString} would have returned.
     * <p/>
-    * This method is just a convenience for some uses of the <em>Annotations</em> API.
+    * This method is just a convenience for some uses of the <em>Mockups</em> API.
     * In <em>JMockit Expectations</em> in particular, mocked instances will be automatically created and assigned to any
     * mock fields or parameters.
     *

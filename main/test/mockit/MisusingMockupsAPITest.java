@@ -9,7 +9,7 @@ import org.junit.*;
 import static mockit.Mockit.*;
 import static org.junit.Assert.*;
 
-public final class MisusingAnnotationsAPITest
+public final class MisusingMockupsAPITest
 {
    @Test(expected = IllegalArgumentException.class)
    public void attemptToSetUpMockWithoutRealClass()

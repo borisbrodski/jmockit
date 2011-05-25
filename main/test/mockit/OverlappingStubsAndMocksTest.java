@@ -7,8 +7,8 @@ package mockit;
 import org.junit.*;
 
 /**
- * Overlapping mocks/stubbing for the same real class is currently not supported by the Annotations
- * API. See related "TO DO" item in MockFixture.
+ * Overlapping mocks/stubbing for the same real class is currently not supported by the Mockups API.
+ * See related "TO DO" item in MockFixture.
  */
 @UsingMocksAndStubs(RealClass.class)
 public final class OverlappingStubsAndMocksTest

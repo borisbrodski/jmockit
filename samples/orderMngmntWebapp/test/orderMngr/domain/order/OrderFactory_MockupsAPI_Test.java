@@ -15,7 +15,7 @@ import mockit.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
-public final class OrderFactory_AnnotationsAPI_Test
+public final class OrderFactory_MockupsAPI_Test
 {
    @Test
    public void createOrder() throws Exception

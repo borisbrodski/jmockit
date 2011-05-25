@@ -10,7 +10,7 @@ import mockit.*;
 
 import static org.junit.Assert.*;
 
-public final class JMockitAnnotationsExampleTest
+public final class JMockitMockupsExampleTest
 {
    @Test
    public void testDoOperationAbc()

@@ -37,7 +37,7 @@
 <div id="sections" style="margin-bottom: 32px">
    <div><a href="#expectations">JMockit Expectations</a></div>
    <div><a href="#verifications">JMockit Verifications</a></div>
-   <div><a href="#annotations">JMockit Annotations</a></div>
+   <div><a href="#mockups">JMockit Mockups</a></div>
    <div><a href="#coverage">JMockit Coverage</a></div>
    <div><a href="#hibernate">JMockit Hibernate Emulation</a></div>
 </div>
@@ -642,7 +642,7 @@
       Mock</a>
 </div>
 
-<h3 id="annotations">JMockit Annotations</h3>
+<h3 id="mockups">JMockit Mockups</h3>
 <p>
    This is a different kind of mocking API, which can be seen as complementary to the Expectations & Verifications API.
    Instead of specifying expectations on the invocations made from code under test to its collaborators,
@@ -653,7 +653,7 @@
    In addition, constraints on the number of expected invocations for each mock method can be specified, and mock
    methods can be made to be <em>re-entrant</em>.
 </p>
-<pre><code>public class JMockitAnnotationsExampleTest
+<pre><code>public class JMockitMockupsExampleTest
 {
    @Test
    public void testDoOperationAbc()
@@ -677,7 +677,7 @@
 }
 </code></pre>
 <div class="links">
-   <a href="tutorial/AnExample.html#annotations">Tutorial sample</a>
+   <a href="tutorial/AnExample.html#mockups">Tutorial sample</a>
    <a href="tutorial/StateBasedTesting.html">Tutorial chapter</a>
    <a href="javadoc/mockit/Mock.html">API documentation</a>
 </div>

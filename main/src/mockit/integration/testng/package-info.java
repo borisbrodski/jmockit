@@ -11,11 +11,11 @@
  * This integration provides the same benefits to test code as the one for JUnit 4:
  * <ol>
  * <li>
- * Unexpected invocations specified through the Annotations or the Expectations API are automatically verified just
- * before the execution of a test ends (specifically, immediately after the execution of the test method).
+ * Unexpected invocations specified through the Mockups or the Expectations API are automatically verified just before
+ * the execution of a test ends (specifically, immediately after the execution of the test method).
  * </li>
  * <li>
- * Any mock classes applied with the Annotations API from inside a method annotated as a {@code @Test} or a
+ * Any mock classes applied with the Mockups API from inside a method annotated as a {@code @Test} or a
  * {@code @BeforeMethod} will be discarded right after the execution of the test or the test method, respectively.
  * </li>
  * <li>

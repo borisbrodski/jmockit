@@ -32,7 +32,7 @@ public final class HelloWorld_JMockit_Test
    }
 
    @Test
-   public void testGreetingUsingAnnotationsAPI()
+   public void testGreetingUsingMockupsAPI()
    {
       new MockUp<SimpleConfig>()
       {

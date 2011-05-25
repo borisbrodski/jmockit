@@ -52,8 +52,8 @@
 </ol>
 
 <p>
-   In the JMockit toolkit, the <strong>Annotations API</strong> provides support for the creation of
-   <em>state-based</em> tests.
+   In the JMockit toolkit, the <strong>Mockups API</strong> provides support for the creation of <em>state-based</em>
+   tests.
    The focus when doing this kind of testing is not on the <em>interactions</em> between objects, but on their
    <em>state</em> after the code under test is exercised, and on the data items exchanged between objects.
 </p>
@@ -70,7 +70,7 @@
 <p>
    Regular state verification, performed <em>after</em> exercising the unit under test, is typically done through
    JUnit/TestNG assertions written at the end of each test method.
-   The Annotations API extends the ability of a test to do state verification, by allowing those same JUnit/TestNG
+   The Mockups API extends the ability of a test to do state verification, by allowing those same JUnit/TestNG
    assertions to be executed whenever a dependency is invoked from the tested code.
    As the tested unit passes data to dependencies through method and constructor invocations, the corresponding mock
    implementations specified for those dependencies get called.
@@ -105,7 +105,7 @@
    </div>
 </h3>
 <p>
-   In the context of the JMockit Annotations API, a <em>mock method</em> is one annotated with the
+   In the context of the JMockit Mockups API, a <em>mock method</em> is one annotated with the
    <code class="type">mockit.Mock</code> annotation.
    The class to which such methods belong is a <em>mock class</em>.
    For short, in this chapter we will refer to such annotated mock methods simply as "mocks" (in other contexts, the
@@ -403,7 +403,7 @@
    <em>type parameter</em> <strong><code>T</code></strong>.
    (Subclasses of <code class="type">MockUp</code> can also be named, of course.)
    Given this succinct and readable syntax, and the fact that mock classes tend to be specific to individual tests, the
-   creation of such <em>mock-up classes</em> should be the most common way to define mocks with the Annotations API.
+   creation of such <em>mock-up classes</em> should be the most common way to define mocks with the Mockups API.
 </p>
 <p>
    As the previous example tests have shown, it is perfectly safe to declare mock methods in an anonymous mock class as
@@ -988,7 +988,7 @@
 </p>
 <p>
    It is also valid to extend from base test classes, which may optionally define "before" and/or "after" methods
-   containing calls to the Annotations API.
+   containing calls to the Mockups API.
 </p>
 
 <h4 id="reusableMocks">Reusable mock classes</h4>

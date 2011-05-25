@@ -277,7 +277,7 @@ public final class MyBusinessService_ExpectationsAPI_Test
       <img align="right" src="blank.gif" width="22">
       <img align="right" src="blank.gif" width="22">
       <a href="#expectations"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#annotations"><img align="right" src="go-down.png" title="Next section"></a>
+      <a href="#mockups"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
@@ -412,8 +412,8 @@ public final class MyBusinessService_VerificationsAPI_Test
    <code><em>times</em> = 0</code> invocation count constraint (or <code><em>maxTimes</em> = 0</code> if preferred).
 </p>
 
-<h3 id="annotations">
-   Using the Annotations API
+<h3 id="mockups">
+   Using the Mockups API
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#expectations"><img align="right" src="go-top.png" title="First section"></a>
@@ -423,7 +423,7 @@ public final class MyBusinessService_VerificationsAPI_Test
    </div>
 </h3>
 <p>
-   Next, lets see how the <strong>JMockit Annotations</strong> API solves the problem.
+   Next, lets see how the <strong>JMockit Mockups</strong> API solves the problem.
 </p>
 <pre><code>package domain;
 
@@ -435,11 +435,11 @@ import static org.junit.Assert.*;
 
 import mockit.*;
 
-import domain.MyBusinessService_AnnotationsAPI_Test.*;
+import domain.MyBusinessService_MockupsAPI_Test.*;
 import infrastructure.*;
 
 @UsingMocksAndStubs({MockDatabase.class, Email.class})
-public final class MyBusinessService_AnnotationsAPI_Test
+public final class MyBusinessService_MockupsAPI_Test
 {
    @MockClass(realClass = Database.class, stubs = "&lt;clinit>")
    public static class MockDatabase
@@ -541,8 +541,9 @@ public final class MyBusinessService_AnnotationsAPI_Test
 </p>
 <p>
    Typically, the vast majority of tests can be written with the Expectations & Verifications API.
-   There are situations, however, where the Annotations API can be an useful complement to that.
+   There are situations, however, where the Mockups API can be an useful complement to that.
 </p>
+
 <div class="navigation">
    <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
    <a href="RunningTests.html"><img align="right" src="go-next.png" title="Next chapter"></a>
