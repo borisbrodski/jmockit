@@ -8,7 +8,7 @@ import java.util.*;
 
 public final class MethodFormatter
 {
-   private final StringBuilder out = new StringBuilder();
+   private final StringBuilder out;
 
    private String classDesc;
    private String methodDesc;
@@ -18,13 +18,14 @@ public final class MethodFormatter
    private char typeCode;
    private int arrayDimensions;
 
-   public MethodFormatter() {}
+   public MethodFormatter() { out = new StringBuilder(); }
 
    public MethodFormatter(String classDesc, String methodDesc)
    {
+      this();
       this.classDesc = classDesc;
       this.methodDesc = methodDesc;
-      appendFriendlyMethodSignature("<init>");
+      appendFriendlyMethodSignature();
    }
 
    @Override
@@ -33,31 +34,31 @@ public final class MethodFormatter
       return out.toString();
    }
 
-   public String friendlyMethodSignatures(String constructorName, Collection<String> classAndMethodDescs)
+   public String friendlyMethodSignatures(Collection<String> classAndMethodDescs)
    {
       String sep = "";
 
       for (String classAndMethodDesc : classAndMethodDescs) {
          out.append(sep);
          separateClassAndMethodInternalDescriptions(classAndMethodDesc);
-         appendFriendlyMethodSignature(constructorName);
+         appendFriendlyMethodSignature();
          sep = ",\n";
       }
 
       return out.toString();
    }
 
-   private void appendFriendlyMethodSignature(String constructorDesc)
+   private void appendFriendlyMethodSignature()
    {
       String className = null;
-      String constructorName = constructorDesc;
+      String friendlyDesc = methodDesc;
 
       if (classDesc != null) {
          className = classDesc.replace('/', '.');
-         constructorName = getConstructorName(className);
+         String constructorName = getConstructorName(className);
+         friendlyDesc = friendlyDesc.replace("<init>", constructorName);
       }
 
-      String friendlyDesc = methodDesc.replace("<init>", constructorName).replace("$init", constructorName);
       int leftParenPos = friendlyDesc.indexOf('(');
       int rightParenPos = friendlyDesc.indexOf(')');
 

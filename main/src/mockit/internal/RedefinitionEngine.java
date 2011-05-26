@@ -185,12 +185,9 @@ public final class RedefinitionEngine
    {
       rcReader.accept(rcWriter, false);
 
-      List<String> remainingMocks = mockMethods.getMethods();
-
-      if (!remainingMocks.isEmpty()) {
-         int p = mockClassName.lastIndexOf('.');
-         String constructorName = p > 0 ? mockClassName.substring(p + 1) : mockClassName;
-         String mockSignatures = new MethodFormatter().friendlyMethodSignatures(constructorName, remainingMocks);
+      if (mockMethods.getMethodCount() > 0) {
+         List<String> remainingMocks = mockMethods.getMethods();
+         String mockSignatures = new MethodFormatter().friendlyMethodSignatures(remainingMocks);
          
          throw new IllegalArgumentException(
             "Matching real methods not found for the following mocks of " + mockClassName + ":\n" + mockSignatures);
