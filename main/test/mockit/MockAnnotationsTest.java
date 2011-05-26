@@ -100,6 +100,24 @@ public final class MockAnnotationsTest
       codeUnderTest.doSomething();
    }
 
+   @Test(expected = IllegalArgumentException.class)
+   public void attemptToSetUpMockClassLackingTheRealClass()
+   {
+      Mockit.setUpMocks(Collaborator.class);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void attemptToSetUpMockForClassLackingAMatchingRealMethod()
+   {
+      Mockit.setUpMocks(MockForClassWithoutRealMethod.class);
+   }
+
+   @MockClass(realClass = Collaborator.class)
+   static final class MockForClassWithoutRealMethod
+   {
+      @Mock void noMatchingRealMethod() {}
+   }
+
    @Test
    public void setUpMockForSingleClassPassingAnnotatedMockInstance()
    {
