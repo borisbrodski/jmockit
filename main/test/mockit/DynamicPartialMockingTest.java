@@ -629,22 +629,16 @@ public final class DynamicPartialMockingTest
       private native int nativeMethod();
    }
 
-   // Native methods are currently ignored when using dynamic mocking. It should be possible, however, to support it by
-   // mocking such methods normally at first, then restoring them at the end of the expectation block if no expectations
-   // were recorded; "onInstance" matching would not work, though.
-   @Ignore @Test
-   public void partiallyMockNativeMethod()
+   @Test(expected = UnsatisfiedLinkError.class)
+   public void attemptToPartiallyMockNativeMethod()
    {
       final ClassWithNative mock = new ClassWithNative();
 
-      new Expectations(mock)
-      {
-         {
-            mock.nativeMethod(); result = 123;
-         }
-      };
-
-      assertEquals(123, mock.doSomething());
+      new Expectations(mock) {{
+         // The native method is ignored when using dynamic mocking, so this actually tries to execute the real method,
+         // failing since there is no native implementation.
+         mock.nativeMethod();
+      }};
    }
 
    @Test // with FileIO compiled with "target 1.1", this produced a VerifyError
