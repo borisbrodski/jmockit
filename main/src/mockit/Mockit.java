@@ -208,11 +208,12 @@ public final class Mockit
     * redefine corresponding real methods/constructors in a designated {@linkplain MockClass#realClass() real class}
     * (usually, a class on which the code under test depends on)
     *
-    * @throws IllegalArgumentException if any mock class fails to specify the corresponding real class using the
-    * {@code @MockClass(realClass = ...)} annotation
+    * @throws IllegalArgumentException if a given mock class fails to specify the corresponding real class using the
+    * {@code @MockClass(realClass = ...)} annotation; or if a mock class defines a mock method for which no
+    * corresponding real method or constructor exists in the real class
     *
     * @see #tearDownMocks(Class[])
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java#132">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#111">Example</a>
     */
    public static void setUpMocks(Object... mockClassesOrInstances)
    {
@@ -265,10 +266,11 @@ public final class Mockit
     * redefine corresponding real methods/constructors in a designated {@linkplain MockClass#realClass() real class}
     * (usually, a class on which the code under test depends on)
     *
-    * @throws IllegalArgumentException if any mock class fails to specify the corresponding real class using the
-    * {@code @MockClass(realClass = ...)} annotation
+    * @throws IllegalArgumentException if a given mock class fails to specify the corresponding real class using the
+    * {@code @MockClass(realClass = ...)} annotation; or if a mock class defines a mock method for which no
+    * corresponding real method or constructor exists in the real class
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#467">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#447">Example</a>
     */
    public static void setUpStartupMocks(Object... mockClassesOrInstances)
    {
@@ -298,7 +300,7 @@ public final class Mockit
     * @param realClass the class to be mocked that is used by code under test
     * @param mock an instance of the class containing the mock methods for the real class
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java#134">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#113">Example</a>
     */
    public static void setUpMock(Class<?> realClass, Object mock)
    {
@@ -325,7 +327,7 @@ public final class Mockit
     * @param realClass the class to be mocked that is used by code under test
     * @param mockClass the class containing the mock methods for the real class
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#171">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#151">Example</a>
     */
    public static void setUpMock(Class<?> realClass, Class<?> mockClass)
    {
@@ -336,7 +338,7 @@ public final class Mockit
     * Same as {@link #setUpMock(Class, Class)}, but accepting the (fully qualified) name of the real class.
     * This is useful when said class is not accessible from the test.
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#61">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#40">Example</a>
     */
    public static void setUpMock(String realClassName, Class<?> mockClass)
    {
@@ -355,12 +357,13 @@ public final class Mockit
     *
     * @return the new proxy instance created for the mocked interface, or {@code null} otherwise
     *
-    * @throws IllegalArgumentException if the mock class fails to specify an interface or class using the
-    * {@code @MockClass(realClass = ...)} annotation
+    * @throws IllegalArgumentException if a given mock class fails to specify the corresponding real class using the
+    * {@code @MockClass(realClass = ...)} annotation; or if a mock class defines a mock method for which no
+    * corresponding real method or constructor exists in the real class
     *
     * @see #setUpMock(Class, Object)
     * @see #setUpMocks(Object...)
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#678">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#663">Example</a>
     */
    public static <T> T setUpMock(Object mockClassOrInstance)
    {
@@ -409,7 +412,7 @@ public final class Mockit
     * mocked for the test class as a whole (through a "before class" method or an {@code @UsingMocksAndStubs}
     * annotation) before the first test in the next test class is executed.
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/serviceA/ServiceATest.java#56">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#415">Example</a>
     */
    public static void tearDownMocks()
    {
@@ -453,7 +456,7 @@ public final class Mockit
     * In <em>JMockit Expectations</em> in particular, mocked instances will be automatically created and assigned to any
     * mock fields or parameters.
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#112">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#91">Example</a>
     */
    public static <E> E newEmptyProxy(Class<E> interfaceToBeProxied)
    {
@@ -483,7 +486,7 @@ public final class Mockit
     *
     * @see #newEmptyProxy(Class)
     * @see #newEmptyProxy(Type...)
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java#207">Example</a>
+    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#186">Example</a>
     */
    public static <E> E newEmptyProxy(ClassLoader loader, Class<E> interfaceToBeProxied)
    {
