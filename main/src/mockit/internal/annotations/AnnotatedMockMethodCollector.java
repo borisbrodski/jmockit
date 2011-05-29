@@ -41,7 +41,7 @@ public final class AnnotatedMockMethodCollector extends EmptyVisitor
          classToCollectMocksFrom = classToCollectMocksFrom.getSuperclass();
          collectingFromSuperClass = true;
       }
-      while (classToCollectMocksFrom != Object.class);
+      while (classToCollectMocksFrom != Object.class && classToCollectMocksFrom != MockUp.class);
    }
 
    @Override
@@ -120,6 +120,10 @@ public final class AnnotatedMockMethodCollector extends EmptyVisitor
       private MockAnnotationVisitor(String mockNameAndDesc)
       {
          this.mockNameAndDesc = mockNameAndDesc;
+
+         if (mockNameAndDesc.contains("(Lmockit/Invocation;")) {
+            getMockState();
+         }
       }
 
       @Override
