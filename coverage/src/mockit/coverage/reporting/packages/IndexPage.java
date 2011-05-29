@@ -177,9 +177,9 @@ public final class IndexPage extends ListWithFilesAndPercentages
       this.packageName = packageName;
       writeTableCellWithPackageName();
       writeInternalTableForSourceFiles();
-      writeCoveragePercentageForFile(0);
-      writeCoveragePercentageForFile(1);
-      writeCoveragePercentageForFile(2);
+      writeCoveragePercentageForPackage(0);
+      writeCoveragePercentageForPackage(1);
+      writeCoveragePercentageForPackage(2);
    }
 
    private void writeTableCellWithPackageName()
@@ -238,7 +238,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
       percentages[metric] = percentage;
    }
 
-   private void writeCoveragePercentageForFile(int metric)
+   private void writeCoveragePercentageForPackage(int metric)
    {
       if (Metrics.withMetric(metric)) {
          int coveredInPackage = packageReport.coveredItems[metric];
