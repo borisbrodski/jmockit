@@ -17,33 +17,65 @@ public final class AnnotatedMockMethods
    private String mockClassInternalName;
    private boolean isInnerMockClass;
    private boolean withItField;
-   private boolean withInvocationParameter;
 
    /**
-    * The set of public mock methods in a mock class. Each one is represented by the concatenation of its name with the
+    * The set of mock methods in a mock class. Each one is identified by the concatenation of its name with the
     * internal JVM description of its parameters and return type.
     */
-   private final List<String> methods;
-
-   /**
-    * The subset of static methods between the {@link #methods mock methods} in a mock class.
-    * This is needed when generating calls for the mock methods.
-    */
-   private final Collection<String> staticMethods;
+   private final List<MockMethod> methods;
 
    final Class<?> realClass;
    private MockClassState mockStates;
-   private int indexForMockExpectations;
+
+   final class MockMethod
+   {
+      final String name;
+      final String desc;
+      final boolean isStatic;
+      final boolean hasInvocationParameter;
+      private int indexForMockExpectations;
+
+      private MockMethod(String nameAndDesc, boolean isStatic)
+      {
+         int p = nameAndDesc.indexOf('(');
+         name = nameAndDesc.substring(0, p);
+         desc = nameAndDesc.substring(p);
+         this.isStatic = isStatic;
+         hasInvocationParameter = desc.startsWith("(Lmockit/Invocation;");
+         indexForMockExpectations = -1;
+      }
+
+      private boolean isMatch(String name, String desc)
+      {
+         if (this.name.equals(name)) {
+            if (hasInvocationParameter) {
+               if (this.desc.substring(20).equals(desc.substring(1))) {
+                  return true;
+               }
+            }
+            else if (this.desc.equals(desc)) {
+               return true;
+            }
+         }
+
+         return false;
+      }
+
+      int getIndexForMockExpectations() { return indexForMockExpectations; }
+
+      boolean isReentrant()
+      {
+         return indexForMockExpectations >= 0 && mockStates.getMockState(indexForMockExpectations).isReentrant();
+      }
+   }
 
    public AnnotatedMockMethods(Class<?> realClass)
    {
-      methods = new ArrayList<String>(20);
-      staticMethods = new ArrayList<String>(20);
+      methods = new ArrayList<MockMethod>();
       this.realClass = realClass;
-      indexForMockExpectations = -1;
    }
 
-   public String addMethod(boolean fromSuperClass, String name, String desc, boolean isStatic)
+   String addMethod(boolean fromSuperClass, String name, String desc, boolean isStatic)
    {
       if (fromSuperClass && isMethodAlreadyAdded(name, desc)) {
          return null;
@@ -51,21 +83,17 @@ public final class AnnotatedMockMethods
 
       String nameAndDesc = name + desc;
 
-      if (isStatic) {
-         staticMethods.add(nameAndDesc);
-      }
-
-      methods.add(nameAndDesc);
+      methods.add(new MockMethod(nameAndDesc, isStatic));
       return nameAndDesc;
    }
 
    private boolean isMethodAlreadyAdded(String name, String desc)
    {
       int p = desc.lastIndexOf(')');
-      String nameAndParams = name + desc.substring(0, p + 1);
+      String params = desc.substring(0, p + 1);
 
-      for (String method : methods) {
-         if (method.startsWith(nameAndParams)) {
+      for (MockMethod mockMethod : methods) {
+         if (mockMethod.name.equals(name) && mockMethod.desc.startsWith(params)) {
             return true;
          }
       }
@@ -88,12 +116,12 @@ public final class AnnotatedMockMethods
       }
    }
 
-   public boolean containsMethod(String name, String desc)
+   MockMethod containsMethod(String name, String desc)
    {
-      boolean mockFound = hasMethod(name, desc);
+      MockMethod mockFound = hasMethod(name, desc);
 
-      if (mockFound && mockStates != null) {
-         indexForMockExpectations = mockStates.findMockState(name + desc);
+      if (mockFound != null && mockStates != null) {
+         mockFound.indexForMockExpectations = mockStates.findMockState(mockFound.name + mockFound.desc);
       }
 
       return mockFound;
@@ -105,59 +133,42 @@ public final class AnnotatedMockMethods
     * method in this container, so that after the last real method is processed there should be no
     * mock methods left in the container.
     */
-   private boolean hasMethod(String name, String desc)
+   private MockMethod hasMethod(String name, String desc)
    {
-      withInvocationParameter = false;
-      int n = name.length();
-
       for (int i = 0; i < methods.size(); i++) {
-         String methodNameAndDesc = methods.get(i);
+         MockMethod mockMethod = methods.get(i);
 
-         if (methodNameAndDesc.startsWith(name) && methodNameAndDesc.charAt(n) == '(') {
-            if (methodNameAndDesc.endsWith(desc)) {
-               methods.remove(i);
-               return true;
-            }
-            else if (
-               methodNameAndDesc.contains("(Lmockit/Invocation;") &&
-               methodNameAndDesc.substring(n + 20).endsWith(desc.substring(1))
-            ) {
-               withInvocationParameter = true;
-               methods.remove(i);
-               return true;
-            }
+         if (mockMethod.isMatch(name, desc)) {
+            methods.remove(i);
+            return mockMethod;
          }
       }
 
-      return false;
-   }
-
-   boolean isReentrant()
-   {
-      return indexForMockExpectations >= 0 && mockStates.getMockState(indexForMockExpectations).isReentrant();
-   }
-
-   public int getIndexForMockExpectations() { return indexForMockExpectations; }
-
-   public boolean containsStaticMethod(String name, String desc)
-   {
-      return staticMethods.remove(name + desc);
+      return null;
    }
 
    public String getMockClassInternalName() { return mockClassInternalName; }
-   public void setMockClassInternalName(String mockClassInternalName)
+   void setMockClassInternalName(String mockClassInternalName)
    {
       this.mockClassInternalName = mockClassInternalName;
    }
 
-   public boolean isInnerMockClass() { return isInnerMockClass; }
-   public void setInnerMockClass(boolean innerMockClass) { isInnerMockClass = innerMockClass; }
+   boolean isInnerMockClass() { return isInnerMockClass; }
+   void setInnerMockClass(boolean innerMockClass) { isInnerMockClass = innerMockClass; }
 
-   public boolean isWithItField() { return withItField; }
-   public void setWithItField(boolean withItField) { this.withItField = withItField; }
+   boolean isWithItField() { return withItField; }
+   void setWithItField(boolean withItField) { this.withItField = withItField; }
 
    public int getMethodCount() { return methods.size(); }
-   public List<String> getMethods() { return methods; }
 
-   public boolean isWithInvocationParameter() { return withInvocationParameter; }
+   public List<String> getMethods()
+   {
+      List<String> signatures = new ArrayList<String>(methods.size());
+
+      for (MockMethod mockMethod : methods) {
+         signatures.add(mockMethod.name + mockMethod.desc);
+      }
+
+      return signatures;
+   }
 }

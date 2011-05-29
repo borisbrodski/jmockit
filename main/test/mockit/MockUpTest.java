@@ -5,6 +5,7 @@
 package mockit;
 
 import java.sql.*;
+import java.util.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.*;
@@ -23,6 +24,21 @@ public final class MockUpTest
 
       @SuppressWarnings({"UnusedDeclaration"})
       <N extends Number> N genericMethod(N n) { return null; }
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void attemptToCreateMockUpWithoutTheTypeToBeMocked()
+   {
+      new MockUp() {};
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void attemptToCreateMockUpWithMockMethodLackingCorrespondingRealMethod()
+   {
+      new MockUp<Collaborator>()
+      {
+         @Mock void $init(int i) { System.out.println(i); }
+      };
    }
 
    @Test
@@ -153,47 +169,100 @@ public final class MockUpTest
       assertEquals(0.5, d, 0);
    }
 
-   public static final class GenericClass<T>
+   public static final class GenericClass<T1, T2>
    {
-      public void methodWithGenericParameter(T t) { System.out.println("t=" + t); }
+      public void aMethod(T1 t) { System.out.println("t=" + t); }
+      public int anotherMethod(T1 t, int i, T2 p) { System.out.println(t + " " + p); return 2 * i; }
    }
 
-   @Ignore @Test
-   public void mockMethodWithGenericTypeArgument()
+   @Test
+   public void mockGenericClass()
    {
-      // Currently, this isn't supported but it can be. If the mock method has a generic signature,
-      // then it can be used when comparing to real methods. The MockUp class can pass the type
-      // arguments ("StringBuilder") defined for "MockUp<T>".
-      new MockUp<GenericClass<StringBuilder>>()
+      new MockUp<GenericClass<?, ?>>()
       {
-         @Mock
-         public void methodWithGenericParameter(StringBuilder s)
+         @Mock(minInvocations = 1)
+         void aMethod(Object o)
          {
+            StringBuilder s = (StringBuilder) o;
             s.setLength(0);
             s.append("mock");
+            s.toString();
+         }
+
+         @Mock
+         int anotherMethod(Object o, int i, Object list)
+         {
+            assertTrue(o instanceof StringBuilder);
+            //noinspection unchecked
+            assertEquals(0, ((Collection<String>) list).size());
+            return -i;
          }
       };
 
       StringBuilder s = new StringBuilder("test");
-      new GenericClass<StringBuilder>().methodWithGenericParameter(s);
+      GenericClass<StringBuilder, List<String>> g = new GenericClass<StringBuilder, List<String>>();
+
+      g.aMethod(s);
+      int r = g.anotherMethod(new StringBuilder("test"), 58, Collections.<String>emptyList());
+
       assertEquals("mock", s.toString());
+      assertEquals(-58, r);
    }
 
    public interface GenericInterface<T> { void method(T t); }
+
+   @Test
+   public void mockGenericInterface()
+   {
+      GenericInterface<Boolean> mock = new MockUp<GenericInterface<Boolean>>()
+      {
+         @Mock
+         public void method(Object b) { assertTrue((Boolean) b); }
+      }.getMockInstance();
+
+      mock.method(true);
+   }
+
    public interface ConcreteInterface extends GenericInterface<Long> {}
 
-   @Ignore @Test
+   @Test
    public void mockMethodOfSubInterfaceWithGenericTypeArgument()
    {
       ConcreteInterface mock = new MockUp<ConcreteInterface>()
       {
          @Mock(invocations = 1)
-         public void method(Long l)
+         public void method(Object l)
          {
-            assertTrue(l > 0);
+            assertTrue((Long) l > 0);
          }
       }.getMockInstance();
 
       mock.method(123L);
+   }
+
+   @Test
+   public void mockUpWithItFieldAndReentrantMockMethod()
+   {
+      new MockUp<Collaborator>()
+      {
+         Collaborator it;
+
+         @Mock(invocations = 1)
+         void $init(boolean b)
+         {
+            assertFalse(it.b);
+            assertTrue(b);
+         }
+
+         @Mock(reentrant = true)
+         int doSomething(String s)
+         {
+            return it.doSomething(s + ": mocked");
+         }
+      };
+
+      int i = new Collaborator(true).doSomething("test");
+
+      assertEquals(12, i);
    }
 }
