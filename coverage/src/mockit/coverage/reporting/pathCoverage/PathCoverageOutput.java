@@ -53,7 +53,6 @@ public final class PathCoverageOutput
    {
       int coveredPaths = currentMethod.getCoveredPaths();
       int totalPaths = currentMethod.paths.size();
-      int coveragePercentage = CoveragePercentage.calculate(coveredPaths, totalPaths);
 
       output.println("    <tr>");
       output.write("      <td></td><td class='count'>");
@@ -61,7 +60,7 @@ public final class PathCoverageOutput
       output.println("</td>");
       output.println("      <td class='paths'>");
       output.write("        <span style='cursor:default; background-color:#");
-      output.write(CoveragePercentage.percentageColor(coveragePercentage));
+      output.write(CoveragePercentage.percentageColor(coveredPaths, totalPaths));
       output.write("' onclick='hidePath()'>Path coverage: ");
       output.print(coveredPaths);
       output.print('/');

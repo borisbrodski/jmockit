@@ -55,10 +55,10 @@ abstract class ListWithFilesAndPercentages
 
    final void printCoveragePercentage(int metric, int covered, int total, int percentage)
    {
-      if (percentage >= 0) {
+      if (total > 0) {
          printIndent();
          output.write("  <td class='coverage' style='background-color:#");
-         output.write(CoveragePercentage.percentageColor(percentage));
+         output.write(CoveragePercentage.percentageColor(covered, total));
          output.write("' title='");
          output.write(METRIC_ITEM_NAMES[metric]);
          output.write(": ");
@@ -66,7 +66,7 @@ abstract class ListWithFilesAndPercentages
          output.write('/');
          output.print(total);
          output.write("'>");
-         output.print(percentage);
+         writePercentageValue(covered, total, percentage);
          output.println("%</td>");
       }
       else if (metric == 0) {
@@ -88,6 +88,19 @@ abstract class ListWithFilesAndPercentages
       else {
          printIndent();
          output.println("  <td class='coverage nocode'>N/A</td>");
+      }
+   }
+
+   private void writePercentageValue(int covered, int total, int percentage)
+   {
+      if (percentage < 100) {
+         output.print(percentage);
+      }
+      else if (covered == total) {
+         output.print("100");
+      }
+      else {
+         output.print(">99");
       }
    }
 }
