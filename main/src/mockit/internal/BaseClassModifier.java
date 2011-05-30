@@ -218,8 +218,8 @@ public class BaseClassModifier extends ClassWriter
    }
 
    protected final void generateCallToMockingBridge(
-      int targetId, String mockClassName, int mockAccess, String mockName, String mockDesc, String genericSignature,
-      String[] exceptions, Object extra)
+      int targetId, String mockClassName, int mockAccess, String mockName, String mockDesc, String targetMockDesc,
+      String genericSignature, String[] exceptions, int mockStateIndex, int mockInstanceIndex, int executionMode)
    {
       generateCodeToObtainInstanceOfMockingBridge();
 
@@ -229,20 +229,19 @@ public class BaseClassModifier extends ClassWriter
 
       // Create array for call arguments (third "invoke" argument):
       Type[] argTypes = mockDesc == null ? NO_ARGS : Type.getArgumentTypes(mockDesc);
-      generateCodeToCreateArrayOfObject(7 + (extra == null ? 0 : 1) + argTypes.length);
+      generateCodeToCreateArrayOfObject(10 + argTypes.length);
 
       int i = 0;
       generateCodeToFillArrayElement(i++, targetId);
       generateCodeToFillArrayElement(i++, mockAccess);
       generateCodeToFillArrayElement(i++, mockClassName);
       generateCodeToFillArrayElement(i++, mockName);
-      generateCodeToFillArrayElement(i++, mockDesc);
+      generateCodeToFillArrayElement(i++, targetMockDesc);
       generateCodeToFillArrayElement(i++, genericSignature);
       generateCodeToFillArrayElement(i++, getListOfExceptionsAsSingleString(exceptions));
-
-      if (extra != null) {
-         generateCodeToFillArrayElement(i++, extra);
-      }
+      generateCodeToFillArrayElement(i++, mockStateIndex);
+      generateCodeToFillArrayElement(i++, mockInstanceIndex);
+      generateCodeToFillArrayElement(i++, executionMode);
 
       generateCodeToPassMethodArgumentsAsVarargs(argTypes, i, isStatic ? 0 : 1);
       generateCallToMockingBridge();

@@ -263,8 +263,8 @@ final class ExpectationsModifier extends BaseClassModifier
       int executionMode)
    {
       generateCallToMockingBridge(
-         MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, genericSignature, exceptions,
-         executionMode);
+         MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, desc, genericSignature, exceptions,
+         0, 0, executionMode);
       generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
       return copyOriginalImplementationCode(access, desc, false);
    }

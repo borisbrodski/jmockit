@@ -79,8 +79,8 @@ public final class AnnotationsModifier extends BaseClassModifier
       useMockingBridgeForUpdatingMockState = useMockingBridge;
 
       if (
-         !useMockingBridge && mock != null && Utilities.isAnonymousClass(mock.getClass())/* &&
-         realClass.getPackage() != mock.getClass().getPackage()*/
+         !useMockingBridge && mock != null && Utilities.isAnonymousClass(mock.getClass()) &&
+         realClass.getPackage() != mock.getClass().getPackage()
       ) {
          useMockingBridge = true;
       }
@@ -280,7 +280,7 @@ public final class AnnotationsModifier extends BaseClassModifier
          mw.visitLabel(l0);
       }
 
-      generateCallToMockMethod(access);
+      generateCallToMockMethod(access, desc);
 
       if (afterCallToMock != null) {
          mw.visitLabel(l1);
@@ -307,7 +307,8 @@ public final class AnnotationsModifier extends BaseClassModifier
 
          if (useMockingBridgeForUpdatingMockState) {
             generateCallToMockingBridge(
-               MockingBridge.UPDATE_MOCK_STATE, mockClassDesc, access, null, null, null, null, mockStateIndex);
+               MockingBridge.UPDATE_MOCK_STATE, mockClassDesc, access, null, null, null, null, null,
+               mockStateIndex, 0, 0);
             mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z");
          }
          else {
@@ -325,23 +326,24 @@ public final class AnnotationsModifier extends BaseClassModifier
       return afterCallToMock;
    }
 
-   private void generateCallToMockMethod(int access)
+   private void generateCallToMockMethod(int access, String desc)
    {
       if (mockMethod.isStatic) {
-         generateStaticMethodCall(access);
+         generateStaticMethodCall(access, desc);
       }
       else {
-         generateInstanceMethodCall(access);
+         generateInstanceMethodCall(access, desc);
       }
    }
 
-   private void generateStaticMethodCall(int access)
+   private void generateStaticMethodCall(int access, String desc)
    {
       String mockClassName = annotatedMocks.getMockClassInternalName();
 
       if (useMockingBridge) {
          generateCallToMockingBridge(
-            MockingBridge.CALL_STATIC_MOCK, mockClassName, access, mockMethod.name, mockMethod.desc, null, null, null);
+            MockingBridge.CALL_STATIC_MOCK, mockClassName, access, mockMethod.name, desc, mockMethod.desc, null, null,
+            mockMethod.getIndexForMockExpectations(), 0, 0);
       }
       else {
          generateMethodOrConstructorArguments(access);
@@ -349,12 +351,13 @@ public final class AnnotationsModifier extends BaseClassModifier
       }
    }
 
-   private void generateInstanceMethodCall(int access)
+   private void generateInstanceMethodCall(int access, String desc)
    {
       if (useMockingBridge) {
          generateCallToMockingBridge(
             MockingBridge.CALL_INSTANCE_MOCK, annotatedMocks.getMockClassInternalName(), access,
-            mockMethod.name, mockMethod.desc, null, null, mockInstanceIndex);
+            mockMethod.name, desc, mockMethod.desc, null, null,
+            mockMethod.getIndexForMockExpectations(), mockInstanceIndex, 0);
          return;
       }
 
@@ -434,7 +437,7 @@ public final class AnnotationsModifier extends BaseClassModifier
       if (mockMethod.hasInvocationParameter) {
          mw.visitLdcInsn(annotatedMocks.getMockClassInternalName());
          mw.visitIntInsn(SIPUSH, mockMethod.getIndexForMockExpectations());
-         mw.visitInsn(ACONST_NULL); // TODO
+         generateCodeToPassThisOrNullIfStaticMethod(!hasInvokedInstance);
          mw.visitMethodInsn(
             INVOKESTATIC, CLASS_WITH_STATE, "createMockInvocation",
             "(Ljava/lang/String;ILjava/lang/Object;)Lmockit/Invocation;");
@@ -470,7 +473,8 @@ public final class AnnotationsModifier extends BaseClassModifier
 
       if (useMockingBridgeForUpdatingMockState) {
          generateCallToMockingBridge(
-            MockingBridge.EXIT_REENTRANT_MOCK, mockClassDesc, ACC_STATIC, null, null, null, null, mockStateIndex);
+            MockingBridge.EXIT_REENTRANT_MOCK, mockClassDesc, ACC_STATIC, null, null, null, null, null,
+            mockStateIndex, 0, 0);
          mw.visitInsn(POP);
       }
       else {

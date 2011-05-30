@@ -7,7 +7,6 @@ package mockit;
 import java.util.*;
 
 import org.junit.*;
-
 import static org.junit.Assert.*;
 
 @SuppressWarnings({"UnusedDeclaration"})
@@ -43,6 +42,8 @@ public final class DelegateInvocationTest
                {
                   assertNull(context.getInvokedInstance());
                   assertEquals(context.getInvocationCount() - 1, context.getInvocationIndex());
+                  assertEquals(0, context.getMinInvocations());
+                  assertEquals(-1, context.getMaxInvocations());
                   return context.getInvocationCount() > 0;
                }
             });
@@ -143,7 +144,7 @@ public final class DelegateInvocationTest
    @Test
    public void delegateClassWithMultipleMethodsAndInexactButValidMatch()
    {
-      new NonStrictExpectations()
+      new Expectations()
       {
          Collaborator mock;
 
@@ -158,6 +159,8 @@ public final class DelegateInvocationTest
 
                boolean staticMethod(Invocation invocation, Number i)
                {
+                  assertEquals(1, invocation.getMinInvocations());
+                  assertEquals(1, invocation.getMaxInvocations());
                   return i.intValue() > 0;
                }
             };
@@ -178,6 +181,15 @@ public final class DelegateInvocationTest
             {
                char finalMethod(Invocation invocation)
                {
+                  if (invocation.getInvocationIndex() == 0) {
+                     assertEquals(0, invocation.getMinInvocations());
+                     assertEquals(1, invocation.getMaxInvocations());
+                  }
+                  else {
+                     assertEquals(2, invocation.getMinInvocations());
+                     assertEquals(2, invocation.getMaxInvocations());
+                  }
+
                   invocation.setMinInvocations(2);
                   invocation.setMaxInvocations(2);
                   return 'a';
@@ -279,6 +291,9 @@ public final class DelegateInvocationTest
                {
                   int delegate(Invocation invocation)
                   {
+                     assertSame(mock, invocation.getInvokedInstance());
+                     assertEquals(1, invocation.getMinInvocations());
+                     assertEquals(3, invocation.getMaxInvocations());
                      return invocation.getInvocationCount();
                   }
                },
@@ -310,5 +325,46 @@ public final class DelegateInvocationTest
       catch (SecurityException e) {
          // OK
       }
+   }
+
+   @SuppressWarnings({"deprecation"})
+   @Test
+   public void useOfContextParametersForJREMethods() throws Exception
+   {
+      new NonStrictExpectations() {
+         @Mocked({"runFinalizersOnExit", "exec"}) Runtime rt;
+
+         {
+            Runtime.runFinalizersOnExit(anyBoolean); minTimes = 1;
+            result = new Delegate()
+            {
+               void delegate(Invocation inv, boolean b)
+               {
+                  assertNull(inv.getInvokedInstance());
+                  assertEquals(1, inv.getInvocationCount());
+                  assertEquals(1, inv.getMinInvocations());
+                  assertEquals(-1, inv.getMaxInvocations());
+                  assertTrue(b);
+               }
+            };
+
+            rt.exec(anyString, null); maxTimes = 1;
+            forEachInvocation = new Object()
+            {
+               void exec(Invocation inv, String command, String[] envp)
+               {
+                  assertSame(Runtime.getRuntime(), inv.getInvokedInstance());
+                  assertEquals(0, inv.getInvocationIndex());
+                  assertEquals(0, inv.getMinInvocations());
+                  assertEquals(1, inv.getMaxInvocations());
+                  assertNotNull(command);
+                  assertNull(envp);
+               }
+            };
+         }
+      };
+
+      Runtime.runFinalizersOnExit(true);
+      assertNull(Runtime.getRuntime().exec("test", null));
    }
 }

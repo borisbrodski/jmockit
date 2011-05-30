@@ -55,7 +55,7 @@ abstract class DynamicInvocationResult extends InvocationResult
       Invocation invocation =
          new DelegateInvocation(
             mockOrRealObject, constraints.invocationCount, constraints.minInvocations, constraints.maxInvocations);
-      Object[] delegateArgs = getArgumentsWithExtraInvocationObject(invocation, args);
+      Object[] delegateArgs = Utilities.argumentsWithExtraFirstValue(args, invocation);
 
       try {
          return executeMethodToInvoke(delegateArgs);
@@ -65,14 +65,6 @@ abstract class DynamicInvocationResult extends InvocationResult
       }
    }
 
-   private Object[] getArgumentsWithExtraInvocationObject(Invocation invocation, Object[] args)
-   {
-      Object[] delegateArgs = new Object[args.length + 1];
-      delegateArgs[0] = invocation;
-      System.arraycopy(args, 0, delegateArgs, 1, args.length);
-      return delegateArgs;
-   }
-   
    private Object executeMethodToInvoke(Object[] args)
    {
       if (!RecordAndReplayExecution.LOCK.isHeldByCurrentThread()) {

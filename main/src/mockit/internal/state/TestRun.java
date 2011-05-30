@@ -9,6 +9,7 @@ import java.util.*;
 
 import static java.util.Collections.*;
 
+import mockit.*;
 import mockit.internal.annotations.*;
 import mockit.internal.capturing.*;
 import mockit.internal.expectations.*;
@@ -205,10 +206,10 @@ public final class TestRun
       return getMockClasses().regularMocks.getMock(mockClass, mockedInstance);
    }
 
-   public static boolean updateMockState(String mockClassDesc, int mockIndex)
+   public static boolean updateMockState(String mockClassDesc, int mockStateIndex)
    {
       AnnotatedMockStates mockStates = getMockStates(mockClassDesc);
-      return mockStates.updateMockState(mockClassDesc, mockIndex);
+      return mockStates.updateMockState(mockClassDesc, mockStateIndex);
    }
 
    private static AnnotatedMockStates getMockStates(String mockClassDesc)
@@ -217,9 +218,15 @@ public final class TestRun
       return mockStates.hasStates(mockClassDesc) ? mockStates : STARTUP_INSTANCE.mockClasses.getMockStates();
    }
 
-   public static void exitReentrantMock(String mockClassDesc, int mockIndex)
+   public static void exitReentrantMock(String mockClassDesc, int mockStateIndex)
    {
       AnnotatedMockStates mockStates = getMockStates(mockClassDesc);
-      mockStates.exitReentrantMock(mockClassDesc, mockIndex);
+      mockStates.exitReentrantMock(mockClassDesc, mockStateIndex);
+   }
+
+   public static Invocation createMockInvocation(String mockClassDesc, int mockStateIndex, Object mockedInstance)
+   {
+      AnnotatedMockStates mockStates = getMockStates(mockClassDesc);
+      return mockStates.createMockInvocation(mockClassDesc, mockStateIndex, mockedInstance);
    }
 }

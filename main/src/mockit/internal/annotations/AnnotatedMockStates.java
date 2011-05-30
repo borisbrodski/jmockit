@@ -6,6 +6,8 @@ package mockit.internal.annotations;
 
 import java.util.*;
 
+import mockit.*;
+
 /**
  * Holds state associated with mock class containing {@linkplain mockit.Mock annotated mocks}.
  */
@@ -88,9 +90,9 @@ public final class AnnotatedMockStates
       mockStatesWithExpectations.add(mockState);
    }
 
-   public boolean updateMockState(String mockClassName, int mockIndex)
+   public boolean updateMockState(String mockClassName, int mockStateIndex)
    {
-      MockState mockState = getMockState(mockClassName, mockIndex);
+      MockState mockState = getMockState(mockClassName, mockStateIndex);
 
       if (mockState.isOnReentrantCall()) {
          return false;
@@ -100,9 +102,9 @@ public final class AnnotatedMockStates
       return true;
    }
 
-   MockState getMockState(String mockClassInternalName, int mockIndex)
+   MockState getMockState(String mockClassInternalName, int mockStateIndex)
    {
-      return classStates.get(mockClassInternalName).getMockState(mockIndex);
+      return classStates.get(mockClassInternalName).getMockState(mockStateIndex);
    }
 
    public boolean hasStates(String mockClassInternalName)
@@ -110,10 +112,16 @@ public final class AnnotatedMockStates
       return classStates.containsKey(mockClassInternalName);
    }
 
-   public void exitReentrantMock(String mockClassInternalName, int mockIndex)
+   public void exitReentrantMock(String mockClassInternalName, int mockStateIndex)
    {
-      MockState mockState = getMockState(mockClassInternalName, mockIndex);
+      MockState mockState = getMockState(mockClassInternalName, mockStateIndex);
       mockState.exitReentrantCall();
+   }
+
+   public Invocation createMockInvocation(String mockClassInternalName, int mockStateIndex, Object invokedInstance)
+   {
+      MockState mockState = getMockState(mockClassInternalName, mockStateIndex);
+      return new MockInvocation(invokedInstance, mockState);
    }
 
    public void verifyExpectations()

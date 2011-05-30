@@ -34,10 +34,7 @@ final class MockState
 
    Class<?> getRealClass() { return realClass; }
 
-   boolean isReentrant()
-   {
-      return onReentrantCall != null;
-   }
+   boolean isReentrant() { return onReentrantCall != null; }
 
    void makeReentrant()
    {
@@ -50,7 +47,9 @@ final class MockState
 
    boolean isWithExpectations()
    {
-      return expectedInvocations >= 0 || minExpectedInvocations > 0 || maxExpectedInvocations >= 0;
+      return
+         expectedInvocations >= 0 || minExpectedInvocations > 0 || maxExpectedInvocations >= 0 ||
+         mockNameAndDesc.contains("(Lmockit/Invocation;");
    }
 
    void update()
@@ -88,6 +87,9 @@ final class MockState
          throw new AssertionError(errorMessage("at most", maxExpectedInvocations, timesInvoked));
       }
    }
+
+   int getMinInvocations() { return expectedInvocations >= 0 ? expectedInvocations : minExpectedInvocations; }
+   int getMaxInvocations() { return expectedInvocations >= 0 ? expectedInvocations : maxExpectedInvocations; }
 
    int getTimesInvoked()
    {

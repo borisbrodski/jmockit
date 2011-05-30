@@ -204,11 +204,16 @@ public final class Utilities
 
    public static <T> T newInnerInstance(Class<? extends T> innerClass, Object outerInstance, Object... nonNullArgs)
    {
-      Object[] initArgs = new Object[1 + nonNullArgs.length];
-      initArgs[0] = outerInstance;
-      System.arraycopy(nonNullArgs, 0, initArgs, 1, nonNullArgs.length);
-
+      Object[] initArgs = argumentsWithExtraFirstValue(nonNullArgs, outerInstance);
       return newInstance(innerClass, initArgs);
+   }
+
+   public static Object[] argumentsWithExtraFirstValue(Object[] args, Object firstValue)
+   {
+      Object[] args2 = new Object[1 + args.length];
+      args2[0] = firstValue;
+      System.arraycopy(args, 0, args2, 1, args.length);
+      return args2;
    }
 
    public static <T> T newInnerInstance(String innerClassName, Object outerInstance, Object... nonNullArgs)

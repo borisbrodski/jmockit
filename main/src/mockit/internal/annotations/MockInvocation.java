@@ -6,10 +6,20 @@ package mockit.internal.annotations;
 
 import mockit.*;
 
-final class MockInvocation extends Invocation
+public final class MockInvocation extends Invocation
 {
-   MockInvocation(Object invokedInstance, int invocationCount, int minInvocations, int maxInvocations)
+   private final MockState mockState;
+
+   public MockInvocation(Object invokedInstance, MockState mockState)
    {
-      super(invokedInstance, invocationCount, minInvocations, maxInvocations);
+      super(invokedInstance, mockState.getTimesInvoked(), mockState.getMinInvocations(), mockState.getMaxInvocations());
+      this.mockState = mockState;
+   }
+
+   @Override
+   protected void onChange()
+   {
+      mockState.minExpectedInvocations = getMinInvocations();
+      mockState.maxExpectedInvocations = getMaxInvocations();
    }
 }
