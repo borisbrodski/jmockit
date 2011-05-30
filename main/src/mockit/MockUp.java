@@ -12,14 +12,16 @@ import mockit.internal.*;
  * A <em>mock-up</em> for a class or interface, to be used in state-based tests.
  * <p/>
  * One or more <em>mock methods</em>, each one annotated {@linkplain Mock as such} and corresponding to a "real" method
- * or constructor of the mocked class/interface, must be defined in a concrete subclass.
+ * or constructor of the mocked class/interface, must be defined in the concrete subclass.
  * <p/>
  * This class is particularly useful for the creation on <em>in-line mock classes</em>, defined inside individual test
  * methods as anonymous inner classes.
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#inline">In the Tutorial</a>
  *
- * @param <T> specifies the class or interface(s) to be mocked
+ * @param <T> specifies the type (class, interface, etc.) to be mocked; multiple interfaces can be mocked by defining
+ * a <em>type variable</em> in the test class or test method, and using it as the type argument;
+ * if the type argument itself is a parameterized type, then only its raw type is considered for mocking
  */
 public abstract class MockUp<T>
 {
@@ -42,10 +44,10 @@ public abstract class MockUp<T>
       Type typeToMock = getTypeToMock();
 
       if (typeToMock instanceof Class<?>) {
-         mockInstance = setUpMockForNonGenericType((Class<?>) typeToMock);
+         mockInstance = redefineClass((Class<?>) typeToMock);
       }
       else if (typeToMock instanceof ParameterizedType){
-         mockInstance = setUpMockForParameterizedType((ParameterizedType) typeToMock);
+         mockInstance = redefineClass((Class<?>) ((ParameterizedType) typeToMock).getRawType());
       }
       else { // a TypeVariable
          mockInstance = createMockInstanceForMultipleInterfaces(typeToMock);
@@ -63,54 +65,43 @@ public abstract class MockUp<T>
       return ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
    }
 
-   private T setUpMockForNonGenericType(Class<?> classToMock)
+   private T redefineClass(Class<?> classToMock)
    {
       //noinspection unchecked
       T proxy = classToMock.isInterface() ? (T) Mockit.newEmptyProxy(classToMock) : null;
-      return redefineMethods(classToMock, proxy);
-   }
-
-   private T redefineMethods(Class<?> classToMock, T proxy)
-   {
       Class<?> realClass = proxy == null ? classToMock : proxy.getClass();
-      new RedefinitionEngine(realClass, this, getClass()).redefineMethods();
+      redefineMethods(realClass);
       return proxy;
    }
 
-   private T setUpMockForParameterizedType(ParameterizedType typeToMock)
+   private void redefineMethods(Class<?> realClass)
    {
-      Class<?> classToMock = (Class<?>) typeToMock.getRawType();
-      //noinspection unchecked
-      T proxy = classToMock.isInterface() ? (T) Mockit.newEmptyProxy(typeToMock) : null;
-      return redefineMethods(classToMock, proxy);
+      new RedefinitionEngine(realClass, this, getClass()).redefineMethods();
    }
 
    private T createMockInstanceForMultipleInterfaces(Type typeToMock)
    {
       T proxy = Mockit.newEmptyProxy(typeToMock);
-      return redefineMethods(null, proxy);
+      redefineMethods(proxy.getClass());
+      return proxy;
    }
 
    /**
-    * Applies the mock methods defined in the concrete subclass to the given class.
+    * Applies the mock methods defined in the concrete subclass to the given class/interface.
     * <p/>
-    * In most cases, the constructor with no parameters can be used. This variation should be used only when the real
-    * class to be mocked is not accessible or known to the test.
+    * In most cases, the constructor with no parameters can be used. This variation should be used only when the type
+    * to be mocked is not accessible or known to the test.
     *
     * @see #MockUp()
     */
    protected MockUp(Class<?> classToMock)
    {
-      mockInstance = null;
-      Mockit.setUpMock(classToMock, this);
+      mockInstance = redefineClass(classToMock);
    }
 
    /**
     * Returns the mock instance created for the interface(s) to be mocked specified by the type parameter {@code T}, or
     * {@literal null} otherwise (ie, if a class was specified to be mocked).
     */
-   public final T getMockInstance()
-   {
-      return mockInstance;
-   }
+   public final T getMockInstance() { return mockInstance; }
 }

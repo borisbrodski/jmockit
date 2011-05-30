@@ -119,10 +119,9 @@ public final class MockUpTest
    public void mockUpGivenClass()
    {
       final Main main = new Main();
-      AtomicIntegerFieldUpdater<?> atomicCount =
-         Deencapsulation.getField(Main.class, AtomicIntegerFieldUpdater.class);
+      AtomicIntegerFieldUpdater<?> atomicCount = Deencapsulation.getField(Main.class, AtomicIntegerFieldUpdater.class);
 
-      new MockUp<AtomicIntegerFieldUpdater<Main>>(atomicCount.getClass())
+      new MockUp(atomicCount.getClass())
       {
          boolean second;
 
@@ -143,6 +142,20 @@ public final class MockUpTest
       };
 
       assertTrue(main.increment());
+   }
+
+   @Test
+   public void mockUpGivenInterface()
+   {
+      Runnable r = new MockUp<Runnable>(Runnable.class)
+      {
+         @Mock(minInvocations = 1)
+         public void run()
+         {
+         }
+      }.getMockInstance();
+
+      r.run();
    }
 
    @Test
