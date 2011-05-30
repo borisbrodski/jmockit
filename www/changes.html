@@ -16,7 +16,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.999.10 (Jul ?, 2011):</p>
+<p>Release 0.999.10 (Jun ?, 2011):</p>
 <ul>
    <li>
       Tested and adapted JMockit to run on <strong>JDK 7</strong>.
@@ -36,6 +36,11 @@
       the new <code>invocations = <em>n</em></code> attribute can be used to specify a fixed number of matching
       invocations for a given input field;
       auto-instantiation of values can be done with a non-public no-args constructor.
+   </li>
+   <li>
+      <strong>Enhancement</strong>: The <code>mockit.Invocation</code> class can now be used as the type of the first
+      parameter in <code>@Mock</code> methods (it was already supported in delegate and validation methods).
+      See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=16">16</a>.
    </li>
    <li>
       Fully reviewed the Tutorial chapter on <a href="tutorial/BehaviorBasedTesting.html">behavior-based testing</a>,
