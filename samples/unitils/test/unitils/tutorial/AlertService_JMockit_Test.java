@@ -39,15 +39,11 @@ public final class AlertService_JMockit_Test
    @Test
    public void sendScheduledAlerts()
    {
-      new NonStrictExpectations()
-      {{
-         mockSchedulerService.getScheduledAlerts(null, 1, anyBoolean); result = alerts;
-      }};
+      new Expectations() { @Input List<Message> scheduledAlerts = alerts; };
 
       alertService.sendScheduledAlerts();
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mockMessageService.sendMessage(alert2);
          mockMessageService.sendMessage(alert1);
       }};
@@ -56,15 +52,11 @@ public final class AlertService_JMockit_Test
    @Test
    public void sendScheduledAlertsInProperSequence()
    {
-      new NonStrictExpectations()
-      {{
-         mockSchedulerService.getScheduledAlerts(null, 1, anyBoolean); result = alerts;
-      }};
+      new Expectations() { @Input List<Message> scheduledAlerts = alerts; };
 
       alertService.sendScheduledAlerts();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mockMessageService.sendMessage(alert1);
          mockMessageService.sendMessage(alert2);
       }};
@@ -75,12 +67,7 @@ public final class AlertService_JMockit_Test
    {
       alertService.sendScheduledAlerts();
 
-      new Verifications()
-      {
-         {
-            mockMessageService.sendMessage((Message) any); times = 0;
-         }
-      };
+      new Verifications() {{ mockMessageService.sendMessage((Message) any); times = 0; }};
    }
 
    @Test
@@ -88,24 +75,18 @@ public final class AlertService_JMockit_Test
    {
       alertService.sendScheduledAlerts();
 
-      new FullVerifications()
-      {
-         {
-            mockSchedulerService.getScheduledAlerts(null, anyInt, anyBoolean);
-         }
-      };
+      new FullVerifications() {{
+         mockSchedulerService.getScheduledAlerts(null, anyInt, true);
+      }};
    }
 
    @Test(expected = IllegalArgumentException.class)
    public void attemptToGetScheduledAlertsWithInvalidArguments()
    {
-      new Expectations()
-      {
-         {
-            mockSchedulerService.getScheduledAlerts("123", 1, true);
-            result = new IllegalArgumentException();
-         }
-      };
+      new Expectations() {{
+         mockSchedulerService.getScheduledAlerts("123", 1, true);
+         result = new IllegalArgumentException();
+      }};
 
       alertService.sendScheduledAlerts();
    }
@@ -113,13 +94,10 @@ public final class AlertService_JMockit_Test
    @Test(expected = Exception.class)
    public void recordConsecutiveInvocationsToSameMethodWithSameArguments()
    {
-      new Expectations()
-      {
-         {
-            mockSchedulerService.getScheduledAlerts(null, 0, true); result = alerts;
-            mockSchedulerService.getScheduledAlerts(null, 0, true); result = new Exception();
-         }
-      };
+      new Expectations() {{
+         mockSchedulerService.getScheduledAlerts(null, 0, true);
+         result = alerts; result = new Exception();
+      }};
 
       assertEquals(alerts, mockSchedulerService.getScheduledAlerts(null, 0, true));
       mockSchedulerService.getScheduledAlerts(null, 0, true);
@@ -128,32 +106,26 @@ public final class AlertService_JMockit_Test
    @Test
    public void specifyingCustomMockBehavior()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {{
+         mockSchedulerService.getScheduledAlerts("123", 1, true);
+         result = new Delegate()
          {
-            mockSchedulerService.getScheduledAlerts("123", 1, true);
-            result = new Delegate()
+            List<Message> getScheduledAlerts(Object arg0, int arg1, boolean arg2)
             {
-               List<Message> getScheduledAlerts(Object arg0, int arg1, boolean arg2)
-               {
-                  assert arg0 == "123";
-                  assert arg1 == 1;
-                  assert arg2;
+               assert arg0 == "123";
+               assert arg1 == 1;
+               assert arg2;
 
-                  return Arrays.asList(alert2);
-               }
-            };
-         }
-      };
+               return Arrays.asList(alert2);
+            }
+         };
+      }};
 
       alertService.sendScheduledAlerts();
 
-      new Verifications()
-      {
-         {
-            mockMessageService.sendMessage(alert1); times = 0;
-            mockMessageService.sendMessage(alert2);
-         }
-      };
+      new Verifications() {{
+         mockMessageService.sendMessage(alert1); times = 0;
+         mockMessageService.sendMessage(alert2);
+      }};
    }
 }

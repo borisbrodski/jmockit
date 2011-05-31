@@ -70,6 +70,8 @@ public final class AlertServiceTest extends UnitilsJUnit4
    {
       alertService.sendScheduledAlerts();
 
+      // This seems to only detect calls to *void* methods that were not stubbed nor verified;
+      // extra calls to non-void methods won't trigger a failure (another bug?):
       MockUnitils.assertNoMoreInvocations();
    }
 
@@ -111,6 +113,7 @@ public final class AlertServiceTest extends UnitilsJUnit4
 
       alertService.sendScheduledAlerts();
 
+      // These two verifications must be in this order or it fails (yet another bug?):
       mockMessageService.assertInvoked().sendMessage(alert2);
       mockMessageService.assertNotInvoked().sendMessage(alert1);
    }
