@@ -961,7 +961,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </code></pre>
 <p>
    The same requirement of having calls to "with" methods inside the invocation statement applies in the case of
-   accesses to "any" fields: they must appear at the actual argument positions in the invocation stament, not before.
+   accesses to "any" fields: they must appear at the actual argument positions in the invocation statement, not before.
    Again, see the <a href="../javadoc/mockit/Expectations.html#anyInt">API documentation</a> for
    more details on argument matching fields.
 </p>
@@ -1248,39 +1248,57 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   Strict expectations are verified implicitly, so there is no point in re-verifying them in a
-   explicit verification block.
-   Non-strict expectations, on the other hand, are usually verified through explicit invocations to
-   mocked types in a verification block.
-   As will be seen later, a recorded non-strict expectation can still be verified implicitly,
-   without the need to write an invocation inside a verification block.
+   Strict expectations are verified implicitly, so there is no point in re-verifying them in a explicit verification
+   block.
+   Non-strict expectations, on the other hand, are usually verified through explicit invocations to mocked types in a
+   verification block.
+   As will be seen later, a recorded non-strict expectation can still be verified implicitly, without the need to write
+   an invocation inside a verification block.
 </p>
 <p>
-   Inside a <code>new Verifications() {...}</code> block we can use the same API that's available in
-   a <code>new NonStrictExpectations() {...}</code> block, with the exception of the methods and
-   fields used to record return values and thrown exceptions/errors.
-   That is, all of the <code>withXyz(...)</code> argument matching methods can be used, as well as
-   the <code>times</code>, <code>minTimes</code>, and <code>maxTimes</code> invocation count constraint fields.
+   Inside a <code>new Verifications() {...}</code> block we can use the same API that's available in a
+   <code>new NonStrictExpectations() {...}</code> block, with the exception of the methods and fields used to record
+   return values and thrown exceptions/errors.
+   That is, we can freely use the <code>anyXyz</code> fields, the <code>withXyz(...)</code> argument matching methods,
+   and the <code>times</code>, <code>minTimes</code>, and <code>maxTimes</code> invocation count constraint fields.
+   An example test follows.
+</p>
+<pre><code>   @Test
+   public void verifyInvocationsExplicitlyAtEndOfTest(final Dependency mock)
+   {
+      // Nothing recorded here, but it could be.
+
+      // Inside tested code:
+      Dependency dependency = new Dependency();
+      dependency.doSomething(123, true, "abc-xyz");
+
+      // Verifies that Dependency#doSomething(int, boolean, String) was called at least once,
+      // with arguments that obey the specified constraints:
+      <strong>new Verifications() {{ mock.doSomething(<em>anyInt</em>, true, withPrefix("abc")); }};</strong>
+   }
+</code></pre>
+<p>
+   Note that, by default, a verification checks that <em>at least one</em> matching invocation occurred during replay.
+   When we need to verify an exact number of invocations (including <code>1</code>), the <code>times = n</code>
+   constraint must be specified.
 </p>
 
 <h4 id="importingMocks">Importing mocks from expectation blocks</h4>
 <p>
-   Mocked instances and mocked types declared as mock fields of the test class or as mock parameters
-   of the test method are immediately available inside verification blocks.
-   However, expectation blocks can also declare <em>local</em> mock fields, which won't be
-   accessible outside the block.
-   In such cases, it's possible to <em>import</em> those mocked instances into a verification block,
-   as the next example shows.
+   Mocked instances and mocked types declared as mock fields of the test class or as mock parameters of the test method
+   are immediately available inside verification blocks.
+   However, expectation blocks can also declare <em>local</em> mock fields, which won't be accessible outside the block.
+   In such cases, it's possible to <em>import</em> those mocked instances into a verification block, as the next example
+   shows.
 </p>
 <pre><code>   @Test
    public void importLocalMockFromPreviousNonStrictExpectationsBlock()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          <strong>Dependency mock;</strong>
 
          {
-            mock.notifyBeforeSave(); result = true;
+            mock.notifyBeforeSave(); <em>result</em> = true;
          }
       };
 
@@ -1288,8 +1306,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       Dependency dependency = new Dependency();
       dependency.editABunchMoreStuff();
 
-      new Verifications()
-      {
+      new Verifications() {
          <strong>Dependency mock;</strong>
 
          {
