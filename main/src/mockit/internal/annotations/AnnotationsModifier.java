@@ -17,15 +17,14 @@ import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 /**
- * Responsible for generating all necessary bytecode in the redefined (real) class. Such code will
- * redirect calls made on "real" methods to equivalent calls on the corresponding "mock" methods.
+ * Responsible for generating all necessary bytecode in the redefined (real) class.
+ * Such code will redirect calls made on "real" methods to equivalent calls on the corresponding "mock" methods.
  * The original code won't be executed by the running JVM until the class redefinition is undone.
  * <p/>
  * Methods in the real class which have no corresponding mock method are unaffected.
  * <p/>
  * Any fields (static or not) in the real class remain untouched.
  */
-@SuppressWarnings({"ClassWithTooManyFields"})
 public final class AnnotationsModifier extends BaseClassModifier
 {
    private static final int IGNORED_ACCESS = Modifier.ABSTRACT + Modifier.NATIVE;
@@ -147,10 +146,7 @@ public final class AnnotationsModifier extends BaseClassModifier
                super.visitMethod(access, name, desc, signature, exceptions) : null;
       }
 
-      if ((access & ACC_NATIVE) != 0 && !Startup.isJava6OrLater()) {
-         throw new IllegalArgumentException("Mocking of native methods not supported under JDK 1.5: \"" + name + '\"');
-      }
-
+      validateMethodModifiers(access, name);
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
 
       MethodVisitor alternativeWriter = getAlternativeMethodWriter(access, desc);
@@ -208,6 +204,16 @@ public final class AnnotationsModifier extends BaseClassModifier
       }
 
       generateEmptyImplementation(desc);
+   }
+
+   private void validateMethodModifiers(int access, String name)
+   {
+      if ((access & ACC_ABSTRACT) != 0) {
+         throw new IllegalArgumentException("Attempted to mock abstract method \"" + name + '\"');
+      }
+      else if ((access & ACC_NATIVE) != 0 && !Startup.isJava6OrLater()) {
+         throw new IllegalArgumentException("Mocking of native methods not supported under JDK 1.5: \"" + name + '\"');
+      }
    }
 
    private MethodVisitor getAlternativeMethodWriter(int access, String desc)

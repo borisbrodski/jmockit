@@ -210,7 +210,8 @@ public final class Mockit
     *
     * @throws IllegalArgumentException if a given mock class fails to specify the corresponding real class using the
     * {@code @MockClass(realClass = ...)} annotation; or if a mock class defines a mock method for which no
-    * corresponding real method or constructor exists in the real class
+    * corresponding real method or constructor exists in the real class;
+    * or if the real method matching a mock method is {@code abstract}
     *
     * @see #tearDownMocks(Class[])
     * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#111">Example</a>
@@ -268,7 +269,8 @@ public final class Mockit
     *
     * @throws IllegalArgumentException if a given mock class fails to specify the corresponding real class using the
     * {@code @MockClass(realClass = ...)} annotation; or if a mock class defines a mock method for which no
-    * corresponding real method or constructor exists in the real class
+    * corresponding real method or constructor exists in the real class;
+    * or if the real method matching a mock method is {@code abstract}
     *
     * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#447">Example</a>
     */
@@ -359,7 +361,8 @@ public final class Mockit
     *
     * @throws IllegalArgumentException if a given mock class fails to specify the corresponding real class using the
     * {@code @MockClass(realClass = ...)} annotation; or if a mock class defines a mock method for which no
-    * corresponding real method or constructor exists in the real class
+    * corresponding real method or constructor exists in the real class;
+    * or if the real method matching a mock method is {@code abstract}
     *
     * @see #setUpMock(Class, Object)
     * @see #setUpMocks(Object...)

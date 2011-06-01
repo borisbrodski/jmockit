@@ -28,14 +28,15 @@ public abstract class MockUp<T>
    private final T mockInstance;
 
    /**
-    * Applies the mock methods defined in the concrete subclass to the class or interface specified through the type
-    * parameter.
+    * Applies the {@linkplain Mock mock methods} defined in the concrete subclass to the class or interface specified
+    * through the type parameter.
     * <p/>
     * When one or more interfaces are specified to be mocked, a mocked proxy class that implements the interfaces is
     * created, with the proxy instance made available through a call to {@link #getMockInstance()}.
     *
     * @throws IllegalArgumentException if no type to be mocked was specified;
-    * or if there is a mock method for which no corresponding real method or constructor is found
+    * or if there is a mock method for which no corresponding real method or constructor is found;
+    * or if the real method matching a mock method is {@code abstract}
     *
     * @see #MockUp(Class)
     */
@@ -87,7 +88,7 @@ public abstract class MockUp<T>
    }
 
    /**
-    * Applies the mock methods defined in the concrete subclass to the given class/interface.
+    * Applies the {@linkplain Mock mock methods} defined in the concrete subclass to the given class/interface.
     * <p/>
     * In most cases, the constructor with no parameters can be used. This variation should be used only when the type
     * to be mocked is not accessible or known to the test.

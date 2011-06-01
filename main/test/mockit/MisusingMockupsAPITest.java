@@ -42,9 +42,37 @@ public final class MisusingMockupsAPITest
       setUpMocks(new MockCollaborator2());
    }
 
+   abstract static class AbstractClass
+   {
+      @SuppressWarnings({"UnusedDeclaration"})
+      abstract void abstractMethod();
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void attemptToMockAbstractMethod()
+   {
+      new MockUp<AbstractClass>()
+      {
+         @Mock void abstractMethod() {}
+      };
+   }
+
    public static class Collaborator
    {
       boolean doSomething() { return false; }
+
+      @SuppressWarnings({"UnusedDeclaration"})
+      native void nativeMethod();
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void attemptToMockNativeMethodWithReentrantMock()
+   {
+      new MockUp<Collaborator>()
+      {
+         @Mock(reentrant = true)
+         void nativeMethod() {}
+      };
    }
 
    public static class MockCollaborator3
@@ -54,7 +82,7 @@ public final class MisusingMockupsAPITest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void setUpMockForSingleRealClassByPassingTheMockClassLiteral()
+   public void setUpMockForSingleRealClassByPassingMockClassLiteralButLackingTheMockClassAnnotation()
    {
       setUpMock(MockCollaborator3.class);
 
@@ -62,7 +90,7 @@ public final class MisusingMockupsAPITest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void setUpMockForSingleRealClassByPassingAMockClassInstance()
+   public void setUpMockForSingleRealClassByPassingMockClassInstanceButLackingTheMockClassAnnotation()
    {
       setUpMock(new MockCollaborator3());
 
