@@ -27,6 +27,7 @@ public final class TestedClassWithNoDITest
    @Tested TestedClass tested1;
    @Tested final TestedClass tested2 = new TestedClass();
    @Tested TestedClass tested3;
+   @Tested NonPublicTestedClass tested4;
    @Mocked Dependency mock;
    TestedClass tested;
 
@@ -40,11 +41,13 @@ public final class TestedClassWithNoDITest
       tested3 = tested;
       assertNull(tested1);
       assertNotNull(tested2);
+      assertNull(tested4);
    }
 
    @Test
    public void verifyThatTestedFieldsAreNotNull()
    {
+      assertNotNull(tested4);
       assertNotNull(tested3);
       assertSame(tested, tested3);
       assertNotNull(tested2);
@@ -54,12 +57,7 @@ public final class TestedClassWithNoDITest
    @Test
    public void exerciseAutomaticallyInstantiatedTestedObject()
    {
-      new Expectations()
-      {
-         {
-            mock.doSomething(); result = 1;
-         }
-      };
+      new Expectations() {{ mock.doSomething(); result = 1; }};
 
       assertTrue(tested1.doSomeOperation());
    }
@@ -67,21 +65,11 @@ public final class TestedClassWithNoDITest
    @Test
    public void exerciseManuallyInstantiatedTestedObject()
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.doSomething(); result = 1;
-         }
-      };
+      new NonStrictExpectations() {{ mock.doSomething(); result = 1; }};
 
       assertTrue(tested2.doSomeOperation());
 
-      new FullVerifications()
-      {
-         {
-            mock.doSomething();
-         }
-      };
+      new FullVerifications() {{ mock.doSomething(); }};
    }
 
    @Test
@@ -89,11 +77,11 @@ public final class TestedClassWithNoDITest
    {
       assertFalse(tested3.doSomeOperation());
 
-      new Verifications()
-      {
-         {
-            mock.doSomething(); times = 1;
-         }
-      };
+      new Verifications() {{ mock.doSomething(); times = 1; }};
    }
+}
+
+class NonPublicTestedClass
+{
+   NonPublicTestedClass() {}
 }

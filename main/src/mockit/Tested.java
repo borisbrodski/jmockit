@@ -19,11 +19,14 @@ import java.lang.annotation.*;
  * <p/>
  * If the tested field is not {@code final} and its value remains {@code null} at the time a test method is about to be
  * executed, then a suitable instance of the tested class will be created and assigned to the field.
- * The instantiation will only succeed if the tested class has a single public constructor, and all parameters to this
- * constructor (if any) can be satisfied with the values available in {@linkplain Injectable injectable} fields of the
- * test class.
- * When injection is performed through a constructor, there must be one injectable field for each parameter of the
- * constructor, having the same type and declared in the same relative order as the corresponding parameter.
+ * The instantiation will only be attempted if the tested class has a single constructor with the same accessibility as
+ * the class: i.e. either a <em>public</em> constructor in a public class, or a <em>package-private</em> constructor in
+ * a <em>non-public</em> class.
+ * Constructor injection will take place, provided all of the constructor parameters (if any) can be satisfied with
+ * values available in {@linkplain Injectable injectable} fields of the test class, each with the same type as the
+ * corresponding parameter.
+ * This process of injection works even with multiple parameters of the same type, provided there is a separate
+ * injectable field for each parameter, declared in the same relative order as the corresponding parameter.
  * <p/>
  * Whenever the tested object is created automatically, <em>field injection</em> is also performed.
  * Only non-{@code final} fields which remain {@code null} at this time are considered, between those declared in the

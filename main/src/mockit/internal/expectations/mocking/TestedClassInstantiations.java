@@ -7,6 +7,7 @@ package mockit.internal.expectations.mocking;
 import java.lang.reflect.*;
 import java.util.*;
 
+import static java.lang.reflect.Modifier.*;
 import static mockit.internal.util.Utilities.*;
 
 public final class TestedClassInstantiations
@@ -49,17 +50,44 @@ public final class TestedClassInstantiations
 
       void create()
       {
-         Constructor<?>[] publicConstructors = testedClass.getConstructors();
+         findSingleConstructorAccordingToClassVisibility();
 
-         if (publicConstructors.length == 1) {
-            constructor = publicConstructors[0];
-            Object testedObject = instantiateWithPublicConstructor();
+         if (constructor != null) {
+            Object testedObject = instantiateUsingConstructor();
             injectIntoFieldsThatAreStillNull(testedClass, testedObject);
             setFieldValue(testedField, objectWithFields, testedObject);
          }
       }
 
-      private Object instantiateWithPublicConstructor()
+      private void findSingleConstructorAccordingToClassVisibility()
+      {
+         Constructor<?>[] constructors;
+
+         if (isPublic(testedClass.getModifiers())) {
+            constructors = testedClass.getConstructors();
+
+            if (constructors.length == 1) {
+               constructor = constructors[0];
+               return;
+            }
+         }
+
+         constructors = testedClass.getDeclaredConstructors();
+
+         for (Constructor<?> c : constructors) {
+            if (c.getModifiers() == 0) {
+               if (constructor == null) {
+                  constructor = c;
+               }
+               else {
+                  constructor = null;
+                  return;
+               }
+            }
+         }
+      }
+
+      private Object instantiateUsingConstructor()
       {
          parameterTypes = constructor.getGenericParameterTypes();
          Object[] arguments = obtainInjectedConstructorArguments();
