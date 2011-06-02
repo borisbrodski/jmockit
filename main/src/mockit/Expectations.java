@@ -26,8 +26,8 @@ import mockit.internal.expectations.*;
  * the same mock fields. Such fields need to be annotated as {@code @Mocked}, though.
  * <p/>
  * There are several API fields and methods which the expectation block can use for recording desired return values and
- * exceptions/errors to be thrown (see {@link #result}), and for specifying argument matching constraints such as
- * {@link #withEqual(Object)}.
+ * exceptions/errors to be thrown (see {@link #result}), and for specifying argument matching constraints (see
+ * {@link #anyString}).
  * <p/>
  * Individual expectations are defined during the <em>record phase</em>, and later exercised during the
  * <em>replay phase</em> of the test.

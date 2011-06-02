@@ -330,18 +330,40 @@ public final class InvocationArguments
       }
 
       for (int i = 0; i < matchers.size(); i++) {
-         Matcher<?> matcher = matchers.get(i);
-         Matcher<?> otherMatcher = otherMatchers.get(i);
+         Matcher<?> matcher1 = matchers.get(i);
+         Matcher<?> matcher2 = otherMatchers.get(i);
 
-         if (
-            matcher != otherMatcher &&
-            (matcher.getClass() != otherMatcher.getClass() ||
-             matcher.matches(other.invocationArgs[i]) != otherMatcher.matches(invocationArgs[i]))
-         ) {
-            return false;
+         if (matcher1 != matcher2) {
+            if (matcher1.getClass() != matcher2.getClass() || matcher1.getClass() == HamcrestAdapter.class) {
+               return false;
+            }
+
+            if (!equivalentMatches(matcher1, invocationArgs[i], matcher2, other.invocationArgs[i])) {
+               return false;
+            }
          }
       }
 
       return true;
+   }
+
+   private boolean equivalentMatches(Matcher<?> matcher1, Object arg1, Matcher<?> matcher2, Object arg2)
+   {
+      boolean matcher1MatchesArg2 = matcher1.matches(arg2);
+      boolean matcher2MatchesArg1 = matcher2.matches(arg1);
+
+      if (arg1 != null && arg2 != null && matcher1MatchesArg2 && matcher2MatchesArg1) {
+         return true;
+      }
+
+      if (arg1 == arg2 && matcher1MatchesArg2 == matcher2MatchesArg1) { // both matchers fail
+         Description desc1 = new StringDescription();
+         matcher1.describeTo(desc1);
+         Description desc2 = new StringDescription();
+         matcher2.describeTo(desc2);
+         return desc1.toString().equals(desc2.toString());
+      }
+
+      return false;
    }
 }

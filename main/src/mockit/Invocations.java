@@ -326,12 +326,17 @@ abstract class Invocations
     * The matcher is added to the end of the list of argument matchers for the invocation being recorded/verified.
     * It cannot be reused for a different parameter.
     * <p/>
+    * Usually, this particular method should <em>not</em> be used. Instead, simply pass the desired argument value
+    * directly, without any matcher.
+    * Only when specifying values for a <em>varargs</em> method it's useful, and even then only when some other argument
+    * matcher is also used.
+    * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#argumentMatching">In the
     * Tutorial</a>
     *
     * @param arg the expected argument value
     *
-    * @return the input argument
+    * @return the given argument
     */
    protected final <T> T withEqual(T arg)
    {
@@ -343,6 +348,11 @@ abstract class Invocations
    /**
     * Same as {@link #withEqual(Object)}, but checking that a numeric invocation argument in the replay phase is
     * sufficiently close to the given value.
+    *
+    * @param value the center value for range comparison
+    * @param delta the tolerance around the center value, for a range of [value - delta, value + delta]
+    *
+    * @return the given {@code value}
     */
    protected final double withEqual(double value, double delta)
    {
@@ -353,6 +363,11 @@ abstract class Invocations
    /**
     * Same as {@link #withEqual(Object)}, but checking that a numeric invocation argument in the replay phase is
     * sufficiently close to the given value.
+    *
+    * @param value the center value for range comparison
+    * @param delta the tolerance around the center value, for a range of [value - delta, value + delta]
+    *
+    * @return the given {@code value}
     */
    protected final float withEqual(float value, double delta)
    {
@@ -364,8 +379,12 @@ abstract class Invocations
     * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay phase is an instance of
     * the same class as the given object.
     * <p/>
-    * Equivalent to a call <code>withInstanceOf(arg.getClass())</code>, except that it returns {@code arg} instead of
-    * {@code null}.
+    * Equivalent to a <code>withInstanceOf(object.getClass())</code> call, except that it returns {@code object} instead
+    * of {@code null}.
+    *
+    * @param object an instance of the desired class
+    *
+    * @return the given instance
     */
    protected final <T> T withInstanceLike(T object)
    {
@@ -377,7 +396,9 @@ abstract class Invocations
     * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay phase is an instance of
     * the given class.
     *
-    * @return always null; if you need a specific return value, use {@link #withInstanceLike(Object)}
+    * @param argClass the desired class
+    *
+    * @return always {@code null}; if you need a specific return value, use {@link #withInstanceLike(Object)}
     */
    protected final <T> T withInstanceOf(Class<T> argClass)
    {
@@ -388,6 +409,10 @@ abstract class Invocations
    /**
     * Same as {@link #withEqual(Object)}, but checking that the invocation argument in the replay phase is different
     * from the given value.
+    *
+    * @param arg an arbitrary value, but different from the ones expected to occur during replay
+    *
+    * @return the given argument value
     */
    protected final <T> T withNotEqual(T arg)
    {
@@ -422,6 +447,10 @@ abstract class Invocations
    /**
     * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay phase is the exact same
     * instance as the one in the recorded/verified invocation.
+    *
+    * @param object the desired instance
+
+    * @return the given object
     */
    protected final <T> T withSameInstance(T object)
    {
@@ -435,6 +464,10 @@ abstract class Invocations
    /**
     * Same as {@link #withEqual(Object)}, but checking that a textual invocation argument in the replay phase contains
     * the given text as a substring.
+    *
+    * @param text an arbitrary non-null textual value
+    *
+    * @return the given text
     */
    protected final <T extends CharSequence> T withSubstring(T text)
    {
@@ -445,6 +478,10 @@ abstract class Invocations
    /**
     * Same as {@link #withEqual(Object)}, but checking that a textual invocation argument in the replay phase starts
     * with the given text.
+    *
+    * @param text an arbitrary non-null textual value
+    *
+    * @return the given text
     */
    protected final <T extends CharSequence> T withPrefix(T text)
    {
@@ -455,6 +492,10 @@ abstract class Invocations
    /**
     * Same as {@link #withEqual(Object)}, but checking that a textual invocation argument in the replay phase ends with
     * the given text.
+    *
+    * @param text an arbitrary non-null textual value
+    *
+    * @return the given text
     */
    protected final <T extends CharSequence> T withSuffix(T text)
    {
@@ -468,6 +509,10 @@ abstract class Invocations
     * <p/>
     * Note that this can be used for any string comparison, including case insensitive ones (with {@code "(?i)"} in the
     * regex).
+    *
+    * @param regex an arbitrary (non-null) regular expression against which textual argument values will be matched
+    *
+    * @return the given regex
     *
     * @see Pattern#compile(String, int)
     */
