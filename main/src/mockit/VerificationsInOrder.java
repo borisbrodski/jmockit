@@ -45,28 +45,33 @@ public abstract class VerificationsInOrder extends Verifications
 
    /**
     * Accounts for a sequence of non-strict invocations executed in the replay phase that are not explicitly verified
-    * in this block.
-    * Note that even the invocations that are implicitly verified (due to a minimum invocation count specified in the
-    * <em>record</em> phase) will be accounted for (if any), since their replay order cannot be verified otherwise.
-    * (Obviously, this doesn't apply to <em>strict</em> invocations, whose replay order is always verified implicitly.)
+    * in this block or in a previous block.
+    * Such a "sequence" of invocations can include only a single invocation, or even be empty.
     * <p/>
-    * Which invocations belong or not in this sequence depends on the relative position of the call to this method with
-    * respect to the explicitly verified invocations in the same block.
+    * Invocations matching an expectation recorded with a minimum invocation count - if any - are <em>also</em>
+    * included here, since their replay order could not be verified otherwise.
+    * This doesn't apply to <em>strict</em> expectations, though, since in that case the replay order must be as
+    * recorded.
     * <p/>
-    * This can be used to verify that one or more consecutive invocations occurred <em>before</em> others, and
+    * This method can be used to verify that one or more consecutive invocations occurred <em>before</em> others, and
     * conversely to verify that one or more consecutive invocations occurred <em>after</em> others.
     * The call to this method marks the position where the unverified invocations are expected to have occurred,
     * relative to the explicitly verified ones.
     * <p/>
-    * Each sequence of explicit verifications in the block will correspond to a <em>consecutive</em> sequence of
-    * invocations in the replay phase of the test.
-    * So, if this method is called more than once from the same verification block, then an arbitrary sequence of
-    * consecutive invocations between said calls will be verified.
+    * The exact sequence of unverified invocations accounted for by a particular call to this method depends on the
+    * <em>position</em> of the call relative to the explicit verifications in the block.
+    * Each grouping of explicit verifications in the block will correspond to a sequence of <em>consecutive</em>
+    * (and verified) invocations in the replay phase of the test.
+    * So, if this method is called more than once from the same verification block, each call will account for a
+    * separate sequence of unverified invocations; each sequence will be verified to occur, as a whole, in the same
+    * order as it appears relative to those groupings of verified invocations.
+    * <p/>
     * Notice that when this method is not used, the invocations in the replay phase need <em>not</em> be consecutive,
     * but only have the same relative order as the verification calls.
     * <p/>
-    * Finally, notice that you can combine an ordered block that verifies the position of some calls relative to others,
-    * with a previous unordered block which verifies some or all of those other invocations.
+    * Finally, notice that you can combine an ordered block that verifies the position of some calls relative to others
+    * with a later unordered block which verifies some or all of those other invocations.
+    * The unordered block should not come before, however, since it would "consume" the verified invocations.
     *
     * @see #verifiedInvocations(Verifications)
     * @see <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#partiallyOrdered">In
