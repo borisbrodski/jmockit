@@ -674,8 +674,8 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
-   public void verifyConsecutiveInvocationsInTwoSequencesWhenNotConsecutive()
+   @Test
+   public void accountForUnverifiedInvocationsWithAllAlreadyVerifiedInAPreviousBlock()
    {
       mock.prepare();
       mock.setSomething(123);
@@ -684,14 +684,18 @@ public final class VerificationsWithPartialOrderingTest
       mock.notifyBeforeSave();
       mock.save();
 
+      new Verifications()
+      {{
+         mock.setSomething(anyInt);
+         mock.setSomethingElse(anyString);
+         mock.notifyBeforeSave(); maxTimes = 1;
+      }};
+
       new VerificationsInOrder()
       {{
-         unverifiedInvocations();
-         mock.setSomething(123);
-         mock.setSomething(45);
-         unverifiedInvocations();
+         mock.prepare();
+         unverifiedInvocations(); // nothing was left unverified
          mock.save();
-         unverifiedInvocations();
       }};
    }
 }

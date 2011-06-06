@@ -84,10 +84,6 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
                unverifiedInvocationLeftBehind.errorForUnexpectedInvocationBeforeAnother(currentExpectation.invocation);
       }
 
-      if (replayIndex >= expectationCount) {
-         throw new AssertionError("No unverified invocations left");
-      }
-
       replayIndex = indexOfLastUnverifiedExpectation();
       indexIncrement = -1;
       unverifiedExpectationsFixed = true;
