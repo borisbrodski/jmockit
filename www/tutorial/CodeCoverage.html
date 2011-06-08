@@ -16,6 +16,37 @@
       <a href="UsingMocksAndStubs.html"><img align="right" src="go-previous.png" title="Previous chapter"></a>
    </div>
 </h2>
+<ol style="border: medium ridge; background-color: beige;">
+   <li><a href="#line">Line coverage</a></li>
+   <li><a href="#path">Path coverage</a></li>
+   <li>
+      <a href="#output">Types of coverage output</a>
+      <ol>
+         <li><a href="#callPoints">Call points</a></li>
+      </ol>
+   </li>
+   <li>
+      <a href="#configuration">Configuring the coverage tool</a>
+      <ol>
+         <li><a href="#classpathConfiguration">Selecting the desired output through classpath configuration</a></li>
+         <li><a href="#propertyConfiguration">Configuration through system properties</a></li>
+      </ol>
+   </li>
+   <li>
+      <a href="#merging">Generating aggregate or cumulative reports for separate test runs</a>
+      <ol>
+         <li><a href="#singleMergedReport">Generating a single aggregate report for multiple test runs</a></li>
+         <li><a href="#separateAggregateReport">Generating an aggregate report from a set of data files</a></li>
+      </ol>
+   </li>
+   <li><a href="#maven">Using JMockit Coverage in a Maven project</a></li>
+   <li>
+      <a href="#switching">Turning coverage output on/off</a>
+      <ol>
+         <li><a href="#jmockit-tools">Using the <code>jmockit-tools</code> system property</a></li>
+      </ol>
+   </li>
+</ol>
 
 <p>
    <a href="http://en.wikipedia.org/wiki/Code_coverage"><em>Code coverage</em></a> consists of a set of software metrics
@@ -38,7 +69,7 @@
 </p>
 
 <h3 id="line">
-   Line Coverage
+   Line coverage
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <img align="right" src="blank.gif" width="22">
@@ -92,7 +123,7 @@
       <a href="#line"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#output"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
-   Path Coverage
+   Path coverage
 </h3>
 <p>
    A completely different metric is <em>path coverage</em>, which is computed for method and
@@ -124,7 +155,7 @@
 </p>
 
 <h3 id="output">
-   Available types of coverage output
+   Types of coverage output
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#line"><img align="right" src="go-top.png" title="First section"></a>
