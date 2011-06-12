@@ -2303,19 +2303,24 @@ public final class TestedUnit
    Typically, a test class will exercise a single <em>tested class</em>.
    JMockit can help by automatically instantiating this class, and optionally injecting the relevant mocked
    dependencies.
-   This is what the <strong><code>@Tested</code></strong> annotation is for.
+   This is what the <strong><code class="annotation">@Tested</code></strong> annotation is for.
 </p>
 <p>
-   Any instance field annotated as such in the test class will be considered for automatic instantiation and injection,
-   just before the execution of a test method.
+   A non-<code>final</code> instance field annotated as such in the test class will be considered for automatic
+   instantiation and injection, just before the execution of a test method.
    If at this time the field still holds the <code>null</code> reference, JMockit will try to create an instance using
-   the public constructor of the tested class, and make sure its internal dependencies get properly injected.
+   a suitable constructor of the tested class, and make sure its internal dependencies get properly injected (when
+   applicable).
    If the field has already been initialized (not <code>null</code>), then nothing will be done.
-   For injection to be performed, the test class must also define one or more <code>@Injectable</code> fields.
-   Mock fields annotated only with <code>@Mocked</code>, <code>@NonStrict</code>, etc. are <em>not</em> considered for
-   injection.
+</p>
+<p>
+   For injection to be performed, the test class must also define one or more
+   <strong><code class="annotation">@Injectable</code></strong> fields.
+   Mock fields annotated only with <code class="annotation">@Mocked</code>, <code class="annotation">@NonStrict</code>,
+   etc. are <em>not</em> considered for injection.
    On the other hand, not all injectable fields need to be <em>mock</em> fields; fields of primitive or array types can
-   also be annotated as <code>@Injectable</code>, and will be equally considered when injection is performed.
+   also be annotated as <code class="annotation">@Injectable</code>, and will be equally considered when injection is
+   performed.
    The following example test class will demonstrate.
 </p>
 <pre><code>public class SomeTest
@@ -2343,10 +2348,11 @@ public final class TestedUnit
 <p>
    Two forms of injection are supported: <em>constructor</em> injection and <em>field</em> injection.
    In the first case, the tested class must have a <em>single</em> <code>public</code> constructor if it's a public
-   class; a <em>non-public</em> tested class is also accepted, which should then have a single <em>package-private</em>
+   class; a <em>non-public</em> tested class is also accepted, provided it has a single <em>package-private</em>
    constructor.
-   Once the tested class is initialized with this single constructor, its instance fields are considered for injection.
-   For each field to be injected, an injectable field of the same type is searched.
+   Once the tested class is initialized with this single constructor, its non-<code>final</code> instance fields are
+   considered for injection.
+   For each such field to be injected, an injectable field of the same type is searched in the test class.
    If only one is found, its current value is read and then stored in the injected field.
    If there is more than one, the injected field name is used to select between the injectable fields of same type.
 </p>
