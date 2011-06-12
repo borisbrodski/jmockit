@@ -1781,9 +1781,10 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   <code>Delegate</code> implementations can be used to validate invocation arguments, but they are limited to
-   expectation blocks. Besides, the main point of delegate methods is to specify <em>invocation results</em> (values to
-   return or exceptions to throw) at replay time, based on the arguments received.
+   <code class="type">Delegate</code> implementations can be used to validate invocation arguments, but they are limited
+   to expectation blocks.
+   Besides, the main point of delegate methods is to specify <em>invocation results</em> (values to return or exceptions
+   to throw) at replay time, based on the arguments received.
    If the actual need is to validate the arguments passed at replay time in each invocation matching
    an expectation, the <strong><code>forEachInvocation</code></strong> field should be used instead.
    Such validations can be specified not only in expectation blocks, but also in verification blocks.
@@ -1795,33 +1796,31 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       // Inside tested code:
       new Collaborator().doSomething(true, new int[2], "test");
 
-      new Verifications()
-      {
+      new Verifications() {{
+         mock.doSomething(<em>anyBoolean</em>, null, null);
+         <strong><em>forEachInvocation</em> = new Object()
          {
-            mock.doSomething(<em>anyBoolean</em>, null, null);
-            <em>forEachInvocation</em> = new Object()
+            void validate(Boolean b, int[] i, String s)
             {
-               void validate(Boolean b, int[] i, String s)
-               {
-                  assertTrue(b);
-                  assertEquals(2, i.length);
-                  assertEquals("test", s);
-               }
-            };
-         }
-      };
+               assertTrue(b);
+               assertEquals(2, i.length);
+               assertEquals("test", s);
+            }
+         };</strong>
+      }};
    }
 </code></pre>
 <p>
    In this test, all invocations to the <code>Collaborator#doSomething</code> method that occur during the replay phase
-   and that match the verified expectation will be validated by a call to the specified <code>validate</code> method.
+   and that match the verified expectation will be validated by a call to the specified
+   <strong><code>validate</code></strong> method.
    Each such call will be made with the same arguments that the verified method/constructor received at replay time.
    In this particular example, the verified expectation matches invocations with any arguments, but
-   more strict argument matchers could have been specified.
+   more strict argument matchers could have been used.
 </p>
 <p>
-   Differently from <code>Delegate</code> implementations, the object assigned to the <code>forEachInvocation</code>
-   field can be of any type.
+   Differently from <code class="type">Delegate</code> implementations, the object assigned to the
+   <code>forEachInvocation</code> field can be of any type.
    The implementation class, however, should define exactly one non-<code>private</code> method of any name, with the
    same number of parameters as the validated method/constructor (any number of additional <code>private</code> methods
    is allowed).
@@ -2109,21 +2108,20 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    In such cases it may be necessary to mock all objects/classes in the chain, starting with <code>obj1</code>.
 </p>
 <p>
-   The <code class="annotation">@Cascading</code> annotation provides this ability.
+   The <strong><code class="annotation">@Cascading</code></strong> annotation provides this ability.
    Just like <code class="annotation">@Mocked</code>, it can be applied to mock fields and mock parameters.
-   Similarly to <code class="annotation">@NonStrict</code> and <code class="annotation">@Capturing</code>, the use of
-   <code class="annotation">@Cascading</code> on a mock field or test method parameter will imply that the type is
+   Similarly to <code class="annotation">@NonStrict</code> and <code class="annotation">@Injectable</code>, the use of
+   <code class="annotation">@Cascading</code> on a mock field or test method parameter also implies that the type is
    mocked (this doesn't preclude use of <code class="annotation">@Mocked</code> on the same field/parameter, however).
    The following test shows a basic example, where the cascading mocked type is used in expectation
    and verification blocks. The test involves use of the <code>java.net</code> and <code>java.nio</code> APIs.
 </p>
 <pre><code>   @Test
-   public void recordAndVerifyExpectationsOnCascadedMocks(@Cascading final Socket mock)
+   public void recordAndVerifyExpectationsOnCascadedMocks(<strong>@Cascading final Socket mock</strong>)
       throws Exception
    {
-      new NonStrictExpectations()
-      {
-         InetSocketAddress ignored;
+      new NonStrictExpectations() {
+         InetSocketAddress unused;
 
          {
             mock.getChannel().isConnected(); <em>result</em> = false;
@@ -2141,12 +2139,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 
       ...
    
-      new Verifications()
-      {
-         {
-            mock.getChannel().connect((SocketAddress) withNotNull());
-         }
-      };
+      new Verifications() {{
+         mock.getChannel().connect((SocketAddress) withNotNull());
+      }};
    }
 </code></pre>
 <p>
@@ -2218,18 +2213,17 @@ public final class TestedUnit
 }
 </code></pre>
 <p>
-   The method we want to test, <code>businessOperation(boolean)</code>, creates several new
-   instances of classes that implement public abstractions.
-   Most of these implementations are defined through anonymous inner classes, which are completely
-   inaccessible (except for the use of Reflection) from client code.
+   The method we want to test, <code>businessOperation(boolean)</code>, creates several new instances of classes that
+   implement public abstractions.
+   Most of these implementations are defined through anonymous inner classes, which are completely inaccessible (except
+   for the use of Reflection) from client code.
 </p>
 <p>
    This kind of situation will probably not occur often in real projects, though.
-   Still, we can write a test that <em>captures</em> such class definitions and instantiations as
-   they happen during test execution, automatically mocking the implementation classes as they are
-   loaded by the JVM.
-   (As a matter of fact, classes that have been loaded previously will also get mocked for the
-   duration of a given test, transparently and as needed.)
+   Still, we can write a test that <em>captures</em> such class definitions and instantiations as they happen during
+   test execution, automatically mocking the implementation classes as they are loaded by the JVM.
+   (As a matter of fact, classes that have been loaded previously will also get mocked for the duration of a given test,
+   transparently and as needed.)
    The next test shows how it's done.
 </p>
 <pre><code>public final class UnitTest
@@ -2263,30 +2257,32 @@ public final class TestedUnit
 }
 </code></pre>
 <p>
-   Note that we used all three possible scopes for mocked types: a mock field of the test class, a
-   mock parameter of the test method, and a local mock field of the expectation block.
-   In all three cases the mocked type is either an interface or a non-<code>final</code> class, and
-   the <code>capturing</code> annotation attribute has been used.
+   Note that we used all three possible scopes for mocked types: a mock field of the test class, a mock parameter of the
+   test method, and a local mock field of the expectation block.
+   In all three cases the mocked type is either an interface or a non-<code>final</code> class, and the
+   <strong><code>capture</code></strong> annotation attribute is used.
 </p>
 <p>
-   This optional attribute of the <code>Mocked</code> annotation takes an <code>int</code> value
-   that specifies the maximum number of instantiations of classes assignable to the declared mocked
-   type that should be captured.
-   For a non-<code>final</code> mock field, each captured instance will be immediately assigned to
-   the field, up to the specified maximum number of instances.
-   If any more instantiations occur they won't be assigned to the field, even though the classes to
-   which such instances belong will still get mocked.
-   However, if there is a second capturing field of the same mocked type, then those extra instances
-   will get assigned to it up to the <em>its</em> maximum number of instances to capture.
+   This optional attribute takes an <code>int</code> value specifying the <em>maximum</em> number of new instances of
+   the mocked type that should be "captured" during the test.
+   <em>Any</em> (future) instantiation of a class that is assignable to the declared mocked type will be affected.
+   For a non-<code>final</code> mock field, each captured instance will be immediately assigned to the field, up to the
+   specified maximum number of instances.
+   If any more instantiations occur they won't be assigned to the field, even though the classes to which such instances
+   belong will still get mocked.
+   However, if there is a second capturing field of the same mocked type, then those extra instances will get assigned
+   to it up to the <em>its</em> maximum number of instances to capture.
    So, once a mocked type is declared to be captured, all implementation classes will get mocked for
    the test, no matter how many new instances are captured.
-   For a mock parameter, on the other hand, new instances will never get assigned to the parameter,
-   so any positive value for the <code>capture</code> attribute will have the same effect (this
-   limitation may be lifted in a future version, for non-<code>final</code> parameters).
+   For a mock parameter, on the other hand, new instances will never get assigned to the parameter, so any positive
+   value for the <code>capture</code> attribute will have the same effect.
 </p>
 <p>
-   Finally, notice that it is perfectly valid to record and/or verify invocations to the captured
-   mocked types, as exemplified in the expectation and verification blocks above.
+   If control over <em>which</em> implementation classes should get captured and which should not is needed, we can use
+   <strong><code class="annotation">@Capturing</code></strong> instead, which has a couple of attributes for that
+   purpose.
+   This dedicated annotation specifies a capturing mocked type without the need to specify the maximum number of
+   instances to capture, which by default will be unlimited.
 </p>
 
 <h3 id="tested">

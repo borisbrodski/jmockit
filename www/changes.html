@@ -19,24 +19,25 @@
 <p>Release 0.999.10 (Jun 1?, 2011):</p>
 <ul>
    <li>
-      Renamed the "<strong>Annotations</strong>" API, since most annotations now belong to the much grown Expectations
-      API. It is now known as the "<strong>Mockups</strong>" API.
+      <strong>Renamed</strong> the "<strong>Annotations</strong>" API, since most annotations now belong to the much
+      grown Expectations API. It is now known as the "<strong>Mockups</strong>" API.
    </li>
    <li>
-      Enhanced <strong>injection</strong> support for <code>@Tested</code> fields:
-      <code>@Injectable</code> fields of non-mockable types (primitives and arrays) are now considered when injecting
-      values into the tested object;
-      multiple parameters of the same type are now supported when doing constructor injection, by taking values from
-      matching injectable fields declared in the same relative order;
-      a "varargs" constructor parameter is now supported, taking the values of all injectable fields having the same
-      type.
+      <strong>Enhanced</strong> the support for <strong><code>@Tested</code></strong> fields:
+      <em>non-public</em> classes with a package-private constructor are now accepted as well;
+      <code>@Injectable</code> fields of <em>non-mockable</em> types (primitives and arrays) are now considered when
+      injecting values into the tested object;
+      <em>multiple</em> parameters of the same type are now supported when doing constructor injection, by taking values
+      from matching injectable fields declared in the same relative order;
+      a <em>varargs</em> constructor parameter is now supported, taking the values of all injectable fields having the
+      same type.
    </li>
    <li>
-      Several enhancements made to <strong><code>@Input</code> fields</strong>:
-      multiple fields of the same type can be declared, allowing consecutive results to be specified;
-      the new <code>invocations = <em>n</em></code> attribute can be used to specify a fixed number of matching
-      invocations for a given input field;
-      auto-instantiation of values can be done with a non-public no-args constructor.
+      <strong>Enhanced</strong> the support for <strong><code>@Input</code></strong> fields:
+      <em>multiple</em> fields of the same type can be declared, allowing <em>consecutive</em> results to be specified;
+      the new <strong><code>invocations = <em>n</em></code></strong> attribute can be used to specify a fixed number of
+      matching invocations for a given input field;
+      auto-instantiation of values can now be done with a <em>non-public</em> no-args constructor.
    </li>
    <li>
       <strong>Enhancement</strong>: The <code>mockit.Invocation</code> class can now be used as the type of the first
