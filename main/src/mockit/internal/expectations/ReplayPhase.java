@@ -85,7 +85,8 @@ final class ReplayPhase extends Phase
       nonStrictExpectation.constraints.incrementInvocationCount();
 
       if (executeRealImpl) {
-         return Void.class;
+         Object defaultResult = nonStrictExpectation.invocation.getDefaultResult();
+         return defaultResult == null ? Void.class : defaultResult;
       }
 
       if (nonStrictExpectation.constraints.isInvocationCountMoreThanMaximumExpected()) {

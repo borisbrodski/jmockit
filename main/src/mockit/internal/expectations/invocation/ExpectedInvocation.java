@@ -231,16 +231,20 @@ public final class ExpectedInvocation
       return desc;
    }
 
-   // Default return value ////////////////////////////////////////////////////////////////////////////////////////////
+   // Default result //////////////////////////////////////////////////////////////////////////////////////////////////
+
+   public Object getDefaultResult()
+   {
+      return TestRun.getExecutingTest().defaultResults.get(arguments.getGenericSignature(), arguments.exceptions);
+   }
 
    public Object getDefaultValueForReturnType(TestOnlyPhase phase)
    {
       if (defaultReturnValue == UNDEFINED_DEFAULT_RETURN) {
-         Object indirectInput =
-            TestRun.getExecutingTest().defaultResults.get(arguments.getGenericSignature(), arguments.exceptions);
+         Object defaultResult = getDefaultResult();
 
-         if (indirectInput != null) {
-            return indirectInput;
+         if (defaultResult != null) {
+            return defaultResult;
          }
 
          String returnTypeDesc = DefaultValues.getReturnTypeDesc(arguments.methodNameAndDesc);

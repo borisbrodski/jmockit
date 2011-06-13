@@ -4,6 +4,7 @@
  */
 package mockit;
 
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.*;
@@ -231,7 +232,7 @@ public final class InputTest
 
    public static final class SomeCheckedException extends Exception {}
 
-   public static class UnitUnderTest
+   public static class TestedUnit
    {
       private final DependencyAbc abc = new DependencyAbc();
 
@@ -266,6 +267,32 @@ public final class InputTest
          @Input SomeCheckedException onFirstIteration;
       };
 
-      new UnitUnderTest().doSomething();
+      new TestedUnit().doSomething();
+   }
+
+   @Test
+   public void specifyDefaultReturnByCombiningInputFieldsWithDynamicPartialMocking()
+   {
+      final Calendar fixedCal = new GregorianCalendar(2010, 4, 15);
+
+      new NonStrictExpectations(Calendar.class) {
+         @Input Calendar defaultCalendar = fixedCal;
+      };
+
+      assertSame(fixedCal, Calendar.getInstance());
+      assertSame(fixedCal, Calendar.getInstance(TimeZone.getDefault()));
+      assertSame(fixedCal, Calendar.getInstance(TimeZone.getTimeZone("CST")));
+      assertSame(fixedCal, Calendar.getInstance(Locale.FRANCE));
+      assertSame(fixedCal, Calendar.getInstance(TimeZone.getTimeZone("PST"), Locale.US));
+   }
+
+   @Test(expected = FileNotFoundException.class)
+   public void specifyDefaultExceptionByCombiningInputFieldsWithDynamicPartialMocking() throws IOException
+   {
+      new Expectations(File.class) {
+         @Input IOException defaultCalendar = new FileNotFoundException();
+      };
+
+      File.createTempFile("", "");
    }
 }
