@@ -5,6 +5,7 @@
 package mockit;
 
 import java.io.*;
+import java.util.*;
 
 import junit.framework.*;
 
@@ -27,6 +28,21 @@ public final class JREMockingTest extends TestCase
 
       File f = new File("...");
       assertTrue(f.exists());
+   }
+
+   public void testMockingOfCalendar()
+   {
+      final Calendar calCST = new GregorianCalendar(2010, 4, 15);
+
+      new NonStrictExpectations(Calendar.class) {{
+         Calendar.getInstance(TimeZone.getTimeZone("CST")); result = calCST;
+      }};
+
+      Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("CST"));
+      assertSame(calCST, cal);
+      assertEquals(2010, cal.get(Calendar.YEAR));
+
+      assertNotSame(calCST, Calendar.getInstance(TimeZone.getTimeZone("PST")));
    }
 
    // Mocking of native methods ///////////////////////////////////////////////////////////////////////////////////////
