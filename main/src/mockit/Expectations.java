@@ -90,8 +90,11 @@ public abstract class Expectations extends Invocations
     * replay phase.
     * Otherwise, it's assumed to be a <em>return value</em> for a non-void method, and will be returned at replay time
     * from a matching invocation.
+    * <p/>
     * Attempting to return a value that is incompatible with the method return type will cause a
     * {@code ClassCastException} to be thrown at replay time.
+    * If, however, the recorded invocation is to a constructor or {@code void} method, then a matching invocation during
+    * replay will be allowed, with the specified return value simply being ignored.
     * <p/>
     * If the current expectation is for a method which actually <em>returns</em> an exception or error (as opposed to
     * <em>throwing</em> one), then the {@link #returns(Object)} method should be used instead.
@@ -220,6 +223,9 @@ public abstract class Expectations extends Invocations
     * The return type of the recorded method, however, must <em>not</em> be of one of these type non-singular types.
     * If it is, the multi-valued argument will be returned by a single invocation at replay time.
     * <p/>
+    * If this method is used for a constructor or {@code void} method, the given return value will be ignored,
+    * but a matching invocation will be allowed during replay; it will simply do nothing.
+    * <p/>
     * For a non-void method, if no return value is recorded then all invocations to it will return the appropriate
     * default value according to the method return type:
     * <ul>
@@ -241,8 +247,6 @@ public abstract class Expectations extends Invocations
     * type
     *
     * @throws IllegalStateException if not currently recording an invocation
-    * @throws IllegalArgumentException if the given return value is not {@code null} but the preceding mock invocation
-    * is to a constructor or {@code void} method
     *
     * @see #result
     * @see #returns(Object, Object...)
@@ -271,13 +275,14 @@ public abstract class Expectations extends Invocations
     * </ol>
     * The current expectation will have its upper invocation count automatically set to the total number of values
     * specified to be returned. This upper limit can be overridden through the {@code maxTimes} field, if necessary.
+    * <p/>
+    * If this method is used for a constructor or {@code void} method, the given return values will be ignored,
+    * but matching invocations will be allowed during replay; they will simply do nothing.
     *
     * @param firstValue the first value to be returned in the replay phase
     * @param remainingValues the remaining values to be returned, in the same order
     *
     * @throws IllegalStateException if not currently recording an invocation
-    * @throws IllegalArgumentException if one of the given return values is not {@code null} but the preceding mock
-    * invocation is to a constructor or {@code void} method
     */
    protected final void returns(Object firstValue, Object... remainingValues)
    {

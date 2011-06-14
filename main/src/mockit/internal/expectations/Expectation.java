@@ -7,7 +7,6 @@ package mockit.internal.expectations;
 import java.lang.reflect.*;
 import java.util.*;
 
-import mockit.*;
 import mockit.external.asm.Type;
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.state.*;
@@ -37,15 +36,11 @@ final class Expectation
 
    InvocationResults getResults()
    {
-      createResultsHolderIfNotYetCreated();
-      return results;
-   }
-
-   private void createResultsHolderIfNotYetCreated()
-   {
       if (results == null) {
          results = new InvocationResults(invocation, constraints);
       }
+
+      return results;
    }
 
    Object produceResult(Object invokedObject, Object[] invocationArgs) throws Throwable
@@ -64,20 +59,18 @@ final class Expectation
 
    void addReturnValueOrValues(Object value)
    {
-      createResultsHolderIfNotYetCreated();
-
       boolean valueIsArray = value != null && value.getClass().isArray();
       boolean valueIsIterable = value instanceof Iterable<?>;
 
       if ((valueIsArray || valueIsIterable || value instanceof Iterator<?>) && hasReturnOfDifferentType(value)) {
          if (valueIsArray) {
-            results.addReturnValues(value);
+            getResults().addReturnValues(value);
          }
          else if (valueIsIterable) {
-            results.addReturnValues((Iterable<?>) value);
+            getResults().addReturnValues((Iterable<?>) value);
          }
          else {
-            results.addDeferredReturnValues((Iterator<?>) value);
+            getResults().addDeferredReturnValues((Iterator<?>) value);
          }
 
          return;
@@ -88,9 +81,8 @@ final class Expectation
 
    private void addSingleReturnValue(Object value)
    {
-      validateReturnValues(value, (Object) null);
       substituteCascadedMockToBeReturnedIfNeeded(value);
-      results.addReturnValue(value);
+      getResults().addReturnValue(value);
    }
 
    private boolean hasReturnOfDifferentType(Object valueToBeReturned)
@@ -105,31 +97,6 @@ final class Expectation
       return Utilities.getClassForType(invocationReturnType);
    }
 
-   private void validateReturnValues(Object firstValue, Object... remainingValues)
-   {
-      if (hasVoidReturnType()) {
-         validateReturnValueForConstructorOrVoidMethod(firstValue);
-
-         if (remainingValues != null) {
-            for (Object anotherValue : remainingValues) {
-               validateReturnValueForConstructorOrVoidMethod(anotherValue);
-            }
-         }
-      }
-   }
-
-   private boolean hasVoidReturnType()
-   {
-      return invocation.getMethodNameAndDescription().endsWith(")V");
-   }
-
-   private void validateReturnValueForConstructorOrVoidMethod(Object value)
-   {
-      if (value != null && !(value instanceof Delegate)) {
-         throw new IllegalArgumentException("Non-null return value specified for constructor or void method");
-      }
-   }
-
    private void substituteCascadedMockToBeReturnedIfNeeded(Object valueToBeReturned)
    {
       Object cascadedMock = invocation.getCascadedMock();
@@ -142,8 +109,6 @@ final class Expectation
 
    void addSequenceOfReturnValues(Object firstValue, Object[] remainingValues)
    {
-      validateReturnValues(firstValue, remainingValues);
-
       InvocationResults sequence = getResults();
 
       if (remainingValues == null) {
@@ -237,10 +202,8 @@ final class Expectation
 
    void addResult(Object value)
    {
-      createResultsHolderIfNotYetCreated();
-
       if (value instanceof Throwable) {
-         results.addThrowable((Throwable) value);
+         getResults().addThrowable((Throwable) value);
          return;
       }
 
@@ -249,13 +212,13 @@ final class Expectation
 
       if ((valueIsArray || valueIsIterable || value instanceof Iterator<?>) && hasReturnOfDifferentType(value)) {
          if (valueIsArray) {
-            results.addResults(value);
+            getResults().addResults(value);
          }
          else if (valueIsIterable) {
-            results.addResults((Iterable<?>) value);
+            getResults().addResults((Iterable<?>) value);
          }
          else {
-            results.addDeferredResults((Iterator<?>) value);
+            getResults().addDeferredResults((Iterator<?>) value);
          }
 
          return;

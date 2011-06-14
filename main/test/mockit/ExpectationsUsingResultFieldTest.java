@@ -478,32 +478,42 @@ public final class ExpectationsUsingResultFieldTest
       new Collaborator();
    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void attemptsToRecordReturnValueForVoidMethod()
+   @Test
+   public void recordReturnValueForVoidMethod(final Collaborator mock)
    {
-      new Expectations()
-      {
-         Collaborator mock;
+      new Expectations() {{
+         mock.provideSomeService();
+         result = 123; // will have no effect
+      }};
 
-         {
-            mock.provideSomeService();
-            result = 123;
-         }
-      };
+      mock.provideSomeService();
    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void attemptsToRecordReturnValueForConstructor()
+   @Test
+   public void recordConsecutiveReturnValuesForVoidMethod(final Collaborator mock)
    {
-      new Expectations()
-      {
+      new Expectations() {{
+         mock.provideSomeService();
+         result = new int[] {123, 45}; // will have no effect
+      }};
+
+      mock.provideSomeService();
+      mock.provideSomeService();
+   }
+
+   @Test
+   public void recordReturnValueForConstructor()
+   {
+      new NonStrictExpectations() {
          final Collaborator mock = null;
 
          {
             new Collaborator();
-            result = "test";
+            result = "test"; // will have no effect
          }
       };
+
+      new Collaborator();
    }
 
    @Test

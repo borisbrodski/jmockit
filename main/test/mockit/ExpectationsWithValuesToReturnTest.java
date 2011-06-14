@@ -412,24 +412,21 @@ public final class ExpectationsWithValuesToReturnTest
       assertSame(itr, collaborator.getIterator());
    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void attemptsToRecordReturnValueForVoidMethod()
+   @Test
+   public void recordReturnValueForVoidMethod(final Collaborator mock)
    {
-      new Expectations()
-      {
-         Collaborator mock;
+      new Expectations() {{
+         mock.provideSomeService();
+         returns(123);
+      }};
 
-         {
-            mock.provideSomeService();
-            returns(123);
-         }
-      };
+      mock.provideSomeService();
    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void attemptsToRecordReturnValueForConstructor()
+   @Test
+   public void recordReturnValueForConstructor()
    {
-      new Expectations()
+      new NonStrictExpectations()
       {
          final Collaborator mock = null;
 
@@ -438,27 +435,26 @@ public final class ExpectationsWithValuesToReturnTest
             returns("test");
          }
       };
+
+      new Collaborator();
    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void attemptsToRecordMultipleReturnValuesForVoidMethod()
+   @Test
+   public void recordMultipleReturnValuesForVoidMethod(@NonStrict final Collaborator mock)
    {
-      new Expectations()
-      {
-         Collaborator mock;
+      new Expectations() {{
+         mock.provideSomeService();
+         returns(null, 123, "abc");
+      }};
 
-         {
-            mock.provideSomeService();
-            returns(null, 123, "abc");
-         }
-      };
+      mock.provideSomeService();
+      mock.provideSomeService();
    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void attemptsToRecordMultipleReturnValuesForConstructor()
+   @Test
+   public void recordMultipleReturnValuesForConstructor()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -466,6 +462,18 @@ public final class ExpectationsWithValuesToReturnTest
             returns(123, null, "abc");
          }
       };
+
+      new Collaborator();
+      new Collaborator();
+      new Collaborator();
+
+      try {
+         new Collaborator();
+         fail();
+      }
+      catch (AssertionError e) {
+         assertTrue(e.getMessage().startsWith("Unexpected invocation "));
+      }
    }
 
    @Test
