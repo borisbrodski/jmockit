@@ -172,4 +172,62 @@ public final class CapturingInstancesTest
       assertEquals(11, cs1.doSomething());
       assertEquals(22, cs2.doSomething());
    }
+
+   static class Base { boolean doSomething() { return false; } }
+   static final class Derived1 extends Base {}
+   static final class Derived2 extends Base {}
+
+   @Test
+   public void verifyExpectationsOnlyOnOneOfTwoSubclassesForOneCapturedInstance()
+   {
+      new NonStrictExpectations() {
+         @Capturing Derived1 firstCapture;
+
+         {
+            new Derived1(); times = 1;
+            onInstance(firstCapture).doSomething(); result = true; times = 1;
+         }
+      };
+
+      assertTrue(new Derived1().doSomething());
+      assertFalse(new Derived2().doSomething());
+   }
+
+   @Test
+   public void verifyExpectationsOnlyOnOneOfTwoSubclassesForAnyNumberOfCapturedInstances()
+   {
+      new NonStrictExpectations() {
+         @Capturing Derived1 anyCapture;
+
+         {
+            new Derived1(); minTimes = 1;
+            onInstance(anyCapture).doSomething(); result = true; times = 3;
+         }
+      };
+
+      assertTrue(new Derived1().doSomething());
+      assertFalse(new Derived2().doSomething());
+      Derived1 d1b = new Derived1();
+      assertTrue(d1b.doSomething());
+      assertTrue(d1b.doSomething());
+   }
+
+   @Test
+   public void verifyExpectationsOnlyOnOneOfTwoSubclassesForTwoCapturedInstances()
+   {
+      new NonStrictExpectations() {
+         @Capturing(maxInstances = 1) Derived1 firstCapture;
+         @Capturing(maxInstances = 1) Derived1 secondCapture;
+
+         {
+            new Derived1(); times = 2;
+            onInstance(firstCapture).doSomething(); result = true; times = 1;
+            onInstance(secondCapture).doSomething(); result = true; times = 1;
+         }
+      };
+
+      assertTrue(new Derived1().doSomething());
+      assertFalse(new Derived2().doSomething());
+      assertTrue(new Derived1().doSomething());
+   }
 }

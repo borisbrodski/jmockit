@@ -262,7 +262,7 @@ public final class RecordAndReplayExecution
 
    private static boolean handleCallToConstructor(RecordAndReplayExecution instance, Object mock, String classDesc)
    {
-      if (TestRun.getCurrentTestInstance() != null) {
+      if (TestRun.getCurrentTestInstance() != null && (instance == null || instance.replayPhase != null)) {
          FieldTypeRedefinitions fieldTypeRedefs = instance == null ? null : instance.redefinitions;
 
          if (fieldTypeRedefs != null && fieldTypeRedefs.captureNewInstanceForApplicableMockField(mock)) {
