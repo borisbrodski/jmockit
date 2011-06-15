@@ -137,6 +137,12 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
    {
       try {
          callBack.runTestMethod(testResult);
+
+         Throwable thrown = testResult.getThrowable();
+
+         if (thrown != null) {
+            Utilities.filterStackTrace(thrown);
+         }
       }
       finally {
          SavePoint testMethodSavePoint = savePoint.get();
