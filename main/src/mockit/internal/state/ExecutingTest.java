@@ -345,9 +345,9 @@ public final class ExecutingTest
 
       if (clearSharedMocks) {
          clearNonStrictMocks();
-         strictMocks.clear();
       }
 
+      strictMocks.clear();
       clearNonSharedCascadingTypes();
       defaultResults.clear();
    }

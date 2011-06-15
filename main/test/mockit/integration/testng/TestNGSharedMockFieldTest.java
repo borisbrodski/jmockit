@@ -17,26 +17,30 @@ public final class TestNGSharedMockFieldTest
       void doSomethingElse();
    }
 
-   @NonStrict Dependency mock;
+   @NonStrict Dependency mock1;
+   @Mocked Runnable mock2;
 
    @Test
-   public void recordExpectationsOnSharedMock()
+   public void recordAndReplayExpectationsOnSharedMocks()
    {
       new Expectations() {{
-         mock.doSomething(); result = true;
+         mock1.doSomething(); result = true;
+         mock2.run(); // turns mock2 into a strict mock
       }};
 
-      assertTrue(mock.doSomething());
+      assertTrue(mock1.doSomething());
+      mock2.run();
    }
 
    @Test
-   public void recordExpectationsOnSharedMockAgain()
+   public void recordAndReplayExpectationsOnSharedMocksAgain()
    {
-      new Expectations() {{
-         mock.doSomething(); result = true;
-         mock.doSomethingElse();
+      new NonStrictExpectations() {{
+         mock1.doSomething(); result = true;
+         mock1.doSomethingElse();
       }};
 
-      assertTrue(mock.doSomething());
+      assertTrue(mock1.doSomething());
+      mock2.run(); // mock2 should be non-strict here
    }
 }
