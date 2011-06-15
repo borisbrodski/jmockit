@@ -11,7 +11,7 @@ import junit.framework.*;
 import mockit.*;
 
 // These tests are expected to fail, so they are kept inactive to avoid busting the full test run.
-public final class JUnit3MissingInvocationsTest //extends TestCase
+public final class JUnit3MissingInvocationsTests //extends TestCase
 {
    static class Collaborator { void doSomething() {} }
 
