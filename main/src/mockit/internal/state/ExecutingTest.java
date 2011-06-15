@@ -333,7 +333,7 @@ public final class ExecutingTest
       return null;
    }
 
-   void finishExecution()
+   void finishExecution(boolean clearSharedMocks)
    {
       recordAndReplayForLastTestMethod = currentRecordAndReplay;
       currentRecordAndReplay = null;
@@ -343,8 +343,11 @@ public final class ExecutingTest
          parameterTypeRedefinitions = null;
       }
 
-      clearNonStrictMocks();
-      strictMocks.clear();
+      if (clearSharedMocks) {
+         clearNonStrictMocks();
+         strictMocks.clear();
+      }
+
       clearNonSharedCascadingTypes();
       defaultResults.clear();
    }
