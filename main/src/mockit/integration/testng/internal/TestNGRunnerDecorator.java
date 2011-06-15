@@ -64,17 +64,17 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
 
    public void run(IConfigureCallBack callBack, ITestResult testResult)
    {
-      Object instance = testResult.getInstance();
+      Object testInstance = testResult.getInstance();
       Class<?> testClass = testResult.getTestClass().getRealClass();
 
-      updateTestClassState(instance, testClass);
+      updateTestClassState(testInstance, testClass);
 
       if (shouldPrepareForNextTest && testResult.getMethod().isBeforeMethodConfiguration()) {
          prepareForNextTest();
          shouldPrepareForNextTest = false;
       }
 
-      TestRun.setRunningIndividualTest(instance);
+      TestRun.setRunningIndividualTest(testInstance);
       TestRun.setRunningTestMethod(null);
 
       try {
@@ -94,67 +94,54 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
 
    public void run(IHookCallBack callBack, ITestResult testResult)
    {
-      Object instance = testResult.getInstance();
+      Object testInstance = testResult.getInstance();
       Class<?> testClass = testResult.getTestClass().getRealClass();
 
-      updateTestClassState(instance, testClass);
+      updateTestClassState(testInstance, testClass);
       savePoint.set(new SavePoint());
+
+      if (shouldPrepareForNextTest) {
+         prepareForNextTest();
+      }
+
+      shouldPrepareForNextTest = true;
+      createInstancesForTestedFields(testInstance);
 
       @SuppressWarnings({"deprecation"}) Method method = testResult.getMethod().getMethod();
 
-      createInstancesForTestedFields(instance);
-
       if (!isMethodWithParametersProvidedByTestNG(method)) {
          Object[] parameters = testResult.getParameters();
-         Object[] mockParameters = createInstancesForMockParameters(instance, method);
+         Object[] mockParameters = createInstancesForMockParameters(testInstance, method);
 
          if (mockParameters != null) {
             System.arraycopy(mockParameters, 0, parameters, 0, parameters.length);
          }
       }
 
-      if (shouldPrepareForNextTest) {
-         prepareForNextTest();
-      }
-
-      TestRun.setRunningIndividualTest(instance);
+      TestRun.setRunningIndividualTest(testInstance);
       TestRun.setRunningTestMethod(method);
-      shouldPrepareForNextTest = true;
 
-      executeTestMethod(callBack, testResult);
+      try {
+         executeTestMethod(callBack, testResult);
+      }
+      catch (AssertionError t) {
+         Utilities.filterStackTrace(t);
+         throw t;
+      }
+      finally {
+         TestRun.finishCurrentTestExecution(false);
+      }
    }
 
    private void executeTestMethod(IHookCallBack callBack, ITestResult testResult)
    {
       try {
          callBack.runTestMethod(testResult);
-
-         AssertionError error = RecordAndReplayExecution.endCurrentReplayIfAny();
-
-         if (error != null) {
-            Utilities.filterStackTrace(error);
-            throw error;
-         }
-
-         TestRun.verifyExpectationsOnAnnotatedMocks();
       }
       finally {
-         cleanUpAfterTestMethodExecution();
-      }
-   }
-
-   private void cleanUpAfterTestMethodExecution()
-   {
-      TestRun.enterNoMockingZone();
-
-      try {
-         TestRun.resetExpectationsOnAnnotatedMocks();
-         TestRun.finishCurrentTestExecution();
-         savePoint.get().rollback();
+         SavePoint testMethodSavePoint = savePoint.get();
          savePoint.set(null);
-      }
-      finally {
-         TestRun.exitNoMockingZone();
+         concludeTestMethodExecution(testMethodSavePoint);
       }
    }
 }

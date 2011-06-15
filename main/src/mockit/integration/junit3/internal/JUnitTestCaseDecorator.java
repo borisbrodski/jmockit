@@ -10,7 +10,6 @@ import junit.framework.*;
 
 import mockit.*;
 import mockit.integration.*;
-import mockit.internal.expectations.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
@@ -60,8 +59,8 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
    {
       updateTestClassState(it, it.getClass());
 
-      TestRun.setRunningIndividualTest(it);
       prepareForNextTest();
+      TestRun.setRunningIndividualTest(it);
 
       try {
          originalRunBare();
@@ -69,6 +68,9 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       catch (Throwable t) {
          Utilities.filterStackTrace(t);
          throw t;
+      }
+      finally {
+         TestRun.setRunningIndividualTest(null);
       }
    }
 
@@ -79,14 +81,13 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       Throwable exception = null;
 
       try {
-         runTest();
-         exception = endTestExecution(true);
+         executeCurrentTestMethod();
       }
       catch (Throwable running) {
-         endTestExecution(false);
          exception = running;
       }
       finally {
+         TestRun.finishCurrentTestExecution(true);
          exception = performTearDown(exception);
       }
 
@@ -95,56 +96,39 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       }
    }
 
-   private Throwable performTearDown(Throwable thrownByTestMethod)
+   private void executeCurrentTestMethod() throws Throwable
    {
-      TestRun.setRunningTestMethod(null);
-
-      try {
-         tearDownMethod.invoke(it);
-         return thrownByTestMethod;
-      }
-      catch (Throwable tearingDown) {
-         return thrownByTestMethod == null ? tearingDown : thrownByTestMethod;
-      }
-      finally {
-         TestRun.getExecutingTest().setRecordAndReplay(null);
-      }
+      Method testMethod = findTestMethod();
+      TestRun.setRunningTestMethod(testMethod);
+      executeTestMethod(testMethod);
    }
 
-   @Mock(reentrant = true)
-   public void runTest() throws Throwable
+   private Method findTestMethod() throws IllegalAccessException
    {
       String testMethodName = (String) fName.get(it);
-      Method testMethod = findTestMethod(testMethodName);
 
-      if (testMethod == null) {
-         try {
-            runTestMethod.invoke(it);
+      for (Method publicMethod : it.getClass().getMethods()) {
+         if (publicMethod.getName().equals(testMethodName)) {
+            return publicMethod;
          }
-         catch (InvocationTargetException e) {
-            e.fillInStackTrace();
-            throw e.getTargetException();
-         }
-         catch (IllegalAccessException e) {
-            e.fillInStackTrace();
-            throw e;
-         }
-
-         return;
       }
 
-      TestRun.setRunningTestMethod(testMethod);
+      return runTestMethod;
+   }
+
+   private void executeTestMethod(Method testMethod) throws Throwable
+   {
       SavePoint savePoint = new SavePoint();
 
-      createInstancesForTestedFields(it);
-      Object[] args = createInstancesForMockParameters(it, testMethod);
-
       try {
-         if (args == null) {
+         createInstancesForTestedFields(it);
+         Object[] mockParameters = createInstancesForMockParameters(it, testMethod);
+
+         if (mockParameters == null) {
             runTestMethod.invoke(it);
          }
          else {
-            testMethod.invoke(it, args);
+            testMethod.invoke(it, mockParameters);
          }
       }
       catch (InvocationTargetException e) {
@@ -156,50 +140,21 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
          throw e;
       }
       finally {
-         rollbackToSavePoint(savePoint);
+         concludeTestMethodExecution(savePoint);
       }
    }
 
-   private void rollbackToSavePoint(SavePoint savePoint)
+   private Throwable performTearDown(Throwable thrownByTestMethod)
    {
-      TestRun.enterNoMockingZone();
-
       try {
-         savePoint.rollback();
+         tearDownMethod.invoke(it);
+         return thrownByTestMethod;
+      }
+      catch (Throwable tearingDown) {
+         return thrownByTestMethod == null ? tearingDown : thrownByTestMethod;
       }
       finally {
-         TestRun.exitNoMockingZone();
+         TestRun.getExecutingTest().setRecordAndReplay(null);
       }
-   }
-
-   private Method findTestMethod(String testMethodName)
-   {
-      for (Method publicMethod : it.getClass().getMethods()) {
-         if (publicMethod.getName().equals(testMethodName)) {
-            return publicMethod;
-         }
-      }
-
-      return null;
-   }
-
-   private AssertionError endTestExecution(boolean nothingThrownByTestMethod)
-   {
-      AssertionError expectationsFailure = RecordAndReplayExecution.endCurrentReplayIfAny();
-
-      try {
-         if (nothingThrownByTestMethod && expectationsFailure == null) {
-            TestRun.verifyExpectationsOnAnnotatedMocks();
-         }
-      }
-      catch (AssertionError e) {
-         expectationsFailure = e;
-      }
-      finally {
-         TestRun.resetExpectationsOnAnnotatedMocks();
-      }
-
-      TestRun.finishCurrentTestExecution();
-      return expectationsFailure;
    }
 }

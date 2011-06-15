@@ -6,6 +6,7 @@ package mockit.integration;
 
 import java.lang.reflect.*;
 
+import mockit.internal.expectations.*;
 import mockit.internal.expectations.mocking.*;
 import mockit.internal.capturing.*;
 import mockit.internal.state.*;
@@ -141,17 +142,20 @@ public class TestRunnerDecorator
 
    protected final void createInstancesForTestedFields(Object target)
    {
-      TestedClassInstantiations testedClasses =
-         TestRun.getSharedFieldTypeRedefinitions().getTestedClassInstantiations();
+      SharedFieldTypeRedefinitions sharedRedefinitions = TestRun.getSharedFieldTypeRedefinitions();
 
-      if (testedClasses != null) {
-         TestRun.enterNoMockingZone();
+      if (sharedRedefinitions != null) {
+         TestedClassInstantiations testedClasses = sharedRedefinitions.getTestedClassInstantiations();
 
-         try {
-            testedClasses.assignNewInstancesToTestedFields(target);
-         }
-         finally {
-            TestRun.exitNoMockingZone();
+         if (testedClasses != null) {
+            TestRun.enterNoMockingZone();
+
+            try {
+               testedClasses.assignNewInstancesToTestedFields(target);
+            }
+            finally {
+               TestRun.exitNoMockingZone();
+            }
          }
       }
    }
@@ -172,6 +176,28 @@ public class TestRunnerDecorator
       }
       finally {
          TestRun.exitNoMockingZone();
+      }
+   }
+
+   protected final void concludeTestMethodExecution(SavePoint savePoint)
+   {
+      TestRun.enterNoMockingZone();
+      AssertionError expectationsFailure = RecordAndReplayExecution.endCurrentReplayIfAny();
+
+      try {
+         if (expectationsFailure == null) {
+            TestRun.verifyExpectationsOnAnnotatedMocks();
+         }
+      }
+      finally {
+         TestRun.resetExpectationsOnAnnotatedMocks();
+         savePoint.rollback();
+         TestRun.exitNoMockingZone();
+      }
+
+      if (expectationsFailure != null) {
+         //noinspection ThrowFromFinallyBlock
+         throw expectationsFailure;
       }
    }
 }

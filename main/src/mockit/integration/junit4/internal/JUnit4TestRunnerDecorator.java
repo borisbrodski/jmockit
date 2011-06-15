@@ -68,11 +68,11 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
          prepareForNextTest();
       }
 
-      TestRun.setRunningTestMethod(method);
       shouldPrepareForNextTest = true;
+      TestRun.setRunningTestMethod(method);
 
       try {
-         executeTest(target, params);
+         executeTestMethod(target, params);
          return null; // it's a test method, therefore has void return type
       }
       catch (Throwable t) {
@@ -80,7 +80,7 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
          throw t;
       }
       finally {
-         TestRun.finishCurrentTestExecution();
+         TestRun.finishCurrentTestExecution(true);
       }
    }
 
@@ -101,10 +101,9 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
       }
    }
 
-   private void executeTest(Object target, Object... parameters) throws Throwable
+   private void executeTestMethod(Object target, Object... parameters) throws Throwable
    {
       SavePoint savePoint = new SavePoint();
-      boolean nothingThrownByTest = false;
 
       try {
          createInstancesForTestedFields(target);
@@ -112,27 +111,9 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
 
          TestRun.setRunningIndividualTest(target);
          it.invokeExplosively(target, mockParameters == null ? parameters : mockParameters);
-         nothingThrownByTest = true;
       }
       finally {
-         TestRun.enterNoMockingZone();
-         AssertionError expectationsFailure = RecordAndReplayExecution.endCurrentReplayIfAny();
-
-         try {
-            if (nothingThrownByTest && expectationsFailure == null) {
-               TestRun.verifyExpectationsOnAnnotatedMocks();
-            }
-         }
-         finally {
-            TestRun.resetExpectationsOnAnnotatedMocks();
-            savePoint.rollback();
-            TestRun.exitNoMockingZone();
-         }
-
-         if (nothingThrownByTest && expectationsFailure != null) {
-            //noinspection ThrowFromFinallyBlock
-            throw expectationsFailure;
-         }
+         concludeTestMethodExecution(savePoint);
       }
    }
 
