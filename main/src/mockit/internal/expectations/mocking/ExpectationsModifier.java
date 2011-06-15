@@ -45,7 +45,7 @@ final class ExpectationsModifier extends BaseClassModifier
    ExpectationsModifier(ClassLoader classLoader, ClassReader classReader, MockedType typeMetadata)
    {
       super(classReader);
-      
+
       if (typeMetadata == null) {
          mockingCfg = null;
       }
@@ -77,6 +77,10 @@ final class ExpectationsModifier extends BaseClassModifier
    @Override
    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
+      if ("java/lang/Class".equals(name)) {
+         throw new IllegalArgumentException("Mocked class " + name.replace('/', '.') + " is not mockable");
+      }
+
       superClassName = superName;
       super.visit(version, access, name, signature, superName, interfaces);
       isProxy = "java/lang/reflect/Proxy".equals(superName);

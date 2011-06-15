@@ -148,4 +148,17 @@ public final class JREMockingTest extends TestCase
 
       awaitNotification();
    }
+
+   // Un-mockable JRE classes /////////////////////////////////////////////////////////////////////////////////////////
+
+   public void testAttemptToMockJREClassThatIsNotMockable()
+   {
+      try {
+         new Expectations() { Class<?> mockClass; };
+         fail();
+      }
+      catch (IllegalArgumentException e) {
+         assertTrue(e.getMessage().contains("java.lang.Class"));
+      }
+   }
 }
