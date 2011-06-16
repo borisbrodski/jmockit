@@ -117,7 +117,7 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
  <A HREF="../mockit/Mockit.html#stubOutClass(java.lang.Class, boolean, java.lang.String...)"><CODE>stubOutClass(Class, boolean, String...)</CODE></A>.
  </li>
  <li>
- <strong>Annotations API</strong> for state-oriented mocking: <A HREF="../mockit/MockUp.html" title="class in mockit"><CODE>MockUp</CODE></A>, <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>setUpMocks(Object...)</CODE></A>,
+ <strong>Mockups API</strong> for state-oriented mocking: <A HREF="../mockit/MockUp.html" title="class in mockit"><CODE>MockUp</CODE></A>, <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>setUpMocks(Object...)</CODE></A>,
  <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Class)"><CODE>setUpMock(Class, Class)</CODE></A> and its several overloads, <A HREF="../mockit/Mockit.html#setUpStartupMocks(java.lang.Object...)"><CODE>setUpStartupMocks(Object...)</CODE></A>,
  <A HREF="../mockit/Mockit.html#setUpMocksAndStubs(java.lang.Class...)"><CODE>setUpMocksAndStubs(Class...)</CODE></A>, and <A HREF="../mockit/Mockit.html#tearDownMocks(java.lang.Class...)"><CODE>tearDownMocks(Class...)</CODE></A> / <A HREF="../mockit/Mockit.html#tearDownMocks()"><CODE>tearDownMocks()</CODE></A>.
  </li>
@@ -127,7 +127,7 @@ Provides static methods for the mocking and stubbing of arbitrary classes from p
  These are merely convenience methods that create empty implementation classes for one or more interfaces, where all
  implemented methods do nothing beyond returning a default value according to the return type of each interface
  method.
- The created classes can be mocked through the Annotations API, and its instances passed to code under test.
+ The created classes can be mocked through the Mockups API, and its instances passed to code under test.
  </li>
  </ul>
  Tutorial:
@@ -376,12 +376,12 @@ public static &lt;E&gt; E <B>newEmptyProxy</B>(<A HREF="http://download.oracle.c
  loader (usually, when it's a JRE class).
  Therefore, you should only use this method for application-defined interfaces.
  <p/>
- This method is just a convenience for some uses of the <em>Annotations</em> API.
+ This method is just a convenience for some uses of the <em>Mockups</em> API.
  In <em>JMockit Expectations</em> in particular, mocked instances will be automatically created and assigned to any
  mock fields or parameters.
 <P>
 <DD><DL>
-<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#112">Example</a></DL>
+<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#91">Example</a></DL>
 </DD>
 </DL>
 <HR>
@@ -402,7 +402,7 @@ public static &lt;E&gt; E <B>newEmptyProxy</B>(<A HREF="http://download.oracle.c
  for equality; <code>hashCode</code> is implemented to return the identity hash code for the proxy instance; and
  <code>toString</code> returns the standard string representation that <code>Object#toString</code> would have returned.
  <p/>
- This method is just a convenience for some uses of the <em>Annotations</em> API.
+ This method is just a convenience for some uses of the <em>Mockups</em> API.
  In <em>JMockit Expectations</em> in particular, mocked instances will be automatically created and assigned to any
  mock fields or parameters.
 <P>
@@ -411,7 +411,7 @@ public static &lt;E&gt; E <B>newEmptyProxy</B>(<A HREF="http://download.oracle.c
  loader, which can be obtained from any application class<DD><CODE>interfaceToBeProxied</CODE> - a <code>Class</code> object for an interface
 <DT><B>Returns:</B><DD>the created proxy instance<DT><B>See Also:</B><DD><A HREF="../mockit/Mockit.html#newEmptyProxy(java.lang.Class)"><CODE>newEmptyProxy(Class)</CODE></A>, 
 <A HREF="../mockit/Mockit.html#newEmptyProxy(java.lang.reflect.Type...)"><CODE>newEmptyProxy(Type...)</CODE></A>, 
-<a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java#207">Example</a></DL>
+<a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#186">Example</a></DL>
 </DD>
 </DL>
 <HR>
@@ -431,7 +431,7 @@ public static &lt;E&gt; E <B>newEmptyProxy</B>(<A HREF="http://download.oracle.c
  for equality; <code>hashCode</code> is implemented to return the identity hash code for the proxy instance; and
  <code>toString</code> returns the standard string representation that <code>Object#toString</code> would have returned.
  <p/>
- This method is just a convenience for some uses of the <em>Annotations</em> API.
+ This method is just a convenience for some uses of the <em>Mockups</em> API.
  In <em>JMockit Expectations</em> in particular, mocked instances will be automatically created and assigned to any
  mock fields or parameters.
 <P>
@@ -456,7 +456,7 @@ public static void <B>setUpMock</B>(<A HREF="http://download.oracle.com/javase/6
  configuration or by creating a <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/reflect/Proxy.html?is-external=true" title="class or interface in java.lang.reflect"><CODE>Proxy</CODE></A> for an interface.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>realClass</CODE> - the class to be mocked that is used by code under test<DD><CODE>mockClass</CODE> - the class containing the mock methods for the real class<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#171">Example</a></DL>
+<DT><B>Parameters:</B><DD><CODE>realClass</CODE> - the class to be mocked that is used by code under test<DD><CODE>mockClass</CODE> - the class containing the mock methods for the real class<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#151">Example</a></DL>
 </DD>
 </DL>
 <HR>
@@ -473,7 +473,7 @@ public static void <B>setUpMock</B>(<A HREF="http://download.oracle.com/javase/6
  of by creating a <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/reflect/Proxy.html?is-external=true" title="class or interface in java.lang.reflect"><CODE>Proxy</CODE></A> for an interface.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>realClass</CODE> - the class to be mocked that is used by code under test<DD><CODE>mock</CODE> - an instance of the class containing the mock methods for the real class<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java#134">Example</a></DL>
+<DT><B>Parameters:</B><DD><CODE>realClass</CODE> - the class to be mocked that is used by code under test<DD><CODE>mock</CODE> - an instance of the class containing the mock methods for the real class<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#113">Example</a></DL>
 </DD>
 </DL>
 <HR>
@@ -493,10 +493,12 @@ public static &lt;T&gt; T <B>setUpMock</B>(<A HREF="http://download.oracle.com/j
  class
 <DT><B>Returns:</B><DD>the new proxy instance created for the mocked interface, or <code>null</code> otherwise
 <DT><B>Throws:</B>
-<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if the mock class fails to specify an interface or class using the
- <code>@MockClass(realClass = ...)</code> annotation<DT><B>See Also:</B><DD><A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)"><CODE>setUpMock(Class, Object)</CODE></A>, 
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if a given mock class fails to specify the corresponding real class using the
+ <code>@MockClass(realClass = ...)</code> annotation; or if a mock class defines a mock method for which no
+ corresponding real method or constructor exists in the real class;
+ or if the real method matching a mock method is <code>abstract</code><DT><B>See Also:</B><DD><A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)"><CODE>setUpMock(Class, Object)</CODE></A>, 
 <A HREF="../mockit/Mockit.html#setUpMocks(java.lang.Object...)"><CODE>setUpMocks(Object...)</CODE></A>, 
-<a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#678">Example</a></DL>
+<a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#663">Example</a></DL>
 </DD>
 </DL>
 <HR>
@@ -511,7 +513,7 @@ public static void <B>setUpMock</B>(<A HREF="http://download.oracle.com/javase/6
  This is useful when said class is not accessible from the test.
 <P>
 <DD><DL>
-<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#61">Example</a></DL>
+<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#40">Example</a></DL>
 </DD>
 </DL>
 <HR>
@@ -580,9 +582,11 @@ public static void <B>setUpMocks</B>(<A HREF="http://download.oracle.com/javase/
  redefine corresponding real methods/constructors in a designated <A HREF="../mockit/MockClass.html#realClass()">real class</A>
  (usually, a class on which the code under test depends on)
 <DT><B>Throws:</B>
-<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if any mock class fails to specify the corresponding real class using the
- <code>@MockClass(realClass = ...)</code> annotation<DT><B>See Also:</B><DD><A HREF="../mockit/Mockit.html#tearDownMocks(java.lang.Class...)"><CODE>tearDownMocks(Class[])</CODE></A>, 
-<a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepositoryTest.java#132">Example</a></DL>
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if a given mock class fails to specify the corresponding real class using the
+ <code>@MockClass(realClass = ...)</code> annotation; or if a mock class defines a mock method for which no
+ corresponding real method or constructor exists in the real class;
+ or if the real method matching a mock method is <code>abstract</code><DT><B>See Also:</B><DD><A HREF="../mockit/Mockit.html#tearDownMocks(java.lang.Class...)"><CODE>tearDownMocks(Class[])</CODE></A>, 
+<a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#111">Example</a></DL>
 </DD>
 </DL>
 <HR>
@@ -638,8 +642,10 @@ public static void <B>setUpStartupMocks</B>(<A HREF="http://download.oracle.com/
  redefine corresponding real methods/constructors in a designated <A HREF="../mockit/MockClass.html#realClass()">real class</A>
  (usually, a class on which the code under test depends on)
 <DT><B>Throws:</B>
-<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if any mock class fails to specify the corresponding real class using the
- <code>@MockClass(realClass = ...)</code> annotation<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#467">Example</a></DL>
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if a given mock class fails to specify the corresponding real class using the
+ <code>@MockClass(realClass = ...)</code> annotation; or if a mock class defines a mock method for which no
+ corresponding real method or constructor exists in the real class;
+ or if the real method matching a mock method is <code>abstract</code><DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#447">Example</a></DL>
 </DD>
 </DL>
 <HR>
@@ -756,7 +762,7 @@ public static void <B>tearDownMocks</B>()</PRE>
  test suite.
  <p/>
  Notice that a call to this method will tear down <em>all</em> mock classes that were applied through use of the
- Annotations API that are still in effect, as well as any mock classes or stubs applied to the current test class
+ Mockups API that are still in effect, as well as any mock classes or stubs applied to the current test class
  through <code>@UsingMocksAndStubs</code>.
  In other words, it would effectively prevent mocks to be set up at the test class and test suite levels.
  So, use it only if necessary and if it won't discard mock classes that should remain in effect.
@@ -768,7 +774,7 @@ public static void <B>tearDownMocks</B>()</PRE>
  annotation) before the first test in the next test class is executed.
 <P>
 <DD><DL>
-<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/serviceA/ServiceATest.java#56">Example</a></DL>
+<DT><B>See Also:</B><DD><a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#415">Example</a></DL>
 </DD>
 </DL>
 <HR>

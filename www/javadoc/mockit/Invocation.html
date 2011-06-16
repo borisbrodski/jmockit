@@ -97,16 +97,19 @@ Class Invocation</H2>
 </PRE>
 
 <P>
-A context object representing the current invocation to a mocked method or constructor.
+A context object representing the current invocation to a mocked method/constructor, to be passed as the
+ <em>first</em> parameter of the corresponding <em>mock method</em> implementations.
  <p/>
- When used as the type of the first parameter on a <A HREF="../mockit/Delegate.html" title="interface in mockit"><CODE>Delegate</CODE></A> method, all invocations to the delegate method
- will receive an appropriate instance.
- Similarly, it can be used in the handler method of an instance assigned to the
+ With the <em>Expectations & Verifications</em> API, this parameter can appear in mock methods implemented in
+ <A HREF="../mockit/Delegate.html" title="interface in mockit"><CODE>Delegate</CODE></A> classes or in validation objects assigned to the
  forEachInvocation field.
+ With the <em>Mockups</em> API, it can appear in <A HREF="../mockit/Mock.html" title="annotation in mockit"><CODE>Mock</CODE></A> methods.
  <p/>
  Sample tests:
  <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/DelegateInvocationTest.java"
- >DelegateInvocationTest</a>
+ >DelegateInvocationTest</a>,
+ <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockInvocationTest.java"
+ >MockInvocationTest</a>
 <P>
 
 <P>
@@ -172,8 +175,8 @@ A context object representing the current invocation to a mocked method or const
 <TD><CODE><B><A HREF="../mockit/Invocation.html#getInvokedInstance()">getInvokedInstance</A></B>()</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the target instance on which the current invocation was made, if any (if the method invoked is
- <code>static</code> then there is no instance and null is returned).</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the instance on which the current invocation was made, or <code>null</code> for a <code>static</code> method
+ invocation.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -181,7 +184,8 @@ A context object representing the current invocation to a mocked method or const
 <TD><CODE><B><A HREF="../mockit/Invocation.html#getMaxInvocations()">getMaxInvocations</A></B>()</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the maximum invocation count for the current expectation (-1 indicates unlimited).</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the current value of the maximum invocation count for the matching expectation or mock method (<code>-1</code>
+ indicates that it's unlimited).</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -189,7 +193,15 @@ A context object representing the current invocation to a mocked method or const
 <TD><CODE><B><A HREF="../mockit/Invocation.html#getMinInvocations()">getMinInvocations</A></B>()</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the minimum invocation count for the current expectation.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the current value of the minimum invocation count associated with the matching expectation or mock method.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../mockit/Invocation.html#onChange()">onChange</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For internal use only.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -197,7 +209,7 @@ A context object representing the current invocation to a mocked method or const
 <TD><CODE><B><A HREF="../mockit/Invocation.html#setMaxInvocations(int)">setMaxInvocations</A></B>(int&nbsp;maxInvocations)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the maximum invocation count for the current expectation.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the current value of the maximum invocation count for the matching expectation or mock method.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -205,7 +217,7 @@ A context object representing the current invocation to a mocked method or const
 <TD><CODE><B><A HREF="../mockit/Invocation.html#setMinInvocations(int)">setMinInvocations</A></B>(int&nbsp;minInvocations)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the minimum invocation count for the current expectation.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the current value of the minimum invocation count for the matching expectation or mock method.</TD>
 </TR>
 </TABLE>
 &nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
@@ -284,11 +296,8 @@ getInvokedInstance</H3>
 <PRE>
 public final &lt;T&gt; T <B>getInvokedInstance</B>()</PRE>
 <DL>
-<DD>Returns the target instance on which the current invocation was made, if any (if the method invoked is
- <code>static</code> then there is no instance and null is returned).
- <p/>
- Note that this instance can either be the mocked instance originally created by JMockit and assigned to a mock
- field or passed as a mock parameter, or an instance created by the code under test.
+<DD>Returns the instance on which the current invocation was made, or <code>null</code> for a <code>static</code> method
+ invocation.
 <P>
 <DD><DL>
 </DL>
@@ -301,10 +310,14 @@ getMaxInvocations</H3>
 <PRE>
 public final int <B>getMaxInvocations</B>()</PRE>
 <DL>
-<DD>Returns the maximum invocation count for the current expectation (-1 indicates unlimited).
+<DD>Returns the current value of the maximum invocation count for the matching expectation or mock method (<code>-1</code>
+ indicates that it's unlimited).
  <p/>
- This call will return the value specified through the <CODE>Invocations.times</CODE> or <CODE>Invocations.maxTimes</CODE>
- field, if that was the case.
+ For an expectation, this call will return the value specified through the
+ times or maxTimes field, if that was the case;
+ if not, the value will be <code>-1</code> for a non-strict expectation and <code>1</code> for a strict expectation.
+ For a <code>@Mock</code> method, it will return the value specified for the <A HREF="../mockit/Mock.html#invocations()">invocations</A>
+ or <A HREF="../mockit/Mock.html#maxInvocations()">maxInvocations</A> attribute, or <code>-1</code> if none.
 <P>
 <DD><DL>
 </DL>
@@ -317,10 +330,26 @@ getMinInvocations</H3>
 <PRE>
 public final int <B>getMinInvocations</B>()</PRE>
 <DL>
-<DD>Returns the minimum invocation count for the current expectation.
+<DD>Returns the current value of the minimum invocation count associated with the matching expectation or mock method.
  <p/>
- This call will return the value specified through the <CODE>Invocations.times</CODE> or <CODE>Invocations.minTimes</CODE>
- field, if that was the case.
+ For an expectation, this call will return the value specified through the
+ times or minTimes field, if that was the case;
+ if not, the value will be <code>0</code> for a non-strict expectation and <code>1</code> for a strict expectation.
+ For a <code>@Mock</code> method, it will return the value specified for the <A HREF="../mockit/Mock.html#invocations()">invocations</A>
+ or <A HREF="../mockit/Mock.html#minInvocations()">minInvocations</A> attribute, or <code>0</code> if none.
+<P>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="onChange()"><!-- --></A><H3>
+onChange</H3>
+<PRE>
+protected void <B>onChange</B>()</PRE>
+<DL>
+<DD>For internal use only.
 <P>
 <DD><DL>
 </DL>
@@ -333,10 +362,13 @@ setMaxInvocations</H3>
 <PRE>
 public final void <B>setMaxInvocations</B>(int&nbsp;maxInvocations)</PRE>
 <DL>
-<DD>Sets the maximum invocation count for the current expectation.
+<DD>Sets the current value of the maximum invocation count for the matching expectation or mock method.
+ The value of <code>-1</code> implies no upper limit.
  <p/>
- This call can be used to override the value set on the <CODE>Invocations.times</CODE> or <CODE>Invocations.maxTimes</CODE>
- field.
+ For an expectation, this call can be used to override the value set on the times or
+ maxTimes field.
+ For a <code>@Mock</code> method, it would override the value specified in the
+ <A HREF="../mockit/Mock.html#invocations()">invocations</A> or <A HREF="../mockit/Mock.html#maxInvocations()">maxInvocations</A> attribute.
 <P>
 <DD><DL>
 </DL>
@@ -349,10 +381,12 @@ setMinInvocations</H3>
 <PRE>
 public final void <B>setMinInvocations</B>(int&nbsp;minInvocations)</PRE>
 <DL>
-<DD>Sets the minimum invocation count for the current expectation.
+<DD>Sets the current value of the minimum invocation count for the matching expectation or mock method.
  <p/>
- This call can be used to override the value set on the <CODE>Invocations.times</CODE> or <CODE>Invocations.minTimes</CODE>
- field.
+ For an expectation, this call can be used to override the value set on the times or
+ minTimes field.
+ For a <code>@Mock</code> method, it would override the value specified in the
+ <A HREF="../mockit/Mock.html#invocations()">invocations</A> or <A HREF="../mockit/Mock.html#minInvocations()">minInvocations</A> attribute.
 <P>
 <DD><DL>
 </DL>

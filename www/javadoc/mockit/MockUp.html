@@ -92,7 +92,9 @@ Class MockUp&lt;T&gt;</H2>
   <IMG SRC="../resources/inherit.gif" ALT="extended by "><B>mockit.MockUp&lt;T&gt;</B>
 </PRE>
 <DL>
-<DT><DT><B>Type Parameters:</B><DD><CODE>T</CODE> - specifies the class or interface(s) to be mocked</DL>
+<DT><DT><B>Type Parameters:</B><DD><CODE>T</CODE> - specifies the type (class, interface, etc.) to be mocked; multiple interfaces can be mocked by defining
+ a <em>type variable</em> in the test class or test method, and using it as the type argument;
+ if the type argument itself is a parameterized type, then only its raw type is considered for mocking</DL>
 <HR>
 <DL>
 <DT><PRE>public abstract class <B>MockUp&lt;T&gt;</B><DT>extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></DL>
@@ -102,12 +104,12 @@ Class MockUp&lt;T&gt;</H2>
 A <em>mock-up</em> for a class or interface, to be used in state-based tests.
  <p/>
  One or more <em>mock methods</em>, each one annotated <A HREF="../mockit/Mock.html" title="annotation in mockit">as such</A> and corresponding to a "real" method
- or constructor of the mocked class/interface, must be defined in a concrete subclass.
+ or constructor of the mocked class/interface, must be defined in the concrete subclass.
  <p/>
  This class is particularly useful for the creation on <em>in-line mock classes</em>, defined inside individual test
  methods as anonymous inner classes.
  <p/>
- <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#inline">Tutorial</a>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#inline">In the Tutorial</a>
 <P>
 
 <P>
@@ -129,8 +131,8 @@ A <em>mock-up</em> for a class or interface, to be used in state-based tests.
 <TD><CODE><B><A HREF="../mockit/MockUp.html#MockUp()">MockUp</A></B>()</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Applies the mock methods defined in the concrete subclass to the class or interface specified through the type
- parameter.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Applies the <A HREF="../mockit/Mock.html" title="annotation in mockit">mock methods</A> defined in the concrete subclass to the class or interface specified
+ through the type parameter.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -138,7 +140,7 @@ A <em>mock-up</em> for a class or interface, to be used in state-based tests.
 <TD><CODE><B><A HREF="../mockit/MockUp.html#MockUp(java.lang.Class)">MockUp</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;classToMock)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Applies the mock methods defined in the concrete subclass to the given class.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Applies the <A HREF="../mockit/Mock.html" title="annotation in mockit">mock methods</A> defined in the concrete subclass to the given class/interface.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -187,14 +189,18 @@ MockUp</H3>
 <PRE>
 protected <B>MockUp</B>()</PRE>
 <DL>
-<DD>Applies the mock methods defined in the concrete subclass to the class or interface specified through the type
- parameter.
+<DD>Applies the <A HREF="../mockit/Mock.html" title="annotation in mockit">mock methods</A> defined in the concrete subclass to the class or interface specified
+ through the type parameter.
  <p/>
  When one or more interfaces are specified to be mocked, a mocked proxy class that implements the interfaces is
  created, with the proxy instance made available through a call to <A HREF="../mockit/MockUp.html#getMockInstance()"><CODE>getMockInstance()</CODE></A>.
 <P>
 <DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/MockUp.html#MockUp(java.lang.Class)"><CODE>MockUp(Class)</CODE></A></DL>
+
+<DT><B>Throws:</B>
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if no type to be mocked was specified;
+ or if there is a mock method for which no corresponding real method or constructor is found;
+ or if the real method matching a mock method is <code>abstract</code><DT><B>See Also:</B><DD><A HREF="../mockit/MockUp.html#MockUp(java.lang.Class)"><CODE>MockUp(Class)</CODE></A></DL>
 </DL>
 <HR>
 
@@ -203,10 +209,10 @@ MockUp</H3>
 <PRE>
 protected <B>MockUp</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;classToMock)</PRE>
 <DL>
-<DD>Applies the mock methods defined in the concrete subclass to the given class.
+<DD>Applies the <A HREF="../mockit/Mock.html" title="annotation in mockit">mock methods</A> defined in the concrete subclass to the given class/interface.
  <p/>
- In most cases, the constructor with no parameters can be used. This variation should be used only when the real
- class to be mocked is not accessible or known to the test.
+ In most cases, the constructor with no parameters can be used. This variation should be used only when the type
+ to be mocked is not accessible or known to the test.
 <P>
 <DL>
 <DT><B>See Also:</B><DD><A HREF="../mockit/MockUp.html#MockUp()"><CODE>MockUp()</CODE></A></DL>
