@@ -428,17 +428,14 @@ public final class MyBusinessService_VerificationsAPI_Test
 <pre><code>package domain;
 
 import java.util.*;
-
 import org.apache.commons.mail.*;
 import org.junit.*;
 import static org.junit.Assert.*;
-
 import mockit.*;
-
 import domain.MyBusinessService_MockupsAPI_Test.*;
 import infrastructure.*;
 
-@UsingMocksAndStubs({MockDatabase.class, Email.class})
+@UsingMocksAndStubs(MockDatabase.class)
 public final class MyBusinessService_MockupsAPI_Test
 {
    @MockClass(realClass = Database.class, stubs = "&lt;clinit>")
@@ -457,6 +454,12 @@ public final class MyBusinessService_MockupsAPI_Test
    }
 
    final EntityX data = new EntityX(5, "abc", "5453-1");
+
+   @Before
+   public void stubOutEmailClass()
+   {
+      Mockit.stubOut(Email.class);
+   }
 
    @Test
    public void doBusinessOperationXyz() throws Exception
@@ -501,22 +504,23 @@ public final class MyBusinessService_MockupsAPI_Test
 <p>
    The two tests above share a reusable mock class, <code class="type">MockDatabase</code>, which is applied to
    the test class as a whole through the <code class="annotation">@UsingMocksAndStubs</code> annotation.
-   As the name suggests, this annotation can also be applied to make all tests in a given test class
-   use stub (empty) implementations for one or more classes.
-   In this case, we stub out the <code class="type">Email</code> class, which has methods that are called from
-   the tested class (<code class="type">MyBusinessService</code>) but aren't actually relevant in our tests (for
-   example, the <code>setSubject(String)</code> method).
-   When a class is stubbed out, <em>all</em> of its methods, constructors, and static initializers (if any) are
-   temporarily replaced with empty implementations. However, an individual test method can still specify a particular
-   mock implementation for any of the stubbed out methods and constructors.
-</p>
-<p>
-   Notice that we also stub out static initializers in the <code class="type">Database</code> class, by
-   specifying the special method name "<code>&lt;clinit></code>" in another attribute of the
-   <code class="annotation">@MockClass</code> annotation. This is necessary in this case because the
+   Notice that we also stub out static initializers in the <code class="type">Database</code> class, by specifying the
+   special method name "<code>&lt;clinit></code>" in another attribute of the <code class="annotation">@MockClass</code>
+   annotation.
+   This is necessary in this case because the
    <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/src/jmockit/tutorial/infrastructure/Database.java">Database</a>
    class actually creates a JPA <code class="type">EntityManagerFactory</code> instance during its static
    initialization.
+</p>
+<p>
+   For each test, we stub out the entire <code class="type">Email</code> class before mocking some of its methods inside
+   each test method, by calling <code>Mockit.stubOut(Email.class)</code> in a test set-up method.
+   This is done so that those methods/constructors that are not actually relevant for the test (such as
+   <code>Email#setSubject(String)</code>) do nothing if/when called from the tested class.
+   When a class is stubbed out, <em>all</em> of its methods, constructors, and static initializers (if any) are
+   temporarily replaced with empty implementations.
+   However, an individual test method can still specify a particular mock implementation for any of the stubbed out
+   methods/constructors, as we do in these two tests.
 </p>
 <p>
    Each test sets up specific mocks for the <code class="type">Email</code> class by creating an inline

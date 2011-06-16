@@ -16,7 +16,7 @@ import mockit.*;
 
 import jmockit.tutorial.infrastructure.*;
 
-@UsingMocksAndStubs({MockDatabase.class, Email.class})
+@UsingMocksAndStubs(MockDatabase.class)
 public final class MyBusinessService_MockupsAPI_Test
 {
    @MockClass(realClass = Database.class, stubs = "<clinit>")
@@ -35,6 +35,12 @@ public final class MyBusinessService_MockupsAPI_Test
    }
 
    final EntityX data = new EntityX(5, "abc", "5453-1");
+
+   @Before
+   public void stubOutEmailClass()
+   {
+      Mockit.stubOut(Email.class);
+   }
 
    @Test
    public void doBusinessOperationXyz() throws Exception
