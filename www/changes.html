@@ -14,9 +14,9 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
-<p>Release 0.999.10 (Jun 1?, 2011):</p>
+<p>Release 0.999.10 (Jun 16, 2011):</p>
 <ul>
    <li>
       <strong>Renamed</strong> the "<strong>Annotations</strong>" API, since most annotations now belong to the much
@@ -24,20 +24,22 @@
    </li>
    <li>
       <strong>Enhanced</strong> the support for <strong><code>@Tested</code></strong> fields:
-      <em>non-public</em> classes with a package-private constructor are now accepted as well;
-      <code>@Injectable</code> fields of <em>non-mockable</em> types (primitives and arrays) are now considered when
+      1) <em>non-public</em> classes with a package-private constructor are now accepted as well;
+      2) <code>@Injectable</code> fields of <em>non-mockable</em> types (primitives and arrays) are now considered when
       injecting values into the tested object;
-      <em>multiple</em> parameters of the same type are now supported when doing constructor injection, by taking values
-      from matching injectable fields declared in the same relative order;
-      a <em>varargs</em> constructor parameter is now supported, taking the values of all injectable fields having the
-      same type.
+      3) <em>multiple</em> parameters of the same type are now supported when doing constructor injection, by taking
+      values from matching injectable fields declared in the same relative order;
+      4) a <em>varargs</em> constructor parameter is now supported, taking the values of all injectable fields having
+      the same type.
    </li>
    <li>
       <strong>Enhanced</strong> the support for <strong><code>@Input</code></strong> fields:
-      <em>multiple</em> fields of the same type can be declared, allowing <em>consecutive</em> results to be specified;
-      the new <strong><code>invocations = <em>n</em></code></strong> attribute can be used to specify a fixed number of
-      matching invocations for a given input field;
-      auto-instantiation of values can now be done with a <em>non-public</em> no-args constructor.
+      1) <em>multiple</em> fields of the same type can be declared, allowing <em>consecutive</em> results to be
+      specified;
+      2) the new <strong><code>invocations = <em>n</em></code></strong> attribute can be used to specify a fixed number
+      of matching invocations for a given input field;
+      3) auto-instantiation of values can now be done with a <em>non-public</em> no-args constructor;
+      4) it now also works when combined with <em>dynamic</em> partial mocking.
    </li>
    <li>
       <strong>Enhancement</strong>: The <code>mockit.Invocation</code> class can now be used as the type of the first
@@ -45,13 +47,22 @@
       See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=16">16</a>.
    </li>
    <li>
-      Fully reviewed the Tutorial chapter on <a href="tutorial/BehaviorBasedTesting.html">behavior-based testing</a>,
+      Some fixes and improvements to the <strong>TestNG</strong> and <strong>JUnit 3.8</strong> integrations.
+      See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=167">167</a> for one of the bugs fixed.
+   </li>
+   <li>
+      <strong>Fixed/improved</strong> the handling of non-strict expectations recorded for the same method, when using
+      similar or equivalent argument matchers.
+      See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=168">168</a>.
+   </li>
+   <li>
+      Reviewed the Tutorial chapter on <a href="tutorial/BehaviorBasedTesting.html">behavior-based testing</a>,
       with new coverage on the <code>@Injectable</code> and <code>@Tested</code> annotations.
    </li>
    <li>Tested and adapted JMockit to run on <strong>JDK 7</strong>.</li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release 0.999.9 (May 17, 2011):</p>
 <ul>
@@ -105,8 +116,6 @@ domain/MyBusinessService_ExpectationsAPI2_Test.java">here</a> for examples.
       EMMA code coverage tool, when they were mocked with <em>reentrant</em> mock methods (Annotations API).
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.999.8 (March 11, 2011):</p>
 <ul>
