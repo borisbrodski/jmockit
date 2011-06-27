@@ -10,7 +10,6 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings({"ClassWithTooManyMethods"})
 public final class ExpectationsUsingReflectionTest
 {
    public interface BusinessInterface
@@ -18,7 +17,14 @@ public final class ExpectationsUsingReflectionTest
       void doOperation();
    }
 
-   static class Collaborator
+   static class BaseCollaborator
+   {
+      @SuppressWarnings({"UnusedParameters"})
+      void setValue(short value) {}
+   }
+
+   @SuppressWarnings({"UnusedDeclaration", "MethodOverloadsMethodOfSuperclass"})
+   static final class Collaborator extends BaseCollaborator
    {
       static String xyz;
 
@@ -27,9 +33,9 @@ public final class ExpectationsUsingReflectionTest
       private String value3;
 
       Collaborator() {}
-
+      Collaborator(Object value) { value3 = String.valueOf(value); }
+      Collaborator(CharSequence value) { value3 = value.toString(); }
       Collaborator(int value) { this.value = value; }
-
       Collaborator(int value, Integer value2, String value3)
       {
          this.value = value; this.value2 = value2; this.value3 = value3;
@@ -37,12 +43,21 @@ public final class ExpectationsUsingReflectionTest
 
       private static String doInternal() { return "123"; }
 
+      static void staticMethod(int i, Object o, Character c) {}
+      static void staticMethod(int i, String s, char c) {}
+
       void setValue(int value) { this.value = value; }
+      void setValue(long value) { this.value = (int) value; }
+      void setValue(byte value) { this.value = value; }
+      void setValue(char value) { this.value = value; }
+      void setValue(float value) { this.value = (int) value; }
+      void setValue(double value) { this.value = (int) value; }
+      void setValue(boolean value) { this.value = value ? 1 : -1; }
       void setValue(String value) { value3 = value; }
+      void setValue(Object value) { value3 = String.valueOf(value); }
 
       void doBusinessOperation(BusinessInterface operation) { operation.doOperation(); }
 
-      @SuppressWarnings({"UnusedDeclaration"})
       private final class Inner
       {
          private final String s;
@@ -58,12 +73,7 @@ public final class ExpectationsUsingReflectionTest
    @Test
    public void expectInstanceMethodInvocation(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            invoke(mock, "setValue", 2);
-         }
-      };
+      new Expectations() {{ invoke(mock, "setValue", 2); }};
 
       mock.setValue(2);
    }
@@ -71,37 +81,53 @@ public final class ExpectationsUsingReflectionTest
    @Test
    public void expectInstanceMethodInvocationsWithAnyArguments(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            invoke(mock, "setValue", anyInt);
-            invoke(mock, "setValue", withAny(1));
-            invoke(mock, "setValue", anyString);
-            invoke(mock, "setValue", withAny(""));
-            invoke(mock, "doBusinessOperation", withAny(BusinessInterface.class));
-         }
-      };
+      new Expectations() {{
+         invoke(mock, "setValue", anyInt);
+         invoke(mock, "setValue", withAny(1));
+         invoke(mock, "setValue", anyByte);
+         invoke(mock, "setValue", anyShort);
+         invoke(mock, "setValue", anyLong);
+         invoke(mock, "setValue", anyChar);
+         invoke(mock, "setValue", anyBoolean);
+         invoke(mock, "setValue", anyFloat);
+         invoke(mock, "setValue", anyDouble);
+         invoke(mock, "setValue", anyString);
+         invoke(mock, "setValue", withAny(""));
+         invoke(mock, "setValue", withAny(Object.class));
+         invoke(mock, "doBusinessOperation", withAny(BusinessInterface.class));
+      }};
 
       mock.setValue(2);
       mock.setValue(-3);
+      mock.setValue((byte) 45);
+      mock.setValue((short) 23000);
+      mock.setValue(987654321L);
+      mock.setValue('S');
+      mock.setValue(true);
+      mock.setValue(6.7F);
+      mock.setValue(6.7);
       mock.setValue("test");
       mock.setValue(null);
+      mock.setValue(new Object());
       mock.doBusinessOperation(null);
    }
 
    @Test
-   public void expectStaticMethodInvocation()
+   public void expectStaticMethodInvocations()
    {
-      new Expectations()
-      {
+      new Expectations() {
          final Collaborator mock = null;
 
          {
             invoke(Collaborator.class, "doInternal"); result = "test";
+            invoke(Collaborator.class, "staticMethod", anyInt, withAny(Object.class), anyChar);
+            invoke(Collaborator.class, "staticMethod", anyInt, anyString, anyChar);
          }
       };
 
       assertEquals("test", Collaborator.doInternal());
+      Collaborator.staticMethod(1, true, 'c');
+      Collaborator.staticMethod(2, "ab", 'd');
    }
 
    @Test
@@ -115,6 +141,18 @@ public final class ExpectationsUsingReflectionTest
       };
 
       mock.doBusinessOperation(proxyArg);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void recordMethodInvocationWithNullArgument()
+   {
+      new NonStrictExpectations() {
+         Collaborator mock;
+
+         {
+            invoke(mock, "setValue", any);
+         }
+      };
    }
 
    @Test
@@ -353,8 +391,14 @@ public final class ExpectationsUsingReflectionTest
          private final String className = Collaborator.class.getName();
 
          {
-            Collaborator c1 = newInstance(className, 1);
-            assertEquals(1, c1.value);
+            Collaborator cString = newInstance(className, "test");
+            assertEquals("test", cString.value3);
+
+            Collaborator cObject = newInstance(className, new Object());
+            assertTrue(cObject.value3.startsWith("java.lang.Object@"));
+
+            Collaborator cInt = newInstance(className, 1);
+            assertEquals(1, cInt.value);
 
             Collaborator c2 = newInstance(className, 1, 2, "3");
             assertEquals(1, c2.value);

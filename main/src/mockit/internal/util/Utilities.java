@@ -37,6 +37,17 @@ public final class Utilities
       put(Long.class, long.class);
       put(Double.class, double.class);
    }};
+   private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER = new HashMap<Class<?>, Class<?>>()
+   {{
+      put(boolean.class, Boolean.class);
+      put(char.class, Character.class);
+      put(byte.class, Byte.class);
+      put(short.class, Short.class);
+      put(int.class, Integer.class);
+      put(float.class, Float.class);
+      put(long.class, Long.class);
+      put(double.class, Double.class);
+   }};
    private static final Class<?>[] NO_PARAMETERS = new Class<?>[0];
 
    private Utilities() {}
@@ -104,26 +115,36 @@ public final class Utilities
 
    private static Constructor findCompatibleConstructor(Class<?> theClass, Class<?>[] argTypes)
    {
+      Constructor found = null;
+      Class<?>[] foundParameters = null;
+
       for (Constructor declaredConstructor : theClass.getDeclaredConstructors()) {
          Class<?>[] declaredParamTypes = declaredConstructor.getParameterTypes();
 
          if (
-            matchesParameterTypes(declaredParamTypes, argTypes) ||
-            acceptsArgumentTypes(declaredParamTypes, argTypes)
+            (matchesParameterTypes(declaredParamTypes, argTypes) ||
+             acceptsArgumentTypes(declaredParamTypes, argTypes)) &&
+            (found == null || hasMoreSpecificTypes(declaredParamTypes, foundParameters))
          ) {
-            return declaredConstructor;
+            found = declaredConstructor;
+            foundParameters = declaredParamTypes;
          }
       }
 
-      String argTypesDesc = getParameterTypesDescription(argTypes);
+      if (found != null) {
+         return found;
+      }
 
+      String argTypesDesc = getParameterTypesDescription(argTypes);
       throw new IllegalArgumentException("No compatible constructor found: " + theClass.getSimpleName() + argTypesDesc);
    }
 
    public static <T> T newInstance(String className, Object... nonNullArgs)
    {
       Class<?>[] argTypes = getArgumentTypesFromArgumentValues(nonNullArgs);
-      return (T) newInstance(className, argTypes, nonNullArgs);
+      Class<T> theClass = loadClass(className);
+      Constructor constructor = findCompatibleConstructor(theClass, argTypes);
+      return (T) invoke(constructor, nonNullArgs);
    }
 
    private static Class<?>[] getArgumentTypesFromArgumentValues(Object... args)
@@ -146,9 +167,7 @@ public final class Utilities
       Object arg = args[i];
 
       if (arg == null) {
-         throw new IllegalArgumentException(
-            "Invalid null value passed as argument " + i +
-            " (instead of null, provide the Class object for the parameter type)");
+         throw new IllegalArgumentException("Invalid null value passed as argument " + i);
       }
 
       Class<?> argType;
@@ -226,10 +245,13 @@ public final class Utilities
 
    public static <T> T invoke(Class<?> theClass, Object targetInstance, String methodName, Object... methodArgs)
    {
+      boolean staticMethod = targetInstance == null;
       Class<?>[] argTypes = getArgumentTypesFromArgumentValues(methodArgs);
-      Method method = findCompatibleMethod(theClass, methodName, argTypes);
+      Method method = staticMethod ?
+         findCompatibleStaticMethod(theClass, methodName, argTypes) :
+         findCompatibleInstanceMethod(theClass, methodName, argTypes);
 
-      if (targetInstance == null && !isStatic(method.getModifiers())) {
+      if (staticMethod && !isStatic(method.getModifiers())) {
          throw new IllegalArgumentException(
             "Attempted to invoke non-static method without an instance to invoke it on");
       }
@@ -238,21 +260,33 @@ public final class Utilities
       return result;
    }
 
-   public static Method findCompatibleMethod(Object targetInstance, String methodName, Object[] args)
+   private static Method findCompatibleStaticMethod(Class<?> theClass, String methodName, Class<?>[] argTypes)
    {
-      Class<?>[] argTypes = getArgumentTypesFromArgumentValues(args);
-      return findCompatibleMethod(targetInstance.getClass(), methodName, argTypes);
+      Method methodFound = findCompatibleMethodInClass(theClass, methodName, argTypes);
+
+      if (methodFound != null) {
+         return methodFound;
+      }
+
+      String argTypesDesc = getParameterTypesDescription(argTypes);
+      throw new IllegalArgumentException("No compatible static method found: " + methodName + argTypesDesc);
    }
 
-   private static Method findCompatibleMethod(Class<?> theClass, String methodName, Class<?>[] argTypes)
+   private static Method findCompatibleInstanceMethod(Class<?> theClass, String methodName, Class<?>[] argTypes)
    {
-      while (true) {
-         Method methodFound = findCompatibleMethodInClass(theClass, methodName, argTypes);
+      Method methodFound = null;
 
-         if (methodFound != null) {
-            return methodFound;
+      while (true) {
+         Method compatibleMethod = findCompatibleMethodInClass(theClass, methodName, argTypes);
+
+         if (
+            compatibleMethod != null &&
+            (methodFound == null ||
+             hasMoreSpecificTypes(compatibleMethod.getParameterTypes(), methodFound.getParameterTypes()))
+         ) {
+            methodFound = compatibleMethod;
          }
-         
+
          Class<?> superClass = theClass.getSuperclass();
 
          if (superClass == null || superClass == Object.class) {
@@ -263,27 +297,60 @@ public final class Utilities
          theClass = superClass;
       }
 
-      String argTypesDesc = getParameterTypesDescription(argTypes);
+      if (methodFound != null) {
+         return methodFound;
+      }
 
+      String argTypesDesc = getParameterTypesDescription(argTypes);
       throw new IllegalArgumentException("No compatible method found: " + methodName + argTypesDesc);
+   }
+
+   public static Method findCompatibleMethod(Object targetInstance, String methodName, Object[] args)
+   {
+      Class<?>[] argTypes = getArgumentTypesFromArgumentValues(args);
+      return findCompatibleInstanceMethod(targetInstance.getClass(), methodName, argTypes);
    }
 
    private static Method findCompatibleMethodInClass(Class<?> theClass, String methodName, Class<?>[] argTypes)
    {
+      Method found = null;
+      Class<?>[] foundParamTypes = null;
+
       for (Method declaredMethod : theClass.getDeclaredMethods()) {
          if (declaredMethod.getName().equals(methodName)) {
             Class<?>[] declaredParamTypes = declaredMethod.getParameterTypes();
 
             if (
-               matchesParameterTypes(declaredParamTypes, argTypes) ||
-               acceptsArgumentTypes(declaredParamTypes, argTypes)
+               (matchesParameterTypes(declaredParamTypes, argTypes) ||
+                acceptsArgumentTypes(declaredParamTypes, argTypes)) &&
+               (found == null || hasMoreSpecificTypes(declaredParamTypes, foundParamTypes))
             ) {
-               return declaredMethod;
+               found = declaredMethod;
+               foundParamTypes = declaredParamTypes;
             }
          }
       }
 
-      return null;
+      return found;
+   }
+
+   private static boolean hasMoreSpecificTypes(Class<?>[] currentTypes, Class<?>[] previousTypes)
+   {
+      for (int i = 0; i < currentTypes.length; i++) {
+         Class<?> current = currentTypes[i];
+         Class<?> previous = previousTypes[i];
+
+         if (current != previous && wrappedIfPrimitive(previous).isAssignableFrom(wrappedIfPrimitive(current))) {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   private static Class<?> wrappedIfPrimitive(Class<?> parameterType)
+   {
+      return parameterType.isPrimitive() ? PRIMITIVE_TO_WRAPPER.get(parameterType) : parameterType;
    }
 
    private static boolean acceptsArgumentTypes(Class<?>[] paramTypes, Class<?>[] argTypes)
