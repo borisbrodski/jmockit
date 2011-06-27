@@ -45,32 +45,28 @@ public final class DynamicPartialMockingTest
    @Test
    public void dynamicallyMockAClass()
    {
-      new Expectations(Collaborator.class)
-      {
-         {
-            new Collaborator().getValue(); result = 123;
-         }
-      };
+      final Collaborator toBeMocked = new Collaborator();
 
-      // Mocked:
-      Collaborator collaborator = new Collaborator();
-      assertEquals(0, collaborator.value);
-      assertEquals(123, collaborator.getValue());
+      new Expectations(Collaborator.class) {{
+         toBeMocked.getValue(); result = 123;
+      }};
 
       // Not mocked:
+      Collaborator collaborator = new Collaborator();
+      assertEquals(-1, collaborator.value);
       assertTrue(collaborator.simpleOperation(1, "b", null));
       assertEquals(45, new Collaborator(45).value);
+
+      // Mocked:
+      assertEquals(123, collaborator.getValue());
    }
 
    @Test
    public void dynamicallyMockJREClass() throws Exception
    {
-      new Expectations(ByteArrayOutputStream.class)
-      {
-         {
-            new ByteArrayOutputStream().size(); result = 123;
-         }
-      };
+      new Expectations(ByteArrayOutputStream.class) {{
+         new ByteArrayOutputStream().size(); result = 123;
+      }};
 
       // Mocked:
       ByteArrayOutputStream collaborator = new ByteArrayOutputStream();
@@ -280,7 +276,7 @@ public final class DynamicPartialMockingTest
       String format() { return String.valueOf(value); }
    }
 
-   @Test(expected = IllegalStateException.class)
+   @Test
    public void dynamicallyMockASubCollaboratorInstance()
    {
       final SubCollaborator collaborator = new SubCollaborator();
@@ -295,43 +291,42 @@ public final class DynamicPartialMockingTest
 
       // Mocked:
       assertEquals(5, collaborator.getValue());
-      assertEquals("test", collaborator.format());
 
       // Not mocked:
+      assertEquals("1", collaborator.format()); // was recorded, but not on an instance specified for mocking
       assertTrue(collaborator.simpleOperation(0, null, null));
-      Collaborator.doSomething(true, null); // will throw the IllegalStateException
+
+      try {
+         Collaborator.doSomething(true, null);
+         fail();
+      }
+      catch (IllegalStateException ignore) {}
    }
 
    @Test
-   public void dynamicallyMockOnlyTheSubclass()
+   public void dynamicallyMockClassHierarchyForSpecifiedSubclass()
    {
       final SubCollaborator collaborator = new SubCollaborator();
 
-      new NonStrictExpectations(SubCollaborator.class)
-      {
-         {
-            collaborator.getValue();
-            collaborator.format(); result = "test";
-         }
-      };
+      new NonStrictExpectations(SubCollaborator.class) {{
+         collaborator.getValue(); result = 123;
+         collaborator.format(); result = "test";
+      }};
 
       // Mocked:
       assertEquals("test", collaborator.format());
+      assertEquals(123, collaborator.getValue());
 
       // Not mocked:
-      assertEquals(1, collaborator.getValue());
       assertTrue(collaborator.simpleOperation(0, null, null));
 
       // Mocked sub-constructor/not mocked base constructor:
       assertEquals(-1, new SubCollaborator().value);
 
-      new VerificationsInOrder()
-      {
-         {
-            collaborator.format();
-            new SubCollaborator();
-         }
-      };
+      new VerificationsInOrder() {{
+         collaborator.format();
+         new SubCollaborator();
+      }};
    }
 
    @Test
@@ -486,25 +481,22 @@ public final class DynamicPartialMockingTest
    }
 
    @Test
-   public void dynamicPartialMockingWithOnInstanceMatching()
+   public void dynamicPartialMockingWithInstanceSpecificMatching()
    {
       final Collaborator mock = new Collaborator();
 
-      new NonStrictExpectations(mock)
-      {{
-         onInstance(mock).getValue(); result = 3;
+      new NonStrictExpectations(mock) {{
+         mock.getValue(); result = 3;
       }};
 
       assertEquals(3, mock.getValue());
-      assertEquals(4, new Collaborator(4).getValue());
+      final Collaborator collaborator2 = new Collaborator(4);
+      assertEquals(4, collaborator2.getValue());
 
-      new FullVerificationsInOrder()
-      {
-         {
-            onInstance(mock).getValue();
-            mock.getValue();
-         }
-      };
+      new FullVerificationsInOrder() {{
+         mock.getValue(); times = 1;
+         collaborator2.getValue();
+      }};
    }
 
    @Test
@@ -651,5 +643,18 @@ public final class DynamicPartialMockingTest
       }};
 
       f.writeToFile("test");
+   }
+
+   static class Base { Base(boolean b) { if (!b) throw new IllegalAccessError(); } }
+   static class Derived extends Base { Derived() { super(true); } }
+
+   @Test(expected = IllegalAccessError.class)
+   public void mockConstructorsInClassHierarchyWithMockedCallToSuperWhichFails()
+   {
+      new Expectations(Derived.class) {};
+
+      // No constructor invocations were recorded: tries to execute real implementations,
+      // but constructor in subclass now calls "super(false)", which fails.
+      new Derived();
    }
 }

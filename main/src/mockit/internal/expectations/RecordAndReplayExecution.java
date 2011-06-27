@@ -217,7 +217,10 @@ public final class RecordAndReplayExecution
          RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(true);
 
          if (mockDesc.startsWith("<init>") && handleCallToConstructor(instance, mock, classDesc)) {
-            return executionMode == 0 || executingTest.isInjectableMock(mock) ? null : Void.class;
+            return
+               executionMode == 0 ||
+               executionMode == 1 && !inReplayPhase(instance) ||
+               executingTest.isInjectableMock(mock) ? null : Void.class;
          }
 
          if (instance == null) {
@@ -260,9 +263,14 @@ public final class RecordAndReplayExecution
       return executionMode == 0 ? DefaultValues.computeForReturnType(nameAndDesc) : Void.class;
    }
 
+   private static boolean inReplayPhase(RecordAndReplayExecution instance)
+   {
+      return instance == null || instance.replayPhase != null;
+   }
+
    private static boolean handleCallToConstructor(RecordAndReplayExecution instance, Object mock, String classDesc)
    {
-      if (TestRun.getCurrentTestInstance() != null && (instance == null || instance.replayPhase != null)) {
+      if (TestRun.getCurrentTestInstance() != null && inReplayPhase(instance)) {
          FieldTypeRedefinitions fieldTypeRedefs = instance == null ? null : instance.redefinitions;
 
          if (fieldTypeRedefs != null && fieldTypeRedefs.captureNewInstanceForApplicableMockField(mock)) {

@@ -30,23 +30,20 @@ public final class DynamicOnInstanceMockingTest
    }
 
    @Test
-   public void mockingOneInstanceAndMatchingInvocationsOnAnyInstance()
+   public void mockingOneInstanceAndMatchingInvocationsOnlyOnThatInstance()
    {
       Collaborator collaborator1 = new Collaborator();
       Collaborator collaborator2 = new Collaborator();
       final Collaborator collaborator3 = new Collaborator();
 
-      new NonStrictExpectations(collaborator3)
-      {
-         {
-            collaborator3.getValue(); result = 3;
-         }
-      };
+      new NonStrictExpectations(collaborator3) {{
+         collaborator3.getValue(); result = 3;
+      }};
 
-      assertEquals(3, collaborator1.getValue());
-      assertEquals(3, collaborator2.getValue());
+      assertEquals(-1, collaborator1.getValue());
+      assertEquals(-1, collaborator2.getValue());
       assertEquals(3, collaborator3.getValue());
-      assertEquals(3, new Collaborator(2).getValue());
+      assertEquals(2, new Collaborator(2).getValue());
    }
 
    @Test
@@ -92,19 +89,17 @@ public final class DynamicOnInstanceMockingTest
       final Collaborator collaborator2 = new Collaborator();
       Collaborator collaborator3 = new Collaborator();
 
-      new NonStrictExpectations(collaborator1)
-      {
-         {
-            collaborator2.getValue(); result = -2;
-         }
-      };
+      new NonStrictExpectations(collaborator1) {{
+         // A misuse of the API:
+         collaborator2.getValue(); result = -2;
+      }};
 
       collaborator1.setValue(1);
       collaborator2.setValue(2);
       collaborator3.setValue(3);
-      assertEquals(-2, collaborator1.getValue());
+      assertEquals(1, collaborator1.getValue());
       assertEquals(-2, collaborator2.getValue());
-      assertEquals(-2, collaborator3.getValue());
+      assertEquals(3, collaborator3.getValue());
    }
 
    @Test
@@ -133,12 +128,12 @@ public final class DynamicOnInstanceMockingTest
    @Test
    public void mockingOneInstanceAndOneClass()
    {
-      final Collaborator collaborator1 = new Collaborator();
+      Collaborator collaborator1 = new Collaborator();
       final Collaborator collaborator2 = new Collaborator();
       Collaborator collaborator3 = new Collaborator();
       final AnotherDependency dependency = new AnotherDependency();
 
-      new NonStrictExpectations(collaborator1, AnotherDependency.class)
+      new NonStrictExpectations(collaborator2, AnotherDependency.class)
       {
          {
             collaborator2.getValue(); result = -2;
@@ -150,8 +145,8 @@ public final class DynamicOnInstanceMockingTest
       collaborator2.setValue(2);
       collaborator3.setValue(3);
       assertEquals(-2, collaborator2.getValue());
-      assertEquals(-2, collaborator1.getValue());
-      assertEquals(-2, collaborator3.getValue());
+      assertEquals(1, collaborator1.getValue());
+      assertEquals(3, collaborator3.getValue());
 
       dependency.setName("modified");
       assertEquals("name1", dependency.getName());
@@ -159,5 +154,27 @@ public final class DynamicOnInstanceMockingTest
       AnotherDependency dep2 = new AnotherDependency();
       dep2.setName("another");
       assertEquals("name1", dep2.getName());
+   }
+
+   public static class Foo
+   {
+      boolean doIt() { return true; }
+   }
+
+   public static class SubFoo extends Foo {}
+
+   @Test
+   public void recordDuplicateInvocationOnTwoDynamicMocksOfDifferentTypesButSharedBaseClass()
+   {
+      final Foo f1 = new Foo();
+      final SubFoo f2 = new SubFoo();
+
+      new NonStrictExpectations(f1, f2) {{
+         f1.doIt(); result = true;
+         f2.doIt(); result = false;
+      }};
+
+      assertTrue(f1.doIt());
+      assertFalse(f2.doIt());
    }
 }

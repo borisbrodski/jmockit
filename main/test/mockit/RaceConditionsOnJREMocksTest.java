@@ -54,12 +54,9 @@ public final class RaceConditionsOnJREMocksTest
    @Test
    public void throwsExceptionFromGetStuffType()
    {
-      new Expectations(stuffHandler)
-      {
-         {
-            invoke(stuffHandler, "getStuffType"); result = new Exception();
-         }
-      };
+      new Expectations(stuffHandler) {{
+         invoke(stuffHandler, "getStuffType"); result = new Exception();
+      }};
 
       String result = stuffHandler.readStuff();
 
@@ -69,13 +66,10 @@ public final class RaceConditionsOnJREMocksTest
    @Test
    public void throwsFileNotFoundExceptionWhenOpeningInputFile() throws Exception
    {
-      new Expectations(stuffHandler, FileInputStream.class)
-      {
-         {
-            invoke(stuffHandler, "getStuffType"); result = "*mocked*";
-            new FileInputStream(anyString); result = new FileNotFoundException();
-         }
-      };
+      new Expectations(stuffHandler, FileInputStream.class) {{
+         invoke(stuffHandler, "getStuffType"); result = "*mocked*";
+         new FileInputStream(anyString); result = new FileNotFoundException();
+      }};
 
       String result = stuffHandler.readStuff();
 
@@ -85,16 +79,14 @@ public final class RaceConditionsOnJREMocksTest
    @Test
    public void throwsIOExceptionWhileReadingProperties()
    {
-      final Properties props = new Properties();
-
-      new Expectations(stuffHandler, props)
-      {
+      new Expectations(stuffHandler) {
+         @Mocked("load") Properties mockProps;
          @Mocked("(String)") FileInputStream mockFIS;
 
          {
             invoke(stuffHandler, "getStuffType"); result = "*mocked*";
 
-            invoke(props, "load", withAny(FileInputStream.class));
+            invoke(mockProps, "load", withAny(FileInputStream.class));
             result = new IOException();
          }
       };
@@ -107,8 +99,7 @@ public final class RaceConditionsOnJREMocksTest
    @Test
    public void getCompleteStuff()
    {
-      new Expectations(stuffHandler)
-      {
+      new Expectations(stuffHandler) {
          @NonStrict @Mocked({"load", "getProperty"}) Properties props;
          @Mocked("(String)") FileInputStream mockFIS;
 

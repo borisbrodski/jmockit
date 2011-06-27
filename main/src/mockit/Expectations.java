@@ -144,20 +144,19 @@ public abstract class Expectations extends Invocations
     * Such classes are those directly specified as well as those to which any given instances belong.
     * <p/>
     * During the replay phase, any invocations to one of these classes or instances will execute real production code,
-    * unless a matching invocation was previously recorded as an expectation inside the block.
+    * unless a matching invocation was recorded as an expectation inside the block.
     * <p/>
-    * For a given <em>object</em> (of any valid mockable type) that is to be partially mocked, all methods will be
-    * considered for mocking, from the concrete class of the given object up to but not including
-    * {@code java.lang.Object}. The constructors of those classes, though, will not be considered.
-    * For a given {@code Class} object, on the other hand, both constructors and methods will be considered for mocking,
-    * but only those belonging to the specified class.
+    * For a given {@code Class} object, all constructors and methods will be considered for mocking, from the specified
+    * class up to but not including {@code java.lang.Object}.
     * <p/>
-    * If more than one instance of the same mocked class is given, then instance method invocations will automatically
-    * be matched on those individual instances, during the replay phase.
-    * Otherwise, an expectation recorded on a dynamically mocked object will match invocations on <em>any</em> instance
-    * of the mocked class (unless the {@link #onInstance(Object)} specifier was used in the expectation block).
+    * For a given <em>object</em>, all methods will be considered for mocking, from the concrete class of the given
+    * object up to but not including {@code java.lang.Object}.
+    * The constructors of those classes will <em>not</em> be considered.
+    * During replay, invocations to instance methods will only match expectations recorded on the given instance
+    * (or instances, if more than one was given).
     * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#dynamicPartial">In the Tutorial</a>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#dynamicPartial">In the
+    * Tutorial</a>
     *
     * @param classesOrObjectsToBePartiallyMocked one or more classes or objects whose classes are to be considered for
     * partial mocking
@@ -186,7 +185,8 @@ public abstract class Expectations extends Invocations
     * It's also valid to have multiple expectation blocks for the same test, each with an arbitrary number of
     * iterations, and containing any mix of strict and non-strict expectations.
     * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#iteratedExpectations">In the Tutorial</a>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#iteratedExpectations">In
+    * the Tutorial</a>
     * 
     * @param numberOfIterations the positive number of iterations for the whole set of invocations recorded inside the
     * block; when not specified, 1 (one) iteration is assumed

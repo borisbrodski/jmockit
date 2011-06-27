@@ -169,30 +169,6 @@ public final class MisusedExpectationsTest
       assertEquals("second", blah.doSomething(true));
    }
 
-   public static class Foo
-   {
-      boolean doIt() { return true; }
-   }
-
-   public static class SubFoo extends Foo {}
-
-   @Test
-   public void recordDuplicateInvocationOnTwoDynamicMocksOfDifferentTypesButSharedBaseClass()
-   {
-      final Foo f1 = new Foo();
-      final SubFoo f2 = new SubFoo();
-
-      new NonStrictExpectations(f1, f2)
-      {{
-         // These two expectations should be recorded with "onInstance(fn)" instead:
-         f1.doIt(); result = true;
-         f2.doIt(); result = false;
-      }};
-
-      assertFalse(f1.doIt());
-      assertFalse(f2.doIt());
-   }
-
    @BeforeClass
    public static void recordExpectationsInStaticContext()
    {

@@ -44,12 +44,13 @@ public final class DynamicPartialMocking
       if (classOrInstance instanceof Class) {
          targetClass = (Class<?>) classOrInstance;
          validateTargetClassType(targetClass);
-         redefineClass(targetClass, false);
+         redefineClassAndItsSuperClasses(targetClass, false);
       }
       else {
          targetClass = classOrInstance.getClass();
          validateTargetClassType(targetClass);
-         redefineClassAndItsSuperClasses(targetClass);
+         redefineClassAndItsSuperClasses(targetClass, true);
+         targetClasses.add(targetClass);
       }
 
       targetClasses.add(targetClass);
@@ -66,13 +67,13 @@ public final class DynamicPartialMocking
       }
    }
 
-   private void redefineClassAndItsSuperClasses(Class<?> realClass)
+   private void redefineClassAndItsSuperClasses(Class<?> realClass, boolean methodsOnly)
    {
-      redefineClass(realClass, true);
+      redefineClass(realClass, methodsOnly);
       Class<?> superClass = realClass.getSuperclass();
 
-      if (superClass != Object.class && superClass != Proxy.class) {
-         redefineClassAndItsSuperClasses(superClass);
+      if (superClass != null && superClass != Object.class && superClass != Proxy.class) {
+         redefineClassAndItsSuperClasses(superClass, methodsOnly);
       }
    }
 
