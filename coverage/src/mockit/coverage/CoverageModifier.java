@@ -55,6 +55,8 @@ final class CoverageModifier extends ClassWriter
          throw new VisitInterruptedException();
       }
 
+      forEnumClass = (access & ACC_ENUM) != 0;
+
       if (!forInnerClass) {
          internalClassName = name;
          int p = name.lastIndexOf('/');
@@ -69,9 +71,12 @@ final class CoverageModifier extends ClassWriter
          }
 
          cannotModify = (access & ACC_ANNOTATION) != 0 || name.startsWith("mockit/coverage/");
+
+         if (!forEnumClass && (access & ACC_SUPER) != 0 && name.indexOf('$') > 0) {
+            INNER_CLASS_MODIFIERS.put(name.replace('/', '.'), this);
+         }
       }
 
-      forEnumClass = (access & ACC_ENUM) != 0;
       super.visit(version, access, name, signature, superName, interfaces);
    }
 
@@ -100,6 +105,10 @@ final class CoverageModifier extends ClassWriter
       }
 
       String innerClassName = internalName.replace('/', '.');
+
+      if (INNER_CLASS_MODIFIERS.containsKey(innerClassName)) {
+         return;
+      }
 
       try {
          ClassReader innerCR = new ClassReader(innerClassName);
