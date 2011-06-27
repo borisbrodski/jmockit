@@ -104,6 +104,7 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
    private void executeTestMethod(Object target, Object... parameters) throws Throwable
    {
       SavePoint savePoint = new SavePoint();
+      Throwable testFailure = null;
 
       try {
          createInstancesForTestedFields(target);
@@ -112,8 +113,11 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
          TestRun.setRunningIndividualTest(target);
          it.invokeExplosively(target, mockParameters == null ? parameters : mockParameters);
       }
+      catch (Throwable thrownByTest) {
+         testFailure = thrownByTest;
+      }
       finally {
-         concludeTestMethodExecution(savePoint);
+         concludeTestMethodExecution(savePoint, testFailure);
       }
    }
 

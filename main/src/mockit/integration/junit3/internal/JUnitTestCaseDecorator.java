@@ -119,6 +119,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
    private void executeTestMethod(Method testMethod) throws Throwable
    {
       SavePoint savePoint = new SavePoint();
+      Throwable testFailure = null;
 
       try {
          createInstancesForTestedFields(it);
@@ -133,14 +134,17 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       }
       catch (InvocationTargetException e) {
          e.fillInStackTrace();
-         throw e.getTargetException();
+         testFailure = e.getTargetException();
       }
       catch (IllegalAccessException e) {
          e.fillInStackTrace();
-         throw e;
+         testFailure = e;
+      }
+      catch (Throwable thrownByTest) {
+         testFailure = thrownByTest;
       }
       finally {
-         concludeTestMethodExecution(savePoint);
+         concludeTestMethodExecution(savePoint, testFailure);
       }
    }
 

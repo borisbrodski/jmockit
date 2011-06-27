@@ -124,17 +124,20 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
       try {
          executeTestMethod(callBack, testResult);
       }
-      catch (AssertionError t) {
+      catch (Throwable t) {
          Utilities.filterStackTrace(t);
-         throw t;
+         //noinspection ConstantConditions
+         throw (AssertionError) t;
       }
       finally {
          TestRun.finishCurrentTestExecution(false);
       }
    }
 
-   private void executeTestMethod(IHookCallBack callBack, ITestResult testResult)
+   private void executeTestMethod(IHookCallBack callBack, ITestResult testResult) throws Throwable
    {
+      AssertionError testFailure = null;
+
       try {
          callBack.runTestMethod(testResult);
 
@@ -142,12 +145,20 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
 
          if (thrown != null) {
             Utilities.filterStackTrace(thrown);
+
+            if (thrown instanceof InvocationTargetException) {
+               InvocationTargetException ite = (InvocationTargetException) thrown;
+
+               if (ite.getTargetException() instanceof AssertionError) {
+                  testFailure = (AssertionError) ite.getTargetException();
+               }
+            }
          }
       }
       finally {
          SavePoint testMethodSavePoint = savePoint.get();
          savePoint.set(null);
-         concludeTestMethodExecution(testMethodSavePoint);
+         concludeTestMethodExecution(testMethodSavePoint, testFailure);
       }
    }
 }

@@ -179,7 +179,7 @@ public class TestRunnerDecorator
       }
    }
 
-   protected final void concludeTestMethodExecution(SavePoint savePoint)
+   protected final void concludeTestMethodExecution(SavePoint savePoint, Throwable thrownByTest) throws Throwable
    {
       TestRun.enterNoMockingZone();
       AssertionError expectationsFailure = RecordAndReplayExecution.endCurrentReplayIfAny();
@@ -195,8 +195,15 @@ public class TestRunnerDecorator
          TestRun.exitNoMockingZone();
       }
 
+      if (thrownByTest != null) {
+         if (expectationsFailure == null || thrownByTest instanceof AssertionError) {
+            throw thrownByTest;
+         }
+
+         expectationsFailure.getCause().initCause(thrownByTest);
+      }
+
       if (expectationsFailure != null) {
-         //noinspection ThrowFromFinallyBlock
          throw expectationsFailure;
       }
    }
