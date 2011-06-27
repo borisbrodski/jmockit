@@ -82,7 +82,8 @@ public abstract class MockUp<T>
 
    private T createMockInstanceForMultipleInterfaces(Type typeToMock)
    {
-      T proxy = Mockit.newEmptyProxy(typeToMock);
+      //noinspection unchecked
+      T proxy = (T) Mockit.newEmptyProxy(typeToMock);
       redefineMethods(proxy.getClass());
       return proxy;
    }
