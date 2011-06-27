@@ -539,23 +539,21 @@ abstract class Invocations
    // Methods for instantiating non-accessible classes ////////////////////////////////////////////////////////////////
 
    /**
-    * Specifies an expected constructor invocation for a given class.
+    * Specifies an expectation for a constructor of a given class.
     * <p/>
-    * This is useful for invoking non-accessible constructors (private ones, for example) from the
-    * test, which otherwise could not be called normally.
+    * This is useful for invoking non-accessible constructors ({@code private} ones, for example) from the test, which
+    * otherwise could not be called normally. It should not be used for accessible constructors.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
     * Tutorial</a>
     *
-    * @param className the fully qualified name of the desired class (which should not be accessible
-    * to the test; otherwise just refer to it in code)
+    * @param className the fully qualified name of the desired class
     * @param parameterTypes the formal parameter types for the desired constructor, possibly empty
-    * @param initArgs the invocation arguments for the constructor, which must be consistent with
-    * the specified parameter types
+    * @param initArgs the invocation arguments for the constructor, which must be consistent with the specified
+    * parameter types
     * @param <T> interface or super-class type to which the returned instance should be assignable
     *
-    * @return a newly created instance of the specified class, initialized with the specified
-    * constructor and arguments
+    * @return a newly created instance of the specified class, initialized with the specified constructor and arguments
     *
     * @see #newInstance(String, Object...)
     * @see #newInnerInstance(String, Object, Object...)
@@ -567,12 +565,13 @@ abstract class Invocations
    }
 
    /**
-    * The same as {@link #newInstance(String, Class[], Object...)}, but for the case where each
-    * initialization argument is known to be null or non-null at the call point.
-    * <p/>
-    * However, {@code null} argument values cannot directly be passed to this method;
-    * if the parameter value must be {@code null}, then the corresponding {@code Class} literal must
-    * be passed instead.
+    * The same as {@link #newInstance(String, Class[], Object...)}, but inferring parameter types from non-null argument
+    * values.
+    * If a given parameter needs to match {@code null} during replay, then the corresponding {@code Class} literal must
+    * be passed instead of {@code null}.
+    *
+    * @param nonNullInitArgs zero or more non-null expected parameter values for the expectation;
+    * if a null value needs to be passed, the {@code Class} object for the parameter type must be passed instead
     *
     * @throws IllegalArgumentException if one of the given arguments is {@code null}
     */
@@ -583,14 +582,14 @@ abstract class Invocations
    }
 
    /**
-    * The same as {@link #newInstance(String, Class[], Object...)}, but for instantiating an inner
-    * non-accessible class of some other class, and where all other (if any) initialization
-    * arguments are known to be non null.
+    * The same as {@link #newInstance(String, Class[], Object...)}, but for instantiating an inner non-accessible class
+    * of some other class, and where all other (if any) initialization arguments are known to be non null.
     *
-    * @param innerClassSimpleName simple name of the inner class, that is, the part after the "$"
-    * character in its full name
-    * @param outerClassInstance the outer class instance to which the inner class instance will
-    * belong
+    * @param innerClassSimpleName simple name of the inner class, that is, the part after the "$" character in its full
+    * name
+    * @param outerClassInstance the outer class instance to which the inner class instance will belong
+    * @param nonNullInitArgs zero or more non-null expected parameter values for the expectation;
+    * if a null value needs to be passed, the {@code Class} object for the parameter type must be passed instead
     */
    protected final <T> T newInnerInstance(
       String innerClassSimpleName, Object outerClassInstance, Object... nonNullInitArgs)
@@ -602,24 +601,26 @@ abstract class Invocations
    // Methods for invoking non-accessible methods on instances or classes /////////////////////////////////////////////
 
    /**
-    * Specifies an expected invocation to a given instance method, with a given list of arguments.
+    * Specifies an expectation for an instance method, with a given list of arguments.
     * <p/>
-    * This is useful when the next expected method is not accessible (private, for example) from the test, and
-    * therefore can not be called normally. It should <strong>not</strong> be used for calling accessible methods.
+    * This is useful when a method is not accessible from the test (it's {@code private}, for example), and therefore
+    * cannot be called normally. It should not be used to call accessible methods.
     * <p/>
     * Additionally, this can also be used to directly test private methods, when there is no other way to do so, or it
-    * would be too difficult by indirect means. Note that in such a case the target instance will actually be a "real"
-    * (non-mocked) object, not a mocked instance.
+    * would be too difficult by indirect means.
+    * Note that in such a case the target instance will actually be a "real" (non-mocked) object.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
     * Tutorial</a>
     *
     * @param objectWithMethod the instance on which the invocation is to be done; must not be null
     * @param methodName the name of the expected method
-    * @param methodArgs zero or more non-null expected parameter values for the invocation; if a
-    * null value needs to be passed, the Class object for the parameter type must be passed instead
+    * @param methodArgs zero or more non-null expected parameter values for the expectation;
+    * if a null value needs to be passed, the {@code Class} object for the parameter type must be passed instead
     *
     * @return the return value from the invoked method, wrapped if primitive
+    *
+    * @throws IllegalArgumentException if a null reference was provided for a parameter
     *
     * @see #invoke(Class, String, Object...)
     */
@@ -630,20 +631,23 @@ abstract class Invocations
    }
 
    /**
-    * Specifies an expected invocation to a given static method, with a given list of arguments.
+    * Specifies an expectation for a {@code static} method, with a given list of arguments.
     * <p/>
-    * This is useful when the next expected method is not accessible (private, for example) from the
-    * test, and therefore cannot be called normally. It should <strong>not</strong> be used for
-    * calling accessible methods.
+    * This is useful when a method is not accessible from the test (it's {@code private}, for example), and therefore
+    * cannot be called normally. It should not be used to call accessible methods.
     * <p/>
-    * Additionally, this can also be used to directly test private methods, when there is no other
-    * way to do so, or it would be too difficult by indirect means. Note that in such a case the
-    * target class will normally be a "real", non-mocked, class in the code under test.
+    * Additionally, this can also be used to directly test private methods, when there is no other way to do so, or it
+    * would be too difficult by indirect means.
+    * Note that in such a case the target class would not be mocked.
     *
     * @param methodOwner the class on which the invocation is to be done; must not be null
     * @param methodName the name of the expected static method
-    * @param methodArgs zero or more non-null expected parameter values for the invocation; if a
-    * null value needs to be passed, the Class object for the parameter type must be passed instead
+    * @param methodArgs zero or more non-null expected parameter values for the expectation;
+    * if a null value needs to be passed, the {@code Class} object for the parameter type must be passed instead
+    *
+    * @return the return value from the invoked method, wrapped if primitive
+    *
+    * @throws IllegalArgumentException if a null reference was provided for a parameter
     */
    protected final <T> T invoke(Class<?> methodOwner, String methodName, Object... methodArgs)
    {
