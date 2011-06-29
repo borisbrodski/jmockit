@@ -148,8 +148,7 @@ public final class ForEachInvocationTest
    @Test
    public void verifyExpectationWithHandlerForEachInvocationOfConstructor(Collaborator mock)
    {
-      final Collaborator[] collaborators =
-         {new Collaborator(5), new Collaborator(4), new Collaborator(1024)};
+      final Collaborator[] collaborators = {new Collaborator(5), new Collaborator(4), new Collaborator(1024)};
 
       new FullVerifications()
       {
@@ -286,8 +285,7 @@ public final class ForEachInvocationTest
    }
 
    @Test
-   public void verifyExpectationWithHandlerForPrivateMethod(
-      @NonStrict final Collaborator collaborator)
+   public void verifyExpectationWithHandlerForPrivateMethod(@NonStrict final Collaborator collaborator)
    {
       collaborator.privateMethod((short) 5);
 
@@ -341,8 +339,7 @@ public final class ForEachInvocationTest
    }
 
    @Test
-   public void verifyExpectationWithHandlerDefiningTwoNonPrivateMethods(
-      final Collaborator collaborator)
+   public void verifyExpectationWithHandlerDefiningTwoNonPrivateMethods(final Collaborator collaborator)
    {
       collaborator.doSomething(true, null, "str");
 
