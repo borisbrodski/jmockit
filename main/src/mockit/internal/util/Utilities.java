@@ -873,4 +873,15 @@ public final class Utilities
 
       return null;
    }
+
+   public static boolean containsReference(List<?> references, Object toBeFound)
+   {
+      for (Object reference : references) {
+         if (reference == toBeFound) {
+            return true;
+         }
+      }
+
+      return false;
+   }
 }
