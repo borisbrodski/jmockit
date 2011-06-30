@@ -14,6 +14,41 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
+<h3>Next release</h3>
+
+<p>Release 0.999.11 (Jul ?, 2011):</p>
+<ul>
+   <li>
+      <strong>Changed</strong> the <code>Expectations(Object...)</code> and
+      <code>NonStrictExpectations(Object...)</code> constructors so that the <code>Class</code> literals and/or
+      instances passed in are (<em>dynamically</em>) mocked in a more intuitive way:
+      a) for a given <code>Class</code>, the super-classes are now also considered for mocking, rather than only the
+      specified class;
+      b) for a given <em>object</em>, only method invocations made on the specified instance will be able to match
+      expectations (invocations on other instances will execute the real implementation).
+      <br/>
+      Most existing tests which use dynamic partial mocking should not be affected, but there is always the possibility
+      that a few may break, requiring adaptation to the new defaults.
+   </li>
+   <li>
+      <strong>Fixed</strong> a couple of bugs of omission in the Reflection-based utility methods used for calling
+      inaccessible methods and constructors:
+      a) when there were multiple matching methods/constructors, the first one to be found was used, rather than the one
+      with the most specific parameters;
+      b) only constructors with the exact same parameters as the actual argument types were found, rather than
+      constructors with <em>compatible</em> parameters (as already done for methods).
+   </li>
+   <li>
+      <strong>JMockit Coverage</strong>:
+      Fixed a problem with nested classes that get loaded before the outer class.
+<!--
+      <br/>
+      Added special handling for termination methods such as <code>System.exit(int)</code>:
+      issue <a href="http://code.google.com/p/jmockit/issues/detail?id=169">169</a>.
+-->
+   </li>
+</ul>
+
 <h3>Current release</h3>
 
 <p>Release 0.999.10 (Jun 16, 2011):</p>
