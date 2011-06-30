@@ -159,11 +159,15 @@
    object construction".)
    <br/>
    For an authoritative discussion on design for extension (which defends the judicious use of <code>final</code> for
-   classes and methods), I refer readers to "Item 17: Design and document for inheritance or else prohibit it" in the
+   classes and methods), see "Item 17: Design and document for inheritance or else prohibit it" in the
    <a href="http://www.amazon.com/Effective-Java-2nd-Joshua-Bloch/dp/0321356683">Effective Java</a> book.
    Another book which strongly recommends the use of <code>final</code> for classes and methods is
    <a href="http://www.amazon.com/Practical-API-Design-Confessions-Framework/dp/1430209739">Practical API Design</a>
    (see "Make Everything Final", in chapter 5).
+   Yet another relevant book is <a href="http://www.apibook.com/blog">API Design for C++</a>, which is also largely
+   applicable to Java (see sections "2.3.2 Add Virtual Functions Judiciously" and "4.6.3 Using Inheritance").
+   The site for this last book points to several interesting articles, including
+   <a href="http://www.artima.com/weblogs/viewpost.jsp?thread=142428">Java API Design Guidelines</a>.
 </p>
 <p>
    In the second case, directly instantiating dependencies with <code>new</code> facilitates the use of stateful
@@ -204,8 +208,7 @@
 
 <h4 id="testability">Testability</h4>
 <p>
-   The set of limitations listed above, which are found in conventional mocking tools, has come to be associated with
-   the idea of "untestable code".
+   The limitations found in conventional mocking tools has come to be associated with the idea of "untestable code".
    Often, we see the restrictions resulting from those limitations considered as inevitable, or even as something that
    could be beneficial.
    The JMockit toolkit, which breaks away from these limitations and restrictions, shows that in fact there is no such
