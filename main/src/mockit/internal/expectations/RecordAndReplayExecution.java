@@ -40,7 +40,7 @@ public final class RecordAndReplayExecution
       dynamicPartialMocking = null;
       validateRecordingContext();
       validateThereIsAtLeastOneMockedTypeInScope();
-      discoverDuplicateMockedTypesForAutomaticMockInstanceMatching();
+      discoverMockedTypesAndInstancesForMatchingOnInstance();
       failureState = new FailureState();
       replayPhase = new ReplayPhase(this);
    }
@@ -90,7 +90,7 @@ public final class RecordAndReplayExecution
 
          validateRecordingContext();
          validateThereIsAtLeastOneMockedTypeInScope();
-         discoverDuplicateMockedTypesForAutomaticMockInstanceMatching();
+         discoverMockedTypesAndInstancesForMatchingOnInstance();
          TestRun.getExecutingTest().setRecordAndReplay(this);
       }
       finally {
@@ -132,7 +132,7 @@ public final class RecordAndReplayExecution
       }
    }
 
-   private void discoverDuplicateMockedTypesForAutomaticMockInstanceMatching()
+   private void discoverMockedTypesAndInstancesForMatchingOnInstance()
    {
       List<Class<?>> fields = TestRun.getSharedFieldTypeRedefinitions().getTargetClasses();
       List<Class<?>> targetClasses = new ArrayList<Class<?>>(fields);
@@ -147,22 +147,10 @@ public final class RecordAndReplayExecution
          targetClasses.addAll(paramTypeRedefinitions.getTargetClasses());
       }
 
-      if (dynamicPartialMocking != null) {
-         addDynamicallyMockedTargetClasses(targetClasses);
-      }
-
       executionState.discoverMockedTypesToMatchOnInstances(targetClasses);
-   }
 
-   private void addDynamicallyMockedTargetClasses(List<Class<?>> targetClasses)
-   {
-      List<Class<?>> staticallyMockedClasses = new ArrayList<Class<?>>(targetClasses);
-      List<Class<?>> dynamicallyMockedClasses = dynamicPartialMocking.getTargetClasses();
-
-      for (Class<?> dynamicallyMockedClass : dynamicallyMockedClasses) {
-         if (!staticallyMockedClasses.contains(dynamicallyMockedClass)) {
-            targetClasses.add(dynamicallyMockedClass);
-         }
+      if (dynamicPartialMocking != null) {
+         executionState.setMockedInstancesToMatch(dynamicPartialMocking.targetInstances);
       }
    }
 

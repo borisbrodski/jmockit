@@ -154,18 +154,18 @@ public final class MisusedExpectationsTest
    }
 
    @Test
-   public void recordInvocationUsingDynamicMockingWhichDiffersOnlyOnTheMatchedInstance()
+   public void recordInvocationOnDynamicallyMockedInstanceForClassAlreadyMockedRegularly()
    {
       final Blah blah = new Blah();
 
-      new NonStrictExpectations(blah)
-      {{
+      // Dynamic mocking of Blah overwrites its regular mocking through the "mock" field.
+      new NonStrictExpectations(blah) {{
          onInstance(mock).doSomething(true); result = "first";
          blah.value(); result = 123;
-         onInstance(blah).doSomething(true); result = "second";
+         blah.doSomething(true); result = "second";
       }};
 
-      assertEquals("first", mock.doSomething(true));
+      assertEquals("", mock.doSomething(true)); // matches nothing, since the mocking of "mock" was overruled
       assertEquals("second", blah.doSomething(true));
    }
 

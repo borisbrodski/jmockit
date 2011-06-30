@@ -6,6 +6,8 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
+import static mockit.internal.util.Utilities.containsReference;
+
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.util.*;
 
@@ -15,6 +17,7 @@ final class PhasedExecutionState
    final List<Expectation> nonStrictExpectations;
    final List<VerifiedExpectation> verifiedExpectations;
    final Map<Object, Object> instanceMap;
+   private List<?> mockedInstancesToMatch;
    private List<Class<?>> mockedTypesToMatchOnInstances;
 
    PhasedExecutionState()
@@ -23,6 +26,11 @@ final class PhasedExecutionState
       nonStrictExpectations = new ArrayList<Expectation>();
       verifiedExpectations = new ArrayList<VerifiedExpectation>();
       instanceMap = new IdentityHashMap<Object, Object>();
+   }
+
+   void setMockedInstancesToMatch(List<?> mockedInstancesToMatch)
+   {
+      this.mockedInstancesToMatch = mockedInstancesToMatch;
    }
 
    void discoverMockedTypesToMatchOnInstances(List<Class<?>> targetClasses)
@@ -65,17 +73,27 @@ final class PhasedExecutionState
 
    private void forceMatchingOnMockInstanceIfRequired(ExpectedInvocation invocation)
    {
-      if (mockedTypesToMatchOnInstances != null) {
-         Object mock = invocation.instance;
+      Object mock = invocation.instance;
 
-         if (mock != null) {
-            Class<?> mockedClass = Utilities.getMockedClass(mock);
+      if (mock != null && isToBeMatchedOnInstance(mock)) {
+         invocation.matchInstance = true;
+      }
+   }
 
-            if (mockedTypesToMatchOnInstances.contains(mockedClass)) {
-               invocation.matchInstance = true;
-            }
+   boolean isToBeMatchedOnInstance(Object mock)
+   {
+      if (mockedInstancesToMatch != null && containsReference(mockedInstancesToMatch, mock)) {
+         return true;
+      }
+      else if (mockedTypesToMatchOnInstances != null) {
+         Class<?> mockedClass = Utilities.getMockedClass(mock);
+
+         if (containsReference(mockedTypesToMatchOnInstances, mockedClass)) {
+            return true;
          }
       }
+
+      return false;
    }
 
    private void removeMatchingExpectationsCreatedBefore(ExpectedInvocation invocation)
@@ -128,6 +146,7 @@ final class PhasedExecutionState
 
          if (
             isInvocationToSameMethodOrConstructor(mock, mockClassDesc, mockNameAndDesc, invocation) &&
+//            (mock == null || mock == invocation.instance || !isToBeMatchedOnInstance(mock)) &&
             invocation.arguments.isMatch(args, instanceMap)
          ) {
             return nonStrict;

@@ -281,20 +281,17 @@ public final class DynamicPartialMockingTest
    {
       final SubCollaborator collaborator = new SubCollaborator();
 
-      new NonStrictExpectations(collaborator)
-      {
-         {
-            collaborator.getValue(); result = 5;
-            new SubCollaborator().format(); result = "test";
-         }
-      };
+      new NonStrictExpectations(collaborator) {{
+         collaborator.getValue(); result = 5;
+         new SubCollaborator().format(); result = "test";
+      }};
 
       // Mocked:
       assertEquals(5, collaborator.getValue());
 
       // Not mocked:
-      assertEquals("1", collaborator.format()); // was recorded, but not on an instance specified for mocking
       assertTrue(collaborator.simpleOperation(0, null, null));
+      assertEquals("1", collaborator.format()); // was recorded on a different instance
 
       try {
          Collaborator.doSomething(true, null);
@@ -466,18 +463,20 @@ public final class DynamicPartialMockingTest
    @Test
    public void dynamicPartialMockingWithFlexibleArgumentMatching(final Collaborator mock)
    {
-      new NonStrictExpectations(mock)
-      {{
+      new NonStrictExpectations(mock) {{
          mock.simpleOperation(anyInt, withPrefix("s"), null); result = false;
       }};
 
+      assertFalse(mock.simpleOperation(1, "sSs", null));
+      assertTrue(mock.simpleOperation(2, " s", null));
+      assertTrue(mock.simpleOperation(1, "S", null));
+      assertFalse(mock.simpleOperation(-1, "s", new Date()));
+      assertTrue(mock.simpleOperation(1, null, null));
+      assertFalse(mock.simpleOperation(0, "string", null));
+
       Collaborator collaborator = new Collaborator();
-      assertFalse(collaborator.simpleOperation(1, "sSs", null));
-      assertTrue(collaborator.simpleOperation(2, " s", null));
-      assertTrue(collaborator.simpleOperation(1, "S", null));
-      assertFalse(collaborator.simpleOperation(-1, "s", new Date()));
-      assertTrue(collaborator.simpleOperation(1, null, null));
-      assertFalse(collaborator.simpleOperation(0, "string", null));
+      assertTrue(collaborator.simpleOperation(1, "sSs", null));
+      assertTrue(collaborator.simpleOperation(-1, null, new Date()));
    }
 
    @Test
@@ -495,7 +494,27 @@ public final class DynamicPartialMockingTest
 
       new FullVerificationsInOrder() {{
          mock.getValue(); times = 1;
-         collaborator2.getValue();
+         collaborator2.getValue(); times = 1;
+      }};
+   }
+
+   @Test
+   public void dynamicPartialMockingWithInstanceSpecificMatchingOnTwoInstancesOfSameClass()
+   {
+      final Collaborator mock1 = new Collaborator();
+      final Collaborator mock2 = new Collaborator();
+
+      new NonStrictExpectations(mock1, mock2) {{
+         mock1.getValue(); result = 1;
+         mock2.getValue(); result = 2;
+      }};
+
+      assertEquals(2, mock2.getValue());
+      assertEquals(1, mock1.getValue());
+
+      new FullVerifications() {{
+         mock1.getValue(); times = 1;
+         mock2.getValue(); times = 1;
       }};
    }
 

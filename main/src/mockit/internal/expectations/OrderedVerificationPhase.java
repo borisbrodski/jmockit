@@ -51,6 +51,10 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
             continue;
          }
 
+         if (mock != null && recordAndReplay.executionState.isToBeMatchedOnInstance(mock)) {
+            matchInstance = true;
+         }
+
          if (matches(mock, mockClassDesc, mockNameAndDesc, args, expectation)) {
             currentExpectation = expectation;
             i += 1 - indexIncrement;
@@ -168,6 +172,7 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
       String mockClassDesc = invocation.getClassDesc();
       String mockNameAndDesc = invocation.getMethodNameAndDescription();
       Object[] args = invocation.arguments.getValues();
+      matchInstance = invocation.matchInstance;
 
       return matches(mock, mockClassDesc, mockNameAndDesc, args, expectation);
    }

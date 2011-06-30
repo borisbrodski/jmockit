@@ -13,18 +13,13 @@ import mockit.internal.util.*;
 
 public final class DynamicPartialMocking
 {
-   private final List<Class<?>> targetClasses;
+   public final List<Object> targetInstances;
    private final Map<Class<?>, byte[]> modifiedClassfiles;
 
    public DynamicPartialMocking()
    {
-      targetClasses = new ArrayList<Class<?>>(2);
+      targetInstances = new ArrayList<Object>(2);
       modifiedClassfiles = new HashMap<Class<?>, byte[]>();
-   }
-
-   public List<Class<?>> getTargetClasses()
-   {
-      return targetClasses;
    }
 
    public void redefineTypes(Object[] classesOrInstancesToBePartiallyMocked)
@@ -50,10 +45,8 @@ public final class DynamicPartialMocking
          targetClass = classOrInstance.getClass();
          validateTargetClassType(targetClass);
          redefineClassAndItsSuperClasses(targetClass, true);
-         targetClasses.add(targetClass);
+         targetInstances.add(classOrInstance);
       }
-
-      targetClasses.add(targetClass);
    }
 
    private void validateTargetClassType(Class<?> targetClass)
