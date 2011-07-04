@@ -161,11 +161,11 @@ Indicates an instance <em>field</em> or test method <em>parameter</em> whose val
 
 <P>
 <DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/Mocked.html#methods()"><CODE>methods()</CODE></A>, 
-<A HREF="../mockit/Mocked.html#inverse()"><CODE>inverse()</CODE></A>, 
-<A HREF="../mockit/Mocked.html#stubOutClassInitialization()"><CODE>stubOutClassInitialization()</CODE></A>, 
-<A HREF="../mockit/Mocked.html#capture()"><CODE>capture()</CODE></A>, 
-<A HREF="../mockit/Mocked.html#realClassName()"><CODE>realClassName()</CODE></A></DL>
+<DT><B>See Also:</B><DD><A HREF="../mockit/Mocked.html#methods()"><CODE>methods</CODE></A>, 
+<A HREF="../mockit/Mocked.html#inverse()"><CODE>inverse</CODE></A>, 
+<A HREF="../mockit/Mocked.html#stubOutClassInitialization()"><CODE>stubOutClassInitialization</CODE></A>, 
+<A HREF="../mockit/Mocked.html#capture()"><CODE>capture</CODE></A>, 
+<A HREF="../mockit/Mocked.html#realClassName()"><CODE>realClassName</CODE></A></DL>
 <HR>
 
 <P>
@@ -226,7 +226,7 @@ Indicates an instance <em>field</em> or test method <em>parameter</em> whose val
 <TD><CODE><B><A HREF="../mockit/Mocked.html#value()">value</A></B></CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as specifying only the <A HREF="../mockit/Mocked.html#methods()"><CODE>methods()</CODE></A> attribute.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as specifying only the <A HREF="../mockit/Mocked.html#methods()"><CODE>methods</CODE></A> attribute.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -294,8 +294,8 @@ public abstract <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/
  mocked.
  <p/>
  If no other annotation attribute needs to be specified for a given mocked type, then for convenience the value for
- this attribute can also be specified through the default <A HREF="../mockit/Mocked.html#value()"><CODE>value()</CODE></A> attribute, that is, by just supplying the
- list of mock filters without naming any annotation attribute.
+ this attribute can also be specified through the default <A HREF="../mockit/Mocked.html#value()"><CODE>value</CODE></A> attribute, that is, by just
+ supplying the list of mock filters without naming any annotation attribute.
  <p/>
  Each mock filter must follow the syntax <strong><code>[nameRegex][(paramTypeName...)]</code></strong>, where
  <code>nameRegex</code> is a <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex">regular expression</A> for matching method names, and
@@ -313,7 +313,7 @@ public abstract <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/
  <p/>
  The special filter <code>"&lt;clinit&gt;"</code> can be used to match the static initializers of the target class.
  If only this filter is specified then the static initializers are stubbed out and no methods or constructors are
- mocked; the opposite can be achieved by using the <A HREF="../mockit/Mocked.html#inverse()"><CODE>inverse()</CODE></A> attribute.
+ mocked; the opposite can be achieved by using the <A HREF="../mockit/Mocked.html#inverse()"><CODE>inverse</CODE></A> attribute.
 <P>
 <DD><DL>
 </DL>
@@ -336,8 +336,8 @@ public abstract <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/
  for the test.
  <p/>
  This attribute can be used with fields that are <code>final</code> or not.
- In the second case it can be used in conjunction with the <A HREF="../mockit/Mocked.html#capture()"><CODE>capture()</CODE></A> attribute, so that only the specified
- class is mocked, instead of all classes that implement/extend a given super-type.
+ In the second case it can be used in conjunction with the <A HREF="../mockit/Mocked.html#capture()"><CODE>capture</CODE></A> attribute, so that only the
+ specified class is mocked, instead of all classes that implement/extend a given super-type.
  <p/>
  Note that this attribute can also be used when the desired concrete class is not accessible to the test (for
  example, if it's a private inner class inside the code under test).
@@ -390,7 +390,7 @@ value</H3>
 <PRE>
 public abstract <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>[] <B>value</B></PRE>
 <DL>
-<DD>Same as specifying only the <A HREF="../mockit/Mocked.html#methods()"><CODE>methods()</CODE></A> attribute.
+<DD>Same as specifying only the <A HREF="../mockit/Mocked.html#methods()"><CODE>methods</CODE></A> attribute.
 <P>
 <DD><DL>
 </DL>

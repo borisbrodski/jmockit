@@ -12,10 +12,10 @@ import java.lang.annotation.*;
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#MockClass">In the Tutorial</a>
  *
- * @see #realClass
- * @see #stubs
- * @see #inverse
- * @see #instantiation
+ * @see #realClass realClass
+ * @see #stubs stubs
+ * @see #inverse inverse
+ * @see #instantiation instantiation
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

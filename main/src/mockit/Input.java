@@ -22,7 +22,7 @@ import java.lang.annotation.*;
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#defaultResults">In the
  * Tutorial</a>
  *
- * @see #invocations
+ * @see #invocations invocations
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

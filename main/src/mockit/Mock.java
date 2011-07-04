@@ -36,10 +36,10 @@ import java.lang.annotation.*;
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#mocks">In the Tutorial</a>
  *
- * @see #invocations
- * @see #minInvocations
- * @see #maxInvocations
- * @see #reentrant
+ * @see #invocations invocations
+ * @see #minInvocations minInvocations
+ * @see #maxInvocations maxInvocations
+ * @see #reentrant reentrant
  * @see MockClass
  */
 @Inherited
@@ -53,16 +53,16 @@ public @interface Mock
     * A negative value (the default) means there is no expectation on the number of invocations;
     * that is, the mock can be called any number of times or not at all during any test which uses it.
     * <p/>
-    * A non-negative value is equivalent to setting {@link #minInvocations} and  {@link #maxInvocations} to that same
-    * value.
+    * A non-negative value is equivalent to setting {@link #minInvocations minInvocations} and
+    * {@link #maxInvocations maxInvocations} to that same value.
     */
    int invocations() default -1;
 
    /**
     * Minimum number of expected invocations of the mock method, starting from 0 (zero, which is the default).
     * 
-    * @see #invocations
-    * @see #maxInvocations
+    * @see #invocations invocations
+    * @see #maxInvocations maxInvocations
     */
    int minInvocations() default 0;
 
@@ -71,8 +71,8 @@ public @interface Mock
     * If zero the mock is not expected to be called at all.
     * A negative value (the default) means there is no expectation on the maximum number of invocations.
     * 
-    * @see #invocations
-    * @see #minInvocations
+    * @see #invocations invocations
+    * @see #minInvocations minInvocations
     */
    int maxInvocations() default -1;
 

@@ -70,18 +70,18 @@ import java.lang.annotation.*;
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#declaration">In the
  * Tutorial</a>
  *
- * @see #methods
- * @see #inverse
- * @see #stubOutClassInitialization
- * @see #capture
- * @see #realClassName
+ * @see #methods methods
+ * @see #inverse inverse
+ * @see #stubOutClassInitialization stubOutClassInitialization
+ * @see #capture capture
+ * @see #realClassName realClassName
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 public @interface Mocked
 {
    /**
-    * Same as specifying only the {@link #methods} attribute.
+    * Same as specifying only the {@link #methods methods} attribute.
     */
    String[] value() default {};
 
@@ -91,8 +91,8 @@ public @interface Mocked
     * mocked.
     * <p/>
     * If no other annotation attribute needs to be specified for a given mocked type, then for convenience the value for
-    * this attribute can also be specified through the default {@link #value} attribute, that is, by just supplying the
-    * list of mock filters without naming any annotation attribute.
+    * this attribute can also be specified through the default {@link #value value} attribute, that is, by just
+    * supplying the list of mock filters without naming any annotation attribute.
     * <p/>
     * Each mock filter must follow the syntax <strong>{@code [nameRegex][(paramTypeName...)]}</strong>, where
     * {@code nameRegex} is a {@linkplain java.util.regex.Pattern regular expression} for matching method names, and
@@ -110,7 +110,7 @@ public @interface Mocked
     * <p/>
     * The special filter {@code "<clinit>"} can be used to match the static initializers of the target class.
     * If only this filter is specified then the static initializers are stubbed out and no methods or constructors are
-    * mocked; the opposite can be achieved by using the {@link #inverse} attribute.
+    * mocked; the opposite can be achieved by using the {@link #inverse inverse} attribute.
     */
    String[] methods() default {};
 
@@ -168,8 +168,8 @@ public @interface Mocked
     * for the test.
     * <p/>
     * This attribute can be used with fields that are {@code final} or not.
-    * In the second case it can be used in conjunction with the {@link #capture} attribute, so that only the specified
-    * class is mocked, instead of all classes that implement/extend a given super-type.
+    * In the second case it can be used in conjunction with the {@link #capture capture} attribute, so that only the
+    * specified class is mocked, instead of all classes that implement/extend a given super-type.
     * <p/>
     * Note that this attribute can also be used when the desired concrete class is not accessible to the test (for
     * example, if it's a private inner class inside the code under test).

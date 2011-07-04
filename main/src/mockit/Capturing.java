@@ -25,9 +25,9 @@ import java.lang.annotation.*;
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/CapturingImplementationsTest.java">CapturingImplementationsTest</a>,
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/TimingFramework/test/org/jdesktop/animation/timing/interpolation/PropertySetterTest.java">PropertySetterTest</a>
  *
- * @see #classNames
- * @see #inverse
- * @see #maxInstances
+ * @see #classNames classNames
+ * @see #inverse inverse
+ * @see #maxInstances maxInstances
  */
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)

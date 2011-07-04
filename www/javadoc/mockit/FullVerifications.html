@@ -390,7 +390,7 @@ Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Ver
        <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an expected invocation to a given static method, with a given list of arguments.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an expectation for a <code>static</code> method, with a given list of arguments.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -407,7 +407,7 @@ Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Ver
        <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an expected invocation to a given instance method, with a given list of arguments.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an expectation for an instance method, with a given list of arguments.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -424,9 +424,8 @@ Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Ver
                  <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullInitArgs)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The same as <A HREF="../mockit/FullVerifications.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but for instantiating an inner
- non-accessible class of some other class, and where all other (if any) initialization
- arguments are known to be non null.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The same as <A HREF="../mockit/FullVerifications.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but for instantiating an inner non-accessible class
+ of some other class, and where all other (if any) initialization arguments are known to be non null.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -443,7 +442,7 @@ Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Ver
             <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;initArgs)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an expected constructor invocation for a given class.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an expectation for a constructor of a given class.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -459,8 +458,8 @@ Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Ver
             <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullInitArgs)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The same as <A HREF="../mockit/FullVerifications.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but for the case where each
- initialization argument is known to be null or non-null at the call point.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The same as <A HREF="../mockit/FullVerifications.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but inferring parameter types from non-null argument
+ values.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -1193,19 +1192,21 @@ protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://download.oracle.com/ja
                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</PRE>
 <DL>
-<DD>Specifies an expected invocation to a given static method, with a given list of arguments.
+<DD>Specifies an expectation for a <code>static</code> method, with a given list of arguments.
  <p/>
- This is useful when the next expected method is not accessible (private, for example) from the
- test, and therefore cannot be called normally. It should <strong>not</strong> be used for
- calling accessible methods.
+ This is useful when a method is not accessible from the test (it's <code>private</code>, for example), and therefore
+ cannot be called normally. It should not be used to call accessible methods.
  <p/>
- Additionally, this can also be used to directly test private methods, when there is no other
- way to do so, or it would be too difficult by indirect means. Note that in such a case the
- target class will normally be a "real", non-mocked, class in the code under test.
+ Additionally, this can also be used to directly test private methods, when there is no other way to do so, or it
+ would be too difficult by indirect means.
+ Note that in such a case the target class would not be mocked.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>methodOwner</CODE> - the class on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected static method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the invocation; if a
- null value needs to be passed, the Class object for the parameter type must be passed instead</DL>
+<DT><B>Parameters:</B><DD><CODE>methodOwner</CODE> - the class on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected static method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the expectation;
+ if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead
+<DT><B>Returns:</B><DD>the return value from the invoked method, wrapped if primitive
+<DT><B>Throws:</B>
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if a null reference was provided for a parameter</DL>
 </DD>
 </DL>
 <HR>
@@ -1217,22 +1218,24 @@ protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://download.oracle.com/ja
                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</PRE>
 <DL>
-<DD>Specifies an expected invocation to a given instance method, with a given list of arguments.
+<DD>Specifies an expectation for an instance method, with a given list of arguments.
  <p/>
- This is useful when the next expected method is not accessible (private, for example) from the test, and
- therefore can not be called normally. It should <strong>not</strong> be used for calling accessible methods.
+ This is useful when a method is not accessible from the test (it's <code>private</code>, for example), and therefore
+ cannot be called normally. It should not be used to call accessible methods.
  <p/>
  Additionally, this can also be used to directly test private methods, when there is no other way to do so, or it
- would be too difficult by indirect means. Note that in such a case the target instance will actually be a "real"
- (non-mocked) object, not a mocked instance.
+ would be too difficult by indirect means.
+ Note that in such a case the target instance will actually be a "real" (non-mocked) object.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
  Tutorial</a>
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>objectWithMethod</CODE> - the instance on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the invocation; if a
- null value needs to be passed, the Class object for the parameter type must be passed instead
-<DT><B>Returns:</B><DD>the return value from the invoked method, wrapped if primitive<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerifications.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><CODE>invoke(Class, String, Object...)</CODE></A></DL>
+<DT><B>Parameters:</B><DD><CODE>objectWithMethod</CODE> - the instance on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the expectation;
+ if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead
+<DT><B>Returns:</B><DD>the return value from the invoked method, wrapped if primitive
+<DT><B>Throws:</B>
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if a null reference was provided for a parameter<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerifications.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><CODE>invoke(Class, String, Object...)</CODE></A></DL>
 </DD>
 </DL>
 <HR>
@@ -1244,14 +1247,13 @@ protected final &lt;T&gt; T <B>newInnerInstance</B>(<A HREF="http://download.ora
                                        <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;outerClassInstance,
                                        <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullInitArgs)</PRE>
 <DL>
-<DD>The same as <A HREF="../mockit/FullVerifications.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but for instantiating an inner
- non-accessible class of some other class, and where all other (if any) initialization
- arguments are known to be non null.
+<DD>The same as <A HREF="../mockit/FullVerifications.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but for instantiating an inner non-accessible class
+ of some other class, and where all other (if any) initialization arguments are known to be non null.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>innerClassSimpleName</CODE> - simple name of the inner class, that is, the part after the "$"
- character in its full name<DD><CODE>outerClassInstance</CODE> - the outer class instance to which the inner class instance will
- belong</DL>
+<DT><B>Parameters:</B><DD><CODE>innerClassSimpleName</CODE> - simple name of the inner class, that is, the part after the "$" character in its full
+ name<DD><CODE>outerClassInstance</CODE> - the outer class instance to which the inner class instance will belong<DD><CODE>nonNullInitArgs</CODE> - zero or more non-null expected parameter values for the expectation;
+ if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead</DL>
 </DD>
 </DL>
 <HR>
@@ -1263,20 +1265,18 @@ protected final &lt;T&gt; T <B>newInstance</B>(<A HREF="http://download.oracle.c
                                   <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;[]&nbsp;parameterTypes,
                                   <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;initArgs)</PRE>
 <DL>
-<DD>Specifies an expected constructor invocation for a given class.
+<DD>Specifies an expectation for a constructor of a given class.
  <p/>
- This is useful for invoking non-accessible constructors (private ones, for example) from the
- test, which otherwise could not be called normally.
+ This is useful for invoking non-accessible constructors (<code>private</code> ones, for example) from the test, which
+ otherwise could not be called normally. It should not be used for accessible constructors.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
  Tutorial</a>
 <P>
 <DD><DL>
-<DT><B>Type Parameters:</B><DD><CODE>T</CODE> - interface or super-class type to which the returned instance should be assignable<DT><B>Parameters:</B><DD><CODE>className</CODE> - the fully qualified name of the desired class (which should not be accessible
- to the test; otherwise just refer to it in code)<DD><CODE>parameterTypes</CODE> - the formal parameter types for the desired constructor, possibly empty<DD><CODE>initArgs</CODE> - the invocation arguments for the constructor, which must be consistent with
- the specified parameter types
-<DT><B>Returns:</B><DD>a newly created instance of the specified class, initialized with the specified
- constructor and arguments<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerifications.html#newInstance(java.lang.String, java.lang.Object...)"><CODE>newInstance(String, Object...)</CODE></A>, 
+<DT><B>Type Parameters:</B><DD><CODE>T</CODE> - interface or super-class type to which the returned instance should be assignable<DT><B>Parameters:</B><DD><CODE>className</CODE> - the fully qualified name of the desired class<DD><CODE>parameterTypes</CODE> - the formal parameter types for the desired constructor, possibly empty<DD><CODE>initArgs</CODE> - the invocation arguments for the constructor, which must be consistent with the specified
+ parameter types
+<DT><B>Returns:</B><DD>a newly created instance of the specified class, initialized with the specified constructor and arguments<DT><B>See Also:</B><DD><A HREF="../mockit/FullVerifications.html#newInstance(java.lang.String, java.lang.Object...)"><CODE>newInstance(String, Object...)</CODE></A>, 
 <A HREF="../mockit/FullVerifications.html#newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)"><CODE>newInnerInstance(String, Object, Object...)</CODE></A></DL>
 </DD>
 </DL>
@@ -1288,15 +1288,14 @@ newInstance</H3>
 protected final &lt;T&gt; T <B>newInstance</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;className,
                                   <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullInitArgs)</PRE>
 <DL>
-<DD>The same as <A HREF="../mockit/FullVerifications.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but for the case where each
- initialization argument is known to be null or non-null at the call point.
- <p/>
- However, <code>null</code> argument values cannot directly be passed to this method;
- if the parameter value must be <code>null</code>, then the corresponding <code>Class</code> literal must
- be passed instead.
+<DD>The same as <A HREF="../mockit/FullVerifications.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but inferring parameter types from non-null argument
+ values.
+ If a given parameter needs to match <code>null</code> during replay, then the corresponding <code>Class</code> literal must
+ be passed instead of <code>null</code>.
 <P>
 <DD><DL>
-
+<DT><B>Parameters:</B><DD><CODE>nonNullInitArgs</CODE> - zero or more non-null expected parameter values for the expectation;
+ if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead
 <DT><B>Throws:</B>
 <DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if one of the given arguments is <code>null</code></DL>
 </DD>
