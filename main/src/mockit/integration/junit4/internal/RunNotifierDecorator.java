@@ -25,18 +25,25 @@ public final class RunNotifierDecorator
    @Mock(reentrant = true)
    public void fireTestStarted(Description description)
    {
-      Class<?> currentTestClass = TestRun.getCurrentTestClass();
+      TestRun.enterNoMockingZone();
 
-      if (currentTestClass != null) {
-         String testClassName = getTestClassName(description);
+      try {
+         Class<?> currentTestClass = TestRun.getCurrentTestClass();
 
-         if (!testClassName.equals(currentTestClass.getName())) {
-            Class<?> testClass = Utilities.loadClass(testClassName);
-            discardCurrentTestClassIfNoLongerValid(testClass);
+         if (currentTestClass != null) {
+            String testClassName = getTestClassName(description);
+
+            if (!testClassName.equals(currentTestClass.getName())) {
+               Class<?> testClass = Utilities.loadClass(testClassName);
+               discardCurrentTestClassIfNoLongerValid(testClass);
+            }
          }
-      }
 
-      it.fireTestStarted(description);
+         it.fireTestStarted(description);
+      }
+      finally {
+         TestRun.exitNoMockingZone();
+      }
    }
 
    private String getTestClassName(Description description)

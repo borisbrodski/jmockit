@@ -95,27 +95,38 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
    public void run(IHookCallBack callBack, ITestResult testResult)
    {
       Object testInstance = testResult.getInstance();
-      Class<?> testClass = testResult.getTestClass().getRealClass();
 
-      updateTestClassState(testInstance, testClass);
-      savePoint.set(new SavePoint());
+      TestRun.enterNoMockingZone();
 
-      if (shouldPrepareForNextTest) {
-         prepareForNextTest();
-      }
+      Method method;
 
-      shouldPrepareForNextTest = true;
-      createInstancesForTestedFields(testInstance);
+      try {
+         Class<?> testClass = testResult.getTestClass().getRealClass();
 
-      @SuppressWarnings({"deprecation"}) Method method = testResult.getMethod().getMethod();
+         updateTestClassState(testInstance, testClass);
+         savePoint.set(new SavePoint());
 
-      if (!isMethodWithParametersProvidedByTestNG(method)) {
-         Object[] parameters = testResult.getParameters();
-         Object[] mockParameters = createInstancesForMockParameters(testInstance, method);
-
-         if (mockParameters != null) {
-            System.arraycopy(mockParameters, 0, parameters, 0, parameters.length);
+         if (shouldPrepareForNextTest) {
+            prepareForNextTest();
          }
+
+         shouldPrepareForNextTest = true;
+         createInstancesForTestedFields(testInstance);
+
+         //noinspection deprecation
+         method = testResult.getMethod().getMethod();
+
+         if (!isMethodWithParametersProvidedByTestNG(method)) {
+            Object[] parameters = testResult.getParameters();
+            Object[] mockParameters = createInstancesForMockParameters(testInstance, method);
+
+            if (mockParameters != null) {
+               System.arraycopy(mockParameters, 0, parameters, 0, parameters.length);
+            }
+         }
+      }
+      finally {
+         TestRun.exitNoMockingZone();
       }
 
       TestRun.setRunningIndividualTest(testInstance);
