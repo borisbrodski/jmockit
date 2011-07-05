@@ -28,25 +28,19 @@ public final class JavadocExamples_JMockit_Test
       mock.someMethod("test");
 
       // Invocations to mock are verified (verify phase):
-      new Verifications()
-      {
-         {
-            mock.doSomething("one", true);
-            mock.someMethod("test");
-         }
-      };
+      new Verifications() {{
+         mock.doSomething("one", true);
+         mock.someMethod("test");
+      }};
    }
 
    @Test // Uses of JMockit API: 3
    public void stubInvocations(final MockedClass mock)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.getItem(0); result = "first";
-            mock.getItem(1); result = new RuntimeException();
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.getItem(0); result = "first";
+         mock.getItem(1); result = new RuntimeException();
+      }};
 
       assertEquals("first", mock.getItem(0));
 
@@ -63,12 +57,7 @@ public final class JavadocExamples_JMockit_Test
    @Test // Uses of JMockit API: 3
    public void stubAndVerifyInvocation()
    {
-      new NonStrictExpectations()
-      {
-         {
-            mockedList.get(0); result = "first";
-         }
-      };
+      new NonStrictExpectations() {{ mockedList.get(0); result = "first"; }};
 
       assertEquals("first", mockedList.get(0));
 
@@ -76,28 +65,20 @@ public final class JavadocExamples_JMockit_Test
       // invocation occurs at least once. If this is the case, then it's not safe to expect the test
       // to break without an explicit verification, because the method under test may never call the
       // stubbed one, and that would be a bug that the test should detect.
-      new Verifications()
-      {
-         {
-            mockedList.get(0);
-         }
-      };
+      new Verifications() {{ mockedList.get(0); }};
    }
 
    @Test // Uses of JMockit API: 3
    public void stubAndVerifyInvocationWithoutRepeatingItInExpectationAndVerificationBlocks()
    {
-      new NonStrictExpectations()
-      {
-         {
-            // Notice that this can't be done in Mockito, which requires the repetition of
-            // "mockedList.get(0);" in the verification phase.
-            mockedList.get(0); result = "first"; times = 1;
+      new NonStrictExpectations() {{
+         // Notice that this can't be done in Mockito, which requires the repetition of
+         // "mockedList.get(0);" in the verification phase.
+         mockedList.get(0); result = "first"; times = 1;
 
-            // Notice also that if the expectation above was strict (ie, recorded inside an
-            // "Expectations" block) then the "times = 1;" constraint could be removed.
-         }
-      };
+         // Notice also that if the expectation above was strict (ie, recorded inside an
+         // "Expectations" block) then the "times = 1;" constraint could be removed.
+      }};
 
       assertEquals("first", mockedList.get(0));
    }
@@ -105,22 +86,14 @@ public final class JavadocExamples_JMockit_Test
    @Test // Uses of JMockit API: 7
    public void useArgumentMatchers()
    {
-      new NonStrictExpectations()
-      {
-         {
-            mockedList.get(anyInt); result = "element";
-            mockedList.contains(with(new HasProperty<String>("abc"))); result = true;
-         }
-      };
+      new NonStrictExpectations() {{
+         mockedList.get(anyInt); result = "element";
+         mockedList.contains(with(new HasProperty<String>("abc"))); result = true;
+      }};
 
       assertEquals("element", mockedList.get(999));
 
-      new Verifications()
-      {
-         {
-            mockedList.get(anyInt);
-         }
-      };
+      new Verifications() {{ mockedList.get(anyInt); }};
    }
 
    @Test // Uses of JMockit API: 8
@@ -136,38 +109,32 @@ public final class JavadocExamples_JMockit_Test
       mockedList.add("three times");
       mockedList.add("three times");
 
-      new Verifications()
-      {
-         {
-            // Following two verifications work exactly the same:
-            mockedList.add("once"); // minTimes == 1 is the default
-            mockedList.add("once"); times = 1;
+      new Verifications() {{
+         // Following two verifications work exactly the same:
+         mockedList.add("once"); // minTimes == 1 is the default
+         mockedList.add("once"); times = 1;
 
-            // Verifies exact number of invocations:
-            mockedList.add("twice"); times = 2;
-            mockedList.add("three times"); times = 3;
+         // Verifies exact number of invocations:
+         mockedList.add("twice"); times = 2;
+         mockedList.add("three times"); times = 3;
 
-            // Verifies no invocations occurred:
-            mockedList.add("never happened"); times = 0;
+         // Verifies no invocations occurred:
+         mockedList.add("never happened"); times = 0;
 
-            // Verifies min/max number of invocations:
-            mockedList.add("three times"); minTimes = 1;
-            mockedList.add("three times"); minTimes = 2;
-            mockedList.add("three times"); maxTimes = 5;
-         }
-      };
+         // Verifies min/max number of invocations:
+         mockedList.add("three times"); minTimes = 1;
+         mockedList.add("three times"); minTimes = 2;
+         mockedList.add("three times"); maxTimes = 5;
+      }};
    }
 
    @Test(expected = RuntimeException.class) // Uses of JMockit API: 2
    public void stubVoidMethodsWithExceptions()
    {
-      new NonStrictExpectations()
-      {
-         {
-            // void/non-void methods are handled the same way, with a consistent API:
-            mockedList.clear(); result = new RuntimeException();
-         }
-      };
+      new NonStrictExpectations() {{
+         // void/non-void methods are handled the same way, with a consistent API:
+         mockedList.clear(); result = new RuntimeException();
+      }};
 
       mockedList.clear();
    }
@@ -179,14 +146,11 @@ public final class JavadocExamples_JMockit_Test
       firstMock.add("was called first");
       secondMock.add("was called second");
 
-      new VerificationsInOrder()
-      {
-         {
-            // Verifies that firstMock was called before secondMock:
-            firstMock.add("was called first");
-            secondMock.add("was called second");
-         }
-      };
+      new VerificationsInOrder() {{
+         // Verifies that firstMock was called before secondMock:
+         firstMock.add("was called first");
+         secondMock.add("was called second");
+      }};
    }
 
    @Test // Uses of JMockit API: 2
@@ -196,16 +160,13 @@ public final class JavadocExamples_JMockit_Test
       mockedList.add("one");
 
       // Verify that the two other mocks were never invoked.
-      new FullVerifications()
-      {
-         {
-            // Ordinary verification:
-            mockedList.add("one");
+      new FullVerifications() {{
+         // Ordinary verification:
+         mockedList.add("one");
 
-            // Verify that method was never called on a mock:
-            mockedList.add("two"); times = 0;
-         }
-      };
+         // Verify that method was never called on a mock:
+         mockedList.add("two"); times = 0;
+      }};
    }
 
    @Test(expected = AssertionError.class) // Uses of JMockit API: 1
@@ -214,12 +175,7 @@ public final class JavadocExamples_JMockit_Test
       mockedList.add("one");
       mockTwo.size();
 
-      new FullVerifications()
-      {
-         {
-            mockedList.add("one");
-         }
-      };
+      new FullVerifications() {{ mockedList.add("one"); }};
    }
 
    @Test // Uses of JMockit API: 1
@@ -229,16 +185,13 @@ public final class JavadocExamples_JMockit_Test
       mockedList.add("two");
 
       // Verify all invocations to mockedList.
-      new FullVerifications()
-      {
-         {
-            // Verifies first invocation:
-            mockedList.add("one");
+      new FullVerifications() {{
+         // Verifies first invocation:
+         mockedList.add("one");
 
-            // Verifies second (and last) invocation:
-            mockedList.add("two");
-         }
-      };
+         // Verifies second (and last) invocation:
+         mockedList.add("two");
+      }};
    }
 
    @Test(expected = AssertionError.class) // Uses of JMockit API: 1
@@ -249,13 +202,10 @@ public final class JavadocExamples_JMockit_Test
       mockedList.size();
 
       // Verify all invocations to mockedList.
-      new FullVerifications()
-      {
-         {
-            mockedList.add("one");
-            mockedList.add("two");
-         }
-      };
+      new FullVerifications() {{
+         mockedList.add("one");
+         mockedList.add("two");
+      }};
    }
 
    @Test // Uses of JMockit API: 1
@@ -265,14 +215,11 @@ public final class JavadocExamples_JMockit_Test
       mockedList.size();
       mockedList.add("two");
 
-      new FullVerificationsInOrder()
-      {
-         {
-            mockedList.add("one");
-            mockedList.size();
-            mockedList.add("two");
-         }
-      };
+      new FullVerificationsInOrder() {{
+         mockedList.add("one");
+         mockedList.size();
+         mockedList.add("two");
+      }};
    }
 
    @Test(expected = AssertionError.class) // Uses of JMockit API: 1
@@ -282,13 +229,10 @@ public final class JavadocExamples_JMockit_Test
       mockedList.add("two");
       mockedList.size();
 
-      new FullVerificationsInOrder()
-      {
-         {
-            mockedList.add("one");
-            mockedList.add("two");
-         }
-      };
+      new FullVerificationsInOrder() {{
+         mockedList.add("one");
+         mockedList.add("two");
+      }};
    }
 
    @Test(expected = AssertionError.class) // Uses of JMockit API: 1
@@ -297,24 +241,18 @@ public final class JavadocExamples_JMockit_Test
       mockedList.add("one");
       mockedList.add("two");
 
-      new FullVerificationsInOrder()
-      {
-         {
-            mockedList.add("two");
-            mockedList.add("one");
-         }
-      };
+      new FullVerificationsInOrder() {{
+         mockedList.add("two");
+         mockedList.add("one");
+      }};
    }
 
    @Test // Uses of JMockit API: 4
    public void consecutiveCallsWithStrictExpectations(final Iterator<String> mock)
    {
-      new Expectations()
-      {
-         {
-            mock.next(); result = new IllegalStateException(); result = "foo"; minTimes = 1;
-         }
-      };
+      new Expectations() {{
+         mock.next(); result = new IllegalStateException(); result = "foo"; minTimes = 1;
+      }};
 
       verifyConsecutiveCallsWithRegularAssertions(mock);
    }
@@ -340,12 +278,9 @@ public final class JavadocExamples_JMockit_Test
    @Test // Uses of JMockit API: 3
    public void consecutiveCallsWithNonStrictExpectations(final Iterator<String> mock)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.next(); result = new IllegalStateException(); result = "foo";
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.next(); result = new IllegalStateException(); result = "foo";
+      }};
 
       verifyConsecutiveCallsWithRegularAssertions(mock);
    }
@@ -353,19 +288,12 @@ public final class JavadocExamples_JMockit_Test
    @Test // Uses of JMockit API: 4
    public void stubbingWithCallbacksUsingDelegate(final MockedClass mock)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.someMethod(anyString);
-            result = new Delegate()
-            {
-               String delegate(String s)
-               {
-                  return "called with arguments: " + s;
-               }
-            };
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.someMethod(anyString);
+         result = new Delegate() {
+            String delegate(String s) { return "called with arguments: " + s; }
+         };
+      }};
 
       assertEquals("called with arguments: foo", mock.someMethod("foo"));
    }
@@ -375,8 +303,7 @@ public final class JavadocExamples_JMockit_Test
    {
       final MockedClass mock = new MockedClass();
 
-      new MockUp<MockedClass>()
-      {
+      new MockUp<MockedClass>() {
          MockedClass it;
 
          @Mock
@@ -397,16 +324,13 @@ public final class JavadocExamples_JMockit_Test
       final MockedClass dynamicMock = new MockedClass();
 
       // Optionally, you can record some invocations:
-      new NonStrictExpectations(dynamicMock)
-      {
-         {
-            dynamicMock.getSomeValue(); result = 100;
+      new NonStrictExpectations(dynamicMock) {{
+         dynamicMock.getSomeValue(); result = 100;
 
-            // When recording invocations the real implementations are never executed, so this call
-            // would never throw an exception:
-            dynamicMock.getItem(1); result = "an item";
-         }
-      };
+         // When recording invocations the real implementations are never executed, so this call
+         // would never throw an exception:
+         dynamicMock.getItem(1); result = "an item";
+      }};
 
       // Using the mock calls real methods, except for calls which match recorded expectations:
       dynamicMock.doSomething("one", true);
@@ -417,14 +341,26 @@ public final class JavadocExamples_JMockit_Test
       assertEquals(100, dynamicMock.getSomeValue());
 
       // Optionally, you can verify invocations to the dynamically mocked types/objects:
-      new Verifications()
-      {
-         {
-            // When verifying invocations, real implementations are never executed:
-            dynamicMock.doSomething("one", true);
-            dynamicMock.doSomething("two", anyBoolean);
-         }
-      };
+      new Verifications() {{
+         // When verifying invocations, real implementations are never executed:
+         dynamicMock.doSomething("one", true);
+         dynamicMock.doSomething("two", anyBoolean);
+      }};
+   }
+
+   @Test // Uses of JMockit API: 3
+   public void validatingSingleArgumentWithCustomArgumentMatcher(final MockedClass mock)
+   {
+      mock.doSomething(new Person("John"));
+      mock.doSomething(new Person("Jane"));
+
+      new Verifications() {{
+         mock.doSomething((Person) with(new Object() {
+            Iterator<String> expectedNames = Arrays.asList("John", "Jane").iterator();
+            void validatePerson(Person p) { assertEquals(expectedNames.next(), p.getName()); }
+         }));
+         times = 2;
+      }};
    }
 
    @Test // Uses of JMockit API: 5
@@ -433,21 +369,17 @@ public final class JavadocExamples_JMockit_Test
       mock.doSomething(new Person("John"));
       mock.doSomething(new Person("Jane"));
 
-      new Verifications()
-      {
-         {
-            mock.doSomething((Person) any); times = 2;
-            forEachInvocation = new Object()
-            {
-               String[] expectedNames = {"John", "Jane"};
+      new Verifications() {{
+         mock.doSomething((Person) any); times = 2;
+         forEachInvocation = new Object() {
+            String[] expectedNames = {"John", "Jane"};
 
-               void validatePerson(Invocation i, Person p)
-               {
-                  assertEquals(expectedNames[i.getInvocationIndex()], p.getName());
-               }
-            };
-         }
-      };
+            void validatePerson(Invocation i, Person p)
+            {
+               assertEquals(expectedNames[i.getInvocationIndex()], p.getName());
+            }
+         };
+      }};
    }
 
    @Test // Uses of JMockit API: 4
@@ -455,41 +387,29 @@ public final class JavadocExamples_JMockit_Test
    {
       mock.doSomething("test", true);
 
-      new Verifications()
-      {
-         {
-            mock.doSomething(anyString, anyBoolean);
-            forEachInvocation = new Object()
+      new Verifications() {{
+         mock.doSomething(anyString, anyBoolean);
+         forEachInvocation = new Object() {
+            void validateArguments(String s, boolean b)
             {
-               void validateArguments(String s, boolean b)
-               {
-                  assertEquals("test", s);
-                  assertTrue(b);
-               }
-            };
-         }
-      };
+               assertEquals("test", s);
+               assertTrue(b);
+            }
+         };
+      }};
    }
 
    @Test // Uses of JMockit API: 4
    public void chainingMethodCallsWithCascading(@Cascading final MockedClass mock)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.getPerson().getName(); result = "deep";
-         }
-      };
+      new NonStrictExpectations() {{ mock.getPerson().getName(); result = "deep"; }};
 
       assertEquals("deep", mock.getPerson().getName());
 
-      new Verifications()
-      {
-         {
-            // Not likely to be useful often, but such verifications do work:
-            mock.getPerson();
-            mock.getPerson().getName();
-         }
-      };
+      new Verifications() {{
+         // Not likely to be useful often, but such verifications do work:
+         mock.getPerson();
+         mock.getPerson().getName();
+      }};
    }
 }
