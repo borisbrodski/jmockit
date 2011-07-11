@@ -19,7 +19,8 @@ public final class MockingMultipleInterfacesTest<MultiMock extends Dependency & 
       String doSomething(boolean b);
    }
 
-   @Mocked MultiMock multiMock;
+   @Mocked
+   MultiMock multiMock;
 
    @Test
    public void mockFieldWithTwoInterfaces()
@@ -53,5 +54,17 @@ public final class MockingMultipleInterfacesTest<MultiMock extends Dependency & 
       };
 
       assertEquals("", mock.doSomething(true));
+   }
+
+   public interface Base { void doSomething(); }
+   abstract static class Derived implements Base { protected Derived() {} }
+   public abstract static class ToBeMocked extends Derived {}
+
+   @Test
+   public void mockAbstractMethodInheritedFromInterfaceImplementedBySuperClass(final ToBeMocked mock)
+   {
+      mock.doSomething();
+
+      new Verifications() {{ mock.doSomething(); times = 1; }};
    }
 }

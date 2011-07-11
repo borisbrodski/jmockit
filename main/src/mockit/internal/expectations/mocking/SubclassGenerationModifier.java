@@ -6,8 +6,10 @@ package mockit.internal.expectations.mocking;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.*;
+import java.util.ArrayList;
 import java.util.*;
 
+import static java.util.Arrays.*;
 import static mockit.external.asm.Opcodes.*;
 
 import mockit.external.asm.*;
@@ -25,7 +27,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
    private final String subclassName;
    private String superClassName;
    private String superClassOfSuperClass;
-   private String[] initialSuperInterfaces;
+   private Set<String> superInterfaces;
    private final List<String> implementedMethods;
 
    SubclassGenerationModifier(
@@ -44,7 +46,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
       super.visit(version, access & CLASS_ACCESS_MASK, subclassName, signature, name, null);
       superClassName = name;
       superClassOfSuperClass = superName;
-      initialSuperInterfaces = interfaces;
+      superInterfaces = new HashSet<String>(asList(interfaces));
    }
 
    @Override
@@ -65,26 +67,25 @@ final class SubclassGenerationModifier extends BaseClassModifier
    @Override
    public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
    {
-      if (!"<init>".equals(name)) {
-         // Inherits from super-class when non-abstract.
-         // Otherwise, creates implementation for abstract method with call to "recordOrReplay".
-         generateImplementationIfAbstractMethod(superClassName, access, name, desc, signature, exceptions);
-      }
-
+      // Inherits from super-class when non-abstract.
+      // Otherwise, creates implementation for abstract method with call to "recordOrReplay".
+      generateImplementationIfAbstractMethod(superClassName, access, name, desc, signature, exceptions);
       return null;
    }
 
    private void generateImplementationIfAbstractMethod(
       String className, int access, String name, String desc, String signature, String[] exceptions)
    {
-      String methodNameAndDesc = name + desc;
+      if (!"<init>".equals(name)) {
+         String methodNameAndDesc = name + desc;
 
-      if (!implementedMethods.contains(methodNameAndDesc)) {
-         if (Modifier.isAbstract(access)) {
-            generateMethodImplementation(className, access, name, desc, signature, exceptions);
+         if (!implementedMethods.contains(methodNameAndDesc)) {
+            if (Modifier.isAbstract(access)) {
+               generateMethodImplementation(className, access, name, desc, signature, exceptions);
+            }
+
+            implementedMethods.add(methodNameAndDesc);
          }
-
-         implementedMethods.add(methodNameAndDesc);
       }
    }
 
@@ -113,8 +114,10 @@ final class SubclassGenerationModifier extends BaseClassModifier
    {
       generateImplementationsForInheritedAbstractMethods(superClassOfSuperClass);
 
-      for (String superInterface : initialSuperInterfaces) {
+      while (!superInterfaces.isEmpty()) {
+         String superInterface = superInterfaces.iterator().next();
          generateImplementationsForInterfaceMethods(superInterface);
+         superInterfaces.remove(superInterface);
       }
    }
 
@@ -159,6 +162,10 @@ final class SubclassGenerationModifier extends BaseClassModifier
       public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
       {
          this.superName = superName;
+
+         if (interfaces != null) {
+            superInterfaces.addAll(asList(interfaces));
+         }
       }
 
       @Override
@@ -177,14 +184,12 @@ final class SubclassGenerationModifier extends BaseClassModifier
 
    private final class MethodModifierForImplementedInterface extends BaseMethodModifier
    {
-      String[] superInterfaces;
-
       MethodModifierForImplementedInterface(String interfaceName) { super(interfaceName); }
 
       @Override
       public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
       {
-         superInterfaces = interfaces;
+         superInterfaces.addAll(asList(interfaces));
       }
 
       @Override
@@ -218,14 +223,6 @@ final class SubclassGenerationModifier extends BaseClassModifier
          }
          catch (NoSuchMethodException ignore) {
             return false;
-         }
-      }
-
-      @Override
-      public void visitEnd()
-      {
-         for (String superName : superInterfaces) {
-            generateImplementationsForInterfaceMethods(superName);
          }
       }
    }
