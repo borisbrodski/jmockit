@@ -291,8 +291,8 @@ public class MyFirstJMockitTest
             assertEquals(1, n);
             assertNotNull(otherData);
             ...
-            // Return (if non-void) or throw the result we want to produce for the
-            // invocation to the mocked method:
+            // Return (if non-void) or throw the result we want to produce for
+            // this invocation of the mocked method:
             return otherData.isValid();
          }
    
@@ -306,8 +306,7 @@ public class MyFirstJMockitTest
 </code></pre>
 <p>
    The <code class="annotation">@Mock</code> annotation marks those methods in the <em>mock-up class</em> which are
-   supposed to provide mock/stub implementations for the corresponding methods (of the same signature) in the mocked
-   class.
+   meant to provide mock/stub implementations for the corresponding methods (of the same signature) in the mocked class.
    If no invocation count constraint is specified through attributes of the <code class="annotation">@Mock</code>
    annotation, then any number (including zero) of invocations will be allowed.
 </p>
