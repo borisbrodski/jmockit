@@ -29,8 +29,6 @@
  */
 package mockit.external.asm;
 
-import java.lang.reflect.Method;
-
 /**
  * A Java type. This class can be used to make it easier to manipulate type and
  * method descriptors.
@@ -275,23 +273,6 @@ public final class Type
     }
 
     /**
-     * Returns the Java types corresponding to the argument types of the given
-     * method.
-     * 
-     * @param method a method.
-     * @return the Java types corresponding to the argument types of the given
-     *         method.
-     */
-    public static Type[] getArgumentTypes(Method method) {
-        Class<?>[] classes = method.getParameterTypes();
-        Type[] types = new Type[classes.length];
-        for (int i = classes.length - 1; i >= 0; --i) {
-            types[i] = getType(classes[i]);
-        }
-        return types;
-    }
-
-    /**
      * Returns the Java type corresponding to the return type of the given
      * method descriptor.
      * 
@@ -302,18 +283,6 @@ public final class Type
     public static Type getReturnType(String methodDescriptor) {
         char[] buf = methodDescriptor.toCharArray();
         return getType(buf, methodDescriptor.indexOf(')') + 1);
-    }
-
-    /**
-     * Returns the Java type corresponding to the return type of the given
-     * method.
-     * 
-     * @param method a method.
-     * @return the Java type corresponding to the return type of the given
-     *         method.
-     */
-    public static Type getReturnType(Method method) {
-        return getType(method.getReturnType());
     }
 
     /**
@@ -471,29 +440,6 @@ public final class Type
     }
 
     /**
-     * Returns the descriptor corresponding to the given argument and return
-     * types.
-     * 
-     * @param returnType the return type of the method.
-     * @param argumentTypes the argument types of the method.
-     * @return the descriptor corresponding to the given argument and return
-     *         types.
-     */
-    public static String getMethodDescriptor(Type returnType, Type[] argumentTypes)
-    {
-        StringBuilder buf = new StringBuilder();
-        buf.append('(');
-
-        for (Type argumentType : argumentTypes) {
-           argumentType.getDescriptor(buf);
-        }
-
-        buf.append(')');
-        returnType.getDescriptor(buf);
-        return buf.toString();
-    }
-
-    /**
      * Appends the descriptor corresponding to this Java type to the given
      * string buffer.
      * 
@@ -560,26 +506,6 @@ public final class Type
     public static String getDescriptor(Class<?> c) {
         StringBuffer buf = new StringBuffer();
         getDescriptor(buf, c);
-        return buf.toString();
-    }
-
-    /**
-     * Returns the descriptor corresponding to the given method.
-     * 
-     * @param m a {@link Method Method} object.
-     * @return the descriptor of the given method.
-     */
-    public static String getMethodDescriptor(Method m) {
-        Class<?>[] parameters = m.getParameterTypes();
-        StringBuffer buf = new StringBuffer();
-        buf.append('(');
-
-        for (Class<?> parameter : parameters) {
-           getDescriptor(buf, parameter);
-        }
-
-        buf.append(')');
-        getDescriptor(buf, m.getReturnType());
         return buf.toString();
     }
 
