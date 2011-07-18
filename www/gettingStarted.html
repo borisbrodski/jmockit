@@ -96,11 +96,10 @@
 
 <h4 id="mockObject">Creating a "mock object"</h4>
 <p>
-   In a test class, simply declare a <em>mock field</em> of the desired type, annotating it with an appropriate JMockit
-   annotation such as <code class="annotation">@Mocked</code> or <code class="annotation">@Injectable</code>.
-   When the mocked type is a class, applying the latter annotation means that <em>only</em> the instance assigned to the
-   mock field will have mock behavior; if it is not applied, <em>all</em> instances of the mocked class will be mocked
-   by default.
+   In a test class, declare a <em>mock field</em> of the type you wish to mock, annotating it with a JMockit annotation
+   such as <code class="annotation">@Mocked</code> or <code class="annotation">@Injectable</code>.
+   When mocking a class, the latter annotation means that <em>only</em> the instance assigned to the mock field will
+   have mock behavior; if it is not applied, <em>all</em> instances of the mocked class will be mocked by default.
 </p>
 <pre><code>import org.junit.*;
 import mockit.*;
@@ -109,8 +108,8 @@ public class MyFirstJMockitTest
 {
    // <strong>Mocked instances</strong> (rather than conventional "mock objects") will be
    // automatically created and assigned to annotated mock fields:
-   @Mocked Collaborator mock1; // all current <strong>and future</strong> instances will be mocked
-   @Injectable AnotherDependency anotherMock; // only <strong>one</strong> instance is a mock
+   @Mocked Collaborator mock1; // <strong>all</strong> current <strong>and future</strong> instances are mocked
+   @Injectable AnotherDependency anotherMock; // only <strong>one</strong> particular instance is mocked
 
    @Test
    public void myFirstTestMethod()
@@ -119,7 +118,7 @@ public class MyFirstJMockitTest
       // They should <strong>not</strong> be reassigned, however.
    }
 
-   @Test // a method parameter is by default a "mock parameter" ("@Mocked" is implied)
+   @Test // a test method parameter is by default a "mock parameter" ("@Mocked" is implied)
    public void anotherTestMethod(YetAnotherDependency testSpecificMock)
    {
       ...
@@ -130,7 +129,7 @@ public class MyFirstJMockitTest
 </code></pre>
 <p>
    The template test class above shows something unusual: the second test method actually declares a parameter!
-   Normally, JUnit (and TestNG) test methods are not allowed to have parameters.
+   Normally, JUnit/TestNG test methods are not allowed to have parameters.
    When using JMockit, however, such <em>mock parameters</em> are allowed and quite useful.
    In fact, it's best to use mock fields of the test class only when the mocked types are needed by most or all tests in
    the class. Otherwise, mock parameters (or <em>local mock fields</em>, which we introduce later) with scope limited to
@@ -143,8 +142,8 @@ public class MyFirstJMockitTest
    Although optional, mock parameters can also be annotated with <code class="annotation">@Mocked</code> and/or
    <code class="annotation">@Injectable</code>. (The <code class="annotation">@Mocked</code> annotation is always
    implied, even when <code class="annotation">@Injectable</code> or some other annotation is used.)
-   Instance fields of the test class which are <em>not</em> annotated, on the other hand, will not be mocked.
-   Therefore, the use of an annotation for <em>mock</em> fields of the test class is required.
+   Instance fields of the test class which are <em>not</em> annotated with one or more of these mocking annotations, on
+   the other hand, will <em>not</em> be mocked.
 </p>
 
 <h4 id="testMethod">What exactly goes inside a test method?</h4>
@@ -155,11 +154,11 @@ public class MyFirstJMockitTest
 <pre><code>   @Test
    public void aTestMethod(<em>&lt;any number of mock parameters></em>)
    {
-      // <strong>Record phase</strong>: expectations on mocks are recorded; empty if there is nothing to record.
+      // <strong>Record phase</strong>: expectations on mocks are <strong>recorded</strong>; empty if there is nothing to record.
 
-      // <strong>Replay phase</strong>: invocations on mocks are "replayed"; here the code under test is exercised.
+      // <strong>Replay phase</strong>: invocations on mocks are "<strong>replayed</strong>"; here the code under test is exercised.
 
-      // <strong>Verify phase</strong>: expectations on mocks are verified; empty if there is nothing to verify.
+      // <strong>Verify phase</strong>: expectations on mocks are <strong>verified</strong>; empty if there is nothing to verify.
    }
 </code></pre>
 <p>
@@ -172,13 +171,14 @@ public class MyFirstJMockitTest
    Third, the test method can explicitly <em>verify</em> that specific invocations to mocked methods/constructors
    actually happened (or not) during replay. Again, it is perfectly valid for this phase to be empty, with no explicit
    verifications (but with <em>implicit</em>, automatic, verifications - otherwise no behavior would be tested).
-   Note that we say "mocked methods/<strong>constructors</strong>". As we will see later, the JMockit mocking API deals
-   with methods (of all kinds) <em>and</em> constructors in the exact same way: you simply invoke them!
+   Note that we say "mocked methods/<strong>constructors</strong>".
+   The mocking API handles mocked methods (of <em>all</em> kinds) <em>and</em> constructors in the exact same way: to
+   record or verify expectations on them, you simply <em>invoke</em> them during the corresponding test execution phase.
 </p>
 
 <h4 id="record">Recording expectations</h4>
 <p>
-   In the record phase of a test, we write one or more <em>expectation blocks</em>, inside which invocations to mocked
+   In the "record" phase of a test, we write one or more <em>expectation blocks</em>, inside which invocations to mocked
    types/instances are recorded.
 </p>
 <p>
@@ -187,7 +187,7 @@ public class MyFirstJMockitTest
    {
       new NonStrictExpectations()
       {
-         // A "local" mock field (could also be annotated with @Mocked):
+         // A "local" mock field ("@Mocked" is implied when not annotated):
          MyCollaborator mock;
 
          {
@@ -210,7 +210,7 @@ public class MyFirstJMockitTest
    and <code class="type">NonStrictExpectations</code>.
    The difference is only in the default behavior for the recorded expectations.
    In the first case, all expectations associated to mocked types used in the block will be <em>strict</em> by default,
-   meaning that the invocations are <em>expected</em> to occur in the replay phase in the same order as they were
+   meaning that the invocations are <em>expected</em> to occur during the replay phase in the same order as they were
    recorded, and that invocations not recorded are expected to <em>not</em> occur.
    In the second case, expectations are always <em>non-strict</em>, meaning that the invocations to mocked types,
    whether recorded or not, are <em>allowed</em> to occur in any order and in any number, including not at all.
