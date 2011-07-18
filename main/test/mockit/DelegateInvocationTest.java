@@ -27,17 +27,17 @@ public final class DelegateInvocationTest
       void addElements(Collection<String> elements) { elements.add("one element"); }
    }
 
+   // In Delegate methods /////////////////////////////////////////////////////////////////////////////////////////////
+
    @Test
    public void delegateWithContextObject()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          final Collaborator unused = null;
 
          {
             Collaborator.staticMethod();
-            returns(new Delegate()
-            {
+            returns(new Delegate() {
                boolean staticMethod(Invocation context)
                {
                   assertNull(context.getInvokedInstance());
@@ -70,8 +70,7 @@ public final class DelegateInvocationTest
    {
       final ConstructorDelegate delegate = new ConstructorDelegate();
 
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -89,14 +88,12 @@ public final class DelegateInvocationTest
    {
       final Collaborator collaborator = new Collaborator();
 
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
             mock.doSomething(true, null, null);
-            result = new Delegate()
-            {
+            result = new Delegate() {
                void doSomething(Invocation invocation, Boolean b, int[] i, String s)
                {
                   Collaborator instance = invocation.getInvokedInstance();
@@ -116,14 +113,12 @@ public final class DelegateInvocationTest
    @Test
    public void delegateWithAnotherMethodOnTheDelegateClass()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
             mock.getValue();
-            result = new Delegate()
-            {
+            result = new Delegate() {
                int getValue(Invocation context)
                {
                   return context.getInvocationCount();
@@ -144,14 +139,12 @@ public final class DelegateInvocationTest
    @Test
    public void delegateClassWithMultipleMethodsAndInexactButValidMatch()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
             Collaborator.staticMethod(1);
-            result = new Delegate()
-            {
+            result = new Delegate() {
                void otherMethod(int i)
                {
                   fail();
@@ -173,30 +166,26 @@ public final class DelegateInvocationTest
    @Test
    public void delegateOverridingInvocationCountConstraints(final Collaborator mock)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.finalMethod(); maxTimes = 1;
-            result = new Delegate()
+      new NonStrictExpectations() {{
+         mock.finalMethod(); maxTimes = 1;
+         result = new Delegate() {
+            char finalMethod(Invocation invocation)
             {
-               char finalMethod(Invocation invocation)
-               {
-                  if (invocation.getInvocationIndex() == 0) {
-                     assertEquals(0, invocation.getMinInvocations());
-                     assertEquals(1, invocation.getMaxInvocations());
-                  }
-                  else {
-                     assertEquals(2, invocation.getMinInvocations());
-                     assertEquals(2, invocation.getMaxInvocations());
-                  }
-
-                  invocation.setMinInvocations(2);
-                  invocation.setMaxInvocations(2);
-                  return 'a';
+               if (invocation.getInvocationIndex() == 0) {
+                  assertEquals(0, invocation.getMinInvocations());
+                  assertEquals(1, invocation.getMaxInvocations());
                }
-            };
-         }
-      };
+               else {
+                  assertEquals(2, invocation.getMinInvocations());
+                  assertEquals(2, invocation.getMaxInvocations());
+               }
+
+               invocation.setMinInvocations(2);
+               invocation.setMaxInvocations(2);
+               return 'a';
+            }
+         };
+      }};
 
       assertEquals('a', mock.finalMethod());
       assertEquals('a', mock.finalMethod());
@@ -205,17 +194,13 @@ public final class DelegateInvocationTest
    @Test(expected = IllegalArgumentException.class)
    public void delegateClassWithNoMethodMatchingTheExpectationSignature(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.privateMethod();
-            result = new Delegate()
-            {
-               float someDelegate(Invocation invocation) { return 1.0F; }
-               void someOtherMethod() {}
-            };
-         }
-      };
+      new Expectations() {{
+         mock.privateMethod();
+         result = new Delegate() {
+            float someDelegate(Invocation invocation) { return 1.0F; }
+            void someOtherMethod() {}
+         };
+      }};
 
       assertEquals(1.0, mock.privateMethod(), 0.0);
    }
@@ -223,14 +208,12 @@ public final class DelegateInvocationTest
    @Test
    public void delegateWithDifferentMethodName()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
             mock.nativeMethod(anyBoolean);
-            result = new Delegate()
-            {
+            result = new Delegate() {
                long differentName(Invocation invocation, boolean b)
                {
                   assertEquals(1, invocation.getInvocationCount());
@@ -245,75 +228,34 @@ public final class DelegateInvocationTest
    }
 
    @Test
-   public void delegatesForTwoSeparateExpectations(final Collaborator mock)
-   {
-      new Expectations()
-      {
-         {
-            //noinspection unchecked
-            mock.addElements((Collection<String>) any);
-            forEachInvocation = new Object()
-            {
-               void delegate1(Invocation invocation, Collection<String> elements)
-               {
-                  assertSame(mock, invocation.getInvokedInstance());
-                  assertEquals(1, invocation.getInvocationCount());
-                  assertNotNull(elements);
-               }
-            };
-
-            mock.addElements(null);
-            forEachInvocation = new Object()
-            {
-               void delegate2(Invocation invocation, Collection<String> elements)
-               {
-                  assertSame(mock, invocation.getInvokedInstance());
-                  assertEquals(1, invocation.getInvocationCount());
-                  assertNull(elements);
-               }
-            };
-         }
-      };
-
-      mock.addElements(Collections.<String>emptyList());
-      mock.addElements(null);
-   }
-
-   @Test
    public void consecutiveDelegatesForTheSameExpectation(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getValue();
-            returns(
-               new Delegate()
+      new Expectations() {{
+         mock.getValue();
+         returns(
+            new Delegate() {
+               int delegate(Invocation invocation)
                {
-                  int delegate(Invocation invocation)
-                  {
-                     assertSame(mock, invocation.getInvokedInstance());
-                     assertEquals(1, invocation.getMinInvocations());
-                     assertEquals(3, invocation.getMaxInvocations());
-                     return invocation.getInvocationCount();
-                  }
-               },
-               new Delegate()
+                  assertSame(mock, invocation.getInvokedInstance());
+                  assertEquals(1, invocation.getMinInvocations());
+                  assertEquals(3, invocation.getMaxInvocations());
+                  return invocation.getInvocationCount();
+               }
+            },
+            new Delegate() {
+               int delegate(Invocation invocation)
                {
-                  int delegate(Invocation invocation)
-                  {
-                     return invocation.getInvocationCount();
-                  }
-               },
-               new Delegate()
+                  return invocation.getInvocationCount();
+               }
+            },
+            new Delegate() {
+               int delegate(Invocation invocation)
                {
-                  int delegate(Invocation invocation)
-                  {
-                     assertEquals(3, invocation.getInvocationCount());
-                     throw new SecurityException();
-                  }
-               });
-         }
-      };
+                  assertEquals(3, invocation.getInvocationCount());
+                  throw new SecurityException();
+               }
+            });
+      }};
 
       assertEquals(1, mock.getValue());
       assertEquals(2, mock.getValue());
@@ -327,6 +269,38 @@ public final class DelegateInvocationTest
       }
    }
 
+   // In forEachInvocation objects ////////////////////////////////////////////////////////////////////////////////////
+
+   @Test
+   public void invocationValidatorsForTwoSeparateExpectations(final Collaborator mock)
+   {
+      new Expectations() {{
+         //noinspection unchecked
+         mock.addElements((Collection<String>) any);
+         forEachInvocation = new Object() {
+            void delegate1(Invocation invocation, Collection<String> elements)
+            {
+               assertSame(mock, invocation.getInvokedInstance());
+               assertEquals(1, invocation.getInvocationCount());
+               assertNotNull(elements);
+            }
+         };
+
+         mock.addElements(null);
+         forEachInvocation = new Object() {
+            void delegate2(Invocation invocation, Collection<String> elements)
+            {
+               assertSame(mock, invocation.getInvokedInstance());
+               assertEquals(1, invocation.getInvocationCount());
+               assertNull(elements);
+            }
+         };
+      }};
+
+      mock.addElements(Collections.<String>emptyList());
+      mock.addElements(null);
+   }
+
    @SuppressWarnings({"deprecation"})
    @Test
    public void useOfContextParametersForJREMethods() throws Exception
@@ -336,8 +310,7 @@ public final class DelegateInvocationTest
 
          {
             Runtime.runFinalizersOnExit(anyBoolean); minTimes = 1;
-            result = new Delegate()
-            {
+            result = new Delegate() {
                void delegate(Invocation inv, boolean b)
                {
                   assertNull(inv.getInvokedInstance());
@@ -349,8 +322,7 @@ public final class DelegateInvocationTest
             };
 
             rt.exec(anyString, null); maxTimes = 1;
-            forEachInvocation = new Object()
-            {
+            forEachInvocation = new Object() {
                void exec(Invocation inv, String command, String[] envp)
                {
                   assertSame(Runtime.getRuntime(), inv.getInvokedInstance());
