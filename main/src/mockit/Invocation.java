@@ -10,7 +10,7 @@ package mockit;
  * <p/>
  * With the <em>Expectations & Verifications</em> API, this parameter can appear in mock methods implemented in
  * {@link Delegate} classes or in validation objects assigned to the
- * {@linkplain Invocations#forEachInvocation forEachInvocation} field.
+ * {@link Invocations#forEachInvocation forEachInvocation} field.
  * With the <em>Mockups</em> API, it can appear in {@link Mock} methods.
  * <p/>
  * Sample tests:
