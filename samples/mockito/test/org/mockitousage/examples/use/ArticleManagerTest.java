@@ -5,7 +5,6 @@
 package org.mockitousage.examples.use;
 
 import org.mockito.*;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import static java.util.Arrays.asList;

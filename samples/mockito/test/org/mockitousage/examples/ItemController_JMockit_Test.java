@@ -25,16 +25,10 @@ public final class ItemController_JMockit_Test
    final Map<String, Object> modelMap = new HashMap<String, Object>();
 
    @Test
-   public void testViewItem() throws Exception
+   public void testViewItem()
    {
       final Item item = new Item(1, "Item 1");
-
-      new Expectations()
-      {
-         {
-            itemService.getItem(item.getId()); result = item;
-         }
-      };
+      new Expectations() { @Input Item itemToGet = item; };
 
       String view = itemController.viewItem(item.getId(), modelMap);
 
@@ -43,16 +37,10 @@ public final class ItemController_JMockit_Test
    }
 
    @Test
-   public void testViewItemWithItemNotFoundException() throws Exception
+   public void testViewItemWithItemNotFoundException()
    {
       final ItemNotFoundException exception = new ItemNotFoundException(5);
-
-      new Expectations()
-      {
-         {
-            itemService.getItem(5); result = exception;
-         }
-      };
+      new Expectations() { @Input ItemNotFoundException onGetItem = exception; };
 
       String view = itemController.viewItem(5, modelMap);
 
@@ -65,13 +53,7 @@ public final class ItemController_JMockit_Test
    {
       String view = itemController.deleteItem(5);
 
-      new Verifications()
-      {
-         {
-            itemService.deleteItem(5);
-         }
-      };
-
+      new Verifications() {{ itemService.deleteItem(5); }};
       assertEquals("redirect:/itemList", view);
    }
 }
