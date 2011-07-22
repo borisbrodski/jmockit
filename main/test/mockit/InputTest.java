@@ -28,6 +28,8 @@ public final class InputTest
       Socket getSocket() { return null; }
       void throwSocketException() throws SocketException, IllegalAccessException {}
       <E> List<E> genericMethod() { return null; }
+      <Value> Map<String, Value> genericMethod2() { return null; }
+      <Key extends Number, Value> Map<Key, Value> genericMethod3() { return null; }
       Collaborator parent() { return null; }
       ClassLackingNoArgsConstructor someMethod() { return new ClassLackingNoArgsConstructor(123); }
       ClassWhoseConstructorFails willAlwaysFail() { return new ClassWhoseConstructorFails(); }
@@ -93,14 +95,19 @@ public final class InputTest
    @Test
    public void specifyUniqueReturnValueForMethodWithGenericReturnType()
    {
-      new Expectations()
-      {
-         @Input final List<String> names = asList("a", "b");
+      final List<String> values1 = asList("a", "b");
+      final Map<String, String> values2 = new HashMap<String, String>();
+      final Map<Integer, String> values3 = new HashMap<Integer, String>();
+
+      new Expectations() {
+         @Input final List<String> names = values1;
+         @Input Map<String, String> defaultValues2 = values2;
+         @Input Map<? extends Number, String> defaultValues3 = values3;
       };
 
-      List<String> names = mock.genericMethod();
-
-      assertEquals(asList("a", "b"), names);
+      assertSame(values1, mock.genericMethod());
+      assertSame(values2, mock.genericMethod2());
+      assertSame(values3, mock.genericMethod3());
    }
 
    @Test(expected = SocketException.class)
@@ -294,5 +301,31 @@ public final class InputTest
       };
 
       File.createTempFile("", "");
+   }
+
+   public static class GenericClass<T>
+   {
+      T doSomething() { return null; }
+      T doSomethingElse() { return null; }
+      Collaborator getCollaborator() { return null; }
+   }
+
+   @Test
+   public void specifyDefaultValueForMethodsReturningTypeParameterOfGenericClass()
+   {
+      final DependencyAbc d = new DependencyAbc();
+
+      new Expectations() {
+         final GenericClass<?> unused = null;
+         @Input DependencyAbc abc = d;
+      };
+
+      GenericClass<DependencyAbc> gc1 = new GenericClass<DependencyAbc>();
+      assertSame(d, gc1.doSomething());
+      assertSame(d, gc1.doSomethingElse());
+      assertNull(gc1.getCollaborator());
+
+      GenericClass<Collaborator> gc2 = new GenericClass<Collaborator>();
+      assertSame(d, gc2.doSomething());
    }
 }

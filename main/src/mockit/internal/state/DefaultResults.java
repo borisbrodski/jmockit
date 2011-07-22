@@ -14,8 +14,54 @@ import mockit.internal.util.*;
 public final class DefaultResults
 {
    private Map<String, ResultExtractor> defaultResults;
+   private Map<String, ReturnType> genericReturnTypes;
 
-   private final class ResultExtractor
+   private static final class ReturnType
+   {
+      private final List<String> components;
+
+      ReturnType(String typeDesc)
+      {
+         components = new ArrayList<String>();
+         int p = 0;
+
+         while (p < typeDesc.length()) {
+            char typeCode = typeDesc.charAt(p);
+
+            if (typeCode == 'L' || typeCode == 'T') {
+               int q1 = typeDesc.indexOf('<', p);
+               int q2 = typeDesc.indexOf(';', p);
+               int q = q1 > 0 && q1 < q2 ? q1 : q2;
+               components.add(typeDesc.substring(p, q));
+               p = q;
+            }
+
+            p++;
+         }
+      }
+
+      boolean satisfiesTypeVariables(ReturnType typeDesc)
+      {
+         int n = components.size();
+
+         if (n != typeDesc.components.size()) {
+            return false;
+         }
+
+         for (int i = 0; i < n; i++) {
+            String c1 = components.get(i);
+            String c2 = typeDesc.components.get(i);
+
+            if (c1.charAt(0) != 'T' && !c1.equals(c2)) {
+               return false;
+            }
+         }
+
+         return true;
+      }
+   }
+
+   private static final class ResultExtractor
    {
       final Field inputField;
       final Object fieldOwner;
@@ -117,41 +163,72 @@ public final class DefaultResults
          return null;
       }
 
+      extractAndThrowExceptionIfSpecified(exceptions);
+
+      String returnTypeDesc = DefaultValues.getReturnTypeDesc(signature);
       ResultExtractor extractor;
 
+      if (signature.charAt(0) == '<' && !signature.startsWith("<init>") || returnTypeDesc.charAt(0) == 'T') {
+         extractor = findResultForGenericType(returnTypeDesc);
+      }
+      else {
+         extractor = defaultResults.get(returnTypeDesc);
+      }
+
+      return extractor == null ? null : extractor.getInputFieldValue();
+   }
+
+   private void extractAndThrowExceptionIfSpecified(String[] exceptions)
+   {
       if (exceptions != null) {
          for (String exception : exceptions) {
-            extractor = defaultResults.get(exception);
+            ResultExtractor extractor = defaultResults.get(exception);
 
             if (extractor != null) {
                extractor.extractException();
             }
          }
       }
-
-      String returnTypeDesc = DefaultValues.getReturnTypeDesc(signature);
-      int typeParameter = returnTypeDesc.indexOf("<T");
-
-      extractor = typeParameter < 0 ? defaultResults.get(returnTypeDesc) : findResultForGenericType(typeParameter);
-
-      return extractor == null ? null : extractor.getInputFieldValue();
    }
 
-   private ResultExtractor findResultForGenericType(int typeParamPos)
+   private ResultExtractor findResultForGenericType(String returnTypeDesc)
    {
-      for (Map.Entry<String, ResultExtractor> keyAndValue : defaultResults.entrySet()) {
-         String key = keyAndValue.getKey();
+      ReturnType genericType = findReturnType(returnTypeDesc);
 
-         if (key.length() > typeParamPos && key.charAt(typeParamPos) == '<' && key.indexOf(';', typeParamPos) > 0) {
-            return keyAndValue.getValue();
+      for (Map.Entry<String, ResultExtractor> keyAndValue : defaultResults.entrySet()) {
+         String typeDesc = keyAndValue.getKey();
+
+         if (typeDesc.length() > 1) {
+            ReturnType returnType = findReturnType(typeDesc);
+
+            if (genericType.satisfiesTypeVariables(returnType)) {
+               return keyAndValue.getValue();
+            }
          }
       }
 
       return null;
    }
 
+   private ReturnType findReturnType(String returnTypeDesc)
+   {
+      if (genericReturnTypes == null) {
+         genericReturnTypes = new HashMap<String, ReturnType>();
+      }
+
+      ReturnType genericType = genericReturnTypes.get(returnTypeDesc);
+
+      if (genericType == null) {
+         genericType = new ReturnType(returnTypeDesc);
+         genericReturnTypes.put(returnTypeDesc, genericType);
+      }
+
+      return genericType;
+   }
+
    void clear()
    {
       defaultResults = null;
+      genericReturnTypes = null;
    }
 }
