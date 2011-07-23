@@ -23,7 +23,7 @@ import mockit.internal.util.*;
  * <p/>
  * This class is not supposed to be accessed from user code. It will be automatically loaded at startup.
  */
-public final class TestNGRunnerDecorator extends TestRunnerDecorator implements IConfigurable, IHookable
+public final class TestNGRunnerDecorator extends TestRunnerDecorator implements IConfigurable, IHookable, ISuiteListener
 {
    @MockClass(realClass = Parameters.class, stubs = "checkParameterTypes")
    public static final class MockParameters
@@ -170,6 +170,20 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
          SavePoint testMethodSavePoint = savePoint.get();
          savePoint.set(null);
          concludeTestMethodExecution(testMethodSavePoint, testFailure);
+      }
+   }
+
+   public void onStart(ISuite suite) {}
+
+   public void onFinish(ISuite suite)
+   {
+      TestRun.enterNoMockingZone();
+
+      try {
+         TestRunnerDecorator.cleanUpMocksFromPreviousTestClass();
+      }
+      finally {
+         TestRun.exitNoMockingZone();
       }
    }
 }

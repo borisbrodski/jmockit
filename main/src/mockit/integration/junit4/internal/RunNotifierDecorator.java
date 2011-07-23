@@ -62,4 +62,18 @@ public final class RunNotifierDecorator
          TestRun.setCurrentTestClass(null);
       }
    }
+
+   @Mock(reentrant = true)
+   public void fireTestRunFinished(Result result)
+   {
+      TestRun.enterNoMockingZone();
+
+      try {
+         TestRunnerDecorator.cleanUpMocksFromPreviousTestClass();
+         it.fireTestRunFinished(result);
+      }
+      finally {
+         TestRun.exitNoMockingZone();
+      }
+   }
 }
