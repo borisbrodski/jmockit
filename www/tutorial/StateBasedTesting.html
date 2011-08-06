@@ -206,14 +206,15 @@
 <p>
    A given mock class must be applied to a corresponding real class to have any effect.
    We call this "setting up" the mock class.
-   This is normally done for a specific test or set of tests. In the first case, it occurs inside
-   individual test methods. In the second one, a <code class="annotation">@BeforeMethod</code> (TestNG),
-   <code>setUp()</code> (JUnit 3.8), or <code class="annotation">@Before</code> (JUnit 4) method can be used.
-   During the time a mock class is in effect, the methods and constructors of the real class which
-   have corresponding mocks will stay mocked, with any calls made on them automatically and
-   transparently redirected to the corresponding mocks for execution.
-   There are several different ways to set up mock classes, each with a different way to specify the
-   corresponding real class, as we'll now see.
+   This is normally done for a specific test or set of tests.
+   In the first case, it occurs inside individual test methods.
+   In the second one, a <code class="annotation">@BeforeMethod</code> (TestNG), <code>setUp()</code> (in JUnit 3.8-style
+   tests), or <code class="annotation">@Before</code> (JUnit 4) method can be used.
+   During the time a mock class is in effect, the methods and constructors of the real class which have corresponding
+   mocks will stay mocked, with any calls made on them automatically and transparently redirected to the corresponding
+   mocks for execution.
+   There are several different ways to set up mock classes, each with a different way to specify the corresponding real
+   class, as we'll now see.
 </p>
 
 <h4 id="setupTime">Setting up mocks for a real class chosen at setup time</h4>
@@ -949,7 +950,7 @@
 <p>
    In a given test class, we can define instance methods that will run <em>before</em> and <em>after</em> each test
    method (even when the test throws an error or exception).
-   In JUnit 3.8, these are the <code>setUp()</code> and <code>tearDown()</code> method overrides.
+   With JUnit 3.8-style tests, these are the <code>setUp()</code> and <code>tearDown()</code> method overrides.
    In JUnit 4.x we use the <code class="annotation">@Before</code> and <code class="annotation">@After</code>
    annotations on one or more arbitrary instance methods of the test class. The same applies to the
    <code class="annotation">@BeforeMethod</code> and <code class="annotation">@AfterMethod</code> annotations of TestNG.
@@ -984,7 +985,8 @@
    <code>Mockit.setUpMocks(NamedMockClass.class)</code> call or with a <code>Mockit.setUpMock</code> variant.
 </p>
 <p>
-   The example above uses JUnit 4, but the equivalent code for JUnit 3.8 or TestNG would be almost the same.
+   The example above uses JUnit 4, but the equivalent code for TestNG or with JUnit 3.8-style tests would be almost the
+   same.
 </p>
 <p>
    It is also valid to extend from base test classes, which may optionally define "before" and/or "after" methods
