@@ -329,7 +329,10 @@ public final class InvocationArguments
          return false;
       }
 
-      for (int i = 0; i < matchers.size(); i++) {
+      int i = 0;
+      int m = matchers.size();
+
+      while (i < m) {
          Matcher<?> matcher1 = matchers.get(i);
          Matcher<?> matcher2 = otherMatchers.get(i);
 
@@ -342,6 +345,41 @@ public final class InvocationArguments
                return false;
             }
          }
+
+         i++;
+      }
+
+      int argCount = invocationArgs.length;
+      Object[] otherVarArgs = other.invocationArgs;
+      Object[] thisVarArgs = invocationArgs;
+      int varArgsCount = 0;
+
+      if (isVarargsMethod()) {
+         thisVarArgs = getVarArgs(invocationArgs);
+         otherVarArgs = getVarArgs(other.invocationArgs);
+
+         if (thisVarArgs != NULL_VARARGS) {
+            varArgsCount = otherVarArgs.length;
+
+            if (varArgsCount != thisVarArgs.length) {
+               return false;
+            }
+         }
+
+         argCount--;
+      }
+
+      int n = argCount + varArgsCount;
+
+      while (i < n) {
+         Object thisArg = getArgument(invocationArgs, thisVarArgs, argCount, i);
+         Object otherArg = getArgument(other.invocationArgs, otherVarArgs, argCount, i);
+
+         if (!IsEqual.areEqual(thisArg, otherArg)) {
+            return false;
+         }
+
+         i++;
       }
 
       return true;

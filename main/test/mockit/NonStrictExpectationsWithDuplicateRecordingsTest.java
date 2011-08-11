@@ -280,4 +280,58 @@ public final class NonStrictExpectationsWithDuplicateRecordingsTest
       assertEquals(1L, mock.doSomething((Long) null));
       assertEquals(2L, mock.doSomething(123L));
    }
+
+   @Test
+   public void recordUnambiguousExpectationsWithSameMatcherForOneParameterAndDifferentArgumentsForAnother()
+   {
+      Blah b = new Blah();
+
+      new NonStrictExpectations() {{
+         mock.doSomething(anyLong, "A"); result = 1L;
+         mock.doSomething(anyLong, "B"); result = 2L;
+      }};
+
+      assertEquals(1L, b.doSomething(1L, "A"));
+      assertEquals(2L, b.doSomething(2L, "B"));
+      assertEquals(0L, b.doSomething(1L, "c"));
+      assertEquals(1L, b.doSomething(1L, "A"));
+      assertEquals(2L, b.doSomething(0L, "B"));
+      assertEquals(0L, b.doSomething(0L, null));
+   }
+
+   @Test
+   public void recordOverlappingExpectationsWithSameMatcherForOneParameterAndDifferentArgumentsForAnother()
+   {
+      Blah b = new Blah();
+
+      new NonStrictExpectations() {{
+         mock.doSomething(anyLong, "A"); result = 1L;
+         mock.doSomething(anyLong, null); result = 2L;
+      }};
+
+      assertEquals(1L, b.doSomething(1L, "A"));
+      assertEquals(2L, b.doSomething(2L, "B"));
+      assertEquals(2L, b.doSomething(1L, "c"));
+      assertEquals(1L, b.doSomething(2L, "A"));
+      assertEquals(2L, b.doSomething(0L, "B"));
+      assertEquals(2L, b.doSomething(0L, null));
+   }
+
+   @Test
+   public void recordOverlappingExpectationsWithSameMatcherForOneParameterAndDifferentForAnotherButInWrongOrder()
+   {
+      Blah b = new Blah();
+
+      new NonStrictExpectations() {{
+         mock.doSomething(anyLong, null); result = 2L;
+         mock.doSomething(anyLong, "A"); result = 1L; // most specific should come first
+      }};
+
+      assertEquals(2L, b.doSomething(1L, "A"));
+      assertEquals(2L, b.doSomething(2L, "B"));
+      assertEquals(2L, b.doSomething(1L, "c"));
+      assertEquals(2L, b.doSomething(2L, "A"));
+      assertEquals(2L, b.doSomething(0L, "B"));
+      assertEquals(2L, b.doSomething(0L, null));
+   }
 }
