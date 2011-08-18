@@ -72,7 +72,7 @@
 
    <macrodef name="buildSample">
       <attribute name="module"/>
-      <attribute name="jdkVersion" default="1.5"/>
+      <attribute name="jdkVersion" default="1.6"/>
       <attribute name="outdir" default="classes"/>
       <attribute name="testLibrary" default="${JUNIT_JAR}"/>
       <attribute name="extraclasspathLocation" default=""/>
