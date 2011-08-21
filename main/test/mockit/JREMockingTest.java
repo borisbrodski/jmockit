@@ -222,4 +222,21 @@ public final class JREMockingTest extends TestCase
          assertTrue(e.getMessage().contains("java.lang.Class"));
       }
    }
+
+   public void testStringBuilder()
+   {
+      new NonStrictExpectations() {
+         StringBuilder builder;
+
+         {
+            builder.length(); result = 20;
+            builder.toString(); result = "test";
+         }
+      };
+
+      StringBuilder s = new StringBuilder();
+      s.append("something");
+      assertEquals(20, s.length());
+      assertEquals("test", s.toString());
+   }
 }
