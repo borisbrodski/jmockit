@@ -30,7 +30,7 @@
          <mkdir dir="@{module}/@{outdir}"/>
 
          <javac
-            srcdir="@{module}/@{srcdir}" destdir="@{module}/@{outdir}"
+            srcdir="@{module}/@{srcdir}" destdir="@{module}/@{outdir}" includeantruntime="false"
             source="1.5" target="1.5" debug="true" nowarn="true">
             <classpath refid="common.classpath"/>
             <classpath location="main/classes"/>
@@ -81,7 +81,7 @@
          <delete dir="samples/@{module}/@{outdir}" includes="**/*.class" quiet="true"/>
          <mkdir dir="samples/@{module}/@{outdir}"/>
          <javac
-            srcdir="samples/@{module}/src" destdir="samples/@{module}/@{outdir}"
+            srcdir="samples/@{module}/src" destdir="samples/@{module}/@{outdir}" includeantruntime="false"
             source="@{jdkVersion}" target="@{jdkVersion}" debug="true" nowarn="true">
             <classpath refid="common.classpath"/>
             <classpath>
@@ -92,8 +92,9 @@
          </javac>
 
          <delete dir="samples/@{module}/test-classes" includes="**/*.class" quiet="true"/>
+         <mkdir dir="samples/@{module}/test-classes"/>
          <javac
-            srcdir="samples/@{module}/test" destdir="samples/@{module}/test-classes"
+            srcdir="samples/@{module}/test" destdir="samples/@{module}/test-classes" includeantruntime="false"
             source="@{jdkVersion}" target="@{jdkVersion}" debug="true" nowarn="true">
             <classpath refid="common.classpath"/>
             <classpath location="jmockit.jar"/>
