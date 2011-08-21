@@ -75,6 +75,67 @@ public final class JREMockingTest extends TestCase
        assertTrue(System.currentTimeMillis() > 0);
    }
 
+   // See http://www.javaspecialists.eu/archive/Issue056.html
+   public static class InterruptibleThread extends Thread
+   {
+      protected final boolean interruptRequested()
+      {
+         try {
+            Thread.sleep(10);
+            return false;
+         }
+         catch (InterruptedException ignore) {
+            interrupt();
+            return true;
+         }
+      }
+   }
+
+   public void testInterruptibleThreadShouldResetItsInterruptStatusWhenInterrupted() throws Exception
+   {
+      final InterruptibleThread t = new InterruptibleThread();
+
+      new Expectations() {
+         @Mocked({"sleep", "interrupt"}) final Thread unused = null;
+
+         {
+            Thread.sleep(anyLong); result = new InterruptedException();
+            onInstance(t).interrupt();
+         }
+      };
+
+      assertTrue(t.interruptRequested());
+   }
+
+   static class ExampleInterruptibleThread extends InterruptibleThread
+   {
+      boolean terminatedCleanly;
+
+      @Override
+      public void run()
+      {
+         while (true) {
+            for (int i = 0; i < 10; i++) {
+               if (interruptRequested()) break;
+            }
+
+            if (interruptRequested()) break;
+         }
+
+         terminatedCleanly = true;
+      }
+   }
+
+   public void testInterruptionOfThreadRunningNestedLoops() throws Exception
+   {
+      ExampleInterruptibleThread t = new ExampleInterruptibleThread();
+      t.start();
+      Thread.sleep(30);
+      t.interrupt();
+      t.join();
+      assertTrue(t.terminatedCleanly);
+   }
+
    // When a native instance method is called on a regular instance, there is no way to execute its real
    // implementation; therefore, dynamic mocking of native methods is not supported.
    public void testDynamicMockingOfNativeMethod(@Injectable final Thread t)
