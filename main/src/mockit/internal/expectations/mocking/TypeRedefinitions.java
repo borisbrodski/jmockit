@@ -32,7 +32,7 @@ class TypeRedefinitions
       TestRun.getExecutingTest().registerMock(typeMetadata, mock);
    }
 
-   public final void cleanUp()
+   public void cleanUp()
    {
       if (captureOfNewInstances != null) {
          captureOfNewInstances.cleanUp();

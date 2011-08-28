@@ -141,4 +141,11 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
    }
 
    public TestedClassInstantiations getTestedClassInstantiations() { return testedClassInstantiations; }
+
+   @Override
+   public void cleanUp()
+   {
+      TestRun.getExecutingTest().clearCascadingTypes();
+      super.cleanUp();
+   }
 }

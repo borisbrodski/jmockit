@@ -364,4 +364,9 @@ public final class ExecutingTest
          }
       }
    }
+
+   public void clearCascadingTypes()
+   {
+      cascadingTypes.clear();
+   }
 }
