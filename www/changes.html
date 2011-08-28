@@ -16,7 +16,7 @@
 
 <h3>Next release</h3>
 
-<p>Release 0.999.11 (Jul ?, 2011):</p>
+<p>Release 0.999.11 (Sep ?, 2011):</p>
 <ul>
    <li>
       <strong>Changed</strong> the <code>Expectations(Object...)</code> and
@@ -29,6 +29,11 @@
       <br/>
       Most existing tests which use dynamic partial mocking should not be affected, but there is always the possibility
       that a few may break, requiring adaptation to the new defaults.
+   </li>
+   <li>
+      <strong>Fixed</strong> a bug which occurred with <code>@Cascading</code> mock fields declared in test classes,
+      where cascaded instances created during the execution of a test would remain in effect for a different test class.
+      See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=182">182</a>.
    </li>
    <li>
       <strong>Fixed</strong> a couple of bugs of omission in the Reflection-based utility methods used for calling
