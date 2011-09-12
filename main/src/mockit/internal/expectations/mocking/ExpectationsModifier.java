@@ -155,7 +155,7 @@ final class ExpectationsModifier extends BaseClassModifier
 
       generateReturnWithObjectAtTopOfTheStack(desc);
       mw.visitMaxs(1, 0);
-      return null;
+      return methodAnnotationsVisitor;
    }
 
    private MethodVisitor unmodifiedBytecode(int access, String name, String desc, String signature, String[] exceptions)
@@ -291,7 +291,7 @@ final class ExpectationsModifier extends BaseClassModifier
    {
       if (isNative(access)) {
          generateEmptyImplementation(desc);
-         return null;
+         return methodAnnotationsVisitor;
       }
 
       return specialTreatmentForConstructor ? new DynamicConstructorModifier() : new DynamicModifier();

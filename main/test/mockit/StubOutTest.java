@@ -7,6 +7,7 @@ package mockit;
 import static org.junit.Assert.*;
 import org.junit.*;
 
+@SuppressWarnings({"deprecation"})
 public final class StubOutTest
 {
    static class RealClass
@@ -17,7 +18,7 @@ public final class StubOutTest
       int doSomething() { return 1; }
       private static void tryAndFail(String s) { throw new AssertionError(s); }
 
-      long getLongValue() { return 15L; }
+      @Deprecated long getLongValue() { return 15L; }
       static float getFloatValue() { return 1.5F; }
       synchronized double getDoubleValue() { return 1.5; }
 
@@ -158,5 +159,13 @@ public final class StubOutTest
 
       assertEquals("mocked", new AnotherRealClass().getText(true));
       assertEquals("MOCKED", new AnotherRealClass().getText(false));
+   }
+
+   @Test
+   public void stubOutAnnotatedMethod() throws Exception
+   {
+      Mockit.stubOut(RealClass.class);
+
+      assertTrue(RealClass.class.getDeclaredMethod("getLongValue").isAnnotationPresent(Deprecated.class));
    }
 }

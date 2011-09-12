@@ -10,6 +10,7 @@ import static mockit.external.asm.Opcodes.*;
 
 import mockit.external.asm.*;
 import mockit.external.asm.Type;
+import mockit.external.asm.commons.*;
 import mockit.internal.state.*;
 
 @SuppressWarnings({"ClassWithTooManyMethods"})
@@ -24,6 +25,21 @@ public class BaseClassModifier extends ClassWriter
       null, "booleanValue", "charValue", "byteValue", "shortValue", "intValue", "floatValue", "longValue", "doubleValue"
    };
    private static final Type[] NO_ARGS = new Type[0];
+
+   protected final MethodVisitor methodAnnotationsVisitor = new EmptyVisitor()
+   {
+      @Override
+      public AnnotationVisitor visitAnnotation(String annotationDesc, boolean visible)
+      {
+         return mw.visitAnnotation(annotationDesc, visible);
+      }
+
+      @Override
+      public AnnotationVisitor visitParameterAnnotation(int parameter, String annotationDesc, boolean visible)
+      {
+         return mw.visitParameterAnnotation(parameter, annotationDesc, visible);
+      }
+   };
 
    protected MethodVisitor mw;
    protected boolean useMockingBridge;

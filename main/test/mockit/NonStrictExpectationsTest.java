@@ -4,16 +4,24 @@
  */
 package mockit;
 
+import java.lang.reflect.*;
+
 import org.junit.*;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings({"UnusedDeclaration"})
+@SuppressWarnings({"UnusedDeclaration", "deprecation"})
 public final class NonStrictExpectationsTest
 {
+   @Deprecated
    public static class Dependency
    {
-      public void setSomething(int value) {}
+      @Deprecated int value;
+
+      @Deprecated public Dependency() { value = -1; }
+
+      @Ignore("test") public native void setSomething(@Deprecated int value);
+
       public void setSomethingElse(String value) {}
       public int editABunchMoreStuff() { return 1; }
       public boolean notifyBeforeSave() { return true; }
@@ -229,5 +237,20 @@ public final class NonStrictExpectationsTest
       for (int i = 0; i < 2; i++) {
          exerciseCodeUnderTest();
       }
+   }
+
+   @Test
+   public void mockedClassWithAnnotatedElements() throws Exception
+   {
+      Class<?> mockedClass = mock.getClass();
+      assertTrue(mockedClass.isAnnotationPresent(Deprecated.class));
+      assertTrue(mockedClass.getDeclaredField("value").isAnnotationPresent(Deprecated.class));
+      assertTrue(mockedClass.getDeclaredConstructor().isAnnotationPresent(Deprecated.class));
+
+      Method mockedMethod = mockedClass.getDeclaredMethod("setSomething", int.class);
+      Ignore ignore = mockedMethod.getAnnotation(Ignore.class);
+      assertNotNull(ignore);
+      assertEquals("test", ignore.value());
+      assertTrue(mockedMethod.getParameterAnnotations()[0][0] instanceof Deprecated);
    }
 }

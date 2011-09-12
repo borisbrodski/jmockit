@@ -48,7 +48,7 @@ public final class StubOutModifier extends BaseClassModifier
       }
 
       generateEmptyImplementation(desc);
-      return null;
+      return methodAnnotationsVisitor;
    }
 
    private void generateCallToSuper()

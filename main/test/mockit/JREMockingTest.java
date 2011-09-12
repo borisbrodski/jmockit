@@ -12,7 +12,7 @@ import junit.framework.*;
 @SuppressWarnings({
    "WaitWhileNotSynced", "UnconditionalWait", "WaitWithoutCorrespondingNotify", "WaitNotInLoop",
    "WaitOrAwaitWithoutTimeout", "UnusedDeclaration"
-})
+   , "deprecation"})
 public final class JREMockingTest extends TestCase
 {
    public void testMockingOfFile()
@@ -45,34 +45,50 @@ public final class JREMockingTest extends TestCase
       assertNotSame(calCST, Calendar.getInstance(TimeZone.getTimeZone("PST")));
    }
 
+   public void testRegularMockingOfAnnotatedJREMethod(Date d) throws Exception
+   {
+      assertTrue(d.getClass().getDeclaredMethod("parse", String.class).isAnnotationPresent(Deprecated.class));
+   }
+
+   public void testDynamicMockingOfAnnotatedJREMethod() throws Exception
+   {
+      final Date d = new Date();
+
+      new NonStrictExpectations(d) {{
+         d.getMinutes(); result = 5;
+      }};
+
+      assertEquals(5, d.getMinutes());
+      assertTrue(Date.class.getDeclaredMethod("getMinutes").isAnnotationPresent(Deprecated.class));
+   }
+
    // Mocking of native methods ///////////////////////////////////////////////////////////////////////////////////////
 
    public void testFirstMockingOfNativeMethods() throws Exception
    {
-       new Expectations()
-       {
-           // First mocking: puts mocked class in cache, knowing it has native methods to re-register.
-           @Mocked("sleep") final Thread unused = null;
-       };
+      new Expectations() {
+         // First mocking: puts mocked class in cache, knowing it has native methods to re-register.
+         @Mocked("sleep")
+         final Thread unused = null;
+      };
 
       Thread.sleep(5000);
    }
 
    public void testSecondMockingOfNativeMethods(@Mocked("isAlive") final Thread mock)
    {
-       new Expectations()
-       {{
-           // Second mocking: retrieves from cache, no longer knowing it has native methods to re-register.
-           mock.isAlive(); result = true;
-       }};
+      new Expectations() {{
+         // Second mocking: retrieves from cache, no longer knowing it has native methods to re-register.
+         mock.isAlive(); result = true;
+      }};
 
       assertTrue(mock.isAlive());
    }
 
    public void testUnmockedNativeMethods() throws Exception
    {
-       Thread.sleep(10);
-       assertTrue(System.currentTimeMillis() > 0);
+      Thread.sleep(10);
+      assertTrue(System.currentTimeMillis() > 0);
    }
 
    // See http://www.javaspecialists.eu/archive/Issue056.html
@@ -154,6 +170,11 @@ public final class JREMockingTest extends TestCase
             }
          }
       };
+   }
+
+   public void testMockingOfAnnotatedNativeMethod(@Mocked("countStackFrames") Thread mock) throws Exception
+   {
+      assertTrue(Thread.class.getDeclaredMethod("countStackFrames").isAnnotationPresent(Deprecated.class));
    }
 
    @Injectable FileOutputStream stream;

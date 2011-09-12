@@ -143,7 +143,7 @@ public final class AnnotationsModifier extends BaseClassModifier
       if (!hasMock(name, desc)) {
          return
             shouldCopyOriginalMethodBytecode(access, name, desc, signature, exceptions) ?
-               super.visitMethod(access, name, desc, signature, exceptions) : null;
+               super.visitMethod(access, name, desc, signature, exceptions) : methodAnnotationsVisitor;
       }
 
       validateMethodModifiers(access, name);
@@ -152,14 +152,10 @@ public final class AnnotationsModifier extends BaseClassModifier
       MethodVisitor alternativeWriter = getAlternativeMethodWriter(access, desc);
 
       if (alternativeWriter == null) {
-         // Uses the MethodWriter just created to produce bytecode that calls the mock method.
          generateCallsForMockExecution(access, desc);
          generateMethodReturn(desc);
          mw.visitMaxs(1, 0); // dummy values, real ones are calculated by ASM
-
-         // All desired bytecode is written at this point, so returns null in order to avoid
-         // appending the original method bytecode, which would happen if mv was returned.
-         return null;
+         return methodAnnotationsVisitor;
       }
 
       return alternativeWriter;

@@ -5,35 +5,38 @@
 package mockit;
 
 import java.io.*;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.*;
 
 import static org.junit.Assert.*;
 import org.junit.*;
 
+@SuppressWarnings({"deprecation"})
 public final class DynamicPartialMockingTest
 {
+   @SuppressWarnings({"UnusedDeclaration"})
+   @Deprecated
    static class Collaborator
    {
+      @Deprecated
       protected final int value;
 
       Collaborator() { value = -1; }
-      Collaborator(int value) { this.value = value; }
+      @Deprecated Collaborator(@Deprecated int value) { this.value = value; }
 
       final int getValue() { return value; }
-
-      @SuppressWarnings({"UnusedDeclaration"})
       final boolean simpleOperation(int a, String b, Date c) { return true; }
-
-      @SuppressWarnings({"UnusedDeclaration"})
       static void doSomething(boolean b, String s) { throw new IllegalStateException(); }
 
+      @Ignore("test")
       boolean methodWhichCallsAnotherInTheSameClass()
       {
          return simpleOperation(1, "internal", null);
       }
       
       String overridableMethod() { return "base"; }
+      @Deprecated native void nativeMethod();
    }
 
    interface Dependency
@@ -675,5 +678,28 @@ public final class DynamicPartialMockingTest
       // No constructor invocations were recorded: tries to execute real implementations,
       // but constructor in subclass now calls "super(false)", which fails.
       new Derived();
+   }
+
+   @Test
+   public void mockedClassWithAnnotatedElements() throws Exception
+   {
+      new Expectations(Collaborator.class) {};
+
+      Collaborator mock = new Collaborator(123);
+      Class<?> mockedClass = mock.getClass();
+
+      assertTrue(mockedClass.isAnnotationPresent(Deprecated.class));
+      assertTrue(mockedClass.getDeclaredField("value").isAnnotationPresent(Deprecated.class));
+
+      Constructor<?> mockedConstructor = mockedClass.getDeclaredConstructor(int.class);
+      assertTrue(mockedConstructor.isAnnotationPresent(Deprecated.class));
+      assertTrue(mockedConstructor.getParameterAnnotations()[0][0] instanceof Deprecated);
+
+      Method mockedMethod = mockedClass.getDeclaredMethod("methodWhichCallsAnotherInTheSameClass");
+      Ignore ignore = mockedMethod.getAnnotation(Ignore.class);
+      assertNotNull(ignore);
+      assertEquals("test", ignore.value());
+
+      assertTrue(mockedClass.getDeclaredMethod("nativeMethod").isAnnotationPresent(Deprecated.class));
    }
 }

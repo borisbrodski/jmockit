@@ -18,7 +18,7 @@ import org.junit.*;
 
 import mockit.internal.state.*;
 
-@SuppressWarnings({"JUnitTestMethodWithNoAssertions", "ClassWithTooManyMethods"})
+@SuppressWarnings({"JUnitTestMethodWithNoAssertions", "ClassWithTooManyMethods", "deprecation"})
 public final class MockAnnotationsTest
 {
    // The "code under test" for the tests in this class ///////////////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ public final class MockAnnotationsTest
       Collaborator() {}
       Collaborator(int value) { this.value = value; }
 
-      private static String doInternal() { return "123"; }
+      @Deprecated private static String doInternal() { return "123"; }
 
       void provideSomeService()
       {
@@ -860,5 +860,19 @@ public final class MockAnnotationsTest
 
       File f = new File("test");
       assertEquals("fixedPrefix/test", f.getPath());
+   }
+
+   @Test
+   public void stubbedOutAnnotatedMethodInMockedClass() throws Exception
+   {
+      Mockit.setUpMocks(MockCollaborator7.class);
+
+      assertTrue(Collaborator.class.getDeclaredMethod("doInternal").isAnnotationPresent(Deprecated.class));
+   }
+
+   @MockClass(realClass = Collaborator.class, stubs = "doInternal")
+   static class MockCollaborator7
+   {
+      @Mock void provideSomeService() {}
    }
 }

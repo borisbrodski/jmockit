@@ -4,6 +4,7 @@
  */
 package mockit;
 
+import java.lang.reflect.*;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
@@ -12,18 +13,23 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings({"deprecation"})
 public final class MockUpTest
 {
+   @Deprecated
    static final class Collaborator
    {
-      final boolean b;
+      @Deprecated final boolean b;
 
-      Collaborator() { b = false; }
+      @Deprecated Collaborator() { b = false; }
       Collaborator(boolean b) { this.b = b; }
-      int doSomething(String s) { return s.length(); }
+
+      @Ignore("test") int doSomething(@Deprecated String s) { return s.length(); }
 
       @SuppressWarnings({"UnusedDeclaration"})
       <N extends Number> N genericMethod(N n) { return null; }
+
+      @Deprecated static boolean doSomethingElse() { return false; }
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -277,5 +283,30 @@ public final class MockUpTest
       int i = new Collaborator(true).doSomething("test");
 
       assertEquals(12, i);
+   }
+
+   @Test
+   public void mockingOfAnnotatedClass() throws Exception
+   {
+      new MockUp<Collaborator>() {
+         @Mock void $init() {}
+         @Mock int doSomething(String s) { assert s != null; return 123; }
+         @Mock(reentrant = true) boolean doSomethingElse() { return true; }
+      };
+
+      assertEquals(123, new Collaborator().doSomething(""));
+
+      assertTrue(Collaborator.class.isAnnotationPresent(Deprecated.class));
+      assertTrue(Collaborator.class.getDeclaredField("b").isAnnotationPresent(Deprecated.class));
+      assertTrue(Collaborator.class.getDeclaredConstructor().isAnnotationPresent(Deprecated.class));
+
+      Method mockedMethod = Collaborator.class.getDeclaredMethod("doSomething", String.class);
+      Ignore ignore = mockedMethod.getAnnotation(Ignore.class);
+      assertNotNull(ignore);
+      assertEquals("test", ignore.value());
+      assertTrue(mockedMethod.getParameterAnnotations()[0][0] instanceof Deprecated);
+
+      assertTrue(Collaborator.doSomethingElse());
+      assertTrue(Collaborator.class.getDeclaredMethod("doSomethingElse").isAnnotationPresent(Deprecated.class));
    }
 }
