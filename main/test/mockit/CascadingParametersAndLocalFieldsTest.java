@@ -57,6 +57,12 @@ public final class CascadingParametersAndLocalFieldsTest
    }
 
    @Test
+   public void verifyThatAllCascadedInstancesHaveBeenDiscarded(Foo foo)
+   {
+      assert foo.getBar() == null;
+   }
+
+   @Test
    public void verifyThatStaticMethodsAndConstructorsAreNotMockedWhenCascading(@Cascading Foo foo)
    {
       foo.getBar();

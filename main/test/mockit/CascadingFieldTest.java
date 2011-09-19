@@ -31,17 +31,52 @@ public final class CascadingFieldTest
       int doSomething() { return 1; }
       boolean isDone() { return false; }
       Short getShort() { return 1; }
+      List<?> getList() { return null; }
+      Baz getBaz() { return null; }
+      Runnable getTask() { return null; }
    }
 
+   static final class Baz { void doSomething() {} }
+
+   public interface A { B getB(); }
+   public interface B { C getC(); }
+   public interface C {}
+
    @Cascading Foo foo;
+   @Cascading A a;
 
    @Before
    public void recordCommonExpectations()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          foo.getBar().isDone(); result = true;
       }};
+   }
+
+   @Test
+   public void obtainCascadedInstancesAtAllLevels()
+   {
+      assertNotNull(foo.getBar());
+      assertNotNull(foo.getBar().getList());
+      assertNotNull(foo.getBar().getBaz());
+      assertNotNull(foo.getBar().getTask());
+
+      B b = a.getB();
+      assertNotNull(b);
+      assertNotNull(b.getC());
+   }
+
+   @Test
+   public void obtainCascadedInstancesAtAllLevelsAgain()
+   {
+      Bar bar = foo.getBar();
+      assertNotNull(bar);
+      assertNotNull(bar.getList());
+      assertNotNull(bar.getBaz());
+      assertNotNull(bar.getTask());
+
+      assertNotNull(a.getB());
+      assertNotNull(a.getB().getC());
    }
 
    @Test

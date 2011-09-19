@@ -359,7 +359,10 @@ public final class ExecutingTest
       while (itr.hasNext()) {
          MockedTypeCascade cascade = itr.next();
 
-         if (!cascade.mockFieldFromTestClass) {
+         if (cascade.mockFieldFromTestClass) {
+            cascade.discardCascadedMocks();
+         }
+         else {
             itr.remove();
          }
       }

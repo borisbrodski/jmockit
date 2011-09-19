@@ -36,13 +36,13 @@ public final class MockedTypeCascade
 
    private static String getReturnTypeIfCascadingSupportedForIt(String typeDesc)
    {
-      String typeInternalName = typeDesc.substring(1, typeDesc.length() - 1);
+      String typeName = typeDesc.substring(1, typeDesc.length() - 1);
 
-      if (typeInternalName.startsWith("java/lang/") && !typeInternalName.contains("/Process")) {
+      if (typeName.startsWith("java/lang/") && !(typeName.contains("/Process") || typeName.endsWith("/Runnable"))) {
          return null;
       }
       
-      return typeInternalName;
+      return typeName;
    }
 
    private Object getCascadedMock(String returnTypeInternalName)
@@ -65,5 +65,10 @@ public final class MockedTypeCascade
 
       TestRun.getExecutingTest().addInjectableMock(mock);
       return mock;
+   }
+
+   public void discardCascadedMocks()
+   {
+      cascadedTypesAndMocks.clear();
    }
 }
