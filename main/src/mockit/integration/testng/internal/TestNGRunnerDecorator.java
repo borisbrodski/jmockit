@@ -55,6 +55,12 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
    private final ThreadLocal<SavePoint> savePoint;
    private boolean shouldPrepareForNextTest;
 
+   public static void registerWithTestNG(TestNG testNG)
+   {
+      Object runnerDecorator = new TestNGRunnerDecorator();
+      testNG.addListener(runnerDecorator);
+   }
+
    public TestNGRunnerDecorator()
    {
       savePoint = new ThreadLocal<SavePoint>();

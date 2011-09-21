@@ -26,7 +26,7 @@ public final class Initializer implements ITestNGListener
    {
       if (Startup.initializeIfNeeded()) {
          //noinspection deprecation
-         TestNG.getDefault().addListener(new TestNGRunnerDecorator());
+         TestNGRunnerDecorator.registerWithTestNG(TestNG.getDefault());
       }
    }
 }

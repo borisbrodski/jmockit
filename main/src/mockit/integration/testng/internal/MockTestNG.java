@@ -18,6 +18,6 @@ public final class MockTestNG
    public void init(boolean useDefaultListeners)
    {
       Utilities.invoke(TestNG.class, it, "init", useDefaultListeners);
-      it.addListener(new TestNGRunnerDecorator());
+      TestNGRunnerDecorator.registerWithTestNG(it);
    }
 }
