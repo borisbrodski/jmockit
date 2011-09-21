@@ -19,21 +19,34 @@
 <p>Release 0.999.11 (Sep ?, 2011):</p>
 <ul>
    <li>
-      <strong>Changed</strong> the <code>Expectations(Object...)</code> and
-      <code>NonStrictExpectations(Object...)</code> constructors so that the <code>Class</code> literals and/or
-      instances passed in are (<em>dynamically</em>) mocked in a more intuitive way:
-      a) for a given <code>Class</code>, the super-classes are now also considered for mocking, rather than only the
-      specified class;
+      <strong>Changed</strong> the semantics for the <code>Expectations(Object...)</code> and
+      <code>NonStrictExpectations(Object...)</code> constructors so that the <code class="type">Class</code> literals
+      and/or instances passed in are (<em>dynamically</em>) mocked in a more intuitive way:
+      a) for a given <code class="type">Class</code>, the super-classes are now also considered for mocking, rather than
+      only the specified class;
       b) for a given <em>object</em>, only method invocations made on the specified instance will be able to match
       expectations (invocations on other instances will execute the real implementation).
       <br/>
-      Most existing tests which use dynamic partial mocking should not be affected, but there is always the possibility
-      that a few may break, requiring adaptation to the new defaults.
+      Most existing tests which use dynamic partial mocking should not be affected, but there is the possibility that a
+      few may break, requiring adaptation to the new behavior.
    </li>
    <li>
-      <strong>Fixed</strong> a bug which occurred with <code>@Cascading</code> mock fields declared in test classes,
-      where cascaded instances created during the execution of a test would remain in effect for a different test class.
-      See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=182">182</a>.
+      Added support for the new <em>automatic listener registration</em> feature of <strong>TestNG 6.2</strong>.
+      With this, it is no longer necessary to explicitly specify the
+      <code class="type">mockit.integration.testng.Initializer</code> listener.
+      When running on Java 6+ with TestNG 6.2+, the listener will be automatically registered.
+      (The use of <code>-javaagent:jmockit.jar</code> is still required with Java 5, though.)
+   </li>
+   <li>
+      <strong>Fixed</strong> a bug in the JMockit-TestNG integration which caused <em>"Invalid context for the recording
+      of expectations"</em> failures.
+   </li>
+   <li>
+      <strong>Fixed</strong> bugs affecting <code class="annotation">@Cascading</code> mock fields declared in test
+      classes, where cascaded instances created during the execution of a test would remain in effect for a different
+      test class, or would not be recreated for a second test in the same test class.
+      See issues <a href="http://code.google.com/p/jmockit/issues/detail?id=182">182</a> and
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=185">185</a>.
    </li>
    <li>
       <strong>Fixed</strong> a couple of bugs of omission in the Reflection-based utility methods used for calling
@@ -63,17 +76,17 @@
       grown Expectations API. It is now known as the "<strong>Mockups</strong>" API.
    </li>
    <li>
-      <strong>Enhanced</strong> the support for <strong><code>@Tested</code></strong> fields:
+      <strong>Enhanced</strong> the support for <strong><code class="annotation">@Tested</code></strong> fields:
       1) <em>non-public</em> classes with a package-private constructor are now accepted as well;
-      2) <code>@Injectable</code> fields of <em>non-mockable</em> types (primitives and arrays) are now considered when
-      injecting values into the tested object;
+      2) <code class="annotation">@Injectable</code> fields of <em>non-mockable</em> types (primitives and arrays) are
+      now considered when injecting values into the tested object;
       3) <em>multiple</em> parameters of the same type are now supported when doing constructor injection, by taking
       values from matching injectable fields declared in the same relative order;
       4) a <em>varargs</em> constructor parameter is now supported, taking the values of all injectable fields having
       the same type.
    </li>
    <li>
-      <strong>Enhanced</strong> the support for <strong><code>@Input</code></strong> fields:
+      <strong>Enhanced</strong> the support for <strong><code class="annotation">@Input</code></strong> fields:
       1) <em>multiple</em> fields of the same type can be declared, allowing <em>consecutive</em> results to be
       specified;
       2) the new <strong><code>invocations = <em>n</em></code></strong> attribute can be used to specify a fixed number
@@ -82,8 +95,9 @@
       4) it now also works when combined with <em>dynamic</em> partial mocking.
    </li>
    <li>
-      <strong>Enhancement</strong>: The <code>mockit.Invocation</code> class can now be used as the type of the first
-      parameter in <code>@Mock</code> methods (it was already supported in delegate and validation methods).
+      <strong>Enhancement</strong>: The <code class="type">mockit.Invocation</code> class can now be used as the type of
+      the first parameter in <code class="annotation">@Mock</code> methods (it was already supported in delegate and
+      validation methods).
       See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=16">16</a>.
    </li>
    <li>
@@ -97,7 +111,8 @@
    </li>
    <li>
       Reviewed the Tutorial chapter on <a href="tutorial/BehaviorBasedTesting.html">behavior-based testing</a>,
-      with new coverage on the <code>@Injectable</code> and <code>@Tested</code> annotations.
+      with new coverage on the <code class="annotation">@Injectable</code> and <code class="annotation">@Tested</code>
+      annotations.
    </li>
    <li>Tested and adapted JMockit to run on <strong>JDK 7</strong>.</li>
 </ul>
@@ -110,15 +125,17 @@
       <strong>New feature</strong>: expectation blocks can now specify <em>default results</em> for mocked
       methods/constructors, without specifying anything but the return type (for default return values) or a checked
       exception from the <code>throws</code> clause.
-      Each default result is specified through an instance field annotated with <strong><code>@Input</code></strong>.
+      Each default result is specified through an instance field annotated with
+      <strong><code class="annotation">@Input</code></strong>.
       See <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/test/jmockit/tutorial/
 domain/MyBusinessService_ExpectationsAPI2_Test.java">here</a> for examples.
    </li>
    <li>
       Fixes and improvements to the support for <strong>reusable expectation/verification blocks</strong> and base test
       classes.
-      A reusable base class which extends (directly or indirectly) <code>Expectations</code> or
-      <code>Verifications</code> must have a name ending in "Expectations" or "Verifications", respectively.
+      A reusable base class which extends (directly or indirectly) <code class="type">Expectations</code> or
+      <code class="type">Verifications</code> must have a name ending in "Expectations" or "Verifications",
+      respectively.
       Any such classes in existing test suites will have to be renamed if needed to fit this new rule.
       See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=161">161</a>.
    </li>
@@ -131,14 +148,15 @@ domain/MyBusinessService_ExpectationsAPI2_Test.java">here</a> for examples.
    </li>
    <li>
       <strong>Enhancement</strong>: added the <strong><code>verifiedInvocations(Verifications)</code></strong> method to
-      the <code>VerificationsInOrder</code> class. With this, new scenarios involving <em>partially ordered
-      verification</em> are now supported.
+      the <code class="type">VerificationsInOrder</code> class.
+      With this, new scenarios involving <em>partially ordered verification</em> are now supported.
       See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=153">153</a>.
    </li>
    <li>
-      <strong>Removed</strong> the <strong><code>endRecording()</code></strong> method of the <code>Expectations</code>
-      class. This method was deprecated in the previous release. Existing tests still using it will have to be changed
-      as described in the deprecation comment.
+      <strong>Removed</strong> the <strong><code>endRecording()</code></strong> method of the
+      <code class="type">Expectations</code> class.
+      This method was deprecated in the previous release. Existing tests still using it will have to be changed as
+      described in the deprecation comment.
    </li>
    <li>
       <strong>TestNG integration</strong> no longer requires the <code>mockit.integration.testng.Initializer</code>

@@ -194,7 +194,7 @@
            depends="createjar-main, createjars-coverage, createjar-hibernate3emul, createjar-multicore"/>
 
    <target name="createjar-main">
-      <jar destfile="jmockit.jar" manifest="main/META-INF/MANIFEST.MF">
+      <jar destfile="jmockit.jar">
          <fileset file="LICENSE.txt"/>
          <fileset file="main/src/jmockit.properties"/>
          <fileset
@@ -203,7 +203,13 @@
          <fileset
             dir="main/classes"
             includes="mockit/**/*.class **/attach/**/*.class org/junit/**/*.class junit/*/*.class"/>
-         <manifest><attribute name="Implementation-Version" value="${version}"/></manifest>
+         <manifest>
+            <attribute name="Premain-Class" value="mockit.internal.startup.Startup"/>
+            <attribute name="Agent-Class" value="mockit.internal.startup.Startup"/>
+            <attribute name="Can-Redefine-Classes" value="true"/>
+            <attribute name="Implementation-Version" value="${version}"/>
+         </manifest>
+         <service type="org.testng.ITestNGListener" provider="mockit.integration.testng.Initializer"/>
       </jar>
    </target>
 

@@ -3,8 +3,8 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-   <parent><groupId>mockit</groupId><artifactId>mockit</artifactId><version>0.999.10</version></parent>
-   <artifactId>jmockit</artifactId><version>0.999.10</version>
+   <parent><groupId>mockit</groupId><artifactId>mockit</artifactId><version>0.999.11</version></parent>
+   <artifactId>jmockit</artifactId><version>0.999.11</version>
    <name>Main</name>
 
    <build>
@@ -12,6 +12,10 @@
          <resource>
             <directory>src</directory>
             <includes><include>jmockit.properties</include></includes>
+         </resource>
+         <resource>
+            <directory>.</directory>
+            <includes><include>META-INF/services/org.testng.ITestNGListener</include></includes>
          </resource>
       </resources>
       <plugins>
@@ -26,7 +30,11 @@
             <configuration>
                <archive>
                   <addMavenDescriptor>false</addMavenDescriptor>
-                  <forced/><manifestFile>META-INF/MANIFEST.MF</manifestFile>
+                  <manifestEntries>
+                     <Premain-Class>mockit.internal.startup.Startup</Premain-Class>
+                     <Agent-Class>mockit.internal.startup.Startup</Agent-Class>
+                     <Can-Redefine-Classes>true</Can-Redefine-Classes>
+                  </manifestEntries>
                </archive>
                <excludes><exclude>Temp.class</exclude></excludes>
             </configuration>
@@ -41,7 +49,7 @@
             </executions>
          </plugin>
          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId><version>2.5</version>
+            <artifactId>maven-surefire-plugin</artifactId><version>2.6</version>
             <configuration>
                <testNGArtifactName>none:none</testNGArtifactName>
                <argLine>-javaagent:"${project.build.directory}"/jmockit-${project.version}.jar</argLine>
@@ -62,9 +70,10 @@
          <optional>true</optional>
       </dependency>
       <dependency>
-         <groupId>org.testng</groupId><artifactId>testng</artifactId><version>6.0.1</version>
+         <groupId>org.testng</groupId><artifactId>testng</artifactId><version>6.2</version>
          <optional>true</optional>
          <exclusions>
+            <exclusion><groupId>junit</groupId><artifactId>junit</artifactId></exclusion>
             <exclusion><groupId>org.beanshell</groupId><artifactId>bsh</artifactId></exclusion>
             <exclusion><groupId>com.google.inject</groupId><artifactId>guice</artifactId></exclusion>
             <exclusion><groupId>com.beust</groupId><artifactId>jcommander</artifactId></exclusion>
