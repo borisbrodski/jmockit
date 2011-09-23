@@ -29,8 +29,8 @@
    When using a HotSpot or JRockit JDK of version 1.6 or newer, on Windows or Linux:
    <ul>
       <li>
-         For JUnit test suites, make sure that <code>jmockit.jar</code> appears <em>before</em> any JUnit jar in the
-         classpath.
+         For <strong>JUnit</strong> test suites, make sure that <code>jmockit.jar</code> appears <em>before</em> the
+         JUnit jar in the classpath.
          Only JUnit 4.5 or newer is supported (test classes which extend
          <code class="type">junit.framework.TestCase</code> are also supported).
          <br/>
@@ -38,16 +38,18 @@
          and Export" tab of the "Java Build Path" window.
       </li>
       <li>
-         For TestNG test suites, configure TestNG (version 5.14 or newer) with the
-         <code class="type">mockit.integration.testng.Initializer</code>
+         For <strong>TestNG</strong> 6.2+ test suites, simply add <code>jmockit.jar</code> (version 0.999.11+) to the
+         classpath.
+         For older versions of TestNG (5.14 to 6.1) or JMockit, the
+         <code class="type">mockit.integration.testng.Initializer</code> class must be configured as a TestNG
          <a href="http://testng.org/doc/documentation-main.html#testng-listeners">listener</a>.
          This can be done by passing "<code>-listener mockit.integration.testng.Initializer</code>" as a test runner
-         argument in the JVM command line.
-         When using Maven, the listener can be specified by configuring the <code>maven-surefire-plugin</code> with a
+         argument in the JVM command line;
+         when using Maven, the listener can be specified by configuring the <code>maven-surefire-plugin</code> with a
          property of name "listener" and a value containing "mockit.integration.testng.Initializer" (see
          <a href="http://maven.apache.org/plugins/maven-surefire-plugin/examples/testng.html">this page</a> for more
-         details).
-         Another way is to specify the listener in the <code>testng.xml</code> configuration file:
+         details);
+         another way is to specify the listener in the <code>testng.xml</code> configuration file:
          <code style="white-space: nowrap;">&lt;listener class-name="mockit.integration.testng.Initializer"/></code>.
       </li>
    </ul>
