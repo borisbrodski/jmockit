@@ -67,6 +67,13 @@ public final class ExpectationsUsingReflectionTest
       }
    }
 
+   @SuppressWarnings({"UnusedParameters"})
+   static final class Collaborator2
+   {
+      static void staticMethod(int i, String s, char c) {}
+      static void staticMethod(int i, Object o, Character c) {}
+   }
+
    // Just to have a mock field so no empty expectation blocks exist.
    @Mocked Runnable unused;
 
@@ -121,13 +128,29 @@ public final class ExpectationsUsingReflectionTest
          {
             invoke(Collaborator.class, "doInternal"); result = "test";
             invoke(Collaborator.class, "staticMethod", anyInt, withAny(Object.class), anyChar);
-            invoke(Collaborator.class, "staticMethod", anyInt, anyString, anyChar);
+            invoke(Collaborator.class, "staticMethod", 2, "ab", 'd');
          }
       };
 
       assertEquals("test", Collaborator.doInternal());
       Collaborator.staticMethod(1, true, 'c');
       Collaborator.staticMethod(2, "ab", 'd');
+   }
+
+   @Test // the order of the results from "Class#getDeclaredMethods()" is different in JDK 7
+   public void expectStaticMethodInvocationsWithMethodsInReverseOrderInTheMockedClass()
+   {
+      new Expectations() {
+         final Collaborator2 mock = null;
+
+         {
+            invoke(Collaborator2.class, "staticMethod", anyInt, withAny(Object.class), anyChar);
+            invoke(Collaborator2.class, "staticMethod", 2, "ab", 'd');
+         }
+      };
+
+      Collaborator2.staticMethod(1, true, 'c');
+      Collaborator2.staticMethod(2, "ab", 'd');
    }
 
    @Test

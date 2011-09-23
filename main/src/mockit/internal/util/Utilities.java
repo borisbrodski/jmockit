@@ -337,10 +337,10 @@ public final class Utilities
    private static boolean hasMoreSpecificTypes(Class<?>[] currentTypes, Class<?>[] previousTypes)
    {
       for (int i = 0; i < currentTypes.length; i++) {
-         Class<?> current = currentTypes[i];
-         Class<?> previous = previousTypes[i];
+         Class<?> current = wrappedIfPrimitive(currentTypes[i]);
+         Class<?> previous = wrappedIfPrimitive(previousTypes[i]);
 
-         if (current != previous && wrappedIfPrimitive(previous).isAssignableFrom(wrappedIfPrimitive(current))) {
+         if (current != previous && previous.isAssignableFrom(current)) {
             return true;
          }
       }
