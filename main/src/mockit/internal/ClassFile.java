@@ -12,6 +12,22 @@ import mockit.internal.state.*;
 
 public final class ClassFile
 {
+   public static mockit.external.asm4.ClassReader createClassFileReader4(String className)
+   {
+      byte[] fixedClassfile = TestRun.mockFixture().getFixedClassfile(className);
+
+      if (fixedClassfile != null) {
+         return new mockit.external.asm4.ClassReader(fixedClassfile);
+      }
+
+      try {
+         return readClass4(className);
+      }
+      catch (IOException e) {
+         throw new RuntimeException("Failed to read class file for " + className, e);
+      }
+   }
+
    public static ClassReader createClassFileReader(String className)
    {
       byte[] fixedClassfile = TestRun.mockFixture().getFixedClassfile(className);
@@ -26,6 +42,15 @@ public final class ClassFile
       catch (IOException e) {
          throw new RuntimeException("Failed to read class file for " + className, e);
       }
+   }
+
+   public static mockit.external.asm4.ClassReader readClass4(String className) throws IOException
+   {
+      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      String classFileName = className.replace('.', '/') + ".class";
+      InputStream classFile = classLoader.getResourceAsStream(classFileName);
+
+      return new mockit.external.asm4.ClassReader(classFile);
    }
 
    public static ClassReader readClass(String className) throws IOException

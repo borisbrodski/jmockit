@@ -242,4 +242,18 @@ public final class MisusedExpectationsTest
 
       assertTrue(verified);
    }
+
+   @Test // with Java 7 only: "java.lang.VerifyError: Expecting a stackmap frame ..."
+   public void expectationBlockContainingATryBlock()
+   {
+      new Expectations()
+      {
+         {
+            try { mock.doSomething(anyBoolean); } finally { mock.setValue(1); }
+         }
+      };
+
+      mock.doSomething(true);
+      mock.setValue(1);
+   }
 }

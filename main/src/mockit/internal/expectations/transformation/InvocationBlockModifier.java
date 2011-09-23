@@ -4,25 +4,23 @@
  */
 package mockit.internal.expectations.transformation;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 
 import static mockit.external.asm.Opcodes.*;
 
-final class InvocationBlockModifier extends MethodAdapter
+final class InvocationBlockModifier extends MethodVisitor
 {
    private static final String CLASS_DESC = ActiveInvocations.class.getName().replace('.', '/');
 
    private final int[] matcherStacks;
-   private final MethodWriter mw;
    private final String fieldOwner;
    private final boolean callEndInvocations;
    private int matchers;
 
-   InvocationBlockModifier(MethodWriter mw, String fieldOwner, boolean callEndInvocations)
+   InvocationBlockModifier(MethodVisitor mw, String fieldOwner, boolean callEndInvocations)
    {
-      super(mw);
+      super(Opcodes.ASM4, mw);
       matcherStacks = new int[20];
-      this.mw = mw;
       this.fieldOwner = fieldOwner;
       this.callEndInvocations = callEndInvocations;
    }
@@ -33,31 +31,31 @@ final class InvocationBlockModifier extends MethodAdapter
       if ((opcode == GETSTATIC || opcode == PUTSTATIC) && isFieldDefinedByInvocationBlock(owner)) {
          if (opcode == PUTSTATIC) {
             if ("result".equals(name)) {
-               mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addResult", "(Ljava/lang/Object;)V");
+               mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addResult", "(Ljava/lang/Object;)V");
                return;
             }
             else if ("forEachInvocation".equals(name)) {
-               mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "setHandler", "(Ljava/lang/Object;)V");
+               mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "setHandler", "(Ljava/lang/Object;)V");
                return;
             }
             else if ("times".equals(name) || "minTimes".equals(name) || "maxTimes".equals(name)) {
-               mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, name, "(I)V");
+               mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, name, "(I)V");
                return;
             }
             else if ("$".equals(name)) {
-               mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "setErrorMessage", "(Ljava/lang/CharSequence;)V");
+               mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "setErrorMessage", "(Ljava/lang/CharSequence;)V");
                return;
             }
          }
          else if (name.startsWith("any")) {
-            mw.visitFieldInsn(GETSTATIC, owner, name, desc);
-            mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addArgMatcher", "()V");
-            matcherStacks[matchers++] = mw.stackSize2;
+            mv.visitFieldInsn(GETSTATIC, owner, name, desc);
+            mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addArgMatcher", "()V");
+            matcherStacks[matchers++] = mv.stackSize2;
             return;
          }
       }
 
-      mw.visitFieldInsn(opcode, owner, name, desc);
+      mv.visitFieldInsn(opcode, owner, name, desc);
    }
 
    private boolean isFieldDefinedByInvocationBlock(String owner)
@@ -73,14 +71,14 @@ final class InvocationBlockModifier extends MethodAdapter
    public void visitMethodInsn(int opcode, String owner, String name, String desc)
    {
       if (opcode == INVOKEVIRTUAL && owner.equals(fieldOwner) && name.startsWith("with")) {
-         mw.visitMethodInsn(INVOKEVIRTUAL, owner, name, desc);
-         matcherStacks[matchers++] = mw.stackSize2;
+         mv.visitMethodInsn(INVOKEVIRTUAL, owner, name, desc);
+         matcherStacks[matchers++] = mv.stackSize2;
          return;
       }
 
       if (matchers > 0) {
          Type[] argTypes = Type.getArgumentTypes(desc);
-         int stackSize = mw.stackSize2;
+         int stackSize = mv.stackSize2;
          int stackAfter = stackSize - sumOfSizes(argTypes);
 
          if (stackAfter < matcherStacks[0]) {
@@ -89,7 +87,7 @@ final class InvocationBlockModifier extends MethodAdapter
          }
       }
 
-      mw.visitMethodInsn(opcode, owner, name, desc);
+      mv.visitMethodInsn(opcode, owner, name, desc);
    }
 
    private int sumOfSizes(Type[] argTypes)
@@ -124,9 +122,9 @@ final class InvocationBlockModifier extends MethodAdapter
 
    private void generateCallToMoveArgMatcher(int originalMatcherIndex, int toIndex)
    {
-      mw.visitIntInsn(SIPUSH, originalMatcherIndex);
-      mw.visitIntInsn(SIPUSH, toIndex);
-      mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "moveArgMatcher", "(II)V");
+      mv.visitIntInsn(SIPUSH, originalMatcherIndex);
+      mv.visitIntInsn(SIPUSH, toIndex);
+      mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "moveArgMatcher", "(II)V");
    }
 
    @Override
@@ -143,9 +141,9 @@ final class InvocationBlockModifier extends MethodAdapter
    public void visitInsn(int opcode)
    {
       if (opcode == RETURN && callEndInvocations) {
-         mw.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "endInvocations", "()V");
+         mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "endInvocations", "()V");
       }
 
-      mw.visitInsn(opcode);
+      mv.visitInsn(opcode);
    }
 }

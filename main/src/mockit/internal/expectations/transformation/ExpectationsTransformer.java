@@ -11,8 +11,12 @@ import java.util.*;
 import static java.lang.reflect.Modifier.*;
 
 import mockit.*;
-import mockit.external.asm.*;
+import mockit.external.asm.ClassReader;
 import mockit.external.asm.commons.*;
+import mockit.external.asm4.ClassVisitor;
+import mockit.external.asm4.ClassWriter;
+import mockit.external.asm4.MethodVisitor;
+import mockit.external.asm4.Opcodes;
 import mockit.internal.*;
 import mockit.internal.util.*;
 
@@ -65,11 +69,11 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    {
       for (Class<?> aClass : alreadyLoaded) {
          if (isFinalClass(aClass) && isExpectationsOrVerificationsSubclassFromUserCode(aClass)) {
-            ClassReader cr = ClassFile.createClassFileReader(aClass.getName());
+            mockit.external.asm4.ClassReader cr = ClassFile.createClassFileReader4(aClass.getName());
             EndOfBlockModifier modifier = new EndOfBlockModifier(cr, true);
 
             try {
-               cr.accept(modifier, false);
+               cr.accept(modifier, 0);
             }
             catch (VisitInterruptedException ignore) {
                continue;
@@ -86,7 +90,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       byte[] classfileBuffer)
    {
       if (classBeingRedefined == null && protectionDomain != null) {
-         ClassReader cr = new ClassReader(classfileBuffer);
+         mockit.external.asm4.ClassReader cr = new mockit.external.asm4.ClassReader(classfileBuffer);
          int v = cr.getItem(cr.readUnsignedShort(cr.header + 4));
 
          if (v == 0) {
@@ -105,26 +109,33 @@ public final class ExpectationsTransformer implements ClassFileTransformer
          int p = className.lastIndexOf('$');
          boolean isAnonymousClass = p > 0 && Utilities.hasPositiveDigit(className, p);
 
-         ClassWriter modifier = new EndOfBlockModifier(cr, isAnonymousClass);
-         cr.accept(modifier, false);
-         return modifier.toByteArray();
+         try {
+            EndOfBlockModifier modifier = new EndOfBlockModifier(cr, isAnonymousClass);
+            cr.accept(modifier, 0);
+            return modifier.toByteArray();
+         }
+         catch (Throwable e) {
+            e.printStackTrace();
+         }
       }
 
       return null;
    }
 
-   private final class EndOfBlockModifier extends ClassWriter
+   private final class EndOfBlockModifier extends ClassVisitor
    {
       final boolean isAnonymousClass;
       boolean isFinalClass;
       MethodVisitor mw;
       String classDesc;
 
-      EndOfBlockModifier(ClassReader cr, boolean isAnonymousClass)
+      EndOfBlockModifier(mockit.external.asm4.ClassReader cr, boolean isAnonymousClass)
       {
-         super(cr, true);
+         super(Opcodes.ASM4, new ClassWriter(cr, ClassWriter.COMPUTE_MAXS));
          this.isAnonymousClass = isAnonymousClass;
       }
+
+      byte[] toByteArray() { return ((ClassWriter) cv).toByteArray(); }
 
       @Override
       public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
@@ -158,7 +169,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
          mw = super.visitMethod(access, name, desc, signature, exceptions);
 
          if ("<init>".equals(name)) {
-            return new InvocationBlockModifier((MethodWriter) mw, classDesc, isFinalClass);
+            return new InvocationBlockModifier(mw, classDesc, isFinalClass);
          }
 
          return mw;
