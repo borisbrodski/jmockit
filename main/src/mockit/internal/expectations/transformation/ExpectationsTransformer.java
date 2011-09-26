@@ -114,9 +114,8 @@ public final class ExpectationsTransformer implements ClassFileTransformer
             cr.accept(modifier, 0);
             return modifier.toByteArray();
          }
-         catch (Throwable e) {
-            e.printStackTrace();
-         }
+         catch (VisitInterruptedException ignore) {}
+         catch (Throwable e) { e.printStackTrace(); }
       }
 
       return null;
