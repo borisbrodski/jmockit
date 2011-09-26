@@ -277,6 +277,7 @@ public final class DynamicPartialMockingTest
       String overridableMethod() { return super.overridableMethod() + " overridden"; }
 
       String format() { return String.valueOf(value); }
+      static void causeFailure() { throw new RuntimeException(); }
    }
 
    @Test
@@ -286,18 +287,20 @@ public final class DynamicPartialMockingTest
 
       new NonStrictExpectations(collaborator) {{
          collaborator.getValue(); result = 5;
-         new SubCollaborator().format(); result = "test";
+         collaborator.format(); result = "test";
+         SubCollaborator.causeFailure();
       }};
 
       // Mocked:
       assertEquals(5, collaborator.getValue());
+      SubCollaborator.causeFailure();
 
       // Not mocked:
-      assertTrue(collaborator.simpleOperation(0, null, null));
-      assertEquals("1", collaborator.format()); // was recorded on a different instance
+      assertTrue(collaborator.simpleOperation(0, null, null)); // not recorded
+      assertEquals("1", new SubCollaborator().format()); // was recorded but on a different instance
 
       try {
-         Collaborator.doSomething(true, null);
+         Collaborator.doSomething(true, null); // not recorded
          fail();
       }
       catch (IllegalStateException ignore) {}

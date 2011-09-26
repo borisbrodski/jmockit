@@ -17,7 +17,6 @@ public final class FinalMockFieldsTest
       Collaborator(boolean b) { if (!b) throw new IllegalArgumentException(); }
       int getValue() { return -1; }
       void doSomething() {}
-      static int doSomethingStatic() { return -2; }
    }
 
    static final class AnotherCollaborator
@@ -79,8 +78,11 @@ public final class FinalMockFieldsTest
 
    static final class YetAnotherCollaborator
    {
+      YetAnotherCollaborator() {}
+      YetAnotherCollaborator(boolean b) { if (!b) throw new IllegalArgumentException(); }
       int getValue() { return -1; }
       void doSomething() {}
+      static int doSomethingStatic() { return -2; }
    }
 
    @Test
@@ -121,20 +123,20 @@ public final class FinalMockFieldsTest
    {
       new Expectations()
       {
-         @NonStrict final Collaborator unused = null;
+         @NonStrict final YetAnotherCollaborator unused = null;
 
          {
-            new Collaborator(true); result = new RuntimeException();
-            Collaborator.doSomethingStatic(); result = 123;
+            new YetAnotherCollaborator(true); result = new RuntimeException();
+            YetAnotherCollaborator.doSomethingStatic(); result = 123;
          }
       };
 
       try {
-         new Collaborator(true);
+         new YetAnotherCollaborator(true);
          fail();
       }
       catch (RuntimeException ignore) {}
 
-      assertEquals(123, Collaborator.doSomethingStatic());
+      assertEquals(123, YetAnotherCollaborator.doSomethingStatic());
    }
 }

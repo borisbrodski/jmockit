@@ -160,13 +160,14 @@ public final class MisusedExpectationsTest
 
       // Dynamic mocking of Blah overwrites its regular mocking through the "mock" field.
       new NonStrictExpectations(blah) {{
-         onInstance(mock).doSomething(true); result = "first";
+         mock.doSomething(true); result = "first";
          blah.value(); result = 123;
          blah.doSomething(true); result = "second";
       }};
 
       assertEquals("", mock.doSomething(true)); // matches nothing, since the mocking of "mock" was overruled
       assertEquals("second", blah.doSomething(true));
+      assertEquals(123, blah.value());
    }
 
    @BeforeClass
