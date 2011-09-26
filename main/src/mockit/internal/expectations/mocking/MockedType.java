@@ -127,15 +127,9 @@ public final class MockedType
       return true;
    }
 
-   boolean isMockParameter()
-   {
-      return isMockableType();
-   }
+   boolean isMockParameter() { return isMockableType(); }
 
-   boolean isFinalFieldOrParameter()
-   {
-      return field == null || isFinal(accessModifiers);
-   }
+   boolean isFinalFieldOrParameter() { return field == null || isFinal(accessModifiers); }
 
    void buildMockingConfiguration()
    {
@@ -161,10 +155,9 @@ public final class MockedType
       return filters;
    }
 
-   boolean isClassInitializationToBeStubbedOut()
-   {
-      return mocked != null && mocked.stubOutClassInitialization();
-   }
+   boolean isClassInitializationToBeStubbedOut() { return mocked != null && mocked.stubOutClassInitialization(); }
+
+   boolean withInstancesToCapture() { return getMaxInstancesToCapture() > 0; }
 
    int getMaxInstancesToCapture()
    {
@@ -178,10 +171,7 @@ public final class MockedType
       return 0;
    }
 
-   String getRealClassName()
-   {
-      return mocked == null ? "" : mocked.realClassName();
-   }
+   String getRealClassName() { return mocked == null ? "" : mocked.realClassName(); }
 
    @Override
    public int hashCode()

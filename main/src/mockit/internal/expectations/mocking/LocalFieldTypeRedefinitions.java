@@ -44,7 +44,7 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
       }
 
       typesAndTargetObjects.put(typeMetadata.declaredType, parentObject);
-      targetClasses.add(typeRedefinition.targetClass);
+      addTargetClass(typeMetadata.withInstancesToCapture(), typeRedefinition.targetClass);
    }
 
    @Override

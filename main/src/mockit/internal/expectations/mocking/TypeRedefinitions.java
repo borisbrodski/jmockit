@@ -14,13 +14,20 @@ class TypeRedefinitions
    protected final Object parentObject;
    protected MockedType typeMetadata;
    protected int typesRedefined;
-   protected final List<Class<?>> targetClasses;
+   private final List<Class<?>> targetClasses;
    protected CaptureOfImplementations captureOfNewInstances;
 
    protected TypeRedefinitions(Object parentObject)
    {
       this.parentObject = parentObject;
       targetClasses = new ArrayList<Class<?>>(2);
+   }
+
+   protected final void addTargetClass(boolean withInstancesToCapture, Class<?> targetClass)
+   {
+      if (!withInstancesToCapture || !targetClasses.contains(targetClass)) {
+         targetClasses.add(targetClass);
+      }
    }
 
    public final int getTypesRedefined() { return typesRedefined; }
@@ -31,6 +38,8 @@ class TypeRedefinitions
    {
       TestRun.getExecutingTest().registerMock(typeMetadata, mock);
    }
+
+   protected final void clearTargetClasses() { targetClasses.clear(); }
 
    public void cleanUp()
    {

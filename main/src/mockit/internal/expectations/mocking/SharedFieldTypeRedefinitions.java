@@ -36,7 +36,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
          }
 
          Class<?> testClass = parentObject.getClass();
-         targetClasses.clear();
+         clearTargetClasses();
          redefineFieldTypes(testClass, true);
       }
       finally {
@@ -65,7 +65,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
          }
       }
 
-      targetClasses.add(typeRedefinition.targetClass);
+      addTargetClass(typeMetadata.withInstancesToCapture(), typeRedefinition.targetClass);
    }
 
    public void assignNewInstancesToMockFields(Object target)

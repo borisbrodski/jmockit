@@ -69,11 +69,11 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       Object mock = typeRedefinition.redefineType();
       registerMock(mock);
 
-      if (typeMetadata.getMaxInstancesToCapture() > 0) {
+      if (typeMetadata.withInstancesToCapture()) {
          registerCaptureOfNewInstances(mock);
       }
 
-      targetClasses.add(typeRedefinition.targetClass);
+      addTargetClass(typeMetadata.withInstancesToCapture(), typeRedefinition.targetClass);
       typesRedefined++;
       
       return mock;
