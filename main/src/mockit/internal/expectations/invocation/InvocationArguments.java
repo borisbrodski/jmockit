@@ -10,6 +10,7 @@ import java.util.*;
 import mockit.external.asm.*;
 import mockit.external.hamcrest.*;
 import mockit.external.hamcrest.core.*;
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class InvocationArguments
@@ -58,44 +59,51 @@ public final class InvocationArguments
 
    public boolean isMatch(Object[] replayArgs, Map<Object, Object> instanceMap)
    {
-      if (matchers == null) {
-         return areEqual(replayArgs, instanceMap);
-      }
+      TestRun.enterNoMockingZone();
 
-      int argCount = replayArgs.length;
-      Object[] replayVarArgs = replayArgs;
-      Object[] invocationVarArgs = invocationArgs;
-      int varArgsCount = 0;
+      try {
+         if (matchers == null) {
+            return areEqual(replayArgs, instanceMap);
+         }
 
-      if (isVarargsMethod()) {
-         invocationVarArgs = getVarArgs(invocationArgs);
-         replayVarArgs = getVarArgs(replayArgs);
+         int argCount = replayArgs.length;
+         Object[] replayVarArgs = replayArgs;
+         Object[] invocationVarArgs = invocationArgs;
+         int varArgsCount = 0;
 
-         if (invocationVarArgs != NULL_VARARGS) {
-            varArgsCount = replayVarArgs.length;
+         if (isVarargsMethod()) {
+            invocationVarArgs = getVarArgs(invocationArgs);
+            replayVarArgs = getVarArgs(replayArgs);
 
-            if (varArgsCount != invocationVarArgs.length) {
+            if (invocationVarArgs != NULL_VARARGS) {
+               varArgsCount = replayVarArgs.length;
+
+               if (varArgsCount != invocationVarArgs.length) {
+                  return false;
+               }
+            }
+
+            argCount--;
+         }
+
+         int n = argCount + varArgsCount;
+
+         for (int i = 0; i < n; i++) {
+            Object actual = getArgument(replayArgs, replayVarArgs, argCount, i);
+            Matcher<?> expected = i < matchers.size() ? matchers.get(i) : null;
+
+            if (expected == null) {
+               Object arg = getArgument(invocationArgs, invocationVarArgs, argCount, i);
+               expected = arg == null ? ANYTHING : new IsEqual<Object>(arg);
+            }
+
+            if (!expected.matches(actual)) {
                return false;
             }
          }
-
-         argCount--;
       }
-
-      int n = argCount + varArgsCount;
-
-      for (int i = 0; i < n; i++) {
-         Object actual = getArgument(replayArgs, replayVarArgs, argCount, i);
-         Matcher<?> expected = i < matchers.size() ? matchers.get(i) : null;
-
-         if (expected == null) {
-            Object arg = getArgument(invocationArgs, invocationVarArgs, argCount, i);
-            expected = arg == null ? ANYTHING : new IsEqual<Object>(arg);
-         }
-
-         if (!expected.matches(actual)) {
-            return false;
-         }
+      finally {
+         TestRun.exitNoMockingZone();
       }
 
       return true;

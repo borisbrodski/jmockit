@@ -37,6 +37,8 @@ public final class DynamicPartialMockingTest
       
       String overridableMethod() { return "base"; }
       @Deprecated native void nativeMethod();
+
+      void readFile(File f) {}
    }
 
    interface Dependency
@@ -704,5 +706,19 @@ public final class DynamicPartialMockingTest
       assertEquals("test", ignore.value());
 
       assertTrue(mockedClass.getDeclaredMethod("nativeMethod").isAnnotationPresent(Deprecated.class));
+   }
+
+   @Test
+   public void regularMockedMethodCallingOverriddenEqualsInDynamicallyMockedClass(final Collaborator mock)
+   {
+      @SuppressWarnings({"TooBroadScope"}) final File f = new File("test");
+
+      new NonStrictExpectations(File.class) {};
+
+      mock.readFile(new File("test"));
+
+      new Verifications() {{
+         mock.readFile(f);
+      }};
    }
 }
