@@ -10,6 +10,11 @@ import java.util.*;
 final class Subclass extends BaseClass
 {
    final int INITIAL_VALUE = new Random().nextInt();
+   final int initialValue = -1;
+
+   private static final Integer constantField = 123;
+   private static final String compileTimeConstantField = "test";
+   static final boolean FLAG = false;
 
    private static StringBuilder buffer;
    private static char static1;

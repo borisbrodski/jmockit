@@ -420,7 +420,6 @@ public final class Utilities
          return (T) method.invoke(targetInstance, methodArgs);
       }
       catch (IllegalAccessException e) {
-         assert false : "Not expected to happen because the method was made accessible";
          throw new RuntimeException(e);
       }
       catch (IllegalArgumentException e) {
@@ -557,11 +556,9 @@ public final class Utilities
          return constructor.newInstance(args);
       }
       catch (InstantiationException e) {
-         assert false : "Not expected to happen because the class is expected to be concrete";
          throw new RuntimeException(e);
       }
       catch (IllegalAccessException e) {
-         assert false : "Not expected to happen because the constructor was made accessible";
          throw new RuntimeException(e);
       }
       catch (InvocationTargetException e) {
@@ -710,7 +707,6 @@ public final class Utilities
          return field.get(targetObject);
       }
       catch (IllegalAccessException e) {
-         assert false : "Not expected to happen because the field was made accessible";
          throw new RuntimeException(e);
       }
    }
@@ -728,15 +724,39 @@ public final class Utilities
 
    public static void setFieldValue(Field field, Object targetObject, Object value)
    {
-      ensureThatMemberIsAccessible(field);
-
       try {
-         field.set(targetObject, value);
+         if (isStatic(field.getModifiers()) && isFinal(field.getModifiers())) {
+            setStaticFinalField(field, value);
+         }
+         else {
+            ensureThatMemberIsAccessible(field);
+            field.set(targetObject, value);
+         }
       }
       catch (IllegalAccessException e) {
-         assert false : "Not expected to happen because the field was made accessible";
          throw new RuntimeException(e);
       }
+   }
+
+   private static void setStaticFinalField(Field field, Object value) throws IllegalAccessException
+   {
+      Field modifiersField;
+
+      try {
+         modifiersField = Field.class.getDeclaredField("modifiers");
+      }
+      catch (NoSuchFieldException e) {
+         throw new RuntimeException(e);
+      }
+
+      modifiersField.setAccessible(true);
+      int nonFinalModifiers = modifiersField.getInt(field) - Modifier.FINAL;
+      modifiersField.setInt(field, nonFinalModifiers);
+
+      //noinspection UnnecessaryFullyQualifiedName,UseOfSunClasses
+      sun.reflect.FieldAccessor accessor =
+         sun.reflect.ReflectionFactory.getReflectionFactory().newFieldAccessor(field, false);
+      accessor.set(null, value);
    }
 
    public static Class<?>[] getParameterTypes(String mockDesc)

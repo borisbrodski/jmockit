@@ -32,6 +32,8 @@ public final class Deencapsulation
     * @param fieldName the name of the field to get
     * @param <T> interface or class type to which the returned value should be assignable
     *
+    * @throws IllegalArgumentException if the desired field is not found
+    *
     * @see #getField(Object, Class)
     * @see #setField(Object, String, Object)
     */
@@ -63,6 +65,8 @@ public final class Deencapsulation
     * @param fieldName the name of the static field to get
     * @param <T> interface or class type to which the returned value should be assignable
     *
+    * @throws IllegalArgumentException if the desired field is not found
+    *
     * @see #setField(Class, String, Object)
     */
    public static <T> T getField(Class<?> classWithStaticField, String fieldName)
@@ -93,6 +97,8 @@ public final class Deencapsulation
     * @param fieldName the name of the field to set
     * @param fieldValue the value to set the field to
     *
+    * @throws IllegalArgumentException if the desired field is not found
+    *
     * @see #setField(Class, String, Object)
     */
    public static void setField(Object objectWithField, String fieldName, Object fieldValue)
@@ -117,6 +123,8 @@ public final class Deencapsulation
     * @param classWithStaticField the class on which the static field is defined
     * @param fieldName the name of the field to set
     * @param fieldValue the value to set the field to
+    *
+    * @throws IllegalArgumentException if the desired field is not found
     */
    public static void setField(Class<?> classWithStaticField, String fieldName, Object fieldValue)
    {

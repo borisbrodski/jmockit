@@ -19,16 +19,6 @@ public final class DeencapsulationTest
    final Subclass anInstance = new Subclass();
 
    @Test
-   public void setValueOfNonConstantFinalField()
-   {
-      Subclass obj = new Subclass();
-
-      setField(obj, "INITIAL_VALUE", 123);
-
-      assertEquals(123, obj.INITIAL_VALUE);
-   }
-
-   @Test
    public void getInstanceFieldByName()
    {
       anInstance.setIntField(3);
@@ -218,6 +208,34 @@ public final class DeencapsulationTest
    public void attemptToSetStaticFieldByTypeForClassWithMultipleFieldsOfThatType()
    {
       setField(Subclass.class, 'A');
+   }
+
+   @Test
+   public void setFinalInstanceFields()
+   {
+      Subclass obj = new Subclass();
+
+      setField(obj, "INITIAL_VALUE", 123);
+      setField(obj, "initialValue", 123);
+
+      assertEquals(123, obj.INITIAL_VALUE);
+      assertEquals(123, getField(obj, "initialValue"));
+      assertEquals(-1, obj.initialValue); // in this case, the compile-time constant gets embedded in client code
+   }
+
+   @Test
+   public void setStaticFinalFields()
+   {
+      setField(Subclass.class, "constantField", 54);
+      setField(Subclass.class, "changed");
+      setField(Subclass.class, true);
+
+      assertEquals(54, getField(Subclass.class, "constantField"));
+      assertEquals("changed", getField(Subclass.class, String.class));
+      assertTrue(getField(Subclass.class, boolean.class));
+
+      //noinspection ConstantJUnitAssertArgument
+      assertFalse(Subclass.FLAG); // in this case, the compile-time constant gets embedded in client code
    }
 
    @Test
