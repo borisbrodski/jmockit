@@ -98,7 +98,7 @@ public final class DynamicOnInstanceMockingTest
       collaborator2.setValue(2);
       collaborator3.setValue(3);
       assertEquals(1, collaborator1.getValue());
-      assertEquals(2, collaborator2.getValue());
+      assertEquals(-2, collaborator2.getValue());
       assertEquals(3, collaborator3.getValue());
    }
 
@@ -158,7 +158,7 @@ public final class DynamicOnInstanceMockingTest
    public void passBothClassLiteralAndInstanceInExpectationsConstructor()
    {
       final Foo foo1 = new Foo();
-      final Foo foo2 = new Foo();
+      Foo foo2 = new Foo();
 
       // Instance-specific mocking takes precedence over any-instance mocking, when both are
       // (erroneously) used for the same class.
@@ -170,30 +170,51 @@ public final class DynamicOnInstanceMockingTest
       assertFalse(foo2.doItAgain());
       assertFalse(foo2.doIt());
       assertFalse(foo1.doItAgain());
+      Foo foo3 = new Foo();
+      assertFalse(foo3.doIt());
+      assertFalse(foo3.doItAgain());
+   }
+
+   @Test
+   public void verifyMethodInvocationCountOnMockedAndNonMockedInstances()
+   {
+      final Foo foo1 = new Foo();
+      final Foo foo2 = new Foo();
+
+      new NonStrictExpectations(foo1, foo2) {{
+         foo1.doIt(); result = true;
+      }};
+
+      assertTrue(foo1.doIt());
+      assertFalse(foo2.doItAgain());
+      assertFalse(foo2.doIt());
       final Foo foo3 = new Foo();
+      assertFalse(foo1.doItAgain());
+      assertFalse(foo3.doItAgain());
       assertFalse(foo3.doIt());
       assertFalse(foo3.doItAgain());
 
       new Verifications() {{
          assertFalse(foo1.doIt()); times = 1;
-         assertFalse(foo2.doIt()); times = 2;
+         assertFalse(foo2.doIt()); times = 1;
          assertFalse(foo1.doItAgain()); times = 1;
          assertFalse(foo3.doItAgain()); times = 2;
       }};
    }
 
    @Test
-   public void verifySingleInvocationToDynamicallyMockedInstanceWithAnotherInstanceInvolved()
+   public void verifySingleInvocationToMockedInstanceWithAdditionalInvocationToSameMethodOnAnotherInstance()
    {
-      final Collaborator mock = new Collaborator();
+      final Collaborator mocked = new Collaborator();
 
-      new Expectations(mock) {};
+      new Expectations(mocked) {};
 
-      new Collaborator().getValue();
-      mock.getValue();
+      Collaborator notMocked = new Collaborator();
+      assertEquals(-1, notMocked.getValue());
+      assertEquals(-1, mocked.getValue());
 
       new Verifications() {{
-         mock.getValue();
+         mocked.getValue();
          times = 1;
       }};
    }
@@ -210,7 +231,7 @@ public final class DynamicOnInstanceMockingTest
 
       new VerificationsInOrder() {{
          mock.setValue(1); times = 1;
-         mock.setValue(2); times = 1;
+         mock.setValue(2); times = 1; // must be missing
       }};
    }
 
@@ -226,8 +247,7 @@ public final class DynamicOnInstanceMockingTest
 
       new VerificationsInOrder() {{
          mock.setValue(1); times = 1;
-         mock.setValue(2);
-         times = 0;
+         mock.setValue(2); times = 0;
       }};
    }
 }

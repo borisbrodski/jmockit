@@ -64,24 +64,18 @@ public final class InjectableMockedTest
    @Test
    public void mockNextCreatedInstance(@Injectable @Mocked(capture = 1) final Collaborator mock)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.doSomething(true); result = 2;
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.doSomething(true); result = 2;
+      }};
 
       Collaborator captured = new Collaborator();
       assertEquals(0, captured.value);
       assertEquals(0, captured.doSomething(false));
       assertEquals(2, captured.doSomething(true));
 
-      new Verifications()
-      {
-         {
-            mock.doSomething(anyBoolean); times = 2;
-         }
-      };
+      new Verifications() {{
+         mock.doSomething(anyBoolean); times = 2;
+      }};
 
       Collaborator notMocked = new Collaborator();
       assertEquals(101, notMocked.value);
@@ -145,19 +139,16 @@ public final class InjectableMockedTest
       assertEquals(-1, notMocked.doSomething(false));
       assertEquals(1, notMocked.doSomething(true));
    }
-   
+
    @Test
    public void mockSeparatelyTwoGroupsOfInternallyCreatedInstancesUsingMockParameters(
       @Injectable @Mocked(capture = 2) final Collaborator mock1,
       @Injectable @Mocked(capture = 3) final Collaborator mock2)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock1.doSomething(false); result = -45;
-            mock2.doSomething(true); result = 123;
-         }
-      };
+      new NonStrictExpectations() {{
+         mock1.doSomething(false); result = -45;
+         mock2.doSomething(true); result = 123;
+      }};
 
       // First two instances created and captured in code under test (mock1):
       assertEquals(0, new Collaborator(4) {}.doSomething(true));
@@ -167,17 +158,14 @@ public final class InjectableMockedTest
       assertEquals(123, new Collaborator() {}.doSomething(true));
       assertEquals(123, new Collaborator(12).doSomething(true));
       assertEquals(0, new Collaborator(-5).doSomething(false));
-      
+
       // Further instances not captured:
       assertEquals(1, new Collaborator().doSomething(true));
       assertEquals(-1, new Collaborator(2) {}.doSomething(false));
 
-      new Verifications()
-      {
-         {
-            mock1.doSomething(anyBoolean); times = 2;
-         }
-      };
+      new Verifications() {{
+         mock1.doSomething(anyBoolean); times = 2;
+      }};
    }
 
    @Test
@@ -226,14 +214,11 @@ public final class InjectableMockedTest
    @Test
    public void mockSeparatelyTwoGroupsOfInternallyCreatedInstancesUsingMockFields()
    {
-      new NonStrictExpectations()
-      {
-         {
-            anotherMock1.doSomething(true); result = -45;
-            anotherMock2.doSomething(true); result = 123;
-            anotherMock2.doSomething(false); result = 246;
-         }
-      };
+      new NonStrictExpectations() {{
+         anotherMock1.doSomething(true); result = -45;
+         anotherMock2.doSomething(true); result = 123;
+         anotherMock2.doSomething(false); result = 246;
+      }};
 
       // First two instances created and captured in code under test (anotherMock1):
       assertEquals(-45, new AnotherCollaborator(4) {}.doSomething(true));
@@ -255,13 +240,10 @@ public final class InjectableMockedTest
       }
       catch (IllegalArgumentException ignore) {}
 
-      new FullVerifications()
-      {
-         {
-            anotherMock1.doSomething(anyBoolean); times = 2;
-            anotherMock2.doSomething(true);
-            anotherMock2.doSomething(false);
-         }
-      };
+      new FullVerifications() {{
+         anotherMock1.doSomething(anyBoolean); times = 2;
+         anotherMock2.doSomething(true);
+         anotherMock2.doSomething(false);
+      }};
    }
 }

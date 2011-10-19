@@ -9,6 +9,7 @@ import java.util.*;
 import static mockit.internal.util.Utilities.containsReference;
 
 import mockit.internal.expectations.invocation.*;
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 final class PhasedExecutionState
@@ -17,7 +18,7 @@ final class PhasedExecutionState
    final List<Expectation> nonStrictExpectations;
    final List<VerifiedExpectation> verifiedExpectations;
    final Map<Object, Object> instanceMap;
-   private List<?> mockedInstancesToMatch;
+   private List<?> dynamicMockInstancesToMatch;
    private List<Class<?>> mockedTypesToMatchOnInstances;
 
    PhasedExecutionState()
@@ -28,9 +29,9 @@ final class PhasedExecutionState
       instanceMap = new IdentityHashMap<Object, Object>();
    }
 
-   void setMockedInstancesToMatch(List<?> mockedInstancesToMatch)
+   void setDynamicMockInstancesToMatch(List<?> dynamicMockInstancesToMatch)
    {
-      this.mockedInstancesToMatch = mockedInstancesToMatch;
+      this.dynamicMockInstancesToMatch = dynamicMockInstancesToMatch;
    }
 
    void discoverMockedTypesToMatchOnInstances(List<Class<?>> targetClasses)
@@ -82,7 +83,7 @@ final class PhasedExecutionState
 
    boolean isToBeMatchedOnInstance(Object mock)
    {
-      if (mockedInstancesToMatch != null && containsReference(mockedInstancesToMatch, mock)) {
+      if (dynamicMockInstancesToMatch != null && containsReference(dynamicMockInstancesToMatch, mock)) {
          return true;
       }
       else if (mockedTypesToMatchOnInstances != null) {
@@ -91,6 +92,9 @@ final class PhasedExecutionState
          if (containsReference(mockedTypesToMatchOnInstances, mockedClass)) {
             return true;
          }
+      }
+      else if (TestRun.getExecutingTest().isInjectableMock(mock)) {
+         return true;
       }
 
       return false;
@@ -120,7 +124,8 @@ final class PhasedExecutionState
          ExpectedInvocation previousInvocation = previousExpectation.invocation;
 
          if (
-            isInvocationToSameMethodOrConstructor(mock, mockClassDesc, mockNameAndDesc, previousInvocation) &&
+            previousInvocation.isMatch(mockClassDesc, mockNameAndDesc) &&
+            (mock == null || isMatchingInstance(mock, previousInvocation)) &&
             (newInvocationWithMatchers && arguments.hasEquivalentMatchers(previousInvocation.arguments) ||
              !newInvocationWithMatchers && previousInvocation.arguments.isMatch(argValues, instanceMap))
          ) {
@@ -131,12 +136,6 @@ final class PhasedExecutionState
       return null;
    }
 
-   private boolean isInvocationToSameMethodOrConstructor(
-      Object mock, String mockClassDesc, String mockNameAndDesc, ExpectedInvocation invocation)
-   {
-      return invocation.isMatch(mockClassDesc, mockNameAndDesc) && invocation.isMatch(mock, instanceMap);
-   }
-
    Expectation findNonStrictExpectation(Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
       // Note: new expectations might get added to the list, so a regular loop would cause a CME:
@@ -145,8 +144,8 @@ final class PhasedExecutionState
          ExpectedInvocation invocation = nonStrict.invocation;
 
          if (
-            isInvocationToSameMethodOrConstructor(mock, mockClassDesc, mockNameAndDesc, invocation) &&
-//            (mock == null || mock == invocation.instance || !isToBeMatchedOnInstance(mock)) &&
+            invocation.isMatch(mockClassDesc, mockNameAndDesc) &&
+            (mock == null || isMatchingInstance(mock, invocation)) &&
             invocation.arguments.isMatch(args, instanceMap)
          ) {
             return nonStrict;
@@ -154,6 +153,33 @@ final class PhasedExecutionState
       }
 
       return null;
+   }
+
+   private boolean isMatchingInstance(Object mock, ExpectedInvocation invocation)
+   {
+      if (invocation.isEquivalentInstance(mock, instanceMap)) {
+         return true;
+      }
+
+      if (TestRun.getExecutingTest().isInjectableMock(mock)) {
+         return false;
+      }
+
+      if (dynamicMockInstancesToMatch != null) {
+         if (containsReference(dynamicMockInstancesToMatch, mock)) {
+            return false;
+         }
+
+         Class<?> invokedClass = invocation.instance.getClass();
+
+         for (Object dynamicMock : dynamicMockInstancesToMatch) {
+            if (dynamicMock.getClass() == invokedClass) {
+               return false;
+            }
+         }
+      }
+
+      return !invocation.matchInstance;
    }
 
    void makeNonStrict(Expectation expectation)

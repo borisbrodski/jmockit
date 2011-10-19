@@ -158,14 +158,13 @@ public final class MisusedExpectationsTest
    {
       final Blah blah = new Blah();
 
-      // Dynamic mocking of Blah overwrites its regular mocking through the "mock" field.
       new NonStrictExpectations(blah) {{
          mock.doSomething(true); result = "first";
          blah.value(); result = 123;
          blah.doSomething(true); result = "second";
       }};
 
-      assertEquals("", mock.doSomething(true)); // matches nothing, since the mocking of "mock" was overruled
+      assertEquals("first", mock.doSomething(true));
       assertEquals("second", blah.doSomething(true));
       assertEquals(123, blah.value());
    }

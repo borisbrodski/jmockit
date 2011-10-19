@@ -150,7 +150,7 @@ public final class RecordAndReplayExecution
       executionState.discoverMockedTypesToMatchOnInstances(targetClasses);
 
       if (dynamicPartialMocking != null) {
-         executionState.setMockedInstancesToMatch(dynamicPartialMocking.targetInstances);
+         executionState.setDynamicMockInstancesToMatch(dynamicPartialMocking.targetInstances);
       }
    }
 

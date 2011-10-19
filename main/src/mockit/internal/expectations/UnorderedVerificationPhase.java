@@ -26,11 +26,11 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
    {
       aggregate = null;
 
-      for (Expectation expectation : recordAndReplay.executionState.nonStrictExpectations) {
-         if (mock != null && recordAndReplay.executionState.isToBeMatchedOnInstance(mock)) {
-            matchInstance = true;
-         }
+      if (mock != null && recordAndReplay.executionState.isToBeMatchedOnInstance(mock)) {
+         matchInstance = true;
+      }
 
+      for (Expectation expectation : recordAndReplay.executionState.nonStrictExpectations) {
          if (matches(mock, mockClassDesc, mockNameAndDesc, args, expectation)) {
             if (argMatchers == null) {
                currentExpectation = expectation;

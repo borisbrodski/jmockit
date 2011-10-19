@@ -174,6 +174,10 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
       Object[] args = invocation.arguments.getValues();
       matchInstance = invocation.matchInstance;
 
+      if (mock != null && recordAndReplay.executionState.isToBeMatchedOnInstance(mock)) {
+         matchInstance = true;
+      }
+
       return matches(mock, mockClassDesc, mockNameAndDesc, args, expectation);
    }
 
