@@ -17,7 +17,7 @@
          <optional>true</optional>
       </dependency>
       <dependency>
-         <groupId>mockit</groupId><artifactId>jmockit-coverage</artifactId><version>${project.version}</version>
+         <groupId>mockit</groupId><artifactId>jmockit-coverage</artifactId><version>0.999.11</version>
          <optional>true</optional>
       </dependency>
       <dependency>
