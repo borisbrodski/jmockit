@@ -8,21 +8,27 @@ import java.lang.reflect.*;
 
 import sun.reflect.*;
 
-public interface InstanceFactory
+public abstract class InstanceFactory
 {
-   Object create();
+   protected Object lastInstance;
 
-   final class InterfaceInstanceFactory implements InstanceFactory
+   public abstract Object create();
+
+   public final Object getLastInstance() { return lastInstance; }
+   public final void clearLastInstance() { lastInstance = null; }
+
+   static final class InterfaceInstanceFactory extends InstanceFactory
    {
       private final Object emptyProxy;
 
       InterfaceInstanceFactory(Object emptyProxy) { this.emptyProxy = emptyProxy; }
 
-      public Object create() { return emptyProxy; }
+      @Override
+      public Object create() { lastInstance = emptyProxy; return emptyProxy; }
    }
 
    @SuppressWarnings({"UseOfSunClasses"})
-   final class ClassInstanceFactory implements InstanceFactory
+   static final class ClassInstanceFactory extends InstanceFactory
    {
       private static final ReflectionFactory REFLECTION_FACTORY = ReflectionFactory.getReflectionFactory();
       private static final Constructor<?> OBJECT_CONSTRUCTOR;
@@ -39,18 +45,25 @@ public interface InstanceFactory
          fakeConstructor = REFLECTION_FACTORY.newConstructorForSerialization(concreteClass, OBJECT_CONSTRUCTOR);
       }
 
+      @Override
       public Object create()
       {
-         try { return fakeConstructor.newInstance(); } catch (Exception e) { throw new RuntimeException(e); }
+         try {
+            Object newInstance = fakeConstructor.newInstance();
+            lastInstance = newInstance;
+            return newInstance;
+         }
+         catch (Exception e) { throw new RuntimeException(e); }
       }
    }
 
-   final class EnumInstanceFactory implements InstanceFactory
+   static final class EnumInstanceFactory extends InstanceFactory
    {
       private final Object anEnumValue;
 
       EnumInstanceFactory(Class<?> enumClass) { anEnumValue = enumClass.getEnumConstants()[0]; }
 
-      public Object create() { return anEnumValue; }
+      @Override
+      public Object create() { lastInstance = anEnumValue; return anEnumValue; }
    }
 }

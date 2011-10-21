@@ -87,7 +87,7 @@ final class PhasedExecutionState
          return true;
       }
       else if (mockedTypesToMatchOnInstances != null) {
-         Class<?> mockedClass = Utilities.getMockedClass(mock);
+         Class<?> mockedClass = Utilities.getMockedClassType(mock.getClass());
 
          if (containsReference(mockedTypesToMatchOnInstances, mockedClass)) {
             return true;

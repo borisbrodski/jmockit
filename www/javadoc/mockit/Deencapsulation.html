@@ -431,7 +431,9 @@ public static &lt;T&gt; T <B>getField</B>(<A HREF="http://download.oracle.com/ja
 <DD>Gets the value of a non-accessible static field defined in a given class.
 <P>
 <DD><DL>
-<DT><B>Type Parameters:</B><DD><CODE>T</CODE> - interface or class type to which the returned value should be assignable<DT><B>Parameters:</B><DD><CODE>classWithStaticField</CODE> - the class from which to get the field value<DD><CODE>fieldName</CODE> - the name of the static field to get<DT><B>See Also:</B><DD><A HREF="../mockit/Deencapsulation.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
+<DT><B>Type Parameters:</B><DD><CODE>T</CODE> - interface or class type to which the returned value should be assignable<DT><B>Parameters:</B><DD><CODE>classWithStaticField</CODE> - the class from which to get the field value<DD><CODE>fieldName</CODE> - the name of the static field to get
+<DT><B>Throws:</B>
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if the desired field is not found<DT><B>See Also:</B><DD><A HREF="../mockit/Deencapsulation.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
 </DD>
 </DL>
 <HR>
@@ -462,7 +464,9 @@ public static &lt;T&gt; T <B>getField</B>(<A HREF="http://download.oracle.com/ja
 <DD>Gets the value of a non-accessible (eg <code>private</code>) field from a given object.
 <P>
 <DD><DL>
-<DT><B>Type Parameters:</B><DD><CODE>T</CODE> - interface or class type to which the returned value should be assignable<DT><B>Parameters:</B><DD><CODE>objectWithField</CODE> - the instance from which to get the field value<DD><CODE>fieldName</CODE> - the name of the field to get<DT><B>See Also:</B><DD><A HREF="../mockit/Deencapsulation.html#getField(java.lang.Object, java.lang.Class)"><CODE>getField(Object, Class)</CODE></A>, 
+<DT><B>Type Parameters:</B><DD><CODE>T</CODE> - interface or class type to which the returned value should be assignable<DT><B>Parameters:</B><DD><CODE>objectWithField</CODE> - the instance from which to get the field value<DD><CODE>fieldName</CODE> - the name of the field to get
+<DT><B>Throws:</B>
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if the desired field is not found<DT><B>See Also:</B><DD><A HREF="../mockit/Deencapsulation.html#getField(java.lang.Object, java.lang.Class)"><CODE>getField(Object, Class)</CODE></A>, 
 <A HREF="../mockit/Deencapsulation.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><CODE>setField(Object, String, Object)</CODE></A></DL>
 </DD>
 </DL>
@@ -667,7 +671,9 @@ public static void <B>setField</B>(<A HREF="http://download.oracle.com/javase/6/
 <DD>Sets the value of a non-accessible static field on a given class.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>classWithStaticField</CODE> - the class on which the static field is defined<DD><CODE>fieldName</CODE> - the name of the field to set<DD><CODE>fieldValue</CODE> - the value to set the field to</DL>
+<DT><B>Parameters:</B><DD><CODE>classWithStaticField</CODE> - the class on which the static field is defined<DD><CODE>fieldName</CODE> - the name of the field to set<DD><CODE>fieldValue</CODE> - the value to set the field to
+<DT><B>Throws:</B>
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if the desired field is not found</DL>
 </DD>
 </DL>
 <HR>
@@ -699,7 +705,9 @@ public static void <B>setField</B>(<A HREF="http://download.oracle.com/javase/6/
 <DD>Sets the value of a non-accessible field on a given object.
 <P>
 <DD><DL>
-<DT><B>Parameters:</B><DD><CODE>objectWithField</CODE> - the instance on which to set the field value<DD><CODE>fieldName</CODE> - the name of the field to set<DD><CODE>fieldValue</CODE> - the value to set the field to<DT><B>See Also:</B><DD><A HREF="../mockit/Deencapsulation.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
+<DT><B>Parameters:</B><DD><CODE>objectWithField</CODE> - the instance on which to set the field value<DD><CODE>fieldName</CODE> - the name of the field to set<DD><CODE>fieldValue</CODE> - the value to set the field to
+<DT><B>Throws:</B>
+<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if the desired field is not found<DT><B>See Also:</B><DD><A HREF="../mockit/Deencapsulation.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
 </DD>
 </DL>
 <!-- ========= END OF CLASS DATA ========= -->

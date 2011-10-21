@@ -10,6 +10,7 @@ import java.util.Map.*;
 
 import mockit.internal.*;
 import mockit.internal.expectations.mocking.*;
+import mockit.internal.util.*;
 
 /**
  * Holds data about redefined real classes and their corresponding mock classes (if any), and
@@ -104,27 +105,26 @@ public final class MockFixture
       redefinedClasses.put(redefinedClass, modifiedClassfile);
    }
 
-   public void addInstanceForMockedType(Class<?> mockedType, InstanceFactory mockInstanceFactory)
+   public void registerInstanceFactoryForMockedType(Class<?> mockedType, InstanceFactory mockedInstanceFactory)
    {
-      mockedTypesAndInstances.put(mockedType, mockInstanceFactory);
+      mockedTypesAndInstances.put(mockedType, mockedInstanceFactory);
    }
 
-   public Object getNewInstanceForMockedType(Class<?> mockedType)
+   public InstanceFactory findInstanceFactory(Class<?> mockedType)
    {
-      InstanceFactory instanceFactory = mockedTypesAndInstances.get(mockedType);
+      if (mockedType.isInterface() || Modifier.isAbstract(mockedType.getModifiers())) {
+         for (Entry<Class<?>, InstanceFactory> entry : mockedTypesAndInstances.entrySet()) {
+            Class<?> baseType = Utilities.getMockedClassOrInterfaceType(entry.getKey());
 
-      if (instanceFactory == null) {
+            if (baseType == mockedType) {
+               return entry.getValue();
+            }
+         }
+
          return null;
       }
 
-      TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(true);
-
-      try {
-         return instanceFactory.create();
-      }
-      finally {
-         TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(false);
-      }
+      return mockedTypesAndInstances.get(mockedType);
    }
 
    public void restoreAndRemoveTransformedClasses(Set<String> transformedClassesToRestore)

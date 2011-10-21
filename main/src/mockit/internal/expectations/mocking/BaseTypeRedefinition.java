@@ -66,7 +66,7 @@ abstract class BaseTypeRedefinition
          TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(false);
       }
 
-      TestRun.mockFixture().addInstanceForMockedType(targetClass, instanceFactory);
+      TestRun.mockFixture().registerInstanceFactoryForMockedType(targetClass, instanceFactory);
 
       return mock;
    }

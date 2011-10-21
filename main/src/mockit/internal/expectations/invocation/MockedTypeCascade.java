@@ -50,21 +50,50 @@ public final class MockedTypeCascade
       Class<?> returnType = cascadedTypesAndMocks.get(returnTypeInternalName);
 
       if (returnType == null) {
-         String className = returnTypeInternalName.replace('/', '.');
-         returnType = Utilities.loadClass(className);
-
-         cascadedTypesAndMocks.put(returnTypeInternalName, returnType);
-         TestRun.getExecutingTest().addCascadingType(returnTypeInternalName, false);
+         returnType = registerIntermediateCascadingType(returnTypeInternalName);
       }
 
-      Object mock = TestRun.mockFixture().getNewInstanceForMockedType(returnType);
+      return createNewCascadedInstanceOrUseNonCascadedOneIfAvailable(returnType);
+   }
 
-      if (mock == null) {
-         mock = new CascadingTypeRedefinition(returnType).redefineType();
+   private Class<?> registerIntermediateCascadingType(String returnTypeInternalName)
+   {
+      String className = returnTypeInternalName.replace('/', '.');
+      Class<?> returnType = Utilities.loadClass(className);
+
+      cascadedTypesAndMocks.put(returnTypeInternalName, returnType);
+      TestRun.getExecutingTest().addCascadingType(returnTypeInternalName, false);
+      return returnType;
+   }
+
+   private Object createNewCascadedInstanceOrUseNonCascadedOneIfAvailable(Class<?> mockedType)
+   {
+      InstanceFactory instanceFactory = TestRun.mockFixture().findInstanceFactory(mockedType);
+
+      if (instanceFactory == null) {
+         return new CascadingTypeRedefinition(mockedType).redefineType();
       }
 
-      TestRun.getExecutingTest().addInjectableMock(mock);
-      return mock;
+      Object lastInstance = instanceFactory.getLastInstance();
+
+      if (lastInstance != null) {
+         return lastInstance;
+      }
+
+      ExecutingTest executingTest = TestRun.getExecutingTest();
+      executingTest.setShouldIgnoreMockingCallbacks(true);
+      Object cascadedInstance;
+
+      try {
+         cascadedInstance = instanceFactory.create();
+      }
+      finally {
+         executingTest.setShouldIgnoreMockingCallbacks(false);
+      }
+
+      instanceFactory.clearLastInstance();
+      executingTest.addInjectableMock(cascadedInstance);
+      return cascadedInstance;
    }
 
    public void discardCascadedMocks()

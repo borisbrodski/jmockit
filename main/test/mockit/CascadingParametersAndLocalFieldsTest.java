@@ -80,7 +80,7 @@ public final class CascadingParametersAndLocalFieldsTest
    public void verifyThatStaticMethodsAndConstructorsAreMockedWhenCascadedMockIsMockedNormally(
       @Cascading Foo mockFoo, @Mocked Bar mockBar)
    {
-      assert mockFoo.getBar() != mockBar;
+      assert mockFoo.getBar() == mockBar;
       assert mockBar.doSomething() == 0;
       assert Bar.staticMethod() == null;
       new Bar();
@@ -169,7 +169,7 @@ public final class CascadingParametersAndLocalFieldsTest
    }
 
    @Test
-   public void cascadeOneLevelAndVerifyInvocationOnLastMockOnly(@Cascading Foo foo, final Bar bar)
+   public void cascadeOneLevelAndVerifyInvocationOnLastMockOnly(@Cascading Foo foo, @Injectable final Bar bar)
    {
       Bar fooBar = foo.getBar();
       assertSame(bar, fooBar);
@@ -189,14 +189,16 @@ public final class CascadingParametersAndLocalFieldsTest
          }
       };
 
-      // Intermediate mocked type Bar is never mentioned above.
-      foo.getBar().getBaz().runIt();
+      Baz cascadedBaz = foo.getBar().getBaz();
+      cascadedBaz.runIt();
    }
 
    @Test
    public void cascadeTwoLevelsAndVerifyInvocationOnLastMockOnly(@Cascading Foo foo, final Baz baz)
    {
-      foo.getBar().getBaz().runIt();
+      Baz cascadedBaz = foo.getBar().getBaz();
+      assertSame(baz, cascadedBaz);
+      cascadedBaz.runIt();
 
       new Verifications() {{ baz.runIt(); }};
    }
@@ -211,7 +213,7 @@ public final class CascadingParametersAndLocalFieldsTest
 
          {
             ProcessBuilder sameBuilder = pb.directory((File) any);
-            assert pb != sameBuilder;
+            assert pb == sameBuilder;
 
             Process process = sameBuilder.start();
             process.getOutputStream().write(5);

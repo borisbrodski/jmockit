@@ -177,15 +177,7 @@ public final class Utilities
          args[i] = null;
       }
       else {
-         Class<?> argClass = arg.getClass();
-
-         if (isGeneratedImplementationClass(argClass)) {
-            // Assumes that the proxy class implements a single interface.
-            argType = argClass.getInterfaces()[0];
-         }
-         else {
-            argType = getMockedClass(argClass);
-         }
+         argType = getMockedClass(arg);
       }
 
       return argType;
@@ -196,14 +188,24 @@ public final class Utilities
       return Proxy.isProxyClass(mockedType) || isGeneratedImplementationClass(mockedType.getName());
    }
 
-   public static Class<?> getMockedClass(Class<?> aClass)
+   public static Class<?> getMockedClassOrInterfaceType(Class<?> aClass)
+   {
+      if (isGeneratedImplementationClass(aClass)) {
+         // Assumes that the proxy class implements a single interface.
+         return aClass.getInterfaces()[0];
+      }
+
+      return getMockedClassType(aClass);
+   }
+
+   public static Class<?> getMockedClassType(Class<?> aClass)
    {
       return isGeneratedSubclass(aClass.getName()) ? aClass.getSuperclass() : aClass;
    }
 
    public static Class<?> getMockedClass(Object mock)
    {
-      return getMockedClass(mock.getClass());
+      return getMockedClassOrInterfaceType(mock.getClass());
    }
 
    private static boolean isGeneratedSubclass(String className)

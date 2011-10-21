@@ -14,6 +14,9 @@ import java.lang.annotation.*;
  * type on which further invocations can be made.
  * This behavior automatically cascades to those mocked return types.
  * <p/>
+ * In a test having a cascading mocked type, a separate non-cascading mocked type can be used to record/verify
+ * expectations on intermediate cascaded instances.
+ * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#cascading">In the
  * Tutorial</a>
  * <p/>

@@ -5,6 +5,7 @@
 package mockit.internal.expectations.mocking;
 
 import mockit.external.asm.*;
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class CascadingTypeRedefinition extends BaseTypeRedefinition
@@ -17,7 +18,10 @@ public final class CascadingTypeRedefinition extends BaseTypeRedefinition
 
    public Object redefineType()
    {
-      return redefineType(targetClass);
+      Object mock = redefineType(targetClass);
+      instanceFactory.clearLastInstance();
+      TestRun.getExecutingTest().addInjectableMock(mock);
+      return mock;
    }
 
    @Override
