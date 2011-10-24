@@ -7,7 +7,8 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * Indicates one or more {@linkplain #value() classes} to be mocked or stubbed out.
+ * Indicates one or more {@linkplain #value() classes} to be mocked or stubbed out for the whole test class or the whole
+ * test suite (in the case of a JUnit 4 test suite definition class).
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/UsingMocksAndStubs.html">In the Tutorial</a>
  *

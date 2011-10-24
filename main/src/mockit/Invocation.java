@@ -6,7 +6,7 @@ package mockit;
 
 /**
  * A context object representing the current invocation to a mocked method/constructor, to be passed as the
- * <em>first</em> parameter of the corresponding <em>mock method</em> implementations.
+ * <em>first</em> parameter of the corresponding <em>mock method</em> implementation.
  * <p/>
  * With the <em>Expectations & Verifications</em> API, this parameter can appear in mock methods implemented in
  * {@link Delegate} classes or in validation objects assigned to the

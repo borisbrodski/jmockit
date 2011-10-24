@@ -167,22 +167,17 @@
       <javadoc
          destdir="www/javadoc" overview="www/javadoc/overview.html" classpathref="common.classpath"
          nodeprecated="true" noindex="true" notree="true" nohelp="true" breakiterator="true"
-         source="1.5" windowtitle="JMockit Toolkit API Documentation"
-         encoding="UTF-8" charset="UTF-8" docencoding="UTF-8">
+         source="1.5" windowtitle="JMockit Toolkit API" doctitle="JMockit Toolkit API Documentation"
+         encoding="UTF-8" charset="UTF-8" includenosourcepackages="true">
          <arg line="-notimestamp -quiet"/>
          <fileset dir="${basedir}/main/src">
             <include name="mockit/*.java"/>
             <include name="mockit/integration/*/*.java"/>
          </fileset>
          <link
-            href="http://download.oracle.com/javase/6/docs/api"
-            offline="true" packagelistloc="www/javadoc/external"/>
-         <header><![CDATA[
-            <a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>
-         ]]></header>
-         <footer><![CDATA[
-            <a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>
-         ]]></footer>
+            href="http://download.oracle.com/javase/6/docs/api" offline="true" packagelistloc="www/javadoc/external"/>
+         <header><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>]]></header>
+         <footer><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>]]></footer>
          <bottom><![CDATA[<font size=-1>© 2006-2011 Rogério Liesenfeld</font>]]></bottom>
       </javadoc>
       <delete file="www/javadoc/constant-values.html"/>

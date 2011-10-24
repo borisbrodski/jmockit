@@ -4,7 +4,7 @@
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <TITLE>
-mockit (JMockit Toolkit API Documentation)
+mockit (JMockit Toolkit API)
 </TITLE>
 
 
@@ -14,7 +14,7 @@ mockit (JMockit Toolkit API Documentation)
 function windowTitle()
 {
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="mockit (JMockit Toolkit API Documentation)";
+        parent.document.title="mockit (JMockit Toolkit API)";
     }
 }
 </SCRIPT>
@@ -43,9 +43,7 @@ function windowTitle()
 </TABLE>
 </TD>
 <TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-
-            <a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a>
-         </EM>
+<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
 </TD>
 </TR>
 
@@ -92,9 +90,8 @@ Provides the classes and annotations used when writing tests with the JMockit mo
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Delegate.html" title="interface in mockit">Delegate</A></B></TD>
-<TD>An empty interface to be used with the <A HREF="../mockit/Expectations.html#result"><CODE>Expectations.result</CODE></A> field, in order to allow test
- code to define invocation results (return values or thrown errors/exceptions) based on 
- test-specific logic.</TD>
+<TD>An empty interface to be used with the <A HREF="../mockit/Expectations.html#result"><CODE>Expectations.result</CODE></A> field, allowing test code to define invocation
+ results (return values or thrown exceptions) based on test-specific logic.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -108,8 +105,8 @@ Provides the classes and annotations used when writing tests with the JMockit mo
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Deencapsulation.html" title="class in mockit">Deencapsulation</A></B></TD>
-<TD>Provides utility methods that enable access to (ie "de-encapsulate") otherwise non-accessible fields, methods and
- constructors belonging to code under test.</TD>
+<TD>Provides utility methods that enable access to ("de-encapsulate") otherwise non-accessible fields, methods and
+ constructors.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Expectations.html" title="class in mockit">Expectations</A></B></TD>
@@ -119,9 +116,8 @@ Provides the classes and annotations used when writing tests with the JMockit mo
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/FullVerifications.html" title="class in mockit">FullVerifications</A></B></TD>
-<TD>Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Verifications</CODE></A>, but checking that all invocations in the replay phase are
- explicitly verified in this verification block, except for those with an specified number of
- <em>expected</em> invocations (the minimum invocation count).</TD>
+<TD>Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Verifications</CODE></A>, but checking that all invocations in the replay phase are explicitly verified in this
+ verification block, except for those already verified through other means.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/FullVerificationsInOrder.html" title="class in mockit">FullVerificationsInOrder</A></B></TD>
@@ -130,12 +126,12 @@ Provides the classes and annotations used when writing tests with the JMockit mo
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Invocation.html" title="class in mockit">Invocation</A></B></TD>
 <TD>A context object representing the current invocation to a mocked method/constructor, to be passed as the
- <em>first</em> parameter of the corresponding <em>mock method</em> implementations.</TD>
+ <em>first</em> parameter of the corresponding <em>mock method</em> implementation.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Mockit.html" title="class in mockit">Mockit</A></B></TD>
-<TD>Provides static methods for the mocking and stubbing of arbitrary classes from production code, according to
- specified <em>mock classes</em> defined in test code.</TD>
+<TD>Provides static methods for the mocking and stubbing of arbitrary classes, according to specified <em>mock
+ classes</em> defined in test code.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/MockUp.html" title="class in mockit">MockUp&lt;T&gt;</A></B></TD>
@@ -187,14 +183,13 @@ Provides the classes and annotations used when writing tests with the JMockit mo
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Cascading.html" title="annotation in mockit">Cascading</A></B></TD>
-<TD>Indicates a <A HREF="../mockit/Mocked.html" title="annotation in mockit">mocked type</A> where methods which return a reference type, excluding <code>String</code>,
- primitive wrappers, and collection types, will be automatically mocked if and when an invocation to the method
- occurs.</TD>
+<TD>Indicates a <A HREF="../mockit/Mocked.html" title="annotation in mockit">mocked type</A> where the <em>return types</em> of mocked methods get automatically
+ mocked if and when an invocation to the method occurs, with a mocked instance being returned instead of <code>null</code>.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Injectable.html" title="annotation in mockit">Injectable</A></B></TD>
-<TD>Indicates an instance field of the test class or a parameter of the test method whose value will be an <em>injectable
- mocked instance</em>.</TD>
+<TD>Indicates an instance field of the test class or a parameter of the test method whose value will be an
+ <em>isolated</em> mocked instance, intended to be passed or <em>injected</em> into the code under test.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Input.html" title="annotation in mockit">Input</A></B></TD>
@@ -208,25 +203,28 @@ Provides the classes and annotations used when writing tests with the JMockit mo
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/MockClass.html" title="annotation in mockit">MockClass</A></B></TD>
-<TD>Indicates a mock class containing one or more mock methods, each one of them properly indicated as
- <A HREF="../mockit/Mock.html" title="annotation in mockit">such</A>.</TD>
+<TD>Indicates a <em>mock class</em> containing one or more <em>mock methods</em>, whose implementations will take the
+ place of the corresponding method/constructor implementations in the mocked class.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Mocked.html" title="annotation in mockit">Mocked</A></B></TD>
-<TD>Indicates an instance <em>field</em> or test method <em>parameter</em> whose value will be a mocked instance.</TD>
+<TD>Indicates an instance <em>field</em> or test method <em>parameter</em> of a <em>mocked type</em> whose value will be
+ a <em>mocked instance</em>.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/NonStrict.html" title="annotation in mockit">NonStrict</A></B></TD>
-<TD>For tests using <A HREF="../mockit/Expectations.html" title="class in mockit"><CODE>Expectations</CODE></A>, indicates a <em>non-strict</em> mocked type for an instance field or
- test method parameter.</TD>
+<TD>For tests using <A HREF="../mockit/Expectations.html" title="class in mockit"><CODE>Expectations</CODE></A>, indicates a mock field/parameter of a <em>non-strict</em> mocked type,
+ whose expectations are <em>allowed</em> but not <em>expected</em> to occur (unless specified otherwise).</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Tested.html" title="annotation in mockit">Tested</A></B></TD>
-<TD>Indicates a class to be tested in isolation from selected dependencies.</TD>
+<TD>Indicates a class to be tested in isolation from selected dependencies, with optional automatic instantiation and/or
+ automatic injection of dependencies.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/UsingMocksAndStubs.html" title="annotation in mockit">UsingMocksAndStubs</A></B></TD>
-<TD>Indicates one or more <A HREF="../mockit/UsingMocksAndStubs.html#value()">classes</A> to be mocked or stubbed out.</TD>
+<TD>Indicates one or more <A HREF="../mockit/UsingMocksAndStubs.html#value()">classes</A> to be mocked or stubbed out for the whole test class or the whole
+ test suite (in the case of a JUnit 4 test suite definition class).</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -239,22 +237,22 @@ Package mockit Description
 <P>
 Provides the classes and annotations used when writing tests with the JMockit mocking APIs.
  <p/>
- The <A HREF="../mockit/Mockit.html" title="class in mockit"><CODE>Mockit</CODE></A> class contains a group of <code>setUpMock/setUpMocks</code> static methods that can be used to
- set up <em>state-oriented</em> mock implementations.
- They rely on the <A HREF="../mockit/Mock.html" title="annotation in mockit"><CODE>Mock</CODE></A> and <A HREF="../mockit/MockClass.html" title="annotation in mockit"><CODE>MockClass</CODE></A> annotations.
- <p/>
- The <A HREF="../mockit/MockUp.html" title="class in mockit"><CODE>MockUp</CODE></A> class is a convenient wrapper for common uses of the
- <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)"><CODE>Mockit.setUpMock(Class, Object)</CODE></A> and <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Object)"><CODE>Mockit.setUpMock(Object)</CODE></A> methods, which allows the
- definition of in-line mocks for individual tests.
- <p/>
  The <A HREF="../mockit/Expectations.html" title="class in mockit"><CODE>Expectations</CODE></A> class provides an API for the traditional <em>record-replay</em> model of recording
  expected invocations which are later replayed and implicitly verified.
  This API makes use of the <A HREF="../mockit/Mocked.html" title="annotation in mockit"><CODE>Mocked</CODE></A> annotation.
  <p/>
- The <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Verifications</CODE></A> class, when combined with the <A HREF="../mockit/NonStrictExpectations.html" title="class in mockit"><CODE>NonStrictExpectations</CODE></A> class and/or the
+ The <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Verifications</CODE></A> class, when combined with the <A HREF="../mockit/NonStrictExpectations.html" title="class in mockit"><CODE>NonStrictExpectations</CODE></A> class or the
  <A HREF="../mockit/NonStrict.html" title="annotation in mockit"><CODE>NonStrict</CODE></A> annotation, extends the record-replay model to a <em>record-replay-verify</em> model, where
- the record phase can be empty (or not) and the expected invocations can be verified explicitly <em>after</em>
- exercising the code under test.
+ the record phase can be left empty, with expected invocations verified explicitly <em>after</em> exercising the code
+ under test (ie, after the replay phase).
+ <p/>
+ The <A HREF="../mockit/Mockit.html" title="class in mockit"><CODE>Mockit</CODE></A> class contains a group of <code>setUpMock/setUpMocks</code> static methods that can be used to
+ set up <em>state-oriented</em> mock implementations.
+ They rely on the <A HREF="../mockit/Mock.html" title="annotation in mockit"><CODE>Mock</CODE></A> and <A HREF="../mockit/MockClass.html" title="annotation in mockit"><CODE>MockClass</CODE></A> annotations.
+ <p/>
+ The <A HREF="../mockit/MockUp.html" title="class in mockit"><code>MockUp&lt;T></code></A> generic class (where <code>T</code> is the mocked type) is a
+ convenient wrapper for common uses of the <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Class, java.lang.Object)"><CODE>Mockit.setUpMock(Class, Object)</CODE></A> and
+ <A HREF="../mockit/Mockit.html#setUpMock(java.lang.Object)"><CODE>Mockit.setUpMock(Object)</CODE></A> methods, which allows the definition of in-line mocks for individual tests.
 <P>
 
 <P>
@@ -279,9 +277,7 @@ Provides the classes and annotations used when writing tests with the JMockit mo
 </TABLE>
 </TD>
 <TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-
-            <a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a>
-         </EM>
+<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
 </TD>
 </TR>
 

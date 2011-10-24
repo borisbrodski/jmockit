@@ -7,8 +7,8 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * For tests using {@link mockit.Expectations}, indicates a <em>non-strict</em> mocked type for an instance field or
- * test method parameter.
+ * For tests using {@link mockit.Expectations}, indicates a mock field/parameter of a <em>non-strict</em> mocked type,
+ * whose expectations are <em>allowed</em> but not <em>expected</em> to occur (unless specified otherwise).
  * <p/>
  * While in the replay phase, invocations on the non-strict mocked type can be made in any number and in any order.
  * For each of these invocations, the result (return value or thrown error/exception) will be either a "no-op" (doing

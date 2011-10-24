@@ -4,7 +4,7 @@
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <TITLE>
-Cascading (JMockit Toolkit API Documentation)
+Cascading (JMockit Toolkit API)
 </TITLE>
 
 
@@ -14,7 +14,7 @@ Cascading (JMockit Toolkit API Documentation)
 function windowTitle()
 {
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="Cascading (JMockit Toolkit API Documentation)";
+        parent.document.title="Cascading (JMockit Toolkit API)";
     }
 }
 </SCRIPT>
@@ -43,9 +43,7 @@ function windowTitle()
 </TABLE>
 </TD>
 <TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-
-            <a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a>
-         </EM>
+<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
 </TD>
 </TR>
 
@@ -95,12 +93,12 @@ Annotation Type Cascading</H2>
 </PRE>
 
 <P>
-Indicates a <A HREF="../mockit/Mocked.html" title="annotation in mockit">mocked type</A> where methods which return a reference type, excluding <code>String</code>,
- primitive wrappers, and collection types, will be automatically mocked if and when an invocation to the method
- occurs.
- Instead of returning the default null reference, such methods will return a mocked instance of the return
- type on which further invocations can be made.
- This behavior automatically cascades to those mocked return types.
+Indicates a <A HREF="../mockit/Mocked.html" title="annotation in mockit">mocked type</A> where the <em>return types</em> of mocked methods get automatically
+ mocked if and when an invocation to the method occurs, with a mocked instance being returned instead of <code>null</code>.
+ Further invocations can then be made on the <em>cascaded</em> instances, with the cascading process repeating itself
+ as needed.
+ <p/>
+ Methods returning <code>String</code>, primitive wrappers, or collection types are <em>not</em> considered for cascading.
  <p/>
  In a test having a cascading mocked type, a separate non-cascading mocked type can be used to record/verify
  expectations on intermediate cascaded instances.
@@ -140,9 +138,7 @@ Indicates a <A HREF="../mockit/Mocked.html" title="annotation in mockit">mocked 
 </TABLE>
 </TD>
 <TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-
-            <a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a>
-         </EM>
+<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
 </TD>
 </TR>
 

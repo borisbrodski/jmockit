@@ -13,8 +13,8 @@ import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 /**
- * Provides static methods for the mocking and stubbing of arbitrary classes from production code, according to
- * specified <em>mock classes</em> defined in test code.
+ * Provides static methods for the mocking and stubbing of arbitrary classes, according to specified <em>mock
+ * classes</em> defined in test code.
  * Such methods are intended to be called from test code only.
  * <p/>
  * Once mocked, a "real" method defined in a production class will behave (during test execution) as if its

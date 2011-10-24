@@ -5,19 +5,16 @@
 package mockit;
 
 /**
- * Same as {@link Verifications}, but checking that all invocations in the replay phase are
- * explicitly verified in this verification block, except for those with an specified number of
- * <em>expected</em> invocations (the minimum invocation count).
- * This way, the verification block represents a full set of verifications for the mocked types
- * used in the test.
+ * Same as {@link Verifications}, but checking that all invocations in the replay phase are explicitly verified in this
+ * verification block, except for those already verified through other means.
+ * This way, the verification block represents a full set of verifications for the mocked types used in the test.
  * <p/>
- * Any invocation in the replay phase not covered by one of these verifications will cause an
- * assertion error to be thrown.
+ * Any invocation in the replay phase not covered by one of these verifications will cause an assertion error to be
+ * thrown.
  * <p/>
  * Note that the behavior provided by this class is basically the same obtained with
- * {@linkplain Expectations strict expectations} (where no unexpected invocations are allowed),
- * except for the ordering and the number of occurrences of invocations, which are both still
- * "non-strict".
+ * {@linkplain Expectations strict expectations} (where no unexpected invocations are allowed), except for the ordering
+ * and the number of occurrences of invocations, which are both still "non-strict".
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerification">In the Tutorial</a>
  */

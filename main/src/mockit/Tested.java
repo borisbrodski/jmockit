@@ -7,7 +7,8 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * Indicates a class to be tested in isolation from selected dependencies.
+ * Indicates a class to be tested in isolation from selected dependencies, with optional automatic instantiation and/or
+ * automatic injection of dependencies.
  * This annotation is only applicable to instance fields of a test class.
  * <p/>
  * If the tested class has a super-class (apart from {@code Object}), it's also considered to be tested,

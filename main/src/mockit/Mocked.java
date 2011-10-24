@@ -7,12 +7,14 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * Indicates an instance <em>field</em> or test method <em>parameter</em> whose value will be a mocked instance.
+ * Indicates an instance <em>field</em> or test method <em>parameter</em> of a <em>mocked type</em> whose value will be
+ * a <em>mocked instance</em>.
  * Such fields or parameters can be of any type, except for primitive and array types.
  * The declared type of the <em>mock field</em> or <em>mock parameter</em> is the <em>mocked type</em> (unless
  * {@linkplain #realClassName specified otherwise}).
- * For the duration of each test where such a <em>mocked type</em> is in scope, all new instances of that type, as well
- * as those previously existing, will also be mocked.
+ * <p/>
+ * For the duration of each test where the mocked type is in scope, all new instances of that type, as well as those
+ * previously created, will also be mocked.
  * <em>Static methods</em> and <em>constructors</em> belonging to a mocked class type are mocked as well, just like
  * instance methods.
  * Static <em>class initializers</em> (including assignments to static fields) of a mocked class are <em>not</em>
@@ -24,8 +26,8 @@ import java.lang.annotation.*;
  * <p/>
  * Notice that not only a concrete {@code Expectations} subclass used in specific tests can declare mock fields, but
  * also any intermediate super-class in the inheritance hierarchy from {@code Expectations} to the "final" subclass.
- * This can be used to define reusable {@code Expectations} subclasses, which will define one or more mock fields common
- * to a given set of tests.
+ * This can be used to define reusable {@code Expectations} subclasses, containing mock fields that are common to a
+ * whole group of tests.
  * <p/>
  * Note also that for inner {@code Expectations} subclasses the full set of mock fields will consist of the local
  * "inner" fields plus any fields declared in the test class.
@@ -42,19 +44,19 @@ import java.lang.annotation.*;
  * It is also possible, however, for the test itself to provide this instance, by declaring the field as {@code final}
  * and assigning to it the desired instance.
  * If no such instance is necessary because only static methods or constructors will be called, then this final field
- * can receive the {@literal null} reference.
+ * can receive the {@code null} reference.
  * Mock parameters, on the other hand, will always receive a mocked argument whenever the test method is executed by the
  * test runner.
  * <p/>
  * For each mocked type there is at least one <em>target class for mocking</em>, which is derived from the declared type
  * of the mock field or parameter, or specified through an annotation attribute.
  * By default, all methods (including those which are {@code static}, {@code final}, {@code private}, {@code abstract},
- * or {@code native}) and constructors in the target classes will be mocked; in addition, all static class initializers
- * (if any, and including assignments to static fields) will be stubbed out.
+ * or {@code native}) and constructors in the target classes will be mocked.
  * <p/>
  * When a method or constructor is mocked, any invocations will not result in the execution of the original code, but
  * only in a call back to JMockit; according to the current phase of execution for the test - <em>record</em>,
- * <em>replay</em>, or <em>verify</em> - JMockit will then take the appropriate actions.
+ * <em>replay</em>, or <em>verify</em> - the appropriate action (do nothing, return a recorded value, etc.) will be
+ * taken.
  * <p/>
  * The following rules are applied when deriving target classes from the mocked type:
  * <ol>

@@ -7,11 +7,12 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * Indicates an instance field of the test class or a parameter of the test method whose value will be an <em>injectable
- * mocked instance</em>.
+ * Indicates an instance field of the test class or a parameter of the test method whose value will be an
+ * <em>isolated</em> mocked instance, intended to be passed or <em>injected</em> into the code under test.
  * Such instances can be said to be proper <em>mock objects</em>, in contrast to the <em>mocked instances</em> of a
  * regular mocked type.
- * The intent is that these mock objects will be passed/injected into the tested object/unit.
+ * The intent is that these mock objects will be passed/injected into the tested object/unit, so that other instances
+ * of the same type remain unaffected.
  * <p/>
  * The use of this annotation implies that the declared type of the mock field/parameter is a mocked type, just like it
  * would be if annotated with {@linkplain Mocked @Mocked}.

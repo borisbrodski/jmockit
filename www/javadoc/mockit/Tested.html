@@ -4,7 +4,7 @@
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <TITLE>
-Tested (JMockit Toolkit API Documentation)
+Tested (JMockit Toolkit API)
 </TITLE>
 
 
@@ -14,7 +14,7 @@ Tested (JMockit Toolkit API Documentation)
 function windowTitle()
 {
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="Tested (JMockit Toolkit API Documentation)";
+        parent.document.title="Tested (JMockit Toolkit API)";
     }
 }
 </SCRIPT>
@@ -43,9 +43,7 @@ function windowTitle()
 </TABLE>
 </TD>
 <TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-
-            <a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a>
-         </EM>
+<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
 </TD>
 </TR>
 
@@ -95,7 +93,8 @@ Annotation Type Tested</H2>
 </PRE>
 
 <P>
-Indicates a class to be tested in isolation from selected dependencies.
+Indicates a class to be tested in isolation from selected dependencies, with optional automatic instantiation and/or
+ automatic injection of dependencies.
  This annotation is only applicable to instance fields of a test class.
  <p/>
  If the tested class has a super-class (apart from <code>Object</code>), it's also considered to be tested,
@@ -152,9 +151,7 @@ Indicates a class to be tested in isolation from selected dependencies.
 </TABLE>
 </TD>
 <TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-
-            <a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a>
-         </EM>
+<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
 </TD>
 </TR>
 

@@ -4,7 +4,7 @@
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <TITLE>
-NonStrict (JMockit Toolkit API Documentation)
+NonStrict (JMockit Toolkit API)
 </TITLE>
 
 
@@ -14,7 +14,7 @@ NonStrict (JMockit Toolkit API Documentation)
 function windowTitle()
 {
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="NonStrict (JMockit Toolkit API Documentation)";
+        parent.document.title="NonStrict (JMockit Toolkit API)";
     }
 }
 </SCRIPT>
@@ -43,9 +43,7 @@ function windowTitle()
 </TABLE>
 </TD>
 <TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-
-            <a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a>
-         </EM>
+<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
 </TD>
 </TR>
 
@@ -95,8 +93,8 @@ Annotation Type NonStrict</H2>
 </PRE>
 
 <P>
-For tests using <A HREF="../mockit/Expectations.html" title="class in mockit"><CODE>Expectations</CODE></A>, indicates a <em>non-strict</em> mocked type for an instance field or
- test method parameter.
+For tests using <A HREF="../mockit/Expectations.html" title="class in mockit"><CODE>Expectations</CODE></A>, indicates a mock field/parameter of a <em>non-strict</em> mocked type,
+ whose expectations are <em>allowed</em> but not <em>expected</em> to occur (unless specified otherwise).
  <p/>
  While in the replay phase, invocations on the non-strict mocked type can be made in any number and in any order.
  For each of these invocations, the result (return value or thrown error/exception) will be either a "no-op" (doing
@@ -145,9 +143,7 @@ For tests using <A HREF="../mockit/Expectations.html" title="class in mockit"><C
 </TABLE>
 </TD>
 <TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-
-            <a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a>
-         </EM>
+<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
 </TD>
 </TR>
 

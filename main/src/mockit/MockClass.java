@@ -7,8 +7,9 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * Indicates a mock class containing one or more mock methods, each one of them properly indicated as
- * {@linkplain Mock such}.
+ * Indicates a <em>mock class</em> containing one or more <em>mock methods</em>, whose implementations will take the
+ * place of the corresponding method/constructor implementations in the mocked class.
+ * Each mock method in the mock class must be explicitly indicated as {@linkplain Mock such}.
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#MockClass">In the Tutorial</a>
  *

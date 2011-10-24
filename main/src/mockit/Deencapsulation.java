@@ -7,8 +7,8 @@ package mockit;
 import mockit.internal.util.*;
 
 /**
- * Provides utility methods that enable access to (ie "de-encapsulate") otherwise non-accessible fields, methods and
- * constructors belonging to code under test.
+ * Provides utility methods that enable access to ("de-encapsulate") otherwise non-accessible fields, methods and
+ * constructors.
  * <p/>
  * The {@link Expectations} class (and its subclasses) provide context-specific versions of this same methods.
  * So, when dealing with mocked types through the Expectations API there is usually no need to import this class.

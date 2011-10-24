@@ -7,12 +7,12 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * Indicates a {@linkplain Mocked mocked type} where methods which return a reference type, excluding {@code String},
- * primitive wrappers, and collection types, will be automatically mocked if and when an invocation to the method
- * occurs.
- * Instead of returning the default {@literal null} reference, such methods will return a mocked instance of the return
- * type on which further invocations can be made.
- * This behavior automatically cascades to those mocked return types.
+ * Indicates a {@linkplain Mocked mocked type} where the <em>return types</em> of mocked methods get automatically
+ * mocked if and when an invocation to the method occurs, with a mocked instance being returned instead of {@code null}.
+ * Further invocations can then be made on the <em>cascaded</em> instances, with the cascading process repeating itself
+ * as needed.
+ * <p/>
+ * Methods returning {@code String}, primitive wrappers, or collection types are <em>not</em> considered for cascading.
  * <p/>
  * In a test having a cascading mocked type, a separate non-cascading mocked type can be used to record/verify
  * expectations on intermediate cascaded instances.

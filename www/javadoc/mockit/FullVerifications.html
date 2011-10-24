@@ -4,7 +4,7 @@
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <TITLE>
-FullVerifications (JMockit Toolkit API Documentation)
+FullVerifications (JMockit Toolkit API)
 </TITLE>
 
 
@@ -14,7 +14,7 @@ FullVerifications (JMockit Toolkit API Documentation)
 function windowTitle()
 {
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="FullVerifications (JMockit Toolkit API Documentation)";
+        parent.document.title="FullVerifications (JMockit Toolkit API)";
     }
 }
 </SCRIPT>
@@ -43,9 +43,7 @@ function windowTitle()
 </TABLE>
 </TD>
 <TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-
-            <a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a>
-         </EM>
+<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
 </TD>
 </TR>
 
@@ -98,19 +96,16 @@ Class FullVerifications</H2>
 </PRE>
 
 <P>
-Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Verifications</CODE></A>, but checking that all invocations in the replay phase are
- explicitly verified in this verification block, except for those with an specified number of
- <em>expected</em> invocations (the minimum invocation count).
- This way, the verification block represents a full set of verifications for the mocked types
- used in the test.
+Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Verifications</CODE></A>, but checking that all invocations in the replay phase are explicitly verified in this
+ verification block, except for those already verified through other means.
+ This way, the verification block represents a full set of verifications for the mocked types used in the test.
  <p/>
- Any invocation in the replay phase not covered by one of these verifications will cause an
- assertion error to be thrown.
+ Any invocation in the replay phase not covered by one of these verifications will cause an assertion error to be
+ thrown.
  <p/>
  Note that the behavior provided by this class is basically the same obtained with
- <A HREF="../mockit/Expectations.html" title="class in mockit">strict expectations</A> (where no unexpected invocations are allowed),
- except for the ordering and the number of occurrences of invocations, which are both still
- "non-strict".
+ <A HREF="../mockit/Expectations.html" title="class in mockit">strict expectations</A> (where no unexpected invocations are allowed), except for the ordering
+ and the number of occurrences of invocations, which are both still "non-strict".
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerification">In the Tutorial</a>
 <P>
@@ -1710,9 +1705,7 @@ protected final &lt;T extends <A HREF="http://download.oracle.com/javase/6/docs/
 </TABLE>
 </TD>
 <TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-
-            <a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a>
-         </EM>
+<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
 </TD>
 </TR>
 

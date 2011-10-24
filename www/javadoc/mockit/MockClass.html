@@ -4,7 +4,7 @@
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <TITLE>
-MockClass (JMockit Toolkit API Documentation)
+MockClass (JMockit Toolkit API)
 </TITLE>
 
 
@@ -14,7 +14,7 @@ MockClass (JMockit Toolkit API Documentation)
 function windowTitle()
 {
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="MockClass (JMockit Toolkit API Documentation)";
+        parent.document.title="MockClass (JMockit Toolkit API)";
     }
 }
 </SCRIPT>
@@ -43,9 +43,7 @@ function windowTitle()
 </TABLE>
 </TD>
 <TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-
-            <a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a>
-         </EM>
+<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
 </TD>
 </TR>
 
@@ -95,8 +93,9 @@ Annotation Type MockClass</H2>
 </PRE>
 
 <P>
-Indicates a mock class containing one or more mock methods, each one of them properly indicated as
- <A HREF="../mockit/Mock.html" title="annotation in mockit">such</A>.
+Indicates a <em>mock class</em> containing one or more <em>mock methods</em>, whose implementations will take the
+ place of the corresponding method/constructor implementations in the mocked class.
+ Each mock method in the mock class must be explicitly indicated as <A HREF="../mockit/Mock.html" title="annotation in mockit">such</A>.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#MockClass">In the Tutorial</a>
 <P>
@@ -291,9 +290,7 @@ public abstract <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/
 </TABLE>
 </TD>
 <TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-
-            <a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a>
-         </EM>
+<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
 </TD>
 </TR>
 
