@@ -73,13 +73,6 @@ public final class ExpectedInvocation
       return invokedClassDesc.equals(getClassDesc()) && isMatchingMethod(invokedMethod);
    }
 
-   public boolean isMatch(Object replayInstance, Map<Object, Object> instanceMap)
-   {
-      return
-         getMethodNameAndDescription().charAt(0) == '<' ||
-         !matchInstance || isEquivalentInstance(replayInstance, instanceMap);
-   }
-
    public boolean isMatch(
       Object replayInstance, String invokedClassDesc, String invokedMethod, Map<Object, Object> instanceMap)
    {
