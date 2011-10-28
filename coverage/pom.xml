@@ -4,7 +4,30 @@
    <modelVersion>4.0.0</modelVersion>
 
    <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId><version>0.999.11</version>
+   <packaging>jar</packaging>
+
    <name>JMockit Coverage</name>
+   <description>
+      JMockit Coverage is a code coverage tool with several metrics (line, path, data) capable of generating XHTML
+      reports. It is designed with ease of use in mind, avoiding the need for complex configuration. Instead, smart
+      (but overridable) defaults are employed, such as the selection of which classes to consider for coverage, and
+      where to find sources files for report generation.
+   </description>
+   <url>http://code.google.com/p/jmockit</url>
+   <licenses>
+      <license>
+         <name>MIT LICENSE</name>
+         <url>http://www.opensource.org/licenses/mit-license.php</url>
+         <distribution>repo</distribution>
+      </license>
+   </licenses>
+   <scm>
+      <url>http://code.google.com/p/jmockit/source/browse/trunk</url>
+      <connection>scm:http://jmockit.googlecode.com/svn/trunk/ jmockit-read-only</connection>
+   </scm>
+   <developers>
+      <developer><name>Rogério Liesenfeld</name><email>rliesenfeld@gmail.com</email><timezone>-3</timezone></developer>
+   </developers>
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,7 +38,6 @@
       <testSourceDirectory>test</testSourceDirectory>
       <outputDirectory>classes</outputDirectory>
       <testOutputDirectory>test-classes</testOutputDirectory>
-      <finalName>${project.artifactId}</finalName>
       <resources>
          <resource>
             <directory>src</directory>
@@ -43,6 +65,16 @@
                <disableXmlReport>true</disableXmlReport>
                <excludes><exclude>**/CoverageTest.class</exclude></excludes>
             </configuration>
+         </plugin>
+         <plugin>
+            <artifactId>maven-gpg-plugin</artifactId><version>1.4</version>
+               <executions>
+                  <execution>
+                     <id>sign-artifacts</id>
+                     <phase>verify</phase>
+                     <goals><goal>sign</goal></goals>
+                  </execution>
+               </executions>
          </plugin>
       </plugins>
    </build>

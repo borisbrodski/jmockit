@@ -4,16 +4,17 @@
    <modelVersion>4.0.0</modelVersion>
 
    <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit</artifactId><version>0.999.11</version>
+   <packaging>jar</packaging>
    <prerequisites><maven>3.0.1</maven></prerequisites>
 
    <name>Main</name>
-   <url>http://code.google.com/p/jmockit</url>
    <description>
       JMockit is a Java toolkit for developer (unit/integration) testing.
       It contains mocking APIs and other tools, supporting both JUnit and TestNG.
       The mocking APIs allow all kinds of Java code, without testability restrictions, to be tested
       in isolation from selected dependencies.
    </description>
+   <url>http://code.google.com/p/jmockit</url>
    <licenses>
       <license>
          <name>MIT LICENSE</name>
@@ -21,11 +22,14 @@
          <distribution>repo</distribution>
       </license>
    </licenses>
+   <scm>
+      <url>http://code.google.com/p/jmockit/source/browse/trunk</url>
+      <connection>scm:http://jmockit.googlecode.com/svn/trunk/ jmockit-read-only</connection>
+   </scm>
    <developers>
       <developer><name>Rogério Liesenfeld</name><email>rliesenfeld@gmail.com</email><timezone>-3</timezone></developer>
    </developers>
    <inceptionYear>2006</inceptionYear>
-
    <issueManagement><url>http://code.google.com/p/jmockit/issues/list</url></issueManagement>
    <mailingLists>
       <mailingList>
@@ -34,10 +38,6 @@
          <post>jmockit-users@googlegroups.com</post>
       </mailingList>
    </mailingLists>
-   <scm>
-      <url>http://code.google.com/p/jmockit/source/browse/trunk</url>
-      <connection>scm:http://jmockit.googlecode.com/svn/trunk/ jmockit-read-only</connection>
-   </scm>
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
