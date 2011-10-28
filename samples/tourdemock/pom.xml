@@ -26,7 +26,7 @@
 
       <!-- JMockit -->
       <dependency>
-         <groupId>mockit</groupId><artifactId>jmockit</artifactId><version>${jmockit.version}</version>
+         <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit</artifactId><version>${jmockit.version}</version>
          <scope>test</scope>
       </dependency>
 
