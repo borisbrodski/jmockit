@@ -10,16 +10,17 @@ import mockit.*;
 
 import static java.util.Arrays.*;
 
+// Total uses of JMockit API: 24
 public final class ArticleManager_JMockit_Test
 {
-   @Injectable @NonStrict ArticleCalculator mockCalculator;
-   @Injectable @NonStrict ArticleDatabase mockDatabase;
+   @Injectable ArticleCalculator mockCalculator;
+   @Injectable ArticleDatabase mockDatabase;
    @Tested ArticleManager articleManager;
 
    @Test
    public void managerCountsArticlesAndSavesThemInTheDatabase()
    {
-      new Expectations() {{
+      new NonStrictExpectations() {{
          mockCalculator.countArticles("Guardian"); result = 12;
          mockCalculator.countArticlesInPolish(anyString); result = 5;
       }};
@@ -63,13 +64,11 @@ public final class ArticleManager_JMockit_Test
       final Article articleTwo = new Article();
       final Article articleThree = new Article();
 
-      new Expectations() {{
+      new NonStrictExpectations() {{
          mockCalculator.countNumberOfRelatedArticles(articleOne); result = 1;
          mockCalculator.countNumberOfRelatedArticles(articleTwo); result = 12;
          mockCalculator.countNumberOfRelatedArticles(articleThree); result = 0;
-
-         mockDatabase.getArticlesFor("Guardian");
-         result = asList(articleOne, articleTwo, articleThree);
+         mockDatabase.getArticlesFor("Guardian"); returns(articleOne, articleTwo, articleThree);
       }};
 
       articleManager.updateRelatedArticlesCounters("Guardian");
@@ -87,7 +86,7 @@ public final class ArticleManager_JMockit_Test
       final Article articleOne = new Article();
       final Article articleTwo = new Article();
 
-      new Expectations() {{
+      new NonStrictExpectations() {{
          mockCalculator.countNumberOfRelatedArticles(articleOne); result = 1;
          mockCalculator.countNumberOfRelatedArticles(articleTwo); result = 12;
          mockDatabase.getArticlesFor("Guardian"); result = asList(articleOne, articleTwo);
@@ -95,9 +94,9 @@ public final class ArticleManager_JMockit_Test
 
       articleManager.updateRelatedArticlesCounters("Guardian");
 
-      new VerificationsInOrder(2) {{
+      new VerificationsInOrder() {{
          mockCalculator.countNumberOfRelatedArticles(withInstanceOf(Article.class));
-         mockDatabase.save((Article) withNotNull());
+         mockDatabase.save((Article) withNotNull()); times = 2;
       }};
    }
 }

@@ -18,7 +18,6 @@ import org.hamcrest.beans.*;
  * <a href="http://mockito.googlecode.com/svn/tags/latest/javadoc/org/mockito/Mockito.html">Mockito documentation</a>,
  * with some minor changes.
  */
-@SuppressWarnings({"unchecked"})
 @RunWith(MockitoJUnitRunner.class)
 public final class JavadocExamplesTest
 {
@@ -87,6 +86,32 @@ public final class JavadocExamplesTest
 
       //you can also verify using an argument matcher
       verify(mockedList).get(anyInt());
+   }
+
+   @Test // Uses of Mockito API: 6
+   public void customArgumentMatcherUsingNamedClass()
+   {
+      class IsListOfTwoElements extends ArgumentMatcher<List<String>> {
+         @Override
+         public boolean matches(Object list) { return ((List<String>) list).size() == 2; }
+      }
+
+      when(mockedList.addAll(argThat(new IsListOfTwoElements()))).thenReturn(true);
+
+      mockedList.addAll(Arrays.asList("one", "two"));
+
+      verify(mockedList).addAll(argThat(new IsListOfTwoElements()));
+   }
+
+   @Test // Uses of Mockito API: 3
+   public void customArgumentMatcherUsingAnonymousClass()
+   {
+      mockedList.addAll(Arrays.asList("one", "two"));
+
+      verify(mockedList).addAll(argThat(new ArgumentMatcher<List<String>>() {
+         @Override
+         public boolean matches(Object list) { return ((List<String>) list).size() == 2; }
+      }));
    }
 
    @Test // Uses of Mockito API: 15
@@ -237,6 +262,7 @@ public final class JavadocExamplesTest
 
       when(mock.someMethod(anyString())).thenAnswer(new Answer()
       {
+         @Override
          public Object answer(InvocationOnMock invocation)
          {
             assertSame(mock, invocation.getMock());
@@ -320,5 +346,18 @@ public final class JavadocExamplesTest
       // The following verification does work:
       verify(mock.getPerson()).getName();
       // ... but this one does not: verify(mock).getPerson();
+   }
+
+   @Test
+   public void creatingAMockWithExtraInterfaces()
+   {
+      MockedClass mock = mock(MockedClass.class, withSettings().extraInterfaces(Runnable.class));
+
+      when(mock.getItem(1)).thenReturn("test");
+
+      assertEquals("test", mock.getItem(1));
+      ((Runnable) mock).run();
+
+      ((Runnable) verify(mock)).run();
    }
 }

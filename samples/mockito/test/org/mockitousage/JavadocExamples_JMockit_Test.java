@@ -96,6 +96,48 @@ public final class JavadocExamples_JMockit_Test
       new Verifications() {{ mockedList.get(anyInt); }};
    }
 
+   @Test // Uses of JMockit API: 5
+   public void customArgumentMatcherUsingNamedClass()
+   {
+      class IsListOfTwoElements implements Delegate<List<String>> {
+         boolean matches(List<?> list) { return list.size() == 2; }
+      }
+
+      new NonStrictExpectations() {{
+         mockedList.addAll(with(new IsListOfTwoElements())); result = true;
+         times = 1;
+      }};
+
+      mockedList.addAll(Arrays.asList("one", "two"));
+
+      // No need to re-verify the invocation of "addAll" here.
+   }
+
+   @Test // Uses of JMockit API: 3
+   public void customArgumentMatcherUsingAnonymousClass()
+   {
+      mockedList.addAll(Arrays.asList("one", "two"));
+
+      new Verifications() {{
+         mockedList.addAll(with(new Delegate<List<String>>() {
+            boolean matches(List<?> list) { return list.size() == 2; }
+         }));
+      }};
+   }
+
+   @Test // Uses of JMockit API: 3
+   public void validationMethodInsteadOfCustomArgumentMatcher()
+   {
+      mockedList.addAll(Arrays.asList("one", "two"));
+
+      new Verifications() {{
+         mockedList.addAll((List<String>) any);
+         forEachInvocation = new Object() {
+            void assertListOfTwoElements(List<?> list) { assertEquals(2, list.size()); }
+         };
+      }};
+   }
+
    @Test // Uses of JMockit API: 8
    public void verifyNumberOfInvocations()
    {
@@ -153,6 +195,7 @@ public final class JavadocExamples_JMockit_Test
       }};
    }
 
+   @SuppressWarnings({"UnusedParameters"})
    @Test // Uses of JMockit API: 2
    public void verifyThatInvocationsNeverHappened(List<String> mockTwo, List<String> mockThree)
    {

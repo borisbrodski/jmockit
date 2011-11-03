@@ -14,12 +14,13 @@ import org.junit.runner.RunWith;
 
 import org.mockito.runners.MockitoJUnitRunner;
 
+// Total uses of Mockito API: 40
 @RunWith(MockitoJUnitRunner.class)
 public final class ArticleManagerTest
 {
    @Mock ArticleCalculator mockCalculator;
    @Mock ArticleDatabase mockDatabase;
-   @InjectMocks final ArticleManager articleManager = new ArticleManager(null, null);
+   @InjectMocks ArticleManager articleManager;
 
    @Test
    public void managerCountsArticlesAndSavesThemInTheDatabase()
@@ -63,9 +64,7 @@ public final class ArticleManagerTest
       when(mockCalculator.countNumberOfRelatedArticles(articleOne)).thenReturn(1);
       when(mockCalculator.countNumberOfRelatedArticles(articleTwo)).thenReturn(12);
       when(mockCalculator.countNumberOfRelatedArticles(articleThree)).thenReturn(0);
-
-      when(mockDatabase.getArticlesFor("Guardian"))
-         .thenReturn(asList(articleOne, articleTwo, articleThree));
+      when(mockDatabase.getArticlesFor("Guardian")).thenReturn(asList(articleOne, articleTwo, articleThree));
 
       articleManager.updateRelatedArticlesCounters("Guardian");
 
