@@ -595,9 +595,6 @@
         <inspection_tool class="OverlyLargePrimitiveArrayInitializer" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_limit" value="64" />
         </inspection_tool>
-        <inspection_tool class="OverlyStrongTypeCast" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="ignoreInMatchingInstanceof" value="false" />
-        </inspection_tool>
         <inspection_tool class="OverridableMethodCallDuringObjectConstruction" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="OverriddenMethodCallDuringObjectConstruction" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="PackageInMultipleModules" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -1648,6 +1645,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.8.5/mockito-all-1.8.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.mockito:mockito-all:1.9.0-rc1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.9.0-rc1/mockito-all-1.9.0-rc1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.9.0-rc1/mockito-all-1.9.0-rc1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.9.0-rc1/mockito-all-1.9.0-rc1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.objenesis:objenesis:1.0">

@@ -32,7 +32,7 @@
          <groupId>javax.persistence</groupId><artifactId>persistence-api</artifactId><version>1.0</version>
       </dependency>
       <dependency>
-         <groupId>mockit</groupId><artifactId>jmockit-hibernate3emul</artifactId><version>0.999.5</version>
+         <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-hibernate3emul</artifactId><version>0.999.5</version>
       </dependency>
    </dependencies>
 </project>
