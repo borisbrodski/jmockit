@@ -11,7 +11,6 @@ import java.util.*;
 
 import static java.lang.reflect.Modifier.*;
 
-import mockit.*;
 import mockit.external.asm.*;
 import mockit.internal.*;
 import mockit.internal.expectations.mocking.InstanceFactory.*;
@@ -109,7 +108,7 @@ abstract class BaseTypeRedefinition
 
    private void createMockInterfaceImplementationUsingStandardProxy(Type typeToMock)
    {
-      Object mock = Mockit.newEmptyProxy(typeToMock);
+      Object mock = Utilities.newEmptyProxy(getClass().getClassLoader(), typeToMock);
       targetClass = mock.getClass();
 
       redefineMethodsAndConstructorsInTargetType();

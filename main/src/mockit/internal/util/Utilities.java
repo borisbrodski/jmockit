@@ -10,8 +10,6 @@ import java.util.*;
 
 import static java.lang.reflect.Modifier.*;
 
-import mockit.*;
-
 /**
  * Miscellaneous utility methods which don't fit into any other class, most of them related to the
  * use of Reflection.
@@ -359,9 +357,9 @@ public final class Utilities
    {
       int i0 = 0;
 
-      if (paramTypes.length != argTypes.length)
-      {
-         if (paramTypes.length > 0 && paramTypes[0] == Invocation.class) {
+      if (paramTypes.length != argTypes.length) {
+         //noinspection UnnecessaryFullyQualifiedName
+         if (paramTypes.length > 0 && paramTypes[0] == mockit.Invocation.class) {
             i0 = 1;
          }
          else {
@@ -477,9 +475,9 @@ public final class Utilities
    {
       int i0 = 0;
 
-      if (declaredTypes.length != specifiedTypes.length)
-      {
-         if (declaredTypes.length > 0 && declaredTypes[0] == Invocation.class) {
+      if (declaredTypes.length != specifiedTypes.length) {
+         //noinspection UnnecessaryFullyQualifiedName
+         if (declaredTypes.length > 0 && declaredTypes[0] == mockit.Invocation.class) {
             i0 = 1;
          }
          else {
@@ -699,6 +697,51 @@ public final class Utilities
       }
 
       return (Class<?>) declaredType;
+   }
+
+   public static <E> E newEmptyProxy(ClassLoader loader, Type... interfacesToBeProxied)
+   {
+      List<Class<?>> interfaces = new ArrayList<Class<?>>();
+
+      for (Type type : interfacesToBeProxied) {
+         addInterface(interfaces, type);
+      }
+
+      if (loader == null) {
+         //noinspection AssignmentToMethodParameter
+         loader = interfaces.get(0).getClassLoader();
+      }
+
+      if (loader == EmptyProxy.class.getClassLoader()) {
+         interfaces.add(EmptyProxy.class);
+      }
+
+      Class<?>[] interfacesArray = interfaces.toArray(new Class<?>[interfaces.size()]);
+
+      //noinspection unchecked
+      return (E) Proxy.newProxyInstance(loader, interfacesArray, MockInvocationHandler.INSTANCE);
+   }
+
+   private static void addInterface(List<Class<?>> interfaces, Type type)
+   {
+      if (type instanceof Class<?>) {
+         interfaces.add((Class<?>) type);
+      }
+      else if (type instanceof ParameterizedType) {
+         ParameterizedType paramType = (ParameterizedType) type;
+         interfaces.add((Class<?>) paramType.getRawType());
+      }
+      else if (type instanceof TypeVariable) {
+         TypeVariable<?> typeVar = (TypeVariable<?>) type;
+         addBoundInterfaces(interfaces, typeVar.getBounds());
+      }
+   }
+
+   private static void addBoundInterfaces(List<Class<?>> interfaces, Type[] bounds)
+   {
+      for (Type bound : bounds) {
+         addInterface(interfaces, bound);
+      }
    }
 
    public static Object getFieldValue(Field field, Object targetObject)

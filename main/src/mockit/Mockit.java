@@ -523,43 +523,6 @@ public final class Mockit
     */
    public static <E> E newEmptyProxy(Type... interfacesToBeProxied)
    {
-      List<Class<?>> interfaces = new ArrayList<Class<?>>();
-
-      for (Type type : interfacesToBeProxied) {
-         addInterface(interfaces, type);
-      }
-
-      ClassLoader loader = interfaces.get(0).getClassLoader();
-
-      if (loader == EmptyProxy.class.getClassLoader()) {
-         interfaces.add(EmptyProxy.class);
-      }
-
-      Class<?>[] interfacesArray = interfaces.toArray(new Class<?>[interfaces.size()]);
-
-      //noinspection unchecked
-      return (E) Proxy.newProxyInstance(loader, interfacesArray, MockInvocationHandler.INSTANCE);
-   }
-
-   private static void addInterface(List<Class<?>> interfaces, Type type)
-   {
-      if (type instanceof Class<?>) {
-         interfaces.add((Class<?>) type);
-      }
-      else if (type instanceof ParameterizedType) {
-         ParameterizedType paramType = (ParameterizedType) type;
-         interfaces.add((Class<?>) paramType.getRawType());
-      }
-      else if (type instanceof TypeVariable) {
-         TypeVariable<?> typeVar = (TypeVariable<?>) type;
-         addBoundInterfaces(interfaces, typeVar.getBounds());
-      }
-   }
-
-   private static void addBoundInterfaces(List<Class<?>> interfaces, Type[] bounds)
-   {
-      for (Type bound : bounds) {
-         addInterface(interfaces, bound);
-      }
+      return Utilities.newEmptyProxy(null, interfacesToBeProxied);
    }
 }

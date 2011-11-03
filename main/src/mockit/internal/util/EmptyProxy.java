@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2011 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit.internal;
+package mockit.internal.util;
 
 /**
  * This marker interface exists only to guarantee that JMockit can get the bytecode definition of

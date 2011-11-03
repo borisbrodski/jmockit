@@ -2,12 +2,10 @@
  * Copyright (c) 2006-2011 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit;
+package mockit.internal.util;
 
 import java.lang.reflect.*;
 import java.lang.annotation.*;
-
-import mockit.internal.util.*;
 
 /**
  * Handles invocations to all kinds of mock implementations created for interfaces and annotation types through any of
@@ -21,9 +19,9 @@ import mockit.internal.util.*;
  * Any other method invocation is handled by simply returning the default value according to the method's return type
  * (as defined in {@linkplain mockit.internal.util.DefaultValues}).
  */
-final class MockInvocationHandler implements InvocationHandler
+public final class MockInvocationHandler implements InvocationHandler
 {
-   static final InvocationHandler INSTANCE = new MockInvocationHandler();
+   public static final InvocationHandler INSTANCE = new MockInvocationHandler();
 
    public Object invoke(Object proxy, Method method, Object[] args)
    {
