@@ -4,6 +4,9 @@
  */
 package mockit;
 
+import java.util.*;
+
+import static org.junit.Assert.*;
 import org.junit.*;
 
 public final class VerificationsTest
@@ -43,8 +46,7 @@ public final class VerificationsTest
    {
       exerciseCodeUnderTest();
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.prepare(); times = 1;
          mock.editABunchMoreStuff();
          mock.setSomething(45);
@@ -57,8 +59,7 @@ public final class VerificationsTest
       mock.setSomething(123);
       mock.prepare();
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.editABunchMoreStuff();
       }};
    }
@@ -66,18 +67,14 @@ public final class VerificationsTest
    @Test(expected = AssertionError.class)
    public void verifyRecordedInvocationThatNeverHappens()
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.editABunchMoreStuff();
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.editABunchMoreStuff();
+      }};
 
       mock.setSomething(123);
       mock.prepare();
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.editABunchMoreStuff();
       }};
    }
@@ -89,8 +86,7 @@ public final class VerificationsTest
       mock.setSomething(123);
       mock.save();
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.setSomething(anyInt);
          mock.save(); minTimes = 0;
       }};
@@ -104,8 +100,7 @@ public final class VerificationsTest
       mock.prepare();
       mock.setSomething(123);
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.prepare();
          mock.save(); minTimes = 0;
       }};
@@ -119,8 +114,7 @@ public final class VerificationsTest
       mock.setSomething(1);
       mock.setSomething(2);
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.setSomething(anyInt);
          times = 2;
       }};
@@ -132,8 +126,7 @@ public final class VerificationsTest
       mock.prepare();
       mock.setSomething(123);
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.prepare();
          mock.setSomething(anyInt);
          mock.save(); minTimes = 0;
@@ -145,10 +138,7 @@ public final class VerificationsTest
    {
       mock.setSomething(1);
 
-      new Verifications()
-      {{
-         mock.notifyBeforeSave();
-      }};
+      new Verifications() {{ mock.notifyBeforeSave(); }};
    }
 
    @Test
@@ -159,8 +149,7 @@ public final class VerificationsTest
       mock.setSomethingElse("test");
       mock.save();
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.save(); times = 2;
       }};
    }
@@ -173,8 +162,7 @@ public final class VerificationsTest
       mock.setSomethingElse("test");
       mock.save();
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.save(); times = 3;
       }};
    }
@@ -187,8 +175,7 @@ public final class VerificationsTest
       mock.setSomething(45);
       mock.save();
 
-      new Verifications(2)
-      {{
+      new Verifications(2) {{
          mock.setSomething(anyInt);
          mock.save();
       }};
@@ -199,10 +186,7 @@ public final class VerificationsTest
    {
       mock.setSomething(123);
 
-      new Verifications(3)
-      {{
-         mock.setSomething(123);
-      }};
+      new Verifications(3) {{ mock.setSomething(123); }};
    }
 
    @Test(expected = AssertionError.class)
@@ -212,10 +196,7 @@ public final class VerificationsTest
       mock.setSomething(123);
       mock.setSomething(-1015);
 
-      new Verifications(2)
-      {{
-         mock.setSomething(anyInt);
-      }};
+      new Verifications(2) {{ mock.setSomething(anyInt); }};
    }
 
    @Test
@@ -223,10 +204,7 @@ public final class VerificationsTest
    {
       exerciseCodeUnderTest();
 
-      new Verifications()
-      {{
-         mock.setSomething(anyInt);
-      }};
+      new Verifications() {{ mock.setSomething(anyInt); }};
    }
 
    @Test
@@ -234,12 +212,34 @@ public final class VerificationsTest
    {
       exerciseCodeUnderTest();
 
-      new Verifications(1)
-      {{
+      new Verifications(1) {{
          mock.prepare(); maxTimes = 1;
          mock.setSomething(anyInt); minTimes = 2;
          mock.editABunchMoreStuff(); minTimes = 0; maxTimes = 5;
          mock.save(); times = 1;
+      }};
+   }
+
+   @Test
+   public void verifyWithCustomArgumentMatcherWithoutArgumentValue()
+   {
+      mock.setSomethingElse("");
+
+      new Verifications() {{
+         mock.setSomethingElse(with(new Delegate<String>() {
+            boolean isNotEmpty(String s) { return s.length() > 0; }
+         }));
+      }};
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyWithValidationMethod()
+   {
+      mock.setSomethingElse("test");
+
+      new Verifications() {{
+         mock.setSomethingElse(anyString);
+         forEachInvocation = new Object() { void assertEmpty(String s) { assertEquals(0, s.length()); } };
       }};
    }
 
@@ -250,8 +250,7 @@ public final class VerificationsTest
          exerciseCodeUnderTest();
       }
 
-      new Verifications(2)
-      {{
+      new Verifications(2) {{
          mock.prepare(); maxTimes = 1;
          mock.setSomething(anyInt); minTimes = 2;
          mock.editABunchMoreStuff(); minTimes = 0; maxTimes = 5;
@@ -265,8 +264,7 @@ public final class VerificationsTest
       new Dependency(9).privateMethod();
       Dependency.privateStaticMethod("test", true);
 
-      new Verifications()
-      {{
+      new Verifications() {{
          newInstance(Dependency.class.getName(), 9);
          invoke(mock, "privateMethod");
          invoke(Dependency.class, "privateStaticMethod", "test", true);
@@ -276,17 +274,11 @@ public final class VerificationsTest
    @Ignore @Test(expected = AssertionError.class)
    public void verifyTwoInvocationsWithIteratingBlockHavingExpectationRecordedAndSecondInvocationUnverified()
    {
-      new NonStrictExpectations()
-      {{
-         mock.setSomething(anyInt);
-      }};
+      new NonStrictExpectations() {{ mock.setSomething(anyInt); }};
 
       mock.setSomething(123);
       mock.setSomething(45);
 
-      new Verifications(2)
-      {{
-         mock.setSomething(123);
-      }};
+      new Verifications(2) {{ mock.setSomething(123); }};
    }
 }

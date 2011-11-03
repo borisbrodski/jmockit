@@ -293,6 +293,26 @@ abstract class Invocations
       return (T) argValue;
    }
 
+   /**
+    * Adds a custom argument matcher for a parameter in the current invocation.
+    * This works like {@link #with(Object, Object)}, but attempting to extract the argument value from the supplied
+    * argument matcher.
+    *
+    * @param argumentMatcher an instance of a class with an appropriate invocation handler method
+    *
+    * @return the value recorded inside the given argument matcher, or {@code null} if no such value could be determined
+    */
+   protected final <T> T with(Delegate<T> argumentMatcher)
+   {
+      HamcrestAdapter<T> adapter = HamcrestAdapter.create(argumentMatcher);
+      addMatcher(adapter);
+
+      Object argValue = adapter.getInnerValue();
+
+      //noinspection unchecked
+      return (T) argValue;
+   }
+
    private void addMatcher(Matcher<?> matcher)
    {
       getCurrentPhase().addArgMatcher(matcher);
