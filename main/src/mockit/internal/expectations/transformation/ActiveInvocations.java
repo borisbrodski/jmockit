@@ -54,7 +54,14 @@ public final class ActiveInvocations
 
       if (instance != null) {
          TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
-         currentPhase.applyHandlerForEachInvocation(handler);
+         TestRun.enterNoMockingZone();
+
+         try {
+            currentPhase.applyHandlerForEachInvocation(handler);
+         }
+         finally {
+            TestRun.exitNoMockingZone();
+         }
       }
    }
 
