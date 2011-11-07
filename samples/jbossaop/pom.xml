@@ -7,6 +7,19 @@
    <artifactId>jbossaop</artifactId>
    <name>JBoss AOP Testing Sample</name>
 
+   <build>
+      <plugins>
+         <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <argLine>
+-javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
+               </argLine>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+
    <dependencies>
       <dependency>
          <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit</artifactId><version>${jmockit.version}</version>

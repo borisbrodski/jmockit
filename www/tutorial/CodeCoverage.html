@@ -221,10 +221,9 @@
    directory).
 </p>
 <p>
-   Whatever the coverage jar(s) used, <code>jmockit.jar</code> (or a versioned jar obtained from the
-   <a href="http://jmockit.googlecode.com/svn/maven-repo/">Maven repository</a>) does <em>not</em> need to be added to
-   the classpath, unless of course the suite contains tests which use the JMockit mocking APIs (it will also be
-   implicitly added to the classpath).
+   Whatever the coverage jar(s) used, <code>jmockit.jar</code> (or a versioned jar obtained from the central Maven
+   repository) does <em>not</em> need to be added to the classpath, unless of course the suite contains tests which use
+   the JMockit mocking APIs (it will also be implicitly added to the classpath).
    That said, it <em>may</em> be necessary to use the <code>-javaagent:jmockit.jar</code> JVM parameter
    so that JMockit gets properly initialized at start-up. It is possible to avoid the use of this JVM
    parameter, depending on a few conditions. See <a href="RunningTests.html">this page</a> for details.
@@ -453,21 +452,15 @@
    </div>
 </h3>
 <p>
-   If you run tests with the "test" Maven goal, then you will need the following dependency in <code>pom.xml</code>:
+   If you run tests with the "test" Maven goal, then you will need the following dependency in the <code>pom.xml</code>
+   file:
 </p>
 <pre><code>      &lt;dependency>
-         &lt;groupId>mockit&lt;/groupId>
+         &lt;groupId>com.googlecode.jmockit&lt;/groupId>
          &lt;artifactId>jmockit-coverage&lt;/artifactId>
-         &lt;version>0.999.5&lt;/version>
+         &lt;version>0.999.11&lt;/version>
          &lt;scope>runtime&lt;/scope> 
       &lt;/dependency>
-</code></pre>
-<p>
-   Notice that it will probably be useful to define a property for the JMockit version in use:
-</p>
-<pre><code>   &lt;properties>
-      &lt;jmockit.version>0.999.10&lt;/jmockit.version>
-   &lt;/properties>
 </code></pre>
 <p>
    In Maven 2, the <code>surefire</code> plugin is the one usually responsible for actually running tests.
@@ -476,12 +469,11 @@
    <code>jmockit-coverage-outputDir</code> property.
 </p>
 <pre class="no-highlight"><code>&lt;plugin>
-   &lt;groupId>org.apache.maven.plugins&lt;/groupId>
    &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
    &lt;configuration>
       <span class="comment">&lt;!-- uncomment this if needed
-      &lt;argLine>
-         -javaagent:"${settings.localRepository}"/mockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
+      &lt;argLine><span style="font-size: smaller">
+         -javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/0.999.11/jmockit-0.999.11.jar</span>
       &lt;/argLine>
       --></span>
       &lt;systemProperties>

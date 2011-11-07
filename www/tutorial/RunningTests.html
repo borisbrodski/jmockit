@@ -91,11 +91,13 @@
 
 <h3 id="maven">Using JMockit in a Maven project</h3>
 <p>
-   The JMockit artifacts, including a binary jar and a sources jar for releases 0.999.5 and newer, are located in the
-   JMockit <a href="http://jmockit.googlecode.com/svn/maven-repo/">SVN repository</a>.
-   Therefore, you will need to add the following repository to your Maven configuration:
+   The JMockit artifacts for releases <strong>0.999.11</strong> and newer are located in the central Maven repository.
+   Releases 0.999.5 to 0.999.10, however, are not in the central repository, but in JMockit's
+   <a href="http://jmockit.googlecode.com/svn/maven-repo/">SVN repository</a>.
+   For these older versions, therefore, you will need to add the following repository to your Maven configuration:
 </p>
-<pre class="no-highlight"><code>&lt;repository>
+<pre><span class="comment">&lt;!-- Only for versions older than 0.999.11 --></span>
+<code>&lt;repository>
    &lt;id>jmockit-svn&lt;/id>
    &lt;url>http://jmockit.googlecode.com/svn/maven-repo&lt;/url>
    &lt;releases>&lt;checksumPolicy>ignore&lt;/checksumPolicy>&lt;/releases>
@@ -104,10 +106,10 @@
 <p>
    For any project containing JMockit tests, add the following dependency to the <code>pom.xml</code> file:
 </p>
-<pre><code>&lt;dependency>
-   &lt;groupId>mockit&lt;/groupId>
+<pre class="no-highlight"><code>&lt;dependency>
+   &lt;groupId>com.googlecode.jmockit&lt;/groupId> <span class="comment">&lt;!-- "mockit" for versions before 0.999.11 --></span>
    &lt;artifactId>jmockit&lt;/artifactId>
-   &lt;version>0.999.10&lt;/version>
+   &lt;version>0.999.11&lt;/version>
    &lt;scope>test&lt;/scope>
 &lt;/dependency>
 </code></pre>
@@ -121,7 +123,9 @@
 <pre><code>&lt;plugin>
    &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
    &lt;configuration>
-      &lt;argLine>-javaagent:"${settings.localRepository}"/mockit/jmockit/0.999.10/jmockit-0.999.10.jar&lt;/argLine>
+      &lt;argLine><span style="font-size: smaller">
+         -javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/0.999.11/jmockit-0.999.11.jar</span>
+      &lt;/argLine>
    &lt;/configuration>
 &lt;/plugin>
 </code></pre>
