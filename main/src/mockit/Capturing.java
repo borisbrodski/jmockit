@@ -7,16 +7,22 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * Indicates a test class, an instance field declared in a test class, or a test method parameter which will capture all
- * implementations of a given base type (usually an interface or abstract class).
+ * Indicates a mock field or a mock parameter for which all classes extending/implementing the mocked type will
+ * <em>also</em> get mocked.
+ * <p/>
+ * In the case of a non-final "capturing" mock field, mocked instances will (by default) be captured and assigned to the mock
+ * field as they are created.
+ * Otherwise (ie, when applied to a {@code final} mock field or to a mock parameter), instances are still captured but
+ * not made directly available to the test.
+ * The {@link #maxInstances} attribute allows an upper limit to the number of captured instances to be specified.
+ * If multiple capturing mock fields of the same type are declared, this attribute can be used so that each distinct
+ * instance gets assigned to a separate field.
+ * <p/>
+ * Note that, once a capturing mocked type is in scope, the capture of implementation classes and their instances can
+ * happen at any moment before the first expected invocation is recorded, or during the recording and replay phases.
  * <p/>
  * When applied to a test class, each class implementing/extending the explicitly specified
  * {@linkplain #baseType base type} will be stubbed out for the whole test class.
- * <p/>
- * When applied to an instance field or test method parameter, the declared type of the field or parameter will be
- * considered a mocked type, just as it would be if annotated with {@link Mocked @Mocked}.
- * Each class implementing (in case the mocked type is an interface) or extending (in case the mocked type is a class)
- * the mocked type will also be mocked.
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/CapturingImplementations.html">In the Tutorial</a>
  * <p/>

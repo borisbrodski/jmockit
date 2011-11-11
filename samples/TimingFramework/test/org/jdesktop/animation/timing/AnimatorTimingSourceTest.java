@@ -79,7 +79,7 @@ public final class AnimatorTimingSourceTest
 
       new Expectations()
       {
-         @Mocked(capture = 1)
+         @Capturing
          private TimingEventListener timingEventTarget;
 
          {

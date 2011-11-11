@@ -75,7 +75,6 @@ import java.lang.annotation.*;
  * @see #methods methods
  * @see #inverse inverse
  * @see #stubOutClassInitialization stubOutClassInitialization
- * @see #capture capture
  * @see #realClassName realClassName
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -142,36 +141,16 @@ public @interface Mocked
    boolean stubOutClassInitialization() default false;
 
    /**
-    * Specifies the number of new instances to <em>capture</em> during test execution, between those instances which are
-    * assignable to the mocked type and are created during the test.
-    * If applied to a non-{@code final} mock field, each captured instance will be assigned to the field, up to the
-    * number specified in the attribute. Otherwise (ie, when applied to a final field or a mock parameter), instances
-    * are still captured but not made directly available to the test.
-    * Note that capture can happen at any moment before the first expected invocation is recorded, or during the
-    * recording and replay phases.
-    * <p/>
-    * When applied to a mocked <em>class</em>, capture is not restricted to instances of that class. Instances of any
-    * <em>subclass</em> will also be captured. In effect, subclasses will be mocked as well, as long as they have
-    * already been loaded by the JVM or get loaded during test execution.
-    * The same applies to a mocked <em>interface</em>: instances of any implementing class will get captured.
-    * <p/>
-    * It is valid to declare two or more mock fields/parameters of the same type with a positive {@code capture} number
-    * for each of them, say {@code n1}, {@code n2}, etc.
-    * With non-final mock fields, this causes the first {@code n1} new instances to be assigned to the first field, the
-    * following {@code n2} new instances to the second, and so on.
+    * This attribute will be removed in the next release.
     *
-    * @see Capturing
+    * @deprecated Use {@linkplain Capturing @Capturing} instead.
     */
-   int capture() default 0;
+   @Deprecated int capture() default 0;
 
    /**
     * Specify the fully qualified name of the concrete class to be considered as the mocked type when it cannot be used
     * as the declared type, and the instance automatically created by JMockit for a super-type wouldn't be appropriate
     * for the test.
-    * <p/>
-    * This attribute can be used with fields that are {@code final} or not.
-    * In the second case it can be used in conjunction with the {@link #capture capture} attribute, so that only the
-    * specified class is mocked, instead of all classes that implement/extend a given super-type.
     * <p/>
     * Note that this attribute can also be used when the desired concrete class is not accessible to the test (for
     * example, if it's a private inner class inside the code under test).

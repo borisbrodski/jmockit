@@ -62,7 +62,7 @@ public final class InjectableMockedTest
    }
 
    @Test
-   public void mockNextCreatedInstance(@Injectable @Mocked(capture = 1) final Collaborator mock)
+   public void mockNextCreatedInstance(@Capturing(maxInstances = 1) @Injectable final Collaborator mock)
    {
       new NonStrictExpectations() {{
          mock.doSomething(true); result = 2;
@@ -97,9 +97,8 @@ public final class InjectableMockedTest
    @Test
    public void mockInheritedMethodInCapturedInstanceOfOneSubclassButNotInAnother()
    {
-      new Expectations()
-      {
-         @Injectable @Mocked(capture = 1)
+      new Expectations() {
+         @Capturing @Injectable
          SubCollaborator1 capturedInstance;
 
          {
@@ -113,8 +112,7 @@ public final class InjectableMockedTest
    @Test
    public void mockSeparatelyTheNextTwoCreatedInstances()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          @Injectable @Capturing(maxInstances = 1) Collaborator mock1;
          @Injectable @Capturing(maxInstances = 1) Collaborator mock2;
 
@@ -142,8 +140,8 @@ public final class InjectableMockedTest
 
    @Test
    public void mockSeparatelyTwoGroupsOfInternallyCreatedInstancesUsingMockParameters(
-      @Injectable @Mocked(capture = 2) final Collaborator mock1,
-      @Injectable @Mocked(capture = 3) final Collaborator mock2)
+      @Capturing(maxInstances = 2) @Injectable final Collaborator mock1,
+      @Capturing(maxInstances = 3) @Injectable final Collaborator mock2)
    {
       new NonStrictExpectations() {{
          mock1.doSomething(false); result = -45;
@@ -171,9 +169,8 @@ public final class InjectableMockedTest
    @Test
    public void mockSeparatelyTwoGroupsOfInternallyCreatedInstancesUsingLocalMockFields()
    {
-      new Expectations()
-      {
-         @Injectable @NonStrict @Mocked(capture = 2) Collaborator mock1;
+      new Expectations() {
+         @Capturing(maxInstances = 2) @Injectable @NonStrict Collaborator mock1;
          @Injectable @NonStrict @Capturing Collaborator mock2;
 
          {
@@ -208,8 +205,8 @@ public final class InjectableMockedTest
       int doSomething(boolean b) { return -super.doSomething(b); }
    }
 
-   @Injectable @Mocked(capture = 2) AnotherCollaborator anotherMock1;
-   @Injectable @Mocked(capture = 1) AnotherCollaborator anotherMock2;
+   @Capturing(maxInstances = 2) @Injectable AnotherCollaborator anotherMock1;
+   @Capturing(maxInstances = 1) @Injectable AnotherCollaborator anotherMock2;
 
    @Test
    public void mockSeparatelyTwoGroupsOfInternallyCreatedInstancesUsingMockFields()

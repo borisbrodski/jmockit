@@ -64,8 +64,7 @@ public final class MultipleMockedTypesTest
    @Test
    public void invocationsOnMethodsOfDifferentClassesWithDifferentSignatures()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          SecondDependency mock2;
 
          {
@@ -76,40 +75,26 @@ public final class MultipleMockedTypesTest
 
       assertTrue(new TestedUnit().validateWithDifferentValue(mock1));
 
-      new Verifications()
-      {
-         {
-            mock1.getValue();
-         }
-      };
+      new Verifications() {{ mock1.getValue(); }};
    }
 
    @Test
    public void invocationsOnMethodsOfDifferentClassesButSameSignature(final SecondDependency mock2)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock1.getValue(); result = 15;
-            mock2.getValue(); result = -50;
-         }
-      };
+      new NonStrictExpectations() {{
+         mock1.getValue(); result = 15;
+         mock2.getValue(); result = -50;
+      }};
 
       assertTrue(new TestedUnit().validate(mock1));
 
-      new VerificationsInOrder()
-      {
-         {
-            mock1.getValue();
-            mock2.getValue();
-         }
-      };
+      new VerificationsInOrder() {{
+         mock1.getValue();
+         mock2.getValue();
+      }};
    }
 
-   public static final class SubDependencyThatInherits extends SecondDependency
-   {
-   }
-
+   public static final class SubDependencyThatInherits extends SecondDependency {}
    public static final class SubDependencyThatOverrides extends SecondDependency
    {
       @Override
@@ -119,8 +104,7 @@ public final class MultipleMockedTypesTest
    @Test
    public void invocationOnBaseTypeWithReplayOnSubtypeThatInheritsTheInvokedMethod()
    {
-      new Expectations()
-      {
+      new Expectations() {
          SecondDependency mock2;
 
          {
@@ -133,34 +117,26 @@ public final class MultipleMockedTypesTest
    }
 
    @Test
-   public void invocationOnBaseTypeWithReplayOnSubtypeThatOverridesTheInvokedMethod(
-      final SecondDependency mock2)
+   public void invocationOnBaseTypeWithReplayOnSubtypeThatOverridesTheInvokedMethod(final SecondDependency mock2)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock1.getValue(); result = 15;
-            mock2.getValue(); result = -50;
-         }
-      };
+      new NonStrictExpectations() {{
+         mock1.getValue(); result = 15;
+         mock2.getValue(); result = -50;
+      }};
 
       // The executed method will be the override, which is not mocked.
       assertFalse(new TestedUnit().validate(mock1, new SubDependencyThatOverrides()));
 
-      new FullVerifications()
-      {
-         {
-            mock1.getValue();
-            mock2.getValue(); times = 0;
-         }
-      };
+      new FullVerifications() {{
+         mock1.getValue();
+         mock2.getValue(); times = 0;
+      }};
    }
 
    @Test
    public void invocationOnBaseTypeWithCapturingOfSubtypeThatInheritsTheInvokedMethod()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          @Capturing SecondDependency mock2;
 
          {
@@ -171,44 +147,32 @@ public final class MultipleMockedTypesTest
 
       assertTrue(new TestedUnit().validate(mock1, new SubDependencyThatInherits()));
 
-      new Verifications()
-      {
-         {
-            mock1.getValue();
-         }
-      };
+      new Verifications() {{ mock1.getValue(); }};
    }
 
    @Test
    public void invocationOnBaseTypeWithCapturingOfSubtypeThatOverridesTheInvokedMethod(
       @Capturing final SecondDependency mock2)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock1.getValue(); result = 15;
-            mock2.getValue(); result = -50;
-         }
-      };
+      new NonStrictExpectations() {{
+         mock1.getValue(); result = 15;
+         mock2.getValue(); result = -50;
+      }};
 
       assertTrue(new TestedUnit().validate(mock1, new SubDependencyThatOverrides()));
 
-      new FullVerificationsInOrder()
-      {
-         {
-            mock1.getValue();
-            mock2.getValue();
-         }
-      };
+      new FullVerificationsInOrder() {{
+         mock1.getValue();
+         mock2.getValue();
+      }};
    }
 
    @Test
-   public void invocationsOnCapturedImplementationsOfInterfaces(
-      @Capturing final Callable<String> callable) throws Exception
+   public void invocationsOnCapturedImplementationsOfInterfaces(@Capturing final Callable<String> callable)
+      throws Exception
    {
-      new NonStrictExpectations()
-      {
-         @Mocked(capture = 1) Observer observer;
+      new NonStrictExpectations() {
+         @Capturing(maxInstances = 1) Observer observer;
 
          {
             observer.update(null, any); times = 1;
@@ -217,11 +181,6 @@ public final class MultipleMockedTypesTest
 
       TestedUnit.doSomethingWithInternallyCreatedImplementations();
 
-      new Verifications()
-      {
-         {
-            callable.call();
-         }
-      };
+      new Verifications() {{ callable.call(); }};
    }
 }

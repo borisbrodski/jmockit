@@ -24,7 +24,7 @@ public final class ScreenTransitionExecutionTest
    @Mocked Animator animator;
    @Mocked AnimationManager manager;
    @Mocked AnimationLayer animationLayer;
-   @Mocked(methods = "()", capture = 1) TimingTarget timingTarget;
+   @Mocked("()") @Capturing(maxInstances = 1) TimingTarget timingTarget;
 
    private ScreenTransition transition;
 

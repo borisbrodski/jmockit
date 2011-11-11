@@ -42,7 +42,7 @@ public final class CapturingInstancesTest
       }
    }
 
-   @Mocked(capture = 2) Service service;
+   @Capturing(maxInstances = 2) Service service;
 
    @Test
    public void captureServiceInstancesCreatedByTestedConstructor()
@@ -56,11 +56,10 @@ public final class CapturingInstancesTest
    }
 
    @Test
-   public void captureAllInternallyCreatedInstances(@Mocked(capture = 1) final Callable<?> callable) throws Exception
+   public void captureAllInternallyCreatedInstances(@Capturing final Callable<?> callable) throws Exception
    {
-      new NonStrictExpectations()
-      {
-         @Mocked(capture = 1) Observable observable;
+      new NonStrictExpectations() {
+         @Capturing Observable observable;
 
          {
             service.doSomething(); returns(3, 4);
@@ -79,10 +78,9 @@ public final class CapturingInstancesTest
    @Test
    public void recordStrictExpectationsForNextTwoInstancesToBeCreatedUsingMockFields()
    {
-      new Expectations()
-      {
-         @Mocked(capture = 1) Service s1;
-         @Mocked(capture = 1) Service s2;
+      new Expectations() {
+         @Capturing(maxInstances = 1) Service s1;
+         @Capturing(maxInstances = 1) Service s2;
 
          {
             s1.doSomething(); result = 11;
@@ -96,15 +94,12 @@ public final class CapturingInstancesTest
 
    @Test
    public void recordStrictExpectationsForNextTwoInstancesToBeCreatedUsingMockParameters(
-      @Mocked(capture = 1) final Service s1, @Capturing(maxInstances = 1) final Service s2)
+      @Capturing(maxInstances = 1) final Service s1, @Capturing(maxInstances = 1) final Service s2)
    {
-      new Expectations()
-      {
-         {
-            s1.doSomething(); result = 11;
-            s2.doSomething(); returns(22, 33);
-         }
-      };
+      new Expectations() {{
+         s1.doSomething(); result = 11;
+         s2.doSomething(); returns(22, 33);
+      }};
 
       assertEquals(11, new ServiceImpl().doSomething());
       ServiceImpl s = new ServiceImpl();
@@ -115,10 +110,9 @@ public final class CapturingInstancesTest
    @Test
    public void recordExpectationsForNextTwoInstancesToBeCreatedUsingNonStrictMockFields()
    {
-      new Expectations()
-      {
-         @NonStrict @Mocked(capture = 1) Service s1;
-         @NonStrict @Mocked(capture = 1) Service s2;
+      new Expectations() {
+         @Capturing(maxInstances = 1) @NonStrict Service s1;
+         @Capturing(maxInstances = 1) @NonStrict Service s2;
 
          {
             s1.doSomething(); result = 11;
@@ -138,8 +132,7 @@ public final class CapturingInstancesTest
    @Test
    public void recordNonStrictExpectationsForNextTwoInstancesToBeCreatedUsingMockFields()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          @Capturing(maxInstances = 1) Service s1;
          @Capturing(maxInstances = 1) Service s2;
 
@@ -155,15 +148,13 @@ public final class CapturingInstancesTest
 
    @Test
    public void recordExpectationsForNextTwoInstancesToBeCreatedUsingNonStrictMockParameters(
-      @NonStrict @Capturing(maxInstances = 1) final Service s1, @NonStrict @Mocked(capture = 1) final Service s2)
+      @Capturing(maxInstances = 1) @NonStrict final Service s1,
+      @Capturing(maxInstances = 1) @NonStrict final Service s2)
    {
-      new Expectations()
-      {
-         {
-            s2.doSomething(); result = 22;
-            s1.doSomething(); result = 11;
-         }
-      };
+      new Expectations() {{
+         s2.doSomething(); result = 22;
+         s1.doSomething(); result = 11;
+      }};
 
       ServiceImpl cs1 = new ServiceImpl();
       assertEquals(11, cs1.doSomething());

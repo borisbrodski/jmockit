@@ -46,7 +46,7 @@ public final class MockedParametersWithCapturingTest
    }
 
    @Test
-   public void captureInstancesWithoutMockingAnyMethods(@Mocked(capture = 2, methods = "") Service service)
+   public void captureInstancesWithoutMockingAnyMethods(@Capturing(maxInstances = 2) @Mocked("") Service service)
    {
       assertEquals(0, service.doSomething());
 
@@ -124,7 +124,7 @@ public final class MockedParametersWithCapturingTest
    }
 
    @Test
-   public void captureDerivedClassButWithoutMockingAnything(@Mocked(methods = "", capture = 1) BaseClass mock)
+   public void captureDerivedClassButWithoutMockingAnything(@Capturing @Mocked("") BaseClass mock)
    {
       assertNull(mock.str);
       assertEquals("test", new DerivedClass("test").str);

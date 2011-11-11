@@ -50,8 +50,7 @@ public final class CapturingImplementationsTest
    {
       Service service = new ServiceImpl();
 
-      new Expectations()
-      {
+      new Expectations() {
          @Capturing Service mock;
 
          {
@@ -69,13 +68,10 @@ public final class CapturingImplementationsTest
    {
       ServiceImpl service = new ServiceImpl();
 
-      new Expectations()
-      {
-         {
-            mock.doSomething();
-            returns(3, 2);
-         }
-      };
+      new Expectations() {{
+         mock.doSomething();
+         returns(3, 2);
+      }};
 
       assertEquals(3, service.doSomething());
       assertEquals(2, new ServiceImpl().doSomething());
@@ -106,8 +102,7 @@ public final class CapturingImplementationsTest
       AnotherService service = new ServiceImpl2();
       assertEquals(2, service.doSomethingElse());
 
-      new Expectations()
-      {
+      new Expectations() {
          @NonStrict @Capturing(classNames = ".+ServiceImpl3", inverse = true)
          AnotherService mock;
 
@@ -122,9 +117,8 @@ public final class CapturingImplementationsTest
    @Test
    public void captureInstancesForMockFieldWithoutUsingTheCapturingAnnotation()
    {
-      new Expectations()
-      {
-         @Mocked(capture = 2) AnotherService mock;
+      new Expectations() {
+         @Capturing(maxInstances = 2) AnotherService mock;
 
          {
             mock.doSomethingElse(); returns(5, 6);
@@ -164,13 +158,10 @@ public final class CapturingImplementationsTest
    @Test
    public void captureGeneratedMockSubclass(@Capturing final AbstractService mock1, final AbstractService mock2)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock1.doSomething(); result = true;
-            mock2.doSomething(); result = false;
-         }
-      };
+      new NonStrictExpectations() {{
+         mock1.doSomething(); result = true;
+         mock2.doSomething(); result = false;
+      }};
 
       assertFalse(mock2.doSomething());
       assertTrue(mock1.doSomething());
@@ -190,8 +181,7 @@ public final class CapturingImplementationsTest
    {
       final AtomicFieldHolder fieldHolder = new AtomicFieldHolder();
 
-      new Expectations()
-      {
+      new Expectations() {
          @Capturing AtomicIntegerFieldUpdater<AtomicFieldHolder> mock;
 
          {

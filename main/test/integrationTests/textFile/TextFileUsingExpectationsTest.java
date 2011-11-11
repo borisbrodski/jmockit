@@ -45,7 +45,7 @@ public final class TextFileUsingExpectationsTest
    {
       new Expectations()
       {
-         @Mocked(capture = 1)
+         @Capturing
          TextReader reader;
       };
 
