@@ -9,12 +9,12 @@ import java.util.concurrent.atomic.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-import mockit.CapturingImplementationsTest.*;
-
-@Capturing(baseType = ServiceToBeStubbedOut.class)
 public final class CapturingImplementationsTest
 {
    interface ServiceToBeStubbedOut { int doSomething(); }
+
+   // Just to cause any implementing classes to be stubbed out.
+   @Capturing ServiceToBeStubbedOut unused;
 
    static final class ServiceLocator
    {

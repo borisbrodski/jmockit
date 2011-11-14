@@ -23,6 +23,7 @@ import java.lang.annotation.*;
  * <p/>
  * When applied to a test class, each class implementing/extending the explicitly specified
  * {@linkplain #baseType base type} will be stubbed out for the whole test class.
+ * <strong>Note: this functionality is deprecated and will be removed in the next release.</strong>
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/CapturingImplementations.html">In the Tutorial</a>
  * <p/>
@@ -51,8 +52,10 @@ public @interface Capturing
     * This attribute is mandatory for test classes, and optional for instance fields and test method parameters.
     * In the case of fields and parameters, the base type will be the declared field or parameter type, if this
     * attribute is left unspecified.
+    * 
+    * @deprecated Use a mock field of the desired base type instead.
     */
-   Class<?> baseType() default Void.class;
+   @Deprecated Class<?> baseType() default Void.class;
 
    /**
     * When the annotation is applied to an instance field, this attribute specifies the maximum number of new instances
