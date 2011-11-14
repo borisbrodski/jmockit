@@ -14,6 +14,27 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
+<h3>Next release</h3>
+
+<p>Release 0.999.12 (Dec ?, 2011):</p>
+<ul>
+   <li>
+      <strong>Deprecated</strong> the "<code>capture</code>" and "<code>baseType</code>" annotation attributes, used in
+      the <code class="annotation">@Mocked</code> and <code class="annotation">@Capturing</code> annotations,
+      respectively.
+      Existing uses of "<code>@Mocked(<strong>capture</strong> = <em>n</em>)</code>" should be replaced with
+      "<code>@Capturing</code>" or "<code>@Capturing(maxInstances = <em>n</em>)</code>", as needed.
+      Applications of "<code>@Capturing(<strong>baseType</strong> = <em>BaseType.class</em>)</code>" to a test class
+      should be replaced with "<code>@Capturing <em>BaseType</em> unused;</code>" mock fields.
+   </li>
+   <li>
+      <strong>New feature</strong>: mock classes and classes to be stubbed out for a whole test suite can now be
+      specified through external configuration, by defining the "<code>jmockit-mocks</code>" and
+      "<code>jmockit-stubs</code>" system properties, respectively.
+      These properties can also be defined in a custom <code>jmockit.properties</code> file.
+   </li>
+</ul>
+
 <h3>Current release</h3>
 
 <p>Release 0.999.11 (Oct 21, 2011):</p>
