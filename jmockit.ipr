@@ -1656,6 +1656,7 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.9.0-rc1/mockito-all-1.9.0-rc1-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.9.0-rc1/mockito-all-1.9.0-rc1.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.objenesis:objenesis:1.0">
@@ -1733,6 +1734,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/6.2/testng-6.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.testng:testng:6.3">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/6.3/testng-6.3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/6.3/testng-6.3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/6.3/testng-6.3-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.unitils:unitils-core:3.1">

@@ -13,7 +13,7 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>org.testng</groupId><artifactId>testng</artifactId><version>6.2</version>
+         <groupId>org.testng</groupId><artifactId>testng</artifactId><version>6.3</version>
          <scope>test</scope>
       </dependency>
    </dependencies>
