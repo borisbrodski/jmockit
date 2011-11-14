@@ -10,7 +10,6 @@ import org.junit.*;
 
 import mockit.*;
 
-@Capturing(baseType = TimingSource.class)
 public final class AnimatorTimingSourceTest
 {
    @Test

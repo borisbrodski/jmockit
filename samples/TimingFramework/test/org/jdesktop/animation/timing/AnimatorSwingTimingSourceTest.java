@@ -19,7 +19,7 @@ public final class AnimatorSwingTimingSourceTest
    @Test
    public void timingSourceEventOnSwingTimingSourceForRunningAnimator(final TimingTarget timingTarget)
    {
-      Mockit.setUpMocks(new MockTimer());
+      new MockTimer();
 
       final Animator animator = new Animator(50);
 
@@ -46,8 +46,7 @@ public final class AnimatorSwingTimingSourceTest
       animator.setStartDelay(0);
    }
 
-   @MockClass(realClass = Timer.class)
-   class MockTimer
+   class MockTimer extends MockUp<Timer>
    {
       @Mock(invocations = 1) // invocation from Animator(d)
       void $init(int delay, ActionListener actionListener)

@@ -5,29 +5,25 @@
 package org.jdesktop.animation.timing;
 
 import mockit.*;
-import static mockit.Mockit.*;
 import static org.jdesktop.animation.timing.Animator.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-@Capturing(baseType = TimingSource.class)
+@UsingMocksAndStubs(AnimatorRunningTest.MockSystem.class)
 public final class AnimatorRunningTest
 {
-   @MockClass(realClass = System.class)
-   class MockSystem
-   {
-      @Mock
-      public long nanoTime() { return currentTimeInMillis * 1000000L; }
-   }
-
-   @Before
-   public void setUpTest() { setUpMocks(new MockSystem()); }
-
-   long currentTimeInMillis;
+   static long currentTimeInMillis;
    final Animator animator = new Animator(500);
 
+   @MockClass(realClass = System.class)
+   static final class MockSystem
+   {
+      @Mock
+      static long nanoTime() { return currentTimeInMillis * 1000000L; }
+   }
+
    @Test
-   public void testGetTotalElapsedTimeFromGivenTime()
+   public void getTotalElapsedTimeFromGivenTime()
    {
       // Just to check the initial state:
       assertEquals(0, animator.getTotalElapsedTime(0));
@@ -39,7 +35,7 @@ public final class AnimatorRunningTest
    }
 
    @Test
-   public void testGetTotalElapsedTimeFromCurrentTime()
+   public void getTotalElapsedTimeFromCurrentTime()
    {
       assertEquals(0, animator.getTotalElapsedTime(0));
 
@@ -51,8 +47,9 @@ public final class AnimatorRunningTest
    }
 
    @Test
-   public void testGetCycleElapsedTimeFromGivenTime()
+   public void getCycleElapsedTimeFromGivenTime()
    {
+      currentTimeInMillis = 0;
       assertEquals(0, animator.getCycleElapsedTime(0));
 
       animator.start();
@@ -62,8 +59,9 @@ public final class AnimatorRunningTest
    }
 
    @Test
-   public void testGetCycleElapsedTimeFromCurrentTime()
+   public void getCycleElapsedTimeFromCurrentTime()
    {
+      currentTimeInMillis = 0;
       assertEquals(0, animator.getCycleElapsedTime(0));
 
       animator.start();
@@ -76,6 +74,7 @@ public final class AnimatorRunningTest
    @Test
    public void getTimingFractionAtStartWithInfiniteDurationForward()
    {
+      currentTimeInMillis = 0;
       animator.setDuration(INFINITE);
       animator.start();
       assertEquals(0, animator.getTimingFraction(), 0);
@@ -84,6 +83,7 @@ public final class AnimatorRunningTest
    @Test
    public void getTimingFractionAtStartWithFiniteDurationForward()
    {
+      currentTimeInMillis = 0;
       animator.start();
       assertEquals(0, animator.getTimingFraction(), 0.01);
    }
@@ -91,6 +91,7 @@ public final class AnimatorRunningTest
    @Test
    public void getTimingFractionAtStartWithFiniteDurationBackward()
    {
+      currentTimeInMillis = 0;
       animator.setStartDirection(Direction.BACKWARD);
       animator.setStartFraction(1.0f);
       animator.start();
@@ -100,6 +101,7 @@ public final class AnimatorRunningTest
    @Test
    public void getTimingFractionAtEndWithFiniteDurationForward()
    {
+      currentTimeInMillis = 0;
       animator.setDuration(5);
       animator.start();
       currentTimeInMillis = 5;
@@ -125,6 +127,7 @@ public final class AnimatorRunningTest
    @Test
    public void getTimingFractionAtEndWithDecelerationAndFiniteDurationForward()
    {
+      currentTimeInMillis = 0;
       animator.setDuration(5);
       animator.setDeceleration(0.2f);
       animator.start();
@@ -135,6 +138,7 @@ public final class AnimatorRunningTest
    @Test
    public void getTimingFractionAfterFirstCycleWithFiniteDurationForward()
    {
+      currentTimeInMillis = 0;
       animator.setDuration(20);
       animator.setRepeatCount(2);
       animator.start();
@@ -145,6 +149,7 @@ public final class AnimatorRunningTest
    @Test
    public void getTimingFractionAfterFirstCycleWithFiniteDurationBackward()
    {
+      currentTimeInMillis = 0;
       animator.setDuration(20);
       animator.setRepeatCount(2);
       animator.setStartDirection(Direction.BACKWARD);
@@ -157,6 +162,7 @@ public final class AnimatorRunningTest
    @Test
    public void getTimingFractionAtEndWithFiniteDurationForwardAndResetting()
    {
+      currentTimeInMillis = 0;
       animator.setDuration(20);
       animator.setEndBehavior(EndBehavior.RESET);
       animator.start();
@@ -167,6 +173,7 @@ public final class AnimatorRunningTest
    @Test
    public void getTimingFractionAtEndWithFiniteDurationForwardAndFractionalRepeatCount()
    {
+      currentTimeInMillis = 0;
       animator.setDuration(20);
       animator.setRepeatCount(1.5);
       animator.start();
@@ -177,6 +184,7 @@ public final class AnimatorRunningTest
    @Test
    public void getTimingFractionAtEndWithFiniteDurationBackward()
    {
+      currentTimeInMillis = 0;
       animator.setDuration(20);
       animator.setStartDirection(Direction.BACKWARD);
       animator.setStartFraction(1.0f);

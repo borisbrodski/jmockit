@@ -12,17 +12,16 @@ import static org.jdesktop.animation.timing.Animator.*;
 import org.jdesktop.animation.timing.interpolation.*;
 import static org.junit.Assert.*;
 
-@Capturing(baseType = TimingSource.class)
 public final class AnimatorInitializationTest
 {
    @Test
-   public void testGetDuration()
+   public void getDuration()
    {
       assertEquals(500, new Animator(500).getDuration());
    }
 
    @Test
-   public void testSetDuration()
+   public void setDuration()
    {
       Animator animator = new Animator(500);
       animator.setDuration(300);
@@ -30,13 +29,13 @@ public final class AnimatorInitializationTest
    }
 
    @Test
-   public void testGetStartDirection()
+   public void getStartDirection()
    {
       assertSame(Direction.FORWARD, new Animator(500).getStartDirection());
    }
 
    @Test
-   public void testSetStartDirection()
+   public void setStartDirection()
    {
       Animator animator = new Animator(500);
       animator.setStartDirection(Direction.BACKWARD);
@@ -44,13 +43,13 @@ public final class AnimatorInitializationTest
    }
 
    @Test
-   public void testGetInterpolator()
+   public void getInterpolator()
    {
       assertSame(LinearInterpolator.getInstance(), new Animator(500).getInterpolator());
    }
 
    @Test
-   public void testSetInterpolator()
+   public void setInterpolator()
    {
       Animator animator = new Animator(500);
       DiscreteInterpolator interpolator = DiscreteInterpolator.getInstance();
@@ -61,13 +60,13 @@ public final class AnimatorInitializationTest
    }
 
    @Test
-   public void testGetAcceleration()
+   public void getAcceleration()
    {
       assertEquals(0, new Animator(500).getAcceleration(), 0);
    }
 
    @Test
-   public void testSetAcceleration()
+   public void setAcceleration()
    {
       Animator animator = new Animator(500);
       animator.setAcceleration(0.2f);
@@ -75,14 +74,14 @@ public final class AnimatorInitializationTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testSetInvalidAcceleration()
+   public void setInvalidAcceleration()
    {
       Animator animator = new Animator(500);
       animator.setAcceleration(1.2f);
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testSetAccelerationIncompatibleWithDeceleration()
+   public void setAccelerationIncompatibleWithDeceleration()
    {
       Animator animator = new Animator(500);
       animator.setDeceleration(0.6f);
@@ -90,13 +89,13 @@ public final class AnimatorInitializationTest
    }
 
    @Test
-   public void testGetDeceleration()
+   public void getDeceleration()
    {
       assertEquals(0, new Animator(500).getDeceleration(), 0);
    }
 
    @Test
-   public void testSetDeceleration()
+   public void setDeceleration()
    {
       Animator animator = new Animator(500);
       animator.setDeceleration(0.2f);
@@ -104,14 +103,14 @@ public final class AnimatorInitializationTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testSetInvalidDeceleration()
+   public void setInvalidDeceleration()
    {
       Animator animator = new Animator(500);
       animator.setDeceleration(1.2f);
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testSetDecelerationIncompatibleWithAcceleration()
+   public void setDecelerationIncompatibleWithAcceleration()
    {
       Animator animator = new Animator(500);
       animator.setAcceleration(0.5f);
@@ -119,7 +118,7 @@ public final class AnimatorInitializationTest
    }
 
    @Test
-   public void testFullConstructor()
+   public void fullConstructor()
    {
       Animator animator = new Animator(250, 3, RepeatBehavior.LOOP, null);
 
@@ -129,7 +128,7 @@ public final class AnimatorInitializationTest
    }
 
    @Test
-   public void testFullConstructorWithDefaultRepeatBehavior()
+   public void fullConstructorWithDefaultRepeatBehavior()
    {
       Animator animator = new Animator(250, 3, null, null);
 
@@ -137,7 +136,7 @@ public final class AnimatorInitializationTest
    }
 
    @Test
-   public void testSetRepeatCount()
+   public void setRepeatCount()
    {
       Animator animator = new Animator(250);
       animator.setRepeatCount(5);
@@ -145,20 +144,20 @@ public final class AnimatorInitializationTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testSetInvalidRepeatCount()
+   public void setInvalidRepeatCount()
    {
       Animator animator = new Animator(250);
       animator.setRepeatCount(-5);
    }
 
    @Test
-   public void testGetResolution()
+   public void getResolution()
    {
       assertEquals(20, new Animator(500).getResolution());
    }
 
    @Test
-   public void testSetResolution()
+   public void setResolution()
    {
       Animator animator = new Animator(500);
       animator.setResolution(30);
@@ -166,20 +165,20 @@ public final class AnimatorInitializationTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testSetInvalidResolution()
+   public void setInvalidResolution()
    {
       Animator animator = new Animator(500);
       animator.setResolution(-10);
    }
 
    @Test
-   public void testGetStartDelay()
+   public void getStartDelay()
    {
       assertEquals(0, new Animator(500).getStartDelay());
    }
 
    @Test
-   public void testSetStartDelay()
+   public void setStartDelay()
    {
       Animator animator = new Animator(500);
       animator.setStartDelay(40);
@@ -187,20 +186,20 @@ public final class AnimatorInitializationTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testSetInvalidStartDelay()
+   public void setInvalidStartDelay()
    {
       Animator animator = new Animator(500);
       animator.setStartDelay(-4);
    }
 
    @Test
-   public void testGetRepeatBehavior()
+   public void getRepeatBehavior()
    {
       assertSame(RepeatBehavior.REVERSE, new Animator(500).getRepeatBehavior());
    }
 
    @Test
-   public void testSetRepeatBehavior()
+   public void setRepeatBehavior()
    {
       Animator animator = new Animator(500);
       animator.setRepeatBehavior(RepeatBehavior.LOOP);
@@ -208,7 +207,7 @@ public final class AnimatorInitializationTest
    }
 
    @Test
-   public void testSetDefaultRepeatBehavior()
+   public void setDefaultRepeatBehavior()
    {
       Animator animator = new Animator(500);
       animator.setRepeatBehavior(null);
@@ -216,13 +215,13 @@ public final class AnimatorInitializationTest
    }
 
    @Test
-   public void testGetEndBehavior()
+   public void getEndBehavior()
    {
       assertSame(EndBehavior.HOLD, new Animator(500).getEndBehavior());
    }
 
    @Test
-   public void testSetEndBehavior()
+   public void setEndBehavior()
    {
       Animator animator = new Animator(500);
       animator.setEndBehavior(EndBehavior.RESET);
@@ -230,13 +229,13 @@ public final class AnimatorInitializationTest
    }
 
    @Test
-   public void testGetStartFraction()
+   public void getStartFraction()
    {
       assertEquals(0, new Animator(500).getStartFraction(), 0);
    }
 
    @Test
-   public void testSetStartFraction()
+   public void setStartFraction()
    {
       Animator animator = new Animator(500);
       animator.setStartFraction(0.1f);
@@ -244,14 +243,14 @@ public final class AnimatorInitializationTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testSetNegativeStartFraction()
+   public void setNegativeStartFraction()
    {
       Animator animator = new Animator(500);
       animator.setStartFraction(-0.1f);
    }
 
    @Test
-   public void testAddTarget()
+   public void addTarget()
    {
       final Animator animator = new Animator(500);
 
@@ -270,7 +269,7 @@ public final class AnimatorInitializationTest
    }
 
    @Test
-   public void testRemoveTarget()
+   public void removeTarget()
    {
       final Animator animator = new Animator(500);
 
