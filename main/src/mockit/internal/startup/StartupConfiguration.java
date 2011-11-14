@@ -21,6 +21,9 @@ final class StartupConfiguration
    String toolClassName;
    String toolArguments;
 
+   final String[] classesToBeStubbedOut;
+   final String[] mockClasses;
+
    StartupConfiguration() throws IOException
    {
       startupTools = new Properties();
@@ -29,10 +32,16 @@ final class StartupConfiguration
 
       defaultTools = new ArrayList<String>();
       fillListOfDefaultTools();
+
+      classesToBeStubbedOut = System.getProperty("jmockit-stubs", "").split(",");
+      mockClasses = System.getProperty("jmockit-mocks", "").split(",");
    }
 
    private void loadPropertiesFile() throws IOException
    {
+      // TODO: use Thread.currentThread().getContextClassLoader().getResources("/jmockit.properties")
+      // to support multiple properties files
+
       InputStream properties = getClass().getResourceAsStream("/jmockit.properties");
 
       try {
@@ -45,20 +54,19 @@ final class StartupConfiguration
 
    private void loadSystemProperties()
    {
-      Properties systemProperties = System.getProperties();
-
       for (Map.Entry<?, ?> prop : startupTools.entrySet()) {
          String name = (String) prop.getKey();
 
          if (!DEFAULT_TOOLS_KEY.equals(name) && !name.startsWith(STARTUP_TOOL_PREFIX)) {
-            addToSystemProperties(systemProperties, name, prop.getValue());
+            addToSystemProperties(name, prop.getValue());
          }
       }
    }
 
-   private void addToSystemProperties(Properties systemProperties, String name, Object value)
+   private void addToSystemProperties(String name, Object value)
    {
       String sysPropName = name.startsWith("jmockit-") ? name : "jmockit-" + name;
+      Properties systemProperties = System.getProperties();
 
       if (!systemProperties.containsKey(sysPropName)) {
          systemProperties.put(sysPropName, value);

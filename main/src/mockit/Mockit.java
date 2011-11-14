@@ -46,17 +46,13 @@ import mockit.internal.util.*;
  * The created classes can be mocked through the Mockups API, and its instances passed to code under test.
  * </li>
  * </ul>
- * Tutorial:
+ * In the Tutorial:
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html">Writing state-based tests</a>,
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/ReflectionUtilities.html">Reflection-based utilities</a>
  */
 public final class Mockit
 {
-   static
-   {
-      Startup.verifyInitialization();
-   }
-
+   static { Startup.verifyInitialization(); }
    private Mockit() {}
 
    /**
@@ -68,8 +64,9 @@ public final class Mockit
     * The super-constructor to be called is chosen arbitrarily.
     * The classes are stubbed out in the order they are given, so make sure any super-class comes first.
     * <p/>
-    * Methods with non-{@code void} return type will return the default value for this type, that is, zero for a number
-    * or {@code char}, {@literal false} for a boolean, empty for an array, or {@literal null} for a reference type.
+    * Methods with non-<code>void</code> return type will return the default value for this type, that is, zero for a
+    * number or {@code char}, {@literal false} for a boolean, empty for an array, or {@literal null} for a reference
+    * type.
     * <p/>
     * If a different behavior is desired for any method or constructor, then {@link #setUpMocks(Object...)} and the
     * other similar methods can be used right after the call to this method.
@@ -77,7 +74,13 @@ public final class Mockit
     *
     * @param realClasses one or more regular classes to be stubbed out
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/powermock/test/powermock/examples/suppress/constructor/ExampleWithEvilChild_JMockit_Test.java">Example</a>
+    * @see
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/powermock/test/powermock/examples/suppress/constructor/ExampleWithEvilChild_JMockit_Test.java#17">
+    * Example</a>
+    * <p/>
+    * In the Tutorial:
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#stubbingMethods">Using the
+    * stubbing methods</a>
     */
    public static void stubOut(Class<?>... realClasses)
    {
@@ -106,7 +109,13 @@ public final class Mockit
     * @param filters one or more filters that specify which class members (methods, constructors, and/or static
     * initialization blocks) to be stubbed out
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/powermock/test/powermock/examples/suppress/method/ExampleWithEvilMethod_JMockit_Test.java">Example</a>
+    * @see
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/powermock/test/powermock/examples/suppress/method/ExampleWithEvilMethod_JMockit_Test.java#20">
+    * Example</a>
+    * <p/>
+    * In the Tutorial:
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#stubbingMethods">Using the
+    * stubbing methods</a>
     */
    public static void stubOutClass(Class<?> realClass, String... filters)
    {
@@ -214,7 +223,13 @@ public final class Mockit
     * or if the real method matching a mock method is {@code abstract}
     *
     * @see #tearDownMocks(Class[])
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#111">Example</a>
+    * @see
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#111">
+    * Example</a>
+    * <p/>
+    * In the Tutorial:
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#MockClass">Using the
+    * <code>@MockClass</code> annotation</a>
     */
    public static void setUpMocks(Object... mockClassesOrInstances)
    {
@@ -236,43 +251,46 @@ public final class Mockit
    }
 
    /**
-    * Sets up the <em>startup</em> mocks defined in one or more mock classes, similarly to
-    * {@link #setUpMocks(Object...)}. The difference is in the lifetime of the mocks, which will last to the end of the
-    * current test suite execution.
+    * Sets up the <em>startup</em> {@linkplain Mock mocks} defined in one or more mock classes, just like
+    * {@link #setUpMocks(Object...)} does for regular mock classes.
+    * The difference is in the lifetime of the mocks, which will last to the end of the test run.
     * Consequently, this method should only be called once, before the first test begins execution.
     * One way to achieve this is to put the call in the static initializer of a common base class extended by all test
-    * classes in the suite.
-    * Another way is by configuring JMockit to apply one or more of the mock classes at startup.
+    * classes in the suite. Another way is by configuring what happens at startup through external means.
     * <p/>
-    * There are two mechanisms that allow specifying mock classes to be loaded at JMockit startup time:
+    * There are three ways to set up mock classes at startup time:
     * <ol>
-    * <li>Using the "-javaagent:jmockit.jar=&lt;agentArgs>" JVM argument, where "agentArgs" contains one or more
-    * <strong>mock class names</strong> (separated by semicolons if more than one).
+    * <li>Defining a value for the "<code>jmockit-mocks</code>" system property, as a comma-separated list of fully
+    * qualified class names.</li>
+    * <li>Using a custom "<code>jmockit.properties</code>" file containing an entry for the "<code>jmockit-mocks</code>"
+    * property.
+    * This custom file must <em>precede</em> <code>jmockit.jar</code> (which contains the standard properties file)
+    * in the classpath.
     * </li>
-    * <li>Using a customized "jmockit.properties" file, which must precede the standard file located inside jmockit.jar
-    * (see comments in that file for more details).
+    * <li>Using the "<code>-javaagent:jmockit.jar=&lt;agentArgs></code>" JVM argument, where "<code>agentArgs</code>"
+    * contains one or more mock class names, separated by semicolons if more than one.
     * </li>
     * </ol>
-    * Note that if you pass all desired mock classes to JMockit at startup using one of these two mechanisms, this
-    * method won't be used. However, it's also possible to pass only one of those mock classes to JMockit and then call
-    * this method in the no-args constructor of the chosen mock class, to cause the remaining mock classes to be
-    * applied.
-    * <p/>
-    * Note also that it's possible to package a whole set of mock classes in a jar file containing a jmockit.properties
-    * file and then, by simply adding the jar to the classpath <em>before</em> jmockit.jar, to have it loaded and
-    * applied automatically for any test suite execution, as soon as JMockit itself is initialized.
+    * Note that option two above makes it possible to package a whole set of reusable mock classes in a jar file,
+    * provided it contains a suitable <code>jmockit.properties</code> file.
+    * By simply adding the jar to the classpath <em>before</em> <code>jmockit.jar</code>, the specified mock classes
+    * will be loaded and applied automatically on every test run, as soon as JMockit itself gets initialized.
     *
-    * @param mockClassesOrInstances one or more classes ({@code Class} objects) or instances of classes which define
-    * arbitrary methods and/or constructors, where the ones annotated as {@linkplain Mock mocks} will be used to
-    * redefine corresponding real methods/constructors in a designated {@linkplain MockClass#realClass() real class}
-    * (usually, a class on which the code under test depends on)
+    * @param mockClassesOrInstances one or more mock classes (either <code>Class</code> literals or fully qualified
+    * class names) or instances of mock classes
     *
     * @throws IllegalArgumentException if a given mock class fails to specify the corresponding real class using the
     * {@code @MockClass(realClass = ...)} annotation; or if a mock class defines a mock method for which no
     * corresponding real method or constructor exists in the real class;
     * or if the real method matching a mock method is {@code abstract}
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#447">Example</a>
+    * @see
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#465">
+    * Example</a>
+    * <p/>
+    * In the Tutorial:
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/UsingMocksAndStubs.html">Using mocks and stubs over
+    * entire test classes and suites</a>
     */
    public static void setUpStartupMocks(Object... mockClassesOrInstances)
    {
@@ -282,6 +300,12 @@ public final class Mockit
 
          if (mockClassOrInstance instanceof Class<?>) {
             mockClass = (Class<?>) mockClassOrInstance;
+            mock = null;
+         }
+         else if (mockClassOrInstance instanceof String) {
+            String className = ((String) mockClassOrInstance).trim();
+            if (className.length() == 0) continue;
+            mockClass = Utilities.loadClass(className);
             mock = null;
          }
          else {
@@ -302,7 +326,9 @@ public final class Mockit
     * @param realClass the class to be mocked that is used by code under test
     * @param mock an instance of the class containing the mock methods for the real class
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#113">Example</a>
+    * @see
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#113">
+    * Example</a>
     */
    public static void setUpMock(Class<?> realClass, Object mock)
    {
@@ -329,7 +355,9 @@ public final class Mockit
     * @param realClass the class to be mocked that is used by code under test
     * @param mockClass the class containing the mock methods for the real class
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#151">Example</a>
+    * @see
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#169">
+    * Example</a>
     */
    public static void setUpMock(Class<?> realClass, Class<?> mockClass)
    {
@@ -340,7 +368,9 @@ public final class Mockit
     * Same as {@link #setUpMock(Class, Class)}, but accepting the (fully qualified) name of the real class.
     * This is useful when said class is not accessible from the test.
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#40">Example</a>
+    * @see
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#40">
+    * Example</a>
     */
    public static void setUpMock(String realClassName, Class<?> mockClass)
    {
@@ -366,7 +396,9 @@ public final class Mockit
     *
     * @see #setUpMock(Class, Object)
     * @see #setUpMocks(Object...)
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#663">Example</a>
+    * @see
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#696">
+    * Example</a>
     */
    public static <T> T setUpMock(Object mockClassOrInstance)
    {
@@ -415,7 +447,9 @@ public final class Mockit
     * mocked for the test class as a whole (through a "before class" method or an {@code @UsingMocksAndStubs}
     * annotation) before the first test in the next test class is executed.
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#415">Example</a>
+    * @see
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#450">
+    * Example</a>
     */
    public static void tearDownMocks()
    {
@@ -459,7 +493,9 @@ public final class Mockit
     * In <em>JMockit Expectations</em> in particular, mocked instances will be automatically created and assigned to any
     * mock fields or parameters.
     *
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#91">Example</a>
+    * @see
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/textFile/TextFileUsingAnnotatedMockClassesTest.java#91">
+    * Example</a>
     */
    public static <E> E newEmptyProxy(Class<E> interfaceToBeProxied)
    {
@@ -489,7 +525,9 @@ public final class Mockit
     *
     * @see #newEmptyProxy(Class)
     * @see #newEmptyProxy(Type...)
-    * @see <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#186">Example</a>
+    * @see
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/orderMngmntWebapp/test/orderMngr/domain/order/OrderRepository_MockupsAPI_Test.java#186">
+    * Example</a>
     */
    public static <E> E newEmptyProxy(ClassLoader loader, Class<E> interfaceToBeProxied)
    {

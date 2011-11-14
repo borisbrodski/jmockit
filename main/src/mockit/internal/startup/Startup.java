@@ -7,6 +7,7 @@ package mockit.internal.startup;
 import java.io.*;
 import java.lang.instrument.*;
 
+import mockit.*;
 import mockit.external.asm.*;
 import mockit.integration.junit3.internal.*;
 import mockit.integration.junit4.internal.*;
@@ -14,6 +15,7 @@ import mockit.integration.testng.internal.*;
 import mockit.internal.*;
 import mockit.internal.expectations.transformation.*;
 import mockit.internal.state.*;
+import mockit.internal.util.*;
 
 /**
  * This is the "agent class" that initializes the JMockit "Java agent". It is not intended for use in client code.
@@ -89,6 +91,9 @@ public final class Startup
       for (String toolSpec : config.defaultTools) {
          loadExternalTool(config, toolSpec, true);
       }
+
+      stubOutClassesIfSpecifiedInSystemProperty(config);
+      Mockit.setUpStartupMocks(config.mockClasses);
 
       inst.addTransformer(new JMockitTransformer());
       inst.addTransformer(new ExpectationsTransformer(inst));
@@ -180,6 +185,25 @@ public final class Startup
       }
 
       System.out.println("JMockit: loaded external tool " + config);
+   }
+
+   private static void stubOutClassesIfSpecifiedInSystemProperty(StartupConfiguration config)
+   {
+      for (String stubbing : config.classesToBeStubbedOut) {
+         if (stubbing.length() == 0) continue;
+
+         int p = stubbing.indexOf('#');
+         String realClassName = stubbing;
+         String[] filters = {};
+
+         if (p > 0) {
+            realClassName = stubbing.substring(0, p);
+            filters = stubbing.substring(p + 1).split("\\|");
+         }
+
+         Class<?> realClass = Utilities.loadClass(realClassName.trim());
+         new RedefinitionEngine(realClass, true, filters).stubOutAtStartup();
+      }
    }
 
    public static Instrumentation instrumentation()

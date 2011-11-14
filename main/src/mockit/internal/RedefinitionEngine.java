@@ -71,7 +71,7 @@ public final class RedefinitionEngine
       }
    }
 
-   public RedefinitionEngine(Class<?> realClass, boolean filtersNotInverted, String[] stubbingFilters)
+   public RedefinitionEngine(Class<?> realClass, boolean filtersNotInverted, String... stubbingFilters)
    {
       this.realClass = realClass;
       mockClass = null;
@@ -135,14 +135,23 @@ public final class RedefinitionEngine
 
    public void stubOut()
    {
-      ClassReader rcReader = createClassReaderForRealClass();
-      ClassWriter rcWriter = new StubOutModifier(rcReader, mockingConfiguration);
-
-      rcReader.accept(rcWriter, false);
-      byte[] modifiedClassFile = rcWriter.toByteArray();
-
+      byte[] modifiedClassFile = stubOutClass();
       String classDesc = realClass.getName().replace('.', '/');
       redefineMethods(classDesc, modifiedClassFile, true);
+   }
+
+   private byte[] stubOutClass()
+   {
+      ClassReader rcReader = createClassReaderForRealClass();
+      ClassWriter rcWriter = new StubOutModifier(rcReader, mockingConfiguration);
+      rcReader.accept(rcWriter, false);
+      return rcWriter.toByteArray();
+   }
+
+   public void stubOutAtStartup()
+   {
+      byte[] modifiedClassFile = stubOutClass();
+      redefineMethods(modifiedClassFile);
    }
 
    public void redefineMethods()

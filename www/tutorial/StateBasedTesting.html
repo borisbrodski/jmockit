@@ -29,7 +29,13 @@
       </ol>
    </li>
    <li><a href="#interfaces">Mocking interfaces</a></li>
-   <li><a href="#stubs">Specifying stubs with a mock class</a></li>
+   <li>
+      <a href="#stubs">Stubbing out classes and methods</a>
+      <ol>
+         <li><a href="#stubbingMethods">Using the stubbing methods</a></li>
+         <li><a href="#stubsAttribute">Specifying stubs with a mock class</a></li>
+      </ol>
+   </li>
    <li><a href="#constraints">Invocation count constraints</a></li>
    <li><a href="#initializers">Mocking and stubbing class initializers</a></li>
    <li>
@@ -485,7 +491,7 @@
 </p>
 
 <h3 id="stubs">
-   Specifying stubs with a mock class
+   Stubbing out classes and methods
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
@@ -494,6 +500,38 @@
       <a href="#constraints"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
+<p>
+   Sometimes all we need is to stub out the executable code in an entire class or in selected methods/constructors.
+   When a method is stubbed out, it does nothing when executed.
+   An stubbed out constructor will also do nothing, except for calling the necessary constructor in the super-class.
+   Methods with non-<code>void</code> return type will simply return the default value for that type: zero for numeric
+   primitive types, <code>false</code> for <code>boolean</code>, an empty array or collection, or <code>null</code> for
+   any other reference type (including <code class="type">String</code>).
+</p>
+<p>
+   Special care must be taken when the <em>static initialization</em> code of a class is stubbed out.
+   Note that this includes not only any "<code>static</code>" blocks in the class, but also any assignments to
+   <code>static</code> fields (excluding those resolved at compile time, which do not produce any executable bytecode).
+   Since the JVM only attempts to initialize a class <em>once</em>, restoring the static initialization code of an
+   stubbed out class will not have any effect.
+   So, if you stub out the static initialization of a class that hasn't been initialized by the JVM yet, the original
+   class initialization code will <em>never</em> be executed in the test run.
+   This will cause any static fields (except those assigned with compile-time constants) to retain their initial default
+   values.
+</p>
+
+<h4 id="stubbingMethods">Using the stubbing methods</h4>
+<p>
+   The <code class="type">Mockit</code> class provides a set of "stubbing" methods with names starting in
+   "<code>stubOut</code>".
+   They accept one or more classes to be stubbed out, with some of them also accepting a set of filters for methods
+   and constructors.
+   The static initializer of a class is specified by the special filter value "<code>&lt;clinit></code>".
+   For details and examples, see the relevant <a href="../javadoc/mockit/Mockit.html#stubOut(java.lang.Class...)">API
+   documentation</a>.
+</p>
+
+<h4 id="stubsAttribute">Specifying stubs with a mock class</h4>
 <p>
    The <code class="annotation">@MockClass</code> annotation also gives us the ability to specify methods and/or
    constructors in the real class that should be <em>stubbed out</em> so they have no effect when
@@ -795,14 +833,19 @@
          {
             assertNotNull(name);
             assertSame(testSubject, subject);
-            setField(it, subject); // forces setting of private Subject field, since no setter is available
+
+            // Forces setting of private Subject field, since no setter is available.
+            setField(it, subject);
          }
 
          @Mock(invocations = 1)
          void login()
          {
-            assertNull(it.getSubject()); // getSubject() returns null until the subject is authenticated
-            setField(it, "loginSucceeded", true); // private field set to true when login succeeds
+            // getSubject() returns null until the subject is authenticated.
+            assertNull(it.getSubject());
+
+            // Private field set to true when login succeeds.
+            setField(it, "loginSucceeded", true);
          }
 
          @Mock(invocations = 1)
@@ -897,8 +940,8 @@
             loggedIn = true;
          }
          finally {
-            // This is here just to show that arbitrary actions can be taken inside the mock,
-            // <em>before</em> and/or <em>after</em> the real method gets executed.
+            // This is here just to show that arbitrary actions can be taken inside
+            // the mock, <em>before</em> and/or <em>after</em> the real method gets executed.
             System.out.println("Login attempted for " + it.getSubject());
          }
       }
@@ -906,7 +949,8 @@
       @Mock(<strong>reentrant = true</strong>)
       void logout() throws LoginException
       {
-         // A reentrant mock execution can re-enter the mocked method <em>or not</em>, based on a condition.
+         // A reentrant mock execution can re-enter the mocked method <em>or not</em>,
+         // based on a condition.
          if (!ignoreLogout) {
             <strong>it.logout();</strong>
             loggedIn = false;

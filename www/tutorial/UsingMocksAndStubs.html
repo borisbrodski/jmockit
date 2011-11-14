@@ -26,8 +26,8 @@
    that, by letting us specify which mock classes to apply and/or which real classes to stub out for a given test class,
    and when JUnit 4 is used, for a given test suite class.
    It is also possible to specify mock classes and/or classes to be stubbed out for a given test run through external
-   configuration, by taking advantage of the <code>jmockit.properties</code> file or the <code>jmockit-tools</code>
-   system property.
+   configuration, by defining certain system properties via JVM configuration or in a <code>jmockit.properties</code>
+   file.
 </p>
 <div style="text-align: center;">
    <map name="figure1">
@@ -138,7 +138,7 @@ public final class Log4jMocks
 </p>
 
 <h3 id="systemProperty">
-   External configuration with the <code>jmockit-tools</code> system property
+   External configuration through system properties
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <img align="right" src="blank.gif" width="22">
@@ -148,7 +148,33 @@ public final class Log4jMocks
    </div>
 </h3>
 <p>
-<del>to be written</del>
+   Two special system properties are considered at startup time: <strong><code>jmockit-mocks</code></strong> and
+   <strong><code>jmockit-stubs</code></strong>.
+</p>
+<p>
+   The first one may contain a comma-separated list of fully qualified class names.
+   Any such class will be automatically set up as a <em>mock class</em>, provided it is properly annotated with
+   <code class="annotation">@MockClass</code>.
+   The mocks defined in startup mock classes will remain in effect until the end of the test run, for all test classes.
+   Use of this property is equivalent to a call, at the beginning of the test run, to the
+   <code>Mockit.setUpStartupMocks(...)</code> method.
+</p>
+<p>
+   The <code>jmockit-stubs</code> property, similarly, may also contain a comma-separated list of fully qualified class
+   names.
+   These are, however, arbitrary classes to be fully <em>stubbed out</em> for the duration of the test run.
+   Use of this property is equivalent to a call, at the beginning of the test run, to the
+   <code>Mockit.stubOut(...)</code> method.
+   If only some methods or constructors need to be stubbed out, they can be specified by appending one or more filters
+   after the class name, separated from it by a "<code>#</code>" character.
+   Multiple filters for the same class must be separated by a "<code>|</code>" character.
+   These filters are interpreted just like those that can be passed to the <code>Mockit.stubOutClass(String, ...)</code>
+   method - see the API documentation for details.
+</p>
+<p>
+   Note that system properties can be passed to the JVM through the standard "<code>-D</code> command line parameter.
+   Ant/Maven/etc. build scripts have their own ways of specifying system properties, so check their documentation for
+   details.
 </p>
 
 <h3 id="propertiesFile">
@@ -162,7 +188,15 @@ public final class Log4jMocks
    </div>
 </h3>
 <p>
-<del>to be written</del>
+   The system properties described above can also be specified in a separate <code>jmockit.properties</code> file,
+   which should be present at the root of the classpath, <em>before</em> <code>jmockit.jar</code> (since it contains
+   its own <code>jmockit.properties</code> file).
+   The contents of the standard JMockit configuration file will be overridden by a custom properties file, so make
+   sure you create the custom one from a copy of the original.
+</p>
+<p>
+   For convenience, JMockit system properties can be specified in the properties file without the
+   "<code>jmockit-</code>" prefix.
 </p>
 
 <div class="navigation">
