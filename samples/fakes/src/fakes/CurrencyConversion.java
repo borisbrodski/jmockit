@@ -13,7 +13,7 @@ public final class CurrencyConversion
 {
    public static List<String> currencySymbols()
    {
-      return Arrays.asList("USD", "BR", "YEN");
+      return Arrays.asList("USD", "BRL", "CNY");
    }
 
    public static BigDecimal convertFromTo(String fromCurrency, String toCurrency)
@@ -29,7 +29,7 @@ public final class CurrencyConversion
       }
 
       String url =
-         "http://www.gocurrency.com/v2/dorate.phpo?inV=1&from=" + fromCurrency +
+         "http://www.gocurrency.com/v2/dorate.php?inV=1&from=" + fromCurrency +
          "&to=" + toCurrency + "&Calculate=Convert";
 
       try {

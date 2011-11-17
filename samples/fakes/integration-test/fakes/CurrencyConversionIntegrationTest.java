@@ -6,10 +6,7 @@ import java.util.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-import mockit.*;
-
-// Or configure the fake with "-Djmockit-mocks=schuchert.CurrencyConversionFake".
-@UsingMocksAndStubs(CurrencyConversionHttpClientFake.class)
+// Run with "-Djmockit-mocks=fakes.CurrencyConversionHttpClientFake" for fake Web site access.
 public final class CurrencyConversionIntegrationTest
 {
    final List<String> validCurrencies = CurrencyConversion.currencySymbols();
@@ -39,7 +36,7 @@ public final class CurrencyConversionIntegrationTest
    @Test
    public void convertFromDollarToCheapCurrency()
    {
-      double rate = CurrencyConversion.convertFromTo("USD", "YEN").doubleValue();
+      double rate = CurrencyConversion.convertFromTo("USD", "CNY").doubleValue();
 
       assertTrue(rate > 1.0);
    }

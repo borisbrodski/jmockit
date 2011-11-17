@@ -15,7 +15,7 @@ public final class CurrencyConversion2
 
    public static List<String> currencySymbols()
    {
-      return Arrays.asList("USD", "BR", "YEN");
+      return Arrays.asList("USD", "BRL", "CNY");
    }
 
    public CurrencyConversion2(String fromCurrency, String toCurrency)

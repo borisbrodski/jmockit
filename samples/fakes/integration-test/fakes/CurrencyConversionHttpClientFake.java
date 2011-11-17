@@ -79,10 +79,10 @@ public final class CurrencyConversionHttpClientFake
       if (from.equals(to)) {
          rate = BigDecimal.ONE;
       }
-      else if ("USD".equals(from) && "YEN".equals(to)) {
+      else if ("USD".equals(from) && "CNY".equals(to)) {
          rate = BigDecimal.TEN;
       }
-      else if ("YEN".equals(from) && "USD".equals(to)) {
+      else if ("CNY".equals(from) && "USD".equals(to)) {
          rate = new BigDecimal("0.1");
       }
       else {
