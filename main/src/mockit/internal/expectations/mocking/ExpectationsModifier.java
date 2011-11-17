@@ -30,6 +30,7 @@ final class ExpectationsModifier extends BaseClassModifier
       put("java/util/Hashtable", "get");
       put("java/lang/Throwable", "<init> fillInStackTrace");
       put("java/lang/Exception", "<init>");
+      put("java/lang/Thread", "currentThread isInterrupted");
    }};
 
    private final MockingConfiguration mockingCfg;

@@ -11,14 +11,12 @@ import junit.framework.*;
 
 @SuppressWarnings({
    "WaitWhileNotSynced", "UnconditionalWait", "WaitWithoutCorrespondingNotify", "WaitNotInLoop",
-   "WaitOrAwaitWithoutTimeout", "UnusedDeclaration"
-   , "deprecation"})
+   "WaitOrAwaitWithoutTimeout", "UnusedDeclaration", "deprecation"})
 public final class JREMockingTest extends TestCase
 {
    public void testMockingOfFile()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          File file;
 
          {
@@ -172,6 +170,50 @@ public final class JREMockingTest extends TestCase
       };
    }
 
+   public void testFullMockingOfThread()
+   {
+      new NonStrictExpectations() {
+         Thread t;
+
+         {
+            Thread.activeCount();
+            result = 123;
+         }
+      };
+
+      assertEquals(123, Thread.activeCount());
+
+      new Verifications() {{
+         new Thread((Runnable) any); times = 0;
+      }};
+   }
+
+   public void testDynamicMockingOfThread()
+   {
+      final Thread d = new Thread((Runnable) null);
+
+      new NonStrictExpectations(d) {};
+
+      d.start();
+      d.interrupt();
+
+      new Verifications() {{
+         d.start(); times = 1;
+         d.interrupt();
+      }};
+   }
+
+   public void testFullAndPartialMockingOfThread(Thread t)
+   {
+      final Thread d = new Thread((Runnable) null);
+
+      new NonStrictExpectations(d) {};
+
+      new Verifications() {{
+         d.interrupt(); times = 0;
+      }};
+   }
+
    public void testMockingOfAnnotatedNativeMethod(@Mocked("countStackFrames") Thread mock) throws Exception
    {
       assertTrue(Thread.class.getDeclaredMethod("countStackFrames").isAnnotationPresent(Deprecated.class));
@@ -182,14 +224,28 @@ public final class JREMockingTest extends TestCase
    // This interferes with the test runner if regular mocking is applied.
    public void testDynamicMockingOfFileOutputStreamThroughMockField() throws Exception
    {
-      new Expectations()
-      {
+      new Expectations() {{
+         stream.write((byte[]) any);
+      }};
+
+      stream.write("Hello world".getBytes());
+   }
+
+   public void testStringBuilder()
+   {
+      new NonStrictExpectations() {
+         StringBuilder builder;
+
          {
-            stream.write((byte[]) any);
+            builder.length(); result = 20;
+            builder.toString(); result = "test";
          }
       };
 
-      stream.write("Hello world".getBytes());
+      StringBuilder s = new StringBuilder();
+      s.append("something");
+      assertEquals(20, s.length());
+      assertEquals("test", s.toString());
    }
 
    // Mocking of java.lang.Object methods /////////////////////////////////////////////////////////////////////////////
@@ -207,20 +263,14 @@ public final class JREMockingTest extends TestCase
    {
       final Object mockedLock = new Object();
 
-      new Expectations(Object.class)
-      {
-         {
-            mockedLock.wait();
-         }
-      };
+      new Expectations(Object.class) {{ mockedLock.wait(); }};
 
       awaitNotification();
    }
 
    public void testWaitingWithLocalMockField() throws Exception
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Object mockedLock;
 
          {
@@ -242,22 +292,5 @@ public final class JREMockingTest extends TestCase
       catch (IllegalArgumentException e) {
          assertTrue(e.getMessage().contains("java.lang.Class"));
       }
-   }
-
-   public void testStringBuilder()
-   {
-      new NonStrictExpectations() {
-         StringBuilder builder;
-
-         {
-            builder.length(); result = 20;
-            builder.toString(); result = "test";
-         }
-      };
-
-      StringBuilder s = new StringBuilder();
-      s.append("something");
-      assertEquals(20, s.length());
-      assertEquals("test", s.toString());
    }
 }

@@ -106,6 +106,7 @@ public final class Startup
       try {
          Class.forName("mockit.Delegate");
          Class.forName("mockit.internal.expectations.invocation.InvocationResults");
+         Class.forName("mockit.external.hamcrest.core.IsEqual");
       }
       catch (ClassNotFoundException ignore) {}
 

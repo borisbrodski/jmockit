@@ -31,21 +31,28 @@ public final class TestRun
 
    private static TestRun getInstance()
    {
-      ClassLoader contextCL = Thread.currentThread().getContextClassLoader();
-      TestRun instance = INSTANCES.get(contextCL);
+      enterNoMockingZone();
 
-      // Certain runtime environments (OpenEJB, at least) change the context class loader to a child of the system
-      // class loader, so we try looking up the parent class loader before creating a new TestRun instance.
-      if (instance == null) {
-         instance = INSTANCES.get(contextCL.getParent());
+      try {
+         ClassLoader contextCL = Thread.currentThread().getContextClassLoader();
+         TestRun instance = INSTANCES.get(contextCL);
+
+         // Certain runtime environments (OpenEJB, at least) change the context class loader to a child of the system
+         // class loader, so we try looking up the parent class loader before creating a new TestRun instance.
+         if (instance == null) {
+            instance = INSTANCES.get(contextCL.getParent());
+         }
+
+         if (instance == null) {
+            instance = new TestRun();
+            INSTANCES.put(contextCL, instance);
+         }
+
+         return instance;
       }
-
-      if (instance == null) {
-         instance = new TestRun();
-         INSTANCES.put(contextCL, instance);
+      finally {
+         exitNoMockingZone();
       }
-
-      return instance;
    }
 
    private TestRun() {}
