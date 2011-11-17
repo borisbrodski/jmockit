@@ -4,8 +4,6 @@
  */
 package mockit;
 
-import java.util.*;
-
 import static org.junit.Assert.*;
 import org.junit.*;
 
@@ -223,7 +221,7 @@ public final class VerificationsTest
    @Test
    public void verifyWithCustomArgumentMatcherWithoutArgumentValue()
    {
-      mock.setSomethingElse("");
+      mock.setSomethingElse("not empty");
 
       new Verifications() {{
          mock.setSomethingElse(with(new Delegate<String>() {
