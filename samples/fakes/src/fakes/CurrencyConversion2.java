@@ -23,7 +23,7 @@ public final class CurrencyConversion2
       validateSymbol("from", fromCurrency);
       validateSymbol("to", toCurrency);
       url =
-         "http://www.gocurrency.com/v2/dorate.phpo?inV=1&Calculate=Convert&from=" + fromCurrency + "&to=" + toCurrency;
+         "http://www.gocurrency.com/v2/dorate.php?inV=1&Calculate=Convert&from=" + fromCurrency + "&to=" + toCurrency;
    }
 
    private void validateSymbol(String whichOne, String currencySymbol)
