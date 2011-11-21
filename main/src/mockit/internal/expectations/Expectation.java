@@ -4,6 +4,7 @@
  */
 package mockit.internal.expectations;
 
+import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -204,6 +205,11 @@ final class Expectation
    {
       if (value instanceof Throwable) {
          getResults().addThrowable((Throwable) value);
+         return;
+      }
+
+      if (value instanceof CharSequence && invocation.getMethodNameAndDescription().endsWith("Ljava/io/InputStream;")) {
+         addSingleReturnValue(new ByteArrayInputStream(value.toString().getBytes()));
          return;
       }
 

@@ -183,7 +183,7 @@ public final class MessageTest
 
          {
             con.getOutputStream(); result = new ByteArrayOutputStream();
-            con.getInputStream(); result = new ByteArrayInputStream("reply1\nreply2\n".getBytes());
+            con.getInputStream(); result = "reply1\nreply2\n";
             con.close(); times = 1;
          }
       };
@@ -211,7 +211,7 @@ public final class MessageTest
 
          {
             con.getOutputStream(); result = new ByteArrayOutputStream();
-            con.getInputStream(); result = new ByteArrayInputStream("reply1\n reply2\n".getBytes());
+            con.getInputStream(); result = "reply1\n reply2\n";
          }
       };
 
