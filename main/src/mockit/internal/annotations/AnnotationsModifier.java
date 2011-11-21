@@ -359,7 +359,7 @@ public final class AnnotationsModifier extends BaseClassModifier
          generateCallToMockingBridge(
             MockingBridge.CALL_INSTANCE_MOCK, annotatedMocks.getMockClassInternalName(), access,
             mockMethod.name, desc, mockMethod.desc, null, null,
-            mockMethod.getIndexForMockExpectations(), mockInstanceIndex, 0);
+            mockMethod.getIndexForMockExpectations(), mockInstanceIndex, forStartupMock ? 1 : 0);
          return;
       }
 

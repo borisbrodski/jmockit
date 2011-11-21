@@ -4,65 +4,45 @@
  */
 package mockit;
 
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
 import org.junit.*;
 
 import static mockit.Instantiation.*;
 import static mockit.Mockit.*;
 import static org.junit.Assert.*;
 
+import mockit.internal.*;
+
 @UsingMocksAndStubs(MockClassInstantiationPerMockedInstanceTest.MockClass1.class)
 public final class MockClassInstantiationPerMockedInstanceTest
 {
    static final class RealClass1
    {
-      static void doSomething()
-      {
-         throw new RuntimeException();
-      }
-
-      int performComputation(int a, boolean b)
-      {
-         return b ? a : -a;
-      }
+      final int value;
+      RealClass1(int value) { this.value = value; }
+      static void doSomething() { throw new RuntimeException(); }
+      int performComputation(int a, boolean b) { return b ? a : -a; }
    }
 
    static final class RealClass2
    {
-      static void doSomething()
-      {
-         throw new RuntimeException();
-      }
-
-      int performComputation(int a, boolean b)
-      {
-         return b ? a : -a;
-      }
+      static void doSomething() { throw new RuntimeException(); }
+      int performComputation(int a, boolean b) { return b ? a : -a; }
    }
 
    static final class RealClass3
    {
-      static void doSomething()
-      {
-         throw new RuntimeException();
-      }
-
-      int performComputation(int a, boolean b)
-      {
-         return b ? a : -a;
-      }
+      static void doSomething() { throw new RuntimeException(); }
+      int performComputation(int a, boolean b) { return b ? a : -a; }
    }
 
    static final class RealClass4
    {
-      static void doSomething()
-      {
-         throw new RuntimeException();
-      }
-
-      int performComputation(int a, boolean b)
-      {
-         return b ? a : -a;
-      }
+      static void doSomething() { throw new RuntimeException(); }
+      int performComputation(int a, boolean b) { return b ? a : -a; }
    }
 
    @MockClass(realClass = RealClass1.class, instantiation = PerMockedInstance)
@@ -70,6 +50,7 @@ public final class MockClassInstantiationPerMockedInstanceTest
    {
       static Object firstInstance;
       static Object secondInstance;
+      int value;
 
       MockClass1()
       {
@@ -80,6 +61,11 @@ public final class MockClassInstantiationPerMockedInstanceTest
             assertNull(secondInstance);
             secondInstance = this;
          }
+      }
+
+      @Mock void $init(int value)
+      {
+         this.value = value;
       }
 
       @Mock void doSomething()
@@ -93,6 +79,7 @@ public final class MockClassInstantiationPerMockedInstanceTest
          assertNotNull(firstInstance);
          assertNotSame(firstInstance, this);
          assertSame(secondInstance, this);
+         assertEquals(123, value);
          assertTrue(a > 0);
          assertTrue(b);
          return 2;
@@ -204,7 +191,7 @@ public final class MockClassInstantiationPerMockedInstanceTest
    @BeforeClass
    public static void setUpClassLevelMocks()
    {
-      setUpMocksAndStubs(MockClass2.class);
+      setUpMocks(MockClass2.class);
    }
 
    @Before
@@ -227,7 +214,7 @@ public final class MockClassInstantiationPerMockedInstanceTest
       MockClass1.firstInstance = null;
       MockClass1.secondInstance = null;
       RealClass1.doSomething();
-      RealClass1 realClass = new RealClass1();
+      RealClass1 realClass = new RealClass1(123);
       assertEquals(2, realClass.performComputation(1, true));
       assertEquals(2, realClass.performComputation(3, true));
    }
@@ -269,5 +256,33 @@ public final class MockClassInstantiationPerMockedInstanceTest
       assertMockClass2();
       assertMockClass3();
       assertMockClass4();
+   }
+
+   @MockClass(realClass = URL.class, instantiation = Instantiation.PerMockedInstance)
+   public static final class MockURL
+   {
+      public URL it;
+
+      @Mock(reentrant = true)
+      public InputStream openStream() throws IOException
+      {
+         if ("test".equals(it.getHost())) {
+            return new ByteArrayInputStream("response".getBytes());
+         }
+
+         return it.openStream();
+      }
+   }
+
+   @Test
+   public void reentrantStartupMockForJREClass() throws Exception
+   {
+      setUpStartupMocks(MockURL.class);
+
+      InputStream response = new URL("http://test").openStream();
+
+      assertEquals("response", new Scanner(response).nextLine());
+
+      new RedefinitionEngine().restoreToDefinitionBeforeStartup(URL.class);
    }
 }

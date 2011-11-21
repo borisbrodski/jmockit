@@ -48,11 +48,14 @@ public final class MockingBridge implements InvocationHandler
 
       String mockName = (String) args[3];
       String mockDesc = (String) args[4];
+      int executionMode = (Integer) args[9];
       Object[] mockArgs = extractMockArguments(args);
 
       if (targetId != RECORD_OR_REPLAY) {
          int mockIndex = (Integer) args[8];
-         return callMock(mocked, targetId, mockClassDesc, mockName, mockDesc, mockStateIndex, mockIndex, mockArgs);
+         boolean startupMock = executionMode > 0;
+         return callMock(
+            mocked, targetId, mockClassDesc, mockName, mockDesc, mockStateIndex, mockIndex, startupMock, mockArgs);
       }
 
       if (TestRun.isInsideNoMockingZone()) {
@@ -65,7 +68,6 @@ public final class MockingBridge implements InvocationHandler
          int mockAccess = (Integer) args[1];
          String genericSignature = (String) args[5];
          String exceptions = (String) args[6];
-         int executionMode = (Integer) args[9];
 
          return
             RecordAndReplayExecution.recordOrReplay(
@@ -115,7 +117,7 @@ public final class MockingBridge implements InvocationHandler
 
    private static Object callMock(
       Object mocked, int targetId, String mockClassInternalName, String mockName, String mockDesc,
-      int mockStateIndex, int mockInstanceIndex, Object[] mockArgs)
+      int mockStateIndex, int mockInstanceIndex, boolean startupMock, Object[] mockArgs)
    {
       Class<?> mockClass;
       Object mock;
@@ -131,6 +133,9 @@ public final class MockingBridge implements InvocationHandler
          if (mockInstanceIndex < 0) { // call to instance mock method on mock not yet instantiated
             String mockClassName = getMockClassName(mockClassInternalName);
             mock = Utilities.newInstance(mockClassName);
+         }
+         else if (startupMock) {
+            mock = TestRun.getStartupMock(mockInstanceIndex);
          }
          else { // call to instance mock method on mock already instantiated
             mock = TestRun.getMock(mockInstanceIndex);

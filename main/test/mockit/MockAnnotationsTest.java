@@ -462,9 +462,33 @@ public final class MockAnnotationsTest
    @Test
    public void setUpStartupMock()
    {
-      Mockit.setUpStartupMocks(MockCollaborator1.class, new MockCollaborator4());
-
+      Mockit.setUpStartupMocks(MockAnotherCollaborator.class);
       assertEquals(0, TestRun.mockFixture().getRedefinedClassCount());
+      assertFalse(AnotherCollaborator.doSomething());
+
+      // Startup mock must remain in effect even after tearing down all (regular) mocks.
+      Mockit.tearDownMocks();
+      assertFalse(AnotherCollaborator.doSomething());
+
+      // A different, but local, mocking of the same real class must be restored to the definition of the startup mock.
+      new MockUp<AnotherCollaborator>()
+      {
+         @Mock boolean doSomething() { return true; }
+      };
+      assertTrue(AnotherCollaborator.doSomething());
+      Mockit.tearDownMocks(AnotherCollaborator.class);
+      assertFalse(AnotherCollaborator.doSomething());
+   }
+
+   static final class AnotherCollaborator
+   {
+      static boolean doSomething() { throw new IllegalAccessError("Not mocked!"); }
+   }
+
+   @MockClass(realClass = AnotherCollaborator.class)
+   static final class MockAnotherCollaborator
+   {
+      @Mock boolean doSomething() { return false; }
    }
 
    @Test

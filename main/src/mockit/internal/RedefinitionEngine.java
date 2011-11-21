@@ -4,6 +4,7 @@
  */
 package mockit.internal;
 
+import java.io.*;
 import java.lang.instrument.*;
 import java.util.*;
 import java.util.Map.*;
@@ -137,7 +138,7 @@ public final class RedefinitionEngine
    {
       byte[] modifiedClassFile = stubOutClass();
       String classDesc = realClass.getName().replace('.', '/');
-      redefineMethods(classDesc, modifiedClassFile, true);
+      redefineMethods(classDesc, modifiedClassFile);
    }
 
    private byte[] stubOutClass()
@@ -163,7 +164,14 @@ public final class RedefinitionEngine
    {
       if (mockMethods.getMethodCount() > 0 || mockingConfiguration != null) {
          byte[] modifiedClassFile = modifyRealClass(forStartupMock);
-         redefineMethods(mockMethods.getMockClassInternalName(), modifiedClassFile, !forStartupMock);
+         redefineMethods(modifiedClassFile);
+
+         if (forStartupMock) {
+            TestRun.mockFixture().addFixedClass(realClass.getName(), modifiedClassFile);
+         }
+         else {
+            addToMapOfRedefinedClasses(mockMethods.getMockClassInternalName(), modifiedClassFile);
+         }
       }
    }
 
@@ -216,18 +224,15 @@ public final class RedefinitionEngine
       }
    }
 
-   public void redefineMethods(String mockClassInternalName, byte[] modifiedClassfile, boolean register)
+   public void redefineMethods(String mockClassInternalName, byte[] modifiedClassfile)
    {
       redefineMethods(modifiedClassfile);
-
-      if (register) {
-         addToMapOfRedefinedClasses(mockClassInternalName, modifiedClassfile);
-      }
+      addToMapOfRedefinedClasses(mockClassInternalName, modifiedClassfile);
    }
 
-   private void addToMapOfRedefinedClasses(String classInternalName, byte[] modifiedClassfile)
+   private void addToMapOfRedefinedClasses(String mockClassInternalName, byte[] modifiedClassfile)
    {
-      TestRun.mockFixture().addRedefinedClass(classInternalName, realClass, modifiedClassfile);
+      TestRun.mockFixture().addRedefinedClass(mockClassInternalName, realClass, modifiedClassfile);
    }
 
    private void redefineMethods(byte[] modifiedClassfile)
@@ -269,6 +274,13 @@ public final class RedefinitionEngine
    {
       realClass = aClass;
       byte[] realClassFile = new ClassFile(aClass, false).getBytecode();
+      redefineMethods(realClassFile);
+   }
+
+   public void restoreToDefinitionBeforeStartup(Class<?> aClass) throws IOException
+   {
+      realClass = aClass;
+      byte[] realClassFile = ClassFile.readClass4(aClass.getName()).b;
       redefineMethods(realClassFile);
    }
 

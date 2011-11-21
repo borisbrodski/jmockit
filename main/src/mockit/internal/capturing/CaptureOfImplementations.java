@@ -59,7 +59,7 @@ public abstract class CaptureOfImplementations
          classReader.accept(modifier, false);
          byte[] modifiedClass = modifier.toByteArray();
 
-         new RedefinitionEngine(realClass).redefineMethods(null, modifiedClass, true);
+         new RedefinitionEngine(realClass).redefineMethods(null, modifiedClass);
       }
    }
 

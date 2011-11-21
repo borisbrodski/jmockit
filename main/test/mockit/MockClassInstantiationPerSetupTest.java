@@ -4,11 +4,17 @@
  */
 package mockit;
 
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
 import org.junit.*;
 
 import static mockit.Instantiation.*;
 import static mockit.Mockit.*;
 import static org.junit.Assert.*;
+
+import mockit.internal.*;
 
 @UsingMocksAndStubs(MockClassInstantiationPerSetupTest.MockClass1.class)
 public final class MockClassInstantiationPerSetupTest
@@ -200,5 +206,33 @@ public final class MockClassInstantiationPerSetupTest
       assertMockClass2();
       assertMockClass3();
       assertMockClass4();
+   }
+
+   @MockClass(realClass = URL.class, instantiation = Instantiation.PerMockSetup)
+   public static final class MockURL
+   {
+      public URL it;
+
+      @Mock(reentrant = true)
+      public InputStream openStream() throws IOException
+      {
+         if ("test".equals(it.getHost())) {
+            return new ByteArrayInputStream("response".getBytes());
+         }
+
+         return it.openStream();
+      }
+   }
+
+   @Test
+   public void reentrantMockForJREClass() throws Exception
+   {
+      setUpStartupMocks(MockURL.class);
+
+      InputStream response = new URL("http://test").openStream();
+
+      assertEquals("response", new Scanner(response).nextLine());
+
+      new RedefinitionEngine().restoreToDefinitionBeforeStartup(URL.class);
    }
 }
