@@ -20,15 +20,14 @@ import mockit.internal.util.*;
 public final class MockFixture
 {
    /**
-    * Class names with their bytecode fixed definitions, that is, those to which the class should
-    * eventually be restored.
+    * Classes with fixed bytecode definitions, that is, those to which the class should eventually be restored if
+    * modified for a particular test.
     * <p/>
-    * This map is to be used by other bytecode instrumentation tools such as JMockit Coverage,
-    * which need to avoid having their bytecode redefinitions/transformations getting discarded when
-    * test tear down executes and restores mocked classes.
+    * This map is meant to be used by other bytecode instrumentation tools (such as JMockit Coverage), which need to
+    * avoid having their bytecode redefinitions/transformations getting discarded when mocked classes get restored.
     * <p/>
-    * The modified bytecode arrays in the map allow a new redefinition for a given class to be made,
-    * on top of the fixed definition.
+    * The modified bytecode arrays in the map allow a new redefinition for a given class to be made, on top of the
+    * fixed definition.
     */
    private final Map<String, byte[]> fixedClassDefinitions = new HashMap<String, byte[]>();
 
@@ -234,17 +233,5 @@ public final class MockFixture
    public boolean containsRedefinedClass(Class<?> redefinedClass)
    {
       return redefinedClasses.containsKey(redefinedClass);
-   }
-
-   public void turnRedefinedClassesIntoFixedOnes()
-   {
-      Iterator<Entry<Class<?>, byte[]>> itr = redefinedClasses.entrySet().iterator();
-
-      while (itr.hasNext()) {
-         Entry<Class<?>, byte[]> classAndBytecode = itr.next();
-         itr.remove();
-
-         addFixedClass(classAndBytecode.getKey().getName(), classAndBytecode.getValue());
-      }
    }
 }

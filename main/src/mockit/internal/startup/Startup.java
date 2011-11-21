@@ -14,7 +14,6 @@ import mockit.integration.junit4.internal.*;
 import mockit.integration.testng.internal.*;
 import mockit.internal.*;
 import mockit.internal.expectations.transformation.*;
-import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 /**
@@ -125,8 +124,6 @@ public final class Startup
 
          setUpInternalStartupMock(RunNotifierDecorator.class);
          setUpInternalStartupMock(JUnit4TestRunnerDecorator.class);
-
-         TestRun.mockFixture().turnRedefinedClassesIntoFixedOnes();
       }
    }
 
