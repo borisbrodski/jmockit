@@ -19,7 +19,7 @@
       <module>orderMngmntWebapp</module>
       <module>tourdemock</module>
       <module>LoginService</module>
-      <module>fakes</module>
+      <module>fakingXmocking</module>
    </modules>
 
    <name>The JMockit Testing Toolkit Samples</name>

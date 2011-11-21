@@ -1297,7 +1297,7 @@
       <module fileurl="file://$PROJECT_DIR$/samples/TimingFramework/TimingFramework.iml" filepath="$PROJECT_DIR$/samples/TimingFramework/TimingFramework.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/tutorial/Tutorial.iml" filepath="$PROJECT_DIR$/samples/tutorial/Tutorial.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/unitils/Unitils.iml" filepath="$PROJECT_DIR$/samples/unitils/Unitils.iml" group="Samples" />
-      <module fileurl="file://$PROJECT_DIR$/samples/fakes/fakes.iml" filepath="$PROJECT_DIR$/samples/fakes/fakes.iml" group="Samples" />
+      <module fileurl="file://$PROJECT_DIR$/samples/fakingXmocking/fakingXmocking.iml" filepath="$PROJECT_DIR$/samples/fakingXmocking/fakingXmocking.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/jmock/jMock2.iml" filepath="$PROJECT_DIR$/samples/jmock/jMock2.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/samples.iml" filepath="$PROJECT_DIR$/samples/samples.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/tourdemock/tourdemock.iml" filepath="$PROJECT_DIR$/samples/tourdemock/tourdemock.iml" group="Samples" />
