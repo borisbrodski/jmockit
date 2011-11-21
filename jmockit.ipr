@@ -1297,7 +1297,7 @@
       <module fileurl="file://$PROJECT_DIR$/samples/TimingFramework/TimingFramework.iml" filepath="$PROJECT_DIR$/samples/TimingFramework/TimingFramework.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/tutorial/Tutorial.iml" filepath="$PROJECT_DIR$/samples/tutorial/Tutorial.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/unitils/Unitils.iml" filepath="$PROJECT_DIR$/samples/unitils/Unitils.iml" group="Samples" />
-      <module fileurl="file://$PROJECT_DIR$/samples/fakingXmocking/fakingXmocking.iml" filepath="$PROJECT_DIR$/samples/fakingXmocking/fakingXmocking.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/fakingXmocking/fakingXmocking.iml" filepath="$PROJECT_DIR$/samples/fakingXmocking/fakingXmocking.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/jmock/jMock2.iml" filepath="$PROJECT_DIR$/samples/jmock/jMock2.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/samples.iml" filepath="$PROJECT_DIR$/samples/samples.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/tourdemock/tourdemock.iml" filepath="$PROJECT_DIR$/samples/tourdemock/tourdemock.iml" group="Samples" />
@@ -1334,6 +1334,84 @@
                 <list>
                   <option value="https://jmockit.googlecode.com/svn/branches" />
                   <option value="https://jmockit.googlecode.com/svn/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://jmockit.googlecode.com/svn/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/samples">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://jmockit.googlecode.com/svn/branches">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                  <entry key="https://jmockit.googlecode.com/svn/maven-repo">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                  <entry key="https://jmockit.googlecode.com/svn/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                  <entry key="https://jmockit.googlecode.com/svn/wiki">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://jmockit.googlecode.com/svn/branches" />
+                  <option value="https://jmockit.googlecode.com/svn/maven-repo" />
+                  <option value="https://jmockit.googlecode.com/svn/tags" />
+                  <option value="https://jmockit.googlecode.com/svn/wiki" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://jmockit.googlecode.com/svn/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/samples/fakingXmocking">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://jmockit.googlecode.com/svn/branches">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                  <entry key="https://jmockit.googlecode.com/svn/maven-repo">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                  <entry key="https://jmockit.googlecode.com/svn/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                  <entry key="https://jmockit.googlecode.com/svn/wiki">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://jmockit.googlecode.com/svn/branches" />
+                  <option value="https://jmockit.googlecode.com/svn/maven-repo" />
+                  <option value="https://jmockit.googlecode.com/svn/tags" />
+                  <option value="https://jmockit.googlecode.com/svn/wiki" />
                 </list>
               </option>
               <option name="trunkUrl" value="https://jmockit.googlecode.com/svn/trunk" />
