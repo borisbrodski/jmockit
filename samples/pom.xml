@@ -27,7 +27,7 @@
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <jmockit.version>0.999.11</jmockit.version>
+      <jmockit.version>0.999.12</jmockit.version>
       <junit.version>4.8.2</junit.version>
    </properties>
 
