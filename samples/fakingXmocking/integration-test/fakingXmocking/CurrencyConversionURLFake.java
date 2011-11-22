@@ -21,7 +21,7 @@ import mockit.*;
 public final class CurrencyConversionURLFake
 {
    private static final BigDecimal DEFAULT_RATE = new BigDecimal("1.2");
-   private static final Map<String, BigDecimal> currenciesAndRates = new ConcurrentHashMap<String, BigDecimal>();
+   private static final Map<String, BigDecimal> currenciesAndRates = new ConcurrentHashMap<>();
    public URL it;
 
    @Mock(reentrant = true)
@@ -30,22 +30,23 @@ public final class CurrencyConversionURLFake
       String host = it.getHost();
       String response;
 
-      if ("www.jhall.demon.co.uk".equals(host)) {
-         response =
-            "<h3>Currency Data</h3>\r\n" +
-            "<table><tr>\r\n" +
-            "  <td valign=top>USD</td>\r\n" +
-            "  <td valign=top>EUR</td>\r\n" +
-            "  <td valign=top>BRL</td>\r\n" +
-            "  <td valign=top>CNY</td>\r\n" +
-            "</tr></table>";
-      }
-      else if ("www.gocurrency.com".equals(host)) {
-         String[] params = it.getQuery().split("&");
-         response = formatResultContainingCurrencyConversion(params);
-      }
-      else {
-         return it.openStream();
+      switch (host) {
+         case "www.jhall.demon.co.uk":
+            response =
+               "<h3>Currency Data</h3>\r\n" +
+               "<table><tr>\r\n" +
+               "  <td valign=top>USD</td>\r\n" +
+               "  <td valign=top>EUR</td>\r\n" +
+               "  <td valign=top>BRL</td>\r\n" +
+               "  <td valign=top>CNY</td>\r\n" +
+               "</tr></table>";
+            break;
+         case "www.gocurrency.com":
+            String[] params = it.getQuery().split("&");
+            response = formatResultContainingCurrencyConversion(params);
+            break;
+         default:
+            return it.openStream();
       }
 
       return new ByteArrayInputStream(response.getBytes());

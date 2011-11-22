@@ -47,7 +47,7 @@ public final class CurrencyConversion2
    private List<String> extractCurrencySymbolsFromHtml(InputStream response)
    {
       BufferedReader reader = new BufferedReader(new InputStreamReader(response));
-      List<String> symbols = new ArrayList<String>();
+      List<String> symbols = new ArrayList<>();
 
       try {
          String line;
