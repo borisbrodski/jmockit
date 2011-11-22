@@ -1,6 +1,6 @@
 /***
  * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2005 INRIA, France Telecom
+ * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,12 +27,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package mockit.external.asm4;
 
 /**
  * A reference to a field or a method.
- * 
+ *
  * @author Remi Forax
  * @author Eric Bruneton
  */
@@ -65,7 +64,7 @@ public final class Handle {
 
     /**
      * Constructs a new field or method handle.
-     * 
+     *
      * @param tag the kind of field or method designated by this Handle. Must be
      *        {@link Opcodes#H_GETFIELD}, {@link Opcodes#H_GETSTATIC},
      *        {@link Opcodes#H_PUTFIELD}, {@link Opcodes#H_PUTSTATIC},
@@ -88,7 +87,7 @@ public final class Handle {
 
     /**
      * Returns the kind of field or method designated by this handle.
-     * 
+     *
      * @return {@link Opcodes#H_GETFIELD}, {@link Opcodes#H_GETSTATIC},
      *         {@link Opcodes#H_PUTFIELD}, {@link Opcodes#H_PUTSTATIC},
      *         {@link Opcodes#H_INVOKEVIRTUAL}, {@link Opcodes#H_INVOKESTATIC},
@@ -103,7 +102,7 @@ public final class Handle {
     /**
      * Returns the internal name of the field or method designed by this
      * handle.
-     * 
+     *
      * @return the internal name of the field or method designed by this
      *         handle.
      */
@@ -113,7 +112,7 @@ public final class Handle {
 
     /**
      * Returns the name of the field or method designated by this handle.
-     * 
+     *
      * @return the name of the field or method designated by this handle.
      */
     public String getName() {
@@ -122,7 +121,7 @@ public final class Handle {
 
     /**
      * Returns the descriptor of the field or method designated by this handle.
-     * 
+     *
      * @return the descriptor of the field or method designated by this handle.
      */
     public String getDesc() {
