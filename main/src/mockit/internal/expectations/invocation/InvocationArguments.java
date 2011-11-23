@@ -7,7 +7,7 @@ package mockit.internal.expectations.invocation;
 import java.lang.reflect.*;
 import java.util.*;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.external.hamcrest.*;
 import mockit.external.hamcrest.core.*;
 import mockit.internal.state.*;

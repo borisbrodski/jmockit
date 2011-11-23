@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.*;
 
 import static java.util.Arrays.*;
-import static mockit.external.asm.Opcodes.*;
+import static mockit.external.asm4.Opcodes.*;
 
 import mockit.external.asm.*;
 import mockit.external.asm.commons.*;

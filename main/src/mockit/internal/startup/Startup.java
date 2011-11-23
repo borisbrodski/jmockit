@@ -8,7 +8,7 @@ import java.io.*;
 import java.lang.instrument.*;
 
 import mockit.*;
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.integration.junit3.internal.*;
 import mockit.integration.junit4.internal.*;
 import mockit.integration.testng.internal.*;
@@ -157,7 +157,7 @@ public final class Startup
 
       if (byDefault) {
          try {
-            cr = ClassFile.readClass(config.toolClassName);
+            cr = ClassFile.readClass4(config.toolClassName);
          }
          catch (IOException ignore) {
             // OK, don't load if not in the classpath.
@@ -165,7 +165,7 @@ public final class Startup
          }
       }
       else {
-         cr = ClassFile.readClass(config.toolClassName);
+         cr = ClassFile.readClass4(config.toolClassName);
       }
 
       loadExternalTool(config, cr);
@@ -176,7 +176,7 @@ public final class Startup
       ToolLoader toolLoader = new ToolLoader(config.toolClassName, config.toolArguments);
 
       try {
-         cr.accept(toolLoader, true);
+         cr.accept(toolLoader, ClassReader.SKIP_DEBUG);
       }
       catch (IllegalStateException ignore) {
          return;

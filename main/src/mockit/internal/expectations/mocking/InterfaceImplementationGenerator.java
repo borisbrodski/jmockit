@@ -6,7 +6,7 @@ package mockit.internal.expectations.mocking;
 
 import java.util.*;
 
-import static mockit.external.asm.Opcodes.*;
+import static mockit.external.asm4.Opcodes.*;
 
 import mockit.external.asm.*;
 import mockit.external.asm.commons.*;

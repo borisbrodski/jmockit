@@ -7,7 +7,7 @@ package mockit.internal.filtering;
 import java.util.*;
 import java.util.regex.*;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 
 public final class MockingConfiguration
 {

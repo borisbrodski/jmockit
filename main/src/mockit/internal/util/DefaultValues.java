@@ -7,7 +7,7 @@ package mockit.internal.util;
 import java.lang.reflect.*;
 import java.util.*;
 
-import mockit.external.asm.Type;
+import mockit.external.asm4.Type;
 
 import static java.util.Collections.*;
 

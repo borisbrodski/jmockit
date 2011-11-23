@@ -1596,7 +1596,7 @@ public class ClassReader
                 return new Double(Double.longBitsToDouble(readLong(index)));
             case ClassWriter.CLASS:
                 String s = readUTF8(index, buf);
-                return Type.getType(s.charAt(0) == '[' ? s : "L" + s + ";");
+                return mockit.external.asm4.Type.getType(s.charAt(0) == '[' ? s : "L" + s + ";");
             // case ClassWriter.STR:
             default:
                 return readUTF8(index, buf);

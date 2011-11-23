@@ -806,7 +806,7 @@ public final class Utilities
 
    public static Class<?>[] getParameterTypes(String mockDesc)
    {
-      mockit.external.asm.Type[] paramTypes = mockit.external.asm.Type.getArgumentTypes(mockDesc);
+      mockit.external.asm4.Type[] paramTypes = mockit.external.asm4.Type.getArgumentTypes(mockDesc);
 
       if (paramTypes.length == 0) {
          return NO_PARAMETERS;
@@ -821,7 +821,7 @@ public final class Utilities
       return paramClasses;
    }
 
-   public static Class<?> getClassForType(mockit.external.asm.Type type)
+   public static Class<?> getClassForType(mockit.external.asm4.Type type)
    {
       int elementSort = type.getSort();
 
@@ -830,7 +830,7 @@ public final class Utilities
       }
 
       String className =
-         elementSort == mockit.external.asm.Type.ARRAY ? type.getDescriptor().replace('/', '.') : type.getClassName();
+         elementSort == mockit.external.asm4.Type.ARRAY ? type.getDescriptor().replace('/', '.') : type.getClassName();
 
       return loadClass(className);
    }

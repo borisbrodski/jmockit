@@ -7,7 +7,7 @@ package mockit.internal.expectations.mocking;
 import java.lang.reflect.*;
 import static java.lang.reflect.Modifier.*;
 
-import static mockit.external.asm.Opcodes.*;
+import static mockit.external.asm4.Opcodes.*;
 
 import mockit.*;
 import mockit.internal.state.*;

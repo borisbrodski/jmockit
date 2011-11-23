@@ -199,7 +199,7 @@ public final class TestedClassInstantiations
             Class<?> declaredClass = (Class<?>) declaredType;
 
             if (declaredClass.isArray()) {
-               typeDesc = "type " + mockit.external.asm.Type.getType(declaredClass).getClassName();
+               typeDesc = "type " + mockit.external.asm4.Type.getType(declaredClass).getClassName();
             }
             else if (declaredClass.isPrimitive()) {
                typeDesc = "type " + typeDesc;

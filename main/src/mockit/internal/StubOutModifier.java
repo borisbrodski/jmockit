@@ -11,7 +11,7 @@ import mockit.internal.filtering.*;
 import mockit.internal.util.*;
 import mockit.internal.startup.*;
 
-import static mockit.external.asm.Opcodes.*;
+import static mockit.external.asm4.Opcodes.*;
 
 public final class StubOutModifier extends BaseClassModifier
 {

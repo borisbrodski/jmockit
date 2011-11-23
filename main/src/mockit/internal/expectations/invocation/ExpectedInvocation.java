@@ -6,7 +6,7 @@ package mockit.internal.expectations.invocation;
 
 import java.util.*;
 
-import mockit.external.asm.Type;
+import mockit.external.asm4.Type;
 
 import mockit.internal.expectations.*;
 import mockit.internal.state.*;

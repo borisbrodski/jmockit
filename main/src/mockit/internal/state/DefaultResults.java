@@ -8,7 +8,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.*;
-import mockit.external.asm.Type;
+import mockit.external.asm4.Type;
 import mockit.internal.util.*;
 
 public final class DefaultResults

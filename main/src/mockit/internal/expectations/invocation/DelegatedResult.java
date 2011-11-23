@@ -7,17 +7,17 @@ package mockit.internal.expectations.invocation;
 import java.lang.reflect.*;
 
 import mockit.*;
-import mockit.external.asm.Type;
+import mockit.external.asm4.Type;
 import mockit.internal.util.*;
 
 final class DelegatedResult extends DynamicInvocationResult
 {
-   DelegatedResult(Delegate delegate)
+   DelegatedResult(Delegate<?> delegate)
    {
       super(delegate, findDelegateMethodIfSingle(delegate));
    }
 
-   private static Method findDelegateMethodIfSingle(Delegate delegate)
+   private static Method findDelegateMethodIfSingle(Delegate<?> delegate)
    {
       Method[] declaredMethods = delegate.getClass().getDeclaredMethods();
       return declaredMethods.length == 1 ? declaredMethods[0] : null;

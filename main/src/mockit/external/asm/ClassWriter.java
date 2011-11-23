@@ -775,9 +775,9 @@ public class ClassWriter implements ClassVisitor
             return newDouble(val);
         } else if (cst instanceof String) {
             return newString((String) cst);
-        } else if (cst instanceof Type) {
-            Type t = (Type) cst;
-            return newClassItem(t.getSort() == Type.OBJECT
+        } else if (cst instanceof mockit.external.asm4.Type) {
+            mockit.external.asm4.Type t = (mockit.external.asm4.Type) cst;
+            return newClassItem(t.getSort() == mockit.external.asm4.Type.OBJECT
                     ? t.getInternalName()
                     : t.getDescriptor());
         } else {

@@ -6,7 +6,7 @@ package mockit.internal.expectations.transformation;
 
 import mockit.external.asm4.*;
 
-import static mockit.external.asm.Opcodes.*;
+import static mockit.external.asm4.Opcodes.*;
 
 final class InvocationBlockModifier extends MethodVisitor
 {

@@ -6,10 +6,10 @@ package mockit.internal.annotations;
 
 import java.lang.reflect.*;
 
-import static mockit.external.asm.Opcodes.*;
+import static mockit.external.asm4.Opcodes.*;
 
 import mockit.external.asm.*;
-import mockit.external.asm.Type;
+import mockit.external.asm4.Type;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
 import mockit.internal.startup.*;
