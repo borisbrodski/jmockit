@@ -8,7 +8,7 @@ import java.lang.reflect.*;
 
 import static mockit.external.asm4.Opcodes.*;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.external.asm4.Type;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
@@ -225,7 +225,7 @@ public final class AnnotationsModifier extends BaseClassModifier
 
       generateCallToMock(access, desc);
 
-      return new MethodAdapter(mw)
+      return new MethodVisitor(mw)
       {
          @Override
          public void visitLocalVariable(String name, String desc2, String signature, Label start, Label end, int index)

@@ -8,8 +8,7 @@ import java.lang.instrument.*;
 import java.security.*;
 import java.util.*;
 
-import mockit.external.asm.*;
-import mockit.external.asm.commons.*;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
@@ -70,7 +69,7 @@ final class CaptureTransformer implements ClassFileTransformer
       byte[] modifiedBytecode = null;
 
       try {
-         cr.accept(superTypeCollector, true);
+         cr.accept(superTypeCollector, ClassReader.SKIP_DEBUG);
       }
       catch (VisitInterruptedException ignore) {
          if (superTypeCollector.classExtendsCapturedType) {
@@ -83,8 +82,8 @@ final class CaptureTransformer implements ClassFileTransformer
 
    private byte[] modifyAndRegisterClass(ClassLoader loader, String className, ClassReader cr)
    {
-      ClassWriter modifier = modifierFactory.createModifier(loader, cr, capturedType);
-      cr.accept(modifier, false);
+      ClassVisitor modifier = modifierFactory.createModifier(loader, cr, capturedType);
+      cr.accept(modifier, 0);
 
       byte[] originalBytecode = cr.b;
 
@@ -98,7 +97,7 @@ final class CaptureTransformer implements ClassFileTransformer
       return modifier.toByteArray();
    }
 
-   private final class SuperTypeCollector extends EmptyVisitor
+   private final class SuperTypeCollector extends ClassVisitor
    {
       boolean classExtendsCapturedType;
 
@@ -121,8 +120,8 @@ final class CaptureTransformer implements ClassFileTransformer
 
          if (!classExtendsCapturedType && !"java/lang/Object".equals(superName)) {
             String superClassName = superName.replace('/', '.');
-            ClassReader cr = ClassFile.createClassFileReader(superClassName);
-            cr.accept(superTypeCollector, true);
+            ClassReader cr = ClassFile.createClassFileReader4(superClassName);
+            cr.accept(superTypeCollector, ClassReader.SKIP_DEBUG);
          }
 
          throw VisitInterruptedException.INSTANCE;

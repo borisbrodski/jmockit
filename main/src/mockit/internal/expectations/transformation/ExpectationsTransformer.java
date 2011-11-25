@@ -11,12 +11,7 @@ import java.util.*;
 import static java.lang.reflect.Modifier.*;
 
 import mockit.*;
-import mockit.external.asm.ClassReader;
-import mockit.external.asm.commons.*;
-import mockit.external.asm4.ClassVisitor;
-import mockit.external.asm4.ClassWriter;
-import mockit.external.asm4.MethodVisitor;
-import mockit.external.asm4.Opcodes;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 import mockit.internal.util.*;
 
@@ -69,7 +64,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    {
       for (Class<?> aClass : alreadyLoaded) {
          if (isFinalClass(aClass) && isExpectationsOrVerificationsSubclassFromUserCode(aClass)) {
-            mockit.external.asm4.ClassReader cr = ClassFile.createClassFileReader4(aClass.getName());
+            ClassReader cr = ClassFile.createClassFileReader4(aClass.getName());
             EndOfBlockModifier modifier = new EndOfBlockModifier(cr, true);
 
             try {
@@ -90,7 +85,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       byte[] classfileBuffer)
    {
       if (classBeingRedefined == null && protectionDomain != null) {
-         mockit.external.asm4.ClassReader cr = new mockit.external.asm4.ClassReader(classfileBuffer);
+         ClassReader cr = new ClassReader(classfileBuffer);
          int v = cr.getItem(cr.readUnsignedShort(cr.header + 4));
 
          if (v == 0) {
@@ -128,13 +123,11 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       MethodVisitor mw;
       String classDesc;
 
-      EndOfBlockModifier(mockit.external.asm4.ClassReader cr, boolean isAnonymousClass)
+      EndOfBlockModifier(ClassReader cr, boolean isAnonymousClass)
       {
-         super(Opcodes.ASM4, new ClassWriter(cr, ClassWriter.COMPUTE_MAXS));
+         super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS));
          this.isAnonymousClass = isAnonymousClass;
       }
-
-      byte[] toByteArray() { return ((ClassWriter) cv).toByteArray(); }
 
       @Override
       public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
@@ -175,7 +168,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       }
    }
 
-   private final class SuperClassAnalyser extends EmptyVisitor
+   private final class SuperClassAnalyser extends ClassVisitor
    {
       private boolean classExtendsBaseSubclass;
 
@@ -186,9 +179,9 @@ public final class ExpectationsTransformer implements ClassFileTransformer
          }
 
          String className = classOfInterest.replace('/', '.');
-         ClassReader cr = ClassFile.createClassFileReader(className);
+         ClassReader cr = ClassFile.createClassFileReader4(className);
 
-         try { cr.accept(this, true); } catch (VisitInterruptedException ignore) {}
+         try { cr.accept(this, ClassReader.SKIP_DEBUG); } catch (VisitInterruptedException ignore) {}
 
          return classExtendsBaseSubclass;
       }

@@ -38,7 +38,7 @@ package mockit.external.asm4;
  *
  * @author Eric Bruneton
  */
-public class ClassWriter extends ClassVisitor {
+public final class ClassWriter extends ClassVisitor {
 
     /**
      * Flag to automatically compute the maximum stack size and the maximum
@@ -588,7 +588,6 @@ public class ClassWriter extends ClassVisitor {
      *        of this class. See {@link #COMPUTE_MAXS}, {@link #COMPUTE_FRAMES}.
      */
     public ClassWriter(final int flags) {
-        super(Opcodes.ASM4);
         index = 1;
         pool = new ByteVector();
         items = new Item[256];

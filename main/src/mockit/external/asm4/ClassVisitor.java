@@ -41,40 +41,21 @@ package mockit.external.asm4;
 public abstract class ClassVisitor {
 
     /**
-     * The ASM API version implemented by this visitor. The value of this field
-     * must be one of {@link Opcodes#ASM4}.
-     */
-    protected final int api;
-
-    /**
      * The class visitor to which this visitor must delegate method calls. May
      * be null.
      */
-    protected ClassVisitor cv;
+    protected final ClassVisitor cv;
 
-    /**
-     * Constructs a new {@link ClassVisitor}.
-     *
-     * @param api the ASM API version implemented by this visitor. Must be one
-     *        of {@link Opcodes#ASM4}.
-     */
-    public ClassVisitor(final int api) {
-        this(api, null);
+    protected ClassVisitor() {
+        this(null);
     }
 
     /**
-     * Constructs a new {@link ClassVisitor}.
+     * Constructs a new ClassVisitor.
      *
-     * @param api the ASM API version implemented by this visitor. Must be one
-     *        of {@link Opcodes#ASM4}.
-     * @param cv the class visitor to which this visitor must delegate method
-     *        calls. May be null.
+     * @param cv the class visitor to which this visitor must delegate method calls. May be null.
      */
-    public ClassVisitor(final int api, final ClassVisitor cv) {
-        /*if (api != Opcodes.ASM4) {
-            throw new IllegalArgumentException();
-        }*/
-        this.api = api;
+    protected ClassVisitor(ClassVisitor cv) {
         this.cv = cv;
     }
 
@@ -274,4 +255,6 @@ public abstract class ClassVisitor {
             cv.visitEnd();
         }
     }
+
+    public byte[] toByteArray() { return cv.toByteArray(); }
 }

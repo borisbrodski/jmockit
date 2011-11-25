@@ -104,7 +104,6 @@ final class AnnotationWriter extends AnnotationVisitor {
         final ByteVector parent,
         final int offset)
     {
-        super(Opcodes.ASM4);
         this.cw = cw;
         this.named = named;
         this.bv = bv;

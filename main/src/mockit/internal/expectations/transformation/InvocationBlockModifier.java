@@ -19,7 +19,7 @@ final class InvocationBlockModifier extends MethodVisitor
 
    InvocationBlockModifier(MethodVisitor mw, String fieldOwner, boolean callEndInvocations)
    {
-      super(Opcodes.ASM4, mw);
+      super(mw);
       matcherStacks = new int[20];
       this.fieldOwner = fieldOwner;
       this.callEndInvocations = callEndInvocations;

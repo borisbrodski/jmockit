@@ -6,7 +6,7 @@ package mockit.internal;
 
 import static java.lang.reflect.Modifier.*;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.filtering.*;
 import mockit.internal.util.*;
 import mockit.internal.startup.*;

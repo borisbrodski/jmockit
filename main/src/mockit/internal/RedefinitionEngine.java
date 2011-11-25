@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.Map.*;
 
 import mockit.*;
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.annotations.*;
 import mockit.internal.filtering.*;
 import mockit.internal.startup.*;
@@ -144,8 +144,8 @@ public final class RedefinitionEngine
    private byte[] stubOutClass()
    {
       ClassReader rcReader = createClassReaderForRealClass();
-      ClassWriter rcWriter = new StubOutModifier(rcReader, mockingConfiguration);
-      rcReader.accept(rcWriter, false);
+      ClassVisitor rcWriter = new StubOutModifier(rcReader, mockingConfiguration);
+      rcReader.accept(rcWriter, 0);
       return rcWriter.toByteArray();
    }
 
@@ -198,9 +198,9 @@ public final class RedefinitionEngine
       return new ClassFile(realClass, true).getReader();
    }
 
-   public byte[] modifyRealClass(ClassReader rcReader, ClassWriter rcWriter, String mockClassName)
+   public byte[] modifyRealClass(ClassReader rcReader, ClassVisitor rcWriter, String mockClassName)
    {
-      rcReader.accept(rcWriter, false);
+      rcReader.accept(rcWriter, 0);
 
       if (mockMethods.getMethodCount() > 0) {
          List<String> remainingMocks = mockMethods.getMethods();

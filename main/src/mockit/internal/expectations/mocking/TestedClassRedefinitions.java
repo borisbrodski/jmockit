@@ -9,7 +9,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.*;
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 
 final class TestedClassRedefinitions
@@ -53,9 +53,9 @@ final class TestedClassRedefinitions
 
    private void redefineTestedClass(Class<?> testedClass)
    {
-      ClassReader cr = ClassFile.createClassFileReader(testedClass.getName());
+      ClassReader cr = ClassFile.createClassFileReader4(testedClass.getName());
       TestedClassModifier modifier = new TestedClassModifier(cr, mockedTypes);
-      cr.accept(modifier, false);
+      cr.accept(modifier, 0);
       byte[] modifiedClass = modifier.toByteArray();
 
       ClassDefinition classDefinition = new ClassDefinition(testedClass, modifiedClass);

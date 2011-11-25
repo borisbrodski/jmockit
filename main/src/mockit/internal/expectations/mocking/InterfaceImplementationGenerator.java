@@ -8,8 +8,7 @@ import java.util.*;
 
 import static mockit.external.asm4.Opcodes.*;
 
-import mockit.external.asm.*;
-import mockit.external.asm.commons.*;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 
 final class InterfaceImplementationGenerator extends BaseClassModifier
@@ -95,7 +94,7 @@ final class InterfaceImplementationGenerator extends BaseClassModifier
       }
    }
 
-   private final class MethodGeneratorForImplementedSuperInterface extends EmptyVisitor
+   private final class MethodGeneratorForImplementedSuperInterface extends ClassVisitor
    {
       String[] superInterfaces;
 

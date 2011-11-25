@@ -49,12 +49,6 @@ package mockit.external.asm4;
 public abstract class MethodVisitor {
 
     /**
-     * The ASM API version implemented by this visitor. The value of this field
-     * must be one of {@link Opcodes#ASM4}.
-     */
-    protected final int api;
-
-    /**
      * The method visitor to which this visitor must delegate method calls. May
      * be null.
      */
@@ -63,29 +57,16 @@ public abstract class MethodVisitor {
     // Created to avoid issues with the Eclipse compiler.
     public int stackSize2;
 
-    /**
-     * Constructs a new {@link MethodVisitor}.
-     *
-     * @param api the ASM API version implemented by this visitor. Must be one
-     *        of {@link Opcodes#ASM4}.
-     */
-    public MethodVisitor(final int api) {
-        this(api, null);
+    protected MethodVisitor() {
+        this(null);
     }
 
     /**
-     * Constructs a new {@link MethodVisitor}.
+     * Constructs a new MethodVisitor.
      *
-     * @param api the ASM API version implemented by this visitor. Must be one
-     *        of {@link Opcodes#ASM4}.
-     * @param mv the method visitor to which this visitor must delegate method
-     *        calls. May be null.
+     * @param mv the method visitor to which this visitor must delegate method calls. May be null.
      */
-    public MethodVisitor(final int api, final MethodVisitor mv) {
-        /*if (api != Opcodes.ASM4) {
-            throw new IllegalArgumentException();
-        }*/
-        this.api = api;
+    protected MethodVisitor(MethodVisitor mv) {
         this.mv = mv;
     }
 

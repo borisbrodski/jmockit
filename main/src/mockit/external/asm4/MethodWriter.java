@@ -37,7 +37,7 @@ package mockit.external.asm4;
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
-class MethodWriter extends MethodVisitor {
+final class MethodWriter extends MethodVisitor {
 
     /**
      * Pseudo access flag used to denote constructors.
@@ -418,7 +418,6 @@ class MethodWriter extends MethodVisitor {
         final boolean computeMaxs,
         final boolean computeFrames)
     {
-        super(Opcodes.ASM4);
         if (cw.firstMethod == null) {
             cw.firstMethod = this;
         } else {

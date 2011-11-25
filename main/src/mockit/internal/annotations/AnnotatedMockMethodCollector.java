@@ -9,15 +9,14 @@ import java.lang.reflect.*;
 import static mockit.external.asm4.Opcodes.*;
 
 import mockit.*;
-import mockit.external.asm.*;
-import mockit.external.asm.commons.*;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 
 /**
  * Responsible for collecting the signatures of all methods defined in a given mock class which are explicitly annotated
  * as {@link mockit.Mock mocks}.
  */
-public final class AnnotatedMockMethodCollector extends EmptyVisitor
+public final class AnnotatedMockMethodCollector extends ClassVisitor
 {
    private static final int INVALID_FIELD_ACCESSES = ACC_FINAL + ACC_STATIC + ACC_SYNTHETIC;
    private static final int INVALID_METHOD_ACCESSES = ACC_BRIDGE + ACC_SYNTHETIC + ACC_ABSTRACT + ACC_NATIVE;
@@ -36,8 +35,8 @@ public final class AnnotatedMockMethodCollector extends EmptyVisitor
       Class<?> classToCollectMocksFrom = mockClass;
 
       do {
-         ClassReader mcReader = ClassFile.createClassFileReader(classToCollectMocksFrom.getName());
-         mcReader.accept(this, true);
+         ClassReader mcReader = ClassFile.createClassFileReader4(classToCollectMocksFrom.getName());
+         mcReader.accept(this, ClassReader.SKIP_DEBUG);
          classToCollectMocksFrom = classToCollectMocksFrom.getSuperclass();
          collectingFromSuperClass = true;
       }
@@ -93,7 +92,7 @@ public final class AnnotatedMockMethodCollector extends EmptyVisitor
          enclosingClassDescriptor = null;
       }
 
-      return new EmptyVisitor()
+      return new MethodVisitor()
       {
          @Override
          public AnnotationVisitor visitAnnotation(String desc, boolean visible)
@@ -107,12 +106,12 @@ public final class AnnotatedMockMethodCollector extends EmptyVisitor
                }
             }
 
-            return this;
+            return null;
          }
       };
    }
 
-   private final class MockAnnotationVisitor extends EmptyVisitor
+   private final class MockAnnotationVisitor extends AnnotationVisitor
    {
       private final String mockNameAndDesc;
       private MockState mockState;

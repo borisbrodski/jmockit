@@ -12,8 +12,7 @@ import java.util.*;
 import static java.util.Arrays.*;
 import static mockit.external.asm4.Opcodes.*;
 
-import mockit.external.asm.*;
-import mockit.external.asm.commons.*;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
 import mockit.internal.util.*;
@@ -135,7 +134,7 @@ final class SubclassGenerationModifier extends BaseClassModifier
       }
    }
 
-   private class BaseMethodModifier extends EmptyVisitor
+   private class BaseMethodModifier extends ClassVisitor
    {
       final String typeName;
 

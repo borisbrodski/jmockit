@@ -8,13 +8,12 @@ import java.lang.reflect.*;
 
 import static mockit.external.asm4.Opcodes.*;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.external.asm4.Type;
-import mockit.external.asm.commons.*;
 import mockit.internal.state.*;
 
 @SuppressWarnings({"ClassWithTooManyMethods"})
-public class BaseClassModifier extends ClassWriter
+public class BaseClassModifier extends ClassVisitor
 {
    private static final int ACCESS_MASK = 0xFFFF - ACC_ABSTRACT - ACC_NATIVE;
    private static final String[] PRIMITIVE_WRAPPER_TYPE = {
@@ -26,7 +25,7 @@ public class BaseClassModifier extends ClassWriter
    };
    private static final Type[] NO_ARGS = new Type[0];
 
-   protected final MethodVisitor methodAnnotationsVisitor = new EmptyVisitor()
+   protected final MethodVisitor methodAnnotationsVisitor = new MethodVisitor()
    {
       @Override
       public AnnotationVisitor visitAnnotation(String annotationDesc, boolean visible)
@@ -47,7 +46,7 @@ public class BaseClassModifier extends ClassWriter
 
    protected BaseClassModifier(ClassReader classReader)
    {
-      super(classReader, true);
+      super(new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS));
    }
 
    protected final void setUseMockingBridge(ClassLoader classLoader)

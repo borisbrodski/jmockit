@@ -4,7 +4,7 @@
  */
 package mockit.internal.capturing;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 
 public final class CaptureOfImplementationsForTestClass extends CaptureOfImplementations
@@ -12,7 +12,7 @@ public final class CaptureOfImplementationsForTestClass extends CaptureOfImpleme
    public CaptureOfImplementationsForTestClass() {}
 
    @Override
-   public ClassWriter createModifier(ClassLoader classLoader, ClassReader cr, String baseTypeDesc)
+   public ClassVisitor createModifier(ClassLoader classLoader, ClassReader cr, String baseTypeDesc)
    {
       return new StubOutModifier(cr, null);
    }

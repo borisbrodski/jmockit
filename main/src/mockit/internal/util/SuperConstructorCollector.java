@@ -7,11 +7,10 @@ package mockit.internal.util;
 import java.io.*;
 import java.util.*;
 
-import mockit.external.asm.*;
-import mockit.external.asm.commons.*;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 
-public final class SuperConstructorCollector extends EmptyVisitor
+public final class SuperConstructorCollector extends ClassVisitor
 {
    public static final SuperConstructorCollector INSTANCE = new SuperConstructorCollector();
 
@@ -31,7 +30,7 @@ public final class SuperConstructorCollector extends EmptyVisitor
 
       ClassReader cr = createClassReader(className);
 
-      try { cr.accept(this, true); } catch (VisitInterruptedException ignore) {}
+      try { cr.accept(this, ClassReader.SKIP_DEBUG); } catch (VisitInterruptedException ignore) {}
       cache.put(className, constructorDesc);
       
       return constructorDesc;
@@ -40,7 +39,7 @@ public final class SuperConstructorCollector extends EmptyVisitor
    private ClassReader createClassReader(String className)
    {
       try {
-         return ClassFile.readClass(className);
+         return ClassFile.readClass4(className);
       }
       catch (IOException e) {
          throw new RuntimeException("Failed to read class file for " + className, e);

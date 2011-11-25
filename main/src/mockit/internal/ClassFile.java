@@ -7,17 +7,17 @@ package mockit.internal;
 import java.io.*;
 import java.lang.reflect.*;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.state.*;
 
 public final class ClassFile
 {
-   public static mockit.external.asm4.ClassReader createClassFileReader4(String className)
+   public static ClassReader createClassFileReader4(String className)
    {
       byte[] fixedClassfile = TestRun.mockFixture().getFixedClassfile(className);
 
       if (fixedClassfile != null) {
-         return new mockit.external.asm4.ClassReader(fixedClassfile);
+         return new ClassReader(fixedClassfile);
       }
 
       try {
@@ -28,32 +28,7 @@ public final class ClassFile
       }
    }
 
-   public static ClassReader createClassFileReader(String className)
-   {
-      byte[] fixedClassfile = TestRun.mockFixture().getFixedClassfile(className);
-
-      if (fixedClassfile != null) {
-         return new ClassReader(fixedClassfile);
-      }
-
-      try {
-         return readClass(className);
-      }
-      catch (IOException e) {
-         throw new RuntimeException("Failed to read class file for " + className, e);
-      }
-   }
-
-   public static mockit.external.asm4.ClassReader readClass4(String className) throws IOException
-   {
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-      String classFileName = className.replace('.', '/') + ".class";
-      InputStream classFile = classLoader.getResourceAsStream(classFileName);
-
-      return new mockit.external.asm4.ClassReader(classFile);
-   }
-
-   public static ClassReader readClass(String className) throws IOException
+   public static ClassReader readClass4(String className) throws IOException
    {
       ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
       String classFileName = className.replace('.', '/') + ".class";
@@ -69,7 +44,7 @@ public final class ClassFile
 
       try {
          ClassReader cr = new ClassReader(classFile);
-         cr.accept(visitor, true);
+         cr.accept(visitor, ClassReader.SKIP_DEBUG);
       }
       catch (IOException e) {
          throw new RuntimeException(e);
@@ -87,7 +62,7 @@ public final class ClassFile
          classfile = TestRun.mockFixture().getRedefinedClassfile(aClass);
       }
 
-      reader = classfile == null ? createClassFileReader(className) : new ClassReader(classfile);
+      reader = classfile == null ? createClassFileReader4(className) : new ClassReader(classfile);
    }
 
    public ClassReader getReader() { return reader; }

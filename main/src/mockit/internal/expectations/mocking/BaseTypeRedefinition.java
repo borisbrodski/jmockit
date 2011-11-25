@@ -11,7 +11,7 @@ import java.util.*;
 
 import static java.lang.reflect.Modifier.*;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 import mockit.internal.expectations.mocking.InstanceFactory.*;
 import mockit.internal.state.*;
@@ -118,15 +118,15 @@ abstract class BaseTypeRedefinition
 
    private void generateNewMockImplementationClassForInterface(Class<?> mockedInterface)
    {
-      ClassReader interfaceReader = ClassFile.createClassFileReader(mockedInterface.getName());
+      ClassReader interfaceReader = ClassFile.createClassFileReader4(mockedInterface.getName());
       String mockClassName = Utilities.GENERATED_IMPLCLASS_PREFIX + mockedInterface.getSimpleName();
-      ClassWriter modifier = new InterfaceImplementationGenerator(interfaceReader, mockClassName);
-      interfaceReader.accept(modifier, true);
+      ClassVisitor modifier = new InterfaceImplementationGenerator(interfaceReader, mockClassName);
+      interfaceReader.accept(modifier, ClassReader.SKIP_DEBUG);
 
       targetClass = newImplementationClass(mockedInterface, modifier, mockClassName);
    }
 
-   private Class<?> newImplementationClass(Class<?> interfaceOrAbstractClass, ClassWriter generator, String implName)
+   private Class<?> newImplementationClass(Class<?> interfaceOrAbstractClass, ClassVisitor generator, String implName)
    {
       final byte[] generatedBytecode = generator.toByteArray();
       ClassLoader parentLoader = interfaceOrAbstractClass.getClassLoader();
@@ -172,9 +172,9 @@ abstract class BaseTypeRedefinition
 
    abstract ExpectationsModifier createModifier(Class<?> realClass, ClassReader classReader);
 
-   private void redefineClass(Class<?> realClass, ClassReader classReader, ClassWriter modifier)
+   private void redefineClass(Class<?> realClass, ClassReader classReader, ClassVisitor modifier)
    {
-      classReader.accept(modifier, false);
+      classReader.accept(modifier, 0);
       byte[] modifiedClass = modifier.toByteArray();
 
       ClassDefinition classDefinition = new ClassDefinition(realClass, modifiedClass);
@@ -269,7 +269,7 @@ abstract class BaseTypeRedefinition
       ClassReader classReader = createClassReader(targetClass);
       SubclassGenerationModifier modifier =
          new SubclassGenerationModifier(typeMetadata.mockingCfg, targetClass, classReader, subclassName);
-      classReader.accept(modifier, false);
+      classReader.accept(modifier, 0);
 
       return newImplementationClass(targetClass, modifier, subclassName);
    }

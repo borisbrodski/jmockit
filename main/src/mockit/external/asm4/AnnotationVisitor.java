@@ -40,40 +40,21 @@ package mockit.external.asm4;
 public abstract class AnnotationVisitor {
 
     /**
-     * The ASM API version implemented by this visitor. The value of this field
-     * must be one of {@link Opcodes#ASM4}.
-     */
-    protected final int api;
-
-    /**
      * The annotation visitor to which this visitor must delegate method calls.
      * May be null.
      */
     protected AnnotationVisitor av;
 
-    /**
-     * Constructs a new {@link AnnotationVisitor}.
-     *
-     * @param api the ASM API version implemented by this visitor. Must be one
-     *        of {@link Opcodes#ASM4}.
-     */
-    public AnnotationVisitor(final int api) {
-        this(api, null);
+    protected AnnotationVisitor() {
+        this(null);
     }
 
     /**
-     * Constructs a new {@link AnnotationVisitor}.
+     * Constructs a new AnnotationVisitor.
      *
-     * @param api the ASM API version implemented by this visitor. Must be one
-     *        of {@link Opcodes#ASM4}.
-     * @param av the annotation visitor to which this visitor must delegate
-     *        method calls. May be null.
+     * @param av the annotation visitor to which this visitor must delegate method calls. May be null.
      */
-    public AnnotationVisitor(final int api, final AnnotationVisitor av) {
-        /*if (api != Opcodes.ASM4) {
-            throw new IllegalArgumentException();
-        }*/
-        this.api = api;
+    protected AnnotationVisitor(AnnotationVisitor av) {
         this.av = av;
     }
 

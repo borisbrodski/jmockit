@@ -6,7 +6,7 @@ package mockit.internal.expectations.mocking;
 
 import java.util.*;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.capturing.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
@@ -61,7 +61,7 @@ class CaptureOfNewInstances extends CaptureOfImplementations
    }
 
    @Override
-   public final ClassWriter createModifier(ClassLoader cl, ClassReader cr, String baseTypeDesc)
+   public final ClassVisitor createModifier(ClassLoader cl, ClassReader cr, String baseTypeDesc)
    {
       ExpectationsModifier modifier = new ExpectationsModifier(cl, cr, typeMetadata);
       modifier.setClassNameForCapturedInstanceMethods(baseTypeDesc);

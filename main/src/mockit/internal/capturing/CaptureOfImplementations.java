@@ -7,7 +7,7 @@ package mockit.internal.capturing;
 import java.util.*;
 
 import mockit.*;
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 import mockit.internal.expectations.mocking.*;
 import mockit.internal.startup.*;
@@ -22,7 +22,7 @@ public abstract class CaptureOfImplementations
       captureTransformers = new ArrayList<CaptureTransformer>();
    }
 
-   protected abstract ClassWriter createModifier(ClassLoader cl, ClassReader cr, String capturedTypeDesc);
+   protected abstract ClassVisitor createModifier(ClassLoader cl, ClassReader cr, String capturedTypeDesc);
 
    public final void makeSureAllSubtypesAreModified(Capturing capturing)
    {
@@ -55,8 +55,8 @@ public abstract class CaptureOfImplementations
    {
       if (!TestRun.mockFixture().containsRedefinedClass(realClass)) {
          ClassReader classReader = new ClassFile(realClass, true).getReader();
-         ClassWriter modifier = createModifier(realClass.getClassLoader(), classReader, baseTypeDesc);
-         classReader.accept(modifier, false);
+         ClassVisitor modifier = createModifier(realClass.getClassLoader(), classReader, baseTypeDesc);
+         classReader.accept(modifier, 0);
          byte[] modifiedClass = modifier.toByteArray();
 
          new RedefinitionEngine(realClass).redefineMethods(null, modifiedClass);

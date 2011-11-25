@@ -4,7 +4,7 @@
  */
 package mockit.internal.expectations.mocking;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 

@@ -7,7 +7,7 @@ package mockit.internal.expectations.mocking;
 import java.lang.reflect.*;
 import java.util.*;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 import mockit.internal.util.*;
 
@@ -77,7 +77,7 @@ public final class DynamicPartialMocking
       ExpectationsModifier modifier = new ExpectationsModifier(realClass.getClassLoader(), classReader, null);
       modifier.useDynamicMocking(methodsOnly);
 
-      classReader.accept(modifier, false);
+      classReader.accept(modifier, 0);
       byte[] modifiedClass = modifier.toByteArray();
 
       modifiedClassfiles.put(realClass, modifiedClass);

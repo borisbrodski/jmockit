@@ -18,7 +18,6 @@ final class ToolLoader extends ClassVisitor
 
    ToolLoader(String toolClassName, String toolArgs)
    {
-      super(Opcodes.ASM4);
       this.toolClassName = toolClassName;
       this.toolArgs = toolArgs;
    }

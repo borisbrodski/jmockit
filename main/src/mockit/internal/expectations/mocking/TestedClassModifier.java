@@ -6,7 +6,7 @@ package mockit.internal.expectations.mocking;
 
 import java.util.*;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 
 final class TestedClassModifier extends BaseClassModifier

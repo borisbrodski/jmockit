@@ -12,7 +12,7 @@ import static mockit.external.asm4.Opcodes.*;
 
 import mockit.external.asm4.Type;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
 import mockit.internal.startup.*;
@@ -298,7 +298,8 @@ final class ExpectationsModifier extends BaseClassModifier
       return specialTreatmentForConstructor ? new DynamicConstructorModifier() : new DynamicModifier();
    }
 
-   private class DynamicModifier extends MethodAdapter
+
+   private class DynamicModifier extends MethodVisitor
    {
       DynamicModifier() { super(mw); }
 
