@@ -12,16 +12,13 @@ import jbossaop.testing.customer.*;
 
 /**
  * This class is JMockit's version of the JBoss AOP test from the
- * <a href="http://www.jboss.org/jbossaop/docs/2.0.0.GA/docs/aspect-framework/userguide/en/html/testing.html#testing1">Injecting Mock Objects</a>
- * section in the "Testing with AOP" chapter of the user guide for JBoss AOP 2.
+ * <a href="http://www.jboss.org/jbossaop/docs/2.0.0.GA/docs/aspect-framework/userguide/en/html/testing.html#testing1">
+ * Injecting Mock Objects</a> section in the "Testing with AOP" chapter of the user guide for JBoss AOP 2.
  * <p/>
- * Notice how much simpler this is, when compared to the full code from the JBoss AOP original
- * example. With JMockit, there is no need to use the "Mock Maker" tool, or to write the
- * "BankAccountDAOInterceptor" and "MockService" classes; no configuration file
- * (such as jboss-aop.xml) is required, no external bytecode modification tool (such as aopc) is
- * used, and (assuming the use of JDK 1.6 for <strong>running</strong> the tests - but not
- * necessarily for compiling the sources or running the production code) no extra JVM initialization
- * arguments are needed.
+ * Notice how much simpler this is, when compared to the full code from the JBoss AOP original example.
+ * With JMockit, there is no need to use the "Mock Maker" tool, or to write the {@code BankAccountDAOInterceptor} and
+ * {@code MockService} classes; no configuration file (such as {@code jboss-aop.xml}) is required, and no build-time
+ * bytecode modification tool (such as {@code aopc}) is used.
  */
 public final class BankBusinessTest extends TestCase
 {
