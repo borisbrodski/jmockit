@@ -105,6 +105,7 @@
                <source>1.5</source>
                <windowtitle>JMockit Toolkit API</windowtitle>
                <doctitle>JMockit Toolkit API Documentation</doctitle>
+               <stylesheetfile>${basedir}/../www/javadoc/stylesheet.css</stylesheetfile>
                <overview>${basedir}/../www/javadoc/overview.html</overview>
                <header><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>]]></header>
                <footer><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>]]></footer>
@@ -141,7 +142,7 @@
             <executions>
                <execution>
                   <id>sign-artifacts</id>
-                  <phase>verify</phase>
+                  <phase>deploy</phase>
                   <goals><goal>sign</goal></goals>
                </execution>
             </executions>

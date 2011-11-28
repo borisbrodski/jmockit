@@ -163,9 +163,10 @@
    <!-- Target for generating the Javadoc HTML documentation -->
 
    <target name="createjavadocs">
-      <delete dir="www/javadoc" includes="**/*.html" excludes="overview.html external/*" quiet="true"/>
+      <delete dir="www/javadoc" includes="**/*.html" excludes="overview.html" quiet="true"/>
       <javadoc
-         destdir="www/javadoc" overview="www/javadoc/overview.html" classpathref="common.classpath"
+         destdir="www/javadoc" classpathref="common.classpath"
+         stylesheetfile="www/javadoc/stylesheet.css" overview="www/javadoc/overview.html"
          nodeprecated="true" noindex="true" notree="true" nohelp="true" breakiterator="true"
          source="1.5" windowtitle="JMockit Toolkit API" doctitle="JMockit Toolkit API Documentation"
          encoding="UTF-8" charset="UTF-8" includenosourcepackages="true">
@@ -379,6 +380,7 @@
             <pathelement location="samples/tourdemock/classes"/>
             <pathelement location="samples/tourdemock/test-classes"/>
          </classpath>
+         <jvmarg value="-Djmockit-stubs=java.awt.EventDispatchThread"/>
          <batchtest>
             <fileset dir="samples/jbossaop/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/easymock/test-classes" includes="**/*Test.class"/>
