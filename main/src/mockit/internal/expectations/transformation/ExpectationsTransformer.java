@@ -64,7 +64,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    {
       for (Class<?> aClass : alreadyLoaded) {
          if (isFinalClass(aClass) && isExpectationsOrVerificationsSubclassFromUserCode(aClass)) {
-            ClassReader cr = ClassFile.createClassFileReader4(aClass.getName());
+            ClassReader cr = ClassFile.createClassFileReader(aClass.getName());
             EndOfBlockModifier modifier = new EndOfBlockModifier(cr, true);
 
             try {
@@ -179,7 +179,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
          }
 
          String className = classOfInterest.replace('/', '.');
-         ClassReader cr = ClassFile.createClassFileReader4(className);
+         ClassReader cr = ClassFile.createClassFileReader(className);
 
          try { cr.accept(this, ClassReader.SKIP_DEBUG); } catch (VisitInterruptedException ignore) {}
 

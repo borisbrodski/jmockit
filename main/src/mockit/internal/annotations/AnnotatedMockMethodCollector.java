@@ -35,7 +35,7 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
       Class<?> classToCollectMocksFrom = mockClass;
 
       do {
-         ClassReader mcReader = ClassFile.createClassFileReader4(classToCollectMocksFrom.getName());
+         ClassReader mcReader = ClassFile.createClassFileReader(classToCollectMocksFrom.getName());
          mcReader.accept(this, ClassReader.SKIP_DEBUG);
          classToCollectMocksFrom = classToCollectMocksFrom.getSuperclass();
          collectingFromSuperClass = true;

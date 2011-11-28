@@ -5,7 +5,7 @@
 package mockit.coverage.data;
 
 import mockit.coverage.*;
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 
 /**
  * Coverage data gathered for a branch inside a line of source code.

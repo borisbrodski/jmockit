@@ -118,7 +118,7 @@ abstract class BaseTypeRedefinition
 
    private void generateNewMockImplementationClassForInterface(Class<?> mockedInterface)
    {
-      ClassReader interfaceReader = ClassFile.createClassFileReader4(mockedInterface.getName());
+      ClassReader interfaceReader = ClassFile.createClassFileReader(mockedInterface.getName());
       String mockClassName = Utilities.GENERATED_IMPLCLASS_PREFIX + mockedInterface.getSimpleName();
       ClassVisitor modifier = new InterfaceImplementationGenerator(interfaceReader, mockClassName);
       interfaceReader.accept(modifier, ClassReader.SKIP_DEBUG);

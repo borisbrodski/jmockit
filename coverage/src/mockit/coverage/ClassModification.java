@@ -9,7 +9,7 @@ import java.lang.instrument.*;
 import java.security.*;
 import java.util.*;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.TestRun;
 
@@ -26,8 +26,7 @@ final class ClassModification
 
    void redefineClassesAlreadyLoadedForCoverage()
    {
-      Class<?>[] loadedClasses =
-         Startup.instrumentation().getInitiatedClasses(CodeCoverage.class.getClassLoader());
+      Class<?>[] loadedClasses = Startup.instrumentation().getInitiatedClasses(CodeCoverage.class.getClassLoader());
 
       for (Class<?> loadedClass : loadedClasses) {
          if (
@@ -107,15 +106,13 @@ final class ClassModification
       }
 
       CoverageModifier modifier = new CoverageModifier(cr);
-      cr.accept(modifier, false);
+      cr.accept(modifier, 0);
       return modifier.toByteArray();
    }
 
    private boolean isToBeConsideredForCoverage(String className, ProtectionDomain protectionDomain)
    {
-      return
-         !modifiedClasses.contains(className) &&
-         classSelection.isSelected(className, protectionDomain);
+      return !modifiedClasses.contains(className) && classSelection.isSelected(className, protectionDomain);
    }
 
    private void registerClassAsModifiedForCoverage(String className, byte[] modifiedClassfile)

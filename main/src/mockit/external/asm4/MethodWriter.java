@@ -37,7 +37,7 @@ package mockit.external.asm4;
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
-final class MethodWriter extends MethodVisitor {
+public final class MethodWriter extends MethodVisitor {
 
     /**
      * Pseudo access flag used to denote constructors.
@@ -369,7 +369,7 @@ final class MethodWriter extends MethodVisitor {
     /**
      * The current basic block.
      */
-    private Label currentBlock;
+    public Label currentBlock;
 
     /**
      * The (relative) stack size after the last visited instruction. This size

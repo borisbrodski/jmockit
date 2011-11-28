@@ -26,7 +26,8 @@ import mockit.internal.util.*;
 public final class Startup
 {
    static final String javaSpecVersion = System.getProperty("java.specification.version");
-   static final boolean jdk6OrLater = "1.6".equals(javaSpecVersion) || "1.7".equals(javaSpecVersion);
+   static final boolean jdk6OrLater =
+      "1.6".equals(javaSpecVersion) || "1.7".equals(javaSpecVersion) || "1.8".equals(javaSpecVersion);
 
    private static Instrumentation instrumentation;
    private static boolean initializedOnDemand;
@@ -157,7 +158,7 @@ public final class Startup
 
       if (byDefault) {
          try {
-            cr = ClassFile.readClass4(config.toolClassName);
+            cr = ClassFile.readClass(config.toolClassName);
          }
          catch (IOException ignore) {
             // OK, don't load if not in the classpath.
@@ -165,7 +166,7 @@ public final class Startup
          }
       }
       else {
-         cr = ClassFile.readClass4(config.toolClassName);
+         cr = ClassFile.readClass(config.toolClassName);
       }
 
       loadExternalTool(config, cr);

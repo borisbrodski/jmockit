@@ -6,7 +6,7 @@ package mockit.coverage.paths;
 
 import java.util.*;
 
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 
 public final class NodeBuilder
 {
@@ -17,8 +17,7 @@ public final class NodeBuilder
    private Node.SimpleFork currentSimpleFork;
    private Node.BasicBlock currentBasicBlock;
    private Node.Join currentJoin;
-   private final Map<Label, List<Node.Fork>> jumpTargetToForks =
-      new LinkedHashMap<Label, List<Node.Fork>>();
+   private final Map<Label, List<Node.Fork>> jumpTargetToForks = new LinkedHashMap<Label, List<Node.Fork>>();
    private final Map<Label, List<Node.GotoSuccessor>> gotoTargetToSuccessors =
       new LinkedHashMap<Label, List<Node.GotoSuccessor>>();
 
@@ -93,9 +92,7 @@ public final class NodeBuilder
 
    private boolean isNewLineTarget(Label basicBlock)
    {
-      return
-         !jumpTargetToForks.containsKey(basicBlock) &&
-         !gotoTargetToSuccessors.containsKey(basicBlock);
+      return !jumpTargetToForks.containsKey(basicBlock) && !gotoTargetToSuccessors.containsKey(basicBlock);
    }
 
    private void connectNodes(Node.BasicBlock newBasicBlock)

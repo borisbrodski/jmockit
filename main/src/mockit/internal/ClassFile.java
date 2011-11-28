@@ -12,7 +12,7 @@ import mockit.internal.state.*;
 
 public final class ClassFile
 {
-   public static ClassReader createClassFileReader4(String className)
+   public static ClassReader createClassFileReader(String className)
    {
       byte[] fixedClassfile = TestRun.mockFixture().getFixedClassfile(className);
 
@@ -21,14 +21,14 @@ public final class ClassFile
       }
 
       try {
-         return readClass4(className);
+         return readClass(className);
       }
       catch (IOException e) {
          throw new RuntimeException("Failed to read class file for " + className, e);
       }
    }
 
-   public static ClassReader readClass4(String className) throws IOException
+   public static ClassReader readClass(String className) throws IOException
    {
       ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
       String classFileName = className.replace('.', '/') + ".class";
@@ -62,7 +62,7 @@ public final class ClassFile
          classfile = TestRun.mockFixture().getRedefinedClassfile(aClass);
       }
 
-      reader = classfile == null ? createClassFileReader4(className) : new ClassReader(classfile);
+      reader = classfile == null ? createClassFileReader(className) : new ClassReader(classfile);
    }
 
    public ClassReader getReader() { return reader; }

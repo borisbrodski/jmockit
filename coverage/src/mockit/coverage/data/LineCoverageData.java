@@ -7,7 +7,7 @@ package mockit.coverage.data;
 import java.util.*;
 
 import mockit.coverage.*;
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 
 /**
  * Coverage data gathered for a single executable line of code in a source file.

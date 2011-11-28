@@ -120,7 +120,7 @@ final class CaptureTransformer implements ClassFileTransformer
 
          if (!classExtendsCapturedType && !"java/lang/Object".equals(superName)) {
             String superClassName = superName.replace('/', '.');
-            ClassReader cr = ClassFile.createClassFileReader4(superClassName);
+            ClassReader cr = ClassFile.createClassFileReader(superClassName);
             cr.accept(superTypeCollector, ClassReader.SKIP_DEBUG);
          }
 

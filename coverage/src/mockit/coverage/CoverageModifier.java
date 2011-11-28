@@ -7,13 +7,13 @@ package mockit.coverage;
 import java.io.*;
 import java.util.*;
 
-import static mockit.external.asm.Opcodes.*;
+import static mockit.external.asm4.Opcodes.*;
 
 import mockit.coverage.data.*;
 import mockit.coverage.paths.*;
-import mockit.external.asm.*;
+import mockit.external.asm4.*;
 
-final class CoverageModifier extends ClassWriter
+final class CoverageModifier extends ClassVisitor
 {
    private static final Map<String, CoverageModifier> INNER_CLASS_MODIFIERS = new HashMap<String, CoverageModifier>();
    private static final int FIELD_MODIFIERS_TO_IGNORE = ACC_FINAL + ACC_SYNTHETIC;
@@ -34,13 +34,13 @@ final class CoverageModifier extends ClassWriter
 
    CoverageModifier(ClassReader cr)
    {
-      super(cr, true);
+      super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS));
       forInnerClass = false;
    }
 
    private CoverageModifier(ClassReader cr, CoverageModifier other, String simpleClassName)
    {
-      super(cr, true);
+      super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS));
       sourceFileName = other.sourceFileName;
       fileData = other.fileData;
       internalClassName = other.internalClassName;
@@ -113,7 +113,7 @@ final class CoverageModifier extends ClassWriter
       try {
          ClassReader innerCR = new ClassReader(innerClassName);
          CoverageModifier innerClassModifier = new CoverageModifier(innerCR, this, innerName);
-         innerCR.accept(innerClassModifier, false);
+         innerCR.accept(innerClassModifier, 0);
          INNER_CLASS_MODIFIERS.put(innerClassName, innerClassModifier);
       }
       catch (IOException e) {
@@ -175,7 +175,7 @@ final class CoverageModifier extends ClassWriter
       }
    }
 
-   private class BaseMethodModifier extends MethodAdapter
+   private class BaseMethodModifier extends MethodVisitor
    {
       static final String DATA_RECORDING_CLASS = "mockit/coverage/TestRun";
 

@@ -39,7 +39,7 @@ public final class SuperConstructorCollector extends ClassVisitor
    private ClassReader createClassReader(String className)
    {
       try {
-         return ClassFile.readClass4(className);
+         return ClassFile.readClass(className);
       }
       catch (IOException e) {
          throw new RuntimeException("Failed to read class file for " + className, e);

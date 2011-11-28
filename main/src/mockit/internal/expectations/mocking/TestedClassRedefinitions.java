@@ -53,7 +53,7 @@ final class TestedClassRedefinitions
 
    private void redefineTestedClass(Class<?> testedClass)
    {
-      ClassReader cr = ClassFile.createClassFileReader4(testedClass.getName());
+      ClassReader cr = ClassFile.createClassFileReader(testedClass.getName());
       TestedClassModifier modifier = new TestedClassModifier(cr, mockedTypes);
       cr.accept(modifier, 0);
       byte[] modifiedClass = modifier.toByteArray();
