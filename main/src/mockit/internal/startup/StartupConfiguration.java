@@ -15,6 +15,7 @@ final class StartupConfiguration
       "mockit.integration.junit4.IncrementalJUnit4Runner " +
       "mockit.emulation.hibernate3.ConfigurationEmul";
    private static final String STARTUP_TOOL_PREFIX = "startupTools.";
+   private static final String SEPARATOR_REGEX = "\\s*,\\s*|\\s+";
 
    private final Properties startupTools;
    final List<String> defaultTools;
@@ -33,8 +34,8 @@ final class StartupConfiguration
       defaultTools = new ArrayList<String>();
       fillListOfDefaultTools();
 
-      classesToBeStubbedOut = System.getProperty("jmockit-stubs", "").split(",");
-      mockClasses = System.getProperty("jmockit-mocks", "").split(",");
+      classesToBeStubbedOut = System.getProperty("jmockit-stubs", "").split(SEPARATOR_REGEX);
+      mockClasses = System.getProperty("jmockit-mocks", "").split(SEPARATOR_REGEX);
    }
 
    private void loadPropertiesFile() throws IOException
