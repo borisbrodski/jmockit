@@ -30,12 +30,15 @@ public final class MockingBridge implements InvocationHandler
    public Object invoke(Object mocked, Method method, Object[] args) throws Throwable
    {
       int targetId = (Integer) args[0];
+      String mockClassDesc = (String) args[2];
 
-      if (mocked != null && instanceOfClassThatParticipatesInClassLoading(mocked) && wasCalledDuringClassLoading()) {
+      if (
+         mocked == null && "java/lang/System".equals(mockClassDesc) && wasCalledDuringClassLoading() ||
+         mocked != null && instanceOfClassThatParticipatesInClassLoading(mocked) && wasCalledDuringClassLoading()
+      ) {
          return targetId == UPDATE_MOCK_STATE ? false : Void.class;
       }
 
-      String mockClassDesc = (String) args[2];
       int mockStateIndex = (Integer) args[7];
 
       if (targetId == UPDATE_MOCK_STATE) {
