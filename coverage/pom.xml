@@ -3,7 +3,7 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-   <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId><version>0.999.11</version>
+   <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId><version>0.999.12</version>
    <packaging>jar</packaging>
 
    <name>JMockit Coverage</name>
@@ -120,7 +120,7 @@
             <executions>
                <execution>
                   <id>sign-artifacts</id>
-                  <phase>verify</phase>
+                  <phase>deploy</phase>
                   <goals><goal>sign</goal></goals>
                </execution>
             </executions>
@@ -130,7 +130,7 @@
 
    <dependencies>
       <dependency>
-         <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit</artifactId><version>0.999.11</version>
+         <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit</artifactId><version>0.999.12</version>
          <optional>true</optional>
       </dependency>
       <dependency>

@@ -1473,15 +1473,30 @@
         <root url="jar://$MAVEN_REPOSITORY$/com/beust/jcommander/1.12/jcommander-1.12-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: com.googlecode.jmockit:jmockit:0.999.11">
+    <library name="Maven: com.googlecode.jmockit:jmockit-coverage:0.999.11">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/jmockit/jmockit/0.999.11/jmockit-0.999.11.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/jmockit/jmockit-coverage/0.999.11/jmockit-coverage-0.999.11.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/jmockit/jmockit/0.999.11/jmockit-0.999.11-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/coverage/pom-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/jmockit/jmockit-coverage/0.999.11/jmockit-coverage-0.999.11-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/jmockit/jmockit/0.999.11/jmockit-0.999.11-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/coverage/pom-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/jmockit/jmockit-coverage/0.999.11/jmockit-coverage-0.999.11-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.googlecode.jmockit:jmockit:0.999.12">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/main/pom.xml!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/main/pom-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/jmockit/jmockit/0.999.12/jmockit-0.999.12-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/main/pom-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/jmockit/jmockit/0.999.12/jmockit-0.999.12-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: commons-collections:commons-collections:3.2">
