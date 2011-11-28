@@ -10,11 +10,21 @@
    <build>
       <plugins>
          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId><version>2.0.2</version>
+            <configuration><source>1.7</source><target>1.7</target></configuration>
+         </plugin>
+         <plugin>
             <artifactId>maven-surefire-plugin</artifactId><version>2.6</version>
             <configuration>
                <systemProperties>
-                  <jmockit.mocks>fakingXmocking.CurrencyConversionHttpClientFake,fakingXmocking.CurrencyConversionURLFake</jmockit.mocks>
+                  <jmockit-mocks>
+                     fakingXmocking.CurrencyConversionHttpClientFake
+                     fakingXmocking.CurrencyConversionURLFake
+                  </jmockit-mocks>
                </systemProperties>
+               <includes>
+                  <include>**/*IntegrationTest.java</include>
+               </includes>
             </configuration>
          </plugin>
       </plugins>

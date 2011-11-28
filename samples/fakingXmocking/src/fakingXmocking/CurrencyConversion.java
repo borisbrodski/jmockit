@@ -9,6 +9,9 @@ import org.apache.http.client.*;
 import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.*;
 
+/**
+ * From <a href="http://schuchert.wikispaces.com/JMockIt.AStoryAboutTooMuchPower">this</a> article.
+ */
 public final class CurrencyConversion
 {
    static final int CACHE_DURATION = 5 * 60 * 1000;
