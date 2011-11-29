@@ -12,30 +12,48 @@ public final class TestedClassWithConstructorDI0Test
 {
    public static final class TestedClassWithConstructorHavingPrimitiveParameter
    {
-      public TestedClassWithConstructorHavingPrimitiveParameter(int i) {}
+      public TestedClassWithConstructorHavingPrimitiveParameter(int i) { assertEquals(123, i); }
+   }
+
+   public static final class TestedClassWithConstructorHavingStringParameter
+   {
+      public TestedClassWithConstructorHavingStringParameter(String s) {}
    }
 
    public static final class TestedClassWithConstructorHavingArrayParameter
    {
-      public TestedClassWithConstructorHavingArrayParameter(String[] arr) {}
+      public TestedClassWithConstructorHavingArrayParameter(String[] arr)
+      {
+         assertArrayEquals(new String[] {"abc", "Xyz"}, arr);
+      }
    }
 
    public static final class TestedClassWithConstructorHavingMultipleLongParameters
    {
-      public TestedClassWithConstructorHavingMultipleLongParameters(long l1, long l2) {}
+      public TestedClassWithConstructorHavingMultipleLongParameters(long l1, long l2)
+      {
+         assertEquals(1, l1);
+         assertEquals(2, l2);
+      }
    }
 
    public static final class TestedClassWithConstructorHavingVarargsParameter
    {
-      final String s;
-
       public TestedClassWithConstructorHavingVarargsParameter(byte b, char c, String s, byte b2, boolean... flags)
       {
-         this.s = s;
+         assertEquals(56, b);
+         assertEquals(57, b2);
+         assertEquals('X', c);
+         assertEquals("test", s);
+         assertEquals(3, flags.length);
+         assertTrue(flags[0]);
+         assertFalse(flags[1]);
+         assertTrue(flags[2]);
       }
    }
 
-   @Tested TestedClassWithConstructorHavingPrimitiveParameter tested1;
+   @Tested TestedClassWithConstructorHavingPrimitiveParameter tested0;
+   @Tested TestedClassWithConstructorHavingStringParameter tested1;
    @Tested TestedClassWithConstructorHavingArrayParameter tested2;
    @Tested TestedClassWithConstructorHavingMultipleLongParameters tested3;
    @Tested TestedClassWithConstructorHavingVarargsParameter tested4;
@@ -46,7 +64,7 @@ public final class TestedClassWithConstructorDI0Test
    @Injectable final long l2 = 2;
    @Injectable String[] arr = {"abc", "Xyz"};
    @Injectable byte b = 56;
-   @Injectable byte b2 = 56;
+   @Injectable byte b2 = 57;
    @Injectable char c = 'X';
    @Injectable String s = "test"; // String is mocked
 
@@ -58,10 +76,10 @@ public final class TestedClassWithConstructorDI0Test
    @Test
    public void verifyInstantiationOfTestedObjectsThroughConstructorsWithNonMockedParameters()
    {
+      assertNotNull(tested0);
       assertNotNull(tested1);
       assertNotNull(tested2);
       assertNotNull(tested3);
       assertNotNull(tested4);
-      assertEquals("test", tested4.s);
    }
 }
