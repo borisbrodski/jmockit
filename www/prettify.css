@@ -6,7 +6,7 @@ h2 {
    margin-top: 1ex; font-size: 115%; padding: 3px;
    text-shadow: 2px 2px 2px #123152;
    color: azure; background-color: green;
-   border: 1px solid navy; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+   border: 1px solid navy; border-radius: 5px;
 }
 h3 {
    margin-top: 3ex; font-size: 105%; padding: 3px;
@@ -14,18 +14,16 @@ h3 {
    background: -webkit-gradient(linear, left bottom, left top, from(darkslategray), to(lightseagreen));
    background-image: -moz-linear-gradient(bottom, darkslategray, lightseagreen);
    color: azure; background-color: #4f6f6f;
-   border: 1px solid navy; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+   border: 1px solid navy; border-radius: 5px;
    clear: both;
 }
 h4 { margin-top: 3ex; margin-bottom: 1ex; font-size: 100%; }
 pre {
    padding: 2px; border: 1px solid #888; background-color: silver;
    box-shadow: 4px 4px 4px #666;
-   -moz-box-shadow: 4px 4px 4px #666; -webkit-box-shadow: 4px 4px 4px #666;
 }
 img { border: none; }
 .links a { padding-right: 1em; }
-.rounded { border: 2px outset slategray; -moz-border-radius: 7px; -webkit-border-radius: 7px; }
 
 .navigation { display: inline; }
 .navigation img { margin-left: 2px; margin-right: 2px; }
@@ -46,7 +44,6 @@ Intellij Idea-like styling (c) Vasily Polovnyov <vast@whiteants.net>
 pre code {
   display: block;
   color: #000;
-  font-size: 90%;
 }
 
 pre .subst, pre .title, .type {
