@@ -26,6 +26,7 @@ final class ExpectationsModifier extends BaseClassModifier
    private static final Map<String, String> DEFAULT_FILTERS = new HashMap<String, String>()
    {{
       put("java/lang/Object", "<init> getClass hashCode");
+      put("java/lang/String", "");
       put("java/lang/System", "arraycopy getProperties getSecurityManager");
       put("java/util/Hashtable", "get");
       put("java/lang/Throwable", "<init> fillInStackTrace");
@@ -205,7 +206,7 @@ final class ExpectationsModifier extends BaseClassModifier
          isConstructorToBeIgnored(name) ||
          isStaticMethodToBeIgnored(access) ||
          isNativeMethodForDynamicMocking(access) ||
-         defaultFilters != null && defaultFilters.contains(name);
+         defaultFilters != null && (defaultFilters.length() == 0 || defaultFilters.contains(name));
    }
 
    private boolean isConstructorToBeIgnored(String name)

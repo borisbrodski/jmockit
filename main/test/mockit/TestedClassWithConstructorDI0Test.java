@@ -81,5 +81,21 @@ public final class TestedClassWithConstructorDI0Test
       assertNotNull(tested2);
       assertNotNull(tested3);
       assertNotNull(tested4);
+
+      // With "String" fully mocked by default, infinite recursion occurred (until a stack overflow).
+      new Expectations() {
+         Collaborator mock;
+
+         {
+            Collaborator.doSomething();
+         }
+      };
+
+      Collaborator.doSomething();
+   }
+
+   static class Collaborator
+   {
+      static void doSomething() {}
    }
 }
