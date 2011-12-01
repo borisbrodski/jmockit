@@ -344,7 +344,12 @@ public final class InvocationArguments
          Matcher<?> matcher1 = matchers.get(i);
          Matcher<?> matcher2 = otherMatchers.get(i);
 
-         if (matcher1 != matcher2) {
+         if (matcher1 == null || matcher2 == null) {
+            if (!IsEqual.areEqual(invocationArgs[i], other.invocationArgs[i])) {
+               return false;
+            }
+         }
+         else if (matcher1 != matcher2) {
             if (matcher1.getClass() != matcher2.getClass() || matcher1.getClass() == HamcrestAdapter.class) {
                return false;
             }
