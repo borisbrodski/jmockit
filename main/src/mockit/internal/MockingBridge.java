@@ -27,9 +27,21 @@ public final class MockingBridge implements InvocationHandler
    @SuppressWarnings({"UnusedDeclaration"})
    public static final MockingBridge MB = new MockingBridge();
 
+   public static void preventEventualClassLoadingConflicts()
+   {
+      wasCalledDuringClassLoading();
+      DefaultValues.computeForReturnType("()J");
+   }
+
    public Object invoke(Object mocked, Method method, Object[] args) throws Throwable
    {
       int targetId = (Integer) args[0];
+      String mockDesc = (String) args[4];
+
+      if ((targetId == CALL_STATIC_MOCK || targetId == CALL_INSTANCE_MOCK) && wasCalledDuringClassLoading()) {
+         return DefaultValues.computeForReturnType(mockDesc);
+      }
+
       String mockClassDesc = (String) args[2];
 
       if (
@@ -50,7 +62,6 @@ public final class MockingBridge implements InvocationHandler
       }
 
       String mockName = (String) args[3];
-      String mockDesc = (String) args[4];
       int executionMode = (Integer) args[9];
       Object[] mockArgs = extractMockArguments(args);
 

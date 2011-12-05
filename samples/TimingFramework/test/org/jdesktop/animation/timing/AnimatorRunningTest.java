@@ -25,6 +25,8 @@ public final class AnimatorRunningTest
    @Test
    public void getTotalElapsedTimeFromGivenTime()
    {
+      currentTimeInMillis = 0;
+
       // Just to check the initial state:
       assertEquals(0, animator.getTotalElapsedTime(0));
 

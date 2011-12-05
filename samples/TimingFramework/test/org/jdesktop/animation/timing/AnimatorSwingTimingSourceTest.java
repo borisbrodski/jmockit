@@ -57,9 +57,10 @@ public final class AnimatorSwingTimingSourceTest
       }
 
       @Mock(invocations = 1)
-      void start()
-      {
-      }
+      void start() {}
+
+      @Mock(invocations = 1)
+      void stop() {}
 
       @Mock(invocations = 1) // invocation from animator.setResolution
       void setDelay(int delay)

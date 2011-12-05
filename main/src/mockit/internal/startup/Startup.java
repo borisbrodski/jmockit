@@ -104,13 +104,16 @@ public final class Startup
       // Pre-load certain JMockit classes to avoid NoClassDefFoundError's when mocking certain JRE classes,
       // such as ArrayList.
       try {
+         Class.forName("mockit.Capturing");
          Class.forName("mockit.Delegate");
          Class.forName("mockit.internal.expectations.invocation.InvocationResults");
+         Class.forName("mockit.internal.expectations.mocking.SharedFieldTypeRedefinitions");
+         Class.forName("mockit.internal.expectations.mocking.TestedClasses");
          Class.forName("mockit.external.hamcrest.core.IsEqual");
       }
       catch (ClassNotFoundException ignore) {}
 
-      MockingBridge.MB.getClass();
+      MockingBridge.preventEventualClassLoadingConflicts();
    }
 
    private static void loadInternalStartupMocksForJUnitIntegration()
