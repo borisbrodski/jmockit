@@ -187,7 +187,7 @@ abstract class BaseTypeRedefinition
 
    private ClassReader createClassReader(Class<?> realClass)
    {
-      return new ClassFile(realClass, true).getReader();
+      return new ClassFile(realClass, false).getReader();
    }
 
    private Object createNewInstanceOfTargetClass()

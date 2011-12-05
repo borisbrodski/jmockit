@@ -23,17 +23,12 @@ public final class TextFileUsingVerificationsTest
 
       new TextFile("file", 0);
 
-      new Verifications()
-      {
-         {
-            new DefaultTextReader("file");
-         }
-      };
+      new Verifications() {{ new DefaultTextReader("file"); }};
    }
 
    @Test
-   public void createTextFileByCapturingTheTextReaderClassThroughItsBaseType(
-      @Capturing TextReader reader) throws Exception
+   public void createTextFileByCapturingTheTextReaderClassThroughItsBaseType(@Capturing TextReader reader)
+      throws Exception
    {
       new TextFile("file", 0);
    }
@@ -53,52 +48,35 @@ public final class TextFileUsingVerificationsTest
    {
       new TextFile("file", 0).closeReader();
 
-      new Verifications()
-      {
-         {
-            reader.close();
-         }
-      };
+      new Verifications() {{ reader.close(); }};
    }
 
    @Test
    public void createTextFileVerifyingInvocationsThroughReflection(
-      @Mocked(realClassName = "integrationTests.textFile.TextFile$DefaultTextReader")
-      final Object reader)
+      @Mocked(realClassName = "integrationTests.textFile.TextFile$DefaultTextReader") final Object reader)
       throws Exception
    {
       new TextFile("file", 0).closeReader();
 
-      new FullVerificationsInOrder()
-      {
-         {
-            newInstance("integrationTests.textFile.TextFile$DefaultTextReader", "file");
-            invoke(reader, "close");
-         }
-      };
+      new FullVerificationsInOrder() {{
+         newInstance("integrationTests.textFile.TextFile$DefaultTextReader", "file");
+         invoke(reader, "close");
+      }};
    }
 
    @Test
    public void parseTextFileUsingConcreteClass(final DefaultTextReader reader) throws Exception
    {
-      new NonStrictExpectations()
-      {
-         {
-            reader.readLine(); returns("line1", "another,line", null);
-         }
-      };
+      new NonStrictExpectations() {{
+         reader.readLine(); returns("line1", "another,line", null);
+      }};
 
       TextFile textFile = new TextFile("file", 200);
       List<String[]> result = textFile.parse();
 
       assertResultFromTextFileParsing(result);
 
-      new Verifications()
-      {
-         {
-            reader.close();
-         }
-      };
+      new Verifications() {{ reader.close(); }};
    }
 
    private void assertResultFromTextFileParsing(List<String[]> result)
@@ -116,34 +94,26 @@ public final class TextFileUsingVerificationsTest
    @Test
    public void parseTextFileUsingInterface(@NonStrict final TextReader reader) throws Exception
    {
-      new Expectations()
-      {
-         {
-            reader.readLine(); returns("line1", "another,line", null);
-         }
-      };
+      new Expectations() {{
+         reader.readLine(); returns("line1", "another,line", null);
+      }};
 
       TextFile textFile = new TextFile(reader, 100);
       List<String[]> result = textFile.parse();
 
       assertResultFromTextFileParsing(result);
 
-      new VerificationsInOrder()
-      {
-         {
-            reader.skip(100);
-            reader.close();
-         }
-      };
+      new VerificationsInOrder() {{
+         reader.skip(100);
+         reader.close();
+      }};
    }
 
    @Test
    public void parseTextFileUsingBufferedReader(final BufferedReader reader) throws Exception
    {
-      new NonStrictExpectations()
-      {
-         @Mocked("(InputStream)") final InputStreamReader inputStreamReader = null;
-         @Mocked("(String)") final FileReader fileReader = null;
+      new NonStrictExpectations() {
+         final FileReader fileReader = null;
 
          {
             reader.readLine(); returns("line1", "another,line", null);
@@ -155,11 +125,6 @@ public final class TextFileUsingVerificationsTest
 
       assertResultFromTextFileParsing(result);
 
-      new Verifications()
-      {
-         {
-            reader.close();
-         }
-      };
+      new Verifications() {{ reader.close(); }};
    }
 }

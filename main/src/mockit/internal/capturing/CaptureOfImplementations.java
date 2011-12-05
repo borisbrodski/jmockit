@@ -54,7 +54,7 @@ public abstract class CaptureOfImplementations
    private void redefineClass(Class<?> realClass, String baseTypeDesc)
    {
       if (!TestRun.mockFixture().containsRedefinedClass(realClass)) {
-         ClassReader classReader = new ClassFile(realClass, true).getReader();
+         ClassReader classReader = new ClassFile(realClass, false).getReader();
          ClassVisitor modifier = createModifier(realClass.getClassLoader(), classReader, baseTypeDesc);
          classReader.accept(modifier, 0);
          byte[] modifiedClass = modifier.toByteArray();

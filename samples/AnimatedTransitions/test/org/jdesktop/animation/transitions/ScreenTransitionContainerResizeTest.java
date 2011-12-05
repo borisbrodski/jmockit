@@ -21,17 +21,24 @@ import static org.junit.Assert.*;
 @UsingMocksAndStubs({Animator.class, PropertySetter.class})
 public final class ScreenTransitionContainerResizeTest
 {
-   @Mocked("createImage(int, int)") final JComponent container = new JPanel();
+   @Mocked("createImage(int, int)") JComponent container;
    @NonStrict BufferedImage transitionImage;
    @NonStrict AnimationManager manager;
 
-   final Dimension newSize = new Dimension(100, 80);
+   Dimension newSize;
    ScreenTransition transition;
+
+   @Before
+   public void setUp()
+   {
+      container = new JPanel();
+      newSize = new Dimension(100, 80);
+   }
 
    @Test
    public void resizeTransitionContainerOnce()
    {
-      new CreationOfTransitionImage();
+      new CreationOfTransitionImageExpectations();
 
       ComponentListener containerSizeListener = createTransition();
 
@@ -39,7 +46,7 @@ public final class ScreenTransitionContainerResizeTest
       assertResizingOfContainer(containerSizeListener);
    }
 
-   final class CreationOfTransitionImage extends Expectations
+   final class CreationOfTransitionImageExpectations extends Expectations
    {
       {
          container.createImage(newSize.width, newSize.height); result = transitionImage;
@@ -74,7 +81,7 @@ public final class ScreenTransitionContainerResizeTest
       ComponentListener containerSizeListener = createTransition();
       setField(transition, transitionImage);
 
-      new CreationOfTransitionImage();
+      new CreationOfTransitionImageExpectations();
 
       assertResizingOfContainer(containerSizeListener);
    }
@@ -86,7 +93,7 @@ public final class ScreenTransitionContainerResizeTest
       setField(transition, transitionImage);
 
       new Expectations() {{ transitionImage.getWidth(); result = newSize.width; }};
-      new CreationOfTransitionImage();
+      new CreationOfTransitionImageExpectations();
 
       assertResizingOfContainer(containerSizeListener);
    }

@@ -14,15 +14,13 @@ import static org.junit.Assert.*;
 /**
  * <a href="http://code.google.com/p/powermock/source/browse/trunk/examples/simple/src/test/java/demo/org/powermock/examples/simple/GreeterTest.java">PowerMock version</a>
  */
-@UsingMocksAndStubs(SimpleConfig.class)
 public final class Greeter_JMockit_Test
 {
    @Test
    public void testGetMessage()
    {
-      new Expectations()
-      {
-         final SimpleConfig unused = null;
+      new Expectations() {
+         @Mocked(stubOutClassInitialization = true) final SimpleConfig unused = null;
 
          {
             SimpleConfig.getGreeting(); result = "Hi";
@@ -37,8 +35,7 @@ public final class Greeter_JMockit_Test
    @Test
    public void testRun()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Logger logger;
 
          {
@@ -53,8 +50,7 @@ public final class Greeter_JMockit_Test
    @Test(expected = IllegalArgumentException.class)
    public void testRunWhenLoggerThrowsUnexpectedRuntimeException()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Logger mock;
 
          {
