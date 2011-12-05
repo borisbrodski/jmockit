@@ -4,28 +4,25 @@
  */
 package mockit.internal.expectations.mocking;
 
-import java.lang.instrument.*;
 import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.*;
-import mockit.external.asm4.*;
-import mockit.internal.*;
 
-final class TestedClassRedefinitions
+final class TestedClasses
 {
    final List<Field> testedFields;
    final List<MockedType> injectableFields;
-   private final List<MockedType> mockedTypes;
+//   private final List<MockedType> mockedTypes;
 
-   TestedClassRedefinitions()
+   TestedClasses()
    {
       testedFields = new LinkedList<Field>();
       injectableFields = new ArrayList<MockedType>();
-      mockedTypes = new ArrayList<MockedType>();
+//      mockedTypes = new ArrayList<MockedType>();
    }
 
-   boolean redefineTestedClasses(Object objectWithTestedFields)
+   boolean findTestedAndInjectableFields(Object objectWithTestedFields)
    {
       for (Field field: objectWithTestedFields.getClass().getDeclaredFields()) {
          if (field.isAnnotationPresent(Tested.class)) {
@@ -38,17 +35,22 @@ final class TestedClassRedefinitions
                injectableFields.add(mockedType);
             }
 
-            if (mockedType.isMockField()) {
-               mockedTypes.add(mockedType);
-            }
+            // TODO: move the commented code out before release 1.0
+//            if (mockedType.isMockField()) {
+//               mockedTypes.add(mockedType);
+//            }
          }
       }
 
+      return !testedFields.isEmpty();
+   }
+
+/*
+   void redefineTestedClasses()
+   {
       for (Field testedField : testedFields) {
          redefineTestedClass(testedField.getType());
       }
-
-      return !testedFields.isEmpty();
    }
 
    private void redefineTestedClass(Class<?> testedClass)
@@ -61,4 +63,5 @@ final class TestedClassRedefinitions
       ClassDefinition classDefinition = new ClassDefinition(testedClass, modifiedClass);
       RedefinitionEngine.redefineClasses(classDefinition);
    }
+*/
 }

@@ -29,10 +29,11 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
       TestRun.enterNoMockingZone();
 
       try {
-         TestedClassRedefinitions testedClassRedefinitions = new TestedClassRedefinitions();
+         TestedClasses testedClasses = new TestedClasses();
 
-         if (testedClassRedefinitions.redefineTestedClasses(parentObject)) {
-            testedClassInstantiations = new TestedClassInstantiations(testedClassRedefinitions);
+         if (testedClasses.findTestedAndInjectableFields(parentObject)) {
+            testedClassInstantiations =
+               new TestedClassInstantiations(testedClasses.testedFields, testedClasses.injectableFields);
          }
 
          Class<?> testClass = parentObject.getClass();

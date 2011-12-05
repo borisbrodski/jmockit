@@ -15,10 +15,10 @@ public final class TestedClassInstantiations
    private final List<Field> testedFields;
    private final List<MockedType> injectableFields;
 
-   TestedClassInstantiations(TestedClassRedefinitions redefinitions)
+   TestedClassInstantiations(List<Field> testedFields, List<MockedType> injectableFields)
    {
-      testedFields = redefinitions.testedFields;
-      injectableFields = redefinitions.injectableFields;
+      this.testedFields = testedFields;
+      this.injectableFields = injectableFields;
    }
 
    public void assignNewInstancesToTestedFields(Object objectWithFields)
