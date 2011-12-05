@@ -89,12 +89,9 @@ public final class DynamicPartialMockingTest
    {
       assertEquals(0, mock.value);
 
-      new Expectations(mock)
-      {
-         {
-            mock.getValue(); result = 123;
-         }
-      };
+      new Expectations(mock) {{
+         mock.getValue(); result = 123;
+      }};
 
       // Mocked:
       assertEquals(123, mock.getValue());
@@ -111,12 +108,9 @@ public final class DynamicPartialMockingTest
    {
       final Collaborator collaborator = new Collaborator();
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getValue(); result = 123;
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getValue(); result = 123;
+      }};
 
       // Mocked:
       assertEquals(123, collaborator.getValue());
@@ -132,12 +126,9 @@ public final class DynamicPartialMockingTest
    {
       final Collaborator collaborator = new Collaborator();
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getValue(); times = 2;
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getValue(); times = 2;
+      }};
 
       assertEquals(0, collaborator.getValue());
    }
@@ -147,12 +138,9 @@ public final class DynamicPartialMockingTest
    {
       final Collaborator collaborator = new Collaborator(1);
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.methodWhichCallsAnotherInTheSameClass(); result = false;
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.methodWhichCallsAnotherInTheSameClass(); result = false;
+      }};
 
       // Mocked:
       assertFalse(collaborator.methodWhichCallsAnotherInTheSameClass());
@@ -166,12 +154,9 @@ public final class DynamicPartialMockingTest
    {
       final Collaborator collaborator = new Collaborator(1);
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getValue(); times = 2;
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getValue(); times = 2;
+      }};
 
       // Mocked:
       assertEquals(0, collaborator.getValue());
@@ -186,12 +171,9 @@ public final class DynamicPartialMockingTest
    {
       final Collaborator collaborator = new Collaborator();
 
-      new NonStrictExpectations(collaborator)
-      {
-         {
-            collaborator.getValue(); times = 2;
-         }
-      };
+      new NonStrictExpectations(collaborator) {{
+         collaborator.getValue(); times = 2;
+      }};
 
       assertEquals(0, collaborator.getValue());
    }
@@ -201,12 +183,9 @@ public final class DynamicPartialMockingTest
    {
       final Collaborator collaborator = new Collaborator(1);
 
-      new NonStrictExpectations(collaborator)
-      {
-         {
-            collaborator.getValue(); times = 1;
-         }
-      };
+      new NonStrictExpectations(collaborator) {{
+         collaborator.getValue(); times = 1;
+      }};
 
       // Mocked:
       assertEquals(0, collaborator.getValue());
@@ -220,13 +199,10 @@ public final class DynamicPartialMockingTest
    {
       final Collaborator collaborator = new Collaborator(2);
 
-      new NonStrictExpectations(collaborator)
-      {
-         {
-            collaborator.simpleOperation(1, "", null); result = false;
-            Collaborator.doSomething(anyBoolean, "test");
-         }
-      };
+      new NonStrictExpectations(collaborator) {{
+         collaborator.simpleOperation(1, "", null); result = false;
+         Collaborator.doSomething(anyBoolean, "test");
+      }};
 
       // Mocked:
       assertFalse(collaborator.simpleOperation(1, "", null));
@@ -243,14 +219,11 @@ public final class DynamicPartialMockingTest
       }
       catch (IllegalStateException ignore) {}
 
-      new Verifications()
-      {
-         {
-            Collaborator.doSomething(anyBoolean, "test");
-            collaborator.getValue(); times = 1;
-            new Collaborator(45);
-         }
-      };
+      new Verifications() {{
+         Collaborator.doSomething(anyBoolean, "test");
+         collaborator.getValue(); times = 1;
+         new Collaborator(45);
+      }};
    }
 
    @Test
@@ -258,12 +231,9 @@ public final class DynamicPartialMockingTest
    {
       final Collaborator collaborator = new Collaborator();
 
-      new NonStrictExpectations(collaborator)
-      {
-         {
-            collaborator.simpleOperation(1, anyString, null); result = false;
-         }
-      };
+      new NonStrictExpectations(collaborator) {{
+         collaborator.simpleOperation(1, anyString, null); result = false;
+      }};
 
       assertFalse(collaborator.methodWhichCallsAnotherInTheSameClass());
       assertTrue(collaborator.simpleOperation(2, "", null));
@@ -339,13 +309,10 @@ public final class DynamicPartialMockingTest
    {
       final Collaborator collaborator = new Collaborator();
       
-      new Expectations(Collaborator.class)
-      {
-         {
-            collaborator.overridableMethod(); result = "";
-            collaborator.overridableMethod(); result = "mocked";
-         }
-      };
+      new Expectations(Collaborator.class) {{
+         collaborator.overridableMethod(); result = "";
+         collaborator.overridableMethod(); result = "mocked";
+      }};
 
       assertEquals("", collaborator.overridableMethod());
       assertEquals("mocked overridden", new SubCollaborator().overridableMethod());
@@ -356,19 +323,15 @@ public final class DynamicPartialMockingTest
    {
       final Collaborator collaborator = new Collaborator();
 
-      final Dependency dependency = new Dependency()
-      {
+      final Dependency dependency = new Dependency() {
          public boolean doSomething() { return false; }
          public List<?> doSomethingElse(int n) { return null; }
       };
       
-      new NonStrictExpectations(collaborator, dependency)
-      {
-         {
-            collaborator.getValue(); result = 5;
-            dependency.doSomething(); result = true;
-         }
-      };
+      new NonStrictExpectations(collaborator, dependency) {{
+         collaborator.getValue(); result = 5;
+         dependency.doSomething(); result = true;
+      }};
 
       // Mocked:
       assertEquals(5, collaborator.getValue());
@@ -378,15 +341,12 @@ public final class DynamicPartialMockingTest
       assertTrue(collaborator.simpleOperation(0, null, null));
       assertNull(dependency.doSomethingElse(3));
 
-      new FullVerifications()
-      {
-         {
-            dependency.doSomething();
-            collaborator.getValue();
-            dependency.doSomethingElse(anyInt);
-            collaborator.simpleOperation(0, null, null);
-         }
-      };
+      new FullVerifications() {{
+         dependency.doSomething();
+         collaborator.getValue();
+         dependency.doSomethingElse(anyInt);
+         collaborator.simpleOperation(0, null, null);
+      }};
    }
 
    @Test
@@ -395,13 +355,10 @@ public final class DynamicPartialMockingTest
       final List<String> list = new LinkedList<String>();
       @SuppressWarnings({"UseOfObsoleteCollectionType"}) List<String> anotherList = new Vector<String>();
 
-      new NonStrictExpectations(list, anotherList)
-      {
-         {
-            list.get(1); result = "an item";
-            list.size(); result = 2;
-         }
-      };
+      new NonStrictExpectations(list, anotherList) {{
+         list.get(1); result = "an item";
+         list.size(); result = 2;
+      }};
 
       // Use mocked methods:
       assertEquals(2, list.size());
@@ -448,8 +405,7 @@ public final class DynamicPartialMockingTest
    {
       final Collaborator collaborator = new Collaborator();
 
-      new NonStrictExpectations(collaborator)
-      {{
+      new NonStrictExpectations(collaborator) {{
          collaborator.simpleOperation(1, "s", null); result = false;
       }};
 
@@ -460,12 +416,9 @@ public final class DynamicPartialMockingTest
       assertTrue(collaborator.simpleOperation(1, null, new Date()));
       assertFalse(collaborator.simpleOperation(1, "s", null));
 
-      new FullVerifications()
-      {
-         {
-            collaborator.simpleOperation(anyInt, null, null);
-         }
-      };
+      new FullVerifications() {{
+         collaborator.simpleOperation(anyInt, null, null);
+      }};
    }
 
    @Test
@@ -536,12 +489,9 @@ public final class DynamicPartialMockingTest
       assertEquals(123, collaborator.getValue());
       assertEquals(123, collaborator.getValue());
 
-      new FullVerifications()
-      {
-         {
-            collaborator.getValue(); times = 2;
-         }
-      };
+      new FullVerifications() {{
+         collaborator.getValue(); times = 2;
+      }};
    }
 
    static final class TaskWithConsoleInput
@@ -571,10 +521,7 @@ public final class DynamicPartialMockingTest
    private boolean runTaskWithTimeout(long timeoutInMillis) throws InterruptedException, ExecutionException
    {
       final TaskWithConsoleInput task = new TaskWithConsoleInput();
-      Runnable asynchronousTask = new Runnable()
-      {
-         public void run() { task.doIt(); }
-      };
+      Runnable asynchronousTask = new Runnable() { public void run() { task.doIt(); } };
       ExecutorService executor = Executors.newSingleThreadExecutor();
 
       while (!task.finished) {
@@ -595,12 +542,9 @@ public final class DynamicPartialMockingTest
    @Test
    public void taskWithConsoleInputTerminatingNormally() throws Exception
    {
-      new Expectations(System.in)
-      {
-         {
-            System.in.read(); returns((int) 'A', (int) 'x', (int) 'Z');
-         }
-      };
+      new Expectations(System.in) {{
+         System.in.read(); returns((int) 'A', (int) 'x', (int) 'Z');
+      }};
 
       assertTrue(runTaskWithTimeout(5000));
    }
@@ -608,16 +552,12 @@ public final class DynamicPartialMockingTest
    @Test
    public void taskWithConsoleInputTerminatingOnTimeout() throws Exception
    {
-      new Expectations(System.in)
-      {
-         {
-            System.in.read();
-            result = new Delegate()
-            {
-               void takeTooLong() throws InterruptedException { Thread.sleep(5000); }
-            };
-         }
-      };
+      new Expectations(System.in) {{
+         System.in.read();
+         result = new Delegate() {
+            void takeTooLong() throws InterruptedException { Thread.sleep(5000); }
+         };
+      }};
 
       assertFalse("no timeout", runTaskWithTimeout(10));
    }
@@ -631,12 +571,9 @@ public final class DynamicPartialMockingTest
    @Test
    public void doNotStubOutStaticInitializersWhenDynamicallyMockingAClass()
    {
-      new Expectations(ClassWithStaticInitializer.class)
-      {
-         {
-            ClassWithStaticInitializer.doSomething(); result = 2;
-         }
-      };
+      new Expectations(ClassWithStaticInitializer.class) {{
+         ClassWithStaticInitializer.doSomething(); result = 2;
+      }};
 
       assertEquals(2, ClassWithStaticInitializer.doSomething());
       assertTrue(ClassWithStaticInitializer.initialized);
