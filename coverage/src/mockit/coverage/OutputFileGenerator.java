@@ -42,11 +42,6 @@ final class OutputFileGenerator extends Thread
       }
    }
 
-   private String getCoverageProperty(String suffix)
-   {
-      return System.getProperty(COVERAGE_PREFIX + suffix, "");
-   }
-
    private String getOutputFormat(String specifiedFormat)
    {
       if (specifiedFormat.length() > 0) {
@@ -64,6 +59,11 @@ final class OutputFileGenerator extends Thread
       }
 
       return format;
+   }
+
+   private String getCoverageProperty(String suffix)
+   {
+      return System.getProperty(COVERAGE_PREFIX + suffix, "");
    }
 
    private String outputFormatFromClasspath()
@@ -117,9 +117,17 @@ final class OutputFileGenerator extends Thread
    public void run()
    {
       onRun.run();
-      createOutputDirIfSpecifiedButNotExists();
 
       CoverageData coverageData = CoverageData.instance();
+
+      if (coverageData.isEmpty()) {
+         System.out.println(
+            "JMockit: No classes were instrumented for coverage; please make sure the desired classes have been " +
+            "compiled with debug information.");
+         return;
+      }
+
+      createOutputDirIfSpecifiedButNotExists();
 
       try {
          generateAccretionDataFileIfRequested(coverageData);
@@ -163,8 +171,7 @@ final class OutputFileGenerator extends Thread
       }
    }
 
-   private void generateAccretionDataFileIfRequested(CoverageData newData)
-      throws IOException, ClassNotFoundException
+   private void generateAccretionDataFileIfRequested(CoverageData newData) throws IOException, ClassNotFoundException
    {
       if (outputFormat.contains("serial")) {
          new AccretionFile(outputDir, newData).generate();

@@ -20,8 +20,7 @@ class CoverageReport
    private final Map<String, List<String>> packageToFiles;
    private final boolean withCallPoints;
 
-   protected CoverageReport(
-      String outputDir, String[] srcDirs, CoverageData coverageData, boolean withCallPoints)
+   protected CoverageReport(String outputDir, String[] srcDirs, CoverageData coverageData, boolean withCallPoints)
    {
       this.outputDir = outputDir.length() > 0 ? outputDir : "coverage-report";
       sourceDirs = srcDirs == null ? null : new SourceFiles().buildListOfSourceDirectories(srcDirs);
@@ -32,11 +31,7 @@ class CoverageReport
 
    public final void generate() throws IOException
    {
-      if (fileToFileData.isEmpty()) {
-         return;
-      }
-
-      createOutputDirIfNotExists();
+      createReportOutputDirIfNotExists();
 
       File outputFile = createOutputFileForIndexPage();
 
@@ -59,11 +54,10 @@ class CoverageReport
       new IndexPage(outputFile, sourceDirs, packageToFiles, fileToFileData).generate();
       new StaticFiles().copyToOutputDir(outputDir, withSourceFilePages);
 
-      System.out.println(
-         "JMockit: Coverage report written to " + outputFile.getParentFile().getCanonicalPath());
+      System.out.println("JMockit: Coverage report written to " + outputFile.getParentFile().getCanonicalPath());
    }
 
-   private void createOutputDirIfNotExists()
+   private void createReportOutputDirIfNotExists()
    {
       File outDir = new File(outputDir);
 
@@ -78,9 +72,7 @@ class CoverageReport
       File outputFile = new File(outputDir, "index.html");
 
       if (outputFile.exists() && !outputFile.canWrite()) {
-         System.out.println(
-            "JMockit: " + outputFile.getCanonicalPath() +
-            " is read-only; report generation canceled");
+         System.out.println("JMockit: " + outputFile.getCanonicalPath() + " is read-only; report generation canceled");
          return null;
       }
 
@@ -96,8 +88,7 @@ class CoverageReport
       }
    }
 
-   private void generateFileCoverageReport(String sourceFile, FileCoverageData fileData)
-      throws IOException
+   private void generateFileCoverageReport(String sourceFile, FileCoverageData fileData) throws IOException
    {
       if (sourceDirs == null) {
          addFileToPackageFileList(sourceFile);
@@ -138,8 +129,7 @@ class CoverageReport
       }
    }
 
-   private void addMissingSourceFiles(
-      List<String> packageFilesToReport, File srcDir, String packageRelDir)
+   private void addMissingSourceFiles(List<String> packageFilesToReport, File srcDir, String packageRelDir)
    {
       File packageDir = new File(srcDir, packageRelDir);
       String[] allPackageFiles = packageDir.list();
