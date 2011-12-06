@@ -8,6 +8,7 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
+import java.util.zip.*;
 
 import mockit.*;
 import mockit.internal.expectations.*;
@@ -98,7 +99,7 @@ public final class MockingBridge implements InvocationHandler
       Class<?> mockedClass = mocked.getClass();
       return
          mockedClass == File.class || mockedClass == URL.class || mockedClass == FileInputStream.class ||
-         Vector.class.isInstance(mocked) || Hashtable.class.isInstance(mocked);
+         mockedClass == ZipFile.class || Vector.class.isInstance(mocked) || Hashtable.class.isInstance(mocked);
    }
 
    private static boolean wasCalledDuringClassLoading()

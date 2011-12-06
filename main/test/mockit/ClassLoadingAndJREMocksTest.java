@@ -7,6 +7,7 @@ package mockit;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.zip.*;
 
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -243,4 +244,10 @@ public final class ClassLoadingAndJREMocksTest
          // OK
       }
    }
+
+   @Test
+   public void mockZipFile(ZipFile zf)
+   {
+      assertNull(zf.getEntry("test"));
+  }
 }

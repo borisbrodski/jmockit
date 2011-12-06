@@ -206,6 +206,7 @@ final class ExpectationsModifier extends BaseClassModifier
          isConstructorToBeIgnored(name) ||
          isStaticMethodToBeIgnored(access) ||
          isNativeMethodForDynamicMocking(access) ||
+         useMockingBridge && isPrivate(access) && isNative(access) ||
          defaultFilters != null && (defaultFilters.length() == 0 || defaultFilters.contains(name));
    }
 
