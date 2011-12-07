@@ -8,7 +8,7 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
-import java.util.zip.*;
+import java.util.jar.*;
 
 import mockit.*;
 import mockit.internal.expectations.*;
@@ -30,6 +30,19 @@ public final class MockingBridge implements InvocationHandler
 
    public static void preventEventualClassLoadingConflicts()
    {
+      // Pre-load certain JMockit classes to avoid NoClassDefFoundError's when mocking certain JRE classes,
+      // such as ArrayList.
+      try {
+         Class.forName("mockit.Capturing");
+         Class.forName("mockit.Delegate");
+         Class.forName("mockit.internal.expectations.invocation.InvocationResults");
+         Class.forName("mockit.internal.expectations.mocking.BaseTypeRedefinition$MockedClass");
+         Class.forName("mockit.internal.expectations.mocking.SharedFieldTypeRedefinitions");
+         Class.forName("mockit.internal.expectations.mocking.TestedClasses");
+         Class.forName("mockit.external.hamcrest.core.IsEqual");
+      }
+      catch (ClassNotFoundException ignore) {}
+
       wasCalledDuringClassLoading();
       DefaultValues.computeForReturnType("()J");
    }
@@ -99,7 +112,7 @@ public final class MockingBridge implements InvocationHandler
       Class<?> mockedClass = mocked.getClass();
       return
          mockedClass == File.class || mockedClass == URL.class || mockedClass == FileInputStream.class ||
-         mockedClass == ZipFile.class || Vector.class.isInstance(mocked) || Hashtable.class.isInstance(mocked);
+         mockedClass == JarFile.class || Vector.class.isInstance(mocked) || Hashtable.class.isInstance(mocked);
    }
 
    private static boolean wasCalledDuringClassLoading()

@@ -77,7 +77,7 @@ public final class Startup
 
       StartupConfiguration config = new StartupConfiguration();
 
-      preventEventualClassLoadingConflicts();
+      MockingBridge.preventEventualClassLoadingConflicts();
       loadInternalStartupMocksForJUnitIntegration();
 
       if (initializeTestNG) {
@@ -97,23 +97,6 @@ public final class Startup
 
       inst.addTransformer(new JMockitTransformer());
       inst.addTransformer(new ExpectationsTransformer(inst));
-   }
-
-   private static void preventEventualClassLoadingConflicts()
-   {
-      // Pre-load certain JMockit classes to avoid NoClassDefFoundError's when mocking certain JRE classes,
-      // such as ArrayList.
-      try {
-         Class.forName("mockit.Capturing");
-         Class.forName("mockit.Delegate");
-         Class.forName("mockit.internal.expectations.invocation.InvocationResults");
-         Class.forName("mockit.internal.expectations.mocking.SharedFieldTypeRedefinitions");
-         Class.forName("mockit.internal.expectations.mocking.TestedClasses");
-         Class.forName("mockit.external.hamcrest.core.IsEqual");
-      }
-      catch (ClassNotFoundException ignore) {}
-
-      MockingBridge.preventEventualClassLoadingConflicts();
    }
 
    private static void loadInternalStartupMocksForJUnitIntegration()

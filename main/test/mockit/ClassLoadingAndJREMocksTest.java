@@ -12,7 +12,6 @@ import java.util.zip.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-@SuppressWarnings({"UseOfObsoleteCollectionType", "CollectionDeclaredAsConcreteClass"})
 public final class ClassLoadingAndJREMocksTest
 {
    static class Foo
@@ -27,8 +26,7 @@ public final class ClassLoadingAndJREMocksTest
    @Test
    public void recordExpectationForFileUsingLocalMockField()
    {
-      new Expectations()
-      {
+      new Expectations() {
          File file;
 
          {
@@ -43,12 +41,7 @@ public final class ClassLoadingAndJREMocksTest
    @Test
    public void recordExpectationForFileUsingMockParameter(@Mocked File file)
    {
-      new Expectations()
-      {
-         {
-            new File("filePath").exists(); result = true;
-         }
-      };
+      new Expectations() {{ new File("filePath").exists(); result = true; }};
 
       Foo foo = new Foo();
       assertTrue(foo.checkFile("filePath"));
@@ -59,8 +52,7 @@ public final class ClassLoadingAndJREMocksTest
    {
       Foo foo = new Foo();
 
-      new MockUp<File>()
-      {
+      new MockUp<File>() {
          @Mock
          boolean exists() { return true; }
       };
@@ -71,8 +63,7 @@ public final class ClassLoadingAndJREMocksTest
    @Test
    public void mockFileOutputStreamInstantiation() throws Exception
    {
-      new Expectations()
-      {
+      new Expectations() {
          @Mocked("helperMethod") TestedUnitUsingIO tested;
          FileOutputStream mockOS;
 
@@ -101,17 +92,13 @@ public final class ClassLoadingAndJREMocksTest
    @Test
    public void mockEntireAbstractListClass()
    {
-      new NonStrictExpectations()
-      {
-         AbstractList<?> c;
-      };
+      new NonStrictExpectations() { AbstractList<?> c; };
    }
 
    @Test
    public void attemptToMockNonMockableJREClass()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Integer mock;
 
          {
@@ -122,16 +109,16 @@ public final class ClassLoadingAndJREMocksTest
 
    static class ClassWithVector
    {
+      @SuppressWarnings({"UseOfObsoleteCollectionType"})
       final Collection<?> theVector = new Vector<Object>();
-
       public int getVectorSize() { return theVector.size(); }
    }
 
    @Test
    public void useMockedVectorDuringClassLoading()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
+         @SuppressWarnings({"UseOfObsoleteCollectionType", "CollectionDeclaredAsConcreteClass"})
          Vector<?> mockedVector;
 
          {
@@ -147,8 +134,7 @@ public final class ClassLoadingAndJREMocksTest
    {
       Properties props = new Properties();
 
-      new Expectations()
-      {
+      new Expectations() {
          Properties mock;
 
          {
@@ -166,12 +152,7 @@ public final class ClassLoadingAndJREMocksTest
    @Test
    public void mockURLAndURLConnectionUsingMockParameterAndMockField(final URL url) throws Exception
    {
-      new Expectations()
-      {
-         {
-            url.openConnection(); result = mockConnection;
-         }
-      };
+      new Expectations() {{ url.openConnection(); result = mockConnection; }};
 
       URLConnection conn = url.openConnection();
       assertSame(mockConnection, conn);
@@ -181,12 +162,7 @@ public final class ClassLoadingAndJREMocksTest
    public void mockURLAndHttpURLConnectionUsingMockParameters(
       final URL mockUrl, final HttpURLConnection mockHttpConnection) throws Exception
    {
-      new NonStrictExpectations()
-      {
-         {
-            mockUrl.openConnection(); result = mockHttpConnection;
-         }
-      };
+      new NonStrictExpectations() {{ mockUrl.openConnection(); result = mockHttpConnection; }};
 
       HttpURLConnection conn = (HttpURLConnection) mockUrl.openConnection();
       assertSame(mockHttpConnection, conn);
@@ -197,8 +173,7 @@ public final class ClassLoadingAndJREMocksTest
    {
       final URL url = new URL("http://nowhere");
 
-      new NonStrictExpectations(url)
-      {
+      new NonStrictExpectations(url) {
          HttpURLConnection mockHttpConnection;
 
          {
@@ -215,8 +190,7 @@ public final class ClassLoadingAndJREMocksTest
 
       assertNotNull(out);
 
-      new Verifications()
-      {
+      new Verifications() {
          HttpURLConnection mockHttpConnection;
 
          {
@@ -229,12 +203,7 @@ public final class ClassLoadingAndJREMocksTest
    @Test
    public void mockFileInputStream() throws Exception
    {
-      new Expectations(FileInputStream.class)
-      {
-         {
-            new FileInputStream("").close(); result = new IOException();
-         }
-      };
+      new Expectations(FileInputStream.class) {{ new FileInputStream("").close(); result = new IOException(); }};
 
       try {
          new FileInputStream("").close();
@@ -246,8 +215,29 @@ public final class ClassLoadingAndJREMocksTest
    }
 
    @Test
-   public void mockZipFile(ZipFile zf)
+   public void mockZipFile() throws Exception
    {
-      assertNull(zf.getEntry("test"));
-  }
+      final ZipFile testZip = new ZipFile(getClass().getResource("test.zip").getPath());
+
+      new NonStrictExpectations() {
+         @Capturing @Injectable ZipFile mock;
+
+         {
+            mock.entries();
+            result = testZip.entries();
+
+            mock.getInputStream((ZipEntry) any);
+            result = new Delegate() {
+               InputStream delegate(ZipEntry e) throws IOException { return testZip.getInputStream(e); }
+            };
+         }
+      };
+
+      ZipFile zf = new ZipFile("non-existing");
+      ZipEntry firstEntry = zf.entries().nextElement();
+      InputStream content = zf.getInputStream(firstEntry);
+      String textContent = new BufferedReader(new InputStreamReader(content)).readLine();
+
+      assertEquals("test", textContent);
+   }
 }
