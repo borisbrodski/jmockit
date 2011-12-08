@@ -47,8 +47,7 @@ public final class VerificationsInOrderTest
    {
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          mock.setSomething(45);
          mock.editABunchMoreStuff();
@@ -60,10 +59,7 @@ public final class VerificationsInOrderTest
    {
       mock.setSomething(1);
 
-      new VerificationsInOrder()
-      {{
-         mock.notifyBeforeSave();
-      }};
+      new VerificationsInOrder() {{ mock.notifyBeforeSave(); }};
    }
 
    @Test(expected = AssertionError.class)
@@ -71,28 +67,20 @@ public final class VerificationsInOrderTest
    {
       mock.setSomething(1);
 
-      new VerificationsInOrder()
-      {{
-         mock.setSomething(2);
-         times = 1;
-      }};
+      new VerificationsInOrder() {{ mock.setSomething(2); times = 1; }};
    }
 
    @Test(expected = AssertionError.class)
    public void verifyRecordedInvocationThatShouldHappenButDoesNot()
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.setSomething(1);
-            mock.notifyBeforeSave();
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.setSomething(1);
+         mock.notifyBeforeSave();
+      }};
 
       mock.setSomething(1);
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.setSomething(1);
          mock.notifyBeforeSave();
       }};
@@ -101,18 +89,14 @@ public final class VerificationsInOrderTest
    @Test
    public void verifyAllInvocationsWithSomeOfThemRecorded()
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.prepare();
-            mock.editABunchMoreStuff();
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.prepare();
+         mock.editABunchMoreStuff();
+      }};
 
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare(); minTimes = 1;
          mock.setSomethingElse(anyString);
          mock.setSomething(anyInt); minTimes = 1; maxTimes = 2;
@@ -125,21 +109,17 @@ public final class VerificationsInOrderTest
    @Test
    public void verifyInvocationsWithOneRecordedButNotReplayed()
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.prepare();
-            mock.editABunchMoreStuff();
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.prepare();
+         mock.editABunchMoreStuff();
+      }};
 
       mock.prepare();
       mock.setSomething(123);
       mock.setSomethingElse("a");
       mock.save();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.setSomething(anyInt);
          mock.setSomethingElse(anyString);
          mock.save();
@@ -147,15 +127,14 @@ public final class VerificationsInOrderTest
    }
 
    @Ignore @Test
-   public void verifyInvocationRecordedWithArgumentMatcherHavingExactInvocationCountsInTheVerifications()
+   public void verifyInvocationsWithExactInvocationCountsHavingRecordedMatchingExpectationWithArgumentMatcher()
    {
       new NonStrictExpectations() {{ mock.setSomething(anyInt); }};
 
       mock.setSomething(1);
       mock.setSomething(2);
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.setSomething(1); times = 1;
          mock.setSomething(2); times = 1;
       }};
@@ -168,8 +147,7 @@ public final class VerificationsInOrderTest
       mock.setSomething(123);
       mock.save();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          mock.setSomething(anyInt);
          mock.save(); minTimes = 0;
@@ -184,8 +162,7 @@ public final class VerificationsInOrderTest
       mock.prepare();
       mock.setSomething(123);
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          mock.save(); minTimes = 0;
       }};
@@ -197,8 +174,7 @@ public final class VerificationsInOrderTest
       mock.prepare();
       mock.setSomething(123);
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.setSomething(anyInt);
          mock.save(); minTimes = 0;
       }};
@@ -210,8 +186,7 @@ public final class VerificationsInOrderTest
       mock.prepare();
       mock.setSomething(123);
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          mock.editABunchMoreStuff(); minTimes = 0;
          mock.setSomething(anyInt);
@@ -224,8 +199,7 @@ public final class VerificationsInOrderTest
       mock.setSomething(123);
       mock.prepare();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          mock.setSomething(123);
       }};
@@ -237,11 +211,7 @@ public final class VerificationsInOrderTest
       mock.setSomething(123);
       mock.setSomething(123);
 
-      new VerificationsInOrder()
-      {{
-         mock.setSomething(123);
-         times = 2;
-      }};
+      new VerificationsInOrder() {{ mock.setSomething(123); times = 2; }};
    }
 
    @Test(expected = AssertionError.class)
@@ -250,10 +220,7 @@ public final class VerificationsInOrderTest
       mock.setSomething(123);
       mock.setSomething(123);
 
-      new VerificationsInOrder()
-      {{
-         mock.setSomething(123); maxTimes = 1;
-      }};
+      new VerificationsInOrder() {{ mock.setSomething(123); maxTimes = 1; }};
    }
 
    @Test
@@ -262,10 +229,7 @@ public final class VerificationsInOrderTest
       mock.setSomething(123);
       mock.setSomething(123);
 
-      new VerificationsInOrder(2)
-      {{
-         mock.setSomething(123);
-      }};
+      new VerificationsInOrder(2) {{ mock.setSomething(123); }};
    }
 
    @Test
@@ -276,10 +240,7 @@ public final class VerificationsInOrderTest
       mock.setSomething(123);
       mock.setSomething(123);
 
-      new VerificationsInOrder(2)
-      {{
-         mock.setSomething(123); minTimes = 2;
-      }};
+      new VerificationsInOrder(2) {{ mock.setSomething(123); minTimes = 2; }};
    }
 
    @Test
@@ -288,10 +249,7 @@ public final class VerificationsInOrderTest
       mock.setSomething(123);
       mock.setSomething(45);
 
-      new VerificationsInOrder()
-      {{
-         mock.setSomething(anyInt); times = 2;
-      }};
+      new VerificationsInOrder() {{ mock.setSomething(anyInt); times = 2; }};
    }
 
    @Test
@@ -300,10 +258,7 @@ public final class VerificationsInOrderTest
       mock.setSomething(123);
       mock.setSomething(45);
 
-      new VerificationsInOrder(2)
-      {{
-         mock.setSomething(anyInt);
-      }};
+      new VerificationsInOrder(2) {{ mock.setSomething(anyInt); }};
    }
 
    @Test
@@ -314,8 +269,7 @@ public final class VerificationsInOrderTest
       mock.setSomething(45);
       mock.save();
 
-      new VerificationsInOrder(2)
-      {{
+      new VerificationsInOrder(2) {{
          mock.setSomething(anyInt);
          mock.save();
       }};
@@ -326,10 +280,7 @@ public final class VerificationsInOrderTest
    {
       mock.setSomething(123);
 
-      new VerificationsInOrder(3)
-      {{
-         mock.setSomething(123);
-      }};
+      new VerificationsInOrder(3) {{ mock.setSomething(123); }};
    }
 
    @Test
@@ -339,10 +290,7 @@ public final class VerificationsInOrderTest
       mock.setSomething(123);
       mock.setSomething(45);
 
-      new VerificationsInOrder(2)
-      {{
-         mock.setSomething(anyInt);
-      }};
+      new VerificationsInOrder(2) {{ mock.setSomething(anyInt); }};
    }
 
    @Test(expected = AssertionError.class)
@@ -352,8 +300,7 @@ public final class VerificationsInOrderTest
       mock.setSomething(123);
       mock.setSomething(45);
 
-      new VerificationsInOrder(2)
-      {{
+      new VerificationsInOrder(2) {{
          mock.setSomething(anyInt);
          mock.setSomething(anyInt);
       }};
@@ -364,8 +311,7 @@ public final class VerificationsInOrderTest
    {
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          mock.setSomething(anyInt);
       }};
@@ -376,27 +322,22 @@ public final class VerificationsInOrderTest
    {
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare(); times = 1;
          mock.setSomething(anyInt); times = 2;
       }};
    }
 
    @Test
-   public void verifyUsingInvocationCountConstraintAndArgumentMatcherOnObjectWithMockedHashCode(
-      ClassWithHashCode wh)
+   public void verifyUsingInvocationCountConstraintAndArgumentMatcherOnObjectWithMockedHashCode(ClassWithHashCode wh)
    {
       mock.doSomething(null);
       mock.doSomething(wh);
 
-      new VerificationsInOrder()
-      {
-         {
-            mock.doSomething((ClassWithHashCode) withNull()); times = 1;
-            mock.doSomething((ClassWithHashCode) withNotNull());
-         }
-      };
+      new VerificationsInOrder() {{
+         mock.doSomething((ClassWithHashCode) withNull()); times = 1;
+         mock.doSomething((ClassWithHashCode) withNotNull());
+      }};
    }
 
    @Test(expected = AssertionError.class)
@@ -406,8 +347,7 @@ public final class VerificationsInOrderTest
       mock.setSomethingElse("anotherValue");
       mock.setSomething(45);
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.setSomething(anyInt);
          mock.setSomething(anyInt);
          mock.setSomethingElse(anyString);
@@ -421,8 +361,7 @@ public final class VerificationsInOrderTest
       mock.prepare();
       mock.setSomething(45);
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          mock.setSomething(anyInt); times = 2;
       }};
@@ -440,15 +379,13 @@ public final class VerificationsInOrderTest
       mock.setSomething(20);
 
       // Verifies first sequence:
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.setSomething(1);
          mock.setSomething(2);
       }};
 
       // Verifies second sequence:
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.setSomething(10);
          mock.setSomething(20);
       }};
@@ -463,17 +400,34 @@ public final class VerificationsInOrderTest
       mock.setSomething(20); // second sequence
 
       // Verifies second sequence:
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.setSomething(10);
          mock.setSomething(20);
       }};
 
       // Verifies first sequence:
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.setSomething(1);
          mock.setSomething(2);
+      }};
+   }
+
+   @Test
+   public void verifySecondSequenceOfInvocationsWithTimesConstraintAfterVerifyingLastInvocationOfFirstSequence()
+   {
+      mock.setSomething(1); // first sequence
+      mock.setSomething(3); // second sequence
+      mock.setSomething(4); // second sequence
+      mock.setSomething(2); // first sequence
+
+      new VerificationsInOrder() {{
+         mock.setSomething(1);
+         mock.setSomething(2);
+      }};
+
+      new VerificationsInOrder() {{
+         mock.setSomething(3);
+         mock.setSomething(4); times = 1;
       }};
    }
 }

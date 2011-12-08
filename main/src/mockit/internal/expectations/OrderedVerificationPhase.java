@@ -119,7 +119,7 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
       while (replayIndex < expectationCount) {
          Expectation expectation = expectationsInReplayOrder.get(replayIndex);
 
-         if (matchesCurrentExpectation(expectation)) {
+         if (expectation != null && matchesCurrentExpectation(expectation)) {
             invocationCount++;
 
             if (invocationCount > maxInvocations) {
