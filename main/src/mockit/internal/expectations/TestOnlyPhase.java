@@ -6,14 +6,14 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
-import mockit.external.hamcrest.*;
+import mockit.internal.expectations.argumentMatching.*;
 
 public abstract class TestOnlyPhase extends Phase
 {
    protected int numberOfIterations;
    protected Object nextInstanceToMatch;
    protected boolean matchInstance;
-   protected List<Matcher<?>> argMatchers;
+   protected List<ArgumentMatcher> argMatchers;
 
    TestOnlyPhase(RecordAndReplayExecution recordAndReplay)
    {
@@ -30,7 +30,7 @@ public abstract class TestOnlyPhase extends Phase
       this.nextInstanceToMatch = nextInstanceToMatch;
    }
 
-   public final void addArgMatcher(Matcher<?> matcher)
+   public final void addArgMatcher(ArgumentMatcher matcher)
    {
       createArgMatchersListIfNeeded();
       argMatchers.add(matcher);
@@ -39,7 +39,7 @@ public abstract class TestOnlyPhase extends Phase
    private void createArgMatchersListIfNeeded()
    {
       if (argMatchers == null) {
-         argMatchers = new ArrayList<Matcher<?>>();
+         argMatchers = new ArrayList<ArgumentMatcher>();
       }
    }
 

@@ -13,12 +13,14 @@ import org.junit.*;
 
 public final class ExpectationsWithArgMatchersTest
 {
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    static class Collaborator
    {
       void setValue(int value) {}
       void setValue(double value) {}
       void setValue(float value) {}
+      void setValue(String value) {}
+      void setValues(String[] values) {}
 
       List<?> complexOperation(Object input1, Object... otherInputs)
       {
@@ -35,12 +37,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test(expected = AssertionError.class)
    public void replayWithUnexpectedMethodArgument()
    {
-      new Expectations()
-      {
-         {
-            mock.simpleOperation(2, "test", null);
-         }
-      };
+      new Expectations() {{ mock.simpleOperation(2, "test", null); }};
 
       mock.simpleOperation(2, "other", null);
    }
@@ -48,12 +45,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test(expected = AssertionError.class)
    public void replayWithUnexpectedNullArgument()
    {
-      new Expectations()
-      {
-         {
-            mock.simpleOperation(2, "test", null);
-         }
-      };
+      new Expectations() {{ mock.simpleOperation(2, "test", null); }};
 
       mock.simpleOperation(2, null, null);
    }
@@ -61,12 +53,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test(expected = AssertionError.class)
    public void replayWithUnexpectedMethodArgumentUsingMatcher()
    {
-      new Expectations()
-      {
-         {
-            mock.setValue(withEqual(-1));
-         }
-      };
+      new Expectations() {{ mock.setValue(withEqual(-1)); }};
 
       mock.setValue(1);
    }
@@ -74,8 +61,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test(expected = AssertionError.class)
    public void expectInvocationWithDifferentThanExpectedProxyArgument()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Runnable mock2;
 
          {
@@ -87,14 +73,17 @@ public final class ExpectationsWithArgMatchersTest
    }
 
    @Test
-   public void expectInvocationWithAnyArgument()
+   public void expectInvocationWithAnyArgumentUsingField()
    {
-      new Expectations()
-      {
-         {
-            mock.setValue(anyInt);
-         }
-      };
+      new Expectations() {{ mock.setValue(anyInt); }};
+
+      mock.setValue(3);
+   }
+
+   @Test
+   public void expectInvocationWithAnyArgumentUsingMethod()
+   {
+      new Expectations() {{ mock.setValue(withAny(1)); }};
 
       mock.setValue(3);
    }
@@ -102,25 +91,23 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationWithEqualArgument()
    {
-      new Expectations()
-      {
-         {
-            mock.setValue(withEqual(3));
-         }
-      };
+      new Expectations() {{ mock.setValue(withEqual(3)); }};
 
       mock.setValue(3);
    }
 
    @Test
+   public void expectInvocationWithEqualArrayArgument()
+   {
+      new Expectations() {{ mock.setValues(withEqual(new String[] {"A", "bb", "cee"})); }};
+
+      mock.setValues(new String[] {"A", "bb", "cee"});
+   }
+
+   @Test
    public void expectInvocationWithEqualDoubleArgument()
    {
-      new Expectations()
-      {
-         {
-            mock.setValue(withEqual(3.0, 0.01)); times = 3;
-         }
-      };
+      new Expectations() {{ mock.setValue(withEqual(3.0, 0.01)); times = 3; }};
 
       mock.setValue(3.0);
       mock.setValue(3.01);
@@ -130,12 +117,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationWithEqualFloatArgument()
    {
-      new Expectations()
-      {
-         {
-            mock.setValue(withEqual(3.0F, 0.01)); times = 3;
-         }
-      };
+      new Expectations() {{ mock.setValue(withEqual(3.0F, 0.01)); times = 3; }};
 
       mock.setValue(3.0F);
       mock.setValue(3.01F);
@@ -145,12 +127,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test(expected = AssertionError.class)
    public void expectInvocationWithEqualFloatArgumentButWithDifferentReplayValue()
    {
-      new Expectations()
-      {
-         {
-            mock.setValue(withEqual(3.0F, 0.01));
-         }
-      };
+      new Expectations() {{ mock.setValue(withEqual(3.0F, 0.01)); }};
 
       mock.setValue(3.02F);
    }
@@ -158,12 +135,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationWithNotEqualArgument()
    {
-      new Expectations()
-      {
-         {
-            mock.setValue(withNotEqual(3));
-         }
-      };
+      new Expectations() {{ mock.setValue(withNotEqual(3)); }};
 
       mock.setValue(4);
    }
@@ -171,13 +143,10 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationWithInstanceOfClassFromGivenObject()
    {
-      new Expectations()
-      {
-         {
-            mock.complexOperation("string");
-            mock.complexOperation(withInstanceLike("string"));
-         }
-      };
+      new Expectations() {{
+         mock.complexOperation("string");
+         mock.complexOperation(withInstanceLike("string"));
+      }};
 
       mock.complexOperation("string");
       mock.complexOperation("another string");
@@ -186,12 +155,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationWithInstanceOfGivenClass()
    {
-      new Expectations()
-      {
-         {
-            mock.complexOperation(withInstanceOf(Long.class));
-         }
-      };
+      new Expectations() {{ mock.complexOperation(withInstanceOf(long.class)); }};
 
       mock.complexOperation(5L);
    }
@@ -199,12 +163,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationWithNullArgument()
    {
-      new Expectations()
-      {
-         {
-            mock.complexOperation(withNull());
-         }
-      };
+      new Expectations() {{ mock.complexOperation(withNull()); }};
 
       mock.complexOperation(null);
    }
@@ -212,12 +171,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationWithNotNullArgument()
    {
-      new Expectations()
-      {
-         {
-            mock.complexOperation(withNotNull());
-         }
-      };
+      new Expectations() {{ mock.complexOperation(withNotNull()); }};
 
       mock.complexOperation(true);
    }
@@ -225,12 +179,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationWithSameInstance()
    {
-      new Expectations()
-      {
-         {
-            mock.complexOperation(withSameInstance(45L));
-         }
-      };
+      new Expectations() {{ mock.complexOperation(withSameInstance(45L)); }};
 
       mock.complexOperation(45L);
    }
@@ -238,8 +187,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test(expected = AssertionError.class)
    public void expectInvocationWithSameMockInstanceButReplayWithNull()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          // This class defines an abstract "toString" override, which initially was erroneously 
          // mocked, causing a non-strict expectation to be created during replay:
          Certificate cert;
@@ -249,17 +197,15 @@ public final class ExpectationsWithArgMatchersTest
          }
       };
 
-      mock.setValue(null);
+      mock.setValue((Certificate) null);
    }
 
    @Test(expected = AssertionError.class)
    public void expectNonStrictInvocationWithMatcherWhichInvokesMockedMethod()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          {
-            mock.setValue(with(0, new Object()
-            {
+            mock.setValue(with(0, new Object() {
                boolean validateAsPositive(int value)
                {
                   // Invoking mocked method caused ConcurrentModificationException (bug fixed):
@@ -277,38 +223,23 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationWithSubstring()
    {
-      new Expectations()
-      {
-         {
-            mock.complexOperation(withSubstring("sub"));
-         }
-      };
+      new Expectations() {{ mock.complexOperation(withSubstring("sub")); }};
 
-      mock.complexOperation("abcsub123");
+      mock.complexOperation("abcsub\r\n123");
    }
 
    @Test
    public void expectInvocationWithPrefix()
    {
-      new Expectations()
-      {
-         {
-            mock.complexOperation(withPrefix("abc"));
-         }
-      };
+      new Expectations() {{ mock.complexOperation(withPrefix("abc")); }};
 
-      mock.complexOperation("abcsub123");
+      mock.complexOperation("abc\tsub\"123\"");
    }
 
    @Test
    public void expectInvocationWithSuffix()
    {
-      new Expectations()
-      {
-         {
-            mock.complexOperation(withSuffix("123"));
-         }
-      };
+      new Expectations() {{ mock.complexOperation(withSuffix("123")); }};
 
       mock.complexOperation("abcsub123");
    }
@@ -316,13 +247,10 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationWithMatchForRegex()
    {
-      new Expectations()
-      {
-         {
-            mock.complexOperation(withMatch("[a-z]+[0-9]*"));
-            mock.complexOperation(withMatch("(?i)[a-z]+sub[0-9]*"));
-         }
-      };
+      new Expectations() {{
+         mock.complexOperation(withMatch("[a-z]+[0-9]*"));
+         mock.complexOperation(withMatch("(?i)[a-z]+sub[0-9]*"));
+      }};
 
       mock.complexOperation("abcsub123");
       mock.complexOperation("abcSuB123");
@@ -331,12 +259,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test(expected = AssertionError.class)
    public void expectInvocationWithMatchForRegexButWithNonMatchingArgument()
    {
-      new Expectations()
-      {
-         {
-            mock.complexOperation(withMatch("test"));
-         }
-      };
+      new Expectations() {{ mock.complexOperation(withMatch("test")); }};
 
       mock.complexOperation("otherValue");
    }
@@ -344,12 +267,7 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationWithUserProvidedMatcher()
    {
-      new Expectations()
-      {
-         {
-            mock.setValue(with(1, new IsEqual<Integer>(3)));
-         }
-      };
+      new Expectations() {{ mock.setValue(with(1, new IsEqual<Integer>(3))); }};
 
       mock.setValue(3);
    }
@@ -357,24 +275,20 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationWithUserImplementedMatcherUsingHamcrestAPI()
    {
-      new Expectations()
-      {
-         {
-            mock.complexOperation(with(new BaseMatcher<Integer>()
+      new Expectations() {{
+         mock.complexOperation(with(new BaseMatcher<Integer>() {
+            public boolean matches(Object item)
             {
-               public boolean matches(Object item)
-               {
-                  Integer value = (Integer) item;
-                  return value >= 10 && value <= 100;
-               }
+               Integer value = (Integer) item;
+               return value >= 10 && value <= 100;
+            }
 
-               public void describeTo(Description description)
-               {
-                  description.appendText("between 10 and 100");
-               }
-            }));
-         }
-      };
+            public void describeTo(Description description)
+            {
+               description.appendText("between 10 and 100");
+            }
+         }));
+      }};
 
       mock.complexOperation(28);
    }
@@ -382,40 +296,50 @@ public final class ExpectationsWithArgMatchersTest
    @Test
    public void expectInvocationsWithUserImplementedReflectionBasedMatchers()
    {
-      new Expectations()
-      {
-         {
-            mock.setValue(with(0, new Object()
+      new Expectations() {{
+         mock.setValue(with(0, new Object() {
+            boolean matches(int value)
             {
-               boolean matches(int value)
-               {
-                  return value >= 10 && value <= 100;
-               }
-            }));
+               return value >= 10 && value <= 100;
+            }
+         }));
 
-            mock.setValue(with(0.0, new Object()
+         mock.setValue(with(0.0, new Object() {
+            void validate(double value)
             {
-               void validate(double value)
-               {
-                  assert value >= 20.0 && value <= 80.0 : "value outside of 20-80 range";
-               }
-            }));
-         }
-      };
+               assert value >= 20.0 && value <= 80.0 : "value outside of 20-80 range";
+            }
+         }));
+      }};
 
       mock.setValue(28);
       mock.setValue(20.0);
    }
 
    @Test
+   public void expectInvocationsWithUserImplementedReflectionBasedMatcherUsingTypedDelegate()
+   {
+      new Expectations() {{
+         mock.setValue(with(new Delegate<String>() {
+            boolean validLength(String value)
+            {
+               return value.length() >= 10 && value.length() <= 100;
+            }
+         }));
+
+         mock.setValue(with(new Delegate<Float>() {
+            boolean positive(float value) { return value > 0.0F; }
+         }));
+      }};
+
+      mock.setValue("Test 123 abc");
+      mock.setValue(1.5F);
+   }
+
+   @Test
    public void expectInvocationWithMatcherContainingAnotherMatcher()
    {
-      new Expectations()
-      {
-         {
-            mock.setValue((Integer) with(IsEqual.equalTo(3)));
-         }
-      };
+      new Expectations() {{ mock.setValue((Integer) with(IsEqual.equalTo(3))); }};
 
       mock.setValue(3);
    }

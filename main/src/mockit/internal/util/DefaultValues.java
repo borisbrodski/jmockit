@@ -30,11 +30,11 @@ public final class DefaultValues
          put("F", 0.0F);
          put("J", 0L);
          put("D", 0.0);
-         put("Ljava/util/Collection;", Collections.emptyList());
-         put("Ljava/util/List;", Collections.emptyList());
-         put("Ljava/util/Set;", Collections.emptySet());
+         put("Ljava/util/Collection;", emptyList());
+         put("Ljava/util/List;", emptyList());
+         put("Ljava/util/Set;", emptySet());
          put("Ljava/util/SortedSet;", unmodifiableSortedSet(new TreeSet<Object>()));
-         put("Ljava/util/Map;", Collections.emptyMap());
+         put("Ljava/util/Map;", emptyMap());
          put("Ljava/util/SortedMap;", unmodifiableSortedMap(new TreeMap<Object, Object>()));
       }
    };
@@ -141,5 +141,35 @@ public final class DefaultValues
       else {
          return (short) 0;
       }
+   }
+
+   public static Object computeForWrapperType(java.lang.reflect.Type type)
+   {
+      if (type == Integer.class) {
+         return 0;
+      }
+      else if (type == Boolean.class) {
+         return false;
+      }
+      else if (type == Long.class) {
+         return 0L;
+      }
+      else if (type == Double.class) {
+         return 0.0;
+      }
+      else if (type == Float.class) {
+         return 0.0F;
+      }
+      else if (type == Character.class) {
+         return '\0';
+      }
+      else if (type == Byte.class) {
+         return (byte) 0;
+      }
+      else if (type == Short.class) {
+         return (short) 0;
+      }
+
+      return null;
    }
 }

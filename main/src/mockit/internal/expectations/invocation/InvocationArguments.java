@@ -8,15 +8,13 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.external.asm4.*;
-import mockit.external.hamcrest.*;
-import mockit.external.hamcrest.core.*;
+import mockit.internal.expectations.argumentMatching.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class InvocationArguments
 {
    private static final Object[] NULL_VARARGS = new Object[0];
-   private static final Matcher<?> ANYTHING = new IsAnything();
 
    final String classDesc;
    final String methodNameAndDesc;
@@ -24,7 +22,7 @@ public final class InvocationArguments
    final String[] exceptions;
    private final int methodAccess;
    private Object[] invocationArgs;
-   private List<Matcher<?>> matchers;
+   private List<ArgumentMatcher> matchers;
 
    InvocationArguments(
       int access, String classDesc, String methodNameAndDesc, String genericSignature, String exceptions, Object[] args)
@@ -46,10 +44,10 @@ public final class InvocationArguments
       matchers = null;
    }
 
-   public List<Matcher<?>> getMatchers() { return matchers; }
-   public void setMatchers(List<Matcher<?>> matchers) { this.matchers = matchers; }
+   public List<ArgumentMatcher> getMatchers() { return matchers; }
+   public void setMatchers(List<ArgumentMatcher> matchers) { this.matchers = matchers; }
 
-   public Object[] prepareForVerification(Object[] argsToVerify, List<Matcher<?>> matchers)
+   public Object[] prepareForVerification(Object[] argsToVerify, List<ArgumentMatcher> matchers)
    {
       Object[] replayArgs = invocationArgs;
       invocationArgs = argsToVerify;
@@ -90,11 +88,12 @@ public final class InvocationArguments
 
          for (int i = 0; i < n; i++) {
             Object actual = getArgument(replayArgs, replayVarArgs, argCount, i);
-            Matcher<?> expected = i < matchers.size() ? matchers.get(i) : null;
+            ArgumentMatcher expected = i < matchers.size() ? matchers.get(i) : null;
 
             if (expected == null) {
                Object arg = getArgument(invocationArgs, invocationVarArgs, argCount, i);
-               expected = arg == null ? ANYTHING : new IsEqual<Object>(arg);
+               if (arg == null) continue;
+               expected = new EqualityMatcher(arg);
             }
 
             if (!expected.matches(actual)) {
@@ -171,7 +170,7 @@ public final class InvocationArguments
          actual == null && expected != null ||
          actual != null && expected == null ||
          actual != null && actual != expected && actual != instanceMap.get(expected) &&
-         !IsEqual.areEqualWhenNonNull(actual, expected);
+         !EqualityMatcher.areEqualWhenNonNull(actual, expected);
    }
 
    private Object getArgument(Object[] regularArgs, Object[] varArgs, int regularArgCount, int i)
@@ -209,11 +208,12 @@ public final class InvocationArguments
 
       for (int i = 0; i < n; i++) {
          Object actual = getArgument(replayArgs, replayVarArgs, argCount, i);
-         Matcher<?> expected = i < matchers.size() ? matchers.get(i) : null;
+         ArgumentMatcher expected = i < matchers.size() ? matchers.get(i) : null;
 
          if (expected == null) {
             Object arg = getArgument(invocationArgs, invocationVarArgs, argCount, i);
-            expected = arg == null ? ANYTHING : new IsEqual<Object>(arg);
+            if (arg == null) continue;
+            expected = new EqualityMatcher(arg);
          }
 
          if (!expected.matches(actual)) {
@@ -277,51 +277,41 @@ public final class InvocationArguments
 
    private AssertionError argumentMismatchMessage(int paramIndex, Object expected, Object actual)
    {
-      StringBuilder message = new StringBuilder(50);
+      ArgumentMismatch message = new ArgumentMismatch();
 
-      message.append("Parameter ").append(paramIndex);
-      message.append(" of ").append(new MethodFormatter(classDesc, methodNameAndDesc));
-      message.append(" expected ");
-      appendParameterValue(message, expected);
-      message.append(", got ");
-      appendParameterValue(message, actual);
+      message.append("Parameter ");
 
-      return new AssertionError(message.toString());
-   }
+      String parameterName = ParameterNames.getName(classDesc, methodNameAndDesc, paramIndex);
 
-   private void appendParameterValue(StringBuilder message, Object parameterValue)
-   {
-      if (parameterValue == null) {
-         message.append("null");
-      }
-      else if (parameterValue instanceof CharSequence || parameterValue instanceof Appendable) {
-         message.append('"').append(parameterValue).append('"');
-      }
-      else if (parameterValue instanceof Character) {
-         message.append('\'').append(parameterValue).append('\'');
-      }
-      else if (parameterValue.getClass().isArray()) {
-         String desc = Arrays.deepToString(new Object[] {parameterValue});
-         message.append(desc.substring(1, desc.length() - 1));
+      if (parameterName == null) {
+         message.append(paramIndex);
       }
       else {
-         message.append(parameterValue);
+         message.appendFormatted(parameterName);
       }
+
+      message.append(" of ").append(new MethodFormatter(classDesc, methodNameAndDesc).toString());
+      message.append(" expected ").appendFormatted(expected);
+
+      if (!message.isFinished()) {
+         message.append(", got ").appendFormatted(actual);
+      }
+
+      return new AssertionError(message.toString());
    }
 
    @Override
    public String toString()
    {
-      StringBuilder desc = new StringBuilder(30);
-      desc.append(":\n").append(new MethodFormatter(classDesc, methodNameAndDesc));
+      ArgumentMismatch desc = new ArgumentMismatch();
+      desc.append(":\n").append(new MethodFormatter(classDesc, methodNameAndDesc).toString());
 
       if (invocationArgs.length > 0) {
          desc.append("\nwith arguments: ");
          String sep = "";
 
          for (Object arg : invocationArgs) {
-            desc.append(sep);
-            appendParameterValue(desc, arg);
+            desc.append(sep).appendFormatted(arg);
             sep = ", ";
          }
       }
@@ -331,7 +321,7 @@ public final class InvocationArguments
 
    public boolean hasEquivalentMatchers(InvocationArguments other)
    {
-      List<Matcher<?>> otherMatchers = other.matchers;
+      List<ArgumentMatcher> otherMatchers = other.matchers;
 
       if (otherMatchers == null || otherMatchers.size() != matchers.size()) {
          return false;
@@ -341,11 +331,11 @@ public final class InvocationArguments
       int m = matchers.size();
 
       while (i < m) {
-         Matcher<?> matcher1 = matchers.get(i);
-         Matcher<?> matcher2 = otherMatchers.get(i);
+         ArgumentMatcher matcher1 = matchers.get(i);
+         ArgumentMatcher matcher2 = otherMatchers.get(i);
 
          if (matcher1 == null || matcher2 == null) {
-            if (!IsEqual.areEqual(invocationArgs[i], other.invocationArgs[i])) {
+            if (!EqualityMatcher.areEqual(invocationArgs[i], other.invocationArgs[i])) {
                return false;
             }
          }
@@ -388,7 +378,7 @@ public final class InvocationArguments
          Object thisArg = getArgument(invocationArgs, thisVarArgs, argCount, i);
          Object otherArg = getArgument(other.invocationArgs, otherVarArgs, argCount, i);
 
-         if (!IsEqual.areEqual(thisArg, otherArg)) {
+         if (!EqualityMatcher.areEqual(thisArg, otherArg)) {
             return false;
          }
 
@@ -398,7 +388,7 @@ public final class InvocationArguments
       return true;
    }
 
-   private boolean equivalentMatches(Matcher<?> matcher1, Object arg1, Matcher<?> matcher2, Object arg2)
+   private boolean equivalentMatches(ArgumentMatcher matcher1, Object arg1, ArgumentMatcher matcher2, Object arg2)
    {
       boolean matcher1MatchesArg2 = matcher1.matches(arg2);
       boolean matcher2MatchesArg1 = matcher2.matches(arg1);
@@ -408,10 +398,10 @@ public final class InvocationArguments
       }
 
       if (arg1 == arg2 && matcher1MatchesArg2 == matcher2MatchesArg1) { // both matchers fail
-         Description desc1 = new StringDescription();
-         matcher1.describeTo(desc1);
-         Description desc2 = new StringDescription();
-         matcher2.describeTo(desc2);
+         ArgumentMismatch desc1 = new ArgumentMismatch();
+         matcher1.writeMismatchPhrase(desc1);
+         ArgumentMismatch desc2 = new ArgumentMismatch();
+         matcher2.writeMismatchPhrase(desc2);
          return desc1.toString().equals(desc2.toString());
       }
 

@@ -4,13 +4,12 @@
  */
 package mockit;
 
+import java.lang.reflect.*;
 import java.util.regex.*;
 
-import mockit.external.hamcrest.*;
-import mockit.external.hamcrest.Matcher;
-import mockit.external.hamcrest.core.*;
-import mockit.external.hamcrest.number.*;
+import mockit.internal.expectations.argumentMatching.ArgumentMatcher;
 import mockit.internal.expectations.*;
+import mockit.internal.expectations.argumentMatching.*;
 import mockit.internal.startup.*;
 import mockit.internal.util.*;
 
@@ -244,27 +243,32 @@ abstract class Invocations
    // Methods for argument matching ///////////////////////////////////////////////////////////////////////////////////
 
    /**
-    * Adds a custom argument matcher for a parameter in the current invocation.
+    * Adds a custom argument matcher for a parameter in the current expectation.
     * <p/>
-    * The given matcher can be any existing <strong>Hamcrest</strong> matcher or a user provided one.
-    * Additionally, it can be an instance of an arbitrary <em>invocation handler</em> class, similar to those used with
-    * the {@link #forEachInvocation} field.
-    * In this case, the non-{@code private} <em>handler method</em> must have a single parameter of a type capable of
-    * receiving the relevant argument values.
-    * The name of this handler method does not matter. Its return type, on the other hand, should either be
-    * {@code boolean} or {@code void}. In the first case, a return value of {@code true} will indicate a successful
-    * match for the actual invocation argument at replay time, while a return of {@code false} will cause the test to
-    * fail. In the second case, instead of returning a value the invocation handler method should validate the actual
-    * invocation argument through an {@code assert} statement or a JUnit/TestNG assertion.
+    * The given matcher can be any existing <em>Hamcrest</em> matcher or a user provided one.
+    * <p/>
+    * Alternatively, it can be an instance of an <em>invocation handler</em> class, similar to those used with the
+    * {@linkplain #forEachInvocation} field.
+    * In this case, the non-<code>private</code> <em>handler method</em> must have a single parameter of a type capable
+    * of receiving the relevant argument values.
+    * The name of this handler method does not matter.
+    * Its return type, on the other hand, should either be {@code boolean} or {@code void}.
+    * In the first case, a return value of {@code true} will indicate a successful match for the actual invocation
+    * argument at replay time, while a return of {@code false} will cause the test to fail.
+    * In the case of a {@code void} return type, instead of returning a value the handler method should validate the
+    * actual invocation argument through an {@code assert} statement or a JUnit/TestNG assertion.
     * <p/>
     * For additional details, refer to {@link #withEqual(Object)}.
     *
     * @param argValue an arbitrary value of the proper type, necessary to provide a valid argument to the invocation
     * parameter
-    * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher} interface, or any
-    * other instance with an appropriate invocation handler method
+    * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher} interface, <em>or</em>
+    * an instance of an invocation handler class containing an appropriate invocation handler method
     *
     * @return the given {@code argValue}
+    *
+    * @see #with(Object)
+    * @see #with(Delegate)
     */
    protected final <T> T with(T argValue, Object argumentMatcher)
    {
@@ -273,47 +277,69 @@ abstract class Invocations
    }
 
    /**
-    * Adds a custom argument matcher for a parameter in the current invocation.
-    * This works like {@link #with(Object, Object)}, but attempting to extract the argument value from the supplied
-    * argument matcher.
+    * Adds a custom argument matcher for a parameter in the current expectation.
+    * This works just like {@link #with(T, Object)}, but attempting to discover the argument type from the supplied
+    * <em>Hamcrest</em> argument matcher, when applicable.
     *
-    * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher} interface, or any
-    * other instance with an appropriate invocation handler method
+    * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher} interface, <em>or</em>
+    * an instance of an invocation handler class containing an appropriate invocation handler method
     *
-    * @return the value recorded inside the given argument matcher, or {@code null} if no such value could be determined
+    * @return the value recorded inside the given <em>Hamcrest</em> argument matcher, or {@code null} if there is no
+    * such value to be found
+    *
+    * @see #with(Object, Object)
+    * @see #with(Delegate)
     */
    protected final <T> T with(Object argumentMatcher)
    {
-      HamcrestAdapter<T> adapter = HamcrestAdapter.create(argumentMatcher);
-      addMatcher(adapter);
+      ArgumentMatcher matcher = HamcrestAdapter.create(argumentMatcher);
+      addMatcher(matcher);
 
-      Object argValue = adapter.getInnerValue();
-      
-      //noinspection unchecked
-      return (T) argValue;
+      if (matcher instanceof HamcrestAdapter) {
+         Object argValue = ((HamcrestAdapter) matcher).getInnerValue();
+         //noinspection unchecked
+         return (T) argValue;
+      }
+
+      return null;
    }
 
    /**
-    * Adds a custom argument matcher for a parameter in the current invocation.
-    * This works like {@link #with(Object, Object)}, but attempting to extract the argument value from the supplied
-    * argument matcher.
+    * Adds a custom argument matcher for a parameter in the current expectation.
+    * <p/>
+    * The given delegate object is assumed to be an instance of an <em>invocation handler</em> class, similar to those
+    * used with the {@linkplain #forEachInvocation} field.
+    * The non-<code>private</code> <em>handler method</em> must have a single parameter of a type capable of receiving
+    * the relevant argument values.
+    * The name of this handler method does not matter.
+    * Its return type, on the other hand, should either be {@code boolean} or {@code void}.
+    * In the first case, a return value of {@code true} will indicate a successful match for the actual invocation
+    * argument at replay time, while a return of {@code false} will cause the test to fail.
+    * In the case of a {@code void} return type, the handler method should validate the actual invocation argument
+    * through an {@code assert} statement or a JUnit/TestNG assertion.
     *
-    * @param argumentMatcher an instance of a class with an appropriate invocation handler method
+    * @param delegateObjectWithInvocationHandlerMethod an instance of a class with an appropriate invocation handler
+    * method
     *
-    * @return the value recorded inside the given argument matcher, or {@code null} if no such value could be determined
+    * @return the default primitive value corresponding to {@code T} if it's a primitive wrapper type, or {@code null}
+    * otherwise
+    *
+    * @see #with(Object)
+    * @see #with(Object, Object)
     */
-   protected final <T> T with(Delegate<T> argumentMatcher)
+   protected final <T> T with(Delegate<T> delegateObjectWithInvocationHandlerMethod)
    {
-      HamcrestAdapter<T> adapter = HamcrestAdapter.create(argumentMatcher);
-      addMatcher(adapter);
+      addMatcher(new ReflectiveMatcher(delegateObjectWithInvocationHandlerMethod));
 
-      Object argValue = adapter.getInnerValue();
+      Class<?> delegateClass = delegateObjectWithInvocationHandlerMethod.getClass();
+      ParameterizedType type = (ParameterizedType) delegateClass.getGenericInterfaces()[0];
+      Type parameterType = type.getActualTypeArguments()[0];
 
       //noinspection unchecked
-      return (T) argValue;
+      return (T) DefaultValues.computeForWrapperType(parameterType);
    }
 
-   private void addMatcher(Matcher<?> matcher)
+   private void addMatcher(ArgumentMatcher matcher)
    {
       getCurrentPhase().addArgMatcher(matcher);
    }
@@ -334,7 +360,7 @@ abstract class Invocations
     */
    protected final <T> T withAny(T arg)
    {
-      addMatcher(new IsAnything());
+      addMatcher(AlwaysTrueMatcher.INSTANCE);
       return arg;
    }
 
@@ -360,8 +386,7 @@ abstract class Invocations
     */
    protected final <T> T withEqual(T arg)
    {
-      //noinspection unchecked
-      addMatcher(new IsEqual(arg));
+      addMatcher(new EqualityMatcher(arg));
       return arg;
    }
 
@@ -376,7 +401,7 @@ abstract class Invocations
     */
    protected final double withEqual(double value, double delta)
    {
-      addMatcher(new IsCloseTo(value, delta));
+      addMatcher(new NumericEqualityMatcher(value, delta));
       return value;
    }
 
@@ -391,7 +416,7 @@ abstract class Invocations
     */
    protected final float withEqual(float value, double delta)
    {
-      addMatcher(new IsCloseTo(value, delta));
+      addMatcher(new NumericEqualityMatcher(value, delta));
       return value;
    }
 
@@ -408,7 +433,7 @@ abstract class Invocations
     */
    protected final <T> T withInstanceLike(T object)
    {
-      addMatcher(new IsInstanceOf(object.getClass()));
+      addMatcher(new ClassMatcher(object.getClass()));
       return object;
    }
 
@@ -422,7 +447,7 @@ abstract class Invocations
     */
    protected final <T> T withInstanceOf(Class<T> argClass)
    {
-      addMatcher(new IsInstanceOf(argClass));
+      addMatcher(new ClassMatcher(argClass));
       return null;
    }
 
@@ -436,9 +461,19 @@ abstract class Invocations
     */
    protected final <T> T withNotEqual(T arg)
    {
-      //noinspection unchecked
-      addMatcher(new IsNot<T>(new IsEqual(arg)));
+      addMatcher(new InequalityMatcher(arg));
       return arg;
+   }
+
+   /**
+    * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay phase is {@code null}.
+    *
+    * @return always {@code null}
+    */
+   protected final <T> T withNull()
+   {
+      addMatcher(NullityMatcher.INSTANCE);
+      return null;
    }
 
    /**
@@ -449,18 +484,7 @@ abstract class Invocations
     */
    protected final <T> T withNotNull()
    {
-      addMatcher(new IsNot<T>(new IsNull<T>()));
-      return null;
-   }
-
-   /**
-    * Same as {@link #withEqual(Object)}, but checking that an invocation argument in the replay phase is {@code null}.
-    *
-    * @return always {@code null}
-    */
-   protected final <T> T withNull()
-   {
-      addMatcher(new IsNull<T>());
+      addMatcher(NonNullityMatcher.INSTANCE);
       return null;
    }
 
@@ -474,8 +498,7 @@ abstract class Invocations
     */
    protected final <T> T withSameInstance(T object)
    {
-      //noinspection unchecked
-      addMatcher(new IsSame(object));
+      addMatcher(new SamenessMatcher(object));
       return object;
    }
 
@@ -491,7 +514,7 @@ abstract class Invocations
     */
    protected final <T extends CharSequence> T withSubstring(T text)
    {
-      addMatcher(new StringContains(text));
+      addMatcher(new StringContainmentMatcher(text));
       return text;
    }
 
@@ -505,7 +528,7 @@ abstract class Invocations
     */
    protected final <T extends CharSequence> T withPrefix(T text)
    {
-      addMatcher(new StringStartsWith(text));
+      addMatcher(new StringPrefixMatcher(text));
       return text;
    }
 
@@ -519,7 +542,7 @@ abstract class Invocations
     */
    protected final <T extends CharSequence> T withSuffix(T text)
    {
-      addMatcher(new StringEndsWith(text));
+      addMatcher(new StringSuffixMatcher(text));
       return text;
    }
 
@@ -538,21 +561,7 @@ abstract class Invocations
     */
    protected final <T extends CharSequence> T withMatch(T regex)
    {
-      final Pattern pattern = Pattern.compile(regex.toString());
-
-      addMatcher(new BaseMatcher<T>()
-      {
-         public boolean matches(Object item)
-         {
-            return pattern.matcher((CharSequence) item).matches();
-         }
-
-         public void describeTo(Description description)
-         {
-            description.appendText("a string matching ").appendValue(pattern);
-         }
-      });
-
+      addMatcher(new PatternMatcher(regex.toString()));
       return regex;
    }
 

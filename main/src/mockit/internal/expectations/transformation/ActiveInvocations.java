@@ -4,15 +4,13 @@
  */
 package mockit.internal.expectations.transformation;
 
-import mockit.external.hamcrest.core.*;
 import mockit.internal.expectations.*;
+import mockit.internal.expectations.argumentMatching.*;
 import mockit.internal.state.*;
 
 @SuppressWarnings({"UnusedDeclaration"})
 public final class ActiveInvocations
 {
-   private static final IsAnything<?> MATCHES_ANYTHING = new IsAnything();
-
    public static void addArgMatcher()
    {
       RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
@@ -21,7 +19,7 @@ public final class ActiveInvocations
          TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
 
          if (currentPhase != null) {
-            currentPhase.addArgMatcher(MATCHES_ANYTHING);
+            currentPhase.addArgMatcher(AlwaysTrueMatcher.INSTANCE);
          }
       }
    }

@@ -35,7 +35,7 @@ public final class Utilities
       put(Long.class, long.class);
       put(Double.class, double.class);
    }};
-   private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER = new HashMap<Class<?>, Class<?>>()
+   public static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER = new HashMap<Class<?>, Class<?>>()
    {{
       put(boolean.class, Boolean.class);
       put(char.class, Character.class);
@@ -49,6 +49,11 @@ public final class Utilities
    private static final Class<?>[] NO_PARAMETERS = new Class<?>[0];
 
    private Utilities() {}
+
+   public static <T> Class<T> loadClassByInternalName(String internalClassName)
+   {
+      return loadClass(internalClassName.replace('/', '.'));
+   }
 
    public static <T> Class<T> loadClass(String className)
    {
@@ -107,16 +112,16 @@ public final class Utilities
    public static <T> T newInstance(Class<? extends T> aClass, Object... nonNullArgs)
    {
       Class<?>[] argTypes = getArgumentTypesFromArgumentValues(nonNullArgs);
-      Constructor constructor = findCompatibleConstructor(aClass, argTypes);
+      Constructor<?> constructor = findCompatibleConstructor(aClass, argTypes);
       return (T) invoke(constructor, nonNullArgs);
    }
 
-   private static Constructor findCompatibleConstructor(Class<?> theClass, Class<?>[] argTypes)
+   private static Constructor<?> findCompatibleConstructor(Class<?> theClass, Class<?>[] argTypes)
    {
-      Constructor found = null;
+      Constructor<?> found = null;
       Class<?>[] foundParameters = null;
 
-      for (Constructor declaredConstructor : theClass.getDeclaredConstructors()) {
+      for (Constructor<?> declaredConstructor : theClass.getDeclaredConstructors()) {
          Class<?>[] declaredParamTypes = declaredConstructor.getParameterTypes();
 
          if (
@@ -141,7 +146,7 @@ public final class Utilities
    {
       Class<?>[] argTypes = getArgumentTypesFromArgumentValues(nonNullArgs);
       Class<T> theClass = loadClass(className);
-      Constructor constructor = findCompatibleConstructor(theClass, argTypes);
+      Constructor<?> constructor = findCompatibleConstructor(theClass, argTypes);
       return (T) invoke(constructor, nonNullArgs);
    }
 

@@ -6,16 +6,16 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
-import mockit.external.hamcrest.*;
+import mockit.internal.expectations.argumentMatching.*;
 
 final class VerifiedExpectation
 {
    final Expectation expectation;
    final Object[] arguments;
-   final List<Matcher<?>> argMatchers;
+   final List<ArgumentMatcher> argMatchers;
    final int replayIndex;
 
-   VerifiedExpectation(Expectation expectation, Object[] arguments, List<Matcher<?>> argMatchers, int replayIndex)
+   VerifiedExpectation(Expectation expectation, Object[] arguments, List<ArgumentMatcher> argMatchers, int replayIndex)
    {
       this.expectation = expectation;
       this.arguments = arguments;
