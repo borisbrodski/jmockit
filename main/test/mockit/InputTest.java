@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
 
 public final class InputTest
 {
+   @SuppressWarnings("UnusedParameters")
    static class Collaborator
    {
       int getInt() { return 1; }
@@ -27,9 +28,10 @@ public final class InputTest
       static Map<String, List<Long>> getMapFromStringToListOfLongs() { return null; }
       Socket getSocket() { return null; }
       void throwSocketException() throws SocketException, IllegalAccessException {}
-      <E> List<E> genericMethod() { return null; }
-      <Value> Map<String, Value> genericMethod2() { return null; }
-      <Key extends Number, Value> Map<Key, Value> genericMethod3() { return null; }
+      <E extends CharSequence> List<E> genericMethod1() { return null; }
+      <E extends Number> List<E> genericMethod2(E num) { return null; }
+      <Value> Map<String, Value> genericMethod3() { return null; }
+      <Key extends Number, Value> Map<Key, Value> genericMethod4(Key key, Value value) { return null; }
       Collaborator parent() { return null; }
       ClassLackingNoArgsConstructor someMethod() { return new ClassLackingNoArgsConstructor(123); }
       ClassWhoseConstructorFails willAlwaysFail() { return new ClassWhoseConstructorFails(); }
@@ -50,8 +52,7 @@ public final class InputTest
    @Test
    public void specifyDefaultReturnValues()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          @Input final int someIntValue = 123;
          @Input String uniqueId = "Abc5"; // fields not required to be final
          @Input final List<Integer> userIds = asList(4, 56, 278);
@@ -93,28 +94,30 @@ public final class InputTest
    }
 
    @Test
-   public void specifyUniqueReturnValueForMethodWithGenericReturnType()
+   public void specifyUniqueReturnValueForMethodsWithGenericReturnTypes()
    {
-      final List<String> values1 = asList("a", "b");
-      final Map<String, String> values2 = new HashMap<String, String>();
-      final Map<Integer, String> values3 = new HashMap<Integer, String>();
+      final List<String> list1 = asList("a", "b");
+      final List<Integer> list2 = asList(1, 2);
+      final Map<String, String> map1  = new HashMap<String, String>() {{ put("map", "map1"); }};
+      final Map<Integer, String> map2 = new HashMap<Integer, String>() {{ put(123, "map2"); }};
 
       new Expectations() {
-         @Input final List<String> names = values1;
-         @Input Map<String, String> defaultValues2 = values2;
-         @Input Map<? extends Number, String> defaultValues3 = values3;
+         @Input final List<String> names = list1;
+         @Input final List<Integer> numbers = list2;
+         @Input Map<String, String> defaultValues3 = map1;
+         @Input Map<? extends Number, String> defaultValues4 = map2;
       };
 
-      assertSame(values1, mock.genericMethod());
-      assertSame(values2, mock.genericMethod2());
-      assertSame(values3, mock.genericMethod3());
+      assertSame(list1, mock.genericMethod1());
+      assertSame(list2, mock.genericMethod2(123));
+      assertSame(map1, mock.genericMethod3());
+      assertSame(map2, mock.genericMethod4(5L, "test"));
    }
 
    @Test(expected = SocketException.class)
    public void specifyDefaultExceptionToThrow() throws Exception
    {
-      new Expectations()
-      {
+      new Expectations() {
          @Input SocketException networkFailure;
       };
 
@@ -233,7 +236,7 @@ public final class InputTest
    {
       int intReturningMethod() { return -1; }
 
-      @SuppressWarnings({"RedundantThrowsDeclaration"})
+      @SuppressWarnings("RedundantThrowsDeclaration")
       String stringReturningMethod() throws SomeCheckedException { return ""; }
    }
 
@@ -327,5 +330,31 @@ public final class InputTest
 
       GenericClass<Collaborator> gc2 = new GenericClass<Collaborator>();
       assertSame(d, gc2.doSomething());
+   }
+
+   @Test
+   public void specifyDefaultValuesForMethodsReturningTypeParameterOfGenericClassInstantiations(GenericClass<?> mock)
+   {
+      new Expectations() {
+         @Input String name = "test";
+         @Input Double value = 4.5;
+         @Input Collaborator collaborator;
+      };
+
+      Object v1 = mock.doSomething();
+      assertEquals("test", v1); // gets the first default result, when more than one matches
+      assertEquals("test", mock.doSomethingElse());
+      assertNotNull(mock.getCollaborator());
+
+      // Coincides with the type of the first default result, so it "works".
+      GenericClass<String> gc1 = new GenericClass<String>();
+      assertSame("test", gc1.doSomething());
+      assertSame("test", gc1.doSomethingElse());
+      assertNotNull(gc1.getCollaborator());
+
+      // Same as "GenericClass<?>", so it doesn't work: generic methods return the first default value, of type String.
+      GenericClass<Double> gc2 = new GenericClass<Double>();
+      Object s = gc2.doSomething();
+      assertEquals("test", s);
    }
 }
