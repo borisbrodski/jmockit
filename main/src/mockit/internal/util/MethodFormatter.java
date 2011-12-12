@@ -6,6 +6,8 @@ package mockit.internal.util;
 
 import java.util.*;
 
+import mockit.internal.state.*;
+
 public final class MethodFormatter
 {
    private final StringBuilder out;
@@ -13,7 +15,8 @@ public final class MethodFormatter
    private String classDesc;
    private String methodDesc;
 
-   // Auxiliary variables for handling method parameter types:
+   // Auxiliary fields for handling method parameters:
+   private int parameterIndex;
    private int typeDescPos;
    private char typeCode;
    private int arrayDimensions;
@@ -29,10 +32,7 @@ public final class MethodFormatter
    }
 
    @Override
-   public String toString()
-   {
-      return out.toString();
-   }
+   public String toString() { return out.toString(); }
 
    public String friendlyMethodSignatures(Collection<String> classAndMethodDescs)
    {
@@ -48,33 +48,39 @@ public final class MethodFormatter
       return out.toString();
    }
 
+   private void separateClassAndMethodInternalDescriptions(String classAndMethodDesc)
+   {
+      int p = classAndMethodDesc.indexOf('#');
+
+      if (p >= 0) {
+         classDesc = classAndMethodDesc.substring(0, p);
+         methodDesc = classAndMethodDesc.substring(p + 1);
+      }
+      else {
+         classDesc = null;
+         methodDesc = classAndMethodDesc;
+      }
+   }
+
    private void appendFriendlyMethodSignature()
    {
-      String className = null;
       String friendlyDesc = methodDesc;
 
       if (classDesc != null) {
-         className = classDesc.replace('/', '.');
+         String className = classDesc.replace('/', '.');
+         out.append(className).append('#');
+
          String constructorName = getConstructorName(className);
          friendlyDesc = friendlyDesc.replace("<init>", constructorName);
       }
 
-      int leftParenPos = friendlyDesc.indexOf('(');
+      int leftParenNextPos = friendlyDesc.indexOf('(') + 1;
       int rightParenPos = friendlyDesc.indexOf(')');
 
-      if (!methodDesc.startsWith("<init>")) {
-         String returnType = friendlyDesc.substring(rightParenPos + 1);
-         appendFriendlyTypes(returnType);
-         out.append(' ');
-      }
-
-      if (className != null) {
-         out.append(className).append('#');
-      }
-
-      if (leftParenPos + 1 < rightParenPos) {
-         out.append(friendlyDesc.substring(0, leftParenPos + 1));
-         String parameterTypes = friendlyDesc.substring(leftParenPos + 1, rightParenPos);
+      if (leftParenNextPos < rightParenPos) {
+         out.append(friendlyDesc.substring(0, leftParenNextPos));
+         String parameterTypes = friendlyDesc.substring(leftParenNextPos, rightParenPos);
+         parameterIndex = 0;
          appendFriendlyTypes(parameterTypes);
          out.append(')');
       }
@@ -98,20 +104,6 @@ public final class MethodFormatter
       return constructorName;
    }
 
-   private void separateClassAndMethodInternalDescriptions(String classAndMethodDesc)
-   {
-      int p = classAndMethodDesc.indexOf('#');
-
-      if (p >= 0) {
-         classDesc = classAndMethodDesc.substring(0, p);
-         methodDesc = classAndMethodDesc.substring(p + 1);
-      }
-      else {
-         classDesc = null;
-         methodDesc = classAndMethodDesc;
-      }
-   }
-
    private void appendFriendlyTypes(String typeDescs)
    {
       String sep = "";
@@ -121,6 +113,7 @@ public final class MethodFormatter
 
          if (typeDesc.charAt(0) == 'L') {
             out.append(friendlyReferenceType(typeDesc));
+            appendParameterName();
          }
          else {
             appendFriendlyPrimitiveTypes(typeDesc);
@@ -135,6 +128,19 @@ public final class MethodFormatter
       return typeDesc.substring(1).replace("java/lang/", "").replace('/', '.');
    }
 
+   private void appendParameterName()
+   {
+      if (classDesc != null) {
+         String name = ParameterNames.getName(classDesc, methodDesc, parameterIndex);
+
+         if (name != null) {
+            out.append(' ').append(name);
+         }
+      }
+
+      parameterIndex++;
+   }
+
    private void appendFriendlyPrimitiveTypes(String typeDesc)
    {
       String sep = "";
@@ -142,14 +148,17 @@ public final class MethodFormatter
       for (typeDescPos = 0; typeDescPos < typeDesc.length(); typeDescPos++) {
          typeCode = typeDesc.charAt(typeDescPos);
          advancePastArrayDimensionsIfAny(typeDesc);
+
          String paramType = getTypeNameForTypeDesc(typeDesc);
          out.append(sep).append(paramType);
+
          appendArrayBrackets();
+         appendParameterName();
          sep = ", ";
       }
    }
 
-   @SuppressWarnings({"OverlyComplexMethod"})
+   @SuppressWarnings("OverlyComplexMethod")
    private String getTypeNameForTypeDesc(String typeDesc)
    {
       String paramType;

@@ -12,20 +12,22 @@ import java.util.concurrent.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-@SuppressWarnings({"deprecation"})
+@SuppressWarnings("deprecation")
 public final class DynamicPartialMockingTest
 {
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    @Deprecated
    static class Collaborator
    {
       @Deprecated
-      protected final int value;
+      protected int value;
 
       Collaborator() { value = -1; }
       @Deprecated Collaborator(@Deprecated int value) { this.value = value; }
 
       final int getValue() { return value; }
+      void setValue(int value) { this.value = value; }
+
       final boolean simpleOperation(int a, String b, Date c) { return true; }
       static void doSomething(boolean b, String s) { throw new IllegalStateException(); }
 
@@ -82,6 +84,30 @@ public final class DynamicPartialMockingTest
       ByteArrayOutputStream buf = new ByteArrayOutputStream(200);
       buf.write(65);
       assertEquals("A", buf.toString("UTF-8"));
+   }
+
+   @Test
+   public void dynamicallyMockClassNonStrictly()
+   {
+      new NonStrictExpectations(Collaborator.class) {{
+         new Collaborator().getValue(); result = 123;
+      }};
+
+      // Mocked:
+      assertEquals(123, new Collaborator().getValue());
+
+      // Not mocked:
+      Collaborator col1 = new Collaborator(200);
+      col1.setValue(45);
+      assertEquals(45, col1.value);
+
+      // Still mocked:
+      assertEquals(123, col1.getValue());
+
+      new Verifications() {{
+         Collaborator col2 = new Collaborator(200); times = 1;
+         col2.getValue(); times = 2;
+      }};
    }
 
    @Test
@@ -222,7 +248,6 @@ public final class DynamicPartialMockingTest
       new Verifications() {{
          Collaborator.doSomething(anyBoolean, "test");
          collaborator.getValue(); times = 1;
-         new Collaborator(45);
       }};
    }
 
@@ -353,7 +378,7 @@ public final class DynamicPartialMockingTest
    public void dynamicallyMockInstanceOfJREClass()
    {
       final List<String> list = new LinkedList<String>();
-      @SuppressWarnings({"UseOfObsoleteCollectionType"}) List<String> anotherList = new Vector<String>();
+      @SuppressWarnings("UseOfObsoleteCollectionType") List<String> anotherList = new Vector<String>();
 
       new NonStrictExpectations(list, anotherList) {{
          list.get(1); result = "an item";
@@ -648,7 +673,7 @@ public final class DynamicPartialMockingTest
    @Test
    public void regularMockedMethodCallingOverriddenEqualsInDynamicallyMockedClass(final Collaborator mock)
    {
-      @SuppressWarnings({"TooBroadScope"}) final File f = new File("test");
+      @SuppressWarnings("TooBroadScope") final File f = new File("test");
 
       new NonStrictExpectations(File.class) {};
 

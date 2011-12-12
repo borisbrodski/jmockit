@@ -18,7 +18,7 @@ import mockit.internal.filtering.*;
 import mockit.internal.startup.*;
 import mockit.internal.util.*;
 
-@SuppressWarnings({"ClassWithTooManyFields"})
+@SuppressWarnings("ClassWithTooManyFields")
 final class ExpectationsModifier extends BaseClassModifier
 {
    private static final int METHOD_ACCESS_MASK = ACC_SYNTHETIC + ACC_ABSTRACT;
@@ -300,7 +300,6 @@ final class ExpectationsModifier extends BaseClassModifier
       return specialTreatmentForConstructor ? new DynamicConstructorModifier() : new DynamicModifier();
    }
 
-
    private class DynamicModifier extends MethodVisitor
    {
       DynamicModifier() { super(mw); }
@@ -308,6 +307,8 @@ final class ExpectationsModifier extends BaseClassModifier
       @Override
       public final void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int idx)
       {
+         registerParameterName(name, idx);
+
          // For some reason, the start position for "this" gets displaced by bytecode inserted at the beginning,
          // in a method modified by the EMMA tool. If not treated, this causes a ClassFormatError.
          if (end.position > 0 && start.position > end.position) {

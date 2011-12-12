@@ -12,7 +12,7 @@ import mockit.external.asm4.*;
 import mockit.external.asm4.Type;
 import mockit.internal.state.*;
 
-@SuppressWarnings({"ClassWithTooManyMethods"})
+@SuppressWarnings("ClassWithTooManyMethods")
 public class BaseClassModifier extends ClassVisitor
 {
    private static final int ACCESS_MASK = 0xFFFF - ACC_ABSTRACT - ACC_NATIVE;
@@ -34,15 +34,34 @@ public class BaseClassModifier extends ClassVisitor
       }
 
       @Override
+      public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index)
+      {
+         registerParameterName(name, index);
+      }
+
+      @Override
       public AnnotationVisitor visitParameterAnnotation(int parameter, String annotationDesc, boolean visible)
       {
          return mw.visitParameterAnnotation(parameter, annotationDesc, visible);
       }
    };
 
+   protected final void registerParameterName(String name, int index)
+   {
+      if (staticMethod) {
+         ParameterNames.registerName(classDesc, methodName, methodDesc, index, name);
+      }
+      else if (index > 0) {
+         ParameterNames.registerName(classDesc, methodName, methodDesc, index - 1, name);
+      }
+   }
+
    protected MethodVisitor mw;
    protected boolean useMockingBridge;
-   private String modifiedClassName;
+   private String classDesc;
+   private boolean staticMethod;
+   private String methodName;
+   private String methodDesc;
 
    protected BaseClassModifier(ClassReader classReader)
    {
@@ -71,7 +90,7 @@ public class BaseClassModifier extends ClassVisitor
       }
 
       super.visit(modifiedVersion, access, name, signature, superName, interfaces);
-      modifiedClassName = name;
+      classDesc = name;
    }
 
    /**
@@ -85,8 +104,12 @@ public class BaseClassModifier extends ClassVisitor
       //noinspection UnnecessarySuperQualifier
       mw = super.visitMethod(access & ACCESS_MASK, name, desc, signature, exceptions);
 
+      staticMethod = Modifier.isStatic(access);
+      methodName = name;
+      methodDesc = desc;
+
       if (Modifier.isNative(access)) {
-         TestRun.mockFixture().addRedefinedClassWithNativeMethods(modifiedClassName);
+         TestRun.mockFixture().addRedefinedClassWithNativeMethods(classDesc);
       }
    }
 
