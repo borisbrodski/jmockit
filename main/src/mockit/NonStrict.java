@@ -14,7 +14,7 @@ import java.lang.annotation.*;
  * For each of these invocations, the result (return value or thrown error/exception) will be either a "no-op" (doing
  * nothing for constructors and {@code void} methods, or returning the default value appropriate to the return type) or
  * whatever was specified through a matching invocation executed in the record phase (matching on the parameter values,
- * optionally using Hamcrest matchers).
+ * optionally using argument matchers).
  * Note that multiple invocations to the same method or constructor can be recorded, provided different arguments are
  * used.
  * <p/>

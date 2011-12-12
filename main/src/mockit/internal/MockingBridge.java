@@ -25,7 +25,7 @@ public final class MockingBridge implements InvocationHandler
 
    private static final Object[] EMPTY_ARGS = {};
 
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    public static final MockingBridge MB = new MockingBridge();
 
    public static void preventEventualClassLoadingConflicts()
@@ -39,7 +39,7 @@ public final class MockingBridge implements InvocationHandler
          Class.forName("mockit.internal.expectations.mocking.BaseTypeRedefinition$MockedClass");
          Class.forName("mockit.internal.expectations.mocking.SharedFieldTypeRedefinitions");
          Class.forName("mockit.internal.expectations.mocking.TestedClasses");
-         Class.forName("mockit.external.hamcrest.core.IsEqual");
+         Class.forName("mockit.internal.expectations.argumentMatching.EqualityMatcher");
       }
       catch (ClassNotFoundException ignore) {}
 
