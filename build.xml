@@ -31,7 +31,7 @@
 
          <javac
             srcdir="@{module}/@{srcdir}" destdir="@{module}/@{outdir}" includeantruntime="false"
-            source="1.5" target="1.5" debug="true" nowarn="true">
+            source="1.5" target="1.5" debug="true" nowarn="true" excludes="**/package-info.java">
             <classpath refid="common.classpath"/>
             <classpath location="main/classes"/>
             <classpath location="@{module}/classes"/>
@@ -82,7 +82,7 @@
          <mkdir dir="samples/@{module}/@{outdir}"/>
          <javac
             srcdir="samples/@{module}/src" destdir="samples/@{module}/@{outdir}" includeantruntime="false"
-            source="@{jdkVersion}" target="@{jdkVersion}" debug="true" nowarn="true">
+            source="@{jdkVersion}" target="@{jdkVersion}" debug="true" nowarn="true" excludes="**/package-info.java">
             <classpath refid="common.classpath"/>
             <classpath>
                <fileset dir="samples/@{module}/lib" includes="*.jar" erroronmissingdir="false"/>
@@ -288,7 +288,7 @@
       <sequential>
          <junitreport>
            <fileset dir="." includes="TEST-*.xml"/>
-           <report format="noframes"/>
+           <report format="noframes" styledir="${ant.home}/etc"/>
          </junitreport>
          <delete dir="." includes="TEST*-*.xml" quiet="true"/>
          <move file="junit-noframes.html" tofile="@{name}.html"/>

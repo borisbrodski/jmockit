@@ -8,7 +8,7 @@
     <defaultAnt bundledAnt="true" />
     <buildFile url="file://$PROJECT_DIR$/build.xml">
       <additionalClassPath />
-      <antReference projectDefault="true" />
+      <antReference name="Apache Ant version 1.8.2" />
       <customJdkName value="" />
       <maximumHeapSize value="128" />
       <maximumStackSize value="2" />
@@ -100,7 +100,7 @@
     <option name="ADDITIONAL_OPTIONS_STRING" value="-source 1.5 -target 1.5" />
   </component>
   <component name="CompilerConfiguration">
-    <option name="DEFAULT_COMPILER" value="Javac" />
+    <option name="DEFAULT_COMPILER" value="compAPI" />
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -282,9 +282,6 @@
         <inspection_tool class="ComparisonToNaN" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConditionSignal" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConditionalExpressionWithIdenticalBranches" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ConfusingElse" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="reportWhenNoStatementFollow" value="false" />
-        </inspection_tool>
         <inspection_tool class="ConfusingFloatingPointLiteral" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConfusingMainMethod" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConfusingOctalEscape" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -684,10 +681,11 @@
         <inspection_tool class="SetupIsPublicVoidNoArg" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SignalWithoutCorrespondingAwait" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SimpleDateFormatWithoutLocale" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="SimplifiableAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="SimplifiableEqualsExpression" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SimplifiableJUnitAssertion" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="Since15" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SingleCharacterStartsWith" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="SizeReplaceableByIsEmpty" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SleepWhileHoldingLock" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SpellCheckingInspection" enabled="true" level="INFO" enabled_by_default="true">
           <option name="processCode" value="true" />
@@ -776,20 +774,26 @@
         <inspection_tool class="UnaryPlus" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnconditionalWait" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnconstructableTestCase" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessarilyQualifiedInnerClassAccess" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreReferencesNeedingImport" value="false" />
+        </inspection_tool>
         <inspection_tool class="UnnecessarilyQualifiedStaticUsage" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_ignoreStaticFieldAccesses" value="false" />
           <option name="m_ignoreStaticMethodCalls" value="false" />
           <option name="m_ignoreStaticAccessFromStaticContext" value="false" />
         </inspection_tool>
+        <inspection_tool class="UnnecessarilyQualifiedStaticallyImportedElement" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryAnnotationParentheses" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryBlockStatement" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreSwitchBranches" value="false" />
         </inspection_tool>
         <inspection_tool class="UnnecessaryCallToStringValueOf" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryConstantArrayCreationExpression" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryDefault" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryEnumModifier" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryFinalOnLocalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryFinalOnLocalVariableOrParameter" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryFinalOnParameter" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="onlyWarnOnAbstractMethods" value="false" />
         </inspection_tool>
@@ -841,6 +845,7 @@
         <inspection_tool class="WhileLoopSpinsOnField" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreNonEmtpyLoops" value="false" />
         </inspection_tool>
+        <inspection_tool class="ZeroLengthArrayInitialization" enabled="true" level="WARNING" enabled_by_default="true" />
       </profile>
     </profiles>
     <option name="PROJECT_PROFILE" value="Project Default" />
@@ -1386,7 +1391,7 @@
     </modules>
   </component>
   <component name="ProjectResources">
-    <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
+    <default-html-doctype>jar:file:\E:\Java\IDEA11.0\lib\idea.jar!\resources\html5-schema\html5.rnc</default-html-doctype>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="JDK 1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
