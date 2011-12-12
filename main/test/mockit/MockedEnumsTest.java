@@ -32,13 +32,11 @@ public final class MockedEnumsTest
       public String getDescription() { return num + desc + flag; }
    }
 
+
    @Test
    public void mockEnumValues()
    {
-      MyEnum.First.getDescription();
-
-      new Expectations()
-      {
+      new NonStrictExpectations() {
          final MyEnum mock = MyEnum.First;
 
          {
@@ -59,8 +57,7 @@ public final class MockedEnumsTest
    {
       final double f = 2.5;
 
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          MyEnum mock;
 
          {
@@ -75,8 +72,7 @@ public final class MockedEnumsTest
    @Test
    public void mockSpecificEnumElementsByUsingTwoMockInstances()
    {
-      new Expectations()
-      {
+      new NonStrictExpectations() {
          final MyEnum mock1 = MyEnum.First;
          final MyEnum mock2 = MyEnum.Second;
 
@@ -91,25 +87,21 @@ public final class MockedEnumsTest
    }
 
    @Test
-   public void mockSpecificEnumElementsByUsingASingleMockInstance(@NonStrict MyEnum unused)
+   public void mockSpecificEnumElementsEvenWhenUsingASingleMockInstance(@NonStrict MyEnum unused)
    {
-      new Expectations()
-      {
-         {
-            onInstance(MyEnum.First).getValue(anyDouble); result = 12.3;
-            onInstance(MyEnum.Second).getValue(anyDouble); result = -5.01;
-         }
-      };
+      new Expectations() {{
+         onInstance(MyEnum.First).getValue(anyDouble); result = 12.3;
+         onInstance(MyEnum.Second).getValue(anyDouble); result = -5.01;
+      }};
 
       assertEquals(-5.01, MyEnum.Second.getValue(1), 0.0);
       assertEquals(12.3, MyEnum.First.getValue(2.5), 0.0);
    }
 
    @Test(expected = AssertionError.class)
-   public void mockSpecificEnumElementsByUsingASingleStrictMockInstance()
+   public void mockSpecificEnumElementsEvenWhenUsingASingleStrictMockInstance()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @Mocked("getDescription") final MyEnum unused = null;
 
          {
@@ -124,13 +116,12 @@ public final class MockedEnumsTest
    @Test
    public void mockNonAbstractMethodsInEnumWithAbstractMethod(final TimeUnit tm) throws Exception
    {
-      new Expectations()
-      {{
-         tm.convert(anyLong, TimeUnit.HOURS); result = 1L;
+      new Expectations() {{
+         tm.convert(anyLong, TimeUnit.SECONDS); result = 1L;
          tm.sleep(anyLong);
       }};
 
-      assertEquals(1, tm.convert(1000, TimeUnit.HOURS));
+      assertEquals(1, tm.convert(1000, TimeUnit.SECONDS));
       tm.sleep(10000);
    }
 
@@ -156,8 +147,7 @@ public final class MockedEnumsTest
    {
       assertSame(EnumWithValueSpecificMethods.One, mockedEnum);
 
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          onInstance(EnumWithValueSpecificMethods.One).getValue(); result = 123;
          onInstance(EnumWithValueSpecificMethods.Two).getValue(); result = -45;
 
