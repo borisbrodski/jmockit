@@ -5,15 +5,13 @@
 package mockit.internal.startup;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 final class StartupConfiguration
 {
    private static final String DEFAULT_TOOLS_KEY = "defaultTools";
-   private static final String DEFAULT_TOOLS_VALUE =
-      "mockit.coverage.CodeCoverage " +
-      "mockit.integration.junit4.IncrementalJUnit4Runner " +
-      "mockit.emulation.hibernate3.ConfigurationEmul";
    private static final String STARTUP_TOOL_PREFIX = "startupTools.";
    private static final String SEPARATOR_REGEX = "\\s*,\\s*|\\s+";
 
@@ -28,8 +26,9 @@ final class StartupConfiguration
    StartupConfiguration() throws IOException
    {
       startupTools = new Properties();
-      loadPropertiesFile();
-      loadSystemProperties();
+
+      loadJMockitPropertiesFilesFromClasspath();
+      loadJMockitPropertiesIntoSystemProperties();
 
       defaultTools = new ArrayList<String>();
       fillListOfDefaultTools();
@@ -38,24 +37,50 @@ final class StartupConfiguration
       mockClasses = System.getProperty("jmockit-mocks", "").split(SEPARATOR_REGEX);
    }
 
-   private void loadPropertiesFile() throws IOException
+   private void loadJMockitPropertiesFilesFromClasspath() throws IOException
    {
-      // TODO: use Thread.currentThread().getContextClassLoader().getResources("/jmockit.properties")
-      // to support multiple properties files
+      Enumeration<URL> allFiles = Thread.currentThread().getContextClassLoader().getResources("jmockit.properties");
+      int numFiles = 0;
 
-      InputStream properties = getClass().getResourceAsStream("/jmockit.properties");
+      while (allFiles.hasMoreElements()) {
+         URL url = allFiles.nextElement();
+         InputStream propertiesFile = url.openStream();
 
-      try {
-         startupTools.load(properties);
-      }
-      finally {
-         properties.close();
+         if (numFiles == 0) {
+            try { startupTools.load(propertiesFile); } finally { propertiesFile.close(); }
+         }
+         else {
+            Properties properties = new Properties();
+            try { properties.load(propertiesFile); } finally { propertiesFile.close(); }
+            addPropertyValues(properties);
+         }
+
+         numFiles++;
       }
    }
 
-   private void loadSystemProperties()
+   private void addPropertyValues(Properties propertiesToAdd)
    {
-      for (Map.Entry<?, ?> prop : startupTools.entrySet()) {
+      for (Entry<?, ?> propertyToAdd : propertiesToAdd.entrySet()) {
+         Object key = propertyToAdd.getKey();
+         String valueToAdd = (String) propertyToAdd.getValue();
+         String existingValue = (String) startupTools.get(key);
+         String newValue;
+
+         if (existingValue == null || existingValue.length() == 0) {
+            newValue = valueToAdd;
+         }
+         else {
+            newValue = existingValue + ' ' + valueToAdd;
+         }
+
+         startupTools.put(key, newValue);
+      }
+   }
+
+   private void loadJMockitPropertiesIntoSystemProperties()
+   {
+      for (Entry<?, ?> prop : startupTools.entrySet()) {
          String name = (String) prop.getKey();
 
          if (!DEFAULT_TOOLS_KEY.equals(name) && !name.startsWith(STARTUP_TOOL_PREFIX)) {
@@ -80,7 +105,7 @@ final class StartupConfiguration
       String[] defaultToolsArray;
 
       if (specifiedTools == null) {
-         defaultToolsArray = startupTools.getProperty(DEFAULT_TOOLS_KEY, DEFAULT_TOOLS_VALUE).split("\\s+");
+         defaultToolsArray = startupTools.getProperty(DEFAULT_TOOLS_KEY).split("\\s+");
       }
       else {
          defaultToolsArray = specifiedTools.split(",");

@@ -260,15 +260,13 @@ public final class Mockit
     * <p/>
     * There are three ways to set up mock classes at startup time:
     * <ol>
-    * <li>Defining a value for the "<code>jmockit-mocks</code>" system property, as a comma-separated list of fully
+    * <li>Define a value for the "<code>jmockit-mocks</code>" system property, as a comma-separated list of fully
     * qualified class names.</li>
-    * <li>Using a custom "<code>jmockit.properties</code>" file containing an entry for the "<code>jmockit-mocks</code>"
-    * property.
-    * This custom file must <em>precede</em> <code>jmockit.jar</code> (which contains the standard properties file)
-    * in the classpath.
+    * <li>Add a custom "<code>jmockit.properties</code>" file to the classpath, with an entry for the
+    * "<code>jmockit-mocks</code>" (or just "<code>mocks</code>") property.
     * </li>
-    * <li>Using the "<code>-javaagent:jmockit.jar=&lt;agentArgs></code>" JVM argument, where "<code>agentArgs</code>"
-    * contains one or more mock class names, separated by semicolons if more than one.
+    * <li>Specify the "<code>-javaagent:jmockit.jar=&lt;agentArgs></code>" JVM argument, with "<code>agentArgs</code>"
+    * containing one or more mock class names, separated by semicolons if more than one.
     * </li>
     * </ol>
     * Note that option two above makes it possible to package a whole set of reusable mock classes in a jar file,
