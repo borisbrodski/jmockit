@@ -15,7 +15,7 @@ import org.junit.*;
 
 import mockit.*;
 
-public final class CurrencyConversion2UnitTest
+public final class CurrencyConversion2Test
 {
    String conversionHtml = "<div id=\"converter_results\"><ul><li><b>1 X = 1.3 Y</b>";
    @Tested CurrencyConversion2 conversion;

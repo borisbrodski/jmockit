@@ -14,7 +14,7 @@ import org.junit.*;
 
 import mockit.*;
 
-public final class CurrencyConversionUnitTest
+public final class CurrencyConversionTest
 {
    @Capturing // so that any class implementing the base type gets mocked
    @Cascading // so that intermediate objects obtained from chained calls get mocked
