@@ -11,12 +11,11 @@ import java.util.Map.Entry;
 
 final class StartupConfiguration
 {
-   private static final String DEFAULT_TOOLS_KEY = "defaultTools";
-   private static final String STARTUP_TOOL_PREFIX = "startupTools.";
    private static final String SEPARATOR_REGEX = "\\s*,\\s*|\\s+";
 
-   private final Properties startupTools;
-   final List<String> defaultTools;
+   private final Properties config;
+
+   final String[] externalTools;
    String toolClassName;
    String toolArguments;
 
@@ -25,14 +24,12 @@ final class StartupConfiguration
 
    StartupConfiguration() throws IOException
    {
-      startupTools = new Properties();
+      config = new Properties();
 
       loadJMockitPropertiesFilesFromClasspath();
       loadJMockitPropertiesIntoSystemProperties();
 
-      defaultTools = new ArrayList<String>();
-      fillListOfDefaultTools();
-
+      externalTools = System.getProperty("jmockit-tools", "").split(SEPARATOR_REGEX);
       classesToBeStubbedOut = System.getProperty("jmockit-stubs", "").split(SEPARATOR_REGEX);
       mockClasses = System.getProperty("jmockit-mocks", "").split(SEPARATOR_REGEX);
    }
@@ -47,7 +44,7 @@ final class StartupConfiguration
          InputStream propertiesFile = url.openStream();
 
          if (numFiles == 0) {
-            try { startupTools.load(propertiesFile); } finally { propertiesFile.close(); }
+            try { config.load(propertiesFile); } finally { propertiesFile.close(); }
          }
          else {
             Properties properties = new Properties();
@@ -64,7 +61,7 @@ final class StartupConfiguration
       for (Entry<?, ?> propertyToAdd : propertiesToAdd.entrySet()) {
          Object key = propertyToAdd.getKey();
          String valueToAdd = (String) propertyToAdd.getValue();
-         String existingValue = (String) startupTools.get(key);
+         String existingValue = (String) config.get(key);
          String newValue;
 
          if (existingValue == null || existingValue.length() == 0) {
@@ -74,61 +71,28 @@ final class StartupConfiguration
             newValue = existingValue + ' ' + valueToAdd;
          }
 
-         startupTools.put(key, newValue);
+         config.put(key, newValue);
       }
    }
 
    private void loadJMockitPropertiesIntoSystemProperties()
    {
-      for (Entry<?, ?> prop : startupTools.entrySet()) {
+      Properties systemProperties = System.getProperties();
+
+      for (Entry<?, ?> prop : config.entrySet()) {
          String name = (String) prop.getKey();
 
-         if (!DEFAULT_TOOLS_KEY.equals(name) && !name.startsWith(STARTUP_TOOL_PREFIX)) {
-            addToSystemProperties(name, prop.getValue());
+         if (name.startsWith("jmockit-") && !systemProperties.containsKey(name)) {
+            systemProperties.put(name, prop.getValue());
          }
       }
    }
 
-   private void addToSystemProperties(String name, Object value)
-   {
-      String sysPropName = name.startsWith("jmockit-") ? name : "jmockit-" + name;
-      Properties systemProperties = System.getProperties();
-
-      if (!systemProperties.containsKey(sysPropName)) {
-         systemProperties.put(sysPropName, value);
-      }
-   }
-
-   private void fillListOfDefaultTools()
-   {
-      String specifiedTools = System.getProperty("jmockit-tools");
-      String[] defaultToolsArray;
-
-      if (specifiedTools == null) {
-         defaultToolsArray = startupTools.getProperty(DEFAULT_TOOLS_KEY).split("\\s+");
-      }
-      else {
-         defaultToolsArray = specifiedTools.split(",");
-      }
-
-      Collections.addAll(defaultTools, defaultToolsArray);
-   }
-
-   void extractClassNameAndArgumentsFromToolSpecification(String toolSpec, boolean byDefault)
+   void extractClassNameAndArgumentsFromToolSpecification(String toolSpec)
    {
       String[] classAndArgs = toolSpec.split("\\s*=\\s*");
       toolClassName = classAndArgs[0];
       toolArguments = classAndArgs.length == 1 ? null : classAndArgs[1];
-
-      if (!byDefault) {
-         defaultTools.remove(toolClassName);
-      }
-
-      String toolKey = STARTUP_TOOL_PREFIX + toolClassName;
-
-      if (startupTools.containsKey(toolKey)) {
-         toolClassName = startupTools.getProperty(toolKey);
-      }
    }
 
    @Override

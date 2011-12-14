@@ -29,6 +29,8 @@ public final class Startup
    static final boolean jdk6OrLater =
       "1.6".equals(javaSpecVersion) || "1.7".equals(javaSpecVersion) || "1.8".equals(javaSpecVersion);
 
+   private static final String[] NO_STUBBING_FILTERS = {};
+
    private static Instrumentation instrumentation;
    private static boolean initializedOnDemand;
 
@@ -62,16 +64,16 @@ public final class Startup
     */
    public static void premain(String agentArgs, Instrumentation inst) throws Exception
    {
-      initialize(true, agentArgs, inst);
+      initialize(true, inst);
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    public static void agentmain(String agentArgs, Instrumentation inst) throws Exception
    {
-      initialize(false, agentArgs, inst);
+      initialize(false, inst);
    }
 
-   private static void initialize(boolean initializeTestNG, String agentArgs, Instrumentation inst) throws IOException
+   private static void initialize(boolean initializeTestNG, Instrumentation inst) throws IOException
    {
       instrumentation = inst;
 
@@ -84,12 +86,8 @@ public final class Startup
          try { setUpInternalStartupMock(MockTestNG.class); } catch (Error ignored) {}
       }
 
-      if (agentArgs != null && agentArgs.length() > 0) {
-         processAgentArgs(config, agentArgs);
-      }
-
-      for (String toolSpec : config.defaultTools) {
-         loadExternalTool(config, toolSpec, true);
+      for (String toolSpec : config.externalTools) {
+         loadExternalTool(config, toolSpec);
       }
 
       stubOutClassesIfSpecifiedInSystemProperty(config);
@@ -126,33 +124,18 @@ public final class Startup
       }
    }
 
-   private static void processAgentArgs(StartupConfiguration config, String agentArgs) throws IOException
+   private static void loadExternalTool(StartupConfiguration config, String toolSpec)
    {
-      String[] externalToolSpecs = agentArgs.split("\\s*;\\s*");
-
-      for (String toolSpec : externalToolSpecs) {
-         loadExternalTool(config, toolSpec, false);
-      }
-   }
-
-   private static void loadExternalTool(StartupConfiguration config, String toolSpec, boolean byDefault)
-      throws IOException
-   {
-      config.extractClassNameAndArgumentsFromToolSpecification(toolSpec, byDefault);
+      config.extractClassNameAndArgumentsFromToolSpecification(toolSpec);
 
       ClassReader cr;
 
-      if (byDefault) {
-         try {
-            cr = ClassFile.readClass(config.toolClassName);
-         }
-         catch (IOException ignore) {
-            // OK, don't load if not in the classpath.
-            return;
-         }
-      }
-      else {
+      try {
          cr = ClassFile.readClass(config.toolClassName);
+      }
+      catch (IOException ignore) {
+         System.out.println("JMockit: external tool class \"" + config.toolClassName + "\" not available in classpath");
+         return;
       }
 
       loadExternalTool(config, cr);
@@ -179,7 +162,7 @@ public final class Startup
 
          int p = stubbing.indexOf('#');
          String realClassName = stubbing;
-         String[] filters = {};
+         String[] filters = NO_STUBBING_FILTERS;
 
          if (p > 0) {
             realClassName = stubbing.substring(0, p);
