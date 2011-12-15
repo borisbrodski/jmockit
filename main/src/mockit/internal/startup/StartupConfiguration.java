@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 
 final class StartupConfiguration
 {
-   private static final String SEPARATOR_REGEX = "\\s*,\\s*|\\s+";
+   private static final String[] NO_VALUES = {};
 
    private final Properties config;
 
@@ -29,9 +29,9 @@ final class StartupConfiguration
       loadJMockitPropertiesFilesFromClasspath();
       loadJMockitPropertiesIntoSystemProperties();
 
-      externalTools = System.getProperty("jmockit-tools", "").split(SEPARATOR_REGEX);
-      classesToBeStubbedOut = System.getProperty("jmockit-stubs", "").split(SEPARATOR_REGEX);
-      mockClasses = System.getProperty("jmockit-mocks", "").split(SEPARATOR_REGEX);
+      externalTools = getMultiValuedProperty("jmockit-tools");
+      classesToBeStubbedOut = getMultiValuedProperty("jmockit-stubs");
+      mockClasses = getMultiValuedProperty("jmockit-mocks");
    }
 
    private void loadJMockitPropertiesFilesFromClasspath() throws IOException
@@ -80,12 +80,19 @@ final class StartupConfiguration
       Properties systemProperties = System.getProperties();
 
       for (Entry<?, ?> prop : config.entrySet()) {
-         String name = (String) prop.getKey();
+         String key = (String) prop.getKey();
+         String name = key.startsWith("jmockit-") ? key : "jmockit-" + key;
 
-         if (name.startsWith("jmockit-") && !systemProperties.containsKey(name)) {
+         if (!systemProperties.containsKey(name)) {
             systemProperties.put(name, prop.getValue());
          }
       }
+   }
+
+   private String[] getMultiValuedProperty(String key)
+   {
+      String values = System.getProperty(key);
+      return values == null ? NO_VALUES : values.split("\\s*,\\s*|\\s+");
    }
 
    void extractClassNameAndArgumentsFromToolSpecification(String toolSpec)
