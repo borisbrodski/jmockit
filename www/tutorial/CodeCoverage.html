@@ -1,4 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2006-2011 Rogério Liesenfeld
+  ~ This file is subject to the terms of the MIT license (see LICENSE.txt).
+  -->
 <html>
 <head>
    <title>The JMockit Testing Toolkit Tutorial</title>
@@ -40,12 +44,7 @@
       </ol>
    </li>
    <li><a href="#maven">Using JMockit Coverage in a Maven project</a></li>
-   <li>
-      <a href="#switching">Turning coverage output on/off</a>
-      <ol>
-         <li><a href="#jmockit-tools">Using the <code>jmockit-tools</code> system property</a></li>
-      </ol>
-   </li>
+   <li><a href="#switching">Turning coverage output on/off</a></li>
 </ol>
 
 <p>
@@ -169,36 +168,34 @@
 </p>
 <ol>
    <li>
-      <strong>XHTML reports</strong>: a multi-page XHTML report is written in the "coverage-report"
-      directory, under the current working directory (a different output directory can be specified
-      if needed).
-      The directory is created if it doesn't yet exist; its contents are overwritten if previously
-      generated.
+      <strong>HTML reports</strong>: a multi-page HTML report is written in the "coverage-report" directory, under the
+      current working directory (a different output directory can be specified if needed).
+      The directory is created if it doesn't yet exist; its contents are overwritten if previously generated.
       The report will include pages containing all Java source files covered by the test suite.
-      By default, the tool looks for ".java" source files inside all directories of name "src" found
-      directly or indirectly under the current working directory; any intermediate sub-directories
-      between "src" and the top-level package directory, such as "src/java" for example, are also
+      By default, the tool looks for "<code>.java</code>" source files inside all directories of name "<code>src</code>"
+      found directly or indirectly under the current working directory; any intermediate sub-directories between
+      "<code>src</code>" and the top-level package directory, such as "<code>src/java</code>" for example, are also
       searched.
    </li>
    <li>
-      <strong>Coverage data files</strong>: a single serialized file of name "coverage.ser" is
-      written under the current working directory or under an specified output directory.
-      If the file already exists its contents are first read and <em>merged</em> with the in-memory
-      results of the current test run.
+      <strong>Coverage data files</strong>: a single serialized file of name "<code>coverage.ser</code>" is written
+      under the current working directory or under an specified output directory.
+      If the file already exists its contents are first read and <em>merged</em> with the in-memory results of the
+      current test run.
       In the end, the file is overwritten with the merged coverage data.
    </li>
 </ol>
 
 <h4 id="callPoints">Call points</h4>
 <p>
-   When running a test suite with the coverage tool, there is optional "call point" information
-   which can be gathered, as selected by the user.
-   A <em>call point</em> is the point in the source test code from which an specific line of
-   production code was exercised.
-   Note that generating coverage with this extra information takes more time and produces
-   significantly larger output. On the other hand, it can be useful to know which lines of test code
-   caused a given line of production code to be executed during the test run.
-   The XHTML report makes this information easily viewable, though hiding it at first.
+   When running a test suite with the coverage tool, there is optional "call point" information which can be gathered,
+   as selected by the user.
+   A <em>call point</em> is the point in the source test code from which an specific line of production code was
+   exercised.
+   Note that generating coverage with this extra information takes more time and produces significantly larger output.
+   On the other hand, it can be useful to know which lines of test code caused a given line of production code to be
+   executed during the test run.
+   The HTML report makes this information easily viewable, though hiding it at first.
 </p>
 
 <h3 id="configuration">
@@ -234,21 +231,21 @@
 </p>
 <ol>
    <li>
-      The <strong>output format</strong> desired: an XHTML report or a data file for merging of
-      multiple test runs. Both kinds of output can be selected for the same test run.
-      The default if none is specified is to generate a basic XHTML report.
+      The <strong>output format</strong> desired: an HTML report or a data file for merging of multiple test runs.
+      Both kinds of output can be selected for the same test run.
+      The default if none is specified is to generate a basic HTML report.
    </li>
    <li>
       The <strong>output directory</strong> where output files should be written.
-      By default, the current working directory of the running JVM is used, with all ".html" files
-      of the XHTML report generated inside a "coverage-report" sub-directory. Sub-directories are
-      automatically created as needed.
+      By default, the current working directory of the running JVM is used, with all "<code>.html</code>" files
+      of the HTML report generated inside a "coverage-report" sub-directory.
+      Sub-directories are automatically created as needed.
    </li>
    <li>
-      The list of <strong>source directories</strong> for the XHTML report.
+      The list of <strong>source directories</strong> for the HTML report.
       (This is not relevant for the serialized data file.)
-      If no such directory is specified, all "src" directories under the current working directory
-      will be considered.
+      If no such directory is specified, all "<code>src</code>" directories under the current working directory will be
+      considered.
    </li>
    <li>
       The set of Java classes which should be considered for coverage gathering.
@@ -270,15 +267,15 @@
 <ul>
    <li>
       <code>jmockit-coverage-<strong>htmlbasic</strong>.jar</code>:
-      generates an XHTML report <em>without</em> call points.
+      generates an HTML report <em>without</em> call points.
    </li>
    <li>
       <code>jmockit-coverage-<strong>htmlfull</strong>.jar</code>:
-      generates an XHTML report <em>with</em> call points.
+      generates an HTML report <em>with</em> call points.
    </li>
    <li>
       <code>jmockit-coverage-<strong>serial</strong>.jar</code>:
-      generates a <em>serialized data file</em> of name "coverage.ser".
+      generates a <em>serialized data file</em> of name "<code>coverage.ser</code>".
    </li>
    <li>
       <code>jmockit-coverage-<strong>merge</strong>.jar</code>:
@@ -298,68 +295,64 @@
    <code>META-INF/MANIFEST.MF</code> file.
    Still, they depend on <strong><code>jmockit-coverage.jar</code></strong> and this is specified
    through the <code>Class-Path</code> property inside <code>MANIFEST.MF</code>.
-   Consequently, if this last jar file is available in the same directory then it does not need to
-   be explicitly added to the classpath; otherwise, it (or an equivalent jar from the Maven
-   repository) will need to be added.
+   Consequently, if this last jar file is available in the same directory then it does not need to be explicitly added
+   to the classpath; otherwise, it (or an equivalent jar from the Maven repository) will need to be added.
 </p>
 <p>
-   If none of the output specification jars is added to the classpath, but
-   <code>jmockit-coverage.jar</code> is, then the "htmlbasic" report will be generated.
+   If none of the output specification jars is added to the classpath, but <code>jmockit-coverage.jar</code> is, then
+   the "htmlbasic" report will be generated.
 </p>
 
 <h4 id="propertyConfiguration">Configuration through system properties</h4>
 <p>
-   To have control over all aspects of the code coverage tool, set one or more
-   <em>system properties</em> for the JVM instance that will run the test suite.
-   Note that you should be able to do this inside an Ant target, a Maven <code>surefire</code>
-   plugin configuration, or a test run configuration for your Java IDE of choice, using either
-   JUnit or TestNG.
+   To have control over all aspects of the code coverage tool, set one or more <em>system properties</em> for the JVM
+   instance that will run the test suite.
+   Note that you should be able to do this inside an Ant target, a Maven <code>surefire</code> plugin configuration, or
+   a test run configuration for your Java IDE of choice, using either JUnit or TestNG.
 </p>
 <p>
-   The available system properties, all prefixed with "jmockit-coverage-", are:
+   The available system properties, all prefixed with "<code>jmockit-coverage-</code>", are:
 </p>
 <ol>
    <li>
-      <code>jmockit-coverage-<strong>output</strong></code>: one or more comma-separated values
-      between <strong><code>html</code></strong>, <strong><code>html-nocp</code></strong>,
+      <code>jmockit-coverage-<strong>output</strong></code>: one or more comma-separated values between
+      <strong><code>html</code></strong>, <strong><code>html-nocp</code></strong>,
       <strong><code>serial</code></strong>, and <strong><code>merge</code></strong>.
       The "nocp" suffix stands for "no call points".
-      The use of this system property takes precedence over the presence of coverage jars in the
-      classpath.
+      The use of this system property takes precedence over the presence of coverage jars in the classpath.
    </li>
    <li>
-      <code>jmockit-coverage-<strong>outputDir</strong></code>: absolute or relative path to the
-      output directory, to be used for writing any "coverage.ser" or "index.html" files (plus the
-      remaining ".html" files of the XHTML report, in automatically created sub-directories).
+      <code>jmockit-coverage-<strong>outputDir</strong></code>: absolute or relative path to the output directory, to
+      be used for writing any "<code>coverage.ser</code>" or "<code>index.html</code>" files (plus the remaining
+      "<code>.html</code>" files of the HTML report, in automatically created sub-directories).
    </li>
    <li>
-      <code>jmockit-coverage-<strong>srcDirs</strong></code>: comma-separated list of Java source 
-      directories to be searched when generating an XHTML report.
+      <code>jmockit-coverage-<strong>srcDirs</strong></code>: comma-separated list of Java source directories to be
+      searched when generating an HTML report.
       Each directory is specified by an absolute or relative path.
    </li>
    <li>
       <code>jmockit-coverage-<strong>classes</strong></code>:
-      a <code>java.util.regex</code>-conformable regular expression which will be used to select
-      the classes from production code which are considered for coverage.
+      a <code>java.util.regex</code>-conformable regular expression which will be used to select the classes from
+      production code which are considered for coverage.
    </li>
    <li>
       <code>jmockit-coverage-<strong>excludes</strong></code>:
-      a <code>java.util.regex</code>-conformable regular expression for class names which should be
-      excluded from consideration when deciding which classes will be modified to gather coverage.
+      a <code>java.util.regex</code>-conformable regular expression for class names which should be excluded from
+      consideration when deciding which classes will be modified to gather coverage.
       This property can be used together with <code>jmockit-coverage-classes</code> or on its own.
    </li>
    <li>
       <code>jmockit-coverage-<strong>metrics</strong></code>:
-      one or more comma-separated words between <strong><code>line</code></strong>,
-      <strong><code>path</code></strong>, <strong><code>data</code></strong>, and
-      <strong><code>all</code></strong> (the default).
+      one or more comma-separated words between <strong><code>line</code></strong>, <strong><code>path</code></strong>,
+      <strong><code>data</code></strong>, and <strong><code>all</code></strong> (the default).
    </li>
 </ol>
 <p>
-   The class selection regular expressions should specify the fully qualified names of classes in
-   production code for which coverage is desired.
-   For example, "orderMngr\.domain\..+" selects all classes in the <code>orderMngr.domain</code>
-   package as well as in any sub-packages.
+   The class selection regular expressions should specify the fully qualified names of classes in production code for
+   which coverage is desired.
+   For example, "<code>orderMngr\.domain\..+</code>" selects all classes in the <code>orderMngr.domain</code> package
+   as well as in any sub-packages.
 </p>
 
 <h3 id="merging">
@@ -373,59 +366,59 @@
    </div>
 </h3>
 <p>
-   Suppose you have multiple test run configurations (in separate Ant targets, for example), and
-   you want to generate a single XHTML report for the code covered by the full set of tests.
-   Normally, when JMockit Coverage generates a report at the end of a test run, it overwrites any
-   previous report that may have been generated in the same output directory.
-   So, instead of getting a merged report as desired, you would end up with the report for the last
-   test run only (assuming all test runs used the same working dir).
+   Suppose you have multiple test run configurations (in separate Ant targets, for example), and you want to generate a
+   single HTML report for the code covered by the full set of tests.
+   Normally, when JMockit Coverage generates a report at the end of a test run, it overwrites any previous report that
+   may have been generated in the same output directory.
+   So, instead of getting a merged report as desired, you would end up with the report for the last test run only
+   (assuming all test runs used the same working dir).
    Here is where the serialized data files ("coverage.ser" files generated in the same or in
    different output directories) come in.
 </p>
 <p>
    As seen in other sections, we activate the generation of this file by either adding
-   <code>jmockit-coverage-serial.jar</code> or <code>jmockit-coverage-merge.jar</code> to the
-   classpath, or by setting the <code>jmockit-coverage-output</code> system property.
+   <code>jmockit-coverage-serial.jar</code> or <code>jmockit-coverage-merge.jar</code> to the classpath, or by setting
+   the <code>jmockit-coverage-output</code> system property.
 </p>
 <p>
-   There are different ways to use the merging of multiple coverage data files. The following
-   sub-sections provide the details for each use case.
+   There are different ways to use the merging of multiple coverage data files.
+   The following sub-sections provide the details for each use case.
 </p>
 
 <h4 id="singleMergedReport">Generating a single aggregate report for multiple test runs</h4>
 <p>
-   Lets say you have multiple test run configurations (for example, multiple <code>junit</code> or
-   <code>testng</code> tasks in the same Ant target) to be executed at once, and want to produce a
-   single aggregate coverage report for the full set of tests. That is, you don't want to produce a
-   separate report for each individual test run.
+   Lets say you have multiple test run configurations (for example, multiple <code>junit</code> or <code>testng</code>
+   tasks in the same Ant target) to be executed at once, and want to produce a single aggregate coverage report for the
+   full set of tests.
+   That is, you don't want to produce a separate report for each individual test run.
    The easiest way to achieve this is to use the same working directory for all test runs, with
-   <code>jmockit-coverage-merge.jar</code> in the classpath or with
-   <code>jmockit-coverage-output=merge</code> specified as a system property for each test run
-   configuration. Since the XHTML report is only desired at the end, the last test run configuration
-   in the sequence should either have the appropriate coverage jar in the classpath or add the
-   appropriate value to the <code>jmockit-coverage-output</code> property.
-   The "coverage.ser" file will be shared between all test runs. The first test run must
-   <em>not</em> read data from this file, therefore it should either be deleted or ignored by the
-   first test run by using <code>jmockit-coverage-serial.jar</code> or
-   <code>jmockit-coverage-output=serial</code> instead.
+   <code>jmockit-coverage-merge.jar</code> in the classpath or with <code>jmockit-coverage-output=merge</code> specified
+   as a system property for each test run configuration.
+   Since the HTML report is only desired at the end, the last test run configuration in the sequence should either have
+   the appropriate coverage jar in the classpath or add the appropriate value to the
+   <code>jmockit-coverage-output</code> property.
+   The "<code>coverage.ser</code>" file will be shared between all test runs.
+   The first test run must <em>not</em> read data from this file; therefore, it should either be deleted or ignored by
+   the first test run, by using <code>jmockit-coverage-serial.jar</code> or <code>jmockit-coverage-output=serial</code>
+   instead.
 </p>
 
 <h4 id="separateAggregateReport">Generating an aggregate report from a set of data files</h4>
 <p>
-   Suppose you want to generate a separate coverage report for <em>each</em> test run configuration
-   and also an aggregate report merging together the results from all test runs.
+   Suppose you want to generate a separate coverage report for <em>each</em> test run configuration and also an
+   aggregate report merging together the results from all test runs.
    In this case we would have <code>n</code> test runs but <code>n + 1</code> coverage reports.
-   Only one XHTML report can be produced from a single test run, so an extra step which doesn't
-   execute any tests is necessary.
-   In order to preserve the original <code>coverage.ser</code> output files generated by each test
-   run, they will need to be written or copied into different output directories.
+   Only one HTML report can be produced from a single test run, so an extra step which doesn't execute any tests is
+   necessary.
+   In order to preserve the original <code>coverage.ser</code> output files generated by each test run, they will need
+   to be written or copied into different output directories.
 </p>
 <p>
-   Assuming that two or more <code>coverage.ser</code> files are available in separate directories,
-   an aggregate report can be generated from them by executing the
-   <code>mockit.coverage.CodeCoverage.main</code> method (a regular Java "main" method).
-   To facilitate this, the <code>jmockit-coverage-htmlbasic.jar</code> and
-   <code>jmockit-coverage-htmlfull.jar</code> files are <em>executable</em>.
+   Assuming that two or more <code>coverage.ser</code> files are available in separate directories, an aggregate report
+   can be generated from them by executing the <code>mockit.coverage.CodeCoverage.main</code> method (a regular Java
+   "main" method).
+   To facilitate this, the <code>jmockit-coverage-htmlbasic.jar</code> and <code>jmockit-coverage-htmlfull.jar</code>
+   files are <em>executable</em>.
    Using Ant, the following task could be used:
 </p>
 <pre><code>   &lt;java
@@ -433,12 +426,12 @@
       args="module1-outDir,anotherOutDir"/>
 </code></pre>
 <p>
-   The example above uses "myBaseDir" as the base directory where a separate JVM instance will run.
-   Two output directories containing "coverage.ser" data files are specified, separated by commas,
-   as the first command line argument.
-   Other configuration parameters can be specified through the "jmockit-coverage-xyz" system properties.
-   This separate JVM instance will read each of the "coverage.ser" data files, merge the coverage
-   data in memory, and then generate the aggregate XHTML report before exiting.
+   The example above uses "<code>myBaseDir</code>" as the base directory where a separate JVM instance will run.
+   Two output directories containing "<code>coverage.ser</code>" data files are specified, separated by commas, as the
+   first command line argument.
+   Other configuration parameters can be specified through the "<code>jmockit-coverage-xyz</code>" system properties.
+   This separate JVM instance will read each of the "<code>coverage.ser</code>" data files, merge the coverage data in
+   memory, and then generate the aggregate HTML report before exiting.
 </p>
 
 <h3 id="maven">
@@ -464,8 +457,9 @@
 </code></pre>
 <p>
    In Maven 2, the <code>surefire</code> plugin is the one usually responsible for actually running tests.
-   To configure the coverage tool, specify values for the appropriate "jmockit-coverage-xyz" system
-   properties. For example, the output directory for generated files can be specified through the
+   To configure the coverage tool, specify values for the appropriate "<code>jmockit-coverage-xyz</code>" system
+   properties.
+   For example, the output directory for generated files can be specified through the
    <code>jmockit-coverage-outputDir</code> property.
 </p>
 <pre class="no-highlight"><code>&lt;plugin>
@@ -486,9 +480,9 @@
 &lt;/plugin>
 </code></pre>
 <p>
-   If the tests are run in a Java SE 5 JVM, or if for whatever reason JMockit cannot be
-   automatically initialized when running on Java SE 6 (typically, when using the IBM or Apple
-   JDKs), then the <code>-javaagent</code> JVM parameter should be used as shown above.
+   If the tests are run in a Java SE 5 JVM, or if for whatever reason JMockit cannot be automatically initialized when
+   running on Java SE 6 (typically, when using the IBM or Apple JDKs), then the <code>-javaagent</code> JVM parameter
+   should be used as shown above.
 </p>
 
 <h3 id="switching">
@@ -502,29 +496,30 @@
    </div>
 </h3>
 <p>
-   To facilitate switching on/off the generation of code coverage output, the
-   <em>read-only status</em> of the relevant file is checked by JMockit at startup.
-   The relevant file, always in the working directory, is "coverage.ser" for serialized output and
-   "coverage-report/index.html" for XHTML output. (Note that the working directory can usually be
-   selected separately for each test run configuration in the Java IDE.)
-   If said file is currently marked as read-only in the OS, then the corresponding output is not
-   generated for the next test run.
+   Sometimes we want to turn coverage output off for a particular test run, without having to remove the coverage jar
+   from the classpath.
+   This can be done in two different ways.
 </p>
 <p>
-   Notice that a Java IDE usually provides an easy mechanism to toggle the read-only status of a
-   project file. In IntelliJ IDEA it is done by double clicking the status bar, with the desired
-   file opened in the editor. In Eclipse there is a "Read only" check box in the "Properties" screen
-   for the text file selected in the editor; this screen can be opened by typing "Alt + Enter".
+   For one, we can manipulate the <em>read-only attribute</em> of the relevant output file, when one has already been
+   generated.
+   The particular file to be manipulated, always in the working directory, is "<code>coverage.ser</code>" for serialized
+   output or "<code>coverage-report/index.html</code>" for HTML output.
+   The file attribute is checked by JMockit at startup; when marked as read-only it cannot be overwritten, so JMockit
+   avoids the attempt entirely.
+</p>
+<p>
+   Note that the working directory can usually be selected separately for each test run configuration in the Java IDE.
+   Also, a Java IDE usually provides an easy mechanism to toggle the read-only status of a file in the project:
+   in IntelliJ IDEA it is done by double clicking the status bar, with the desired file opened in the editor;
+   in Eclipse there is a "Read only" check box in the "Properties" screen (which can be opened by typing "Alt+Enter")
+   for the text file selected in the editor.
+</p>
+<p>
+   Another way to switch coverage off is to simply set the <strong><code>jmockit-coverage-output</code></strong> system
+   property to an invalid output format, such as "<code>-Djmockit-coverage-output=<strong>none</strong></code>".
 </p>
 
-<h4 id="jmockit-tools">Using the <code>jmockit-tools</code> system property</h4>
-<p>
-   Another way to switch coverage on/off is to use the <strong><code>jmockit-tools</code></strong>
-   system property, which can specify the "startup tools", between those available in the classpath
-   (if any), to be loaded by JMockit at startup.
-   For the coverage tool, the word <strong>"coverage"</strong> must be present in the value
-   specified for the property (which can contain two or more tool names separated by commas).
-</p>
 <div class="navigation">
    <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
    <a href="IncrementalTests.html"><img align="right" src="go-next.png" title="Next chapter"></a>

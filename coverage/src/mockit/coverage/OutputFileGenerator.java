@@ -14,14 +14,14 @@ final class OutputFileGenerator extends Thread
    private static final String COVERAGE_PREFIX = "jmockit-coverage-";
 
    Runnable onRun;
-   private final String outputFormat;
+   private final String[] outputFormats;
    private final String outputDir;
    private final String[] sourceDirs;
    private String[] classPath;
 
-   OutputFileGenerator(String outputFormat, String outputDir, String[] srcDirs)
+   OutputFileGenerator(String outputFormats, String outputDir, String[] srcDirs)
    {
-      this.outputFormat = getOutputFormat(outputFormat);
+      this.outputFormats = getOutputFormat(outputFormats);
       this.outputDir = outputDir.length() > 0 ? outputDir : getCoverageProperty("outputDir");
 
       if (srcDirs.length > 0) {
@@ -42,23 +42,26 @@ final class OutputFileGenerator extends Thread
       }
    }
 
-   private String getOutputFormat(String specifiedFormat)
+   private String[] getOutputFormat(String specifiedFormat)
    {
+      String format;
+
       if (specifiedFormat.length() > 0) {
-         return specifiedFormat;
+         format = specifiedFormat;
+      }
+      else {
+         format = getCoverageProperty("output");
+
+         if (format.length() == 0) {
+            format = outputFormatFromClasspath();
+         }
+
+         if (format.length() == 0) {
+            format = "html-nocp";
+         }
       }
 
-      String format = getCoverageProperty("output");
-
-      if (format.length() == 0) {
-         format = outputFormatFromClasspath();
-      }
-
-      if (format.length() == 0) {
-         format = "html-nocp";
-      }
-
-      return format;
+      return format.split("\\s+|\\s*,\\s*");
    }
 
    private String getCoverageProperty(String suffix)
@@ -105,12 +108,25 @@ final class OutputFileGenerator extends Thread
 
    boolean isOutputToBeGenerated()
    {
-      return outputFormat.length() > 0;
+      return
+         hasOutputFormat("html") || hasOutputFormat("html-nocp") ||
+         hasOutputFormat("serial") || hasOutputFormat("merge");
    }
 
    boolean isWithCallPoints()
    {
-      return outputFormat.contains("html") && !outputFormat.contains("html-nocp");
+      return hasOutputFormat("html") && !hasOutputFormat("html-nocp");
+   }
+
+   private boolean hasOutputFormat(String format)
+   {
+      for (String outputFormat : outputFormats) {
+         if (format.equals(outputFormat)) {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    @Override
@@ -173,10 +189,10 @@ final class OutputFileGenerator extends Thread
 
    private void generateAccretionDataFileIfRequested(CoverageData newData) throws IOException, ClassNotFoundException
    {
-      if (outputFormat.contains("serial")) {
+      if (hasOutputFormat("serial")) {
          new AccretionFile(outputDir, newData).generate();
       }
-      else if (outputFormat.contains("merge")) {
+      else if (hasOutputFormat("merge")) {
          AccretionFile accretionFile = new AccretionFile(outputDir, newData);
          accretionFile.mergeDataFromExistingFileIfAny();
          accretionFile.generate();
@@ -185,10 +201,10 @@ final class OutputFileGenerator extends Thread
 
    private void generateHTMLReportIfRequested(CoverageData coverageData) throws IOException
    {
-      if (outputFormat.contains("html-nocp")) {
+      if (hasOutputFormat("html-nocp")) {
          new BasicCoverageReport(outputDir, sourceDirs, coverageData).generate();
       }
-      else if (outputFormat.contains("html")) {
+      else if (hasOutputFormat("html")) {
          new FullCoverageReport(outputDir, sourceDirs, coverageData).generate();
       }
    }
