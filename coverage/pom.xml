@@ -8,7 +8,7 @@
 
    <name>JMockit Coverage</name>
    <description>
-      JMockit Coverage is a code coverage tool with several metrics (line, path, data) capable of generating XHTML
+      JMockit Coverage is a code coverage tool with several metrics (line, path, data) capable of generating HTML
       reports. It is designed with ease of use in mind, avoiding the need for complex configuration. Instead, smart
       (but overridable) defaults are employed, such as the selection of which classes to consider for coverage, and
       where to find sources files for report generation.

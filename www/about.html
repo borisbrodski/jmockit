@@ -1,4 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2006-2011 Rogério Liesenfeld
+  ~ This file is subject to the terms of the MIT license (see LICENSE.txt).
+  -->
 <html>
 <head>
    <title>The JMockit Testing Toolkit</title>
@@ -718,28 +722,26 @@
       to libraries used by code under test).
    </li>
    <li>
-      A serialized output file and/or an XHTML report can be generated at the end of each test run
-      with no extra configuration beyond adding the relevant jar files to the classpath
-      (at least one <code>jmockit-coverage-xyz.jar</code> file).
-      For the generation of the XHTML report, Java source files are automatically searched in all
-      "src" directories under the working directory.
+      A serialized output file and/or an HTML report can be generated at the end of each test run with no extra
+      configuration beyond adding the relevant jar files to the classpath (at least one
+      <code>jmockit-coverage-xyz.jar</code> file).
+      For the generation of the HTML report, Java source files are automatically searched in all "src" directories
+      under the working directory.
    </li>
    <li>
       In code coverage reports, each line of production code can be accurately linked to the lines
       in test code which caused their execution, for each individual execution of each line of code.
-      (This feature is optional, however, because of the higher runtime cost and the larger
-      resulting XHTML report.)
+      (This feature is optional, however, because of the higher runtime cost and the larger resulting HTML report.)
    </li>
    <li>
-      Besides a <em>line coverage</em> metric, a <em>path coverage</em> metric is also made
-      available. Both metrics are calculated and shown at the source file, package, and global
-      levels.
-      For path coverage, each possible path through a method or constructor can be interactively
-      displayed in the XHTML report.
+      Besides a <em>line coverage</em> metric, a <em>path coverage</em> metric is also made available.
+      Both metrics are calculated and shown at the source file, package, and global levels.
+      For path coverage, each possible path through a method or constructor can be interactively displayed in the HTML
+      report.
    </li>
    <li>
-      <strong>Intra-line</strong> coverage is provided, with the appropriate red/green coloring in
-      the XHTML report for each conditionally executed line segment.
+      <strong>Intra-line</strong> coverage is provided, with the appropriate red/green coloring in the HTML report for
+      each conditionally executed line segment.
    </li>
    <li>
       An <strong>incremental test runner</strong> (actually, an automatic modification to the

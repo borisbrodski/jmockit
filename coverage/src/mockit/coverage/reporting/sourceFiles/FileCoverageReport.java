@@ -18,7 +18,7 @@ import mockit.coverage.reporting.parsing.*;
 import mockit.coverage.reporting.pathCoverage.*;
 
 /**
- * Generates an XHTML page containing line-by-line coverage information for a single source file.
+ * Generates an HTML page containing line-by-line coverage information for a single source file.
  */
 public final class FileCoverageReport
 {
