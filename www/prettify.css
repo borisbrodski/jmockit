@@ -26,7 +26,7 @@ img { border: none; }
 .links a { padding-right: 1em; }
 
 .navigation { display: inline; }
-.navigation img { margin-left: 2px; margin-right: 2px; }
+.navigation img { margin-left: 2px; margin-right: 2px; margin-top: -2px; }
 
 .sidebar {
    width: 22em;
