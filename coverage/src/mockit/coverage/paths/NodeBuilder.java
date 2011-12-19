@@ -21,15 +21,13 @@ public final class NodeBuilder
    private final Map<Label, List<Node.GotoSuccessor>> gotoTargetToSuccessors =
       new LinkedHashMap<Label, List<Node.GotoSuccessor>>();
 
-   public int handlePotentialNewBlock(int line)
-   {
-      if (entryNode == null) {
-         firstLine = line;
-         entryNode = new Node.Entry(line);
-         return addNewNode(entryNode);
-      }
+   private int potentiallyTrivialJump;
 
-      return -1;
+   public void handleEntry(int line)
+   {
+      firstLine = line;
+      entryNode = new Node.Entry(line);
+      addNewNode(entryNode);
    }
 
    private int addNewNode(Node newNode)
@@ -48,16 +46,17 @@ public final class NodeBuilder
       return newNodeIndex;
    }
 
-   public int handleRegularInstruction(int line)
+   public int handleRegularInstruction(int line, int opcode)
    {
       if (currentSimpleFork == null && currentJoin == null) {
+         potentiallyTrivialJump = 0;
          return -1;
       }
 
       assert currentBasicBlock == null;
 
       Node.BasicBlock newNode = new Node.BasicBlock(line);
-      connectNodes(newNode);
+      connectNodes(newNode, opcode);
 
       return addNewNode(newNode);
    }
@@ -69,10 +68,17 @@ public final class NodeBuilder
          assert currentSimpleFork == null;
          connectNodes(targetBlock, newFork);
          currentSimpleFork = newFork;
+         potentiallyTrivialJump = 1;
          return addNewNode(newFork);
       }
+      else if (currentBasicBlock == null && currentJoin == null) {
+         Node.Goto newGoto = new Node.Goto(line);
+         connectNodes(newGoto);
+         setUpMappingFromGotoTargetToCurrentGotoSuccessor(targetBlock, newGoto);
+         return addNewNode(newGoto);
+      }
       else {
-         setUpMappingFromGotoTargetToCurrentGotoSuccessor(targetBlock);
+         setUpMappingFromGotoTargetToCurrentGotoSuccessor(targetBlock, null);
          return -1;
       }
    }
@@ -95,13 +101,25 @@ public final class NodeBuilder
       return !jumpTargetToForks.containsKey(basicBlock) && !gotoTargetToSuccessors.containsKey(basicBlock);
    }
 
-   private void connectNodes(Node.BasicBlock newBasicBlock)
+   private void connectNodes(Node.BasicBlock newBasicBlock, int opcode)
    {
       if (currentSimpleFork != null) {
          currentSimpleFork.nextConsecutiveNode = newBasicBlock;
          currentSimpleFork = null;
+
+         if (potentiallyTrivialJump == 1) {
+            potentiallyTrivialJump = opcode == Opcodes.ICONST_1 ? 2 : 0;
+         }
       }
       else {
+         if (potentiallyTrivialJump == 3) {
+            if (opcode == Opcodes.ICONST_0) {
+               currentJoin.fromTrivialFork = true;
+            }
+
+            potentiallyTrivialJump = 0;
+         }
+
          currentJoin.nextNode = newBasicBlock;
          currentJoin = null;
       }
@@ -131,12 +149,8 @@ public final class NodeBuilder
       forksWithSameTarget.add(newFork);
    }
 
-   private void setUpMappingFromGotoTargetToCurrentGotoSuccessor(Label targetBlock)
+   private void setUpMappingFromGotoTargetToCurrentGotoSuccessor(Label targetBlock, Node.Goto gotoNode)
    {
-      if (currentBasicBlock == null && currentJoin == null) {
-         return;
-      }
-
       List<Node.GotoSuccessor> successors = gotoTargetToSuccessors.get(targetBlock);
 
       if (successors == null) {
@@ -146,12 +160,20 @@ public final class NodeBuilder
 
       // TODO: they both can be non-null here; what to do?
       if (currentBasicBlock != null) {
+         assert currentJoin == null : "Ambiguous situation for " + targetBlock;
          successors.add(currentBasicBlock);
          currentBasicBlock = null;
+
+         if (potentiallyTrivialJump == 2) {
+            potentiallyTrivialJump = 3;
+         }
       }
-      else {
+      else if (currentJoin != null) {
          successors.add(currentJoin);
          currentJoin = null;
+      }
+      else {
+         successors.add(gotoNode);
       }
    }
 

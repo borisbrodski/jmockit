@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ASMPluginConfiguration">
-    <asm skipDebug="false" skipFrames="false" skipCode="false" expandFrames="false" />
+    <asm skipDebug="false" skipFrames="true" skipCode="false" expandFrames="false" />
     <groovy codeStyle="LEGACY" />
   </component>
   <component name="AntConfiguration">
@@ -130,6 +130,10 @@
       <option name="myLocal" value="true" />
     </copyright>
     <module2copyright />
+    <LanguageOptions name="HTML">
+      <option name="fileLocation" value="2" />
+      <option name="prefixLines" value="false" />
+    </LanguageOptions>
     <LanguageOptions name="__TEMPLATE__">
       <option name="addBlankAfter" value="false" />
     </LanguageOptions>
@@ -376,8 +380,12 @@
         <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="myValues">
             <value>
-              <list size="1">
+              <list size="5">
                 <item index="0" class="java.lang.String" itemvalue="target" />
+                <item index="1" class="java.lang.String" itemvalue="align" />
+                <item index="2" class="java.lang.String" itemvalue="cellpadding" />
+                <item index="3" class="java.lang.String" itemvalue="cellspacing" />
+                <item index="4" class="java.lang.String" itemvalue="width" />
               </list>
             </value>
           </option>
@@ -701,7 +709,6 @@
         <inspection_tool class="StaticSuite" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="StringBufferReplaceableByString" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="StringBufferToStringInConcatenation" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="StringCompareTo" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="StringConcatenationInLoops" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_ignoreUnlessAssigned" value="true" />
         </inspection_tool>
@@ -775,7 +782,7 @@
         <inspection_tool class="UnconditionalWait" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnconstructableTestCase" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessarilyQualifiedInnerClassAccess" enabled="true" level="WARNING" enabled_by_default="true">
-          <option name="ignoreReferencesNeedingImport" value="false" />
+          <option name="ignoreReferencesNeedingImport" value="true" />
         </inspection_tool>
         <inspection_tool class="UnnecessarilyQualifiedStaticUsage" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_ignoreStaticFieldAccesses" value="false" />
@@ -855,7 +862,7 @@
   <component name="JavacSettings">
     <option name="GENERATE_NO_WARNINGS" value="true" />
     <option name="DEPRECATION" value="false" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="-target 1.5" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-source 1.5 -target 1.5" />
   </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
@@ -901,7 +908,7 @@
     </option>
     <option name="activeProfiles">
       <list>
-        <option value="integration-tests" />
+        <option value="unit-tests" />
       </list>
     </option>
   </component>
@@ -1113,6 +1120,7 @@
       <words>
         <w>codebase</w>
         <w>doesnt</w>
+        <w>eval</w>
         <w>generifying</w>
         <w>junit</w>
         <w>mockups</w>
@@ -1472,7 +1480,7 @@
     <mapping directory="" vcs="svn" />
   </component>
   <component name="com.sixrr.metrics.MetricsReloaded">
-    <option name="selectedProfile" value="" />
+    <option name="selectedProfile" value="Lines of code metrics" />
     <option name="autoscroll" value="false" />
     <option name="showOnlyWarnings" value="false" />
   </component>

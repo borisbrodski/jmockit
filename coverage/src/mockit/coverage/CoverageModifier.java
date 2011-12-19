@@ -421,11 +421,11 @@ final class CoverageModifier extends ClassVisitor
       }
    }
 
-   // TODO: implement max limit for number of paths
    private class MethodOrConstructorModifier extends BaseMethodModifier
    {
       final MethodCoverageData methodData;
       final NodeBuilder nodeBuilder;
+      private Label entryPoint;
 
       MethodOrConstructorModifier(MethodVisitor mv, String methodOrConstructorName)
       {
@@ -435,11 +435,21 @@ final class CoverageModifier extends ClassVisitor
       }
 
       @Override
-      public final void visitLineNumber(int line, Label start)
+      public final void visitLabel(Label label)
       {
-         super.visitLineNumber(line, start);
+         int line = label.line;
 
-         int newNodeIndex = nodeBuilder.handlePotentialNewBlock(line);
+         if (entryPoint == null) {
+            entryPoint = new Label();
+            mw.visitLabel(entryPoint);
+            mw.visitLineNumber(line, entryPoint);
+            nodeBuilder.handleEntry(line);
+            generateCallToRegisterNodeReached(0);
+         }
+
+         super.visitLabel(label);
+
+         int newNodeIndex = nodeBuilder.handleJumpTarget(label, line > 0 ? line : currentLine);
          generateCallToRegisterNodeReached(newNodeIndex);
       }
 
@@ -451,16 +461,6 @@ final class CoverageModifier extends ClassVisitor
             mw.visitIntInsn(SIPUSH, nodeIndex);
             mw.visitMethodInsn(INVOKESTATIC, DATA_RECORDING_CLASS, "nodeReached", "(Ljava/lang/String;II)V");
          }
-      }
-
-      @Override
-      public final void visitLabel(Label label)
-      {
-         super.visitLabel(label);
-
-         int line = label.line;
-         int newNodeIndex = nodeBuilder.handleJumpTarget(label, line > 0 ? line : currentLine);
-         generateCallToRegisterNodeReached(newNodeIndex);
       }
 
       @Override
@@ -486,15 +486,15 @@ final class CoverageModifier extends ClassVisitor
             generateCallToRegisterNodeReached(newNodeIndex);
          }
          else {
-            handleRegularInstruction();
+            handleRegularInstruction(opcode);
          }
 
          super.visitInsn(opcode);
       }
 
-      private void handleRegularInstruction()
+      private void handleRegularInstruction(int opcode)
       {
-         int nodeIndex = nodeBuilder.handleRegularInstruction(currentLine);
+         int nodeIndex = nodeBuilder.handleRegularInstruction(currentLine, opcode);
          generateCallToRegisterNodeReached(nodeIndex);
       }
 
@@ -502,35 +502,35 @@ final class CoverageModifier extends ClassVisitor
       public final void visitIntInsn(int opcode, int operand)
       {
          super.visitIntInsn(opcode, operand);
-         handleRegularInstruction();
+         handleRegularInstruction(opcode);
       }
 
       @Override
       public final void visitIincInsn(int var, int increment)
       {
          super.visitIincInsn(var, increment);
-         handleRegularInstruction();
+         handleRegularInstruction(IINC);
       }
 
       @Override
       public final void visitLdcInsn(Object cst)
       {
          super.visitLdcInsn(cst);
-         handleRegularInstruction();
+         handleRegularInstruction(LDC);
       }
 
       @Override
       public final void visitTypeInsn(int opcode, String desc)
       {
          super.visitTypeInsn(opcode, desc);
-         handleRegularInstruction();
+         handleRegularInstruction(opcode);
       }
 
       @Override
       public final void visitVarInsn(int opcode, int var)
       {
          super.visitVarInsn(opcode, var);
-         handleRegularInstruction();
+         handleRegularInstruction(opcode);
       }
 
       @Override
@@ -558,7 +558,7 @@ final class CoverageModifier extends ClassVisitor
             generateCallToRegisterFieldCoverage(getField, isStatic, size2, classAndFieldNames);
          }
 
-         handleRegularInstruction();
+         handleRegularInstruction(opcode);
       }
 
       private void generateCodeToSaveInstanceReferenceOnTheStack(boolean getField, boolean size2)
@@ -611,14 +611,14 @@ final class CoverageModifier extends ClassVisitor
       public final void visitMethodInsn(int opcode, String owner, String name, String desc)
       {
          super.visitMethodInsn(opcode, owner, name, desc);
-         handleRegularInstruction();
+         handleRegularInstruction(opcode);
       }
 
       @Override
       public final void visitTryCatchBlock(Label start, Label end, Label handler, String type)
       {
          super.visitTryCatchBlock(start, end, handler, type);
-         handleRegularInstruction();
+         handleRegularInstruction(0);
       }
 
       @Override
@@ -643,7 +643,7 @@ final class CoverageModifier extends ClassVisitor
       public final void visitMultiANewArrayInsn(String desc, int dims)
       {
          super.visitMultiANewArrayInsn(desc, dims);
-         handleRegularInstruction();
+         handleRegularInstruction(MULTIANEWARRAY);
       }
 
       @Override

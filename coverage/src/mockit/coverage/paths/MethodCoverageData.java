@@ -17,15 +17,13 @@ public final class MethodCoverageData implements Serializable
    private int lastLine;
 
    // Helper fields used during node building and path execution:
-   private transient ThreadLocal<Integer> nodesReached;
+   private transient ThreadLocal<List<Node>> nodesReached;
+   private transient ThreadLocal<Integer> previousNodeIndex;
 
-   // TODO: eliminate this list in favor of a list of exit nodes?
    public List<Path> paths;
+   private List<Path> nonShadowedPaths;
 
-   public MethodCoverageData(String methodName)
-   {
-      this.methodName = methodName;
-   }
+   public MethodCoverageData(String methodName) { this.methodName = methodName; }
 
    public void buildPaths(int lastLine, NodeBuilder nodeBuilder)
    {
@@ -34,20 +32,25 @@ public final class MethodCoverageData implements Serializable
 
       nodes = nodeBuilder.nodes;
       paths = new PathBuilder().buildPaths(nodes);
+      buildListOfNonShadowedPaths();
 
-      nodesReached = new ThreadLocal<Integer>();
-      nodesReached.set(0);
+      nodesReached = new ThreadLocal<List<Node>>();
+      previousNodeIndex = new ThreadLocal<Integer>();
    }
 
-   public int getFirstLineInBody()
+   private void buildListOfNonShadowedPaths()
    {
-      return firstLine;
+      nonShadowedPaths = new ArrayList<Path>(paths.size());
+
+      for (Path path : paths) {
+         if (!path.isShadowed()) {
+            nonShadowedPaths.add(path);
+         }
+      }
    }
 
-   public int getLastLineInBody()
-   {
-      return lastLine;
-   }
+   public int getFirstLineInBody() { return firstLine; }
+   public int getLastLineInBody() { return lastLine; }
 
    public void markNodeAsReached(int nodeIndex)
    {
@@ -56,12 +59,12 @@ public final class MethodCoverageData implements Serializable
       }
 
       Node node = nodes.get(nodeIndex);
-      Integer currentNodesReached = nodesReached.get();
+      List<Node> currentNodesReached = nodesReached.get();
 
-      if (!node.wasReached()) {
+      if (!node.wasReached() && (nodeIndex == 0 || nodeIndex > previousNodeIndex.get())) {
          node.setReached(Boolean.TRUE);
-         currentNodesReached++;
-         nodesReached.set(currentNodesReached);
+         currentNodesReached.add(node);
+         previousNodeIndex.set(nodeIndex);
       }
 
       if (node instanceof Node.Exit) {
@@ -81,25 +84,30 @@ public final class MethodCoverageData implements Serializable
          node.setReached(null);
       }
 
-      nodesReached.set(0);
+      nodesReached.set(new ArrayList<Node>());
+      previousNodeIndex.set(0);
    }
+
+   public List<Path> getPaths() { return nonShadowedPaths; }
 
    public int getExecutionCount()
    {
       int totalCount = 0;
 
-      for (Path path : paths) {
+      for (Path path : nonShadowedPaths) {
          totalCount += path.getExecutionCount();
       }
 
       return totalCount;
    }
 
+   public int getTotalPaths() { return nonShadowedPaths.size(); }
+
    public int getCoveredPaths()
    {
       int coveredCount = 0;
 
-      for (Path path : paths) {
+      for (Path path : nonShadowedPaths) {
          if (path.getExecutionCount() > 0) {
             coveredCount++;
          }
@@ -113,7 +121,7 @@ public final class MethodCoverageData implements Serializable
       for (int i = 0; i < paths.size(); i++) {
          Path path = paths.get(i);
          Path previousPath = previousData.paths.get(i);
-         path.setExecutionCount(previousPath.getExecutionCount());
+         path.addCountFromPreviousTestRun(previousPath);
       }
    }
 }

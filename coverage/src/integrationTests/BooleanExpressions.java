@@ -47,4 +47,42 @@ public final class BooleanExpressions
          primitiveType == float.class && otherType == Float.class ||
          primitiveType == boolean.class && otherType == Boolean.class;
    }
+
+   public boolean simplyReturnsInput(boolean b)
+   {
+      return b;
+   }
+
+   public boolean returnsNegatedInput(boolean b)
+   {
+      return !b; // Pattern: IFNE Ln, ICONST_1 (=4), GOTO Ln+1, Ln ICONST_0 (=3), Ln+1 ...
+   }
+
+   public boolean returnsTrivialResultFromInputAfterIfElse(boolean b, int i)
+   {
+      String s;
+
+      if (b) {
+         s = "one";
+      }
+      else {
+         s = "two";
+      }
+
+      return i != 0 ? true : false; // Pattern: IFEQ Ln, ICONST_1, GOTO Ln+1, Ln ICONST_0, Ln+1 ...
+   }
+
+   public boolean returnsResultPreviouslyComputedFromInput(boolean b, int i)
+   {
+      String s = b ? "a" : "b";
+      boolean res;
+
+      if (i != 0) res = true;
+      else {
+         res = false;
+         System.out.checkError();
+      }
+
+      return res;
+   }
 }

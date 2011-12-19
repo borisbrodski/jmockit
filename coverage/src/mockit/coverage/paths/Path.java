@@ -14,50 +14,52 @@ public final class Path implements Serializable
 
    final List<Node> nodes = new ArrayList<Node>(4);
    private final AtomicInteger executionCount = new AtomicInteger();
+   private final boolean shadowed;
+   private Path shadowPath;
 
    Path(Node.Entry entryNode)
    {
+      shadowed = false;
       addNode(entryNode);
    }
 
-   Path(Path sharedSubPath)
+   Path(Path sharedSubPath, boolean shadowed)
    {
+      this.shadowed = shadowed;
+      sharedSubPath.shadowPath = shadowed ? this : null;
       nodes.addAll(sharedSubPath.nodes);
    }
 
-   void addNode(Node node)
-   {
-      nodes.add(node);
-   }
+   void addNode(Node node) { nodes.add(node); }
 
-   boolean countExecutionIfAllNodesWereReached(int currentNodesReached)
+   boolean countExecutionIfAllNodesWereReached(List<Node> nodesReached)
    {
-      if (currentNodesReached != nodes.size()) {
-         return false;
+      boolean allNodesReached = nodes.equals(nodesReached);
+
+      if (allNodesReached) {
+         executionCount.getAndIncrement();
       }
 
-      for (Node node : nodes) {
-         if (!node.wasReached()) {
-            return false;
-         }
-      }
-
-      executionCount.getAndIncrement();
-      return true;
+      return allNodesReached;
    }
 
-   public List<Node> getNodes()
-   {
-      return nodes;
-   }
+   public boolean isShadowed() { return shadowed; }
+   public List<Node> getNodes() { return nodes; }
 
    public int getExecutionCount()
    {
-      return executionCount.get();
+      int count = executionCount.get();
+
+      if (shadowPath != null) {
+         count += shadowPath.executionCount.get();
+      }
+
+      return count;
    }
 
-   void setExecutionCount(int count)
+   void addCountFromPreviousTestRun(Path previousPath)
    {
-      executionCount.set(count);
+      int previousExecutionCount = previousPath.executionCount.get();
+      executionCount.set(previousExecutionCount);
    }
 }

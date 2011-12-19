@@ -86,7 +86,7 @@ public class CoverageTest extends Assert
 
    protected final void assertPaths(int expectedPaths, int expectedCoveredPaths, int expectedExecutionCount)
    {
-      assertEquals("Number of paths:", expectedPaths, methodData.paths.size());
+      assertEquals("Number of paths:", expectedPaths, methodData.getTotalPaths());
       assertEquals("Number of covered paths:", expectedCoveredPaths, methodData.getCoveredPaths());
       assertEquals("Execution count for all paths:", expectedExecutionCount, methodData.getExecutionCount());
    }
@@ -97,7 +97,7 @@ public class CoverageTest extends Assert
       assertEquals(endingLine, methodData.getLastLineInBody());
    }
 
-   protected final void assertPath(int expectedNodeCount, int expectedExecutionCount)
+   protected final Path assertPath(int expectedNodeCount, int expectedExecutionCount)
    {
       int i = currentPathIndex + 1;
       currentPathIndex = -1;
@@ -107,6 +107,19 @@ public class CoverageTest extends Assert
       assertEquals("Path execution count:", expectedExecutionCount, path.getExecutionCount());
 
       currentPathIndex = i;
+      return path;
+   }
+
+   protected final void assertRegularPath(int expectedNodeCount, int expectedExecutionCount)
+   {
+      Path path = assertPath(expectedNodeCount, expectedExecutionCount);
+      assertFalse("Path is shadowed", path.isShadowed());
+   }
+
+   protected final void assertShadowedPath(int expectedNodeCount, int expectedExecutionCount)
+   {
+      Path path = assertPath(expectedNodeCount, expectedExecutionCount);
+      assertTrue("Path is not shadowed", path.isShadowed());
    }
 
    @After

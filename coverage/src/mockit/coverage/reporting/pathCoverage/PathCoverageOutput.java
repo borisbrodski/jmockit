@@ -42,9 +42,11 @@ public final class PathCoverageOutput
 
    private void writePathCoverageInformationForMethod()
    {
-      if (currentMethod.paths.size() > 1) {
+      List<Path> paths = currentMethod.getPaths();
+
+      if (paths.size() > 1) {
          writeHeaderForAllPaths();
-         pathFormatter.writeInformationForEachPath(currentMethod.paths);
+         pathFormatter.writeInformationForEachPath(paths);
          writeFooterForAllPaths();
       }
    }
@@ -52,7 +54,7 @@ public final class PathCoverageOutput
    private void writeHeaderForAllPaths()
    {
       int coveredPaths = currentMethod.getCoveredPaths();
-      int totalPaths = currentMethod.paths.size();
+      int totalPaths = currentMethod.getTotalPaths();
 
       output.println("    <tr>");
       output.write("      <td></td><td class='count'>");

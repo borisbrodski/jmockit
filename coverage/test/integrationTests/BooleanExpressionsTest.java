@@ -85,7 +85,12 @@ public final class BooleanExpressionsTest extends CoverageTest
       assertTrue(tested.eval5(false, false, false));
 
       findMethodData(27, "eval5");
-      assertPaths(5, 2, 2);
+      assertPaths(4, 2, 2);
+      assertRegularPath(4, 0);
+      assertRegularPath(8, 1);
+      assertRegularPath(10, 0);
+      assertShadowedPath(14, 0);
+      assertRegularPath(13, 1);
    }
 
    @Test
@@ -98,5 +103,57 @@ public final class BooleanExpressionsTest extends CoverageTest
 
       findMethodData(43, "isWrapperOfPrimitiveType");
       assertPaths(63, 1, 1);
+   }
+
+   @Test
+   public void trivialMethodWhichReturnsBooleanInput()
+   {
+      assertTrue(tested.simplyReturnsInput(true));
+      assertFalse(tested.simplyReturnsInput(false));
+
+      findMethodData(53, "simplyReturnsInput");
+      assertPaths(1, 1, 2);
+      assertPath(2, 2);
+   }
+
+   @Test
+   public void methodWhichReturnsNegatedBoolean()
+   {
+      assertTrue(tested.returnsNegatedInput(false));
+
+      findMethodData(58, "returnsNegatedInput");
+      assertPaths(1, 1, 1);
+      assertShadowedPath(6, 0);
+      assertRegularPath(5, 1);
+   }
+
+   @Test
+   public void methodWithIfElseAndTrivialTernaryOperator()
+   {
+      assertTrue(tested.returnsTrivialResultFromInputAfterIfElse(false, 1));
+      assertFalse(tested.returnsTrivialResultFromInputAfterIfElse(true, 0));
+
+      findMethodData(65, "returnsTrivialResultFromInputAfterIfElse");
+      assertPaths(2, 2, 2);
+      assertShadowedPath(11, 0);
+      assertRegularPath(10, 1);
+      assertShadowedPath(10, 1);
+      assertRegularPath(9, 1);
+   }
+
+   @Test
+   public void methodWithTrivialTernaryOperatorAndTrivialIfElse()
+   {
+      assertTrue(tested.returnsResultPreviouslyComputedFromInput(false, 1));
+      assertFalse(tested.returnsResultPreviouslyComputedFromInput(false, 0));
+      assertTrue(tested.returnsResultPreviouslyComputedFromInput(true, 1));
+      assertTrue(tested.returnsResultPreviouslyComputedFromInput(true, -1));
+
+      findMethodData(77, "returnsResultPreviouslyComputedFromInput");
+      assertPaths(4, 3, 4);
+      assertPath(12, 1);
+      assertPath(11, 1);
+      assertPath(11, 0);
+      assertPath(10, 2);
    }
 }

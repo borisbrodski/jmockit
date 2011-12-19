@@ -15,43 +15,21 @@ public class Node implements Serializable
    public final int line;
    protected int segment;
 
-   private Node(int line)
-   {
-      this.line = line;
-   }
+   private Node(int line) { this.line = line; }
 
    void setSegmentAccordingToPrecedingNode(Node precedingNode)
    {
       int currentSegment = precedingNode.segment;
-
-      if (precedingNode instanceof Fork) {
-         segment = currentSegment + 1;
-      }
-      else {
-         segment = currentSegment;
-      }
+      segment = precedingNode instanceof Fork ? currentSegment + 1 : currentSegment;
    }
 
-   public final int getSegment()
-   {
-      return segment;
-   }
+   public final int getSegment() { return segment; }
 
-   final void setReached(Boolean reached)
-   {
-      this.reached.set(reached);
-   }
-
-   final boolean wasReached()
-   {
-      return reached.get() != null;
-   }
+   final void setReached(Boolean reached) { this.reached.set(reached); }
+   final boolean wasReached() { return reached.get() != null; }
 
    @Override
-   public final String toString()
-   {
-      return getClass().getSimpleName() + ':' + line + '-' + segment;
-   }
+   public final String toString() { return getClass().getSimpleName() + ':' + line + '-' + segment; }
 
    static final class Entry extends Node
    {
@@ -111,13 +89,15 @@ public class Node implements Serializable
 
    public abstract static class Fork extends Node implements ConditionalSuccessor
    {
+      private static final long serialVersionUID = -4995089238476806249L;
+
       Fork(int line) { super(line); }
 
       abstract void addNextNode(Join nextNode);
 
       final void createAlternatePath(Path parentPath, Join targetJoin)
       {
-         Path alternatePath = new Path(parentPath);
+         Path alternatePath = new Path(parentPath, targetJoin.fromTrivialFork);
          targetJoin.addToPath(alternatePath);
       }
    }
@@ -165,6 +145,7 @@ public class Node implements Serializable
    {
       private static final long serialVersionUID = -1983522899831071765L;
       ConditionalSuccessor nextNode;
+      transient boolean fromTrivialFork;
 
       Join(int joiningLine) { super(joiningLine); }
 
@@ -180,6 +161,22 @@ public class Node implements Serializable
       void setSegmentAccordingToPrecedingNode(Node precedingNode)
       {
          segment = precedingNode.segment + 1;
+      }
+   }
+
+   static final class Goto extends Node implements ConditionalSuccessor, GotoSuccessor
+   {
+      private static final long serialVersionUID = -4715451134432419220L;
+      Join nextNodeAfterGoto;
+
+      Goto(int line) { super(line); }
+
+      public void setNextNodeAfterGoto(Join join) { nextNodeAfterGoto = join; }
+
+      public void addToPath(Path path)
+      {
+         path.addNode(this);
+         nextNodeAfterGoto.addToPath(path);
       }
    }
 }

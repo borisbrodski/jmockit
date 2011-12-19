@@ -119,7 +119,7 @@ public final class FileCoverageData implements Serializable
 
       if (totalPaths == 0) {
          for (MethodCoverageData method : firstLineToMethodData.values()) {
-            totalPaths += method.paths.size();
+            totalPaths += method.getTotalPaths();
             coveredPaths += method.getCoveredPaths();
          }
       }
