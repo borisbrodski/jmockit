@@ -34,13 +34,13 @@ final class CoverageModifier extends ClassVisitor
 
    CoverageModifier(ClassReader cr)
    {
-      super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS));
+      super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS + ClassWriter.COMPUTE_FRAMES));
       forInnerClass = false;
    }
 
    private CoverageModifier(ClassReader cr, CoverageModifier other, String simpleClassName)
    {
-      super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS));
+      super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS + ClassWriter.COMPUTE_FRAMES));
       sourceFileName = other.sourceFileName;
       fileData = other.fileData;
       internalClassName = other.internalClassName;
@@ -418,18 +418,6 @@ final class CoverageModifier extends ClassVisitor
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitMultiANewArrayInsn(desc, dims);
-      }
-
-      @Override
-      public void visitInvokeDynamicInsn(String name, String desc, Handle bsm, Object... bsmArgs)
-      {
-         mw.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
-      }
-
-      @Override
-      public void visitFrame(int type, int nLocal, Object[] local, int nStack, Object[] stack)
-      {
-         mw.visitFrame(type, nLocal, local, nStack, stack);
       }
    }
 
