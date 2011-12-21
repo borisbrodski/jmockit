@@ -146,4 +146,13 @@ public final class WhileStatementsTest extends CoverageTest
       assertPaths(1, 1, 2); // why only one path?
       assertPath(2, 2);
    }
+
+   @Ignore @Test
+   public void whileTrueEndingWithAnIf()
+   {
+      tested.whileTrueEndingWithAnIf(0);
+
+      findMethodData(84, "whileTrueEndingWithAnIf");
+      assertPaths(2, 1, 1);
+   }
 }

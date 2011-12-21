@@ -77,4 +77,14 @@ public class WhileStatements
          }
       }
    }
+
+   void whileTrueEndingWithAnIf(int i)
+   {
+      while (true) {
+         i++;
+
+         if (i >= 2)
+            return;
+      }
+   }
 }
