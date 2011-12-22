@@ -186,7 +186,7 @@ public final class MockFixture
       TestRun.getMockClasses().getMockStates().removeClassState(redefinedClass, mockClassesInternalNames);
    }
 
-   public void restoreRedefinedClasses(Map<Class<?>, byte[]> previousDefinitions)
+   public synchronized void restoreRedefinedClasses(Map<Class<?>, byte[]> previousDefinitions)
    {
       RedefinitionEngine redefinitionEngine = new RedefinitionEngine();
       Iterator<Entry<Class<?>, byte[]>> itr = redefinedClasses.entrySet().iterator();

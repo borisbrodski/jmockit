@@ -109,7 +109,7 @@ public final class ClassLoadingAndJREMocksTest
 
    static class ClassWithVector
    {
-      @SuppressWarnings({"UseOfObsoleteCollectionType"})
+      @SuppressWarnings("UseOfObsoleteCollectionType")
       final Collection<?> theVector = new Vector<Object>();
       public int getVectorSize() { return theVector.size(); }
    }
@@ -220,7 +220,7 @@ public final class ClassLoadingAndJREMocksTest
       final ZipFile testZip = new ZipFile(getClass().getResource("test.zip").getPath());
 
       new NonStrictExpectations() {
-         @Capturing @Injectable ZipFile mock;
+         @Capturing(classNames = "java.util.zip.ZipFile") @Injectable ZipFile mock;
 
          {
             mock.entries();
