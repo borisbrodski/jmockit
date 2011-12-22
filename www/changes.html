@@ -18,9 +18,9 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
-<p>Release 0.999.12 (Dec 2?, 2011):</p>
+<p>Release 0.999.12 (Dec 22, 2011):</p>
 <ul>
    <li>
       <strong>Deprecated</strong> the "<code>capture</code>" and "<code>baseType</code>" annotation attributes, used in
@@ -76,12 +76,14 @@
       detected and measured, which is now disregarded.
    </li>
    <li>
-      Several other small fixes and improvements.
-      See the <a href="http://code.google.com/p/jmockit/source/list">full list of changes</a> for details.
+      <strong>Fixed</strong> a problem in tests using the Expectations API, where the same class was mocked in an outer
+      scope (as a mock field in the test class, usually) <em>and</em> in an inner scope (as a mock parameter or a
+      dynamic mock in a test method).
+      See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=189">189</a>.
    </li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release 0.999.11 (Oct 21, 2011):</p>
 <p>
@@ -132,8 +134,6 @@
       <strong>JMockit Coverage</strong>: Fixed a problem with nested classes that get loaded before the outer class.
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.999.10 (Jun 16, 2011):</p>
 <ul>
