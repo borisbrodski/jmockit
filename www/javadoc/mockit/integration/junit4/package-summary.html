@@ -4,7 +4,7 @@
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <TITLE>
-mockit.integration.logging (JMockit Toolkit API)
+mockit.integration.junit4 (JMockit Toolkit API)
 </TITLE>
 
 
@@ -14,7 +14,7 @@ mockit.integration.logging (JMockit Toolkit API)
 function windowTitle()
 {
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="mockit.integration.logging (JMockit Toolkit API)";
+        parent.document.title="mockit.integration.junit4 (JMockit Toolkit API)";
     }
 }
 </SCRIPT>
@@ -49,10 +49,10 @@ function windowTitle()
 
 <TR>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="../../../mockit/integration/junit4/package-summary.html"><B>PREV PACKAGE</B></A>&nbsp;
-&nbsp;<A HREF="../../../mockit/integration/testng/package-summary.html"><B>NEXT PACKAGE</B></A></FONT></TD>
+&nbsp;<A HREF="../../../mockit/package-summary.html"><B>PREV PACKAGE</B></A>&nbsp;
+&nbsp;<A HREF="../../../mockit/integration/logging/package-summary.html"><B>NEXT PACKAGE</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-  <A HREF="../../../index.html?mockit/integration/logging/package-summary.html" target="_top"><B>FRAMES</B></A>  &nbsp;
+  <A HREF="../../../index.html?mockit/integration/junit4/package-summary.html" target="_top"><B>FRAMES</B></A>  &nbsp;
 &nbsp;<A HREF="package-summary.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
 &nbsp;<SCRIPT type="text/javascript">
   <!--
@@ -74,10 +74,9 @@ function windowTitle()
 
 <HR>
 <H2>
-Package mockit.integration.logging
+Package mockit.integration.junit4
 </H2>
-Provides integration with logging frameworks such as Log4j, SLF4j, and standard JDK logging, with the purpose of
- isolating code under test from them.
+Provides integration with <em>JUnit 4.x</em> test runners.
 <P>
 <B>See:</B>
 <BR>
@@ -90,36 +89,21 @@ Provides integration with logging frameworks such as Log4j, SLF4j, and standard 
 <B>Class Summary</B></FONT></TH>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD WIDTH="15%"><B><A HREF="../../../mockit/integration/logging/CommonsLoggingMocks.html" title="class in mockit.integration.logging">CommonsLoggingMocks</A></B></TD>
-<TD>A mock class containing mocks and stubs for the Apache Commons Logging API.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD WIDTH="15%"><B><A HREF="../../../mockit/integration/logging/JDKLoggingMocks.html" title="class in mockit.integration.logging">JDKLoggingMocks</A></B></TD>
-<TD>A mock class containing mocks and stubs for the standard logging API in the JDK
- (java.util.logging).</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD WIDTH="15%"><B><A HREF="../../../mockit/integration/logging/Log4jMocks.html" title="class in mockit.integration.logging">Log4jMocks</A></B></TD>
-<TD>A mock class containing mocks and stubs for the Log4j API.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD WIDTH="15%"><B><A HREF="../../../mockit/integration/logging/Slf4jMocks.html" title="class in mockit.integration.logging">Slf4jMocks</A></B></TD>
-<TD>A mock class containing mocks and stubs for the SLF4j API.</TD>
+<TD WIDTH="15%"><B><A HREF="../../../mockit/integration/junit4/JMockit.html" title="class in mockit.integration.junit4">JMockit</A></B></TD>
+<TD>A test runner for <em>JUnit 4.5+</em>, with special modifications to integrate with JMockit.</TD>
 </TR>
 </TABLE>
 &nbsp;
 
 <P>
 <A NAME="package_description"><!-- --></A><H2>
-Package mockit.integration.logging Description
+Package mockit.integration.junit4 Description
 </H2>
 
 <P>
-Provides integration with logging frameworks such as Log4j, SLF4j, and standard JDK logging, with the purpose of
- isolating code under test from them.
- <p/>
- Contains one <A HREF="../../../mockit/MockClass.html" title="annotation in mockit">mock class</A> for each supported logging framework, to be used with the
- <A HREF="../../../mockit/UsingMocksAndStubs.html" title="annotation in mockit"><CODE>UsingMocksAndStubs</CODE></A> annotation when applied to a test class.
+Provides integration with <em>JUnit 4.x</em> test runners.
+ Contains the "startup mock" implementation for integration with the JUnit 4.5+ test runner.
+ (JUnit 4.4 had a different test runner which was deprecated, and is no longer supported.)
 <P>
 
 <P>
@@ -150,10 +134,10 @@ Provides integration with logging frameworks such as Log4j, SLF4j, and standard 
 
 <TR>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="../../../mockit/integration/junit4/package-summary.html"><B>PREV PACKAGE</B></A>&nbsp;
-&nbsp;<A HREF="../../../mockit/integration/testng/package-summary.html"><B>NEXT PACKAGE</B></A></FONT></TD>
+&nbsp;<A HREF="../../../mockit/package-summary.html"><B>PREV PACKAGE</B></A>&nbsp;
+&nbsp;<A HREF="../../../mockit/integration/logging/package-summary.html"><B>NEXT PACKAGE</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-  <A HREF="../../../index.html?mockit/integration/logging/package-summary.html" target="_top"><B>FRAMES</B></A>  &nbsp;
+  <A HREF="../../../index.html?mockit/integration/junit4/package-summary.html" target="_top"><B>FRAMES</B></A>  &nbsp;
 &nbsp;<A HREF="package-summary.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
 &nbsp;<SCRIPT type="text/javascript">
   <!--

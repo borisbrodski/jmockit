@@ -164,7 +164,6 @@ Indicates an instance <em>field</em> or test method <em>parameter</em> of a <em>
 <DT><B>See Also:</B><DD><A HREF="../mockit/Mocked.html#methods()"><CODE>methods</CODE></A>, 
 <A HREF="../mockit/Mocked.html#inverse()"><CODE>inverse</CODE></A>, 
 <A HREF="../mockit/Mocked.html#stubOutClassInitialization()"><CODE>stubOutClassInitialization</CODE></A>, 
-<A HREF="../mockit/Mocked.html#capture()"><CODE>capture</CODE></A>, 
 <A HREF="../mockit/Mocked.html#realClassName()"><CODE>realClassName</CODE></A></DL>
 <HR>
 
@@ -176,15 +175,6 @@ Indicates an instance <em>field</em> or test method <em>parameter</em> of a <em>
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
 <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
 <B>Optional Element Summary</B></FONT></TH>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;int</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/Mocked.html#capture()">capture</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies the number of new instances to <em>capture</em> during test execution, between those instances which are
- assignable to the mocked type and are created during the test.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -231,40 +221,6 @@ Indicates an instance <em>field</em> or test method <em>parameter</em> of a <em>
 </TABLE>
 &nbsp;
 <P>
-<A NAME="capture()"><!-- --></A><H3>
-capture</H3>
-<PRE>
-public abstract int <B>capture</B></PRE>
-<DL>
-<DD>Specifies the number of new instances to <em>capture</em> during test execution, between those instances which are
- assignable to the mocked type and are created during the test.
- If applied to a non-<code>final</code> mock field, each captured instance will be assigned to the field, up to the
- number specified in the attribute. Otherwise (ie, when applied to a final field or a mock parameter), instances
- are still captured but not made directly available to the test.
- Note that capture can happen at any moment before the first expected invocation is recorded, or during the
- recording and replay phases.
- <p/>
- When applied to a mocked <em>class</em>, capture is not restricted to instances of that class. Instances of any
- <em>subclass</em> will also be captured. In effect, subclasses will be mocked as well, as long as they have
- already been loaded by the JVM or get loaded during test execution.
- The same applies to a mocked <em>interface</em>: instances of any implementing class will get captured.
- <p/>
- It is valid to declare two or more mock fields/parameters of the same type with a positive <code>capture</code> number
- for each of them, say <code>n1</code>, <code>n2</code>, etc.
- With non-final mock fields, this causes the first <code>n1</code> new instances to be assigned to the first field, the
- following <code>n2</code> new instances to the second, and so on.
-<P>
-<DD><DL>
-</DL>
-</DD>
-<DD><DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/Capturing.html" title="annotation in mockit"><CODE>Capturing</CODE></A></DL>
-<DL>
-<DT><B>Default:</B><DD>0</DD>
-</DL>
-</DL>
-<HR>
-
 <A NAME="inverse()"><!-- --></A><H3>
 inverse</H3>
 <PRE>
@@ -334,10 +290,6 @@ public abstract <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/
 <DD>Specify the fully qualified name of the concrete class to be considered as the mocked type when it cannot be used
  as the declared type, and the instance automatically created by JMockit for a super-type wouldn't be appropriate
  for the test.
- <p/>
- This attribute can be used with fields that are <code>final</code> or not.
- In the second case it can be used in conjunction with the <A HREF="../mockit/Mocked.html#capture()"><CODE>capture</CODE></A> attribute, so that only the
- specified class is mocked, instead of all classes that implement/extend a given super-type.
  <p/>
  Note that this attribute can also be used when the desired concrete class is not accessible to the test (for
  example, if it's a private inner class inside the code under test).

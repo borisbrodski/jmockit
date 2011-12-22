@@ -50,7 +50,7 @@ function windowTitle()
 <TR>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;PREV PACKAGE&nbsp;
-&nbsp;<A HREF="../mockit/integration/logging/package-summary.html"><B>NEXT PACKAGE</B></A></FONT></TD>
+&nbsp;<A HREF="../mockit/integration/junit4/package-summary.html"><B>NEXT PACKAGE</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
   <A HREF="../index.html?mockit/package-summary.html" target="_top"><B>FRAMES</B></A>  &nbsp;
 &nbsp;<A HREF="package-summary.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
@@ -89,9 +89,10 @@ Provides the classes and annotations used when writing tests with the JMockit mo
 <B>Interface Summary</B></FONT></TH>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD WIDTH="15%"><B><A HREF="../mockit/Delegate.html" title="interface in mockit">Delegate</A></B></TD>
-<TD>An empty interface to be used with the <A HREF="../mockit/Expectations.html#result"><CODE>Expectations.result</CODE></A> field, allowing test code to define invocation
- results (return values or thrown exceptions) based on test-specific logic.</TD>
+<TD WIDTH="15%"><B><A HREF="../mockit/Delegate.html" title="interface in mockit">Delegate&lt;T&gt;</A></B></TD>
+<TD>An empty interface to be used with the <A HREF="../mockit/Expectations.html#result"><CODE>Expectations.result</CODE></A> field or the <CODE>Invocations.with(Delegate)</CODE>
+ method, allowing test code to define invocation results (return values or thrown exceptions) or argument matching
+ rules based on test-specific logic.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -178,8 +179,8 @@ Provides the classes and annotations used when writing tests with the JMockit mo
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Capturing.html" title="annotation in mockit">Capturing</A></B></TD>
-<TD>Indicates a test class, an instance field declared in a test class, or a test method parameter which will capture all
- implementations of a given base type (usually an interface or abstract class).</TD>
+<TD>Indicates a mock field or a mock parameter for which all classes extending/implementing the mocked type will
+ <em>also</em> get mocked.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD WIDTH="15%"><B><A HREF="../mockit/Cascading.html" title="annotation in mockit">Cascading</A></B></TD>
@@ -284,7 +285,7 @@ Provides the classes and annotations used when writing tests with the JMockit mo
 <TR>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;PREV PACKAGE&nbsp;
-&nbsp;<A HREF="../mockit/integration/logging/package-summary.html"><B>NEXT PACKAGE</B></A></FONT></TD>
+&nbsp;<A HREF="../mockit/integration/junit4/package-summary.html"><B>NEXT PACKAGE</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
   <A HREF="../index.html?mockit/package-summary.html" target="_top"><B>FRAMES</B></A>  &nbsp;
 &nbsp;<A HREF="package-summary.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
