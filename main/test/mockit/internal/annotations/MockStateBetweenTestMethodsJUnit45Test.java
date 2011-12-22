@@ -15,7 +15,7 @@ public final class MockStateBetweenTestMethodsJUnit45Test
 {
    static final class RealClass
    {
-      static void doSomething() {}
+      static void doSomething() { throw new RuntimeException("Unexpected execution"); }
    }
 
    @MockClass(realClass = RealClass.class)
@@ -28,8 +28,7 @@ public final class MockStateBetweenTestMethodsJUnit45Test
 
       static void assertMockState(int expectedInvocationCount)
       {
-         MockState mockState =
-            TestRun.getMockClasses().getMockStates().getMockState(internalName, 0);
+         MockState mockState = TestRun.getMockClasses().getMockStates().getMockState(internalName, 0);
 
          assert mockState.isWithExpectations();
          assert !mockState.isReentrant();

@@ -393,7 +393,7 @@ public final class Utilities
       Method nonPrivateMethod = null;
 
       for (Method declaredMethod : declaredMethods) {
-         if (!Modifier.isPrivate(declaredMethod.getModifiers())) {
+         if (!isPrivate(declaredMethod.getModifiers())) {
             if (nonPrivateMethod != null) {
                throw new IllegalArgumentException("More than one non-private invocation handler method found");
             }
@@ -800,7 +800,7 @@ public final class Utilities
       }
 
       modifiersField.setAccessible(true);
-      int nonFinalModifiers = modifiersField.getInt(field) - Modifier.FINAL;
+      int nonFinalModifiers = modifiersField.getInt(field) - FINAL;
       modifiersField.setInt(field, nonFinalModifiers);
 
       //noinspection UnnecessaryFullyQualifiedName,UseOfSunClasses

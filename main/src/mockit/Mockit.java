@@ -451,12 +451,7 @@ public final class Mockit
     */
    public static void tearDownMocks()
    {
-      MockFixture mockFixture = TestRun.mockFixture();
-
-      Set<Class<?>> redefinedClasses = mockFixture.getRedefinedClasses();
-      mockFixture.restoreAndRemoveRedefinedClasses(redefinedClasses);
-      assert mockFixture.getRedefinedClassCount() == 0;
-
+      TestRun.mockFixture().restoreAndRemoveRedefinedClasses(null);
       TestRun.getMockClasses().getRegularMocks().discardInstances();
    }
 

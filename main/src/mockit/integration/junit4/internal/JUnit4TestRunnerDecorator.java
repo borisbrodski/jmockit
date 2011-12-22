@@ -29,7 +29,7 @@ import mockit.internal.util.*;
 public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
 {
    public FrameworkMethod it;
-   private static volatile boolean shouldPrepareForNextTest = true; // TODO: will not work in parallel
+   private static volatile boolean shouldPrepareForNextTest = true;
 
    @Mock(reentrant = true)
    public Object invokeExplosively(Object target, Object... params) throws Throwable
@@ -89,7 +89,17 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
       TestRun.enterNoMockingZone();
 
       try {
-         if (testClass.isAnnotationPresent(SuiteClasses.class)) {
+         if (target == null) {
+            if (testClass == TestRun.getCurrentTestClass()) {
+               assert it.getAnnotation(AfterClass.class) != null;
+               cleanUpMocksFromPreviousTestClass();
+            }
+            else {
+               assert it.getAnnotation(BeforeClass.class) != null;
+               updateTestClassState(null, testClass);
+            }
+         }
+         else if (testClass.isAnnotationPresent(SuiteClasses.class)) {
             setUpClassLevelMocksAndStubs(testClass);
          }
          else {

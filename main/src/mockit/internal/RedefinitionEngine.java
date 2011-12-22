@@ -270,6 +270,16 @@ public final class RedefinitionEngine
       redefineMethods(classDefs);
    }
 
+   public void restoreDefinition(Class<?> aClass, byte[] previousDefinition)
+   {
+      if (previousDefinition == null) {
+         restoreOriginalDefinition(aClass);
+      }
+      else {
+         restoreToDefinition(aClass, previousDefinition);
+      }
+   }
+
    public void restoreOriginalDefinition(Class<?> aClass)
    {
       realClass = aClass;
@@ -284,9 +294,15 @@ public final class RedefinitionEngine
       redefineMethods(realClassFile);
    }
 
+   private void restoreToDefinition(Class<?> aClass, byte[] definitionToRestore)
+   {
+      realClass = aClass;
+      redefineMethods(definitionToRestore);
+   }
+
    public void restoreToDefinition(String className, byte[] definitionToRestore)
    {
-      realClass = Utilities.loadClass(className);
-      redefineMethods(definitionToRestore);
+      Class<?> aClass = Utilities.loadClass(className);
+      restoreToDefinition(aClass, definitionToRestore);
    }
 }

@@ -32,20 +32,19 @@ public final class MockFixture
    private final Map<String, byte[]> fixedClassDefinitions = new HashMap<String, byte[]>();
 
    /**
-    * Similar to <code>redefinedClasses</code>, but for classes modified by a ClassFileTransformer
-    * such as the CaptureTransformer, and containing the pre-transform bytecode instead of the
-    * modified one.
+    * Similar to <code>redefinedClasses</code>, but for classes modified by a <code>ClassFileTransformer</code> such as
+    * the <code>CaptureTransformer</code>, and containing the pre-transform bytecode instead of the modified one.
     */
    private final Map<String, byte[]> transformedClasses = new HashMap<String, byte[]>(2);
 
    /**
     * Real classes currently redefined in the running JVM and their current (modified) bytecodes.
     * <p/>
-    * The keys in the map allow each redefined real class to be later restored to its original
-    * definition at any moment, by re-reading the class file from disk.
+    * The keys in the map allow each redefined real class to be later restored to a previous definition.
     * <p/>
-    * The modified bytecode arrays in the map allow a new redefinition for a given real class to be
-    * made, on top of the current redefinition.
+    * The modified bytecode arrays in the map allow a new redefinition to be made on top of the current redefinition
+    * (in the case of the Mockups API), or to restore the class to a previous definition (provided the map is copied
+    * between redefinitions of the same class).
     */
    private final Map<Class<?>, byte[]> redefinedClasses = new HashMap<Class<?>, byte[]>(8);
 
@@ -93,10 +92,6 @@ public final class MockFixture
       }
 
       addRedefinedClass(redefinedClass, modifiedClassfile);
-
-      // TODO: implement support for multiple simultaneous redefinitions for each class?
-      // at least support the case where some class is stubbed out for the whole test class and
-      // then mocked in one or more tests, particularly when using @Mock(invocations = n)
    }
 
    public void addRedefinedClass(Class<?> redefinedClass, byte[] modifiedClassfile)
@@ -126,41 +121,92 @@ public final class MockFixture
       return mockedTypesAndInstances.get(mockedType);
    }
 
-   public void restoreAndRemoveTransformedClasses(Set<String> transformedClassesToRestore)
+   public void restoreTransformedClasses(Set<String> previousTransformedClasses)
+   {
+      if (!transformedClasses.isEmpty()) {
+         Set<String> classesToRestore;
+
+         if (previousTransformedClasses.isEmpty()) {
+            classesToRestore = transformedClasses.keySet();
+         }
+         else {
+            classesToRestore = getTransformedClasses();
+            classesToRestore.removeAll(previousTransformedClasses);
+         }
+
+         if (!classesToRestore.isEmpty()) {
+            restoreAndRemoveTransformedClasses(classesToRestore);
+         }
+      }
+   }
+
+   private void restoreAndRemoveTransformedClasses(Set<String> classesToRestore)
    {
       RedefinitionEngine redefinitionEngine = new RedefinitionEngine();
 
-      for (String transformedClassName : transformedClassesToRestore) {
+      for (String transformedClassName : classesToRestore) {
          byte[] definitionToRestore = transformedClasses.get(transformedClassName);
          redefinitionEngine.restoreToDefinition(transformedClassName, definitionToRestore);
       }
 
-      transformedClasses.keySet().removeAll(transformedClassesToRestore);
+      transformedClasses.keySet().removeAll(classesToRestore);
    }
 
-   public void restoreAndRemoveRedefinedClasses(Set<Class<?>> redefinedClassesToRestore)
+   public void restoreAndRemoveRedefinedClasses(Set<Class<?>> desiredClasses)
    {
+      Set<Class<?>> classesToRestore = desiredClasses == null ? redefinedClasses.keySet() : desiredClasses;
       RedefinitionEngine redefinitionEngine = new RedefinitionEngine();
 
-      for (Class<?> redefinedClass : redefinedClassesToRestore) {
+      for (Class<?> redefinedClass : classesToRestore) {
          redefinitionEngine.restoreOriginalDefinition(redefinedClass);
-
-         if (redefinedClassesWithNativeMethods.contains(redefinedClass.getName())) {
-            reregisterNativeMethodsForRestoredClass(redefinedClass);
-         }
-
+         restoreDefinition(redefinedClass);
          discardStateForCorrespondingMockClassIfAny(redefinedClass);
       }
 
-      redefinedClasses.keySet().removeAll(redefinedClassesToRestore);
-      mockedTypesAndInstances.keySet().removeAll(redefinedClassesToRestore);
+      if (desiredClasses == null) {
+         redefinedClasses.clear();
+      }
+      else {
+         redefinedClasses.keySet().removeAll(desiredClasses);
+      }
+   }
+
+   private void restoreDefinition(Class<?> redefinedClass)
+   {
+      if (redefinedClassesWithNativeMethods.contains(redefinedClass.getName())) {
+         reregisterNativeMethodsForRestoredClass(redefinedClass);
+      }
+
+      mockedTypesAndInstances.remove(redefinedClass);
    }
 
    private void discardStateForCorrespondingMockClassIfAny(Class<?> redefinedClass)
    {
       String mockClassesInternalNames = realClassesToMockClasses.remove(redefinedClass);
-
       TestRun.getMockClasses().getMockStates().removeClassState(redefinedClass, mockClassesInternalNames);
+   }
+
+   public void restoreRedefinedClasses(Map<Class<?>, byte[]> previousDefinitions)
+   {
+      RedefinitionEngine redefinitionEngine = new RedefinitionEngine();
+      Iterator<Entry<Class<?>, byte[]>> itr = redefinedClasses.entrySet().iterator();
+
+      while (itr.hasNext()) {
+         Entry<Class<?>, byte[]> entry = itr.next();
+         Class<?> redefinedClass = entry.getKey();
+         byte[] previousDefinition = previousDefinitions.get(redefinedClass);
+
+         redefinitionEngine.restoreDefinition(redefinedClass, previousDefinition);
+         restoreDefinition(redefinedClass);
+
+         if (previousDefinition == null) {
+            discardStateForCorrespondingMockClassIfAny(redefinedClass);
+            itr.remove();
+         }
+         else {
+            entry.setValue(previousDefinition);
+         }
+      }
    }
 
    // Methods that deal with redefined native methods /////////////////////////////////////////////////////////////////
@@ -205,30 +251,13 @@ public final class MockFixture
 
    // Getter methods for the maps of redefined classes ////////////////////////////////////////////////////////////////
 
-   public byte[] getFixedClassfile(String className)
-   {
-      return fixedClassDefinitions.get(className);
-   }
+   public byte[] getFixedClassfile(String className) { return fixedClassDefinitions.get(className); }
 
-   public int getRedefinedClassCount()
-   {
-      return redefinedClasses.size();
-   }
+   public Set<String> getTransformedClasses() { return new HashSet<String>(transformedClasses.keySet()); }
 
-   public byte[] getRedefinedClassfile(Class<?> redefinedClass)
-   {
-      return redefinedClasses.get(redefinedClass);
-   }
-
-   public Set<String> getTransformedClasses()
-   {
-      return transformedClasses.keySet();
-   }
-
-   public Set<Class<?>> getRedefinedClasses()
-   {
-      return redefinedClasses.keySet();
-   }
+   public int getRedefinedClassCount() { return redefinedClasses.size(); }
+   public byte[] getRedefinedClassfile(Class<?> redefinedClass) { return redefinedClasses.get(redefinedClass); }
+   public Map<Class<?>, byte[]> getRedefinedClasses() { return new HashMap<Class<?>, byte[]>(redefinedClasses); }
 
    public boolean containsRedefinedClass(Class<?> redefinedClass)
    {

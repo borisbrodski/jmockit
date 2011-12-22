@@ -13,5 +13,11 @@ class BaseClass
    protected Set<Boolean> baseSet;
    private long longField;
 
+   static void doStatic1() { throw new RuntimeException("Real method 1 called"); }
+   static void doStatic2() { throw new RuntimeException("Real method 2 called"); }
+
+   void doSomething1() { throw new RuntimeException("Real method 1 called"); }
+   void doSomething2() { throw new RuntimeException("Real method 2 called"); }
+
    void setLongField(long value) { longField = value; }
 }

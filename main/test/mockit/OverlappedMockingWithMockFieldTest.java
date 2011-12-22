@@ -7,17 +7,21 @@ package mockit;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-public final class OverlappedMockingTest
+public final class OverlappedMockingWithMockFieldTest
 {
-   static class BaseClass
-   {
-      void doSomething1() { throw new RuntimeException("Real method 1 called"); }
-      void doSomething2() { throw new RuntimeException("Real method 2 called"); }
-   }
-
    static final class DerivedClass extends BaseClass
    {
       boolean doSomethingElse() { doSomething1(); return true; }
+   }
+
+   @BeforeClass @AfterClass
+   public static void verifyNoMockingBeforeAndAfterAllTests()
+   {
+      BaseClass base = new BaseClass();
+      try { base.doSomething1(); fail(); } catch (RuntimeException ignore) {}
+      try { base.doSomething1(); fail(); } catch (RuntimeException ignore) {}
+      try { BaseClass.doStatic1(); fail(); } catch (RuntimeException ignore) {}
+      try { BaseClass.doStatic2(); fail(); } catch (RuntimeException ignore) {}
    }
 
    @Mocked("doSomething1") BaseClass base;
@@ -38,8 +42,10 @@ public final class OverlappedMockingTest
    }
 
    @Test
-   public void overlappedStaticPartialMocking2()
+   public void overlappedStaticPartialMockingWithLocalMockFieldInsteadOfMockParameter()
    {
+      assertRegularMockingOfBaseClass();
+
       DerivedClass derived = new DerivedClass();
 
       new NonStrictExpectations() {
@@ -59,7 +65,7 @@ public final class OverlappedMockingTest
    }
 
    @Test
-   public void regularMockingOfBaseClassOnlyAfterRegularMockingOfDerivedClass()
+   public void regularMockingOfBaseClassAfterRegularMockingOfDerivedClassInPreviousTest()
    {
       assertRegularMockingOfBaseClass();
    }
@@ -102,7 +108,7 @@ public final class OverlappedMockingTest
    }
 
    @Test
-   public void regularMockingOfBaseClassOnlyAfterDynamicMockingOfDerivedClass()
+   public void regularMockingOfBaseClassAfterDynamicMockingOfDerivedClassInPreviousTest()
    {
       assertRegularMockingOfBaseClass();
    }
@@ -134,7 +140,7 @@ public final class OverlappedMockingTest
    }
 
    @Test
-   public void regularMockingOfBaseClassOnlyAfterDynamicMockingOfDerivedClassInstance()
+   public void regularMockingOfBaseClassAfterDynamicMockingOfDerivedClassInstanceInPreviousTest()
    {
       assertRegularMockingOfBaseClass();
    }
