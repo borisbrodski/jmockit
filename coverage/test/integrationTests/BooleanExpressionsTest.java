@@ -11,16 +11,6 @@ public final class BooleanExpressionsTest extends CoverageTest
    BooleanExpressions tested;
 
    @Test
-   public void evalOnlySomeCombinations()
-   {
-      assertTrue(tested.eval1(true, true, 0));
-      assertFalse(tested.eval1(true, false, 0));
-
-      findMethodData(7, "eval1");
-      assertPaths(4, 2, 2);
-   }
-
-   @Test
    public void evalBuggyCombination()
    {
       // Only this combination will fail if the third condition in eval1 is changed to "z < 0",
@@ -29,6 +19,16 @@ public final class BooleanExpressionsTest extends CoverageTest
 
       findMethodData(7, "eval1");
       assertPaths(4, 3, 3);
+   }
+
+   @Test
+   public void evalOnlySomeCombinations()
+   {
+      assertTrue(tested.eval1(true, true, 0));
+      assertFalse(tested.eval1(true, false, 0));
+
+      findMethodData(7, "eval1");
+      assertPaths(4, 2, 2);
    }
 
    @Test
@@ -44,15 +44,6 @@ public final class BooleanExpressionsTest extends CoverageTest
    }
 
    @Test
-   public void evalOnlyFirstBranch()
-   {
-      assertFalse(tested.eval3(false, true, false));
-
-      findMethodData(17, "eval3");
-      assertPaths(4, 1, 1);
-   }
-
-   @Test
    public void evalAllPaths()
    {
       assertFalse(tested.eval3(false, true, false));
@@ -61,7 +52,7 @@ public final class BooleanExpressionsTest extends CoverageTest
       assertFalse(tested.eval3(true, false, false));
 
       findMethodData(17, "eval3");
-      assertPaths(4, 4, 5);
+      assertPaths(4, 4, 4);
    }
 
    @Test
