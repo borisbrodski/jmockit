@@ -117,8 +117,7 @@
    </target>
    <target name="buildMockito">
       <buildSample
-         module="mockito"
-         extraclasspath="lib/hamcrest-*.jar samples/lib/hamcrest-*.jar samples/lib/mockito*.jar"/>
+         module="mockito" extraclasspath="lib/hamcrest-*.jar samples/lib/hamcrest-*.jar samples/lib/mockito*.jar"/>
    </target>
    <target name="buildUnitils">
       <buildSample module="unitils" extraclasspath="samples/lib/unitils*.jar"/>
@@ -135,8 +134,7 @@
    </target>
    <target name="buildOrderManagement">
       <buildSample
-         module="orderMngmntWebapp" outdir="WEB-INF/classes"
-         extraclasspathlocation="jmockit-hibernate3emul.jar"/>
+         module="orderMngmntWebapp" outdir="WEB-INF/classes" extraclasspathlocation="jmockit-hibernate3emul.jar"/>
    </target>
    <target name="buildTimingFramework">
       <buildSample module="TimingFramework" extraclasspath="lib/hamcrest-*.jar"/>
@@ -179,7 +177,7 @@
             href="http://download.oracle.com/javase/6/docs/api" offline="true" packagelistloc="www/javadoc/external"/>
          <header><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>]]></header>
          <footer><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>]]></footer>
-         <bottom><![CDATA[<font size=-1>© 2006-2011 Rogério Liesenfeld</font>]]></bottom>
+         <bottom><![CDATA[<font size=-1>© 2006-2012 Rogério Liesenfeld</font>]]></bottom>
       </javadoc>
       <delete file="www/javadoc/constant-values.html"/>
    </target>
@@ -192,13 +190,9 @@
    <target name="createjar-main">
       <jar destfile="jmockit.jar">
          <fileset file="LICENSE.txt"/>
-         <fileset file="main/src/jmockit.properties"/>
+         <fileset dir="main/src" includes="mockit/**/*.java **/attach/**/*.java"/>
          <fileset
-            dir="main/src"
-            includes="mockit/**/*.java mockit/external/**/*.txt **/attach/**/*.java"/>
-         <fileset
-            dir="main/classes"
-            includes="mockit/**/*.class **/attach/**/*.class org/junit/**/*.class junit/*/*.class"/>
+            dir="main/classes" includes="mockit/**/*.class **/attach/**/*.class org/junit/**/*.class junit/*/*.class"/>
          <manifest>
             <attribute name="Premain-Class" value="mockit.internal.startup.Startup"/>
             <attribute name="Agent-Class" value="mockit.internal.startup.Startup"/>
@@ -210,7 +204,9 @@
    </target>
 
    <target name="createjar-coverage">
-      <jar destfile="jmockit-coverage.jar" basedir="coverage/classes" excludes="integrationTests/**">
+      <jar destfile="jmockit-coverage.jar">
+         <fileset dir="coverage/src" includes="mockit/coverage/**/*.java"/>
+         <fileset dir="coverage/classes" includes="jmockit.properties mockit/coverage/**/*.class **/*.css **/*.js"/>
          <manifest>
             <attribute name="Class-Path" value="jmockit.jar"/>
             <attribute name="Implementation-Version" value="${version}"/>
