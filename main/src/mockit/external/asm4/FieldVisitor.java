@@ -39,40 +39,25 @@ package mockit.external.asm4;
 public abstract class FieldVisitor {
 
     /**
-     * The ASM API version implemented by this visitor. The value of this field
-     * must be one of {@link Opcodes#ASM4}.
-     */
-    protected final int api;
-
-    /**
      * The field visitor to which this visitor must delegate method calls. May
      * be null.
      */
     protected FieldVisitor fv;
 
     /**
-     * Constructs a new {@link FieldVisitor}.
-     *
-     * @param api the ASM API version implemented by this visitor. Must be one
-     *        of {@link Opcodes#ASM4}.
+     * Constructs a new FieldVisitor.
      */
-    public FieldVisitor(final int api) {
-        this(api, null);
+    protected FieldVisitor() {
+        this(null);
     }
 
     /**
-     * Constructs a new {@link FieldVisitor}.
+     * Constructs a new FieldVisitor.
      *
-     * @param api the ASM API version implemented by this visitor. Must be one
-     *        of {@link Opcodes#ASM4}.
      * @param fv the field visitor to which this visitor must delegate method
      *        calls. May be null.
      */
-    public FieldVisitor(final int api, final FieldVisitor fv) {
-        /*if (api != Opcodes.ASM4) {
-            throw new IllegalArgumentException();
-        }*/
-        this.api = api;
+    protected FieldVisitor(FieldVisitor fv) {
         this.fv = fv;
     }
 

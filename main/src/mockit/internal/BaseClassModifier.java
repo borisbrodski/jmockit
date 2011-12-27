@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal;
@@ -79,14 +79,14 @@ public class BaseClassModifier extends ClassVisitor
       int modifiedVersion = version;
       int originalVersion = version & 0xFFFF;
 
-      if (originalVersion < 49) {
+      if (originalVersion < V1_5) {
          // LDC instructions (see MethodVisitor#visitLdcInsn) are more capable in JVMs with support for class files of
          // version 49 (Java 1.5) or newer, so we "upgrade" it to avoid a VerifyError:
-         modifiedVersion = 49;
+         modifiedVersion = V1_5;
       }
-      else if (originalVersion == 51) {
+      else if (originalVersion == V1_7) {
          // For some unknown reason the Java 7 JVM throws a VerifyError for the bytecode generated for dynamic mocking:
-         modifiedVersion = 50;
+         modifiedVersion = V1_6;
       }
 
       super.visit(modifiedVersion, access, name, signature, superName, interfaces);
