@@ -71,8 +71,12 @@ function showHideFiles(files)
 
 function showHideLines(row)
 {
-   var cellWithLines = row.cells[2].style;
-   cellWithLines.display = cellWithLines.display == 'block' ? 'none' : 'block';
+   var content = row.cells[2].children;
+   var expanded = content[0].style;
+   var collapsed = content[1].style;
+   var showingExpanded = expanded.display == 'block';
+   expanded.display = showingExpanded ? 'none' : 'block';
+   collapsed.display = showingExpanded ? 'block' : 'none';
 }
 
 var metricCol;

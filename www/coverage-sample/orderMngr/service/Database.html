@@ -5,18 +5,16 @@
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../coverage.css'/>
   <script type='text/javascript' src='../../coverage.js'></script>
-  <link rel='stylesheet' type='text/css' href='../../prettify.css'/>
   <script type='text/javascript' src='../../prettify.js'></script>
 </head>
 <body onload='prettyPrint()'>
   <table cellpadding='0' cellspacing='1'>
     <caption><code>..\orderMngmntWebapp\src\orderMngr\service\Database.java</code></caption>
     <tr class='click' onclick='showHideLines(this)'>
-      <td class='line'></td><td>&nbsp;</td><td class='comment'>/*
+      <td class='line'></td><td>&nbsp;</td><td class='comment'><div>/*
  * Copyright (c) 2006-2011 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
- */
-</td></tr>
+ */</div><span>/*...*/</span></td></tr>
     <tr>
       <td class='line'>5</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>package orderMngr.service;</pre></td>
@@ -32,12 +30,11 @@
       <td class='line'>8</td><td colspan='2'></td>
     </tr>
     <tr class='click' onclick='showHideLines(this)'>
-      <td class='line'></td><td>&nbsp;</td><td class='comment'>/**
+      <td class='line'></td><td>&nbsp;</td><td class='comment'><div>/**
  * A static facade for database access through JDBC. It assumes the application can use a single
  * global DB connection. (This class is just for the sake of demonstration; in the real world,
  * direct use of JDBC like this is not too practical.)
- */
-</td></tr>
+ */</div><span>/*...*/</span></td></tr>
     <tr>
       <td class='line'>14</td><td class='count'>0</td>
       <td><pre class='prettyprint uncovered' id='l14s0'>public final class Database</pre></td>
@@ -197,14 +194,16 @@
       <td class='line'>50</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l50s0'>      PreparedStatement stmt = connection().prepareStatement(sql);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>51</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l51s0'>      int i = 1;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -214,23 +213,27 @@
       <td class='line'>53</td><td class='count'>4</td>
       <td><pre class='prettyprint jmp'>      <span id='l53s0' title='Executions: 4' class='covered cp' onclick='showHide(this,0)'>for (Object arg</span> : <span id='l53s1' title='Executions: 2' class='covered cp' onclick='showHide(this,1)'>args)</span> </pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>54</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l54s0'>         stmt.setObject(i, arg);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>55</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l55s0'>         i++;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -244,7 +247,8 @@
       <td class='line'>58</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l58s0'>      return stmt;</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -329,9 +333,11 @@
       <td class='line'>75</td><td class='count'>2</td>
       <td><pre class='prettyprint jmp'>      <span id='l75s0' title='Executions: 2' class='covered cp' onclick='showHide(this,0)'>if (result != null)</span> <span id='l75s1' title='Executions: 2' class='covered cp' onclick='showHide(this,1)'>{</span></pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -342,7 +348,8 @@
       <td class='line'>77</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l77s0'>            result.getStatement().close();</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -361,7 +368,8 @@
       <td class='line'>81</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l81s0'>         }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -372,7 +380,8 @@
       <td class='line'>83</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l83s0'>   }</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -394,14 +403,16 @@
       <td class='line'>88</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l88s0'>         PreparedStatement stmt = createStatement(sql, args);</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>89</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l89s0'>         return stmt.executeQuery();</pre>
         <ol style='display: none;'>
-          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172        </ol>
+          <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
+        </ol>
       </td>
     </tr>
     <tr>

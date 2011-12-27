@@ -5,14 +5,13 @@
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../../coverage.css'/>
   <script type='text/javascript' src='../../../../coverage.js'></script>
-  <link rel='stylesheet' type='text/css' href='../../../../prettify.css'/>
   <script type='text/javascript' src='../../../../prettify.js'></script>
 </head>
 <body onload='prettyPrint()'>
   <table cellpadding='0' cellspacing='1'>
     <caption><code>..\orderMngmntWebapp\src\net\sourceforge\cobertura\util\IOUtil.java</code></caption>
     <tr class='click' onclick='showHideLines(this)'>
-      <td class='line'></td><td>&nbsp;</td><td class='comment'>/*
+      <td class='line'></td><td>&nbsp;</td><td class='comment'><div>/*
  * Cobertura - http://cobertura.sourceforge.net/
  *
  * Copyright (C) 2005 Grzegorz Lukasik
@@ -36,8 +35,7 @@
  * along with Cobertura; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
- */
-</td></tr>
+ */</div><span>/*...*/</span></td></tr>
     <tr>
       <td class='line'>26</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>package net.sourceforge.cobertura.util;</pre></td>
@@ -97,13 +95,12 @@
       <td class='line'>40</td><td colspan='2'></td>
     </tr>
     <tr class='click' onclick='showHideLines(this)'>
-      <td class='line'></td><td>&nbsp;</td><td class='comment'>/**
+      <td class='line'></td><td>&nbsp;</td><td class='comment'><div>/**
  * Helper class with useful I/O operations.
  * 
  * @author Grzegorz Lukasik
  * Compare to the original: http://cobertura.sourceforge.net/sample/net.sourceforge.cobertura.util.IOUtil.html
- */
-</td></tr>
+ */</div><span>/*...*/</span></td></tr>
     <tr>
       <td class='line'>47</td><td class='count'>0</td>
       <td><pre class='prettyprint uncovered' id='l47s0'>public abstract class IOUtil</pre></td>
@@ -116,15 +113,14 @@
       <td class='line'>49</td><td colspan='2'></td>
     </tr>
     <tr class='click' onclick='showHideLines(this)'>
-      <td class='line'></td><td>&nbsp;</td><td class='comment'>	/**
+      <td class='line'></td><td>&nbsp;</td><td class='comment'><div>	/**
 	 * Copies bytes from input stream into the output stream.  Stops
 	 * when the input stream read method returns -1.  Does not close
 	 * the streams.
 	 * 
 	 * @throws IOException If either passed stream will throw IOException.
 	 * @throws NullPointerException If either passed stream is null.
-	 */
-</td></tr>
+	 */</div><span>	/*...*/</span></td></tr>
     <tr>
       <td class='line'>58</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>	public static void copyStream(InputStream in, OutputStream out)</pre></td>
@@ -156,10 +152,12 @@
       <td><pre class='prettyprint jmp'>		<span id='l62s0' title='Executions: 11' class='covered cp' onclick='showHide(this,0)'>if (in == null</span> || <span id='l62s1' title='Executions: 9' class='covered cp' onclick='showHide(this,1)'>out == null)</span></pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream: 102, 107, 112, 118, 122, 130</li>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150, 154        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150, 154</li>
+        </ol>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream: 102, 107, 112, 118, 130</li>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -167,7 +165,8 @@
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l63s0'>			throw new NullPointerException();</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream: 122, 130</li>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 154        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 154</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -182,7 +181,8 @@
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l66s0'>		byte[] buffer = new byte[1 &lt;&lt; 15];</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream: 102, 107, 112, 118</li>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -190,7 +190,8 @@
       <td><pre class='prettyprint jmp'>		<span id='l67s0' title='Executions: 74' class='covered cp' onclick='showHide(this,0)'>while ((el = in.read(buffer)) != -1)</span></pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream: 102x2, 107x2, 112, 118x32</li>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140x2, 143, 146x2, 150        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140x2, 143, 146x2, 150</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -202,7 +203,8 @@
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l69s0'>			out.write(buffer, 0, el);</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream: 102, 107, 118x31</li>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 146, 150        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 146, 150</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -214,20 +216,20 @@
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l71s0'>	}</pre>
         <ol style='display: none;'>
           <li>net.sourceforge.cobertura.util.IOUtilTest#testCopyStream: 102, 107, 112, 118</li>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>72</td><td colspan='2'></td>
     </tr>
     <tr class='click' onclick='showHideLines(this)'>
-      <td class='line'></td><td>&nbsp;</td><td class='comment'>	/**
+      <td class='line'></td><td>&nbsp;</td><td class='comment'><div>	/**
 	 * Returns an array that contains values read from the
 	 * given input stream.
 	 * 
 	 * @throws NullPointerException If null stream is passed.
-	 */
-</td></tr>
+	 */</div><span>	/*...*/</span></td></tr>
     <tr>
       <td class='line'>79</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>	public static byte[] createByteArrayFromInputStream(InputStream in)</pre></td>
@@ -244,21 +246,24 @@
       <td class='line'>82</td><td class='count'>5</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l82s0'>		ByteArrayOutputStream byteArray = new ByteArrayOutputStream();</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150, 154        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150, 154</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>83</td><td class='count'>5</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l83s0'>		copyStream(in, byteArray);</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150, 154        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150, 154</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>84</td><td class='count'>4</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l84s0'>		return byteArray.toByteArray();</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testFillByteArrayFromInputStream: 140, 143, 146, 150</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -269,13 +274,12 @@
       <td class='line'>86</td><td colspan='2'></td>
     </tr>
     <tr class='click' onclick='showHideLines(this)'>
-      <td class='line'></td><td>&nbsp;</td><td class='comment'>	/**
+      <td class='line'></td><td>&nbsp;</td><td class='comment'><div>	/**
 	 * Moves a file from one location to other.
 	 *
 	 * @throws IOException If IO exception occur during moving.
 	 * @throws NullPointerException If either passed file is null.
-	 */
-</td></tr>
+	 */</div><span>	/*...*/</span></td></tr>
     <tr>
       <td class='line'>93</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>	public static void moveFile(File sourceFile, File destinationFile)</pre></td>
@@ -302,7 +306,8 @@
       <td class='line'>96</td><td class='count'>4</td>
       <td><pre class='prettyprint jmp'>		<span id='l96s0' title='Executions: 4' class='covered cp' onclick='showHide(this,0)'>if (destinationFile.exists())</span></pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile: 53, 67, 82, 91        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile: 53, 67, 82, 91</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -313,7 +318,8 @@
       <td class='line'>98</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l98s0'>			destinationFile.delete();</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile: 67, 91        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile: 67, 91</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -331,21 +337,24 @@
       <td class='line'>102</td><td class='count'>3</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l102s0'>		boolean succesfulMove = sourceFile.renameTo(destinationFile);</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile: 53, 67, 91        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile: 53, 67, 91</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>103</td><td class='count'>2</td>
       <td><pre class='prettyprint jmp'>		<span id='l103s0' title='Executions: 2' class='covered cp' onclick='showHide(this,0)'>if (succesfulMove)</span></pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile: 53, 67        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile: 53, 67</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>104</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l104s0'>			return;</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile: 53, 67        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testMoveFile: 53, 67</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -426,14 +435,13 @@
       <td class='line'>124</td><td colspan='2'></td>
     </tr>
     <tr class='click' onclick='showHideLines(this)'>
-      <td class='line'></td><td>&nbsp;</td><td class='comment'>	/**
+      <td class='line'></td><td>&nbsp;</td><td class='comment'><div>	/**
 	 * Closes an input stream.
 	 * 
 	 * @param in The stream to close.
 	 * @return null unless an exception was thrown while closing, else
 	 *         returns the stream
-	 */
-</td></tr>
+	 */</div><span>	/*...*/</span></td></tr>
     <tr>
       <td class='line'>132</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>	public static InputStream closeInputStream(InputStream in)</pre></td>
@@ -454,7 +462,8 @@
       <td class='line'>134</td><td class='count'>1</td>
       <td><pre class='prettyprint jmp'>		<span id='l134s0' title='Executions: 1' class='covered cp' onclick='showHide(this,0)'>if (in != null)</span></pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream: 184        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream: 184</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -473,14 +482,16 @@
       <td class='line'>138</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l138s0'>				in.close();</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream: 184        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream: 184</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>139</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l139s0'>				in = null;</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream: 184        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream: 184</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -507,7 +518,8 @@
       <td class='line'>145</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l145s0'>			}</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream: 184        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream: 184</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -518,7 +530,8 @@
       <td class='line'>147</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l147s0'>		return in;</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream: 184        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseInputStream: 184</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -529,14 +542,13 @@
       <td class='line'>149</td><td colspan='2'></td>
     </tr>
     <tr class='click' onclick='showHideLines(this)'>
-      <td class='line'></td><td>&nbsp;</td><td class='comment'>	/**
+      <td class='line'></td><td>&nbsp;</td><td class='comment'><div>	/**
 	 * Closes an output stream.
 	 * 
 	 * @param out The stream to close.
 	 * @return null unless an exception was thrown while closing, else
 	 *         returns the stream.
-	 */
-</td></tr>
+	 */</div><span>	/*...*/</span></td></tr>
     <tr>
       <td class='line'>157</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>	public static OutputStream closeOutputStream(OutputStream out)</pre></td>
@@ -557,7 +569,8 @@
       <td class='line'>159</td><td class='count'>1</td>
       <td><pre class='prettyprint jmp'>		<span id='l159s0' title='Executions: 1' class='covered cp' onclick='showHide(this,0)'>if (out != null)</span></pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream: 189        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream: 189</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -576,14 +589,16 @@
       <td class='line'>163</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l163s0'>				out.close();</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream: 189        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream: 189</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>164</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l164s0'>				out = null;</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream: 189        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream: 189</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -610,7 +625,8 @@
       <td class='line'>170</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l170s0'>			}</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream: 189        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream: 189</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -621,7 +637,8 @@
       <td class='line'>172</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l172s0'>		return out;</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream: 189        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testCloseOutputStream: 189</li>
+        </ol>
       </td>
     </tr>
     <tr>
@@ -643,21 +660,24 @@
       <td class='line'>177</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l177s0'>		Writer osWriter = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testGetPrintWriter: 194        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testGetPrintWriter: 194</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>178</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l178s0'>		PrintWriter pw = new PrintWriter(osWriter, false);</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testGetPrintWriter: 194        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testGetPrintWriter: 194</li>
+        </ol>
       </td>
     </tr>
     <tr>
       <td class='line'>179</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l179s0'>		return pw;</pre>
         <ol style='display: none;'>
-          <li>net.sourceforge.cobertura.util.IOUtilTest#testGetPrintWriter: 194        </ol>
+          <li>net.sourceforge.cobertura.util.IOUtilTest#testGetPrintWriter: 194</li>
+        </ol>
       </td>
     </tr>
     <tr>
