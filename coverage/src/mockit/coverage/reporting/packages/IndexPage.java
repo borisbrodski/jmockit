@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting.packages;
@@ -76,11 +76,11 @@ public final class IndexPage extends ListWithFilesAndPercentages
       int totalFileCount = computeTotalNumberOfSourceFilesAndMaximumFileNameLength();
 
       output.println("    <tr>");
-      output.write("      <th style='cursor: pointer' onclick='showHideAllFiles(this)'>Packages: ");
+      output.write("      <th style='cursor: col-resize' onclick='showHideAllFiles(this)'>Packages: ");
       output.print(packageToFiles.keySet().size());
       output.println("</th>");
       output.write(
-         "      <th onclick='location.reload()' style='cursor: pointer' " +
+         "      <th onclick='location.reload()' style='cursor: n-resize' " +
          "title='Click on the title for each metric to sort by size (total number of line " +
          "segments, paths, or fields).'>Files: ");
       output.print(totalFileCount);
@@ -88,7 +88,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
       if (Metrics.LINE_COVERAGE) {
          output.println(
-            "      <th onclick='sortTables(1)' style='cursor: pointer' title='" +
+            "      <th onclick='sortTables(1)' style='cursor: n-resize' title='" +
             "Measures how much of the executable production code was exercised by tests.\r\n" +
             "An executable line of code contains one or more executable segments.\r\n" +
             "The percentages are calculated as 100*NE/NS, where NS is the number of segments " +
@@ -97,7 +97,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
       if (Metrics.PATH_COVERAGE) {
          output.println(
-            "      <th onclick='sortTables(2)' style='cursor: pointer' title='" +
+            "      <th onclick='sortTables(2)' style='cursor: n-resize' title='" +
             "Measures how many of the possible execution paths through method/constructor bodies " +
             "were actually executed by tests.\r\n" +
             "The percentages are calculated as 100*NPE/NP, where NP is the number of possible " +
@@ -106,7 +106,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
       if (Metrics.DATA_COVERAGE) {
          output.println(
-            "      <th onclick='sortTables(3)' style='cursor: pointer' title='" +
+            "      <th onclick='sortTables(3)' style='cursor: n-resize' title='" +
             "Measures how many of the instance and static non-final fields were fully exercised " +
             "by the test run.\r\n" +
             "To be fully exercised, a field must have the last value assigned to it read by at " +
