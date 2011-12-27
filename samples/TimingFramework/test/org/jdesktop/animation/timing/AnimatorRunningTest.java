@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.timing;
@@ -13,13 +13,20 @@ import static org.junit.Assert.*;
 public final class AnimatorRunningTest
 {
    static long currentTimeInMillis;
-   final Animator animator = new Animator(500);
+   Animator animator;
 
    @MockClass(realClass = System.class)
    static final class MockSystem
    {
       @Mock
       static long nanoTime() { return currentTimeInMillis * 1000000L; }
+   }
+
+   @Before
+   public void setUp()
+   {
+      currentTimeInMillis = 0;
+      animator = new Animator(500);
    }
 
    @Test
