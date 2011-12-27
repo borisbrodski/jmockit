@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
@@ -16,7 +16,7 @@ import mockit.internal.state.*;
 @SuppressWarnings({"ClassWithTooManyFields", "EqualsAndHashcode"})
 public final class MockedType
 {
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    @Mocked private static final Object DUMMY = null;
    private static final int DUMMY_HASHCODE;
 
@@ -161,14 +161,7 @@ public final class MockedType
 
    int getMaxInstancesToCapture()
    {
-      if (capturing != null) {
-         return capturing.maxInstances();
-      }
-      else if (mocked != null) {
-         return mocked.capture();
-      }
-
-      return 0;
+      return capturing == null ? 0 : capturing.maxInstances();
    }
 
    String getRealClassName() { return mocked == null ? "" : mocked.realClassName(); }

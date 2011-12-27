@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.state;
@@ -11,15 +11,14 @@ import static java.util.Collections.*;
 
 import mockit.*;
 import mockit.internal.annotations.*;
-import mockit.internal.capturing.*;
 import mockit.internal.expectations.*;
 import mockit.internal.expectations.mocking.*;
 
 /**
- * A singleton which stores several data structures which in turn hold global state for individual
- * test methods, test classes, and for the test run as a whole.
+ * A singleton which stores several data structures which in turn hold global state for individual test methods, test
+ * classes, and for the test run as a whole.
  */
-@SuppressWarnings({"ClassWithTooManyFields"})
+@SuppressWarnings("ClassWithTooManyFields")
 public final class TestRun
 {
    private static final TestRun STARTUP_INSTANCE = new TestRun();
@@ -79,7 +78,6 @@ public final class TestRun
    private Method runningTestMethod;
 
    private SavePoint savePointForTestClass;
-   private CaptureOfImplementationsForTestClass captureOfSubtypes;
    private SharedFieldTypeRedefinitions sharedFieldTypeRedefinitions;
 
    private final ProxyClasses proxyClasses = new ProxyClasses();
@@ -98,15 +96,7 @@ public final class TestRun
 
    public static int getTestId() { return getInstance().testId; }
 
-   public static SavePoint getSavePointForTestClass()
-   {
-      return getInstance().savePointForTestClass;
-   }
-
-   public static CaptureOfImplementationsForTestClass getCaptureOfSubtypes()
-   {
-      return getInstance().captureOfSubtypes;
-   }
+   public static SavePoint getSavePointForTestClass() { return getInstance().savePointForTestClass; }
 
    public static SharedFieldTypeRedefinitions getSharedFieldTypeRedefinitions()
    {
@@ -177,11 +167,6 @@ public final class TestRun
       getInstance().savePointForTestClass = savePoint;
    }
 
-   public static void setCaptureOfSubtypes(CaptureOfImplementationsForTestClass captureOfSubtypes)
-   {
-      getInstance().captureOfSubtypes = captureOfSubtypes;
-   }
-
    public static void setSharedFieldTypeRedefinitions(SharedFieldTypeRedefinitions redefinitions)
    {
       getInstance().sharedFieldTypeRedefinitions = redefinitions;
@@ -201,13 +186,13 @@ public final class TestRun
       return getMockClasses().regularMocks.getMock(index);
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    public static Object getStartupMock(int index)
    {
       return STARTUP_INSTANCE.mockClasses.startupMocks.getMock(index);
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    public static Object getMock(Class<?> mockClass, Object mockedInstance)
    {
       return getMockClasses().regularMocks.getMock(mockClass, mockedInstance);

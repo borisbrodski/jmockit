@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -25,35 +25,20 @@ public final class MockingMultipleInterfacesTest<MultiMock extends Dependency & 
    @Test
    public void mockFieldWithTwoInterfaces()
    {
-      new NonStrictExpectations()
-      {
-         {
-            multiMock.doSomething(false); result = "test";
-         }
-      };
+      new NonStrictExpectations() {{ multiMock.doSomething(false); result = "test"; }};
 
       multiMock.run();
       assertEquals("test", multiMock.doSomething(false));
 
-      new Verifications()
-      {
-         {
-            multiMock.run();
-         }
-      };
+      new Verifications() {{ multiMock.run(); }};
    }
 
    @Test
    public <M extends Dependency & Serializable> void mockParameterWithTwoInterfaces(final M mock)
    {
-      new Expectations()
-      {
-         {
-            mock.doSomething(true); result = "";
-         }
-      };
+      new Expectations() {{ mock.doSomething(true); result = "test"; }};
 
-      assertEquals("", mock.doSomething(true));
+      assertEquals("test", mock.doSomething(true));
    }
 
    public interface Base { void doSomething(); }
@@ -66,5 +51,11 @@ public final class MockingMultipleInterfacesTest<MultiMock extends Dependency & 
       mock.doSomething();
 
       new Verifications() {{ mock.doSomething(); times = 1; }};
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public <M extends Base & Dependency> void attemptToMockCapturingFieldWhichImplementsTwoInterfaces()
+   {
+      new Expectations() { @Capturing M mock; };
    }
 }

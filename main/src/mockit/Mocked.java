@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -139,13 +139,6 @@ public @interface Mocked
     * {@code NullPointerException}'s to occur.
     */
    boolean stubOutClassInitialization() default false;
-
-   /**
-    * This attribute will be removed in the next release.
-    *
-    * @deprecated Use {@linkplain Capturing @Capturing} instead.
-    */
-   @Deprecated int capture() default 0;
 
    /**
     * Specify the fully qualified name of the concrete class to be considered as the mocked type when it cannot be used

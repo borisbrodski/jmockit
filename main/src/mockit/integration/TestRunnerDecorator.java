@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.integration;
@@ -8,7 +8,6 @@ import java.lang.reflect.*;
 
 import mockit.internal.expectations.*;
 import mockit.internal.expectations.mocking.*;
-import mockit.internal.capturing.*;
 import mockit.internal.state.*;
 import mockit.*;
 import mockit.internal.util.*;
@@ -61,7 +60,7 @@ public class TestRunnerDecorator
             SavePoint.registerNewActiveSavePoint();
          }
 
-         applyClassLevelMockingIfSpecifiedForTestClass(testClass);
+         setUpClassLevelMocksAndStubs(testClass);
          TestRun.setCurrentTestClass(testClass);
       }
    }
@@ -74,12 +73,6 @@ public class TestRunnerDecorator
       }
 
       SavePoint.rollbackForTestClass();
-      CaptureOfImplementationsForTestClass capture = TestRun.getCaptureOfSubtypes();
-
-      if (capture != null) {
-         capture.cleanUp();
-         TestRun.setCaptureOfSubtypes(null);
-      }
 
       SharedFieldTypeRedefinitions redefinitions = TestRun.getSharedFieldTypeRedefinitions();
 
@@ -89,29 +82,12 @@ public class TestRunnerDecorator
       }
    }
 
-   private void applyClassLevelMockingIfSpecifiedForTestClass(Class<?> testClass)
-   {
-      setUpClassLevelMocksAndStubs(testClass);
-      setUpClassLevelCapturing(testClass);
-   }
-
    protected final void setUpClassLevelMocksAndStubs(Class<?> testClass)
    {
       UsingMocksAndStubs mocksAndStubs = testClass.getAnnotation(UsingMocksAndStubs.class);
 
       if (mocksAndStubs != null) {
          Mockit.setUpMocksAndStubs(mocksAndStubs.value());
-      }
-   }
-
-   private void setUpClassLevelCapturing(Class<?> testClass)
-   {
-      Capturing capturingType = testClass.getAnnotation(Capturing.class);
-
-      if (capturingType != null) {
-         CaptureOfImplementationsForTestClass capture = new CaptureOfImplementationsForTestClass();
-         capture.makeSureAllSubtypesAreModified(capturingType);
-         TestRun.setCaptureOfSubtypes(capture);
       }
    }
 

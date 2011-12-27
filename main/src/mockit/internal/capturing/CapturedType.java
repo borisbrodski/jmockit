@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.capturing;
@@ -17,28 +17,9 @@ final class CapturedType
 
    CapturedType(Class<?> baseType, Capturing capturing)
    {
-      if (capturing == null) { // occurs when using @Mocked#capture
-         this.baseType = baseType;
-         classNameFilters = null;
-         inverseFilters = false;
-      }
-      else {
-         classNameFilters = capturing.classNames();
-         inverseFilters = capturing.inverse();
-
-         Class<?> specifiedBaseType = capturing.baseType();
-
-         if (specifiedBaseType == Void.class) {
-            if (baseType == null) {
-               throw new IllegalArgumentException("Missing base type in @Capturing annotation at class level");
-            }
-
-            this.baseType = baseType;
-         }
-         else {
-            this.baseType = specifiedBaseType;
-         }
-      }
+      classNameFilters = capturing.classNames();
+      inverseFilters = capturing.inverse();
+      this.baseType = baseType;
    }
 
    boolean isToBeCaptured(Class<?> aClass)

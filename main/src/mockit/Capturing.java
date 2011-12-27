@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -10,8 +10,8 @@ import java.lang.annotation.*;
  * Indicates a mock field or a mock parameter for which all classes extending/implementing the mocked type will
  * <em>also</em> get mocked.
  * <p/>
- * In the case of a non-final "capturing" mock field, mocked instances will (by default) be captured and assigned to the mock
- * field as they are created.
+ * In the case of a non-final "capturing" mock field, mocked instances will (by default) be captured and assigned to
+ * the mock field as they are created.
  * Otherwise (ie, when applied to a {@code final} mock field or to a mock parameter), instances are still captured but
  * not made directly available to the test.
  * The {@link #maxInstances} attribute allows an upper limit to the number of captured instances to be specified.
@@ -20,10 +20,6 @@ import java.lang.annotation.*;
  * <p/>
  * Note that, once a capturing mocked type is in scope, the capture of implementation classes and their instances can
  * happen at any moment before the first expected invocation is recorded, or during the recording and replay phases.
- * <p/>
- * When applied to a test class, each class implementing/extending the explicitly specified
- * {@linkplain #baseType base type} will be stubbed out for the whole test class.
- * <strong>Note: this functionality is deprecated and will be removed in the next release.</strong>
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/CapturingImplementations.html">In the Tutorial</a>
  * <p/>
@@ -38,25 +34,9 @@ import java.lang.annotation.*;
  */
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 public @interface Capturing
 {
-   /**
-    * Specifies the base interface/class type whose implementations to capture at runtime.
-    * <p/>
-    * Any classes implementing this base type will be fully mocked or {@linkplain Mockit#stubOut(Class[]) stubbed out}
-    * when loaded by the JVM during test execution (they are mocked if the annotation is applied to a field or
-    * parameter, and stubbed out if applied to a test class).
-    * Any already loaded implementations of the base type will also be mocked or stubbed out.
-    * <p/>
-    * This attribute is mandatory for test classes, and optional for instance fields and test method parameters.
-    * In the case of fields and parameters, the base type will be the declared field or parameter type, if this
-    * attribute is left unspecified.
-    * 
-    * @deprecated Use a mock field of the desired base type instead.
-    */
-   @Deprecated Class<?> baseType() default Void.class;
-
    /**
     * When the annotation is applied to an instance field, this attribute specifies the maximum number of new instances
     * to <em>capture</em> (by assigning them to the field) while the test is running, between those instances which are
