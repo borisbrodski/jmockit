@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.startup;
@@ -7,7 +7,6 @@ package mockit.internal.startup;
 import java.io.*;
 import java.lang.instrument.*;
 
-import mockit.*;
 import mockit.external.asm4.*;
 import mockit.integration.junit3.internal.*;
 import mockit.integration.junit4.internal.*;
@@ -90,8 +89,8 @@ public final class Startup
          loadExternalTool(config, toolSpec);
       }
 
-      stubOutClassesIfSpecifiedInSystemProperty(config);
-      Mockit.setUpStartupMocks(config.mockClasses);
+      stubOutClassesIfSpecifiedInSystemProperty(config.classesToBeStubbedOut);
+      setUpStartupMocks(config.mockClasses);
 
       inst.addTransformer(new JMockitTransformer());
       inst.addTransformer(new ExpectationsTransformer(inst));
@@ -155,11 +154,9 @@ public final class Startup
       System.out.println("JMockit: loaded external tool " + config);
    }
 
-   private static void stubOutClassesIfSpecifiedInSystemProperty(StartupConfiguration config)
+   private static void stubOutClassesIfSpecifiedInSystemProperty(Iterable<String> classesToStubOut)
    {
-      for (String stubbing : config.classesToBeStubbedOut) {
-         if (stubbing.length() == 0) continue;
-
+      for (String stubbing : classesToStubOut) {
          int p = stubbing.indexOf('#');
          String realClassName = stubbing;
          String[] filters = NO_STUBBING_FILTERS;
@@ -171,6 +168,14 @@ public final class Startup
 
          Class<?> realClass = Utilities.loadClass(realClassName.trim());
          new RedefinitionEngine(realClass, true, filters).stubOutAtStartup();
+      }
+   }
+
+   private static void setUpStartupMocks(Iterable<String> mockClasses)
+   {
+      for (String mockClassName : mockClasses) {
+         Class<?> mockClass = Utilities.loadClass(mockClassName);
+         new RedefinitionEngine(null, mockClass).setUpStartupMock();
       }
    }
 

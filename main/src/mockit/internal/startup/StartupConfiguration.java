@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.startup;
@@ -11,16 +11,16 @@ import java.util.Map.Entry;
 
 final class StartupConfiguration
 {
-   private static final String[] NO_VALUES = {};
+   private static final Iterable<String> NO_VALUES = Collections.emptyList();
 
    private final Properties config;
 
-   final String[] externalTools;
+   final Iterable<String> externalTools;
    String toolClassName;
    String toolArguments;
 
-   final String[] classesToBeStubbedOut;
-   final String[] mockClasses;
+   final Iterable<String> classesToBeStubbedOut;
+   final Iterable<String> mockClasses;
 
    StartupConfiguration() throws IOException
    {
@@ -89,10 +89,19 @@ final class StartupConfiguration
       }
    }
 
-   private String[] getMultiValuedProperty(String key)
+   private Iterable<String> getMultiValuedProperty(String key)
    {
-      String values = System.getProperty(key);
-      return values == null ? NO_VALUES : values.split("\\s*,\\s*|\\s+");
+      String commaOrSpaceSeparatedValues = System.getProperty(key);
+      
+      if (commaOrSpaceSeparatedValues == null) {
+         return NO_VALUES;
+      }
+
+      List<String> allValues = Arrays.asList(commaOrSpaceSeparatedValues.split("\\s*,\\s*|\\s+"));
+      Set<String> uniqueValues = new HashSet<String>(allValues);
+      uniqueValues.remove("");
+
+      return uniqueValues;
    }
 
    void extractClassNameAndArgumentsFromToolSpecification(String toolSpec)
