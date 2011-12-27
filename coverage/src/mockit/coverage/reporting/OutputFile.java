@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting;
@@ -70,9 +70,6 @@ public final class OutputFile extends PrintWriter
       println("coverage.js'></script>");
 
       if (withPrettyPrint) {
-         print("  <link rel='stylesheet' type='text/css' href='");
-         print(relPathToOutDir);
-         println("prettify.css'/>");
          print("  <script type='text/javascript' src='");
          print(relPathToOutDir);
          println("prettify.js'></script>");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting;
@@ -10,21 +10,18 @@ final class StaticFiles
 {
    void copyToOutputDir(String outputDir, boolean forSourceFilePages) throws IOException
    {
-      String pathToThisJar =
-         getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+      String pathToThisJar = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
       long timeOfCoverageJar = new File(pathToThisJar).lastModified();
 
       copyFile(outputDir, "coverage.css", timeOfCoverageJar);
       copyFile(outputDir, "coverage.js", timeOfCoverageJar);
 
       if (forSourceFilePages) {
-         copyFile(outputDir, "prettify.css", timeOfCoverageJar);
          copyFile(outputDir, "prettify.js", timeOfCoverageJar);
       }
    }
 
-   private void copyFile(String outputDir, String fileName, long timeOfCoverageJar)
-      throws IOException
+   private void copyFile(String outputDir, String fileName, long timeOfCoverageJar) throws IOException
    {
       File outputFile = new File(outputDir, fileName);
 
