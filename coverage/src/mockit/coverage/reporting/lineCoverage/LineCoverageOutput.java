@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting.lineCoverage;
@@ -17,9 +17,9 @@ public final class LineCoverageOutput
    private final LineCoverageFormatter lineCoverageFormatter;
    private LineCoverageData lineData;
    private boolean previousLineInComments;
+   private String initialCommentLineIndentation;
 
-   public LineCoverageOutput(
-      PrintWriter output, Map<Integer, LineCoverageData> lineToLineData, boolean withCallPoints)
+   public LineCoverageOutput(PrintWriter output, Map<Integer, LineCoverageData> lineToLineData, boolean withCallPoints)
    {
       this.output = output;
       this.lineToLineData = lineToLineData;
@@ -56,16 +56,22 @@ public final class LineCoverageOutput
          previousLineInComments &&
          initialElement != null && initialElement.isComment() && initialElement.getNext() == null
       ) {
-         if (!previousLineInComments) {
+         String lineText = initialElement.toString();
+
+         if (previousLineInComments) {
+            output.println();
+         }
+         else {
             writeOpeningForBlockOfCommentedLines();
+            extractInitialCommentLineIndentation(lineText);
             previousLineInComments = true;
          }
 
-         output.println(initialElement.toString());
+         output.write(lineText);
          return true;
       }
       else if (previousLineInComments) {
-         output.println("</td></tr>");
+         output.append("</div><span>").append(initialCommentLineIndentation).println("/*...*/</span></td></tr>");
          previousLineInComments = false;
       }
 
@@ -75,7 +81,18 @@ public final class LineCoverageOutput
    private void writeOpeningForBlockOfCommentedLines()
    {
       output.println("    <tr class='click' onclick='showHideLines(this)'>");
-      output.write("      <td class='line'></td><td>&nbsp;</td><td class='comment'>");
+      output.write("      <td class='line'></td><td>&nbsp;</td><td class='comment'><div>");
+   }
+
+   private void extractInitialCommentLineIndentation(String lineText)
+   {
+      int indentationSize = 0;
+
+      for (int i = 0; i < lineText.length(); i++, indentationSize++) {
+         if (lineText.charAt(i) > ' ') break;
+      }
+
+      initialCommentLineIndentation = lineText.substring(0, indentationSize);
    }
 
    private void writeOpeningOfNewLine(int line)
@@ -109,8 +126,7 @@ public final class LineCoverageOutput
          output.write("</pre>");
       }
       else {
-         String formattedLine =
-            lineCoverageFormatter.format(lineParser.getNumber(), lineData, initialElement);
+         String formattedLine = lineCoverageFormatter.format(lineParser.getNumber(), lineData, initialElement);
          output.write("      <td>");
          output.write(formattedLine);
       }

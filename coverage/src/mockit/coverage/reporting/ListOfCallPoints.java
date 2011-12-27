@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting;
@@ -53,7 +53,7 @@ public final class ListOfCallPoints
          previous = current;
       }
 
-      content.append("        </ol>").append(EOL).append("      ");
+      content.append("</li>").append(EOL).append("        </ol>").append(EOL).append("      ");
    }
 
    private void appendTestMethod(StackTraceElement current)
