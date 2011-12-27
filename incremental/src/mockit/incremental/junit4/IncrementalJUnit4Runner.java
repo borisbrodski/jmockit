@@ -11,6 +11,7 @@ import java.io.*;
 
 import org.junit.internal.runners.*;
 import org.junit.runner.Description;
+import org.junit.runner.manipulation.*;
 import org.junit.runner.notification.*;
 import org.junit.runners.*;
 import org.junit.runners.model.*;
@@ -34,7 +35,7 @@ public final class IncrementalJUnit4Runner
    static
    {
       try {
-         shouldRunMethod = ParentRunner.class.getDeclaredMethod("shouldRun", Object.class);
+         shouldRunMethod = ParentRunner.class.getDeclaredMethod("shouldRun", Filter.class, Object.class);
       }
       catch (NoSuchMethodException e) {
          throw new RuntimeException(e);
@@ -70,7 +71,7 @@ public final class IncrementalJUnit4Runner
    }
 
    @Mock(reentrant = true)
-   public boolean shouldRun(Object m)
+   public boolean shouldRun(Filter filter, Object m)
    {
       testMethod = null;
 
@@ -92,7 +93,7 @@ public final class IncrementalJUnit4Runner
          }
       }
 
-      Boolean shouldRun = Utilities.invoke(it, shouldRunMethod, m);
+      Boolean shouldRun = Utilities.invoke(it, shouldRunMethod, filter, m);
 
       if (testMethod != null) {
          testMethods.put(testMethod, shouldRun);
