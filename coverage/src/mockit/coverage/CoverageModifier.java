@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage;
@@ -34,13 +34,13 @@ final class CoverageModifier extends ClassVisitor
 
    CoverageModifier(ClassReader cr)
    {
-      super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS + ClassWriter.COMPUTE_FRAMES));
+      super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS));
       forInnerClass = false;
    }
 
    private CoverageModifier(ClassReader cr, CoverageModifier other, String simpleClassName)
    {
-      super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS + ClassWriter.COMPUTE_FRAMES));
+      super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS));
       sourceFileName = other.sourceFileName;
       fileData = other.fileData;
       internalClassName = other.internalClassName;
@@ -77,7 +77,10 @@ final class CoverageModifier extends ClassVisitor
          }
       }
 
-      super.visit(version, access, name, signature, superName, interfaces);
+      // A VerifyError can occur with Java 7, related to stack map frames. ASM has a bug affecting "COMPUTE_FRAMES",
+      // so the only solution was to "downgrade" the bytecode to Java 6.
+      int finalVersion = (version & 0xFFFF) == V1_7 ? V1_6 : version;
+      super.visit(finalVersion, access, name, signature, superName, interfaces);
    }
 
    @Override
@@ -180,12 +183,12 @@ final class CoverageModifier extends ClassVisitor
       static final String DATA_RECORDING_CLASS = "mockit/coverage/TestRun";
 
       final MethodWriter mw;
+      final List<Label> visitedLabels;
+      final List<Label> jumpTargetsForCurrentLine;
+      private final Map<Label, Label> unconditionalJumps;
+      final Map<Integer, Boolean> pendingBranches;
       int currentLine;
       LineCoverageData lineData;
-      final List<Label> visitedLabels = new ArrayList<Label>();
-      final List<Label> jumpTargetsForCurrentLine = new ArrayList<Label>(4);
-      private final Map<Label, Label> unconditionalJumps = new HashMap<Label, Label>(2);
-      final Map<Integer, Boolean> pendingBranches = new HashMap<Integer, Boolean>();
       boolean assertFoundInCurrentLine;
       boolean nextLabelAfterConditionalJump;
       boolean potentialAssertFalseFound;
@@ -194,6 +197,10 @@ final class CoverageModifier extends ClassVisitor
       {
          super(mv);
          mw = (MethodWriter) mv;
+         visitedLabels = new ArrayList<Label>();
+         jumpTargetsForCurrentLine = new ArrayList<Label>(4);
+         unconditionalJumps = new HashMap<Label, Label>(2);
+         pendingBranches = new HashMap<Integer, Boolean>();
       }
 
       @Override

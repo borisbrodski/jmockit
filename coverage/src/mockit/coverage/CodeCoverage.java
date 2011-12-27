@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage;
@@ -32,7 +32,7 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
       return new OutputFileGenerator(outputFormat, outputDir, sourceDirs);
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    public CodeCoverage(String argsSeparatedByColon)
    {
       String[] args = argsSeparatedByColon == null ? NO_ARGS : argsSeparatedByColon.split(":");
@@ -63,8 +63,8 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
       ClassLoader loader, String internalClassName, Class<?> classBeingRedefined,
       ProtectionDomain protectionDomain, byte[] originalClassfile)
    {
-      if (classBeingRedefined != null) {
-         return originalClassfile;
+      if (classBeingRedefined != null || protectionDomain == null) {
+         return null;
       }
 
       String className = internalClassName.replace('/', '.');
