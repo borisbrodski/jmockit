@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.integration.junit4;
@@ -21,6 +21,18 @@ public final class JUnit4DecoratorTest extends BaseJUnit4DecoratorTest
    {
       @Mock
       public String getValue() { return "TEST2"; }
+   }
+
+   @BeforeClass
+   public static void beforeClassThatRunsSecond()
+   {
+      assertEquals("TEST0", new RealClass0().getValue());
+   }
+
+   @BeforeClass
+   public static void beforeClassThatRunsFirst()
+   {
+      assertEquals("TEST0", new RealClass0().getValue());
    }
 
    @Test

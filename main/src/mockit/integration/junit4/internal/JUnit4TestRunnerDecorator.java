@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.integration.junit4.internal;
@@ -93,8 +93,9 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
             Class<?> currentTestClass = TestRun.getCurrentTestClass();
 
             if (currentTestClass != null && testClass.isAssignableFrom(currentTestClass)) {
-               assert it.getAnnotation(AfterClass.class) != null;
-               cleanUpMocksFromPreviousTestClass();
+               if (it.getAnnotation(AfterClass.class) != null) {
+                  cleanUpMocksFromPreviousTestClass();
+               }
             }
             else {
                assert it.getAnnotation(BeforeClass.class) != null;
