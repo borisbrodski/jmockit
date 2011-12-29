@@ -49,7 +49,7 @@ td.package, td.file {
    background-color: #e0e0e0; padding: 2px; border-bottom: white solid 1px;
 }
 .click { cursor: row-resize; }
-td.file { white-space: pre; }
+td.file { font-family: monospace; white-space: pre; }
 
 td.coverage {
    font-size: 0.95em; width: 2.875em; text-align: right;
