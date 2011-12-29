@@ -6,8 +6,8 @@ package mockit;
 
 import java.io.*;
 
+import static org.junit.Assert.*;
 import org.junit.*;
-import static org.testng.AssertJUnit.*;
 
 public final class FinalMockFieldsTest
 {
