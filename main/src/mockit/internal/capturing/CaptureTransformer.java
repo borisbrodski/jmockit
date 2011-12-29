@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.capturing;
@@ -66,18 +66,17 @@ final class CaptureTransformer implements ClassFileTransformer
       }
 
       ClassReader cr = new ClassReader(classfileBuffer);
-      byte[] modifiedBytecode = null;
 
       try {
          cr.accept(superTypeCollector, ClassReader.SKIP_DEBUG);
       }
       catch (VisitInterruptedException ignore) {
          if (superTypeCollector.classExtendsCapturedType) {
-            modifiedBytecode = modifyAndRegisterClass(loader, className, cr);
+            return modifyAndRegisterClass(loader, className, cr);
          }
       }
 
-      return modifiedBytecode;
+      return null;
    }
 
    private byte[] modifyAndRegisterClass(ClassLoader loader, String className, ClassReader cr)

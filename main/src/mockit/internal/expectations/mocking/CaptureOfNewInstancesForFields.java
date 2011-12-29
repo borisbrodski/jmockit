@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
@@ -11,8 +11,6 @@ import mockit.internal.util.*;
 
 final class CaptureOfNewInstancesForFields extends CaptureOfNewInstances
 {
-   CaptureOfNewInstancesForFields() {}
-
    boolean captureNewInstanceForApplicableMockField(Object fieldOwner, Object mock)
    {
       boolean constructorModifiedForCaptureOnly = captureNewInstance(fieldOwner, mock);
