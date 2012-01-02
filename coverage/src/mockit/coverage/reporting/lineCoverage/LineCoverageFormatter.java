@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting.lineCoverage;
 
 import mockit.coverage.data.*;
 import mockit.coverage.reporting.*;
-import mockit.coverage.reporting.parsing.LineElement;
+import mockit.coverage.reporting.parsing.*;
 
 final class LineCoverageFormatter
 {
@@ -22,7 +22,7 @@ final class LineCoverageFormatter
       listOfCallPoints = withCallPoints ? new ListOfCallPoints() : null;
    }
 
-   String format(int lineNum, LineCoverageData lineData, LineElement initialElement)
+   String format(LineParser lineParser, LineCoverageData lineData)
    {
       this.lineData = lineData;
 
@@ -30,33 +30,33 @@ final class LineCoverageFormatter
       formattedLine.append("<pre class='prettyprint");
 
       if (lineData.containsBranches()) {
-         formatLineWithMultipleSegments(lineNum, initialElement);
+         formatLineWithMultipleSegments(lineParser);
       }
       else {
-         formatLineWithSingleSegment(lineNum, initialElement);
+         formatLineWithSingleSegment(lineParser);
       }
 
       return formattedLine.toString();
    }
 
-   private void formatLineWithMultipleSegments(int lineNum, LineElement initialElement)
+   private void formatLineWithMultipleSegments(LineParser lineParser)
    {
       formattedLine.append(" jmp'>");
-      segmentsFormatter.formatSegments(lineNum, lineData, initialElement);
+      segmentsFormatter.formatSegments(lineParser, lineData);
    }
 
-   private void formatLineWithSingleSegment(int line, LineElement initialElement)
+   private void formatLineWithSingleSegment(LineParser lineParser)
    {
       formattedLine.append(lineData.isCovered() ? " covered" : " uncovered");
 
-      boolean lineWithCallPoints = listOfCallPoints != null && lineData.getExecutionCount() > 0;
+      boolean lineWithCallPoints = listOfCallPoints != null && lineData.containsCallPoints();
 
       if (lineWithCallPoints) {
          formattedLine.append(" cp' onclick='showHide(this)");
       }
 
-      formattedLine.append("' id='l").append(line).append("s0'>").append(initialElement.toString());
-      formattedLine.append("</pre>");
+      formattedLine.append("' id='l").append(lineParser.getNumber()).append("s0'>");
+      formattedLine.append(lineParser.getInitialElement().toString()).append("</pre>");
 
       if (lineWithCallPoints) {
          listOfCallPoints.insertListOfCallPoints(lineData.getCallPoints());

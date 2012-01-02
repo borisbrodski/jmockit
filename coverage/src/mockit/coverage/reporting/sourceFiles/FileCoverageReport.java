@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting.sourceFiles;
@@ -11,7 +11,7 @@ import mockit.coverage.*;
 import mockit.coverage.data.*;
 import mockit.coverage.data.dataItems.*;
 import mockit.coverage.paths.*;
-import mockit.coverage.reporting.OutputFile;
+import mockit.coverage.reporting.*;
 import mockit.coverage.reporting.dataCoverage.*;
 import mockit.coverage.reporting.lineCoverage.*;
 import mockit.coverage.reporting.parsing.*;
@@ -24,18 +24,19 @@ public final class FileCoverageReport
 {
    private final InputFile inputFile;
    private final OutputFile output;
-   private final FileParser fileParser = new FileParser();
+   private final FileParser fileParser;
+   private final NeutralOutput neutralOutput;
    private final LineCoverageOutput lineCoverage;
    private final PathCoverageOutput pathCoverage;
    private final DataCoverageOutput dataCoverage;
 
-   public FileCoverageReport(
-      String outputDir, InputFile inputFile, FileCoverageData fileData, boolean withCallPoints)
+   public FileCoverageReport(String outputDir, InputFile inputFile, FileCoverageData fileData, boolean withCallPoints)
       throws IOException
    {
       this.inputFile = inputFile;
       output = new OutputFile(outputDir, inputFile.filePath);
-
+      fileParser = new FileParser();
+      neutralOutput = new NeutralOutput(output);
       lineCoverage = new LineCoverageOutput(output, fileData.getLineToLineData(), withCallPoints);
       pathCoverage = createPathCoverageOutput(fileData);
       dataCoverage = createDataCoverageOutput(fileData);
@@ -47,9 +48,8 @@ public final class FileCoverageReport
          Collection<MethodCoverageData> methods = fileData.getMethods();
          return methods.isEmpty() ? null : new PathCoverageOutput(output, methods);
       }
-      else {
-         return null;
-      }
+
+      return null;
    }
 
    private DataCoverageOutput createDataCoverageOutput(FileCoverageData fileData)
@@ -58,9 +58,8 @@ public final class FileCoverageReport
          DataCoverageInfo dataCoverageInfo = fileData.dataCoverageInfo;
          return dataCoverageInfo.hasFields() ? new DataCoverageOutput(dataCoverageInfo) : null;
       }
-      else {
-         return null;
-      }
+
+      return null;
    }
 
    public void generate() throws IOException
@@ -78,13 +77,14 @@ public final class FileCoverageReport
 
    private void writeHeader()
    {
-      output.writeCommonHeader();
+      output.writeCommonHeader(inputFile.sourceFile.getName());
       output.println("  <table cellpadding='0' cellspacing='1'>");
-      output.println("    <caption><code>" + inputFile.sourceFile.getPath() + "</code></caption>");
+      output.println("    <caption>" + inputFile.getSourceFilePath() + "</caption>");
    }
 
    private void writeFormattedSourceLines() throws IOException
    {
+      LineParser lineParser = fileParser.lineParser;
       String line;
 
       while ((line = inputFile.input.readLine()) != null) {
@@ -96,13 +96,37 @@ public final class FileCoverageReport
             }
 
             if (pathCoverage != null) {
-               pathCoverage.writePathCoverageInfoIfLineStartsANewMethodOrConstructor(
-                  fileParser.lineParser.getNumber());
+               pathCoverage.writePathCoverageInfoIfLineStartsANewMethodOrConstructor(lineParser.getNumber());
             }
          }
 
-         lineCoverage.writeLineOfSourceCodeWithCoverageInfo(fileParser.lineParser);
+         if (!neutralOutput.writeLineWithoutCoverageInfo(lineParser)) {
+            writeOpeningOfNewLine(lineParser.getNumber());
+
+            if (!lineCoverage.writeLineWithCoverageInfo(lineParser)) {
+               writeLineWithoutCoverageInfo(lineParser.getInitialElement());
+            }
+
+            output.println("    </tr>");
+         }
       }
+   }
+
+   private void writeOpeningOfNewLine(int lineNumber)
+   {
+      output.println("    <tr>");
+      output.write("      <td class='line'>");
+      output.print(lineNumber);
+      output.write("</td>");
+   }
+
+   private void writeLineWithoutCoverageInfo(LineElement initialElement)
+   {
+      output.println("<td>&nbsp;</td>");
+      output.write("      <td><pre class='");
+      output.write(initialElement.isComment() ? "comment'>" : "prettyprint'>");
+      output.write(initialElement.toString());
+      output.println("</pre></td>");
    }
 
    private void writeFooter()

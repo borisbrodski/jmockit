@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.data;
@@ -20,15 +20,8 @@ public class LineSegmentData implements Serializable
    int executionCount;
    private List<CallPoint> callPoints;
 
-   public final boolean isUnreachable()
-   {
-      return unreachable;
-   }
-
-   public final void markAsUnreachable()
-   {
-      unreachable = true;
-   }
+   public final boolean isUnreachable() { return unreachable; }
+   public final void markAsUnreachable() { unreachable = true; }
 
    final void registerExecution(CallPoint callPoint)
    {
@@ -47,25 +40,11 @@ public class LineSegmentData implements Serializable
       }
    }
 
-   public int getExecutionCount()
-   {
-      return executionCount;
-   }
+   public final boolean containsCallPoints() { return callPoints != null; }
+   public final List<CallPoint> getCallPoints() { return callPoints; }
 
-   public final boolean containsCallPoints()
-   {
-      return callPoints != null;
-   }
-
-   public final List<CallPoint> getCallPoints()
-   {
-      return callPoints == null ? Collections.<CallPoint>emptyList() : callPoints;
-   }
-
-   public boolean isCovered()
-   {
-      return unreachable || executionCount > 0;
-   }
+   public int getExecutionCount() { return executionCount; }
+   public boolean isCovered() { return unreachable || executionCount > 0; }
 
    final void addExecutionCountAndCallPointsFromPreviousTestRun(LineSegmentData previousData)
    {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting.lineCoverage;
@@ -8,13 +8,13 @@ import java.util.*;
 
 import mockit.coverage.data.*;
 import mockit.coverage.reporting.*;
-import mockit.coverage.reporting.parsing.LineElement;
+import mockit.coverage.reporting.parsing.*;
 
 final class LineSegmentsFormatter
 {
    private final ListOfCallPoints listOfCallPoints;
    private final StringBuilder line;
-   private int lineNum;
+   private int lineNumber;
 
    // Helper fields:
    private LineElement element;
@@ -27,14 +27,14 @@ final class LineSegmentsFormatter
       this.line = line;
    }
 
-   void formatSegments(int lineNum, LineCoverageData lineData, LineElement initialElement)
+   void formatSegments(LineParser lineParser, LineCoverageData lineData)
    {
-      this.lineNum = lineNum;
+      lineNumber = lineParser.getNumber();
 
       List<BranchCoverageData> branchData = lineData.getBranches();
       int numSegments = 1 + branchData.size();
 
-      element = initialElement.appendUntilNextCodeElement(line);
+      element = lineParser.getInitialElement().appendUntilNextCodeElement(line);
 
       segmentIndex = 0;
       segmentData = lineData;
@@ -49,7 +49,7 @@ final class LineSegmentsFormatter
 
       line.append("</pre>");
 
-      if (listOfCallPoints != null) {
+      if (hasCallPointsForSegment()) {
          line.append(listOfCallPoints.getContents());
       }
    }
@@ -82,15 +82,14 @@ final class LineSegmentsFormatter
 
    private void appendStartTag()
    {
-      line.append("<span id='l").append(lineNum);
-      line.append('s').append(segmentIndex).append("' ");
+      line.append("<span id='l").append(lineNumber).append('s').append(segmentIndex).append("' ");
 
       appendTooltipWithExecutionCounts();
 
       if (segmentData.isCovered()) {
          line.append("class='covered");
 
-         if (listOfCallPoints != null) {
+         if (hasCallPointsForSegment()) {
             line.append(" cp' onclick='showHide(this,").append(segmentIndex).append(')');
          }
 
@@ -116,8 +115,10 @@ final class LineSegmentsFormatter
       
       line.insert(i + 1, "</span>");
 
-      if (listOfCallPoints != null && !segmentData.getCallPoints().isEmpty()) {
+      if (hasCallPointsForSegment()) {
          listOfCallPoints.insertListOfCallPoints(segmentData.getCallPoints());
       }
    }
+
+   private boolean hasCallPointsForSegment() { return listOfCallPoints != null && segmentData.containsCallPoints(); }
 }
