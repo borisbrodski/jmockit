@@ -543,6 +543,7 @@ final class CoverageModifier extends ClassVisitor
       @Override
       public final void visitFieldInsn(int opcode, String owner, String name, String desc)
       {
+         // TODO: need to also process field instructions inside accessor methods (STATIC + SYNTHETIC, "access$nnn")
          boolean getField = opcode == GETSTATIC || opcode == GETFIELD;
          boolean isStatic = opcode == PUTSTATIC || opcode == GETSTATIC;
          char fieldType = desc.charAt(0);
