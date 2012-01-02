@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting.parsing;
@@ -7,10 +7,9 @@ package mockit.coverage.reporting.parsing;
 import mockit.coverage.reporting.parsing.LineElement.*;
 
 /**
- * Parses a source line into one or more consecutive segments, identifying which ones contain Java
- * code and which ones contain only comments.
- * Block comments initiated in a previous line are kept track of until the end of the block is
- * reached.
+ * Parses a source line into one or more consecutive segments, identifying which ones contain Java code and which ones
+ * contain only comments.
+ * Block comments initiated in a previous line are kept track of until the end of the block is reached.
  */
 public final class LineParser
 {
@@ -29,15 +28,9 @@ public final class LineParser
    private int pos;
    private int currChar;
 
-   public int getNumber()
-   {
-      return lineNum;
-   }
+   public int getNumber() { return lineNum; }
 
-   public boolean isInComments()
-   {
-      return inComments;
-   }
+   public boolean isInComments() { return inComments; }
 
    public boolean isBlankLine()
    {
@@ -54,10 +47,7 @@ public final class LineParser
       return true;
    }
 
-   public LineElement getInitialElement()
-   {
-      return initialElement;
-   }
+   public LineElement getInitialElement() { return initialElement; }
 
    boolean parse(String line)
    {
@@ -80,7 +70,11 @@ public final class LineParser
       }
 
       if (startPos >= 0) {
-         addElement(0);
+         addFinalElement();
+      }
+      else if (initialElement == null) {
+         initialElement = new LineElement(ElementType.SEPARATOR, "");
+         return false;
       }
 
       return !inComments && !isBlankLine();
@@ -95,14 +89,14 @@ public final class LineParser
       }
       else if (!inCodeElement && !separator) {
          if (startPos >= 0) {
-            addElement(pos);
+            addElement();
          }
 
          inCodeElement = true;
          startPos = pos;
       }
       else if (separator) {
-         addElement(pos);
+         addElement();
          inCodeElement = false;
          startPos = pos;
       }
@@ -133,7 +127,7 @@ public final class LineParser
             endCodeElementIfPending();
             startNewElementIfNotYetStarted();
             inComments = true;
-            addElement(0);
+            addFinalElement();
             inComments = false;
             startPos = -1;
             return true;
@@ -159,7 +153,7 @@ public final class LineParser
    private void endCodeElementIfPending()
    {
       if (inCodeElement) {
-         addElement(pos);
+         addElement();
          startPos = pos;
          inCodeElement = false;
       }
@@ -172,7 +166,7 @@ public final class LineParser
 
          if (currChar == '*' && pos < lineLength - 1 && line.codePointAt(pos + 1) == '/') {
             pos += 2;
-            addElement(pos);
+            addElement();
             startPos = -1;
             inComments = false;
             break;
@@ -190,9 +184,20 @@ public final class LineParser
       }
    }
 
-   private void addElement(int p)
+   private void addFinalElement()
    {
-      String text = p > 0 ? line.substring(startPos, p) : line.substring(startPos);
+      String text = line.substring(startPos);
+      addElement(text);
+   }
+
+   private void addElement()
+   {
+      String text = pos > 0 ? line.substring(startPos, pos) : line.substring(startPos);
+      addElement(text);
+   }
+
+   private void addElement(String text)
+   {
       ElementType type;
 
       if (inComments) {
@@ -209,7 +214,6 @@ public final class LineParser
 
       if (initialElement == null) {
          initialElement = newElement;
-         currentElement = newElement;
       }
       else {
          currentElement.setNext(newElement);
