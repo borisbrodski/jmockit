@@ -1,32 +1,6 @@
 /*
- * Copyright 2007 Sun Microsystems, Inc.  All Rights Reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   - Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *
- *   - Neither the name of Sun Microsystems nor the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 
 package org.jdesktop.animation.transitions;
@@ -97,30 +71,13 @@ class AnimationState
       this(new ComponentState(component), isStart);
    }
 
-   void setStart(ComponentState compState)
-   {
-      start = compState;
-   }
+   ComponentState getStart() { return start; }
+   void setStart(ComponentState compState) { start = compState; }
 
-   void setEnd(ComponentState compState)
-   {
-      end = compState;
-   }
+   ComponentState getEnd() { return end; }
+   void setEnd(ComponentState compState) { end = compState; }
 
-   ComponentState getStart()
-   {
-      return start;
-   }
-
-   ComponentState getEnd()
-   {
-      return end;
-   }
-
-   Component getComponent()
-   {
-      return component;
-   }
+   Component getComponent() { return component; }
 
    /**
     * Called just prior to running the transition.  This method examines the start and end states
@@ -192,6 +149,11 @@ class AnimationState
       // If size changes, use Scale effect.
       boolean scale = start.getWidth() != end.getWidth() || start.getHeight() != end.getHeight();
 
+      createStandardEffectsToAnimateComponentThatRemainsInBothScreens(move, scale);
+   }
+
+   private void createStandardEffectsToAnimateComponentThatRemainsInBothScreens(boolean move, boolean scale)
+   {
       if (move && scale) {
          // Move/Scale composite effect needed.
          effect = new Move(start, end);

@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.transitions.effects;
 
 import java.awt.*;
+import java.awt.image.*;
 import java.util.List;
 
 import org.junit.*;
@@ -35,16 +36,46 @@ public final class CompositeEffectTest
    @Test
    public void testAddEffect()
    {
-      Move effect = new Move(start, end);
+      Effect effect = new Move(start, end);
       effect.setRenderComponent(true);
 
       composite.addEffect(effect);
 
-      List<Effect> effects = Deencapsulation.getField(composite, List.class);
-      assertTrue(effects.contains(effect));
+      assertEffectWasAdded(effect);
       assertTrue(composite.getRenderComponent());
       assertSame(start, composite.getStart());
       assertSame(end, composite.getEnd());
+   }
+
+   private void assertEffectWasAdded(Effect effect)
+   {
+      @SuppressWarnings("unchecked") List<Effect> effects = Deencapsulation.getField(composite, List.class);
+      assertTrue(effects.contains(effect));
+   }
+
+   @Test
+   public void testAddEffectWhichDoesNotRequireRerendering()
+   {
+      Effect effect = new Move(start, end);
+
+      composite.addEffect(effect);
+
+      assertEffectWasAdded(effect);
+      assertFalse(composite.getRenderComponent());
+   }
+
+   @Test
+   public void testAddEffectWhenStartAndEndStatesAreAlreadySet(ComponentState anotherStart, ComponentState anotherEnd)
+   {
+      Effect effect = new Move(start, end);
+      composite.setStart(anotherStart);
+      composite.setEnd(anotherEnd);
+
+      composite.addEffect(effect);
+
+      assertEffectWasAdded(effect);
+      assertSame(anotherStart, composite.getStart());
+      assertSame(anotherEnd, composite.getEnd());
    }
 
    @Test
@@ -128,19 +159,73 @@ public final class CompositeEffectTest
       composite = new CompositeEffect(effect1);
       composite.addEffect(effect2);
 
-      final Graphics2D g2D = null;
+      new CompositeSetupExpectations();
 
+      composite.setup(null);
+   }
+
+   final class CompositeSetupExpectations extends Expectations
+   {
+      CompositeSetupExpectations()
+      {
+         super(Effect.class);
+
+         onInstance(effect1).setup((Graphics2D) any);
+         onInstance(effect2).setup((Graphics2D) any);
+
+         Effect effectSuper = new Unchanging();
+         onInstance(composite); effectSuper.setup((Graphics2D) any);
+      }
+   }
+
+   @Test
+   public void testSetupWhenComponentNeedsRerendering()
+   {
+      composite = new CompositeEffect(effect1);
+      composite.addEffect(effect2);
+      composite.setRenderComponent(true);
+
+      new CompositeSetupExpectations();
+
+      composite.setup(null);
+
+      assertNull(composite.getComponentImage());
+   }
+
+   @Test
+   public void testSetupWhenComponentImageHasBeenSetupAlready()
+   {
+      composite = new CompositeEffect(effect1);
+      composite.addEffect(effect2);
+      Image compositeImage = new BufferedImage(10, 5, BufferedImage.TYPE_BYTE_GRAY);
+      Deencapsulation.setField(composite, compositeImage);
+
+      new CompositeSetupExpectations();
+
+      composite.setup(null);
+
+      assertSame(compositeImage, composite.getComponentImage());
+   }
+
+   @Test
+   public void testOperationsWithNoSubEffects(final Animator animator)
+   {
       new Expectations(Effect.class)
       {
          private final Effect effectSuper = new Unchanging();
 
          {
-            onInstance(effect1).setup(g2D);
-            onInstance(effect2).setup(g2D);
-            onInstance(composite); effectSuper.setup(g2D);
+            effectSuper.init(animator, null);
+            effectSuper.setStart(null);
+            effectSuper.setup(null);
+            effectSuper.setEnd(null);
          }
       };
 
-      composite.setup(g2D);
+      composite.init(animator, null);
+      composite.setStart(null);
+      composite.setup(null);
+      composite.setEnd(null);
+      composite.cleanup(animator);
    }
 }
