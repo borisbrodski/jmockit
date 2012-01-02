@@ -85,8 +85,8 @@ public final class Startup
          try { setUpInternalStartupMock(MockTestNG.class); } catch (Error ignored) {}
       }
 
-      for (String toolSpec : config.externalTools) {
-         loadExternalTool(config, toolSpec);
+      for (String toolClassName : config.externalTools) {
+         ToolLoader.loadExternalTool(toolClassName);
       }
 
       stubOutClassesIfSpecifiedInSystemProperty(config.classesToBeStubbedOut);
@@ -121,37 +121,6 @@ public final class Startup
          // OK, ignore the startup mock if the necessary third-party class files are not in the classpath.
          return false;
       }
-   }
-
-   private static void loadExternalTool(StartupConfiguration config, String toolSpec)
-   {
-      config.extractClassNameAndArgumentsFromToolSpecification(toolSpec);
-
-      ClassReader cr;
-
-      try {
-         cr = ClassFile.readClass(config.toolClassName);
-      }
-      catch (IOException ignore) {
-         System.out.println("JMockit: external tool class \"" + config.toolClassName + "\" not available in classpath");
-         return;
-      }
-
-      loadExternalTool(config, cr);
-   }
-
-   private static void loadExternalTool(StartupConfiguration config, ClassReader cr)
-   {
-      ToolLoader toolLoader = new ToolLoader(config.toolClassName, config.toolArguments);
-
-      try {
-         cr.accept(toolLoader, ClassReader.SKIP_DEBUG);
-      }
-      catch (IllegalStateException ignore) {
-         return;
-      }
-
-      System.out.println("JMockit: loaded external tool " + config);
    }
 
    private static void stubOutClassesIfSpecifiedInSystemProperty(Iterable<String> classesToStubOut)

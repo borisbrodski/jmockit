@@ -14,11 +14,7 @@ final class StartupConfiguration
    private static final Iterable<String> NO_VALUES = Collections.emptyList();
 
    private final Properties config;
-
    final Iterable<String> externalTools;
-   String toolClassName;
-   String toolArguments;
-
    final Iterable<String> classesToBeStubbedOut;
    final Iterable<String> mockClasses;
 
@@ -102,19 +98,5 @@ final class StartupConfiguration
       uniqueValues.remove("");
 
       return uniqueValues;
-   }
-
-   void extractClassNameAndArgumentsFromToolSpecification(String toolSpec)
-   {
-      String[] classAndArgs = toolSpec.split("\\s*=\\s*");
-      toolClassName = classAndArgs[0];
-      toolArguments = classAndArgs.length == 1 ? null : classAndArgs[1];
-   }
-
-   @Override
-   public String toString()
-   {
-      String toolArgsDescription = toolArguments == null ? "" : '=' + toolArguments;
-      return toolClassName + toolArgsDescription;
    }
 }
