@@ -209,25 +209,24 @@
    </div>
 </h3>
 <p>
-   First of all, to enable the JMockit Coverage tool at least one of several <em>coverage jars</em>
-   needs to be added to the classpath.
-   The main jar file, which contains all of the tool implementation code, is
-   <code>jmockit-coverage.jar</code>.
-   Adding any of the other <code>jmockit-coverage-xyz.jar</code> files to the classpath will result
-   in having this one added implicitly (provided all jars are available in the same installation
-   directory).
+   First of all, to enable the JMockit Coverage tool at least one of several <em>coverage jars</em> needs to be added
+   to the classpath.
+   The main jar file, which contains all of the tool implementation code, is <code>jmockit-coverage.jar</code>.
+   Adding any of the other <code>jmockit-coverage-xyz.jar</code> files to the classpath will result in having this one
+   added implicitly (provided all jars are available in the same installation directory).
 </p>
 <p>
    Whatever the coverage jar(s) used, <code>jmockit.jar</code> (or a versioned jar obtained from the central Maven
    repository) does <em>not</em> need to be added to the classpath, unless of course the suite contains tests which use
    the JMockit mocking APIs (it will also be implicitly added to the classpath).
-   That said, it <em>may</em> be necessary to use the <code>-javaagent:jmockit.jar</code> JVM parameter
-   so that JMockit gets properly initialized at start-up. It is possible to avoid the use of this JVM
-   parameter, depending on a few conditions. See <a href="RunningTests.html">this page</a> for details.
+   That said, it <em>may</em> be necessary to use the <code>-javaagent:jmockit.jar</code> JVM parameter so that JMockit
+   gets properly initialized at start-up.
+   It is usually possible to avoid the use of this JVM parameter, depending on a few conditions.
+   See <a href="RunningTests.html">this page</a> for details.
 </p>
 <p>
-   Apart from enabling JMockit Coverage for a given test run, there are five aspects of the tool's
-   behavior which can optionally be configured for the test run:
+   Apart from enabling JMockit Coverage for a given test run, there are five aspects of the tool's behavior which can
+   optionally be configured for the test run:
 </p>
 <ol>
    <li>
@@ -237,8 +236,8 @@
    </li>
    <li>
       The <strong>output directory</strong> where output files should be written.
-      By default, the current working directory of the running JVM is used, with all "<code>.html</code>" files
-      of the HTML report generated inside a "coverage-report" sub-directory.
+      By default, the current working directory of the running JVM is used, with all "<code>.html</code>" files of the
+      HTML report generated inside a "coverage-report" sub-directory.
       Sub-directories are automatically created as needed.
    </li>
    <li>
@@ -249,20 +248,19 @@
    </li>
    <li>
       The set of Java classes which should be considered for coverage gathering.
-      By default, all classes in production code loaded during the test run and which are not inside
-      jar files will be considered.
+      By default, all classes in production code loaded during the test run and which are not inside jar files will be
+      considered.
    </li>
    <li>
       The specific set of code coverage <strong>metrics</strong> which should be considered.
-      By default, all available metrics (<em>line</em>, <em>path</em>, and <em>data</em> coverage)
-      are included.
+      By default, all available metrics (<em>line</em>, <em>path</em>, and <em>data</em> coverage) are included.
    </li>
 </ol>
 
 <h4 id="classpathConfiguration">Selecting the desired output through classpath configuration</h4>
 <p>
-   To select the desired output format(s) to be generated for a test run, add one or more of the
-   following jar files to the classpath:
+   To select the desired output format(s) to be generated for a test run, add one or more of the following jar files to
+   the classpath:
 </p>
 <ul>
    <li>
@@ -270,8 +268,7 @@
       generates an HTML report <em>without</em> call points.
    </li>
    <li>
-      <code>jmockit-coverage-<strong>htmlfull</strong>.jar</code>:
-      generates an HTML report <em>with</em> call points.
+      <code>jmockit-coverage-<strong>htmlfull</strong>.jar</code>: generates an HTML report <em>with</em> call points.
    </li>
    <li>
       <code>jmockit-coverage-<strong>serial</strong>.jar</code>:
@@ -279,24 +276,24 @@
    </li>
    <li>
       <code>jmockit-coverage-<strong>merge</strong>.jar</code>:
-      generates the same serialized data file, but after <em>merging</em> the coverage data gathered
-      by the current test run with an existing "coverage.ser" file (if any is found in the working
-      dir - otherwise has the same effect as <code>jmockit-coverage-serial.jar</code>).
+      generates the same serialized data file, but after <em>merging</em> the coverage data gathered by the current
+      test run with an existing "coverage.ser" file (if any is found in the working dir - otherwise has the same effect
+      as <code>jmockit-coverage-serial.jar</code>).
    </li>
 </ul>
 <p>
    The "htmlbasic" and "htmlfull" jars are mutually exclusive, just like "serial" and "merge" are.
    However, it <em>is</em> valid to have one of each pair in the classpath at the same time.
-   In such a case, at the end of the test run both a "coverage.ser" file and a "coverage-report" 
-   directory (unless another is specified) will be written.
+   In such a case, at the end of the test run both a "coverage.ser" file and a "coverage-report" directory (unless
+   another is specified) will be written.
 </p>
 <p>
    Each one of these <em>output specification jars</em> is empty except for the standard
    <code>META-INF/MANIFEST.MF</code> file.
-   Still, they depend on <strong><code>jmockit-coverage.jar</code></strong> and this is specified
-   through the <code>Class-Path</code> property inside <code>MANIFEST.MF</code>.
+   Still, they depend on <strong><code>jmockit-coverage.jar</code></strong> and this is specified through the
+   <code>Class-Path</code> property inside <code>MANIFEST.MF</code>.
    Consequently, if this last jar file is available in the same directory then it does not need to be explicitly added
-   to the classpath; otherwise, it (or an equivalent jar from the Maven repository) will need to be added.
+   to the classpath; otherwise, it will need to be added.
 </p>
 <p>
    If none of the output specification jars is added to the classpath, but <code>jmockit-coverage.jar</code> is, then
@@ -319,7 +316,7 @@
       <strong><code>html</code></strong>, <strong><code>html-nocp</code></strong>,
       <strong><code>serial</code></strong>, and <strong><code>merge</code></strong>.
       The "nocp" suffix stands for "no call points".
-      The use of this system property takes precedence over the presence of coverage jars in the classpath.
+      The use of this property takes precedence over any coverage jars in the classpath.
    </li>
    <li>
       <code>jmockit-coverage-<strong>outputDir</strong></code>: absolute or relative path to the output directory, to
@@ -421,14 +418,13 @@
    files are <em>executable</em>.
    Using Ant, the following task could be used:
 </p>
-<pre><code>   &lt;java
-      fork="yes" dir="myBaseDir" jar="jmockit-coverage-htmlfull.jar"
-      args="module1-outDir,anotherOutDir"/>
+<pre><code>   &lt;java fork="yes" dir="myBaseDir" jar="jmockit-coverage-htmlfull.jar">
+      &lt;arg line="module1-outDir anotherOutDir"/>
+   &lt;/java>
 </code></pre>
 <p>
    The example above uses "<code>myBaseDir</code>" as the base directory where a separate JVM instance will run.
-   Two output directories containing "<code>coverage.ser</code>" data files are specified, separated by commas, as the
-   first command line argument.
+   Two output directories containing "<code>coverage.ser</code>" data files are specified, as command line arguments.
    Other configuration parameters can be specified through the "<code>jmockit-coverage-xyz</code>" system properties.
    This separate JVM instance will read each of the "<code>coverage.ser</code>" data files, merge the coverage data in
    memory, and then generate the aggregate HTML report before exiting.
@@ -481,8 +477,7 @@
 </code></pre>
 <p>
    If the tests are run in a Java SE 5 JVM, or if for whatever reason JMockit cannot be automatically initialized when
-   running on Java SE 6 (typically, when using the IBM or Apple JDKs), then the <code>-javaagent</code> JVM parameter
-   should be used as shown above.
+   running on Java SE 6, then the <code>-javaagent</code> JVM parameter should be used as shown above.
 </p>
 
 <h3 id="switching">

@@ -399,8 +399,6 @@
          <classpath path="jmockit.jar"/>
          <classpath path="jmockit-coverage-serial.jar"/>
          <classpath>
-            <pathelement location="lib/bsh-2.0b1.jar"/>
-            <pathelement location="lib/jcommander-1.5.jar"/>
             <fileset dir="samples" includes="lib/*.jar"/>
             <pathelement location="${sampleDir}/classes"/>
             <pathelement location="${sampleDir}/test-classes"/>
@@ -409,7 +407,7 @@
       </testng>
 
       <java fork="yes" dir="samples" jar="jmockit-coverage-htmlfull.jar">
-         <arg value=".,LoginService"/>
+         <arg line=". LoginService"/>
       </java>
    </target>
 </project>

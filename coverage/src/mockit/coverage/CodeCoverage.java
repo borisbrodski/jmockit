@@ -12,43 +12,35 @@ import mockit.internal.startup.*;
 
 public final class CodeCoverage implements ClassFileTransformer, Runnable
 {
-   private static final String[] NO_ARGS = new String[0];
-
    private final ClassModification classModification;
 
    public static void main(String[] args)
    {
-      OutputFileGenerator generator = createOutputFileGenerator(args);
-      generator.generateAggregateReportFromInputFiles(args[0]);
+      OutputFileGenerator generator = createOutputFileGenerator();
+      generator.generateAggregateReportFromInputFiles(args);
    }
 
-   private static OutputFileGenerator createOutputFileGenerator(String[] args)
+   private static OutputFileGenerator createOutputFileGenerator()
    {
-      int argCount = args.length;
-      String outputFormat = argCount <= 1 ? "" : args[1];
-      String outputDir = argCount <= 2 ? "" : args[2];
-      String[] sourceDirs = argCount <= 3 ? NO_ARGS : args[3].split(",");
-
-      return new OutputFileGenerator(outputFormat, outputDir, sourceDirs);
+      OutputFileGenerator generator = new OutputFileGenerator();
+      CoverageData.instance().setWithCallPoints(generator.isWithCallPoints());
+      return generator;
    }
 
    @SuppressWarnings("UnusedDeclaration")
-   public CodeCoverage(String argsSeparatedByColon)
+   public CodeCoverage()
    {
-      String[] args = argsSeparatedByColon == null ? NO_ARGS : argsSeparatedByColon.split(":");
-
-      classModification = new ClassModification(args);
+      classModification = new ClassModification();
       classModification.redefineClassesAlreadyLoadedForCoverage();
 
-      setUpOutputFileGenerator(args);
+      setUpOutputFileGenerator();
    }
 
-   private void setUpOutputFileGenerator(String[] args)
+   private void setUpOutputFileGenerator()
    {
-      OutputFileGenerator generator = createOutputFileGenerator(args);
+      OutputFileGenerator generator = createOutputFileGenerator();
 
       if (generator.isOutputToBeGenerated()) {
-         CoverageData.instance().setWithCallPoints(generator.isWithCallPoints());
          Runtime.getRuntime().addShutdownHook(generator);
          generator.onRun = this;
       }
@@ -60,8 +52,8 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
    }
 
    public byte[] transform(
-      ClassLoader loader, String internalClassName, Class<?> classBeingRedefined,
-      ProtectionDomain protectionDomain, byte[] originalClassfile)
+      ClassLoader loader, String internalClassName, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
+      byte[] originalClassfile)
    {
       if (classBeingRedefined != null || protectionDomain == null) {
          return null;
