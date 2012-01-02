@@ -55,34 +55,24 @@ public final class OutputFile extends PrintWriter
       return cssRelPath.toString();
    }
 
-   public void writeCommonHeader()
+   public void writeCommonHeader(String subTitle)
    {
+      String titleSuffix = subTitle == null ? "" : " - " + subTitle;
+
       println("<!DOCTYPE html>");
       println("<html>");
       println("<head>");
-      println("  <title>JMockit Coverage Report</title>");
+      println("  <title>JMockit Coverage Report" + titleSuffix + "</title>");
       println("  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>");
-      print("  <link rel='stylesheet' type='text/css' href='");
-      print(relPathToOutDir);
-      println("coverage.css'/>");
-      print("  <script type='text/javascript' src='");
-      print(relPathToOutDir);
-      println("coverage.js'></script>");
+      println("  <link rel='stylesheet' type='text/css' href='" + relPathToOutDir + "coverage.css'/>");
+      println("  <script type='text/javascript' src='" + relPathToOutDir + "coverage.js'></script>");
 
       if (withPrettyPrint) {
-         print("  <script type='text/javascript' src='");
-         print(relPathToOutDir);
-         println("prettify.js'></script>");
+         println("  <script type='text/javascript' src='" + relPathToOutDir + "prettify.js'></script>");
       }
 
       println("</head>");
-
-      if (withPrettyPrint) {
-         println("<body onload='prettyPrint()'>");
-      }
-      else {
-         println("<body>");
-      }
+      println(withPrettyPrint ? "<body onload='prettyPrint()'>" : "<body>");
    }
 
    public void writeCommonFooter()

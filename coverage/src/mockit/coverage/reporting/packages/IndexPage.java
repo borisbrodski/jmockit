@@ -49,10 +49,10 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeHeader()
    {
-      ((OutputFile) output).writeCommonHeader();
+      ((OutputFile) output).writeCommonHeader(null);
 
       output.println("  <h1>JMockit Coverage Report</h1>");
-      output.println("  <table>");
+      output.println("  <table id='packages'>");
 
       writeTableCaption();
       writeTableFirstRowWithColumnTitles();
@@ -65,10 +65,16 @@ public final class IndexPage extends ListWithFilesAndPercentages
       }
       else {
          output.write("    <caption>All Packages and Files<div style='font-size: smaller'>");
-         String commaSepDirs = sourceDirs.toString();
-         output.write(commaSepDirs.substring(1, commaSepDirs.length() - 1));
+         output.write(getCommaSeparatedListOfSourceDirs());
          output.println("</div></caption>");
       }
+   }
+
+   private String getCommaSeparatedListOfSourceDirs()
+   {
+      String prefixToRemove = ".." + File.separatorChar;
+      String commaSepDirs = sourceDirs.toString().replace(prefixToRemove, "");
+      return commaSepDirs.substring(1, commaSepDirs.length() - 1);
    }
 
    private void writeTableFirstRowWithColumnTitles()
@@ -86,27 +92,31 @@ public final class IndexPage extends ListWithFilesAndPercentages
       output.print(totalFileCount);
       output.println("</th>");
 
+      int tableColumnForMetric = 1;
+
       if (Metrics.LINE_COVERAGE) {
          output.println(
-            "      <th onclick='sortTables(1)' style='cursor: n-resize' title='" +
+            "      <th onclick='sortTables(" + tableColumnForMetric + ")' style='cursor: n-resize' title='" +
             "Measures how much of the executable production code was exercised by tests.\r\n" +
             "An executable line of code contains one or more executable segments.\r\n" +
             "The percentages are calculated as 100*NE/NS, where NS is the number of segments " +
             "and NE the number of executed segments.'>Line</th>");
+         tableColumnForMetric++;
       }
 
       if (Metrics.PATH_COVERAGE) {
          output.println(
-            "      <th onclick='sortTables(2)' style='cursor: n-resize' title='" +
+            "      <th onclick='sortTables(" + tableColumnForMetric + ")' style='cursor: n-resize' title='" +
             "Measures how many of the possible execution paths through method/constructor bodies " +
             "were actually executed by tests.\r\n" +
             "The percentages are calculated as 100*NPE/NP, where NP is the number of possible " +
             "paths and NPE the number of fully executed paths.'>Path</th>");
+         tableColumnForMetric++;
       }
 
       if (Metrics.DATA_COVERAGE) {
          output.println(
-            "      <th onclick='sortTables(3)' style='cursor: n-resize' title='" +
+            "      <th onclick='sortTables(" + tableColumnForMetric + ")' style='cursor: n-resize' title='" +
             "Measures how many of the instance and static non-final fields were fully exercised " +
             "by the test run.\r\n" +
             "To be fully exercised, a field must have the last value assigned to it read by at " +
@@ -187,8 +197,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
       printIndent();
       output.write(
          packageToFiles.get(packageName).size() > 1 ?
-            "  <td class='package click' onclick='showHideFiles(this)'>" :
-            "  <td class='package'>");
+            "  <td class='package click' onclick='showHideFiles(this)'>" : "  <td class='package'>");
       output.write(packageName.replace('/', '.'));
       output.println("</td>");
    }

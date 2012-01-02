@@ -26,7 +26,7 @@ public final class ListOfCallPoints
          content.append(EOL).append("      ");
       }
 
-      content.append("  <ol style='display: none;'>").append(EOL);
+      content.append("  <ol style='display: none'>").append(EOL);
       n = 1;
 
       StackTraceElement previous = null;
@@ -76,8 +76,7 @@ public final class ListOfCallPoints
    {
       return
          ste1 == ste2 ||
-         ste1.getClassName().equals(ste2.getClassName()) &&
-         ste1.getMethodName().equals(ste2.getMethodName());
+         ste1.getClassName().equals(ste2.getClassName()) && ste1.getMethodName().equals(ste2.getMethodName());
    }
 
    public String getContents()

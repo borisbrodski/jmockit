@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting.sourceFiles;
@@ -47,9 +47,7 @@ public final class InputFile
       File[] subDirs = sourceDir.listFiles();
 
       for (File subDir : subDirs) {
-         if (
-            subDir.isDirectory() && !subDir.isHidden() && !subDir.getName().equals(topLevelPackage)
-         ) {
+         if (subDir.isDirectory() && !subDir.isHidden() && !subDir.getName().equals(topLevelPackage)) {
             file = getSourceFile(subDir, topLevelPackage, filePath);
 
             if (file != null) {
@@ -61,8 +59,11 @@ public final class InputFile
       return null;
    }
 
-   public boolean wasFileFound()
+   public boolean wasFileFound() { return sourceFile != null; }
+   
+   String getSourceFilePath()
    {
-      return sourceFile != null;
+      String path = sourceFile.getPath();
+      return path.startsWith("..") ? path.substring(3) : path;
    }
 }
