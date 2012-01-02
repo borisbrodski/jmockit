@@ -1370,11 +1370,13 @@
         <w>guice</w>
         <w>intelli</w>
         <w>jcommander</w>
+        <w>jdesktop</w>
         <w>jmockit</w>
         <w>matchers</w>
         <w>mockable</w>
         <w>mutators</w>
         <w>opcode</w>
+        <w>prettyprint</w>
         <w>repo</w>
         <w>throwables</w>
         <w>varargs</w>
