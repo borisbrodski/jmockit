@@ -18,10 +18,10 @@ final class ClassModification
    private final Set<String> modifiedClasses;
    private final ClassSelection classSelection;
 
-   ClassModification(String[] args)
+   ClassModification()
    {
       modifiedClasses = new HashSet<String>();
-      classSelection = new ClassSelection(args);
+      classSelection = new ClassSelection();
    }
 
    void redefineClassesAlreadyLoadedForCoverage()
@@ -69,7 +69,7 @@ final class ClassModification
 
    private void redefineClassForCoverage(Class<?> loadedClass, byte[] modifiedClassfile)
    {
-      ClassDefinition[] classDefs = { new ClassDefinition(loadedClass, modifiedClassfile) };
+      ClassDefinition[] classDefs = {new ClassDefinition(loadedClass, modifiedClassfile)};
 
       try {
          Startup.instrumentation().redefineClasses(classDefs);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage;
@@ -12,20 +12,15 @@ final class ClassSelection
    private final Matcher classesToInclude;
    private final Matcher classesToExclude;
 
-   ClassSelection(String[] args)
+   ClassSelection()
    {
-      classesToInclude = getClassNameRegexForClassesToInclude(args);
+      classesToInclude = getClassNameRegexForClassesToInclude();
       classesToExclude = getClassNameRegexForClassesToExclude();
    }
 
-   private Matcher getClassNameRegexForClassesToInclude(String[] args)
+   private Matcher getClassNameRegexForClassesToInclude()
    {
-      String regex = args.length == 0 ? "" : args[0];
-
-      if (regex.length() == 0) {
-         regex = System.getProperty("jmockit-coverage-classes", "");
-      }
-
+      String regex = System.getProperty("jmockit-coverage-classes", "");
       return getClassNameRegex(regex);
    }
 

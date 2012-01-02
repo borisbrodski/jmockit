@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage;
@@ -9,11 +9,12 @@ import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+import mockit.internal.util.*;
+
 public final class CallPoint implements Serializable
 {
    private static final long serialVersionUID = 362727169057343840L;
-   private static final Map<StackTraceElement, Boolean> steCache =
-      new HashMap<StackTraceElement, Boolean>();
+   private static final Map<StackTraceElement, Boolean> steCache = new HashMap<StackTraceElement, Boolean>();
    private static final Class<? extends Annotation> testAnnotation;
    private static final boolean checkTestAnnotationOnClass;
    private static final boolean checkIfTestCaseSubclass;
@@ -66,22 +67,16 @@ public final class CallPoint implements Serializable
 
    private final StackTraceElement ste;
 
-   public CallPoint(StackTraceElement ste)
-   {
-      this.ste = ste;
-   }
+   public CallPoint(StackTraceElement ste) { this.ste = ste; }
 
-   public StackTraceElement getStackTraceElement()
-   {
-      return ste;
-   }
+   public StackTraceElement getStackTraceElement() { return ste; }
 
    static CallPoint create(Throwable newThrowable)
    {
-      StackTraceElement[] stackTrace = newThrowable.getStackTrace();
+      int n = StackTraceUtil.getDepth(newThrowable);
 
-      for (int i = 2; i < stackTrace.length; i++) {
-         StackTraceElement ste = stackTrace[i];
+      for (int i = 2; i < n; i++) {
+         StackTraceElement ste = StackTraceUtil.getElement(newThrowable, i);
 
          if (isTestMethod(ste)) {
             return new CallPoint(ste);
@@ -132,13 +127,18 @@ public final class CallPoint implements Serializable
 
    private static Method findMethod(Class<?> aClass, String name)
    {
-      for (Method method : aClass.getDeclaredMethods()) {
-         if (
-            Modifier.isPublic(method.getModifiers()) && method.getReturnType() == void.class &&
-            name.equals(method.getName())
-         ) {
-            return method;
+      try {
+         for (Method method : aClass.getDeclaredMethods()) {
+            if (
+               Modifier.isPublic(method.getModifiers()) && method.getReturnType() == void.class &&
+               name.equals(method.getName())
+            ) {
+               return method;
+            }
          }
+      }
+      catch (NoClassDefFoundError e) {
+         System.out.println(e + " when attempting to find method \"" + name + "\" in " + aClass);
       }
 
       return null;

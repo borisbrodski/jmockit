@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage;
@@ -12,6 +12,7 @@ import mockit.coverage.reporting.*;
 final class OutputFileGenerator extends Thread
 {
    private static final String COVERAGE_PREFIX = "jmockit-coverage-";
+   private static final String[] ALL_SOURCE_DIRS = new String[0];
 
    Runnable onRun;
    private final String[] outputFormats;
@@ -19,46 +20,34 @@ final class OutputFileGenerator extends Thread
    private final String[] sourceDirs;
    private String[] classPath;
 
-   OutputFileGenerator(String outputFormats, String outputDir, String[] srcDirs)
+   OutputFileGenerator()
    {
-      this.outputFormats = getOutputFormat(outputFormats);
-      this.outputDir = outputDir.length() > 0 ? outputDir : getCoverageProperty("outputDir");
+      outputFormats = getOutputFormat();
+      outputDir = getCoverageProperty("outputDir");
 
-      if (srcDirs.length > 0) {
-         sourceDirs = srcDirs;
+      String commaSeparatedDirs = System.getProperty(COVERAGE_PREFIX + "srcDirs");
+
+      if (commaSeparatedDirs == null) {
+         sourceDirs = ALL_SOURCE_DIRS;
+      }
+      else if (commaSeparatedDirs.length() == 0) {
+         sourceDirs = null;
       }
       else {
-         String commaSeparatedDirs = System.getProperty(COVERAGE_PREFIX + "srcDirs");
-
-         if (commaSeparatedDirs == null) {
-            sourceDirs = srcDirs;
-         }
-         else if (commaSeparatedDirs.length() == 0) {
-            sourceDirs = null;
-         }
-         else {
-            sourceDirs = commaSeparatedDirs.split(",");
-         }
+         sourceDirs = commaSeparatedDirs.split(",");
       }
    }
 
-   private String[] getOutputFormat(String specifiedFormat)
+   private String[] getOutputFormat()
    {
-      String format;
+      String format = getCoverageProperty("output");
 
-      if (specifiedFormat.length() > 0) {
-         format = specifiedFormat;
+      if (format.length() == 0) {
+         format = outputFormatFromClasspath();
       }
-      else {
-         format = getCoverageProperty("output");
 
-         if (format.length() == 0) {
-            format = outputFormatFromClasspath();
-         }
-
-         if (format.length() == 0) {
-            format = "html-nocp";
-         }
+      if (format.length() == 0) {
+         format = "html-nocp";
       }
 
       return format.split("\\s+|\\s*,\\s*");
@@ -108,14 +97,17 @@ final class OutputFileGenerator extends Thread
 
    boolean isOutputToBeGenerated()
    {
-      return
-         hasOutputFormat("html") || hasOutputFormat("html-nocp") ||
-         hasOutputFormat("serial") || hasOutputFormat("merge");
+      return isOutputWithCallpointsToBeGenerated() || hasOutputFormat("html-nocp");
+   }
+
+   private boolean isOutputWithCallpointsToBeGenerated()
+   {
+      return hasOutputFormat("html") || hasOutputFormat("serial") || hasOutputFormat("merge");
    }
 
    boolean isWithCallPoints()
    {
-      return hasOutputFormat("html") && !hasOutputFormat("html-nocp");
+      return isOutputWithCallpointsToBeGenerated() && !hasOutputFormat("html-nocp");
    }
 
    private boolean hasOutputFormat(String format)
@@ -157,11 +149,9 @@ final class OutputFileGenerator extends Thread
       }
    }
 
-   void generateAggregateReportFromInputFiles(String commaSeparatedPaths)
+   void generateAggregateReportFromInputFiles(String[] inputPaths)
    {
       createOutputDirIfSpecifiedButNotExists();
-
-      String[] inputPaths = commaSeparatedPaths.split(",");
 
       try {
          CoverageData coverageData = new DataFileMerging(inputPaths).merge();
