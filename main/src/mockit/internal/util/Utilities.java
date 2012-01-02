@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.util;
@@ -428,7 +428,7 @@ public final class Utilities
          throw new RuntimeException(e);
       }
       catch (IllegalArgumentException e) {
-         filterStackTrace(e);
+         StackTraceUtil.filterStackTrace(e);
          throw new IllegalArgumentException("Failure to invoke method: " + method, e);
       }
       catch (InvocationTargetException e) {
@@ -838,36 +838,6 @@ public final class Utilities
          elementSort == mockit.external.asm4.Type.ARRAY ? type.getDescriptor().replace('/', '.') : type.getClassName();
 
       return loadClass(className);
-   }
-
-   public static void filterStackTrace(Throwable t)
-   {
-      StackTraceElement[] originalST = t.getStackTrace();
-      List<StackTraceElement> filteredST = new ArrayList<StackTraceElement>(originalST.length);
-
-      for (StackTraceElement ste : originalST) {
-         if (ste.getFileName() != null) {
-            String where = ste.getClassName();
-
-            if (
-               (!where.startsWith("sun.") || ste.isNativeMethod()) &&
-               !where.startsWith("org.junit.") && !where.startsWith("junit.") &&
-               !where.startsWith("org.testng.")
-            ) {
-               if (!where.startsWith("mockit.") || ste.getFileName().endsWith("Test.java")) {
-                  filteredST.add(ste);
-               }
-            }
-         }
-      }
-
-      t.setStackTrace(filteredST.toArray(new StackTraceElement[filteredST.size()]));
-
-      Throwable cause = t.getCause();
-
-      if (cause != null) {
-         filterStackTrace(cause);
-      }
    }
 
    public static void throwCheckedException(Exception exceptionToThrow)

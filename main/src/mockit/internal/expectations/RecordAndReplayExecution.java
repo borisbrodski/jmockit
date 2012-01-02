@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations;
@@ -107,12 +107,12 @@ public final class RecordAndReplayExecution
       }
       catch (Error e) {
          redefs.cleanUp();
-         Utilities.filterStackTrace(e);
+         StackTraceUtil.filterStackTrace(e);
          throw e;
       }
       catch (RuntimeException e) {
          redefs.cleanUp();
-         Utilities.filterStackTrace(e);
+         StackTraceUtil.filterStackTrace(e);
          throw e;
       }
    }

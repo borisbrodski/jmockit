@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.integration.junit3.internal;
@@ -66,7 +66,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
          originalRunBare();
       }
       catch (Throwable t) {
-         Utilities.filterStackTrace(t);
+         StackTraceUtil.filterStackTrace(t);
          throw t;
       }
       finally {

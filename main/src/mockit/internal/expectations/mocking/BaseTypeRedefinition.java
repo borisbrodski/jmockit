@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
@@ -200,12 +200,12 @@ abstract class BaseTypeRedefinition
          return instanceFactory.create();
       }
       catch (NoClassDefFoundError e) {
-         Utilities.filterStackTrace(e);
+         StackTraceUtil.filterStackTrace(e);
          e.printStackTrace();
          throw e;
       }
       catch (ExceptionInInitializerError e) {
-         Utilities.filterStackTrace(e);
+         StackTraceUtil.filterStackTrace(e);
          e.printStackTrace();
          throw e;
       }

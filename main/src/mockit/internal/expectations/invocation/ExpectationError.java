@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.invocation;
@@ -16,7 +16,7 @@ final class ExpectationError extends AssertionError
    void prepareForDisplay(String title)
    {
       message = title;
-      Utilities.filterStackTrace(this);
+      StackTraceUtil.filterStackTrace(this);
    }
 
    void defineCause(String title, AssertionError error)

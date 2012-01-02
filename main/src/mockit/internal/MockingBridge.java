@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal;
@@ -117,10 +117,11 @@ public final class MockingBridge implements InvocationHandler
 
    private static boolean wasCalledDuringClassLoading()
    {
-      StackTraceElement[] st = new Throwable().getStackTrace();
+      Throwable t = new Throwable();
+      int n = StackTraceUtil.getDepth(t);
 
-      for (int i = 3; i < st.length; i++) {
-         StackTraceElement ste = st[i];
+      for (int i = 3; i < n; i++) {
+         StackTraceElement ste = StackTraceUtil.getElement(t, i);
 
          if ("ClassLoader.java".equals(ste.getFileName()) && "loadClass".equals(ste.getMethodName())) {
             return true;

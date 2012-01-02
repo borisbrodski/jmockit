@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.integration.testng.internal;
@@ -88,7 +88,7 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
       }
       catch (RuntimeException t) {
          RecordAndReplayExecution.endCurrentReplayIfAny();
-         Utilities.filterStackTrace(t);
+         StackTraceUtil.filterStackTrace(t);
          throw t;
       }
       finally {
@@ -142,7 +142,7 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
          executeTestMethod(callBack, testResult);
       }
       catch (Throwable t) {
-         Utilities.filterStackTrace(t);
+         StackTraceUtil.filterStackTrace(t);
          //noinspection ConstantConditions
          throw (AssertionError) t;
       }
@@ -161,7 +161,7 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
          Throwable thrown = testResult.getThrowable();
 
          if (thrown != null) {
-            Utilities.filterStackTrace(thrown);
+            StackTraceUtil.filterStackTrace(thrown);
 
             if (thrown instanceof InvocationTargetException) {
                InvocationTargetException ite = (InvocationTargetException) thrown;
