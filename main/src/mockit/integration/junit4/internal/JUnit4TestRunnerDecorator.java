@@ -54,7 +54,7 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
          }
          catch (Throwable t) {
             RecordAndReplayExecution.endCurrentReplayIfAny();
-            Utilities.filterStackTrace(t);
+            StackTraceUtil.filterStackTrace(t);
             throw t;
          }
          finally {
@@ -76,7 +76,7 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
          return null; // it's a test method, therefore has void return type
       }
       catch (Throwable t) {
-         Utilities.filterStackTrace(t);
+         StackTraceUtil.filterStackTrace(t);
          throw t;
       }
       finally {
@@ -97,8 +97,7 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
                   cleanUpMocksFromPreviousTestClass();
                }
             }
-            else {
-               assert it.getAnnotation(BeforeClass.class) != null;
+            else if (it.getAnnotation(BeforeClass.class) != null) {
                updateTestClassState(null, testClass);
             }
          }
