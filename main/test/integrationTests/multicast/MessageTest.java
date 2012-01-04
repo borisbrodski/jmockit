@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package integrationTests.multicast;
@@ -192,8 +192,6 @@ public final class MessageTest
 
       for (final Client client : testClients) {
          new VerificationsInOrder() {{
-            // TODO: try creating a "setMaxDelay(msBeforeTimeout)" method that allows a given
-            // max time for the verification block to be fully satisfied.
             listener.messageSent(client);
             listener.messageDisplayedByClient(client);
             listener.messageReadByClient(client);
