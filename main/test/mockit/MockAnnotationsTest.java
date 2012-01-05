@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -48,7 +48,7 @@ public final class MockAnnotationsTest
       }
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    static class Collaborator
    {
       static Object xyz;
@@ -80,7 +80,7 @@ public final class MockAnnotationsTest
    @Test
    public void mockWithNoExpectationsPassingMockClass()
    {
-      Mockit.setUpMocks(MockCollaborator1.class);
+      setUpMocks(MockCollaborator1.class);
 
       codeUnderTest.doSomething();
    }
@@ -95,7 +95,7 @@ public final class MockAnnotationsTest
    @Test
    public void mockWithNoExpectationsPassingMockInstance()
    {
-      Mockit.setUpMocks(new MockCollaborator1());
+      setUpMocks(new MockCollaborator1());
 
       codeUnderTest.doSomething();
    }
@@ -103,13 +103,13 @@ public final class MockAnnotationsTest
    @Test(expected = IllegalArgumentException.class)
    public void attemptToSetUpMockClassLackingTheRealClass()
    {
-      Mockit.setUpMocks(Collaborator.class);
+      setUpMocks(Collaborator.class);
    }
 
    @Test(expected = IllegalArgumentException.class)
    public void attemptToSetUpMockForClassLackingAMatchingRealMethod()
    {
-      Mockit.setUpMocks(MockForClassWithoutRealMethod.class);
+      setUpMocks(MockForClassWithoutRealMethod.class);
    }
 
    @MockClass(realClass = Collaborator.class)
@@ -121,7 +121,7 @@ public final class MockAnnotationsTest
    @Test
    public void setUpMockForSingleClassPassingAnnotatedMockInstance()
    {
-      Mockit.setUpMock(new MockCollaborator1());
+      setUpMock(new MockCollaborator1());
 
       codeUnderTest.doSomething();
    }
@@ -152,7 +152,7 @@ public final class MockAnnotationsTest
    @Test
    public void setUpStubs()
    {
-      Mockit.setUpMocksAndStubs(Collaborator.class);
+      setUpMocksAndStubs(Collaborator.class);
 
       codeUnderTest.doSomething();
    }
@@ -166,7 +166,7 @@ public final class MockAnnotationsTest
    @Test
    public void setUpMockForGivenRealClass()
    {
-      Mockit.setUpMock(Collaborator.class, MockCollaborator2.class);
+      setUpMock(Collaborator.class, MockCollaborator2.class);
 
       codeUnderTest.doSomething();
    }
@@ -174,7 +174,7 @@ public final class MockAnnotationsTest
    @Test
    public void setUpMockForRealClassByName()
    {
-      Mockit.setUpMock(Collaborator.class.getName(), MockCollaborator2.class);
+      setUpMock(Collaborator.class.getName(), MockCollaborator2.class);
 
       codeUnderTest.doSomething();
    }
@@ -182,7 +182,7 @@ public final class MockAnnotationsTest
    @Test
    public void setUpMockForGivenRealClassPassingMockInstance()
    {
-      Mockit.setUpMock(Collaborator.class, new MockCollaborator2());
+      setUpMock(Collaborator.class, new MockCollaborator2());
 
       codeUnderTest.doSomething();
    }
@@ -190,7 +190,7 @@ public final class MockAnnotationsTest
    @Test
    public void setUpMockForRealClassByNamePassingMockInstance()
    {
-      Mockit.setUpMock(Collaborator.class.getName(), new MockCollaborator2());
+      setUpMock(Collaborator.class.getName(), new MockCollaborator2());
 
       codeUnderTest.doSomething();
    }
@@ -198,7 +198,7 @@ public final class MockAnnotationsTest
    @Test
    public void setUpMockForInterface()
    {
-      BusinessInterface mock = Mockit.setUpMock(new MockCollaborator3());
+      BusinessInterface mock = setUpMock(new MockCollaborator3());
 
       mock.provideSomeService();
    }
@@ -218,16 +218,16 @@ public final class MockAnnotationsTest
    @Test(expected = RuntimeException.class)
    public void setUpAndTearDownMocks()
    {
-      Mockit.setUpMocks(MockCollaborator1.class);
+      setUpMocks(MockCollaborator1.class);
       codeUnderTest.doSomething();
-      Mockit.tearDownMocks();
+      tearDownMocks();
       codeUnderTest.doSomething();
    }
 
    @Test
    public void setUpMocksFromInnerMockClassWithMockConstructor()
    {
-      Mockit.setUpMocks(new MockCollaborator4());
+      setUpMocks(new MockCollaborator4());
       assertFalse(mockExecuted);
 
       new CodeUnderTest().doSomething();
@@ -248,7 +248,7 @@ public final class MockAnnotationsTest
    @Test
    public void setUpMocksFromMockClassWithStaticMockMethod()
    {
-      Mockit.setUpMocks(MockCollaborator5.class);
+      setUpMocks(MockCollaborator5.class);
 
       codeUnderTest.doSomething();
    }
@@ -266,7 +266,7 @@ public final class MockAnnotationsTest
    @Test
    public void setUpMocksContainingExpectations()
    {
-      Mockit.setUpMocks(MockCollaboratorWithExpectations.class);
+      setUpMocks(MockCollaboratorWithExpectations.class);
 
       int result = codeUnderTest.performComputation(2, true);
 
@@ -303,7 +303,7 @@ public final class MockAnnotationsTest
    @Test(expected = AssertionError.class)
    public void setUpMockWithMinInvocationsExpectationButFailIt()
    {
-      Mockit.setUpMocks(MockCollaboratorWithMinInvocationsExpectation.class);
+      setUpMocks(MockCollaboratorWithMinInvocationsExpectation.class);
    }
 
    @MockClass(realClass = Collaborator.class)
@@ -316,7 +316,7 @@ public final class MockAnnotationsTest
    @Test(expected = AssertionError.class)
    public void setUpMockWithMaxInvocationsExpectationButFailIt()
    {
-      Mockit.setUpMocks(MockCollaboratorWithMaxInvocationsExpectation.class);
+      setUpMocks(MockCollaboratorWithMaxInvocationsExpectation.class);
 
       new Collaborator().setValue(23);
    }
@@ -331,7 +331,7 @@ public final class MockAnnotationsTest
    @Test(expected = AssertionError.class)
    public void setUpMockWithInvocationsExpectationButFailIt()
    {
-      Mockit.setUpMocks(MockCollaboratorWithInvocationsExpectation.class);
+      setUpMocks(MockCollaboratorWithInvocationsExpectation.class);
 
       codeUnderTest.doSomething();
       codeUnderTest.doSomething();
@@ -349,7 +349,7 @@ public final class MockAnnotationsTest
    @Test(expected = RuntimeException.class)
    public void setUpReentrantMock()
    {
-      Mockit.setUpMocks(MockCollaboratorWithReentrantMock.class);
+      setUpMocks(MockCollaboratorWithReentrantMock.class);
 
       codeUnderTest.doSomething();
    }
@@ -371,7 +371,7 @@ public final class MockAnnotationsTest
    @Test
    public void setUpMockForConstructor()
    {
-      Mockit.setUpMocks(MockCollaboratorWithConstructorMock.class);
+      setUpMocks(MockCollaboratorWithConstructorMock.class);
 
       new Collaborator(5);
    }
@@ -389,7 +389,7 @@ public final class MockAnnotationsTest
    @Test
    public void setUpMockForStaticMethod()
    {
-      Mockit.setUpMocks(MockCollaboratorForStaticMethod.class);
+      setUpMocks(MockCollaboratorForStaticMethod.class);
 
       Collaborator.doInternal();
    }
@@ -404,33 +404,33 @@ public final class MockAnnotationsTest
    @Test
    public void setUpMockForSubclassConstructor()
    {
-      Mockit.setUpMocks(MockSubCollaborator.class);
+      setUpMocks(MockSubCollaborator.class);
 
-      new SubCollaborator();
+      new SubCollaborator(31);
    }
 
    static class SubCollaborator extends Collaborator
    {
-      SubCollaborator() {}
+      SubCollaborator(int i) { throw new RuntimeException("" + i); }
    }
 
    @MockClass(realClass = SubCollaborator.class)
    static class MockSubCollaborator
    {
       @Mock(invocations = 1)
-      void $init() {}
+      void $init(int i) { assert i == 31; }
 
-      @SuppressWarnings({"UnusedDeclaration"})
+      @SuppressWarnings("UnusedDeclaration")
       native void doNothing();
    }
 
    @Test // Note: this test only works under JDK 1.6+; JDK 1.5 does not support redefining natives.
    public void mockNativeMethodInClassWithRegisterNatives()
    {
-      Mockit.setUpMocks(MockSystem.class);
+      setUpMocks(MockSystem.class);
       assertEquals(0, System.nanoTime());
 
-      Mockit.tearDownMocks();
+      tearDownMocks();
       assertTrue(System.nanoTime() > 0);
    }
 
@@ -444,17 +444,17 @@ public final class MockAnnotationsTest
    @Test // Note: this test only works under JDK 1.6+; JDK 1.5 does not support redefining natives.
    public void mockNativeMethodInClassWithoutRegisterNatives() throws Exception
    {
-      Mockit.setUpMocks(MockFloat.class);
+      setUpMocks(MockFloat.class);
       assertEquals(0.0, Float.intBitsToFloat(2243019), 0.0);
 
-      Mockit.tearDownMocks();
+      tearDownMocks();
       assertTrue(Float.intBitsToFloat(2243019) > 0);
    }
 
    @MockClass(realClass = Float.class)
    static class MockFloat
    {
-      @SuppressWarnings({"UnusedDeclaration"})
+      @SuppressWarnings("UnusedDeclaration")
       @Mock
       public static float intBitsToFloat(int bits) { return 0; }
    }
@@ -462,12 +462,12 @@ public final class MockAnnotationsTest
    @Test
    public void setUpStartupMock()
    {
-      Mockit.setUpStartupMocks(MockAnotherCollaborator.class);
+      setUpStartupMocks(MockAnotherCollaborator.class);
       assertEquals(0, TestRun.mockFixture().getRedefinedClassCount());
       assertFalse(AnotherCollaborator.doSomething());
 
       // Startup mock must remain in effect even after tearing down all (regular) mocks.
-      Mockit.tearDownMocks();
+      tearDownMocks();
       assertFalse(AnotherCollaborator.doSomething());
 
       // A different, but local, mocking of the same real class must be restored to the definition of the startup mock.
@@ -476,7 +476,7 @@ public final class MockAnnotationsTest
          @Mock boolean doSomething() { return true; }
       };
       assertTrue(AnotherCollaborator.doSomething());
-      Mockit.tearDownMocks(AnotherCollaborator.class);
+      tearDownMocks(AnotherCollaborator.class);
       assertFalse(AnotherCollaborator.doSomething());
    }
 
@@ -495,7 +495,7 @@ public final class MockAnnotationsTest
    public void setUpMockForJREClass()
    {
       MockThread mockThread = new MockThread();
-      Mockit.setUpMocks(mockThread);
+      setUpMocks(mockThread);
 
       Thread.currentThread().interrupt();
 
@@ -514,7 +514,7 @@ public final class MockAnnotationsTest
    @Test
    public void mockJREMethodAndConstructorForGivenRealClass() throws Exception
    {
-      Mockit.setUpMock(LoginContext.class, MockLoginContextWithoutAnnotation.class);
+      setUpMock(LoginContext.class, MockLoginContextWithoutAnnotation.class);
 
       new LoginContext("test", (CallbackHandler) null).login();
    }
@@ -522,7 +522,7 @@ public final class MockAnnotationsTest
    @Test
    public void mockJREMethodAndConstructorForGivenRealClassWithGivenMockInstance() throws Exception
    {
-      Mockit.setUpMock(LoginContext.class, new MockLoginContextWithoutAnnotation());
+      setUpMock(LoginContext.class, new MockLoginContextWithoutAnnotation());
 
       new LoginContext("test", (CallbackHandler) null).login();
    }
@@ -545,7 +545,7 @@ public final class MockAnnotationsTest
    @Test
    public void mockJREMethodAndConstructorUsingAnnotatedMockClass() throws Exception
    {
-      Mockit.setUpMocks(new MockLoginContext());
+      setUpMocks(new MockLoginContext());
 
       new LoginContext("test", (CallbackHandler) null).login();
    }
@@ -570,7 +570,7 @@ public final class MockAnnotationsTest
    @Test
    public void mockJREMethodAndConstructorWithAnonymousMockClass() throws Exception
    {
-      Mockit.setUpMock(LoginContext.class, new Object()
+      setUpMock(LoginContext.class, new Object()
       {
          @Mock(minInvocations = 1)
          void $init(String name) { assertEquals("test", name); }
@@ -606,14 +606,14 @@ public final class MockAnnotationsTest
    @Test
    public void mockPrivateMethodInJREClassByName() throws Exception
    {
-      Mockit.setUpMock(LoginContext.class.getName(), new MockLoginContextForPrivateMethod());
+      setUpMock(LoginContext.class.getName(), new MockLoginContextForPrivateMethod());
 
-      Deencapsulation.invoke(new LoginContext(""), "clearState");
+      invoke(new LoginContext(""), "clearState");
    }
 
    static final class MockLoginContextForPrivateMethod
    {
-      @Mock @SuppressWarnings({"UnusedDeclaration"})
+      @Mock @SuppressWarnings("UnusedDeclaration")
       void $init(String name) {}
 
       @Mock(invocations = 1)
@@ -623,7 +623,7 @@ public final class MockAnnotationsTest
    @Test
    public void mockJREClassWithStubs() throws Exception
    {
-      Mockit.setUpMocks(new MockLoginContextWithStubs());
+      setUpMocks(new MockLoginContextWithStubs());
 
       LoginContext context = new LoginContext("");
       context.login();
@@ -640,7 +640,7 @@ public final class MockAnnotationsTest
    @Test
    public void mockJREClassWithInverseStubs() throws Exception
    {
-      Mockit.setUpMocks(MockLoginContextWithInverseStubs.class);
+      setUpMocks(MockLoginContextWithInverseStubs.class);
 
       LoginContext context = new LoginContext("", null, null);
       context.login();
@@ -702,7 +702,7 @@ public final class MockAnnotationsTest
    @Test
    public void stubOutStaticInitializer() throws Exception
    {
-      Mockit.setUpMock(new MockForClassWithInitializer());
+      setUpMock(new MockForClassWithInitializer());
 
       AnotherClassWithStaticInitializers.doSomething();
    }
@@ -717,7 +717,7 @@ public final class MockAnnotationsTest
    @Test
    public void mockJREInterface() throws Exception
    {
-      CallbackHandler callbackHandler = Mockit.setUpMock(new MockCallbackHandler());
+      CallbackHandler callbackHandler = setUpMock(new MockCallbackHandler());
 
       callbackHandler.handle(new Callback[] {new NameCallback("Enter name:")});
    }
@@ -878,7 +878,7 @@ public final class MockAnnotationsTest
          @Mock
          void $init(String pathName)
          {
-            Deencapsulation.setField(it, "path", "fixedPrefix/" + pathName);
+            setField(it, "path", "fixedPrefix/" + pathName);
          }
       };
 
@@ -889,7 +889,7 @@ public final class MockAnnotationsTest
    @Test
    public void stubbedOutAnnotatedMethodInMockedClass() throws Exception
    {
-      Mockit.setUpMocks(MockCollaborator7.class);
+      setUpMocks(MockCollaborator7.class);
 
       assertTrue(Collaborator.class.getDeclaredMethod("doInternal").isAnnotationPresent(Deprecated.class));
    }
