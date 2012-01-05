@@ -163,11 +163,10 @@
    <target name="createjavadocs">
       <delete dir="www/javadoc" includes="**/*.html" excludes="overview.html" quiet="true"/>
       <javadoc
-         destdir="www/javadoc" classpathref="common.classpath"
-         stylesheetfile="www/javadoc/stylesheet.css" overview="www/javadoc/overview.html"
-         nodeprecated="true" noindex="true" notree="true" nohelp="true" breakiterator="true"
-         source="1.5" windowtitle="JMockit Toolkit API" doctitle="JMockit Toolkit API Documentation"
-         encoding="UTF-8" charset="UTF-8" includenosourcepackages="true">
+         destdir="www/javadoc" classpathref="common.classpath" overview="www/javadoc/overview.html"
+         nodeprecated="true" noindex="true" notree="true" nohelp="true" breakiterator="yes"
+         windowtitle="JMockit Toolkit API" doctitle="JMockit Toolkit API Documentation"
+         encoding="UTF-8" charset="UTF-8" locale="en">
          <arg line="-notimestamp -quiet"/>
          <fileset dir="${basedir}/main/src">
             <include name="mockit/*.java"/>

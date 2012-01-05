@@ -1,806 +1,539 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!--NewPage-->
-<HTML>
-<HEAD>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<TITLE>
-VerificationsInOrder (JMockit Toolkit API)
-</TITLE>
-
-
-<LINK REL ="stylesheet" TYPE="text/css" HREF="../stylesheet.css" TITLE="Style">
-
-<SCRIPT type="text/javascript">
-function windowTitle()
-{
+<!-- NewPage -->
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+<title>VerificationsInOrder (JMockit Toolkit API)</title>
+<link rel="stylesheet" type="text/css" href="../stylesheet.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
     if (location.href.indexOf('is-external=true') == -1) {
         parent.document.title="VerificationsInOrder (JMockit Toolkit API)";
     }
-}
-</SCRIPT>
-<NOSCRIPT>
-</NOSCRIPT>
-
-</HEAD>
-
-<BODY BGCOLOR="white" onload="windowTitle();">
-<HR>
-
-
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
 <!-- ========= START OF TOP NAVBAR ======= -->
-<A NAME="navbar_top"><!-- --></A>
-<A HREF="#skip-navbar_top" title="Skip navigation links"></A>
-<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0" SUMMARY="">
-<TR>
-<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
-<A NAME="navbar_top_firstrow"><!-- --></A>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3" SUMMARY="">
-  <TR ALIGN="center" VALIGN="top">
-  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../overview-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
-  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
-  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
-  </TR>
-</TABLE>
-</TD>
-<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
-</TD>
-</TR>
-
-<TR>
-<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="../mockit/Verifications.html" title="class in mockit"><B>PREV CLASS</B></A>&nbsp;
-&nbsp;NEXT CLASS</FONT></TD>
-<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-  <A HREF="../index.html?mockit/VerificationsInOrder.html" target="_top"><B>FRAMES</B></A>  &nbsp;
-&nbsp;<A HREF="VerificationsInOrder.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
-&nbsp;<SCRIPT type="text/javascript">
-  <!--
+<div class="topNav"><a name="navbar_top">
+<!--   -->
+</a><a href="#skip-navbar_top" title="Skip navigation links"></a><a name="navbar_top_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+</ul>
+<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></em></div>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../mockit/Verifications.html" title="class in mockit"><span class="strong">Prev Class</span></a></li>
+<li>Next Class</li>
+</ul>
+<ul class="navList">
+<li><a href="../index.html?mockit/VerificationsInOrder.html" target="_top">Frames</a></li>
+<li><a href="VerificationsInOrder.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
   if(window==top) {
-    document.writeln('<A HREF="../allclasses-noframe.html"><B>All Classes</B></A>');
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
   }
   //-->
-</SCRIPT>
-<NOSCRIPT>
-  <A HREF="../allclasses-noframe.html"><B>All Classes</B></A>
-</NOSCRIPT>
-
-
-</FONT></TD>
-</TR>
-<TR>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
-  SUMMARY:&nbsp;NESTED&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
-DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
-</TR>
-</TABLE>
-<A NAME="skip-navbar_top"></A>
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#field_summary">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li><a href="#field_detail">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_top">
+<!--   -->
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
-
-<HR>
 <!-- ======== START OF CLASS DATA ======== -->
-<H2>
-<FONT SIZE="-1">
-mockit</FONT>
-<BR>
-Class VerificationsInOrder</H2>
-<PRE>
-<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</A>
-  <IMG SRC="../resources/inherit.gif" ALT="extended by "><A HREF="../mockit/Verifications.html" title="class in mockit">mockit.Verifications</A>
-      <IMG SRC="../resources/inherit.gif" ALT="extended by "><B>mockit.VerificationsInOrder</B>
-</PRE>
-<HR>
-<DL>
-<DT><PRE>public abstract class <B>VerificationsInOrder</B><DT>extends <A HREF="../mockit/Verifications.html" title="class in mockit">Verifications</A></DL>
-</PRE>
-
-<P>
-Same as <A HREF="../mockit/Verifications.html" title="class in mockit"><CODE>Verifications</CODE></A>, but checking that invocations in the replay phase occurred in the same order as
+<div class="header">
+<div class="subTitle">mockit</div>
+<h2 title="Class VerificationsInOrder" class="title">Class VerificationsInOrder</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</a></li>
+<li>
+<ul class="inheritance">
+<li><a href="../mockit/Verifications.html" title="class in mockit">mockit.Verifications</a></li>
+<li>
+<ul class="inheritance">
+<li>mockit.VerificationsInOrder</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<hr>
+<br>
+<pre>public abstract class <span class="strong">VerificationsInOrder</span>
+extends <a href="../mockit/Verifications.html" title="class in mockit">Verifications</a></pre>
+<div class="block">Same as <a href="../mockit/Verifications.html" title="class in mockit"><code>Verifications</code></a>, but checking that invocations in the replay phase occurred in the same order as
  specified in this <em>ordered</em> verification block.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#VerificationInOrder">In the
- Tutorial</a>
-<P>
-
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#VerificationsInOrder()"><CODE>VerificationsInOrder()</CODE></A>, 
-<A HREF="../mockit/VerificationsInOrder.html#VerificationsInOrder(int)"><CODE>VerificationsInOrder(int)</CODE></A>, 
-<A HREF="../mockit/VerificationsInOrder.html#unverifiedInvocations()"><CODE>unverifiedInvocations()</CODE></A>, 
-<A HREF="../mockit/VerificationsInOrder.html#verifiedInvocations(mockit.Verifications)"><CODE>verifiedInvocations(Verifications)</CODE></A></DL>
-<HR>
-
-<P>
+ Tutorial</a></div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#VerificationsInOrder()"><code>VerificationsInOrder()</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#VerificationsInOrder(int)"><code>VerificationsInOrder(int)</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#unverifiedInvocations()"><code>unverifiedInvocations()</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#verifiedInvocations(mockit.Verifications)"><code>verifiedInvocations(Verifications)</code></a></dd></dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
 <!-- =========== FIELD SUMMARY =========== -->
-
-<A NAME="field_summary"><!-- --></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
-<B>Field Summary</B></FONT></TH>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#$">$</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A value assigned to this field will be used as a prefix for the error message to be reported
- if and when the current expectation is violated.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#any">any</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Matches any <code>Object</code> reference for the relevant parameter.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#anyBoolean">anyBoolean</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Matches any <code>boolean</code> or <code>Boolean</code> value for the relevant parameter.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#anyByte">anyByte</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Matches any <code>byte</code> or <code>Byte</code> value for the relevant parameter.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Character.html?is-external=true" title="class or interface in java.lang">Character</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#anyChar">anyChar</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Matches any <code>char</code> or <code>Character</code> value for the relevant parameter.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#anyDouble">anyDouble</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Matches any <code>double</code> or <code>Double</code> value for the relevant parameter.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#anyFloat">anyFloat</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Matches any <code>float</code> or <code>Float</code> value for the relevant parameter.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#anyInt">anyInt</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Matches any <code>int</code> or <code>Integer</code> value for the relevant parameter.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#anyLong">anyLong</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Matches any <code>long</code> or <code>Long</code> value for the relevant parameter.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#anyShort">anyShort</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Matches any <code>short</code> or <code>Short</code> value for the relevant parameter.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#anyString">anyString</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Matches any <code>String</code> value for the relevant parameter.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#forEachInvocation">forEachInvocation</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An object assigned to this field will be taken as a handler for each invocation matching the current expectation,
- with the purpose of validating invocation arguments.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;int</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#maxTimes">maxTimes</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the maximum number of times that invocations matching
- the current expectation should occur during replay.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;int</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#minTimes">minTimes</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the minimum number of times that invocations matching
- the current expectation should occur during replay.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected static&nbsp;int</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#times">times</A></B></CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A non-negative value assigned to this field will be taken as the exact number of times that
- invocations matching the current expectation should occur during replay.</TD>
-</TR>
-</TABLE>
-&nbsp;
+<ul class="blockList">
+<li class="blockList"><a name="field_summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Field and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#$">$</a></strong></code>
+<div class="block">A value assigned to this field will be used as a prefix for the error message to be reported
+ if and when the current expectation is violated.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#any">any</a></strong></code>
+<div class="block">Matches any <code>Object</code> reference for the relevant parameter.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#anyBoolean">anyBoolean</a></strong></code>
+<div class="block">Matches any <code>boolean</code> or <code>Boolean</code> value for the relevant parameter.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#anyByte">anyByte</a></strong></code>
+<div class="block">Matches any <code>byte</code> or <code>Byte</code> value for the relevant parameter.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Character.html?is-external=true" title="class or interface in java.lang">Character</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#anyChar">anyChar</a></strong></code>
+<div class="block">Matches any <code>char</code> or <code>Character</code> value for the relevant parameter.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#anyDouble">anyDouble</a></strong></code>
+<div class="block">Matches any <code>double</code> or <code>Double</code> value for the relevant parameter.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#anyFloat">anyFloat</a></strong></code>
+<div class="block">Matches any <code>float</code> or <code>Float</code> value for the relevant parameter.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#anyInt">anyInt</a></strong></code>
+<div class="block">Matches any <code>int</code> or <code>Integer</code> value for the relevant parameter.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#anyLong">anyLong</a></strong></code>
+<div class="block">Matches any <code>long</code> or <code>Long</code> value for the relevant parameter.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#anyShort">anyShort</a></strong></code>
+<div class="block">Matches any <code>short</code> or <code>Short</code> value for the relevant parameter.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#anyString">anyString</a></strong></code>
+<div class="block">Matches any <code>String</code> value for the relevant parameter.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#forEachInvocation">forEachInvocation</a></strong></code>
+<div class="block">An object assigned to this field will be taken as a handler for each invocation matching the current expectation,
+ with the purpose of validating invocation arguments.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected static int</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#maxTimes">maxTimes</a></strong></code>
+<div class="block">A non-negative value assigned to this field will be taken as the maximum number of times that invocations matching
+ the current expectation should occur during replay.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected static int</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#minTimes">minTimes</a></strong></code>
+<div class="block">A non-negative value assigned to this field will be taken as the minimum number of times that invocations matching
+ the current expectation should occur during replay.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected static int</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#times">times</a></strong></code>
+<div class="block">A non-negative value assigned to this field will be taken as the exact number of times that
+ invocations matching the current expectation should occur during replay.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
-
-<A NAME="constructor_summary"><!-- --></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
-<B>Constructor Summary</B></FONT></TH>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#VerificationsInOrder()">VerificationsInOrder</A></B>()</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Begins <em>in-order</em> verification on the mocked types/instances invoked during the replay phase of the test.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected </CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#VerificationsInOrder(int)">VerificationsInOrder</A></B>(int&nbsp;numberOfIterations)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Begins <em>in-order</em> verification on the mocked types/instances invoked during the replay phase of the test.</TD>
-</TR>
-</TABLE>
-&nbsp;
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier</th>
+<th class="colLast" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected </code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#VerificationsInOrder()">VerificationsInOrder</a></strong>()</code>
+<div class="block">Begins <em>in-order</em> verification on the mocked types/instances invoked during the replay phase of the test.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected </code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#VerificationsInOrder(int)">VerificationsInOrder</a></strong>(int&nbsp;numberOfIterations)</code>
+<div class="block">Begins <em>in-order</em> verification on the mocked types/instances invoked during the replay phase of the test.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
 <!-- ========== METHOD SUMMARY =========== -->
-
-<A NAME="method_summary"><!-- --></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
-<B>Method Summary</B></FONT></TH>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#getField(java.lang.Class, java.lang.Class)">getField</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-         <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;fieldType)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a non-accessible static field defined in a given class.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#getField(java.lang.Class, java.lang.String)">getField</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-         <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a non-accessible static field defined in a given class.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#getField(java.lang.Object, java.lang.Class)">getField</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-         <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;fieldType)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a non-accessible field from a given object, <em>assuming</em> there is only
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#getField(java.lang.Class, java.lang.Class)">getField</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;fieldOwner,
+        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;fieldType)</code>
+<div class="block">Gets the value of a non-accessible static field defined in a given class.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#getField(java.lang.Class, java.lang.String)">getField</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;fieldOwner,
+        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName)</code>
+<div class="block">Gets the value of a non-accessible static field defined in a given class.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#getField(java.lang.Object, java.lang.Class)">getField</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldOwner,
+        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;fieldType)</code>
+<div class="block">Gets the value of a non-accessible field from a given object, <em>assuming</em> there is only
  one field declared in the class of the given object whose type can receive values of the
- specified field type.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#getField(java.lang.Object, java.lang.String)">getField</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-         <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of a non-accessible field from a given object.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)">invoke</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;methodOwner,
-       <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
-       <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an expectation for a <code>static</code> method, with a given list of arguments.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)">invoke</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;objectWithMethod,
-       <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
-       <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an expectation for an instance method, with a given list of arguments.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)">newInnerInstance</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;innerClassSimpleName,
-                 <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;outerClassInstance,
-                 <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullInitArgs)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The same as <A HREF="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but for instantiating an inner non-accessible class
- of some other class, and where all other (if any) initialization arguments are known to be non null.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)">newInstance</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;className,
-            <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;[]&nbsp;parameterTypes,
-            <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;initArgs)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies an expectation for a constructor of a given class.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Object...)">newInstance</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;className,
-            <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullInitArgs)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The same as <A HREF="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but inferring parameter types from non-null argument
- values.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#onInstance(T)">onInstance</A></B>(T&nbsp;mockedInstance)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specify that the next invocation on the given mocked instance must match a corresponding invocation on the
- <em>same</em> instance in the replay phase.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.Object)">setField</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-         <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A>, except that the field is looked up by the
- type of the given field value instead of by name.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)">setField</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-         <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName,
-         <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value of a non-accessible static field on a given class.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#setField(java.lang.Object, java.lang.Object)">setField</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-         <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><CODE>setField(Object, String, Object)</CODE></A>, except that the field is looked up by the
- type of the given field value instead of by name.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#setField(java.lang.Object, java.lang.String, java.lang.Object)">setField</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-         <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName,
-         <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value of a non-accessible field on a given object.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#unverifiedInvocations()">unverifiedInvocations</A></B>()</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Accounts for a sequence of non-strict invocations executed in the replay phase that are not explicitly verified
- in this block or in a previous block.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected &nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#verifiedInvocations(mockit.Verifications)">verifiedInvocations</A></B>(<A HREF="../mockit/Verifications.html" title="class in mockit">Verifications</A>&nbsp;alreadyVerified)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Accounts for a sequence of non-strict invocations executed in the replay phase that have already been explicitly
- verified in a previous verification block.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#with(mockit.Delegate)">with</A></B>(<A HREF="../mockit/Delegate.html" title="interface in mockit">Delegate</A>&lt;T&gt;&nbsp;delegateObjectWithInvocationHandlerMethod)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a custom argument matcher for a parameter in the current expectation.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#with(java.lang.Object)">with</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a custom argument matcher for a parameter in the current expectation.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#with(T, java.lang.Object)">with</A></B>(T&nbsp;argValue,
-     <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a custom argument matcher for a parameter in the current expectation.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withAny(T)">withAny</A></B>(T&nbsp;arg)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but matching any argument value of the appropriate type.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected &nbsp;double</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withEqual(double, double)">withEqual</A></B>(double&nbsp;value,
-          double&nbsp;delta)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a numeric invocation argument in the replay phase is
- sufficiently close to the given value.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected &nbsp;float</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withEqual(float, double)">withEqual</A></B>(float&nbsp;value,
-          double&nbsp;delta)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a numeric invocation argument in the replay phase is
- sufficiently close to the given value.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withEqual(T)">withEqual</A></B>(T&nbsp;arg)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When called as argument for a method/constructor invocation in the recording or verification phase of a test,
- creates a new matcher that will check if the given value is <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang"><CODE>equal</CODE></A> to the
- corresponding invocation argument in the replay phase.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withInstanceLike(T)">withInstanceLike</A></B>(T&nbsp;object)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay phase is an instance of
- the same class as the given object.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withInstanceOf(java.lang.Class)">withInstanceOf</A></B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;argClass)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay phase is an instance of
- the given class.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; 
-<BR>
-T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withMatch(T)">withMatch</A></B>(T&nbsp;regex)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the replay phase matches
- the given <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex"><CODE>regular expression</CODE></A>.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withNotEqual(T)">withNotEqual</A></B>(T&nbsp;arg)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that the invocation argument in the replay phase is different
- from the given value.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withNotNull()">withNotNull</A></B>()</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay phase is not
- <code>null</code>.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withNull()">withNull</A></B>()</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay phase is <code>null</code>.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; 
-<BR>
-T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withPrefix(T)">withPrefix</A></B>(T&nbsp;text)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the replay phase starts
- with the given text.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T&gt; T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withSameInstance(T)">withSameInstance</A></B>(T&nbsp;object)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay phase is the exact same
- instance as the one in the recorded/verified invocation.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; 
-<BR>
-T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withSubstring(T)">withSubstring</A></B>(T&nbsp;text)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the replay phase contains
- the given text as a substring.</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>protected 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
-<TR ALIGN="right" VALIGN="">
-<TD NOWRAP><FONT SIZE="-1">
-<CODE>&lt;T extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; 
-<BR>
-T</CODE></FONT></TD>
-</TR>
-</TABLE>
-</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../mockit/VerificationsInOrder.html#withSuffix(T)">withSuffix</A></B>(T&nbsp;text)</CODE>
-
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the replay phase ends with
- the given text.</TD>
-</TR>
-</TABLE>
-&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
-<TH ALIGN="left"><B>Methods inherited from class java.lang.<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A></B></TH>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang">clone</A>, <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang">equals</A>, <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang">finalize</A>, <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang">getClass</A>, <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#hashCode()" title="class or interface in java.lang">hashCode</A>, <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang">notify</A>, <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang">notifyAll</A>, <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang">toString</A>, <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang">wait</A>, <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang">wait</A>, <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait(long, int)" title="class or interface in java.lang">wait</A></CODE></TD>
-</TR>
-</TABLE>
-&nbsp;
-<P>
-
+ specified field type.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#getField(java.lang.Object, java.lang.String)">getField</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldOwner,
+        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName)</code>
+<div class="block">Gets the value of a non-accessible field from a given object.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)">invoke</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;methodOwner,
+      <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName,
+      <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;methodArgs)</code>
+<div class="block">Specifies an expectation for a <code>static</code> method, with a given list of arguments.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)">invoke</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;objectWithMethod,
+      <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName,
+      <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;methodArgs)</code>
+<div class="block">Specifies an expectation for an instance method, with a given list of arguments.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)">newInnerInstance</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;innerClassSimpleName,
+                <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;outerClassInstance,
+                <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;nonNullInitArgs)</code>
+<div class="block">The same as <a href="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><code>newInstance(String, Class[], Object...)</code></a>, but for instantiating an inner non-accessible class
+ of some other class, and where all other (if any) initialization arguments are known to be non null.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)">newInstance</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;[]&nbsp;parameterTypes,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;initArgs)</code>
+<div class="block">Specifies an expectation for a constructor of a given class.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Object...)">newInstance</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;nonNullInitArgs)</code>
+<div class="block">The same as <a href="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><code>newInstance(String, Class[], Object...)</code></a>, but inferring parameter types from non-null argument
+ values.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#onInstance(T)">onInstance</a></strong>(T&nbsp;mockedInstance)</code>
+<div class="block">Specify that the next invocation on the given mocked instance must match a corresponding invocation on the
+ <em>same</em> instance in the replay phase.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.Object)">setField</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;fieldOwner,
+        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldValue)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><code>setField(Class, String, Object)</code></a>, except that the field is looked up by the
+ type of the given field value instead of by name.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)">setField</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;fieldOwner,
+        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName,
+        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldValue)</code>
+<div class="block">Sets the value of a non-accessible static field on a given class.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#setField(java.lang.Object, java.lang.Object)">setField</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldOwner,
+        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldValue)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><code>setField(Object, String, Object)</code></a>, except that the field is looked up by the
+ type of the given field value instead of by name.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#setField(java.lang.Object, java.lang.String, java.lang.Object)">setField</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldOwner,
+        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName,
+        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldValue)</code>
+<div class="block">Sets the value of a non-accessible field on a given object.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#unverifiedInvocations()">unverifiedInvocations</a></strong>()</code>
+<div class="block">Accounts for a sequence of non-strict invocations executed in the replay phase that are not explicitly verified
+ in this block or in a previous block.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#verifiedInvocations(mockit.Verifications)">verifiedInvocations</a></strong>(<a href="../mockit/Verifications.html" title="class in mockit">Verifications</a>&nbsp;alreadyVerified)</code>
+<div class="block">Accounts for a sequence of non-strict invocations executed in the replay phase that have already been explicitly
+ verified in a previous verification block.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#with(mockit.Delegate)">with</a></strong>(<a href="../mockit/Delegate.html" title="interface in mockit">Delegate</a>&lt;T&gt;&nbsp;delegateObjectWithInvocationHandlerMethod)</code>
+<div class="block">Adds a custom argument matcher for a parameter in the current expectation.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#with(java.lang.Object)">with</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;argumentMatcher)</code>
+<div class="block">Adds a custom argument matcher for a parameter in the current expectation.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#with(T, java.lang.Object)">with</a></strong>(T&nbsp;argValue,
+    <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;argumentMatcher)</code>
+<div class="block">Adds a custom argument matcher for a parameter in the current expectation.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withAny(T)">withAny</a></strong>(T&nbsp;arg)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but matching any argument value of the appropriate type.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected double</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withEqual(double, double)">withEqual</a></strong>(double&nbsp;value,
+         double&nbsp;delta)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a numeric invocation argument in the replay phase is
+ sufficiently close to the given value.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected float</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withEqual(float, double)">withEqual</a></strong>(float&nbsp;value,
+         double&nbsp;delta)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a numeric invocation argument in the replay phase is
+ sufficiently close to the given value.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withEqual(T)">withEqual</a></strong>(T&nbsp;arg)</code>
+<div class="block">When called as argument for a method/constructor invocation in the recording or verification phase of a test,
+ creates a new matcher that will check if the given value is <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang"><code>equal</code></a> to the
+ corresponding invocation argument in the replay phase.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withInstanceLike(T)">withInstanceLike</a></strong>(T&nbsp;object)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is an instance of
+ the same class as the given object.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withInstanceOf(java.lang.Class)">withInstanceOf</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;argClass)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is an instance of
+ the given class.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;<br>T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withMatch(T)">withMatch</a></strong>(T&nbsp;regex)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase matches
+ the given <a href="http://download.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex"><code>regular expression</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withNotEqual(T)">withNotEqual</a></strong>(T&nbsp;arg)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that the invocation argument in the replay phase is different
+ from the given value.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withNotNull()">withNotNull</a></strong>()</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is not
+ <code>null</code>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withNull()">withNull</a></strong>()</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is <code>null</code>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;<br>T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withPrefix(T)">withPrefix</a></strong>(T&nbsp;text)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase starts
+ with the given text.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withSameInstance(T)">withSameInstance</a></strong>(T&nbsp;object)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is the exact same
+ instance as the one in the recorded/verified invocation.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;<br>T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withSubstring(T)">withSubstring</a></strong>(T&nbsp;text)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase contains
+ the given text as a substring.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;<br>T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withSuffix(T)">withSuffix</a></strong>(T&nbsp;text)</code>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase ends with
+ the given text.</div>
+</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
+<code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang">clone</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang">equals</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang">finalize</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang">getClass</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#hashCode()" title="class or interface in java.lang">hashCode</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang">notify</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang">notifyAll</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang">toString</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang">wait</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang">wait</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait(long, int)" title="class or interface in java.lang">wait</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
 <!-- ============ FIELD DETAIL =========== -->
-
-<A NAME="field_detail"><!-- --></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2">
-<B>Field Detail</B></FONT></TH>
-</TR>
-</TABLE>
-
-<A NAME="$"><!-- --></A><H3>
-$</H3>
-<PRE>
-protected static <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A> <B>$</B></PRE>
-<DL>
-<DD>A value assigned to this field will be used as a prefix for the error message to be reported
+<ul class="blockList">
+<li class="blockList"><a name="field_detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a name="$">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>$</h4>
+<pre>protected static&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a> $</pre>
+<div class="block">A value assigned to this field will be used as a prefix for the error message to be reported
  if and when the current expectation is violated.
  <p/>
  Inside an <em>expectation</em>/<em>verification</em> block, the assignment must follow the
@@ -808,151 +541,138 @@ protected static <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang
  point the assignment appears, an <code>IllegalStateException</code> is thrown.
  <p/>
  Notice there are only two different ways in which an expectation can be violated: either an
- <em>unexpected</em> invocation occurs, or a <em>missing</em> invocation is detected.
-<P>
-<DL>
-</DL>
-</DL>
-<HR>
-
-<A NAME="any"><!-- --></A><H3>
-any</H3>
-<PRE>
-protected static final <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A> <B>any</B></PRE>
-<DL>
-<DD>Matches any <code>Object</code> reference for the relevant parameter.
+ <em>unexpected</em> invocation occurs, or a <em>missing</em> invocation is detected.</div>
+</li>
+</ul>
+<a name="any">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>any</h4>
+<pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> any</pre>
+<div class="block">Matches any <code>Object</code> reference for the relevant parameter.
  Note that the use of this field will usually require a cast to the specific parameter type.
  If there is any other parameter for which an argument matching constraint can be specified, though, the
  <code>null</code> reference can be passed instead, as it will also match any reference during the replay phase.
  <p/>
  Note: in invocations to <em>non-accessible</em> methods or constructors (for example, with
- <A HREF="../mockit/VerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><CODE>invoke(Object, String, Object...)</CODE></A>), use <A HREF="../mockit/VerificationsInOrder.html#withAny(T)"><CODE>withAny(T)</CODE></A> instead.
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A></DL>
-</DL>
-<HR>
-
-<A NAME="anyBoolean"><!-- --></A><H3>
-anyBoolean</H3>
-<PRE>
-protected static final <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</A> <B>anyBoolean</B></PRE>
-<DL>
-<DD>Matches any <code>boolean</code> or <code>Boolean</code> value for the relevant parameter.
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A></DL>
-</DL>
-<HR>
-
-<A NAME="anyByte"><!-- --></A><H3>
-anyByte</H3>
-<PRE>
-protected static final <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</A> <B>anyByte</B></PRE>
-<DL>
-<DD>Matches any <code>byte</code> or <code>Byte</code> value for the relevant parameter.
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A></DL>
-</DL>
-<HR>
-
-<A NAME="anyChar"><!-- --></A><H3>
-anyChar</H3>
-<PRE>
-protected static final <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Character.html?is-external=true" title="class or interface in java.lang">Character</A> <B>anyChar</B></PRE>
-<DL>
-<DD>Matches any <code>char</code> or <code>Character</code> value for the relevant parameter.
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A></DL>
-</DL>
-<HR>
-
-<A NAME="anyDouble"><!-- --></A><H3>
-anyDouble</H3>
-<PRE>
-protected static final <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</A> <B>anyDouble</B></PRE>
-<DL>
-<DD>Matches any <code>double</code> or <code>Double</code> value for the relevant parameter.
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A></DL>
-</DL>
-<HR>
-
-<A NAME="anyFloat"><!-- --></A><H3>
-anyFloat</H3>
-<PRE>
-protected static final <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</A> <B>anyFloat</B></PRE>
-<DL>
-<DD>Matches any <code>float</code> or <code>Float</code> value for the relevant parameter.
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A></DL>
-</DL>
-<HR>
-
-<A NAME="anyInt"><!-- --></A><H3>
-anyInt</H3>
-<PRE>
-protected static final <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</A> <B>anyInt</B></PRE>
-<DL>
-<DD>Matches any <code>int</code> or <code>Integer</code> value for the relevant parameter.
+ <a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><code>invoke(Object, String, Object...)</code></a>), use <a href="../mockit/VerificationsInOrder.html#withAny(T)"><code>withAny(T)</code></a> instead.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#anyInt"><code>anyInt</code></a></dd></dl>
+</li>
+</ul>
+<a name="anyBoolean">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>anyBoolean</h4>
+<pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a> anyBoolean</pre>
+<div class="block">Matches any <code>boolean</code> or <code>Boolean</code> value for the relevant parameter.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#anyInt"><code>anyInt</code></a></dd></dl>
+</li>
+</ul>
+<a name="anyByte">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>anyByte</h4>
+<pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</a> anyByte</pre>
+<div class="block">Matches any <code>byte</code> or <code>Byte</code> value for the relevant parameter.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#anyInt"><code>anyInt</code></a></dd></dl>
+</li>
+</ul>
+<a name="anyChar">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>anyChar</h4>
+<pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Character.html?is-external=true" title="class or interface in java.lang">Character</a> anyChar</pre>
+<div class="block">Matches any <code>char</code> or <code>Character</code> value for the relevant parameter.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#anyInt"><code>anyInt</code></a></dd></dl>
+</li>
+</ul>
+<a name="anyDouble">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>anyDouble</h4>
+<pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> anyDouble</pre>
+<div class="block">Matches any <code>double</code> or <code>Double</code> value for the relevant parameter.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#anyInt"><code>anyInt</code></a></dd></dl>
+</li>
+</ul>
+<a name="anyFloat">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>anyFloat</h4>
+<pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</a> anyFloat</pre>
+<div class="block">Matches any <code>float</code> or <code>Float</code> value for the relevant parameter.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#anyInt"><code>anyInt</code></a></dd></dl>
+</li>
+</ul>
+<a name="anyInt">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>anyInt</h4>
+<pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> anyInt</pre>
+<div class="block">Matches any <code>int</code> or <code>Integer</code> value for the relevant parameter.
  <p/>
  When used as argument for a method/constructor invocation in the recording or verification phase of a test,
  specifies the matching of <em>any</em> value passed as argument to corresponding invocations in the replay phase.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#argumentMatching">In the
- Tutorial</a>
-<P>
-<DL>
-</DL>
-</DL>
-<HR>
-
-<A NAME="anyLong"><!-- --></A><H3>
-anyLong</H3>
-<PRE>
-protected static final <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</A> <B>anyLong</B></PRE>
-<DL>
-<DD>Matches any <code>long</code> or <code>Long</code> value for the relevant parameter.
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A></DL>
-</DL>
-<HR>
-
-<A NAME="anyShort"><!-- --></A><H3>
-anyShort</H3>
-<PRE>
-protected static final <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</A> <B>anyShort</B></PRE>
-<DL>
-<DD>Matches any <code>short</code> or <code>Short</code> value for the relevant parameter.
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A></DL>
-</DL>
-<HR>
-
-<A NAME="anyString"><!-- --></A><H3>
-anyString</H3>
-<PRE>
-protected static final <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A> <B>anyString</B></PRE>
-<DL>
-<DD>Matches any <code>String</code> value for the relevant parameter.
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A></DL>
-</DL>
-<HR>
-
-<A NAME="forEachInvocation"><!-- --></A><H3>
-forEachInvocation</H3>
-<PRE>
-protected static <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A> <B>forEachInvocation</B></PRE>
-<DL>
-<DD>An object assigned to this field will be taken as a handler for each invocation matching the current expectation,
+ Tutorial</a></div>
+</li>
+</ul>
+<a name="anyLong">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>anyLong</h4>
+<pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a> anyLong</pre>
+<div class="block">Matches any <code>long</code> or <code>Long</code> value for the relevant parameter.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#anyInt"><code>anyInt</code></a></dd></dl>
+</li>
+</ul>
+<a name="anyShort">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>anyShort</h4>
+<pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</a> anyShort</pre>
+<div class="block">Matches any <code>short</code> or <code>Short</code> value for the relevant parameter.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#anyInt"><code>anyInt</code></a></dd></dl>
+</li>
+</ul>
+<a name="anyString">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>anyString</h4>
+<pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> anyString</pre>
+<div class="block">Matches any <code>String</code> value for the relevant parameter.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#anyInt"><code>anyInt</code></a></dd></dl>
+</li>
+</ul>
+<a name="forEachInvocation">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>forEachInvocation</h4>
+<pre>protected static&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> forEachInvocation</pre>
+<div class="block">An object assigned to this field will be taken as a handler for each invocation matching the current expectation,
  with the purpose of validating invocation arguments.
  Note that for a <em>recorded</em> expectation such invocations are the ones that will be executed during the
  <em>replay</em> phase, while for a <em>verified</em> expectation they are the ones actually executed during that
@@ -978,121 +698,113 @@ protected static <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang
  errors, since the verified invocation(s) already happened in the replay phase; any exception/error actually thrown
  will simply propagate back to the test method.
  <p/>
- Just like with <A HREF="../mockit/Delegate.html" title="interface in mockit">delegate classes</A>, the handler method can declare its first parameter
- as being of type <A HREF="../mockit/Invocation.html" title="class in mockit"><CODE>Invocation</CODE></A>.
+ Just like with <a href="../mockit/Delegate.html" title="interface in mockit">delegate classes</a>, the handler method can declare its first parameter
+ as being of type <a href="../mockit/Invocation.html" title="class in mockit"><code>Invocation</code></a>.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#forEachInvocation">In the
- Tutorial</a>
-<P>
-<DL>
-</DL>
-</DL>
-<HR>
-
-<A NAME="maxTimes"><!-- --></A><H3>
-maxTimes</H3>
-<PRE>
-protected static int <B>maxTimes</B></PRE>
-<DL>
-<DD>A non-negative value assigned to this field will be taken as the maximum number of times that invocations matching
+ Tutorial</a></div>
+</li>
+</ul>
+<a name="maxTimes">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>maxTimes</h4>
+<pre>protected static&nbsp;int maxTimes</pre>
+<div class="block">A non-negative value assigned to this field will be taken as the maximum number of times that invocations matching
  the current expectation should occur during replay.
  A <em>negative</em> value implies there is no upper limit.
  <p/>
  Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long as <code>minTimes</code>
- is assigned first.
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#times"><CODE>times</CODE></A>, 
-<A HREF="../mockit/VerificationsInOrder.html#minTimes"><CODE>minTimes</CODE></A></DL>
-</DL>
-<HR>
-
-<A NAME="minTimes"><!-- --></A><H3>
-minTimes</H3>
-<PRE>
-protected static int <B>minTimes</B></PRE>
-<DL>
-<DD>A non-negative value assigned to this field will be taken as the minimum number of times that invocations matching
+ is assigned first.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#times"><code>times</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#minTimes"><code>minTimes</code></a></dd></dl>
+</li>
+</ul>
+<a name="minTimes">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>minTimes</h4>
+<pre>protected static&nbsp;int minTimes</pre>
+<div class="block">A non-negative value assigned to this field will be taken as the minimum number of times that invocations matching
  the current expectation should occur during replay.
  <em>Zero</em> or a <em>negative</em> value implies there is no lower limit.
  The <em>maximum</em> number of times is automatically adjusted to allow any number of invocations.
  <p/>
  Both <code>minTimes</code> and <code>maxTimes</code> can be specified for the same expectation, as long as <code>minTimes</code>
- is assigned first.
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#times"><CODE>times</CODE></A>, 
-<A HREF="../mockit/VerificationsInOrder.html#maxTimes"><CODE>maxTimes</CODE></A></DL>
-</DL>
-<HR>
-
-<A NAME="times"><!-- --></A><H3>
-times</H3>
-<PRE>
-protected static int <B>times</B></PRE>
-<DL>
-<DD>A non-negative value assigned to this field will be taken as the exact number of times that
+ is assigned first.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#times"><code>times</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#maxTimes"><code>maxTimes</code></a></dd></dl>
+</li>
+</ul>
+<a name="times">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>times</h4>
+<pre>protected static&nbsp;int times</pre>
+<div class="block">A non-negative value assigned to this field will be taken as the exact number of times that
  invocations matching the current expectation should occur during replay.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#constraints">In the
- Tutorial</a>
-<P>
-<DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#minTimes"><CODE>minTimes</CODE></A>, 
-<A HREF="../mockit/VerificationsInOrder.html#maxTimes"><CODE>maxTimes</CODE></A></DL>
-</DL>
-
+ Tutorial</a></div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#minTimes"><code>minTimes</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#maxTimes"><code>maxTimes</code></a></dd></dl>
+</li>
+</ul>
+</li>
+</ul>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
-
-<A NAME="constructor_detail"><!-- --></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2">
-<B>Constructor Detail</B></FONT></TH>
-</TR>
-</TABLE>
-
-<A NAME="VerificationsInOrder()"><!-- --></A><H3>
-VerificationsInOrder</H3>
-<PRE>
-protected <B>VerificationsInOrder</B>()</PRE>
-<DL>
-<DD>Begins <em>in-order</em> verification on the mocked types/instances invoked during the replay phase of the test.
-<P>
-</DL>
-<HR>
-
-<A NAME="VerificationsInOrder(int)"><!-- --></A><H3>
-VerificationsInOrder</H3>
-<PRE>
-protected <B>VerificationsInOrder</B>(int&nbsp;numberOfIterations)</PRE>
-<DL>
-<DD>Begins <em>in-order</em> verification on the mocked types/instances invoked during the replay phase of the test.
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="VerificationsInOrder()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>VerificationsInOrder</h4>
+<pre>protected&nbsp;VerificationsInOrder()</pre>
+<div class="block">Begins <em>in-order</em> verification on the mocked types/instances invoked during the replay phase of the test.</div>
+</li>
+</ul>
+<a name="VerificationsInOrder(int)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>VerificationsInOrder</h4>
+<pre>protected&nbsp;VerificationsInOrder(int&nbsp;numberOfIterations)</pre>
+<div class="block">Begins <em>in-order</em> verification on the mocked types/instances invoked during the replay phase of the test.
  <p/>
  The effect of specifying a number of iterations larger than 1 (one) is equivalent to duplicating (like in "copy &
- paste") the whole sequence of invocations in the block.
-<P>
-<DL>
-<DT><B>Parameters:</B><DD><CODE>numberOfIterations</CODE> - the positive number of iterations for the whole set of invocations
- verified inside the block; when not specified, 1 (one) iteration is assumed</DL>
-</DL>
-
+ paste") the whole sequence of invocations in the block.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>numberOfIterations</code> - the positive number of iterations for the whole set of invocations
+ verified inside the block; when not specified, 1 (one) iteration is assumed</dd></dl>
+</li>
+</ul>
+</li>
+</ul>
 <!-- ============ METHOD DETAIL ========== -->
-
-<A NAME="method_detail"><!-- --></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2">
-<B>Method Detail</B></FONT></TH>
-</TR>
-</TABLE>
-
-<A NAME="unverifiedInvocations()"><!-- --></A><H3>
-unverifiedInvocations</H3>
-<PRE>
-protected final void <B>unverifiedInvocations</B>()</PRE>
-<DL>
-<DD>Accounts for a sequence of non-strict invocations executed in the replay phase that are not explicitly verified
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="unverifiedInvocations()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>unverifiedInvocations</h4>
+<pre>protected final&nbsp;void&nbsp;unverifiedInvocations()</pre>
+<div class="block">Accounts for a sequence of non-strict invocations executed in the replay phase that are not explicitly verified
  in this block or in a previous block.
  Such a "sequence" of invocations can include only a single invocation, or even be empty.
  <p/>
@@ -1119,131 +831,117 @@ protected final void <B>unverifiedInvocations</B>()</PRE>
  <p/>
  Finally, notice that you can combine an ordered block that verifies the position of some calls relative to others
  with a later unordered block which verifies some or all of those other invocations.
- The unordered block should not come before, however, since it would "consume" the verified invocations.
-<P>
-<DD><DL>
-<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#verifiedInvocations(mockit.Verifications)"><CODE>verifiedInvocations(Verifications)</CODE></A>, 
+ The unordered block should not come before, however, since it would "consume" the verified invocations.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#verifiedInvocations(mockit.Verifications)"><code>verifiedInvocations(Verifications)</code></a>, 
 <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#partiallyOrdered">In
- the Tutorial</a></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="verifiedInvocations(mockit.Verifications)"><!-- --></A><H3>
-verifiedInvocations</H3>
-<PRE>
-protected final void <B>verifiedInvocations</B>(<A HREF="../mockit/Verifications.html" title="class in mockit">Verifications</A>&nbsp;alreadyVerified)</PRE>
-<DL>
-<DD>Accounts for a sequence of non-strict invocations executed in the replay phase that have already been explicitly
- verified in a previous verification block.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>alreadyVerified</CODE> - an unordered verification block describing a group of already verified invocations
-<DT><B>Throws:</B>
-<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if the given verifications are ordered<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#unverifiedInvocations()"><CODE>unverifiedInvocations()</CODE></A>, 
+ the Tutorial</a></dd></dl>
+</li>
+</ul>
+<a name="verifiedInvocations(mockit.Verifications)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>verifiedInvocations</h4>
+<pre>protected final&nbsp;void&nbsp;verifiedInvocations(<a href="../mockit/Verifications.html" title="class in mockit">Verifications</a>&nbsp;alreadyVerified)</pre>
+<div class="block">Accounts for a sequence of non-strict invocations executed in the replay phase that have already been explicitly
+ verified in a previous verification block.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>alreadyVerified</code> - an unordered verification block describing a group of already verified invocations</dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if the given verifications are ordered</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#unverifiedInvocations()"><code>unverifiedInvocations()</code></a>, 
 <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#partiallyOrdered">In
- the Tutorial</a></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="getField(java.lang.Class, java.lang.Class)"><!-- --></A><H3>
-getField</H3>
-<PRE>
-protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-                               <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;fieldType)</PRE>
-<DL>
-<DD>Gets the value of a non-accessible static field defined in a given class.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the class from which to get the field value<DD><CODE>fieldType</CODE> - the declared type of the field, or a sub-type of the declared field type<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="getField(java.lang.Class, java.lang.String)"><!-- --></A><H3>
-getField</H3>
-<PRE>
-protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-                               <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName)</PRE>
-<DL>
-<DD>Gets the value of a non-accessible static field defined in a given class.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the class from which to get the field value<DD><CODE>fieldName</CODE> - the name of the static field to get<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="getField(java.lang.Object, java.lang.Class)"><!-- --></A><H3>
-getField</H3>
-<PRE>
-protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-                               <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;fieldType)</PRE>
-<DL>
-<DD>Gets the value of a non-accessible field from a given object, <em>assuming</em> there is only
+ the Tutorial</a></dd></dl>
+</li>
+</ul>
+<a name="getField(java.lang.Class, java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getField</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;getField(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;fieldOwner,
+             <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;fieldType)</pre>
+<div class="block">Gets the value of a non-accessible static field defined in a given class.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldOwner</code> - the class from which to get the field value</dd><dd><code>fieldType</code> - the declared type of the field, or a sub-type of the declared field type</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><code>setField(Class, String, Object)</code></a></dd></dl>
+</li>
+</ul>
+<a name="getField(java.lang.Class, java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getField</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;getField(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;fieldOwner,
+             <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName)</pre>
+<div class="block">Gets the value of a non-accessible static field defined in a given class.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldOwner</code> - the class from which to get the field value</dd><dd><code>fieldName</code> - the name of the static field to get</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><code>setField(Class, String, Object)</code></a></dd></dl>
+</li>
+</ul>
+<a name="getField(java.lang.Object, java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getField</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;getField(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldOwner,
+             <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;fieldType)</pre>
+<div class="block">Gets the value of a non-accessible field from a given object, <em>assuming</em> there is only
  one field declared in the class of the given object whose type can receive values of the
- specified field type.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the instance from which to get the field value<DD><CODE>fieldType</CODE> - the declared type of the field, or a sub-type of the declared field type
-<DT><B>Throws:</B>
-<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if either the desired field is not found, or more than one is<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#getField(java.lang.Object, java.lang.String)"><CODE>getField(Object, String)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="getField(java.lang.Object, java.lang.String)"><!-- --></A><H3>
-getField</H3>
-<PRE>
-protected final &lt;T&gt; T <B>getField</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-                               <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName)</PRE>
-<DL>
-<DD>Gets the value of a non-accessible field from a given object.
+ specified field type.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldOwner</code> - the instance from which to get the field value</dd><dd><code>fieldType</code> - the declared type of the field, or a sub-type of the declared field type</dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if either the desired field is not found, or more than one is</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#getField(java.lang.Object, java.lang.String)"><code>getField(Object, String)</code></a></dd></dl>
+</li>
+</ul>
+<a name="getField(java.lang.Object, java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getField</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;getField(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldOwner,
+             <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName)</pre>
+<div class="block">Gets the value of a non-accessible field from a given object.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
- Tutorial</a>
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the instance from which to get the field value<DD><CODE>fieldName</CODE> - the name of the field to get<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><CODE>setField(Object, String, Object)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><!-- --></A><H3>
-invoke</H3>
-<PRE>
-protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;methodOwner,
-                             <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
-                             <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</PRE>
-<DL>
-<DD>Specifies an expectation for a <code>static</code> method, with a given list of arguments.
+ Tutorial</a></div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldOwner</code> - the instance from which to get the field value</dd><dd><code>fieldName</code> - the name of the field to get</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><code>setField(Object, String, Object)</code></a></dd></dl>
+</li>
+</ul>
+<a name="invoke(java.lang.Class, java.lang.String, java.lang.Object...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>invoke</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;invoke(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;methodOwner,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;methodArgs)</pre>
+<div class="block">Specifies an expectation for a <code>static</code> method, with a given list of arguments.
  <p/>
  This is useful when a method is not accessible from the test (it's <code>private</code>, for example), and therefore
  cannot be called normally. It should not be used to call accessible methods.
  <p/>
  Additionally, this can also be used to directly test private methods, when there is no other way to do so, or it
  would be too difficult by indirect means.
- Note that in such a case the target class would not be mocked.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>methodOwner</CODE> - the class on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected static method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the expectation;
- if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead
-<DT><B>Returns:</B><DD>the return value from the invoked method, wrapped if primitive
-<DT><B>Throws:</B>
-<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if a null reference was provided for a parameter</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><!-- --></A><H3>
-invoke</H3>
-<PRE>
-protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;objectWithMethod,
-                             <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;methodName,
-                             <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;methodArgs)</PRE>
-<DL>
-<DD>Specifies an expectation for an instance method, with a given list of arguments.
+ Note that in such a case the target class would not be mocked.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>methodOwner</code> - the class on which the invocation is to be done; must not be null</dd><dd><code>methodName</code> - the name of the expected static method</dd><dd><code>methodArgs</code> - zero or more non-null expected parameter values for the expectation;
+ if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the return value from the invoked method, wrapped if primitive</dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if a null reference was provided for a parameter</dd></dl>
+</li>
+</ul>
+<a name="invoke(java.lang.Object, java.lang.String, java.lang.Object...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>invoke</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;invoke(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;objectWithMethod,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;methodArgs)</pre>
+<div class="block">Specifies an expectation for an instance method, with a given list of arguments.
  <p/>
  This is useful when a method is not accessible from the test (it's <code>private</code>, for example), and therefore
  cannot be called normally. It should not be used to call accessible methods.
@@ -1253,86 +951,80 @@ protected final &lt;T&gt; T <B>invoke</B>(<A HREF="http://download.oracle.com/ja
  Note that in such a case the target instance will actually be a "real" (non-mocked) object.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
- Tutorial</a>
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>objectWithMethod</CODE> - the instance on which the invocation is to be done; must not be null<DD><CODE>methodName</CODE> - the name of the expected method<DD><CODE>methodArgs</CODE> - zero or more non-null expected parameter values for the expectation;
- if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead
-<DT><B>Returns:</B><DD>the return value from the invoked method, wrapped if primitive
-<DT><B>Throws:</B>
-<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if a null reference was provided for a parameter<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><CODE>invoke(Class, String, Object...)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)"><!-- --></A><H3>
-newInnerInstance</H3>
-<PRE>
-protected final &lt;T&gt; T <B>newInnerInstance</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;innerClassSimpleName,
-                                       <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;outerClassInstance,
-                                       <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullInitArgs)</PRE>
-<DL>
-<DD>The same as <A HREF="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but for instantiating an inner non-accessible class
- of some other class, and where all other (if any) initialization arguments are known to be non null.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>innerClassSimpleName</CODE> - simple name of the inner class, that is, the part after the "$" character in its full
- name<DD><CODE>outerClassInstance</CODE> - the outer class instance to which the inner class instance will belong<DD><CODE>nonNullInitArgs</CODE> - zero or more non-null expected parameter values for the expectation;
- if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><!-- --></A><H3>
-newInstance</H3>
-<PRE>
-protected final &lt;T&gt; T <B>newInstance</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;className,
-                                  <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;[]&nbsp;parameterTypes,
-                                  <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;initArgs)</PRE>
-<DL>
-<DD>Specifies an expectation for a constructor of a given class.
+ Tutorial</a></div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>objectWithMethod</code> - the instance on which the invocation is to be done; must not be null</dd><dd><code>methodName</code> - the name of the expected method</dd><dd><code>methodArgs</code> - zero or more non-null expected parameter values for the expectation;
+ if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the return value from the invoked method, wrapped if primitive</dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if a null reference was provided for a parameter</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><code>invoke(Class, String, Object...)</code></a></dd></dl>
+</li>
+</ul>
+<a name="newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>newInnerInstance</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;newInnerInstance(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;innerClassSimpleName,
+                     <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;outerClassInstance,
+                     <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;nonNullInitArgs)</pre>
+<div class="block">The same as <a href="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><code>newInstance(String, Class[], Object...)</code></a>, but for instantiating an inner non-accessible class
+ of some other class, and where all other (if any) initialization arguments are known to be non null.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>innerClassSimpleName</code> - simple name of the inner class, that is, the part after the "$" character in its full
+ name</dd><dd><code>outerClassInstance</code> - the outer class instance to which the inner class instance will belong</dd><dd><code>nonNullInitArgs</code> - zero or more non-null expected parameter values for the expectation;
+ if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead</dd></dl>
+</li>
+</ul>
+<a name="newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>newInstance</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;newInstance(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
+                <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;[]&nbsp;parameterTypes,
+                <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;initArgs)</pre>
+<div class="block">Specifies an expectation for a constructor of a given class.
  <p/>
  This is useful for invoking non-accessible constructors (<code>private</code> ones, for example) from the test, which
  otherwise could not be called normally. It should not be used for accessible constructors.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
- Tutorial</a>
-<P>
-<DD><DL>
-<DT><B>Type Parameters:</B><DD><CODE>T</CODE> - interface or super-class type to which the returned instance should be assignable<DT><B>Parameters:</B><DD><CODE>className</CODE> - the fully qualified name of the desired class<DD><CODE>parameterTypes</CODE> - the formal parameter types for the desired constructor, possibly empty<DD><CODE>initArgs</CODE> - the invocation arguments for the constructor, which must be consistent with the specified
- parameter types
-<DT><B>Returns:</B><DD>a newly created instance of the specified class, initialized with the specified constructor and arguments<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Object...)"><CODE>newInstance(String, Object...)</CODE></A>, 
-<A HREF="../mockit/VerificationsInOrder.html#newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)"><CODE>newInnerInstance(String, Object, Object...)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="newInstance(java.lang.String, java.lang.Object...)"><!-- --></A><H3>
-newInstance</H3>
-<PRE>
-protected final &lt;T&gt; T <B>newInstance</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;className,
-                                  <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>...&nbsp;nonNullInitArgs)</PRE>
-<DL>
-<DD>The same as <A HREF="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><CODE>newInstance(String, Class[], Object...)</CODE></A>, but inferring parameter types from non-null argument
+ Tutorial</a></div>
+<dl><dt><span class="strong">Type Parameters:</span></dt><dd><code>T</code> - interface or super-class type to which the returned instance should be assignable</dd><dt><span class="strong">Parameters:</span></dt><dd><code>className</code> - the fully qualified name of the desired class</dd><dd><code>parameterTypes</code> - the formal parameter types for the desired constructor, possibly empty</dd><dd><code>initArgs</code> - the invocation arguments for the constructor, which must be consistent with the specified
+ parameter types</dd>
+<dt><span class="strong">Returns:</span></dt><dd>a newly created instance of the specified class, initialized with the specified constructor and arguments</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Object...)"><code>newInstance(String, Object...)</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)"><code>newInnerInstance(String, Object, Object...)</code></a></dd></dl>
+</li>
+</ul>
+<a name="newInstance(java.lang.String, java.lang.Object...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>newInstance</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;newInstance(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
+                <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;nonNullInitArgs)</pre>
+<div class="block">The same as <a href="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)"><code>newInstance(String, Class[], Object...)</code></a>, but inferring parameter types from non-null argument
  values.
  If a given parameter needs to match <code>null</code> during replay, then the corresponding <code>Class</code> literal must
- be passed instead of <code>null</code>.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>nonNullInitArgs</CODE> - zero or more non-null expected parameter values for the expectation;
- if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead
-<DT><B>Throws:</B>
-<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if one of the given arguments is <code>null</code></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="onInstance(java.lang.Object)"><!-- --></A><A NAME="onInstance(T)"><!-- --></A><H3>
-onInstance</H3>
-<PRE>
-protected final &lt;T&gt; T <B>onInstance</B>(T&nbsp;mockedInstance)</PRE>
-<DL>
-<DD>Specify that the next invocation on the given mocked instance must match a corresponding invocation on the
+ be passed instead of <code>null</code>.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>nonNullInitArgs</code> - zero or more non-null expected parameter values for the expectation;
+ if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead</dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if one of the given arguments is <code>null</code></dd></dl>
+</li>
+</ul>
+<a name="onInstance(java.lang.Object)">
+<!--   -->
+</a><a name="onInstance(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>onInstance</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;onInstance(T&nbsp;mockedInstance)</pre>
+<div class="block">Specify that the next invocation on the given mocked instance must match a corresponding invocation on the
  <em>same</em> instance in the replay phase.
  <p/>
  By default, such instances can be different between the replay phase and the record or verify phase, even though
@@ -1359,91 +1051,79 @@ protected final &lt;T&gt; T <B>onInstance</B>(T&nbsp;mockedInstance)</PRE>
  partially mocking a class hierarchy.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#onInstance">In the
- Tutorial</a>
-<P>
-<DD><DL>
-
-<DT><B>Returns:</B><DD>the given mocked instance, allowing the invocation to be recorded/verified to immediately follow the call
- to this method</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="setField(java.lang.Class, java.lang.Object)"><!-- --></A><H3>
-setField</H3>
-<PRE>
-protected final void <B>setField</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A>, except that the field is looked up by the
- type of the given field value instead of by name.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the class on which the static field is defined<DD><CODE>fieldValue</CODE> - the value to set the field to</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="setField(java.lang.Class, java.lang.String, java.lang.Object)"><!-- --></A><H3>
-setField</H3>
-<PRE>
-protected final void <B>setField</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;?&gt;&nbsp;fieldOwner,
-                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName,
-                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</PRE>
-<DL>
-<DD>Sets the value of a non-accessible static field on a given class.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the class on which the static field is defined<DD><CODE>fieldName</CODE> - the name of the field to set<DD><CODE>fieldValue</CODE> - the value to set the field to</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="setField(java.lang.Object, java.lang.Object)"><!-- --></A><H3>
-setField</H3>
-<PRE>
-protected final void <B>setField</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><CODE>setField(Object, String, Object)</CODE></A>, except that the field is looked up by the
- type of the given field value instead of by name.
-<P>
-<DD><DL>
-
-<DT><B>Throws:</B>
-<DD><CODE><A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</A></CODE> - if no field or more than one is found in the target class to
- which the given value can be assigned</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="setField(java.lang.Object, java.lang.String, java.lang.Object)"><!-- --></A><H3>
-setField</H3>
-<PRE>
-protected final void <B>setField</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldOwner,
-                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;fieldName,
-                              <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;fieldValue)</PRE>
-<DL>
-<DD>Sets the value of a non-accessible field on a given object.
+ Tutorial</a></div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>the given mocked instance, allowing the invocation to be recorded/verified to immediately follow the call
+ to this method</dd></dl>
+</li>
+</ul>
+<a name="setField(java.lang.Class, java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setField</h4>
+<pre>protected final&nbsp;void&nbsp;setField(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;fieldOwner,
+            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldValue)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><code>setField(Class, String, Object)</code></a>, except that the field is looked up by the
+ type of the given field value instead of by name.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldOwner</code> - the class on which the static field is defined</dd><dd><code>fieldValue</code> - the value to set the field to</dd></dl>
+</li>
+</ul>
+<a name="setField(java.lang.Class, java.lang.String, java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setField</h4>
+<pre>protected final&nbsp;void&nbsp;setField(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;fieldOwner,
+            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName,
+            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldValue)</pre>
+<div class="block">Sets the value of a non-accessible static field on a given class.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldOwner</code> - the class on which the static field is defined</dd><dd><code>fieldName</code> - the name of the field to set</dd><dd><code>fieldValue</code> - the value to set the field to</dd></dl>
+</li>
+</ul>
+<a name="setField(java.lang.Object, java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setField</h4>
+<pre>protected final&nbsp;void&nbsp;setField(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldOwner,
+            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldValue)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><code>setField(Object, String, Object)</code></a>, except that the field is looked up by the
+ type of the given field value instead of by name.</div>
+<dl><dt><span class="strong">Throws:</span></dt>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if no field or more than one is found in the target class to
+ which the given value can be assigned</dd></dl>
+</li>
+</ul>
+<a name="setField(java.lang.Object, java.lang.String, java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setField</h4>
+<pre>protected final&nbsp;void&nbsp;setField(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldOwner,
+            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName,
+            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldValue)</pre>
+<div class="block">Sets the value of a non-accessible field on a given object.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
- Tutorial</a>
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>fieldOwner</CODE> - the instance on which to set the field value<DD><CODE>fieldName</CODE> - the name of the field to set<DD><CODE>fieldValue</CODE> - the value to set the field to<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><CODE>setField(Class, String, Object)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="with(mockit.Delegate)"><!-- --></A><H3>
-with</H3>
-<PRE>
-protected final &lt;T&gt; T <B>with</B>(<A HREF="../mockit/Delegate.html" title="interface in mockit">Delegate</A>&lt;T&gt;&nbsp;delegateObjectWithInvocationHandlerMethod)</PRE>
-<DL>
-<DD>Adds a custom argument matcher for a parameter in the current expectation.
+ Tutorial</a></div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldOwner</code> - the instance on which to set the field value</dd><dd><code>fieldName</code> - the name of the field to set</dd><dd><code>fieldValue</code> - the value to set the field to</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#setField(java.lang.Class, java.lang.String, java.lang.Object)"><code>setField(Class, String, Object)</code></a></dd></dl>
+</li>
+</ul>
+<a name="with(mockit.Delegate)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>with</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;with(<a href="../mockit/Delegate.html" title="interface in mockit">Delegate</a>&lt;T&gt;&nbsp;delegateObjectWithInvocationHandlerMethod)</pre>
+<div class="block">Adds a custom argument matcher for a parameter in the current expectation.
  <p/>
  The given delegate object is assumed to be an instance of an <em>invocation handler</em> class, similar to those
- used with the <A HREF="../mockit/VerificationsInOrder.html#forEachInvocation">forEachInvocation</A> field.
+ used with the <a href="../mockit/VerificationsInOrder.html#forEachInvocation">forEachInvocation</a> field.
  The non-<code>private</code> <em>handler method</em> must have a single parameter of a type capable of receiving
  the relevant argument values.
  The name of this handler method does not matter.
@@ -1451,49 +1131,47 @@ protected final &lt;T&gt; T <B>with</B>(<A HREF="../mockit/Delegate.html" title=
  In the first case, a return value of <code>true</code> will indicate a successful match for the actual invocation
  argument at replay time, while a return of <code>false</code> will cause the test to fail.
  In the case of a <code>void</code> return type, the handler method should validate the actual invocation argument
- through an <code>assert</code> statement or a JUnit/TestNG assertion.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>delegateObjectWithInvocationHandlerMethod</CODE> - an instance of a class with an appropriate invocation handler
- method
-<DT><B>Returns:</B><DD>the default primitive value corresponding to <code>T</code> if it's a primitive wrapper type, or <code>null</code>
- otherwise<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#with(java.lang.Object)"><CODE>with(Object)</CODE></A>, 
-<A HREF="../mockit/VerificationsInOrder.html#with(T, java.lang.Object)"><CODE>with(Object, Object)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="with(java.lang.Object)"><!-- --></A><H3>
-with</H3>
-<PRE>
-protected final &lt;T&gt; T <B>with</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</PRE>
-<DL>
-<DD>Adds a custom argument matcher for a parameter in the current expectation.
- This works just like <CODE>#with(T, Object)</CODE>, but attempting to discover the argument type from the supplied
- <em>Hamcrest</em> argument matcher, when applicable.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>argumentMatcher</CODE> - an instance of a class implementing the <code>org.hamcrest.Matcher</code> interface, <em>or</em>
- an instance of an invocation handler class containing an appropriate invocation handler method
-<DT><B>Returns:</B><DD>the value recorded inside the given <em>Hamcrest</em> argument matcher, or <code>null</code> if there is no
- such value to be found<DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#with(T, java.lang.Object)"><CODE>with(Object, Object)</CODE></A>, 
-<A HREF="../mockit/VerificationsInOrder.html#with(mockit.Delegate)"><CODE>with(Delegate)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="with(java.lang.Object,java.lang.Object)"><!-- --></A><A NAME="with(T, java.lang.Object)"><!-- --></A><H3>
-with</H3>
-<PRE>
-protected final &lt;T&gt; T <B>with</B>(T&nbsp;argValue,
-                           <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</A>&nbsp;argumentMatcher)</PRE>
-<DL>
-<DD>Adds a custom argument matcher for a parameter in the current expectation.
+ through an <code>assert</code> statement or a JUnit/TestNG assertion.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>delegateObjectWithInvocationHandlerMethod</code> - an instance of a class with an appropriate invocation handler
+ method</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the default primitive value corresponding to <code>T</code> if it's a primitive wrapper type, or <code>null</code>
+ otherwise</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#with(java.lang.Object)"><code>with(Object)</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#with(T, java.lang.Object)"><code>with(Object, Object)</code></a></dd></dl>
+</li>
+</ul>
+<a name="with(java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>with</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;with(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;argumentMatcher)</pre>
+<div class="block">Adds a custom argument matcher for a parameter in the current expectation.
+ This works just like <code>#with(T, Object)</code>, but attempting to discover the argument type from the supplied
+ <em>Hamcrest</em> argument matcher, when applicable.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>argumentMatcher</code> - an instance of a class implementing the <code>org.hamcrest.Matcher</code> interface, <em>or</em>
+ an instance of an invocation handler class containing an appropriate invocation handler method</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the value recorded inside the given <em>Hamcrest</em> argument matcher, or <code>null</code> if there is no
+ such value to be found</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#with(T, java.lang.Object)"><code>with(Object, Object)</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#with(mockit.Delegate)"><code>with(Delegate)</code></a></dd></dl>
+</li>
+</ul>
+<a name="with(java.lang.Object,java.lang.Object)">
+<!--   -->
+</a><a name="with(T, java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>with</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;with(T&nbsp;argValue,
+         <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;argumentMatcher)</pre>
+<div class="block">Adds a custom argument matcher for a parameter in the current expectation.
  <p/>
  The given matcher can be any existing <em>Hamcrest</em> matcher or a user provided one.
  <p/>
  Alternatively, it can be an instance of an <em>invocation handler</em> class, similar to those used with the
- <A HREF="../mockit/VerificationsInOrder.html#forEachInvocation">forEachInvocation</A> field.
+ <a href="../mockit/VerificationsInOrder.html#forEachInvocation">forEachInvocation</a> field.
  In this case, the non-<code>private</code> <em>handler method</em> must have a single parameter of a type capable
  of receiving the relevant argument values.
  The name of this handler method does not matter.
@@ -1503,78 +1181,74 @@ protected final &lt;T&gt; T <B>with</B>(T&nbsp;argValue,
  In the case of a <code>void</code> return type, instead of returning a value the handler method should validate the
  actual invocation argument through an <code>assert</code> statement or a JUnit/TestNG assertion.
  <p/>
- For additional details, refer to <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>argValue</CODE> - an arbitrary value of the proper type, necessary to provide a valid argument to the invocation
- parameter<DD><CODE>argumentMatcher</CODE> - an instance of a class implementing the <code>org.hamcrest.Matcher</code> interface, <em>or</em>
- an instance of an invocation handler class containing an appropriate invocation handler method
-<DT><B>Returns:</B><DD>the given <code>argValue</code><DT><B>See Also:</B><DD><A HREF="../mockit/VerificationsInOrder.html#with(java.lang.Object)"><CODE>with(Object)</CODE></A>, 
-<A HREF="../mockit/VerificationsInOrder.html#with(mockit.Delegate)"><CODE>with(Delegate)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withAny(java.lang.Object)"><!-- --></A><A NAME="withAny(T)"><!-- --></A><H3>
-withAny</H3>
-<PRE>
-protected final &lt;T&gt; T <B>withAny</B>(T&nbsp;arg)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but matching any argument value of the appropriate type.
+ For additional details, refer to <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>argValue</code> - an arbitrary value of the proper type, necessary to provide a valid argument to the invocation
+ parameter</dd><dd><code>argumentMatcher</code> - an instance of a class implementing the <code>org.hamcrest.Matcher</code> interface, <em>or</em>
+ an instance of an invocation handler class containing an appropriate invocation handler method</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the given <code>argValue</code></dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#with(java.lang.Object)"><code>with(Object)</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#with(mockit.Delegate)"><code>with(Delegate)</code></a></dd></dl>
+</li>
+</ul>
+<a name="withAny(java.lang.Object)">
+<!--   -->
+</a><a name="withAny(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withAny</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withAny(T&nbsp;arg)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but matching any argument value of the appropriate type.
  <p/>
  Consider using instead the "anyXyz" field appropriate to the parameter type:
- <A HREF="../mockit/VerificationsInOrder.html#anyBoolean"><CODE>anyBoolean</CODE></A>, <A HREF="../mockit/VerificationsInOrder.html#anyByte"><CODE>anyByte</CODE></A>, <A HREF="../mockit/VerificationsInOrder.html#anyChar"><CODE>anyChar</CODE></A>, <A HREF="../mockit/VerificationsInOrder.html#anyDouble"><CODE>anyDouble</CODE></A>, <A HREF="../mockit/VerificationsInOrder.html#anyFloat"><CODE>anyFloat</CODE></A>, <A HREF="../mockit/VerificationsInOrder.html#anyInt"><CODE>anyInt</CODE></A>,
- <A HREF="../mockit/VerificationsInOrder.html#anyLong"><CODE>anyLong</CODE></A>, <A HREF="../mockit/VerificationsInOrder.html#anyShort"><CODE>anyShort</CODE></A>, <A HREF="../mockit/VerificationsInOrder.html#anyString"><CODE>anyString</CODE></A>, or <A HREF="../mockit/VerificationsInOrder.html#any"><CODE>any</CODE></A> for other reference types.
+ <a href="../mockit/VerificationsInOrder.html#anyBoolean"><code>anyBoolean</code></a>, <a href="../mockit/VerificationsInOrder.html#anyByte"><code>anyByte</code></a>, <a href="../mockit/VerificationsInOrder.html#anyChar"><code>anyChar</code></a>, <a href="../mockit/VerificationsInOrder.html#anyDouble"><code>anyDouble</code></a>, <a href="../mockit/VerificationsInOrder.html#anyFloat"><code>anyFloat</code></a>, <a href="../mockit/VerificationsInOrder.html#anyInt"><code>anyInt</code></a>,
+ <a href="../mockit/VerificationsInOrder.html#anyLong"><code>anyLong</code></a>, <a href="../mockit/VerificationsInOrder.html#anyShort"><code>anyShort</code></a>, <a href="../mockit/VerificationsInOrder.html#anyString"><code>anyString</code></a>, or <a href="../mockit/VerificationsInOrder.html#any"><code>any</code></a> for other reference types.
  <p/>
- Note: when using <A HREF="../mockit/VerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><CODE>invoke(Object, String, Object...)</CODE></A>, etc., it's valid to pass
- <code>withAny(ParameterType.class)</code> if an actual instance of the parameter type cannot be created.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>arg</CODE> - an arbitrary value which will match any argument value in the replay phase
-<DT><B>Returns:</B><DD>the input argument</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withEqual(double, double)"><!-- --></A><H3>
-withEqual</H3>
-<PRE>
-protected final double <B>withEqual</B>(double&nbsp;value,
-                                 double&nbsp;delta)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a numeric invocation argument in the replay phase is
- sufficiently close to the given value.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>value</CODE> - the center value for range comparison<DD><CODE>delta</CODE> - the tolerance around the center value, for a range of [value - delta, value + delta]
-<DT><B>Returns:</B><DD>the given <code>value</code></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withEqual(float, double)"><!-- --></A><H3>
-withEqual</H3>
-<PRE>
-protected final float <B>withEqual</B>(float&nbsp;value,
-                                double&nbsp;delta)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a numeric invocation argument in the replay phase is
- sufficiently close to the given value.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>value</CODE> - the center value for range comparison<DD><CODE>delta</CODE> - the tolerance around the center value, for a range of [value - delta, value + delta]
-<DT><B>Returns:</B><DD>the given <code>value</code></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withEqual(java.lang.Object)"><!-- --></A><A NAME="withEqual(T)"><!-- --></A><H3>
-withEqual</H3>
-<PRE>
-protected final &lt;T&gt; T <B>withEqual</B>(T&nbsp;arg)</PRE>
-<DL>
-<DD>When called as argument for a method/constructor invocation in the recording or verification phase of a test,
- creates a new matcher that will check if the given value is <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang"><CODE>equal</CODE></A> to the
+ Note: when using <a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><code>invoke(Object, String, Object...)</code></a>, etc., it's valid to pass
+ <code>withAny(ParameterType.class)</code> if an actual instance of the parameter type cannot be created.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>arg</code> - an arbitrary value which will match any argument value in the replay phase</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the input argument</dd></dl>
+</li>
+</ul>
+<a name="withEqual(double, double)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withEqual</h4>
+<pre>protected final&nbsp;double&nbsp;withEqual(double&nbsp;value,
+               double&nbsp;delta)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a numeric invocation argument in the replay phase is
+ sufficiently close to the given value.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>value</code> - the center value for range comparison</dd><dd><code>delta</code> - the tolerance around the center value, for a range of [value - delta, value + delta]</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the given <code>value</code></dd></dl>
+</li>
+</ul>
+<a name="withEqual(float, double)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withEqual</h4>
+<pre>protected final&nbsp;float&nbsp;withEqual(float&nbsp;value,
+              double&nbsp;delta)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a numeric invocation argument in the replay phase is
+ sufficiently close to the given value.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>value</code> - the center value for range comparison</dd><dd><code>delta</code> - the tolerance around the center value, for a range of [value - delta, value + delta]</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the given <code>value</code></dd></dl>
+</li>
+</ul>
+<a name="withEqual(java.lang.Object)">
+<!--   -->
+</a><a name="withEqual(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withEqual</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withEqual(T&nbsp;arg)</pre>
+<div class="block">When called as argument for a method/constructor invocation in the recording or verification phase of a test,
+ creates a new matcher that will check if the given value is <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang"><code>equal</code></a> to the
  corresponding invocation argument in the replay phase.
  <p/>
  The matcher is added to the end of the list of argument matchers for the invocation being recorded/verified.
@@ -1586,224 +1260,221 @@ protected final &lt;T&gt; T <B>withEqual</B>(T&nbsp;arg)</PRE>
  matcher is also used.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#argumentMatching">In the
- Tutorial</a>
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>arg</CODE> - the expected argument value
-<DT><B>Returns:</B><DD>the given argument</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withInstanceLike(java.lang.Object)"><!-- --></A><A NAME="withInstanceLike(T)"><!-- --></A><H3>
-withInstanceLike</H3>
-<PRE>
-protected final &lt;T&gt; T <B>withInstanceLike</B>(T&nbsp;object)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay phase is an instance of
+ Tutorial</a></div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>arg</code> - the expected argument value</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the given argument</dd></dl>
+</li>
+</ul>
+<a name="withInstanceLike(java.lang.Object)">
+<!--   -->
+</a><a name="withInstanceLike(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withInstanceLike</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withInstanceLike(T&nbsp;object)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is an instance of
  the same class as the given object.
  <p/>
  Equivalent to a <code>withInstanceOf(object.getClass())</code> call, except that it returns <code>object</code> instead
- of <code>null</code>.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>object</CODE> - an instance of the desired class
-<DT><B>Returns:</B><DD>the given instance</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withInstanceOf(java.lang.Class)"><!-- --></A><H3>
-withInstanceOf</H3>
-<PRE>
-protected final &lt;T&gt; T <B>withInstanceOf</B>(<A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</A>&lt;T&gt;&nbsp;argClass)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay phase is an instance of
- the given class.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>argClass</CODE> - the desired class
-<DT><B>Returns:</B><DD>always <code>null</code>; if you need a specific return value, use <A HREF="../mockit/VerificationsInOrder.html#withInstanceLike(T)"><CODE>withInstanceLike(Object)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withMatch(java.lang.CharSequence)"><!-- --></A><A NAME="withMatch(T)"><!-- --></A><H3>
-withMatch</H3>
-<PRE>
-protected final &lt;T extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; T <B>withMatch</B>(T&nbsp;regex)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the replay phase matches
- the given <A HREF="http://download.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex"><CODE>regular expression</CODE></A>.
+ of <code>null</code>.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>object</code> - an instance of the desired class</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the given instance</dd></dl>
+</li>
+</ul>
+<a name="withInstanceOf(java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withInstanceOf</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withInstanceOf(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;argClass)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is an instance of
+ the given class.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>argClass</code> - the desired class</dd>
+<dt><span class="strong">Returns:</span></dt><dd>always <code>null</code>; if you need a specific return value, use <a href="../mockit/VerificationsInOrder.html#withInstanceLike(T)"><code>withInstanceLike(Object)</code></a></dd></dl>
+</li>
+</ul>
+<a name="withMatch(java.lang.CharSequence)">
+<!--   -->
+</a><a name="withMatch(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withMatch</h4>
+<pre>protected final&nbsp;&lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;T&nbsp;withMatch(T&nbsp;regex)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase matches
+ the given <a href="http://download.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex"><code>regular expression</code></a>.
  <p/>
  Note that this can be used for any string comparison, including case insensitive ones (with <code>"(?i)"</code> in the
- regex).
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>regex</CODE> - an arbitrary (non-null) regular expression against which textual argument values will be matched
-<DT><B>Returns:</B><DD>the given regex<DT><B>See Also:</B><DD><A HREF="http://download.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true#compile(java.lang.String, int)" title="class or interface in java.util.regex"><CODE>Pattern.compile(String, int)</CODE></A></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withNotEqual(java.lang.Object)"><!-- --></A><A NAME="withNotEqual(T)"><!-- --></A><H3>
-withNotEqual</H3>
-<PRE>
-protected final &lt;T&gt; T <B>withNotEqual</B>(T&nbsp;arg)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that the invocation argument in the replay phase is different
- from the given value.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>arg</CODE> - an arbitrary value, but different from the ones expected to occur during replay
-<DT><B>Returns:</B><DD>the given argument value</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withNotNull()"><!-- --></A><H3>
-withNotNull</H3>
-<PRE>
-protected final &lt;T&gt; T <B>withNotNull</B>()</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay phase is not
- <code>null</code>.
-<P>
-<DD><DL>
-
-<DT><B>Returns:</B><DD>always <code>null</code></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withNull()"><!-- --></A><H3>
-withNull</H3>
-<PRE>
-protected final &lt;T&gt; T <B>withNull</B>()</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay phase is <code>null</code>.
-<P>
-<DD><DL>
-
-<DT><B>Returns:</B><DD>always <code>null</code></DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withPrefix(java.lang.CharSequence)"><!-- --></A><A NAME="withPrefix(T)"><!-- --></A><H3>
-withPrefix</H3>
-<PRE>
-protected final &lt;T extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; T <B>withPrefix</B>(T&nbsp;text)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the replay phase starts
- with the given text.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>text</CODE> - an arbitrary non-null textual value
-<DT><B>Returns:</B><DD>the given text</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withSameInstance(java.lang.Object)"><!-- --></A><A NAME="withSameInstance(T)"><!-- --></A><H3>
-withSameInstance</H3>
-<PRE>
-protected final &lt;T&gt; T <B>withSameInstance</B>(T&nbsp;object)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that an invocation argument in the replay phase is the exact same
- instance as the one in the recorded/verified invocation.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>object</CODE> - the desired instance
-<DT><B>Returns:</B><DD>the given object</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withSubstring(java.lang.CharSequence)"><!-- --></A><A NAME="withSubstring(T)"><!-- --></A><H3>
-withSubstring</H3>
-<PRE>
-protected final &lt;T extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; T <B>withSubstring</B>(T&nbsp;text)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the replay phase contains
- the given text as a substring.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>text</CODE> - an arbitrary non-null textual value
-<DT><B>Returns:</B><DD>the given text</DL>
-</DD>
-</DL>
-<HR>
-
-<A NAME="withSuffix(java.lang.CharSequence)"><!-- --></A><A NAME="withSuffix(T)"><!-- --></A><H3>
-withSuffix</H3>
-<PRE>
-protected final &lt;T extends <A HREF="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</A>&gt; T <B>withSuffix</B>(T&nbsp;text)</PRE>
-<DL>
-<DD>Same as <A HREF="../mockit/VerificationsInOrder.html#withEqual(T)"><CODE>withEqual(Object)</CODE></A>, but checking that a textual invocation argument in the replay phase ends with
- the given text.
-<P>
-<DD><DL>
-<DT><B>Parameters:</B><DD><CODE>text</CODE> - an arbitrary non-null textual value
-<DT><B>Returns:</B><DD>the given text</DL>
-</DD>
-</DL>
+ regex).</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>regex</code> - an arbitrary (non-null) regular expression against which textual argument values will be matched</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the given regex</dd><dt><span class="strong">See Also:</span></dt><dd><a href="http://download.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true#compile(java.lang.String, int)" title="class or interface in java.util.regex"><code>Pattern.compile(String, int)</code></a></dd></dl>
+</li>
+</ul>
+<a name="withNotEqual(java.lang.Object)">
+<!--   -->
+</a><a name="withNotEqual(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withNotEqual</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withNotEqual(T&nbsp;arg)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that the invocation argument in the replay phase is different
+ from the given value.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>arg</code> - an arbitrary value, but different from the ones expected to occur during replay</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the given argument value</dd></dl>
+</li>
+</ul>
+<a name="withNotNull()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withNotNull</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withNotNull()</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is not
+ <code>null</code>.</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>always <code>null</code></dd></dl>
+</li>
+</ul>
+<a name="withNull()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withNull</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withNull()</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is <code>null</code>.</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>always <code>null</code></dd></dl>
+</li>
+</ul>
+<a name="withPrefix(java.lang.CharSequence)">
+<!--   -->
+</a><a name="withPrefix(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withPrefix</h4>
+<pre>protected final&nbsp;&lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;T&nbsp;withPrefix(T&nbsp;text)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase starts
+ with the given text.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>text</code> - an arbitrary non-null textual value</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the given text</dd></dl>
+</li>
+</ul>
+<a name="withSameInstance(java.lang.Object)">
+<!--   -->
+</a><a name="withSameInstance(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withSameInstance</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withSameInstance(T&nbsp;object)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is the exact same
+ instance as the one in the recorded/verified invocation.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>object</code> - the desired instance</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the given object</dd></dl>
+</li>
+</ul>
+<a name="withSubstring(java.lang.CharSequence)">
+<!--   -->
+</a><a name="withSubstring(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withSubstring</h4>
+<pre>protected final&nbsp;&lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;T&nbsp;withSubstring(T&nbsp;text)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase contains
+ the given text as a substring.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>text</code> - an arbitrary non-null textual value</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the given text</dd></dl>
+</li>
+</ul>
+<a name="withSuffix(java.lang.CharSequence)">
+<!--   -->
+</a><a name="withSuffix(T)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>withSuffix</h4>
+<pre>protected final&nbsp;&lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;T&nbsp;withSuffix(T&nbsp;text)</pre>
+<div class="block">Same as <a href="../mockit/VerificationsInOrder.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase ends with
+ the given text.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>text</code> - an arbitrary non-null textual value</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the given text</dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <!-- ========= END OF CLASS DATA ========= -->
-<HR>
-
-
 <!-- ======= START OF BOTTOM NAVBAR ====== -->
-<A NAME="navbar_bottom"><!-- --></A>
-<A HREF="#skip-navbar_bottom" title="Skip navigation links"></A>
-<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0" SUMMARY="">
-<TR>
-<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
-<A NAME="navbar_bottom_firstrow"><!-- --></A>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3" SUMMARY="">
-  <TR ALIGN="center" VALIGN="top">
-  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../overview-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
-  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
-  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
-  </TR>
-</TABLE>
-</TD>
-<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
-<a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></EM>
-</TD>
-</TR>
-
-<TR>
-<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="../mockit/Verifications.html" title="class in mockit"><B>PREV CLASS</B></A>&nbsp;
-&nbsp;NEXT CLASS</FONT></TD>
-<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
-  <A HREF="../index.html?mockit/VerificationsInOrder.html" target="_top"><B>FRAMES</B></A>  &nbsp;
-&nbsp;<A HREF="VerificationsInOrder.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
-&nbsp;<SCRIPT type="text/javascript">
-  <!--
+<div class="bottomNav"><a name="navbar_bottom">
+<!--   -->
+</a><a href="#skip-navbar_bottom" title="Skip navigation links"></a><a name="navbar_bottom_firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+</ul>
+<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></em></div>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../mockit/Verifications.html" title="class in mockit"><span class="strong">Prev Class</span></a></li>
+<li>Next Class</li>
+</ul>
+<ul class="navList">
+<li><a href="../index.html?mockit/VerificationsInOrder.html" target="_top">Frames</a></li>
+<li><a href="VerificationsInOrder.html" target="_top">No Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../allclasses-noframe.html">All Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
   if(window==top) {
-    document.writeln('<A HREF="../allclasses-noframe.html"><B>All Classes</B></A>');
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
   }
   //-->
-</SCRIPT>
-<NOSCRIPT>
-  <A HREF="../allclasses-noframe.html"><B>All Classes</B></A>
-</NOSCRIPT>
-
-
-</FONT></TD>
-</TR>
-<TR>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
-  SUMMARY:&nbsp;NESTED&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
-DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
-</TR>
-</TABLE>
-<A NAME="skip-navbar_bottom"></A>
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#field_summary">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li><a href="#field_detail">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#constructor_detail">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method_detail">Method</a></li>
+</ul>
+</div>
+<a name="skip-navbar_bottom">
+<!--   -->
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
-
-<HR>
-<font size=-1>© 2006-2011 Rogério Liesenfeld</font>
-</BODY>
-</HTML>
+<p class="legalCopy"><small><font size=-1>© 2006-2012 Rogério Liesenfeld</font></small></p>
+</body>
+</html>
