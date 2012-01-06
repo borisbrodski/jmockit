@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 public final class MisusedExpectationsTest
 {
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    static class Blah
    {
       int value() { return 0; }
@@ -24,8 +24,7 @@ public final class MisusedExpectationsTest
    public void multipleReplayPhasesWithFirstSetOfExpectationsFullyReplayed()
    {
       // First record phase:
-      new Expectations()
-      {{
+      new Expectations() {{
          new Blah().value(); result = 5;
       }};
 
@@ -33,8 +32,7 @@ public final class MisusedExpectationsTest
       assertEquals(5, new Blah().value());
 
       // Second record phase:
-      new Expectations()
-      {{
+      new Expectations() {{
          mock.value(); result = 6;
          mock.value(); result = 3;
       }};
@@ -48,8 +46,7 @@ public final class MisusedExpectationsTest
    public void multipleReplayPhasesWithFirstSetOfExpectationsPartiallyReplayed()
    {
       // First record phase:
-      new Expectations()
-      {{
+      new Expectations() {{
          mock.value(); returns(1, 2);
       }};
 
@@ -57,8 +54,7 @@ public final class MisusedExpectationsTest
       assertEquals(1, mock.value());
 
       // Second record phase:
-      new Expectations()
-      {{
+      new Expectations() {{
          mock.value(); returns(3, 4);
       }};
 
@@ -71,8 +67,7 @@ public final class MisusedExpectationsTest
    @Test
    public void recordDuplicateInvocationWithNoArguments()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.value(); result = 1;
          mock.value(); result = 2; // second recording overrides the first
       }};
@@ -84,8 +79,7 @@ public final class MisusedExpectationsTest
    @Test
    public void recordDuplicateInvocationWithArgumentMatcher()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.setValue(anyInt); result = new UnknownError();
          mock.setValue(anyInt); // overrides the previous one
       }};
@@ -96,13 +90,11 @@ public final class MisusedExpectationsTest
    @Test
    public void recordDuplicateInvocationInSeparateNonStrictExpectationBlocks()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.value(); result = 1;
       }};
 
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.value(); result = 2; // overrides the previous expectation
       }};
 
@@ -112,13 +104,11 @@ public final class MisusedExpectationsTest
    @Test(expected = AssertionError.class)
    public void recordSameInvocationInNonStrictExpectationBlockThenInStrictOne()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.value(); result = 1;
       }};
 
-      new Expectations()
-      {{
+      new Expectations() {{
          // This expectation can never be replayed, so it will cause the test to fail:
          mock.value(); result = 2;
       }};
@@ -132,8 +122,7 @@ public final class MisusedExpectationsTest
    {
       assertEquals(0, mock.value());
 
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.value(); result = 1;
       }};
 
@@ -145,8 +134,7 @@ public final class MisusedExpectationsTest
    {
       assertEquals(0, mock.value());
 
-      new Expectations()
-      {{
+      new Expectations() {{
          mock.value(); result = 1;
       }};
 
@@ -169,12 +157,66 @@ public final class MisusedExpectationsTest
       assertEquals(123, blah.value());
    }
 
+   @Test
+   public void recordOrderedInstantiationOfClassMockedTwice()
+   {
+      new Expectations() {
+         Blah mock2;
+
+         {
+            // OK because of the strictly ordered matching (will match the *first* invocation with this constructor).
+            new Blah();
+         }
+      };
+
+      new Blah();
+   }
+
+   @Test
+   public void recordUnorderedInstantiationOfClassMockedTwice(final Blah mock2)
+   {
+      new NonStrictExpectations() {{
+         new Blah(); times = 1;
+         mock.value(); result = 123;
+         mock2.value(); result = 45;
+      }};
+
+      assertEquals(45, mock2.value());
+      assertEquals(123, mock.value());
+      new Blah();
+   }
+
+   @Test
+   public void verifyOrderedInstantiationOfClassMockedTwice(final Blah mock2)
+   {
+      new Blah();
+      mock2.doSomething(true);
+
+      new VerificationsInOrder() {{
+         new Blah();
+         mock2.doSomething(anyBoolean);
+      }};
+   }
+
+   @Test
+   public void verifyUnorderedInstantiationOfClassMockedTwice(final Blah mock2)
+   {
+      mock.doSomething(false);
+      mock2.doSomething(true);
+      new Blah();
+
+      new Verifications() {{
+         mock2.doSomething(true);
+         new Blah();
+         mock.doSomething(false);
+      }};
+   }
+
    @BeforeClass
    public static void recordExpectationsInStaticContext()
    {
       try {
-         new NonStrictExpectations()
-         {
+         new NonStrictExpectations() {
             Blah blah;
 
             {
@@ -187,7 +229,7 @@ public final class MisusedExpectationsTest
       }
    }
 
-   @SuppressWarnings({"UnusedParameters"})
+   @SuppressWarnings("UnusedParameters")
    static class BlahBlah
    {
       int value() { return 0; }
@@ -196,21 +238,18 @@ public final class MisusedExpectationsTest
       void doSomethingElse(Object o) {}
    }
 
-   @SuppressWarnings({"StaticFieldReferencedViaSubclass"})
+   @SuppressWarnings("StaticFieldReferencedViaSubclass")
    @Test
    public void accessSpecialFieldsInExpectationBlockThroughClassQualifierInsteadOfDirectly(final BlahBlah mock)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.value(); Expectations.result = 123; Expectations.minTimes = 1; Expectations.maxTimes = 2;
+      new NonStrictExpectations() {{
+         mock.value(); Expectations.result = 123; Expectations.minTimes = 1; Expectations.maxTimes = 2;
 
-            mock.doSomething(Expectations.anyBoolean); NonStrictExpectations.result = "test";
-            NonStrictExpectations.times = 1;
+         mock.doSomething(Expectations.anyBoolean); NonStrictExpectations.result = "test";
+         NonStrictExpectations.times = 1;
 
-            mock.setValue(withNotEqual(0));
-         }
-      };
+         mock.setValue(withNotEqual(0));
+      }};
 
       assertEquals(123, mock.value());
       assertEquals("test", mock.doSomething(true));
@@ -219,26 +258,23 @@ public final class MisusedExpectationsTest
 
    boolean verified;
 
-   @SuppressWarnings({"StaticFieldReferencedViaSubclass"})
+   @SuppressWarnings("StaticFieldReferencedViaSubclass")
    @Test
    public void accessSpecialFieldsInVerificationBlockThroughClassQualifierInsteadOfDirectly(final BlahBlah mock)
    {
       assertNull(mock.doSomething(true));
       mock.setValue(1);
 
-      new Verifications()
-      {
-         {
-            mock.doSomething(false); Verifications.times = 0;
+      new Verifications() {{
+         mock.doSomething(false); Verifications.times = 0;
 
-            mock.doSomethingElse(Expectations.any); FullVerificationsInOrder.maxTimes = 0;
+         mock.doSomethingElse(Expectations.any); FullVerificationsInOrder.maxTimes = 0;
 
-            mock.setValue(FullVerifications.anyInt); VerificationsInOrder.forEachInvocation = new Object()
-            {
-               void setValue(int v) { assertTrue(v > 0); verified = true; }
-            };
-         }
-      };
+         mock.setValue(FullVerifications.anyInt);
+         VerificationsInOrder.forEachInvocation = new Object() {
+            void setValue(int v) { assertTrue(v > 0); verified = true; }
+         };
+      }};
 
       assertTrue(verified);
    }
@@ -246,12 +282,9 @@ public final class MisusedExpectationsTest
    @Test // with Java 7 only: "java.lang.VerifyError: Expecting a stackmap frame ..."
    public void expectationBlockContainingATryBlock()
    {
-      new Expectations()
-      {
-         {
-            try { mock.doSomething(anyBoolean); } finally { mock.setValue(1); }
-         }
-      };
+      new Expectations() {{
+         try { mock.doSomething(anyBoolean); } finally { mock.setValue(1); }
+      }};
 
       mock.doSomething(true);
       mock.setValue(1);

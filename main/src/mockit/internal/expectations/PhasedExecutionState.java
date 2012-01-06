@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations;
@@ -74,16 +74,17 @@ final class PhasedExecutionState
 
    private void forceMatchingOnMockInstanceIfRequired(ExpectedInvocation invocation)
    {
-      Object mock = invocation.instance;
-
-      if (mock != null && isToBeMatchedOnInstance(mock)) {
+      if (isToBeMatchedOnInstance(invocation.instance, invocation.getMethodNameAndDescription())) {
          invocation.matchInstance = true;
       }
    }
 
-   boolean isToBeMatchedOnInstance(Object mock)
+   boolean isToBeMatchedOnInstance(Object mock, String mockNameAndDesc)
    {
-      if (dynamicMockInstancesToMatch != null && containsReference(dynamicMockInstancesToMatch, mock)) {
+      if (mock == null || mockNameAndDesc.charAt(0) == '<') {
+         return false;
+      }
+      else if (dynamicMockInstancesToMatch != null && containsReference(dynamicMockInstancesToMatch, mock)) {
          return true;
       }
       else if (mockedTypesToMatchOnInstances != null) {
@@ -117,15 +118,18 @@ final class PhasedExecutionState
       String mockNameAndDesc = newInvocation.getMethodNameAndDescription();
       InvocationArguments arguments = newInvocation.arguments;
       Object[] argValues = arguments.getValues();
+
+      boolean staticOrConstructorInvocation = mock == null || mockNameAndDesc.charAt(0) == '<';
       boolean newInvocationWithMatchers = arguments.getMatchers() != null;
 
+      //noinspection ForLoopReplaceableByForEach
       for (int i = 0, n = nonStrictExpectations.size(); i < n; i++) {
          Expectation previousExpectation = nonStrictExpectations.get(i);
          ExpectedInvocation previousInvocation = previousExpectation.invocation;
 
          if (
             previousInvocation.isMatch(mockClassDesc, mockNameAndDesc) &&
-            (mock == null || isMatchingInstance(mock, previousInvocation)) &&
+            (staticOrConstructorInvocation || isMatchingInstance(mock, previousInvocation)) &&
             (newInvocationWithMatchers && arguments.hasEquivalentMatchers(previousInvocation.arguments) ||
              !newInvocationWithMatchers && previousInvocation.arguments.isMatch(argValues, instanceMap))
          ) {
@@ -138,14 +142,17 @@ final class PhasedExecutionState
 
    Expectation findNonStrictExpectation(Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
+      boolean staticOrConstructorInvocation = mock == null || mockNameAndDesc.charAt(0) == '<';
+
       // Note: new expectations might get added to the list, so a regular loop would cause a CME:
+      //noinspection ForLoopReplaceableByForEach
       for (int i = 0, n = nonStrictExpectations.size(); i < n; i++) {
          Expectation nonStrict = nonStrictExpectations.get(i);
          ExpectedInvocation invocation = nonStrict.invocation;
 
          if (
             invocation.isMatch(mockClassDesc, mockNameAndDesc) &&
-            (mock == null || isMatchingInstance(mock, invocation)) &&
+            (staticOrConstructorInvocation || isMatchingInstance(mock, invocation)) &&
             invocation.arguments.isMatch(args, instanceMap)
          ) {
             return nonStrict;

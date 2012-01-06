@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations;
@@ -26,7 +26,7 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
    {
       aggregate = null;
 
-      if (mock != null && recordAndReplay.executionState.isToBeMatchedOnInstance(mock)) {
+      if (recordAndReplay.executionState.isToBeMatchedOnInstance(mock, mockNameAndDesc)) {
          matchInstance = true;
       }
 

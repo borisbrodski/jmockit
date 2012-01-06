@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations;
@@ -51,7 +51,7 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
             continue;
          }
 
-         if (mock != null && recordAndReplay.executionState.isToBeMatchedOnInstance(mock)) {
+         if (recordAndReplay.executionState.isToBeMatchedOnInstance(mock, mockNameAndDesc)) {
             matchInstance = true;
          }
 
@@ -104,7 +104,7 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
       return -1;
    }
 
-   @SuppressWarnings({"OverlyComplexMethod"})
+   @SuppressWarnings("OverlyComplexMethod")
    @Override
    public void handleInvocationCountConstraint(int minInvocations, int maxInvocations)
    {
@@ -174,7 +174,7 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
       Object[] args = invocation.arguments.getValues();
       matchInstance = invocation.matchInstance;
 
-      if (mock != null && recordAndReplay.executionState.isToBeMatchedOnInstance(mock)) {
+      if (recordAndReplay.executionState.isToBeMatchedOnInstance(mock, mockNameAndDesc)) {
          matchInstance = true;
       }
 
