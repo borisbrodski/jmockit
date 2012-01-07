@@ -1,15 +1,20 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage;
 
 import mockit.coverage.data.*;
+import mockit.coverage.lines.*;
 import mockit.coverage.paths.*;
 
-@SuppressWarnings({"UnusedDeclaration"})
+@SuppressWarnings("UnusedDeclaration")
 public final class TestRun
 {
+   /**
+    * Used to prevent reentrancy in methods which gather coverage information, when measuring the coverage of
+    * JMockit Coverage itself.
+    */
    private static final ThreadLocal<Boolean> executingCall = new ThreadLocal<Boolean>()
    {
       @Override
@@ -27,11 +32,11 @@ public final class TestRun
       executingCall.set(true);
 
       CoverageData coverageData = CoverageData.instance();
-      CallPoint callPoint =
-         coverageData.isWithCallPoints() ? CallPoint.create(new Throwable()) : null;
+      CallPoint callPoint = coverageData.isWithCallPoints() ? CallPoint.create(new Throwable()) : null;
 
       FileCoverageData fileData = coverageData.getFileData(file);
-      fileData.incrementLineCount(line, callPoint);
+      LineCoverageData lineData = fileData.lineToLineData.get(line);
+      lineData.registerExecution(callPoint);
 
       executingCall.set(false);
    }
@@ -45,11 +50,11 @@ public final class TestRun
       executingCall.set(true);
 
       CoverageData coverageData = CoverageData.instance();
-      CallPoint callPoint =
-         coverageData.isWithCallPoints() ? CallPoint.create(new Throwable()) : null;
+      CallPoint callPoint = coverageData.isWithCallPoints() ? CallPoint.create(new Throwable()) : null;
 
       FileCoverageData fileData = coverageData.getFileData(file);
-      fileData.registerBranchExecution(line, segment, true, callPoint);
+      LineCoverageData lineData = fileData.lineToLineData.get(line);
+      lineData.registerExecution(segment, true, callPoint);
 
       executingCall.set(false);
    }
@@ -63,11 +68,11 @@ public final class TestRun
       executingCall.set(true);
 
       CoverageData coverageData = CoverageData.instance();
-      CallPoint callPoint =
-         coverageData.isWithCallPoints() ? CallPoint.create(new Throwable()) : null;
+      CallPoint callPoint = coverageData.isWithCallPoints() ? CallPoint.create(new Throwable()) : null;
 
       FileCoverageData fileData = coverageData.getFileData(file);
-      fileData.registerBranchExecution(line, segment, false, callPoint);
+      LineCoverageData lineData = fileData.lineToLineData.get(line);
+      lineData.registerExecution(segment, false, callPoint);
 
       executingCall.set(false);
    }

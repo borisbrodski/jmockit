@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.data;
@@ -9,7 +9,8 @@ import java.util.*;
 import java.util.Map.*;
 
 import mockit.coverage.*;
-import mockit.coverage.data.dataItems.*;
+import mockit.coverage.dataItems.*;
+import mockit.coverage.lines.*;
 import mockit.coverage.paths.*;
 
 /**
@@ -19,8 +20,7 @@ public final class FileCoverageData implements Serializable
 {
    private static final long serialVersionUID = 3508592808457531011L;
 
-   public final SortedMap<Integer, LineCoverageData> lineToLineData =
-      new TreeMap<Integer, LineCoverageData>();
+   public final SortedMap<Integer, LineCoverageData> lineToLineData = new TreeMap<Integer, LineCoverageData>();
    public final Map<Integer, MethodCoverageData> firstLineToMethodData =
       new LinkedHashMap<Integer, MethodCoverageData>();
    public final DataCoverageInfo dataCoverageInfo = new DataCoverageInfo();
@@ -51,49 +51,15 @@ public final class FileCoverageData implements Serializable
       return lineData;
    }
 
-   public void incrementLineCount(int line, CallPoint cp)
-   {
-      LineCoverageData lineData = lineToLineData.get(line);
-      lineData.registerExecution(cp);
-   }
+   public SortedMap<Integer, LineCoverageData> getLineToLineData() { return lineToLineData; }
+   public Collection<MethodCoverageData> getMethods() { return firstLineToMethodData.values(); }
 
-   public void registerBranchExecution(int line, int branchIndex, boolean jumped, CallPoint cp)
-   {
-      LineCoverageData lineData = lineToLineData.get(line);
-      lineData.registerExecution(branchIndex, jumped, cp);
-   }
+   public int getTotalSegments() { return totalSegments; }
+   public int getCoveredSegments() { return coveredSegments; }
+   public int getTotalPaths() { return totalPaths; }
+   public int getCoveredPaths() { return coveredPaths; }
 
-   public SortedMap<Integer, LineCoverageData> getLineToLineData()
-   {
-      return lineToLineData;
-   }
-
-   public Collection<MethodCoverageData> getMethods()
-   {
-      return firstLineToMethodData.values();
-   }
-
-   public int getTotalSegments()
-   {
-      return totalSegments;
-   }
-
-   public int getCoveredSegments()
-   {
-      return coveredSegments;
-   }
-
-   public int getTotalPaths()
-   {
-      return totalPaths;
-   }
-
-   public int getCoveredPaths()
-   {
-      return coveredPaths;
-   }
-
-   public int getCodeCoveragePercentage()
+   public int getLineCoveragePercentage()
    {
       if (lineToLineData.isEmpty()) {
          return -1;

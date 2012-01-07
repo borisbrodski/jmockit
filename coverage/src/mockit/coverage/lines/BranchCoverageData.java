@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit.coverage.data;
+package mockit.coverage.lines;
 
 import mockit.coverage.*;
 import mockit.external.asm4.*;
@@ -29,15 +29,8 @@ public final class BranchCoverageData extends LineSegmentData
       executionCount = -1;
    }
 
-   public void setHasJumpTarget()
-   {
-      jumpExecutionCount = 0;
-   }
-
-   public void setHasNoJumpTarget()
-   {
-      executionCount = 0;
-   }
+   public void setHasJumpTarget() { jumpExecutionCount = 0; }
+   public void setHasNoJumpTarget() { executionCount = 0; }
 
    void registerJumpExecution(CallPoint callPoint)
    {

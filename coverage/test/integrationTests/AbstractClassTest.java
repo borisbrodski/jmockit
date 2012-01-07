@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package integrationTests;
@@ -28,7 +28,7 @@ public final class AbstractClassTest extends CoverageTest
 
       assertEquals(1, fileData.lineToLineData.size());
       assertLines(3, 3, 1);
-      assertEquals(100, fileData.getCodeCoveragePercentage());
+      assertEquals(100, fileData.getLineCoveragePercentage());
 
       assertEquals(1, fileData.firstLineToMethodData.size());
       findMethodData(3, AbstractClassWithNoExecutableLines.class.getSimpleName());

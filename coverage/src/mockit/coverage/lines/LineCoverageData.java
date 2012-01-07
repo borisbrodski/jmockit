@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit.coverage.data;
+package mockit.coverage.lines;
 
 import java.util.*;
 
@@ -36,7 +36,7 @@ public final class LineCoverageData extends LineSegmentData
       return branches.get(index);
    }
 
-   void registerExecution(int branchIndex, boolean jumped, CallPoint callPoint)
+   public void registerExecution(int branchIndex, boolean jumped, CallPoint callPoint)
    {
       BranchCoverageData data = branches.get(branchIndex);
 
@@ -48,15 +48,8 @@ public final class LineCoverageData extends LineSegmentData
       }
    }
 
-   public boolean containsBranches()
-   {
-      return branches != null;
-   }
-
-   public List<BranchCoverageData> getBranches()
-   {
-      return branches;
-   }
+   public boolean containsBranches() { return branches != null; }
+   public List<BranchCoverageData> getBranches() { return branches; }
 
    public int getNumberOfSegments()
    {
@@ -93,7 +86,7 @@ public final class LineCoverageData extends LineSegmentData
       return segmentsCovered;
    }
 
-   void addCountsFromPreviousTestRun(LineCoverageData previousData)
+   public void addCountsFromPreviousTestRun(LineCoverageData previousData)
    {
       addExecutionCountAndCallPointsFromPreviousTestRun(previousData);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package integrationTests;
@@ -11,7 +11,8 @@ import static java.lang.reflect.Modifier.*;
 import org.junit.*;
 
 import mockit.coverage.data.*;
-import mockit.coverage.data.dataItems.*;
+import mockit.coverage.dataItems.*;
+import mockit.coverage.lines.*;
 import mockit.coverage.paths.*;
 
 public class CoverageTest extends Assert

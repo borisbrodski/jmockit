@@ -9,7 +9,7 @@ import java.util.*;
 
 import mockit.coverage.*;
 import mockit.coverage.data.*;
-import mockit.coverage.data.dataItems.*;
+import mockit.coverage.dataItems.*;
 import mockit.coverage.paths.*;
 import mockit.coverage.reporting.*;
 import mockit.coverage.reporting.dataCoverage.*;

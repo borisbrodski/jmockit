@@ -2,14 +2,16 @@
  * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit.coverage;
+package mockit.coverage.modification;
 
 import java.io.*;
 import java.util.*;
 
 import static mockit.external.asm4.Opcodes.*;
 
+import mockit.coverage.*;
 import mockit.coverage.data.*;
+import mockit.coverage.lines.*;
 import mockit.coverage.paths.*;
 import mockit.external.asm4.*;
 

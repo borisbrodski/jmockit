@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package integrationTests;
@@ -16,7 +16,7 @@ public final class ClassWithNestedClassesTest extends CoverageTest
       ClassWithNestedClasses.doSomething();
 
       assertEquals(9, fileData.lineToLineData.size());
-      assertEquals(44, fileData.getCodeCoveragePercentage());
+      assertEquals(44, fileData.getLineCoveragePercentage());
       assertEquals(9, fileData.getTotalSegments());
       assertEquals(4, fileData.getCoveredSegments());
 

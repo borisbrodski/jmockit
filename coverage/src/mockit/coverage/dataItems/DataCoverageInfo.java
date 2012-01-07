@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit.coverage.data.dataItems;
+package mockit.coverage.dataItems;
 
 import java.io.*;
 import java.util.*;
@@ -15,10 +15,8 @@ public final class DataCoverageInfo implements Serializable
    private static final long serialVersionUID = -4561686103982673490L;
 
    public final List<String> allFields = new ArrayList<String>(2);
-   public final Map<String, StaticFieldData> staticFieldsData =
-      new LinkedHashMap<String, StaticFieldData>();
-   public final Map<String, InstanceFieldData> instanceFieldsData =
-      new LinkedHashMap<String, InstanceFieldData>();
+   public final Map<String, StaticFieldData> staticFieldsData = new LinkedHashMap<String, StaticFieldData>();
+   public final Map<String, InstanceFieldData> instanceFieldsData = new LinkedHashMap<String, InstanceFieldData>();
 
    private transient int coveredDataItems = -1;
 

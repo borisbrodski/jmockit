@@ -8,6 +8,7 @@ import java.lang.instrument.*;
 import java.security.*;
 
 import mockit.coverage.data.*;
+import mockit.coverage.modification.*;
 import mockit.internal.startup.*;
 
 public final class CodeCoverage implements ClassFileTransformer, Runnable
@@ -31,13 +32,7 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
    public CodeCoverage()
    {
       classModification = new ClassModification();
-      classModification.redefineClassesAlreadyLoadedForCoverage();
 
-      setUpOutputFileGenerator();
-   }
-
-   private void setUpOutputFileGenerator()
-   {
       OutputFileGenerator generator = createOutputFileGenerator();
 
       if (generator.isOutputToBeGenerated()) {

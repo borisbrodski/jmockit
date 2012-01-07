@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting.packages;
@@ -17,8 +17,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
    private char[] fileNameWithSpaces;
    private String filePath;
 
-   PackageCoverageReport(
-      PrintWriter output, Map<String, FileCoverageData> filesToFileData, boolean withSourceFiles)
+   PackageCoverageReport(PrintWriter output, Map<String, FileCoverageData> filesToFileData, boolean withSourceFiles)
    {
       super(output, "          ");
       this.filesToFileData = filesToFileData;
@@ -101,7 +100,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
 
    private void writeLineCoveragePercentageForFile(FileCoverageData fileData)
    {
-      int percentage = fileData.getCodeCoveragePercentage();
+      int percentage = fileData.getLineCoveragePercentage();
       int covered = fileData.getCoveredSegments();
       int total = fileData.getTotalSegments();
 

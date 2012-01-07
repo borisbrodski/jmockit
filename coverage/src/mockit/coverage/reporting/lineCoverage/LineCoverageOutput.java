@@ -7,7 +7,7 @@ package mockit.coverage.reporting.lineCoverage;
 import java.io.*;
 import java.util.*;
 
-import mockit.coverage.data.*;
+import mockit.coverage.lines.*;
 import mockit.coverage.reporting.parsing.*;
 
 public final class LineCoverageOutput

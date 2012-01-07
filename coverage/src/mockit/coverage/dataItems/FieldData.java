@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit.coverage.data.dataItems;
+package mockit.coverage.dataItems;
 
 import java.io.*;
 
@@ -20,15 +20,8 @@ public abstract class FieldData implements Serializable
       out.defaultWriteObject();
    }
 
-   public final int getReadCount()
-   {
-      return readCount;
-   }
-
-   public final int getWriteCount()
-   {
-      return writeCount;
-   }
+   public final int getReadCount() { return readCount; }
+   public final int getWriteCount() { return writeCount; }
 
    public final boolean isCovered()
    {

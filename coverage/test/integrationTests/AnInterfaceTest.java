@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package integrationTests;
@@ -26,7 +26,7 @@ public final class AnInterfaceTest extends CoverageTest
       tested.doSomething("test", true);
 
       assertTrue(fileData.lineToLineData.isEmpty());
-      assertEquals(-1, fileData.getCodeCoveragePercentage());
+      assertEquals(-1, fileData.getLineCoveragePercentage());
       assertEquals(0, fileData.getTotalSegments());
       assertEquals(0, fileData.getCoveredSegments());
 

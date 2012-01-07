@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit.coverage.data;
+package mockit.coverage.lines;
 
 import java.io.*;
 import java.util.*;
@@ -23,7 +23,7 @@ public class LineSegmentData implements Serializable
    public final boolean isUnreachable() { return unreachable; }
    public final void markAsUnreachable() { unreachable = true; }
 
-   final void registerExecution(CallPoint callPoint)
+   public final void registerExecution(CallPoint callPoint)
    {
       addCallPointIfAny(callPoint);
       executionCount++;

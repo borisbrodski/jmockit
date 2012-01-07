@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit.coverage;
+package mockit.coverage.modification;
 
 import java.io.*;
 import java.lang.instrument.*;
@@ -13,20 +13,21 @@ import mockit.external.asm4.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.TestRun;
 
-final class ClassModification
+public final class ClassModification
 {
    private final Set<String> modifiedClasses;
    private final ClassSelection classSelection;
 
-   ClassModification()
+   public ClassModification()
    {
       modifiedClasses = new HashSet<String>();
       classSelection = new ClassSelection();
+      redefineClassesAlreadyLoadedForCoverage();
    }
 
-   void redefineClassesAlreadyLoadedForCoverage()
+   private void redefineClassesAlreadyLoadedForCoverage()
    {
-      Class<?>[] loadedClasses = Startup.instrumentation().getInitiatedClasses(CodeCoverage.class.getClassLoader());
+      Class<?>[] loadedClasses = Startup.instrumentation().getInitiatedClasses(getClass().getClassLoader());
 
       for (Class<?> loadedClass : loadedClasses) {
          if (
@@ -121,7 +122,7 @@ final class ClassModification
       TestRun.mockFixture().addFixedClass(className, modifiedClassfile);
    }
 
-   byte[] modifyClass(String className, ProtectionDomain protectionDomain, byte[] originalClassfile)
+   public byte[] modifyClass(String className, ProtectionDomain protectionDomain, byte[] originalClassfile)
    {
       boolean modifyClassForCoverage = isToBeConsideredForCoverage(className, protectionDomain);
 
