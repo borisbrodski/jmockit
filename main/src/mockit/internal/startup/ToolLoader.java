@@ -13,7 +13,12 @@ import mockit.internal.util.*;
 
 final class ToolLoader extends ClassVisitor
 {
-   static void loadExternalTool(String toolClassName)
+   private final String toolClassName;
+   private boolean loadClassFileTransformer;
+
+   ToolLoader(String toolClassName) { this.toolClassName = toolClassName; }
+
+   void loadTool()
    {
       ClassReader cr;
 
@@ -25,22 +30,12 @@ final class ToolLoader extends ClassVisitor
          return;
       }
 
-      ToolLoader toolLoader = new ToolLoader(toolClassName);
-
       try {
-         cr.accept(toolLoader, ClassReader.SKIP_DEBUG);
+         cr.accept(this, ClassReader.SKIP_DEBUG);
+         System.out.println("JMockit: loaded external tool " + toolClassName);
       }
-      catch (IllegalStateException ignore) {
-         return;
-      }
-
-      System.out.println("JMockit: loaded external tool " + toolClassName);
+      catch (IllegalStateException ignore) {}
    }
-
-   private final String toolClassName;
-   private boolean loadClassFileTransformer;
-
-   private ToolLoader(String toolClassName) { this.toolClassName = toolClassName; }
 
    @Override
    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)

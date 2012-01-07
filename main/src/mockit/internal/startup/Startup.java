@@ -7,13 +7,8 @@ package mockit.internal.startup;
 import java.io.*;
 import java.lang.instrument.*;
 
-import mockit.external.asm4.*;
-import mockit.integration.junit3.internal.*;
-import mockit.integration.junit4.internal.*;
-import mockit.integration.testng.internal.*;
-import mockit.internal.*;
+import mockit.*;
 import mockit.internal.expectations.transformation.*;
-import mockit.internal.util.*;
 
 /**
  * This is the "agent class" that initializes the JMockit "Java agent". It is not intended for use in client code.
@@ -27,8 +22,6 @@ public final class Startup
    static final String javaSpecVersion = System.getProperty("java.specification.version");
    static final boolean jdk6OrLater =
       "1.6".equals(javaSpecVersion) || "1.7".equals(javaSpecVersion) || "1.8".equals(javaSpecVersion);
-
-   private static final String[] NO_STUBBING_FILTERS = {};
 
    private static Instrumentation instrumentation;
    private static boolean initializedOnDemand;
@@ -75,77 +68,9 @@ public final class Startup
    private static void initialize(boolean initializeTestNG, Instrumentation inst) throws IOException
    {
       instrumentation = inst;
-
-      StartupConfiguration config = new StartupConfiguration();
-
-      MockingBridge.preventEventualClassLoadingConflicts();
-      loadInternalStartupMocksForJUnitIntegration();
-
-      if (initializeTestNG) {
-         try { setUpInternalStartupMock(MockTestNG.class); } catch (Error ignored) {}
-      }
-
-      for (String toolClassName : config.externalTools) {
-         ToolLoader.loadExternalTool(toolClassName);
-      }
-
-      stubOutClassesIfSpecifiedInSystemProperty(config.classesToBeStubbedOut);
-      setUpStartupMocks(config.mockClasses);
-
+      new JMockitInitialization().initialize(initializeTestNG);
       inst.addTransformer(new JMockitTransformer());
       inst.addTransformer(new ExpectationsTransformer(inst));
-   }
-
-   private static void loadInternalStartupMocksForJUnitIntegration()
-   {
-      if (setUpInternalStartupMock(TestSuiteDecorator.class)) {
-         try {
-            setUpInternalStartupMock(JUnitTestCaseDecorator.class);
-         }
-         catch (VerifyError ignore) {
-            // For some reason, this error occurs when running TestNG tests from Maven.
-         }
-
-         setUpInternalStartupMock(RunNotifierDecorator.class);
-         setUpInternalStartupMock(JUnit4TestRunnerDecorator.class);
-      }
-   }
-
-   private static boolean setUpInternalStartupMock(Class<?> mockClass)
-   {
-      try {
-         new RedefinitionEngine(null, mockClass).setUpStartupMock();
-         return true;
-      }
-      catch (TypeNotPresentException ignore) {
-         // OK, ignore the startup mock if the necessary third-party class files are not in the classpath.
-         return false;
-      }
-   }
-
-   private static void stubOutClassesIfSpecifiedInSystemProperty(Iterable<String> classesToStubOut)
-   {
-      for (String stubbing : classesToStubOut) {
-         int p = stubbing.indexOf('#');
-         String realClassName = stubbing;
-         String[] filters = NO_STUBBING_FILTERS;
-
-         if (p > 0) {
-            realClassName = stubbing.substring(0, p);
-            filters = stubbing.substring(p + 1).split("\\|");
-         }
-
-         Class<?> realClass = Utilities.loadClass(realClassName.trim());
-         new RedefinitionEngine(realClass, true, filters).stubOutAtStartup();
-      }
-   }
-
-   private static void setUpStartupMocks(Iterable<String> mockClasses)
-   {
-      for (String mockClassName : mockClasses) {
-         Class<?> mockClass = Utilities.loadClass(mockClassName);
-         new RedefinitionEngine(null, mockClass).setUpStartupMock();
-      }
    }
 
    public static Instrumentation instrumentation()
@@ -158,7 +83,7 @@ public final class Startup
 
    public static void verifyInitialization()
    {
-      if (instrumentation == null) {
+      if (getJVMWideInstrumentation() == null) {
          new AgentInitialization().initializeAccordingToJDKVersion();
          initializedOnDemand = true;
          System.out.println(
@@ -167,9 +92,27 @@ public final class Startup
       }
    }
 
-   public static boolean initializeIfNeeded()
+   private static Instrumentation getJVMWideInstrumentation()
    {
       if (instrumentation == null) {
+         ClassLoader systemCL = ClassLoader.getSystemClassLoader();
+
+         if (systemCL != null && systemCL != Startup.class.getClassLoader()) {
+            // For runtimes with custom classloading, such as OSGi containers or application servers.
+            try {
+               Class<?> startupClassFromSystemCL = systemCL.loadClass(Startup.class.getName());
+               instrumentation = Deencapsulation.getField(startupClassFromSystemCL, "instrumentation");
+            }
+            catch (ClassNotFoundException ignore) {}
+         }
+      }
+
+      return instrumentation;
+   }
+
+   public static boolean initializeIfNeeded()
+   {
+      if (getJVMWideInstrumentation() == null) {
          try {
             new AgentInitialization().initializeAccordingToJDKVersion();
             return true;
