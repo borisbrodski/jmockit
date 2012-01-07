@@ -109,7 +109,7 @@
                <overview>${basedir}/../www/javadoc/overview.html</overview>
                <header><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>]]></header>
                <footer><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>]]></footer>
-               <bottom><![CDATA[<font size=-1>© 2006-2011 Rogério Liesenfeld</font>]]></bottom>
+               <bottom><![CDATA[<font size=-1>© 2006-2012 Rogério Liesenfeld</font>]]></bottom>
                <notimestamp>true</notimestamp>
                <quiet>true</quiet>
                <sourcepath>${basedir}/src</sourcepath>
