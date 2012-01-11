@@ -109,12 +109,12 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
             mock = instanceFactory.create();
          }
          catch (NoClassDefFoundError e) {
-            StackTraceUtil.filterStackTrace(e);
+            StackTrace.filterStackTrace(e);
             e.printStackTrace();
             throw e;
          }
          catch (ExceptionInInitializerError e) {
-            StackTraceUtil.filterStackTrace(e);
+            StackTrace.filterStackTrace(e);
             e.printStackTrace();
             throw e;
          }

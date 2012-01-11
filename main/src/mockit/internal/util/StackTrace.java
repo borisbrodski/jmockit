@@ -9,29 +9,41 @@ import java.lang.reflect.*;
 /**
  * Provides optimized utility methods to extract stack trace information.
  */
-public final class StackTraceUtil
+public final class StackTrace
 {
-   private static final Method getStackTraceDepth;
-   private static final Method getStackTraceElement;
+   private static final Method getStackTraceDepth = getThrowableMethod("getStackTraceDepth");
+   private static final Method getStackTraceElement = getThrowableMethod("getStackTraceElement", int.class);
 
-   static
+   private static Method getThrowableMethod(String name, Class<?>... parameterTypes)
    {
-      try {
-         getStackTraceDepth = Throwable.class.getDeclaredMethod("getStackTraceDepth");
-         getStackTraceDepth.setAccessible(true);
+      Method m;
 
-         getStackTraceElement = Throwable.class.getDeclaredMethod("getStackTraceElement", int.class);
-         getStackTraceElement.setAccessible(true);
+      try {
+         m = Throwable.class.getDeclaredMethod(name, parameterTypes);
       }
-      catch (NoSuchMethodException e) {
-         throw new RuntimeException(e);
+      catch (NoSuchMethodException ignore) {
+         return null;
       }
+
+      m.setAccessible(true);
+      return m;
    }
 
-   private StackTraceUtil() {}
+   private final Throwable t;
+   private final StackTraceElement[] elements;
 
-   public static int getDepth(Throwable t)
+   public StackTrace(Throwable t)
    {
+      this.t = t;
+      elements = getStackTraceDepth == null ? t.getStackTrace() : null;
+   }
+
+   public int getDepth()
+   {
+      if (elements != null) {
+         return elements.length;
+      }
+
       int depth = 0;
 
       try {
@@ -43,8 +55,12 @@ public final class StackTraceUtil
       return depth;
    }
 
-   public static StackTraceElement getElement(Throwable t, int index)
+   public StackTraceElement getElement(int index)
    {
+      if (elements != null) {
+         return elements[index];
+      }
+
       StackTraceElement element = null;
 
       try {
@@ -58,12 +74,13 @@ public final class StackTraceUtil
 
    public static void filterStackTrace(Throwable t)
    {
-      int n = getDepth(t);
+      StackTrace st = new StackTrace(t);
+      int n = st.getDepth();
       StackTraceElement[] filteredST = new StackTraceElement[n];
       int j = 0;
 
       for (int i = 0; i < n; i++) {
-         StackTraceElement ste = getElement(t, i);
+         StackTraceElement ste = st.getElement(i);
 
          if (ste.getFileName() != null) {
             String where = ste.getClassName();

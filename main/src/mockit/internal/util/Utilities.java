@@ -428,7 +428,7 @@ public final class Utilities
          throw new RuntimeException(e);
       }
       catch (IllegalArgumentException e) {
-         StackTraceUtil.filterStackTrace(e);
+         StackTrace.filterStackTrace(e);
          throw new IllegalArgumentException("Failure to invoke method: " + method, e);
       }
       catch (InvocationTargetException e) {

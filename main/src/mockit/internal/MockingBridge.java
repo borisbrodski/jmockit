@@ -117,11 +117,11 @@ public final class MockingBridge implements InvocationHandler
 
    private static boolean wasCalledDuringClassLoading()
    {
-      Throwable t = new Throwable();
-      int n = StackTraceUtil.getDepth(t);
+      StackTrace st = new StackTrace(new Throwable());
+      int n = st.getDepth();
 
       for (int i = 3; i < n; i++) {
-         StackTraceElement ste = StackTraceUtil.getElement(t, i);
+         StackTraceElement ste = st.getElement(i);
 
          if ("ClassLoader.java".equals(ste.getFileName()) && "loadClass".equals(ste.getMethodName())) {
             return true;

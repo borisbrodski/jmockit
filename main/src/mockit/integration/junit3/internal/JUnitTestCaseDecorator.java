@@ -66,7 +66,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
          originalRunBare();
       }
       catch (Throwable t) {
-         StackTraceUtil.filterStackTrace(t);
+         StackTrace.filterStackTrace(t);
          throw t;
       }
       finally {

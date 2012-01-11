@@ -73,10 +73,11 @@ public final class CallPoint implements Serializable
 
    static CallPoint create(Throwable newThrowable)
    {
-      int n = StackTraceUtil.getDepth(newThrowable);
+      StackTrace st = new StackTrace(newThrowable);
+      int n = st.getDepth();
 
       for (int i = 2; i < n; i++) {
-         StackTraceElement ste = StackTraceUtil.getElement(newThrowable, i);
+         StackTraceElement ste = st.getElement(i);
 
          if (isTestMethod(ste)) {
             return new CallPoint(ste);

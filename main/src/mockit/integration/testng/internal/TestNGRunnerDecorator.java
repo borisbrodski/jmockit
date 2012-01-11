@@ -88,7 +88,7 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
       }
       catch (RuntimeException t) {
          RecordAndReplayExecution.endCurrentReplayIfAny();
-         StackTraceUtil.filterStackTrace(t);
+         StackTrace.filterStackTrace(t);
          throw t;
       }
       finally {
@@ -142,7 +142,7 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
          executeTestMethod(callBack, testResult);
       }
       catch (Throwable t) {
-         StackTraceUtil.filterStackTrace(t);
+         StackTrace.filterStackTrace(t);
          //noinspection ConstantConditions
          throw (AssertionError) t;
       }
@@ -161,7 +161,7 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
          Throwable thrown = testResult.getThrowable();
 
          if (thrown != null) {
-            StackTraceUtil.filterStackTrace(thrown);
+            StackTrace.filterStackTrace(thrown);
 
             if (thrown instanceof InvocationTargetException) {
                InvocationTargetException ite = (InvocationTargetException) thrown;

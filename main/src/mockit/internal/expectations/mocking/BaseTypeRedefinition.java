@@ -200,12 +200,12 @@ abstract class BaseTypeRedefinition
          return instanceFactory.create();
       }
       catch (NoClassDefFoundError e) {
-         StackTraceUtil.filterStackTrace(e);
+         StackTrace.filterStackTrace(e);
          e.printStackTrace();
          throw e;
       }
       catch (ExceptionInInitializerError e) {
-         StackTraceUtil.filterStackTrace(e);
+         StackTrace.filterStackTrace(e);
          e.printStackTrace();
          throw e;
       }

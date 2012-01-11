@@ -34,7 +34,7 @@ public class TestRunnerDecorator
             SavePoint.rollbackForTestClass();
          }
          catch (Error err) {
-            StackTraceUtil.filterStackTrace(err);
+            StackTrace.filterStackTrace(err);
             throw err;
          }
 
@@ -42,7 +42,7 @@ public class TestRunnerDecorator
       }
       catch (RuntimeException e) {
          SavePoint.rollbackForTestClass();
-         StackTraceUtil.filterStackTrace(e);
+         StackTrace.filterStackTrace(e);
          throw e;
       }
    }

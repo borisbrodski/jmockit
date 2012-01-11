@@ -107,12 +107,12 @@ public final class RecordAndReplayExecution
       }
       catch (Error e) {
          redefs.cleanUp();
-         StackTraceUtil.filterStackTrace(e);
+         StackTrace.filterStackTrace(e);
          throw e;
       }
       catch (RuntimeException e) {
          redefs.cleanUp();
-         StackTraceUtil.filterStackTrace(e);
+         StackTrace.filterStackTrace(e);
          throw e;
       }
    }

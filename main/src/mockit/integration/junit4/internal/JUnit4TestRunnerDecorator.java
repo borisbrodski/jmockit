@@ -54,7 +54,7 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
          }
          catch (Throwable t) {
             RecordAndReplayExecution.endCurrentReplayIfAny();
-            StackTraceUtil.filterStackTrace(t);
+            StackTrace.filterStackTrace(t);
             throw t;
          }
          finally {
@@ -76,7 +76,7 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
          return null; // it's a test method, therefore has void return type
       }
       catch (Throwable t) {
-         StackTraceUtil.filterStackTrace(t);
+         StackTrace.filterStackTrace(t);
          throw t;
       }
       finally {

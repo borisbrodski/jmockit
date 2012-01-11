@@ -16,7 +16,7 @@ final class ExpectationError extends AssertionError
    void prepareForDisplay(String title)
    {
       message = title;
-      StackTraceUtil.filterStackTrace(this);
+      StackTrace.filterStackTrace(this);
    }
 
    void defineCause(String title, AssertionError error)
