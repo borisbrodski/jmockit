@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.incremental;
@@ -10,6 +10,7 @@ import java.util.*;
 
 import mockit.coverage.*;
 import mockit.coverage.data.*;
+import mockit.coverage.lines.*;
 
 public final class CoverageInfoFile
 {
