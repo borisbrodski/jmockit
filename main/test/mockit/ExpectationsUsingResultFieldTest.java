@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -11,9 +11,10 @@ import org.junit.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
+@SuppressWarnings("ZeroLengthArrayAllocation")
 public final class ExpectationsUsingResultFieldTest
 {
-   @SuppressWarnings({"ClassWithTooManyMethods"})
+   @SuppressWarnings("ClassWithTooManyMethods")
    static class Collaborator
    {
       private static String doInternal() { return "123"; }
@@ -64,13 +65,10 @@ public final class ExpectationsUsingResultFieldTest
    @Test
    public void returnsExpectedValues(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getValue(); result = 3;
-            Collaborator.doInternal(); result = "test";
-         }
-      };
+      new Expectations() {{
+         mock.getValue(); result = 3;
+         Collaborator.doInternal(); result = "test";
+      }};
 
       assertEquals(3, mock.getValue());
       assertEquals("test", Collaborator.doInternal());
@@ -79,13 +77,10 @@ public final class ExpectationsUsingResultFieldTest
    @Test
    public void returnsExpectedValuesWithNonStrictExpectations(final Collaborator mock)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.getValue(); result = 3;
-            Collaborator.doInternal(); result = "test";
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.getValue(); result = 3;
+         Collaborator.doInternal(); result = "test";
+      }};
 
       assertEquals(3, mock.getValue());
       assertEquals("test", Collaborator.doInternal());
@@ -94,12 +89,9 @@ public final class ExpectationsUsingResultFieldTest
    @Test(expected = ArithmeticException.class)
    public void recordThrownException(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.provideSomeService(); result = new ArithmeticException("test");
-         }
-      };
+      new Expectations() {{
+         mock.provideSomeService(); result = new ArithmeticException("test");
+      }};
 
       mock.provideSomeService();
    }
@@ -107,12 +99,9 @@ public final class ExpectationsUsingResultFieldTest
    @Test(expected = LinkageError.class)
    public void recordThrownError(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.provideSomeService(); result = new LinkageError("test");
-         }
-      };
+      new Expectations() {{
+         mock.provideSomeService(); result = new LinkageError("test");
+      }};
 
       mock.provideSomeService();
    }
@@ -120,8 +109,7 @@ public final class ExpectationsUsingResultFieldTest
    @Test
    public void recordThrowingOfMockException(final Collaborator mock)
    {
-      new Expectations()
-      {
+      new Expectations() {
          IllegalFormatWidthException e;
 
          {
@@ -141,12 +129,9 @@ public final class ExpectationsUsingResultFieldTest
    @Test
    public void returnsMultipleExpectedValues(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getValue(); result = 1; result = 2; result = 3;
-         }
-      };
+      new Expectations() {{
+         mock.getValue(); result = 1; result = 2; result = 3;
+      }};
 
       assertEquals(1, mock.getValue());
       assertEquals(2, mock.getValue());
@@ -156,12 +141,9 @@ public final class ExpectationsUsingResultFieldTest
    @Test
    public void returnsMultipleExpectedValuesWithMoreInvocationsAllowed(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
+      new Expectations() {{
             mock.getValue(); result = 1; result = 2; times = 3;
-         }
-      };
+      }};
 
       assertEquals(1, mock.getValue());
       assertEquals(2, mock.getValue());
@@ -171,28 +153,25 @@ public final class ExpectationsUsingResultFieldTest
    @Test
    public void returnsDefaultValuesForPrimitiveAndWrapperReturnTypes(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getValue();
-            mock.getInteger();
-            mock.getByteValue();
-            mock.getByteWrapper();
-            mock.getShortValue();
-            mock.getShortWrapper();
-            mock.getLongValue();
-            mock.getLongWrapper();
-            mock.getFloatValue();
-            mock.getFloatWrapper();
-            mock.getDoubleValue();
-            mock.getDoubleWrapper();
-            mock.getCharValue();
-            mock.getCharacter();
-            mock.getBooleanValue();
-            mock.getBooleanWrapper();
-            Collaborator.doInternal();
-         }
-      };
+      new Expectations() {{
+         mock.getValue();
+         mock.getInteger();
+         mock.getByteValue();
+         mock.getByteWrapper();
+         mock.getShortValue();
+         mock.getShortWrapper();
+         mock.getLongValue();
+         mock.getLongWrapper();
+         mock.getFloatValue();
+         mock.getFloatWrapper();
+         mock.getDoubleValue();
+         mock.getDoubleWrapper();
+         mock.getCharValue();
+         mock.getCharacter();
+         mock.getBooleanValue();
+         mock.getBooleanWrapper();
+         Collaborator.doInternal();
+      }};
 
       assertEquals(0, mock.getValue());
       assertNull(mock.getInteger());
@@ -216,17 +195,14 @@ public final class ExpectationsUsingResultFieldTest
    @Test
    public void returnsDefaultValuesForCollectionValuedReturnTypes(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getItems();
-            mock.getListItems();
-            mock.getSetItems();
-            mock.getSortedSetItems();
-            mock.getMapItems();
-            mock.getSortedMapItems();
-         }
-      };
+      new Expectations() {{
+         mock.getItems();
+         mock.getListItems();
+         mock.getSetItems();
+         mock.getSortedSetItems();
+         mock.getMapItems();
+         mock.getSortedMapItems();
+      }};
 
       assertSame(Collections.<Object>emptyList(), mock.getItems());
       assertSame(Collections.<Object>emptyList(), mock.getListItems());
@@ -239,24 +215,21 @@ public final class ExpectationsUsingResultFieldTest
    @Test
    public void returnsDefaultValuesForArrayValuedReturnTypes(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getIntArray();
-            mock.getInt2Array();
-            mock.getByteArray();
-            mock.getShortArray();
-            mock.getShortWrapperArray();
-            mock.getLongArray();
-            mock.getLong2Array();
-            mock.getFloatArray();
-            mock.getDoubleArray();
-            mock.getCharArray();
-            mock.getBooleanArray();
-            mock.getStringArray();
-            mock.getString2Array();
-         }
-      };
+      new Expectations() {{
+         mock.getIntArray();
+         mock.getInt2Array();
+         mock.getByteArray();
+         mock.getShortArray();
+         mock.getShortWrapperArray();
+         mock.getLongArray();
+         mock.getLong2Array();
+         mock.getFloatArray();
+         mock.getDoubleArray();
+         mock.getCharArray();
+         mock.getBooleanArray();
+         mock.getStringArray();
+         mock.getString2Array();
+      }};
 
       assertArrayEquals(new int[0], mock.getIntArray());
       assertArrayEquals(new int[0][0], mock.getInt2Array());
@@ -281,14 +254,11 @@ public final class ExpectationsUsingResultFieldTest
       final Collection<Integer> intCol = asList(1, 2, 3);
       final List<Character> charList = asList('a', 'b', 'c');
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getBooleanWrapper(); result = booleanSet;
-            collaborator.getInteger(); result = intCol;
-            collaborator.getCharValue(); result = charList;
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getBooleanWrapper(); result = booleanSet;
+         collaborator.getInteger(); result = intCol;
+         collaborator.getCharValue(); result = charList;
+      }};
 
       assertTrue(collaborator.getBooleanWrapper());
       assertFalse(collaborator.getBooleanWrapper());
@@ -308,12 +278,9 @@ public final class ExpectationsUsingResultFieldTest
       final Collaborator collaborator = new Collaborator();
       final Collection<String> strCol = asList("ab", "cde", "Xyz");
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getString(); result = strCol.iterator();
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getString(); result = strCol.iterator();
+      }};
 
       assertEquals("ab", collaborator.getString());
       assertEquals("cde", collaborator.getString());
@@ -328,15 +295,12 @@ public final class ExpectationsUsingResultFieldTest
       final int[] intArray = {1, 2, 3};
       final Character[] charArray = {'a', 'b', 'c'};
 
-      new Expectations()
-      {
-         {
-            collaborator.getBooleanValue(); result = arrayOfBooleanPrimitives;
-            collaborator.getBooleanWrapper(); result = arrayOfBooleanWrappers;
-            collaborator.getValue(); result = intArray;
-            collaborator.getCharValue(); result = charArray;
-         }
-      };
+      new Expectations() {{
+         collaborator.getBooleanValue(); result = arrayOfBooleanPrimitives;
+         collaborator.getBooleanWrapper(); result = arrayOfBooleanWrappers;
+         collaborator.getValue(); result = intArray;
+         collaborator.getCharValue(); result = charArray;
+      }};
 
       assertTrue(collaborator.getBooleanValue());
       assertFalse(collaborator.getBooleanValue());
@@ -356,20 +320,13 @@ public final class ExpectationsUsingResultFieldTest
    @Test
    public void returnsMultipleValuesInSequenceUsingIterable(@Injectable final Collaborator collaborator)
    {
-      final Iterable<Integer> intValues = new Iterable<Integer>()
-      {
-         public Iterator<Integer> iterator()
-         {
-            return asList(3, 2, 1).iterator();
-         }
+      final Iterable<Integer> intValues = new Iterable<Integer>() {
+         public Iterator<Integer> iterator() { return asList(3, 2, 1).iterator(); }
       };
 
-      new Expectations()
-      {
-         {
-            collaborator.getValue(); result = intValues;
-         }
-      };
+      new Expectations() {{
+         collaborator.getValue(); result = intValues;
+      }};
 
       assertEquals(3, collaborator.getValue());
       assertEquals(2, collaborator.getValue());
@@ -385,15 +342,12 @@ public final class ExpectationsUsingResultFieldTest
       final Set<Character> charSet = new HashSet<Character>(asList('g', 't', 'x'));
       final SortedSet<String> sortedSet = new TreeSet<String>(asList("hpq", "Abc"));
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getItems(); result = strCol;
-            collaborator.getListItems(); result = byteList;
-            collaborator.getSetItems(); result = charSet;
-            collaborator.getSortedSetItems(); result = sortedSet;
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getItems(); result = strCol;
+         collaborator.getListItems(); result = byteList;
+         collaborator.getSetItems(); result = charSet;
+         collaborator.getSortedSetItems(); result = sortedSet;
+      }};
 
       assertSame(strCol, collaborator.getItems());
       assertSame(byteList, collaborator.getListItems());
@@ -407,21 +361,59 @@ public final class ExpectationsUsingResultFieldTest
       final Collaborator collaborator = new Collaborator();
       final Iterator<String> itr = asList("ab", "cde").iterator();
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getIterator(); result = itr;
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getIterator(); result = itr;
+      }};
 
       assertSame(itr, collaborator.getIterator());
    }
 
    @Test
+   public void returnsValueOfIncompatibleTypeForMethodReturningArray(@Mocked final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.getBooleanArray(); result = new HashSet();
+         mock.getStringArray(); result = Collections.emptyList();
+         mock.getIntArray(); result = new short[] {1, 2};
+      }};
+
+      try { mock.getBooleanArray(); fail(); } catch (ClassCastException ignore) {}
+      try { mock.getStringArray(); fail(); } catch (ClassCastException ignore) {}
+      try { mock.getIntArray(); fail(); } catch (ClassCastException ignore) {}
+   }
+
+   @Test
+   public void returnsValueOfIncompatibleTypeForMethodReturningCollection(@Mocked final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.getListItems(); result = Collections.emptySet();
+         mock.getSetItems(); result = new ArrayList();
+         mock.getItems(); result = new byte[0];
+      }};
+
+      try { mock.getListItems(); fail(); } catch (ClassCastException ignore) {}
+      try { mock.getSetItems();  fail(); } catch (ClassCastException ignore) {}
+      try { mock.getItems();  fail(); } catch (ClassCastException ignore) {}
+   }
+
+   @Test
+   public void returnsValueOfIncompatibleTypeForMethodReturningIterator(@Mocked final Collaborator mock)
+   {
+      new Expectations() {{
+         mock.getIterator(); result = Collections.emptySet();
+         mock.getIterator(); result = asList("a", true, 123);
+         mock.getIterator(); result = new char[] {'A', 'b'};
+      }};
+
+      try { mock.getIterator(); fail(); } catch (ClassCastException ignore) {}
+      try { mock.getIterator(); fail(); } catch (ClassCastException ignore) {}
+      try { mock.getIterator(); fail(); } catch (ClassCastException ignore) {}
+   }
+
+   @Test
    public void recordNullReturnValueForConstructorAndVoidMethod()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -436,14 +428,11 @@ public final class ExpectationsUsingResultFieldTest
    @Test(expected = UnknownError.class)
    public void recordNullReturnValueForVoidMethodAndThenAThrownError(final Collaborator mock)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.provideSomeService();
-            result = null;
-            result = new UnknownError();
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.provideSomeService();
+         result = null;
+         result = new UnknownError();
+      }};
 
       try {
          mock.provideSomeService();
@@ -458,8 +447,7 @@ public final class ExpectationsUsingResultFieldTest
    @Test(expected = NoSuchElementException.class)
    public void throwExceptionFromSecondInvocationOfConstructor()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -519,8 +507,7 @@ public final class ExpectationsUsingResultFieldTest
    @Test
    public void recordReturnValuesMixedWithThrowablesForNonVoidMethod()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
@@ -541,23 +528,20 @@ public final class ExpectationsUsingResultFieldTest
    @Test
    public void recordExceptionFollowedByNullReturnValueForVoidMethod(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            // One way of doing it:
-            mock.provideSomeService();
-            result = new IllegalArgumentException();
-            result = null;
+      new Expectations() {{
+         // One way of doing it:
+         mock.provideSomeService();
+         result = new IllegalArgumentException();
+         result = null;
 
-            // Another way:
-            mock.provideSomeService();
-            result = asList(new IllegalArgumentException(), null);
+         // Another way:
+         mock.provideSomeService();
+         result = asList(new IllegalArgumentException(), null);
 
-            // Yet another way:
-            mock.provideSomeService();
-            result = asList(new IllegalArgumentException(), null).iterator();
-         }
-      };
+         // Yet another way:
+         mock.provideSomeService();
+         result = asList(new IllegalArgumentException(), null).iterator();
+      }};
 
       for (int i = 0; i < 3; i++) {
          try { mock.provideSomeService(); fail(); } catch (IllegalArgumentException ignored) {}

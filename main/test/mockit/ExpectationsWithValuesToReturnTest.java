@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -11,9 +11,10 @@ import org.junit.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
+@SuppressWarnings("ZeroLengthArrayAllocation")
 public final class ExpectationsWithValuesToReturnTest
 {
-   @SuppressWarnings({"ClassWithTooManyMethods"})
+   @SuppressWarnings("ClassWithTooManyMethods")
    static class Collaborator
    {
       private static String doInternal() { return "123"; }
@@ -66,13 +67,10 @@ public final class ExpectationsWithValuesToReturnTest
    @Test
    public void returnsExpectedValues(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getValue(); returns(3);
-            Collaborator.doInternal(); returns("test");
-         }
-      };
+      new Expectations() {{
+         mock.getValue(); returns(3);
+         Collaborator.doInternal(); returns("test");
+      }};
 
       assertEquals(3, mock.getValue());
       assertEquals("test", Collaborator.doInternal());
@@ -81,13 +79,10 @@ public final class ExpectationsWithValuesToReturnTest
    @Test
    public void returnsExpectedValuesWithNonStrictExpectations(final Collaborator mock)
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.getValue(); returns(3);
-            Collaborator.doInternal(); returns("test");
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.getValue(); returns(3);
+         Collaborator.doInternal(); returns("test");
+      }};
 
       assertEquals(3, mock.getValue());
       assertEquals("test", Collaborator.doInternal());
@@ -96,12 +91,9 @@ public final class ExpectationsWithValuesToReturnTest
    @Test
    public void recordsMultipleExpectedValues(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getValue(); returns(1); returns(2); returns(3);
-         }
-      };
+      new Expectations() {{
+         mock.getValue(); returns(1); returns(2); returns(3);
+      }};
 
       assertEquals(1, mock.getValue());
       assertEquals(2, mock.getValue());
@@ -111,12 +103,9 @@ public final class ExpectationsWithValuesToReturnTest
    @Test
    public void returnsMultipleExpectedValuesWithMoreInvocationsAllowed(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getValue(); returns(1); returns(2); times = 3;
-         }
-      };
+      new Expectations() {{
+         mock.getValue(); returns(1); returns(2); times = 3;
+      }};
 
       assertEquals(1, mock.getValue());
       assertEquals(2, mock.getValue());
@@ -126,28 +115,25 @@ public final class ExpectationsWithValuesToReturnTest
    @Test
    public void returnsDefaultValuesForPrimitiveAndWrapperReturnTypes(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getValue();
-            mock.getInteger();
-            mock.getByteValue();
-            mock.getByteWrapper();
-            mock.getShortValue();
-            mock.getShortWrapper();
-            mock.getLongValue();
-            mock.getLongWrapper();
-            mock.getFloatValue();
-            mock.getFloatWrapper();
-            mock.getDoubleValue();
-            mock.getDoubleWrapper();
-            mock.getCharValue();
-            mock.getCharacter();
-            mock.getBooleanValue();
-            mock.getBooleanWrapper();
-            Collaborator.doInternal();
-         }
-      };
+      new Expectations() {{
+         mock.getValue();
+         mock.getInteger();
+         mock.getByteValue();
+         mock.getByteWrapper();
+         mock.getShortValue();
+         mock.getShortWrapper();
+         mock.getLongValue();
+         mock.getLongWrapper();
+         mock.getFloatValue();
+         mock.getFloatWrapper();
+         mock.getDoubleValue();
+         mock.getDoubleWrapper();
+         mock.getCharValue();
+         mock.getCharacter();
+         mock.getBooleanValue();
+         mock.getBooleanWrapper();
+         Collaborator.doInternal();
+      }};
 
       assertEquals(0, mock.getValue());
       assertNull(mock.getInteger());
@@ -171,17 +157,14 @@ public final class ExpectationsWithValuesToReturnTest
    @Test
    public void returnsDefaultValuesForCollectionValuedReturnTypes(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getItems();
-            mock.getListItems();
-            mock.getSetItems();
-            mock.getSortedSetItems();
-            mock.getMapItems();
-            mock.getSortedMapItems();
-         }
-      };
+      new Expectations() {{
+         mock.getItems();
+         mock.getListItems();
+         mock.getSetItems();
+         mock.getSortedSetItems();
+         mock.getMapItems();
+         mock.getSortedMapItems();
+      }};
 
       assertSame(Collections.<Object>emptyList(), mock.getItems());
       assertSame(Collections.<Object>emptyList(), mock.getListItems());
@@ -194,24 +177,21 @@ public final class ExpectationsWithValuesToReturnTest
    @Test
    public void returnsDefaultValuesForArrayValuedReturnTypes(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getIntArray();
-            mock.getInt2Array();
-            mock.getByteArray();
-            mock.getShortArray();
-            mock.getShortWrapperArray();
-            mock.getLongArray();
-            mock.getLong2Array();
-            mock.getFloatArray();
-            mock.getDoubleArray();
-            mock.getCharArray();
-            mock.getBooleanArray();
-            mock.getStringArray();
-            mock.getString2Array();
-         }
-      };
+      new Expectations() {{
+         mock.getIntArray();
+         mock.getInt2Array();
+         mock.getByteArray();
+         mock.getShortArray();
+         mock.getShortWrapperArray();
+         mock.getLongArray();
+         mock.getLong2Array();
+         mock.getFloatArray();
+         mock.getDoubleArray();
+         mock.getCharArray();
+         mock.getBooleanArray();
+         mock.getStringArray();
+         mock.getString2Array();
+      }};
 
       assertArrayEquals(new int[0], mock.getIntArray());
       assertArrayEquals(new int[0][0], mock.getInt2Array());
@@ -228,23 +208,20 @@ public final class ExpectationsWithValuesToReturnTest
       assertArrayEquals(new String[0][0], mock.getString2Array());
    }
 
-   @SuppressWarnings({"PrimitiveArrayArgumentToVariableArgMethod"})
+   @SuppressWarnings("PrimitiveArrayArgumentToVariableArgMethod")
    @Test
    public void returnsMultipleValuesInSequenceUsingVarargs()
    {
       final Collaborator collaborator = new Collaborator();
       final char[] charArray = {'a', 'b', 'c'};
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getBooleanValue(); returns(true, false);
-            collaborator.getShortValue(); returns((short) 1, (short) 2, (short) 3);
-            collaborator.getShortWrapper(); returns((short) 5, (short) 6, (short) -7, (short) -8);
-            collaborator.getCharArray(); returns(charArray);
-            collaborator.getCharArray(); returns(new char[0], new char[] {'x'});
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getBooleanValue(); returns(true, false);
+         collaborator.getShortValue(); returns((short) 1, (short) 2, (short) 3);
+         collaborator.getShortWrapper(); returns((short) 5, (short) 6, (short) -7, (short) -8);
+         collaborator.getCharArray(); returns(charArray);
+         collaborator.getCharArray(); returns(new char[0], new char[] {'x'});
+      }};
 
       assertTrue(collaborator.getBooleanValue());
       assertFalse(collaborator.getBooleanValue());
@@ -271,16 +248,13 @@ public final class ExpectationsWithValuesToReturnTest
       final int[] intArray = {1, 2, 3};
       final Character[] charArray = {'a', 'b', 'c'};
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getBooleanValue(); returns(booleanArray);
-            collaborator.getBooleanWrapper(); returns(booleanArray);
-            collaborator.getInteger(); returns(intArray);
-            collaborator.getValue(); returns(intArray);
-            collaborator.getCharValue(); returns(charArray);
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getBooleanValue(); returns(booleanArray);
+         collaborator.getBooleanWrapper(); returns(booleanArray);
+         collaborator.getInteger(); returns(intArray);
+         collaborator.getValue(); returns(intArray);
+         collaborator.getCharValue(); returns(charArray);
+      }};
 
       assertTrue(collaborator.getBooleanValue());
       assertFalse(collaborator.getBooleanValue());
@@ -304,20 +278,13 @@ public final class ExpectationsWithValuesToReturnTest
    @Test
    public void returnsMultipleValuesInSequenceUsingIterable(@Injectable final Collaborator collaborator)
    {
-      final Iterable<Integer> intValues = new Iterable<Integer>()
-      {
-         public Iterator<Integer> iterator()
-         {
-            return asList(3, 2, 1).iterator();
-         }
+      final Iterable<Integer> intValues = new Iterable<Integer>() {
+         public Iterator<Integer> iterator() { return asList(3, 2, 1).iterator(); }
       };
 
-      new Expectations()
-      {
-         {
-            collaborator.getValue(); returns(intValues);
-         }
-      };
+      new Expectations() {{
+         collaborator.getValue(); returns(intValues);
+      }};
 
       assertEquals(3, collaborator.getValue());
       assertEquals(2, collaborator.getValue());
@@ -332,14 +299,11 @@ public final class ExpectationsWithValuesToReturnTest
       final Collection<Integer> intCol = asList(1, 2, 3);
       final List<Character> charList = asList('a', 'b', 'c');
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getBooleanWrapper(); returns(booleanSet);
-            collaborator.getInteger(); returns(intCol);
-            collaborator.getCharValue(); returns(charList);
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getBooleanWrapper(); returns(booleanSet);
+         collaborator.getInteger(); returns(intCol);
+         collaborator.getCharValue(); returns(charList);
+      }};
 
       assertTrue(collaborator.getBooleanWrapper());
       assertFalse(collaborator.getBooleanWrapper());
@@ -359,12 +323,9 @@ public final class ExpectationsWithValuesToReturnTest
       final Collaborator collaborator = new Collaborator();
       final Collection<String> strCol = asList("ab", "cde", "Xyz");
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getString(); returns(strCol.iterator());
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getString(); returns(strCol.iterator());
+      }};
 
       assertEquals("ab", collaborator.getString());
       assertEquals("cde", collaborator.getString());
@@ -380,15 +341,12 @@ public final class ExpectationsWithValuesToReturnTest
       final Set<Character> charSet = new HashSet<Character>(asList('g', 't', 'x'));
       final SortedSet<String> sortedSet = new TreeSet<String>(asList("hpq", "Abc"));
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getItems(); returns(strCol);
-            collaborator.getListItems(); returns(byteList);
-            collaborator.getSetItems(); returns(charSet);
-            collaborator.getSortedSetItems(); returns(sortedSet);
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getItems(); returns(strCol);
+         collaborator.getListItems(); returns(byteList);
+         collaborator.getSetItems(); returns(charSet);
+         collaborator.getSortedSetItems(); returns(sortedSet);
+      }};
 
       assertSame(strCol, collaborator.getItems());
       assertSame(byteList, collaborator.getListItems());
@@ -402,14 +360,53 @@ public final class ExpectationsWithValuesToReturnTest
       final Collaborator collaborator = new Collaborator();
       final Iterator<String> itr = asList("ab", "cde").iterator();
 
-      new Expectations(collaborator)
-      {
-         {
-            collaborator.getIterator(); returns(itr);
-         }
-      };
+      new Expectations(collaborator) {{
+         collaborator.getIterator(); returns(itr);
+      }};
 
       assertSame(itr, collaborator.getIterator());
+   }
+
+   @Test
+   public void returnsValueOfIncompatibleTypeForMethodReturningArray(@Mocked final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.getBooleanArray(); returns(new HashSet());
+         mock.getStringArray(); returns(Collections.emptyList());
+         mock.getIntArray(); returns(new short[0]);
+      }};
+
+      try { mock.getBooleanArray(); fail(); } catch (ClassCastException ignore) {}
+      try { mock.getStringArray(); fail(); } catch (ClassCastException ignore) {}
+      try { mock.getIntArray(); fail(); } catch (ClassCastException ignore) {}
+   }
+
+   @Test
+   public void returnsValueOfIncompatibleTypeForMethodReturningCollection(@Mocked final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.getListItems(); returns(Collections.emptySet());
+         mock.getSetItems(); returns(new ArrayList());
+         mock.getItems(); returns(new char[0]);
+      }};
+
+      try { mock.getListItems(); fail(); } catch (ClassCastException ignore) {}
+      try { mock.getSetItems(); fail(); } catch (ClassCastException ignore) {}
+      try { mock.getItems(); fail(); } catch (ClassCastException ignore) {}
+   }
+
+   @Test
+   public void returnsValueOfIncompatibleTypeForMethodReturningIterator(@Mocked final Collaborator mock)
+   {
+      new Expectations() {{
+         mock.getIterator(); returns(Collections.emptySet());
+         mock.getIterator(); returns(asList("a", true, 123));
+         mock.getIterator(); returns(new char[] {'A', 'b'});
+      }};
+
+      try { mock.getIterator(); fail(); } catch (ClassCastException ignore) {}
+      try { mock.getIterator(); fail(); } catch (ClassCastException ignore) {}
+      try { mock.getIterator(); fail(); } catch (ClassCastException ignore) {}
    }
 
    @Test
@@ -426,8 +423,7 @@ public final class ExpectationsWithValuesToReturnTest
    @Test
    public void recordReturnValueForConstructor()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          final Collaborator mock = null;
 
          {
@@ -479,8 +475,7 @@ public final class ExpectationsWithValuesToReturnTest
    @Test
    public void recordResultsForCollectionAndListReturningMethodsUsingVarargs()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
@@ -497,12 +492,9 @@ public final class ExpectationsWithValuesToReturnTest
    @Test
    public void recordResultsForIterableReturningMethodUsingVarargs(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getIterable(); returns(true, "Xyz", 3.6);
-         }
-      };
+      new Expectations() {{
+         mock.getIterable(); returns(true, "Xyz", 3.6);
+      }};
 
       int i = 0;
       Object[] expectedValues = {true, "Xyz", 3.6};
@@ -515,8 +507,7 @@ public final class ExpectationsWithValuesToReturnTest
    @Test
    public void recordResultsForIteratorReturningMethodUsingVarargs()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @NonStrict Collaborator mock;
 
          {
@@ -537,8 +528,7 @@ public final class ExpectationsWithValuesToReturnTest
    {
       Collaborator collaborator = new Collaborator();
 
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -556,21 +546,18 @@ public final class ExpectationsWithValuesToReturnTest
    {
       final Collaborator collaborator = new Collaborator();
 
-      new NonStrictExpectations(collaborator)
-      {
-         {
-            collaborator.getIntArray(); returns(1, 2, 3, 4);
-            collaborator.getLongArray(); returns(1023, 20234L, 354);
-            collaborator.getByteArray(); returns(0, -4, 5);
-            collaborator.getByteWrapperArray(); returns(0, -4, 5);
-            collaborator.getCharArray(); returns('a', 'B');
-            collaborator.getShortArray(); returns(-1, 3, 0);
-            collaborator.getShortWrapperArray(); returns(-1, 3, 0);
-            collaborator.getFloatArray(); returns(-0.1F, 5.6F, 7);
-            collaborator.getDoubleArray(); returns(4.1, 15, -7.0E2);
-            collaborator.getStringArray(); returns("aX", null, "B2 m");
-         }
-      };
+      new NonStrictExpectations(collaborator) {{
+         collaborator.getIntArray(); returns(1, 2, 3, 4);
+         collaborator.getLongArray(); returns(1023, 20234L, 354);
+         collaborator.getByteArray(); returns(0, -4, 5);
+         collaborator.getByteWrapperArray(); returns(0, -4, 5);
+         collaborator.getCharArray(); returns('a', 'B');
+         collaborator.getShortArray(); returns(-1, 3, 0);
+         collaborator.getShortWrapperArray(); returns(-1, 3, 0);
+         collaborator.getFloatArray(); returns(-0.1F, 5.6F, 7);
+         collaborator.getDoubleArray(); returns(4.1, 15, -7.0E2);
+         collaborator.getStringArray(); returns("aX", null, "B2 m");
+      }};
 
       assertArrayEquals(new int[] {1, 2, 3, 4}, collaborator.getIntArray());
       assertArrayEquals(new long[] {1023, 20234, 354}, collaborator.getLongArray());

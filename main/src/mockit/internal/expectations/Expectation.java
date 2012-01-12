@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations;
@@ -86,10 +86,15 @@ final class Expectation
       getResults().addReturnValue(value);
    }
 
-   private boolean hasReturnOfDifferentType(Object valueToBeReturned)
+   private boolean hasReturnOfDifferentType(Object valuesToBeReturned)
    {
       Class<?> returnClass = getReturnType();
-      return returnClass == null || !returnClass.isAssignableFrom(valueToBeReturned.getClass());
+      
+      return 
+         returnClass == null ||
+         !returnClass.isArray() &&
+         !Iterable.class.isAssignableFrom(returnClass) && !Iterator.class.isAssignableFrom(returnClass) &&
+         !returnClass.isAssignableFrom(valuesToBeReturned.getClass());
    }
 
    private Class<?> getReturnType()
@@ -169,7 +174,7 @@ final class Expectation
       results.addReturnValue(values);
    }
 
-   @SuppressWarnings({"AssignmentToMethodParameter"})
+   @SuppressWarnings("AssignmentToMethodParameter")
    private void setArrayElement(Class<?> elementType, Object array, int index, Object value)
    {
       if (elementType == byte.class || elementType == Byte.class) {
