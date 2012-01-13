@@ -32,7 +32,7 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
 
       for (Expectation expectation : recordAndReplay.executionState.nonStrictExpectations) {
          if (matches(mock, mockClassDesc, mockNameAndDesc, args, expectation)) {
-            if (argMatchers == null) {
+            if (matchInstance && argMatchers == null) {
                currentExpectation = expectation;
                break;
             }

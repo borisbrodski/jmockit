@@ -129,7 +129,7 @@ final class PhasedExecutionState
 
          if (
             previousInvocation.isMatch(mockClassDesc, mockNameAndDesc) &&
-            (staticOrConstructorInvocation || isMatchingInstance(mock, previousInvocation)) &&
+            (staticOrConstructorInvocation || isMatchingInstance(mock, previousExpectation)) &&
             (newInvocationWithMatchers && arguments.hasEquivalentMatchers(previousInvocation.arguments) ||
              !newInvocationWithMatchers && previousInvocation.arguments.isMatch(argValues, instanceMap))
          ) {
@@ -152,7 +152,7 @@ final class PhasedExecutionState
 
          if (
             invocation.isMatch(mockClassDesc, mockNameAndDesc) &&
-            (staticOrConstructorInvocation || isMatchingInstance(mock, invocation)) &&
+            (staticOrConstructorInvocation || isMatchingInstance(mock, nonStrict)) &&
             invocation.arguments.isMatch(args, instanceMap)
          ) {
             return nonStrict;
@@ -162,9 +162,9 @@ final class PhasedExecutionState
       return null;
    }
 
-   private boolean isMatchingInstance(Object mock, ExpectedInvocation invocation)
+   private boolean isMatchingInstance(Object mock, Expectation expectation)
    {
-      if (invocation.isEquivalentInstance(mock, instanceMap)) {
+      if (expectation.invocation.isEquivalentInstance(mock, instanceMap)) {
          return true;
       }
 
@@ -177,7 +177,7 @@ final class PhasedExecutionState
             return false;
          }
 
-         Class<?> invokedClass = invocation.instance.getClass();
+         Class<?> invokedClass = expectation.invocation.instance.getClass();
 
          for (Object dynamicMock : dynamicMockInstancesToMatch) {
             if (dynamicMock.getClass() == invokedClass) {
@@ -186,7 +186,7 @@ final class PhasedExecutionState
          }
       }
 
-      return !invocation.matchInstance;
+      return !expectation.invocation.matchInstance && expectation.recordPhase != null;
    }
 
    void makeNonStrict(Expectation expectation)
