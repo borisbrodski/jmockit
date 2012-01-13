@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -8,8 +8,8 @@ import java.io.*;
 import java.nio.*;
 import java.util.*;
 
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.Test;
 import org.junit.runner.*;
 import org.junit.runners.*;
 
@@ -24,10 +24,10 @@ public final class InstanceSpecificMockingTest
 
       int getValue() { return value; }
 
-      @SuppressWarnings({"UnusedDeclaration"})
+      @SuppressWarnings("UnusedDeclaration")
       final boolean simpleOperation(int a, String b, Date c) { return true; }
 
-      @SuppressWarnings({"UnusedDeclaration"})
+      @SuppressWarnings("UnusedDeclaration")
       static void doSomething(boolean b, String s) { throw new IllegalStateException(); }
    }
 
@@ -66,10 +66,7 @@ public final class InstanceSpecificMockingTest
    {
       assertThatPreviouslyCreatedInstanceIsNotMocked();
 
-      new Expectations()
-      {
-         { mock.getValue(); result = 123; }
-      };
+      new Expectations() {{ mock.getValue(); result = 123; }};
 
       assertEquals(123, mock.getValue());
       assertThatNewlyCreatedInstanceIsNotMocked();
@@ -78,8 +75,7 @@ public final class InstanceSpecificMockingTest
    @Test
    public void mockSpecificInstanceWithNonStrictExpectations()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.simpleOperation(1, "", null); result = false;
          mock.getValue(); result = 123;
       }};
@@ -95,10 +91,7 @@ public final class InstanceSpecificMockingTest
       }
       catch (IllegalStateException ignore) {}
 
-      new Verifications()
-      {{
-         mock.getValue(); times = 1;
-      }};
+      new Verifications() {{ mock.getValue(); times = 1; }};
    }
 
    @Test
@@ -106,8 +99,7 @@ public final class InstanceSpecificMockingTest
    {
       assertThatPreviouslyCreatedInstanceIsNotMocked();
 
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock2.getValue(); result = 2;
          mock.getValue(); returns(1, 3);
       }};
@@ -118,8 +110,7 @@ public final class InstanceSpecificMockingTest
       assertEquals(2, mock2.getValue());
       assertEquals(3, mock.getValue());
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.getValue(); times = 3;
          mock2.getValue(); times = 2;
       }};
@@ -127,6 +118,8 @@ public final class InstanceSpecificMockingTest
       assertThatPreviouslyCreatedInstanceIsNotMocked();
       assertThatNewlyCreatedInstanceIsNotMocked();
    }
+
+   // Injectable mocks of unusual types ///////////////////////////////////////////////////////////////////////////////
 
    @Test
    public void allowInjectableMockOfInterfaceType(@Injectable final Runnable mock)
@@ -155,6 +148,8 @@ public final class InstanceSpecificMockingTest
       assertEquals("Test", mock.name());
    }
 
+   // Mocking java.nio.ByteBuffer /////////////////////////////////////////////////////////////////////////////////////
+
    @Test
    public void mockByteBufferAsInjectable(@Injectable final ByteBuffer buf)
    {
@@ -162,15 +157,12 @@ public final class InstanceSpecificMockingTest
       assertNotNull(realBuf);
       assertEquals(10, realBuf.capacity());
       
-      new NonStrictExpectations()
-      {
-         {
-            buf.isDirect(); result = true;
-            
-            // Calling "getBytes()" here indirectly creates a new ByteBuffer, requiring use of @Injectable.
-            buf.put("Test".getBytes()); times = 1;
-         }
-      };
+      new NonStrictExpectations() {{
+         buf.isDirect(); result = true;
+
+         // Calling "getBytes()" here indirectly creates a new ByteBuffer, requiring use of @Injectable.
+         buf.put("Test".getBytes()); times = 1;
+      }};
 
       assertTrue(buf.isDirect());
       buf.put("Test".getBytes());
@@ -181,12 +173,7 @@ public final class InstanceSpecificMockingTest
    {
       assertNull(ByteBuffer.allocateDirect(10));
 
-      new Verifications()
-      {
-         {
-            ByteBuffer.allocateDirect(anyInt);
-         }
-      };
+      new Verifications() {{ ByteBuffer.allocateDirect(anyInt); }};
    }
 
    @Test
@@ -214,6 +201,8 @@ public final class InstanceSpecificMockingTest
       ByteBuffer realBuf2 = ByteBuffer.allocateDirect(20);
       assertEquals(20, realBuf2.capacity());
    }
+
+   // Mocking java.io.InputStream /////////////////////////////////////////////////////////////////////////////////////
 
    public static final class ConcatenatingInputStream extends InputStream
    {
