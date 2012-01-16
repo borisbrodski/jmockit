@@ -3,7 +3,7 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-   <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit</artifactId><version>1.0.0</version>
+   <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit</artifactId><version>1.0-rc1</version>
    <packaging>jar</packaging>
    <prerequisites><maven>3.0.1</maven></prerequisites>
 

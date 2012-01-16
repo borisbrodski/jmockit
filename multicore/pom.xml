@@ -33,7 +33,7 @@
 
    <dependencies>
       <dependency>
-         <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit</artifactId><version>1.0.0</version>
+         <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit</artifactId><version>1.0-rc1</version>
          <optional>true</optional>
       </dependency>
       <dependency>

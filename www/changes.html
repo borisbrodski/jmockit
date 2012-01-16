@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2006-2011 Rogério Liesenfeld
+  ~ Copyright (c) 2006-2012 Rogério Liesenfeld
   ~ This file is subject to the terms of the MIT license (see LICENSE.txt).
   -->
 <html>
@@ -20,12 +20,31 @@
 
 <h3>Next release</h3>
 
-<p>Release <strong>1.0.0</strong> (Feb ?, 2012):</p>
+<p>Release <strong>1.0-rc1</strong> (Feb ?, 2012):</p>
 <ul>
    <li>
       <strong>Removed</strong> the "<code>Mocked#capture</code>" and "<code>Capturing#baseType</code>" annotation
       attributes, which were deprecated in the previous release.
       Existing tests still using them will have to be changed as described in the deprecation comments.
+   </li>
+   <li>
+      <strong>JMockit Coverage</strong>: Several fixes and enhancements to the HTML report. Fixed an issue with code
+      compiled with Java 7.
+   </li>
+   <li>
+      <strong>Fixed</strong> an incompatibility with TestNG introduced in the previous release.
+      See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=194">194</a>.
+   </li>
+   <li>
+      <strong>Fixed</strong> a bug affecting the recording of multi-valued (arrays, collections, etc.) return values
+      for methods whose return type is also a multi-valued type.
+      See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=196">196</a>.
+   </li>
+   <li>
+      <strong>Other bug fixes</strong>: a) improper instance-specific matching of invocations to constructors (now the
+      new instance is never matched); b) use of <code>onInstance(mock)</code> in verification blocks didn't work when
+      multiple instances of the mocked type were involved; c) dynamically mocked constructors could not invoke private
+      methods.
    </li>
 </ul>
 
