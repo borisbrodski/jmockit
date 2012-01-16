@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -41,6 +41,7 @@ public final class DynamicPartialMockingTest
       @Deprecated native void nativeMethod();
 
       void readFile(File f) {}
+      private void initialize() {}
    }
 
    interface Dependency
@@ -682,5 +683,31 @@ public final class DynamicPartialMockingTest
       new Verifications() {{
          mock.readFile(f);
       }};
+   }
+
+   static final class TestedClass
+   {
+      private boolean value;
+
+      TestedClass() { this(true); }
+      TestedClass(boolean value) { initialize(value); }
+
+      private void initialize(boolean value) { this.value = value; }
+   }
+
+   @Test
+   public void mockClassWithConstructorWhichCallsPrivateMethod()
+   {
+      new NonStrictExpectations(TestedClass.class) {};
+
+      assertTrue(new TestedClass(true).value);
+   }
+
+   @Test
+   public void mockClassWithConstructorWhichCallsAnother()
+   {
+      new NonStrictExpectations(TestedClass.class) {};
+
+      assertTrue(new TestedClass().value);
    }
 }

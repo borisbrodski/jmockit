@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
@@ -327,11 +327,12 @@ final class ExpectationsModifier extends BaseClassModifier
       @Override
       public void visitMethodInsn(int opcode, String owner, String name, String desc)
       {
-         if (opcode == INVOKESPECIAL && (owner.equals(superClassName) || owner.equals(className))) {
-            return;
+         if (
+            opcode != INVOKESPECIAL || !"<init>".equals(name) ||
+            !owner.equals(superClassName) && !owner.equals(className)
+         ) {
+            mw.visitMethodInsn(opcode, owner, name, desc);
          }
-
-         mw.visitMethodInsn(opcode, owner, name, desc);
       }
    }
 }
