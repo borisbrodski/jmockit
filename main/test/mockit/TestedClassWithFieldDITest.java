@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -12,7 +12,7 @@ public final class TestedClassWithFieldDITest
    public static class TestedClass
    {
       // Suppose this is injected by some DI framework or Java EE container:
-      @SuppressWarnings({"UnusedDeclaration"}) private Dependency dependency;
+      @SuppressWarnings("UnusedDeclaration") private Dependency dependency;
 
       public boolean doSomeOperation()
       {
@@ -31,17 +31,14 @@ public final class TestedClassWithFieldDITest
    @Test
    public void exerciseTestedObjectWithFieldInjectedByType()
    {
-      new NonStrictExpectations()
-      {
-         {
-            dependency.doSomething(); result = 23; times = 1;
-         }
-      };
+      new NonStrictExpectations() {{
+         dependency.doSomething(); result = 23; times = 1;
+      }};
 
       assertTrue(tested.doSomeOperation());
    }
 
-   public static final class AnotherTestedClass extends TestedClass
+   public static class AnotherTestedClass extends TestedClass
    {
       Runnable runnable;
       Dependency dependency3;
@@ -67,13 +64,19 @@ public final class TestedClassWithFieldDITest
       assertNull(tested2.dependency3);
       assertFalse(tested2.doSomeOperation());
 
-      new Verifications()
-      {
-         {
-            mock2.run(); times = 0;
-            dependency.doSomething(); times = 1;
-            dependency2.doSomething();
-         }
-      };
+      new Verifications() {{
+         mock2.run(); times = 0;
+         dependency.doSomething(); times = 1;
+         dependency2.doSomething();
+      }};
+   }
+
+   @Test
+   public void exerciseTestedSubclassObjectWithFieldsInjectedFromMockFieldsAndMockParameter(
+      @Injectable Dependency mock3)
+   {
+      assertSame(dependency2, tested2.dependency2);
+      assertSame(mock3, tested2.dependency3);
+      assertFalse(tested2.doSomeOperation());
    }
 }

@@ -117,7 +117,6 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
          }
 
          shouldPrepareForNextTest = true;
-         createInstancesForTestedFields(testInstance);
 
          //noinspection deprecation
          method = testResult.getMethod().getMethod();
@@ -130,6 +129,8 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
                System.arraycopy(mockParameters, 0, parameters, 0, parameters.length);
             }
          }
+
+         createInstancesForTestedFields(testInstance);
       }
       finally {
          TestRun.exitNoMockingZone();

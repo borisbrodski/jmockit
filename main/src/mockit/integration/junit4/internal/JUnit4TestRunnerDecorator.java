@@ -119,8 +119,8 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
       Throwable testFailure = null;
 
       try {
-         createInstancesForTestedFields(target);
          Object[] mockParameters = createInstancesForMockParameters(target, it.getMethod());
+         createInstancesForTestedFields(target);
 
          TestRun.setRunningIndividualTest(target);
          it.invokeExplosively(target, mockParameters == null ? parameters : mockParameters);

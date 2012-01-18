@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
 
 import java.lang.annotation.*;
 import java.lang.reflect.*;
+import java.util.*;
 
 import mockit.internal.state.*;
 
@@ -15,6 +16,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
    private final Annotation[][] paramAnnotations;
    private final Object[] paramValues;
    private final MockedType[] mockParameters;
+   private final List<MockedType> injectableParameters;
 
    public ParameterTypeRedefinitions(Object owner, Method testMethod)
    {
@@ -28,6 +30,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
          int n = paramTypes.length;
          paramValues = new Object[n];
          mockParameters = new MockedType[n];
+         injectableParameters = new ArrayList<MockedType>(n);
 
          for (int i = 0; i < n; i++) {
             getMockedTypeFromMockParameterDeclaration(i);
@@ -58,7 +61,9 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
          typeMetadata = mockParameters[i];
 
          if (typeMetadata != null) {
-            paramValues[i] = redefineAndInstantiateMockedType();
+            Object mockedInstance = redefineAndInstantiateMockedType();
+            paramValues[i] = mockedInstance;
+            typeMetadata.parameterValue = mockedInstance;
          }
       }
    }
@@ -75,7 +80,11 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
 
       addTargetClass(typeMetadata.withInstancesToCapture(), typeRedefinition.targetClass);
       typesRedefined++;
-      
+
+      if (typeMetadata.injectable) {
+         injectableParameters.add(typeMetadata);
+      }
+
       return mock;
    }
 
@@ -98,5 +107,6 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       return (CaptureOfNewInstancesForParameters) captureOfNewInstances;
    }
 
+   public List<MockedType> getInjectableParameters() { return injectableParameters; }
    public Object[] getParameterValues() { return paramValues; }
 }

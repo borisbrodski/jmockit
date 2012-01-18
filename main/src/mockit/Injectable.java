@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -24,9 +24,8 @@ import java.lang.annotation.*;
  * For an injectable mocked <em>class</em>, <em>static methods</em> and <em>constructors</em> are <em>not</em> mocked;
  * only instance methods are.
  * <p/>
- * When used in combination with {@linkplain Tested @Tested}, the values assigned (explicitly in test code or
- * automatically by JMockit) to injectable fields of the test class will be used for automatic injection into the tested
- * object.
+ * When used in combination with {@linkplain Tested @Tested}, the values of injectable fields and parameters will be
+ * used for automatic injection into the tested object.
  * Additionally, this annotation can be applied to non-mocked fields of primitive or array type, which will also be used
  * for injection.
  * <p/>

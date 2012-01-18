@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package unitils.tutorial;
@@ -20,10 +20,10 @@ import static org.junit.Assert.assertEquals;
  */
 public final class AlertService_JMockit_Test
 {
-   @Tested private AlertService alertService;
-   private Message alert1;
-   private Message alert2;
-   private List<Message> alerts;
+   @Tested AlertService alertService;
+   Message alert1;
+   Message alert2;
+   List<Message> alerts;
 
    @Injectable SchedulerService mockSchedulerService;
    @Injectable MessageService mockMessageService;

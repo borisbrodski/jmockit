@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -50,5 +50,18 @@ public final class TestedClassWithConstructorDI3Test
       }};
 
       assertEquals(28, tested.doSomeOperation());
+   }
+
+   @Test
+   public void exerciseTestedObjectWithDependenciesProvidedByMockFieldsAndMockParameter(
+      @Injectable final Dependency mock3)
+   {
+      new Expectations() {{
+         mock1.doSomething(); result = 2;
+         mock2.doSomething(); result = 3;
+         mock3.doSomething(); result = 5;
+      }};
+
+      assertEquals(8, tested.doSomeOperation());
    }
 }

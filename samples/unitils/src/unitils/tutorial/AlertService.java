@@ -7,6 +7,8 @@ public final class AlertService
    private final SchedulerService schedulerService;
    private final MessageService messageService;
 
+   public AlertService(SchedulerService schedulerService) { this(schedulerService, new MessageService()); }
+
    public AlertService(SchedulerService schedulerService, MessageService messageService)
    {
       this.schedulerService = schedulerService;

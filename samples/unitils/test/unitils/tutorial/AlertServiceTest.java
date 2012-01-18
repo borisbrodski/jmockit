@@ -3,6 +3,7 @@ package unitils.tutorial;
 import java.util.*;
 
 import org.unitils.*;
+import org.unitils.inject.annotation.*;
 import org.unitils.mock.*;
 import org.unitils.mock.core.proxy.*;
 import org.unitils.mock.mockbehavior.*;
@@ -17,18 +18,17 @@ import static org.unitils.mock.ArgumentMatchers.*;
  */
 public final class AlertServiceTest extends UnitilsJUnit4
 {
-   private AlertService alertService;
-   private Message alert1;
-   private Message alert2;
-   private List<Message> alerts;
+   @TestedObject AlertService alertService = new AlertService(null);
+   Message alert1;
+   Message alert2;
+   List<Message> alerts;
 
-   Mock<SchedulerService> mockSchedulerService;
-   Mock<MessageService> mockMessageService;
+   @InjectIntoByType Mock<SchedulerService> mockSchedulerService;
+   @InjectIntoByType Mock<MessageService> mockMessageService;
 
    @Before
    public void init()
    {
-      alertService = new AlertService(mockSchedulerService.getMock(), mockMessageService.getMock());
       alert1 = new Alert();
       alert2 = new Alert();
       alerts = Arrays.asList(alert1, alert2);

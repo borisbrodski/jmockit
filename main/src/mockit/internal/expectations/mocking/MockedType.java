@@ -7,7 +7,7 @@ package mockit.internal.expectations.mocking;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import static java.lang.reflect.Modifier.*;
-import static mockit.internal.util.Utilities.getAnnotation;
+import static mockit.internal.util.Utilities.*;
 
 import mockit.*;
 import mockit.internal.filtering.*;
@@ -43,6 +43,7 @@ public final class MockedType
    final Type declaredType;
    final String mockId;
    MockingConfiguration mockingCfg;
+   Object parameterValue;
 
    MockedType(Field field, boolean fromTestClass)
    {
@@ -165,6 +166,11 @@ public final class MockedType
    }
 
    String getRealClassName() { return mocked == null ? "" : mocked.realClassName(); }
+
+   Object getMockedInstance(Object objectWithFields)
+   {
+      return field == null ? parameterValue : getFieldValue(field, objectWithFields);
+   }
 
    @Override
    public int hashCode()
