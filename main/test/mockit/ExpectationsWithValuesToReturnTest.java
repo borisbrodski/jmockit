@@ -409,6 +409,33 @@ public final class ExpectationsWithValuesToReturnTest
       try { mock.getIterator(); fail(); } catch (ClassCastException ignore) {}
    }
 
+   @Test(expected = IllegalArgumentException.class)
+   public void returnsEmptyArrayForSimpleReturnType(final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.getString();
+         returns(new String[0]);
+      }};
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void returnsEmptyCollectionForSimpleReturnType(final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.getString();
+         returns(Collections.emptyList());
+      }};
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void returnsEmptyIteratorForSimpleReturnType(final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.getString();
+         returns(Collections.emptySet().iterator());
+      }};
+   }
+
    @Test
    public void recordReturnValueForVoidMethod(final Collaborator mock)
    {

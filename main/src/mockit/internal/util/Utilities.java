@@ -826,6 +826,12 @@ public final class Utilities
       return paramClasses;
    }
 
+   public static Class<?> getReturnType(String mockDesc)
+   {
+      mockit.external.asm4.Type returnType = mockit.external.asm4.Type.getReturnType(mockDesc);
+      return getClassForType(returnType);
+   }
+
    public static Class<?> getClassForType(mockit.external.asm4.Type type)
    {
       int elementSort = type.getSort();

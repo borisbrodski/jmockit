@@ -8,7 +8,6 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
-import mockit.external.asm4.Type;
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
@@ -99,8 +98,7 @@ final class Expectation
 
    private Class<?> getReturnType()
    {
-      Type invocationReturnType = Type.getReturnType(invocation.getMethodNameAndDescription());
-      return Utilities.getClassForType(invocationReturnType);
+      return Utilities.getReturnType(invocation.getMethodNameAndDescription());
    }
 
    private void substituteCascadedMockToBeReturnedIfNeeded(Object valueToBeReturned)

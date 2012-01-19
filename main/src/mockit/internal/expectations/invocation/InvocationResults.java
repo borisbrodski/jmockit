@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.invocation;
@@ -9,6 +9,7 @@ import java.util.*;
 
 import mockit.*;
 import mockit.internal.expectations.invocation.InvocationResult.*;
+import mockit.internal.util.*;
 
 public final class InvocationResults
 {
@@ -27,14 +28,14 @@ public final class InvocationResults
    public void addReturnValue(Object value)
    {
       InvocationResult result =
-         value instanceof Delegate ? new DelegatedResult((Delegate) value) : new ReturnValueResult(value);
+         value instanceof Delegate ? new DelegatedResult((Delegate<?>) value) : new ReturnValueResult(value);
 
       addResult(result);
    }
 
    public void addReturnValues(Object array)
    {
-      int n = Array.getLength(array);
+      int n = validateMultiValuedResult(array);
 
       for (int i = 0; i < n; i++) {
          Object value = Array.get(array, i);
@@ -42,10 +43,36 @@ public final class InvocationResults
       }
    }
 
+   private int validateMultiValuedResult(Object array)
+   {
+      int n = Array.getLength(array);
+
+      if (n == 0) {
+         reportInvalidReturnValue();
+      }
+      
+      return n;
+   }
+
+   private void reportInvalidReturnValue()
+   {
+      Class<?> returnType = Utilities.getReturnType(invocation.getMethodNameAndDescription());
+      throw new IllegalArgumentException("Invalid return value for method returning " + returnType);
+   }
+
    public void addReturnValues(Iterable<?> values)
    {
+      validateMultiValuedResult(values.iterator());
+
       for (Object value : values) {
          addReturnValue(value);
+      }
+   }
+
+   private void validateMultiValuedResult(Iterator<?> values)
+   {
+      if (!values.hasNext()) {
+         reportInvalidReturnValue();
       }
    }
 
@@ -58,7 +85,7 @@ public final class InvocationResults
 
    public void addResults(Object array)
    {
-      int n = Array.getLength(array);
+      int n = validateMultiValuedResult(array);
 
       for (int i = 0; i < n; i++) {
          Object value = Array.get(array, i);
@@ -78,6 +105,8 @@ public final class InvocationResults
 
    public void addResults(Iterable<?> values)
    {
+      validateMultiValuedResult(values.iterator());
+
       for (Object value : values) {
          addConsecutiveResult(value);
       }
@@ -85,6 +114,8 @@ public final class InvocationResults
 
    public void addDeferredReturnValues(Iterator<?> values)
    {
+      validateMultiValuedResult(values);
+
       InvocationResult result = new DeferredReturnValues(values);
       addResult(result);
       constraints.setUnlimitedMaxInvocations();
@@ -92,6 +123,8 @@ public final class InvocationResults
 
    public void addDeferredResults(Iterator<?> values)
    {
+      validateMultiValuedResult(values);
+
       InvocationResult result = new DeferredResults(values);
       addResult(result);
       constraints.setUnlimitedMaxInvocations();
