@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package jmockit.loginExample.domain.userLogin;
@@ -10,6 +10,10 @@ import mockit.*;
 
 import jmockit.loginExample.domain.userAccount.*;
 
+/**
+ * A small TestNG test suite for a single class (<code>LoginService</code>), based on
+ * <a href="http://schuchert.wikispaces.com/Mockito.LoginServiceExample">this article</a>.
+ */
 public final class LoginServiceTest
 {
    @Tested LoginService service;
