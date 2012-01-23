@@ -930,4 +930,15 @@ public final class Utilities
 
       return false;
    }
+
+   public static boolean containsReference(Object[] references, Object toBeFound)
+   {
+      for (Object reference : references) {
+         if (reference == toBeFound) {
+            return true;
+         }
+      }
+
+      return false;
+   }
 }

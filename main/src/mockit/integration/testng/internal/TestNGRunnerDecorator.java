@@ -6,6 +6,8 @@ package mockit.integration.testng.internal;
 
 import java.lang.reflect.*;
 
+import static mockit.internal.util.StackTrace.*;
+import static mockit.internal.util.Utilities.*;
 import org.testng.*;
 import org.testng.annotations.*;
 import org.testng.internal.Parameters;
@@ -14,7 +16,6 @@ import mockit.*;
 import mockit.integration.*;
 import mockit.internal.expectations.*;
 import mockit.internal.state.*;
-import mockit.internal.util.*;
 
 /**
  * Provides callbacks to be called by the TestNG 5.14+ test runner for each test execution.
@@ -23,7 +24,8 @@ import mockit.internal.util.*;
  * <p/>
  * This class is not supposed to be accessed from user code. It will be automatically loaded at startup.
  */
-public final class TestNGRunnerDecorator extends TestRunnerDecorator implements IConfigurable, IHookable, ISuiteListener
+public final class TestNGRunnerDecorator extends TestRunnerDecorator
+   implements IConfigurable, IInvokedMethodListener, ISuiteListener
 {
    @MockClass(realClass = Parameters.class, stubs = "checkParameterTypes")
    public static final class MockParameters
@@ -88,7 +90,7 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
       }
       catch (RuntimeException t) {
          RecordAndReplayExecution.endCurrentReplayIfAny();
-         StackTrace.filterStackTrace(t);
+         filterStackTrace(t);
          throw t;
       }
       finally {
@@ -98,8 +100,12 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
       }
    }
 
-   public void run(IHookCallBack callBack, ITestResult testResult)
+   public void beforeInvocation(IInvokedMethod invokedMethod, ITestResult testResult)
    {
+      if (!invokedMethod.isTestMethod()) {
+         return;
+      }
+
       Object testInstance = testResult.getInstance();
 
       TestRun.enterNoMockingZone();
@@ -138,45 +144,48 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator implements 
 
       TestRun.setRunningIndividualTest(testInstance);
       TestRun.setRunningTestMethod(method);
-
-      try {
-         executeTestMethod(callBack, testResult);
-      }
-      catch (Throwable t) {
-         StackTrace.filterStackTrace(t);
-         //noinspection ConstantConditions
-         throw (AssertionError) t;
-      }
-      finally {
-         TestRun.finishCurrentTestExecution(false);
-      }
    }
 
-   private void executeTestMethod(IHookCallBack callBack, ITestResult testResult) throws Throwable
+   public void afterInvocation(IInvokedMethod invokedMethod, ITestResult testResult)
    {
-      AssertionError testFailure = null;
+      if (!invokedMethod.isTestMethod()) {
+         return;
+      }
+
+      SavePoint testMethodSavePoint = savePoint.get();
+      savePoint.set(null);
+
+      Throwable thrownByTest = testResult.getThrowable();
+
+      if (thrownByTest != null) {
+         filterStackTrace(thrownByTest);
+      }
 
       try {
-         callBack.runTestMethod(testResult);
+         concludeTestMethodExecution(testMethodSavePoint, thrownByTest);
+      }
+      catch (Throwable t) {
+         Method method = invokedMethod.getTestMethod().getConstructorOrMethod().getMethod();
+         Class<?>[] expectedExceptions = method.getAnnotation(Test.class).expectedExceptions();
+         boolean testMethodExpectsTheException = containsReference(expectedExceptions, t.getClass());
 
-         Throwable thrown = testResult.getThrowable();
-
-         if (thrown != null) {
-            StackTrace.filterStackTrace(thrown);
-
-            if (thrown instanceof InvocationTargetException) {
-               InvocationTargetException ite = (InvocationTargetException) thrown;
-
-               if (ite.getTargetException() instanceof AssertionError) {
-                  testFailure = (AssertionError) ite.getTargetException();
+         if (testResult.isSuccess()) {
+            if (!testMethodExpectsTheException) {
+               if (t != thrownByTest) {
+                  filterStackTrace(t);
                }
+
+               testResult.setThrowable(t);
+               testResult.setStatus(ITestResult.FAILURE);
             }
+         }
+         else if (testMethodExpectsTheException) {
+            testResult.setThrowable(null);
+            testResult.setStatus(ITestResult.SUCCESS);
          }
       }
       finally {
-         SavePoint testMethodSavePoint = savePoint.get();
-         savePoint.set(null);
-         concludeTestMethodExecution(testMethodSavePoint, testFailure);
+         TestRun.finishCurrentTestExecution(false);
       }
    }
 

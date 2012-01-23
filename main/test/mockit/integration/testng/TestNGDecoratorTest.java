@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.integration.testng;
@@ -56,7 +56,7 @@ public final class TestNGDecoratorTest extends BaseTestNGDecoratorTest
       assertEquals("REAL2", new RealClass2().getValue());
    }
 
-   @SuppressWarnings({"ClassMayBeInterface"})
+   @SuppressWarnings("ClassMayBeInterface")
    public static class Temp {}
    private static final Temp temp = new Temp();
 
@@ -81,14 +81,13 @@ public final class TestNGDecoratorTest extends BaseTestNGDecoratorTest
    @Test(expectedExceptions = AssertionError.class)
    public void mockMethodWithViolatedInvocationCountConstraint() throws Exception
    {
-      Mockit.setUpMock(LoginContext.class, new Object()
-      {
+      new MockUp<LoginContext>() {
          @Mock(minInvocations = 1)
          void $init(String name) { assert "test".equals(name); }
 
          @Mock(invocations = 1)
          void login() {}
-      });
+      };
 
       LoginContext context = new LoginContext("test");
       context.login();
@@ -98,8 +97,7 @@ public final class TestNGDecoratorTest extends BaseTestNGDecoratorTest
    @Test
    public void mockFile()
    {
-      new Expectations()
-      {
+      new Expectations() {
          final File directory;
 
          {

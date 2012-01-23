@@ -1,16 +1,23 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.integration.testng;
 
+import org.testng.*;
 import org.testng.annotations.*;
 import static org.testng.Assert.*;
 
 import mockit.*;
 
-public class BaseTestNGDecoratorTest
+public class BaseTestNGDecoratorTest implements IHookable
 {
+   // Makes sure TestNG integration works with test classes which implement IHookable.
+   public void run(IHookCallBack callBack, ITestResult testResult)
+   {
+      callBack.runTestMethod(testResult);
+   }
+
    public static class RealClass1
    {
       public String getValue() { return "REAL1"; }
