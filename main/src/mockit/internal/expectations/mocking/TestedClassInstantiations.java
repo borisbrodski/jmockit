@@ -40,18 +40,35 @@ public final class TestedClassInstantiations
    {
       private final Object objectWithFields;
       private Class<?> testedClass;
+      private Constructor<?> constructor;
       private Type declaredType;
+      private final List<MockedType> injectableParameters;
+      private final List<MockedType> injectables;
 
-      TestedObjectCreation(Object objectWithFields) { this.objectWithFields = objectWithFields; }
+      TestedObjectCreation(Object objectWithFields)
+      {
+         this.objectWithFields = objectWithFields;
+
+         ParameterTypeRedefinitions paramTypeRedefinitions = TestRun.getExecutingTest().getParameterTypeRedefinitions();
+
+         if (paramTypeRedefinitions == null) {
+            injectableParameters = Collections.emptyList();
+            injectables = injectableFields;
+         }
+         else {
+            injectableParameters = paramTypeRedefinitions.getInjectableParameters();
+            injectables = new ArrayList<MockedType>(injectableFields);
+            injectables.addAll(injectableParameters);
+         }
+      }
 
       void create(Field testedField)
       {
          testedClass = testedField.getType();
-         Constructor<?> constructor =
-            new ConstructorSearch().findSingleConstructorAccordingToClassVisibilityAndAvailableInjectables();
+         new ConstructorSearch().findSingleConstructorAccordingToClassVisibilityAndAvailableInjectables();
 
          if (constructor != null) {
-            Object testedObject = new ConstructorInjection().instantiate(constructor);
+            Object testedObject = new ConstructorInjection().instantiate();
             new FieldInjection().injectIntoFieldsThatAreStillNull(testedClass, testedObject);
             setFieldValue(testedField, objectWithFields, testedObject);
          }
@@ -59,14 +76,6 @@ public final class TestedClassInstantiations
 
       private MockedType findInjectableForConstructorParameter(int atPosition)
       {
-         List<MockedType> injectables = injectableFields;
-         ParameterTypeRedefinitions paramTypeRedefinitions = TestRun.getExecutingTest().getParameterTypeRedefinitions();
-
-         if (paramTypeRedefinitions != null) {
-            injectables = new ArrayList<MockedType>(injectables);
-            injectables.addAll(paramTypeRedefinitions.getInjectableParameters());
-         }
-
          int currentPosition = 0;
 
          for (MockedType injectable : injectables) {
@@ -84,11 +93,11 @@ public final class TestedClassInstantiations
 
       private final class ConstructorSearch
       {
-         private Constructor<?> constructor;
          private int numberOfApplicableInjectables = -1;
 
-         private Constructor<?> findSingleConstructorAccordingToClassVisibilityAndAvailableInjectables()
+         private void findSingleConstructorAccordingToClassVisibilityAndAvailableInjectables()
          {
+            constructor = null;
             boolean publicClass = isPublic(testedClass.getModifiers());
             Constructor<?>[] constructors =
                publicClass ? testedClass.getConstructors() : testedClass.getDeclaredConstructors();
@@ -100,8 +109,6 @@ public final class TestedClassInstantiations
                   }
                }
             }
-   
-            return constructor;
          }
 
          private boolean isBetterFitForAvailableInjectables(Constructor<?> candidate)
@@ -180,7 +187,7 @@ public final class TestedClassInstantiations
       {
          private Type[] parameterTypes;
 
-         private Object instantiate(Constructor<?> constructor)
+         private Object instantiate()
          {
             parameterTypes = constructor.getGenericParameterTypes();
             Object[] arguments = obtainInjectedConstructorArguments(constructor.isVarArgs());
@@ -248,12 +255,18 @@ public final class TestedClassInstantiations
          private Object getArgumentValueToInject(int atPosition)
          {
             MockedType injectable = findInjectableForConstructorParameter(atPosition);
-            return injectable == null ? null : getArgumentValueToInject(injectable, atPosition);
+
+            if (injectable == null) {
+               throw new IllegalArgumentException(
+                  "No injectable field or parameter" + missingInjectableDescription(atPosition));
+            }
+
+            return getArgumentValueToInject(injectable, atPosition);
          }
 
          private Object getArgumentValueToInject(MockedType injectableField, int atPosition)
          {
-            Object argument = injectableField.getMockedInstance(objectWithFields);
+            Object argument = injectableField.getValueToInject(objectWithFields);
 
             if (argument == null) {
                throw new IllegalArgumentException(
@@ -278,7 +291,18 @@ public final class TestedClassInstantiations
                }
             }
 
-            return " of " + typeDesc + " for " + position + "-th corresponding constructor parameter in " + testedClass;
+            String posDesc =
+               position == 1 ? "first" : position == 2 ? "second" : position == 3 ? "third" : position + "th";
+
+            String constructorDescription = constructor.toGenericString();
+            int lp = constructorDescription.indexOf('(');
+            int rp = constructorDescription.indexOf(')');
+            int mp = constructorDescription.substring(0, lp).lastIndexOf(' ');
+            int sp = mp > 0 ? mp + 1 : 0;
+
+            return
+               " for " + posDesc + " parameter of " + typeDesc + " in constructor " +
+               constructorDescription.substring(sp, rp + 1);
          }
       }
 
@@ -294,23 +318,30 @@ public final class TestedClassInstantiations
 
             for (Field field : testedClass.getDeclaredFields()) {
                if (getFieldValue(field, tested) == null) {
-                  Object value = getFieldValueIfAvailable(field);
-                  setFieldValue(field, tested, value);
+                  Object value = getValueForFieldIfAvailable(field);
+
+                  if (value != null) {
+                     setFieldValue(field, tested, value);
+                  }
                }
             }
          }
 
-         private Object getFieldValueIfAvailable(Field fieldToBeInjected)
+         private Object getValueForFieldIfAvailable(Field fieldToBeInjected)
          {
-            MockedType mockedType = findInjectableMockedType(fieldToBeInjected);
-            return mockedType == null ? null : mockedType.getMockedInstance(objectWithFields);
+            declaredType = fieldToBeInjected.getGenericType();
+            MockedType mockedType = findInjectableField(fieldToBeInjected.getName());
+            
+            if (mockedType == null) {
+               mockedType = findInjectableParameter();
+            }
+
+            return mockedType == null ? null : mockedType.getValueToInject(objectWithFields);
          }
 
-         private MockedType findInjectableMockedType(Field fieldToBeInjected)
+         private MockedType findInjectableField(String fieldName)
          {
-            Type declaredType = fieldToBeInjected.getGenericType();
-            String fieldName = fieldToBeInjected.getName();
-            boolean multipleFieldsOfSameTypeFound = false;
+            boolean multipleInjectableFieldsFound = false;
             MockedType found = null;
 
             for (MockedType injectable : injectableFields) {
@@ -319,7 +350,7 @@ public final class TestedClassInstantiations
                      found = injectable;
                   }
                   else {
-                     multipleFieldsOfSameTypeFound = true;
+                     multipleInjectableFieldsFound = true;
 
                      if (fieldName.equals(injectable.field.getName())) {
                         return injectable;
@@ -328,11 +359,22 @@ public final class TestedClassInstantiations
                }
             }
 
-            if (multipleFieldsOfSameTypeFound && !fieldName.equals(found.field.getName())) {
+            if (multipleInjectableFieldsFound && !fieldName.equals(found.field.getName())) {
                return null;
             }
 
             return found;
+         }
+
+         private MockedType findInjectableParameter()
+         {
+            for (MockedType injectable : injectableParameters) {
+               if (injectable.declaredType == declaredType) {
+                  return injectable;
+               }
+            }
+
+            return null;
          }
       }
    }

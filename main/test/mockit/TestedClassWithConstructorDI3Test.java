@@ -62,6 +62,6 @@ public final class TestedClassWithConstructorDI3Test
          mock3.doSomething(); result = 5;
       }};
 
-      assertEquals(8, tested.doSomeOperation());
+      assertEquals(10, tested.doSomeOperation());
    }
 }
