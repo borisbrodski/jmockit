@@ -49,9 +49,11 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       Annotation[] annotationsOnParameter = paramAnnotations[paramIndex];
 
       typeMetadata = new MockedType(paramIndex, paramType, annotationsOnParameter);
+      mockParameters[paramIndex] = typeMetadata;
 
-      if (typeMetadata.isMockParameter()) {
-         mockParameters[paramIndex] = typeMetadata;
+      if (typeMetadata.injectable) {
+         injectableParameters.add(typeMetadata);
+         paramValues[paramIndex] = typeMetadata.parameterValue;
       }
    }
 
@@ -60,7 +62,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       for (int i = 0; i < mockParameters.length; i++) {
          typeMetadata = mockParameters[i];
 
-         if (typeMetadata != null) {
+         if (typeMetadata.isMockableType()) {
             Object mockedInstance = redefineAndInstantiateMockedType();
             paramValues[i] = mockedInstance;
             typeMetadata.parameterValue = mockedInstance;
@@ -80,10 +82,6 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
 
       addTargetClass(typeMetadata.withInstancesToCapture(), typeRedefinition.targetClass);
       typesRedefined++;
-
-      if (typeMetadata.injectable) {
-         injectableParameters.add(typeMetadata);
-      }
 
       return mock;
    }

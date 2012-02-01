@@ -54,12 +54,36 @@ public final class MockedType
       capturing = field.getAnnotation(Capturing.class);
       cascading = field.getAnnotation(Cascading.class);
       nonStrict = field.isAnnotationPresent(NonStrict.class);
-      injectable = field.isAnnotationPresent(Injectable.class);
+      Injectable injectableAnnotation = field.getAnnotation(Injectable.class);
+      injectable = injectableAnnotation != null;
       declaredType = field.getGenericType();
       mockId = field.getName();
+      parameterValue = getDefaultInjectableValue(injectableAnnotation);
       registerCascadingIfSpecified();
    }
 
+   private Object getDefaultInjectableValue(Injectable annotation)
+   {
+      if (annotation != null) {
+         String defaultValue = annotation.value();
+
+         if (defaultValue.length() > 0) {
+            Class<?> injectableClass = getClassType();
+
+            if (injectableClass == char.class) {
+               return defaultValue.charAt(0);
+            }
+            else if (injectableClass.isPrimitive()) {
+               Class<?> wrapperClass = PRIMITIVE_TO_WRAPPER.get(injectableClass);
+               Class<?>[] constructorParameters = {String.class};
+               return newInstance(wrapperClass, constructorParameters, defaultValue);
+            }
+         }
+      }
+
+      return null;
+   }
+ 
    private void registerCascadingIfSpecified()
    {
       if (cascading != null) {
@@ -77,9 +101,11 @@ public final class MockedType
       capturing = getAnnotation(annotationsOnParameter, Capturing.class);
       cascading = getAnnotation(annotationsOnParameter, Cascading.class);
       nonStrict = getAnnotation(annotationsOnParameter, NonStrict.class) != null;
-      injectable = getAnnotation(annotationsOnParameter, Injectable.class) != null;
+      Injectable injectableAnnotation = getAnnotation(annotationsOnParameter, Injectable.class);
+      injectable = injectableAnnotation != null;
       declaredType = parameterType;
       mockId = "param" + paramIndex;
+      parameterValue = getDefaultInjectableValue(injectableAnnotation);
       registerCascadingIfSpecified();
    }
 
@@ -118,7 +144,7 @@ public final class MockedType
       return (mock || !fieldFromTestClass && !isPrivate(accessModifiers)) && isMockableType();
    }
 
-   private boolean isMockableType()
+   boolean isMockableType()
    {
       if (declaredType instanceof Class) {
          Class<?> classType = (Class<?>) declaredType;
@@ -127,8 +153,6 @@ public final class MockedType
 
       return true;
    }
-
-   boolean isMockParameter() { return isMockableType(); }
 
    boolean isFinalFieldOrParameter() { return field == null || isFinal(accessModifiers); }
 
@@ -167,9 +191,15 @@ public final class MockedType
 
    String getRealClassName() { return mocked == null ? "" : mocked.realClassName(); }
 
-   Object getMockedInstance(Object objectWithFields)
+   Object getValueToInject(Object objectWithFields)
    {
-      return field == null ? parameterValue : getFieldValue(field, objectWithFields);
+      Object value = field == null ? parameterValue : getFieldValue(field, objectWithFields);
+      
+      if (value == null && injectable) {
+         value = parameterValue;
+      }
+
+      return value;
    }
 
    @Override

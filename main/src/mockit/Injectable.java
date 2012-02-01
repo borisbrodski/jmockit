@@ -28,12 +28,18 @@ import java.lang.annotation.*;
  * used for automatic injection into the tested object.
  * Additionally, this annotation can be applied to non-mocked fields of primitive or array type, which will also be used
  * for injection.
- * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#injectable">In the
+ *
+ * @see #value
+ * @see <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#injectable">In the
  * Tutorial</a>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 public @interface Injectable
 {
+   /**
+    * Specifies a literal value when the injectable mock field/parameter is of a primitive type.
+    * The value provided must be convertible to that primitive type.
+    */
+   String value() default "";
 }

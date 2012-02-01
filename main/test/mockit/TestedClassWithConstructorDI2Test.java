@@ -29,10 +29,7 @@ public final class TestedClassWithConstructorDI2Test
       }
    }
 
-   static class Dependency
-   {
-      int doSomething() { return -1; }
-   }
+   static class Dependency { int doSomething() { return -1; } }
 
    @Tested TestedClass tested;
    @Injectable Runnable task;
@@ -40,20 +37,7 @@ public final class TestedClassWithConstructorDI2Test
    @Injectable Dependency mock2;
 
    @Test
-   public void exerciseTestedObjectWithDependenciesOfSameTypeInjectedThroughConstructor()
-   {
-      assertNull(tested.dependency3);
-
-      new Expectations() {{
-         mock1.doSomething(); result = 23;
-         mock2.doSomething(); result = 5;
-      }};
-
-      assertEquals(28, tested.doSomeOperation());
-   }
-
-   @Test
-   public void exerciseTestedObjectWithDependenciesSatisfiedFromMockFieldAndMockParameter(@Injectable Dependency mock3)
+   public void exerciseTestedObjectWithDependenciesOfSameTypeInjectedThroughConstructor(@Injectable Dependency mock3)
    {
       assertSame(mock3, tested.dependency3);
 
@@ -63,5 +47,14 @@ public final class TestedClassWithConstructorDI2Test
       }};
 
       assertEquals(28, tested.doSomeOperation());
+   }
+
+   @Test
+   public void exerciseTestedObjectWithExtraInjectableParameter(
+      @Injectable Dependency mock3, @Injectable Dependency mock4)
+   {
+      assertSame(mock1, tested.dependency1);
+      assertSame(mock2, tested.dependency2);
+      assertSame(mock3, tested.dependency3);
    }
 }

@@ -284,10 +284,10 @@ public final class TestedClassInstantiations
                Class<?> declaredClass = (Class<?>) declaredType;
 
                if (declaredClass.isArray()) {
-                  typeDesc = "type " + mockit.external.asm4.Type.getType(declaredClass).getClassName();
+                  typeDesc = mockit.external.asm4.Type.getType(declaredClass).getClassName();
                }
-               else if (declaredClass.isPrimitive()) {
-                  typeDesc = "type " + typeDesc;
+               else if (!declaredClass.isPrimitive()) {
+                  typeDesc = '"' + declaredClass.getSimpleName() + '"';
                }
             }
 
@@ -301,8 +301,8 @@ public final class TestedClassInstantiations
             int sp = mp > 0 ? mp + 1 : 0;
 
             return
-               " for " + posDesc + " parameter of " + typeDesc + " in constructor " +
-               constructorDescription.substring(sp, rp + 1);
+               " for " + posDesc + " parameter of type " + typeDesc + " in constructor " +
+               constructorDescription.substring(sp, rp + 1).replace("java.lang.", "");
          }
       }
 
