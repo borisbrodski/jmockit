@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -13,21 +13,16 @@ public final class TestedClassWithNoDITest
    {
       private final Dependency dependency = new Dependency();
 
-      public boolean doSomeOperation()
-      {
-         return dependency.doSomething() > 0;
-      }
+      public boolean doSomeOperation() { return dependency.doSomething() > 0; }
    }
 
-   static class Dependency
-   {
-      int doSomething() { return -1; }
-   }
+   static class Dependency { int doSomething() { return -1; } }
 
    @Tested TestedClass tested1;
    @Tested final TestedClass tested2 = new TestedClass();
    @Tested TestedClass tested3;
    @Tested NonPublicTestedClass tested4;
+   @Tested final TestedClass tested5 = null;
    @Mocked Dependency mock;
    TestedClass tested;
 
@@ -42,11 +37,13 @@ public final class TestedClassWithNoDITest
       assertNull(tested1);
       assertNotNull(tested2);
       assertNull(tested4);
+      assertNull(tested5);
    }
 
    @Test
-   public void verifyThatTestedFieldsAreNotNull()
+   public void verifyTestedFields()
    {
+      assertNull(tested5);
       assertNotNull(tested4);
       assertNotNull(tested3);
       assertSame(tested, tested3);
@@ -83,5 +80,6 @@ public final class TestedClassWithNoDITest
 
 class NonPublicTestedClass
 {
+   @SuppressWarnings("RedundantNoArgConstructor")
    NonPublicTestedClass() {}
 }

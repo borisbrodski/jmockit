@@ -46,7 +46,7 @@ public final class TestedClassInjectedFromMockParametersTest
    }
 
    @Test
-   public void exerciseTestedObjectInjectedFromMockParameters(
+   public void exerciseTestedObjectInjectedFromMockParametersUsingOneConstructor(
       @Injectable @Mocked("") String s, @Injectable("123") int mock1, @Injectable("true") boolean mock2,
       @Injectable("A") char c1, @Injectable("bB") char c2)
    {
@@ -60,7 +60,7 @@ public final class TestedClassInjectedFromMockParametersTest
    }
 
    @Test
-   public void exerciseTestedObjectInjectedFromMockParameters(
+   public void exerciseTestedObjectInjectedFromMockParametersUsingAnotherConstructor(
       @Injectable("true") boolean b1, @Injectable("true") boolean b3, @Injectable("65") byte b2)
    {
       assertTrue(tested.b);

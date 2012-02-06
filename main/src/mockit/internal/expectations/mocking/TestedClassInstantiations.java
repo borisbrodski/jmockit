@@ -28,10 +28,12 @@ public final class TestedClassInstantiations
       TestedObjectCreation testedObjectCreation = new TestedObjectCreation(objectWithFields);
 
       for (Field testedField : testedFields) {
-         Object originalFieldValue = getFieldValue(testedField, objectWithFields);
+         if (!isFinal(testedField.getModifiers())) {
+            Object originalFieldValue = getFieldValue(testedField, objectWithFields);
 
-         if (originalFieldValue == null) {
-            testedObjectCreation.create(testedField);
+            if (originalFieldValue == null) {
+               testedObjectCreation.create(testedField);
+            }
          }
       }
    }
@@ -67,11 +69,14 @@ public final class TestedClassInstantiations
          testedClass = testedField.getType();
          new ConstructorSearch().findSingleConstructorAccordingToClassVisibilityAndAvailableInjectables();
 
-         if (constructor != null) {
-            Object testedObject = new ConstructorInjection().instantiate();
-            new FieldInjection().injectIntoFieldsThatAreStillNull(testedClass, testedObject);
-            setFieldValue(testedField, objectWithFields, testedObject);
+         if (constructor == null) {
+            throw new IllegalArgumentException(
+               "No constructor in " + testedClass + " that can be satisfied by available injectables");
          }
+
+         Object testedObject = new ConstructorInjection().instantiate();
+         new FieldInjection().injectIntoFieldsThatAreStillNull(testedClass, testedObject);
+         setFieldValue(testedField, objectWithFields, testedObject);
       }
 
       private MockedType findInjectableForConstructorParameter(int atPosition)
@@ -94,6 +99,7 @@ public final class TestedClassInstantiations
       private final class ConstructorSearch
       {
          private int numberOfApplicableInjectables = -1;
+         private Type[] parameterTypes;
 
          private void findSingleConstructorAccordingToClassVisibilityAndAvailableInjectables()
          {
@@ -104,59 +110,38 @@ public final class TestedClassInstantiations
 
             for (Constructor<?> c : constructors) {
                if (publicClass || !isPrivate(c.getModifiers())) {
-                  if (constructor == null || isBetterFitForAvailableInjectables(c)) {
+                  int parameterCount = numberOfParametersIfSatisfiedByAvailableInjectables(c);
+
+                  if (parameterCount > numberOfApplicableInjectables) {
+                     numberOfApplicableInjectables = parameterCount;
                      constructor = c;
                   }
                }
             }
          }
 
-         private boolean isBetterFitForAvailableInjectables(Constructor<?> candidate)
+         private int numberOfParametersIfSatisfiedByAvailableInjectables(Constructor<?> candidate)
          {
-            if (numberOfApplicableInjectables < 0) {
-               numberOfApplicableInjectables = numberOfApplicableInjectables(constructor);
-            }
-
-            int n = numberOfApplicableInjectables(candidate);
-
-            if (n > numberOfApplicableInjectables) {
-               numberOfApplicableInjectables = n;
-               return true;
-            }
-
-            return false;
-         }
-
-         private Type[] parameterTypes;
-
-         private int numberOfApplicableInjectables(Constructor<?> c)
-         {
-            parameterTypes = c.getGenericParameterTypes();
+            parameterTypes = candidate.getGenericParameterTypes();
             int n = parameterTypes.length;
-            boolean varArgs = c.isVarArgs();
+            boolean varArgs = candidate.isVarArgs();
 
             if (varArgs) {
                n--;
             }
 
-            int parametersWithApplicableInjectables = 0;
-
             for (int i = 0; i < n; i++) {
                declaredType = parameterTypes[i];
                int position = findRelativePositionForInjectable(i);
 
-               if (hasApplicableInjectable(position)) {
-                  parametersWithApplicableInjectables++;
+               if (!hasApplicableInjectable(position)) {
+                  return -1;
                }
             }
 
-            if (varArgs && hasInjectedValuesForVarargsParameter(n)) {
-               parametersWithApplicableInjectables++;
-            }
-
-            return parametersWithApplicableInjectables;
+            return varArgs && hasInjectedValuesForVarargsParameter(n) ? n + 1 : n;
          }
-
+         
          private int findRelativePositionForInjectable(int currentParameterIndex)
          {
             int pos = 0;

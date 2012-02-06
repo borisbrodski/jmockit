@@ -11,19 +11,18 @@ public final class TestedClassWithFieldDITest
 {
    public static class TestedClass
    {
+      protected final int i;
+
       // Suppose this is injected by some DI framework or Java EE container:
-      @SuppressWarnings("UnusedDeclaration") private Dependency dependency;
+      @SuppressWarnings("UnusedDeclaration") protected Dependency dependency;
 
-      public boolean doSomeOperation()
-      {
-         return dependency.doSomething() > 0;
-      }
+      public TestedClass() { i = -1; }
+      public TestedClass(int i) { this.i = i; }
+
+      public boolean doSomeOperation() { return dependency.doSomething() > 0; }
    }
 
-   static class Dependency
-   {
-      int doSomething() { return -1; }
-   }
+   static class Dependency { int doSomething() { return -1; } }
 
    @Tested TestedClass tested;
    @Injectable Dependency dependency;
@@ -31,6 +30,9 @@ public final class TestedClassWithFieldDITest
    @Test
    public void exerciseTestedObjectWithFieldInjectedByType()
    {
+      assertEquals(-1, tested.i);
+      assertSame(dependency, tested.dependency);
+
       new NonStrictExpectations() {{
          dependency.doSomething(); result = 23; times = 1;
       }};
@@ -38,45 +40,10 @@ public final class TestedClassWithFieldDITest
       assertTrue(tested.doSomeOperation());
    }
 
-   public static class AnotherTestedClass extends TestedClass
-   {
-      Runnable runnable;
-      Dependency dependency3;
-      Dependency dependency2;
-
-      @Override
-      public boolean doSomeOperation()
-      {
-         boolean b = dependency2.doSomething() > 0;
-         return super.doSomeOperation() && b;
-      }
-   }
-
-   @Tested AnotherTestedClass tested2;
-   @Injectable Runnable mock2;
-   @Injectable Dependency dependency2;
-
    @Test
-   public void exerciseTestedSubclassObjectWithFieldsInjectedByTypeAndName()
+   public void exerciseTestedObjectCreatedThroughConstructorAndFieldInjection(@Injectable("123") int value)
    {
-      assertSame(mock2, tested2.runnable);
-      assertSame(dependency2, tested2.dependency2);
-      assertNull(tested2.dependency3);
-      assertFalse(tested2.doSomeOperation());
-
-      new Verifications() {{
-         mock2.run(); times = 0;
-         dependency.doSomething(); times = 1;
-         dependency2.doSomething();
-      }};
-   }
-
-   @Test
-   public void exerciseTestedSubclassObjectWithFieldsInjectedFromMockFieldsAndMockParameter(
-      @Injectable Dependency mock3)
-   {
-      assertSame(dependency2, tested2.dependency2);
-      assertSame(mock3, tested2.dependency3);
-      assertFalse(tested2.doSomeOperation());
+      assertEquals(123, tested.i);
+      assertSame(dependency, tested.dependency);
    }
 }
