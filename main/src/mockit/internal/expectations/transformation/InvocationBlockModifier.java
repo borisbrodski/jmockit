@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.transformation;
@@ -10,7 +10,7 @@ import static mockit.external.asm4.Opcodes.*;
 
 final class InvocationBlockModifier extends MethodVisitor
 {
-   private static final String CLASS_DESC = ActiveInvocations.class.getName().replace('.', '/');
+   private static final String CLASS_DESC = Type.getInternalName(ActiveInvocations.class);
 
    private final int[] matcherStacks;
    private final String fieldOwner;

@@ -28,7 +28,7 @@ public abstract class CaptureOfImplementations
          throw new IllegalArgumentException("Capturing implementations of multiple base types is not supported");
       }
 
-      String baseTypeDesc = baseType.getName().replace('.', '/');
+      String baseTypeDesc = Type.getInternalName(baseType);
       CapturedType captureMetadata = new CapturedType(baseType, typeMetadata.capturing);
       makeSureAllSubtypesAreModified(captureMetadata, baseTypeDesc, typeMetadata.fieldFromTestClass);
    }

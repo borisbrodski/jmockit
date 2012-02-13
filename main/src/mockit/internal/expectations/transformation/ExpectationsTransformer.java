@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.transformation;
@@ -39,7 +39,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    {
       for (Class<?> aClass : alreadyLoaded) {
          if (!isFinalClass(aClass) && isExpectationsOrVerificationsSubclassFromUserCode(aClass)) {
-            String classInternalName = aClass.getName().replace('.', '/');
+            String classInternalName = Type.getInternalName(aClass);
             baseSubclasses.add(classInternalName);
          }
       }

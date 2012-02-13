@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal;
@@ -137,7 +137,7 @@ public final class RedefinitionEngine
    public void stubOut()
    {
       byte[] modifiedClassFile = stubOutClass();
-      String classDesc = realClass.getName().replace('.', '/');
+      String classDesc = Type.getInternalName(realClass);
       redefineMethods(classDesc, modifiedClassFile);
    }
 

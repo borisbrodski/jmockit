@@ -25,7 +25,7 @@ final class CaptureTransformer implements ClassFileTransformer
    CaptureTransformer(CapturedType metadata, CaptureOfImplementations modifierFactory, boolean forTestClass)
    {
       this.metadata = metadata;
-      capturedType = metadata.baseType.getName().replace('.', '/');
+      capturedType = Type.getInternalName(metadata.baseType);
       this.modifierFactory = modifierFactory;
       superTypeCollector = new SuperTypeCollector();
       transformedClasses = forTestClass ? new HashMap<String, byte[]>(2) : null;

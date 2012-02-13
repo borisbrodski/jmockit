@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.annotations;
@@ -7,6 +7,7 @@ package mockit.internal.annotations;
 import org.junit.*;
 
 import mockit.*;
+import mockit.external.asm4.*;
 import mockit.internal.annotations.MockStateBetweenTestMethodsJUnit45Test.TheMockClass;
 import mockit.internal.state.*;
 
@@ -21,7 +22,7 @@ public final class MockStateBetweenTestMethodsJUnit45Test
    @MockClass(realClass = RealClass.class)
    static final class TheMockClass
    {
-      static final String internalName = TheMockClass.class.getName().replace('.', '/');
+      static final String internalName = Type.getInternalName(TheMockClass.class);
 
       @Mock(invocations = 1)
       void doSomething() {}
