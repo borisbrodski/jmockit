@@ -4,9 +4,8 @@
    <modelVersion>4.0.0</modelVersion>
 
    <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId><version>1.0-rc1</version>
-   <packaging>jar</packaging>
-
    <name>JMockit Coverage</name>
+
    <description>
       JMockit Coverage is a code coverage tool with several metrics (line, path, data) capable of generating HTML
       reports. It is designed with ease of use in mind, avoiding the need for complex configuration. Instead, smart
@@ -42,6 +41,7 @@
          <resource>
             <directory>src</directory>
             <includes>
+               <include>jmockit.properties</include>
                <include>**/*.css</include>
                <include>**/*.js</include>
             </includes>
@@ -58,7 +58,7 @@
                <archive><addMavenDescriptor>false</addMavenDescriptor></archive>
                <excludes>
                   <exclude>integrationTests/</exclude>
-                  <exclude>*</exclude>
+                  <exclude>*.class</exclude>
                </excludes>
             </configuration>
          </plugin>
