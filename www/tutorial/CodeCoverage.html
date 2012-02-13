@@ -459,26 +459,29 @@
    <code>jmockit-coverage-outputDir</code> property.
 </p>
 <pre class="no-highlight"><code>&lt;plugin>
-   &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
+   &lt;artifactId>maven-surefire-plugin&lt;/artifactId>&lt;version>2.6&lt;/version>
    &lt;configuration>
-      <span class="comment">&lt;!-- uncomment this if needed
       &lt;argLine>
-         -javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/0.999.12/jmockit-0.999.12.jar
+         -Djmockit-coverage-outputDir=target/my-coverage-report
+         <span class="comment">&lt;!-- other "jmockit-coverage" properties, if needed --></span>
       &lt;/argLine>
-      --></span>
-      &lt;systemProperties>
-         &lt;property>
-            &lt;name>jmockit-coverage-outputDir&lt;/name>&lt;value>target/my-coverage-report&lt;/value>
-         &lt;/property>
-         <span class="comment">&lt;!-- other "jmockit-coverage" properties... --></span>
-      &lt;/systemProperties>
    &lt;/configuration>
 &lt;/plugin>
 </code></pre>
 <p>
    If the tests are run in a Java SE 5 JVM, or if for whatever reason JMockit cannot be automatically initialized when
-   running on Java SE 6, then the <code>-javaagent</code> JVM parameter should be used as shown above.
+   running on Java SE 6, then the <code>-javaagent</code> JVM parameter should be used as shown below.
 </p>
+<pre class="no-highlight"><code>&lt;plugin>
+   &lt;artifactId>maven-surefire-plugin&lt;/artifactId>&lt;version>2.6&lt;/version>
+   &lt;configuration>
+      &lt;argLine>
+         -javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/0.999.12/jmockit-0.999.12.jar
+         <span class="comment">&lt;!-- "jmockit-coverage" properties, if any are needed --></span>
+      &lt;/argLine>
+   &lt;/configuration>
+   &lt;/plugin>
+</code></pre>
 
 <h3 id="switching">
    Turning coverage output on/off
