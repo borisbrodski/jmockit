@@ -13,7 +13,7 @@ import org.testng.annotations.*;
 import org.testng.internal.Parameters;
 
 import mockit.*;
-import mockit.integration.*;
+import mockit.integration.internal.*;
 import mockit.internal.expectations.*;
 import mockit.internal.state.*;
 

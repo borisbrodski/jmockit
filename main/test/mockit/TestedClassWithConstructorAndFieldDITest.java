@@ -66,23 +66,23 @@ public final class TestedClassWithConstructorAndFieldDITest
 
    @Test
    public void exerciseTestedSubclassObjectWithFieldsInjectedFromMockFieldsAndMockParameter(
-      @Injectable Dependency mock3)
+      @Injectable Dependency dependency3)
    {
       assertEquals(-2, tested.i);
       assertSame(dependency, tested.dependency);
       assertSame(dependency2, tested.dependency2);
-      assertSame(mock3, tested.dependency3);
+      assertSame(dependency3, tested.dependency3);
       assertFalse(tested.doSomeOperation());
    }
 
    @Test
    public void exerciseTestedSubclassObjectUsingConstructorAndFieldInjection(
-      @Injectable("45") int value, @Injectable Dependency mock3)
+      @Injectable("45") int value, @Injectable Dependency dependency1)
    {
       assertEquals(45, tested.i);
-      assertSame(dependency, tested.dependency);
+      assertSame(dependency1, tested.dependency);
       assertSame(dependency2, tested.dependency2);
-      assertSame(mock3, tested.dependency3);
+      assertNull(tested.dependency3);
       assertSame(mock2, tested.runnable);
       assertFalse(tested.doSomeOperation());
    }

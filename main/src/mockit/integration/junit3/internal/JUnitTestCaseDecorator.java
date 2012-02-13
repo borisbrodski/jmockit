@@ -9,7 +9,7 @@ import java.lang.reflect.*;
 import junit.framework.*;
 
 import mockit.*;
-import mockit.integration.*;
+import mockit.integration.internal.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 

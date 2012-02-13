@@ -32,8 +32,11 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
          mockParameters = new MockedType[n];
          injectableParameters = new ArrayList<MockedType>(n);
 
+         String testClassDesc = mockit.external.asm4.Type.getInternalName(testMethod.getDeclaringClass());
+         String testMethodDesc = testMethod.getName() + mockit.external.asm4.Type.getMethodDescriptor(testMethod);
+
          for (int i = 0; i < n; i++) {
-            getMockedTypeFromMockParameterDeclaration(i);
+            getMockedTypeFromMockParameterDeclaration(testClassDesc, testMethodDesc, i);
          }
 
          redefineAndInstantiateMockedTypes();
@@ -43,17 +46,17 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       }
    }
 
-   private void getMockedTypeFromMockParameterDeclaration(int paramIndex)
+   private void getMockedTypeFromMockParameterDeclaration(String testClassDesc, String testMethodDesc, int paramIndex)
    {
       Type paramType = paramTypes[paramIndex];
       Annotation[] annotationsOnParameter = paramAnnotations[paramIndex];
 
-      typeMetadata = new MockedType(paramIndex, paramType, annotationsOnParameter);
+      typeMetadata = new MockedType(testClassDesc, testMethodDesc, paramIndex, paramType, annotationsOnParameter);
       mockParameters[paramIndex] = typeMetadata;
 
       if (typeMetadata.injectable) {
          injectableParameters.add(typeMetadata);
-         paramValues[paramIndex] = typeMetadata.parameterValue;
+         paramValues[paramIndex] = typeMetadata.providedValue;
       }
    }
 
@@ -65,7 +68,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
          if (typeMetadata.isMockableType()) {
             Object mockedInstance = redefineAndInstantiateMockedType();
             paramValues[i] = mockedInstance;
-            typeMetadata.parameterValue = mockedInstance;
+            typeMetadata.providedValue = mockedInstance;
          }
       }
    }

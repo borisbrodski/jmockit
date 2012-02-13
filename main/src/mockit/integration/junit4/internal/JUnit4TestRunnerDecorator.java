@@ -12,7 +12,7 @@ import org.junit.runners.Suite.*;
 import org.junit.runners.model.*;
 
 import mockit.*;
-import mockit.integration.*;
+import mockit.integration.internal.*;
 import mockit.internal.expectations.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;

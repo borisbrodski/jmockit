@@ -36,7 +36,7 @@ public class BaseClassModifier extends ClassVisitor
       @Override
       public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index)
       {
-         registerParameterName(name, index);
+         registerParameterName(name);
       }
 
       @Override
@@ -46,20 +46,14 @@ public class BaseClassModifier extends ClassVisitor
       }
    };
 
-   protected final void registerParameterName(String name, int index)
+   protected final void registerParameterName(String name)
    {
-      if (staticMethod) {
-         ParameterNames.registerName(classDesc, methodName, methodDesc, index, name);
-      }
-      else if (index > 0) {
-         ParameterNames.registerName(classDesc, methodName, methodDesc, index - 1, name);
-      }
+      ParameterNames.registerName(classDesc, methodName, methodDesc, name);
    }
 
    protected MethodVisitor mw;
    protected boolean useMockingBridge;
    private String classDesc;
-   private boolean staticMethod;
    private String methodName;
    private String methodDesc;
 
@@ -104,7 +98,6 @@ public class BaseClassModifier extends ClassVisitor
       //noinspection UnnecessarySuperQualifier
       mw = super.visitMethod(access & ACCESS_MASK, name, desc, signature, exceptions);
 
-      staticMethod = Modifier.isStatic(access);
       methodName = name;
       methodDesc = desc;
 

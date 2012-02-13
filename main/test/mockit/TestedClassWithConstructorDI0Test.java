@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -70,7 +70,7 @@ public final class TestedClassWithConstructorDI0Test
 
    // For varargs parameter:
    @Injectable boolean firstFlag = true;
-   @Injectable boolean secondFlag;
+   @Injectable("false") boolean secondFlag;
    @Injectable boolean thirdFlag = true;
 
    @Test
@@ -94,8 +94,5 @@ public final class TestedClassWithConstructorDI0Test
       Collaborator.doSomething();
    }
 
-   static class Collaborator
-   {
-      static void doSomething() {}
-   }
+   static class Collaborator { static void doSomething() {} }
 }

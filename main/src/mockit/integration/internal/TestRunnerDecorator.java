@@ -2,11 +2,12 @@
  * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit.integration;
+package mockit.integration.internal;
 
 import java.lang.reflect.*;
 
 import mockit.internal.expectations.*;
+import mockit.internal.expectations.injection.*;
 import mockit.internal.expectations.mocking.*;
 import mockit.internal.state.*;
 import mockit.*;

@@ -13,7 +13,7 @@ public final class TestedClassInjectedFromMockParametersTest
    {
       private int i;
       private String s;
-      private final boolean b;
+      private boolean b;
       private char[] chars;
 
       public TestedClass(boolean b) { this.b = b; }
@@ -31,6 +31,11 @@ public final class TestedClassInjectedFromMockParametersTest
          b = b1;
          chars = new char[] {(char) b2, b3 ? 'X' : 'x'};
       }
+
+      public TestedClass(char first, char second, char third)
+      {
+         chars = new char[] {first, second, third};
+      }
    }
 
    @Tested TestedClass tested;
@@ -46,10 +51,11 @@ public final class TestedClassInjectedFromMockParametersTest
    }
 
    @Test
-   public void exerciseTestedObjectInjectedFromMockParametersUsingOneConstructor(
-      @Injectable @Mocked("") String s, @Injectable("123") int mock1, @Injectable("true") boolean mock2,
+   public void instantiateTestedObjectFromMockParametersUsingOneConstructor(
+      @Injectable("Text") String s, @Injectable("123") int mock1, @Injectable("true") boolean mock2,
       @Injectable("A") char c1, @Injectable("bB") char c2)
    {
+      assertEquals("Text", s);
       assertEquals(s, tested.s);
       assertEquals(mock1, tested.i);
       assertEquals(mock2, tested.b);
@@ -60,11 +66,18 @@ public final class TestedClassInjectedFromMockParametersTest
    }
 
    @Test
-   public void exerciseTestedObjectInjectedFromMockParametersUsingAnotherConstructor(
+   public void instantiateTestedObjectFromMockParametersUsingAnotherConstructor(
       @Injectable("true") boolean b1, @Injectable("true") boolean b3, @Injectable("65") byte b2)
    {
       assertTrue(tested.b);
       assertEquals('A', tested.chars[0]);
       assertEquals('X', tested.chars[1]);
+   }
+
+   @Test
+   public void instantiateTestedObjectUsingConstructorWithMultipleParametersOfTheSameTypeMatchedByName(
+      @Injectable("S") char second, @Injectable("T") char third, @Injectable("F") char first)
+   {
+      assertArrayEquals(new char[] {'F', 'S', 'T'}, tested.chars);
    }
 }

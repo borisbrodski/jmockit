@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.util;
@@ -115,7 +115,7 @@ public final class DefaultValues
       return null;
    }
 
-   private static Object defaultValueForPrimitiveType(Class<?> type)
+   public static Object defaultValueForPrimitiveType(Class<?> type)
    {
       if (type == int.class) {
          return 0;

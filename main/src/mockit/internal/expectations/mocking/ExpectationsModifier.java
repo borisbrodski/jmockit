@@ -307,7 +307,7 @@ final class ExpectationsModifier extends BaseClassModifier
       @Override
       public final void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int idx)
       {
-         registerParameterName(name, idx);
+         registerParameterName(name);
 
          // For some reason, the start position for "this" gets displaced by bytecode inserted at the beginning,
          // in a method modified by the EMMA tool. If not treated, this causes a ClassFormatError.

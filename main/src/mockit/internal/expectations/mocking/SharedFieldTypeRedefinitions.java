@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.Map.*;
 import java.lang.reflect.*;
 
+import mockit.internal.expectations.injection.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
@@ -26,17 +27,16 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
 
    public void redefineTypesForTestClass()
    {
+      Class<?> testClass = parentObject.getClass();
       TestRun.enterNoMockingZone();
 
       try {
-         TestedClasses testedClasses = new TestedClasses();
+         testedClassInstantiations = new TestedClassInstantiations();
 
-         if (testedClasses.findTestedAndInjectableFields(parentObject)) {
-            testedClassInstantiations =
-               new TestedClassInstantiations(testedClasses.testedFields, testedClasses.injectableFields);
+         if (!testedClassInstantiations.findTestedAndInjectableFields(testClass)) {
+            testedClassInstantiations = null;
          }
 
-         Class<?> testClass = parentObject.getClass();
          clearTargetClasses();
          redefineFieldTypes(testClass, true);
       }

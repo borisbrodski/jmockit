@@ -12,6 +12,7 @@ import static mockit.internal.util.Utilities.*;
 import mockit.*;
 import mockit.internal.filtering.*;
 import mockit.internal.state.*;
+import mockit.internal.util.*;
 
 @SuppressWarnings({"ClassWithTooManyFields", "EqualsAndHashcode"})
 public final class MockedType
@@ -40,12 +41,12 @@ public final class MockedType
    final Cascading cascading;
    public final boolean nonStrict;
    public final boolean injectable;
-   final Type declaredType;
-   final String mockId;
+   public final Type declaredType;
+   public final String mockId;
    MockingConfiguration mockingCfg;
-   Object parameterValue;
+   Object providedValue;
 
-   MockedType(Field field, boolean fromTestClass)
+   public MockedType(Field field, boolean fromTestClass)
    {
       this.field = field;
       fieldFromTestClass = fromTestClass;
@@ -58,7 +59,7 @@ public final class MockedType
       injectable = injectableAnnotation != null;
       declaredType = field.getGenericType();
       mockId = field.getName();
-      parameterValue = getDefaultInjectableValue(injectableAnnotation);
+      providedValue = getDefaultInjectableValue(injectableAnnotation);
       registerCascadingIfSpecified();
    }
 
@@ -72,6 +73,9 @@ public final class MockedType
 
             if (injectableClass == char.class) {
                return defaultValue.charAt(0);
+            }
+            else if (injectableClass == String.class) {
+               return defaultValue;
             }
             else if (injectableClass.isPrimitive()) {
                Class<?> wrapperClass = PRIMITIVE_TO_WRAPPER.get(injectableClass);
@@ -92,7 +96,9 @@ public final class MockedType
       }
    }
 
-   MockedType(int paramIndex, Type parameterType, Annotation[] annotationsOnParameter)
+   MockedType(
+      String testClassDesc, String testMethodDesc, int paramIndex, Type parameterType,
+      Annotation[] annotationsOnParameter)
    {
       field = null;
       fieldFromTestClass = false;
@@ -104,8 +110,8 @@ public final class MockedType
       Injectable injectableAnnotation = getAnnotation(annotationsOnParameter, Injectable.class);
       injectable = injectableAnnotation != null;
       declaredType = parameterType;
-      mockId = "param" + paramIndex;
-      parameterValue = getDefaultInjectableValue(injectableAnnotation);
+      mockId = ParameterNames.getName(testClassDesc, testMethodDesc, paramIndex);
+      providedValue = getDefaultInjectableValue(injectableAnnotation);
       registerCascadingIfSpecified();
    }
 
@@ -146,12 +152,16 @@ public final class MockedType
 
    boolean isMockableType()
    {
-      if (declaredType instanceof Class) {
-         Class<?> classType = (Class<?>) declaredType;
-         return !classType.isPrimitive() && !classType.isArray() && classType != Integer.class;
+      if (!(declaredType instanceof Class)) {
+         return true;
       }
+      
+      Class<?> classType = (Class<?>) declaredType;
 
-      return true;
+      return !(
+         classType.isPrimitive() || classType.isArray() || classType == Integer.class ||
+         classType == String.class && injectable
+      );
    }
 
    boolean isFinalFieldOrParameter() { return field == null || isFinal(accessModifiers); }
@@ -191,15 +201,31 @@ public final class MockedType
 
    String getRealClassName() { return mocked == null ? "" : mocked.realClassName(); }
 
-   Object getValueToInject(Object objectWithFields)
+   public Object getValueToInject(Object objectWithFields)
    {
-      Object value = field == null ? parameterValue : getFieldValue(field, objectWithFields);
-      
-      if (value == null && injectable) {
-         value = parameterValue;
+      if (field == null) {
+         return providedValue;
       }
 
-      return value;
+      Object value = getFieldValue(field, objectWithFields);
+
+      if (!injectable) {
+         return value;
+      }
+
+      if (value == null) {
+         return providedValue;
+      }
+
+      Class<?> fieldType = field.getType();
+
+      if (!fieldType.isPrimitive()) {
+         return value;
+      }
+
+      Object defaultValue = DefaultValues.defaultValueForPrimitiveType(fieldType);
+
+      return value.equals(defaultValue) ? providedValue : value;
    }
 
    @Override

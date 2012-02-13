@@ -33,17 +33,18 @@ public final class TestedClassWithConstructorDI2Test
 
    @Tested TestedClass tested;
    @Injectable Runnable task;
-   @Injectable Dependency mock1;
-   @Injectable Dependency mock2;
+   @Injectable Dependency dependency1;
+   @Injectable Dependency dependency2;
 
    @Test
-   public void exerciseTestedObjectWithDependenciesOfSameTypeInjectedThroughConstructor(@Injectable Dependency mock3)
+   public void exerciseTestedObjectWithDependenciesOfSameTypeInjectedThroughConstructor(
+      @Injectable Dependency dependency3)
    {
-      assertSame(mock3, tested.dependency3);
+      assertSame(dependency3, tested.dependency3);
 
       new Expectations() {{
-         mock1.doSomething(); result = 23;
-         mock2.doSomething(); result = 5;
+         dependency1.doSomething(); result = 23;
+         dependency2.doSomething(); result = 5;
       }};
 
       assertEquals(28, tested.doSomeOperation());
@@ -51,10 +52,10 @@ public final class TestedClassWithConstructorDI2Test
 
    @Test
    public void exerciseTestedObjectWithExtraInjectableParameter(
-      @Injectable Dependency mock3, @Injectable Dependency mock4)
+      @Injectable Dependency dependency3, @Injectable Dependency mock4)
    {
-      assertSame(mock1, tested.dependency1);
-      assertSame(mock2, tested.dependency2);
-      assertSame(mock3, tested.dependency3);
+      assertSame(dependency1, tested.dependency1);
+      assertSame(dependency2, tested.dependency2);
+      assertSame(dependency3, tested.dependency3);
    }
 }
