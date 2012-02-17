@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.argumentMatching;
@@ -9,7 +9,10 @@ import java.lang.reflect.*;
 public final class ArgumentMismatch
 {
    private final StringBuilder out = new StringBuilder(50);
+   private String parameterType;
    private boolean finished;
+
+   public String getParameterType() { return parameterType; }
 
    public boolean isFinished() { return finished; }
    void markAsFinished() { finished = true; }
@@ -21,6 +24,17 @@ public final class ArgumentMismatch
    public ArgumentMismatch append(int i) { out.append(i); return this; }
    public ArgumentMismatch append(double d) { out.append(d); return this; }
    public ArgumentMismatch append(CharSequence str) { out.append(str); return this; }
+
+   public void appendFormatted(String parameterType, Object argumentValue, ArgumentMatcher matcher)
+   {
+      if (matcher == null) {
+         appendFormatted(argumentValue);
+      }
+      else {
+         this.parameterType = parameterType;
+         matcher.writeMismatchPhrase(this);
+      }
+   }
 
    public void appendFormatted(Object value)
    {

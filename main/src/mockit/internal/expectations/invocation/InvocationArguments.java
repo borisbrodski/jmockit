@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.invocation;
@@ -36,7 +36,9 @@ public final class InvocationArguments
    }
 
    public String getGenericSignature() { return genericSignature == null ? methodNameAndDesc : genericSignature; }
+
    public Object[] getValues() { return invocationArgs; }
+   void setValues(Object[] values) { invocationArgs = values; }
 
    public void setValuesWithNoMatchers(Object[] argsToVerify)
    {
@@ -88,7 +90,7 @@ public final class InvocationArguments
 
          for (int i = 0; i < n; i++) {
             Object actual = getArgument(replayArgs, replayVarArgs, argCount, i);
-            ArgumentMatcher expected = i < matchers.size() ? matchers.get(i) : null;
+            ArgumentMatcher expected = getArgumentMatcher(i);
 
             if (expected == null) {
                Object arg = getArgument(invocationArgs, invocationVarArgs, argCount, i);
@@ -173,9 +175,20 @@ public final class InvocationArguments
          !EqualityMatcher.areEqualWhenNonNull(actual, expected);
    }
 
-   private Object getArgument(Object[] regularArgs, Object[] varArgs, int regularArgCount, int i)
+   private Object getArgument(Object[] regularArgs, Object[] varArgs, int regularArgCount, int parameterIndex)
    {
-      return i < regularArgCount ? regularArgs[i] : varArgs[i - regularArgCount];
+      return parameterIndex < regularArgCount ? regularArgs[parameterIndex] : varArgs[parameterIndex - regularArgCount];
+   }
+
+   private ArgumentMatcher getArgumentMatcher(int parameterIndex)
+   {
+      ArgumentMatcher matcher = parameterIndex < matchers.size() ? matchers.get(parameterIndex) : null;
+
+      if (matcher == null && parameterIndex < invocationArgs.length && invocationArgs[parameterIndex] == null) {
+         matcher = AlwaysTrueMatcher.INSTANCE;
+      }
+      
+      return matcher;
    }
 
    public AssertionError assertMatch(Object[] replayArgs, Map<Object, Object> instanceMap)
@@ -208,7 +221,7 @@ public final class InvocationArguments
 
       for (int i = 0; i < n; i++) {
          Object actual = getArgument(replayArgs, replayVarArgs, argCount, i);
-         ArgumentMatcher expected = i < matchers.size() ? matchers.get(i) : null;
+         ArgumentMatcher expected = getArgumentMatcher(i);
 
          if (expected == null) {
             Object arg = getArgument(invocationArgs, invocationVarArgs, argCount, i);
@@ -303,15 +316,22 @@ public final class InvocationArguments
    @Override
    public String toString()
    {
-      ArgumentMismatch desc = new ArgumentMismatch();
-      desc.append(":\n").append(new MethodFormatter(classDesc, methodNameAndDesc).toString());
+      MethodFormatter methodFormatter = new MethodFormatter(classDesc, methodNameAndDesc);
 
-      if (invocationArgs.length > 0) {
-         desc.append("\nwith arguments: ");
+      ArgumentMismatch desc = new ArgumentMismatch();
+      desc.append(":\n").append(methodFormatter.toString());
+
+      int parameterCount = invocationArgs.length;
+
+      if (parameterCount > 0) {
+         desc.append('\n').append("with arguments: ");
+
+         List<String> parameterTypes = methodFormatter.getParameterTypes();
          String sep = "";
 
-         for (Object arg : invocationArgs) {
-            desc.append(sep).appendFormatted(arg);
+         for (int i = 0; i < parameterCount; i++) {
+            ArgumentMatcher matcher = matchers == null ? null : getArgumentMatcher(i);
+            desc.append(sep).appendFormatted(parameterTypes.get(i), invocationArgs[i], matcher);
             sep = ", ";
          }
       }

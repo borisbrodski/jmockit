@@ -56,7 +56,6 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
    private void aggregateMatchingExpectations(Expectation found)
    {
       if (currentExpectation == null) {
-         found.invocation.arguments.setMatchers(argMatchers);
          currentExpectation = found;
          return;
       }
@@ -97,7 +96,8 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
          return;
       }
 
-      getCurrentExpectation();
+      validatePresenceOfExpectation(currentVerification);
+
       InvocationHandler handler = new InvocationHandler(invocationHandler);
       int i = 0;
 

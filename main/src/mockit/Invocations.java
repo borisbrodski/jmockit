@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -19,10 +19,7 @@ import mockit.internal.util.*;
  */
 abstract class Invocations
 {
-   static
-   {
-      Startup.verifyInitialization();
-   }
+   static { Startup.verifyInitialization(); }
 
    /**
     * Matches any {@code Object} reference for the relevant parameter.
@@ -107,34 +104,23 @@ abstract class Invocations
    protected static final Float anyFloat = 0.0F;
 
    /**
-    * An object assigned to this field will be taken as a handler for each invocation matching the current expectation,
-    * with the purpose of validating invocation arguments.
-    * Note that for a <em>recorded</em> expectation such invocations are the ones that will be executed during the
-    * <em>replay</em> phase, while for a <em>verified</em> expectation they are the ones actually executed during that
-    * phase.
+    * An object assigned to this field will be called back for each invocation matching the current expectation,
+    * in order to validate invocation arguments.
     * <p/>
-    * The object assigned can be of any type, provided its class has a single non-private method
-    * (therefore, additional methods are allowed and ignored, as long as they are {@code private}).
-    * This <em>handler method</em> can have any name, as long as its parameters match the ones defined in the mocked
+    * Said object can be of any type, provided its class has a single non-private method
+    * (additional methods are allowed and ignored, as long as they are {@code private}).
+    * This <em>validation method</em> can have any name, provided its parameters match the ones defined in the mocked
     * method or constructor associated with the expectation.
     * Corresponding parameters don't need to have the exact same declared type, though, as long as each possible
-    * invocation argument can be passed to the corresponding parameter in the handler method.
+    * invocation argument can be passed to the corresponding parameter in the validation method.
     * <p/>
-    * In the case of an expectation recorded for a non-{@code void} method, the handler method is also responsible for
-    * returning appropriate values to be used by the caller (which normally belongs to the code under test).
-    * That is, the {@code result} field or the {@code returns(...)} method should <em>not</em> be used together with an
-    * assignment to this field.
-    * The same observation applies to the throwing of exceptions/errors from a recorded expectation
-    * (which can also be done for constructors and {@code void} methods).
+    * The return type of the validation method should be either {@code boolean} or {@code void}.
+    * In the first case, a return value of {@code true} means the invocation is valid, while {@code false} causes the
+    * test to fail with an appropriate error message.
+    * In the second case, invocation arguments should be validated through regular assertions (Java
+    * <code>assert</code>s and/or JUnit/TestNG methods).
     * <p/>
-    * When used for an expectation inside a <em>verification</em> block, on the other hand, the handler method should
-    * normally have a {@code void} return type. Any value eventually returned by the method will be silently ignored in
-    * this case. Note that a handler method for a verified expectation also shouldn't intentionally throw exceptions or
-    * errors, since the verified invocation(s) already happened in the replay phase; any exception/error actually thrown
-    * will simply propagate back to the test method.
-    * <p/>
-    * Just like with {@linkplain mockit.Delegate delegate classes}, the handler method can declare its first parameter
-    * as being of type {@link mockit.Invocation}.
+    * The validation method can optionally declare its first parameter as being of type {@link mockit.Invocation}.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#forEachInvocation">In the
     * Tutorial</a>
@@ -192,8 +178,6 @@ abstract class Invocations
     * <em>unexpected</em> invocation occurs, or a <em>missing</em> invocation is detected.
     */
    protected static CharSequence $;
-
-   Invocations() {}
 
    abstract TestOnlyPhase getCurrentPhase();
 
@@ -309,12 +293,13 @@ abstract class Invocations
     * <p/>
     * The given delegate object is assumed to be an instance of an <em>invocation handler</em> class, similar to those
     * used with the {@linkplain #forEachInvocation} field.
-    * The non-<code>private</code> <em>handler method</em> must have a single parameter of a type capable of receiving
-    * the relevant argument values.
+    * The non-<code>private</code> <em>handler method</em> must have a single parameter capable of receiving the
+    * relevant argument values.
     * The name of this handler method does not matter.
-    * Its return type, on the other hand, should either be {@code boolean} or {@code void}.
+    * <p/>
+    * The handler's return type, on the other hand, should be {@code boolean} or {@code void}.
     * In the first case, a return value of {@code true} will indicate a successful match for the actual invocation
-    * argument at replay time, while a return of {@code false} will cause the test to fail.
+    * argument at replay time, while a return of {@code false} will fail to match the invocation.
     * In the case of a {@code void} return type, the handler method should validate the actual invocation argument
     * through an {@code assert} statement or a JUnit/TestNG assertion.
     *

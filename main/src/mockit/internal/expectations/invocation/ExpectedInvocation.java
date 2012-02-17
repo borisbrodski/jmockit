@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.invocation;
@@ -222,6 +222,15 @@ public final class ExpectedInvocation
       }
 
       return desc;
+   }
+
+   String toString(Object[] actualInvocationArguments)
+   {
+      Object[] invocationArgs = arguments.getValues();
+      arguments.setValues(actualInvocationArguments);
+      String description = toString();
+      arguments.setValues(invocationArgs);
+      return description;
    }
 
    // Default result //////////////////////////////////////////////////////////////////////////////////////////////////

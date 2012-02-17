@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -11,7 +11,7 @@ import org.junit.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
-@SuppressWarnings({"UnusedDeclaration"})
+@SuppressWarnings("UnusedDeclaration")
 public final class ForEachInvocationTest
 {
    static class Collaborator
@@ -20,16 +20,53 @@ public final class ForEachInvocationTest
 
       Collaborator(int i) {}
 
-      int getValue() { return -1; }
+      int getValue(int i) { return -i; }
       void doSomething() {}
       void doSomething(int i) {}
+      void doSomething(boolean b, int i) {}
       String doSomething(boolean b, int[] i, String s) { return s + b + i[0]; }
       static boolean staticMethod() { return true; }
       static boolean staticMethod(int i) { return i > 0; }
       native long nativeMethod(boolean b);
-      final char finalMethod() { return 's'; }
+      final char finalMethod(String s) { return 's'; }
       private void privateMethod(short s) {}
       void addElements(Collection<String> elements) { elements.add("one element"); }
+   }
+
+   @Test(expected = AssertionError.class)
+   public void recordExpectationWithHandlerThatWillValidateMultipleInvocations(final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.doSomething(anyBoolean, anyInt);
+         forEachInvocation = new Object() {
+            void validate(boolean b, int i)
+            {
+               assertTrue(b);
+               assertEquals(5, i);
+            }
+         };
+      }};
+
+      mock.doSomething(true, 5); // valid
+      mock.doSomething(false, 1); // invalid
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyExpectationWithHandlerThatValidatesMultipleInvocations(final Collaborator mock)
+   {
+      mock.doSomething(true, 5); // valid
+      mock.doSomething(true, 1); // invalid
+
+      new Verifications() {{
+         mock.doSomething(anyBoolean, anyInt);
+         forEachInvocation = new Object() {
+            void validate(boolean b, int i)
+            {
+               assertTrue(b);
+               assertEquals(5, i);
+            }
+         };
+      }};
    }
 
    @Test
@@ -40,28 +77,26 @@ public final class ForEachInvocationTest
       final int[] iExpected = new int[0];
       final String sExpected = "test";
 
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
-            mock.getValue(); forEachInvocation = new Object() { int getValue() { return 2; } };
+            mock.getValue(5); result = 2;
+            forEachInvocation = new Object() { boolean isValid(int i) { return i > 2; } };
 
-            mock.doSomething(bExpected, iExpected, sExpected);
-            forEachInvocation = new Object()
-            {
-               String invoked(Boolean b, int[] i, String s)
+            mock.doSomething(bExpected, iExpected, sExpected); result = "";
+            forEachInvocation = new Object() {
+               void invoked(Boolean b, int[] i, String s)
                {
                   assertEquals(bExpected, b);
                   assertArrayEquals(iExpected, i);
                   assertEquals(sExpected, s);
-                  return "";
                }
             };
          }
       };
 
-      assertEquals(2, collaborator.getValue());
+      assertEquals(2, collaborator.getValue(5));
       assertEquals("", collaborator.doSomething(bExpected, iExpected, sExpected));
    }
 
@@ -74,49 +109,41 @@ public final class ForEachInvocationTest
 
       collaborator.doSomething(true, new int[0], "test");
 
-      new Verifications()
-      {
-         {
-            //noinspection unchecked
-            mock.addElements((Collection<String>) any);
-            forEachInvocation = new Object()
-            {
-               void verify(Collection<String> elements) { assert elements.contains("B"); }
-            };
+      new Verifications() {{
+         //noinspection unchecked
+         mock.addElements((Collection<String>) any);
+         forEachInvocation = new Object() {
+            void verify(Collection<String> elements) { assert elements.contains("B"); }
+         };
 
-            mock.doSomething(anyBoolean, null, null);
-            forEachInvocation = new Object()
+         mock.doSomething(anyBoolean, null, null);
+         forEachInvocation = new Object() {
+            void invoked(Boolean b, int[] i, String s)
             {
-               void invoked(Boolean b, int[] i, String s)
-               {
-                  assertTrue(b);
-                  assertArrayEquals(new int[0], i);
-                  assertEquals("test", s);
-               }
-            };
-         }
-      };
+               assertTrue(b);
+               assertArrayEquals(new int[0], i);
+               assertEquals("test", s);
+            }
+         };
+      }};
    }
 
    @Test
-   public void returnsMultipleReturnValuesThroughSingleHandler(final Collaborator collaborator)
+   public void combineDelegateAndValidationObjects(final Collaborator collaborator)
    {
-      new NonStrictExpectations()
-      {
-         {
-            collaborator.getValue();
-            forEachInvocation = new Object()
-            {
-               int i = 1;
+      new NonStrictExpectations() {{
+         collaborator.getValue(anyInt);
+         result = new Delegate() {
+            int getValue(int i) { return i + 1; }
+         };
+         forEachInvocation = new Object() {
+            boolean isNonNegative(int i) { return i >= 0; }
+         };
+      }};
 
-               int getValue() { return i++; }
-            };
-         }
-      };
-
-      assertEquals(1, collaborator.getValue());
-      assertEquals(2, collaborator.getValue());
-      assertEquals(3, collaborator.getValue());
+      assertEquals(1, collaborator.getValue(0));
+      assertEquals(2, collaborator.getValue(1));
+      assertEquals(3, collaborator.getValue(2));
    }
 
    @Test
@@ -124,8 +151,7 @@ public final class ForEachInvocationTest
    {
       final ConstructorHandler handler = new ConstructorHandler();
 
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -141,7 +167,6 @@ public final class ForEachInvocationTest
    static class ConstructorHandler
    {
       int capturedArgument;
-
       void init(int i) { capturedArgument = i; }
    }
 
@@ -150,21 +175,17 @@ public final class ForEachInvocationTest
    {
       final Collaborator[] collaborators = {new Collaborator(5), new Collaborator(4), new Collaborator(1024)};
 
-      new FullVerifications()
-      {
-         {
-            new Collaborator(anyInt);
-            forEachInvocation = new Object()
+      new FullVerifications() {{
+         new Collaborator(anyInt);
+         forEachInvocation = new Object() {
+            void checkIt(Invocation invocation, int i)
             {
-               void checkIt(Invocation invocation, int i)
-               {
-                  assert i > 0;
-                  Collaborator collaborator = collaborators[invocation.getInvocationIndex()];
-                  assert collaborator == invocation.getInvokedInstance();
-               }
-            };
-         }
-      };
+               assert i > 0;
+               Collaborator collaborator = collaborators[invocation.getInvocationIndex()];
+               assert collaborator == invocation.getInvokedInstance();
+            }
+         };
+      }};
    }
 
    @Test(expected = AssertionError.class)
@@ -172,32 +193,27 @@ public final class ForEachInvocationTest
    {
       new Collaborator(0);
 
-      new FullVerifications()
-      {
-         {
-            new Collaborator(anyInt);
-            forEachInvocation = new Object()
-            {
-               void checkIt(int i) { assert i > 0; }
-            };
-         }
-      };
+      new FullVerifications() {{
+         new Collaborator(anyInt);
+         forEachInvocation = new Object() {
+            void checkIt(int i) { assert i > 0; }
+         };
+      }};
    }
 
-   @Test
-   public void recordExpectationWithHandlerForStaticMethod()
+   @Test(expected = AssertionError.class)
+   public void recordExpectationWithHandlerForStaticMethodWhichAlsoReturnsAValue()
    {
-      new Expectations()
-      {
+      new Expectations() {
          final Collaborator unused = null;
 
          {
-            Collaborator.staticMethod();
-            forEachInvocation = new Delegate() { boolean staticInvocation() { return false; } };
+            Collaborator.staticMethod(anyInt); result = false;
+            forEachInvocation = new Object() { boolean staticInvocation(int i) { return i > 0; } };
          }
       };
 
-      assertFalse(Collaborator.staticMethod());
+      assertFalse(Collaborator.staticMethod(-123));
    }
 
    @Test
@@ -208,30 +224,26 @@ public final class ForEachInvocationTest
       Collaborator.staticMethod(2);
       Collaborator.staticMethod(3);
 
-      new FullVerificationsInOrder()
-      {
-         {
-            Collaborator.staticMethod();
-            forEachInvocation = new Object() { boolean staticInvocation() { return false; } };
+      new FullVerificationsInOrder() {{
+         Collaborator.staticMethod();
+         forEachInvocation = new Object() { boolean staticInvocation() { return true; } };
 
-            Collaborator.staticMethod(1);
-            forEachInvocation = new Object() { void verify(int i) { assert i == 1; } };
+         Collaborator.staticMethod(1);
+         forEachInvocation = new Object() { void verify(int i) { assert i == 1; } };
 
-            Collaborator.staticMethod(anyInt); times = 2;
-            forEachInvocation = new Object() { void verify(int i) { assert i == 2 || i == 3; } };
-         }
-      };
+         Collaborator.staticMethod(anyInt); times = 2;
+         forEachInvocation = new Object() { void verify(int i) { assert i == 2 || i == 3; } };
+      }};
    }
 
    @Test
    public void recordExpectationWithInvocationHandlerWhichDefinesStaticHandlerMethod()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
-            mock.doSomething(anyBoolean, null, null);
+            mock.doSomething(anyBoolean, null, null); result = "test";
             //noinspection InstantiationOfUtilityClass
             forEachInvocation = new StaticDelegate();
          }
@@ -242,12 +254,11 @@ public final class ForEachInvocationTest
 
    static final class StaticDelegate
    {
-      static String verifyArgs(boolean b, int[] i, String s)
+      static void verifyArgs(boolean b, int[] i, String s)
       {
          assertFalse(b);
          assertNull(i);
          assertEquals("replay", s);
-         return "test";
       }
    }
 
@@ -256,32 +267,27 @@ public final class ForEachInvocationTest
    {
       new Collaborator().nativeMethod(true);
 
-      new Verifications()
-      {
-         {
-            mock.nativeMethod(anyBoolean);
-            forEachInvocation = new Object()
-            {
-               void verify(boolean b) { assertTrue(b); }
-            };
-         }
-      };
+      new Verifications() {{
+         mock.nativeMethod(anyBoolean);
+         forEachInvocation = new Object() {
+            void verify(boolean b) { assertTrue(b); }
+         };
+      }};
    }
 
    @Test
    public void recordExpectationWithHandlerForFinalMethod()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @NonStrict Collaborator mock;
 
          {
-            mock.finalMethod();
-            forEachInvocation = new Object() { char finalMethod() { return 'M'; } };
+            mock.finalMethod(anyString); result = 'M';
+            forEachInvocation = new Object() { void finalMethod(String s) { assert s.length() > 0; } };
          }
       };
 
-      assertEquals('M', new Collaborator().finalMethod());
+      assertEquals('M', new Collaborator().finalMethod("testing"));
    }
 
    @Test
@@ -289,26 +295,21 @@ public final class ForEachInvocationTest
    {
       collaborator.privateMethod((short) 5);
 
-      new VerificationsInOrder()
-      {
-         {
-            invoke(collaborator, "privateMethod", (short) 5); times = 1;
-            forEachInvocation = new Object() { void privateMethod(int i) { assert i == 5; } };
-         }
-      };
+      new VerificationsInOrder() {{
+         invoke(collaborator, "privateMethod", (short) 5); times = 1;
+         forEachInvocation = new Object() { void privateMethod(int i) { assert i == 5; } };
+      }};
    }
 
    @Test
    public void recordExpectationWithHandlerForMethodWithCompatibleButDistinctParameterType()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @NonStrict Collaborator collaborator;
 
          {
-            collaborator.addElements(this.<Collection<String>> withNotNull());
-            forEachInvocation = new Object()
-            {
+            collaborator.addElements(this.<Collection<String>>withNotNull());
+            forEachInvocation = new Object() {
                void addElements(Collection<String> elements) { elements.add("test"); }
             };
          }
@@ -323,17 +324,13 @@ public final class ForEachInvocationTest
    @Test
    public void recordExpectationWithHandlerDefiningTwoMethods(final Collaborator collaborator)
    {
-      new NonStrictExpectations()
-      {
-         {
-            collaborator.doSomething(true, null, "str");
-            forEachInvocation = new Object()
-            {
-               void doSomething(boolean b, int[] i, String s) { assert b; }
-               private String someOther() { return ""; }
-            };
-         }
-      };
+      new NonStrictExpectations() {{
+         collaborator.doSomething(true, null, "str");
+         forEachInvocation = new Object() {
+            void doSomething(boolean b, int[] i, String s) { assert b; }
+            private String someOther() { return ""; }
+         };
+      }};
 
       assertNull(collaborator.doSomething(true, null, "str"));
    }
@@ -343,47 +340,39 @@ public final class ForEachInvocationTest
    {
       collaborator.doSomething(true, null, "str");
 
-      new Verifications()
-      {
-         {
-            collaborator.doSomething(true, null, "str");
+      new Verifications() {{
+         collaborator.doSomething(true, null, "str");
 
-            try {
-               forEachInvocation = new Object()
-               {
-                  void doSomething(boolean b, int[] i, String s) { assert b; }
-                  void someOther() {}
-               };
-               fail();
-            }
-            catch (IllegalArgumentException e) {
-               assert e.getMessage().startsWith("");
-            }
+         try {
+            forEachInvocation = new Object() {
+               void doSomething(boolean b, int[] i, String s) { assert b; }
+               void someOther() {}
+            };
+            fail();
          }
-      };
+         catch (IllegalArgumentException e) {
+            assert e.getMessage().startsWith("");
+         }
+      }};
    }
 
    @Test
    public void recordExpectationWithHandlerMissingNonPrivateMethod(final Collaborator collaborator)
    {
-      new NonStrictExpectations()
-      {
-         {
-            collaborator.doSomething(true, null, "str");
+      new NonStrictExpectations() {{
+         collaborator.doSomething(true, null, "str");
 
-            try {
-               forEachInvocation = new Object()
-               {
-                  private String someOther() { return ""; }
-                  private void doSomethingElse(boolean b, int[] i, String s) {}
-               };
-               fail();
-            }
-            catch (IllegalArgumentException e) {
-               assert e.getMessage().startsWith("No non-private ");
-            }
+         try {
+            forEachInvocation = new Object() {
+               private String someOther() { return ""; }
+               private void doSomethingElse(boolean b, int[] i, String s) {}
+            };
+            fail();
          }
-      };
+         catch (IllegalArgumentException e) {
+            assert e.getMessage().startsWith("No non-private ");
+         }
+      }};
    }
 
    @Test(expected = AssertionError.class)
@@ -391,13 +380,10 @@ public final class ForEachInvocationTest
    {
       mock.doSomething();
 
-      new Verifications()
-      {
-         {
-            mock.doSomething(); minTimes = 2;
-            forEachInvocation = new Object() { void verify() {} };
-         }
-      };
+      new Verifications() {{
+         mock.doSomething(); minTimes = 2;
+         forEachInvocation = new Object() { void verify() {} };
+      }};
    }
 
    @Test(expected = AssertionError.class)
@@ -405,17 +391,14 @@ public final class ForEachInvocationTest
    {
       mock.doSomething();
 
-      new VerificationsInOrder()
-      {
-         {
-            mock.doSomething(); maxTimes = 0;
-            forEachInvocation = new Object() { void verify() {} };
-         }
-      };
+      new VerificationsInOrder() {{
+         mock.doSomething(); maxTimes = 0;
+         forEachInvocation = new Object() { void verify() {} };
+      }};
    }
 
    @Test
-   public void verifyOrderedExpectationsWithHandlerForMultipleInvocations(final Collaborator mock)
+   public void verifyExpectationsInOrderWithHandlerForMultipleInvocations(final Collaborator mock)
    {
       mock.doSomething(1);
       mock.doSomething(2);
@@ -423,14 +406,11 @@ public final class ForEachInvocationTest
 
       final SequentialInvocationHandler handler = new SequentialInvocationHandler();
 
-      new VerificationsInOrder()
-      {
-         {
-            mock.doSomething(anyInt);
-            forEachInvocation = handler;
-            times = 3;
-         }
-      };
+      new VerificationsInOrder() {{
+         mock.doSomething(anyInt);
+         forEachInvocation = handler;
+         times = 3;
+      }};
 
       assertEquals(3, handler.index);
    }
@@ -438,7 +418,6 @@ public final class ForEachInvocationTest
    static class SequentialInvocationHandler
    {
       int index;
-
       void verify(int i) { index++; assert i == index; }
    }
 
@@ -451,14 +430,11 @@ public final class ForEachInvocationTest
 
       final SequentialInvocationHandler handler = new SequentialInvocationHandler();
 
-      new FullVerifications()
-      {
-         {
-            mock.doSomething(anyInt);
-            forEachInvocation = handler;
-            times = 3;
-         }
-      };
+      new FullVerifications() {{
+         mock.doSomething(anyInt);
+         forEachInvocation = handler;
+         times = 3;
+      }};
 
       assertEquals(3, handler.index);
    }
@@ -470,11 +446,10 @@ public final class ForEachInvocationTest
       mock.doSomething();
       mock.doSomething(2);
       mock.doSomething(3);
-      mock.finalMethod();
+      mock.finalMethod("test");
       mock.doSomething(4);
 
-      final Object handler = new Object()
-      {
+      final Object handler = new Object() {
          void verify(Invocation invocation, int i)
          {
             assert mock == invocation.getInvokedInstance();
@@ -482,33 +457,25 @@ public final class ForEachInvocationTest
          }
       };
 
-      new VerificationsInOrder()
-      {
-         {
-            mock.doSomething(anyInt);
-            forEachInvocation = handler;
-         }
-      };
+      new VerificationsInOrder() {{
+         mock.doSomething(anyInt);
+         forEachInvocation = handler;
+      }};
 
-      new Verifications()
-      {
-         {
-            mock.doSomething(anyInt);
-            forEachInvocation = handler;
-         }
-      };
+      new Verifications() {{
+         mock.doSomething(anyInt);
+         forEachInvocation = handler;
+      }};
    }
 
    @Test
    public void verifyInvocationsWithHandlersHavingAlsoRecordedExpectations(final Collaborator mock)
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.doSomething(anyInt);
 
          mock.doSomething(anyBoolean, null, null);
-         result = new Delegate()
-         {
+         result = new Delegate() {
             String delegate(boolean b, int[] i, String s)
             {
                assertTrue(b);
@@ -523,26 +490,112 @@ public final class ForEachInvocationTest
       mock.doSomething(1);
       assertEquals("mocked", mock.doSomething(true, new int[0], "test"));
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.doSomething(anyInt); times = 1;
-         forEachInvocation = new Object()
-         {
+         forEachInvocation = new Object() {
             void validate(int i) { assertEquals(1, i); }
          };
       }};
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.doSomething(anyBoolean, null, null);
-         forEachInvocation = new Object()
-         {
+         forEachInvocation = new Object() {
             void validate(boolean b, int[] i, String s)
             {
                assertTrue(b);
                assertNotNull(i);
                assertEquals("test", s);
             }
+         };
+      }};
+   }
+
+   @Test(expected = AssertionError.class)
+   public void recordInvocationsWithBooleanReturningHandler(final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.doSomething(anyInt);
+         forEachInvocation = new Object() { boolean isPositive(int i) { return i > 0; } };
+      }};
+
+      mock.doSomething(5);
+      mock.doSomething(-5);
+   }
+
+   @Test(expected = AssertionError.class)
+   public void recordAllInvocationsInOrderWithBooleanReturningHandler(final Collaborator mock)
+   {
+      new Expectations() {{
+         mock.doSomething(123);
+
+         mock.doSomething(anyInt); times = 2;
+         forEachInvocation = new Object() { boolean isPositive(int i) { return i > 0; } };
+      }};
+
+      mock.doSomething(123);
+      mock.doSomething(5);
+      mock.doSomething(-5);
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyInvocationsWithBooleanReturningHandler(final Collaborator mock)
+   {
+      mock.doSomething(5);
+      mock.doSomething(-5);
+
+      new Verifications() {{
+         mock.doSomething(anyInt);
+         forEachInvocation = new Object() { boolean isPositive(int i) { return i > 0; } };
+      }};
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyAllInvocationsWithBooleanReturningHandler(final Collaborator mock)
+   {
+      mock.doSomething(true, new int[0], "test1");
+      mock.doSomething(false, new int[] {1, 2}, "");
+
+      new FullVerifications() {{
+         mock.doSomething(anyBoolean, null, null);
+         forEachInvocation = new Object() {
+            boolean validate(boolean b, int[] i, String s) { return i != null && s.length() > 0; }
+         };
+      }};
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyInvocationsInOrderWithBooleanReturningHandler(final Collaborator mock)
+   {
+      mock.doSomething(false, null, "test1");
+      mock.doSomething(true, new int[0], "test2");
+      mock.doSomething(true, null, "");
+
+      new VerificationsInOrder() {{
+         mock.doSomething(false, null, anyString);
+
+         mock.doSomething(true, null, anyString);
+         forEachInvocation = new Object() {
+            boolean validate(boolean b, int[] i, String s) { return b && s.length() > 0; }
+         };
+      }};
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyAllInvocationsInOrderWithBooleanReturningHandler(final Collaborator mock)
+   {
+      mock.doSomething(true, new int[0], "test1");
+      mock.doSomething(false, new int[] {1, 2}, "test2");
+      mock.doSomething(3);
+
+      new FullVerificationsInOrder() {{
+         mock.doSomething(anyBoolean, null, null); times = 2;
+         forEachInvocation = new Object() {
+            boolean validate(boolean b, int[] i, String s) { return i != null && s.length() > 0; }
+         };
+
+         mock.doSomething(anyInt);
+         forEachInvocation = new Object() {
+            boolean isNegative(int i) { return i < 0; }
          };
       }};
    }

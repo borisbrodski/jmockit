@@ -9,6 +9,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.InvocationHandler;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
@@ -17,6 +18,7 @@ final class Expectation
    final RecordPhase recordPhase;
    final ExpectedInvocation invocation;
    final InvocationConstraints constraints;
+   private InvocationHandler handler;
    private InvocationResults results;
 
    Expectation(RecordPhase recordPhase, ExpectedInvocation invocation, boolean nonStrict)
@@ -34,6 +36,8 @@ final class Expectation
       results = other.results;
    }
 
+   void setHandler(Object handler) { this.handler = new InvocationHandler(handler); }
+
    InvocationResults getResults()
    {
       if (results == null) {
@@ -45,6 +49,10 @@ final class Expectation
 
    Object produceResult(Object invokedObject, Object[] invocationArgs) throws Throwable
    {
+      if (handler != null) {
+         handler.produceResult(invokedObject, invocation, constraints, invocationArgs);
+      }
+
       if (results == null) {
          return invocation.getDefaultValueForReturnType(null);
       }

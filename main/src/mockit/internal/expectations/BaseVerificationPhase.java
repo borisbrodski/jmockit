@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations;
@@ -15,6 +15,7 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
    final List<Object[]> invocationArgumentsInReplayOrder;
    private boolean allInvocationsDuringReplayMustBeVerified;
    private Object[] mockedTypesAndInstancesToFullyVerify;
+   protected Expectation currentVerification;
    protected AssertionError pendingError;
 
    protected BaseVerificationPhase(
@@ -46,6 +47,11 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
 
       matchInstance = nextInstanceToMatch != null && mock == nextInstanceToMatch;
 
+      ExpectedInvocation currentInvocation =
+         new ExpectedInvocation(mock, mockAccess, mockClassDesc, mockNameAndDesc, matchInstance, args);
+      currentInvocation.arguments.setMatchers(argMatchers);
+      currentVerification = new Expectation(null, currentInvocation, true);
+
       currentExpectation = null;
       findNonStrictExpectation(mock, mockClassDesc, mockNameAndDesc, args);
       argMatchers = null;
@@ -59,9 +65,7 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
       }
 
       if (currentExpectation == null) {
-         ExpectedInvocation currentInvocation =
-            new ExpectedInvocation(mock, mockAccess, mockClassDesc, mockNameAndDesc, false, args);
-         currentExpectation = new Expectation(null, currentInvocation, true);
+         currentExpectation = currentVerification;
 
          ExpectedInvocation missingInvocation = new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, args);
          pendingError = missingInvocation.errorForMissingInvocation();
@@ -139,12 +143,12 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
       Object[] args = invocation.getArgumentValues();
       InvocationConstraints constraints = expectation.constraints;
 
-      if (matches(mock, mockClassDesc, mockNameAndDesc, args, currentExpectation)) {
+      if (matches(mock, mockClassDesc, mockNameAndDesc, args, currentVerification)) {
          int originalCount = constraints.invocationCount;
          constraints.invocationCount = invocationIndex + 1;
 
          try {
-            handler.invokeMethodOnTargetObject(expectation.invocation.instance, expectation.constraints, replayArgs);
+            handler.produceResult(mock, invocation, constraints, replayArgs);
          }
          finally {
             constraints.invocationCount = originalCount;

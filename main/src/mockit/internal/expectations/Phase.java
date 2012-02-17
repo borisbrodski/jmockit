@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations;
@@ -15,13 +15,17 @@ abstract class Phase
 
    final Expectation getCurrentExpectation()
    {
-      if (currentExpectation == null) {
+      validatePresenceOfExpectation(currentExpectation);
+      return currentExpectation;
+   }
+
+   final void validatePresenceOfExpectation(Expectation expectation)
+   {
+      if (expectation == null) {
          throw new IllegalStateException(
             "Missing invocation to mocked type at this point; please make sure such invocations appear only after " +
             "the declaration of a suitable mock field or parameter");
       }
-
-      return currentExpectation;
    }
 
    final Map<Object, Object> getInstanceMap() { return recordAndReplay.executionState.instanceMap; }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.invocation;
@@ -14,10 +14,16 @@ public final class InvocationHandler extends DynamicInvocationResult
    }
 
    @Override
-   Object produceResult(
+   public Object produceResult(
       Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
-      throws Throwable
    {
-      return invokeMethodOnTargetObject(invokedObject, constraints, args);
+      Object result = invokeMethodOnTargetObject(invokedObject, constraints, args);
+
+      if (Boolean.FALSE.equals(result)) {
+         String message = '"' + methodToInvoke.getName() + "\" failed on invocation to" + invocation.toString(args);
+         throw new AssertionError(message);
+      }
+
+      return result;
    }
 }

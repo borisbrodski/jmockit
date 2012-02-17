@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.util;
@@ -11,6 +11,7 @@ import mockit.internal.state.*;
 public final class MethodFormatter
 {
    private final StringBuilder out;
+   private final List<String> parameterTypes;
 
    private String classDesc;
    private String methodDesc;
@@ -21,7 +22,11 @@ public final class MethodFormatter
    private char typeCode;
    private int arrayDimensions;
 
-   public MethodFormatter() { out = new StringBuilder(); }
+   public MethodFormatter()
+   {
+      out = new StringBuilder();
+      parameterTypes = new ArrayList<String>(5);
+   }
 
    public MethodFormatter(String classDesc, String methodDesc)
    {
@@ -33,6 +38,8 @@ public final class MethodFormatter
 
    @Override
    public String toString() { return out.toString(); }
+
+   public List<String> getParameterTypes() { return parameterTypes; }
 
    public String friendlyMethodSignatures(Collection<String> classAndMethodDescs)
    {
@@ -79,9 +86,9 @@ public final class MethodFormatter
 
       if (leftParenNextPos < rightParenPos) {
          out.append(friendlyDesc.substring(0, leftParenNextPos));
-         String parameterTypes = friendlyDesc.substring(leftParenNextPos, rightParenPos);
+         String concatenatedParameterTypes = friendlyDesc.substring(leftParenNextPos, rightParenPos);
          parameterIndex = 0;
-         appendFriendlyTypes(parameterTypes);
+         appendFriendlyTypes(concatenatedParameterTypes);
          out.append(')');
       }
       else {
@@ -112,7 +119,7 @@ public final class MethodFormatter
          out.append(sep);
 
          if (typeDesc.charAt(0) == 'L') {
-            out.append(friendlyReferenceType(typeDesc));
+            appendParameterType(friendlyReferenceType(typeDesc));
             appendParameterName();
          }
          else {
@@ -126,6 +133,12 @@ public final class MethodFormatter
    private String friendlyReferenceType(String typeDesc)
    {
       return typeDesc.substring(1).replace("java/lang/", "").replace('/', '.');
+   }
+
+   private void appendParameterType(String friendlyTypeDesc)
+   {
+      out.append(friendlyTypeDesc);
+      parameterTypes.add(friendlyTypeDesc);
    }
 
    private void appendParameterName()
@@ -149,11 +162,12 @@ public final class MethodFormatter
          typeCode = typeDesc.charAt(typeDescPos);
          advancePastArrayDimensionsIfAny(typeDesc);
 
-         String paramType = getTypeNameForTypeDesc(typeDesc);
-         out.append(sep).append(paramType);
+         out.append(sep);
 
-         appendArrayBrackets();
+         String paramType = getTypeNameForTypeDesc(typeDesc) + getArrayBrackets();
+         appendParameterType(paramType);
          appendParameterName();
+
          sep = ", ";
       }
    }
@@ -196,10 +210,16 @@ public final class MethodFormatter
       }
    }
 
-   private void appendArrayBrackets()
+   private String getArrayBrackets()
    {
+      @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
+      String result = "";
+
       for (int i = 0; i < arrayDimensions; i++) {
-         out.append("[]");
+         //noinspection StringContatenationInLoop
+         result += "[]";
       }
+
+      return result;
    }
 }

@@ -60,10 +60,6 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
             i += 1 - indexIncrement;
             indexIncrement = 1;
 
-            if (argMatchers != null) {
-               expectation.invocation.arguments.setMatchers(argMatchers);
-            }
-
             replayIndex = i;
             break;
          }
@@ -112,14 +108,14 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
          return;
       }
 
-      ExpectedInvocation invocation = currentExpectation.invocation;
+      ExpectedInvocation invocation = currentVerification.invocation;
       argMatchers = invocation.arguments.getMatchers();
       int invocationCount = 1;
 
       while (replayIndex < expectationCount) {
          Expectation expectation = expectationsInReplayOrder.get(replayIndex);
 
-         if (expectation != null && matchesCurrentExpectation(expectation)) {
+         if (expectation != null && matchesCurrentVerification(expectation)) {
             invocationCount++;
 
             if (invocationCount > maxInvocations) {
@@ -161,13 +157,9 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
       pendingError = null;
    }
 
-   private boolean matchesCurrentExpectation(Expectation expectation)
+   private boolean matchesCurrentVerification(Expectation expectation)
    {
-      if (expectation == currentExpectation) {
-         return true;
-      }
-
-      ExpectedInvocation invocation = currentExpectation.invocation;
+      ExpectedInvocation invocation = currentVerification.invocation;
       Object mock = invocation.instance;
       String mockClassDesc = invocation.getClassDesc();
       String mockNameAndDesc = invocation.getMethodNameAndDescription();
@@ -254,12 +246,13 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
       List<VerifiedExpectation> expectationsVerified = recordAndReplay.executionState.verifiedExpectations;
 
       for (int i = 0; i < expectationsVerifiedInFirstIteration; i++) {
-         ExpectedInvocation invocation = expectationsVerified.get(i).expectation.invocation;
+         VerifiedExpectation verifiedExpectation = expectationsVerified.get(i);
+         ExpectedInvocation invocation = verifiedExpectation.expectation.invocation;
 
-         argMatchers = invocation.arguments.getMatchers();
+         argMatchers = verifiedExpectation.argMatchers;
          handleInvocation(
             invocation.instance, 0, invocation.getClassDesc(), invocation.getMethodNameAndDescription(), null, null,
-            false, invocation.arguments.getValues());
+            false, verifiedExpectation.arguments);
 
          AssertionError testFailure = recordAndReplay.getErrorThrown();
 
