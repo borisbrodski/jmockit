@@ -105,6 +105,8 @@ public abstract class Expectations extends Invocations
     * Another way to specify consecutive results is to simply write multiple consecutive assignments to the field, for
     * the same expectation.
     * <p/>
+    * Finally, custom results can be provided through a {@linkplain mockit.Delegate} object assigned to the field.
+    * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#results">In the Tutorial</a>
     *
     * @see #returns(Object)
