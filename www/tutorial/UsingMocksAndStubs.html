@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2006-2011 Rogério Liesenfeld
+  ~ Copyright (c) 2006-2012 Rogério Liesenfeld
   ~ This file is subject to the terms of the MIT license (see LICENSE.txt).
   -->
 <html>
@@ -176,7 +176,7 @@ public final class Log4jMocks
    method - see the API documentation for details.
 </p>
 <p>
-   Note that system properties can be passed to the JVM through the standard "<code>-D</code> command line parameter.
+   Note that system properties can be passed to the JVM through the standard "<code>-D</code>" command line parameter.
    Ant/Maven/etc. build scripts have their own ways of specifying system properties, so check their documentation for
    details.
 </p>
@@ -192,11 +192,12 @@ public final class Log4jMocks
    </div>
 </h3>
 <p>
-   The system properties described above can also be specified in a separate <code>jmockit.properties</code> file,
-   which should be present at the root of the classpath, <em>before</em> <code>jmockit.jar</code> (since it contains
-   its own <code>jmockit.properties</code> file).
-   The contents of the standard JMockit configuration file will be overridden by a custom properties file, so make
-   sure you create the custom one from a copy of the original.
+   The system properties described above can also be specified in a separate
+   <strong><code>jmockit.properties</code></strong> file, which should be present at the root of the classpath.
+   If there are multiple such files in the classpath (either inside jars or plain directories), the values specified
+   for the same system property are added together.
+   This allows the creation of reusable mock classes which can be packaged in a jar file with its own properties file;
+   when added to the execution classpath of a test suite, the mock classes will be automatically applied at startup.
 </p>
 <p>
    For convenience, JMockit system properties can be specified in the properties file without the

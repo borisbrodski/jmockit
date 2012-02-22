@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package jmockit.tutorial.domain;
@@ -45,8 +45,7 @@ public final class MyBusinessService_MockupsAPI_Test
    @Test
    public void doBusinessOperationXyz() throws Exception
    {
-      new MockUp<Email>()
-      {
+      new MockUp<Email>() {
          @Mock(invocations = 1)
          String send() { return ""; }
       };
@@ -57,8 +56,7 @@ public final class MyBusinessService_MockupsAPI_Test
    @Test(expected = EmailException.class)
    public void doBusinessOperationXyzWithInvalidEmailAddress() throws Exception
    {
-      new MockUp<Email>()
-      {
+      new MockUp<Email>() {
          @Mock
          Email addTo(String emailAddress) throws EmailException
          {

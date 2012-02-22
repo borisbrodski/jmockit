@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2006-2011 Rogério Liesenfeld
+  ~ Copyright (c) 2006-2012 Rogério Liesenfeld
   ~ This file is subject to the terms of the MIT license (see LICENSE.txt).
   -->
 <html>
@@ -132,17 +132,16 @@ public final class MyBusinessService_ExpectationsAPI_Test
       final List&lt;EntityX> items = new ArrayList&lt;EntityX>();
       items.add(new EntityX(1, "AX5", "someone@somewhere.com"));
 
-      new Expectations()
-      {
-         {
-            // "Database" is mocked strictly, therefore the order of these invocations does matter:
-(1)         Database.<em>find</em>(withSubstring("select"), (Object[]) <em>any</em>); <em>result</em> = items;
-(2)         Database.<em>persist</em>(data);
+      new Expectations() {{
+         // "Database" is mocked strictly, therefore the order of these invocations does matter:
+(1)      Database.<em>find</em>(withSubstring("select"), (Object[]) <em>any</em>); <em>result</em> = items;
+(2)      Database.<em>persist</em>(data);
+      }};
 
-            // Since "email" is a non-strict mock, this invocation can be replayed in any order:
-(4)         email.send(); <em>times</em> = 1; // a non-strict invocation requires a constraint if expected
-         }
-      };
+      new Expectations() {{
+         // Since "email" is a non-strict mock, this invocation can be replayed in any order:
+(4)      email.send(); <em>times</em> = 1; // a non-strict invocation requires a constraint if expected
+      }};
 
       new MyBusinessService().doBusinessOperationXyz(data);
    }
@@ -150,15 +149,12 @@ public final class MyBusinessService_ExpectationsAPI_Test
    @Test(expected = EmailException.class)
    public void doBusinessOperationXyzWithInvalidEmailAddress() throws Exception
    {
-      new NonStrictExpectations()
-      {
-         {
-(3)         email.addTo((String) withNotNull()); <em>result</em> = new EmailException();
+      new NonStrictExpectations() {{
+(3)      email.addTo((String) withNotNull()); <em>result</em> = new EmailException();
 
-            // If the e-mail address is invalid, sending the message should not be attempted:
-            email.send(); <em>times</em> = 0;
-         }
-      };
+         // If the e-mail address is invalid, sending the message should not be attempted:
+         email.send(); <em>times</em> = 0;
+      }};
 
       EntityX data = new EntityX(5, "abc", "5453-1");
       new MyBusinessService().doBusinessOperationXyz(data);
@@ -221,7 +217,7 @@ public final class MyBusinessService_ExpectationsAPI_Test
 </p>
 <p>
    We say that such invocations or expectations are <em>recorded</em> during a <em>record phase</em>, so that they can
-   be <em>replayed</em> (and automatically verified) later, during a <em>replay phase</em>.
+   be <em>replayed</em> (and optionaly verified) later, during a <em>replay phase</em>.
    Typically, this second phase of the test starts with the call that exercises the code under test,
    and lasts until the test execution completes.
    This is known as the <em>record-replay model</em> of test execution.
@@ -316,35 +312,24 @@ public final class MyBusinessService_VerificationsAPI_Test
 
       service.doBusinessOperationXyz(data);
 
-      new Verifications()
-      {
-         {
-(2)         Database.<em>persist</em>(data);
-         }
-      };
+(2)   new Verifications() {{ Database.<em>persist</em>(data); }};
    }
 
    @Test
    public void doBusinessOperationXyzFindsItemsAndSendsNotificationEmail() throws Exception
    {
       // Invocations that produce a result are recorded, but only those we care about.
-      new NonStrictExpectations()
-      {
-         {
-(1)         Database.<em>find</em>(withSubstring("select"), (Object[]) null);
-            <em>result</em> = <em>asList</em>(new EntityX(1, "AX5", "someone@somewhere.com"));
-         }
-      };
+      new NonStrictExpectations() {{
+(1)      Database.<em>find</em>(withSubstring("select"), (Object[]) null);
+         <em>result</em> = <em>asList</em>(new EntityX(1, "AX5", "someone@somewhere.com"));
+      }};
 
       service.doBusinessOperationXyz(data);
 
-      new VerificationsInOrder()
-      {
-         {
-(3)         email.addTo(data.getCustomerEmail());
-(4)         email.send();
-         }
-      };
+      new VerificationsInOrder() {{
+(3)      email.addTo(data.getCustomerEmail());
+(4)      email.send();
+      }};
    }
 }
 </code></pre>
@@ -433,11 +418,12 @@ public final class MyBusinessService_VerificationsAPI_Test
 
 import java.util.*;
 import org.apache.commons.mail.*;
+import infrastructure.*;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 import mockit.*;
 import domain.MyBusinessService_MockupsAPI_Test.*;
-import infrastructure.*;
 
 @UsingMocksAndStubs(MockDatabase.class)
 public final class MyBusinessService_MockupsAPI_Test
@@ -468,8 +454,7 @@ public final class MyBusinessService_MockupsAPI_Test
    @Test
    public void doBusinessOperationXyz() throws Exception
    {
-      new MockUp&lt;Email>()
-      {
+      new MockUp&lt;Email>() {
          @Mock(invocations = 1)
 (4)      String send() { return ""; }
       });
@@ -480,8 +465,7 @@ public final class MyBusinessService_MockupsAPI_Test
    @Test(expected = EmailException.class)
    public void doBusinessOperationXyzWithInvalidEmailAddress() throws Exception
    {
-      new MockUp&lt;Email>()
-      {
+      new MockUp&lt;Email>() {
          @Mock
 (3)      Email addTo(String emailAddress) throws EmailException
          {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package jmockit.tutorial.domain;
@@ -33,10 +33,8 @@ public final class MyBusinessService_ExpectationsAPI2_Test
 
       service.doBusinessOperationXyz(data);
 
-      new Verifications() {{
-         Database.persist(data);
-         email.send();
-      }};
+      new Verifications() {{ Database.persist(data); }};
+      new Verifications() {{ email.send(); }};
    }
 
    @Test(expected = EmailException.class)

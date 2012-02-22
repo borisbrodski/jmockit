@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package jmockit.tutorial.domain;
@@ -25,17 +25,16 @@ public final class MyBusinessService_ExpectationsAPI_Test
       final List<EntityX> items = new ArrayList<EntityX>();
       items.add(new EntityX(1, "AX5", "someone@somewhere.com"));
 
-      new Expectations()
-      {
-         {
-            // "Database" is mocked strictly, therefore the order of these invocations does matter:
-            Database.find(withSubstring("select"), (Object[]) any); result = items;
-            Database.persist(data);
+      new Expectations() {{
+         // "Database" is mocked strictly, therefore the order of these invocations does matter:
+         Database.find(withSubstring("select"), (Object[]) any); result = items;
+         Database.persist(data);
+      }};
 
-            // Since "email" is a non-strict mock, this invocation can be replayed in any order:
-            email.send(); times = 1; // a non-strict invocation requires a constraint if expected
-         }
-      };
+      new Expectations() {{
+         // Since "email" is a non-strict mock, this invocation can be replayed in any order:
+         email.send(); times = 1; // a non-strict invocation requires a constraint if expected
+      }};
 
       new MyBusinessService().doBusinessOperationXyz(data);
    }
@@ -43,15 +42,12 @@ public final class MyBusinessService_ExpectationsAPI_Test
    @Test(expected = EmailException.class)
    public void doBusinessOperationXyzWithInvalidEmailAddress() throws Exception
    {
-      new NonStrictExpectations()
-      {
-         {
-            email.addTo((String) withNotNull()); result = new EmailException();
+      new NonStrictExpectations() {{
+         email.addTo((String) withNotNull()); result = new EmailException();
 
-            // If the e-mail address is invalid, sending the message should not be attempted:
-            email.send(); times = 0;
-         }
-      };
+         // If the e-mail address is invalid, sending the message should not be attempted:
+         email.send(); times = 0;
+      }};
 
       EntityX data = new EntityX(5, "abc", "someone@somewhere.com");
       new MyBusinessService().doBusinessOperationXyz(data);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package jmockit.tutorial.domain;
@@ -27,33 +27,24 @@ public final class MyBusinessService_VerificationsAPI_Test
       
       service.doBusinessOperationXyz(data);
 
-      new Verifications()
-      {
-         { Database.persist(data); }
-      };
+      new Verifications() {{ Database.persist(data); }};
    }
 
    @Test
    public void doBusinessOperationXyzFindsItemsAndSendsNotificationEmail() throws Exception
    {
       // Invocations that produce a result are recorded, but only those we care about.
-      new NonStrictExpectations()
-      {
-         {
-            Database.find(withSubstring("select"), (Object[]) null);
-            result = asList(new EntityX(1, "AX5", "someone@somewhere.com"));
-         }
-      };
+      new NonStrictExpectations() {{
+         Database.find(withSubstring("select"), (Object[]) null);
+         result = asList(new EntityX(1, "AX5", "someone@somewhere.com"));
+      }};
 
       service.doBusinessOperationXyz(data);
 
-      new VerificationsInOrder()
-      {
-         {
-            email.addTo(data.getCustomerEmail());
-            email.setMsg(withNotEqual(""));
-            email.send();
-         }
-      };
+      new VerificationsInOrder() {{
+         email.addTo(data.getCustomerEmail());
+         email.setMsg(withNotEqual(""));
+         email.send();
+      }};
    }
 }
