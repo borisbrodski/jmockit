@@ -72,7 +72,7 @@ final class CoverageModifier extends ClassVisitor
             sourceFileName = name.substring(0, p + 1);
          }
 
-         cannotModify = (access & ACC_ANNOTATION) != 0 || name.startsWith("mockit/coverage/");
+         cannotModify = (access & ACC_ANNOTATION) != 0;
 
          if (!forEnumClass && (access & ACC_SUPER) != 0 && name.indexOf('$') > 0) {
             INNER_CLASS_MODIFIERS.put(name.replace('/', '.'), this);

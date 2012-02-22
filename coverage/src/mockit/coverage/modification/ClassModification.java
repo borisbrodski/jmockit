@@ -83,7 +83,7 @@ public final class ClassModification
       }
    }
 
-   byte[] modifyClassForCoverage(String className, byte[] classBytecode)
+   private byte[] modifyClassForCoverage(String className, byte[] classBytecode)
    {
       byte[] modifiedBytecode = CoverageModifier.recoverModifiedByteCodeIfAvailable(className);
 

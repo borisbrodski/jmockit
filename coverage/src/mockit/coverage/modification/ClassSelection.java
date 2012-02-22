@@ -11,54 +11,43 @@ final class ClassSelection
 {
    private final Matcher classesToInclude;
    private final Matcher classesToExclude;
+   private final Matcher testCode;
 
    ClassSelection()
    {
-      classesToInclude = getClassNameRegexForClassesToInclude();
-      classesToExclude = getClassNameRegexForClassesToExclude();
+      classesToInclude = getClassNameRegex("classes");
+      classesToExclude = getClassNameRegex("excludes");
+      testCode = Pattern.compile(".+Test(\\$.+)?").matcher("");
    }
 
-   private Matcher getClassNameRegexForClassesToInclude()
+   private Matcher getClassNameRegex(String propertySuffix)
    {
-      String regex = System.getProperty("jmockit-coverage-classes", "");
-      return getClassNameRegex(regex);
-   }
-
-   private Matcher getClassNameRegex(String regex)
-   {
+      String regex = System.getProperty("jmockit-coverage-" + propertySuffix, "");
       return regex.length() == 0 ? null : Pattern.compile(regex).matcher("");
-   }
-
-   private Matcher getClassNameRegexForClassesToExclude()
-   {
-      String defaultExclusions = "mockit\\..+|.+Test(\\$.+)?|junit\\..+";
-      String regex = System.getProperty("jmockit-coverage-excludes", defaultExclusions);
-      return getClassNameRegex(regex);
    }
 
    boolean isSelected(String className, ProtectionDomain protectionDomain)
    {
-      if (protectionDomain == null) {
-         return false;
-      }
-
       CodeSource codeSource = protectionDomain.getCodeSource();
 
-      if (codeSource == null) {
+      if (codeSource == null || className.charAt(0) == '[' || className.startsWith("mockit.")) {
          return false;
       }
 
-      if (classesToInclude != null) {
-         return
-            classesToInclude.reset(className).matches() &&
-            (classesToExclude == null || !classesToExclude.reset(className).matches());
+      if (classesToExclude != null && classesToExclude.reset(className).matches()) {
+         return false;
       }
-      else if (classesToExclude != null && classesToExclude.reset(className).matches()) {
+      else if (classesToInclude != null && classesToInclude.reset(className).matches()) {
+         return true;
+      }
+      else if (testCode.reset(className).matches()) {
          return false;
       }
 
       String codeLocation = codeSource.getLocation().getPath();
 
-      return !codeLocation.endsWith(".jar") && !codeLocation.endsWith("/test-classes/");
+      return
+         !codeLocation.endsWith(".jar") && !codeLocation.endsWith("/test-classes/") &&
+         !codeLocation.endsWith("/jmockit/main/classes/");
    }
 }
