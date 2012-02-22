@@ -15,6 +15,7 @@ final class StaticFiles
 
       copyFile(outputDir, "coverage.css", timeOfCoverageJar);
       copyFile(outputDir, "coverage.js", timeOfCoverageJar);
+      copyFile(outputDir, "logo.png", timeOfCoverageJar);
 
       if (forSourceFilePages) {
          copyFile(outputDir, "prettify.js", timeOfCoverageJar);

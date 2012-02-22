@@ -12,6 +12,8 @@ caption {
 }
 caption div { text-shadow: 0 0 0; }
 
+img { border: none; vertical-align: middle; }
+
 th { background-color: #6495ed; color: white; }
 td { padding: 0; font-size: 0.95em; }
 table table td { border-right: 1px solid white; }

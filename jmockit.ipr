@@ -427,8 +427,10 @@
         </inspection_tool>
         <inspection_tool class="IteratorHasNextCallsIteratorNext" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="IteratorNextDoesNotThrowNoSuchElementException" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="JDBCExecuteWithNonConstantString" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="JDBCResource" enabled="true" level="WARNING" enabled_by_default="true">
+          <scope name="Tests" level="WARNING" enabled="false">
+            <option name="insideTryAllowed" value="false" />
+          </scope>
           <option name="insideTryAllowed" value="false" />
         </inspection_tool>
         <inspection_tool class="JNDIResource" enabled="true" level="WARNING" enabled_by_default="true">
@@ -465,7 +467,7 @@
             </value>
           </option>
           <option name="IGNORE_DEPRECATED" value="false" />
-          <option name="IGNORE_JAVADOC_PERIOD" value="false" />
+          <option name="IGNORE_JAVADOC_PERIOD" value="true" />
           <option name="IGNORE_DUPLICATED_THROWS" value="false" />
           <option name="IGNORE_POINT_TO_ITSELF" value="false" />
           <option name="myAdditionalJavadocTags" value="" />
@@ -500,7 +502,6 @@
           <option name="ignoreIterators" value="false" />
         </inspection_tool>
         <inspection_tool class="LoopWithImplicitTerminationCondition" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="LossyEncoding" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MapReplaceableByEnumMap" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="MethodCoupling" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_includeJavaClasses" value="false" />
@@ -864,6 +865,7 @@
   <component name="JavacSettings">
     <option name="GENERATE_NO_WARNINGS" value="true" />
     <option name="DEPRECATION" value="false" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-target 1.7" />
   </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
