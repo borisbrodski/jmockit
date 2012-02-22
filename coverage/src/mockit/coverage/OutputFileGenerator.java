@@ -50,7 +50,7 @@ final class OutputFileGenerator extends Thread
          format = "html-nocp";
       }
 
-      return format.split("\\s+|\\s*,\\s*");
+      return format.trim().split("\\s*,\\s*|\\s+");
    }
 
    private String getCoverageProperty(String suffix)
