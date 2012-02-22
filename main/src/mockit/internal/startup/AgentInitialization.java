@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.startup;
@@ -69,10 +69,17 @@ final class AgentInitialization
          return null;
       }
 
+      URL location = codeSource.getLocation();
+
+      if (location.getPath().endsWith("/jmockit/main/classes/")) {
+         String localJarPath = location.getPath().replace("main/classes/", "jmockit.jar");
+         return new File(localJarPath).getPath();
+      }
+
       URI jarFileURI; // URI is needed to deal with spaces and non-ASCII characters
 
       try {
-         jarFileURI = codeSource.getLocation().toURI();
+         jarFileURI = location.toURI();
       }
       catch (URISyntaxException e) {
          throw new RuntimeException(e);
