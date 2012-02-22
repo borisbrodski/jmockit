@@ -107,8 +107,8 @@
                <doctitle>JMockit Toolkit API Documentation</doctitle>
                <stylesheetfile>${basedir}/../www/javadoc/stylesheet.css</stylesheetfile>
                <overview>${basedir}/../www/javadoc/overview.html</overview>
-               <header><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>]]></header>
-               <footer><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>]]></footer>
+               <header><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top"><img src="resources/logo.png">JMockit Home</a>]]></header>
+               <footer><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top"><img src="resources/logo.png">JMockit Home</a>]]></footer>
                <bottom><![CDATA[<font size=-1>© 2006-2012 Rogério Liesenfeld</font>]]></bottom>
                <notimestamp>true</notimestamp>
                <quiet>true</quiet>

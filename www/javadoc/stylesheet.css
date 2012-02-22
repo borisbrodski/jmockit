@@ -74,11 +74,13 @@ Document title and Copyright styles
     overflow:hidden;
 }
 .aboutLanguage {
-    float:right;
-    padding:0px 21px;
-    font-size:.8em;
-    z-index:200;
-    margin-top:-7px;
+    float: right;
+    padding: 0px 7px;
+}
+.aboutLanguage img {
+    border: none;
+    content: url(resources/logo.png);
+    vertical-align: middle;
 }
 .legalCopy {
     margin-left:.5em;

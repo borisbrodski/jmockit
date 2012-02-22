@@ -170,12 +170,14 @@
          <arg line="-notimestamp -quiet"/>
          <fileset dir="${basedir}/main/src">
             <include name="mockit/*.java"/>
-            <include name="mockit/integration/*/*.java"/>
+            <include name="mockit/integration/junit4/*.java"/>
+            <include name="mockit/integration/testng/*.java"/>
+            <include name="mockit/integration/logging/*.java"/>
          </fileset>
          <link
             href="http://download.oracle.com/javase/6/docs/api" offline="true" packagelistloc="www/javadoc/external"/>
-         <header><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>]]></header>
-         <footer><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top">JMockit Home</a>]]></footer>
+         <header><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top"><img src="resources/logo.png">JMockit Home</a>]]></header>
+         <footer><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top"><img src="resources/logo.png">JMockit Home</a>]]></footer>
          <bottom><![CDATA[<font size=-1>© 2006-2012 Rogério Liesenfeld</font>]]></bottom>
       </javadoc>
       <delete file="www/javadoc/constant-values.html"/>
@@ -205,7 +207,8 @@
    <target name="createjar-coverage">
       <jar destfile="jmockit-coverage.jar">
          <fileset dir="coverage/src" includes="mockit/coverage/**/*.java"/>
-         <fileset dir="coverage/classes" includes="jmockit.properties mockit/coverage/**/*.class **/*.css **/*.js"/>
+         <fileset dir="coverage/classes"
+                  includes="jmockit.properties mockit/coverage/**/*.class **/*.css **/*.js **/*.png"/>
          <manifest>
             <attribute name="Class-Path" value="jmockit.jar"/>
             <attribute name="Implementation-Version" value="${version}"/>
