@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -52,7 +52,7 @@ import mockit.internal.util.*;
  */
 public final class Mockit
 {
-   static { Startup.verifyInitialization(); }
+   static { Startup.verifyInitialization(true); }
    private Mockit() {}
 
    /**

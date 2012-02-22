@@ -7,6 +7,7 @@ package mockit.internal.util;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 import static java.lang.reflect.Modifier.*;
 
@@ -48,7 +49,14 @@ public final class Utilities
    }};
    private static final Class<?>[] NO_PARAMETERS = new Class<?>[0];
 
+   private static final Map<String, Class<?>> LOADED_CLASSES = new ConcurrentHashMap<String, Class<?>>();
+
    private Utilities() {}
+
+   public static void registerLoadedClass(Class<?> aClass)
+   {
+      LOADED_CLASSES.put(aClass.getName(), aClass);
+   }
 
    public static <T> Class<T> loadClassByInternalName(String internalClassName)
    {
@@ -57,6 +65,12 @@ public final class Utilities
 
    public static <T> Class<T> loadClass(String className)
    {
+      Class<T> loadedClass = (Class<T>) LOADED_CLASSES.get(className);
+      
+      if (loadedClass != null) {
+         return loadedClass;
+      }
+
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
       try {
@@ -67,6 +81,11 @@ public final class Utilities
          throw e;
       }
       catch (ClassNotFoundException ignore) {
+         try {
+            return (Class<T>) Class.forName(className);
+         }
+         catch (ClassNotFoundException ignored) {}
+
          //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
          throw new IllegalArgumentException("No class with name \"" + className + "\" found");
       }

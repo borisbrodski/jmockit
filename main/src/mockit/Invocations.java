@@ -19,7 +19,7 @@ import mockit.internal.util.*;
  */
 abstract class Invocations
 {
-   static { Startup.verifyInitialization(); }
+   static { Startup.verifyInitialization(false); }
 
    /**
     * Matches any {@code Object} reference for the relevant parameter.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.annotations;
@@ -11,6 +11,7 @@ import static mockit.external.asm4.Opcodes.*;
 import mockit.*;
 import mockit.external.asm4.*;
 import mockit.internal.*;
+import mockit.internal.util.*;
 
 /**
  * Responsible for collecting the signatures of all methods defined in a given mock class which are explicitly annotated
@@ -32,10 +33,12 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
 
    public void collectMockMethods(Class<?> mockClass)
    {
+      Utilities.registerLoadedClass(mockClass);
+
       Class<?> classToCollectMocksFrom = mockClass;
 
       do {
-         ClassReader mcReader = ClassFile.createClassFileReader(classToCollectMocksFrom.getName());
+         ClassReader mcReader = ClassFile.createClassFileReader(classToCollectMocksFrom);
          mcReader.accept(this, ClassReader.SKIP_DEBUG);
          classToCollectMocksFrom = classToCollectMocksFrom.getSuperclass();
          collectingFromSuperClass = true;

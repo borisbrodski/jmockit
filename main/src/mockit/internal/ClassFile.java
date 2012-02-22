@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal;
@@ -12,6 +12,29 @@ import mockit.internal.state.*;
 
 public final class ClassFile
 {
+   public static ClassReader createClassFileReader(Class<?> aClass)
+   {
+      String className = aClass.getName();
+      byte[] fixedClassfile = TestRun.mockFixture().getFixedClassfile(className);
+
+      if (fixedClassfile != null) {
+         return new ClassReader(fixedClassfile);
+      }
+
+      InputStream classFile = aClass.getResourceAsStream('/' + className.replace('.', '/') + ".class");
+
+      if (classFile == null) {
+         throw new RuntimeException("Failed to read class file for " + className);
+      }
+
+      try {
+         return new ClassReader(classFile);
+      }
+      catch (IOException e) {
+         throw new RuntimeException("Failed to read class file for " + className, e);
+      }
+   }
+
    public static ClassReader createClassFileReader(String className)
    {
       byte[] fixedClassfile = TestRun.mockFixture().getFixedClassfile(className);
@@ -30,17 +53,34 @@ public final class ClassFile
 
    public static ClassReader readClass(String className) throws IOException
    {
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-      String classFileName = className.replace('.', '/') + ".class";
-      InputStream classFile = classLoader.getResourceAsStream(classFileName);
-
+      InputStream classFile = readClassFromDisk(className.replace('.', '/'));
       return new ClassReader(classFile);
+   }
+
+   private static InputStream readClassFromDisk(String internalClassName)
+   {
+      String classDesc = internalClassName + ".class";
+      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+      InputStream inputStream = contextClassLoader.getResourceAsStream(classDesc);
+
+      if (inputStream == null) {
+         ClassLoader thisClassLoader = ClassFile.class.getClassLoader();
+
+         if (thisClassLoader != contextClassLoader) {
+            inputStream = thisClassLoader.getResourceAsStream(classDesc);
+         }
+      }
+
+      if (inputStream == null) {
+         throw new RuntimeException("Failed to read class file for " + internalClassName.replace('/', '.'));
+      }
+
+      return inputStream;
    }
 
    public static void visitClass(String internalClassName, ClassVisitor visitor)
    {
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-      InputStream classFile = classLoader.getResourceAsStream(internalClassName + ".class");
+      InputStream classFile = readClassFromDisk(internalClassName);
 
       try {
          ClassReader cr = new ClassReader(classFile);

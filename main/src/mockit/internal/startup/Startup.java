@@ -7,7 +7,6 @@ package mockit.internal.startup;
 import java.io.*;
 import java.lang.instrument.*;
 
-import mockit.*;
 import mockit.internal.expectations.transformation.*;
 
 /**
@@ -75,44 +74,29 @@ public final class Startup
 
    public static Instrumentation instrumentation()
    {
-      verifyInitialization();
+      verifyInitialization(true);
       return instrumentation;
    }
 
    public static boolean wasInitializedOnDemand() { return initializedOnDemand; }
 
-   public static void verifyInitialization()
-   {
-      if (getJVMWideInstrumentation() == null) {
-         new AgentInitialization().initializeAccordingToJDKVersion();
-         initializedOnDemand = true;
-         System.out.println(
-            "WARNING: JMockit was initialized on demand, which may cause certain tests to fail;\n" +
-            "please check the documentation for better ways to get it initialized.");
-      }
-   }
-
-   private static Instrumentation getJVMWideInstrumentation()
+   public static void verifyInitialization(boolean okIfOnDemand)
    {
       if (instrumentation == null) {
-         ClassLoader systemCL = ClassLoader.getSystemClassLoader();
+         new AgentInitialization().initializeAccordingToJDKVersion();
+         initializedOnDemand = true;
 
-         if (systemCL != null && systemCL != Startup.class.getClassLoader()) {
-            // For runtimes with custom classloading, such as OSGi containers or application servers.
-            try {
-               Class<?> startupClassFromSystemCL = systemCL.loadClass(Startup.class.getName());
-               instrumentation = Deencapsulation.getField(startupClassFromSystemCL, "instrumentation");
-            }
-            catch (ClassNotFoundException ignore) {}
+         if (!okIfOnDemand) {
+            System.out.println(
+               "WARNING: JMockit was initialized on demand, which may cause certain tests to fail;\n" +
+               "please check the documentation for better ways to get it initialized.");
          }
       }
-
-      return instrumentation;
    }
 
    public static boolean initializeIfNeeded()
    {
-      if (getJVMWideInstrumentation() == null) {
+      if (instrumentation == null) {
          try {
             new AgentInitialization().initializeAccordingToJDKVersion();
             return true;
