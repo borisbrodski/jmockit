@@ -13,31 +13,52 @@ import mockit.coverage.data.*;
 final class PackageCoverageReport extends ListWithFilesAndPercentages
 {
    private final Map<String, FileCoverageData> filesToFileData;
-   private final boolean withSourceFiles;
-   private char[] fileNameWithSpaces;
+   private final Collection<String> sourceFilesNotFound;
+   private final char[] fileNameWithSpaces;
    private String filePath;
 
-   PackageCoverageReport(PrintWriter output, Map<String, FileCoverageData> filesToFileData, boolean withSourceFiles)
+   PackageCoverageReport(
+      PrintWriter output, Collection<String> sourceFilesNotFound, Map<String, FileCoverageData> filesToFileData,
+      Collection<List<String>> allSourceFileNames)
    {
       super(output, "          ");
+      this.sourceFilesNotFound = sourceFilesNotFound;
       this.filesToFileData = filesToFileData;
-      this.withSourceFiles = withSourceFiles;
+      fileNameWithSpaces = new char[maximumSourceFileNameLength(allSourceFileNames)];
    }
 
-   void setMaxFileNameLength(int maxLength)
+   private int maximumSourceFileNameLength(Collection<List<String>> allSourceFileNames)
    {
-      fileNameWithSpaces = new char[maxLength];
+      int maxLength = 0;
+
+      for (List<String> files : allSourceFileNames) {
+         for (String fileName : files) {
+            int n = fileName.length();
+
+            if (n > maxLength) {
+               maxLength = n;
+            }
+         }
+      }
+
+      return maxLength;
    }
 
    @Override
    protected void writeMetricsForFile(String packageName, String fileName)
    {
       filePath = packageName.length() == 0 ? fileName : packageName + '/' + fileName;
+      FileCoverageData fileData = filesToFileData.get(filePath);
+
+      if (fileData == null && isSourceFileWithTestCodeOnly(fileName)) {
+         return;
+      }
+
+      writeRowStart();
       printIndent();
       output.write("  <td class='file'>");
 
       int fileNameLength = buildFileNameWithTrailingSpaces(fileName);
-      FileCoverageData fileData = filesToFileData.get(filePath);
 
       if (fileData == null) {
          writeTableCellsWithFileNameAndUnknownCoverageMetrics();
@@ -56,7 +77,17 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
          if (Metrics.DATA_COVERAGE) {
             writeDataCoveragePercentageForFile(fileData);
          }
+
       }
+
+      writeRowClose();
+   }
+
+   private boolean isSourceFileWithTestCodeOnly(String fileName)
+   {
+      int p = fileName.lastIndexOf('.');
+      String nameNoExt = p > 0 ? fileName.substring(0, p) : fileName;
+      return nameNoExt.endsWith("Test");
    }
 
    private int buildFileNameWithTrailingSpaces(String fileName)
@@ -82,7 +113,10 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
 
    private void writeTableCellWithFileName(int fileNameLen)
    {
-      if (withSourceFiles) {
+      if (sourceFilesNotFound.contains(filePath)) {
+         output.write(fileNameWithSpaces);
+      }
+      else {
          output.write("<a target='_blank' href='");
          int p = filePath.lastIndexOf('.');
          output.write(filePath.substring(0, p));
@@ -90,9 +124,6 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
          output.write(fileNameWithSpaces, 0, fileNameLen);
          output.write("</a>");
          output.write(fileNameWithSpaces, fileNameLen, fileNameWithSpaces.length - fileNameLen);
-      }
-      else {
-         output.write(fileNameWithSpaces);
       }
 
       output.println("</td>");

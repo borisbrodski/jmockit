@@ -70,14 +70,14 @@ public final class FileCoverageReport
          writeFooter();
       }
       finally {
-         inputFile.input.close();
+         inputFile.close();
          output.close();
       }
    }
 
    private void writeHeader()
    {
-      output.writeCommonHeader(inputFile.sourceFile.getName());
+      output.writeCommonHeader(inputFile.getSourceFileName());
       output.println("  <table cellpadding='0' cellspacing='1'>");
       output.println("    <caption>" + inputFile.getSourceFilePath() + "</caption>");
    }
@@ -87,7 +87,7 @@ public final class FileCoverageReport
       LineParser lineParser = fileParser.lineParser;
       String line;
 
-      while ((line = inputFile.input.readLine()) != null) {
+      while ((line = inputFile.nextLine()) != null) {
          boolean lineWithCodeElements = fileParser.parseCurrentLine(line);
 
          if (lineWithCodeElements) {

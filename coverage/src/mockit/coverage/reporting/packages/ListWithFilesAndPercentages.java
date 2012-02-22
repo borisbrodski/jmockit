@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting.packages;
@@ -36,14 +36,20 @@ abstract class ListWithFilesAndPercentages
       Arrays.fill(coveredItems, 0);
 
       for (String fileName : fileNames) {
-         printIndent();
-         output.println("<tr>");
-
          writeMetricsForFile(packageName, fileName);
-
-         printIndent();
-         output.println("</tr>");
       }
+   }
+
+   protected final void writeRowStart()
+   {
+      printIndent();
+      output.println("<tr>");
+   }
+
+   protected final void writeRowClose()
+   {
+      printIndent();
+      output.println("</tr>");
    }
 
    final void printIndent()

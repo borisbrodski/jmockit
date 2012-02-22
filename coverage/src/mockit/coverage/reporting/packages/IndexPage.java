@@ -17,10 +17,11 @@ public final class IndexPage extends ListWithFilesAndPercentages
    private final Map<String, List<String>> packageToFiles;
    private final Map<String, int[]> packageToPackagePercentages;
    private final PackageCoverageReport packageReport;
+   private final int totalFileCount;
    private String packageName;
 
    public IndexPage(
-      File outputFile, List<File> sourceDirs,
+      File outputFile, List<File> sourceDirs, Collection<String> sourceFilesNotFound,
       Map<String, List<String>> packageToFiles, Map<String, FileCoverageData> fileToFileData)
       throws IOException
    {
@@ -28,7 +29,13 @@ public final class IndexPage extends ListWithFilesAndPercentages
       this.sourceDirs = sourceDirs;
       this.packageToFiles = packageToFiles;
       packageToPackagePercentages = new HashMap<String, int[]>();
-      packageReport = new PackageCoverageReport(output, fileToFileData, sourceDirs != null);
+      packageReport = new PackageCoverageReport(output, sourceFilesNotFound, fileToFileData, packageToFiles.values());
+      totalFileCount = totalNumberOfSourceFilesWithCoverageData(fileToFileData.values());
+   }
+
+   private int totalNumberOfSourceFilesWithCoverageData(Collection<FileCoverageData> fileData)
+   {
+      return fileData.size() - Collections.frequency(fileData, null);
    }
 
    public void generate()
@@ -79,8 +86,6 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeTableFirstRowWithColumnTitles()
    {
-      int totalFileCount = computeTotalNumberOfSourceFilesAndMaximumFileNameLength();
-
       output.println("    <tr>");
       output.write("      <th style='cursor: col-resize' onclick='showHideAllFiles(this)'>Packages: ");
       output.print(packageToFiles.keySet().size());
@@ -128,27 +133,6 @@ public final class IndexPage extends ListWithFilesAndPercentages
       output.println("    </tr>");
    }
 
-   private int computeTotalNumberOfSourceFilesAndMaximumFileNameLength()
-   {
-      int totalFileCount = 0;
-      int maxFileNameLength = 0;
-
-      for (List<String> files : packageToFiles.values()) {
-         totalFileCount += files.size();
-
-         for (String fileName : files) {
-            int n = fileName.length();
-            
-            if (n > maxFileNameLength) {
-               maxFileNameLength = n;
-            }
-         }
-      }
-
-      packageReport.setMaxFileNameLength(maxFileNameLength);
-      return totalFileCount;
-   }
-
    private void writeLineWithCoverageTotals()
    {
       output.println("    <tr class='total'>");
@@ -175,9 +159,11 @@ public final class IndexPage extends ListWithFilesAndPercentages
    private void writeFooter()
    {
       output.println("  </table>");
-      output.write("  <p>Generated on ");
-      output.print(new Date());
-      output.println("</p>");
+      output.println("  <p>");
+      output.println("    <a href='http://code.google.com/p/jmockit'><img src='logo.png'></a>");
+      output.write("    Generated on ");
+      output.println(new Date());
+      output.println("  </p>");
       ((OutputFile) output).writeCommonFooter();
    }
 
@@ -185,11 +171,13 @@ public final class IndexPage extends ListWithFilesAndPercentages
    protected void writeMetricsForFile(String unused, String packageName)
    {
       this.packageName = packageName;
+      writeRowStart();
       writeTableCellWithPackageName();
       writeInternalTableForSourceFiles();
       writeCoveragePercentageForPackage(0);
       writeCoveragePercentageForPackage(1);
       writeCoveragePercentageForPackage(2);
+      writeRowClose();
    }
 
    private void writeTableCellWithPackageName()

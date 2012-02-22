@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting;
@@ -19,6 +19,7 @@ class CoverageReport
    private final Map<String, FileCoverageData> fileToFileData;
    private final Map<String, List<String>> packageToFiles;
    private final boolean withCallPoints;
+   private final Collection<String> sourceFilesNotFound;
 
    protected CoverageReport(String outputDir, String[] srcDirs, CoverageData coverageData, boolean withCallPoints)
    {
@@ -27,6 +28,7 @@ class CoverageReport
       fileToFileData = coverageData.getFileToFileDataMap();
       packageToFiles = new HashMap<String, List<String>>();
       this.withCallPoints = withCallPoints;
+      sourceFilesNotFound = new ArrayList<String>();
    }
 
    public final void generate() throws IOException
@@ -51,7 +53,7 @@ class CoverageReport
          addUncoveredSourceFilesToPackageLists();
       }
 
-      new IndexPage(outputFile, sourceDirs, packageToFiles, fileToFileData).generate();
+      new IndexPage(outputFile, sourceDirs, sourceFilesNotFound, packageToFiles, fileToFileData).generate();
       new StaticFiles().copyToOutputDir(outputDir, withSourceFilePages);
 
       System.out.println("JMockit: Coverage report written to " + outputFile.getParentFile().getCanonicalPath());
@@ -98,8 +100,12 @@ class CoverageReport
 
          if (inputFile.wasFileFound()) {
             new FileCoverageReport(outputDir, inputFile, fileData, withCallPoints).generate();
-            addFileToPackageFileList(sourceFile);
          }
+         else {
+            sourceFilesNotFound.add(sourceFile);
+         }
+
+         addFileToPackageFileList(sourceFile);
       }
    }
 

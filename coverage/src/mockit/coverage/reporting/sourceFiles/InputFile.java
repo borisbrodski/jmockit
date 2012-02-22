@@ -10,8 +10,8 @@ import java.util.*;
 public final class InputFile
 {
    final String filePath;
-   final File sourceFile;
-   final BufferedReader input;
+   private final File sourceFile;
+   private final BufferedReader input;
 
    public InputFile(List<File> sourceDirs, String filePath) throws FileNotFoundException
    {
@@ -60,10 +60,14 @@ public final class InputFile
    }
 
    public boolean wasFileFound() { return sourceFile != null; }
-   
+   String getSourceFileName() { return sourceFile.getName(); }
+
    String getSourceFilePath()
    {
       String path = sourceFile.getPath();
       return path.startsWith("..") ? path.substring(3) : path;
    }
+
+   String nextLine() throws IOException { return input.readLine(); }
+   void close() throws IOException { input.close(); }
 }
