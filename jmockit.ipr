@@ -1510,15 +1510,15 @@
         <root url="jar://E:/.m2/repository/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: cglib:cglib-nodep:2.2">
+    <library name="Maven: cglib:cglib-nodep:2.2.2">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/cglib/cglib-nodep/2.2/cglib-nodep-2.2.jar!/" />
+        <root url="jar://E:/.m2/repository/cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/cglib/cglib-nodep/2.2/cglib-nodep-2.2-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/cglib/cglib-nodep/2.2/cglib-nodep-2.2-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: com.beust:jcommander:1.12">
@@ -1730,15 +1730,15 @@
         <root url="jar://E:/.m2/repository/org/beanshell/bsh/2.0b4/bsh-2.0b4-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.easymock:easymock:3.0">
+    <library name="Maven: org.easymock:easymock:3.1">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/org/easymock/easymock/3.0/easymock-3.0.jar!/" />
+        <root url="jar://E:/.m2/repository/org/easymock/easymock/3.1/easymock-3.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/easymock/easymock/3.0/easymock-3.0-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/org/easymock/easymock/3.1/easymock-3.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/org/easymock/easymock/3.0/easymock-3.0-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/org/easymock/easymock/3.1/easymock-3.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.hamcrest:hamcrest-core:1.1">
@@ -1840,37 +1840,37 @@
         <root url="jar://E:/.m2/repository/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-asm:3.0.0.RELEASE">
+    <library name="Maven: org.springframework:spring-asm:3.1.0.RELEASE">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/org/springframework/spring-asm/3.0.0.RELEASE/spring-asm-3.0.0.RELEASE.jar!/" />
+        <root url="jar://E:/.m2/repository/org/springframework/spring-asm/3.1.0.RELEASE/spring-asm-3.1.0.RELEASE.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/springframework/spring-asm/3.0.0.RELEASE/spring-asm-3.0.0.RELEASE-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/org/springframework/spring-asm/3.1.0.RELEASE/spring-asm-3.1.0.RELEASE-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/org/springframework/spring-asm/3.0.0.RELEASE/spring-asm-3.0.0.RELEASE-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/org/springframework/spring-asm/3.1.0.RELEASE/spring-asm-3.1.0.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-core:3.0.0.RELEASE">
+    <library name="Maven: org.springframework:spring-core:3.1.0.RELEASE">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/org/springframework/spring-core/3.0.0.RELEASE/spring-core-3.0.0.RELEASE.jar!/" />
+        <root url="jar://E:/.m2/repository/org/springframework/spring-core/3.1.0.RELEASE/spring-core-3.1.0.RELEASE.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/springframework/spring-core/3.0.0.RELEASE/spring-core-3.0.0.RELEASE-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/org/springframework/spring-core/3.1.0.RELEASE/spring-core-3.1.0.RELEASE-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/org/springframework/spring-core/3.0.0.RELEASE/spring-core-3.0.0.RELEASE-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/org/springframework/spring-core/3.1.0.RELEASE/spring-core-3.1.0.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.springframework:spring-test:3.0.0.RELEASE">
+    <library name="Maven: org.springframework:spring-test:3.1.0.RELEASE">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/org/springframework/spring-test/3.0.0.RELEASE/spring-test-3.0.0.RELEASE.jar!/" />
+        <root url="jar://E:/.m2/repository/org/springframework/spring-test/3.1.0.RELEASE/spring-test-3.1.0.RELEASE.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/springframework/spring-test/3.0.0.RELEASE/spring-test-3.0.0.RELEASE-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/org/springframework/spring-test/3.1.0.RELEASE/spring-test-3.1.0.RELEASE-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/org/springframework/spring-test/3.0.0.RELEASE/spring-test-3.0.0.RELEASE-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/org/springframework/spring-test/3.1.0.RELEASE/spring-test-3.1.0.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.testng:testng:6.3.1">
@@ -1884,37 +1884,37 @@
         <root url="jar://E:/.m2/repository/org/testng/testng/6.3.1/testng-6.3.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.unitils:unitils-core:3.2">
+    <library name="Maven: org.unitils:unitils-core:3.3">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/org/unitils/unitils-core/3.2/unitils-core-3.2.jar!/" />
+        <root url="jar://E:/.m2/repository/org/unitils/unitils-core/3.3/unitils-core-3.3.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/unitils/unitils-core/3.2/unitils-core-3.2-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/org/unitils/unitils-core/3.3/unitils-core-3.3-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/org/unitils/unitils-core/3.2/unitils-core-3.2-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/org/unitils/unitils-core/3.3/unitils-core-3.3-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.unitils:unitils-inject:3.2">
+    <library name="Maven: org.unitils:unitils-inject:3.3">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/org/unitils/unitils-inject/3.2/unitils-inject-3.2.jar!/" />
+        <root url="jar://E:/.m2/repository/org/unitils/unitils-inject/3.3/unitils-inject-3.3.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/unitils/unitils-inject/3.2/unitils-inject-3.2-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/org/unitils/unitils-inject/3.3/unitils-inject-3.3-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/org/unitils/unitils-inject/3.2/unitils-inject-3.2-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/org/unitils/unitils-inject/3.3/unitils-inject-3.3-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.unitils:unitils-mock:3.2">
+    <library name="Maven: org.unitils:unitils-mock:3.3">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/org/unitils/unitils-mock/3.2/unitils-mock-3.2.jar!/" />
+        <root url="jar://E:/.m2/repository/org/unitils/unitils-mock/3.3/unitils-mock-3.3.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/unitils/unitils-mock/3.2/unitils-mock-3.2-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/org/unitils/unitils-mock/3.3/unitils-mock-3.3-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/org/unitils/unitils-mock/3.2/unitils-mock-3.2-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/org/unitils/unitils-mock/3.3/unitils-mock-3.3-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.yaml:snakeyaml:1.6">
