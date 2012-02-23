@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>JMockit Coverage Report</title>
+  <title>JMockit Coverage Report - OrderItem.java</title>
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
   <script type='text/javascript' src='../../../coverage.js'></script>
@@ -9,30 +9,26 @@
 </head>
 <body onload='prettyPrint()'>
   <table cellpadding='0' cellspacing='1'>
-    <caption><code>..\orderMngmntWebapp\src\orderMngr\domain\order\OrderItem.java</code></caption>
-    <tr class='click' onclick='showHideLines(this)'>
-      <td class='line'></td><td>&nbsp;</td><td class='comment'><div>/*
+    <caption>orderMngmntWebapp\src\orderMngr\domain\order\OrderItem.java</caption>
+    <tr>
+      <td class='line'></td><td>&nbsp;</td>
+      <td class='comment' onclick='showHideLines(this)'><div>/*
  * Copyright (c) 2006-2011 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
- */</div><span>/*...*/</span></td></tr>
+ */</div><span>/*...*/</span></td>
+    </tr>
     <tr>
       <td class='line'>5</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>package orderMngr.domain.order;</pre></td>
     </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
-      <td class='line'>6</td><td colspan='2'></td>
+      <td class='line'></td><td>&nbsp;</td>
+      <td><pre class='imports prettyprint' onclick='showHideLines(this)'><div>import java.math.*;
+import javax.persistence.*;
+</div><span>import ...</span></pre></td>
     </tr>
-    <tr>
-      <td class='line'>7</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>import java.math.*;</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>8</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>import javax.persistence.*;</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>9</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>10</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>@Entity</pre></td>
@@ -53,9 +49,7 @@
       <td class='line'>14</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   private int <span class='instance uncovered' title='Reads: 0 Writes: 0'>id</span>;</pre></td>
     </tr>
-    <tr>
-      <td class='line'>15</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>16</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   @ManyToOne</pre></td>
@@ -64,44 +58,32 @@
       <td class='line'>17</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   private Order <span class='instance uncovered' title='Reads: 0 Writes: 21'>order</span>;</pre></td>
     </tr>
-    <tr>
-      <td class='line'>18</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>19</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   private String <span class='instance covered' title='Reads: 22 Writes: 21'>productId</span>;</pre></td>
     </tr>
-    <tr>
-      <td class='line'>20</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>21</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   private String <span class='instance covered' title='Reads: 6 Writes: 21'>productDescription</span>;</pre></td>
     </tr>
-    <tr>
-      <td class='line'>22</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>23</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   private int <span class='instance covered' title='Reads: 17 Writes: 21'>quantity</span>;</pre></td>
     </tr>
-    <tr>
-      <td class='line'>24</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>25</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   private BigDecimal <span class='instance covered' title='Reads: 16 Writes: 21'>unitPrice</span>;</pre></td>
     </tr>
-    <tr>
-      <td class='line'>26</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>27</td><td class='count'>0</td>
       <td><pre class='prettyprint uncovered' id='l27s0'>   public OrderItem() {}</pre></td>
     </tr>
-    <tr>
-      <td class='line'>28</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>29</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public OrderItem(String productId, String productDescription, int quantity, BigDecimal unitPrice)</pre></td>
@@ -113,7 +95,7 @@
     <tr>
       <td class='line'>31</td><td class='count'>15</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l31s0'>      this(null, productId, productDescription, quantity, unitPrice);</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithInvalidItemQuantity: 74</li>
@@ -131,7 +113,7 @@
     <tr>
       <td class='line'>32</td><td class='count'>15</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l32s0'>   }</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithInvalidItemQuantity: 74</li>
@@ -146,9 +128,7 @@
         </ol>
       </td>
     </tr>
-    <tr>
-      <td class='line'>33</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>34</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public OrderItem(</pre></td>
@@ -160,7 +140,7 @@
     <tr>
       <td class='line'>36</td><td class='count'>21</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l36s0'>   {</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithInvalidItemQuantity: 74</li>
@@ -182,7 +162,7 @@
     <tr>
       <td class='line'>37</td><td class='count'>21</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l37s0'>      this.order = order;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithInvalidItemQuantity: 74</li>
@@ -204,7 +184,7 @@
     <tr>
       <td class='line'>38</td><td class='count'>21</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l38s0'>      this.productId = productId;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithInvalidItemQuantity: 74</li>
@@ -226,7 +206,7 @@
     <tr>
       <td class='line'>39</td><td class='count'>21</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l39s0'>      this.productDescription = productDescription;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithInvalidItemQuantity: 74</li>
@@ -248,7 +228,7 @@
     <tr>
       <td class='line'>40</td><td class='count'>21</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l40s0'>      this.quantity = quantity;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithInvalidItemQuantity: 74</li>
@@ -270,7 +250,7 @@
     <tr>
       <td class='line'>41</td><td class='count'>21</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l41s0'>      this.unitPrice = unitPrice;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithInvalidItemQuantity: 74</li>
@@ -292,7 +272,7 @@
     <tr>
       <td class='line'>42</td><td class='count'>21</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l42s0'>   }</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 24x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithInvalidItemQuantity: 74</li>
@@ -311,9 +291,7 @@
         </ol>
       </td>
     </tr>
-    <tr>
-      <td class='line'>43</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>44</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public int getId()</pre></td>
@@ -330,9 +308,7 @@
       <td class='line'>47</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   }</pre></td>
     </tr>
-    <tr>
-      <td class='line'>48</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>49</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public Order getOrder()</pre></td>
@@ -349,9 +325,7 @@
       <td class='line'>52</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   }</pre></td>
     </tr>
-    <tr>
-      <td class='line'>53</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>54</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public String getProductId()</pre></td>
@@ -363,7 +337,7 @@
     <tr>
       <td class='line'>56</td><td class='count'>6</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l56s0'>      return productId;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderRepository_ExpectationsAPI_Test#createOrder: 34, 46</li>
           <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#createOrder: 62x2</li>
           <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
@@ -375,9 +349,7 @@
       <td class='line'>57</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   }</pre></td>
     </tr>
-    <tr>
-      <td class='line'>58</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>59</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public String getProductDescription()</pre></td>
@@ -389,7 +361,7 @@
     <tr>
       <td class='line'>61</td><td class='count'>6</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l61s0'>      return productDescription;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderRepository_ExpectationsAPI_Test#createOrder: 34, 46</li>
           <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#createOrder: 62x2</li>
           <li>orderMngr.domain.order.OrderRepository_MockupsAPI_Test#findOrderByNumber: 172</li>
@@ -401,9 +373,7 @@
       <td class='line'>62</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   }</pre></td>
     </tr>
-    <tr>
-      <td class='line'>63</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>64</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public int getQuantity()</pre></td>
@@ -415,7 +385,7 @@
     <tr>
       <td class='line'>66</td><td class='count'>17</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l66s0'>      return quantity;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 45x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 39x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithInvalidItemQuantity: 76x2</li>
@@ -433,9 +403,7 @@
       <td class='line'>67</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   }</pre></td>
     </tr>
-    <tr>
-      <td class='line'>68</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>69</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public BigDecimal getUnitPrice()</pre></td>
@@ -447,7 +415,7 @@
     <tr>
       <td class='line'>71</td><td class='count'>16</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l71s0'>      return unitPrice;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 45x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 39x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithInvalidItemQuantity: 76</li>
@@ -465,9 +433,7 @@
       <td class='line'>72</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   }</pre></td>
     </tr>
-    <tr>
-      <td class='line'>73</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>74</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   @Override</pre></td>
@@ -494,13 +460,13 @@
     <tr>
       <td class='line'>77</td><td class='count'>7</td>
       <td><pre class='prettyprint jmp'>      <span id='l77s0' title='Executions: 7' class='covered cp' onclick='showHide(this,0)'>if (this == o)</span> <span id='l77s1' title='Executions: 6' class='covered cp' onclick='showHide(this,1)'>return true;</span></pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 48x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 42x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithDuplicateItem: 94</li>
           <li>orderMngr.domain.order.OrderFactory_VerificationsAPI_Test#createOrder: 54</li>
         </ol>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 48x2</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 42x2</li>
           <li>orderMngr.domain.order.OrderFactory_VerificationsAPI_Test#createOrder: 54</li>
@@ -510,43 +476,37 @@
     <tr>
       <td class='line'>78</td><td class='count'>1</td>
       <td><pre class='prettyprint jmp'>      <span id='l78s0' title='Executions: 1' class='covered cp' onclick='showHide(this,0)'>if (o == null</span> || <span id='l78s1' title='Executions: 1' class='covered cp' onclick='showHide(this,1)'>getClass() != o.getClass()) return false;</span></pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithDuplicateItem: 94</li>
         </ol>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithDuplicateItem: 94</li>
         </ol>
       </td>
     </tr>
-    <tr>
-      <td class='line'>79</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>80</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l80s0'>      OrderItem orderItem = (OrderItem) o;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithDuplicateItem: 94</li>
         </ol>
       </td>
     </tr>
-    <tr>
-      <td class='line'>81</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>82</td><td class='count'>1</td>
       <td><pre class='prettyprint jmp'>      <span id='l82s0' title='Executions: 1' class='covered cp' onclick='showHide(this,0)'>if (!productId.equals(orderItem.productId)) return false;</span></pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithDuplicateItem: 94</li>
         </ol>
       </td>
     </tr>
-    <tr>
-      <td class='line'>83</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>84</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l84s0'>      return true;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithDuplicateItem: 94</li>
         </ol>
       </td>
@@ -555,9 +515,7 @@
       <td class='line'>85</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   }</pre></td>
     </tr>
-    <tr>
-      <td class='line'>86</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>87</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   @Override</pre></td>
@@ -573,7 +531,7 @@
     <tr>
       <td class='line'>90</td><td class='count'>14</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l90s0'>      return productId.hashCode();</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.order.OrderFactory_ExpectationsAPI_Test#createOrder: 45x4</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrder: 39x4</li>
           <li>orderMngr.domain.order.OrderFactory_MockupsAPI_Test#createOrderWithDuplicateItem: 94x2</li>

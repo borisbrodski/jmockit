@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>JMockit Coverage Report</title>
+  <title>JMockit Coverage Report - CustomerManager.java</title>
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <link rel='stylesheet' type='text/css' href='../../../coverage.css'/>
   <script type='text/javascript' src='../../../coverage.js'></script>
@@ -9,52 +9,33 @@
 </head>
 <body onload='prettyPrint()'>
   <table cellpadding='0' cellspacing='1'>
-    <caption><code>..\orderMngmntWebapp\src\orderMngr\domain\customer\CustomerManager.java</code></caption>
-    <tr class='click' onclick='showHideLines(this)'>
-      <td class='line'></td><td>&nbsp;</td><td class='comment'><div>/*
+    <caption>orderMngmntWebapp\src\orderMngr\domain\customer\CustomerManager.java</caption>
+    <tr>
+      <td class='line'></td><td>&nbsp;</td>
+      <td class='comment' onclick='showHideLines(this)'><div>/*
  * Copyright (c) 2006-2011 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
- */</div><span>/*...*/</span></td></tr>
+ */</div><span>/*...*/</span></td>
+    </tr>
     <tr>
       <td class='line'>5</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>package orderMngr.domain.customer;</pre></td>
     </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
-      <td class='line'>6</td><td colspan='2'></td>
+      <td class='line'></td><td>&nbsp;</td>
+      <td><pre class='imports prettyprint' onclick='showHideLines(this)'><div>import java.util.*;
+
+import static orderMngr.service.domain.DomainUtil.*;
+import orderMngr.service.domain.*;
+import orderMngr.service.persistence.*;
+import static orderMngr.service.persistence.Persistence.*;
+</div><span>import ...</span></pre></td>
     </tr>
-    <tr>
-      <td class='line'>7</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>import java.util.*;</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>8</td><td colspan='2'></td>
-    </tr>
-    <tr>
-      <td class='line'>9</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>import static orderMngr.service.domain.DomainUtil.*;</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>10</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>import orderMngr.service.domain.*;</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>11</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>import orderMngr.service.persistence.*;</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>12</td><td>&nbsp;</td>
-      <td><pre class='prettyprint'>import static orderMngr.service.persistence.Persistence.*;</pre></td>
-    </tr>
-    <tr>
-      <td class='line'>13</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>14</td><td class='count'>9</td>
-      <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l14s0'>public final class CustomerManager</pre>
-        <ol style='display: none;'>
-</li>
-        </ol>
-      </td>
+      <td><pre class='prettyprint covered' id='l14s0'>public final class CustomerManager</pre></td>
     </tr>
     <tr>
       <td class='line'>15</td><td>&nbsp;</td>
@@ -71,7 +52,7 @@
     <tr>
       <td class='line'>18</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l18s0'>      return load(Customer.class, id);</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomerById: 45</li>
         </ol>
       </td>
@@ -80,9 +61,7 @@
       <td class='line'>19</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   }</pre></td>
     </tr>
-    <tr>
-      <td class='line'>20</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>21</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public void create(Customer data) throws MissingEntityId, MissingRequiredData, DuplicateCustomer</pre></td>
@@ -102,7 +81,7 @@
     <tr>
       <td class='line'>23</td><td class='count'>4</td>
       <td><pre class='prettyprint jmp'>      <span id='l23s0' title='Executions: 4' class='covered cp' onclick='showHide(this,0)'>if (data.getId() == null) {</span></pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer: 70</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithMissingId: 79</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithMissingName: 86</li>
@@ -113,7 +92,7 @@
     <tr>
       <td class='line'>24</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l24s0'>         throw new MissingEntityId();</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithMissingId: 79</li>
         </ol>
       </td>
@@ -122,13 +101,11 @@
       <td class='line'>25</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>      }</pre></td>
     </tr>
-    <tr>
-      <td class='line'>26</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>27</td><td class='count'>3</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l27s0'>      validateRequiredData(data.getFirstName(), data.getLastName());</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer: 70</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithMissingName: 86</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName: 97</li>
@@ -138,19 +115,17 @@
     <tr>
       <td class='line'>28</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l28s0'>      validateUniqueness("", data.getFirstName(), data.getLastName());</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer: 70</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName: 97</li>
         </ol>
       </td>
     </tr>
-    <tr>
-      <td class='line'>29</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>30</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l30s0'>      persist(data);</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer: 70</li>
         </ol>
       </td>
@@ -158,14 +133,12 @@
     <tr>
       <td class='line'>31</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l31s0'>   }</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer: 70</li>
         </ol>
       </td>
     </tr>
-    <tr>
-      <td class='line'>32</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>33</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   private void validateUniqueness(String id, String firstName, String lastName)</pre></td>
@@ -189,7 +162,7 @@
     <tr>
       <td class='line'>36</td><td class='count'>4</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l36s0'>      boolean customerWithSameNameExists = Persistence.exists(</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer: 70</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName: 97</li>
           <li>orderMngr.domain.customer.CustomerTest#editCustomer: 106</li>
@@ -205,19 +178,17 @@
       <td class='line'>38</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>         firstName, lastName, id);</pre></td>
     </tr>
-    <tr>
-      <td class='line'>39</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>40</td><td class='count'>4</td>
       <td><pre class='prettyprint jmp'>      <span id='l40s0' title='Executions: 4' class='covered cp' onclick='showHide(this,0)'>if (customerWithSameNameExists)</span> <span id='l40s1' title='Executions: 2' class='covered cp' onclick='showHide(this,1)'>{</span></pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer: 70</li>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName: 97</li>
           <li>orderMngr.domain.customer.CustomerTest#editCustomer: 106</li>
           <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName: 119</li>
         </ol>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName: 97</li>
           <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName: 119</li>
         </ol>
@@ -226,7 +197,7 @@
     <tr>
       <td class='line'>41</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l41s0'>         throw new DuplicateCustomer();</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomerWithDuplicateName: 97</li>
           <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName: 119</li>
         </ol>
@@ -239,15 +210,13 @@
     <tr>
       <td class='line'>43</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l43s0'>   }</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#createCustomer: 70</li>
           <li>orderMngr.domain.customer.CustomerTest#editCustomer: 106</li>
         </ol>
       </td>
     </tr>
-    <tr>
-      <td class='line'>44</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>45</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public void changeNameAndAddress(Customer customer, String newFirstName, String newLastName,</pre></td>
@@ -263,7 +232,7 @@
     <tr>
       <td class='line'>48</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l48s0'>      validateRequiredData(newFirstName, newLastName);</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#editCustomer: 106</li>
           <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName: 119</li>
         </ol>
@@ -272,19 +241,17 @@
     <tr>
       <td class='line'>49</td><td class='count'>2</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l49s0'>      validateUniqueness(customer.getId(), newFirstName, newLastName);</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#editCustomer: 106</li>
           <li>orderMngr.domain.customer.CustomerTest#editCustomerWithDuplicateNewName: 119</li>
         </ol>
       </td>
     </tr>
-    <tr>
-      <td class='line'>50</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>51</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l51s0'>      customer.firstName = newFirstName;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#editCustomer: 106</li>
         </ol>
       </td>
@@ -292,7 +259,7 @@
     <tr>
       <td class='line'>52</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l52s0'>      customer.lastName = newLastName;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#editCustomer: 106</li>
         </ol>
       </td>
@@ -300,7 +267,7 @@
     <tr>
       <td class='line'>53</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l53s0'>      customer.deliveryAddress = newAddress;</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#editCustomer: 106</li>
         </ol>
       </td>
@@ -308,14 +275,12 @@
     <tr>
       <td class='line'>54</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l54s0'>   }</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#editCustomer: 106</li>
         </ol>
       </td>
     </tr>
-    <tr>
-      <td class='line'>55</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>56</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public void remove(Customer customer)</pre></td>
@@ -327,7 +292,7 @@
     <tr>
       <td class='line'>58</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l58s0'>      delete(customer);</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#removeCustomer: 128</li>
         </ol>
       </td>
@@ -335,14 +300,12 @@
     <tr>
       <td class='line'>59</td><td class='count'>1</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l59s0'>   }</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#removeCustomer: 128</li>
         </ol>
       </td>
     </tr>
-    <tr>
-      <td class='line'>60</td><td colspan='2'></td>
-    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
     <tr>
       <td class='line'>61</td><td>&nbsp;</td>
       <td><pre class='prettyprint'>   public List&lt;Customer> findByName(String fullOrPartialName)</pre></td>
@@ -354,7 +317,7 @@
     <tr>
       <td class='line'>63</td><td class='count'>5</td>
       <td><pre class='prettyprint covered cp' onclick='showHide(this)' id='l63s0'>      return find(</pre>
-        <ol style='display: none;'>
+        <ol style='display: none'>
           <li>orderMngr.domain.customer.CustomerTest#findCustomersByName: 136, 140, 141, 142, 143</li>
         </ol>
       </td>
