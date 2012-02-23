@@ -308,6 +308,7 @@
                <exclude name="mockit/integration/testng/*Test.class"/>
                <exclude name="**/MockStateBetweenTestMethodsNGTest.class"/>
                <exclude name="**/ExecutingTest.class"/>
+               <exclude name="**/OverlappingStubsAndMocksTest.class"/>
             </fileset>
          </batchtest>
          <formatter type="xml"/>
