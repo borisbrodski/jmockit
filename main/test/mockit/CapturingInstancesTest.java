@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -56,26 +56,6 @@ public final class CapturingInstancesTest
    }
 
    @Test
-   public void captureAllInternallyCreatedInstances(@Capturing final Callable<?> callable) throws Exception
-   {
-      new NonStrictExpectations() {
-         @Capturing Observable observable;
-
-         {
-            service.doSomething(); returns(3, 4);
-         }
-      };
-
-      TestedUnit unit = new TestedUnit();
-      int result = unit.businessOperation(true);
-
-      assertNotNull(unit.observable);
-      assertEquals(7, result);
-
-      new Verifications() {{ callable.call(); }};
-   }
-
-   @Test
    public void recordStrictExpectationsForNextTwoInstancesToBeCreatedUsingMockFields()
    {
       new Expectations() {
@@ -90,6 +70,28 @@ public final class CapturingInstancesTest
 
       assertEquals(11, new ServiceImpl().doSomething());
       assertEquals(22, new ServiceImpl().doSomething());
+   }
+
+   @Ignore @Test
+   public void captureAllInternallyCreatedInstances(@Capturing final Callable<?> callable) throws Exception
+   {
+      new NonStrictExpectations() {
+         @Capturing Observable observable;
+
+         {
+            service.doSomething(); returns(3, 4);
+         }
+      };
+
+      TestedUnit unit = new TestedUnit();
+      int result = unit.businessOperation(true);
+      assertEquals(3, unit.service1.doSomething());
+      assertEquals(4, unit.service2.doSomething());
+
+      assertNotNull(unit.observable);
+      assertEquals(7, result);
+
+      new Verifications() {{ callable.call(); }};
    }
 
    @Test
