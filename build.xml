@@ -299,7 +299,7 @@
          <sysproperty key="jmockit-mocks" value="mockit.integration.logging.Slf4jMocks"/>
          <classpath refid="common.classpath"/>
          <classpath location="main/test-classes"/>
-         <classpath path="main/classes"/>
+         <classpath location="main/classes"/>
          <batchtest>
             <fileset dir="main/test-classes">
                <include name="**/*Test.class"/>
@@ -314,12 +314,10 @@
       </junit>
       <testReport name="main/JMockitTests"/>
 
-      <testng workingdir="main" listener="mockit.integration.testng.Initializer">
+      <testng workingdir="main">
          <classpath refid="common.classpath"/>
          <classpath path="jmockit.jar"/>
          <classpath>
-            <pathelement location="lib/bsh-2.0b1.jar"/>
-            <pathelement location="lib/jcommander-1.5.jar"/>
             <pathelement location="main/test-classes"/>
          </classpath>
          <classfileset
@@ -396,7 +394,7 @@
       <testReport name="samples/JMockitSampleTests"/>
 
       <property name="sampleDir" value="samples/LoginService"/>
-      <testng workingdir="${sampleDir}" listener="mockit.integration.testng.Initializer">
+      <testng workingdir="${sampleDir}">
          <classpath refid="common.classpath"/>
          <classpath path="jmockit.jar"/>
          <classpath path="jmockit-coverage-serial.jar"/>
