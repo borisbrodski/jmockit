@@ -19,9 +19,9 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
-<p>Release <strong>1.0-rc1</strong> (Feb ?, 2012):</p>
+<p>Release <strong>0.999.13</strong> (Feb 23, 2012):</p>
 <ul>
    <li>
       <strong>Removed</strong> the "<code>Mocked#capture</code>" and "<code>Capturing#baseType</code>" annotation
@@ -29,8 +29,38 @@
       Existing tests still using them will have to be changed as described in the deprecation comments.
    </li>
    <li>
-      <strong>JMockit Coverage</strong>: Several fixes and enhancements to the HTML report. Fixed an issue with code
-      compiled with Java 7.
+      <strong>New feature</strong>: Added the "<code>value</code>" attribute to
+      <code class="annotation">@Injectable</code>, to enable the injection of primitive values and strings into
+      "<code class="annotation">@Tested</code>" objects from mock <em>parameters</em> (previously, it was only possible
+      with mock <em>fields</em>).
+   </li>
+   <li>
+      <strong>Enhancements</strong> to the automatic instantiation and injection of
+      <code class="annotation">@Tested</code> objects:
+      a) constructor injection now selects among multiple constructors when more than one can be satisfied by the
+      available <code class="annotation">@Injectable</code>'s, by choosing the one with the most parameters;
+      b) for constructor injection, the <em>names</em> of eligible constructors are now matched against the names of
+      the injectable fields <em>and</em> test method parameters having the same type as the constructor parameter;
+      c) the names of injectable parameters, as declared in test methods, are considered when searching for matching
+      constructor parameters and instance fields in the tested class;
+      d) <em>field</em> injection is now always performed, even if constructor injection was not (ie, the tested class
+      was explicitly instantiated).
+   </li>
+   <li>
+      <strong>Enhancement</strong>: "<code>forEachInvocation</code>" validation methods can now return
+      <code>boolean</code> to indicate whether the received invocation arguments are valid (<code>true</code>) or not
+      (<code>false</code>).
+      In the last case, a descriptive error message is generated from the validation method name and the actual argument
+      values.
+      <br/>
+      This change will break existing tests which use a <em><code>forEachInvocation</code></em> class whose method
+      happens to return a <code>boolean</code> as the value to be returned from the associated recorded expectation.
+      Instead, an identical <code class="type">Delegate</code> object should be assigned to the
+      <em><code>result</code></em> field.
+   </li>
+   <li>
+      <strong>JMockit Coverage</strong>: Several fixes and enhancements to the HTML report.
+      Fixed an issue with code compiled with Java 7.
    </li>
    <li>
       <strong>Fixed</strong> an incompatibility with TestNG introduced in the previous release.
@@ -49,7 +79,7 @@
    </li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release 0.999.12 (Dec 22, 2011):</p>
 <ul>
@@ -113,8 +143,6 @@
       See issue <a href="http://code.google.com/p/jmockit/issues/detail?id=189">189</a>.
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.999.11 (Oct 21, 2011):</p>
 <p>
