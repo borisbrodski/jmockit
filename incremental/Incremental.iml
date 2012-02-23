@@ -12,7 +12,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="JMockit" level="project" />
-    <orderEntry type="library" name="JMockit Coverage" level="project" />
     <orderEntry type="module" module-name="Main" />
     <orderEntry type="module" module-name="Coverage" />
     <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
