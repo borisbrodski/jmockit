@@ -865,7 +865,7 @@
   <component name="JavacSettings">
     <option name="GENERATE_NO_WARNINGS" value="true" />
     <option name="DEPRECATION" value="false" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="-target 1.7" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-source 1.5 -target 1.5" />
   </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
@@ -1497,15 +1497,6 @@
       <JAVADOC />
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/jmockit.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="JMockit Coverage">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/jmockit-coverage.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/jmockit-coverage.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: cglib:cglib-nodep:2.1_3">
