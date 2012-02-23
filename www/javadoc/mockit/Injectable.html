@@ -27,7 +27,7 @@
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 </ul>
-<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></em></div>
+<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top><img src=resources/logo.png>JMockit Home</a></em></div>
 </div>
 <div class="subNav">
 <ul class="navList">
@@ -57,11 +57,11 @@
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Required&nbsp;|&nbsp;</li>
-<li>Optional</li>
+<li><a href="#annotation_type_optional_element_summary">Optional</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Element</li>
+<li><a href="#annotation_type_element_detail">Element</a></li>
 </ul>
 </div>
 <a name="skip-navbar_top">
@@ -99,14 +99,69 @@ public @interface <span class="strong">Injectable</span></pre>
  For an injectable mocked <em>class</em>, <em>static methods</em> and <em>constructors</em> are <em>not</em> mocked;
  only instance methods are.
  <p/>
- When used in combination with <a href="../mockit/Tested.html" title="annotation in mockit">@Tested</a>, the values assigned (explicitly in test code or
- automatically by JMockit) to injectable fields of the test class will be used for automatic injection into the tested
- object.
+ When used in combination with <a href="../mockit/Tested.html" title="annotation in mockit">@Tested</a>, the values of injectable fields and parameters will be
+ used for automatic injection into the tested object.
  Additionally, this annotation can be applied to non-mocked fields of primitive or array type, which will also be used
- for injection.
- <p/>
- <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#injectable">In the
- Tutorial</a></div>
+ for injection.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Injectable.html#value()"><code>value()</code></a>, 
+<a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#injectable">In the
+ Tutorial</a></dd></dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- =========== ANNOTATION TYPE OPTIONAL MEMBER SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="annotation_type_optional_element_summary">
+<!--   -->
+</a>
+<h3>Optional Element Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Optional Element Summary table, listing optional elements, and an explanation">
+<caption><span>Optional Elements</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Optional Element and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/Injectable.html#value()">value</a></strong></code>
+<div class="block">Specifies a literal value when the injectable mock field/parameter is of a primitive type.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ ANNOTATION TYPE MEMBER DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="annotation_type_element_detail">
+<!--   -->
+</a>
+<h3>Element Detail</h3>
+<a name="value()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>value</h4>
+<pre>public abstract&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;value</pre>
+<div class="block">Specifies a literal value when the injectable mock field/parameter is of a primitive type.
+ The value provided must be convertible to that primitive type.</div>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 </ul>
 </div>
@@ -123,7 +178,7 @@ public @interface <span class="strong">Injectable</span></pre>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 </ul>
-<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></em></div>
+<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top><img src=resources/logo.png>JMockit Home</a></em></div>
 </div>
 <div class="subNav">
 <ul class="navList">
@@ -153,11 +208,11 @@ public @interface <span class="strong">Injectable</span></pre>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Required&nbsp;|&nbsp;</li>
-<li>Optional</li>
+<li><a href="#annotation_type_optional_element_summary">Optional</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Element</li>
+<li><a href="#annotation_type_element_detail">Element</a></li>
 </ul>
 </div>
 <a name="skip-navbar_bottom">

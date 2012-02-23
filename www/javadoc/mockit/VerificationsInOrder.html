@@ -27,7 +27,7 @@
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 </ul>
-<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></em></div>
+<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top><img src=resources/logo.png>JMockit Home</a></em></div>
 </div>
 <div class="subNav">
 <ul class="navList">
@@ -195,8 +195,8 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <tr class="rowColor">
 <td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#forEachInvocation">forEachInvocation</a></strong></code>
-<div class="block">An object assigned to this field will be taken as a handler for each invocation matching the current expectation,
- with the purpose of validating invocation arguments.</div>
+<div class="block">An object assigned to this field will be called back for each invocation matching the current expectation,
+ in order to validate invocation arguments.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -672,34 +672,23 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <li class="blockList">
 <h4>forEachInvocation</h4>
 <pre>protected static&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> forEachInvocation</pre>
-<div class="block">An object assigned to this field will be taken as a handler for each invocation matching the current expectation,
- with the purpose of validating invocation arguments.
- Note that for a <em>recorded</em> expectation such invocations are the ones that will be executed during the
- <em>replay</em> phase, while for a <em>verified</em> expectation they are the ones actually executed during that
- phase.
+<div class="block">An object assigned to this field will be called back for each invocation matching the current expectation,
+ in order to validate invocation arguments.
  <p/>
- The object assigned can be of any type, provided its class has a single non-private method
- (therefore, additional methods are allowed and ignored, as long as they are <code>private</code>).
- This <em>handler method</em> can have any name, as long as its parameters match the ones defined in the mocked
+ Said object can be of any type, provided its class has a single non-private method
+ (additional methods are allowed and ignored, as long as they are <code>private</code>).
+ This <em>validation method</em> can have any name, provided its parameters match the ones defined in the mocked
  method or constructor associated with the expectation.
  Corresponding parameters don't need to have the exact same declared type, though, as long as each possible
- invocation argument can be passed to the corresponding parameter in the handler method.
+ invocation argument can be passed to the corresponding parameter in the validation method.
  <p/>
- In the case of an expectation recorded for a non-<code>void</code> method, the handler method is also responsible for
- returning appropriate values to be used by the caller (which normally belongs to the code under test).
- That is, the <code>result</code> field or the <code>returns(...)</code> method should <em>not</em> be used together with an
- assignment to this field.
- The same observation applies to the throwing of exceptions/errors from a recorded expectation
- (which can also be done for constructors and <code>void</code> methods).
+ The return type of the validation method should be either <code>boolean</code> or <code>void</code>.
+ In the first case, a return value of <code>true</code> means the invocation is valid, while <code>false</code> causes the
+ test to fail with an appropriate error message.
+ In the second case, invocation arguments should be validated through regular assertions (Java
+ <code>assert</code>s and/or JUnit/TestNG methods).
  <p/>
- When used for an expectation inside a <em>verification</em> block, on the other hand, the handler method should
- normally have a <code>void</code> return type. Any value eventually returned by the method will be silently ignored in
- this case. Note that a handler method for a verified expectation also shouldn't intentionally throw exceptions or
- errors, since the verified invocation(s) already happened in the replay phase; any exception/error actually thrown
- will simply propagate back to the test method.
- <p/>
- Just like with <a href="../mockit/Delegate.html" title="interface in mockit">delegate classes</a>, the handler method can declare its first parameter
- as being of type <a href="../mockit/Invocation.html" title="class in mockit"><code>Invocation</code></a>.
+ The validation method can optionally declare its first parameter as being of type <a href="../mockit/Invocation.html" title="class in mockit"><code>Invocation</code></a>.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#forEachInvocation">In the
  Tutorial</a></div>
@@ -1124,12 +1113,13 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
  <p/>
  The given delegate object is assumed to be an instance of an <em>invocation handler</em> class, similar to those
  used with the <a href="../mockit/VerificationsInOrder.html#forEachInvocation">forEachInvocation</a> field.
- The non-<code>private</code> <em>handler method</em> must have a single parameter of a type capable of receiving
- the relevant argument values.
+ The non-<code>private</code> <em>handler method</em> must have a single parameter capable of receiving the
+ relevant argument values.
  The name of this handler method does not matter.
- Its return type, on the other hand, should either be <code>boolean</code> or <code>void</code>.
+ <p/>
+ The handler's return type, on the other hand, should be <code>boolean</code> or <code>void</code>.
  In the first case, a return value of <code>true</code> will indicate a successful match for the actual invocation
- argument at replay time, while a return of <code>false</code> will cause the test to fail.
+ argument at replay time, while a return of <code>false</code> will fail to match the invocation.
  In the case of a <code>void</code> return type, the handler method should validate the actual invocation argument
  through an <code>assert</code> statement or a JUnit/TestNG assertion.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>delegateObjectWithInvocationHandlerMethod</code> - an instance of a class with an appropriate invocation handler
@@ -1430,7 +1420,7 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 </ul>
-<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></em></div>
+<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top><img src=resources/logo.png>JMockit Home</a></em></div>
 </div>
 <div class="subNav">
 <ul class="navList">

@@ -27,7 +27,7 @@
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 </ul>
-<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></em></div>
+<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top><img src=resources/logo.png>JMockit Home</a></em></div>
 </div>
 <div class="subNav">
 <ul class="navList">
@@ -253,8 +253,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <tr class="rowColor">
 <td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#forEachInvocation">forEachInvocation</a></strong></code>
-<div class="block">An object assigned to this field will be taken as a handler for each invocation matching the current expectation,
- with the purpose of validating invocation arguments.</div>
+<div class="block">An object assigned to this field will be called back for each invocation matching the current expectation,
+ in order to validate invocation arguments.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -614,22 +614,26 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <pre>protected static&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> result</pre>
 <div class="block">A value assigned to this field will be taken as the result for the current expectation.
  <p/>
- If the value is of type <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang"><code>Throwable</code></a> then it will be <em>thrown</em> when a matching invocation occurs in the
+ If the value is a <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang"><code>Throwable</code></a> then it will be <em>thrown</em> when a matching invocation occurs in the
  replay phase.
  Otherwise, it's assumed to be a <em>return value</em> for a non-void method, and will be returned at replay time
  from a matching invocation.
+ If the current expectation is for a method which actually <em>returns</em> an exception or error (as opposed to
+ <em>throwing</em> one), then the <a href="../mockit/Expectations.html#returns(java.lang.Object)"><code>returns(Object)</code></a> method should be used instead, as it only applies to
+ return values.
  <p/>
  Attempting to return a value that is incompatible with the method return type will cause a
  <code>ClassCastException</code> to be thrown at replay time.
  If, however, the recorded invocation is to a constructor or <code>void</code> method, then a matching invocation during
- replay will be allowed, with the specified return value simply being ignored.
- <p/>
- If the current expectation is for a method which actually <em>returns</em> an exception or error (as opposed to
- <em>throwing</em> one), then the <a href="../mockit/Expectations.html#returns(java.lang.Object)"><code>returns(Object)</code></a> method should be used instead.
+ replay will be allowed, with the specified return value disregarded.
  <p/>
  If the value assigned to the field is an array or of a type assignable to <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang"><code>Iterable</code></a> or to <a href="http://download.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util"><code>Iterator</code></a>,
- then it is taken as a sequence of <em>consecutive results</em> for the current expectation.
- Another way to specify consecutive results is to simply write multiple consecutive assignments to the field.
+ then it is taken as a sequence of <em>consecutive results</em> for the current expectation, as long as the method
+ return type is not itself of an equivalent array/iterable/iterator type.
+ Another way to specify consecutive results is to simply write multiple consecutive assignments to the field, for
+ the same expectation.
+ <p/>
+ Finally, custom results can be provided through a <a href="../mockit/Delegate.html" title="interface in mockit">Delegate</a> object assigned to the field.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#results">In the Tutorial</a></div>
 <dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Expectations.html#returns(java.lang.Object)"><code>returns(Object)</code></a>, 
@@ -782,34 +786,23 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <li class="blockList">
 <h4>forEachInvocation</h4>
 <pre>protected static&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> forEachInvocation</pre>
-<div class="block">An object assigned to this field will be taken as a handler for each invocation matching the current expectation,
- with the purpose of validating invocation arguments.
- Note that for a <em>recorded</em> expectation such invocations are the ones that will be executed during the
- <em>replay</em> phase, while for a <em>verified</em> expectation they are the ones actually executed during that
- phase.
+<div class="block">An object assigned to this field will be called back for each invocation matching the current expectation,
+ in order to validate invocation arguments.
  <p/>
- The object assigned can be of any type, provided its class has a single non-private method
- (therefore, additional methods are allowed and ignored, as long as they are <code>private</code>).
- This <em>handler method</em> can have any name, as long as its parameters match the ones defined in the mocked
+ Said object can be of any type, provided its class has a single non-private method
+ (additional methods are allowed and ignored, as long as they are <code>private</code>).
+ This <em>validation method</em> can have any name, provided its parameters match the ones defined in the mocked
  method or constructor associated with the expectation.
  Corresponding parameters don't need to have the exact same declared type, though, as long as each possible
- invocation argument can be passed to the corresponding parameter in the handler method.
+ invocation argument can be passed to the corresponding parameter in the validation method.
  <p/>
- In the case of an expectation recorded for a non-<code>void</code> method, the handler method is also responsible for
- returning appropriate values to be used by the caller (which normally belongs to the code under test).
- That is, the <code>result</code> field or the <code>returns(...)</code> method should <em>not</em> be used together with an
- assignment to this field.
- The same observation applies to the throwing of exceptions/errors from a recorded expectation
- (which can also be done for constructors and <code>void</code> methods).
+ The return type of the validation method should be either <code>boolean</code> or <code>void</code>.
+ In the first case, a return value of <code>true</code> means the invocation is valid, while <code>false</code> causes the
+ test to fail with an appropriate error message.
+ In the second case, invocation arguments should be validated through regular assertions (Java
+ <code>assert</code>s and/or JUnit/TestNG methods).
  <p/>
- When used for an expectation inside a <em>verification</em> block, on the other hand, the handler method should
- normally have a <code>void</code> return type. Any value eventually returned by the method will be silently ignored in
- this case. Note that a handler method for a verified expectation also shouldn't intentionally throw exceptions or
- errors, since the verified invocation(s) already happened in the replay phase; any exception/error actually thrown
- will simply propagate back to the test method.
- <p/>
- Just like with <a href="../mockit/Delegate.html" title="interface in mockit">delegate classes</a>, the handler method can declare its first parameter
- as being of type <a href="../mockit/Invocation.html" title="class in mockit"><code>Invocation</code></a>.
+ The validation method can optionally declare its first parameter as being of type <a href="../mockit/Invocation.html" title="class in mockit"><code>Invocation</code></a>.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#forEachInvocation">In the
  Tutorial</a></div>
@@ -1343,12 +1336,13 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  <p/>
  The given delegate object is assumed to be an instance of an <em>invocation handler</em> class, similar to those
  used with the <a href="../mockit/Expectations.html#forEachInvocation">forEachInvocation</a> field.
- The non-<code>private</code> <em>handler method</em> must have a single parameter of a type capable of receiving
- the relevant argument values.
+ The non-<code>private</code> <em>handler method</em> must have a single parameter capable of receiving the
+ relevant argument values.
  The name of this handler method does not matter.
- Its return type, on the other hand, should either be <code>boolean</code> or <code>void</code>.
+ <p/>
+ The handler's return type, on the other hand, should be <code>boolean</code> or <code>void</code>.
  In the first case, a return value of <code>true</code> will indicate a successful match for the actual invocation
- argument at replay time, while a return of <code>false</code> will cause the test to fail.
+ argument at replay time, while a return of <code>false</code> will fail to match the invocation.
  In the case of a <code>void</code> return type, the handler method should validate the actual invocation argument
  through an <code>assert</code> statement or a JUnit/TestNG assertion.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>delegateObjectWithInvocationHandlerMethod</code> - an instance of a class with an appropriate invocation handler
@@ -1649,7 +1643,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 </ul>
-<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top>JMockit Home</a></em></div>
+<div class="aboutLanguage"><em><a href=http://code.google.com/p/jmockit target=_top><img src=resources/logo.png>JMockit Home</a></em></div>
 </div>
 <div class="subNav">
 <ul class="navList">
