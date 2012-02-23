@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package integrationTests;
@@ -28,13 +28,9 @@ public final class ClassInitializationTest
    @Test
    public void usingMockUp()
    {
-      new MockUp<ClassWhichFailsAtInitialization>()
-      {
-         @Mock
-         void $clinit() {}
-
-         @Mock
-         int value() { return 1; }
+      new MockUp<ClassWhichFailsAtInitialization>() {
+         @Mock void $clinit() {}
+         @Mock int value() { return 1; }
       };
 
       assertEquals(1, ClassWhichFailsAtInitialization.value());
@@ -50,9 +46,8 @@ public final class ClassInitializationTest
    @Test
    public void usingExpectations()
    {
-      new Expectations()
-      {
-         ClassWhichFailsAtInitialization unused;
+      new Expectations() {
+         @Mocked(stubOutClassInitialization = true) ClassWhichFailsAtInitialization unused;
 
          {
             ClassWhichFailsAtInitialization.value(); result = 1;
@@ -72,8 +67,7 @@ public final class ClassInitializationTest
    @Test
    public void mockClassWithStaticInitializerNotStubbedOut()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          @Mocked(stubOutClassInitialization = false)
          final ClassWithStaticInitializer1 mock = null;
       };
