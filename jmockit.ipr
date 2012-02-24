@@ -1522,6 +1522,21 @@
             </SvnBranchConfiguration>
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/www">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://jmockit.googlecode.com/svn/branches" />
+                  <option value="https://jmockit.googlecode.com/svn/maven-repo" />
+                  <option value="https://jmockit.googlecode.com/svn/tags" />
+                  <option value="https://jmockit.googlecode.com/svn/wiki" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://jmockit.googlecode.com/svn/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
       </map>
     </option>
     <option name="mySupportsUserInfoFilter" value="true" />
