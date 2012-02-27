@@ -88,15 +88,14 @@ public final class MyBusinessService
    ORM API, such as Hibernate or JPA).
 </p>
 <p>
-   So, how can we unit test the "doBusinessOperationXyz" method without making any changes to the
-   existing application code?
+   So, how can we unit test the "doBusinessOperationXyz" method without making any changes to the existing application
+   code?
    JMockit actually provides three different APIs that can be used, each capable enough for our needs.
    (In practice, the first two APIs are just subsets of a larger <em>behavior-oriented</em> mocking API; the other one,
    which can be described as an <em>state-oriented</em> mocking API, is truly different and unique.)
    We will see how to use each one of them in the following sections.
-   In every situation, a JUnit test case will verify the invocations of interest made from the unit
-   under test to its external dependencies. These invocations are the ones at points <code>(1)</code>-<code>(4)</code>,
-   indicated above.
+   In every situation, a JUnit test case will verify the invocations of interest made from the unit under test to its
+   external dependencies. These invocations are the ones at points <code>(1)</code>-<code>(4)</code>, indicated above.
 </p>
 
 <h3 id="expectations">
@@ -123,7 +122,7 @@ import mockit.*;
 
 public final class MyBusinessService_ExpectationsAPI_Test
 {
-   @Mocked final Database unused = null;
+   @Mocked(stubOutClassInitialization = true) final Database unused = null;
    @NonStrict SimpleEmail email; // calls to setters are unimportant, so we make it non-strict
 
    @Test
@@ -185,8 +184,14 @@ public final class MyBusinessService_ExpectationsAPI_Test
    By default, all methods of a class declared as a mocked type will be <em>mocked</em>, that is, they will be modified
    so that the actual method implementation in production code is never executed as long as the type stays mocked.
    The same holds true for the constructors of a mocked class.
+   Class initialization code (in <code>static</code> blocks and/or non-compile time assignments to <code>static</code>
+   fields) can be <em>stubbed out</em> when needed, as done above for the
+   <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/src/jmockit/tutorial/infrastructure/Database.java">Database</a>
+   class. (This isn't done by default because the JVM can only initialize a class <em>once</em>.)
+</p>
+<p>
    Notice that JMockit Expectations does not create any mock subclasses for concrete mocked classes;
-   instead, it directly modifies the actual implementation of the mocked class. 
+   instead, it directly modifies the actual implementation of the mocked class.
    On the other hand, methods of an interface and <code>abstract</code> methods do not contain any implementation to be
    modified.
    In such cases, an empty implementation body is provided in a concrete implementation class.
@@ -301,7 +306,7 @@ import mockit.*;
 public final class MyBusinessService_VerificationsAPI_Test
 {
    @Tested MyBusinessService service; // instantiated automatically
-   @Mocked Database onlyStatics;
+   @Mocked(stubOutClassInitialization = true) Database onlyStatics;
    @Capturing Email email; // concrete subclass mocked on demand, when loaded
 
    final EntityX data = new EntityX(5, "abc", "someone@somewhere.com");
