@@ -64,25 +64,29 @@ public final class RecordAndReplayExecution
    public RecordAndReplayExecution(Expectations targetObject, Object... classesOrInstancesToBePartiallyMocked)
    {
       TestRun.enterNoMockingZone();
-      TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(true);
+      ExecutingTest executingTest = TestRun.getExecutingTest();
+      executingTest.setShouldIgnoreMockingCallbacks(true);
 
       try {
-         RecordAndReplayExecution previous = TestRun.getExecutingTest().getRecordAndReplay();
+         RecordAndReplayExecution previous = executingTest.getRecordAndReplay();
 
          if (previous == null) {
             executionState = new PhasedExecutionState();
             lastExpectationIndexInPreviousReplayPhase = 0;
+            typesAndTargetObjects = new HashMap<Type, Object>(2);
          }
          else {
             executionState = previous.executionState;
             lastExpectationIndexInPreviousReplayPhase = previous.getLastExpectationIndexInPreviousReplayPhase();
+            typesAndTargetObjects = previous.typesAndTargetObjects;
          }
 
          failureState = new FailureState();
-         recordPhase = new RecordPhase(this, targetObject instanceof NonStrictExpectations);
+
+         boolean nonStrict = targetObject instanceof NonStrictExpectations;
+         recordPhase = new RecordPhase(this, nonStrict);
 
          LocalFieldTypeRedefinitions redefs = new LocalFieldTypeRedefinitions(targetObject);
-         typesAndTargetObjects = previous == null ? new HashMap<Type, Object>(2) : previous.typesAndTargetObjects;
          redefineFieldTypes(redefs);
          redefinitions = redefs.getTypesRedefined() == 0 ? null : redefs;
 
@@ -91,10 +95,10 @@ public final class RecordAndReplayExecution
          validateRecordingContext();
          validateThereIsAtLeastOneMockedTypeInScope();
          discoverMockedTypesAndInstancesForMatchingOnInstance();
-         TestRun.getExecutingTest().setRecordAndReplay(this);
+         executingTest.setRecordAndReplay(this);
       }
       finally {
-         TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(false);
+         executingTest.setShouldIgnoreMockingCallbacks(false);
          TestRun.exitNoMockingZone();
       }
    }
