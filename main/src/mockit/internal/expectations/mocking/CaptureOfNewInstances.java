@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
@@ -28,7 +28,7 @@ class CaptureOfNewInstances extends CaptureOfImplementations
 
       private boolean isInstanceAlreadyCaptured(Object mock)
       {
-         return instancesCaptured.contains(mock);
+         return Utilities.containsReference(instancesCaptured, mock);
       }
 
       private boolean captureInstance(Object fieldOwner, Object instance)
