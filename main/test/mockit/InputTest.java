@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -297,13 +297,13 @@ public final class InputTest
    }
 
    @Test(expected = FileNotFoundException.class)
-   public void specifyDefaultExceptionByCombiningInputFieldsWithDynamicPartialMocking() throws IOException
+   public void specifyDefaultExceptionByCombiningInputFieldsWithDynamicPartialMocking() throws Exception
    {
-      new Expectations(File.class) {
+      new NonStrictExpectations(File.class) {
          @Input IOException defaultCalendar = new FileNotFoundException();
       };
 
-      File.createTempFile("", "");
+      File.createTempFile("abc", "");
    }
 
    public static class GenericClass<T>
