@@ -83,7 +83,7 @@ public final class TestNGDecoratorTest extends BaseTestNGDecoratorTest
    {
       new MockUp<LoginContext>() {
          @Mock(minInvocations = 1)
-         void $init(String name) { assert "test".equals(name); }
+         void $init(String name) { assertEquals(name, "test"); }
 
          @Mock(invocations = 1)
          void login() {}

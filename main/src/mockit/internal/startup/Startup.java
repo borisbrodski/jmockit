@@ -68,7 +68,7 @@ public final class Startup
    {
       instrumentation = inst;
       new JMockitInitialization().initialize(initializeTestNG);
-      inst.addTransformer(new JMockitTransformer());
+      inst.addTransformer(new ProxyClassfileSavingTransformer());
       inst.addTransformer(new ExpectationsTransformer(inst));
    }
 

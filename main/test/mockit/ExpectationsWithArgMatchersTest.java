@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -9,6 +9,7 @@ import java.util.*;
 
 import org.hamcrest.*;
 import org.hamcrest.core.*;
+import static org.junit.Assert.*;
 import org.junit.*;
 
 public final class ExpectationsWithArgMatchersTest
@@ -307,7 +308,7 @@ public final class ExpectationsWithArgMatchersTest
          mock.setValue(with(0.0, new Object() {
             void validate(double value)
             {
-               assert value >= 20.0 && value <= 80.0 : "value outside of 20-80 range";
+               assertTrue("value outside of 20-80 range", value >= 20.0 && value <= 80.0);
             }
          }));
       }};

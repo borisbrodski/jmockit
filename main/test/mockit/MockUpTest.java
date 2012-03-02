@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -13,7 +13,7 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings({"deprecation"})
+@SuppressWarnings("deprecation")
 public final class MockUpTest
 {
    @Deprecated
@@ -26,7 +26,7 @@ public final class MockUpTest
 
       @Ignore("test") int doSomething(@Deprecated String s) { return s.length(); }
 
-      @SuppressWarnings({"UnusedDeclaration"})
+      @SuppressWarnings("UnusedDeclaration")
       <N extends Number> N genericMethod(N n) { return null; }
 
       @Deprecated static boolean doSomethingElse() { return false; }
@@ -290,7 +290,7 @@ public final class MockUpTest
    {
       new MockUp<Collaborator>() {
          @Mock void $init() {}
-         @Mock int doSomething(String s) { assert s != null; return 123; }
+         @Mock int doSomething(String s) { assertNotNull(s); return 123; }
          @Mock(reentrant = true) boolean doSomethingElse() { return true; }
       };
 

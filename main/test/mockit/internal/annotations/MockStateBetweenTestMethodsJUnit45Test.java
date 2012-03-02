@@ -4,11 +4,12 @@
  */
 package mockit.internal.annotations;
 
+import static org.junit.Assert.*;
 import org.junit.*;
 
 import mockit.*;
 import mockit.external.asm4.*;
-import mockit.internal.annotations.MockStateBetweenTestMethodsJUnit45Test.TheMockClass;
+import mockit.internal.annotations.MockStateBetweenTestMethodsJUnit45Test.*;
 import mockit.internal.state.*;
 
 @UsingMocksAndStubs(TheMockClass.class)
@@ -31,10 +32,10 @@ public final class MockStateBetweenTestMethodsJUnit45Test
       {
          MockState mockState = TestRun.getMockClasses().getMockStates().getMockState(internalName, 0);
 
-         assert mockState.isWithExpectations();
-         assert !mockState.isReentrant();
-         assert !mockState.isOnReentrantCall();
-         assert mockState.getTimesInvoked() == expectedInvocationCount;
+         assertTrue(mockState.isWithExpectations());
+         assertFalse(mockState.isReentrant());
+         assertFalse(mockState.isOnReentrantCall());
+         assertEquals(expectedInvocationCount, mockState.getTimesInvoked());
       }
    }
 

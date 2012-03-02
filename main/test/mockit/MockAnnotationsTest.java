@@ -418,7 +418,7 @@ public final class MockAnnotationsTest
    static class MockSubCollaborator
    {
       @Mock(invocations = 1)
-      void $init(int i) { assert i == 31; }
+      void $init(int i) { assertEquals(31, i); }
 
       @SuppressWarnings("UnusedDeclaration")
       native void doNothing();

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.timing;
 
 import static org.jdesktop.animation.timing.Animator.*;
-
+import static org.junit.Assert.*;
 import org.junit.*;
 
 import mockit.*;
@@ -17,19 +17,16 @@ public final class AnimatorTimingSourceTest
    {
       final Animator animator = new Animator(500);
 
-      new Expectations()
-      {
-         {
-            // Expectations for setTimer:
-            timingSource.addEventListener(withInstanceOf(TimingEventListener.class));
-            timingSource.setResolution(animator.getResolution());
-            timingSource.setStartDelay(animator.getStartDelay());
+      new Expectations() {{
+         // Expectations for setTimer:
+         timingSource.addEventListener(withInstanceOf(TimingEventListener.class));
+         timingSource.setResolution(animator.getResolution());
+         timingSource.setStartDelay(animator.getStartDelay());
 
-            // Expectations for notification of events:
-            timingSource.start();
-            timingSource.stop();
-         }
-      };
+         // Expectations for notification of events:
+         timingSource.start();
+         timingSource.stop();
+      }};
 
       animator.setTimer(timingSource);
       animator.start();
@@ -41,15 +38,12 @@ public final class AnimatorTimingSourceTest
    {
       Animator animator = new Animator(50);
 
-      new Expectations()
-      {
-         {
-            timingSource.addEventListener(withInstanceOf(TimingEventListener.class));
-            timingSource.setResolution(anyInt);
-            timingSource.setStartDelay(anyInt);
-            timingSource.removeEventListener(withInstanceOf(TimingEventListener.class));
-         }
-      };
+      new Expectations() {{
+         timingSource.addEventListener(withInstanceOf(TimingEventListener.class));
+         timingSource.setResolution(anyInt);
+         timingSource.setStartDelay(anyInt);
+         timingSource.removeEventListener(withInstanceOf(TimingEventListener.class));
+      }};
 
       animator.setTimer(timingSource);
       animator.setTimer(null);
@@ -76,8 +70,7 @@ public final class AnimatorTimingSourceTest
       Animator animator = new Animator(50);
       final TimingSource timingSource = new EmptyTimingSource();
 
-      new Expectations()
-      {
+      new Expectations() {
          @Capturing
          private TimingEventListener timingEventTarget;
 
@@ -97,8 +90,7 @@ public final class AnimatorTimingSourceTest
       TimingSource timingSource = new EmptyTimingSource();
       animator.setTimer(timingSource);
 
-      new Expectations()
-      {
+      new Expectations() {
          TimingTarget timingTarget;
 
          {
@@ -121,8 +113,7 @@ public final class AnimatorTimingSourceTest
       TimingSource timingSource = new EmptyTimingSource();
       animator.setTimer(timingSource);
 
-      new Expectations()
-      {
+      new Expectations() {
          TimingTarget timingTarget;
 
          {
@@ -146,8 +137,7 @@ public final class AnimatorTimingSourceTest
       TimingSource timingSource = new EmptyTimingSource();
       animator.setTimer(timingSource);
 
-      new Expectations()
-      {
+      new Expectations() {
          @Mocked("nanoTime") final System system = null;
          @Mocked TimingTarget timingTarget;
 
@@ -178,8 +168,7 @@ public final class AnimatorTimingSourceTest
       TimingSource timingSource = new EmptyTimingSource();
       animator.setTimer(timingSource);
 
-      new Expectations()
-      {
+      new Expectations() {
          @Mocked("nanoTime") final System system = null;
          @Mocked TimingTarget timingTarget;
 
@@ -191,12 +180,8 @@ public final class AnimatorTimingSourceTest
             timingTarget.begin();
             timingTarget.repeat();
             timingTarget.timingEvent(anyFloat);
-            forEachInvocation = new Object()
-            {
-               void validate(float item)
-               {
-                  assert item > 0.0f;
-               }
+            forEachInvocation = new Object() {
+               void validate(float item) { assertTrue(item > 0.0f); }
             };
          }
       };

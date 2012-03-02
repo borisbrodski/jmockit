@@ -117,8 +117,7 @@ abstract class Invocations
     * The return type of the validation method should be either {@code boolean} or {@code void}.
     * In the first case, a return value of {@code true} means the invocation is valid, while {@code false} causes the
     * test to fail with an appropriate error message.
-    * In the second case, invocation arguments should be validated through regular assertions (Java
-    * <code>assert</code>s and/or JUnit/TestNG methods).
+    * In the second case, invocation arguments should be validated through regular JUnit/TestNG assertion methods.
     * <p/>
     * The validation method can optionally declare its first parameter as being of type {@link mockit.Invocation}.
     * <p/>
@@ -240,7 +239,7 @@ abstract class Invocations
     * In the first case, a return value of {@code true} will indicate a successful match for the actual invocation
     * argument at replay time, while a return of {@code false} will cause the test to fail.
     * In the case of a {@code void} return type, instead of returning a value the handler method should validate the
-    * actual invocation argument through an {@code assert} statement or a JUnit/TestNG assertion.
+    * actual invocation argument through a JUnit/TestNG assertion.
     * <p/>
     * For additional details, refer to {@link #withEqual(Object)}.
     *
@@ -301,7 +300,7 @@ abstract class Invocations
     * In the first case, a return value of {@code true} will indicate a successful match for the actual invocation
     * argument at replay time, while a return of {@code false} will fail to match the invocation.
     * In the case of a {@code void} return type, the handler method should validate the actual invocation argument
-    * through an {@code assert} statement or a JUnit/TestNG assertion.
+    * through a JUnit/TestNG assertion.
     *
     * @param delegateObjectWithInvocationHandlerMethod an instance of a class with an appropriate invocation handler
     * method

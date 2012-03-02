@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package orderMngr.domain.order;
@@ -30,8 +30,7 @@ public final class OrderFindersTest
       order.getItems().add(orderItem);
 
       // Record expectations:
-      new Expectations()
-      {
+      new Expectations() {
          ResultSet rs2;
 
          {
@@ -66,28 +65,20 @@ public final class OrderFindersTest
       final String customerId = "Cust";
       order = new Order(890, customerId);
 
-      new Expectations()
-      {
-         {
-            Database.executeQuery(withMatch("select.+from\\s+order.*where.+customer_id\\s*=\\s*\\?"), customerId);
-            result = rs;
+      new Expectations() {{
+         Database.executeQuery(withMatch("select.+from\\s+order.*where.+customer_id\\s*=\\s*\\?"), customerId);
+         result = rs;
 
-            rs.next(); result = true;
-            rs.getInt(1); result = order.getNumber();
-            invoke(repository, "loadOrderItems", order);
-            rs.next(); result = false;
-         }
-      };
+         rs.next(); result = true;
+         rs.getInt(1); result = order.getNumber();
+         invoke(repository, "loadOrderItems", order);
+         rs.next(); result = false;
+      }};
 
       List<Order> found = repository.findByCustomer(customerId);
 
-      assert found.contains(order) : "Order not found by customer id";
+      assertTrue("Order not found by customer id", found.contains(order));
 
-      new Verifications()
-      {
-         {
-            Database.closeStatement(rs);
-         }
-      };
+      new Verifications() {{ Database.closeStatement(rs); }};
    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -46,20 +46,20 @@ public final class CascadingParametersAndLocalFieldsTest
    @Test
    public void cascadeOneLevelDuringReplay(@Cascading Foo foo)
    {
-      assert foo.getBar().doSomething() == 0;
-      assert Foo.globalBar().doSomething() == 0;
-      assert foo.getBar() != Foo.globalBar();
+      assertEquals(0, foo.getBar().doSomething());
+      assertEquals(0, Foo.globalBar().doSomething());
+      assertNotSame(foo.getBar(), Foo.globalBar());
 
       foo.doSomething("test");
-      assert foo.getIntValue() == 0;
-      assert foo.getBooleanValue() == null;
-      assert foo.getList().isEmpty();
+      assertEquals(0, foo.getIntValue());
+      assertNull(foo.getBooleanValue());
+      assertTrue(foo.getList().isEmpty());
    }
 
    @Test
    public void verifyThatAllCascadedInstancesHaveBeenDiscarded(Foo foo)
    {
-      assert foo.getBar() == null;
+      assertNull(foo.getBar());
    }
 
    @Test
@@ -67,7 +67,7 @@ public final class CascadingParametersAndLocalFieldsTest
    {
       foo.getBar();
       
-      assert "notMocked".equals(Bar.staticMethod());
+      assertEquals("notMocked", Bar.staticMethod());
       
       try {
          new Bar();
@@ -80,9 +80,9 @@ public final class CascadingParametersAndLocalFieldsTest
    public void verifyThatStaticMethodsAndConstructorsAreMockedWhenCascadedMockIsMockedNormally(
       @Cascading Foo mockFoo, @Mocked Bar mockBar)
    {
-      assert mockFoo.getBar() == mockBar;
-      assert mockBar.doSomething() == 0;
-      assert Bar.staticMethod() == null;
+      assertSame(mockBar, mockFoo.getBar());
+      assertEquals(0, mockBar.doSomething());
+      assertNull(Bar.staticMethod());
       new Bar();
    }
 
@@ -106,12 +106,12 @@ public final class CascadingParametersAndLocalFieldsTest
 
       Foo foo = new Foo();
       foo.doSomething("1");
-      assert foo.getBar().doSomething() == 2;
+      assertEquals(2, foo.getBar().doSomething());
       foo.doSomething("2");
-      assert Foo.globalBar().doSomething() == 3;
-      assert foo.getBooleanValue();
-      assert foo.getIntValue() == -1;
-      assert list == foo.getList();
+      assertEquals(3, Foo.globalBar().doSomething());
+      assertTrue(foo.getBooleanValue());
+      assertEquals(-1, foo.getIntValue());
+      assertSame(list, foo.getList());
    }
 
    @Test
@@ -123,10 +123,10 @@ public final class CascadingParametersAndLocalFieldsTest
 
       Foo.globalBar().doSomething();
 
-      assert foo.getIntValue() == 0;
-      assert foo.getBooleanValue() == null;
+      assertEquals(0, foo.getIntValue());
+      assertNull(foo.getBooleanValue());
 
-      assert foo.getList().isEmpty();
+      assertTrue(foo.getList().isEmpty());
 
       new Verifications() {{
          foo.getBar().doSomething(); minTimes = 2;
@@ -160,8 +160,8 @@ public final class CascadingParametersAndLocalFieldsTest
       };
 
       Foo foo = new Foo();
-      assert foo.getBar().doSomething() == 1;
-      assert Foo.globalBar().doSomething() == 2;
+      assertEquals(1, foo.getBar().doSomething());
+      assertEquals(2, Foo.globalBar().doSomething());
 
       Baz baz = foo.getBar().getBaz();
       baz.runIt();
@@ -213,7 +213,7 @@ public final class CascadingParametersAndLocalFieldsTest
 
          {
             ProcessBuilder sameBuilder = pb.directory((File) any);
-            assert pb == sameBuilder;
+            assertSame(sameBuilder, pb);
 
             Process process = sameBuilder.start();
             process.getOutputStream().write(5);
@@ -224,7 +224,7 @@ public final class CascadingParametersAndLocalFieldsTest
       Process process = new ProcessBuilder("test").directory(new File("myDir")).start();
       process.getOutputStream().write(5);
       process.getOutputStream().flush();
-      assert process.exitValue() == 1;
+      assertEquals(1, process.exitValue());
    }
 
    // Tests using java.net classes ////////////////////////////////////////////////////////////////////////////////////
@@ -255,8 +255,8 @@ public final class CascadingParametersAndLocalFieldsTest
          sf.createSocket(anyString, 80); result = null;
       }};
 
-      assert sf.createSocket("expected", 80) == null;
-      assert sf.createSocket("unexpected", 8080) != null;
+      assertNull(sf.createSocket("expected", 80));
+      assertNotNull(sf.createSocket("unexpected", 8080));
    }
 
    @Test
@@ -268,7 +268,7 @@ public final class CascadingParametersAndLocalFieldsTest
          sf.createSocket().getOutputStream(); result = out;
       }};
 
-      assert out == sf.createSocket().getOutputStream();
+      assertSame(out, sf.createSocket().getOutputStream());
 
       new FullVerifications() {{ sf.createSocket().getOutputStream(); }};
    }
@@ -285,8 +285,8 @@ public final class CascadingParametersAndLocalFieldsTest
          sf2.createSocket().getOutputStream(); result = out2;
       }};
 
-      assert out1 == sf1.createSocket().getOutputStream();
-      assert out2 == sf2.createSocket().getOutputStream();
+      assertSame(out1, sf1.createSocket().getOutputStream());
+      assertSame(out2, sf2.createSocket().getOutputStream());
 
       new FullVerificationsInOrder() {{
          sf1.createSocket().getOutputStream();
@@ -305,10 +305,10 @@ public final class CascadingParametersAndLocalFieldsTest
          sf.createSocket(anyString, 81).getPort(); result = 4;
       }};
 
-      assert sf.createSocket().getPort() == 1;
-      assert sf.createSocket("first", 80).getPort() == 2;
-      assert sf.createSocket("second", 80).getPort() == 3;
-      assert sf.createSocket("third", 81).getPort() == 4;
+      assertEquals(1, sf.createSocket().getPort());
+      assertEquals(2, sf.createSocket("first", 80).getPort());
+      assertEquals(3, sf.createSocket("second", 80).getPort());
+      assertEquals(4, sf.createSocket("third", 81).getPort());
 
       new Verifications() {{
          sf.createSocket("first", 80).getPort();
@@ -322,7 +322,7 @@ public final class CascadingParametersAndLocalFieldsTest
    @Test
    public void cascadeOnInheritedMethod(@Cascading SocketChannel sc)
    {
-      assert sc.provider() != null;
+      assertNotNull(sc.provider());
    }
 
    @Test
@@ -334,7 +334,7 @@ public final class CascadingParametersAndLocalFieldsTest
       }};
 
       sf.createSocket("second", 80).getChannel().close();
-      assert sf.createSocket("first", 80).getKeepAlive();
+      assertTrue(sf.createSocket("first", 80).getKeepAlive());
       sf.createSocket("first", 8080).getChannel().provider().openPipe();
 
       new Verifications() {{

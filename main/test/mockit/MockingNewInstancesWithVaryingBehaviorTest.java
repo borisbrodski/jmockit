@@ -54,7 +54,7 @@ public final class MockingNewInstancesWithVaryingBehaviorTest
          @Mock
          String format(Date d)
          {
-            assert d != null;
+            assertNotNull(d);
             if (it == dateFormat) return FORMATTED_DATE;
             else if (it == hourFormat) return FORMATTED_TIME;
             else return null;
@@ -81,7 +81,7 @@ public final class MockingNewInstancesWithVaryingBehaviorTest
          @Mock
          String format(Invocation inv, Date d)
          {
-            assert d != null;
+            assertNotNull(d);
             DateFormat dt = inv.getInvokedInstance();
             if (dt == dateFormat) return FORMATTED_DATE;
             else if (dt == hourFormat) return FORMATTED_TIME;

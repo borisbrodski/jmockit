@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
 
 import org.junit.*;
+import static org.junit.Assert.*;
 
 import mockit.internal.util.*;
 
 @SuppressWarnings({
-   "ObjectEqualsNull", "EqualsBetweenInconvertibleTypes", "LiteralAsArgToStringEquals", "FinalizeCalledExplicitly"})
+   "ObjectEqualsNull", "EqualsBetweenInconvertibleTypes", "LiteralAsArgToStringEquals", "FinalizeCalledExplicitly", "SimplifiableJUnitAssertion"})
 public final class ObjectOverridesTest
 {
    @Test
@@ -27,20 +28,20 @@ public final class ObjectOverridesTest
 
    private void assertDefaultEqualsBehavior(Object a, Object b)
    {
-      assert !a.equals(null);
-      assert !a.equals("test");
-      assert a.equals(a);
-      assert !a.equals(b);
+      assertFalse(a.equals(null));
+      assertFalse(a.equals("test"));
+      assertTrue(a.equals(a));
+      assertFalse(a.equals(b));
    }
 
    private void assertDefaultHashCodeBehavior(Object a)
    {
-      assert a.hashCode() == System.identityHashCode(a);
+      assertEquals(System.identityHashCode(a), a.hashCode());
    }
 
    private void assertDefaultToStringBehavior(Object a)
    {
-      assert a.toString().equals(Utilities.objectIdentity(a));
+      assertEquals(Utilities.objectIdentity(a), a.toString());
    }
 
    @Mocked ClassWithObjectOverrides a;
@@ -65,131 +66,101 @@ public final class ObjectOverridesTest
    @Test
    public void mockOverrideOfEqualsMethod()
    {
-      new Expectations()
-      {
-         {
-            a.equals(null); result = true;
-            a.equals(anyString); result = true;
-         }
-      };
+      new Expectations() {{
+         a.equals(null); result = true;
+         a.equals(anyString); result = true;
+      }};
 
-      new NonStrictExpectations()
-      {
-         {
-            b.equals(a); result = true;
-         }
-      };
+      new NonStrictExpectations() {{
+         b.equals(a); result = true;
+      }};
 
-      assert a.equals(null);
-      assert a.equals("test");
-      assert b.equals(a);
+      assertTrue(a.equals(null));
+      assertTrue(a.equals("test"));
+      assertTrue(b.equals(a));
    }
 
    @Test
    public void mockOverrideOfHashCodeMethod()
    {
-      assert a.hashCode() != b.hashCode();
+      assertTrue(a.hashCode() != b.hashCode());
 
-      new NonStrictExpectations()
-      {
-         {
-            a.hashCode(); result = 123;
-            b.hashCode(); result = 45; times = 1;
-         }
-      };
+      new NonStrictExpectations() {{
+         a.hashCode(); result = 123;
+         b.hashCode(); result = 45; times = 1;
+      }};
 
-      assert a.hashCode() == 123;
-      assert b.hashCode() == 45;
+      assertEquals(123, a.hashCode());
+      assertEquals(45, b.hashCode());
    }
 
    @Test
    public void mockOverrideOfToStringMethod()
    {
-      assert !a.toString().equals(b.toString());
+      assertFalse(a.toString().equals(b.toString()));
 
-      new NonStrictExpectations()
-      {
-         {
-            a.toString(); result = "mocked";
-         }
-      };
+      new NonStrictExpectations() {{
+         a.toString(); result = "mocked";
+      }};
 
-      assert "mocked".equals(a.toString());
+      assertTrue("mocked".equals(a.toString()));
 
-      new Verifications()
-      {
-         {
-            a.toString();
-            b.toString(); times = 1;
-         }
-      };
+      new Verifications() {{
+         a.toString();
+         b.toString(); times = 1;
+      }};
    }
 
    @Test
    public void mockOverrideOfCloneMethod()
    {
-      new Expectations()
-      {
-         {
-            a.clone(); result = b;
-         }
-      };
+      new Expectations() {{
+         a.clone(); result = b;
+      }};
 
-      assert a.clone() == b;
+      assertSame(b, a.clone());
    }
 
    @Test
    public void allowAnyInvocationsOnOverriddenObjectMethodsForStrictMocks()
    {
-      new Expectations()
-      {
-         {
-            a.getIntValue(); result = 58;
-            b.doSomething();
-         }
-      };
+      new Expectations() {{
+         a.getIntValue(); result = 58;
+         b.doSomething();
+      }};
 
-      assert !a.equals(b);
-      assert a.hashCode() != b.hashCode();
-      assert a.getIntValue() == 58;
-      assert a.equals(a);
+      assertFalse(a.equals(b));
+      assertTrue(a.hashCode() != b.hashCode());
+      assertEquals(58, a.getIntValue());
+      assertTrue(a.equals(a));
       String bStr = b.toString();
       b.doSomething();
-      assert !b.equals(a);
+      assertFalse(b.equals(a));
       String aStr = a.toString();
-      assert !aStr.equals(bStr);
+      assertFalse(aStr.equals(bStr));
 
-      new Verifications()
-      {
-         {
-            a.equals(b);
-            b.hashCode(); times = 1;
-            a.toString();
-            b.equals(null); times = 0;
-         }
-      };
+      new Verifications() {{
+         a.equals(b);
+         b.hashCode(); times = 1;
+         a.toString();
+         b.equals(null); times = 0;
+      }};
 
-      new VerificationsInOrder()
-      {
-         {
-            a.hashCode();
-            b.equals(a);
-         }
-      };
+      new VerificationsInOrder() {{
+         a.hashCode();
+         b.equals(a);
+      }};
    }
 
    @Test
    public void recordExpectationsOnOverriddenObjectMethodAsNonStrictEvenInsideStrictExpectationBlock()
    {
-      new Expectations()
-      {
-         {
-            a.doSomething();
-            a.hashCode(); result = 1;
-            a.equals(any);
-            a.toString();
-         }
-      };
+      new Expectations() {{
+         a.doSomething();
+         a.hashCode(); result = 1;
+         a.equals(any);
+         a.toString();
+      }};
 
       a.doSomething();
    }

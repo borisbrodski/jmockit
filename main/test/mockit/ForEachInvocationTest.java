@@ -113,7 +113,7 @@ public final class ForEachInvocationTest
          //noinspection unchecked
          mock.addElements((Collection<String>) any);
          forEachInvocation = new Object() {
-            void verify(Collection<String> elements) { assert elements.contains("B"); }
+            void verify(Collection<String> elements) { assertTrue(elements.contains("B")); }
          };
 
          mock.doSomething(anyBoolean, null, null);
@@ -180,9 +180,9 @@ public final class ForEachInvocationTest
          forEachInvocation = new Object() {
             void checkIt(Invocation invocation, int i)
             {
-               assert i > 0;
+               assertTrue(i > 0);
                Collaborator collaborator = collaborators[invocation.getInvocationIndex()];
-               assert collaborator == invocation.getInvokedInstance();
+               assertSame(collaborator, invocation.getInvokedInstance());
             }
          };
       }};
@@ -196,7 +196,7 @@ public final class ForEachInvocationTest
       new FullVerifications() {{
          new Collaborator(anyInt);
          forEachInvocation = new Object() {
-            void checkIt(int i) { assert i > 0; }
+            void checkIt(int i) { assertTrue(i > 0); }
          };
       }};
    }
@@ -229,10 +229,10 @@ public final class ForEachInvocationTest
          forEachInvocation = new Object() { boolean staticInvocation() { return true; } };
 
          Collaborator.staticMethod(1);
-         forEachInvocation = new Object() { void verify(int i) { assert i == 1; } };
+         forEachInvocation = new Object() { void verify(int i) { assertEquals(1, i); } };
 
          Collaborator.staticMethod(anyInt); times = 2;
-         forEachInvocation = new Object() { void verify(int i) { assert i == 2 || i == 3; } };
+         forEachInvocation = new Object() { void verify(int i) { assertTrue(i == 2 || i == 3); } };
       }};
    }
 
@@ -283,7 +283,7 @@ public final class ForEachInvocationTest
 
          {
             mock.finalMethod(anyString); result = 'M';
-            forEachInvocation = new Object() { void finalMethod(String s) { assert s.length() > 0; } };
+            forEachInvocation = new Object() { void finalMethod(String s) { assertTrue(s.length() > 0); } };
          }
       };
 
@@ -297,7 +297,7 @@ public final class ForEachInvocationTest
 
       new VerificationsInOrder() {{
          invoke(collaborator, "privateMethod", (short) 5); times = 1;
-         forEachInvocation = new Object() { void privateMethod(int i) { assert i == 5; } };
+         forEachInvocation = new Object() { void privateMethod(int i) { assertEquals(5, i); } };
       }};
    }
 
@@ -327,7 +327,7 @@ public final class ForEachInvocationTest
       new NonStrictExpectations() {{
          collaborator.doSomething(true, null, "str");
          forEachInvocation = new Object() {
-            void doSomething(boolean b, int[] i, String s) { assert b; }
+            void doSomething(boolean b, int[] i, String s) { assertTrue(b); }
             private String someOther() { return ""; }
          };
       }};
@@ -345,13 +345,13 @@ public final class ForEachInvocationTest
 
          try {
             forEachInvocation = new Object() {
-               void doSomething(boolean b, int[] i, String s) { assert b; }
+               void doSomething(boolean b, int[] i, String s) { assertTrue(b); }
                void someOther() {}
             };
             fail();
          }
          catch (IllegalArgumentException e) {
-            assert e.getMessage().startsWith("");
+            assertTrue(e.getMessage().startsWith(""));
          }
       }};
    }
@@ -370,7 +370,7 @@ public final class ForEachInvocationTest
             fail();
          }
          catch (IllegalArgumentException e) {
-            assert e.getMessage().startsWith("No non-private ");
+            assertTrue(e.getMessage().startsWith("No non-private "));
          }
       }};
    }
@@ -418,7 +418,7 @@ public final class ForEachInvocationTest
    static class SequentialInvocationHandler
    {
       int index;
-      void verify(int i) { index++; assert i == index; }
+      void verify(int i) { index++; assertEquals(i, index); }
    }
 
    @Test
@@ -452,8 +452,8 @@ public final class ForEachInvocationTest
       final Object handler = new Object() {
          void verify(Invocation invocation, int i)
          {
-            assert mock == invocation.getInvokedInstance();
-            assert i == invocation.getInvocationCount();
+            assertSame(mock, invocation.getInvokedInstance());
+            assertEquals(i, invocation.getInvocationCount());
          }
       };
 

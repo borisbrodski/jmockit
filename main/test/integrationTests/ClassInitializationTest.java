@@ -72,7 +72,7 @@ public final class ClassInitializationTest
          final ClassWithStaticInitializer1 mock = null;
       };
 
-      assert ClassWithStaticInitializer1.CONSTANT != null;
+      assertNotNull(ClassWithStaticInitializer1.CONSTANT);
       ClassWithStaticInitializer1.doSomething();
    }
 
@@ -90,7 +90,7 @@ public final class ClassInitializationTest
       stubOutClass(ClassWithStaticInitializer2.class, "doSomething");
 
       // Initializes the class:
-      assert ClassWithStaticInitializer2.CONSTANT != null;
+      assertNotNull(ClassWithStaticInitializer2.CONSTANT);
 
       // Restore the now initialized class:
       tearDownMocks(ClassWithStaticInitializer2.class);
@@ -114,9 +114,9 @@ public final class ClassInitializationTest
    public void mockClassWithStaticInitializerStubbedOut(
       @Mocked(stubOutClassInitialization = true) AnotherClassWithStaticInitializer1 mock)
    {
-      assert AnotherClassWithStaticInitializer1.CONSTANT == null;
+      assertNull(AnotherClassWithStaticInitializer1.CONSTANT);
       AnotherClassWithStaticInitializer1.doSomething();
-      assert mock.getValue() == 0;
+      assertEquals(0, mock.getValue());
    }
 
    static class AnotherClassWithStaticInitializer2
@@ -132,7 +132,7 @@ public final class ClassInitializationTest
    {
       // Stubs out the static initializer, initializes the class, and then restores it:
       stubOutClass(AnotherClassWithStaticInitializer2.class, "<clinit>");
-      assert AnotherClassWithStaticInitializer2.CONSTANT == null;
+      assertNull(AnotherClassWithStaticInitializer2.CONSTANT);
       tearDownMocks(AnotherClassWithStaticInitializer2.class);
 
       try {
@@ -141,6 +141,6 @@ public final class ClassInitializationTest
       }
       catch (UnsupportedOperationException ignore) {}
 
-      assert new AnotherClassWithStaticInitializer2().getValue() == -1;
+      assertEquals(-1, new AnotherClassWithStaticInitializer2().getValue());
    }
 }

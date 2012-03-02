@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -13,10 +13,7 @@ import org.junit.*;
 
 public final class ExpectationsUsingMockedTest
 {
-   public interface Dependency
-   {
-      String doSomething(boolean b);
-   }
+   public interface Dependency { String doSomething(boolean b); }
 
    static class Collaborator
    {
@@ -29,30 +26,20 @@ public final class ExpectationsUsingMockedTest
 
       int getValue() { return value; }
 
-      @SuppressWarnings({"UnusedDeclaration"})
+      @SuppressWarnings("UnusedDeclaration")
       final void simpleOperation(int a, String b, Date c) {}
    }
 
-   public abstract static class AbstractBase
-   {
-      protected abstract boolean add(Integer i);
-   }
-
+   public abstract static class AbstractBase { protected abstract boolean add(Integer i); }
    @NonStrict AbstractBase base;
 
-   static final class DependencyImpl implements Dependency
-   {
-      public String doSomething(boolean b) { return ""; }
-   }
-
+   static final class DependencyImpl implements Dependency { public String doSomething(boolean b) { return ""; } }
    @Mocked("do.*") DependencyImpl mockDependency;
 
    @Test
    public void annotatedField()
    {
-      //noinspection UnusedDeclaration
-      new Expectations()
-      {
+      new Expectations() {
          @Mocked
          private Collaborator mock;
 
@@ -67,8 +54,7 @@ public final class ExpectationsUsingMockedTest
    @Test
    public void annotatedMockFieldWithFilters()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @Mocked({"(int)", "doInternal()", "[gs]etValue", "complexOperation(Object)"})
          Collaborator mock;
 
@@ -88,8 +74,7 @@ public final class ExpectationsUsingMockedTest
    @Test
    public void annotatedMockFieldWithInverseFilters()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @Mocked(
             inverse = true,
             methods = {"(int)", "simpleOperation(int, String, java.util.Date)", "setValue(long)"})
@@ -108,8 +93,7 @@ public final class ExpectationsUsingMockedTest
    @Test(expected = IllegalArgumentException.class)
    public void annotatedFieldWithInvalidFilter()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @Mocked("setValue(int")
          Collaborator mock;
       };
@@ -118,12 +102,7 @@ public final class ExpectationsUsingMockedTest
    @Test
    public void annotatedParameter(@Mocked final List<Integer> mock)
    {
-      new Expectations()
-      {
-         {
-            mock.get(1);
-         }
-      };
+      new Expectations() {{ mock.get(1); }};
 
       assertNull(mock.get(1));
    }
@@ -131,9 +110,7 @@ public final class ExpectationsUsingMockedTest
    @Test
    public void annotatedFieldAndParameter(@NonStrict final Dependency dependency1)
    {
-      //noinspection UnusedDeclaration
-      new Expectations()
-      {
+      new Expectations() {
          @NonStrict private Dependency dependency2;
 
          {
@@ -149,8 +126,7 @@ public final class ExpectationsUsingMockedTest
    @Test
    public void mockFinalFieldOfInterfaceTypeWithSpecifiedRealClassName()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          @Mocked(realClassName = "mockit.ExpectationsUsingMockedTest$DependencyImpl")
          final Dependency mock = new DependencyImpl();
 
@@ -163,21 +139,15 @@ public final class ExpectationsUsingMockedTest
    @Test(expected = IllegalArgumentException.class)
    public void mockFinalFieldOfInterfaceTypeWithoutRealClassName()
    {
-      new NonStrictExpectations()
-      {
-         final Dependency mock = null;
-      };
+      new NonStrictExpectations() { final Dependency mock = null; };
    }
 
    @Test
    public void mockFieldForAbstractClass()
    {
-      new Expectations()
-      {
-         {
-            base.add(1); result = true;
-         }
-      };
+      new Expectations() {{
+         base.add(1); result = true;
+      }};
 
       assertFalse(base.add(0));
       assertTrue(base.add(1));
@@ -187,12 +157,9 @@ public final class ExpectationsUsingMockedTest
    @Test
    public void partialMockingOfConcreteClassThatExcludesConstructors()
    {
-      new Expectations()
-      {
-         {
-            mockDependency.doSomething(anyBoolean); minTimes = 2;
-         }
-      };
+      new Expectations() {{
+         mockDependency.doSomething(anyBoolean); minTimes = 2;
+      }};
 
       mockDependency.doSomething(true);
       mockDependency.doSomething(false);
@@ -214,8 +181,7 @@ public final class ExpectationsUsingMockedTest
    @Test
    public void onlyStubOutStaticInitializers()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @Mocked("<clinit>") final ClassWithStaticInitializer unused = null;
       };
 
@@ -252,15 +218,13 @@ public final class ExpectationsUsingMockedTest
    static class AnotherClassWithStaticInitializer
    {
       static boolean initialized = true;
-
       static int initialized() { return initialized ? 1 : -1; }
    }
 
    @Test
    public void mockEverythingWithoutStubbingStaticInitializers()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @Mocked(methods = "<clinit>", inverse = true, stubOutClassInitialization = true)
          final AnotherClassWithStaticInitializer unused = null;
       };
@@ -272,7 +236,6 @@ public final class ExpectationsUsingMockedTest
    static class AnotherClassWithStaticInitializer2
    {
       static boolean initialized = true;
-
       static int initialized() { return initialized ? 1 : -1; }
    }
 
@@ -284,24 +247,18 @@ public final class ExpectationsUsingMockedTest
       assertTrue(AnotherClassWithStaticInitializer2.initialized);
    }
 
-   class InnerClass
-   {
-      int getValue() { return -1; }
-   }
+   class InnerClass { int getValue() { return -1; } }
 
    @Test
    public void mockInnerClass(final InnerClass innerMock)
    {
-      assert innerMock.getValue() == 0;
+      assertEquals(0, innerMock.getValue());
 
-      new NonStrictExpectations()
-      {
-         {
-            innerMock.getValue(); result = 123; times = 1;
-         }
-      };
+      new NonStrictExpectations() {{
+         innerMock.getValue(); result = 123; times = 1;
+      }};
 
-      assert new InnerClass().getValue() == 123;
+      assertEquals(123, new InnerClass().getValue());
    }
 
    static final class ClassWithNative
@@ -313,12 +270,9 @@ public final class ExpectationsUsingMockedTest
    @Test
    public void partiallyMockNativeMethod(@Mocked("nativeMethod") final ClassWithNative mock)
    {
-      new Expectations()
-      {
-         {
-            mock.nativeMethod(); result = 123;
-         }
-      };
+      new Expectations() {{
+         mock.nativeMethod(); result = 123;
+      }};
 
       assertEquals(123, mock.doSomething());
    }

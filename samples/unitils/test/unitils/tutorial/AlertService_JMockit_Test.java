@@ -6,11 +6,10 @@ package unitils.tutorial;
 
 import java.util.*;
 
+import static org.junit.Assert.*;
 import org.junit.*;
 
 import mockit.*;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * These tests are equivalent to the ones in {@link AlertServiceTest}.
@@ -112,9 +111,9 @@ public final class AlertService_JMockit_Test
          {
             List<Message> getScheduledAlerts(Object arg0, int arg1, boolean arg2)
             {
-               assert arg0 == "123";
-               assert arg1 == 1;
-               assert arg2;
+               assertEquals("123", arg0);
+               assertEquals(1, arg1);
+               assertTrue(arg2);
 
                return Arrays.asList(alert2);
             }
