@@ -8,6 +8,7 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.locks.*;
 import java.util.jar.*;
 
 import mockit.*;
@@ -24,6 +25,7 @@ public final class MockingBridge implements InvocationHandler
    public static final int EXIT_REENTRANT_MOCK = 6;
 
    private static final Object[] EMPTY_ARGS = {};
+   private static final ReentrantLock LOCK = new ReentrantLock();
 
    @SuppressWarnings("UnusedDeclaration")
    public static final MockingBridge MB = new MockingBridge();
@@ -117,18 +119,26 @@ public final class MockingBridge implements InvocationHandler
 
    private static boolean wasCalledDuringClassLoading()
    {
-      StackTrace st = new StackTrace(new Throwable());
-      int n = st.getDepth();
+      if (LOCK.isHeldByCurrentThread()) return true;
+      LOCK.lock();
 
-      for (int i = 3; i < n; i++) {
-         StackTraceElement ste = st.getElement(i);
+      try {
+         StackTrace st = new StackTrace(new Throwable());
+         int n = st.getDepth();
 
-         if ("ClassLoader.java".equals(ste.getFileName()) && "loadClass".equals(ste.getMethodName())) {
-            return true;
+         for (int i = 3; i < n; i++) {
+            StackTraceElement ste = st.getElement(i);
+
+            if ("ClassLoader.java".equals(ste.getFileName()) && "loadClass".equals(ste.getMethodName())) {
+               return true;
+            }
          }
-      }
 
-      return false;
+         return false;
+      }
+      finally {
+         LOCK.unlock();
+      }
    }
 
    private static Object[] extractMockArguments(Object[] args)
