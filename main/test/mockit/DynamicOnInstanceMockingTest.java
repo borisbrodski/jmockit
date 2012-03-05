@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -52,12 +52,9 @@ public final class DynamicOnInstanceMockingTest
       final Collaborator collaborator1 = new Collaborator();
       final Collaborator collaborator2 = new Collaborator();
 
-      new NonStrictExpectations(collaborator1, collaborator2)
-      {
-         {
-            collaborator1.getValue(); result = 1;
-         }
-      };
+      new NonStrictExpectations(collaborator1, collaborator2) {{
+         collaborator1.getValue(); result = 1;
+      }};
 
       collaborator2.setValue(2);
       assertEquals(2, collaborator2.getValue());
@@ -70,12 +67,9 @@ public final class DynamicOnInstanceMockingTest
    {
       final Collaborator collaborator = new Collaborator();
 
-      new NonStrictExpectations(Collaborator.class)
-      {
-         {
-            collaborator.getValue(); result = 1;
-         }
-      };
+      new NonStrictExpectations(Collaborator.class) {{
+         collaborator.getValue(); result = 1;
+      }};
 
       collaborator.setValue(2);
       assertEquals(1, collaborator.getValue());
@@ -207,7 +201,7 @@ public final class DynamicOnInstanceMockingTest
    {
       final Collaborator mocked = new Collaborator();
 
-      new Expectations(mocked) {};
+      new NonStrictExpectations(mocked) {};
 
       Collaborator notMocked = new Collaborator();
       assertEquals(-1, notMocked.getValue());
@@ -224,7 +218,7 @@ public final class DynamicOnInstanceMockingTest
    {
       final Collaborator mock = new Collaborator();
 
-      new Expectations(mock) {};
+      new NonStrictExpectations(mock) {};
 
       mock.setValue(1);
       new Collaborator().setValue(2);
@@ -240,7 +234,7 @@ public final class DynamicOnInstanceMockingTest
    {
       final Collaborator mock = new Collaborator();
 
-      new Expectations(mock) {};
+      new NonStrictExpectations(mock) {{ mock.setValue(anyInt); }};
 
       mock.setValue(1);
       new Collaborator().setValue(2);

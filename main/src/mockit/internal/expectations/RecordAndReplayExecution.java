@@ -90,7 +90,7 @@ public final class RecordAndReplayExecution
          redefineFieldTypes(redefs);
          redefinitions = redefs.getTypesRedefined() == 0 ? null : redefs;
 
-         dynamicPartialMocking = applyDynamicPartialMocking(classesOrInstancesToBePartiallyMocked);
+         dynamicPartialMocking = applyDynamicPartialMocking(nonStrict, classesOrInstancesToBePartiallyMocked);
 
          validateRecordingContext();
          validateThereIsAtLeastOneMockedTypeInScope();
@@ -160,13 +160,13 @@ public final class RecordAndReplayExecution
 
    public Map<Type, Object> getLocalMocks() { return typesAndTargetObjects; }
 
-   private DynamicPartialMocking applyDynamicPartialMocking(Object... classesOrInstances)
+   private DynamicPartialMocking applyDynamicPartialMocking(boolean nonStrict, Object... classesOrInstances)
    {
       if (classesOrInstances == null || classesOrInstances.length == 0) {
          return null;
       }
 
-      DynamicPartialMocking mocking = new DynamicPartialMocking();
+      DynamicPartialMocking mocking = new DynamicPartialMocking(nonStrict);
       mocking.redefineTypes(classesOrInstances);
       return mocking;
    }

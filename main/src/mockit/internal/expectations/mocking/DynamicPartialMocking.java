@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
@@ -9,17 +9,20 @@ import java.util.*;
 
 import mockit.external.asm4.*;
 import mockit.internal.*;
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class DynamicPartialMocking
 {
    public final List<Object> targetInstances;
    private final Map<Class<?>, byte[]> modifiedClassfiles;
+   private final boolean nonStrict;
 
-   public DynamicPartialMocking()
+   public DynamicPartialMocking(boolean nonStrict)
    {
       targetInstances = new ArrayList<Object>(2);
       modifiedClassfiles = new HashMap<Class<?>, byte[]>();
+      this.nonStrict = nonStrict;
    }
 
    public void redefineTypes(Object[] classesOrInstancesToBePartiallyMocked)
@@ -39,11 +42,13 @@ public final class DynamicPartialMocking
       if (classOrInstance instanceof Class) {
          targetClass = (Class<?>) classOrInstance;
          validateTargetClassType(targetClass);
+         registerAsMocked(targetClass);
          redefineClassAndItsSuperClasses(targetClass, false);
       }
       else {
          targetClass = classOrInstance.getClass();
          validateTargetClassType(targetClass);
+         registerAsMocked(classOrInstance);
          redefineClassAndItsSuperClasses(targetClass, true);
          targetInstances.add(classOrInstance);
       }
@@ -57,6 +62,28 @@ public final class DynamicPartialMocking
          Utilities.isGeneratedImplementationClass(targetClass)
       ) {
          throw new IllegalArgumentException("Invalid type for dynamic mocking: " + targetClass);
+      }
+   }
+
+   public void registerAsMocked(Class<?> mockedClass)
+   {
+      if (nonStrict) {
+         ExecutingTest executingTest = TestRun.getExecutingTest();
+
+         do {
+            executingTest.registerAsNonStrictlyMocked(mockedClass);
+
+            //noinspection AssignmentToMethodParameter
+            mockedClass = mockedClass.getSuperclass();
+         }
+         while (mockedClass != null && mockedClass != Object.class && mockedClass != Proxy.class);
+      }
+   }
+
+   private void registerAsMocked(Object mock)
+   {
+      if (nonStrict) {
+         TestRun.getExecutingTest().registerAsNonStrictlyMocked(mock);
       }
    }
 

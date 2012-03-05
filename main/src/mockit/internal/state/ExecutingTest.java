@@ -6,6 +6,8 @@ package mockit.internal.state;
 
 import java.util.*;
 
+import static mockit.internal.util.Utilities.containsReference;
+
 import mockit.external.asm4.*;
 import mockit.internal.expectations.*;
 import mockit.internal.expectations.invocation.*;
@@ -137,31 +139,19 @@ public final class ExecutingTest
    public void addNonStrictMock(Class<?> mockedClass)
    {
       String mockedClassDesc = Type.getInternalName(mockedClass);
-      String uniqueClassDesc = mockedClassDesc.intern();
-
-      if (!containsNonStrictMockedClass(uniqueClassDesc)) {
-         nonStrictMocks.add(uniqueClassDesc);
-      }
+      addNonStrictMock(mockedClassDesc.intern());
    }
 
-   private boolean containsNonStrictMockedClass(Object mockOrClassDesc)
+   private void addNonStrictMock(Object mock)
    {
-      for (Object nonStrictMock : nonStrictMocks) {
-         if (mockOrClassDesc == nonStrictMock) {
-            return true;
-         }
-      }
-
-      return false;
-   }
-
-   public void addNonStrictMock(Object mock)
-   {
-      if (!containsNonStrictMockedClass(mock)) {
+      if (!containsNonStrictMock(mock)) {
          nonStrictMocks.add(mock);
       }
+   }
 
-      addNonStrictMock(mock.getClass());
+   private boolean containsNonStrictMock(Object mockOrClassDesc)
+   {
+      return containsReference(nonStrictMocks, mockOrClassDesc);
    }
 
    public void addFinalLocalMockField(Object owner, MockedType typeMetadata)
@@ -176,7 +166,7 @@ public final class ExecutingTest
       if (mockClassDesc != null) {
          String uniqueMockClassDesc = mockClassDesc.intern();
 
-         if (!containsStrictMock(uniqueMockClassDesc) && !containsNonStrictMockedClass(uniqueMockClassDesc)) {
+         if (!containsStrictMock(uniqueMockClassDesc) && !containsNonStrictMock(uniqueMockClassDesc)) {
             strictMocks.add(uniqueMockClassDesc);
          }
       }
@@ -189,15 +179,26 @@ public final class ExecutingTest
       }
    }
 
-   private boolean containsStrictMock(Object mockOrClass)
+   private boolean containsStrictMock(Object mockOrClassDesc)
    {
-      for (Object strictMock : strictMocks) {
-         if (mockOrClass == strictMock) {
-            return true;
-         }
+      return containsReference(strictMocks, mockOrClassDesc);
+   }
+
+   public void registerAsNonStrictlyMocked(Class<?> mockedClass)
+   {
+      String toBeRegistered = Type.getInternalName(mockedClass).intern();
+      registerAsNonStrictMock(toBeRegistered, mockedClass);
+   }
+
+   public void registerAsNonStrictlyMocked(Object mockedObject) { registerAsNonStrictMock(mockedObject, mockedObject); }
+
+   private void registerAsNonStrictMock(Object toBeRegistered, Object mockedObjectOrClass)
+   {
+      if (containsStrictMock(toBeRegistered)) {
+         throw new IllegalArgumentException("Already mocked strictly: " + mockedObjectOrClass);
       }
 
-      return false;
+      addNonStrictMock(toBeRegistered);
    }
 
    public boolean isNonStrictInvocation(Object mock, String mockClassDesc, String mockNameAndDesc)
@@ -209,12 +210,7 @@ public final class ExecutingTest
       }
 
       for (Object nonStrictMock : nonStrictMocks) {
-         if (!instanceMethod) {
-            if (nonStrictMock == mockClassDesc) {
-               return true;
-            }
-         }
-         else if (nonStrictMock == mock) {
+         if (nonStrictMock == mock || nonStrictMock == mockClassDesc) {
             return true;
          }
       }
@@ -260,6 +256,7 @@ public final class ExecutingTest
 
       if (typeMetadata.nonStrict) {
          addNonStrictMock(mock);
+         addNonStrictMock(mock.getClass());
       }
    }
 

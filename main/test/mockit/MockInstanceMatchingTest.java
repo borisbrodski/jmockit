@@ -240,26 +240,30 @@ public final class MockInstanceMatchingTest
       assertEquals(1, new Collaborator().getValue());
    }
 
-   @Test(expected = AssertionError.class)
-   public void missingInvocationOnStrictMockWithNonStrictOneOfSameType(
+   @Test
+   public void declaringNonStrictMockedTypeImpliesNonStrictnessForOtherMocksOfSameTypeAsWell(
       final Collaborator mock1, @NonStrict Collaborator mock2)
    {
+      // "mock1" is regarded as non-strict because "mock2" specifies non-strictness for *all* instances:
       new Expectations() {{ mock1.setValue(5); }};
 
       assertEquals(0, mock2.getValue());
+      // Call to mock1.setValue is not missed.
    }
 
-   @Test(expected = AssertionError.class)
-   public void unexpectedInvocationOnStrictMockWithNonStrictOneOfSameType(final Collaborator mock1)
+   @Test
+   public void declaringNonStrictMockedTypeImpliesNonStrictnessForOtherMocksOfSameTypeAsWell2(final Collaborator mock1)
    {
       new Expectations() {
          @NonStrict Collaborator mock2;
 
          {
+            // "mock1" is regarded as non-strict because "mock2" specifies non-strictness for *all* instances:
             mock1.setValue(5);
          }
       };
 
+      // Call to mock1.getValue is not considered to be unexpected, since "Collaborator" is non-strict.
       mock1.getValue();
    }
 

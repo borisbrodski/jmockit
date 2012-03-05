@@ -230,12 +230,11 @@ public final class MisusedExpectationsTest
    }
 
    @SuppressWarnings("UnusedParameters")
-   static class BlahBlah
+   static class BlahBlah extends Blah
    {
-      int value() { return 0; }
-      void setValue(int value) {}
-      String doSomething(boolean b) { return ""; }
+      @Override String doSomething(boolean b) { return "overridden"; }
       void doSomethingElse(Object o) {}
+      static void doSomethingStatic() {}
    }
 
    @SuppressWarnings("StaticFieldReferencedViaSubclass")
@@ -288,5 +287,107 @@ public final class MisusedExpectationsTest
 
       mock.doSomething(true);
       mock.setValue(1);
+   }
+
+   @Test
+   public void mixingStrictAndNonStrictExpectationsForSameDynamicallyMockedObject()
+   {
+      final BlahBlah tested = new BlahBlah();
+
+      new Expectations(tested) {{ tested.value(); }};
+
+      try {
+         new NonStrictExpectations(tested) {{ tested.doSomething(anyBoolean); }};
+         fail();
+      }
+      catch (IllegalArgumentException ignore) {}
+   }
+
+   @Test
+   public void mixingStrictAndNonStrictExpectationsForSameDynamicallyMockedClass()
+   {
+      new Expectations(BlahBlah.class) {{ BlahBlah.doSomethingStatic(); }};
+
+      try {
+         new NonStrictExpectations(BlahBlah.class) {};
+         fail();
+      }
+      catch (IllegalArgumentException ignore) {}
+   }
+
+   @Test
+   public void mixingStrictAndNonStrictExpectationsForSameDynamicallyMockedClass_forNonStrictBaseClass()
+   {
+      new Expectations(BlahBlah.class) {{ new Blah(); BlahBlah.doSomethingStatic(); }};
+
+      try {
+         new NonStrictExpectations(Blah.class) {};
+         fail();
+      }
+      catch (IllegalArgumentException ignore) {}
+   }
+
+   @Test
+   public void mixingStrictAndNonStrictExpectationsForSameDynamicallyMockedClass_forStrictBaseClass()
+   {
+      new Expectations(Blah.class) {{ new Blah(); }};
+
+      try {
+         new NonStrictExpectations(BlahBlah.class) {};
+         fail();
+      }
+      catch (IllegalArgumentException ignore) {}
+   }
+
+   static class TestedClass
+   {
+      static int notMocked() { return 1; }
+      static int mocked1() { return 2; }
+      static int mocked2() { return 5; }
+      static int tested() { return notMocked() + mocked1() + mocked2(); }
+   }
+
+   @Test(expected = AssertionError.class)
+   public void partiallyMockClassAndVerifyAllButOneMockedInvocationToStaticMethods()
+   {
+      new NonStrictExpectations(TestedClass.class) {{
+         TestedClass.mocked1(); result = 3;
+      }};
+
+      // Not recommended, but still valid since "TestedClass" has been mocked non-strictly:
+      new Expectations(TestedClass.class) {{
+         TestedClass.mocked2(); result = 7;
+      }};
+
+      assertEquals(11, TestedClass.tested());
+
+      new FullVerifications() {{ TestedClass.mocked1(); }};
+   }
+
+   class TestedClass2
+   {
+      int notMocked() { return 1; }
+      int mocked1() { return 2; }
+      int mocked2() { return 5; }
+      int tested() { return notMocked() + mocked1() + mocked2(); }
+   }
+
+   @Test(expected = AssertionError.class)
+   public void partiallyMockClassAndVerifyAllButOneMockedInvocationToInstanceMethods()
+   {
+      final TestedClass2 tested = new TestedClass2();
+
+      new NonStrictExpectations(TestedClass2.class) {{
+         tested.mocked1(); result = 3;
+      }};
+
+      // Not recommended, but still valid since "TestedClass" has been mocked non-strictly:
+      new Expectations(TestedClass2.class) {{
+         tested.mocked2(); result = 7;
+      }};
+
+      assertEquals(11, tested.tested());
+
+      new FullVerifications() {{ tested.mocked1(); }};
    }
 }
