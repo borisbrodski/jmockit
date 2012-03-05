@@ -194,6 +194,105 @@ public final class DynamicPartialMockingTest
    }
 
    @Test(expected = AssertionError.class)
+   public void expectTwoOrderedInvocationsOnStrictDynamicMockButReplayOutOfOrder()
+   {
+      final Collaborator collaborator = new Collaborator(1);
+
+      new Expectations(collaborator) {{
+         collaborator.setValue(1);
+         collaborator.setValue(2);
+      }};
+
+      // Not mocked since the first expectation that can be matched is the one setting the value to 1:
+      collaborator.setValue(2);
+      assertEquals(2, collaborator.value);
+
+      // Mocked since the first expectation wasn't yet matched by a replayed one:
+      collaborator.setValue(1);
+      assertEquals(2, collaborator.value);
+
+      // The recorded call to "setValue(2)" is missing at this point.
+   }
+
+   @Test(expected = AssertionError.class)
+   public void nonStrictDynamicMockFullyVerified_verifyOnlyOneOfMultipleRecordedInvocations()
+   {
+      final Collaborator collaborator = new Collaborator(0);
+
+      new NonStrictExpectations(collaborator) {{
+         collaborator.setValue(1);
+         collaborator.setValue(2);
+      }};
+
+      collaborator.setValue(2);
+      collaborator.setValue(1);
+
+      // Verifies all the *mocked* (recorded) invocations, ignoring those not mocked:
+      new FullVerifications() {{
+         collaborator.setValue(1);
+         // Should also verify "setValue(2)" since it was recorded.
+      }};
+   }
+
+   @Test
+   public void nonStrictDynamicMockFullyVerified_verifyAllRecordedExpectationsButNotAllOfTheReplayedOnes()
+   {
+      final Collaborator collaborator = new Collaborator(0);
+
+      new NonStrictExpectations(collaborator) {{
+         collaborator.setValue(1);
+      }};
+
+      collaborator.setValue(1);
+      collaborator.setValue(2);
+
+      // Verifies all the *mocked* (recorded) invocations, ignoring those not mocked:
+      new FullVerifications() {{
+         collaborator.setValue(1);
+         // No need to verify "setValue(2)" since it was not recorded.
+      }};
+   }
+
+   @Test
+   public void nonStrictDynamicMockFullyVerifiedInOrder_verifyAllRecordedExpectationsButNotAllOfTheReplayedOnes()
+   {
+      final Collaborator collaborator = new Collaborator(0);
+
+      new NonStrictExpectations(collaborator) {{
+         collaborator.setValue(2);
+         collaborator.setValue(3);
+      }};
+
+      collaborator.setValue(1);
+      collaborator.setValue(2);
+      collaborator.setValue(3);
+
+      // Verifies all the *mocked* (recorded) invocations, ignoring those not mocked:
+      new FullVerificationsInOrder() {{
+         // No need to verify "setValue(1)" since it was not recorded.
+         collaborator.setValue(2);
+         collaborator.setValue(3);
+      }};
+   }
+
+   @Test
+   public void nonStrictDynamicallyMockedClassFullyVerified_verifyRecordedExpectationButNotReplayedOne()
+   {
+      final Collaborator collaborator = new Collaborator();
+
+      new NonStrictExpectations(Collaborator.class) {{
+         collaborator.simpleOperation(1, "internal", null);
+         result = false;
+      }};
+
+      assertFalse(collaborator.methodWhichCallsAnotherInTheSameClass());
+
+      new FullVerifications() {{
+         collaborator.simpleOperation(anyInt, anyString, null);
+      }};
+   }
+
+   @Test(expected = AssertionError.class)
    public void expectTwoInvocationsOnNonStrictDynamicMockButReplayOnce()
    {
       final Collaborator collaborator = new Collaborator();
@@ -469,18 +568,18 @@ public final class DynamicPartialMockingTest
    @Test
    public void dynamicPartialMockingWithInstanceSpecificMatching()
    {
-      final Collaborator mock = new Collaborator();
+      final Collaborator collaborator1 = new Collaborator();
+      final Collaborator collaborator2 = new Collaborator(4);
 
-      new NonStrictExpectations(mock) {{
-         mock.getValue(); result = 3;
+      new NonStrictExpectations(collaborator1, collaborator2) {{
+         collaborator1.getValue(); result = 3;
       }};
 
-      assertEquals(3, mock.getValue());
-      final Collaborator collaborator2 = new Collaborator(4);
+      assertEquals(3, collaborator1.getValue());
       assertEquals(4, collaborator2.getValue());
 
       new FullVerificationsInOrder() {{
-         mock.getValue(); times = 1;
+         collaborator1.getValue(); times = 1;
          collaborator2.getValue(); times = 1;
       }};
    }

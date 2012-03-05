@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations;
@@ -85,6 +85,7 @@ final class ReplayPhase extends Phase
       nonStrictExpectation.constraints.incrementInvocationCount();
 
       if (executeRealImpl) {
+         nonStrictExpectation.executedRealImplementation = true;
          Object defaultResult = nonStrictExpectation.invocation.getDefaultResult();
          return defaultResult == null ? Void.class : defaultResult;
       }
@@ -97,7 +98,7 @@ final class ReplayPhase extends Phase
       return nonStrictExpectation.produceResult(mock, args);
    }
 
-   @SuppressWarnings({"OverlyComplexMethod"})
+   @SuppressWarnings("OverlyComplexMethod")
    private Object handleStrictInvocation(
       Object mock, String mockClassDesc, String mockNameAndDesc, boolean withRealImpl, Object[] replayArgs)
       throws Throwable

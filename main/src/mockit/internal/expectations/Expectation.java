@@ -20,6 +20,7 @@ final class Expectation
    final InvocationConstraints constraints;
    private InvocationHandler handler;
    private InvocationResults results;
+   boolean executedRealImplementation;
 
    Expectation(RecordPhase recordPhase, ExpectedInvocation invocation, boolean nonStrict)
    {

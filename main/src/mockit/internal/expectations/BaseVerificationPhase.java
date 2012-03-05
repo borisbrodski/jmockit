@@ -13,7 +13,7 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
 {
    final List<Expectation> expectationsInReplayOrder;
    final List<Object[]> invocationArgumentsInReplayOrder;
-   private boolean allInvocationsDuringReplayMustBeVerified;
+   private boolean allMockedInvocationsDuringReplayMustBeVerified;
    private Object[] mockedTypesAndInstancesToFullyVerify;
    protected Expectation currentVerification;
    protected AssertionError pendingError;
@@ -27,7 +27,7 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
       this.invocationArgumentsInReplayOrder = invocationArgumentsInReplayOrder;
    }
 
-   public final void setAllInvocationsMustBeVerified() { allInvocationsDuringReplayMustBeVerified = true; }
+   public final void setAllInvocationsMustBeVerified() { allMockedInvocationsDuringReplayMustBeVerified = true; }
 
    public final void setMockedTypesToFullyVerify(Object[] mockedTypesAndInstancesToFullyVerify)
    {
@@ -166,21 +166,21 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
          return pendingError;
       }
 
-      if (allInvocationsDuringReplayMustBeVerified) {
+      if (allMockedInvocationsDuringReplayMustBeVerified) {
          return validateThatAllInvocationsWereVerified();
       }
 
       return null;
    }
 
-   final AssertionError validateThatAllInvocationsWereVerified()
+   private AssertionError validateThatAllInvocationsWereVerified()
    {
       List<Expectation> notVerified = new ArrayList<Expectation>();
 
       for (int i = 0; i < expectationsInReplayOrder.size(); i++) {
          Expectation replayExpectation = expectationsInReplayOrder.get(i);
 
-         if (replayExpectation != null && replayExpectation.constraints.minInvocations <= 0) {
+         if (replayExpectation != null && isEligibleForFullVerification(replayExpectation)) {
             Object[] replayArgs = invocationArgumentsInReplayOrder.get(i);
 
             if (!wasVerified(replayExpectation, replayArgs)) {
@@ -199,6 +199,11 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
       }
 
       return null;
+   }
+
+   private boolean isEligibleForFullVerification(Expectation replayExpectation)
+   {
+      return !replayExpectation.executedRealImplementation && replayExpectation.constraints.minInvocations <= 0;
    }
 
    private boolean wasVerified(Expectation replayExpectation, Object[] replayArgs)
