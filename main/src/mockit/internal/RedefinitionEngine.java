@@ -28,7 +28,10 @@ public final class RedefinitionEngine
 
    public RedefinitionEngine()
    {
-      this(null, null, null, null);
+      mockClass = null;
+      instantiation = Instantiation.PerMockInvocation;
+      mockingConfiguration = null;
+      mockMethods = null;
    }
 
    public RedefinitionEngine(Class<?> realOrMockClass)
@@ -83,16 +86,10 @@ public final class RedefinitionEngine
 
    public RedefinitionEngine(Class<?> realClass, Object mock, Class<?> mockClass)
    {
-      this(realClass, mockClass, mock, new AnnotatedMockMethods(realClass));
-      new AnnotatedMockMethodCollector(mockMethods).collectMockMethods(mockClass);
-   }
-
-   public RedefinitionEngine(Class<?> realClass, Class<?> mockClass, Object mock, AnnotatedMockMethods mockMethods)
-   {
       this.realClass = realClass;
       this.mockClass = mockClass;
+      mockMethods = new AnnotatedMockMethods(realClass);
       this.mock = mock;
-      this.mockMethods = mockMethods;
 
       if (mockClass == null || !mockClass.isAnnotationPresent(MockClass.class)) {
          instantiation = Instantiation.PerMockInvocation;
@@ -104,6 +101,8 @@ public final class RedefinitionEngine
          createMockInstanceAccordingToInstantiation();
          mockingConfiguration = createMockingConfiguration(metadata);
       }
+
+      new AnnotatedMockMethodCollector(mockMethods).collectMockMethods(mockClass);
    }
 
    public RedefinitionEngine(Object mock, Class<?> mockClass)
@@ -186,7 +185,9 @@ public final class RedefinitionEngine
          modifier.useOneMockInstancePerMockedInstance(mockClass);
       }
 
-      return modifyRealClass(rcReader, modifier, mockClass.getName());
+      rcReader.accept(modifier, 0);
+      validateThatAllMockMethodsWereApplied();
+      return modifier.toByteArray();
    }
 
    private ClassReader createClassReaderForRealClass()
@@ -198,19 +199,16 @@ public final class RedefinitionEngine
       return new ClassFile(realClass, true).getReader();
    }
 
-   public byte[] modifyRealClass(ClassReader rcReader, ClassVisitor rcWriter, String mockClassName)
+   private void validateThatAllMockMethodsWereApplied()
    {
-      rcReader.accept(rcWriter, 0);
-
       if (mockMethods.getMethodCount() > 0) {
          List<String> remainingMocks = mockMethods.getMethods();
          String mockSignatures = new MethodFormatter().friendlyMethodSignatures(remainingMocks);
-         
-         throw new IllegalArgumentException(
-            "Matching real methods not found for the following mocks of " + mockClassName + ":\n" + mockSignatures);
-      }
 
-      return rcWriter.toByteArray();
+         throw new IllegalArgumentException(
+            "Matching real methods not found for the following mocks of " + mockClass.getName() + ":\n" +
+            mockSignatures);
+      }
    }
 
    public static void redefineClasses(ClassDefinition... definitions)
