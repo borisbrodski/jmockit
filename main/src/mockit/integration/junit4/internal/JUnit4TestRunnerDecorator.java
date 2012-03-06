@@ -92,7 +92,9 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
          if (target == null) {
             Class<?> currentTestClass = TestRun.getCurrentTestClass();
 
-            if (currentTestClass != null && testClass.isAssignableFrom(currentTestClass)) {
+            if (
+               currentTestClass != null && currentTestClass != testClass && testClass.isAssignableFrom(currentTestClass)
+            ) {
                if (it.getAnnotation(AfterClass.class) != null) {
                   cleanUpMocksFromPreviousTestClass();
                }
