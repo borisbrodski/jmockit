@@ -44,6 +44,7 @@ final class JMockitInitialization
          }
 
          setUpInternalStartupMock(RunNotifierDecorator.class);
+         setUpInternalStartupMock(BlockJUnit4ClassRunnerDecorator.class);
          setUpInternalStartupMock(JUnit4TestRunnerDecorator.class);
       }
    }
