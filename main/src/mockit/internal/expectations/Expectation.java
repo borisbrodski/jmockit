@@ -61,11 +61,6 @@ final class Expectation
       return results.produceResult(invokedObject, invocationArgs);
    }
 
-   AssertionError verifyConstraints(int minInvocations, int maxInvocations)
-   {
-      return constraints.verify(invocation, minInvocations, maxInvocations);
-   }
-
    void addReturnValueOrValues(Object value)
    {
       boolean valueIsArray = value != null && value.getClass().isArray();

@@ -65,10 +65,8 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
       }
 
       if (currentExpectation == null) {
+         pendingError = currentVerification.invocation.errorForMissingInvocation();
          currentExpectation = currentVerification;
-
-         ExpectedInvocation missingInvocation = new ExpectedInvocation(mock, mockClassDesc, mockNameAndDesc, args);
-         pendingError = missingInvocation.errorForMissingInvocation();
       }
 
       return currentExpectation.invocation.getDefaultValueForReturnType(this);

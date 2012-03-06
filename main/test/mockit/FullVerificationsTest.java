@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -7,7 +7,7 @@ package mockit;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-@SuppressWarnings({"UnusedDeclaration"})
+@SuppressWarnings("UnusedDeclaration")
 public final class FullVerificationsTest
 {
    public static class Dependency
@@ -38,8 +38,7 @@ public final class FullVerificationsTest
    {
       exerciseCodeUnderTest();
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.prepare(); minTimes = 1;
          mock.editABunchMoreStuff();
          mock.notifyBeforeSave(); maxTimes = 1;
@@ -52,16 +51,14 @@ public final class FullVerificationsTest
    @Test
    public void verifyAllInvocationsWithSomeOfThemRecorded()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.editABunchMoreStuff(); result = true;
          mock.setSomething(45);
       }};
 
       exerciseCodeUnderTest();
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.prepare();
          mock.setSomething(anyInt);
          mock.setSomethingElse(anyChar);
@@ -74,16 +71,14 @@ public final class FullVerificationsTest
    @Test
    public void verifyAllInvocationsWithThoseRecordedAsExpectedToOccurVerifiedImplicitly()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.setSomething(45); times = 1;
          mock.editABunchMoreStuff(); result = true; minTimes = 1;
       }};
 
       exerciseCodeUnderTest();
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.prepare();
          mock.setSomething(123);
          mock.setSomethingElse(anyChar);
@@ -97,14 +92,12 @@ public final class FullVerificationsTest
    {
       exerciseCodeUnderTest();
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.setSomething(45);
          mock.editABunchMoreStuff();
       }};
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.prepare();
          mock.setSomething(123);
          mock.setSomethingElse(anyChar);
@@ -118,8 +111,7 @@ public final class FullVerificationsTest
    {
       exerciseCodeUnderTest();
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.prepare();
          mock.notifyBeforeSave();
          mock.setSomething(anyChar);
@@ -135,8 +127,7 @@ public final class FullVerificationsTest
       mock.setSomething(123);
       mock.setSomething(45);
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.prepare();
          mock.setSomething(anyInt); times = 2;
          mock.notifyBeforeSave(); times = 0;
@@ -149,8 +140,7 @@ public final class FullVerificationsTest
       mock.setSomething(1);
       mock.notifyBeforeSave();
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.setSomething(1);
          mock.notifyBeforeSave(); times = 0;
       }};
@@ -163,8 +153,7 @@ public final class FullVerificationsTest
       mock.setSomething(123);
       mock.save();
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.prepare();
          mock.setSomething(anyInt);
          mock.save(); minTimes = 0;
@@ -179,8 +168,7 @@ public final class FullVerificationsTest
       mock.prepare();
       mock.setSomething(123);
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.prepare();
          mock.setSomething(anyInt);
          mock.save(); minTimes = 0;
@@ -193,8 +181,7 @@ public final class FullVerificationsTest
       mock.prepare();
       mock.setSomething(123);
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.prepare();
          mock.setSomething(anyInt);
          mock.save(); minTimes = 0;
@@ -206,8 +193,7 @@ public final class FullVerificationsTest
    {
       mock.setSomething(1);
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.notifyBeforeSave();
       }};
    }
@@ -215,15 +201,13 @@ public final class FullVerificationsTest
    @Test(expected = AssertionError.class)
    public void verifyRecordedInvocationThatShouldHappenButDoesNot()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.notifyBeforeSave();
       }};
 
       mock.setSomething(1);
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.notifyBeforeSave();
       }};
    }
@@ -231,8 +215,7 @@ public final class FullVerificationsTest
    @Test(expected = AssertionError.class)
    public void verifyAllInvocationsWithExpectationRecordedButOneInvocationUnverified()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.setSomething(anyInt);
       }};
 
@@ -240,8 +223,7 @@ public final class FullVerificationsTest
       mock.editABunchMoreStuff();
       mock.setSomething(45);
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.setSomething(withNotEqual(123));
          mock.editABunchMoreStuff();
       }};
@@ -250,8 +232,7 @@ public final class FullVerificationsTest
    @Ignore @Test
    public void verifyTwoInvocationsWithIteratingBlockHavingExpectationRecordedAndSecondInvocationUnverified()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.setSomething(anyInt);
       }};
 
@@ -259,10 +240,7 @@ public final class FullVerificationsTest
       mock.setSomething(45);
 
       try {
-         new FullVerifications(2)
-         {{
-            mock.setSomething(123);
-         }};
+         new FullVerifications(2) {{ mock.setSomething(123); }};
          fail();
       }
       catch (AssertionError e) {
@@ -276,8 +254,7 @@ public final class FullVerificationsTest
       mock.prepare();
       mock.setSomething(123);
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.prepare();
          mock.setSomething(123);
          mock.notifyBeforeSave();
@@ -290,8 +267,7 @@ public final class FullVerificationsTest
       mock.setSomething(123);
       mock.setSomething(45);
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.setSomething(anyInt); times = 1;
       }};
    }
@@ -303,8 +279,7 @@ public final class FullVerificationsTest
       mock.setSomething(45);
       mock.setSomething(0);
 
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          mock.setSomething(anyInt); times = 1;
       }};
    }
@@ -314,9 +289,9 @@ public final class FullVerificationsTest
    {
       mock.setSomethingElse('f');
 
-      new FullVerifications()
-      {{
-         mock.setSomethingElse(anyChar); times = 3;
+      new FullVerifications() {{
+         mock.setSomethingElse(anyChar);
+         times = 3;
       }};
    }
 
@@ -328,8 +303,7 @@ public final class FullVerificationsTest
       mock.setSomething(45);
       mock.save();
 
-      new FullVerifications(2)
-      {{
+      new FullVerifications(2) {{
          mock.setSomething(anyInt);
          mock.save();
       }};
@@ -340,8 +314,7 @@ public final class FullVerificationsTest
    {
       mock.setSomething(123);
 
-      new FullVerifications(3)
-      {{
+      new FullVerifications(3) {{
          mock.setSomething(123);
       }};
    }
@@ -352,8 +325,7 @@ public final class FullVerificationsTest
       mock.setSomething(123);
       mock.setSomething(-14);
 
-      new FullVerifications(1)
-      {{
+      new FullVerifications(1) {{
          mock.setSomething(anyInt);
       }};
    }
@@ -365,8 +337,7 @@ public final class FullVerificationsTest
          exerciseCodeUnderTest();
       }
 
-      new FullVerifications(2)
-      {{
+      new FullVerifications(2) {{
          mock.prepare(); maxTimes = 1;
          mock.setSomething(anyInt); minTimes = 2;
          mock.setSomethingElse('a');
@@ -387,13 +358,11 @@ public final class FullVerificationsTest
    @Test
    public void verifyNoInvocationsOnMockedDependencyBeyondThoseRecordedAsExpected()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.prepare(); times = 1;
       }};
 
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.setSomething(anyInt); minTimes = 1;
          mock.save(); times = 1;
       }};
@@ -409,8 +378,7 @@ public final class FullVerificationsTest
    @Test
    public void verifyNoInvocationsOnMockedDependencyBeyondThoseRecordedAsExpectedWithOneHavingOccurred()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.prepare(); times = 1;
          mock.save(); minTimes = 1;
       }};

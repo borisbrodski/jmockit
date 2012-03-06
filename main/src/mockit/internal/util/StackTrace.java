@@ -89,7 +89,7 @@ public final class StackTrace
                (!where.startsWith("sun.") || ste.isNativeMethod()) &&
                !where.startsWith("org.junit.") && !where.startsWith("junit.") && !where.startsWith("org.testng.")
             ) {
-               if (!where.startsWith("mockit.") || ste.getFileName().endsWith("Test.java")) {
+               if (!where.startsWith("mockit.")) {
                   filteredST[j] = ste;
                   j++;
                }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -9,7 +9,7 @@ import org.junit.*;
 
 public final class VerificationsTest
 {
-   @SuppressWarnings({"UnusedParameters"})
+   @SuppressWarnings("UnusedParameters")
    public static class Dependency
    {
       public Dependency() {}
@@ -155,13 +155,13 @@ public final class VerificationsTest
    @Test(expected = AssertionError.class)
    public void verifyInvocationsWithInvocationCountLargerThanOccurred()
    {
-      mock.setSomething(3);
-      mock.save();
       mock.setSomethingElse("test");
+      mock.setSomething(3);
       mock.save();
 
       new Verifications() {{
-         mock.save(); times = 3;
+         mock.setSomething(anyInt);
+         times = 3;
       }};
    }
 
@@ -184,7 +184,7 @@ public final class VerificationsTest
    {
       mock.setSomething(123);
 
-      new Verifications(3) {{ mock.setSomething(123); }};
+      new Verifications(3) {{ mock.setSomething(anyInt); }};
    }
 
    @Test(expected = AssertionError.class)
@@ -194,7 +194,9 @@ public final class VerificationsTest
       mock.setSomething(123);
       mock.setSomething(-1015);
 
-      new Verifications(2) {{ mock.setSomething(anyInt); }};
+      new Verifications(2) {{
+         mock.setSomething(anyInt);
+      }};
    }
 
    @Test
@@ -238,6 +240,17 @@ public final class VerificationsTest
       new Verifications() {{
          mock.setSomethingElse(anyString);
          forEachInvocation = new Object() { void assertEmpty(String s) { assertEquals(0, s.length()); } };
+      }};
+   }
+
+   @Test(expected = AssertionError.class)
+   public void verifyWithValidationMethodWhichReturnsBoolean()
+   {
+      mock.setSomethingElse("test");
+
+      new Verifications() {{
+         mock.setSomethingElse(anyString);
+         forEachInvocation = new Object() { boolean isEmpty(String s) { return s.length() == 0; } };
       }};
    }
 

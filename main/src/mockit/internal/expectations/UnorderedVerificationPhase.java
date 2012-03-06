@@ -49,7 +49,7 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
             minInvocations = maxInvocations = numberOfIterations;
          }
 
-         pendingError = currentExpectation.verifyConstraints(minInvocations, maxInvocations);
+         verifyConstraints(minInvocations, maxInvocations);
       }
    }
 
@@ -68,6 +68,12 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
       aggregate.constraints.addInvocationCount(found.constraints);
    }
 
+   private void verifyConstraints(int minInvocations, int maxInvocations)
+   {
+      pendingError =
+         currentExpectation.constraints.verify(currentVerification.invocation, minInvocations, maxInvocations);
+   }
+
    @Override
    void addVerifiedExpectation(VerifiedExpectation verifiedExpectation)
    {
@@ -78,15 +84,10 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
    @Override
    public void handleInvocationCountConstraint(int minInvocations, int maxInvocations)
    {
-      Expectation expectation = getCurrentExpectation();
-      int multiplier = numberOfIterations <= 1 ? 1: numberOfIterations;
+      validatePresenceOfExpectation(currentVerification);
 
-      pendingError = null;
-      AssertionError error = expectation.verifyConstraints(multiplier * minInvocations, multiplier * maxInvocations);
-
-      if (error != null) {
-         pendingError = error;
-      }
+      int multiplier = numberOfIterations <= 1 ? 1 : numberOfIterations;
+      verifyConstraints(multiplier * minInvocations, multiplier * maxInvocations);
    }
 
    @Override
