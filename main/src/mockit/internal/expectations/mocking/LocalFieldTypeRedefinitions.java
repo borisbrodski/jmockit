@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
@@ -14,11 +14,7 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
 {
    private Map<Type, Object> typesAndTargetObjects;
 
-   public LocalFieldTypeRedefinitions(Object objectWithMockFields)
-   {
-      super(objectWithMockFields);
-      typesAndTargetObjects = new HashMap<Type, Object>(2);
-   }
+   public LocalFieldTypeRedefinitions(Object objectWithMockFields) { super(objectWithMockFields); }
 
    public void redefineTypesForNestedClass(Map<Type, Object> typesAndTargetObjects)
    {

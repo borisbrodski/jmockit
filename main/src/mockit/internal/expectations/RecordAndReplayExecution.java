@@ -18,7 +18,7 @@ public final class RecordAndReplayExecution
 {
    public static final ReentrantLock LOCK = new ReentrantLock();
 
-   private final LocalFieldTypeRedefinitions redefinitions;
+   private final FieldTypeRedefinitions redefinitions;
    private final Map<Type, Object> typesAndTargetObjects;
    private final DynamicPartialMocking dynamicPartialMocking;
 
@@ -86,9 +86,7 @@ public final class RecordAndReplayExecution
          boolean nonStrict = targetObject instanceof NonStrictExpectations;
          recordPhase = new RecordPhase(this, nonStrict);
 
-         LocalFieldTypeRedefinitions redefs = new LocalFieldTypeRedefinitions(targetObject);
-         redefineFieldTypes(redefs);
-         redefinitions = redefs.getTypesRedefined() == 0 ? null : redefs;
+         redefinitions = redefineFieldTypes(targetObject);
 
          dynamicPartialMocking = applyDynamicPartialMocking(nonStrict, classesOrInstancesToBePartiallyMocked);
 
@@ -103,11 +101,14 @@ public final class RecordAndReplayExecution
       }
    }
 
-   private void redefineFieldTypes(LocalFieldTypeRedefinitions redefs)
+   private FieldTypeRedefinitions redefineFieldTypes(Expectations targetObject)
    {
+      LocalFieldTypeRedefinitions redefs = new LocalFieldTypeRedefinitions(targetObject);
+
       //noinspection CatchGenericClass
       try {
          redefs.redefineTypesForNestedClass(typesAndTargetObjects);
+         return redefs.getTypesRedefined() == 0 ? null : redefs;
       }
       catch (Error e) {
          redefs.cleanUp();
