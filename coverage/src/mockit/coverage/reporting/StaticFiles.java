@@ -5,28 +5,28 @@
 package mockit.coverage.reporting;
 
 import java.io.*;
+import java.security.*;
 
 final class StaticFiles
 {
+   private long lastModifiedTimeOfCoverageJar;
+
    void copyToOutputDir(String outputDir, boolean forSourceFilePages) throws IOException
    {
-      String pathToThisJar = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-      long timeOfCoverageJar = new File(pathToThisJar).lastModified();
-
-      copyFile(outputDir, "coverage.css", timeOfCoverageJar);
-      copyFile(outputDir, "coverage.js", timeOfCoverageJar);
-      copyFile(outputDir, "logo.png", timeOfCoverageJar);
+      copyFile(outputDir, "coverage.css");
+      copyFile(outputDir, "coverage.js");
+      copyFile(outputDir, "logo.png");
 
       if (forSourceFilePages) {
-         copyFile(outputDir, "prettify.js", timeOfCoverageJar);
+         copyFile(outputDir, "prettify.js");
       }
    }
 
-   private void copyFile(String outputDir, String fileName, long timeOfCoverageJar) throws IOException
+   private void copyFile(String outputDir, String fileName) throws IOException
    {
       File outputFile = new File(outputDir, fileName);
 
-      if (outputFile.exists() && timeOfCoverageJar < outputFile.lastModified()) {
+      if (outputFile.exists() && outputFile.lastModified() > getLastModifiedTimeOfCoverageJar()) {
          return;
       }
 
@@ -48,5 +48,22 @@ final class StaticFiles
             output.close();
          }
       }
+   }
+
+   private long getLastModifiedTimeOfCoverageJar()
+   {
+      if (lastModifiedTimeOfCoverageJar == 0) {
+         CodeSource codeSource = getClass().getProtectionDomain().getCodeSource();
+
+         if (codeSource == null) {
+            lastModifiedTimeOfCoverageJar = -1;
+         }
+         else {
+            String pathToThisJar = codeSource.getLocation().getPath();
+            lastModifiedTimeOfCoverageJar = new File(pathToThisJar).lastModified();
+         }
+      }
+
+      return lastModifiedTimeOfCoverageJar;
    }
 }
