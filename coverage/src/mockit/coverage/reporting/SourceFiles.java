@@ -42,11 +42,6 @@ final class SourceFiles
    {
       String curDirName = new File(System.getProperty("user.dir")).getName();
       addSrcSubDirs(new File("../" + curDirName));
-
-      if (srcDirs.isEmpty()) {
-         String curDir = new File("").getAbsolutePath();
-         throw new IllegalStateException("No \"src\" directories found under \"" + curDir + '\"');
-      }
    }
 
    private void addSrcSubDirs(File dir)
