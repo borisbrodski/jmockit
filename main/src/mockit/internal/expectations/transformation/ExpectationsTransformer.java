@@ -86,13 +86,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    {
       if (classBeingRedefined == null && protectionDomain != null) {
          ClassReader cr = new ClassReader(classfileBuffer);
-         int v = cr.getItem(cr.readUnsignedShort(cr.header + 4));
-
-         if (v == 0) {
-            return null;
-         }
-
-         String superClassName = cr.readUTF8(v, new char[120]);
+         String superClassName = cr.getSuperName();
 
          if (
             !baseSubclasses.contains(superClassName) &&

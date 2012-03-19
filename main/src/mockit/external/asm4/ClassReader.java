@@ -138,7 +138,7 @@ public class ClassReader {
      * Start index of the class header information (access, name...) in
      * {@link #b b}.
      */
-    public final int header;
+    private final int header;
 
     // ------------------------------------------------------------------------
     // Constructors
