@@ -7,7 +7,6 @@ package mockit.integration.testng.internal;
 import java.lang.reflect.*;
 
 import static mockit.internal.util.StackTrace.*;
-import static mockit.internal.util.Utilities.*;
 import org.testng.*;
 import org.testng.annotations.*;
 import org.testng.internal.Parameters;
@@ -157,36 +156,97 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator
 
       Throwable thrownByTest = testResult.getThrowable();
 
-      if (thrownByTest != null) {
-         filterStackTrace(thrownByTest);
-      }
-
       try {
-         concludeTestMethodExecution(testMethodSavePoint, thrownByTest);
-      }
-      catch (Throwable t) {
-         Method method = invokedMethod.getTestMethod().getConstructorOrMethod().getMethod();
-         Class<?>[] expectedExceptions = method.getAnnotation(Test.class).expectedExceptions();
-         boolean testMethodExpectsTheException = containsReference(expectedExceptions, t.getClass());
-
-         if (testResult.isSuccess()) {
-            if (!testMethodExpectsTheException) {
-               if (t != thrownByTest) {
-                  filterStackTrace(t);
-               }
-
-               testResult.setThrowable(t);
-               testResult.setStatus(ITestResult.FAILURE);
-            }
+         if (thrownByTest == null) {
+            concludeTestExecutionWithNothingThrown(testMethodSavePoint, testResult);
          }
-         else if (testMethodExpectsTheException) {
-            testResult.setThrowable(null);
-            testResult.setStatus(ITestResult.SUCCESS);
+         else if (thrownByTest instanceof TestException) {
+            concludeTestExecutionWithExpectedExceptionNotThrown(invokedMethod, testMethodSavePoint, testResult);
+         }
+         else if (testResult.isSuccess()) {
+            concludeTestExecutionWithExpectedExceptionThrown(testMethodSavePoint, testResult, thrownByTest);
+         }
+         else {
+            concludeTestExecutionWithUnexpectedExceptionThrown(testMethodSavePoint, thrownByTest);
          }
       }
       finally {
          TestRun.finishCurrentTestExecution(false);
       }
+   }
+
+   private void concludeTestExecutionWithNothingThrown(SavePoint testMethodSavePoint, ITestResult testResult)
+   {
+      try {
+         concludeTestMethodExecution(testMethodSavePoint, null, false);
+      }
+      catch (Throwable t) {
+         filterStackTrace(t);
+         testResult.setThrowable(t);
+         testResult.setStatus(ITestResult.FAILURE);
+      }
+   }
+
+   private void concludeTestExecutionWithExpectedExceptionNotThrown(
+      IInvokedMethod invokedMethod, SavePoint testMethodSavePoint, ITestResult testResult)
+   {
+      try {
+         concludeTestMethodExecution(testMethodSavePoint, null, false);
+      }
+      catch (Throwable t) {
+         filterStackTrace(t);
+
+         if (isExpectedException(invokedMethod, t)) {
+            testResult.setThrowable(null);
+            testResult.setStatus(ITestResult.SUCCESS);
+         }
+         else {
+            filterStackTrace(testResult.getThrowable());
+         }
+      }
+   }
+
+   private void concludeTestExecutionWithExpectedExceptionThrown(
+      SavePoint testMethodSavePoint, ITestResult testResult, Throwable thrownByTest)
+   {
+      filterStackTrace(thrownByTest);
+
+      try {
+         concludeTestMethodExecution(testMethodSavePoint, thrownByTest, true);
+      }
+      catch (Throwable t) {
+         if (t != thrownByTest) {
+            filterStackTrace(t);
+            testResult.setThrowable(t);
+            testResult.setStatus(ITestResult.FAILURE);
+         }
+      }
+   }
+
+   private void concludeTestExecutionWithUnexpectedExceptionThrown(
+      SavePoint testMethodSavePoint, Throwable thrownByTest)
+   {
+      filterStackTrace(thrownByTest);
+
+      try {
+         concludeTestMethodExecution(testMethodSavePoint, thrownByTest, false);
+      }
+      catch (Throwable ignored) {}
+   }
+
+   private boolean isExpectedException(IInvokedMethod invokedMethod, Throwable thrownByTest)
+   {
+      Method testMethod = invokedMethod.getTestMethod().getConstructorOrMethod().getMethod();
+      Class<?>[] expectedExceptions = testMethod.getAnnotation(Test.class).expectedExceptions();
+      Class<? extends Throwable> thrownExceptionType = thrownByTest.getClass();
+
+      for (Class<?> expectedException : expectedExceptions) {
+         if (expectedException.isAssignableFrom(thrownExceptionType)) {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    public void onStart(ISuite suite) {}

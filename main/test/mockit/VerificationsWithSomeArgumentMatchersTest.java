@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -10,9 +10,11 @@ import org.junit.*;
 
 import static java.util.Arrays.*;
 
+import mockit.internal.*;
+
 public final class VerificationsWithSomeArgumentMatchersTest
 {
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    static class Collaborator
    {
       void setValue(int value) {}
@@ -72,7 +74,7 @@ public final class VerificationsWithSomeArgumentMatchersTest
       };
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void useMatcherOnlyForFirstArgumentWithUnexpectedReplayValue()
    {
       mock.simpleOperation(2, "", null);
@@ -85,7 +87,7 @@ public final class VerificationsWithSomeArgumentMatchersTest
       };
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void useMatcherOnlyForSecondArgumentWithUnexpectedReplayValue()
    {
       mock.simpleOperation(1, "Xyz", null);
@@ -98,7 +100,7 @@ public final class VerificationsWithSomeArgumentMatchersTest
       };
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void useMatcherOnlyForLastArgumentWithUnexpectedReplayValue()
    {
       mock.simpleOperation(12, "arg", null);

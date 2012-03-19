@@ -11,6 +11,8 @@ import org.junit.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
+import mockit.internal.*;
+
 @SuppressWarnings("UnusedDeclaration")
 public final class ForEachInvocationTest
 {
@@ -375,7 +377,7 @@ public final class ForEachInvocationTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void handlerForFailedUnorderedVerification(final Collaborator mock)
    {
       mock.doSomething();
@@ -386,7 +388,7 @@ public final class ForEachInvocationTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void handlerForFailedOrderedVerification(final Collaborator mock)
    {
       mock.doSomething();

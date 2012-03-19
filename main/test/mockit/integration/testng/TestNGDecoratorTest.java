@@ -11,6 +11,7 @@ import static org.testng.Assert.*;
 import org.testng.annotations.*;
 
 import mockit.*;
+import mockit.internal.*;
 
 public final class TestNGDecoratorTest extends BaseTestNGDecoratorTest
 {
@@ -78,7 +79,7 @@ public final class TestNGDecoratorTest extends BaseTestNGDecoratorTest
       assertNotSame(temp, mock);
    }
 
-   @Test(expectedExceptions = AssertionError.class)
+   @Test(expectedExceptions = UnexpectedInvocation.class)
    public void mockMethodWithViolatedInvocationCountConstraint() throws Exception
    {
       new MockUp<LoginContext>() {

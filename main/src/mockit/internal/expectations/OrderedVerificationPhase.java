@@ -6,6 +6,7 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
+import mockit.internal.UnexpectedInvocation;
 import mockit.internal.expectations.invocation.*;
 
 public final class OrderedVerificationPhase extends BaseVerificationPhase
@@ -200,7 +201,7 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
    }
 
    @Override
-   protected AssertionError endVerification()
+   protected Error endVerification()
    {
       if (pendingError != null) {
          return pendingError;
@@ -210,14 +211,14 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
          unverifiedExpectationsFixed && indexIncrement > 0 && currentExpectation != null &&
          replayIndex <= indexOfLastUnverifiedExpectation()
       ) {
-         return new AssertionError("Unexpected invocations after" + currentExpectation.invocation);
+         return new UnexpectedInvocation("Unexpected invocations after" + currentExpectation.invocation);
       }
 
       if (unverifiedInvocationPrecedingVerifiedOnesLeftBehind != null) {
          return unverifiedInvocationPrecedingVerifiedOnesLeftBehind.errorForUnexpectedInvocation();
       }
 
-      AssertionError error = verifyRemainingIterations();
+      Error error = verifyRemainingIterations();
 
       if (error != null) {
          return error;
@@ -226,12 +227,12 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
       return super.endVerification();
    }
 
-   private AssertionError verifyRemainingIterations()
+   private Error verifyRemainingIterations()
    {
       int expectationsVerifiedInFirstIteration = recordAndReplay.executionState.verifiedExpectations.size();
 
       for (int i = 1; i < numberOfIterations; i++) {
-         AssertionError error = verifyNextIterationOfWholeBlockOfInvocations(expectationsVerifiedInFirstIteration);
+         Error error = verifyNextIterationOfWholeBlockOfInvocations(expectationsVerifiedInFirstIteration);
 
          if (error != null) {
             return error;
@@ -241,7 +242,7 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
       return null;
    }
 
-   private AssertionError verifyNextIterationOfWholeBlockOfInvocations(int expectationsVerifiedInFirstIteration)
+   private Error verifyNextIterationOfWholeBlockOfInvocations(int expectationsVerifiedInFirstIteration)
    {
       List<VerifiedExpectation> expectationsVerified = recordAndReplay.executionState.verifiedExpectations;
 
@@ -254,7 +255,7 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
             invocation.instance, 0, invocation.getClassDesc(), invocation.getMethodNameAndDescription(), null, null,
             false, verifiedExpectation.arguments);
 
-         AssertionError testFailure = recordAndReplay.getErrorThrown();
+         Error testFailure = recordAndReplay.getErrorThrown();
 
          if (testFailure != null) {
             return testFailure;

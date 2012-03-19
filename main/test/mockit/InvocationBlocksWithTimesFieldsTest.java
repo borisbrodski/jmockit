@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -7,6 +7,8 @@ package mockit;
 import java.util.*;
 
 import org.junit.*;
+
+import mockit.internal.*;
 
 public final class InvocationBlocksWithTimesFieldsTest
 {
@@ -31,12 +33,12 @@ public final class InvocationBlocksWithTimesFieldsTest
    {
       Collaborator() {}
 
-      @SuppressWarnings({"UnusedDeclaration"})
+      @SuppressWarnings("UnusedDeclaration")
       Collaborator(int value) {}
 
       void provideSomeService() {}
 
-      @SuppressWarnings({"UnusedDeclaration"})
+      @SuppressWarnings("UnusedDeclaration")
       final void simpleOperation(int a, String b, Date c) {}
    }
 
@@ -45,8 +47,7 @@ public final class InvocationBlocksWithTimesFieldsTest
    @Test
    public void strict_expectTwiceByUsingInvocationCount()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -60,11 +61,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomethingElse();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void strict_expectTwiceByUsingInvocationCountButReplayOnlyOnce()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -80,8 +80,7 @@ public final class InvocationBlocksWithTimesFieldsTest
    @Test
    public void strict_expectAtLeastOnceAndReplayTwice()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -95,11 +94,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomethingElse();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void strict_expectAtLeastTwiceButReplayOnceWithSingleExpectation()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -110,11 +108,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomething();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void strict_expectAtLeastTwiceButReplayOnceWithTwoConsecutiveExpectations()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -130,8 +127,7 @@ public final class InvocationBlocksWithTimesFieldsTest
    @Test
    public void strict_minTimesAndMaxTimesOutOfOrder()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @Mocked Collaborator mock;
 
          {
@@ -147,8 +143,7 @@ public final class InvocationBlocksWithTimesFieldsTest
    @Test
    public void strict_expectAtMostTwiceAndReplayOnce()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -161,11 +156,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomethingElse();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void strict_expectAtMostOnceButReplayTwice()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -182,8 +176,7 @@ public final class InvocationBlocksWithTimesFieldsTest
    @Test
    public void strict_expectAtMostZero()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -192,11 +185,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       };
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void strict_expectAtMostZeroButReplayOnce()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -208,11 +200,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomething();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void strict_maxTimesDoesNotOverwriteMinTimes()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -311,11 +302,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomething();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void nonStrict_expectTwiceByUsingInvocationCountButReplayOnlyOnce()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
@@ -380,11 +370,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomething();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void nonStrict_expectAtMostOnceButReplayTwice()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
@@ -401,8 +390,7 @@ public final class InvocationBlocksWithTimesFieldsTest
    @Test
    public void nonStrict_expectAtMostZero()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
@@ -411,11 +399,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       };
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void nonStrict_expectAtMostZeroButReplayOnce()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @NonStrict Collaborator mock;
 
          {
@@ -426,11 +413,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomething();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void nonStrict_maxTimesDoesNotOverwriteMinTimes()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          @Mocked Collaborator mock;
 
          {
@@ -445,8 +431,7 @@ public final class InvocationBlocksWithTimesFieldsTest
    public void nonStrict_expectSameMethodOnceOrTwiceThenOnceButReplayEachExpectationOnlyOnce(
       @NonStrict final Collaborator mock)
    {
-      new Expectations()
-      {
+      new Expectations() {
          {
             mock.simpleOperation(1, "", null); minTimes = 1; maxTimes = 2;
             mock.simpleOperation(2, "", null);
@@ -460,8 +445,7 @@ public final class InvocationBlocksWithTimesFieldsTest
    @Test
    public void nonStrict_expectTwoOrThreeTimes()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @NonStrict @Mocked Collaborator mock;
 
          {
@@ -480,13 +464,10 @@ public final class InvocationBlocksWithTimesFieldsTest
    {
       final Collaborator collaborator = new Collaborator();
 
-      new NonStrictExpectations(collaborator)
-      {
-         {
-            collaborator.simpleOperation(1, "b", null);
-            collaborator.provideSomeService(); minTimes = 0; maxTimes = -1;
-         }
-      };
+      new NonStrictExpectations(collaborator) {{
+         collaborator.simpleOperation(1, "b", null);
+         collaborator.provideSomeService(); minTimes = 0; maxTimes = -1;
+      }};
 
       codeUnderTest.doSomething();
       codeUnderTest.doSomethingElse();
@@ -496,8 +477,7 @@ public final class InvocationBlocksWithTimesFieldsTest
    @Test
    public void nonStrict_expectZeroOrMoreTimesAndReplayNone()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
@@ -518,28 +498,22 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomething();
       codeUnderTest.doSomethingElse();
 
-      new VerificationsInOrder()
-      {
-         {
-            mock.provideSomeService(); times = 2;
-            mock.simpleOperation(1, "b", null);
-         }
-      };
+      new VerificationsInOrder() {{
+         mock.provideSomeService(); times = 2;
+         mock.simpleOperation(1, "b", null);
+      }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void ordered_verifyTwiceByUsingInvocationCountButReplayOnlyOnce(final Collaborator mock)
    {
       codeUnderTest.doSomethingElse();
       codeUnderTest.doSomething();
 
-      new FullVerificationsInOrder()
-      {
-         {
-            mock.simpleOperation(1, "b", null);
-            mock.provideSomeService(); times = 2;
-         }
-      };
+      new FullVerificationsInOrder() {{
+         mock.simpleOperation(1, "b", null);
+         mock.provideSomeService(); times = 2;
+      }};
    }
 
    @Test
@@ -549,28 +523,22 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomething();
       codeUnderTest.doSomethingElse();
 
-      new VerificationsInOrder()
-      {
-         {
-            mock.provideSomeService(); minTimes = 1;
-            mock.simpleOperation(1, "b", null);
-         }
-      };
+      new VerificationsInOrder() {{
+         mock.provideSomeService(); minTimes = 1;
+         mock.simpleOperation(1, "b", null);
+      }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void ordered_minTimesAndMaxTimesOutOfOrder(final Collaborator mock)
    {
       codeUnderTest.doSomething();
       codeUnderTest.doSomething();
       codeUnderTest.doSomething();
 
-      new VerificationsInOrder()
-      {
-         {
-            mock.provideSomeService(); maxTimes = 2; minTimes = 1;
-         }
-      };
+      new VerificationsInOrder() {{
+         mock.provideSomeService(); maxTimes = 2; minTimes = 1;
+      }};
    }
 
    @Test
@@ -579,66 +547,51 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomething();
       codeUnderTest.doSomethingElse();
 
-      new FullVerificationsInOrder()
-      {
-         {
-            mock.provideSomeService(); maxTimes = 2;
-            mock.simpleOperation(1, "b", null);
-         }
-      };
+      new FullVerificationsInOrder() {{
+         mock.provideSomeService(); maxTimes = 2;
+         mock.simpleOperation(1, "b", null);
+      }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void ordered_verifyAtMostOnceButReplayTwice(final Collaborator mock)
    {
       codeUnderTest.doSomething();
       codeUnderTest.doSomething();
       codeUnderTest.doSomethingElse();
 
-      new VerificationsInOrder()
-      {
-         {
-            mock.provideSomeService(); maxTimes = 1;
-            mock.simpleOperation(1, "b", null);
-         }
-      };
+      new VerificationsInOrder() {{
+         mock.provideSomeService(); maxTimes = 1;
+         mock.simpleOperation(1, "b", null);
+      }};
    }
 
    @Test
    public void ordered_verifyAtMostZero(final Collaborator mock)
    {
-      new VerificationsInOrder()
-      {
-         {
-            mock.provideSomeService(); maxTimes = 0;
-         }
-      };
+      new VerificationsInOrder() {{
+         mock.provideSomeService(); maxTimes = 0;
+      }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void ordered_verifyAtMostZeroButReplayOnce(@NonStrict final Collaborator mock)
    {
       codeUnderTest.doSomething();
 
-      new VerificationsInOrder()
-      {
-         {
-            mock.provideSomeService(); maxTimes = 0;
-         }
-      };
+      new VerificationsInOrder() {{
+         mock.provideSomeService(); maxTimes = 0;
+      }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void ordered_maxTimesDoesNotOverwriteMinTimes(@Mocked final Collaborator mock)
    {
       codeUnderTest.doSomething();
 
-      new FullVerificationsInOrder()
-      {
-         {
-            mock.provideSomeService(); minTimes = 2; maxTimes = 3;
-         }
-      };
+      new FullVerificationsInOrder() {{
+         mock.provideSomeService(); minTimes = 2; maxTimes = 3;
+      }};
    }
 
    @Test
@@ -648,13 +601,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       mock.simpleOperation(1, "", null);
       mock.simpleOperation(2, "", null);
 
-      new VerificationsInOrder()
-      {
-         {
-            mock.simpleOperation(1, "", null); minTimes = 1; maxTimes = 2;
-            mock.simpleOperation(2, "", null);
-         }
-      };
+      new VerificationsInOrder() {{
+         mock.simpleOperation(1, "", null); minTimes = 1; maxTimes = 2;
+         mock.simpleOperation(2, "", null);
+      }};
    }
 
    @Test
@@ -664,16 +614,13 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomething();
       codeUnderTest.doSomethingElse();
 
-      new VerificationsInOrder()
-      {
-         {
-            mock.provideSomeService(); minTimes = 2; maxTimes = 3;
-            mock.simpleOperation(1, "b", null);
-         }
-      };
+      new VerificationsInOrder() {{
+         mock.provideSomeService(); minTimes = 2; maxTimes = 3;
+         mock.simpleOperation(1, "b", null);
+      }};
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    @Test
    public void ordered_verifyZeroOrMoreTimesAndReplayTwice(Collaborator mock)
    {
@@ -683,13 +630,10 @@ public final class InvocationBlocksWithTimesFieldsTest
 
       final Collaborator collaborator = new Collaborator();
 
-      new VerificationsInOrder()
-      {
-         {
-            collaborator.simpleOperation(1, "b", null);
-            collaborator.provideSomeService(); minTimes = 0; maxTimes = -1;
-         }
-      };
+      new VerificationsInOrder() {{
+         collaborator.simpleOperation(1, "b", null);
+         collaborator.provideSomeService(); minTimes = 0; maxTimes = -1;
+      }};
    }
 
    @Test
@@ -697,13 +641,10 @@ public final class InvocationBlocksWithTimesFieldsTest
    {
       codeUnderTest.doSomethingElse();
 
-      new FullVerificationsInOrder()
-      {
-         {
-            mock.provideSomeService(); minTimes = 0; maxTimes = -1;
-            mock.simpleOperation(1, "b", null);
-         }
-      };
+      new FullVerificationsInOrder() {{
+         mock.provideSomeService(); minTimes = 0; maxTimes = -1;
+         mock.simpleOperation(1, "b", null);
+      }};
    }
 
    // Tests with unordered verifications //////////////////////////////////////////////////////////////////////////////
@@ -715,28 +656,22 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomethingElse();
       codeUnderTest.doSomething();
 
-      new Verifications()
-      {
-         {
-            mock.provideSomeService(); times = 2;
-            mock.simpleOperation(1, "b", null);
-         }
-      };
+      new Verifications() {{
+         mock.provideSomeService(); times = 2;
+         mock.simpleOperation(1, "b", null);
+      }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void unordered_verifyTwiceByUsingInvocationCountButReplayOnlyOnce(final Collaborator mock)
    {
       codeUnderTest.doSomethingElse();
       codeUnderTest.doSomething();
 
-      new FullVerifications()
-      {
-         {
-            mock.provideSomeService(); times = 2;
-            mock.simpleOperation(1, "b", null);
-         }
-      };
+      new FullVerifications() {{
+         mock.provideSomeService(); times = 2;
+         mock.simpleOperation(1, "b", null);
+      }};
    }
 
    @Test
@@ -746,13 +681,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomething();
       codeUnderTest.doSomething();
 
-      new Verifications()
-      {
-         {
-            mock.provideSomeService(); minTimes = 1;
-            mock.simpleOperation(1, "b", null);
-         }
-      };
+      new Verifications() {{
+         mock.provideSomeService(); minTimes = 1;
+         mock.simpleOperation(1, "b", null);
+      }};
    }
 
    @Test
@@ -762,12 +694,9 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomething();
       codeUnderTest.doSomething();
 
-      new Verifications()
-      {
-         {
-            mock.provideSomeService(); maxTimes = 2; minTimes = 1;
-         }
-      };
+      new Verifications() {{
+         mock.provideSomeService(); maxTimes = 2; minTimes = 1;
+      }};
    }
 
    @Test
@@ -776,66 +705,51 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomething();
       codeUnderTest.doSomethingElse();
 
-      new FullVerifications()
-      {
-         {
-            mock.simpleOperation(1, "b", null);
-            mock.provideSomeService(); maxTimes = 2;
-         }
-      };
+      new FullVerifications() {{
+         mock.simpleOperation(1, "b", null);
+         mock.provideSomeService(); maxTimes = 2;
+      }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void unordered_verifyAtMostOnceButReplayTwice(final Collaborator mock)
    {
       codeUnderTest.doSomething();
       codeUnderTest.doSomethingElse();
       codeUnderTest.doSomething();
 
-      new Verifications()
-      {
-         {
-            mock.provideSomeService(); maxTimes = 1;
-            mock.simpleOperation(1, "b", null);
-         }
-      };
+      new Verifications() {{
+         mock.provideSomeService(); maxTimes = 1;
+         mock.simpleOperation(1, "b", null);
+      }};
    }
 
    @Test
    public void unordered_verifyAtMostZero(final Collaborator mock)
    {
-      new Verifications()
-      {
-         {
-            mock.provideSomeService(); maxTimes = 0;
-         }
-      };
+      new Verifications() {{
+         mock.provideSomeService(); maxTimes = 0;
+      }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void unordered_verifyAtMostZeroButReplayOnce(@NonStrict final Collaborator mock)
    {
       codeUnderTest.doSomething();
 
-      new Verifications()
-      {
-         {
-            mock.provideSomeService(); maxTimes = 0;
-         }
-      };
+      new Verifications() {{
+         mock.provideSomeService(); maxTimes = 0;
+      }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void unordered_maxTimesDoesNotOverwriteMinTimes(@Mocked final Collaborator mock)
    {
       codeUnderTest.doSomething();
 
-      new FullVerifications()
-      {
-         {
-            mock.provideSomeService(); minTimes = 2; maxTimes = 3;
-         }
-      };
+      new FullVerifications() {{
+         mock.provideSomeService(); minTimes = 2; maxTimes = 3;
+      }};
    }
 
    @Test
@@ -845,13 +759,10 @@ public final class InvocationBlocksWithTimesFieldsTest
       mock.simpleOperation(2, "", null);
       mock.simpleOperation(1, "", null);
 
-      new Verifications()
-      {
-         {
-            mock.simpleOperation(1, "", null); minTimes = 1; maxTimes = 2;
-            mock.simpleOperation(2, "", null);
-         }
-      };
+      new Verifications() {{
+         mock.simpleOperation(1, "", null); minTimes = 1; maxTimes = 2;
+         mock.simpleOperation(2, "", null);
+      }};
    }
 
    @Test
@@ -861,16 +772,13 @@ public final class InvocationBlocksWithTimesFieldsTest
       codeUnderTest.doSomethingElse();
       codeUnderTest.doSomething();
 
-      new FullVerifications()
-      {
-         {
-            mock.simpleOperation(1, "b", null);
-            mock.provideSomeService(); minTimes = 2; maxTimes = 3;
-         }
-      };
+      new FullVerifications() {{
+         mock.simpleOperation(1, "b", null);
+         mock.provideSomeService(); minTimes = 2; maxTimes = 3;
+      }};
    }
 
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    @Test
    public void unordered_verifyZeroOrMoreTimesAndReplayTwice(Collaborator mock)
    {
@@ -880,13 +788,10 @@ public final class InvocationBlocksWithTimesFieldsTest
 
       final Collaborator collaborator = new Collaborator();
 
-      new Verifications()
-      {
-         {
-            collaborator.simpleOperation(1, "b", null);
-            collaborator.provideSomeService(); minTimes = 0; maxTimes = -1;
-         }
-      };
+      new Verifications() {{
+         collaborator.simpleOperation(1, "b", null);
+         collaborator.provideSomeService(); minTimes = 0; maxTimes = -1;
+      }};
    }
 
    @Test
@@ -894,12 +799,9 @@ public final class InvocationBlocksWithTimesFieldsTest
    {
       codeUnderTest.doSomethingElse();
 
-      new Verifications()
-      {
-         {
-            mock.simpleOperation(1, "b", null);
-            mock.provideSomeService(); minTimes = 0; maxTimes = -1;
-         }
-      };
+      new Verifications() {{
+         mock.simpleOperation(1, "b", null);
+         mock.provideSomeService(); minTimes = 0; maxTimes = -1;
+      }};
    }
 }

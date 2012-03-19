@@ -6,6 +6,8 @@ package mockit.internal.expectations.invocation;
 
 import java.util.*;
 
+import mockit.internal.*;
+import mockit.internal.UnexpectedInvocation;
 import mockit.external.asm4.Type;
 
 import mockit.internal.expectations.*;
@@ -138,7 +140,7 @@ public final class ExpectedInvocation
          TestRun.getExecutingTest().isInvokedInstanceEquivalentToCapturedInstance(instance, mockedInstance);
    }
 
-   // Creation of AssertionError instances for invocation mismatch reporting //////////////////////////////////////////
+   // Creation of Error instances for invocation mismatch reporting ///////////////////////////////////////////////////
 
    public ExpectedInvocation(Object mockedInstance, String classDesc, String methodNameAndDesc, Object[] args)
    {
@@ -148,37 +150,48 @@ public final class ExpectedInvocation
       invocationCause = null;
    }
 
-   public AssertionError errorForUnexpectedInvocation()
+   public UnexpectedInvocation errorForUnexpectedInvocation()
    {
-      return newErrorWithCause("Unexpected invocation", "Unexpected invocation of" + this);
+      return newUnexpectedInvocationWithCause("Unexpected invocation", "Unexpected invocation of" + this);
    }
 
-   private AssertionError newErrorWithCause(String titleForCause, String initialMessage)
+   private UnexpectedInvocation newUnexpectedInvocationWithCause(String titleForCause, String initialMessage)
    {
-      String errorMessage = initialMessage;
-
-      if (customErrorMessage != null) {
-         errorMessage = customErrorMessage + "\n" + errorMessage;
-      }
-
-      AssertionError error = new AssertionError(errorMessage);
-
-      if (invocationCause != null) {
-         invocationCause.defineCause(titleForCause, error);
-      }
-
+      String errorMessage = getErrorMessage(initialMessage);
+      UnexpectedInvocation error = new UnexpectedInvocation(errorMessage);
+      setErrorAsInvocationCause(titleForCause, error);
       return error;
    }
 
-   public AssertionError errorForMissingInvocation()
+   private String getErrorMessage(String initialMessage)
    {
-      return newErrorWithCause("Missing invocation", "Missing invocation of" + this);
+      return customErrorMessage == null ? initialMessage : customErrorMessage + "\n" + initialMessage;
    }
 
-   public AssertionError errorForMissingInvocations(int totalMissing)
+   private void setErrorAsInvocationCause(String titleForCause, Error error)
+   {
+      if (invocationCause != null) {
+         invocationCause.defineCause(titleForCause, error);
+      }
+   }
+
+   private MissingInvocation newMissingInvocationWithCause(String titleForCause, String initialMessage)
+   {
+      String errorMessage = getErrorMessage(initialMessage);
+      MissingInvocation error = new MissingInvocation(errorMessage);
+      setErrorAsInvocationCause(titleForCause, error);
+      return error;
+   }
+
+   public MissingInvocation errorForMissingInvocation()
+   {
+      return newMissingInvocationWithCause("Missing invocation", "Missing invocation of" + this);
+   }
+
+   public MissingInvocation errorForMissingInvocations(int totalMissing)
    {
       String message = "Missing " + totalMissing + invocationsToThis(totalMissing);
-      return newErrorWithCause("Missing invocations", message);
+      return newMissingInvocationWithCause("Missing invocations", message);
    }
 
    private String invocationsToThis(int invocations)
@@ -187,29 +200,30 @@ public final class ExpectedInvocation
       return prefix + this;
    }
 
-   public AssertionError errorForUnexpectedInvocation(Object mock, String invokedClassDesc, String invokedMethod)
+   public UnexpectedInvocation errorForUnexpectedInvocation(
+      Object mock, String invokedClassDesc, String invokedMethod)
    {
       String instanceDescription = mock == null ? "" : "\non instance: " + Utilities.objectIdentity(mock);
       String message =
          "Unexpected invocation of:\n" + new MethodFormatter(invokedClassDesc, invokedMethod) + instanceDescription +
          "\nwhen was expecting an invocation of" + this;
-      return newErrorWithCause("Unexpected invocation", message);
+      return newUnexpectedInvocationWithCause("Unexpected invocation", message);
    }
 
-   public AssertionError errorForUnexpectedInvocations(int totalUnexpected)
+   public UnexpectedInvocation errorForUnexpectedInvocations(int totalUnexpected)
    {
       String message = totalUnexpected + " unexpected" + invocationsToThis(totalUnexpected);
-      return newErrorWithCause("Unexpected invocations", message);
+      return newUnexpectedInvocationWithCause("Unexpected invocations", message);
    }
 
-   public AssertionError errorForUnexpectedInvocationBeforeAnother(ExpectedInvocation another)
+   public UnexpectedInvocation errorForUnexpectedInvocationBeforeAnother(ExpectedInvocation another)
    {
-      return newErrorWithCause("Unexpected invocation" + this, "Unexpected invocation before" + another);
+      return newUnexpectedInvocationWithCause("Unexpected invocation" + this, "Unexpected invocation before" + another);
    }
 
-   public AssertionError errorForUnexpectedInvocationAfterAnother(ExpectedInvocation another)
+   public UnexpectedInvocation errorForUnexpectedInvocationAfterAnother(ExpectedInvocation another)
    {
-      return newErrorWithCause("Unexpected invocation" + this, "Unexpected invocation after" + another);
+      return newUnexpectedInvocationWithCause("Unexpected invocation" + this, "Unexpected invocation after" + another);
    }
 
    @Override

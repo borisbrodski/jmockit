@@ -7,6 +7,8 @@ package mockit;
 import static org.junit.Assert.*;
 import org.junit.*;
 
+import mockit.internal.*;
+
 public final class VerificationsTest
 {
    @SuppressWarnings("UnusedParameters")
@@ -51,7 +53,7 @@ public final class VerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyUnrecordedInvocationThatNeverHappens()
    {
       mock.setSomething(123);
@@ -62,7 +64,7 @@ public final class VerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyRecordedInvocationThatNeverHappens()
    {
       new NonStrictExpectations() {{
@@ -131,7 +133,7 @@ public final class VerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyUnrecordedInvocationThatShouldHappenButDoesNot()
    {
       mock.setSomething(1);
@@ -152,7 +154,7 @@ public final class VerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyInvocationsWithInvocationCountLargerThanOccurred()
    {
       mock.setSomethingElse("test");
@@ -179,7 +181,7 @@ public final class VerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifySingleInvocationInBlockWithLargerNumberOfIterations()
    {
       mock.setSomething(123);
@@ -187,7 +189,7 @@ public final class VerificationsTest
       new Verifications(3) {{ mock.setSomething(anyInt); }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyMultipleInvocationsInBlockWithSmallerNumberOfIterations()
    {
       mock.setSomething(45);

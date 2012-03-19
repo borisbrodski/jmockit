@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -9,6 +9,8 @@ import java.util.*;
 import org.junit.*;
 
 import static org.junit.Assert.*;
+
+import mockit.internal.*;
 
 public final class ExpectationsWithInvocationCountsTest
 {
@@ -33,20 +35,19 @@ public final class ExpectationsWithInvocationCountsTest
    {
       Collaborator() {}
 
-      @SuppressWarnings({"UnusedDeclaration"})
+      @SuppressWarnings("UnusedDeclaration")
       Collaborator(int value) {}
 
       void provideSomeService() {}
 
-      @SuppressWarnings({"UnusedDeclaration"})
+      @SuppressWarnings("UnusedDeclaration")
       final void simpleOperation(int a, String b, Date c) {}
    }
 
    @Test
    public void expectOnce()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -57,11 +58,10 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomething();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectOnceButReplayTwice()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -75,11 +75,10 @@ public final class ExpectationsWithInvocationCountsTest
       fail("Should not get here");
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectOnceButReplayThreeTimes()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -102,8 +101,7 @@ public final class ExpectationsWithInvocationCountsTest
    @Test
    public void expectTwiceByRepeatingTheExpectation()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -119,8 +117,7 @@ public final class ExpectationsWithInvocationCountsTest
    @Test
    public void expectTwiceByUsingInvocationCount()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -134,11 +131,10 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomethingElse();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectTwiceByUsingInvocationCountButReplayOnlyOnce()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -151,11 +147,10 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomethingElse();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectExactlyTwiceButReplayMoreTimes()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -171,8 +166,7 @@ public final class ExpectationsWithInvocationCountsTest
    @Test
    public void expectAtLeastOnceAndReplayTwice()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -186,11 +180,10 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomethingElse();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void expectAtLeastTwiceButReplayOnceWithSingleExpectation()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -201,11 +194,10 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomething();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectAtLeastTwiceButReplayOnceWithTwoConsecutiveExpectations()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -221,8 +213,7 @@ public final class ExpectationsWithInvocationCountsTest
    @Test
    public void repeatsAtLeastOverwritingUpperLimit()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -238,8 +229,7 @@ public final class ExpectationsWithInvocationCountsTest
    @Test
    public void expectAtMostTwiceAndReplayOnce()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -252,11 +242,10 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomethingElse();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectAtMostOnceButReplayTwice()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -270,11 +259,10 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomethingElse();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void repeatsAtMostDoesNotOverwriteLowerLimit()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -289,13 +277,10 @@ public final class ExpectationsWithInvocationCountsTest
    public void expectSameMethodOnceOrTwiceThenOnceButReplayEachExpectationOnlyOnce(
       final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.simpleOperation(1, "", null); minTimes = 1; maxTimes = 2;
-            mock.simpleOperation(2, "", null);
-         }
-      };
+      new Expectations() {{
+         mock.simpleOperation(1, "", null); minTimes = 1; maxTimes = 2;
+         mock.simpleOperation(2, "", null);
+      }};
 
       mock.simpleOperation(1, "", null);
       mock.simpleOperation(2, "", null);
@@ -304,8 +289,7 @@ public final class ExpectationsWithInvocationCountsTest
    @Test
    public void expectTwoOrThreeTimes()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -322,8 +306,7 @@ public final class ExpectationsWithInvocationCountsTest
    @Test
    public void expectZeroOrMoreTimesAndReplayTwice()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -340,8 +323,7 @@ public final class ExpectationsWithInvocationCountsTest
    @Test
    public void expectZeroOrMoreTimesAndReplayNone()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -353,11 +335,10 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomethingElse();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void expectAtLeastOneInvocationMatchingStrictExpectationButInvokeNone()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator a;
 
          {
@@ -368,11 +349,10 @@ public final class ExpectationsWithInvocationCountsTest
       // Do nothing at replay time.
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void expectOneOrMoreInvocationsFollowedByAnotherWhichWontOccur_maxTimes()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -384,16 +364,13 @@ public final class ExpectationsWithInvocationCountsTest
       codeUnderTest.doSomething();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void expectOneOrMoreInvocationsFollowedByAnotherWhichWontOccur_minTimes(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.simpleOperation(1, anyString, null); minTimes = 1;
-            mock.provideSomeService();
-        }
-      };
+      new Expectations() {{
+         mock.simpleOperation(1, anyString, null); minTimes = 1;
+         mock.provideSomeService();
+      }};
 
       codeUnderTest.doSomethingElse();
    }

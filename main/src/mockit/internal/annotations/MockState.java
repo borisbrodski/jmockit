@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.annotations;
 
 import java.lang.reflect.*;
 
+import mockit.internal.*;
+import mockit.internal.UnexpectedInvocation;
 import mockit.internal.util.*;
 
 final class MockState
@@ -78,13 +80,15 @@ final class MockState
       int timesInvoked = getTimesInvoked();
 
       if (expectedInvocations >= 0 && timesInvoked != expectedInvocations) {
-         throw new AssertionError(errorMessage("exactly", expectedInvocations, timesInvoked));
+         String message = errorMessage("exactly", expectedInvocations, timesInvoked);
+         throw timesInvoked < expectedInvocations ?
+            new MissingInvocation(message) : new UnexpectedInvocation(message);
       }
       else if (timesInvoked < minExpectedInvocations) {
-         throw new AssertionError(errorMessage("at least", minExpectedInvocations, timesInvoked));
+         throw new MissingInvocation(errorMessage("at least", minExpectedInvocations, timesInvoked));
       }
       else if (maxExpectedInvocations >= 0 && timesInvoked > maxExpectedInvocations) {
-         throw new AssertionError(errorMessage("at most", maxExpectedInvocations, timesInvoked));
+         throw new UnexpectedInvocation(errorMessage("at most", maxExpectedInvocations, timesInvoked));
       }
    }
 

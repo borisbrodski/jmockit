@@ -11,6 +11,8 @@ import org.junit.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 
+import mockit.internal.*;
+
 @SuppressWarnings("ZeroLengthArrayAllocation")
 public final class ExpectationsWithValuesToReturnTest
 {
@@ -494,7 +496,7 @@ public final class ExpectationsWithValuesToReturnTest
          new Collaborator();
          fail();
       }
-      catch (AssertionError e) {
+      catch (UnexpectedInvocation e) {
          assertTrue(e.getMessage().startsWith("Unexpected invocation "));
       }
    }

@@ -8,6 +8,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.external.asm4.*;
+import mockit.internal.*;
 import mockit.internal.expectations.argumentMatching.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
@@ -191,7 +192,7 @@ public final class InvocationArguments
       return matcher;
    }
 
-   public AssertionError assertMatch(Object[] replayArgs, Map<Object, Object> instanceMap)
+   public Error assertMatch(Object[] replayArgs, Map<Object, Object> instanceMap)
    {
       if (matchers == null) {
          return assertEquality(replayArgs, instanceMap);
@@ -237,7 +238,7 @@ public final class InvocationArguments
       return null;
    }
 
-   private AssertionError assertEquality(Object[] replayArgs, Map<Object, Object> instanceMap)
+   private Error assertEquality(Object[] replayArgs, Map<Object, Object> instanceMap)
    {
       int argCount = replayArgs.length;
 
@@ -245,7 +246,7 @@ public final class InvocationArguments
          return assertEquals(invocationArgs, replayArgs, argCount, instanceMap);
       }
 
-      AssertionError nonVarargsError = assertEquals(invocationArgs, replayArgs, argCount - 1, instanceMap);
+      Error nonVarargsError = assertEquals(invocationArgs, replayArgs, argCount - 1, instanceMap);
 
       if (nonVarargsError != null) {
          return nonVarargsError;
@@ -258,22 +259,22 @@ public final class InvocationArguments
          return errorForVarargsArraysOfDifferentLengths(expectedValues, actualValues);
       }
 
-      AssertionError varargsError = assertEquals(expectedValues, actualValues, expectedValues.length, instanceMap);
+      Error varargsError = assertEquals(expectedValues, actualValues, expectedValues.length, instanceMap);
 
       if (varargsError != null) {
-         return new AssertionError("Varargs " + varargsError);
+         return new UnexpectedInvocation("Varargs " + varargsError);
       }
 
       return null;
    }
 
-   private AssertionError errorForVarargsArraysOfDifferentLengths(Object[] expectedValues, Object[] actualValues)
+   private Error errorForVarargsArraysOfDifferentLengths(Object[] expectedValues, Object[] actualValues)
    {
-      return new AssertionError(
+      return new UnexpectedInvocation(
          "Expected " + expectedValues.length + " values for varargs parameter, got " + actualValues.length);
    }
 
-   private AssertionError assertEquals(
+   private Error assertEquals(
       Object[] expectedValues, Object[] actualValues, int count, Map<Object, Object> instanceMap)
    {
       for (int i = 0; i < count; i++) {
@@ -288,7 +289,7 @@ public final class InvocationArguments
       return null;
    }
 
-   private AssertionError argumentMismatchMessage(int paramIndex, Object expected, Object actual)
+   private Error argumentMismatchMessage(int paramIndex, Object expected, Object actual)
    {
       ArgumentMismatch message = new ArgumentMismatch();
 
@@ -310,7 +311,7 @@ public final class InvocationArguments
          message.append(", got ").appendFormatted(actual);
       }
 
-      return new AssertionError(message.toString());
+      return new UnexpectedInvocation(message.toString());
    }
 
    @Override

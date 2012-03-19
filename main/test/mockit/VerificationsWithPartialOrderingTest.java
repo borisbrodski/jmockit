@@ -1,12 +1,14 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
 
 import org.junit.*;
 
-@SuppressWarnings({"UnusedDeclaration"})
+import mockit.internal.*;
+
+@SuppressWarnings("UnusedDeclaration")
 public final class VerificationsWithPartialOrderingTest
 {
    public static class Dependency
@@ -59,7 +61,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyFirstCallWhenOutOfOrder()
    {
       mock.setSomething(123);
@@ -97,7 +99,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyLastCallWhenOutOfOrder()
    {
       mock.setSomething(123);
@@ -111,7 +113,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyLastTwoCallsWhenOutOfOrder()
    {
       mock.setSomething(123);
@@ -126,7 +128,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyFirstAndLastCallsWhenOutOfOrder()
    {
       mock.prepare();
@@ -163,7 +165,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifySomeCallsInAnyOrderThenFirstCallWhenOutOfOrder()
    {
       mock.setSomething(123);
@@ -241,7 +243,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyThatSomeCallsInAnyRelativeOrderOccurBeforeAllOthers_outOfOrder()
    {
       // Not verified, but should occur *after* the verified invocations:
@@ -288,7 +290,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyThatSomeCallsInAnyRelativeOrderOccurAfterAllOthers_outOfOrder()
    {
       // Not verified:
@@ -313,7 +315,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyThatUnorderedGroupOfCallsOccursAfterOneOtherCall_outOfOrder()
    {
       mock.setSomething(123);
@@ -367,7 +369,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyThatAnOrderedGroupOfCallsOccursBetweenTwoOtherGroupsOfCalls_outOfOrder(final Runnable aCallback)
    {
       // First verified group, happening before everything else in any order:
@@ -442,7 +444,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyThatAnUnverifiedGroupOfCallsOccursBetweenTwoOtherGroupsOfCalls_outOfOrder(final Runnable aCallback)
    {
       // First group, happening before everything else in any order:
@@ -488,7 +490,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyFirstAndLastCallsWithFirstOutOfOrder()
    {
       mock.editABunchMoreStuff();
@@ -503,7 +505,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyFirstAndLastInvocationsWithSomeInvocationsInBetweenImplicitlyVerified()
    {
       new NonStrictExpectations()
@@ -525,7 +527,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyFirstAndLastCallsWithLastOutOfOrder()
    {
       mock.prepare();
@@ -598,7 +600,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyFirstAndLastCallsWithOthersInBetweenInAnyOrderWhenOutOfOrder()
    {
       mock.prepare();
@@ -639,7 +641,7 @@ public final class VerificationsWithPartialOrderingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyConsecutiveInvocationsWhenNotConsecutive()
    {
       mock.prepare();

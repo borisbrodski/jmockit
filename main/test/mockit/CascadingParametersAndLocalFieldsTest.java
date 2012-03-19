@@ -12,6 +12,8 @@ import java.util.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+import mockit.internal.*;
+
 public final class CascadingParametersAndLocalFieldsTest
 {
    static class Foo
@@ -391,7 +393,7 @@ public final class CascadingParametersAndLocalFieldsTest
       bar2.doSomething();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void overrideTwoCascadedMocksOfTheSameTypeButReplayInDifferentOrder(
       @Cascading final Foo foo1, @Cascading final Foo foo2)
    {

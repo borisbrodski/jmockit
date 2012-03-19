@@ -6,6 +6,7 @@ package mockit.integration.internal;
 
 import java.lang.reflect.*;
 
+import mockit.internal.*;
 import mockit.internal.expectations.*;
 import mockit.internal.expectations.injection.*;
 import mockit.internal.expectations.mocking.*;
@@ -156,13 +157,15 @@ public class TestRunnerDecorator
       }
    }
 
-   protected final void concludeTestMethodExecution(SavePoint savePoint, Throwable thrownByTest) throws Throwable
+   protected final void concludeTestMethodExecution(
+      SavePoint savePoint, Throwable thrownByTest, boolean thrownAsExpected)
+      throws Throwable
    {
       TestRun.enterNoMockingZone();
-      AssertionError expectationsFailure = RecordAndReplayExecution.endCurrentReplayIfAny();
+      Error expectationsFailure = RecordAndReplayExecution.endCurrentReplayIfAny();
 
       try {
-         if (expectationsFailure == null) {
+         if (expectationsFailure == null && (thrownByTest == null || thrownAsExpected)) {
             TestRun.verifyExpectationsOnAnnotatedMocks();
          }
       }
@@ -173,15 +176,25 @@ public class TestRunnerDecorator
       }
 
       if (thrownByTest != null) {
-         if (expectationsFailure == null || thrownByTest instanceof AssertionError) {
+         if (expectationsFailure == null || !thrownAsExpected || isUnexpectedOrMissingInvocation(thrownByTest)) {
             throw thrownByTest;
          }
 
-         expectationsFailure.getCause().initCause(thrownByTest);
+         Throwable expectationsFailureCause = expectationsFailure.getCause();
+
+         if (expectationsFailureCause != null) {
+            expectationsFailureCause.initCause(thrownByTest);
+         }
       }
 
       if (expectationsFailure != null) {
          throw expectationsFailure;
       }
+   }
+
+   private boolean isUnexpectedOrMissingInvocation(Throwable error)
+   {
+      Class<?> errorType = error.getClass();
+      return errorType == UnexpectedInvocation.class || errorType == MissingInvocation.class;
    }
 }

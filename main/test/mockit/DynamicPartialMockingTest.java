@@ -12,6 +12,8 @@ import java.util.concurrent.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
+import mockit.internal.*;
+
 @SuppressWarnings("deprecation")
 public final class DynamicPartialMockingTest
 {
@@ -148,7 +150,7 @@ public final class DynamicPartialMockingTest
       assertEquals(-1, new Collaborator().value);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void expectTwoInvocationsOnStrictDynamicMockButReplayOnce()
    {
       final Collaborator collaborator = new Collaborator();
@@ -193,7 +195,7 @@ public final class DynamicPartialMockingTest
       assertEquals(1, collaborator.getValue());
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void expectTwoOrderedInvocationsOnStrictDynamicMockButReplayOutOfOrder()
    {
       final Collaborator collaborator = new Collaborator(1);
@@ -214,7 +216,7 @@ public final class DynamicPartialMockingTest
       // The recorded call to "setValue(2)" is missing at this point.
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void nonStrictDynamicMockFullyVerified_verifyOnlyOneOfMultipleRecordedInvocations()
    {
       final Collaborator collaborator = new Collaborator(0);
@@ -292,7 +294,7 @@ public final class DynamicPartialMockingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void expectTwoInvocationsOnNonStrictDynamicMockButReplayOnce()
    {
       final Collaborator collaborator = new Collaborator();
@@ -304,7 +306,7 @@ public final class DynamicPartialMockingTest
       assertEquals(0, collaborator.getValue());
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectOneInvocationOnNonStrictDynamicMockButReplayTwice()
    {
       final Collaborator collaborator = new Collaborator(1);

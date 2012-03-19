@@ -6,6 +6,7 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
+import mockit.internal.*;
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.util.*;
 
@@ -16,7 +17,7 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
    private boolean allMockedInvocationsDuringReplayMustBeVerified;
    private Object[] mockedTypesAndInstancesToFullyVerify;
    protected Expectation currentVerification;
-   protected AssertionError pendingError;
+   protected Error pendingError;
 
    protected BaseVerificationPhase(
       RecordAndReplayExecution recordAndReplay,
@@ -125,8 +126,10 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
          expectation.setCustomErrorMessage(customMessage);
       }
       else if (customMessage != null) {
+         String finalMessage = customMessage + "\n" + pendingError.getMessage();
          StackTraceElement[] previousStackTrace = pendingError.getStackTrace();
-         pendingError = new AssertionError(customMessage + "\n" + pendingError.getMessage());
+         pendingError = pendingError instanceof MissingInvocation ?
+            new MissingInvocation(finalMessage) : new UnexpectedInvocation(finalMessage);
          pendingError.setStackTrace(previousStackTrace);
       }
    }
@@ -158,7 +161,7 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
       return false;
    }
 
-   protected AssertionError endVerification()
+   protected Error endVerification()
    {
       if (pendingError != null) {
          return pendingError;
@@ -171,7 +174,7 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
       return null;
    }
 
-   private AssertionError validateThatAllInvocationsWereVerified()
+   private Error validateThatAllInvocationsWereVerified()
    {
       List<Expectation> notVerified = new ArrayList<Expectation>();
 
@@ -233,7 +236,7 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
 
    boolean shouldDiscardInformationAboutVerifiedInvocationOnceUsed() { return false; }
 
-   private AssertionError validateThatUnverifiedInvocationsAreAllowed(List<Expectation> unverified)
+   private Error validateThatUnverifiedInvocationsAreAllowed(List<Expectation> unverified)
    {
       for (Expectation expectation : unverified) {
          ExpectedInvocation invocation = expectation.invocation;

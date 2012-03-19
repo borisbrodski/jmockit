@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -10,6 +10,8 @@ import java.net.*;
 import org.junit.*;
 
 import static org.junit.Assert.*;
+
+import mockit.internal.*;
 
 public final class ExpectationsTest
 {
@@ -30,13 +32,12 @@ public final class ExpectationsTest
       void setValue(int value) { this.value = value; }
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectOnlyOneInvocationOnLocalMockedTypeButExerciseOthersDuringReplay()
    {
       Collaborator collaborator = new Collaborator();
 
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -48,48 +49,39 @@ public final class ExpectationsTest
       collaborator.setValue(1);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectOnlyOneInvocationOnTestScopedMockedTypeButExerciseOthersDuringReplay(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.provideSomeService();
-         }
-      };
+      new Expectations() {{ mock.provideSomeService(); }};
 
       mock.provideSomeService();
       mock.setValue(1);
    }
 
    @Test
-   public void recordNothingOnLocalMockedTypeButExerciseItDuringReplay()
+   public void recordNothingOnLocalMockedTypeAndExerciseItDuringReplay()
    {
       Collaborator collaborator = new Collaborator();
 
-      new Expectations()
-      {
-         Collaborator mock;
-      };
+      new Expectations() { Collaborator mock; };
 
       collaborator.provideSomeService();
    }
 
    @Test
-   public void recordNothingOnTestScopedMockedTypeButExerciseItDuringReplay(Collaborator mock)
+   public void recordNothingOnTestScopedMockedTypeAndExerciseItDuringReplay(Collaborator mock)
    {
       new Expectations() {};
 
       mock.provideSomeService();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectNothingOnLocalMockedTypeButExerciseItDuringReplay()
    {
       Collaborator collaborator = new Collaborator();
 
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -100,15 +92,12 @@ public final class ExpectationsTest
       collaborator.setValue(2);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectNothingOnTestScopedMockedTypeButExerciseItDuringReplay(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.setValue(anyInt); times = 0;
-         }
-      };
+      new Expectations() {{
+         mock.setValue(anyInt); times = 0;
+      }};
 
       mock.setValue(2);
    }
@@ -116,20 +105,15 @@ public final class ExpectationsTest
    @Test(expected = IllegalStateException.class)
    public void expectNothingWithNoMockedTypesInScope()
    {
-      new Expectations()
-      {
-      };
+      new Expectations() {};
    }
 
    @Test
    public void restoreFieldTypeRedefinitions(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getValue(); result = 2;
-         }
-      };
+      new Expectations() {{
+         mock.getValue(); result = 2;
+      }};
 
       assertEquals(2, mock.getValue());
       Mockit.tearDownMocks();
@@ -151,8 +135,7 @@ public final class ExpectationsTest
    @Test
    public void mockInterfaceWhichExtendsAnother(final IB b, final IC c)
    {
-      new Expectations()
-      {{
+      new Expectations() {{
          c.doSomething(b); result = false;
          invoke(c, "doSomething", b); result = true;
       }};
@@ -170,13 +153,10 @@ public final class ExpectationsTest
    @Test
    public void mockAbstractClass(final AbstractCollaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.doSomethingConcrete();
-            mock.doSomethingAbstract();
-         }
-      };
+      new Expectations() {{
+         mock.doSomethingConcrete();
+         mock.doSomethingAbstract();
+      }};
 
       mock.doSomethingConcrete();
       mock.doSomethingAbstract();
@@ -185,8 +165,7 @@ public final class ExpectationsTest
    @Test
    public void mockFinalField()
    {
-      new Expectations()
-      {
+      new Expectations() {
          final Collaborator mock = new Collaborator();
 
          {
@@ -200,15 +179,12 @@ public final class ExpectationsTest
    @Test
    public void mockClassWithoutDefaultConstructor()
    {
-      new Expectations()
-      {
-         Dummy mock;
-      };
+      new Expectations() { Dummy mock; };
    }
 
    static class Dummy
    {
-      @SuppressWarnings({"UnusedDeclaration"})
+      @SuppressWarnings("UnusedDeclaration")
       Dummy(int i) {}
    }
 
@@ -229,8 +205,7 @@ public final class ExpectationsTest
    @Test
    public void mockSubclass()
    {
-      new Expectations()
-      {
+      new Expectations() {
          final SubCollaborator mock = new SubCollaborator();
 
          {
@@ -247,8 +222,7 @@ public final class ExpectationsTest
    @Test
    public void mockSuperClassUsingLocalMockField()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -265,12 +239,9 @@ public final class ExpectationsTest
    @Test
    public void mockSuperClassUsingMockParameter(@NonStrict final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getValue(); times = 2; returns(1, 2);
-         }
-      };
+      new Expectations() {{
+         mock.getValue(); times = 2; returns(1, 2);
+      }};
 
       SubCollaborator collaborator = new SubCollaborator();
       assertEquals(2, collaborator.getValue());
@@ -280,8 +251,7 @@ public final class ExpectationsTest
    @Test(expected = IllegalStateException.class)
    public void attemptToRecordExpectedReturnValueForNoCurrentInvocation()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -293,8 +263,7 @@ public final class ExpectationsTest
    @Test(expected = IllegalStateException.class)
    public void attemptToAddArgumentMatcherWhenNotRecording()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
       }.withNotEqual(5);
    }
@@ -304,8 +273,7 @@ public final class ExpectationsTest
    {
       ClassWithMethodsOfEveryReturnType realObject = new ClassWithMethodsOfEveryReturnType();
 
-      new Expectations()
-      {
+      new Expectations() {
          ClassWithMethodsOfEveryReturnType mock;
 
          {
@@ -345,24 +313,10 @@ public final class ExpectationsTest
       Object getObject() { return new Object(); }
    }
 
-   @Test(expected = AssertionError.class)
-   public void replayWithUnexpectedMethodInvocation(final Collaborator mock)
-   {
-      new Expectations()
-      {
-         {
-            mock.getValue();
-         }
-      };
-
-      mock.provideSomeService();
-   }
-
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void replayWithUnexpectedStaticMethodInvocation()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -373,11 +327,10 @@ public final class ExpectationsTest
       Collaborator.doInternal();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void replayWithMissingExpectedMethodInvocation()
    {
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -389,12 +342,9 @@ public final class ExpectationsTest
    @Test
    public void defineTwoConsecutiveReturnValues(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.getValue(); result = 1; result = 2;
-         }
-      };
+      new Expectations() {{
+         mock.getValue(); result = 1; result = 2;
+      }};
 
       assertEquals(1, mock.getValue());
       assertEquals(2, mock.getValue());
@@ -403,8 +353,7 @@ public final class ExpectationsTest
    @Test // Note: this test only works under JDK 1.6+; JDK 1.5 does not support redefining natives.
    public void mockNativeMethod()
    {
-      new Expectations()
-      {
+      new Expectations() {
          final System system = null;
 
          {
@@ -418,8 +367,7 @@ public final class ExpectationsTest
    @Test
    public void mockSystemGetenvMethod()
    {
-      new Expectations()
-      {
+      new Expectations() {
          System mockedSystem;
 
          {
@@ -433,8 +381,7 @@ public final class ExpectationsTest
    @Test
    public void mockConstructorsInJREClassHierarchies() throws Exception
    {
-      new Expectations()
-      {
+      new Expectations() {
          final FileWriter fileWriter;
          PrintWriter printWriter;
 
@@ -446,17 +393,16 @@ public final class ExpectationsTest
       new FileWriter("no.file");
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void failureFromUnexpectedInvocationInAnotherThread() throws Exception
    {
       final Collaborator collaborator = new Collaborator();
-      Thread t = new Thread(new Runnable()
-      {
+      Thread t = new Thread() {
+         @Override
          public void run() { collaborator.provideSomeService(); }
-      });
+      };
 
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -481,13 +427,10 @@ public final class ExpectationsTest
    @Test
    public void recordStrictExpectationsAllowingZeroInvocationsAndReplayNone(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            mock.provideSomeService(); minTimes = 0;
-            mock.setValue(1); minTimes = 0;
-         }
-      };
+      new Expectations() {{
+         mock.provideSomeService(); minTimes = 0;
+         mock.setValue(1); minTimes = 0;
+      }};
 
       // Don't exercise anything.
    }
@@ -498,12 +441,7 @@ public final class ExpectationsTest
    {
       final URL expectedURL = new URL("http://expected");
 
-      new Expectations()
-      {
-         {
-            mock.doSomething(expectedURL);
-         }
-      };
+      new Expectations() {{ mock.doSomething(expectedURL); }};
 
       mock.doSomething(expectedURL);
 
@@ -513,7 +451,7 @@ public final class ExpectationsTest
          mock.doSomething(anotherURL);
          fail();
       }
-      catch (AssertionError e) {
+      catch (UnexpectedInvocation e) {
          assertTrue(e.getMessage().contains(anotherURL.toString()));
       }
    }

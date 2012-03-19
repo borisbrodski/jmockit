@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.invocation;
@@ -70,29 +70,29 @@ public final class InvocationConstraints
       return minInvocations <= invocationCount && (invocationCount <= maxInvocations || maxInvocations < 0);
    }
 
-   public AssertionError verify(ExpectedInvocation invocation, int minInvocations, int maxInvocations)
+   public Error verify(ExpectedInvocation invocation, int minInvocations, int maxInvocations)
    {
-      AssertionError error = verifyLowerLimit(invocation, minInvocations);
+      Error error = verifyLowerLimit(invocation, minInvocations);
 
       return error != null ? error : verifyUpperLimit(invocation, maxInvocations);
    }
 
-   private AssertionError verifyLowerLimit(ExpectedInvocation invocation, int minInvocations)
+   private Error verifyLowerLimit(ExpectedInvocation invocation, int minInvocations)
    {
       return invocationCount < minInvocations ? errorForMissingExpectations(invocation, minInvocations) : null;
    }
 
-   private AssertionError errorForMissingExpectations(ExpectedInvocation invocation, int minInvocations)
+   private Error errorForMissingExpectations(ExpectedInvocation invocation, int minInvocations)
    {
       return invocation.errorForMissingInvocations(minInvocations - invocationCount) ;
    }
 
-   public AssertionError errorForMissingExpectations(ExpectedInvocation invocation)
+   public Error errorForMissingExpectations(ExpectedInvocation invocation)
    {
       return invocation.errorForMissingInvocations(minInvocations - invocationCount) ;
    }
 
-   private AssertionError verifyUpperLimit(ExpectedInvocation invocation, int maxInvocations)
+   private Error verifyUpperLimit(ExpectedInvocation invocation, int maxInvocations)
    {
       if (maxInvocations >= 0) {
          int n = invocationCount - maxInvocations;

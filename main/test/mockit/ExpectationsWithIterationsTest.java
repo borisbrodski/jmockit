@@ -1,14 +1,16 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
 
 import org.junit.*;
 
+import mockit.internal.*;
+
 public final class ExpectationsWithIterationsTest
 {
-   @SuppressWarnings({"UnusedDeclaration"})
+   @SuppressWarnings("UnusedDeclaration")
    public static class Dependency
    {
       public void setSomething(int value) {}
@@ -35,8 +37,7 @@ public final class ExpectationsWithIterationsTest
    @Test
    public void recordWithArgumentMatcherAndIndividualInvocationCounts()
    {
-      new Expectations(1)
-      {{
+      new Expectations(1) {{
          mock.prepare(); maxTimes = 1;
          mock.setSomething(anyInt); minTimes = 2;
          mock.setSomethingElse(anyString); notStrict();
@@ -51,8 +52,7 @@ public final class ExpectationsWithIterationsTest
    @Test
    public void recordStrictInvocationsInIteratingBlock()
    {
-      new Expectations(2)
-      {{
+      new Expectations(2) {{
          mock.setSomething(anyInt);
          mock.save();
       }};
@@ -66,8 +66,7 @@ public final class ExpectationsWithIterationsTest
    @Test
    public void recordNonStrictInvocationsInIteratingBlock()
    {
-      new Expectations(2)
-      {{
+      new Expectations(2) {{
          mock.setSomething(anyInt); notStrict();
          mock.save(); notStrict();
       }};
@@ -78,22 +77,20 @@ public final class ExpectationsWithIterationsTest
       mock.save();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void recordInvocationInBlockWithWrongNumberOfIterations()
    {
-      new Expectations(3)
-      {{
+      new Expectations(3) {{
          mock.setSomething(123);
       }};
 
       mock.setSomething(123);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void recordInvocationInBlockWithNumberOfIterationsTooSmall()
    {
-      new Expectations(2)
-      {{
+      new Expectations(2) {{
          mock.setSomething(123);
          mock.editABunchMoreStuff();
       }};
@@ -107,8 +104,7 @@ public final class ExpectationsWithIterationsTest
    @Test
    public void recordWithArgumentMatcherAndIndividualInvocationCountsInIteratingBlock()
    {
-      new Expectations(2)
-      {{
+      new Expectations(2) {{
          mock.prepare(); maxTimes = 1;
          mock.setSomething(anyInt); minTimes = 2;
          mock.editABunchMoreStuff(); minTimes = 1; maxTimes = 5;
@@ -129,8 +125,7 @@ public final class ExpectationsWithIterationsTest
    @Test
    public void recordRepeatingInvocationInIteratingBlock()
    {
-      new Expectations(2)
-      {{
+      new Expectations(2) {{
          mock.setSomething(123); times = 2;
       }};
 
@@ -143,33 +138,24 @@ public final class ExpectationsWithIterationsTest
    @Test
    public void recordInvocationsInASimpleBlockFollowedByAnIteratingOne()
    {
-      new Expectations()
-      {{
-         mock.setSomething(123);
-      }};
-
-      new Expectations(2)
-      {{
-         mock.save();
-      }};
+      new Expectations() {{ mock.setSomething(123); }};
+      new Expectations(2) {{ mock.save(); }};
 
       mock.setSomething(123);
       mock.save();
       mock.save();
    }
 
-   @SuppressWarnings({"MethodWithMultipleLoops"})
+   @SuppressWarnings("MethodWithMultipleLoops")
    @Test
    public void recordInvocationsInMultipleIteratingBlocks()
    {
-      new Expectations(2)
-      {{
+      new Expectations(2) {{
          mock.setSomething(anyInt);
          mock.save();
       }};
 
-      new Expectations(3)
-      {{
+      new Expectations(3) {{
          mock.prepare();
          mock.setSomethingElse(withNotEqual("")); notStrict();
          mock.editABunchMoreStuff(); notStrict();

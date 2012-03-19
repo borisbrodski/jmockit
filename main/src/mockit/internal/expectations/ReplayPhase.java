@@ -117,7 +117,7 @@ final class ReplayPhase extends Phase
                instanceMap.put(invocation.instance, mock);
             }
 
-            AssertionError error = invocation.arguments.assertMatch(replayArgs, instanceMap);
+            Error error = invocation.arguments.assertMatch(replayArgs, instanceMap);
 
             if (error != null) {
                if (currentExpectation.constraints.isInvocationCountInExpectedRange()) {
@@ -202,7 +202,7 @@ final class ReplayPhase extends Phase
       }
    }
 
-   AssertionError endExecution()
+   Error endExecution()
    {
       Expectation strict = currentExpectation;
       currentExpectation = null;

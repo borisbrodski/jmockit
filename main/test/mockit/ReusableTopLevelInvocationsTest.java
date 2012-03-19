@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -8,6 +8,8 @@ import java.io.*;
 
 import org.junit.*;
 import static org.junit.Assert.assertTrue;
+
+import mockit.internal.*;
 
 final class FinalReusableExpectations extends Expectations
 {
@@ -58,7 +60,7 @@ public final class ReusableTopLevelInvocationsTest
       assertTrue(pw.checkError());
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void useTopLevelAndFinalVerificationsSubclass(PrintWriter mock) throws Exception
    {
       mock.flush();
@@ -75,7 +77,7 @@ public final class ReusableTopLevelInvocationsTest
       new FinalSubclassOfReusableVerifications(mock);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void useTopLevelAndNonFinalVerificationsSubclass(PrintWriter mock) throws Exception
    {
       mock.flush();

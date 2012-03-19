@@ -7,6 +7,8 @@ package mockit;
 import static org.junit.Assert.*;
 import org.junit.*;
 
+import mockit.internal.*;
+
 @SuppressWarnings("UnusedDeclaration")
 public final class FullVerificationsTest
 {
@@ -106,7 +108,7 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsWithOneMissing()
    {
       exerciseCodeUnderTest();
@@ -134,7 +136,7 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyUnrecordedInvocationThatShouldNotHappenButDoes()
    {
       mock.setSomething(1);
@@ -188,7 +190,7 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyUnrecordedInvocationThatShouldHappenButDoesNot()
    {
       mock.setSomething(1);
@@ -198,7 +200,7 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyRecordedInvocationThatShouldHappenButDoesNot()
    {
       new NonStrictExpectations() {{
@@ -212,7 +214,7 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsWithExpectationRecordedButOneInvocationUnverified()
    {
       new NonStrictExpectations() {{
@@ -248,7 +250,7 @@ public final class FullVerificationsTest
       }
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyAllInvocationsWithExtraVerification()
    {
       mock.prepare();
@@ -261,7 +263,7 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsWithInvocationCountOneLessThanActual()
    {
       mock.setSomething(123);
@@ -272,7 +274,7 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsWithInvocationCountTwoLessThanActual()
    {
       mock.setSomething(123);
@@ -284,7 +286,7 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyAllInvocationsWithInvocationCountMoreThanActual()
    {
       mock.setSomethingElse('f');
@@ -309,7 +311,7 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifySingleInvocationInBlockWithLargerNumberOfIterations()
    {
       mock.setSomething(123);
@@ -319,7 +321,7 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyMultipleInvocationsInBlockWithSmallerNumberOfIterations()
    {
       mock.setSomething(123);
@@ -347,7 +349,7 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyNoInvocationsOccurredOnMockedDependencyWithOneHavingOccurred()
    {
       mock.editABunchMoreStuff();
@@ -391,7 +393,7 @@ public final class FullVerificationsTest
          new FullVerifications() {};
          fail();
       }
-      catch (AssertionError e) {
+      catch (UnexpectedInvocation e) {
          assertTrue(e.getMessage().contains("editABunchMoreStuff()"));
       }
    }

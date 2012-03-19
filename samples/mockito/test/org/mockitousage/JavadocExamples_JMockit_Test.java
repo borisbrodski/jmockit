@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.mockitousage;
@@ -9,6 +9,7 @@ import java.util.*;
 import org.junit.*;
 
 import mockit.*;
+import mockit.internal.*;
 
 import org.hamcrest.beans.*;
 import static org.junit.Assert.*;
@@ -195,7 +196,7 @@ public final class JavadocExamples_JMockit_Test
       }};
    }
 
-   @SuppressWarnings({"UnusedParameters"})
+   @SuppressWarnings("UnusedParameters")
    @Test // Uses of JMockit API: 2
    public void verifyThatInvocationsNeverHappened(List<String> mockTwo, List<String> mockThree)
    {
@@ -212,7 +213,7 @@ public final class JavadocExamples_JMockit_Test
       }};
    }
 
-   @Test(expected = AssertionError.class) // Uses of JMockit API: 1
+   @Test(expected = UnexpectedInvocation.class) // Uses of JMockit API: 1
    public void verifyThatInvocationsNeverHappenedWhenTheyDid(List<String> mockTwo)
    {
       mockedList.add("one");
@@ -237,7 +238,7 @@ public final class JavadocExamples_JMockit_Test
       }};
    }
 
-   @Test(expected = AssertionError.class) // Uses of JMockit API: 1
+   @Test(expected = UnexpectedInvocation.class) // Uses of JMockit API: 1
    public void verifyAllInvocationsWhenMoreOfThemHappen()
    {
       mockedList.add("one");
@@ -265,7 +266,7 @@ public final class JavadocExamples_JMockit_Test
       }};
    }
 
-   @Test(expected = AssertionError.class) // Uses of JMockit API: 1
+   @Test(expected = UnexpectedInvocation.class) // Uses of JMockit API: 1
    public void verifyAllInvocationsInOrderWhenMoreOfThemHappen()
    {
       mockedList.add("one");
@@ -278,7 +279,7 @@ public final class JavadocExamples_JMockit_Test
       }};
    }
 
-   @Test(expected = AssertionError.class) // Uses of JMockit API: 1
+   @Test(expected = MissingInvocation.class) // Uses of JMockit API: 1
    public void verifyAllInvocationsInOrderWithOutOfOrderVerifications()
    {
       mockedList.add("one");

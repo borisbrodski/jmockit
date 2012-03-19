@@ -144,7 +144,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
          testFailure = thrownByTest;
       }
       finally {
-         concludeTestMethodExecution(savePoint, testFailure);
+         concludeTestMethodExecution(savePoint, testFailure, false);
       }
    }
 

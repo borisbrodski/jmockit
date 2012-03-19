@@ -10,6 +10,8 @@ import javax.sql.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
+import mockit.internal.*;
+
 public final class MockInstanceMatchingTest
 {
    static class Collaborator
@@ -35,7 +37,7 @@ public final class MockInstanceMatchingTest
       assertEquals(12, mock.getValue());
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void recordOnMockInstanceButReplayOnDifferentInstance()
    {
       Collaborator collaborator = new Collaborator();
@@ -45,7 +47,7 @@ public final class MockInstanceMatchingTest
          result = 12;
       }};
 
-      assertEquals(12, collaborator.getValue());
+      assertEquals(0, collaborator.getValue());
    }
 
    @Test
@@ -79,7 +81,7 @@ public final class MockInstanceMatchingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyOnMockInstanceButReplayOnDifferentInstance()
    {
       new Collaborator().setValue(12);
@@ -103,7 +105,7 @@ public final class MockInstanceMatchingTest
       mock.setValue(20);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void recordOnSpecificMockInstancesButReplayOnDifferentOnes(final Collaborator mock2)
    {
       new Expectations() {{
@@ -129,7 +131,7 @@ public final class MockInstanceMatchingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyOnSpecificMockInstancesButReplayOnDifferentOnes(final Collaborator mock2)
    {
       mock2.setValue(12);
@@ -204,7 +206,7 @@ public final class MockInstanceMatchingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void recordExpectationsMatchingOnMultipleMockParametersButReplayOutOfOrder(
       final Runnable r1, final Runnable r2)
    {
@@ -217,7 +219,7 @@ public final class MockInstanceMatchingTest
       r2.run();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyExpectationsMatchingOnMultipleMockParametersButReplayedOutOfOrder(
       final AbstractExecutorService es1, final AbstractExecutorService es2)
    {

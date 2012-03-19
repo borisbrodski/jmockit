@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -9,6 +9,8 @@ import java.util.concurrent.*;
 import org.junit.*;
 
 import static org.junit.Assert.*;
+
+import mockit.internal.*;
 
 public final class MockedEnumsTest
 {
@@ -98,7 +100,7 @@ public final class MockedEnumsTest
       assertEquals(12.3, MyEnum.First.getValue(2.5), 0.0);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void mockSpecificEnumElementsEvenWhenUsingASingleStrictMockInstance()
    {
       new Expectations() {

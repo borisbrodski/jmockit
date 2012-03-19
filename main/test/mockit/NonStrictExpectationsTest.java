@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -9,6 +9,8 @@ import java.lang.reflect.*;
 import org.junit.*;
 
 import static org.junit.Assert.*;
+
+import mockit.internal.*;
 
 @SuppressWarnings({"UnusedDeclaration", "deprecation"})
 public final class NonStrictExpectationsTest
@@ -95,7 +97,7 @@ public final class NonStrictExpectationsTest
       assertEquals(1, mock.doSomething(1, false));
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void recordInvocationWithExactExpectedNumberOfInvocationsButFailToSatisfy()
    {
       new NonStrictExpectations() {{
@@ -103,7 +105,7 @@ public final class NonStrictExpectationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void recordInvocationWithMinimumExpectedNumberOfInvocationsButFailToSatisfy()
    {
       new NonStrictExpectations() {{
@@ -113,7 +115,7 @@ public final class NonStrictExpectationsTest
       mock.editABunchMoreStuff();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void recordInvocationWithMaximumExpectedNumberOfInvocationsButFailToSatisfy()
    {
       new NonStrictExpectations() {{
@@ -138,7 +140,7 @@ public final class NonStrictExpectationsTest
       mock.save();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void recordInvocationsWithMinInvocationCountLargerThanWillOccur()
    {
       new NonStrictExpectations() {{
@@ -173,7 +175,7 @@ public final class NonStrictExpectationsTest
       assertEquals(1, Dependency.staticMethod(new Object(), new Exception()));
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void recordWithMaxInvocationCountFollowedByReturnValueButReplayOneTimeBeyondMax()
    {
       new NonStrictExpectations() {{
@@ -226,7 +228,7 @@ public final class NonStrictExpectationsTest
       mock.save();
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void recordInvocationInBlockWithWrongNumberOfIterations()
    {
       new NonStrictExpectations(3) {{

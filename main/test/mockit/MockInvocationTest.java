@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
 
 import static org.junit.Assert.*;
 import org.junit.*;
+
+import mockit.internal.*;
 
 public final class MockInvocationTest
 {
@@ -58,8 +60,7 @@ public final class MockInvocationTest
    @Test
    public void instanceMockMethodForStaticMethod()
    {
-      new MockUp<Collaborator>()
-      {
+      new MockUp<Collaborator>() {
          @Mock(invocations = 2)
          boolean staticMethod(Invocation context)
          {
@@ -78,8 +79,7 @@ public final class MockInvocationTest
    @Test
    public void mockMethodsWithInvocationParameter()
    {
-      new MockUp<Collaborator>()
-      {
+      new MockUp<Collaborator>() {
          Collaborator instantiated;
 
          @Mock(invocations = 1)
@@ -147,12 +147,11 @@ public final class MockInvocationTest
       col.setValue(1);
    }
 
-   @SuppressWarnings({"deprecation"})
+   @SuppressWarnings("deprecation")
    @Test
    public void useOfContextParametersForJREMethods() throws Exception
    {
-      new MockUp<Runtime>()
-      {
+      new MockUp<Runtime>() {
          @Mock(minInvocations = 1)
          void runFinalizersOnExit(Invocation inv, boolean b)
          {
@@ -183,8 +182,7 @@ public final class MockInvocationTest
    @Test
    public void dynamicallyChangeInvocationCountConstraintsForMockMethods()
    {
-      new MockUp<Collaborator>()
-      {
+      new MockUp<Collaborator>() {
          Collaborator it;
 
          @Mock
@@ -222,11 +220,10 @@ public final class MockInvocationTest
       new Collaborator(56);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void dynamicallyChangeInvocationCountConstraintForMockMethodAndViolateTheUpperLimit()
    {
-      new MockUp<Collaborator>()
-      {
+      new MockUp<Collaborator>() {
          @Mock(reentrant = true)
          void setValue(Invocation ctx, int i)
          {
@@ -246,11 +243,10 @@ public final class MockInvocationTest
       col.setValue(3);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void dynamicallyChangeInvocationCountConstraintForMockMethodAndViolateTheLowerLimit()
    {
-      new MockUp<Collaborator>()
-      {
+      new MockUp<Collaborator>() {
          @Mock
          boolean staticMethod(Invocation ctx)
          {

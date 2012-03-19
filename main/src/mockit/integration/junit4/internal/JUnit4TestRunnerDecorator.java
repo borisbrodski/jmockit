@@ -116,10 +116,12 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
    private void executeTestMethod(Object target, Object... parameters) throws Throwable
    {
       SavePoint savePoint = new SavePoint();
+      Method testMethod = it.getMethod();
       Throwable testFailure = null;
+      boolean testFailureExpected = false;
 
       try {
-         Object[] mockParameters = createInstancesForMockParameters(target, it.getMethod());
+         Object[] mockParameters = createInstancesForMockParameters(target, testMethod);
          createInstancesForTestedFields(target);
 
          TestRun.setRunningIndividualTest(target);
@@ -127,9 +129,11 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
       }
       catch (Throwable thrownByTest) {
          testFailure = thrownByTest;
+         Class<? extends Throwable> expectedType = testMethod.getAnnotation(Test.class).expected();
+         testFailureExpected = expectedType.isAssignableFrom(thrownByTest.getClass());
       }
       finally {
-         concludeTestMethodExecution(savePoint, testFailure);
+         concludeTestMethodExecution(savePoint, testFailure, testFailureExpected);
       }
    }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -9,7 +9,9 @@ import java.util.concurrent.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-@SuppressWarnings({"UnusedDeclaration"})
+import mockit.internal.*;
+
+@SuppressWarnings("UnusedDeclaration")
 public final class RestrictedFullVerificationsTest
 {
    static class Dependency
@@ -49,16 +51,14 @@ public final class RestrictedFullVerificationsTest
       exerciseCodeUnderTest();
       mock2.doSomething();
 
-      new FullVerifications(mock)
-      {{
+      new FullVerifications(mock) {{
          mock.prepare();
          mock.setSomething(anyInt); minTimes = 1; maxTimes = 2;
          mock.editABunchMoreStuff();
          mock.save(); times = 1;
       }};
 
-      new FullVerifications(mock.getClass())
-      {{
+      new FullVerifications(mock.getClass()) {{
          mock.prepare();
          mock.setSomething(anyInt); minTimes = 1; maxTimes = 2;
          mock.editABunchMoreStuff();
@@ -66,14 +66,13 @@ public final class RestrictedFullVerificationsTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsWithSomeMissing(final AnotherDependency mock2)
    {
       exerciseCodeUnderTest();
       mock2.doSomething();
 
-      new FullVerifications(mock, mock2)
-      {{
+      new FullVerifications(mock, mock2) {{
          mock.prepare();
          mock.setSomething(anyInt);
          mock.save();
@@ -87,10 +86,7 @@ public final class RestrictedFullVerificationsTest
       exerciseCodeUnderTest();
       mock2.call();
 
-      new FullVerificationsInOrder(mock2)
-      {{
-         mock2.call();
-      }};
+      new FullVerificationsInOrder(mock2) {{ mock2.call(); }};
    }
 
    @Test
@@ -104,8 +100,7 @@ public final class RestrictedFullVerificationsTest
       mock.save();
       mock2.doSomethingElse(2);
 
-      new FullVerifications(2, mock)
-      {{
+      new FullVerifications(2, mock) {{
          mock.setSomething(anyInt);
          mock.save();
       }};
@@ -117,33 +112,17 @@ public final class RestrictedFullVerificationsTest
       mock.prepare();
       mock2.getValue();
 
-      new FullVerificationsInOrder(1, mock)
-      {
-         {
-            mock.prepare();
-         }
-      };
-
-      new FullVerificationsInOrder(Dependency.class)
-      {
-         {
-            mock.prepare();
-         }
-      };
+      new FullVerificationsInOrder(1, mock) {{ mock.prepare(); }};
+      new FullVerificationsInOrder(Dependency.class) {{ mock.prepare(); }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsToInheritedMethods_whenNotVerified(final SubDependency mock2)
    {
       mock.prepare();
       mock2.getValue();
 
-      new FullVerifications(1, mock)
-      {
-         {
-            mock2.getValue();
-         }
-      };
+      new FullVerifications(1, mock) {{ mock2.getValue(); }};
    }
 
    @Test
@@ -152,26 +131,16 @@ public final class RestrictedFullVerificationsTest
       mock.prepare();
       mock2.getValue();
 
-      new FullVerifications(1, mock2.getClass())
-      {
-         {
-            mock2.getValue();
-         }
-      };
+      new FullVerifications(1, mock2.getClass()) {{ mock2.getValue(); }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsToSubclassMethods_whenNotVerified(final SubDependency mock2)
    {
       mock.prepare();
       mock2.getValue();
 
-      new FullVerificationsInOrder(1, mock2.getClass())
-      {
-         {
-            mock.prepare();
-         }
-      };
+      new FullVerificationsInOrder(1, mock2.getClass()) {{ mock.prepare(); }};
    }
 
    @Test
@@ -180,43 +149,30 @@ public final class RestrictedFullVerificationsTest
       mock.prepare();
       mock2.getValue();
 
-      new FullVerifications(mock2)
-      {
-         {
-            mock.prepare();
-            mock2.getValue();
-         }
-      };
+      new FullVerifications(mock2) {{
+         mock.prepare();
+         mock2.getValue();
+      }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsToMethodsOfBaseClassAndOfSubclass_whenInheritedMethodNotVerified(
       final SubDependency mock2)
    {
       mock.prepare();
       mock2.getValue();
 
-      new FullVerificationsInOrder(mock2)
-      {
-         {
-            mock2.getValue();
-         }
-      };
+      new FullVerificationsInOrder(mock2) {{ mock2.getValue(); }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsToMethodsOfBaseClassAndOfSubclass_whenSubclassMethodNotVerified(
       final SubDependency mock2)
    {
       mock.prepare();
       mock2.getValue();
 
-      new FullVerifications(mock2)
-      {
-         {
-            mock.prepare();
-         }
-      };
+      new FullVerifications(mock2) {{ mock.prepare(); }};
    }
 
    @Test
@@ -224,13 +180,10 @@ public final class RestrictedFullVerificationsTest
    {
       new Dependency().save();
 
-      new FullVerificationsInOrder(mock)
-      {
-         {
-            new Dependency();
-            mock.save();
-         }
-      };
+      new FullVerificationsInOrder(mock) {{
+         new Dependency();
+         mock.save();
+      }};
    }
 
    @Test
@@ -238,39 +191,26 @@ public final class RestrictedFullVerificationsTest
    {
       mock2.editABunchMoreStuff();
 
-      new FullVerifications(mock2)
-      {
-         {
-            mock2.editABunchMoreStuff();
-         }
-      };
+      new FullVerifications(mock2) {{ mock2.editABunchMoreStuff(); }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyAllWithReplayOnDifferentInstanceWhenShouldBeSame(final Dependency mock2)
    {
       mock2.editABunchMoreStuff();
 
-      new FullVerificationsInOrder(mock2)
-      {
-         {
-            mock.editABunchMoreStuff();
-         }
-      };
+      new FullVerificationsInOrder(mock2) {{
+         mock.editABunchMoreStuff();
+      }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyAllWithUnverifiedReplayOnSameInstance(final Dependency mock2)
    {
       mock.editABunchMoreStuff();
       mock2.editABunchMoreStuff();
 
-      new FullVerifications(mock2)
-      {
-         {
-            mock.editABunchMoreStuff();
-         }
-      };
+      new FullVerifications(mock2) {{ mock.editABunchMoreStuff(); }};
    }
 
    @Test
@@ -282,43 +222,30 @@ public final class RestrictedFullVerificationsTest
       mock.editABunchMoreStuff();
       mock2.doSomethingElse(2);
 
-      new FullVerificationsInOrder(mock2)
-      {
-         {
-            mock2.doSomething();
-            AnotherDependency.staticMethod();
-            mock2.doSomethingElse(anyInt);
-            mock2.doSomethingElse(anyInt);
-         }
-      };
+      new FullVerificationsInOrder(mock2) {{
+         mock2.doSomething();
+         AnotherDependency.staticMethod();
+         mock2.doSomethingElse(anyInt);
+         mock2.doSomethingElse(anyInt);
+      }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void unverifiedStaticInvocationForSpecifiedMockInstance(final AnotherDependency mock2)
    {
       mock2.doSomething();
       AnotherDependency.staticMethod();
 
-      new FullVerifications(mock2)
-      {
-         {
-            mock2.doSomething();
-         }
-      };
+      new FullVerifications(mock2) {{ mock2.doSomething(); }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void unverifiedStaticInvocationForSpecifiedSubclassInstance(final SubDependency mock2)
    {
       mock2.getValue();
       Dependency.staticMethod("test");
 
-      new FullVerificationsInOrder(1, mock2)
-      {
-         {
-            mock2.getValue();
-         }
-      };
+      new FullVerificationsInOrder(1, mock2) {{ mock2.getValue(); }};
    }
 
    @Test
@@ -339,7 +266,7 @@ public final class RestrictedFullVerificationsTest
          new FullVerifications(mock) {};
          fail();
       }
-      catch (AssertionError e) {
+      catch (UnexpectedInvocation e) {
          assertTrue(e.getMessage().contains("editABunchMoreStuff()"));
       }
    }
@@ -348,8 +275,7 @@ public final class RestrictedFullVerificationsTest
    public void verifyNoInvocationsOnOneOfTwoMockedDependenciesBeyondThoseRecordedAsExpected(
       final AnotherDependency mock2)
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.setSomething(anyInt); minTimes = 1;
          mock2.doSomething(); times = 1;
       }};

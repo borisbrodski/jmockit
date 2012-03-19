@@ -8,6 +8,8 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
+import mockit.internal.*;
+
 public final class DynamicOnInstanceMockingTest
 {
    static class Collaborator
@@ -213,7 +215,7 @@ public final class DynamicOnInstanceMockingTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyOrderedInvocationsToDynamicallyMockedInstanceWithAnotherInstanceInvolvedButMissingAnInvocation()
    {
       final Collaborator mock = new Collaborator();

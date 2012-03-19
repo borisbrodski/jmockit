@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations;
@@ -7,7 +7,7 @@ package mockit.internal.expectations;
 final class FailureState
 {
    private final Thread testThread;
-   private AssertionError errorThrownInAnotherThread;
+   private Error errorThrownInAnotherThread;
 
    /**
     * Holds an error associated to an ExpectedInvocation that is to be reported to the user.
@@ -19,15 +19,15 @@ final class FailureState
     * "finally" block where a mock invocation is made after a previous such invocation in the "try"
     * block already failed.
     */
-   private AssertionError errorThrown;
+   private Error errorThrown;
 
    FailureState()
    {
       testThread = Thread.currentThread();
    }
 
-   AssertionError getErrorThrown() { return errorThrown; }
-   void setErrorThrown(AssertionError error) { errorThrown = error; }
+   Error getErrorThrown() { return errorThrown; }
+   void setErrorThrown(Error error) { errorThrown = error; }
    void clearErrorThrown() { errorThrown = null; }
 
    void reportErrorThrownIfAny()
@@ -42,7 +42,7 @@ final class FailureState
       }
    }
 
-   AssertionError getErrorThrownInAnotherThreadIfAny(AssertionError errorFromTestThread)
+   Error getErrorThrownInAnotherThreadIfAny(Error errorFromTestThread)
    {
       return errorThrownInAnotherThread == null ? errorFromTestThread : errorThrownInAnotherThread;
    }

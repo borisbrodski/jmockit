@@ -16,6 +16,7 @@ import static mockit.Mockit.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
+import mockit.internal.*;
 import mockit.internal.state.*;
 
 @SuppressWarnings({"JUnitTestMethodWithNoAssertions", "ClassWithTooManyMethods", "deprecation"})
@@ -300,7 +301,7 @@ public final class MockAnnotationsTest
       void provideSomeService() {}
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void setUpMockWithMinInvocationsExpectationButFailIt()
    {
       setUpMocks(MockCollaboratorWithMinInvocationsExpectation.class);
@@ -313,7 +314,7 @@ public final class MockAnnotationsTest
       int getValue() { return 1; }
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void setUpMockWithMaxInvocationsExpectationButFailIt()
    {
       setUpMocks(MockCollaboratorWithMaxInvocationsExpectation.class);
@@ -328,7 +329,7 @@ public final class MockAnnotationsTest
       void setValue(int v) { assertEquals(23, v); }
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void setUpMockWithInvocationsExpectationButFailIt()
    {
       setUpMocks(MockCollaboratorWithInvocationsExpectation.class);

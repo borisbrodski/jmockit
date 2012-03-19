@@ -1,12 +1,14 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
 
 import org.junit.*;
 
-@SuppressWarnings({"UnusedDeclaration"})
+import mockit.internal.*;
+
+@SuppressWarnings("UnusedDeclaration")
 public final class VerificationsInOrderTest
 {
    public static class Dependency
@@ -54,7 +56,7 @@ public final class VerificationsInOrderTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyUnrecordedInvocationThatShouldHappenButDoesNot()
    {
       mock.setSomething(1);
@@ -62,7 +64,7 @@ public final class VerificationsInOrderTest
       new VerificationsInOrder() {{ mock.notifyBeforeSave(); }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyUnrecordedInvocationThatShouldHappenExactlyOnceButDoesNot()
    {
       mock.setSomething(1);
@@ -70,7 +72,7 @@ public final class VerificationsInOrderTest
       new VerificationsInOrder() {{ mock.setSomething(2); times = 1; }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyRecordedInvocationThatShouldHappenButDoesNot()
    {
       new NonStrictExpectations() {{
@@ -193,7 +195,7 @@ public final class VerificationsInOrderTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifySimpleInvocationsWhenOutOfOrder()
    {
       mock.setSomething(123);
@@ -214,7 +216,7 @@ public final class VerificationsInOrderTest
       new VerificationsInOrder() {{ mock.setSomething(123); times = 2; }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void verifyRepeatingInvocationThatOccursOneTimeMoreThanExpected()
    {
       mock.setSomething(123);
@@ -275,7 +277,7 @@ public final class VerificationsInOrderTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifySingleInvocationInBlockWithLargerNumberOfIterations()
    {
       mock.setSomething(123);
@@ -293,7 +295,7 @@ public final class VerificationsInOrderTest
       new VerificationsInOrder(2) {{ mock.setSomething(anyInt); }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyMultipleInvocationsInIteratingBlockContainingDuplicateVerificationThatCannotBeSatisfied()
    {
       mock.setSomething(-67);
@@ -340,7 +342,7 @@ public final class VerificationsInOrderTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyWithArgumentMatchersWhenOutOfOrder()
    {
       mock.setSomething(123);
@@ -354,7 +356,7 @@ public final class VerificationsInOrderTest
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void verifyWithArgumentMatcherAndIndividualInvocationCountWhenOutOfOrder()
    {
       mock.setSomething(123);

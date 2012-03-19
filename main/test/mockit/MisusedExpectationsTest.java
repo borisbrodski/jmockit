@@ -8,6 +8,8 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
+import mockit.internal.*;
+
 public final class MisusedExpectationsTest
 {
    @SuppressWarnings("UnusedDeclaration")
@@ -347,7 +349,7 @@ public final class MisusedExpectationsTest
       static int tested() { return notMocked() + mocked1() + mocked2(); }
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void partiallyMockClassAndVerifyAllButOneMockedInvocationToStaticMethods()
    {
       new NonStrictExpectations(TestedClass.class) {{
@@ -372,7 +374,7 @@ public final class MisusedExpectationsTest
       int tested() { return notMocked() + mocked1() + mocked2(); }
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void partiallyMockClassAndVerifyAllButOneMockedInvocationToInstanceMethods()
    {
       final TestedClass2 tested = new TestedClass2();

@@ -12,6 +12,8 @@ import org.hamcrest.core.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
+import mockit.internal.*;
+
 public final class ExpectationsWithArgMatchersTest
 {
    @SuppressWarnings("UnusedDeclaration")
@@ -35,7 +37,7 @@ public final class ExpectationsWithArgMatchersTest
 
    @Mocked Collaborator mock;
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void replayWithUnexpectedMethodArgument()
    {
       new Expectations() {{ mock.simpleOperation(2, "test", null); }};
@@ -43,7 +45,7 @@ public final class ExpectationsWithArgMatchersTest
       mock.simpleOperation(2, "other", null);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void replayWithUnexpectedNullArgument()
    {
       new Expectations() {{ mock.simpleOperation(2, "test", null); }};
@@ -51,7 +53,7 @@ public final class ExpectationsWithArgMatchersTest
       mock.simpleOperation(2, null, null);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void replayWithUnexpectedMethodArgumentUsingMatcher()
    {
       new Expectations() {{ mock.setValue(withEqual(-1)); }};
@@ -59,7 +61,7 @@ public final class ExpectationsWithArgMatchersTest
       mock.setValue(1);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectInvocationWithDifferentThanExpectedProxyArgument()
    {
       new Expectations() {
@@ -125,7 +127,7 @@ public final class ExpectationsWithArgMatchersTest
       mock.setValue(2.99F);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectInvocationWithEqualFloatArgumentButWithDifferentReplayValue()
    {
       new Expectations() {{ mock.setValue(withEqual(3.0F, 0.01)); }};
@@ -185,7 +187,7 @@ public final class ExpectationsWithArgMatchersTest
       mock.complexOperation(45L);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void expectInvocationWithSameMockInstanceButReplayWithNull()
    {
       new NonStrictExpectations() {
@@ -201,7 +203,7 @@ public final class ExpectationsWithArgMatchersTest
       mock.setValue((Certificate) null);
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = MissingInvocation.class)
    public void expectNonStrictInvocationWithMatcherWhichInvokesMockedMethod()
    {
       new NonStrictExpectations() {
@@ -257,7 +259,7 @@ public final class ExpectationsWithArgMatchersTest
       mock.complexOperation("abcSuB123");
    }
 
-   @Test(expected = AssertionError.class)
+   @Test(expected = UnexpectedInvocation.class)
    public void expectInvocationWithMatchForRegexButWithNonMatchingArgument()
    {
       new Expectations() {{ mock.complexOperation(withMatch("test")); }};
