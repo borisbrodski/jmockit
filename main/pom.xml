@@ -50,10 +50,6 @@
       <testOutputDirectory>test-classes</testOutputDirectory>
       <resources>
          <resource>
-            <directory>src</directory>
-            <includes><include>jmockit.properties</include></includes>
-         </resource>
-         <resource>
             <directory>.</directory>
             <includes><include>META-INF/services/org.testng.ITestNGListener</include></includes>
          </resource>
