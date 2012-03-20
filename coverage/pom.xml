@@ -3,7 +3,7 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-   <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId><version>0.999.13</version>
+   <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId><version>0.999.14</version>
    <name>JMockit Coverage</name>
 
    <description>
@@ -47,6 +47,12 @@
                <include>**/*.png</include>
             </includes>
          </resource>
+         <resource>
+            <directory>../main/classes</directory>
+            <includes>
+               <include>mockit/external/asm4/*.class</include>
+            </includes>
+         </resource>
       </resources>
       <plugins>
          <plugin>
@@ -56,7 +62,12 @@
          <plugin>
             <artifactId>maven-jar-plugin</artifactId><version>2.2</version>
             <configuration>
-               <archive><addMavenDescriptor>false</addMavenDescriptor></archive>
+               <archive>
+                  <addMavenDescriptor>false</addMavenDescriptor>
+                  <manifestEntries>
+                     <Premain-Class>mockit.coverage.Startup</Premain-Class>
+                  </manifestEntries>
+               </archive>
                <excludes>
                   <exclude>integrationTests/</exclude>
                   <exclude>*.class</exclude>

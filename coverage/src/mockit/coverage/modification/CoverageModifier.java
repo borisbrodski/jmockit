@@ -545,6 +545,11 @@ final class CoverageModifier extends ClassVisitor
       @Override
       public final void visitFieldInsn(int opcode, String owner, String name, String desc)
       {
+         if (!Metrics.DATA_COVERAGE) {
+            super.visitFieldInsn(opcode, owner, name, desc);
+            return;
+         }
+
          // TODO: need to also process field instructions inside accessor methods (STATIC + SYNTHETIC, "access$nnn")
          boolean getField = opcode == GETSTATIC || opcode == GETFIELD;
          boolean isStatic = opcode == PUTSTATIC || opcode == GETSTATIC;

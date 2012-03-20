@@ -9,7 +9,6 @@ import java.security.*;
 
 import mockit.coverage.data.*;
 import mockit.coverage.modification.*;
-import mockit.internal.startup.*;
 
 public final class CodeCoverage implements ClassFileTransformer, Runnable
 {

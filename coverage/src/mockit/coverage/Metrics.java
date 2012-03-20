@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage;
@@ -17,7 +17,7 @@ public final class Metrics
 
       LINE_COVERAGE = all || metrics.contains("line");
       PATH_COVERAGE = all || metrics.contains("path");
-      DATA_COVERAGE = all || metrics.contains("data");
+      DATA_COVERAGE = (all || metrics.contains("data")) && !Startup.isStandalone();
    }
 
    public static boolean withMetric(int metric)

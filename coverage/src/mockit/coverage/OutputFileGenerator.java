@@ -107,7 +107,7 @@ final class OutputFileGenerator extends Thread
 
    boolean isWithCallPoints()
    {
-      return isOutputWithCallpointsToBeGenerated() && !hasOutputFormat("html-nocp");
+      return !Startup.isStandalone() && isOutputWithCallpointsToBeGenerated() && !hasOutputFormat("html-nocp");
    }
 
    private boolean hasOutputFormat(String format)

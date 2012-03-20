@@ -9,9 +9,8 @@ import java.lang.instrument.*;
 import java.security.*;
 import java.util.*;
 
+import mockit.coverage.*;
 import mockit.external.asm4.*;
-import mockit.internal.startup.*;
-import mockit.internal.state.TestRun;
 
 public final class ClassModification
 {
@@ -119,7 +118,11 @@ public final class ClassModification
    private void registerClassAsModifiedForCoverage(String className, byte[] modifiedClassfile)
    {
       modifiedClasses.add(className);
-      TestRun.mockFixture().addFixedClass(className, modifiedClassfile);
+
+      if (!Startup.isStandalone()) {
+         //noinspection UnnecessaryFullyQualifiedName
+         mockit.internal.state.TestRun.mockFixture().addFixedClass(className, modifiedClassfile);
+      }
    }
 
    public byte[] modifyClass(String className, ProtectionDomain protectionDomain, byte[] originalClassfile)
