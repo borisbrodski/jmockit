@@ -40,7 +40,7 @@
          <optional>true</optional>
       </dependency>
       <dependency>
-         <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId><version>0.999.13</version>
+         <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId><version>0.999.14</version>
          <optional>true</optional>
       </dependency>
       <dependency>
