@@ -34,8 +34,8 @@ public final class Startup
     * In order for this to occur, the JVM must be started with "-javaagent:jmockit.jar" as a command line parameter
     * (assuming the jar file is in the current directory).
     * <p/>
-    * It is also possible to load other <em>instrumentation tools</em> at this time, according to any agent
-    * arguments provided as "-javaagent:jmockit.jar=agentArgs" in the JVM command line.
+    * It is also possible to load other <em>instrumentation tools</em> at this time, by having set the "jmockit-tools"
+    * and/or "jmockit-mocks" system properties in the JVM command line.
     * There are two types of instrumentation tools:
     * <ol>
     * <li>A {@link ClassFileTransformer class file transformer}, which will be instantiated and added to the JVM
@@ -48,9 +48,7 @@ public final class Startup
     * the tool arguments, or by annotating the external mock class with {@link mockit.MockClass}.</li>
     * </ol>
     *
-    * @param agentArgs zero or more <em>instrumentation tool specifications</em> (separated by semicolons if more than
-    *                  one); each tool specification must be expressed as "&lt;tool class name>[=tool arguments]", with
-    *                  fully qualified class names for classes available in the classpath; tool arguments are optional
+    * @param agentArgs not used
     * @param inst      the instrumentation service provided by the JVM
     */
    public static void premain(String agentArgs, Instrumentation inst) throws Exception
