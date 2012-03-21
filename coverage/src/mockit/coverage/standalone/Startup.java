@@ -2,9 +2,11 @@
  * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit.coverage;
+package mockit.coverage.standalone;
 
 import java.lang.instrument.*;
+
+import mockit.coverage.*;
 
 public final class Startup
 {
@@ -15,7 +17,10 @@ public final class Startup
    {
       standalone = true;
       instrumentation = inst;
-      inst.addTransformer(new CodeCoverage());
+
+      CodeCoverage coverage = new CodeCoverage(false);
+      CoverageControl.create(coverage);
+      inst.addTransformer(coverage);
    }
 
    public static Instrumentation instrumentation()

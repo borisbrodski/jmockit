@@ -4,6 +4,8 @@
  */
 package mockit.coverage;
 
+import mockit.coverage.standalone.*;
+
 public final class Metrics
 {
    public static final boolean LINE_COVERAGE;

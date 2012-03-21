@@ -9,7 +9,7 @@ import java.lang.instrument.*;
 import java.security.*;
 import java.util.*;
 
-import mockit.coverage.*;
+import mockit.coverage.standalone.*;
 import mockit.external.asm4.*;
 
 public final class ClassModification

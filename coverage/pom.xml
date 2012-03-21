@@ -65,7 +65,7 @@
                <archive>
                   <addMavenDescriptor>false</addMavenDescriptor>
                   <manifestEntries>
-                     <Premain-Class>mockit.coverage.Startup</Premain-Class>
+                     <Premain-Class>mockit.coverage.standalone.Startup</Premain-Class>
                   </manifestEntries>
                </archive>
                <excludes>

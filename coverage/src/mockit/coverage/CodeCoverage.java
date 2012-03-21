@@ -9,10 +9,12 @@ import java.security.*;
 
 import mockit.coverage.data.*;
 import mockit.coverage.modification.*;
+import mockit.coverage.standalone.*;
 
 public final class CodeCoverage implements ClassFileTransformer, Runnable
 {
    private final ClassModification classModification;
+   private final OutputFileGenerator outputGenerator;
 
    public static void main(String[] args)
    {
@@ -28,16 +30,25 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
    }
 
    @SuppressWarnings("UnusedDeclaration")
-   public CodeCoverage()
+   public CodeCoverage() { this(true); }
+
+   public CodeCoverage(boolean generateOutputOnJVMShutdown)
    {
       classModification = new ClassModification();
+      outputGenerator = createOutputFileGenerator();
 
-      OutputFileGenerator generator = createOutputFileGenerator();
+      if (outputGenerator.isOutputToBeGenerated()) {
+         outputGenerator.onRun = this;
 
-      if (generator.isOutputToBeGenerated()) {
-         Runtime.getRuntime().addShutdownHook(generator);
-         generator.onRun = this;
+         if (generateOutputOnJVMShutdown) {
+            Runtime.getRuntime().addShutdownHook(outputGenerator);
+         }
       }
+   }
+
+   public void generateOutput()
+   {
+      outputGenerator.generate();
    }
 
    public void run()

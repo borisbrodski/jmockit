@@ -8,6 +8,7 @@ import java.io.*;
 
 import mockit.coverage.data.*;
 import mockit.coverage.reporting.*;
+import mockit.coverage.standalone.*;
 
 final class OutputFileGenerator extends Thread
 {
@@ -136,6 +137,12 @@ final class OutputFileGenerator extends Thread
       }
 
       createOutputDirIfSpecifiedButNotExists();
+      generate();
+   }
+
+   void generate()
+   {
+      CoverageData coverageData = CoverageData.instance();
 
       try {
          generateAccretionDataFileIfRequested(coverageData);
