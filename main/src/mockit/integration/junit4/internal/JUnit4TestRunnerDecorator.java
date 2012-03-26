@@ -59,7 +59,7 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
          }
          finally {
             if (it.getAnnotation(After.class) != null) {
-               TestRun.getExecutingTest().setRecordAndReplay(null);
+               shouldPrepareForNextTest = true;
             }
          }
       }

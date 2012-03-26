@@ -141,7 +141,9 @@ public final class TestRun
 
    public static void prepareForNextTest()
    {
-      getInstance().testId++;
+      TestRun testRun = getInstance();
+      testRun.testId++;
+      testRun.executingTest.setRecordAndReplay(null);
    }
 
    public static void setRunningTestMethod(Method runningTestMethod)
