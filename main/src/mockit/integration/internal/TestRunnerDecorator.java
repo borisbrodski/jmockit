@@ -69,11 +69,7 @@ public class TestRunnerDecorator
 
    public static void cleanUpMocksFromPreviousTestClass()
    {
-      if (savePointForTest != null) {
-         savePointForTest.rollback();
-         savePointForTest = null;
-      }
-
+      discardTestLevelMockedTypes();
       SavePoint.rollbackForTestClass();
 
       SharedFieldTypeRedefinitions redefinitions = TestRun.getSharedFieldTypeRedefinitions();
@@ -95,12 +91,17 @@ public class TestRunnerDecorator
 
    protected final void prepareForNextTest()
    {
-      if (savePointForTest != null) {
-         savePointForTest.rollback();
-      }
-
+      discardTestLevelMockedTypes();
       savePointForTest = new SavePoint();
       TestRun.prepareForNextTest();
+   }
+
+   protected static void discardTestLevelMockedTypes()
+   {
+      if (savePointForTest != null) {
+         savePointForTest.rollback();
+         savePointForTest = null;
+      }
    }
 
    private void handleMockFieldsForWholeTestClass(Object target)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.integration.junit3;
@@ -7,15 +7,10 @@ package mockit.integration.junit3;
 import junit.framework.*;
 
 import mockit.*;
+import mockit.integration.*;
 
 public final class JUnit3ExpectationsTest extends TestCase
 {
-   public static class MockedClass
-   {
-      public String getValue() { return "REAL"; }
-      public boolean doSomething(int i) { return i > 0; }
-   }
-
    @Injectable MockedClass mock;
 
    @Override
@@ -32,8 +27,7 @@ public final class JUnit3ExpectationsTest extends TestCase
 
    public void testSomething()
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          mock.doSomething(anyInt); result = true;
       }};
 
@@ -41,13 +35,10 @@ public final class JUnit3ExpectationsTest extends TestCase
       assertEquals("mocked", mock.getValue());
       assertTrue(mock.doSomething(-5));
 
-      new FullVerifications()
-      {
-         {
-            mock.doSomething(anyInt); times = 2;
-            mock.getValue();
-         }
-      };
+      new FullVerifications() {{
+         mock.doSomething(anyInt); times = 2;
+         mock.getValue();
+      }};
    }
 
    public void testSomethingElse()
@@ -55,12 +46,9 @@ public final class JUnit3ExpectationsTest extends TestCase
       assertEquals("mocked", mock.getValue());
       assertFalse(mock.doSomething(41));
 
-      new FullVerificationsInOrder()
-      {
-         {
-            mock.getValue();
-            mock.doSomething(anyInt);
-         }
-      };
+      new FullVerificationsInOrder() {{
+         mock.getValue();
+         mock.doSomething(anyInt);
+      }};
    }
 }

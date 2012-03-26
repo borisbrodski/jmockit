@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.integration.testng;
@@ -22,9 +22,9 @@ public final class DynamicMockingInBeforeMethodTest
    public void recordExpectationsOnDynamicallyMockedClass()
    {
       assertTrue(anInstance.doSomething(56));
+      assertFalse(anInstance.doSomething(-56));
 
-      new NonStrictExpectations(anInstance)
-      {{
+      new NonStrictExpectations(anInstance) {{
          anInstance.doSomething(anyInt); result = true;
       }};
    }
@@ -32,8 +32,7 @@ public final class DynamicMockingInBeforeMethodTest
    @AfterMethod
    public void verifyThatDynamicallyMockedClassIsStillMocked()
    {
-      new FullVerifications()
-      {{
+      new FullVerifications() {{
          anInstance.doSomething(anyInt); times = 1;
       }};
    }
@@ -41,7 +40,7 @@ public final class DynamicMockingInBeforeMethodTest
    @Test
    public void testSomething()
    {
-      assertTrue(anInstance.doSomething(56));
+      assertTrue(anInstance.doSomething(-56));
    }
 
    @Test

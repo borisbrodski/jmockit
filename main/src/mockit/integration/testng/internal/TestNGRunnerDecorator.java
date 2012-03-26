@@ -13,18 +13,17 @@ import org.testng.internal.Parameters;
 
 import mockit.*;
 import mockit.integration.internal.*;
-import mockit.internal.expectations.*;
 import mockit.internal.state.*;
 
 /**
  * Provides callbacks to be called by the TestNG 5.14+ test runner for each test execution.
- * JMockit will then assert any expectations set during the test, including those specified through {@link Mock} and
- * those recorded in {@link Expectations} subclasses.
+ * JMockit will then assert any expectations set during the test, including those specified through {@link mockit.Mock} and
+ * those recorded in {@link mockit.Expectations} subclasses.
  * <p/>
  * This class is not supposed to be accessed from user code. It will be automatically loaded at startup.
  */
 public final class TestNGRunnerDecorator extends TestRunnerDecorator
-   implements IConfigurable, IInvokedMethodListener, ISuiteListener
+   implements IInvokedMethodListener, IExecutionListener
 {
    @MockClass(realClass = Parameters.class, stubs = "checkParameterTypes")
    public static final class MockParameters
@@ -69,46 +68,15 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator
       shouldPrepareForNextTest = true;
    }
 
-   public void run(IConfigureCallBack callBack, ITestResult testResult)
-   {
-      Object testInstance = testResult.getInstance();
-      Class<?> testClass = testResult.getTestClass().getRealClass();
-
-      updateTestClassState(testInstance, testClass);
-
-      if (shouldPrepareForNextTest && testResult.getMethod().isBeforeMethodConfiguration()) {
-         prepareForNextTest();
-         shouldPrepareForNextTest = false;
-      }
-
-      TestRun.setRunningIndividualTest(testInstance);
-      TestRun.setRunningTestMethod(null);
-
-      try {
-         callBack.runConfigurationMethod(testResult);
-      }
-      catch (RuntimeException t) {
-         RecordAndReplayExecution.endCurrentReplayIfAny();
-         filterStackTrace(t);
-         throw t;
-      }
-      finally {
-         if (testResult.getMethod().isAfterMethodConfiguration()) {
-            TestRun.getExecutingTest().setRecordAndReplay(null);
-         }
-      }
-   }
-
    public void beforeInvocation(IInvokedMethod invokedMethod, ITestResult testResult)
    {
       if (!invokedMethod.isTestMethod()) {
+         beforeConfigurationMethod(testResult);
          return;
       }
 
-      Object testInstance = testResult.getInstance();
-
       TestRun.enterNoMockingZone();
-
+      Object testInstance = testResult.getInstance();
       Method method;
 
       try {
@@ -118,10 +86,9 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator
          savePoint.set(new SavePoint());
 
          if (shouldPrepareForNextTest) {
-            prepareForNextTest();
+            TestRun.prepareForNextTest();
+            shouldPrepareForNextTest = false;
          }
-
-         shouldPrepareForNextTest = true;
 
          //noinspection deprecation
          method = testResult.getMethod().getMethod();
@@ -145,12 +112,54 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator
       TestRun.setRunningTestMethod(method);
    }
 
+   private void beforeConfigurationMethod(ITestResult testResult)
+   {
+      TestRun.enterNoMockingZone();
+
+      try {
+         Class<?> testClass = testResult.getTestClass().getRealClass();
+         updateTestClassState(null, testClass);
+
+         ITestNGMethod method = testResult.getMethod();
+
+         if (method.isBeforeMethodConfiguration()) {
+            if (shouldPrepareForNextTest) {
+               discardTestLevelMockedTypes();
+            }
+
+            Object testInstance = method.getInstance();
+            updateTestClassState(testInstance, testClass);
+
+            if (shouldPrepareForNextTest) {
+               prepareForNextTest();
+               shouldPrepareForNextTest = false;
+            }
+
+            TestRun.setRunningIndividualTest(testInstance);
+            TestRun.setRunningTestMethod(null);
+         }
+         else if (!method.isAfterMethodConfiguration()) {
+            TestRun.getExecutingTest().setRecordAndReplay(null);
+            cleanUpMocksFromPreviousTestClass();
+            TestRun.setRunningIndividualTest(null);
+            TestRun.setRunningTestMethod(null);
+            TestRun.setCurrentTestClass(null);
+         }
+      }
+      finally {
+         TestRun.exitNoMockingZone();
+      }
+   }
+
    public void afterInvocation(IInvokedMethod invokedMethod, ITestResult testResult)
    {
       if (!invokedMethod.isTestMethod()) {
+         afterConfigurationMethod(testResult);
          return;
       }
 
+      TestRun.enterNoMockingZone();
+      shouldPrepareForNextTest = true;
       SavePoint testMethodSavePoint = savePoint.get();
       savePoint.set(null);
 
@@ -172,6 +181,27 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator
       }
       finally {
          TestRun.finishCurrentTestExecution(false);
+         TestRun.exitNoMockingZone();
+      }
+   }
+
+   private void afterConfigurationMethod(ITestResult testResult)
+   {
+      TestRun.enterNoMockingZone();
+
+      try {
+         ITestNGMethod method = testResult.getMethod();
+
+         if (method.isAfterMethodConfiguration()) {
+            Throwable thrownAfterTest = testResult.getThrowable();
+
+            if (thrownAfterTest != null) {
+               filterStackTrace(thrownAfterTest);
+            }
+         }
+      }
+      finally {
+         TestRun.exitNoMockingZone();
       }
    }
 
@@ -249,9 +279,9 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator
       return false;
    }
 
-   public void onStart(ISuite suite) {}
+   public void onExecutionStart() {}
 
-   public void onFinish(ISuite suite)
+   public void onExecutionFinish()
    {
       TestRun.enterNoMockingZone();
 
