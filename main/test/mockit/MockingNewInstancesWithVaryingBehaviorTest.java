@@ -142,7 +142,7 @@ public final class MockingNewInstancesWithVaryingBehaviorTest
       exerciseAndVerifyTestedCode();
    }
 
-   @Test // nice TODO: doesn't work yet, add support
+   @Ignore @Test // nice
    public void usingCapturingOnFinalMockFields()
    {
       new NonStrictExpectations() {
@@ -158,6 +158,33 @@ public final class MockingNewInstancesWithVaryingBehaviorTest
          }
       };
 
+      assertEquals(FORMATTED_TIME, new SimpleDateFormat(DATE_FORMAT).format(new Date()));
       exerciseAndVerifyTestedCode();
+   }
+
+   class Collaborator
+   {
+      final int value;
+      Collaborator() { value = -1; }
+      Collaborator(int value) { this.value = value; }
+      int getValue() { return value; }
+   }
+
+   @Ignore @Test
+   public void matchMethodCallsOnInstancesCreatedWithConstructorMatchingRecordedOne()
+   {
+      new NonStrictExpectations() {
+         @Capturing final Collaborator mock = new Collaborator(5);
+
+         {
+            mock.getValue(); result = 123;
+         }
+      };
+
+      assertEquals(0, new Collaborator().getValue());
+      assertEquals(123, new Collaborator(5).getValue());
+      assertEquals(0, new Collaborator(6).getValue());
+      assertEquals(123, new Collaborator(5).getValue());
+      assertEquals(0, new Collaborator(0).getValue());
    }
 }

@@ -4,23 +4,23 @@
  */
 package mockit.internal.expectations.mocking;
 
-import java.lang.reflect.*;
-import java.util.*;
-
+import mockit.internal.expectations.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
 {
-   private Map<Type, Object> typesAndTargetObjects;
+   private final RecordAndReplayExecution execution;
 
-   public LocalFieldTypeRedefinitions(Object objectWithMockFields) { super(objectWithMockFields); }
-
-   public void redefineTypesForNestedClass(Map<Type, Object> typesAndTargetObjects)
+   public LocalFieldTypeRedefinitions(Object objectWithMockFields, RecordAndReplayExecution execution)
    {
-      this.typesAndTargetObjects = typesAndTargetObjects;
+      super(objectWithMockFields);
+      this.execution = execution;
+   }
+
+   public void redefineLocalFieldTypes()
+   {
       redefineFieldTypes(parentObject.getClass(), false);
-      this.typesAndTargetObjects = null;
    }
 
    @Override
@@ -31,6 +31,11 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
       if (finalField) {
          typeRedefinition.redefineTypeForFinalField();
          registerMockedClassIfNonStrict();
+
+         if (typeMetadata.getMaxInstancesToCapture() > 0) {
+            execution.addMockedTypeToMatchOnInstance(typeRedefinition.targetClass);
+         }
+
          TestRun.getExecutingTest().addFinalLocalMockField(parentObject, typeMetadata);
       }
       else {
@@ -39,7 +44,7 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
          registerMock(mock);
       }
 
-      typesAndTargetObjects.put(typeMetadata.declaredType, parentObject);
+      execution.addLocalMock(typeMetadata.declaredType, parentObject);
       addTargetClass(typeMetadata.withInstancesToCapture(), typeRedefinition.targetClass);
    }
 

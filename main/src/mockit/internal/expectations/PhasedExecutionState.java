@@ -49,7 +49,7 @@ final class PhasedExecutionState
       }
    }
 
-   private void addMockedTypeToMatchOnInstance(Class<?> mockedType)
+   void addMockedTypeToMatchOnInstance(Class<?> mockedType)
    {
       if (mockedTypesToMatchOnInstances == null) {
          mockedTypesToMatchOnInstances = new LinkedList<Class<?>>();
