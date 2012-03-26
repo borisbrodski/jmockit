@@ -100,7 +100,13 @@
 extends <a href="../mockit/Verifications.html" title="class in mockit">Verifications</a></pre>
 <div class="block">Same as <a href="../mockit/Verifications.html" title="class in mockit"><code>Verifications</code></a>, but checking that invocations in the replay phase occurred in the same order as
  specified in this <em>ordered</em> verification block.
- <p/>
+ <pre>
+ // Exercise tested code, then verify that expected invocations occurred in the same order:
+ new VerificationsInOrder() {{
+    <strong>mock1</strong>.firstExpectedMethod(<em>anyInt</em>); <em>minTimes</em> = 1;
+    <strong>mock2</strong>.secondExpectedMethod(1, "test"); <em>maxTimes</em> = 2;
+    <strong>MockedClass</strong>.finalMethod(<em>anyString</em>);
+ }};</pre>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#VerificationInOrder">In the
  Tutorial</a></div>
 <dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#VerificationsInOrder()"><code>VerificationsInOrder()</code></a>, 

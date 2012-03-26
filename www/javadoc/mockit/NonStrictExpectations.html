@@ -100,9 +100,15 @@
 extends <a href="../mockit/Expectations.html" title="class in mockit">Expectations</a></pre>
 <div class="block">An <a href="../mockit/Expectations.html" title="class in mockit"><code>Expectations</code></a> subclass where all expectations are automatically
  <a href="../mockit/Expectations.html#notStrict()">non-strict</a>.
- <p/>
- Such expectations will typically be later verified through a <a href="../mockit/Verifications.html" title="class in mockit"><code>Verifications</code></a> block, when executed after the
- replay phase of the test.
+ <pre>
+ new NonStrictExpectations() {{
+    <strong>mock1</strong>.expectedMethod(<em>anyInt</em>); <em>result</em> = 123; <em>times</em> = 1;
+    <strong>MockedClass</strong>.allowedMethod(); <em>result</em> = new IOException();
+    <strong>mock2</strong>.anotherAllowedMethod(1, "test"); returns("Abc", "xyz");
+ }};
+ // Now exercise the tested code according to the recorded expectations.</pre>
+ Such expectations can also be verified later (after having exercised the code under test) through
+ <a href="../mockit/Verifications.html" title="class in mockit"><code>Verifications</code></a> blocks.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#strictness">In the
  Tutorial</a></div>

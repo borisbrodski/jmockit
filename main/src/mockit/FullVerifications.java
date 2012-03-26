@@ -9,7 +9,13 @@ package mockit;
  * verified, except for those already verified through other means.
  * As such, the verification block represents a full set of verifications for the mocked types/instances used in the
  * test.
- * <p/>
+ * <pre>
+ * // Exercise tested code, then verify that expected invocations occurred in any order,
+ * // with no invocations left unverified:
+ * new FullVerifications() {{
+ *    <strong>mock1</strong>.expectedMethod(<em>anyInt</em>);
+ *    <strong>mock2</strong>.anotherExpectedMethod(1, "test"); <em>times</em> = 2;
+ * }};</pre>
  * Any invocation in the replay phase not covered by one of these verifications will cause an assertion error to be
  * thrown.
  * <p/>

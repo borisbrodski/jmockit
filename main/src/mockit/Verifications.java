@@ -17,14 +17,11 @@ import mockit.internal.util.*;
  * As such, these so called <em>verification blocks</em> can only appear <em>after</em> having exercised the code under
  * test.
  * <pre>
- *    // Exercise code under test, then:
- *
- *    new Verifications() {{
- *       mock1.expectedMethod(anyInt);
- *       mock2.anotherExpectedMethod(1, "test"); times = 2;
- *    }};
- * </pre>
- * <p/>
+ * // Exercise tested code, then verify that expected invocations occurred in any order:
+ * new Verifications() {{
+ *    <strong>mock1</strong>.expectedMethod(<em>anyInt</em>);
+ *    <strong>mock2</strong>.anotherExpectedMethod(1, "test"); <em>times</em> = 2;
+ * }};</pre>
  * The relative order of invocations is not relevant here; for that, use {@link VerificationsInOrder} instead.
  * Any subset of actual invocations can be verified; to make sure that <em>all</em> have been, if needed, use
  * {@link FullVerifications} instead.

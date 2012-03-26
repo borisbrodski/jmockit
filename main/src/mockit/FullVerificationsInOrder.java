@@ -6,7 +6,14 @@ package mockit;
 
 /**
  * A combination of {@link FullVerifications} and {@link VerificationsInOrder}.
- * <p/>
+ * <pre>
+ * // Exercise tested code, then verify that expected invocations occurred in the same order,
+ * // with no invocations left unverified:
+ * new FullVerificationsInOrder() {{
+ *    <strong>mock1</strong>.firstExpectedMethod(<em>anyInt</em>); <em>times</em> = 1;
+ *    <strong>mock2</strong>.secondExpectedMethod(1, <em>anyString</em>);
+ *    <strong>MockedClass</strong>.finalMethod(<em>anyBoolean</em>, null);
+ * }};</pre>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerificationInOrder">In
  * the Tutorial</a>
  */

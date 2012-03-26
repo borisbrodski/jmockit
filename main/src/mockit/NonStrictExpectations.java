@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -7,9 +7,15 @@ package mockit;
 /**
  * An {@link Expectations} subclass where all expectations are automatically
  * {@linkplain Expectations#notStrict() non-strict}.
- * <p/>
- * Such expectations will typically be later verified through a {@link Verifications} block, when executed after the
- * replay phase of the test.
+ * <pre>
+ * new NonStrictExpectations() {{
+ *    <strong>mock1</strong>.expectedMethod(<em>anyInt</em>); <em>result</em> = 123; <em>times</em> = 1;
+ *    <strong>MockedClass</strong>.allowedMethod(); <em>result</em> = new IOException();
+ *    <strong>mock2</strong>.anotherAllowedMethod(1, "test"); returns("Abc", "xyz");
+ * }};
+ * // Now exercise the tested code according to the recorded expectations.</pre>
+ * Such expectations can also be verified later (after having exercised the code under test) through
+ * {@link Verifications} blocks.
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#strictness">In the
  * Tutorial</a>
@@ -25,9 +31,7 @@ public abstract class NonStrictExpectations extends Expectations
     * @see #NonStrictExpectations(Object...)
     * @see #NonStrictExpectations(int, Object...)
     */
-   protected NonStrictExpectations()
-   {
-   }
+   protected NonStrictExpectations() {}
 
    /**
     * Identical to the corresponding super-constructor {@link Expectations#Expectations(Object...)}, except that all

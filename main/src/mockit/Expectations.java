@@ -9,31 +9,35 @@ import java.util.*;
 import mockit.internal.expectations.*;
 
 /**
- * Base class whose subclasses are defined in test code, and whose instances define a set of <em>expected</em> and/or
- * <em>allowed</em> method/constructor invocations on the mocked types declared through one or more <em>mock fields</em>
- * and/or <em>mock parameters</em>.
- * A (local) mock field is any field declared in a subclass which is either non-private or annotated with
- * {@link Mocked}.
- * <p/>
- * Typically, this class is used by extending it with <em>anonymous inner classes</em> (named as <em>expectation
- * blocks</em>) inside test methods, which record expectations on mocked types by calling instance methods on mock
- * fields/parameters, static methods on mocked classes, and/or constructors of mocked classes.
+ * A set of <em>expected</em> and/or <em>allowed</em> method/constructor invocations on the mocked types/instances that
+ * have been made available to the test through mock fields and/or mock parameters.
+ * <pre>
+ * new Expectations() {{
+ *    <strong>mock1</strong>.expectedMethod(<em>anyInt</em>); <em>result</em> = 123; <em>times</em> = 2;
+ *    <strong>mock2</strong>.anotherExpectedMethod(1, "test"); returns("Abc", "xyz");
+ *    <strong>MockedClass</strong>.allowedMethod(); notStrict();
+ * }};
+ * // Now exercise the tested code according to the recorded expectations.</pre>
+ * Typically, this class is used by extending it with <em>anonymous inner classes</em> (so called <em>expectation
+ * blocks</em>) inside test methods, which record expectations on mocked types or instances by calling instance methods
+ * on mock fields/parameters, static methods on mocked classes, and/or constructors of mocked classes.
  * Arguments passed in such calls are later matched to the actual arguments passed from the code under test.
  * <p/>
- * Any mock fields declared within an expectation block will only be accessible for invocations inside this particular
- * block.
- * An alternative is to declare mock fields of the <em>test class</em> itself, so that all of its test methods can share
- * the same mock fields. Such fields need to be annotated as {@code @Mocked}, though.
+ * Any instance field declared in a subclass is considered a <em>local</em> mock field, provided it has a mockable type
+ * and is either non-private or annotated with {@linkplain Mocked @Mocked}.
  * <p/>
- * There are several API fields and methods which the expectation block can use for recording desired return values and
- * exceptions/errors to be thrown (see {@link #result}), and for specifying argument matching constraints (see
- * {@link #anyString}).
+ * There are several special fields and methods which can be used in the expectation block, to: a) record desired return
+ * values or exceptions/errors to be thrown ({@link #result}, {@link #returns(Object, Object...)}); b) relax or
+ * constrain the matching of argument values ({@link #anyInt}, {@link #anyString}, {@link #withNotNull()}, etc.);
+ * c) relax or constrain the expected and/or allowed number of matching invocations ({@link #times}, {@link #minTimes},
+ * {@link #maxTimes}).
  * <p/>
  * Individual expectations are defined during the <em>record phase</em>, and later exercised during the
  * <em>replay phase</em> of the test.
  * At the end of the test, the test runner will automatically assert that all <em>expected</em> invocations actually
- * occurred during the replay phase. (An expectation block may also record expectations that are merely
- * <em>allowed</em> to occur, and as such are not implicitly verified at the end of the test.)
+ * occurred during the replay phase.
+ * An expectation block may also record expectations that are merely <em>allowed</em> to occur, and as such are not
+ * implicitly verified at the end of the test.
  * <p/>
  * Additional features and details:
  * <ul>
@@ -60,14 +64,10 @@ import mockit.internal.expectations.*;
  * Most tests shouldn't need these facilities, though.
  * </li>
  * <li>
- * A set of special API fields provides the ability to specify how many {@linkplain #times times} a recorded invocation
- * is expected <em>and</em> allowed to occur during replay, the {@linkplain #minTimes minimum number of times} it's
- * expected, or the {@linkplain #maxTimes maximum number of times} it will be allowed to occur.
- * </li>
- * <li>
  * By default, the exact instance on which instance method invocations occur during the replay phase is <em>not</em>
- * verified to be the same as the instance used when recording the corresponding expectation.
- * If such verification is needed, the {@link #onInstance(Object)} method should be used.
+ * verified to be the same as the instance used when recording the corresponding expectation, <em>unless</em> the
+ * mock field/parameter was declared to be {@linkplain Injectable @Injectable}.
+ * If such verification on non-injectable instances is needed, the {@link #onInstance(Object)} method should be used.
  * </li>
  * <li>
  * There are additional constructors which provide other features:
@@ -75,7 +75,8 @@ import mockit.internal.expectations.*;
  * {@linkplain #Expectations(int, Object...) iterated invocations}.
  * </li>
  * </ul>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#expectation">In the Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#expectation">In the
+ * Tutorial</a>
  *
  * @see #Expectations()
  */

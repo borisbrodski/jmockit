@@ -99,7 +99,14 @@
 <pre>public abstract class <span class="strong">FullVerificationsInOrder</span>
 extends <a href="../mockit/Verifications.html" title="class in mockit">Verifications</a></pre>
 <div class="block">A combination of <a href="../mockit/FullVerifications.html" title="class in mockit"><code>FullVerifications</code></a> and <a href="../mockit/VerificationsInOrder.html" title="class in mockit"><code>VerificationsInOrder</code></a>.
- <p/>
+ <pre>
+ // Exercise tested code, then verify that expected invocations occurred in the same order,
+ // with no invocations left unverified:
+ new FullVerificationsInOrder() {{
+    <strong>mock1</strong>.firstExpectedMethod(<em>anyInt</em>); <em>times</em> = 1;
+    <strong>mock2</strong>.secondExpectedMethod(1, <em>anyString</em>);
+    <strong>MockedClass</strong>.finalMethod(<em>anyBoolean</em>, null);
+ }};</pre>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerificationInOrder">In
  the Tutorial</a></div>
 </li>
