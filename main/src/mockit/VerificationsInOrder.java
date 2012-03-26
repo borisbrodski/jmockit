@@ -10,6 +10,7 @@ import mockit.internal.expectations.*;
  * Same as {@link Verifications}, but checking that invocations in the replay phase occurred in the same order as
  * specified in this <em>ordered</em> verification block.
  * <pre>
+ *
  * // Exercise tested code, then verify that expected invocations occurred in the same order:
  * new VerificationsInOrder() {{
  *    <strong>mock1</strong>.firstExpectedMethod(<em>anyInt</em>); <em>minTimes</em> = 1;

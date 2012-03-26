@@ -101,6 +101,7 @@ extends <a href="../mockit/Expectations.html" title="class in mockit">Expectatio
 <div class="block">An <a href="../mockit/Expectations.html" title="class in mockit"><code>Expectations</code></a> subclass where all expectations are automatically
  <a href="../mockit/Expectations.html#notStrict()">non-strict</a>.
  <pre>
+
  new NonStrictExpectations() {{
     <strong>mock1</strong>.expectedMethod(<em>anyInt</em>); <em>result</em> = 123; <em>times</em> = 1;
     <strong>MockedClass</strong>.allowedMethod(); <em>result</em> = new IOException();

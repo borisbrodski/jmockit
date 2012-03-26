@@ -97,7 +97,13 @@
 <pre>public abstract class <span class="strong">MockUp&lt;T&gt;</span>
 extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
 <div class="block">A <em>mock-up</em> for a class or interface, to be used in state-based tests.
- <p/>
+ <pre>
+
+ // Setup a mockup before exercising tested code:
+ new MockUp&lt;SomeClass>() {
+    &#64;Mock int someMethod(int i) { assertTrue(i > 0); return 123; }
+    &#64;Mock(maxInvocations = 2) void anotherMethod(int i, String s) { &#47;* validate arguments *&#47; }
+ };</pre>
  One or more <em>mock methods</em>, each one annotated <a href="../mockit/Mock.html" title="annotation in mockit">as such</a> and corresponding to a "real" method
  or constructor of the mocked class/interface, must be defined in the concrete subclass.
  <p/>

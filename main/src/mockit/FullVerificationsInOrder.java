@@ -7,6 +7,7 @@ package mockit;
 /**
  * A combination of {@link FullVerifications} and {@link VerificationsInOrder}.
  * <pre>
+ *
  * // Exercise tested code, then verify that expected invocations occurred in the same order,
  * // with no invocations left unverified:
  * new FullVerificationsInOrder() {{

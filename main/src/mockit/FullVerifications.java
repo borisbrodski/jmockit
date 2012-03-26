@@ -10,6 +10,7 @@ package mockit;
  * As such, the verification block represents a full set of verifications for the mocked types/instances used in the
  * test.
  * <pre>
+ *
  * // Exercise tested code, then verify that expected invocations occurred in any order,
  * // with no invocations left unverified:
  * new FullVerifications() {{

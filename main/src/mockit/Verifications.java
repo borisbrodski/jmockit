@@ -17,6 +17,7 @@ import mockit.internal.util.*;
  * As such, these so called <em>verification blocks</em> can only appear <em>after</em> having exercised the code under
  * test.
  * <pre>
+ *
  * // Exercise tested code, then verify that expected invocations occurred in any order:
  * new Verifications() {{
  *    <strong>mock1</strong>.expectedMethod(<em>anyInt</em>);

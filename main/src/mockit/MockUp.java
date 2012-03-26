@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -10,7 +10,13 @@ import mockit.internal.*;
 
 /**
  * A <em>mock-up</em> for a class or interface, to be used in state-based tests.
- * <p/>
+ * <pre>
+ *
+ * // Setup a mockup before exercising tested code:
+ * new MockUp&lt;SomeClass>() {
+ *    &#64;Mock int someMethod(int i) { assertTrue(i > 0); return 123; }
+ *    &#64;Mock(maxInvocations = 2) void anotherMethod(int i, String s) { &#47;* validate arguments *&#47; }
+ * };</pre>
  * One or more <em>mock methods</em>, each one annotated {@linkplain Mock as such} and corresponding to a "real" method
  * or constructor of the mocked class/interface, must be defined in the concrete subclass.
  * <p/>

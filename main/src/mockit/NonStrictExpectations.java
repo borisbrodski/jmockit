@@ -8,6 +8,7 @@ package mockit;
  * An {@link Expectations} subclass where all expectations are automatically
  * {@linkplain Expectations#notStrict() non-strict}.
  * <pre>
+ *
  * new NonStrictExpectations() {{
  *    <strong>mock1</strong>.expectedMethod(<em>anyInt</em>); <em>result</em> = 123; <em>times</em> = 1;
  *    <strong>MockedClass</strong>.allowedMethod(); <em>result</em> = new IOException();

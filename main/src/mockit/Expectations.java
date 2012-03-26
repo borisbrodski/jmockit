@@ -12,6 +12,7 @@ import mockit.internal.expectations.*;
  * A set of <em>expected</em> and/or <em>allowed</em> method/constructor invocations on the mocked types/instances that
  * have been made available to the test through mock fields and/or mock parameters.
  * <pre>
+ *
  * new Expectations() {{
  *    <strong>mock1</strong>.expectedMethod(<em>anyInt</em>); <em>result</em> = 123; <em>times</em> = 2;
  *    <strong>mock2</strong>.anotherExpectedMethod(1, "test"); returns("Abc", "xyz");
@@ -75,6 +76,7 @@ import mockit.internal.expectations.*;
  * {@linkplain #Expectations(int, Object...) iterated invocations}.
  * </li>
  * </ul>
+ * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#expectation">In the
  * Tutorial</a>
  *

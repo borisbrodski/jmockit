@@ -102,6 +102,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  As such, these so called <em>verification blocks</em> can only appear <em>after</em> having exercised the code under
  test.
  <pre>
+
  // Exercise tested code, then verify that expected invocations occurred in any order:
  new Verifications() {{
     <strong>mock1</strong>.expectedMethod(<em>anyInt</em>);
