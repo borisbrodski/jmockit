@@ -799,8 +799,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  The return type of the validation method should be either <code>boolean</code> or <code>void</code>.
  In the first case, a return value of <code>true</code> means the invocation is valid, while <code>false</code> causes the
  test to fail with an appropriate error message.
- In the second case, invocation arguments should be validated through regular assertions (Java
- <code>assert</code>s and/or JUnit/TestNG methods).
+ In the second case, invocation arguments should be validated through regular JUnit/TestNG assertion methods.
  <p/>
  The validation method can optionally declare its first parameter as being of type <a href="../mockit/Invocation.html" title="class in mockit"><code>Invocation</code></a>.
  <p/>
@@ -1344,7 +1343,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  In the first case, a return value of <code>true</code> will indicate a successful match for the actual invocation
  argument at replay time, while a return of <code>false</code> will fail to match the invocation.
  In the case of a <code>void</code> return type, the handler method should validate the actual invocation argument
- through an <code>assert</code> statement or a JUnit/TestNG assertion.</div>
+ through a JUnit/TestNG assertion.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>delegateObjectWithInvocationHandlerMethod</code> - an instance of a class with an appropriate invocation handler
  method</dd>
 <dt><span class="strong">Returns:</span></dt><dd>the default primitive value corresponding to <code>T</code> if it's a primitive wrapper type, or <code>null</code>
@@ -1392,7 +1391,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  In the first case, a return value of <code>true</code> will indicate a successful match for the actual invocation
  argument at replay time, while a return of <code>false</code> will cause the test to fail.
  In the case of a <code>void</code> return type, instead of returning a value the handler method should validate the
- actual invocation argument through an <code>assert</code> statement or a JUnit/TestNG assertion.
+ actual invocation argument through a JUnit/TestNG assertion.
  <p/>
  For additional details, refer to <a href="../mockit/Expectations.html#withEqual(T)"><code>withEqual(Object)</code></a>.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>argValue</code> - an arbitrary value of the proper type, necessary to provide a valid argument to the invocation

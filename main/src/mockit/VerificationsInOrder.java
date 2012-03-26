@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -22,11 +22,10 @@ public abstract class VerificationsInOrder extends Verifications
 {
    /**
     * Begins <em>in-order</em> verification on the mocked types/instances invoked during the replay phase of the test.
+    *
+    * @see #VerificationsInOrder(int)
     */
-   protected VerificationsInOrder()
-   {
-      super(true);
-   }
+   protected VerificationsInOrder() { super(true); }
 
    /**
     * Begins <em>in-order</em> verification on the mocked types/instances invoked during the replay phase of the test.
@@ -36,6 +35,8 @@ public abstract class VerificationsInOrder extends Verifications
     *
     * @param numberOfIterations the positive number of iterations for the whole set of invocations
     * verified inside the block; when not specified, 1 (one) iteration is assumed
+    *
+    * @see #VerificationsInOrder()
     */
    protected VerificationsInOrder(int numberOfIterations)
    {

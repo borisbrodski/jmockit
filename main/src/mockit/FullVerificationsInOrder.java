@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -7,17 +7,18 @@ package mockit;
 /**
  * A combination of {@link FullVerifications} and {@link VerificationsInOrder}.
  * <p/>
- * Note that the behavior provided by this class is essentially the same obtained through an strict
- * {@link Expectations} recording block, except that the number of expected invocations for each
- * expectation is still "non-strict".
- * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerificationInOrder">In the Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#FullVerificationInOrder">In
+ * the Tutorial</a>
  */
 public abstract class FullVerificationsInOrder extends Verifications
 {
    /**
     * Begins <em>in-order</em> verification for <em>all</em> invocations on the mocked types/instances that can
     * potentially be invoked during the replay phase.
+    *
+    * @see #FullVerificationsInOrder(int)
+    * @see #FullVerificationsInOrder(Object...)
+    * @see #FullVerificationsInOrder(int, Object...)
     */
    protected FullVerificationsInOrder()
    {
@@ -34,6 +35,10 @@ public abstract class FullVerificationsInOrder extends Verifications
     *
     * @param numberOfIterations the positive number of iterations for the whole set of invocations verified inside the
     * block; when not specified, 1 (one) iteration is assumed
+    *
+    * @see #FullVerificationsInOrder()
+    * @see #FullVerificationsInOrder(Object...)
+    * @see #FullVerificationsInOrder(int, Object...)
     */
    protected FullVerificationsInOrder(int numberOfIterations)
    {
@@ -49,6 +54,10 @@ public abstract class FullVerificationsInOrder extends Verifications
     * @param mockedTypesAndInstancesToVerify one or more of the mocked types (ie, {@code Class} objects) and/or mocked
     * instances that are in scope for the test; for a given mocked <em>instance</em>, all classes up to (but not
     * including) {@code java.lang.Object} are considered
+    *
+    * @see #FullVerificationsInOrder()
+    * @see #FullVerificationsInOrder(int)
+    * @see #FullVerificationsInOrder(int, Object...)
     */
    protected FullVerificationsInOrder(Object... mockedTypesAndInstancesToVerify)
    {
@@ -63,6 +72,10 @@ public abstract class FullVerificationsInOrder extends Verifications
     * @param mockedTypesAndInstancesToVerify one or more of the mocked types (ie, {@code Class} objects) and/or mocked
     * instances that are in scope for the test; for a given mocked <em>instance</em>, all classes up to (but not
     * including) {@code java.lang.Object} are considered
+    *
+    * @see #FullVerificationsInOrder()
+    * @see #FullVerificationsInOrder(int)
+    * @see #FullVerificationsInOrder(Object...)
     */
    protected FullVerificationsInOrder(int numberOfIterations, Object... mockedTypesAndInstancesToVerify)
    {

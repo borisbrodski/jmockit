@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -12,44 +12,34 @@ import mockit.internal.expectations.*;
 import mockit.internal.util.*;
 
 /**
- * Base class whose subclasses are defined in test code, and whose instances define a set of invocations on mocked
- * types/instances to be verified against the actual invocations executed during the replay phase of the test.
- * The order of the invocations is not relevant, and any subset of the potential invocations in the replay phase can be
- * verified (ie, not all of them need to be verified on each use of this class).
+ * A set of expectations on mocked types and/or instances to be verified against the invocations which actually occurred
+ * during the test.
+ * As such, these so called <em>verification blocks</em> can only appear <em>after</em> having exercised the code under
+ * test.
+ * <pre>
+ *    // Exercise code under test, then:
+ *
+ *    new Verifications() {{
+ *       mock1.expectedMethod(anyInt);
+ *       mock2.anotherExpectedMethod(1, "test"); times = 2;
+ *    }};
+ * </pre>
  * <p/>
- * Since each user-defined subclass will typically take the form of an anonymous class with no methods but only an
- * instance initialization block, we name such constructs <em>verification blocks</em>.
- * When extending this class directly (as opposed to extending one of the three specializations available in the API),
- * we have an <em>unordered</em> verification block.
+ * The relative order of invocations is not relevant here; for that, use {@link VerificationsInOrder} instead.
+ * Any subset of actual invocations can be verified; to make sure that <em>all</em> have been, if needed, use
+ * {@link FullVerifications} instead.
  * <p/>
- * Such blocks can appear alone in a test or (more typically) in conjunction with
- * {@linkplain NonStrictExpectations non-strict expectation blocks}.
- * It's also possible to have an {@linkplain Expectations strict expectation block} in the same test, provided at least
- * one non-strict expectation is recorded in it (strict expectations are <em>implicitly</em> verified as invocations
- * occur in the replay phase, and at the end of the test to account for any missing invocations - they cannot be
- * verified explicitly).
- * <p/>
- * Note that while an expectation block can appear only <em>before</em> the replay phase of the test, a verification
- * block can appear only <em>after</em> that phase.
- * <p/>
- * For an invocation inside a verification block to succeed (ie, pass verification), a corresponding invocation must
- * have occurred during the replay phase of the test, <em>at least once</em>.
- * Such an invocation may or may not have been previously recorded in an expectation block.
+ * For an expectation inside a verification block to succeed (ie, pass verification), a matching invocation must have
+ * occurred during the replay (exercise) phase of the test, <em>at least once</em>.
  * This is only the <em>default</em> verification behavior, though. Just like with recorded expectations, it's possible
  * to specify different invocation count constraints through the {@link #times}, {@link #minTimes}, and
  * {@link #maxTimes} fields.
  * <p/>
- * The mocked types used inside the verification block can be all the ones that are in scope: mock fields of the test
- * class and mock parameters of the test method. In addition, local mock fields declared inside expectation blocks can
- * be <em>imported</em> into the verification block by declaring a field of the desired mocked type inside this block -
- * though not necessarily with the same name as the imported mock field, although it's recommended for clarity.
+ * Besides the mock fields and mock parameters available to the test, a verification block can also <em>import</em>
+ * local mock fields declared inside expectation blocks, by declaring a local field of the desired mocked type.
  * <p/>
- * Just like it is valid to have multiple expectation blocks in a test, it is also valid to have multiple (non-nested)
- * verification blocks. The relative order of the blocks is not relevant.
- * Such blocks can be of different types. (Typically, when using multiple verification blocks there will be a mix of
- * ordered and unordered ones.)
- * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#verification">In the Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#verification">In the
+ * Tutorial</a>
  *
  * @see Expectations#notStrict()
  * @see NonStrict
@@ -61,16 +51,15 @@ public abstract class Verifications extends Invocations
    final BaseVerificationPhase verificationPhase;
 
    /**
-    * Begins verification on the mocked types/instances invoked during the replay phase of the test.
+    * Begins a block unordered verifications on the mocked types/instances invoked during the replay phase of the test.
+    *
+    * @see #Verifications(int)
     */
-   protected Verifications()
-   {
-      this(false);
-   }
+   protected Verifications() { this(false); }
 
    /**
-    * Begins verification on the mocked types/instances invoked during the replay phase of the test, considering that
-    * such invocations occurred in a given number of iterations.
+    * Begins a block of unordered verifications on the mocked types/instances invoked during the replay phase of the
+    * test, considering that such invocations occurred in a given number of iterations.
     * <p/>
     * The effect of specifying a (positive) number of iterations is equivalent to setting to that number the lower and
     * upper invocation count limits for each expectation verified inside the block.
@@ -84,6 +73,7 @@ public abstract class Verifications extends Invocations
     * @param numberOfIterations the positive number of iterations for the whole set of invocations verified inside the
     * block
     *
+    * @see #Verifications()
     * @see #times
     * @see #minTimes
     * @see #maxTimes

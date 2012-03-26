@@ -97,44 +97,34 @@
 <br>
 <pre>public abstract class <span class="strong">Verifications</span>
 extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
-<div class="block">Base class whose subclasses are defined in test code, and whose instances define a set of invocations on mocked
- types/instances to be verified against the actual invocations executed during the replay phase of the test.
- The order of the invocations is not relevant, and any subset of the potential invocations in the replay phase can be
- verified (ie, not all of them need to be verified on each use of this class).
+<div class="block">A set of expectations on mocked types and/or instances to be verified against the invocations which actually occurred
+ during the test.
+ As such, these so called <em>verification blocks</em> can only appear <em>after</em> having exercised the code under
+ test.
+ <pre>
+    // Exercise code under test, then:
+
+    new Verifications() {{
+       mock1.expectedMethod(anyInt);
+       mock2.anotherExpectedMethod(1, "test"); times = 2;
+    }};
+ </pre>
  <p/>
- Since each user-defined subclass will typically take the form of an anonymous class with no methods but only an
- instance initialization block, we name such constructs <em>verification blocks</em>.
- When extending this class directly (as opposed to extending one of the three specializations available in the API),
- we have an <em>unordered</em> verification block.
+ The relative order of invocations is not relevant here; for that, use <a href="../mockit/VerificationsInOrder.html" title="class in mockit"><code>VerificationsInOrder</code></a> instead.
+ Any subset of actual invocations can be verified; to make sure that <em>all</em> have been, if needed, use
+ <a href="../mockit/FullVerifications.html" title="class in mockit"><code>FullVerifications</code></a> instead.
  <p/>
- Such blocks can appear alone in a test or (more typically) in conjunction with
- <a href="../mockit/NonStrictExpectations.html" title="class in mockit">non-strict expectation blocks</a>.
- It's also possible to have an <a href="../mockit/Expectations.html" title="class in mockit">strict expectation block</a> in the same test, provided at least
- one non-strict expectation is recorded in it (strict expectations are <em>implicitly</em> verified as invocations
- occur in the replay phase, and at the end of the test to account for any missing invocations - they cannot be
- verified explicitly).
- <p/>
- Note that while an expectation block can appear only <em>before</em> the replay phase of the test, a verification
- block can appear only <em>after</em> that phase.
- <p/>
- For an invocation inside a verification block to succeed (ie, pass verification), a corresponding invocation must
- have occurred during the replay phase of the test, <em>at least once</em>.
- Such an invocation may or may not have been previously recorded in an expectation block.
+ For an expectation inside a verification block to succeed (ie, pass verification), a matching invocation must have
+ occurred during the replay (exercise) phase of the test, <em>at least once</em>.
  This is only the <em>default</em> verification behavior, though. Just like with recorded expectations, it's possible
  to specify different invocation count constraints through the <a href="../mockit/Verifications.html#times"><code>times</code></a>, <a href="../mockit/Verifications.html#minTimes"><code>minTimes</code></a>, and
  <a href="../mockit/Verifications.html#maxTimes"><code>maxTimes</code></a> fields.
  <p/>
- The mocked types used inside the verification block can be all the ones that are in scope: mock fields of the test
- class and mock parameters of the test method. In addition, local mock fields declared inside expectation blocks can
- be <em>imported</em> into the verification block by declaring a field of the desired mocked type inside this block -
- though not necessarily with the same name as the imported mock field, although it's recommended for clarity.
+ Besides the mock fields and mock parameters available to the test, a verification block can also <em>import</em>
+ local mock fields declared inside expectation blocks, by declaring a local field of the desired mocked type.
  <p/>
- Just like it is valid to have multiple expectation blocks in a test, it is also valid to have multiple (non-nested)
- verification blocks. The relative order of the blocks is not relevant.
- Such blocks can be of different types. (Typically, when using multiple verification blocks there will be a mix of
- ordered and unordered ones.)
- <p/>
- <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#verification">In the Tutorial</a></div>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#verification">In the
+ Tutorial</a></div>
 <dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Expectations.html#notStrict()"><code>Expectations.notStrict()</code></a>, 
 <a href="../mockit/NonStrict.html" title="annotation in mockit"><code>NonStrict</code></a>, 
 <a href="../mockit/Verifications.html#Verifications()"><code>Verifications()</code></a>, 
@@ -270,14 +260,14 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <tr class="altColor">
 <td class="colFirst"><code>protected </code></td>
 <td class="colLast"><code><strong><a href="../mockit/Verifications.html#Verifications()">Verifications</a></strong>()</code>
-<div class="block">Begins verification on the mocked types/instances invoked during the replay phase of the test.</div>
+<div class="block">Begins a block unordered verifications on the mocked types/instances invoked during the replay phase of the test.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected </code></td>
 <td class="colLast"><code><strong><a href="../mockit/Verifications.html#Verifications(int)">Verifications</a></strong>(int&nbsp;numberOfIterations)</code>
-<div class="block">Begins verification on the mocked types/instances invoked during the replay phase of the test, considering that
- such invocations occurred in a given number of iterations.</div>
+<div class="block">Begins a block of unordered verifications on the mocked types/instances invoked during the replay phase of the
+ test, considering that such invocations occurred in a given number of iterations.</div>
 </td>
 </tr>
 </table>
@@ -704,8 +694,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  The return type of the validation method should be either <code>boolean</code> or <code>void</code>.
  In the first case, a return value of <code>true</code> means the invocation is valid, while <code>false</code> causes the
  test to fail with an appropriate error message.
- In the second case, invocation arguments should be validated through regular assertions (Java
- <code>assert</code>s and/or JUnit/TestNG methods).
+ In the second case, invocation arguments should be validated through regular JUnit/TestNG assertion methods.
  <p/>
  The validation method can optionally declare its first parameter as being of type <a href="../mockit/Invocation.html" title="class in mockit"><code>Invocation</code></a>.
  <p/>
@@ -779,7 +768,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <li class="blockList">
 <h4>Verifications</h4>
 <pre>protected&nbsp;Verifications()</pre>
-<div class="block">Begins verification on the mocked types/instances invoked during the replay phase of the test.</div>
+<div class="block">Begins a block unordered verifications on the mocked types/instances invoked during the replay phase of the test.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Verifications.html#Verifications(int)"><code>Verifications(int)</code></a></dd></dl>
 </li>
 </ul>
 <a name="Verifications(int)">
@@ -789,8 +779,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <li class="blockList">
 <h4>Verifications</h4>
 <pre>protected&nbsp;Verifications(int&nbsp;numberOfIterations)</pre>
-<div class="block">Begins verification on the mocked types/instances invoked during the replay phase of the test, considering that
- such invocations occurred in a given number of iterations.
+<div class="block">Begins a block of unordered verifications on the mocked types/instances invoked during the replay phase of the
+ test, considering that such invocations occurred in a given number of iterations.
  <p/>
  The effect of specifying a (positive) number of iterations is equivalent to setting to that number the lower and
  upper invocation count limits for each expectation verified inside the block.
@@ -801,7 +791,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#iterations">In the Tutorial</a></div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>numberOfIterations</code> - the positive number of iterations for the whole set of invocations verified inside the
- block</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Verifications.html#times"><code>times</code></a>, 
+ block</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Verifications.html#Verifications()"><code>Verifications()</code></a>, 
+<a href="../mockit/Verifications.html#times"><code>times</code></a>, 
 <a href="../mockit/Verifications.html#minTimes"><code>minTimes</code></a>, 
 <a href="../mockit/Verifications.html#maxTimes"><code>maxTimes</code></a></dd></dl>
 </li>
@@ -1093,7 +1084,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  In the first case, a return value of <code>true</code> will indicate a successful match for the actual invocation
  argument at replay time, while a return of <code>false</code> will fail to match the invocation.
  In the case of a <code>void</code> return type, the handler method should validate the actual invocation argument
- through an <code>assert</code> statement or a JUnit/TestNG assertion.</div>
+ through a JUnit/TestNG assertion.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>delegateObjectWithInvocationHandlerMethod</code> - an instance of a class with an appropriate invocation handler
  method</dd>
 <dt><span class="strong">Returns:</span></dt><dd>the default primitive value corresponding to <code>T</code> if it's a primitive wrapper type, or <code>null</code>
@@ -1141,7 +1132,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  In the first case, a return value of <code>true</code> will indicate a successful match for the actual invocation
  argument at replay time, while a return of <code>false</code> will cause the test to fail.
  In the case of a <code>void</code> return type, instead of returning a value the handler method should validate the
- actual invocation argument through an <code>assert</code> statement or a JUnit/TestNG assertion.
+ actual invocation argument through a JUnit/TestNG assertion.
  <p/>
  For additional details, refer to <a href="../mockit/Verifications.html#withEqual(T)"><code>withEqual(Object)</code></a>.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>argValue</code> - an arbitrary value of the proper type, necessary to provide a valid argument to the invocation
