@@ -13,6 +13,8 @@ import mockit.coverage.standalone.*;
 
 public final class CodeCoverage implements ClassFileTransformer, Runnable
 {
+   private static CodeCoverage instance;
+
    private final ClassModification classModification;
    private final OutputFileGenerator outputGenerator;
 
@@ -32,7 +34,7 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
    @SuppressWarnings("UnusedDeclaration")
    public CodeCoverage() { this(true); }
 
-   public CodeCoverage(boolean generateOutputOnJVMShutdown)
+   private CodeCoverage(boolean generateOutputOnJVMShutdown)
    {
       classModification = new ClassModification();
       outputGenerator = createOutputFileGenerator();
@@ -46,9 +48,25 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
       }
    }
 
-   public void generateOutput()
+   public static CodeCoverage create()
    {
-      outputGenerator.generate();
+      instance = new CodeCoverage(false);
+      return instance;
+   }
+
+   public static void resetConfiguration()
+   {
+      Startup.instrumentation().removeTransformer(instance);
+      Startup.instrumentation().addTransformer(create());
+   }
+
+   public static void generateOutput(boolean resetState)
+   {
+      instance.outputGenerator.generate();
+
+      if (resetState) {
+         CoverageData.instance().clear();
+      }
    }
 
    public void run()

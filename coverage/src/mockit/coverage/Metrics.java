@@ -6,32 +6,45 @@ package mockit.coverage;
 
 import mockit.coverage.standalone.*;
 
-public final class Metrics
+public enum Metrics
 {
-   public static final boolean LINE_COVERAGE;
-   public static final boolean PATH_COVERAGE;
-   public static final boolean DATA_COVERAGE;
+   LineCoverage
+   {
+      @Override
+      public boolean isActive() { return isActive("line"); }
+   },
 
-   static
+   PathCoverage
+   {
+      @Override
+      public boolean isActive() { return isActive("path"); }
+   },
+
+   DataCoverage
+   {
+      @Override
+      public boolean isActive() { return !Startup.isStandalone() && isActive("data"); }
+   };
+
+   public abstract boolean isActive();
+
+   final boolean isActive(String name)
    {
       String metrics = System.getProperty("jmockit-coverage-metrics", "all");
       boolean all = "all".equals(metrics);
-
-      LINE_COVERAGE = all || metrics.contains("line");
-      PATH_COVERAGE = all || metrics.contains("path");
-      DATA_COVERAGE = (all || metrics.contains("data")) && !Startup.isStandalone();
-   }
-
-   public static boolean withMetric(int metric)
-   {
-      return
-         LINE_COVERAGE && metric == 0 ||
-         PATH_COVERAGE && metric == 1 ||
-         DATA_COVERAGE && metric == 2;
+      return all || metrics.contains(name);
    }
 
    public static int amountActive()
    {
-      return (LINE_COVERAGE ? 1 : 0) + (PATH_COVERAGE ? 1 : 0) + (DATA_COVERAGE ? 1 : 0);
+      int amount = 0;
+
+      for (Metrics metric : Metrics.values()) {
+         if (metric.isActive()) {
+            amount++;
+         }
+      }
+
+      return amount;
    }
 }

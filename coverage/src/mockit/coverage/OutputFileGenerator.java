@@ -29,7 +29,7 @@ final class OutputFileGenerator extends Thread
       String commaSeparatedDirs = System.getProperty(COVERAGE_PREFIX + "srcDirs");
 
       if (commaSeparatedDirs == null) {
-         sourceDirs = ALL_SOURCE_DIRS;
+         sourceDirs = Startup.isStandalone() ? null : ALL_SOURCE_DIRS;
       }
       else if (commaSeparatedDirs.length() == 0) {
          sourceDirs = null;
@@ -43,7 +43,7 @@ final class OutputFileGenerator extends Thread
    {
       String format = getCoverageProperty("output");
 
-      if (format.length() == 0) {
+      if (format.length() == 0 && !Startup.isStandalone()) {
          format = outputFormatFromClasspath();
       }
 

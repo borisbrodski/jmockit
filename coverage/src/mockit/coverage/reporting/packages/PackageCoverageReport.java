@@ -66,15 +66,15 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       else {
          writeTableCellWithFileName(fileNameLength);
 
-         if (Metrics.LINE_COVERAGE) {
+         if (Metrics.LineCoverage.isActive()) {
             writeLineCoveragePercentageForFile(fileData);
          }
 
-         if (Metrics.PATH_COVERAGE) {
+         if (Metrics.PathCoverage.isActive()) {
             writePathCoveragePercentageForFile(fileData);
          }
 
-         if (Metrics.DATA_COVERAGE) {
+         if (Metrics.DataCoverage.isActive()) {
             writeDataCoveragePercentageForFile(fileData);
          }
 
@@ -135,13 +135,13 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       int covered = fileData.getCoveredSegments();
       int total = fileData.getTotalSegments();
 
-      writeCodeCoverageMetricForFile(0, covered, total, percentage);
+      writeCodeCoverageMetricForFile(Metrics.LineCoverage, covered, total, percentage);
    }
 
-   private void writeCodeCoverageMetricForFile(int metric, int covered, int total, int percentage)
+   private void writeCodeCoverageMetricForFile(Metrics metric, int covered, int total, int percentage)
    {
-      coveredItems[metric] += covered;
-      totalItems[metric] += total;
+      coveredItems[metric.ordinal()] += covered;
+      totalItems[metric.ordinal()] += total;
 
       printCoveragePercentage(metric, covered, total, percentage);
    }
@@ -152,7 +152,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       int covered = fileData.getCoveredPaths();
       int total = fileData.getTotalPaths();
 
-      writeCodeCoverageMetricForFile(1, covered, total, percentage);
+      writeCodeCoverageMetricForFile(Metrics.PathCoverage, covered, total, percentage);
    }
 
    private void writeDataCoveragePercentageForFile(FileCoverageData fileData)
@@ -161,6 +161,6 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       int covered = fileData.dataCoverageInfo.getCoveredItems();
       int total = fileData.dataCoverageInfo.getTotalItems();
 
-      writeCodeCoverageMetricForFile(2, covered, total, percentage);
+      writeCodeCoverageMetricForFile(Metrics.DataCoverage, covered, total, percentage);
    }
 }

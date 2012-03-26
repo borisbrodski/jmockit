@@ -26,7 +26,7 @@ public final class ClassModification
 
    private void redefineClassesAlreadyLoadedForCoverage()
    {
-      Class<?>[] loadedClasses = Startup.instrumentation().getInitiatedClasses(getClass().getClassLoader());
+      Class<?>[] loadedClasses = Startup.instrumentation().getAllLoadedClasses();
 
       for (Class<?> loadedClass : loadedClasses) {
          if (
@@ -41,7 +41,7 @@ public final class ClassModification
    private void redefineClassForCoverage(Class<?> loadedClass)
    {
       String className = loadedClass.getName();
-      byte[] modifiedClassfile = readAndModifyClassForCoverage(loadedClass);
+      byte[] modifiedClassfile = readAndModifyClassForCoverage(className);
 
       if (modifiedClassfile != null) {
          redefineClassForCoverage(loadedClass, modifiedClassfile);
@@ -49,10 +49,10 @@ public final class ClassModification
       }
    }
 
-   private byte[] readAndModifyClassForCoverage(Class<?> loadedClass)
+   private byte[] readAndModifyClassForCoverage(String className)
    {
       try {
-         return modifyClassForCoverage(loadedClass.getName(), null);
+         return modifyClassForCoverage(className, null);
       }
       catch (VisitInterruptedException ignore) {
          // Ignore the class if the modification was refused for some reason.
@@ -80,6 +80,8 @@ public final class ClassModification
       catch (UnmodifiableClassException e) {
          throw new RuntimeException(e);
       }
+
+      System.out.println("JMockit Coverage: " + loadedClass + " redefined");
    }
 
    private byte[] modifyClassForCoverage(String className, byte[] classBytecode)
@@ -132,6 +134,7 @@ public final class ClassModification
       if (modifyClassForCoverage) {
          try {
             byte[] modifiedClassfile = modifyClassForCoverage(className, originalClassfile);
+            System.out.println("JMockit Coverage: " + className + " transformed");
             registerClassAsModifiedForCoverage(className, modifiedClassfile);
             return modifiedClassfile;
          }

@@ -206,9 +206,10 @@
 
    <target name="createjar-coverage">
       <jar destfile="jmockit-coverage.jar">
+         <fileset file="LICENSE.txt"/>
          <fileset dir="coverage/src" includes="mockit/coverage/**/*.java"/>
-         <fileset dir="coverage/classes"
-                  includes="jmockit.properties mockit/coverage/**/*.class **/*.css **/*.js **/*.png"/>
+         <fileset
+            dir="coverage/classes" includes="jmockit.properties mockit/coverage/**/*.class **/*.css **/*.js **/*.png"/>
          <fileset dir="main/classes" includes="mockit/external/asm4/*.class"/>
          <manifest>
             <attribute name="Premain-Class" value="mockit.coverage.standalone.Startup"/>

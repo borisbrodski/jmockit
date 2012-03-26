@@ -162,22 +162,19 @@ final class CoverageModifier extends ClassVisitor
          return mv;
       }
 
+      boolean withPathOrDataCoverage = Metrics.PathCoverage.isActive() || Metrics.DataCoverage.isActive();
+
       if (name.charAt(0) == '<') {
          if (name.charAt(1) == 'c') {
             return forEnumClass ? mv : new StaticBlockModifier(mv);
          }
 
-         if (Metrics.PATH_COVERAGE || Metrics.DATA_COVERAGE) { // TODO: fully separate these
+         if (withPathOrDataCoverage) {
             return new ConstructorModifier(mv);
          }
       }
 
-      if (Metrics.PATH_COVERAGE || Metrics.DATA_COVERAGE) {
-         return new MethodModifier(mv, name);
-      }
-      else {
-         return new BaseMethodModifier(mv);
-      }
+      return withPathOrDataCoverage ? new MethodModifier(mv, name) : new BaseMethodModifier(mv);
    }
 
    private class BaseMethodModifier extends MethodVisitor
@@ -545,7 +542,7 @@ final class CoverageModifier extends ClassVisitor
       @Override
       public final void visitFieldInsn(int opcode, String owner, String name, String desc)
       {
-         if (!Metrics.DATA_COVERAGE) {
+         if (!Metrics.DataCoverage.isActive()) {
             super.visitFieldInsn(opcode, owner, name, desc);
             return;
          }

@@ -59,14 +59,14 @@ abstract class ListWithFilesAndPercentages
 
    protected abstract void writeMetricsForFile(String packageName, String fileName);
 
-   final void printCoveragePercentage(int metric, int covered, int total, int percentage)
+   final void printCoveragePercentage(Metrics metric, int covered, int total, int percentage)
    {
       if (total > 0) {
          printIndent();
          output.write("  <td class='coverage' style='background-color:#");
          output.write(CoveragePercentage.percentageColor(covered, total));
          output.write("' title='");
-         output.write(METRIC_ITEM_NAMES[metric]);
+         output.write(METRIC_ITEM_NAMES[metric.ordinal()]);
          output.write(": ");
          output.print(covered);
          output.write('/');
@@ -75,11 +75,11 @@ abstract class ListWithFilesAndPercentages
          writePercentageValue(covered, total, percentage);
          output.println("%</td>");
       }
-      else if (metric == 0) {
+      else if (metric == Metrics.LineCoverage) {
          printIndent();
          output.print("  <td class='coverage nocode'>N/A</td>");
 
-         if (Metrics.PATH_COVERAGE) {
+         if (Metrics.PathCoverage.isActive()) {
             output.println("<td class='coverage nocode'>N/A</td>");
          }
          else {

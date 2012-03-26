@@ -44,7 +44,7 @@ public final class FileCoverageReport
 
    private PathCoverageOutput createPathCoverageOutput(FileCoverageData fileData)
    {
-      if (Metrics.PATH_COVERAGE) {
+      if (Metrics.PathCoverage.isActive()) {
          Collection<MethodCoverageData> methods = fileData.getMethods();
          return methods.isEmpty() ? null : new PathCoverageOutput(output, methods);
       }
@@ -54,7 +54,7 @@ public final class FileCoverageReport
 
    private DataCoverageOutput createDataCoverageOutput(FileCoverageData fileData)
    {
-      if (Metrics.DATA_COVERAGE) {
+      if (Metrics.DataCoverage.isActive()) {
          DataCoverageInfo dataCoverageInfo = fileData.dataCoverageInfo;
          return dataCoverageInfo.hasFields() ? new DataCoverageOutput(dataCoverageInfo) : null;
       }

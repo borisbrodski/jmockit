@@ -45,6 +45,7 @@ public final class CoverageData implements Serializable
 
    public FileCoverageData getFileData(String file) { return fileToFileData.get(file); }
    public boolean isEmpty() { return fileToFileData.isEmpty(); }
+   public void clear() { fileToFileData.clear(); }
 
    public void fillLastModifiedTimesForAllClassFiles()
    {

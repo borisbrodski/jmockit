@@ -7,6 +7,8 @@ package mockit.coverage.modification;
 import java.security.*;
 import java.util.regex.*;
 
+import mockit.coverage.standalone.*;
+
 final class ClassSelection
 {
    private final Matcher classesToInclude;
@@ -17,7 +19,7 @@ final class ClassSelection
    {
       classesToInclude = getClassNameRegex("classes");
       classesToExclude = getClassNameRegex("excludes");
-      testCode = Pattern.compile(".+Test(\\$.+)?").matcher("");
+      testCode = Startup.isStandalone() ? null : Pattern.compile(".+Test(\\$.+)?").matcher("");
    }
 
    private Matcher getClassNameRegex(String propertySuffix)
@@ -40,14 +42,14 @@ final class ClassSelection
       else if (classesToInclude != null && classesToInclude.reset(className).matches()) {
          return true;
       }
-      else if (testCode.reset(className).matches()) {
+      else if (testCode == null || testCode.reset(className).matches()) {
          return false;
       }
 
-      String codeLocation = codeSource.getLocation().getPath();
+      String location = codeSource.getLocation().getPath();
 
       return
-         !codeLocation.endsWith(".jar") && !codeLocation.endsWith("/test-classes/") &&
-         !codeLocation.endsWith("/jmockit/main/classes/");
+         !location.endsWith(".jar") &&
+         !location.endsWith("/test-classes/") && !location.endsWith("/jmockit/main/classes/");
    }
 }
