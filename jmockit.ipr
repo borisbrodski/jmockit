@@ -99,7 +99,7 @@
     <option name="DEPRECATION" value="false" />
   </component>
   <component name="CompilerConfiguration">
-    <option name="DEFAULT_COMPILER" value="Javac" />
+    <option name="DEFAULT_COMPILER" value="compAPI" />
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -675,7 +675,7 @@
         <inspection_tool class="SerialVersionUIDNotStaticFinal" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="SerializableHasSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreAnonymousInnerClasses" value="false" />
-          <option name="superClassString" value="java.awt.Component,java.lang.Exception,java.util.HashMap,java.lang.AssertionError,java.util.ArrayList,javax.servlet.http.HttpServlet,javax.swing.table.AbstractTableModel,mockit.internal.MockingBridge" />
+          <option name="superClassString" value="java.awt.Component,java.lang.Exception,java.util.HashMap,java.lang.AssertionError,java.util.ArrayList,javax.servlet.http.HttpServlet,javax.swing.table.AbstractTableModel,mockit.internal.MockingBridge,java.lang.Error" />
         </inspection_tool>
         <inspection_tool class="SerializableInnerClassHasSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreAnonymousInnerClasses" value="false" />
@@ -707,7 +707,6 @@
         <inspection_tool class="StaticFieldReferenceOnSubclass" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="StaticInheritance" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="StaticSuite" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="StringBufferReplaceableByString" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="StringBufferToStringInConcatenation" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="StringConcatenationInLoops" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_ignoreUnlessAssigned" value="true" />
@@ -765,6 +764,7 @@
         <inspection_tool class="TimeToString" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="TooBroadCatch" enabled="false" level="WARNING" enabled_by_default="false">
           <option name="onlyWarnOnRootExceptions" value="true" />
+          <option name="ignoreInTestCode" value="false" />
         </inspection_tool>
         <inspection_tool class="TooBroadScope" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_allowConstructorAsInitializer" value="false" />
@@ -864,7 +864,6 @@
   <component name="JavacSettings">
     <option name="GENERATE_NO_WARNINGS" value="true" />
     <option name="DEPRECATION" value="false" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="-source 1.5 -target 1.5" />
   </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
@@ -1039,6 +1038,7 @@
     <option name="PER_PROJECT_SETTINGS">
       <value>
         <option name="USE_SAME_INDENTS" value="true" />
+        <option name="IGNORE_SAME_INDENTS_FOR_LANGUAGES" value="true" />
         <option name="OTHER_INDENT_OPTIONS">
           <value>
             <option name="INDENT_SIZE" value="3" />
@@ -1405,6 +1405,8 @@
       <module fileurl="file://$PROJECT_DIR$/samples/unitils/Unitils.iml" filepath="$PROJECT_DIR$/samples/unitils/Unitils.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/fakingXmocking/fakingXmocking.iml" filepath="$PROJECT_DIR$/samples/fakingXmocking/fakingXmocking.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/jmock/jMock2.iml" filepath="$PROJECT_DIR$/samples/jmock/jMock2.iml" group="Samples" />
+      <module fileurl="file://$PROJECT_DIR$/mockit.iml" filepath="$PROJECT_DIR$/mockit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/samples.iml" filepath="$PROJECT_DIR$/samples/samples.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/tourdemock/tourdemock.iml" filepath="$PROJECT_DIR$/samples/tourdemock/tourdemock.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/www/www.iml" filepath="$PROJECT_DIR$/www/www.iml" />
     </modules>
@@ -1440,8 +1442,8 @@
     </configuration>
     <configuration default="false" name="Main" type="JUnit" factoryName="JUnit">
       <module name="Main" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_02" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_03" />
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
@@ -1906,7 +1908,7 @@
     <configuration default="false" name="mockit.integration.testng" type="TestNG" factoryName="TestNG">
       <module name="Main" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_03" />
       <option name="SUITE_NAME" value="" />
       <option name="PACKAGE_NAME" value="mockit.integration.testng" />
       <option name="MAIN_CLASS_NAME" value="" />
@@ -2074,6 +2076,7 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/samples" vcs="svn" />
   </component>
   <component name="com.sixrr.metrics.MetricsReloaded">
     <option name="selectedProfile" value="Lines of code metrics" />
@@ -2462,6 +2465,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://E:/.m2/repository/org/springframework/spring-test/3.1.0.RELEASE/spring-test-3.1.0.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.testng:testng:6.3.1">
+      <CLASSES>
+        <root url="jar://E:/.m2/repository/org/testng/testng/6.3.1/testng-6.3.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://E:/.m2/repository/org/testng/testng/6.3.1/testng-6.3.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://E:/.m2/repository/org/testng/testng/6.3.1/testng-6.3.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.testng:testng:6.4">
