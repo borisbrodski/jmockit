@@ -6,10 +6,13 @@ table table { width: 100%; border-spacing: 0; }
 caption {
    background-color: #483d8b; color: white;
    font-size: larger;
+   padding: 3px;
    text-shadow: 2px 2px 2px black;
    border-radius: 4px;
 }
 caption div { text-shadow: 0 0 0; }
+
+img { border: none; vertical-align: middle; }
 
 th { background-color: #6495ed; color: white; }
 td { padding: 0; font-size: 0.95em; }
@@ -18,24 +21,29 @@ table table td { border-right: 1px solid white; }
 ol {
    background-color: #e0ffff;
    margin: 1ex 2em 1ex 4em;
+   font-size: 0.8em;
 }
 
 td.comment { white-space: pre; color: gray; font-family: monospace; }
-td.comment div { display: none; }
+td.comment div, .imports div { display: none; }
 pre.comment { margin: 0; color: gray; }
+td.comment, .imports { cursor: row-resize; }
 
+.line, .count {
+   text-align: right;
+   padding-right: 2px;
+   font-size: 0.8em;
+}
 .line {
    background-color: #e0e0e0;
-   min-width: 1em;
-   text-align: right;
-   padding-left: 1px; padding-right: 1px;
+   width: 2.3em;
+   padding-left: 1px;
    border-right: #a0a0a0 solid 1px;
 }
 .count {
    background-color: yellow;
-   min-width: 1em;
-   text-align: right;
-   padding-left: 2px; padding-right: 1px;
+   width: 1.6em;
+   padding-left: 2px;
    border-right: #aaaa00 solid 1px;
 }
 
@@ -65,6 +73,7 @@ td.unknown { background-color: #daa520; text-align: center; }
 td.nocode { background-color: #999999; text-align: center; }
 
 pre.jmp { background-color: #f8ebb8; }
+pre.jmp span { display: table-cell; }
 
 .cp { cursor: pointer; }
 

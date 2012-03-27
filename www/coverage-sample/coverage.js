@@ -69,9 +69,9 @@ function showHideFiles(files)
    table.style.display = table.style.display == 'none' ? 'block' : 'none';
 }
 
-function showHideLines(row)
+function showHideLines(cell)
 {
-   var content = row.cells[2].children;
+   var content = cell.children;
    var expanded = content[0].style;
    var collapsed = content[1].style;
    var showingExpanded = expanded.display == 'block';
@@ -106,7 +106,7 @@ function sortRows(tbl, metric)
    var startRow = 0;
    var endRow = tbl.rows.length;
 
-   if (tbl.rows[0].cells.length == 5) {
+   if (tbl.id == 'packages') {
       metricCol = 1 + metric;
       startRow = 1;
       endRow--;
