@@ -11,6 +11,8 @@ import java.util.concurrent.*;
 
 import static java.lang.reflect.Modifier.*;
 
+import mockit.internal.state.*;
+
 /**
  * Miscellaneous utility methods which don't fit into any other class, most of them related to the
  * use of Reflection.
@@ -65,30 +67,37 @@ public final class Utilities
 
    public static <T> Class<T> loadClass(String className)
    {
-      Class<T> loadedClass = (Class<T>) LOADED_CLASSES.get(className);
-      
-      if (loadedClass != null) {
-         return loadedClass;
-      }
-
-      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      Class<?> loadedClass = LOADED_CLASSES.get(className);
 
       try {
-         return (Class<T>) Class.forName(className, true, loader);
+         if (loadedClass == null) {
+            loadedClass = loadClass(Thread.currentThread().getContextClassLoader(), className);
+
+            if (loadedClass == null) {
+               Class<?> testClass = TestRun.getCurrentTestClass();
+               loadedClass = testClass == null ? null : loadClass(testClass.getClassLoader(), className);
+
+               if (loadedClass == null) {
+                  loadedClass = loadClass(Utilities.class.getClassLoader(), className);
+
+                  if (loadedClass == null) {
+                     throw new IllegalArgumentException("No class with name \"" + className + "\" found");
+                  }
+               }
+            }
+         }
       }
       catch (LinkageError e) {
          e.printStackTrace();
          throw e;
       }
-      catch (ClassNotFoundException ignore) {
-         try {
-            return (Class<T>) Class.forName(className);
-         }
-         catch (ClassNotFoundException ignored) {}
 
-         //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
-         throw new IllegalArgumentException("No class with name \"" + className + "\" found");
-      }
+      return (Class<T>) loadedClass;
+   }
+
+   private static Class<?> loadClass(ClassLoader loader, String className)
+   {
+      try { return Class.forName(className, true, loader); } catch (ClassNotFoundException ignore) { return null; }
    }
 
    public static <T> T newInstance(Class<T> aClass)
@@ -940,17 +949,6 @@ public final class Utilities
    }
 
    public static boolean containsReference(List<?> references, Object toBeFound)
-   {
-      for (Object reference : references) {
-         if (reference == toBeFound) {
-            return true;
-         }
-      }
-
-      return false;
-   }
-
-   public static boolean containsReference(Object[] references, Object toBeFound)
    {
       for (Object reference : references) {
          if (reference == toBeFound) {
