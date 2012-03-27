@@ -1,10 +1,12 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
 
 import java.io.*;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 import junit.framework.*;
@@ -154,20 +156,17 @@ public final class JREMockingTest extends TestCase
    // implementation; therefore, dynamic mocking of native methods is not supported.
    public void testDynamicMockingOfNativeMethod(@Injectable final Thread t)
    {
-      new NonStrictExpectations()
-      {
-         {
-            t.isAlive();
+      new NonStrictExpectations() {{
+         t.isAlive();
 
-            try {
-               result = true;
-               fail();
-            }
-            catch (IllegalStateException ignore) {
-               // OK
-            }
+         try {
+            result = true;
+            fail();
          }
-      };
+         catch (IllegalStateException ignore) {
+            // OK
+         }
+      }};
    }
 
    public void testFullMockingOfThread()
@@ -279,6 +278,54 @@ public final class JREMockingTest extends TestCase
       };
 
       awaitNotification();
+   }
+
+   // Mocking the Reflection API //////////////////////////////////////////////////////////////////////////////////////
+
+   @Retention(RetentionPolicy.RUNTIME) @interface AnAnnotation { String value(); }
+   @Retention(RetentionPolicy.RUNTIME) @interface AnotherAnnotation {}
+   enum AnEnum { @AnAnnotation("one") First, @AnAnnotation("two") Second, @AnotherAnnotation Third }
+
+   public void testMockingOfGetAnnotation() throws Exception
+   {
+      new MockUp<Field>()
+      {
+         Field it;
+
+         final Map<Object, Annotation> annotationsApplied = new HashMap<Object, Annotation>() {{
+            put(AnEnum.First, anAnnotation("1"));
+            put(AnEnum.Second, anAnnotation("2"));
+         }};
+
+         AnAnnotation anAnnotation(final String value)
+         {
+            return new AnAnnotation() {
+               public Class<? extends Annotation> annotationType() { return AnAnnotation.class; }
+               public String value() { return value; }
+            };
+         }
+
+         @Mock(reentrant = true)
+         <T extends Annotation> T getAnnotation(Class<T> annotation) throws IllegalAccessException
+         {
+            Object fieldValue = it.get(null);
+            Annotation value = annotationsApplied.get(fieldValue);
+            if (value != null) return (T) value;
+            return it.getAnnotation(annotation);
+         }
+      };
+
+      Field firstField = AnEnum.class.getField(AnEnum.First.name());
+      AnAnnotation annotation1 = firstField.getAnnotation(AnAnnotation.class);
+      assertEquals("1", annotation1.value());
+
+      Field secondField = AnEnum.class.getField(AnEnum.Second.name());
+      AnAnnotation annotation2 = secondField.getAnnotation(AnAnnotation.class);
+      assertEquals("2", annotation2.value());
+
+      Field thirdField = AnEnum.class.getField(AnEnum.Third.name());
+      assertNull(thirdField.getAnnotation(AnAnnotation.class));
+      assertNotNull(thirdField.getAnnotation(AnotherAnnotation.class));
    }
 
    // Un-mockable JRE classes /////////////////////////////////////////////////////////////////////////////////////////
