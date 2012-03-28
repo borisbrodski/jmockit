@@ -1930,12 +1930,12 @@
       <option name="PROPERTIES_FILE" value="" />
       <envs />
       <properties>
-        <property name="second" value="" />
         <property name="param1" value="" />
-        <property name="p2" value="" />
+        <property name="second" value="" />
         <property name="param2" value="" />
-        <property name="p1" value="" />
+        <property name="p2" value="" />
         <property name="param3" value="" />
+        <property name="p1" value="" />
         <property name="first" value="" />
       </properties>
       <listeners />

@@ -23,10 +23,10 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../jmockit-hibernate3emul.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../hibernate3emul/jmockit-hibernate3emul.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
