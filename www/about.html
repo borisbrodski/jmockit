@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2006-2011 Rogério Liesenfeld
+  ~ Copyright (c) 2006-2012 Rogério Liesenfeld
   ~ This file is subject to the terms of the MIT license (see LICENSE.txt).
   -->
 <html>
@@ -11,7 +11,7 @@
    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
    <script type="text/javascript" src="highlight.pack.js"></script>
    <script type="text/javascript">hljs.initHighlightingOnLoad()</script>
-   <style type="text/css">#sections div { width: 20%; float: left; }</style>
+   <style type="text/css">#sections div { width: 25%; float: left; }</style>
 </head>
 <body>
 <h2>
@@ -35,8 +35,8 @@
    The APIs (first three items) can be used for writing unit and integration tests.
    They enable the isolation of code under test from its dependencies, no matter what form they take
    or how they are obtained at runtime.
-   The last two items are separate tools delivered in their own jar files, which can optionally be
-   used while running test suites.
+   The last item is a separate tool delivered in its own jar file, which can optionally be used while running test
+   suites.
    The figure below is a clickable map with links to detailed documentation pages.
 </p>
 <div id="sections" style="margin-bottom: 32px">
@@ -44,7 +44,6 @@
    <div><a href="#verifications">JMockit Verifications</a></div>
    <div><a href="#mockups">JMockit Mockups</a></div>
    <div><a href="#coverage">JMockit Coverage</a></div>
-   <div><a href="#hibernate">JMockit Hibernate Emulation</a></div>
 </div>
 <br/>
 <div style="text-align: center;" title="Click on titles to open Tutorial/API">
@@ -80,7 +79,6 @@
       <area shape="rect" coords="645,307,846,340" href="javadoc/mockit/UsingMocksAndStubs.html">
 
       <area shape="rect" coords="211,389,373,422" href="tutorial/CodeCoverage.html">
-      <area shape="rect" coords="381,389,562,422" href="tutorial/IncrementalTests.html">
    </map>
    <img src="toolkit.png" usemap="#figure1">
 </div>
@@ -92,7 +90,6 @@
    Another goal was to provide simpler and more succinct APIs for writing developer tests.
    In addition, and differently from other testing tools which specifically target the use of mocks, JMockit also
    includes other tools designed to support the creation of large test suites.
-   Between such tools the toolkit provides code coverage metrics, incremental re-execution of tests, and more.
 </p>
 
 <h4 id="conventionalTools">Conventional tools for mock objects</h4>
@@ -474,8 +471,8 @@
    <code>verify(mock, <em>constraint</em>)</code> call).
 </li>
 <li>
-   Mockito has poor syntax for verifications <em>in order</em>, and for <em>full</em> verifications
-   (that is, checking that all invocations to mock objects are explicitly verified).
+   Mockito has poor syntax for verifications <em>in order</em>, and for <em>full</em> verifications (that is, checking
+   that all invocations to mock objects are explicitly verified).
    In the first case, an extra object needs to be created, and calls to <code>verify</code> made on it:
    <code>InOrder inOrder = inOrder(mock1, mock2, ...)</code>.
    In the second case, calls like <code>verifyNoMoreInteractions(mock)</code> or
@@ -495,41 +492,37 @@
    A good API for mocking, even without artificial limitations, is not enough for productive creation of tests.
    An IDE-agnostic, easy to use, and well integrated Code Coverage tool is also essential, and that's what JMockit
    Coverage aims to provide.
-   Another piece of the developer testing toolset which will become more useful as the test suite grows in size is the
-   ability to incrementally rerun tests after a localized change to production code; this is also included in the
-   Coverage tool.
 </p>
 
 <h3 id="expectations">JMockit Expectations</h3>
 <p>
    The <em>JMockit Expectations</em> mocking API provides a <em>record-replay</em> model for writing
    <em>behavior-based</em> tests.
-   In this model, a test begins by setting one or more <em>expectations</em> on the invocations made
-   from code under test to its collaborators (dependencies).
-   The classes and instances for such dependencies are established through the declaration of one or
-   more <em>mocked types</em> inside the test class/method.
-   Such mocked types can be declared through instance fields of the test class or of an
-   <code>Expectations</code> anonymous subclass inside a test method, and also through parameters
-   of test methods (even though JUnit and TestNG don't allow regular test methods to have parameters).
-   After expectations are defined in this <em>recording phase</em>, the test transitions to the
-   <em>replay phase</em>, when the code under test is exercised. The invocations that actually occur
-   on the mocked collaborators are handled according to the mocked type declarations and the
-   corresponding expectations recorded on them (if any).
-   At the end of the replay phase, those expectations for which one or more invocations were
-   expected are automatically verified so that missing invocations can be detected.
+   In this model, a test begins by setting one or more <em>expectations</em> on the invocations made from code under
+   test to its collaborators (dependencies).
+   The classes and instances for such dependencies are established through the declaration of one or more <em>mocked
+   types</em> inside the test class/method.
+   Such mocked types can be declared through instance fields of the test class or of an <code>Expectations</code>
+   anonymous subclass inside a test method, and also through parameters of test methods (even though JUnit and TestNG
+   don't allow regular test methods to have parameters).
+   After expectations are defined in this <em>recording phase</em>, the test transitions to the <em>replay phase</em>,
+   when the code under test is exercised. The invocations that actually occur on the mocked collaborators are handled
+   according to the mocked type declarations and the corresponding expectations recorded on them (if any).
+   At the end of the replay phase, those expectations for which one or more invocations were expected are automatically
+   verified so that missing invocations can be detected.
 </p>
 <p>
-   Expectations can be specified on any kind of method invocation (on interfaces, abstract classes,
-   concrete final or non-final classes, and on static methods), as well as on class instantiation
-   through any constructors. Private methods/constructors can also have expectations defined.
+   Expectations can be specified on any kind of method invocation (on interfaces, abstract classes, concrete final or
+   non-final classes, and on static methods), as well as on class instantiation through any constructors.
+   Private methods/constructors can also have expectations defined.
 </p>
 <p>
-   This API provides several ways to specify <em>argument matching</em> constraints on invocations,
-   including the use of custom <a href="http://code.google.com/p/hamcrest">Hamcrest matchers</a>.
-   There are special methods and <em>fields</em> through which <em>values to return</em> or
-   <em>exceptions to throw</em> can be specified for all kinds of mock invocations.
-   Other API fields can be used to specify lower and/or upper limits on the <em>number</em>
-   of expected and/or allowed invocations, respectively, for a given expectation.
+   This API provides several ways to specify <em>argument matching</em> constraints on invocations, including the use of
+   custom <a href="http://code.google.com/p/hamcrest">Hamcrest matchers</a>.
+   There are special methods and <em>fields</em> through which <em>values to return</em> or <em>exceptions to throw</em>
+   can be specified for all kinds of mock invocations.
+   Other API fields can be used to specify lower and/or upper limits on the <em>number</em> of expected and/or allowed
+   invocations, respectively, for a given expectation.
 </p>
 <pre><code>public class JMockitExpectationsExampleTest
 {
@@ -538,8 +531,7 @@
    @Test
    public void testDoOperationAbc()
    {
-      new Expectations()
-      {
+      new Expectations() {
          // This is a local mock field; it can optionally be annotated with @Mocked.
          DependencyXyz mock; // a mocked instance is automatically created and assigned
 
@@ -576,8 +568,8 @@
 
 <h3 id="verifications">JMockit Verifications</h3>
 <p>
-   This API is a natural extension of the Expectations API, where the <em>record-replay</em> model
-   gets an extra phase and becomes the <em>record-replay-verify</em> model for behavior-based testing.
+   This API is a natural extension of the Expectations API, where the <em>record-replay</em> model gets an extra phase
+   and becomes the <em>record-replay-verify</em> model for behavior-based testing.
 </p>
 <p>
    By default, all expectations recorded inside an <code>Expectations</code> block are <em>strict</em>, which means
@@ -618,8 +610,7 @@
    @Test // notice the "mock parameter", whose argument value will be created automatically
    public void testDoAnotherOperation(final AnotherDependency anotherMock)
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          DependencyXyz mock; // mock instance created and assigned automatically
 
          {
@@ -631,12 +622,9 @@
       // and "new AnotherDependency().complexOperation(1, obj);".
       new ServiceAbc().doAnotherOperation("test");
 
-      new Verifications()
-      {
-         {
-            anotherMock.complexOperation(<em>anyInt</em>, null);
-         }
-      };
+      new Verifications() {{
+         anotherMock.complexOperation(<em>anyInt</em>, null);
+      }};
    }
 }
 </code></pre>
@@ -692,35 +680,28 @@
 
 <h3 id="coverage">JMockit Coverage</h3>
 <p>
-   Existing OpenSource code coverage tools, such as
-   <a href="http://cobertura.sourceforge.net">Cobertura</a> and
+   Existing OpenSource code coverage tools, such as <a href="http://cobertura.sourceforge.net">Cobertura</a> and
    <a href="http://emma.sourceforge.net">EMMA</a> are also less than ideal.
    Specifically, JMockit Coverage provides the following benefits.
 </p>
 <ol>
    <li>
-      Bytecode modification performed only at runtime, therefore avoiding the creation of
-      undesirable files. This also allows code coverage information to be captured for
-      <a href="http://code.google.com/webtoolkit">GWT</a> client tests, which are run from classes
-      generated at runtime, not from any ".class" files loaded from disk.
-      So, no extra source or class files are created, and no coverage data file is ever generated.
+      Bytecode modification performed only at runtime, therefore avoiding the creation of undesirable files.
+      No extra source or class files are created, and no coverage data file is generated unless explicitly requested.
       The only files created or modified are those that the user really wants as the desired output.
    </li>
    <li>
-      Running tests with JMockit Coverage does not require the use of any particular command line
-      script, Ant task, or IDE plug-in.
-      The tool applies the idea of convention over configuration, trying to make it as easy as
-      possible for the developer to run tests with code coverage: by simply adding one jar file to
-      the classpath, or by specifying certain initialization parameters to the JVM (plus having the
-      main coverage jar file in the classpath).
+      Running tests with JMockit Coverage does not require the use of any particular command line script, Ant task, or
+      IDE plug-in.
+      The tool applies the idea of convention over configuration, trying to make it as easy as possible for the
+      developer to run tests with code coverage: by simply adding one jar file to the classpath, or by specifying
+      certain initialization parameters to the JVM (plus having the main coverage jar file in the classpath).
    </li>
    <li>
-      No need to specify which classes should be considered for coverage (it still can be specified
-      if needed, though).
+      No need to specify which classes should be considered for coverage (it still can be specified if needed, though).
       All code under test will automatically be analyzed for coverage.
-      Specifically, the tool will gather coverage data for all production code executed by the test
-      suite, excluding classes defined inside jar files (on the assumption that such code belongs
-      to libraries used by code under test).
+      Specifically, the tool will gather coverage data for all production code executed by the test suite, excluding
+      classes defined inside jar files (on the assumption that such code belongs to libraries used by code under test).
    </li>
    <li>
       A serialized output file and/or an HTML report can be generated at the end of each test run with no extra
@@ -744,40 +725,12 @@
       <strong>Intra-line</strong> coverage is provided, with the appropriate red/green coloring in the HTML report for
       each conditionally executed line segment.
    </li>
-   <li>
-      An <strong>incremental test runner</strong> (actually, an automatic modification to the
-      JUnit 4.x standard test runner) is provided.
-      When using this modified runner, only the individual tests which cover locally modified code
-      are re-executed.
-      Any other tests included in the suite are ignored for that particular test run.
-   </li>
 </ol>
 <hr/>
 <div class="links">
   <a href="tutorial/CodeCoverage.html">Running tests with JMockit Coverage</a>
-  <a href="http://jmockit.googlecode.com/svn/trunk/www/coverage-sample/index.html">Sample coverage
-     report</a>
+  <a href="http://jmockit.googlecode.com/svn/trunk/www/coverage-sample/index.html">Sample coverage report</a>
 </div>
-
-<h3 id="hibernate">JMockit Hibernate Emulation</h3>
-<p>
-   If you have a suite of integration tests that directly or indirectly use the Hibernate 3 APIs,
-   you know those tests can be quite slow and fragile when compared to unit tests, because of their
-   dependence on database access, and on a large and complex ORM library such as Hibernate. And in
-   a project with hundreds of O/R mapped classes, <code>SessionFactory</code> construction time
-   alone can take too many seconds for comfort. The advantages of such tests when compared to true
-   unit tests, on the other hand, are that they are relatively easier to write and actually test a
-   lot more (O/R mapping, HQL query strings, and the actual relational database).
-</p>
-<p>
-   The JMockit Hibernate Emulation component is a <em>fake implementation</em> of the Hibernate 3
-   Core APIs, which can be installed in place of the real implementation by simply having the
-   component jar file (jmockit-hibernate3emul.jar) in the classpath, and allowing JMockit to be
-   initialized before the first test is run.
-   When those tests run with the emulation in effect, they won't use the O/R mapping information,
-   nor will they access any real database. All persistence operations, including HQL queries, will
-   be executed against the equivalent of an in-memory database.
-</p>
 
 </body>
 </html>
