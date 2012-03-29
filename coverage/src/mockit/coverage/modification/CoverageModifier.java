@@ -146,7 +146,7 @@ final class CoverageModifier extends ClassVisitor
    @Override
    public FieldVisitor visitField(int access, String name, String desc, String signature, Object value)
    {
-      if (fileData != null && (access & FIELD_MODIFIERS_TO_IGNORE) == 0) {
+      if (fileData != null && (access & FIELD_MODIFIERS_TO_IGNORE) == 0 && Metrics.DataCoverage.isActive()) {
          fileData.dataCoverageInfo.addField(simpleClassName, name, (access & ACC_STATIC) != 0);
       }
 

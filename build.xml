@@ -210,6 +210,7 @@
          <fileset dir="main/classes" includes="mockit/external/asm4/*.class"/>
          <manifest>
             <attribute name="Premain-Class" value="mockit.coverage.standalone.Startup"/>
+            <attribute name="Can-Redefine-Classes" value="true"/>
             <attribute name="Class-Path" value="jmockit.jar"/>
             <attribute name="Implementation-Version" value="${version}"/>
          </manifest>

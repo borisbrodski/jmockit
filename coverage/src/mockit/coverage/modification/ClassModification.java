@@ -40,19 +40,18 @@ public final class ClassModification
 
    private void redefineClassForCoverage(Class<?> loadedClass)
    {
-      String className = loadedClass.getName();
-      byte[] modifiedClassfile = readAndModifyClassForCoverage(className);
+      byte[] modifiedClassfile = readAndModifyClassForCoverage(loadedClass);
 
       if (modifiedClassfile != null) {
          redefineClassForCoverage(loadedClass, modifiedClassfile);
-         registerClassAsModifiedForCoverage(className, modifiedClassfile);
+         registerClassAsModifiedForCoverage(loadedClass.getName(), modifiedClassfile);
       }
    }
 
-   private byte[] readAndModifyClassForCoverage(String className)
+   private byte[] readAndModifyClassForCoverage(Class<?> aClass)
    {
       try {
-         return modifyClassForCoverage(className, null);
+         return modifyClassForCoverage(aClass);
       }
       catch (VisitInterruptedException ignore) {
          // Ignore the class if the modification was refused for some reason.
@@ -65,6 +64,37 @@ public final class ClassModification
       }
 
       return null;
+   }
+
+   private byte[] modifyClassForCoverage(Class<?> aClass)
+   {
+      String className = aClass.getName();
+      byte[] modifiedBytecode = CoverageModifier.recoverModifiedByteCodeIfAvailable(className);
+
+      if (modifiedBytecode != null) {
+         return modifiedBytecode;
+      }
+
+      String classFileName = className.replace('.', '/') + ".class";
+      InputStream classFile = aClass.getClassLoader().getResourceAsStream(classFileName);
+      ClassReader cr;
+
+      try {
+         cr = new ClassReader(classFile);
+      }
+      catch (IOException e) {
+         // Ignore the class if the ".class" file wasn't located.
+         return null;
+      }
+
+      return modifyClassForCoverage(cr);
+   }
+
+   private byte[] modifyClassForCoverage(ClassReader cr)
+   {
+      CoverageModifier modifier = new CoverageModifier(cr);
+      cr.accept(modifier, 0);
+      return modifier.toByteArray();
    }
 
    private void redefineClassForCoverage(Class<?> loadedClass, byte[] modifiedClassfile)
@@ -82,34 +112,6 @@ public final class ClassModification
       }
 
       System.out.println("JMockit Coverage: " + loadedClass + " redefined");
-   }
-
-   private byte[] modifyClassForCoverage(String className, byte[] classBytecode)
-   {
-      byte[] modifiedBytecode = CoverageModifier.recoverModifiedByteCodeIfAvailable(className);
-
-      if (modifiedBytecode != null) {
-         return modifiedBytecode;
-      }
-
-      ClassReader cr;
-
-      if (classBytecode == null) {
-         try {
-            cr = new ClassReader(className);
-         }
-         catch (IOException e) {
-            // Ignore the class if the ".class" file can't be located.
-            return null;
-         }
-      }
-      else {
-         cr = new ClassReader(classBytecode);
-      }
-
-      CoverageModifier modifier = new CoverageModifier(cr);
-      cr.accept(modifier, 0);
-      return modifier.toByteArray();
    }
 
    private boolean isToBeConsideredForCoverage(String className, ProtectionDomain protectionDomain)
@@ -150,5 +152,17 @@ public final class ClassModification
       }
 
       return null;
+   }
+
+   private byte[] modifyClassForCoverage(String className, byte[] classBytecode)
+   {
+      byte[] modifiedBytecode = CoverageModifier.recoverModifiedByteCodeIfAvailable(className);
+
+      if (modifiedBytecode != null) {
+         return modifiedBytecode;
+      }
+
+      ClassReader cr = new ClassReader(classBytecode);
+      return modifyClassForCoverage(cr);
    }
 }

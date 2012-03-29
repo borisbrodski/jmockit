@@ -126,23 +126,21 @@ final class OutputFileGenerator extends Thread
    public void run()
    {
       onRun.run();
-
-      CoverageData coverageData = CoverageData.instance();
-
-      if (coverageData.isEmpty()) {
-         System.out.println(
-            "JMockit: No classes were instrumented for coverage; please make sure the desired classes have been " +
-            "compiled with debug information.");
-         return;
-      }
-
-      createOutputDirIfSpecifiedButNotExists();
       generate();
    }
 
    void generate()
    {
       CoverageData coverageData = CoverageData.instance();
+
+      if (coverageData.isEmpty()) {
+         System.out.println(
+            "JMockit: No classes were instrumented for coverage; please make sure that classes selected for coverage " +
+            "have been compiled with debug information.");
+         return;
+      }
+
+      createOutputDirIfSpecifiedButNotExists();
 
       try {
          generateAccretionDataFileIfRequested(coverageData);
