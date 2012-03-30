@@ -134,7 +134,8 @@
    </target>
    <target name="buildOrderManagement">
       <buildSample
-         module="orderMngmntWebapp" outdir="WEB-INF/classes" extraclasspathlocation="jmockit-hibernate3emul.jar"/>
+         module="orderMngmntWebapp" outdir="WEB-INF/classes"
+         extraclasspathlocation="hibernate3emul/jmockit-hibernate3emul.jar"/>
    </target>
    <target name="buildTimingFramework">
       <buildSample module="TimingFramework" extraclasspath="lib/hamcrest-*.jar"/>
@@ -327,7 +328,8 @@
          <classfileset
             dir="main/test-classes"
             includes="mockit/integration/testng/*Test.class **/MockStateBetweenTestMethodsNGTest.class"
-            excludes="mockit/integration/testng/BaseTestNGDecoratorTest.class"/>
+            excludes="mockit/integration/testng/BaseTestNGDecoratorTest.class
+                      mockit/integration/testng/TestNGViolatedExpectationsTest.class"/>
       </testng>
    </target>
 
@@ -359,7 +361,7 @@
             <pathelement location="samples/unitils/classes"/>
             <pathelement location="samples/unitils/test-classes"/>
 
-            <pathelement location="jmockit-hibernate3emul.jar"/>
+            <pathelement location="hibernate3emul/jmockit-hibernate3emul.jar"/>
             <pathelement location="samples/orderMngmntWebapp/WEB-INF/classes"/>
             <pathelement location="samples/orderMngmntWebapp/test-classes"/>
 

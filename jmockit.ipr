@@ -1442,6 +1442,34 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
+    <configuration default="false" name="Main" type="JUnit" factoryName="JUnit">
+      <module name="Main" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_03" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <option name="VM_PARAMETERS" value="-javaagent:/jmockit/jmockit.jar" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/main" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="1338" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
     <configuration default="false" name="@Tested" type="JUnit" factoryName="JUnit">
       <module name="Main" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -1480,45 +1508,17 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="Coverage" type="JUnit" factoryName="JUnit">
-      <module name="Coverage" />
+    <configuration default="false" name="Samples: Tutorial" type="JUnit" factoryName="JUnit">
+      <module name="Tutorial" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_02" />
-      <option name="PACKAGE_NAME" value="integrationTests" />
-      <option name="MAIN_CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="-ea -javaagent:../jmockit.jar" />
-      <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/coverage" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Debug" />
-      <ConfigurationWrapper RunnerId="Run" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Main" type="JUnit" factoryName="JUnit">
-      <module name="Main" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_03" />
+      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/ibm_sdk60" />
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="-javaagent:/jmockit/jmockit.jar" />
+      <option name="VM_PARAMETERS" value="" />
       <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/main" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="TEST_SEARCH_SCOPE">
@@ -1527,7 +1527,7 @@
       <envs />
       <patterns />
       <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="1338" />
+        <option name="DEBUG_PORT" value="1090" />
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
@@ -1536,17 +1536,17 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="Samples: AnimatedTransitions" type="JUnit" factoryName="JUnit">
-      <module name="AnimatedTransitions" />
+    <configuration default="false" name="Samples: JBoss AOP" type="JUnit" factoryName="JUnit">
+      <module name="Jbossaop" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_02" />
-      <option name="PACKAGE_NAME" value="org.jdesktop.animation.transitions" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="jbossaop.testing" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="-ea -Djmockit-coverage-output=html -Djmockit-coverage-metrics=data" />
+      <option name="VM_PARAMETERS" value="-javaagent:jmockit.jar" />
       <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="TEST_SEARCH_SCOPE">
@@ -1554,13 +1554,7 @@
       </option>
       <envs />
       <patterns />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="1145" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
@@ -1592,15 +1586,15 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="Samples: JBoss AOP" type="JUnit" factoryName="JUnit">
-      <module name="Jbossaop" />
+    <configuration default="false" name="Samples: jMock" type="JUnit" factoryName="JUnit">
+      <module name="jMock2" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <option name="PACKAGE_NAME" value="jbossaop.testing" />
+      <option name="PACKAGE_NAME" value="org.jmock.samples" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="-javaagent:jmockit.jar" />
+      <option name="VM_PARAMETERS" value="" />
       <option name="PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ENV_VARIABLES" />
@@ -1642,17 +1636,17 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="Samples: OrderMngmntWebapp" type="JUnit" factoryName="JUnit">
-      <module name="OrderMngmntWebapp" />
+    <configuration default="false" name="Samples: Powermock" type="JUnit" factoryName="JUnit">
+      <module name="Powermock" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <option name="PACKAGE_NAME" value="" />
+      <option name="PACKAGE_NAME" value="powermock.examples" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="-Djmockit-coverage-outputDir=../../www/coverage-sample" />
+      <option name="VM_PARAMETERS" value="" />
       <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/samples/orderMngmntWebapp" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="TEST_SEARCH_SCOPE">
@@ -1664,11 +1658,33 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="Samples: Powermock" type="JUnit" factoryName="JUnit">
-      <module name="Powermock" />
+    <configuration default="false" name="Samples: Unitils" type="JUnit" factoryName="JUnit">
+      <module name="Unitils" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <option name="PACKAGE_NAME" value="powermock.examples" />
+      <option name="PACKAGE_NAME" value="unitils" />
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Samples: Tour de Mock" type="JUnit" factoryName="JUnit">
+      <module name="tourdemock" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="tourDeMock" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
@@ -1714,39 +1730,17 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="Samples: Tour de Mock" type="JUnit" factoryName="JUnit">
-      <module name="tourdemock" />
+    <configuration default="false" name="Samples: AnimatedTransitions" type="JUnit" factoryName="JUnit">
+      <module name="AnimatedTransitions" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <option name="PACKAGE_NAME" value="tourDeMock" />
+      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_02" />
+      <option name="PACKAGE_NAME" value="org.jdesktop.animation.transitions" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="" />
+      <option name="VM_PARAMETERS" value="-ea -Djmockit-coverage-output=html -Djmockit-coverage-metrics=data" />
       <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-      <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Run" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Samples: Tutorial" type="JUnit" factoryName="JUnit">
-      <module name="Tutorial" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/ibm_sdk60" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="TEST_SEARCH_SCOPE">
@@ -1755,7 +1749,7 @@
       <envs />
       <patterns />
       <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="1090" />
+        <option name="DEBUG_PORT" value="1145" />
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
@@ -1764,17 +1758,17 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="Samples: Unitils" type="JUnit" factoryName="JUnit">
-      <module name="Unitils" />
+    <configuration default="false" name="Samples: OrderMngmntWebapp" type="JUnit" factoryName="JUnit">
+      <module name="OrderMngmntWebapp" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <option name="PACKAGE_NAME" value="unitils" />
+      <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="" />
+      <option name="VM_PARAMETERS" value="-Djmockit-coverage-outputDir=../../www/coverage-sample" />
       <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/samples/orderMngmntWebapp" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="TEST_SEARCH_SCOPE">
@@ -1783,38 +1777,6 @@
       <envs />
       <patterns />
       <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Run" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Samples: fakingXmocking - integration tests" type="JUnit" factoryName="JUnit">
-      <module name="fakingXmocking" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="TEST_OBJECT" value="pattern" />
-      <option name="VM_PARAMETERS" value="-Djmockit-mocks=fakingXmocking.CurrencyConversionHttpClientFake,fakingXmocking.CurrencyConversionURLFake" />
-      <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/samples/fakingXmocking" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <dir value="$PROJECT_DIR$/samples/fakingXmocking/integration-test" />
-      <patterns>
-        <pattern testClass="fakingXmocking.CurrencyConversionIntegrationTest" />
-        <pattern testClass="fakingXmocking.CurrencyConversion2IntegrationTest" />
-      </patterns>
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="1067" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
@@ -1850,17 +1812,49 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="Samples: jMock" type="JUnit" factoryName="JUnit">
-      <module name="jMock2" />
+    <configuration default="false" name="Samples: fakingXmocking - integration tests" type="JUnit" factoryName="JUnit">
+      <module name="fakingXmocking" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <option name="PACKAGE_NAME" value="org.jmock.samples" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="pattern" />
+      <option name="VM_PARAMETERS" value="-Djmockit-mocks=fakingXmocking.CurrencyConversionHttpClientFake,fakingXmocking.CurrencyConversionURLFake" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/samples/fakingXmocking" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <dir value="$PROJECT_DIR$/samples/fakingXmocking/integration-test" />
+      <patterns>
+        <pattern testClass="fakingXmocking.CurrencyConversionIntegrationTest" />
+        <pattern testClass="fakingXmocking.CurrencyConversion2IntegrationTest" />
+      </patterns>
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="1067" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Coverage" type="JUnit" factoryName="JUnit">
+      <module name="Coverage" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_02" />
+      <option name="PACKAGE_NAME" value="integrationTests" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="" />
+      <option name="VM_PARAMETERS" value="-ea -javaagent:../jmockit.jar" />
       <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/coverage" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="TEST_SEARCH_SCOPE">
@@ -1868,7 +1862,13 @@
       </option>
       <envs />
       <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
@@ -1931,12 +1931,12 @@
       <option name="PROPERTIES_FILE" value="" />
       <envs />
       <properties>
-        <property name="param1" value="" />
         <property name="second" value="" />
-        <property name="param2" value="" />
+        <property name="param1" value="" />
         <property name="p2" value="" />
-        <property name="param3" value="" />
+        <property name="param2" value="" />
         <property name="p1" value="" />
+        <property name="param3" value="" />
         <property name="first" value="" />
       </properties>
       <listeners />
@@ -2478,17 +2478,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://E:/.m2/repository/org/testng/testng/6.3.1/testng-6.3.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.testng:testng:6.4">
-      <CLASSES>
-        <root url="jar://E:/.m2/repository/org/testng/testng/6.4/testng-6.4.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/testng/testng/6.4/testng-6.4-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://E:/.m2/repository/org/testng/testng/6.4/testng-6.4-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.unitils:unitils-core:3.3">
