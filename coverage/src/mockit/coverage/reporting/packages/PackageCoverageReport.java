@@ -9,6 +9,7 @@ import java.util.*;
 
 import mockit.coverage.*;
 import mockit.coverage.data.*;
+import mockit.coverage.standalone.*;
 
 final class PackageCoverageReport extends ListWithFilesAndPercentages
 {
@@ -50,7 +51,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       filePath = packageName.length() == 0 ? fileName : packageName + '/' + fileName;
       FileCoverageData fileData = filesToFileData.get(filePath);
 
-      if (fileData == null && isSourceFileWithTestCodeOnly(fileName)) {
+      if (fileData == null && !Startup.isStandalone() && isSourceFileWithTestCodeOnly(fileName)) {
          return;
       }
 
@@ -113,7 +114,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
 
    private void writeTableCellWithFileName(int fileNameLen)
    {
-      if (sourceFilesNotFound.contains(filePath)) {
+      if (sourceFilesNotFound == null || sourceFilesNotFound.contains(filePath)) {
          output.write(fileNameWithSpaces);
       }
       else {

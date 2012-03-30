@@ -4,6 +4,7 @@
  */
 package mockit.coverage.standalone;
 
+import java.io.*;
 import java.lang.management.*;
 import java.lang.reflect.*;
 import java.util.prefs.*;
@@ -77,25 +78,30 @@ public final class CoverageControl extends StandardMBean implements CoverageCont
    @Override
    protected int getImpact(MBeanOperationInfo info) { return MBeanOperationInfo.ACTION; }
 
-   public String getOutput() { return getConfigurationProperty("output"); }
-   public void setOutput(String output) { modifyConfigurationProperty("output", output); }
+   public String getOutput() { return getProperty("output", "html").replace("-nocp", ""); }
+   public void setOutput(String output)
+   { modifyConfigurationProperty("output", "html".equals(output) ? "html-nocp" : output); }
 
-   public String getOutputDir() { return getConfigurationProperty("outputDir"); }
+   public String getWorkingDir() { return new File(".").getAbsoluteFile().getParent(); }
+
+   public String getOutputDir() { return getProperty("outputDir"); }
    public void setOutputDir(String outputDir) { modifyConfigurationProperty("outputDir", outputDir); }
 
-   public String getSrcDirs() { return getConfigurationProperty("srcDirs"); }
+   public String getSrcDirs() { return getProperty("srcDirs"); }
    public void setSrcDirs(String srcDirs) { modifyConfigurationProperty("srcDirs", srcDirs); }
 
-   public String getClasses() { return getConfigurationProperty("classes"); }
+   public String getClasses() { return getProperty("classes"); }
    public void setClasses(String classes) { modifyConfigurationProperty("classes", classes); }
 
-   public String getExcludes() { return getConfigurationProperty("excludes"); }
+   public String getExcludes() { return getProperty("excludes"); }
    public void setExcludes(String excludes) { modifyConfigurationProperty("excludes", excludes); }
 
-   public String getMetrics() { return getConfigurationProperty("metrics"); }
+   public String getMetrics() { return getProperty("metrics", "all"); }
    public void setMetrics(String metrics) { modifyConfigurationProperty("metrics", metrics); }
 
-   private String getConfigurationProperty(String property) { return System.getProperty(propertyName(property), ""); }
+   private String getProperty(String property) { return System.getProperty(propertyName(property), ""); }
+   private String getProperty(String property, String defaultValue)
+   { return System.getProperty(propertyName(property), defaultValue); }
 
    private String propertyName(String name)
    {
@@ -122,7 +128,7 @@ public final class CoverageControl extends StandardMBean implements CoverageCont
 
       try {
          for (String property : preferences.keys()) {
-            String commandLineValue = getConfigurationProperty(property);
+            String commandLineValue = getProperty(property);
 
             if (commandLineValue.length() == 0) {
                String value = preferences.get(property, "");
@@ -141,7 +147,7 @@ public final class CoverageControl extends StandardMBean implements CoverageCont
 
       for (MBeanAttributeInfo info : getMBeanInfo().getAttributes()) {
          String property = info.getName();
-         String value = getConfigurationProperty(property);
+         String value = getProperty(property);
 
          if (value.length() > 0) {
             preferences.put(property, value);

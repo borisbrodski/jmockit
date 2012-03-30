@@ -28,7 +28,7 @@ class CoverageReport
       fileToFileData = coverageData.getFileToFileDataMap();
       packageToFiles = new HashMap<String, List<String>>();
       this.withCallPoints = withCallPoints;
-      sourceFilesNotFound = new ArrayList<String>();
+      sourceFilesNotFound = srcDirs == null ? null : new ArrayList<String>();
    }
 
    public final void generate() throws IOException

@@ -65,13 +65,12 @@ public final class FileCoverageData implements Serializable
          return -1;
       }
 
-      if (totalSegments == 0) {
-         Collection<LineCoverageData> lines = lineToLineData.values();
+      Collection<LineCoverageData> lines = lineToLineData.values();
+      totalSegments = coveredSegments = 0;
 
-         for (LineCoverageData line : lines) {
-            totalSegments += line.getNumberOfSegments();
-            coveredSegments += line.getNumberOfCoveredSegments();
-         }
+      for (LineCoverageData line : lines) {
+         totalSegments += line.getNumberOfSegments();
+         coveredSegments += line.getNumberOfCoveredSegments();
       }
 
       return CoveragePercentage.calculate(coveredSegments, totalSegments);
@@ -83,11 +82,12 @@ public final class FileCoverageData implements Serializable
          return -1;
       }
 
-      if (totalPaths == 0) {
-         for (MethodCoverageData method : firstLineToMethodData.values()) {
-            totalPaths += method.getTotalPaths();
-            coveredPaths += method.getCoveredPaths();
-         }
+      Collection<MethodCoverageData> methods = firstLineToMethodData.values();
+      totalPaths = coveredPaths = 0;
+
+      for (MethodCoverageData method : methods) {
+         totalPaths += method.getTotalPaths();
+         coveredPaths += method.getCoveredPaths();
       }
 
       return CoveragePercentage.calculate(coveredPaths, totalPaths);
@@ -140,5 +140,19 @@ public final class FileCoverageData implements Serializable
             firstLineToMethodData.put(firstLine, firstLineAndInfo.getValue());
          }
       }
+   }
+
+   void reset()
+   {
+      for (LineCoverageData lineData : lineToLineData.values()) {
+         lineData.reset();
+      }
+
+      for (MethodCoverageData methodData : firstLineToMethodData.values()) {
+         methodData.reset();
+      }
+
+      totalSegments = coveredSegments = 0;
+      totalPaths = coveredPaths = 0;
    }
 }

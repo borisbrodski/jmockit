@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.paths;
@@ -122,6 +122,15 @@ public final class MethodCoverageData implements Serializable
          Path path = paths.get(i);
          Path previousPath = previousData.paths.get(i);
          path.addCountFromPreviousTestRun(previousPath);
+      }
+   }
+
+   public void reset()
+   {
+      clearNodes();
+
+      for (Path path : paths) {
+         path.reset();
       }
    }
 }

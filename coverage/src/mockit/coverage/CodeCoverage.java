@@ -57,6 +57,7 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
    public static void resetConfiguration()
    {
       Startup.instrumentation().removeTransformer(instance);
+      CoverageData.instance().clear();
       Startup.instrumentation().addTransformer(create());
    }
 
@@ -65,7 +66,7 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
       instance.outputGenerator.generate();
 
       if (resetState) {
-         CoverageData.instance().clear();
+         CoverageData.instance().reset();
       }
    }
 

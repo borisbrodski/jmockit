@@ -63,4 +63,11 @@ public final class BranchCoverageData extends LineSegmentData
       addExecutionCountAndCallPointsFromPreviousTestRun(previousData);
       jumpExecutionCount += previousData.jumpExecutionCount;
    }
+
+   @Override
+   void reset()
+   {
+      super.reset();
+      jumpExecutionCount = 0;
+   }
 }

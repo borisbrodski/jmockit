@@ -99,4 +99,16 @@ public final class LineCoverageData extends LineSegmentData
          }
       }
    }
+
+   @Override
+   public void reset()
+   {
+      super.reset();
+
+      if (branches != null) {
+         for (BranchCoverageData branchData : branches) {
+            branchData.reset();
+         }
+      }
+   }
 }

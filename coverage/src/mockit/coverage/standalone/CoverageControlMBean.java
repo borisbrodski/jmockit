@@ -12,6 +12,9 @@ public interface CoverageControlMBean
    String getOutput();
    void setOutput(String output);
 
+   @Description("The current working directory, used for output unless specified otherwise")
+   String getWorkingDir();
+
    @Description("Output directory for the HTML report or the \"coverage.ser\" serialized file")
    String getOutputDir();
    void setOutputDir(String outputDir);
@@ -29,7 +32,7 @@ public interface CoverageControlMBean
    String getExcludes();
    void setExcludes(String excludes);
 
-   @Description("Code coverage metrics to be gathered: either \"all\" (default) or one or more of \"line\", \"path\"")
+   @Description("Code coverage metrics to be gathered: either \"all\" or one or more of \"line\", \"path\"")
    String getMetrics();
    void setMetrics(String metrics);
 

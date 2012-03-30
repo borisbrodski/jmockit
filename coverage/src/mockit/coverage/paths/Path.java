@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.paths;
@@ -61,5 +61,10 @@ public final class Path implements Serializable
    {
       int previousExecutionCount = previousPath.executionCount.get();
       executionCount.set(previousExecutionCount);
+   }
+
+   void reset()
+   {
+      executionCount.set(0);
    }
 }
