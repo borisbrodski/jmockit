@@ -21,6 +21,48 @@
 
 <h3>Current release</h3>
 
+<p>Release <strong>0.999.14</strong> (Mar 30, 2012):</p>
+<ul>
+   <li>
+      <strong>New feature</strong>:
+      The JMockit Coverage tool can now be used in "standalone" mode, outside of a test run.
+      To enable this mode in any JVM instance, simply start it with
+      "<code>-javaagent:&lt;proper path>/jmockit-coverage.jar</code>";
+      there is no need to add any jar to any classpath.
+      <br/>
+      With the Tomcat application server, for example, one can set the "<code>CATALINA_OPTS</code>" environment
+      variable with a value like
+      "<code>-javaagent:/jmockit/jmockit-coverage.jar -Djmockit-coverage-outputDir=/dir/for/coverage/report</code>"
+      (as shown here, "jmockit-coverage-" system properties can optionally be set as well).
+      <br/>
+      Standalone mode provides a JMX "MBean" for control, which can be accessed locally or remotely through a JMX
+      client such as JConsole (available in the JDK).
+   </li>
+   <li>
+      Fixed inadequacies in the errors automatically thrown when <em>unexpected</em> or <em>missing</em>
+      invocations were detected during a test; instead of throwing a <code>java.lang.AssertionError</code>, JMockit will
+      now throw a custom <code>java.lang.Error</code> subclass -
+      see <a href="http://code.google.com/p/jmockit/issues/detail?id=213">issue 213</a>.
+   </li>
+   <li>
+      Added a validation against mixing strict and non-strict expectations for the same dynamically mocked instance or
+      class (see <a href="http://code.google.com/p/jmockit/issues/detail?id=209">issue 209</a>);
+      changed the precedence when choosing whether to mock strictly or non-strictly in favor of the latter, in
+      situations where the same type is mocked twice.
+   </li>
+   <li>
+      Removed the automatic activation of asserts in test classes, since it only worked when using
+      <code>-javaagent:jmockit.jar</code>, among other reasons.
+   </li>
+   <li>
+      Other issues fixed:
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=211">211</a>,
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=214">214</a>.
+   </li>
+</ul>
+
+<h3>Previous releases</h3>
+
 <p>Release <strong>0.999.13</strong> (Feb 23, 2012):</p>
 <ul>
    <li>
@@ -78,8 +120,6 @@
       methods.
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release 0.999.12 (Dec 22, 2011):</p>
 <ul>

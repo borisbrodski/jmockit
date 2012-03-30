@@ -130,6 +130,7 @@
                   <exclude>**/Base*Test.class</exclude>
                   <exclude>**/testng/*Test.class</exclude>
                   <exclude>**/MockStateBetweenTestMethodsNGTest.class</exclude>
+                  <exclude>**/mockit/integration/TestedClass.class</exclude>
                </excludes>
             </configuration>
          </plugin>
