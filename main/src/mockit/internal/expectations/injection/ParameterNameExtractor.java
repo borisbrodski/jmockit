@@ -23,7 +23,7 @@ final class ParameterNameExtractor extends ClassVisitor
       classDesc = className.replace('.', '/');
 
       if (!ParameterNames.hasNamesForClass(classDesc)) {
-         ClassReader cr = ClassFile.createClassFileReader(className);
+         ClassReader cr = ClassFile.createClassFileReader(classOfInterest);
          cr.accept(this, ClassReader.SKIP_FRAMES);
       }
 

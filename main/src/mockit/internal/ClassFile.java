@@ -21,7 +21,7 @@ public final class ClassFile
          return new ClassReader(fixedClassfile);
       }
 
-      InputStream classFile = aClass.getResourceAsStream('/' + className.replace('.', '/') + ".class");
+      InputStream classFile = aClass.getResourceAsStream('/' + classFileName(className));
 
       if (classFile == null) {
          throw new RuntimeException("Failed to read class file for " + className);
@@ -34,6 +34,8 @@ public final class ClassFile
          throw new RuntimeException("Failed to read class file for " + className, e);
       }
    }
+
+   private static String classFileName(String className) { return className.replace('.', '/') + ".class"; }
 
    public static ClassReader createClassFileReader(String className)
    {
@@ -59,15 +61,23 @@ public final class ClassFile
 
    private static InputStream readClassFromDisk(String internalClassName)
    {
-      String classDesc = internalClassName + ".class";
+      String classFileName = internalClassName + ".class";
       ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-      InputStream inputStream = contextClassLoader.getResourceAsStream(classDesc);
+      InputStream inputStream = contextClassLoader.getResourceAsStream(classFileName);
 
       if (inputStream == null) {
          ClassLoader thisClassLoader = ClassFile.class.getClassLoader();
 
          if (thisClassLoader != contextClassLoader) {
-            inputStream = thisClassLoader.getResourceAsStream(classDesc);
+            inputStream = thisClassLoader.getResourceAsStream(classFileName);
+
+            if (inputStream == null) {
+               Class<?> testClass = TestRun.getCurrentTestClass();
+
+               if (testClass != null) {
+                  inputStream = testClass.getClassLoader().getResourceAsStream(classFileName);
+               }
+            }
          }
       }
 
@@ -76,6 +86,19 @@ public final class ClassFile
       }
 
       return inputStream;
+   }
+
+   public static ClassReader readClass(Class<?> aClass) throws IOException
+   {
+      String classFileName = classFileName(aClass.getName());
+      ClassLoader classLoader = aClass.getClassLoader();
+
+      if (classLoader == null) {
+         classLoader = ClassFile.class.getClassLoader();
+      }
+
+      InputStream classFile = classLoader.getResourceAsStream(classFileName);
+      return new ClassReader(classFile);
    }
 
    public static void visitClass(String internalClassName, ClassVisitor visitor)

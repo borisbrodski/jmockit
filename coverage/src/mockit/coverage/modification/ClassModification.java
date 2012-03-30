@@ -76,7 +76,13 @@ public final class ClassModification
       }
 
       String classFileName = className.replace('.', '/') + ".class";
-      InputStream classFile = aClass.getClassLoader().getResourceAsStream(classFileName);
+      ClassLoader cl = aClass.getClassLoader();
+
+      if (cl == null) {
+         cl = ClassModification.class.getClassLoader();
+      }
+
+      InputStream classFile = cl.getResourceAsStream(classFileName);
       ClassReader cr;
 
       try {
@@ -110,8 +116,6 @@ public final class ClassModification
       catch (UnmodifiableClassException e) {
          throw new RuntimeException(e);
       }
-
-      System.out.println("JMockit Coverage: " + loadedClass + " redefined");
    }
 
    private boolean isToBeConsideredForCoverage(String className, ProtectionDomain protectionDomain)
@@ -136,7 +140,6 @@ public final class ClassModification
       if (modifyClassForCoverage) {
          try {
             byte[] modifiedClassfile = modifyClassForCoverage(className, originalClassfile);
-            System.out.println("JMockit Coverage: " + className + " transformed");
             registerClassAsModifiedForCoverage(className, modifiedClassfile);
             return modifiedClassfile;
          }

@@ -288,7 +288,7 @@ public final class RedefinitionEngine
    public void restoreToDefinitionBeforeStartup(Class<?> aClass) throws IOException
    {
       realClass = aClass;
-      byte[] realClassFile = ClassFile.readClass(aClass.getName()).b;
+      byte[] realClassFile = ClassFile.readClass(aClass).b;
       redefineMethods(realClassFile);
    }
 

@@ -64,7 +64,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    {
       for (Class<?> aClass : alreadyLoaded) {
          if (isFinalClass(aClass) && isExpectationsOrVerificationsSubclassFromUserCode(aClass)) {
-            ClassReader cr = ClassFile.createClassFileReader(aClass.getName());
+            ClassReader cr = ClassFile.createClassFileReader(aClass);
             EndOfBlockModifier modifier = new EndOfBlockModifier(cr, true);
 
             try {
