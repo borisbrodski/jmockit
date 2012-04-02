@@ -153,7 +153,7 @@ public final class NonStrictExpectationsTest
    @Test
    public void recordWithArgumentMatcherAndIndividualInvocationCounts()
    {
-      new NonStrictExpectations(1) {{
+      new NonStrictExpectations(1, null) {{
          mock.prepare(); maxTimes = 1;
          mock.setSomething(anyInt); minTimes = 2;
          mock.editABunchMoreStuff(); minTimes = 0; maxTimes = 5;
@@ -217,7 +217,7 @@ public final class NonStrictExpectationsTest
    @Test
    public void recordInvocationsInIteratingBlock()
    {
-      new NonStrictExpectations(2) {{
+      new NonStrictExpectations(2, null) {{
          mock.setSomething(anyInt); times = 1;
          mock.save(); times = 1;
       }};
@@ -231,7 +231,7 @@ public final class NonStrictExpectationsTest
    @Test(expected = MissingInvocation.class)
    public void recordInvocationInBlockWithWrongNumberOfIterations()
    {
-      new NonStrictExpectations(3) {{
+      new NonStrictExpectations(3, null) {{
          mock.setSomething(123); minTimes = 1;
       }};
 
@@ -241,7 +241,7 @@ public final class NonStrictExpectationsTest
    @Test
    public void recordWithArgumentMatcherAndIndividualInvocationCountsInIteratingBlock()
    {
-      new NonStrictExpectations(2) {{
+      new NonStrictExpectations(2, null) {{
          mock.prepare(); maxTimes = 1;
          mock.setSomething(anyInt); minTimes = 2;
          mock.editABunchMoreStuff(); minTimes = 1; maxTimes = 5;

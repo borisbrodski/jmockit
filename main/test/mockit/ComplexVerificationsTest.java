@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -11,20 +11,13 @@ public class ComplexVerificationsTest
 {
    public static class A
    {
-      @SuppressWarnings({"UnusedParameters"})
+      @SuppressWarnings("UnusedParameters")
       public void process(Object[] input) {}
       public int result() { return 1; }
    }
 
-   public static class B
-   {
-      public int foo() { return -2; }
-   }
-
-   public static class C
-   {
-      public int bar() { return 3; }
-   }
+   public static class B { public int foo() { return -2; } }
+   public static class C { public int bar() { return 3; } }
 
    final Object[] input = new Object[3];
 
@@ -55,8 +48,7 @@ public class ComplexVerificationsTest
    @Test
    public void usingStrictExpectationsOnly(final A a, final B b, final C c)
    {
-      new Expectations()
-      {{
+      new Expectations() {{
          // Meets requirement 1:
          new A();
          new B();
@@ -66,15 +58,13 @@ public class ComplexVerificationsTest
          a.process(input);
       }};
 
-      new Expectations(input.length)
-      {{
+      new Expectations(input.length, null) {{
          // Meets requirement 3 but NOT 4:
          b.foo();
          c.bar();
       }};
 
-      new Expectations()
-      {{
+      new Expectations() {{
          // Meets requirement 5:
          a.result(); result = 42;
       }};
@@ -87,8 +77,7 @@ public class ComplexVerificationsTest
    @Test
    public void usingStrictExpectationsMostly(final A a, final B b, final C c)
    {
-      new Expectations()
-      {{
+      new Expectations() {{
          // Meets requirement 1:
          new A();
          new B();
@@ -114,8 +103,7 @@ public class ComplexVerificationsTest
    @Test
    public void usingStrictAndNonStrictMockedTypes()
    {
-      new Expectations()
-      {
+      new Expectations() {
          A a;
          @NonStrict B b;
          @NonStrict C c;
@@ -145,8 +133,7 @@ public class ComplexVerificationsTest
    @Test
    public void usingNonStrictExpectationsOnly(final A a, final B b, final C c)
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          // Meets requirements 1b and 5b.
          new A(); times = 1;
          new B(); times = 1;
@@ -156,8 +143,7 @@ public class ComplexVerificationsTest
 
       assertEquals(42, testedMethod());
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          // Meets requirements 1a, 2, 3a, and 5a.
          unverifiedInvocations(); // accounts for the instantiations of A, B, and C
          a.process(input); times = 1;
@@ -165,15 +151,13 @@ public class ComplexVerificationsTest
          a.result();
       }};
 
-      new FullVerifications(a)
-      {{
+      new FullVerifications(a) {{
          // Meets requirement 6a.
          a.process(input);
          a.result();
       }};
 
-      new FullVerifications(input.length, b, c)
-      {{
+      new FullVerifications(input.length, new Object[] {b, c}) {{
          // Meets requirements 3b, 4, 6b and 6c.
          b.foo();
          c.bar();
@@ -183,8 +167,7 @@ public class ComplexVerificationsTest
    @Test
    public void usingNonStrictExpectationsOnlyWithoutDuplicateInvocations(final A a, final B b, final C c)
    {
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          // Meets requirements 1b and 5b.
          new A(); times = 1;
          new B(); times = 1;
@@ -194,8 +177,7 @@ public class ComplexVerificationsTest
 
       assertEquals(42, testedMethod());
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          // Meets requirements 1a, 2, 3a, and 5a.
          unverifiedInvocations(); // accounts for the instantiations of A, B, and C
          a.process(input); times = 1;
@@ -203,8 +185,7 @@ public class ComplexVerificationsTest
          a.result(); // this duplication is inevitable with non-strict expectations, so it's ok
       }};
 
-      new FullVerifications(input.length)
-      {{
+      new FullVerifications(input.length) {{
          // Meets requirements 3b, 4, and 6.
          b.foo();
          c.bar();
@@ -216,8 +197,7 @@ public class ComplexVerificationsTest
    {
       // Requirements to meet: only 1b, 3b, 4, 6b and 6c.
 
-      new NonStrictExpectations()
-      {{
+      new NonStrictExpectations() {{
          // Meets requirement 1b.
          new A(); times = 1;
          new B(); times = 1;
