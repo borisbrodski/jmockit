@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.transitions;
@@ -52,23 +52,12 @@ public final class EffectTest
       // method and then verify that the component had its bounds correctly set.
       effect.paint(null);
 
-      new Verifications()
-      {
-         {
-            component.setBounds(new Rectangle(1, 2, 3, 4));
-         }
-      };
+      new Verifications() {{ component.setBounds(new Rectangle(1, 2, 3, 4)); }};
    }
 
    private void setUpEffect(boolean withStartState)
    {
-      new NonStrictExpectations()
-      {
-         {
-            state.getComponent(); result = component;
-         }
-      };
-
+      new NonStrictExpectations() {{ state.getComponent(); result = component; }};
       effect.setComponentStates(withStartState ? state : null, withStartState ? null : state);
    }
 
@@ -84,12 +73,7 @@ public final class EffectTest
       // method and then verify that the component had its bounds correctly set.
       effect.paint(null);
 
-      new Verifications()
-      {
-         {
-            component.setBounds(bounds);
-         }
-      };
+      new Verifications() {{ component.setBounds(bounds); }};
    }
 
    @Test
@@ -107,40 +91,27 @@ public final class EffectTest
       // and then verify that the correct location was used.
       effect.render(g2D);
 
-      new Verifications()
-      {
-         {
-            g2D.translate(location.x, location.y);
-         }
-      };
+      new Verifications() {{ g2D.translate(location.x, location.y); }};
    }
 
    @Test
    public void initEffectWithStartStateAndOutdatedComponentImage(final Image image)
    {
-      setUpEffect(true);
+      effect.setComponentStates(state, null);
       effect.setComponentImage(image);
 
-      new NonStrictExpectations()
-      {
-         {
-            image.getWidth(null); result = 100;
-         }
-      };
+      new NonStrictExpectations() {{ image.getWidth(null); result = 100; }};
 
       effect.init(null, null);
 
-      new Verifications()
-      {
-         {
-            state.getX();
-            state.getY();
-            state.getWidth();
-            state.getHeight();
+      new Verifications() {{
+         state.getX();
+         state.getY();
+         state.getWidth();
+         state.getHeight();
 
-            image.flush();
-         }
-      };
+         image.flush();
+      }};
    }
 
    @Test
@@ -155,17 +126,12 @@ public final class EffectTest
    @Test
    public void initEffectWithEndStateAndUpToDateComponentImage(final Image image)
    {
-      setUpEffect(false);
+      effect.setComponentStates(null, state);
       effect.setComponentImage(image);
 
       effect.init(null, null);
 
-      new Verifications()
-      {
-         {
-            image.flush(); times = 0;
-         }
-      };
+      new Verifications() {{ image.flush(); times = 0; }};
    }
 
    @Test
@@ -173,12 +139,7 @@ public final class EffectTest
    {
       effect.setComponentStates(state, null);
 
-      new Expectations()
-      {
-         {
-            state.getSnapshot(); result = componentImage;
-         }
-      };
+      new Expectations() {{ state.getSnapshot(); result = componentImage; }};
 
       assertSetupOfComponentImage(componentImage);
    }
@@ -197,12 +158,7 @@ public final class EffectTest
    {
       effect.setComponentStates(null, state);
 
-      new Expectations()
-      {
-         {
-            state.getSnapshot(); result = componentImage;
-         }
-      };
+      new Expectations() {{ state.getSnapshot(); result = componentImage; }};
 
       assertSetupOfComponentImage(componentImage);
    }
@@ -212,12 +168,7 @@ public final class EffectTest
    {
       effect.setComponentStates(state, state);
 
-      new NonStrictExpectations()
-      {
-         {
-            state.getSnapshot(); result = componentImage;
-         }
-      };
+      new NonStrictExpectations() {{ state.getSnapshot(); result = componentImage; }};
 
       assertSetupOfComponentImage(componentImage);
    }
@@ -236,21 +187,18 @@ public final class EffectTest
 
       assertFalse(effect.getRenderComponent());
 
-      new NonStrictExpectations()
-      {
-         {
-            // Start state:
-            startState.getWidth(); result = 20;
-            startState.getHeight(); result = 20;
+      new NonStrictExpectations() {{
+         // Start state:
+         startState.getWidth(); result = 20;
+         startState.getHeight(); result = 20;
 
-            // End state with different width or height:
-            endState.getWidth(); result = 20 + dx;
-            endState.getHeight(); result = 20 + dy;
+         // End state with different width or height:
+         endState.getWidth(); result = 20 + dx;
+         endState.getHeight(); result = 20 + dy;
 
-            ComponentState stateToGetSnapshotImageFrom = dx < 0 || dy < 0 ? startState : endState;
-            stateToGetSnapshotImageFrom.getSnapshot(); result = componentImage;
-         }
-      };
+         ComponentState stateToGetSnapshotImageFrom = dx < 0 || dy < 0 ? startState : endState;
+         stateToGetSnapshotImageFrom.getSnapshot(); result = componentImage;
+      }};
 
       assertSetupOfComponentImage(componentImage);
    }
@@ -280,30 +228,21 @@ public final class EffectTest
 
       effect.paint(g2D);
 
-      new VerificationsInOrder()
-      {
-         {
-            component.setBounds((Rectangle) any);
-            ComponentState.paintSingleBuffered(component, g2D);
-         }
-      };
+      new VerificationsInOrder() {{
+         component.setBounds((Rectangle) any);
+         ComponentState.paintSingleBuffered(component, g2D);
+      }};
    }
 
    @Test
    public void paintEffectWithStartStateAlreadySetup(final Image image, final Graphics2D g2D)
    {
-      setUpEffect(true);
       effect.setComponentImage(image);
       effect.setWidth(20);
       effect.setHeight(10);
 
       effect.paint(g2D);
 
-      new Verifications()
-      {
-         {
-            g2D.drawImage(image, 0, 0, 20, 10, (ImageObserver) any);
-         }
-      };
+      new Verifications() {{ g2D.drawImage(image, 0, 0, 20, 10, (ImageObserver) any); }};
    }
 }
