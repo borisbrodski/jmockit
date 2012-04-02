@@ -5,7 +5,7 @@
   -->
 <html>
 <head>
-   <title>The JMockit Testing Toolkit Tutorial</title>
+   <title>The JMockit Tutorial - Behavior-based testing</title>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
    <link rel="stylesheet" type="text/css" href="../prettify.css"/>
    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico"/>
@@ -2179,35 +2179,22 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    Realistic examples can be found in the <em>Timing Framework</em> and <em>Animated Transitions</em> sample test
    suites, available with the full JMockit distribution.
 </p>
-<pre><code>public interface Service
-{
-   int doSomething();
-}
-
-final class ServiceImpl implements Service
-{
-   public int doSomething() { return 1; }
-}
+<pre><code>public interface Service { int doSomething(); }
+final class ServiceImpl implements Service { public int doSomething() { return 1; } }
 
 public final class TestedUnit
 {
    private final Service service1 = <strong>new ServiceImpl();</strong>
-   private final Service service2 = <strong>new Service()
-   {
-      public int doSomething() { return 2; }
-   };</strong>
-
+   private final Service service2 = <strong>new Service() { public int doSomething() { return 2; } };</strong>
    Observable observable;
 
    public int businessOperation(final boolean b)
    {
-      <strong>new Callable()</strong> // Callable is a parameterized interface from java.util.concurrent
-      {
+      <strong>new Callable()</strong> { // Callable is a parameterized interface from java.util.concurrent
          public Object call() { throw new IllegalStateException(); }
       }.call();
 
-      observable = <strong>new Observable()</strong> // Observable is a concrete class from java.util
-      {{
+      observable = <strong>new Observable()</strong> {{ // Observable is a concrete class from java.util
          if (b) {
             throw new IllegalArgumentException();
          }
@@ -2233,17 +2220,16 @@ public final class TestedUnit
 </p>
 <pre><code>public final class UnitTest
 {
-   @Mocked(<strong>capture = 10</strong>) Service service;
+   @Capturing Service service;
 
    @Test
-   public void captureAllInternallyCreatedInstances(@Mocked(<strong>capture = 1</strong>) final Callable&lt;?> callable)
+   public void captureAllInternallyCreatedInstances(@Capturing(<strong>maxInstances = 1</strong>) final Callable&lt;?> callable)
       throws Exception
    {
       Service initialMockService = service;
 
-      new NonStrictExpectations()
-      {
-         @Mocked(<strong>capture = 1</strong>) Observable observable;
+      new NonStrictExpectations() {
+         @Capturing(<strong>maxInstances = 1</strong>) Observable observable;
 
          {
             service.doSomething(); returns(3, 4);
@@ -2264,12 +2250,14 @@ public final class TestedUnit
 <p>
    Note that we used all three possible scopes for mocked types: a mock field of the test class, a mock parameter of the
    test method, and a local mock field of the expectation block.
-   In all three cases the mocked type is either an interface or a non-<code>final</code> class, and the
-   <strong><code>capture</code></strong> annotation attribute is used.
+   In all three cases the mocked type is either an interface or a non-<code>final</code> class, but instead of using
+   "<code class="annotation">@Mocked</code>" we used the special annotation
+   "<code class="annotation">@Capturing</code>".
 </p>
 <p>
-   This optional attribute takes an <code>int</code> value specifying the <em>maximum</em> number of new instances of
-   the mocked type that should be "captured" during the test.
+   This annotation has an optional attribute which takes an <code>int</code> value specifying the <em>maximum</em>
+   number of new instances of the mocked type that should be "captured" during the test; if not specified, there is no
+   limit.
    <em>Any</em> (future) instantiation of a class that is assignable to the declared mocked type will be affected.
    For a non-<code>final</code> mock field, each captured instance will be immediately assigned to the field, up to the
    specified maximum number of instances.
@@ -2279,15 +2267,11 @@ public final class TestedUnit
    to it up to the <em>its</em> maximum number of instances to capture.
    So, once a mocked type is declared to be captured, all implementation classes will get mocked for
    the test, no matter how many new instances are captured.
-   For a mock parameter, on the other hand, new instances will never get assigned to the parameter, so any positive
-   value for the <code>capture</code> attribute will have the same effect.
 </p>
 <p>
-   If control over <em>which</em> implementation classes should get captured and which should not is needed, we can use
-   <strong><code class="annotation">@Capturing</code></strong> instead, which has a couple of attributes for that
-   purpose.
-   This dedicated annotation specifies a capturing mocked type without the need to specify the maximum number of
-   instances to capture, which by default will be unlimited.
+   If control over <em>which</em> implementation classes should get captured or not is needed, we can use the
+   <strong><code>classNames</code></strong> and <strong><code>inverse</code></strong> attributes of
+   <code class="annotation">@Capturing</code>; see the API documentation for details.
 </p>
 
 <h3 id="tested">

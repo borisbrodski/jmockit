@@ -5,7 +5,7 @@
   -->
 <html>
 <head>
-   <title>The JMockit Testing Toolkit Tutorial</title>
+   <title>The JMockit Tutorial - Measuring code coverage</title>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
    <link rel="stylesheet" type="text/css" href="../prettify.css"/>
    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico"/>
@@ -14,10 +14,9 @@
 </head>
 <body>
 <h2>
-   Measuring line and path coverage with JMockit Coverage
+   Measuring code coverage with JMockit Coverage
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
-      <a href="IncrementalTests.html"><img align="right" src="go-next.png" title="Next chapter"></a>
       <a href="UsingMocksAndStubs.html"><img align="right" src="go-previous.png" title="Previous chapter"></a>
    </div>
 </h2>
@@ -46,6 +45,7 @@
    </li>
    <li><a href="#maven">Using JMockit Coverage in a Maven project</a></li>
    <li><a href="#switching">Turning coverage output on/off</a></li>
+   <li><a href="#standalone">Standalone mode</a></li>
 </ol>
 
 <p>
@@ -60,7 +60,7 @@
    in the practice of TDD (Test Driven Development).
 </p>
 <div style="text-align: center;">
-   <img src="Coverage.png" usemap="#figure1">
+   <img src="Coverage.png">
 </div>
 <p>
    JMockit Coverage provides two different and complementary code coverage metrics:
@@ -73,7 +73,7 @@
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <img align="right" src="blank.gif" width="22">
-      <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#standalone"><img align="right" src="go-bottom.png" title="Last section"></a>
       <img align="right" src="blank.gif" width="22">
       <a href="#path"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
@@ -119,39 +119,37 @@
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <img align="right" src="blank.gif" width="22">
-      <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#standalone"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#line"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#output"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
    Path coverage
 </h3>
 <p>
-   A completely different metric is <em>path coverage</em>, which is computed for method and
-   constructor bodies, not for lines or segments of code.
-   It tells us how many of the possible <em>execution paths</em> through a method or constructor,
-   from <em>entry</em> to <em>exit</em>, have been executed at least once during the test run.
+   A completely different metric is <em>path coverage</em>, which is computed for method and constructor bodies, not for
+   lines or segments of code.
+   It tells us how many of the possible <em>execution paths</em> through a method or constructor, from <em>entry</em> to
+   <em>exit</em>, have been executed at least once during the test run.
 </p>
 <p>
    Note that each method or constructor has a single point of entry, but can have multiple exits.
    An exit occurs when a <code>return</code> or <code>throw</code> statement is executed.
-   These are <em>normal exits</em>, of course. A method/constructor execution can also terminate
-   <em>abruptly</em>, by propagating an exception (or error) thrown as a result of a method call,
-   an attempt to access a <code>null</code> reference, or some other action which caused an
-   unintended program failure.
+   These are <em>normal exits</em>, of course. A method/constructor execution can also terminate <em>abruptly</em>, by
+   propagating an exception (or error) thrown as a result of a method call, an attempt to access a <code>null</code>
+   reference, or some other action which caused an unintended program failure.
 </p>
 <p>
    Each possible path can be either fully executed (covered) or not (uncovered).
-   Paths that execute only partially (ie, they were terminated abruptly) are simply considered as
-   uncovered.
+   Paths that execute only partially (ie, they were terminated abruptly) are simply considered as uncovered.
 </p>
 <p>
-   The <em>path coverage percentage</em> for a method or constructor body is computed in a way
-   similar to the line coverage computation.
-   If <code><strong>NP</strong></code> is the number of possible paths through the implementation
-   body and <code><strong>NPE</strong></code> is the number of paths executed from entry to exit,
-   then the metric is computed as <strong><code>100 * NPE / NP</code></strong>.
-   Also in the same way as the line coverage metric, we extend this formula to the whole source
-   file, the whole package, and the whole set of packages touched by the test run.
+   The <em>path coverage percentage</em> for a method or constructor body is computed in a way similar to the line
+   coverage computation.
+   If <code><strong>NP</strong></code> is the number of possible paths through the implementation body and
+   <code><strong>NPE</strong></code> is the number of paths executed from entry to exit, then the metric is computed as
+   <strong><code>100 * NPE / NP</code></strong>.
+   Also in the same way as the line coverage metric, we extend this formula to the whole source file, the whole package,
+   and the whole set of packages touched by the test run.
 </p>
 
 <h3 id="output">
@@ -159,7 +157,7 @@
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#line"><img align="right" src="go-top.png" title="First section"></a>
-      <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#standalone"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#path"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#configuration"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
@@ -204,7 +202,7 @@
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#line"><img align="right" src="go-top.png" title="First section"></a>
-      <a href="#switching"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#standalone"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#output"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#merging"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
@@ -358,7 +356,7 @@
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#output"><img align="right" src="go-top.png" title="First section"></a>
-      <img align="right" src="blank.gif" width="22">
+      <a href="#standalone"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#configuration"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#maven"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
@@ -436,7 +434,7 @@
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#line"><img align="right" src="go-top.png" title="First section"></a>
-      <img align="right" src="blank.gif" width="22">
+      <a href="#standalone"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#merging"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#switching"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
@@ -491,7 +489,7 @@
       <a href="#line"><img align="right" src="go-top.png" title="First section"></a>
       <img align="right" src="blank.gif" width="22">
       <a href="#maven"><img align="right" src="go-up.png" title="Previous section"></a>
-      <img align="right" src="blank.gif" width="22">
+      <a href="#standalone"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
@@ -516,12 +514,62 @@
 </p>
 <p>
    Another way to switch coverage off is to simply set the <strong><code>jmockit-coverage-output</code></strong> system
-   property to an invalid output format, such as "<code>-Djmockit-coverage-output=<strong>none</strong></code>".
+   property to an unknown output format, such as "<code>-Djmockit-coverage-output=<strong>none</strong></code>".
 </p>
+
+<h3 id="standalone">
+   Standalone mode
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#line"><img align="right" src="go-top.png" title="First section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#switching"><img align="right" src="go-up.png" title="Previous section"></a>
+      <img align="right" src="blank.gif" width="22">
+   </div>
+</h3>
+<p>
+   So far, we discussed the most typical way to use the coverage tool, by enabling it during a JUnit/TestNG test run
+   to measure <em>test</em> coverage.
+   The tool can also be used in a more general context, though: the <em>standalone</em> mode, where it can attach to
+   <em>any</em> Java 5+ process to measure line and path coverage metrics on specified classes, regardless of which code
+   is making calls into said classes.
+</p>
+<p>
+   To activate standalone mode, the target JVM instance must be started with the
+   "<code>-javaagent:&lt;proper/path/>jmockit-coverage.jar</code>" command line argument.
+   Initial configuration settings can be specified through the "<code>jmockit-coverage-xyz</code>" system properties
+   previously described.
+</p>
+<p>
+   Once the target process is running with the JMockit Coverage Java agent, the user should connect to it with a JMX
+   client which can access arbitrary "MBeans".
+   Usually, the standard
+   <a href="http://download.oracle.com/javase/6/docs/technotes/guides/management/jconsole.html">JConsole</a> tool
+   available in a Java 5+ JDK will be used.
+   The JMockit Coverage MBean provides several configuration properties (the same ones which can be set with
+   "<code>-D</code>" on the command line), and one operation through which the desired output can be generated.
+   The user interface provided by JConsole is shown below, where the process that is running with the coverage tool is a
+   Tomcat 7 server instance.
+</p>
+<img src="mbeanUI.png" title="User interface presented by the JConsole tool, after connecting to a Tomcat instance
+   started with the JMockit Coverage agent.">
+<p>
+   The configuration properties (shown as "Attributes" of the "CoverageControl" MBean above) are as before, except that
+   some of them have different default values when not specified, as follows.
+</p>
+<ul>
+   <li>
+      "Classes" (<code>jmockit-coverage-classes</code>): initially selects no classes for coverage; the user has to
+      explicitly select them.
+   </li>
+   <li>
+      "SrcDirs" (<code>jmockit-coverage-srcDirs</code>): if not specified, no attempt is made to find source files for
+      the classes considered for coverage.
+   </li>
+</ul>
 
 <div class="navigation">
    <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
-   <a href="IncrementalTests.html"><img align="right" src="go-next.png" title="Next chapter"></a>
    <a href="UsingMocksAndStubs.html"><img align="right" src="go-previous.png" title="Previous chapter"></a>
 </div>
 <br/>

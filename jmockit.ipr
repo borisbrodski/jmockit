@@ -99,7 +99,7 @@
     <option name="DEPRECATION" value="false" />
   </component>
   <component name="CompilerConfiguration">
-    <option name="DEFAULT_COMPILER" value="Javac" />
+    <option name="DEFAULT_COMPILER" value="compAPI" />
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -378,6 +378,7 @@
         <inspection_tool class="HibernateResource" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="insideTryAllowed" value="false" />
         </inspection_tool>
+        <inspection_tool class="HtmlNonExistentInternetResource" enabled="false" level="WARNING" enabled_by_default="false" />
         <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="myValues">
             <value>
@@ -395,7 +396,7 @@
         <inspection_tool class="HtmlUnknownTag" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="myValues">
             <value>
-              <list size="7">
+              <list size="8">
                 <item index="0" class="java.lang.String" itemvalue="nobr" />
                 <item index="1" class="java.lang.String" itemvalue="noembed" />
                 <item index="2" class="java.lang.String" itemvalue="comment" />
@@ -403,6 +404,7 @@
                 <item index="4" class="java.lang.String" itemvalue="embed" />
                 <item index="5" class="java.lang.String" itemvalue="script" />
                 <item index="6" class="java.lang.String" itemvalue="div" />
+                <item index="7" class="java.lang.String" itemvalue="ul" />
               </list>
             </value>
           </option>
@@ -865,7 +867,6 @@
   <component name="JavacSettings">
     <option name="GENERATE_NO_WARNINGS" value="true" />
     <option name="DEPRECATION" value="false" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="-target 1.7" />
   </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
@@ -1450,7 +1451,7 @@
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="-javaagent:/jmockit/jmockit.jar" />
+      <option name="VM_PARAMETERS" value="-javaagent:/jmockit/jmockit.jar -ea" />
       <option name="PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/main" />
       <option name="ENV_VARIABLES" />
@@ -1930,15 +1931,7 @@
       <option name="USE_DEFAULT_REPORTERS" value="false" />
       <option name="PROPERTIES_FILE" value="" />
       <envs />
-      <properties>
-        <property name="second" value="" />
-        <property name="param1" value="" />
-        <property name="p2" value="" />
-        <property name="param2" value="" />
-        <property name="p1" value="" />
-        <property name="param3" value="" />
-        <property name="first" value="" />
-      </properties>
+      <properties />
       <listeners />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="49210" />

@@ -21,7 +21,8 @@ import java.lang.annotation.*;
  * Note that, once a capturing mocked type is in scope, the capture of implementation classes and their instances can
  * happen at any moment before the first expected invocation is recorded, or during the recording and replay phases.
  * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/CapturingImplementations.html">In the Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#capturing">In the
+ * Tutorial</a>
  * <p/>
  * Sample tests:
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/integrationTests/SubclassTest.java">SubclassTest</a>,
@@ -46,7 +47,7 @@ public @interface Capturing
     * <p/>
     * If the value for this attribute is positive or unspecified (the default is {@code Integer.MAX_VALUE}), then
     * whenever an assignable instance is created during test execution and the specified number of new instances has not
-    * been previously assigned, the (non-{@code final}) mock field will be assigned that new instance.
+    * been previously assigned, the (non-<code>final</code>) mock field will be assigned that new instance.
     * <p/>
     * It is valid to declare two or more fields of the same mocked type with a positive number of {@code maxInstances}
     * for each one of them, say {@code n1}, {@code n2}, etc.
