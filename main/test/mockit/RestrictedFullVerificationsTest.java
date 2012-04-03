@@ -100,7 +100,7 @@ public final class RestrictedFullVerificationsTest
       mock.save();
       mock2.doSomethingElse(2);
 
-      new FullVerifications(2, new Object[] {mock}) {{
+      new FullVerifications(2, mock) {{
          mock.setSomething(anyInt);
          mock.save();
       }};
@@ -112,7 +112,7 @@ public final class RestrictedFullVerificationsTest
       mock.prepare();
       mock2.getValue();
 
-      new FullVerificationsInOrder(1, new Object[] {mock}) {{ mock.prepare(); }};
+      new FullVerificationsInOrder(1, mock) {{ mock.prepare(); }};
       new FullVerificationsInOrder(Dependency.class) {{ mock.prepare(); }};
    }
 
@@ -122,7 +122,7 @@ public final class RestrictedFullVerificationsTest
       mock.prepare();
       mock2.getValue();
 
-      new FullVerifications(1, new Object[] {mock}) {{ mock2.getValue(); }};
+      new FullVerifications(1, mock) {{ mock2.getValue(); }};
    }
 
    @Test
@@ -131,7 +131,7 @@ public final class RestrictedFullVerificationsTest
       mock.prepare();
       mock2.getValue();
 
-      new FullVerifications(1, new Object[] {mock2.getClass()}) {{ mock2.getValue(); }};
+      new FullVerifications(1, mock2.getClass()) {{ mock2.getValue(); }};
    }
 
    @Test(expected = UnexpectedInvocation.class)
@@ -140,7 +140,7 @@ public final class RestrictedFullVerificationsTest
       mock.prepare();
       mock2.getValue();
 
-      new FullVerificationsInOrder(1, new Object[] {mock2.getClass()}) {{ mock.prepare(); }};
+      new FullVerificationsInOrder(1, mock2.getClass()) {{ mock.prepare(); }};
    }
 
    @Test
@@ -245,7 +245,7 @@ public final class RestrictedFullVerificationsTest
       mock2.getValue();
       Dependency.staticMethod("test");
 
-      new FullVerificationsInOrder(1, new Object[] {mock2}) {{ mock2.getValue(); }};
+      new FullVerificationsInOrder(1, mock2) {{ mock2.getValue(); }};
    }
 
    @Test

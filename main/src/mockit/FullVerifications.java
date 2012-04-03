@@ -85,7 +85,7 @@ public abstract class FullVerifications extends Verifications
     * instances that are in scope for the test; for a given mocked <em>instance</em>, all classes up to (but not
     * including) {@code java.lang.Object} are considered
     */
-   protected FullVerifications(int numberOfIterations, Object... mockedTypesAndInstancesToVerify)
+   protected FullVerifications(Integer numberOfIterations, Object... mockedTypesAndInstancesToVerify)
    {
       this(numberOfIterations);
       verificationPhase.setMockedTypesToFullyVerify(mockedTypesAndInstancesToVerify);

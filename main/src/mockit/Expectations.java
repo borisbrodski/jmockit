@@ -201,7 +201,7 @@ public abstract class Expectations extends Invocations
     * @see #Expectations()
     * @see #Expectations(Object...)
     */
-   protected Expectations(int numberOfIterations, Object... classesOrObjectsToBePartiallyMocked)
+   protected Expectations(Integer numberOfIterations, Object... classesOrObjectsToBePartiallyMocked)
    {
       this(classesOrObjectsToBePartiallyMocked);
       getCurrentPhase().setNumberOfIterations(numberOfIterations);

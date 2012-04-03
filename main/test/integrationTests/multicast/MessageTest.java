@@ -178,7 +178,7 @@ public final class MessageTest
    {
       final Client[] testClients = {new Client("client1"), new Client("client2"), new Client("client3")};
 
-      new NonStrictExpectations(testClients.length, null) {
+      new NonStrictExpectations(testClients.length) {
          final Socket con = new Socket(withPrefix("client"), anyInt);
 
          {

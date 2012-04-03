@@ -68,7 +68,7 @@ public abstract class NonStrictExpectations extends Expectations
     * @see #NonStrictExpectations()
     * @see #NonStrictExpectations(Object...)
     */
-   protected NonStrictExpectations(int numberOfIterations, Object... classesOrObjectsToBePartiallyMocked)
+   protected NonStrictExpectations(Integer numberOfIterations, Object... classesOrObjectsToBePartiallyMocked)
    {
       super(classesOrObjectsToBePartiallyMocked);
       getCurrentPhase().setNumberOfIterations(numberOfIterations);

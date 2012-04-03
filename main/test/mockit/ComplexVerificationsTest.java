@@ -58,7 +58,7 @@ public class ComplexVerificationsTest
          a.process(input);
       }};
 
-      new Expectations(input.length, null) {{
+      new Expectations(input.length) {{
          // Meets requirement 3 but NOT 4:
          b.foo();
          c.bar();
@@ -157,7 +157,7 @@ public class ComplexVerificationsTest
          a.result();
       }};
 
-      new FullVerifications(input.length, new Object[] {b, c}) {{
+      new FullVerifications(input.length, b, c) {{
          // Meets requirements 3b, 4, 6b and 6c.
          b.foo();
          c.bar();

@@ -85,7 +85,7 @@ public abstract class FullVerificationsInOrder extends Verifications
     * @see #FullVerificationsInOrder(int)
     * @see #FullVerificationsInOrder(Object...)
     */
-   protected FullVerificationsInOrder(int numberOfIterations, Object... mockedTypesAndInstancesToVerify)
+   protected FullVerificationsInOrder(Integer numberOfIterations, Object... mockedTypesAndInstancesToVerify)
    {
       this(numberOfIterations);
       verificationPhase.setMockedTypesToFullyVerify(mockedTypesAndInstancesToVerify);

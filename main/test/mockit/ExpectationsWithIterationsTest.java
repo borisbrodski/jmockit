@@ -37,7 +37,7 @@ public final class ExpectationsWithIterationsTest
    @Test
    public void recordWithArgumentMatcherAndIndividualInvocationCounts()
    {
-      new Expectations(1, null) {{
+      new Expectations(1) {{
          mock.prepare(); maxTimes = 1;
          mock.setSomething(anyInt); minTimes = 2;
          mock.setSomethingElse(anyString); notStrict();
@@ -52,7 +52,7 @@ public final class ExpectationsWithIterationsTest
    @Test
    public void recordStrictInvocationsInIteratingBlock()
    {
-      new Expectations(2, null) {{
+      new Expectations(2) {{
          mock.setSomething(anyInt);
          mock.save();
       }};
@@ -66,7 +66,7 @@ public final class ExpectationsWithIterationsTest
    @Test
    public void recordNonStrictInvocationsInIteratingBlock()
    {
-      new Expectations(2, null) {{
+      new Expectations(2) {{
          mock.setSomething(anyInt); notStrict();
          mock.save(); notStrict();
       }};
@@ -80,7 +80,7 @@ public final class ExpectationsWithIterationsTest
    @Test(expected = MissingInvocation.class)
    public void recordInvocationInBlockWithWrongNumberOfIterations()
    {
-      new Expectations(3, null) {{
+      new Expectations(3) {{
          mock.setSomething(123);
       }};
 
@@ -90,7 +90,7 @@ public final class ExpectationsWithIterationsTest
    @Test(expected = UnexpectedInvocation.class)
    public void recordInvocationInBlockWithNumberOfIterationsTooSmall()
    {
-      new Expectations(2, null) {{
+      new Expectations(2) {{
          mock.setSomething(123);
          mock.editABunchMoreStuff();
       }};
@@ -104,7 +104,7 @@ public final class ExpectationsWithIterationsTest
    @Test
    public void recordWithArgumentMatcherAndIndividualInvocationCountsInIteratingBlock()
    {
-      new Expectations(2, null) {{
+      new Expectations(2) {{
          mock.prepare(); maxTimes = 1;
          mock.setSomething(anyInt); minTimes = 2;
          mock.editABunchMoreStuff(); minTimes = 1; maxTimes = 5;
@@ -125,7 +125,7 @@ public final class ExpectationsWithIterationsTest
    @Test
    public void recordRepeatingInvocationInIteratingBlock()
    {
-      new Expectations(2, null) {{
+      new Expectations(2) {{
          mock.setSomething(123); times = 2;
       }};
 
@@ -139,7 +139,7 @@ public final class ExpectationsWithIterationsTest
    public void recordInvocationsInASimpleBlockFollowedByAnIteratingOne()
    {
       new Expectations() {{ mock.setSomething(123); }};
-      new Expectations(2, null) {{ mock.save(); }};
+      new Expectations(2) {{ mock.save(); }};
 
       mock.setSomething(123);
       mock.save();
@@ -150,12 +150,12 @@ public final class ExpectationsWithIterationsTest
    @Test
    public void recordInvocationsInMultipleIteratingBlocks()
    {
-      new Expectations(2, null) {{
+      new Expectations(2) {{
          mock.setSomething(anyInt);
          mock.save();
       }};
 
-      new Expectations(3, null) {{
+      new Expectations(3) {{
          mock.prepare();
          mock.setSomethingElse(withNotEqual("")); notStrict();
          mock.editABunchMoreStuff(); notStrict();
