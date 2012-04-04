@@ -537,8 +537,10 @@
 <p>
    To activate standalone mode, the target JVM instance must be started with the
    "<code>-javaagent:&lt;proper/path/>jmockit-coverage.jar</code>" command line argument.
-   Initial configuration settings can be specified through the "<code>jmockit-coverage-xyz</code>" system properties
-   previously described.
+   That's it; none of the JMockit toolkit jars need to be present in the classpath of the target process.
+   Initial configuration settings for the coverage tool can be specified through the "<code>jmockit-coverage-xyz</code>"
+   system properties previously described, but this is entirely optional; the configuration properties can be modified
+   later through a dedicated UI.
 </p>
 <p>
    Once the target process is running with the JMockit Coverage Java agent, the user should connect to it with a JMX
