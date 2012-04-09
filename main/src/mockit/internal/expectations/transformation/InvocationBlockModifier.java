@@ -70,13 +70,15 @@ final class InvocationBlockModifier extends MethodVisitor
    @Override
    public void visitMethodInsn(int opcode, String owner, String name, String desc)
    {
-      if (opcode == INVOKEVIRTUAL && owner.equals(fieldOwner) && name.startsWith("with")) {
+      if (opcode == INVOKESTATIC && !owner.equals(fieldOwner) && name.startsWith("access$")) {
+         // It's a synthetic method for private access, just ignore it.
+      }
+      else if (opcode == INVOKEVIRTUAL && owner.equals(fieldOwner) && name.startsWith("with")) {
          mv.visitMethodInsn(INVOKEVIRTUAL, owner, name, desc);
          matcherStacks[matchers++] = mv.stackSize2;
          return;
       }
-
-      if (matchers > 0) {
+      else if (matchers > 0) {
          Type[] argTypes = Type.getArgumentTypes(desc);
          int stackSize = mv.stackSize2;
          int stackAfter = stackSize - sumOfSizes(argTypes);

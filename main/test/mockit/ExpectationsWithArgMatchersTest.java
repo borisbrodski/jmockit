@@ -19,11 +19,12 @@ public final class ExpectationsWithArgMatchersTest
    @SuppressWarnings("UnusedDeclaration")
    static class Collaborator
    {
-      void setValue(int value) {}
+      private void setValue(int value) {}
       void setValue(double value) {}
       void setValue(float value) {}
       void setValue(String value) {}
       void setValues(String[] values) {}
+      private void doSomething(Integer i) {}
 
       List<?> complexOperation(Object input1, Object... otherInputs)
       {
@@ -81,6 +82,14 @@ public final class ExpectationsWithArgMatchersTest
       new Expectations() {{ mock.setValue(anyInt); }};
 
       mock.setValue(3);
+   }
+
+   @Test
+   public void expectInvocationToPrivateInstanceMethodUsingAnyFieldMatcher()
+   {
+      new Expectations() {{ mock.doSomething(anyInt); }};
+
+      mock.doSomething(3);
    }
 
    @Test
