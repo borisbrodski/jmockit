@@ -12,8 +12,7 @@ public final class MethodFormatter
 {
    private final StringBuilder out;
    private final List<String> parameterTypes;
-
-   private String classDesc;
+   private final String classDesc;
    private String methodDesc;
 
    // Auxiliary fields for handling method parameters:
@@ -22,17 +21,17 @@ public final class MethodFormatter
    private char typeCode;
    private int arrayDimensions;
 
-   public MethodFormatter()
+   public MethodFormatter(String classDesc)
    {
       out = new StringBuilder();
       parameterTypes = new ArrayList<String>(5);
+      this.classDesc = classDesc;
    }
 
-   public MethodFormatter(String classDesc, String methodDesc)
+   public MethodFormatter(String classDesc, String methodNameAndDesc)
    {
-      this();
-      this.classDesc = classDesc;
-      this.methodDesc = methodDesc;
+      this(classDesc);
+      methodDesc = methodNameAndDesc;
       appendFriendlyMethodSignature();
    }
 
@@ -41,32 +40,18 @@ public final class MethodFormatter
 
    public List<String> getParameterTypes() { return parameterTypes; }
 
-   public String friendlyMethodSignatures(Collection<String> classAndMethodDescs)
+   public String friendlyMethodSignatures(Collection<String> methodNamesAndDescs)
    {
       String sep = "";
 
-      for (String classAndMethodDesc : classAndMethodDescs) {
+      for (String methodNameAndDesc : methodNamesAndDescs) {
          out.append(sep);
-         separateClassAndMethodInternalDescriptions(classAndMethodDesc);
+         methodDesc = methodNameAndDesc;
          appendFriendlyMethodSignature();
          sep = ",\n";
       }
 
       return out.toString();
-   }
-
-   private void separateClassAndMethodInternalDescriptions(String classAndMethodDesc)
-   {
-      int p = classAndMethodDesc.indexOf('#');
-
-      if (p >= 0) {
-         classDesc = classAndMethodDesc.substring(0, p);
-         methodDesc = classAndMethodDesc.substring(p + 1);
-      }
-      else {
-         classDesc = null;
-         methodDesc = classAndMethodDesc;
-      }
    }
 
    private void appendFriendlyMethodSignature()

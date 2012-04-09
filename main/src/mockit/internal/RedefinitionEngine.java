@@ -202,12 +202,12 @@ public final class RedefinitionEngine
    private void validateThatAllMockMethodsWereApplied()
    {
       if (mockMethods.getMethodCount() > 0) {
+         String classDesc = mockMethods.getMockClassInternalName();
          List<String> remainingMocks = mockMethods.getMethods();
-         String mockSignatures = new MethodFormatter().friendlyMethodSignatures(remainingMocks);
+         String mockSignatures = new MethodFormatter(classDesc).friendlyMethodSignatures(remainingMocks);
 
          throw new IllegalArgumentException(
-            "Matching real methods not found for the following mocks of " + mockClass.getName() + ":\n" +
-            mockSignatures);
+            "Matching real methods not found for the following mocks:\n" + mockSignatures);
       }
    }
 
