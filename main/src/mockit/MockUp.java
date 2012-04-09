@@ -63,13 +63,21 @@ public abstract class MockUp<T>
 
    private Type getTypeToMock()
    {
-      Type genericSuperclass = getClass().getGenericSuperclass();
+      Class<?> currentClass = getClass();
 
-      if (!(genericSuperclass instanceof ParameterizedType)) {
-         throw new IllegalArgumentException("No type to be mocked");
+      do {
+         Type superclass = currentClass.getGenericSuperclass();
+
+         if (superclass instanceof ParameterizedType) {
+            return ((ParameterizedType) superclass).getActualTypeArguments()[0];
+         }
+         else if (superclass == MockUp.class) {
+            throw new IllegalArgumentException("No type to be mocked");
+         }
+
+         currentClass = (Class<?>) superclass;
       }
-
-      return ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
+      while (true);
    }
 
    private T redefineClass(Class<?> classToMock)
