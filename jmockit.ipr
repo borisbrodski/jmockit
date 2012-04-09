@@ -97,6 +97,7 @@
   <component name="CompilerAPISettings">
     <option name="GENERATE_NO_WARNINGS" value="true" />
     <option name="DEPRECATION" value="false" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-target 1.6" />
   </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="compAPI" />
@@ -306,6 +307,7 @@
         <inspection_tool class="CyclicClassDependency" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CyclicPackageDependency" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="CyclomaticComplexity" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreEqualsMethod" value="false" />
           <option name="m_limit" value="10" />
         </inspection_tool>
         <inspection_tool class="DateToString" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -419,7 +421,9 @@
         <inspection_tool class="InnerClassVariableHidesOuterClassVariable" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_ignoreInvisibleFields" value="true" />
         </inspection_tool>
-        <inspection_tool class="InstanceofCatchParameter" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="InstanceofCatchParameter" enabled="true" level="WARNING" enabled_by_default="true">
+          <scope name="Tests" level="WARNING" enabled="false" />
+        </inspection_tool>
         <inspection_tool class="InstanceofIncompatibleInterface" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="InstanceofThis" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="InstantiationOfUtilityClass" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -1611,8 +1615,8 @@
     </configuration>
     <configuration default="false" name="Samples: Mockito" type="JUnit" factoryName="JUnit">
       <module name="Mockito" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_03" />
       <option name="PACKAGE_NAME" value="org.mockitousage" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
@@ -1908,7 +1912,7 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="mockit.integration.testng" type="TestNG" factoryName="TestNG">
+    <configuration default="false" name="Main" type="TestNG" factoryName="TestNG">
       <module name="Main" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_03" />
@@ -1917,8 +1921,8 @@
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="GROUP_NAME" value="" />
-      <option name="TEST_OBJECT" value="PACKAGE" />
-      <option name="VM_PARAMETERS" value="" />
+      <option name="TEST_OBJECT" value="PATTERN" />
+      <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="OUTPUT_DIRECTORY" value="" />
@@ -1933,6 +1937,15 @@
       <envs />
       <properties />
       <listeners />
+      <patterns>
+        <pattern testClass="mockit.integration.testng.DynamicMockingInBeforeMethodTest" />
+        <pattern testClass="mockit.integration.testng.ParallelExecutionTest" />
+        <pattern testClass="mockit.integration.testng.TestNGDecoratorTest" />
+        <pattern testClass="mockit.integration.testng.TestNGExpectationsTest" />
+        <pattern testClass="mockit.integration.testng.TestNGParametersTest" />
+        <pattern testClass="mockit.integration.testng.TestNGSharedMockFieldTest" />
+        <pattern testClass="mockit.integration.testng.OverlappingStubsAndMocksTest" />
+      </patterns>
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="49210" />
         <option name="TRANSPORT" value="0" />

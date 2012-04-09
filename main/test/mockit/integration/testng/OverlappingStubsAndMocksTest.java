@@ -2,15 +2,15 @@
  * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit;
+package mockit.integration.testng;
 
-import org.junit.*;
+import org.testng.annotations.*;
 
+import mockit.*;
 import mockit.internal.*;
 
 /**
  * Overlapping mocks/stubbing for the same real class is currently not supported by the Mockups API.
- * See related "TO DO" item in MockFixture.
  */
 @UsingMocksAndStubs(RealClass.class)
 public final class OverlappingStubsAndMocksTest
@@ -29,7 +29,7 @@ public final class OverlappingStubsAndMocksTest
       RealClass.doSomething();
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test(dependsOnMethods = "firstTest", expectedExceptions = MissingInvocation.class)
    public void secondTest()
    {
       Mockit.setUpMocks(TheMockClass.class);
@@ -42,6 +42,5 @@ public final class OverlappingStubsAndMocksTest
 
 final class RealClass
 {
-   static void doSomething() {}
+   static void doSomething() { throw new RuntimeException(); }
 }
-
