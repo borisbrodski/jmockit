@@ -155,6 +155,8 @@ public class Type {
     public static final Type DOUBLE_TYPE = new Type(DOUBLE, null, ('D' << 24)
             | (3 << 16) | (3 << 8) | 2, 1);
 
+    private static final Type[] NO_ARGS = new Type[0];
+
     // ------------------------------------------------------------------------
     // Fields
     // ------------------------------------------------------------------------
@@ -296,6 +298,7 @@ public class Type {
      *         method descriptor.
      */
     public static Type[] getArgumentTypes(String methodDescriptor) {
+        if (methodDescriptor.charAt(1) == ')') return NO_ARGS;
         char[] buf = methodDescriptor.toCharArray();
         int off = 1;
         int size = 0;
