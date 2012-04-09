@@ -18,6 +18,7 @@ import org.hamcrest.beans.*;
  * <a href="http://mockito.googlecode.com/svn/tags/latest/javadoc/org/mockito/Mockito.html">Mockito documentation</a>,
  * with some minor changes.
  */
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public final class JavadocExamplesTest
 {
@@ -260,8 +261,7 @@ public final class JavadocExamplesTest
    {
       final MockedClass mock = mock(MockedClass.class);
 
-      when(mock.someMethod(anyString())).thenAnswer(new Answer()
-      {
+      when(mock.someMethod(anyString())).thenAnswer(new Answer() {
          @Override
          public Object answer(InvocationOnMock invocation)
          {
@@ -272,6 +272,23 @@ public final class JavadocExamplesTest
       });
 
       assertEquals("called with arguments: [foo]", mock.someMethod("foo"));
+   }
+
+   @Test // Uses of Mockito API: 6
+   public void callingRealMethodFromCallback()
+   {
+      MockedClass mock = mock(MockedClass.class);
+
+      when(mock.someMethod(anyString())).thenAnswer(new Answer() {
+         @Override
+         public Object answer(InvocationOnMock invocation) throws Throwable
+         {
+            String actualResult = (String) invocation.callRealMethod();
+            return "Res=" + actualResult;
+         }
+      });
+
+      assertEquals("Res=3", mock.someMethod("3"));
    }
 
    @Test // Uses of Mockito API: 9
@@ -348,6 +365,7 @@ public final class JavadocExamplesTest
       // ... but this one does not: verify(mock).getPerson();
    }
 
+   @SuppressWarnings("CastToIncompatibleInterface")
    @Test
    public void creatingAMockWithExtraInterfaces()
    {

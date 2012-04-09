@@ -24,6 +24,7 @@ public final class InvocationArguments
    private final int methodAccess;
    private Object[] invocationArgs;
    private List<ArgumentMatcher> matchers;
+   private RealMethod realMethod;
 
    InvocationArguments(
       int access, String classDesc, String methodNameAndDesc, String genericSignature, String exceptions, Object[] args)
@@ -36,7 +37,8 @@ public final class InvocationArguments
       invocationArgs = args;
    }
 
-   public String getGenericSignature() { return genericSignature == null ? methodNameAndDesc : genericSignature; }
+   String getClassName() { return classDesc.replace('/', '.'); }
+   String getGenericSignature() { return genericSignature == null ? methodNameAndDesc : genericSignature; }
 
    public Object[] getValues() { return invocationArgs; }
    void setValues(Object[] values) { invocationArgs = values; }
@@ -58,6 +60,7 @@ public final class InvocationArguments
       return replayArgs;
    }
 
+   @SuppressWarnings("OverlyLongMethod")
    public boolean isMatch(Object[] replayArgs, Map<Object, Object> instanceMap)
    {
       TestRun.enterNoMockingZone();
@@ -340,6 +343,7 @@ public final class InvocationArguments
       return desc.toString();
    }
 
+   @SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
    public boolean hasEquivalentMatchers(InvocationArguments other)
    {
       List<ArgumentMatcher> otherMatchers = other.matchers;
@@ -427,5 +431,14 @@ public final class InvocationArguments
       }
 
       return false;
+   }
+
+   RealMethod getRealMethod()
+   {
+      if (realMethod == null) {
+         realMethod = new RealMethod(getClassName(), methodNameAndDesc);
+      }
+
+      return realMethod;
    }
 }

@@ -118,10 +118,11 @@ public final class AnnotatedMockStates
       mockState.exitReentrantCall();
    }
 
-   public Invocation createMockInvocation(String mockClassInternalName, int mockStateIndex, Object invokedInstance)
+   public Invocation createMockInvocation(
+      String mockClassInternalName, int mockStateIndex, Object invokedInstance, Object[] invokedArguments)
    {
       MockState mockState = getMockState(mockClassInternalName, mockStateIndex);
-      return new MockInvocation(invokedInstance, mockState);
+      return new MockInvocation(invokedInstance, invokedArguments, mockState);
    }
 
    public void verifyExpectations()

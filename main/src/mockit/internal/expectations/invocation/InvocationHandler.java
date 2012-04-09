@@ -17,7 +17,7 @@ public final class InvocationHandler extends DynamicInvocationResult
    public Object produceResult(
       Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
    {
-      Object result = invokeMethodOnTargetObject(invokedObject, constraints, args);
+      Object result = invokeMethodOnTargetObject(invokedObject, invocation, constraints, args);
 
       if (Boolean.FALSE.equals(result)) {
          String message = '"' + methodToInvoke.getName() + "\" failed on invocation to" + invocation.toString(args);

@@ -14,9 +14,26 @@ import mockit.internal.*;
 import org.hamcrest.beans.*;
 import static org.junit.Assert.*;
 
-// Even though JMockit tests may take more lines of code than the equivalent Mockito tests (mostly because of code
-// formatting style), the number of uses of each mocking API (considering methods/constructors called, fields accessed,
-// and annotations applied) is usually less in the JMockit ones, and never more.
+/**
+ * Note how the number of <em>uses</em> of each mocking API (considering methods/constructors called, fields accessed,
+ * and annotations applied) is usually smaller in a JMockit test when compared to the equivalent Mockito test, and never
+ * larger.
+ * <p/>
+ * Depending on code formatting style, though, JMockit tests may take more lines of code than the equivalent Mockito
+ * tests, because of the embedded "code blocks" created to record and verify expectations.
+ * This syntactical difference tends to make JMockit tests taller (more lines) but narrower (shorter lines), when
+ * compared to similar tests written with APIs which rely on method chaining.
+ * (Other API innovations such as the "<code>any</code>" argument matching <em>fields</em> also contribute to less test
+ * code, by avoiding lots of pointless parentheses.)
+ * <p/>
+ * Finally, the use of separate code blocks in JMockit tests provides a couple of nice readability gains:
+ * 1) it clearly demarcates the special calls made on mock objects to record/verify expectations, separating them from
+ * "real" calls in the test method (no need, therefore, to add a comment before a bunch of such calls);
+ * and 2) it allows said blocks to be automatically <em>collapsed</em> by a Java IDE, causing the test method to appear
+ * significantly smaller at first, while allowing the user to see the code inside a block by simply hovering the mouse
+ * cursor over it.
+ */
+@SuppressWarnings("UnusedDeclaration")
 public final class JavadocExamples_JMockit_Test
 {
    @Mocked List<String> mockedList;
@@ -132,6 +149,7 @@ public final class JavadocExamples_JMockit_Test
       mockedList.addAll(Arrays.asList("one", "two"));
 
       new Verifications() {{
+         //noinspection unchecked
          mockedList.addAll((List<String>) any);
          forEachInvocation = new Object() {
             void assertListOfTwoElements(List<?> list) { assertEquals(2, list.size()); }
@@ -359,6 +377,23 @@ public final class JavadocExamples_JMockit_Test
       };
 
       assertEquals("called with arguments: foo", mock.someMethod("foo"));
+   }
+
+   @Test // Uses of JMockit API: 6
+   public void callingRealMethodFromDelegate(@Injectable final MockedClass mock)
+   {
+      new NonStrictExpectations() {{
+         mock.someMethod(anyString);
+         result = new Delegate() {
+            String delegate(Invocation invocation, String s)
+            {
+               String actualResult = invocation.proceed();
+               return "Res=" + actualResult;
+            }
+         };
+      }};
+
+      assertEquals("Res=3", mock.someMethod("3"));
    }
 
    // Equivalent to "spyingOnRealObjects", but real implementations execute only on replay.

@@ -11,6 +11,7 @@ import static mockit.external.asm4.Opcodes.*;
 import mockit.*;
 import mockit.external.asm4.*;
 import mockit.internal.*;
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 /**
@@ -26,10 +27,7 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
    private boolean collectingFromSuperClass;
    private String enclosingClassDescriptor;
 
-   public AnnotatedMockMethodCollector(AnnotatedMockMethods mockMethods)
-   {
-      this.mockMethods = mockMethods;
-   }
+   public AnnotatedMockMethodCollector(AnnotatedMockMethods mockMethods) { this.mockMethods = mockMethods; }
 
    public void collectMockMethods(Class<?> mockClass)
    {
@@ -39,7 +37,7 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
 
       do {
          ClassReader mcReader = ClassFile.createClassFileReader(classToCollectMocksFrom);
-         mcReader.accept(this, ClassReader.SKIP_DEBUG);
+         mcReader.accept(this, ClassReader.SKIP_FRAMES);
          classToCollectMocksFrom = classToCollectMocksFrom.getSuperclass();
          collectingFromSuperClass = true;
       }
@@ -71,9 +69,7 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
    }
 
    /**
-    * Adds the method specified to the set of mock methods, representing it as <code>name + desc</code>, as long as it's
-    * appropriate for such method to be a mock, as indicated by its access modifiers and by the presence of the
-    * {@link Mock} annotation.
+    * Adds the method specified to the set of mock methods, as long as it's annotated with {@code @Mock}.
     *
     * @param signature generic signature for a Java 5 generic method, ignored since redefinition only needs to consider
     * the "erased" signature
@@ -81,7 +77,7 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
     */
    @Override
    public MethodVisitor visitMethod(
-      final int access, final String name, final String methodDesc, String signature, String[] exceptions)
+      final int access, final String methodName, final String methodDesc, String signature, String[] exceptions)
    {
       if ((access & INVALID_METHOD_ACCESSES) != 0) {
          return null;
@@ -89,10 +85,14 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
 
       if (
          !collectingFromSuperClass && enclosingClassDescriptor != null &&
-         "<init>".equals(name) && methodDesc.equals(enclosingClassDescriptor)
+         "<init>".equals(methodName) && methodDesc.equals(enclosingClassDescriptor)
       ) {
          mockMethods.setInnerMockClass(true);
          enclosingClassDescriptor = null;
+      }
+
+      if ("<init>".equals(methodName)) {
+         return null;
       }
 
       return new MethodVisitor()
@@ -101,29 +101,37 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
          public AnnotationVisitor visitAnnotation(String desc, boolean visible)
          {
             if ("Lmockit/Mock;".equals(desc)) {
-               String nameAndDesc =
-                  mockMethods.addMethod(collectingFromSuperClass, name, methodDesc, Modifier.isStatic(access));
+               AnnotatedMockMethods.MockMethod mockMethod =
+                  mockMethods.addMethod(collectingFromSuperClass, methodName, methodDesc, Modifier.isStatic(access));
 
-               if (nameAndDesc != null) {
-                  return new MockAnnotationVisitor(nameAndDesc);
+               if (mockMethod != null) {
+                  return new MockAnnotationVisitor(mockMethod);
                }
             }
 
             return null;
+         }
+
+         @Override
+         public void visitLocalVariable(
+            String paramName, String paramDesc, String paramSignature, Label start, Label end, int index)
+         {
+            ParameterNames.registerName(mockMethods.getMockClassInternalName(), methodName, methodDesc, paramName);
          }
       };
    }
 
    private final class MockAnnotationVisitor extends AnnotationVisitor
    {
-      private final String mockNameAndDesc;
+      private final AnnotatedMockMethods.MockMethod mockMethod;
       private MockState mockState;
+      private Boolean reentrant;
 
-      private MockAnnotationVisitor(String mockNameAndDesc)
+      private MockAnnotationVisitor(AnnotatedMockMethods.MockMethod mockMethod)
       {
-         this.mockNameAndDesc = mockNameAndDesc;
+         this.mockMethod = mockMethod;
 
-         if (mockNameAndDesc.contains("(Lmockit/Invocation;")) {
+         if (mockMethod.hasInvocationParameter) {
             getMockState();
          }
       }
@@ -140,11 +148,15 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
          else if ("maxInvocations".equals(name)) {
             getMockState().maxExpectedInvocations = (Integer) value;
          }
-         else {
-            boolean reentrant = (Boolean) value;
+         else { // name == "reentrant"
+            reentrant = (Boolean) value;
 
             if (reentrant) {
-               getMockState().makeReentrant();
+               if (mockMethod.isForConstructor()) {
+                  throw new IllegalArgumentException("Invalid reentrant mock method for constructor");
+               }
+
+               getMockState();
             }
          }
       }
@@ -152,7 +164,7 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
       private MockState getMockState()
       {
          if (mockState == null) {
-            mockState = new MockState(mockMethods.realClass, mockNameAndDesc);
+            mockState = new MockState(mockMethod);
          }
 
          return mockState;
@@ -162,6 +174,13 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
       public void visitEnd()
       {
          if (mockState != null) {
+            if (
+               reentrant == Boolean.TRUE ||
+               reentrant == null && mockMethod.hasInvocationParameter && !mockMethod.isForConstructor()
+            ) {
+               mockState.makeReentrant();
+            }
+
             mockMethods.addMockState(mockState);
          }
       }

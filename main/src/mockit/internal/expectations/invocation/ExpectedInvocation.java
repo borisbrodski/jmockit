@@ -7,7 +7,6 @@ package mockit.internal.expectations.invocation;
 import java.util.*;
 
 import mockit.internal.*;
-import mockit.internal.UnexpectedInvocation;
 import mockit.external.asm4.Type;
 
 import mockit.internal.expectations.*;
@@ -64,7 +63,7 @@ public final class ExpectedInvocation
    // Simple getters //////////////////////////////////////////////////////////////////////////////////////////////////
 
    public String getClassDesc() { return arguments.classDesc; }
-   public String getClassName() { return getClassDesc().replace('/', '.'); }
+   public String getClassName() { return arguments.getClassName(); }
    public String getMethodNameAndDescription() { return arguments.methodNameAndDesc; }
    public Object[] getArgumentValues() { return arguments.getValues(); }
 

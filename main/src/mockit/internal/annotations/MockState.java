@@ -4,16 +4,13 @@
  */
 package mockit.internal.annotations;
 
-import java.lang.reflect.*;
-
 import mockit.internal.*;
-import mockit.internal.UnexpectedInvocation;
 import mockit.internal.util.*;
 
 final class MockState
 {
-   private final Class<?> realClass;
-   final String mockNameAndDesc;
+   final AnnotatedMockMethods.MockMethod mockMethod;
+   private RealMethod realMethod;
 
    // Expectations on the number of invocations of the mock as specified by the @Mock annotation,
    // initialized with the default values as specified in @Mock annotation definition:
@@ -28,13 +25,9 @@ final class MockState
    // Helper field just for synchronization:
    private final Object invocationCountLock = new Object();
 
-   MockState(Class<?> realClass, String mockNameAndDesc)
-   {
-      this.realClass = realClass;
-      this.mockNameAndDesc = mockNameAndDesc;
-   }
+   MockState(AnnotatedMockMethods.MockMethod mockMethod) { this.mockMethod = mockMethod; }
 
-   Class<?> getRealClass() { return realClass; }
+   Class<?> getRealClass() { return mockMethod.getRealClass(); }
 
    boolean isReentrant() { return onReentrantCall != null; }
 
@@ -51,7 +44,7 @@ final class MockState
    {
       return
          expectedInvocations >= 0 || minExpectedInvocations > 0 || maxExpectedInvocations >= 0 ||
-         mockNameAndDesc.contains("(Lmockit/Invocation;");
+         mockMethod.hasInvocationParameter;
    }
 
    void update()
@@ -104,28 +97,12 @@ final class MockState
 
    private String errorMessage(String quantifier, int numExpectedInvocations, int timesInvoked)
    {
-      String realClassName = getRealClassName();
+      String mockClassDesc = mockMethod.getMockClassInternalName();
+      String mockNameAndDesc = mockMethod.getMockNameAndDesc();
 
       return
          "Expected " + quantifier + ' ' + numExpectedInvocations + " invocation(s) of " +
-         new MethodFormatter(realClassName, mockNameAndDesc) + ", but was invoked " + timesInvoked + " time(s)";
-   }
-
-   private String getRealClassName()
-   {
-      if (realClass == null) {
-         return null;
-      }
-
-      if (Proxy.isProxyClass(realClass)) {
-         Class<?>[] interfaces = realClass.getInterfaces();
-
-         if (interfaces.length <= 2) {
-            return interfaces[0].getName();
-         }
-      }
-
-      return realClass.getName();
+         new MethodFormatter(mockClassDesc, mockNameAndDesc) + ", but was invoked " + timesInvoked + " time(s)";
    }
 
    void reset()
@@ -133,5 +110,14 @@ final class MockState
       synchronized (invocationCountLock) {
          invocationCount = 0;
       }
+   }
+
+   RealMethod getRealMethod()
+   {
+      if (realMethod == null) {
+         realMethod = new RealMethod(getRealClass(), mockMethod.name, mockMethod.mockedMethodDesc);
+      }
+
+      return realMethod;
    }
 }

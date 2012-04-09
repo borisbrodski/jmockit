@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.invocation;
@@ -38,7 +38,7 @@ final class DelegatedResult extends DynamicInvocationResult
          args = Utilities.NO_ARGS;
       }
 
-      return invokeMethodOnTargetObject(invokedObject, constraints, args);
+      return invokeMethodOnTargetObject(invokedObject, invocation, constraints, args);
    }
 
    private String adaptNameAndArgumentsForDelegate(ExpectedInvocation invocation, Object[] args)

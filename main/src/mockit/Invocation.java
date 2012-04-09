@@ -1,8 +1,12 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
+
+import java.lang.reflect.*;
+
+import mockit.internal.util.*;
 
 /**
  * A context object representing the current invocation to a mocked method/constructor, to be passed as the
@@ -22,6 +26,7 @@ package mockit;
 public class Invocation
 {
    private final Object invokedInstance;
+   private final Object[] invokedArguments;
    private final int invocationCount;
    private int minInvocations;
    private int maxInvocations;
@@ -29,9 +34,11 @@ public class Invocation
    /**
     * For internal use only.
     */
-   protected Invocation(Object invokedInstance, int invocationCount, int minInvocations, int maxInvocations)
+   protected Invocation(
+      Object invokedInstance, Object[] invokedArguments, int invocationCount, int minInvocations, int maxInvocations)
    {
       this.invokedInstance = invokedInstance;
+      this.invokedArguments = invokedArguments;
       this.invocationCount = invocationCount;
       this.minInvocations = minInvocations;
       this.maxInvocations = maxInvocations;
@@ -114,4 +121,51 @@ public class Invocation
     * For internal use only.
     */
    protected void onChange() {}
+
+   /**
+    * Proceeds to execute the real (mocked) method with the argument values originally received or explicitly given as
+    * replacement.
+    * Whatever comes out of that call (either a return value or a thrown exception/error, even if it is a
+    * <em>checked</em> exception) becomes the result of the current invocation to the mock method.
+    *
+    * @param replacementArguments the argument values to be passed to the real method, as replacement for the values
+    *                             received by the mock method; if those received values should be passed without
+    *                             replacement, then this method should be called with no values
+    * @param <T> the return type of the mocked method
+    *
+    * @return the same value returned by the real method, if any
+    *
+    * @throws UnsupportedOperationException if attempting to proceed into a mocked constructor
+    */
+   public final <T> T proceed(Object... replacementArguments)
+   {
+      Object[] actualArgs = invokedArguments;
+      Method realMethod = getRealMethod();
+
+      if (replacementArguments != null && replacementArguments.length > 0) {
+         actualArgs =
+            realMethod.isVarArgs() ? createArgumentsArrayWithVarargs(replacementArguments) : replacementArguments;
+      }
+
+      return Utilities.invoke(invokedInstance, realMethod, actualArgs);
+   }
+
+   private Object[] createArgumentsArrayWithVarargs(Object[] replacementArguments)
+   {
+      int n = invokedArguments.length;
+      int m = n - 1;
+      Object[] actualArgs = new Object[n];
+      System.arraycopy(replacementArguments, 0, actualArgs, 0, m);
+
+      Object[] replacementVarargs = new Object[replacementArguments.length - m];
+      System.arraycopy(replacementArguments, m, replacementVarargs, 0, replacementVarargs.length);
+      actualArgs[m] = replacementVarargs;
+
+      return actualArgs;
+   }
+
+   /**
+    * For internal use only.
+    */
+   protected Method getRealMethod() { return null; }
 }

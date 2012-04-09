@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.annotations;
@@ -151,14 +151,14 @@ public final class AnnotationsModifier extends BaseClassModifier
 
       MethodVisitor alternativeWriter = getAlternativeMethodWriter(access, desc);
 
-      if (alternativeWriter == null) {
-         generateCallsForMockExecution(access, desc);
-         generateMethodReturn(desc);
-         mw.visitMaxs(1, 0); // dummy values, real ones are calculated by ASM
-         return methodAnnotationsVisitor;
+      if (alternativeWriter != null) {
+         return alternativeWriter;
       }
 
-      return alternativeWriter;
+      generateCallsForMockExecution(access, desc);
+      generateMethodReturn(desc);
+      mw.visitMaxs(1, 0); // dummy values, real ones are calculated by ASM
+      return methodAnnotationsVisitor;
    }
 
    private boolean hasMock(String name, String desc)
@@ -176,9 +176,8 @@ public final class AnnotationsModifier extends BaseClassModifier
       else if ("<clinit>".equals(name)) {
          return "$clinit";
       }
-      else {
-         return name;
-      }
+
+      return name;
    }
 
    private boolean shouldCopyOriginalMethodBytecode(
@@ -240,7 +239,7 @@ public final class AnnotationsModifier extends BaseClassModifier
 
    private void generateCallsForMockExecution(int access, String desc)
    {
-      if ("$init".equals(mockMethod.name)) {
+      if (mockMethod.isForConstructor()) {
          generateCallToSuper();
       }
 
@@ -301,7 +300,7 @@ public final class AnnotationsModifier extends BaseClassModifier
 
    private Label generateCallToUpdateMockStateIfAny(int access)
    {
-      int mockStateIndex = mockMethod.getIndexForMockExpectations();
+      int mockStateIndex = mockMethod.getIndexForMockState();
       Label afterCallToMock = null;
 
       if (mockStateIndex >= 0) {
@@ -342,10 +341,10 @@ public final class AnnotationsModifier extends BaseClassModifier
    {
       String mockClassName = annotatedMocks.getMockClassInternalName();
 
-      if (useMockingBridge) {
+      if (isToUseMockingBridge()) {
          generateCallToMockingBridge(
             MockingBridge.CALL_STATIC_MOCK, mockClassName, access, mockMethod.name, desc, mockMethod.desc, null, null,
-            mockMethod.getIndexForMockExpectations(), 0, 0);
+            mockMethod.getIndexForMockState(), 0, 0);
       }
       else {
          generateMethodOrConstructorArguments(access);
@@ -353,13 +352,15 @@ public final class AnnotationsModifier extends BaseClassModifier
       }
    }
 
+   private boolean isToUseMockingBridge() { return useMockingBridge || mockMethod.hasInvocationParameter; }
+
    private void generateInstanceMethodCall(int access, String desc)
    {
-      if (useMockingBridge) {
+      if (isToUseMockingBridge()) {
          generateCallToMockingBridge(
             MockingBridge.CALL_INSTANCE_MOCK, annotatedMocks.getMockClassInternalName(), access,
             mockMethod.name, desc, mockMethod.desc, null, null,
-            mockMethod.getIndexForMockExpectations(), mockInstanceIndex, forStartupMock ? 1 : 0);
+            mockMethod.getIndexForMockState(), mockInstanceIndex, forStartupMock ? 1 : 0);
          return;
       }
 
@@ -432,34 +433,20 @@ public final class AnnotationsModifier extends BaseClassModifier
    private void generateMethodOrConstructorArguments(int access)
    {
       boolean hasInvokedInstance = (access & ACC_STATIC) == 0;
-      int initialVar = hasInvokedInstance ? 1 : 0;
+      varIndex = hasInvokedInstance ? 1 : 0;
+
       Type[] argTypes = Type.getArgumentTypes(mockMethod.desc);
-      int i = 0;
 
-      if (mockMethod.hasInvocationParameter) {
-         mw.visitLdcInsn(annotatedMocks.getMockClassInternalName());
-         mw.visitIntInsn(SIPUSH, mockMethod.getIndexForMockExpectations());
-         generateCodeToPassThisOrNullIfStaticMethod(!hasInvokedInstance);
-         mw.visitMethodInsn(
-            INVOKESTATIC, CLASS_WITH_STATE, "createMockInvocation",
-            "(Ljava/lang/String;ILjava/lang/Object;)Lmockit/Invocation;");
-         i = 1;
-      }
-
-      varIndex = initialVar;
-
-      while (i < argTypes.length) {
-         Type argType = argTypes[i];
+      for (Type argType : argTypes) {
          int opcode = argType.getOpcode(ILOAD);
          mw.visitVarInsn(opcode, varIndex);
          varIndex += argType.getSize();
-         i++;
       }
    }
 
    private void generateMethodReturn(String desc)
    {
-      if (useMockingBridge) {
+      if (isToUseMockingBridge()) {
          generateReturnWithObjectAtTopOfTheStack(desc);
       }
       else {
@@ -471,7 +458,7 @@ public final class AnnotationsModifier extends BaseClassModifier
    private void generateCallToExitReentrantMock()
    {
       String mockClassDesc = annotatedMocks.getMockClassInternalName();
-      int mockStateIndex = mockMethod.getIndexForMockExpectations();
+      int mockStateIndex = mockMethod.getIndexForMockState();
 
       if (useMockingBridgeForUpdatingMockState) {
          generateCallToMockingBridge(

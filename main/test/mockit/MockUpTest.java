@@ -266,7 +266,7 @@ public final class MockUpTest
       {
          Collaborator it;
 
-         @Mock(invocations = 1)
+         @Mock(invocations = 1, reentrant = false)
          void $init(boolean b)
          {
             assertFalse(it.b);
@@ -283,6 +283,14 @@ public final class MockUpTest
       int i = new Collaborator(true).doSomething("test");
 
       assertEquals(12, i);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void cannotReenterConstructors()
+   {
+      new MockUp<Collaborator>() {
+         @Mock(reentrant = true) void $init(boolean b) {}
+      };
    }
 
    @Test

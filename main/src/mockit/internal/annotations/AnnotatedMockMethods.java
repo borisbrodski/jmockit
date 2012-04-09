@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.annotations;
@@ -33,7 +33,8 @@ public final class AnnotatedMockMethods
       final String desc;
       final boolean isStatic;
       final boolean hasInvocationParameter;
-      private int indexForMockExpectations;
+      String mockedMethodDesc;
+      private int indexForMockState;
 
       private MockMethod(String nameAndDesc, boolean isStatic)
       {
@@ -42,7 +43,7 @@ public final class AnnotatedMockMethods
          desc = nameAndDesc.substring(p);
          this.isStatic = isStatic;
          hasInvocationParameter = desc.startsWith("(Lmockit/Invocation;");
-         indexForMockExpectations = -1;
+         indexForMockState = -1;
       }
 
       private boolean isMatch(String name, String desc)
@@ -61,11 +62,15 @@ public final class AnnotatedMockMethods
          return false;
       }
 
-      int getIndexForMockExpectations() { return indexForMockExpectations; }
+      Class<?> getRealClass() { return realClass; }
+      String getMockClassInternalName() { return mockClassInternalName; }
+      String getMockNameAndDesc() { return name + desc; }
+      boolean isForConstructor() { return "$init".equals(name); }
+      int getIndexForMockState() { return indexForMockState; }
 
       boolean isReentrant()
       {
-         return indexForMockExpectations >= 0 && mockStates.getMockState(indexForMockExpectations).isReentrant();
+         return indexForMockState >= 0 && mockStates.getMockState(indexForMockState).isReentrant();
       }
    }
 
@@ -75,16 +80,16 @@ public final class AnnotatedMockMethods
       this.realClass = realClass;
    }
 
-   String addMethod(boolean fromSuperClass, String name, String desc, boolean isStatic)
+   MockMethod addMethod(boolean fromSuperClass, String name, String desc, boolean isStatic)
    {
       if (fromSuperClass && isMethodAlreadyAdded(name, desc)) {
          return null;
       }
 
       String nameAndDesc = name + desc;
-
-      methods.add(new MockMethod(nameAndDesc, isStatic));
-      return nameAndDesc;
+      MockMethod mockMethod = new MockMethod(nameAndDesc, isStatic);
+      methods.add(mockMethod);
+      return mockMethod;
    }
 
    private boolean isMethodAlreadyAdded(String name, String desc)
@@ -120,8 +125,12 @@ public final class AnnotatedMockMethods
    {
       MockMethod mockFound = hasMethod(name, desc);
 
-      if (mockFound != null && mockStates != null) {
-         mockFound.indexForMockExpectations = mockStates.findMockState(mockFound.name + mockFound.desc);
+      if (mockFound != null) {
+         mockFound.mockedMethodDesc = desc;
+
+         if (mockStates != null) {
+            mockFound.indexForMockState = mockStates.findMockState(mockFound);
+         }
       }
 
       return mockFound;
@@ -166,7 +175,7 @@ public final class AnnotatedMockMethods
       List<String> signatures = new ArrayList<String>(methods.size());
 
       for (MockMethod mockMethod : methods) {
-         signatures.add(mockMethod.name + mockMethod.desc);
+         signatures.add(mockMethod.getMockNameAndDesc());
       }
 
       return signatures;

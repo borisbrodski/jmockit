@@ -187,7 +187,7 @@ public final class MockingBridge implements InvocationHandler
       Class<?>[] paramClasses = Utilities.getParameterTypes(mockDesc);
 
       if (paramClasses.length > 0 && paramClasses[0] == Invocation.class) {
-         Invocation invocation = TestRun.createMockInvocation(mockClassInternalName, mockStateIndex, mocked);
+         Invocation invocation = TestRun.createMockInvocation(mockClassInternalName, mockStateIndex, mocked, mockArgs);
          //noinspection AssignmentToMethodParameter
          mockArgs = Utilities.argumentsWithExtraFirstValue(mockArgs, invocation);
       }

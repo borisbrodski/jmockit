@@ -7,6 +7,7 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
+ * TODO: review, several changes and additions needed
  * Used inside a <em>mock class</em> to indicate a <em>mock method</em> whose implementation will temporarily replace
  * the implementation of a matching "real" method.
  * The targeted real method must have the same signature (name and parameters) <em>and</em> the same return type.

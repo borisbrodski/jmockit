@@ -218,9 +218,10 @@ public final class TestRun
       mockStates.exitReentrantMock(mockClassDesc, mockStateIndex);
    }
 
-   public static Invocation createMockInvocation(String mockClassDesc, int mockStateIndex, Object mockedInstance)
+   public static Invocation createMockInvocation(
+      String mockClassDesc, int mockStateIndex, Object mockedInstance, Object[] mockArgs)
    {
       AnnotatedMockStates mockStates = getMockStates(mockClassDesc);
-      return mockStates.createMockInvocation(mockClassDesc, mockStateIndex, mockedInstance);
+      return mockStates.createMockInvocation(mockClassDesc, mockStateIndex, mockedInstance, mockArgs);
    }
 }

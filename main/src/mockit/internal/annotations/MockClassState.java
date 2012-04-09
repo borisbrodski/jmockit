@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.annotations;
@@ -10,12 +10,12 @@ final class MockClassState
 {
    final List<MockState> mockStates = new ArrayList<MockState>(4);
 
-   int findMockState(String mockNameAndDesc)
+   int findMockState(AnnotatedMockMethods.MockMethod mockMethod)
    {
       for (int i = 0; i < mockStates.size(); i++) {
          MockState mockState = mockStates.get(i);
 
-         if (mockState.mockNameAndDesc.equals(mockNameAndDesc)) {
+         if (mockState.mockMethod == mockMethod) {
             return i;
          }
       }
@@ -29,8 +29,5 @@ final class MockClassState
       return mockStates.size() - 1;
    }
 
-   MockState getMockState(int mockIndex)
-   {
-      return mockStates.get(mockIndex);
-   }
+   MockState getMockState(int mockIndex) { return mockStates.get(mockIndex); }
 }
