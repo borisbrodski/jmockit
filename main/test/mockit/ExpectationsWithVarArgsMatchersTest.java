@@ -6,8 +6,8 @@ package mockit;
 
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import org.junit.*;
-
 import static org.junit.Assert.*;
 
 import mockit.internal.*;
@@ -18,17 +18,16 @@ public final class ExpectationsWithVarArgsMatchersTest
    {
       List<?> complexOperation(Object input1, Object... otherInputs)
       {
-         return input1 == null ? Collections.emptyList() : Arrays.asList(otherInputs);
+         return input1 == null ? Collections.emptyList() : asList(otherInputs);
       }
 
       @SuppressWarnings("UnusedDeclaration")
       int anotherOperation(int i, boolean b, String s, String... otherStrings) { return -1; }
+
+      private boolean doSomething(int i, Object... values) { return i + values.length > 0; }
    }
 
-   public interface Dependency
-   {
-      void doSomething(String... args);
-   }
+   public interface Dependency { void doSomething(String... args); }
 
    @Mocked Collaborator mock;
    @Mocked Dependency mock2;
@@ -110,6 +109,29 @@ public final class ExpectationsWithVarArgsMatchersTest
       mock2.doSomething();
       mock2.doSomething("test", "abc");
       mock.complexOperation(123, true, "test", 3);
+   }
+
+   @Test
+   public void expectInvocationsWithMatcherForVarargsParameterOnly()
+   {
+      final List<Integer> values = asList(1, 2, 3);
+
+      new NonStrictExpectations() {{
+         mock.complexOperation("test", (Object[]) any); result = values;
+         mock.anotherOperation(1, true, null, (String[]) any); result = 123;
+         mock.doSomething(anyInt, (Object[]) any); result = true;
+      }};
+
+      assertSame(values, mock.complexOperation("test", true, 'a', 2.5));
+      assertSame(values, mock.complexOperation("test", 123));
+      assertSame(values, mock.complexOperation("test"));
+
+      assertEquals(123, mock.anotherOperation(1, true, null));
+      assertEquals(123, mock.anotherOperation(1, true, null, "A", null, "b"));
+      assertEquals(123, mock.anotherOperation(1, true, "test", "a", "b"));
+
+      assertTrue(mock.doSomething(-1));
+      assertTrue(mock.doSomething(-2, "test"));
    }
 
    @Test

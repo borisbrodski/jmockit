@@ -22,12 +22,16 @@ abstract class Invocations
    static { Startup.verifyInitialization(false); }
 
    /**
-    * Matches any {@code Object} reference for the relevant parameter.
-    * Note that the use of this field will usually require a cast to the specific parameter type.
-    * If there is any other parameter for which an argument matching constraint can be specified, though, the
-    * {@code null} reference can be passed instead, as it will also match any reference during the replay phase.
+    * Matches any {@code Object} reference passed as value for the parameter.
     * <p/>
-    * Note: in invocations to <em>non-accessible</em> methods or constructors (for example, with
+    * The use of this field will usually require a cast to the specific parameter type.
+    * However, if there is any other parameter for which an argument matching constraint is specified, passing the
+    * {@code null} reference instead will have the same effect.
+    * <p/>
+    * When the parameter to be matched is a <em>varargs</em> parameter of element type {@code V}, the use of
+    * {@code any} should be cast to {@code V[]}.
+    * <p/>
+    * In invocations to <em>non-accessible</em> methods or constructors (for example, with
     * {@link #invoke(Object, String, Object...)}), use {@link #withAny} instead.
     *
     * @see #anyInt
