@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -7,16 +7,14 @@ package mockit;
 import java.util.*;
 
 import junit.framework.*;
-
 import static org.junit.Assert.*;
 
-@SuppressWarnings({"UnusedDeclaration"})
+@SuppressWarnings("UnusedDeclaration")
 public final class DelegateTest extends TestCase
 {
    static class Collaborator
    {
       Collaborator() {}
-
       Collaborator(int i) {}
 
       int getValue() { return -1; }
@@ -36,16 +34,14 @@ public final class DelegateTest extends TestCase
       final int[] iExpected = new int[0];
       final String sExpected = "test";
 
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
             mock.getValue(); result = new Delegate() { int getValue() { return 2; } };
 
             mock.doSomething(bExpected, iExpected, sExpected);
-            result = new Delegate()
-            {
+            result = new Delegate() {
                String doSomething(boolean b, int[] i, String s)
                {
                   assertEquals(bExpected, b);
@@ -68,8 +64,7 @@ public final class DelegateTest extends TestCase
 
    public void testConsecutiveReturnValuesThroughDelegatesUsingSeparateReturns()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
@@ -89,23 +84,20 @@ public final class DelegateTest extends TestCase
       Collaborator collaborator = new Collaborator();
       final int[] array = {1, 2};
 
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
             mock.doSomething(true, array, "");
             returns(
-               new Delegate()
-               {
+               new Delegate() {
                   String execute(boolean b, int[] i, String s)
                   {
                      assertEquals(1, i[0]);
                      return "a";
                   }
                },
-               new Delegate()
-               {
+               new Delegate() {
                   String execute(boolean b, int[] i, String s)
                   {
                      assertEquals(2, i[0]);
@@ -123,18 +115,13 @@ public final class DelegateTest extends TestCase
 
    public void testReturnsMultipleReturnValuesThroughSingleDelegate(final Collaborator collaborator)
    {
-      new NonStrictExpectations()
-      {
-         {
-            collaborator.getValue();
-            result = new Delegate()
-            {
-               int i = 1;
-
-               int getValue() { return i++; }
-            };
-         }
-      };
+      new NonStrictExpectations() {{
+         collaborator.getValue();
+         result = new Delegate() {
+            int i = 1;
+            int getValue() { return i++; }
+         };
+      }};
 
       assertEquals(1, collaborator.getValue());
       assertEquals(2, collaborator.getValue());
@@ -145,8 +132,7 @@ public final class DelegateTest extends TestCase
    {
       final ConstructorDelegate delegate = new ConstructorDelegate();
 
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -159,7 +145,7 @@ public final class DelegateTest extends TestCase
       assertTrue(delegate.capturedArgument > 0);
    }
 
-   static class ConstructorDelegate implements Delegate
+   static class ConstructorDelegate implements Delegate<Void>
    {
       int capturedArgument;
 
@@ -168,8 +154,7 @@ public final class DelegateTest extends TestCase
 
    public void testDelegateForStaticMethod()
    {
-      new Expectations()
-      {
+      new Expectations() {
          final Collaborator unused = null;
 
          {
@@ -183,8 +168,7 @@ public final class DelegateTest extends TestCase
 
    public void testDelegateWithStaticMethods()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator mock;
 
          {
@@ -198,7 +182,7 @@ public final class DelegateTest extends TestCase
       assertEquals("test", new Collaborator().doSomething(false, null, "replay"));
    }
 
-   static final class StaticDelegate implements Delegate
+   static final class StaticDelegate implements Delegate<Object>
    {
       static boolean staticMethod(int i)
       {
@@ -217,14 +201,12 @@ public final class DelegateTest extends TestCase
 
    public void testDelegateForNativeMethod()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @NonStrict Collaborator mock;
 
          {
             mock.nativeMethod(anyBoolean);
-            result = new Delegate()
-            {
+            result = new Delegate() {
                Long nativeMethod(boolean b) { assertTrue(b); return 0L; }
             };
          }
@@ -235,8 +217,7 @@ public final class DelegateTest extends TestCase
 
    public void testDelegateForFinalMethod()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @NonStrict Collaborator mock;
 
          {
@@ -250,27 +231,22 @@ public final class DelegateTest extends TestCase
 
    public void testDelegateForPrivateMethod(@NonStrict final Collaborator collaborator)
    {
-      new Expectations()
-      {
-         {
-            invoke(collaborator, "privateMethod");
-            result = new Delegate() { float privateMethod() { return 0.5F; } };
-         }
-      };
+      new Expectations() {{
+         invoke(collaborator, "privateMethod");
+         result = new Delegate() { float privateMethod() { return 0.5F; } };
+      }};
 
       assertEquals(0.5F, collaborator.privateMethod(), 0);
    }
 
    public void testDelegateForMethodWithCompatibleButDistinctParameterType()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @NonStrict Collaborator collaborator;
 
          {
-            collaborator.addElements(this.<Collection<String>> withNotNull());
-            result = new Delegate()
-            {
+            collaborator.addElements(this.<Collection<String>>withNotNull());
+            result = new Delegate() {
                void addElements(Collection<String> elements) { elements.add("test"); }
             };
          }
@@ -284,14 +260,12 @@ public final class DelegateTest extends TestCase
 
    public void testDelegateReceivingNullArguments()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator collaborator;
 
          {
             collaborator.doSomething(true, null, null);
-            returns(new Delegate()
-            {
+            returns(new Delegate() {
                void doSomething(boolean b, int[] i, String s) {}
             });
          }
@@ -302,31 +276,25 @@ public final class DelegateTest extends TestCase
 
    public void testDelegateWithTwoMethods(final Collaborator collaborator)
    {
-      new NonStrictExpectations()
-      {
-         {
-            collaborator.doSomething(true, null, "str");
-            result = new Delegate()
-            {
-               String someOther() { return ""; }
-               void doSomething(boolean b, int[] i, String s) {}
-            };
-         }
-      };
+      new NonStrictExpectations() {{
+         collaborator.doSomething(true, null, "str");
+         result = new Delegate() {
+            String someOther() { return ""; }
+            void doSomething(boolean b, int[] i, String s) {}
+         };
+      }};
 
       assertNull(collaborator.doSomething(true, null, "str"));
    }
 
    public void testDelegateWithSingleMethodHavingADifferentName()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator collaborator;
 
          {
             collaborator.doSomething(true, null, "str");
-            result = new Delegate()
-            {
+            result = new Delegate() {
                void onReplay(boolean b, int[] i, String s)
                {
                   assertTrue(b);
@@ -342,16 +310,12 @@ public final class DelegateTest extends TestCase
 
    public void testDelegateWithSingleMethodHavingNoParameters()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator collaborator;
 
          {
             collaborator.doSomething(anyBoolean, null, null);
-            result = new Delegate()
-            {
-               String onReplay() { return "action"; }
-            };
+            result = new Delegate() { String onReplay() { return "action"; } };
          }
       };
 
@@ -360,14 +324,12 @@ public final class DelegateTest extends TestCase
 
    public void testDelegateWithSingleMethodHavingNoParametersExceptForInvocationContext()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          Collaborator collaborator;
 
          {
             collaborator.doSomething(anyBoolean, null, null);
-            result = new Delegate()
-            {
+            result = new Delegate() {
                void doSomething(Invocation inv) { assertEquals(1, inv.getInvocationCount()); }
             };
          }
@@ -378,16 +340,10 @@ public final class DelegateTest extends TestCase
 
    public void testDelegateWithOneMethodHavingDifferentParameters(final Collaborator collaborator)
    {
-      new NonStrictExpectations()
-      {
-         {
-            collaborator.doSomething(true, null, "str");
-            result = new Delegate()
-            {
-               void doSomething(boolean b, String s) {}
-            };
-         }
-      };
+      new NonStrictExpectations() {{
+         collaborator.doSomething(true, null, "str");
+         result = new Delegate() { void doSomething(boolean b, String s) {} };
+      }};
 
       try {
          assertNull(collaborator.doSomething(true, null, "str"));
@@ -400,17 +356,13 @@ public final class DelegateTest extends TestCase
 
    public void testDelegateWithTwoInvalidMethods(final Collaborator collaborator)
    {
-      new NonStrictExpectations()
-      {
-         {
-            collaborator.doSomething(true, null, "str");
-            result = new Delegate()
-            {
-               String someOther() { return ""; }
-               void doSomethingElse(boolean b, int[] i, String s) {}
-            };
-         }
-      };
+      new NonStrictExpectations() {{
+         collaborator.doSomething(true, null, "str");
+         result = new Delegate() {
+            String someOther() { return ""; }
+            void doSomethingElse(boolean b, int[] i, String s) {}
+         };
+      }};
 
       try {
          assertNull(collaborator.doSomething(true, null, "str"));
@@ -424,19 +376,16 @@ public final class DelegateTest extends TestCase
    public void testDelegateCausingConcurrentMockInvocation()
    {
       final Collaborator collaborator = new Collaborator();
-      final Thread t = new Thread(new Runnable()
-      {
+      final Thread t = new Thread(new Runnable() {
          public void run() { collaborator.doSomething(false, null, ""); }
       });
 
-      new Expectations()
-      {
+      new Expectations() {
          @NonStrict Collaborator mock;
 
          {
             mock.getValue(); times = 1;
-            result = new Delegate()
-            {
+            result = new Delegate() {
                int executeInAnotherThread() throws Exception
                {
                   t.start();
@@ -447,6 +396,85 @@ public final class DelegateTest extends TestCase
          }
       };
 
-      collaborator.getValue();
+      assertEquals(1, collaborator.getValue());
+   }
+
+   public void testDelegateWhichCallsTheSameMockedMethod(final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.getValue();
+         result = new Delegate() {
+            int delegate() { return mock.getValue(); }
+         };
+      }};
+
+      assertEquals(0, mock.getValue());
+   }
+
+   public void testDelegateWhichCallsAnotherMockedMethod_regularMocking(final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.getValue();
+         result = new Delegate() {
+            int delegate() { return mock.finalMethod(); }
+         };
+
+         mock.finalMethod(); result = 'A'; // won't be used
+      }};
+
+      // Allowing the call to "mock.finalMethod()" to be handled as a regular mocked invocation would
+      // cause JMockit to re-enter itself, potentially corrupting internal data structures.
+      // Instead, the reentrant call is avoided by returning immediately with the default return value
+      // (in the case of regular mocking only; for dynamic or injectable mocking, the real method gets
+      // executed instead).
+      assertEquals(0, mock.getValue());
+   }
+
+   public void testDelegateWhichCallsAnotherMockedMethod_dynamicMockingOfClass()
+   {
+      final Collaborator collaborator = new Collaborator();
+
+      new NonStrictExpectations(Collaborator.class) {{
+         Collaborator.staticMethod(); result = new RuntimeException(); // won't be used
+
+         collaborator.getValue();
+         result = new Delegate() {
+            int delegate() { return Collaborator.staticMethod() ? collaborator.finalMethod() : 1; }
+         };
+
+         collaborator.finalMethod(); result = 'A'; // won't be used
+      }};
+
+      assertEquals('s', collaborator.getValue());
+   }
+
+   public void testDelegateWhichCallsAnotherMockedMethod_dynamicMockingOfInstance()
+   {
+      final Collaborator collaborator = new Collaborator();
+
+      new NonStrictExpectations(collaborator) {{
+         collaborator.getValue();
+         result = new Delegate() {
+            int delegate() { return collaborator.finalMethod(); }
+         };
+
+         collaborator.finalMethod(); result = 'A'; // won't be used
+      }};
+
+      assertEquals('s', collaborator.getValue());
+   }
+
+   public void testDelegateWhichCallsAnotherMockedMethod_injectableMocking(@Injectable final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.getValue();
+         result = new Delegate() {
+            int delegate() { return mock.finalMethod(); }
+         };
+
+         mock.finalMethod(); result = 'A'; // won't be used
+      }};
+
+      assertEquals('s', mock.getValue());
    }
 }

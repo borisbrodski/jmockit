@@ -1,13 +1,15 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.invocation;
 
 import java.lang.reflect.*;
+import java.util.concurrent.locks.*;
 
 import mockit.*;
 import mockit.internal.expectations.*;
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 abstract class DynamicInvocationResult extends InvocationResult
@@ -36,12 +38,12 @@ abstract class DynamicInvocationResult extends InvocationResult
    }
 
    public final Object invokeMethodOnTargetObject(
-      Object mockOrRealObject, InvocationConstraints constraints, Object[] args)
+      Object mockOrRealObject, ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
    {
       Object result;
 
       if (hasInvocationParameter) {
-         result = invokeMethodWithContext(mockOrRealObject, constraints, args);
+         result = invokeMethodWithContext(mockOrRealObject, invocation, constraints, args);
       }
       else {
          result = executeMethodToInvoke(args);
@@ -50,11 +52,10 @@ abstract class DynamicInvocationResult extends InvocationResult
       return result;
    }
 
-   private Object invokeMethodWithContext(Object mockOrRealObject, InvocationConstraints constraints, Object[] args)
+   private Object invokeMethodWithContext(
+      Object mockOrRealObject, ExpectedInvocation expectedInvocation, InvocationConstraints constraints, Object[] args)
    {
-      Invocation invocation =
-         new DelegateInvocation(
-            mockOrRealObject, constraints.invocationCount, constraints.minInvocations, constraints.maxInvocations);
+      Invocation invocation = new DelegateInvocation(mockOrRealObject, args, expectedInvocation, constraints);
       Object[] delegateArgs = Utilities.argumentsWithExtraFirstValue(args, invocation);
 
       try {
@@ -67,18 +68,22 @@ abstract class DynamicInvocationResult extends InvocationResult
 
    private Object executeMethodToInvoke(Object[] args)
    {
-      if (!RecordAndReplayExecution.LOCK.isHeldByCurrentThread()) {
+      ReentrantLock reentrantLock = RecordAndReplayExecution.LOCK;
+
+      if (!reentrantLock.isHeldByCurrentThread()) {
          return Utilities.invoke(targetObject, methodToInvoke, args);
       }
 
-      RecordAndReplayExecution.LOCK.unlock();
+      TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(true);
+      reentrantLock.unlock();
 
       try {
          return Utilities.invoke(targetObject, methodToInvoke, args);
       }
       finally {
          //noinspection LockAcquiredButNotSafelyReleased
-         RecordAndReplayExecution.LOCK.lock();
+         reentrantLock.lock();
+         TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(false);
       }
    }
 }
