@@ -148,10 +148,7 @@ public final class CoverageControl extends StandardMBean implements CoverageCont
       for (MBeanAttributeInfo info : getMBeanInfo().getAttributes()) {
          String property = info.getName();
          String value = getProperty(property);
-
-         if (value.length() > 0) {
-            preferences.put(property, value);
-         }
+         preferences.put(property, value);
       }
 
       try {

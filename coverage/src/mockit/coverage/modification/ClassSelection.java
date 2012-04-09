@@ -42,7 +42,7 @@ final class ClassSelection
       else if (classesToInclude != null && classesToInclude.reset(className).matches()) {
          return true;
       }
-      else if (testCode == null || testCode.reset(className).matches()) {
+      else if (testCode != null && testCode.reset(className).matches()) {
          return false;
       }
 
@@ -50,6 +50,6 @@ final class ClassSelection
 
       return
          !location.endsWith(".jar") &&
-         !location.endsWith("/test-classes/") && !location.endsWith("/jmockit/main/classes/");
+         (testCode == null || !location.endsWith("/test-classes/") && !location.endsWith("/jmockit/main/classes/"));
    }
 }
