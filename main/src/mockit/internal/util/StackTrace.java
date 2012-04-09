@@ -85,14 +85,9 @@ public final class StackTrace
          if (ste.getFileName() != null) {
             String where = ste.getClassName();
 
-            if (
-               (!where.startsWith("sun.") || ste.isNativeMethod()) &&
-               !where.startsWith("org.junit.") && !where.startsWith("junit.") && !where.startsWith("org.testng.")
-            ) {
-               if (!where.startsWith("mockit.")) {
-                  filteredST[j] = ste;
-                  j++;
-               }
+            if (!isSunMethod(ste) && !isTestFrameworkMethod(where) && !isJMockitMethod(where)) {
+               filteredST[j] = ste;
+               j++;
             }
          }
       }
@@ -106,5 +101,20 @@ public final class StackTrace
       if (cause != null) {
          filterStackTrace(cause);
       }
+   }
+
+   private static boolean isSunMethod(StackTraceElement ste)
+   {
+      return ste.getClassName().startsWith("sun.") && !ste.isNativeMethod();
+   }
+
+   private static boolean isTestFrameworkMethod(String where)
+   {
+      return where.startsWith("org.junit.") || where.startsWith("junit.") || where.startsWith("org.testng.");
+   }
+
+   private static boolean isJMockitMethod(String where)
+   {
+      return where.startsWith("mockit.") && (where.contains(".internal.") || !where.contains("Test"));
    }
 }
