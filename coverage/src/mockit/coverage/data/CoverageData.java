@@ -63,16 +63,16 @@ public final class CoverageData implements Serializable
             File coveredClassFile = getClassFile(fileAndFileData.getKey());
             fileAndFileData.getValue().lastModified = coveredClassFile.lastModified();
          }
-         catch (ClassNotFoundException ignored) {
-            itr.remove();
-         }
+         catch (ClassNotFoundException ignored) { itr.remove(); }
+         catch (NoClassDefFoundError ignored) { itr.remove(); }
       }
    }
 
    private File getClassFile(String sourceFilePath) throws ClassNotFoundException
    {
       String sourceFilePathNoExt = sourceFilePath.substring(0, sourceFilePath.lastIndexOf('.'));
-      Class<?> coveredClass = Class.forName(sourceFilePathNoExt.replace('/', '.'));
+      String className = sourceFilePathNoExt.replace('/', '.');
+      Class<?> coveredClass = Class.forName(className, false, getClass().getClassLoader());
       CodeSource codeSource = coveredClass.getProtectionDomain().getCodeSource();
       String pathToClassFile = codeSource.getLocation().getPath() + sourceFilePathNoExt + ".class";
 
