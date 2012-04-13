@@ -52,7 +52,7 @@ import mockit.internal.util.*;
  */
 public final class Mockit
 {
-   static { Startup.verifyInitialization(true); }
+   static { Startup.verifyInitialization(); }
    private Mockit() {}
 
    /**

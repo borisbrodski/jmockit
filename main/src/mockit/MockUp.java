@@ -7,6 +7,7 @@ package mockit;
 import java.lang.reflect.*;
 
 import mockit.internal.*;
+import mockit.internal.startup.*;
 
 /**
  * A <em>mock-up</em> for a class or interface, to be used in state-based tests.
@@ -31,6 +32,7 @@ import mockit.internal.*;
  */
 public abstract class MockUp<T>
 {
+   static { Startup.verifyInitialization(); }
    private final T mockInstance;
 
    /**

@@ -72,23 +72,20 @@ public final class Startup
 
    public static Instrumentation instrumentation()
    {
-      verifyInitialization(true);
+      verifyInitialization();
       return instrumentation;
    }
 
    public static boolean wasInitializedOnDemand() { return initializedOnDemand; }
 
-   public static void verifyInitialization(boolean okIfOnDemand)
+   public static void verifyInitialization()
    {
       if (instrumentation == null) {
          new AgentInitialization().initializeAccordingToJDKVersion();
          initializedOnDemand = true;
-
-         if (!okIfOnDemand) {
-            System.out.println(
-               "WARNING: JMockit was initialized on demand, which may cause certain tests to fail;\n" +
-               "please check the documentation for better ways to get it initialized.");
-         }
+         System.out.println(
+            "WARNING: JMockit was initialized on demand, which may cause certain tests to fail;\n" +
+            "please check the documentation for better ways to get it initialized.");
       }
    }
 
