@@ -19,6 +19,27 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
+<h3>Next release</h3>
+
+<p>Release <strong>0.999.15</strong> (Apr 30, 2012):</p>
+<ul>
+   <li>
+      <strong>New feature</strong>: Added the <code>proceed()</code> method to
+      <code class="type">mockit.Invocation</code>, to be used in <code class="annotation">@Mock</code> or delegate
+      methods.
+   </li>
+   <li>
+      <strong>Enhancement</strong>: When running JMockit Coverage in standalone mode, the classes to be measured for
+      coverage will now be those not loaded from a jar file, unless specified otherwise.
+      (In a web application running inside a Java application server, for example, these will be the classes under
+      <code>WEB-INF/classes</code>.)
+   </li>
+   <li>
+      Issues fixed:
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=220">220</a>.
+   </li>
+</ul>
+
 <h3>Current release</h3>
 
 <p>Release <strong>0.999.14</strong> (Mar 30, 2012):</p>
@@ -121,7 +142,7 @@
    </li>
 </ul>
 
-<p>Release 0.999.12 (Dec 22, 2011):</p>
+<p>Release <strong>0.999.12</strong> (Dec 22, 2011):</p>
 <ul>
    <li>
       <strong>Deprecated</strong> the "<code>capture</code>" and "<code>baseType</code>" annotation attributes, used in
@@ -184,7 +205,7 @@
    </li>
 </ul>
 
-<p>Release 0.999.11 (Oct 21, 2011):</p>
+<p>Release <strong>0.999.11</strong> (Oct 21, 2011):</p>
 <p>
    From this version on, JMockit artifacts are deployed to the <a href="http://repo1.maven.org/maven2">Maven Central</a>
    repository, under a different "<code>&lt;groupId></code>" of "<code>com.googlecode.jmockit</code>".
