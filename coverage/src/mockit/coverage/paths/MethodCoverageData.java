@@ -7,6 +7,8 @@ package mockit.coverage.paths;
 import java.io.*;
 import java.util.*;
 
+import mockit.coverage.paths.Node.*;
+
 public final class MethodCoverageData implements Serializable
 {
    private static final long serialVersionUID = -5073393714435522417L;
@@ -67,8 +69,8 @@ public final class MethodCoverageData implements Serializable
          previousNodeIndex.set(nodeIndex);
       }
 
-      if (node instanceof Node.Exit) {
-         Node.Exit exitNode = (Node.Exit) node;
+      if (node instanceof Exit) {
+         Exit exitNode = (Exit) node;
 
          for (Path path : exitNode.paths) {
             if (path.countExecutionIfAllNodesWereReached(currentNodesReached)) {

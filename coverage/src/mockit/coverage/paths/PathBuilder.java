@@ -1,22 +1,24 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.paths;
 
 import java.util.*;
 
+import mockit.coverage.paths.Node.*;
+
 final class PathBuilder
 {
    List<Path> buildPaths(List<Node> nodes)
    {
-      Node.Entry entryNode = (Node.Entry) nodes.get(0);
+      Entry entryNode = (Entry) nodes.get(0);
       Path path = new Path(entryNode);
 
-      Node.ConditionalSuccessor nextNode = entryNode.nextNode;
+      ConditionalSuccessor nextNode = entryNode.nextNode;
 
       if (nextNode == null) {
-         nextNode = (Node.ConditionalSuccessor) nodes.get(1);
+         nextNode = (ConditionalSuccessor) nodes.get(1);
       }
 
       nextNode.addToPath(path);
@@ -29,8 +31,8 @@ final class PathBuilder
       List<Path> paths = new ArrayList<Path>();
 
       for (Node node : nodes) {
-         if (node instanceof Node.Exit) {
-            paths.addAll(((Node.Exit) node).paths);
+         if (node instanceof Exit) {
+            paths.addAll(((Exit) node).paths);
          }
       }
 
