@@ -72,23 +72,24 @@ final class CopyingClassLoader extends ClassLoader
       InputStream input = SYSTEM_CL.getResourceAsStream(classFileName);
       int bytesRead = 0;
 
-      while (true) {
-         int n;
+      try {
+         while (true) {
+            int n = input.read(CLASSFILE_BUFFER, bytesRead, CLASSFILE_BUFFER.length - bytesRead);
 
-         try {
-            n = input.read(CLASSFILE_BUFFER, bytesRead, CLASSFILE_BUFFER.length - bytesRead);
-         }
-         catch (IOException e) {
-            throw new RuntimeException(e);
-         }
-         
-         if (n == -1) {
-            break;
-         }
+            if (n == -1) {
+               break;
+            }
 
-         bytesRead += n;
+            bytesRead += n;
+         }
       }
-      
+      catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+      finally {
+         try { input.close(); } catch (IOException e) { e.printStackTrace(); }
+      }
+
       return bytesRead;
    }
    
