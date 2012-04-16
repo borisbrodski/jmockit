@@ -213,7 +213,7 @@ public final class TestedClassInstantiations
             for (int i = 0; i < n; i++) {
                typeOfInjectionPoint = parameterTypes[i];
                String parameterName = ParameterNames.getName(testedClassDesc, constructorDesc, i);
-               MockedType injectable = findInjectable(parameterName);
+               MockedType injectable = parameterName == null ? null : findInjectable(parameterName);
 
                if (injectable == null) {
                   return null;
