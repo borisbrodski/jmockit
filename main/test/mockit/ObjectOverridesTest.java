@@ -47,6 +47,13 @@ public final class ObjectOverridesTest
    @Mocked ClassWithObjectOverrides a;
    @Mocked ClassWithObjectOverrides b;
 
+   @Before
+   public void callObjectMethodsInMockBeforeEveryTest()
+   {
+      assertEquals(System.identityHashCode(a), a.hashCode());
+      assertEquals(b, b);
+   }
+
    @Test
    public void verifyStandardBehaviorOfOverriddenObjectMethodsInMockedClass()
    {

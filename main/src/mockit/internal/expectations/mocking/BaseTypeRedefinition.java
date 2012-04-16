@@ -46,31 +46,20 @@ abstract class BaseTypeRedefinition
 
    BaseTypeRedefinition(Class<?> mockedType) { targetClass = mockedType; }
 
-   final Object redefineType(Type typeToMock)
+   final InstanceFactory redefineType(Type typeToMock)
    {
-      TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(true);
-
-      Object mock;
-
-      try {
-         if (targetClass == null || targetClass.isInterface()) {
-            createMockedInterfaceImplementation(typeToMock);
-            mock = instanceFactory.create();
-         }
-         else {
-            mock = createNewInstanceOfTargetClass();
-         }
+      if (targetClass == null || targetClass.isInterface()) {
+         createMockedInterfaceImplementationAndInstanceFactory(typeToMock);
       }
-      finally {
-         TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(false);
+      else {
+         redefineTargetClassAndCreateInstanceFactory();
       }
 
       TestRun.mockFixture().registerInstanceFactoryForMockedType(targetClass, instanceFactory);
-
-      return mock;
+      return instanceFactory;
    }
 
-   private void createMockedInterfaceImplementation(Type typeToMock)
+   private void createMockedInterfaceImplementationAndInstanceFactory(Type typeToMock)
    {
       Class<?> mockedInterface = interfaceToMock(typeToMock);
 
@@ -190,31 +179,7 @@ abstract class BaseTypeRedefinition
       return new ClassFile(realClass, false).getReader();
    }
 
-   private Object createNewInstanceOfTargetClass()
-   {
-      createInstanceFactoryForRedefinedClass();
-
-      TestRun.exitNoMockingZone();
-
-      try {
-         return instanceFactory.create();
-      }
-      catch (NoClassDefFoundError e) {
-         StackTrace.filterStackTrace(e);
-         e.printStackTrace();
-         throw e;
-      }
-      catch (ExceptionInInitializerError e) {
-         StackTrace.filterStackTrace(e);
-         e.printStackTrace();
-         throw e;
-      }
-      finally {
-         TestRun.enterNoMockingZone();
-      }
-   }
-
-   private void createInstanceFactoryForRedefinedClass()
+   private void redefineTargetClassAndCreateInstanceFactory()
    {
       Integer mockedClassId = redefineClassesFromCache();
 

@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
 
 import mockit.external.asm4.*;
-import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class CascadingTypeRedefinition extends BaseTypeRedefinition
@@ -16,12 +15,9 @@ public final class CascadingTypeRedefinition extends BaseTypeRedefinition
       typeMetadata = new MockedType(mockedType);
    }
 
-   public Object redefineType()
+   public InstanceFactory redefineType()
    {
-      Object mock = redefineType(targetClass);
-      instanceFactory.clearLastInstance();
-      TestRun.getExecutingTest().addInjectableMock(mock);
-      return mock;
+      return redefineType(targetClass);
    }
 
    @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.invocation;
@@ -21,8 +21,12 @@ public final class MockedTypeCascade
       cascadedTypesAndMocks = new HashMap<String, Class<?>>(4);
    }
 
-   static Object getMock(String mockedTypeDesc, Object mockInstance, String returnTypeDesc)
+   public static Object getMock(String mockedTypeDesc, Object mockInstance, String returnTypeDesc)
    {
+      if (returnTypeDesc.charAt(0) != 'L') {
+         return null;
+      }
+
       String returnTypeInternalName = getReturnTypeIfCascadingSupportedForIt(returnTypeDesc);
 
       if (returnTypeInternalName == null) {
@@ -70,28 +74,20 @@ public final class MockedTypeCascade
       InstanceFactory instanceFactory = TestRun.mockFixture().findInstanceFactory(mockedType);
 
       if (instanceFactory == null) {
-         return new CascadingTypeRedefinition(mockedType).redefineType();
+         CascadingTypeRedefinition typeRedefinition = new CascadingTypeRedefinition(mockedType);
+         instanceFactory = typeRedefinition.redefineType();
+      }
+      else {
+         Object lastInstance = instanceFactory.getLastInstance();
+
+         if (lastInstance != null) {
+            return lastInstance;
+         }
       }
 
-      Object lastInstance = instanceFactory.getLastInstance();
-
-      if (lastInstance != null) {
-         return lastInstance;
-      }
-
-      ExecutingTest executingTest = TestRun.getExecutingTest();
-      executingTest.setShouldIgnoreMockingCallbacks(true);
-      Object cascadedInstance;
-
-      try {
-         cascadedInstance = instanceFactory.create();
-      }
-      finally {
-         executingTest.setShouldIgnoreMockingCallbacks(false);
-      }
-
+      Object cascadedInstance = instanceFactory.create();
       instanceFactory.clearLastInstance();
-      executingTest.addInjectableMock(cascadedInstance);
+      TestRun.getExecutingTest().addInjectableMock(cascadedInstance);
       return cascadedInstance;
    }
 

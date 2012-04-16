@@ -25,7 +25,10 @@ public final class DelegateTest extends TestCase
       final char finalMethod() { return 's'; }
       private float privateMethod() { return 1.2F; }
       void addElements(Collection<String> elements) { elements.add("one element"); }
+      Foo getFoo() { return null; }
    }
+
+   static final class Foo { int doSomething() { return 1; } }
 
    public void testReturnsDelegate()
    {
@@ -476,5 +479,21 @@ public final class DelegateTest extends TestCase
       }};
 
       assertEquals('s', mock.getValue());
+   }
+
+   public void testDelegateWhichCallsAnotherMockedMethodProducingACascadedInstance(@Cascading final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         // Won't be used from inside a delegate method:
+         mock.getFoo().doSomething(); result = 123;
+
+         mock.getValue();
+         result = new Delegate() {
+            int delegate() { return mock.getFoo().doSomething(); }
+         };
+      }};
+
+      assertEquals(123, mock.getFoo().doSomething());
+      assertEquals(1, mock.getValue());
    }
 }

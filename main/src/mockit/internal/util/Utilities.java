@@ -936,6 +936,21 @@ public final class Utilities
       return obj.getClass().getName() + '@' + Integer.toHexString(System.identityHashCode(obj));
    }
 
+   public static Object evaluateObjectOverride(Object obj, String methodNameAndDesc, Object[] args)
+   {
+      if ("equals(Ljava/lang/Object;)Z".equals(methodNameAndDesc)) {
+         return obj == args[0];
+      }
+      else if ("hashCode()I".equals(methodNameAndDesc)) {
+         return System.identityHashCode(obj);
+      }
+      else if ("toString()Ljava/lang/String;".equals(methodNameAndDesc)) {
+         return objectIdentity(obj);
+      }
+
+      return null;
+   }
+
    public static  <A extends Annotation> A getAnnotation(Annotation[] annotations, Class<A> annotation)
    {
       for (Annotation paramAnnotation : annotations) {

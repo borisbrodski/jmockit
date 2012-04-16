@@ -76,7 +76,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
    private Object redefineAndInstantiateMockedType()
    {
       TypeRedefinition typeRedefinition = new TypeRedefinition(parentObject, typeMetadata);
-      Object mock = typeRedefinition.redefineType();
+      Object mock = typeRedefinition.redefineType().create();
       registerMock(mock);
 
       if (typeMetadata.withInstancesToCapture()) {

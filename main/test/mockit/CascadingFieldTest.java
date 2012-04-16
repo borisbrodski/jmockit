@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -107,16 +107,13 @@ public final class CascadingFieldTest
    @Test
    public void recordUnambiguousStrictExpectationsProducingDifferentCascadedInstances()
    {
-      new Expectations()
-      {
-         {
-            Bar c1 = Foo.globalBar();
-            c1.isDone(); result = true;
-            Bar c2 = Foo.globalBar();
-            c2.doSomething(); result = 5;
-            assertNotSame(c1, c2);
-         }
-      };
+      new Expectations() {{
+         Bar c1 = Foo.globalBar();
+         c1.isDone(); result = true;
+         Bar c2 = Foo.globalBar();
+         c2.doSomething(); result = 5;
+         assertNotSame(c1, c2);
+      }};
 
       Bar b1 = Foo.globalBar();
       assertTrue(b1.isDone());
@@ -129,14 +126,11 @@ public final class CascadingFieldTest
    public void recordUnambiguousNonStrictExpectationsProducingDifferentCascadedInstances(
       @Cascading final Foo foo1, @Cascading final Foo foo2)
    {
-      new NonStrictExpectations()
-      {
-         {
-            Date c1 = foo1.getDate();
-            Date c2 = foo2.getDate();
-            assertNotSame(c1, c2);
-         }
-      };
+      new NonStrictExpectations() {{
+         Date c1 = foo1.getDate();
+         Date c2 = foo2.getDate();
+         assertNotSame(c1, c2);
+      }};
 
       Date d1 = foo1.getDate();
       Date d2 = foo2.getDate();
@@ -146,14 +140,11 @@ public final class CascadingFieldTest
    @Test
    public void recordAmbiguousNonStrictExpectationsOnInstanceMethodProducingTheSameCascadedInstance()
    {
-      new NonStrictExpectations()
-      {
-         {
-            Bar c1 = foo.getBar();
-            Bar c2 = foo.getBar();
-            assertSame(c1, c2);
-         }
-      };
+      new NonStrictExpectations() {{
+         Bar c1 = foo.getBar();
+         Bar c2 = foo.getBar();
+         assertSame(c1, c2);
+      }};
 
       Bar b1 = foo.getBar();
       Bar b2 = foo.getBar();
@@ -163,17 +154,53 @@ public final class CascadingFieldTest
    @Test
    public void recordAmbiguousNonStrictExpectationsOnStaticMethodProducingTheSameCascadedInstance()
    {
-      new NonStrictExpectations()
-      {
-         {
-            Bar c1 = Foo.globalBar();
-            Bar c2 = Foo.globalBar();
-            assertSame(c1, c2);
-         }
-      };
+      new NonStrictExpectations() {{
+         Bar c1 = Foo.globalBar();
+         Bar c2 = Foo.globalBar();
+         assertSame(c1, c2);
+      }};
 
       Bar b1 = Foo.globalBar();
       Bar b2 = Foo.globalBar();
       assertSame(b1, b2);
+   }
+
+   static class Dependency { static Dependency create() { return null; } }
+   static class Dependent
+   {
+      private static final Dependency DEPENDENCY = Dependency.create();
+      static { DEPENDENCY.toString(); }
+   }
+
+   @Mocked Dependent dependent;
+   @Cascading Dependency dependency;
+
+   static final class AnotherFoo { Bar getBar() { return null; } }
+
+   @Test
+   public void cascadingLocalMockField()
+   {
+      new NonStrictExpectations() {
+         @Cascading AnotherFoo anotherFoo;
+
+         {
+            anotherFoo.getBar().doSomething(); result = 123;
+         }
+      };
+
+      assertEquals(123, new AnotherFoo().getBar().doSomething());
+   }
+
+   @Test
+   public void cascadingInstanceAccessedFromDelegateMethod()
+   {
+      new NonStrictExpectations() {{
+         foo.getIntValue();
+         result = new Delegate() {
+            int delegate() { return foo.getBar().doSomething(); }
+         };
+      }};
+
+      assertEquals(1, foo.getIntValue());
    }
 }

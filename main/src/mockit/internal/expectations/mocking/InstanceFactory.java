@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
@@ -7,6 +7,9 @@ package mockit.internal.expectations.mocking;
 import java.lang.reflect.*;
 
 import sun.reflect.*;
+
+import mockit.internal.state.*;
+import mockit.internal.util.*;
 
 public abstract class InstanceFactory
 {
@@ -27,7 +30,7 @@ public abstract class InstanceFactory
       public Object create() { lastInstance = emptyProxy; return emptyProxy; }
    }
 
-   @SuppressWarnings({"UseOfSunClasses"})
+   @SuppressWarnings("UseOfSunClasses")
    static final class ClassInstanceFactory extends InstanceFactory
    {
       private static final ReflectionFactory REFLECTION_FACTORY = ReflectionFactory.getReflectionFactory();
@@ -48,12 +51,28 @@ public abstract class InstanceFactory
       @Override
       public Object create()
       {
+         TestRun.exitNoMockingZone();
+
          try {
-            Object newInstance = fakeConstructor.newInstance();
-            lastInstance = newInstance;
-            return newInstance;
+            lastInstance = fakeConstructor.newInstance();
+            return lastInstance;
          }
-         catch (Exception e) { throw new RuntimeException(e); }
+         catch (NoClassDefFoundError e) {
+            StackTrace.filterStackTrace(e);
+            e.printStackTrace();
+            throw e;
+         }
+         catch (ExceptionInInitializerError e) {
+            StackTrace.filterStackTrace(e);
+            e.printStackTrace();
+            throw e;
+         }
+         catch (InstantiationException e) { throw new RuntimeException(e); }
+         catch (IllegalAccessException e) { throw new RuntimeException(e); }
+         catch (InvocationTargetException e) { throw new RuntimeException(e.getCause()); }
+         finally {
+            TestRun.enterNoMockingZone();
+         }
       }
    }
 

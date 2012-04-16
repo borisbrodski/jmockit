@@ -39,7 +39,7 @@ public final class LocalFieldTypeRedefinitions extends FieldTypeRedefinitions
          TestRun.getExecutingTest().addFinalLocalMockField(parentObject, typeMetadata);
       }
       else {
-         Object mock = typeRedefinition.redefineType();
+         Object mock = typeRedefinition.redefineType().create();
          Utilities.setFieldValue(field, parentObject, mock);
          registerMock(mock);
       }

@@ -44,20 +44,8 @@ public final class ExpectedInvocation
 
    private void determineDefaultReturnValueFromMethodSignature()
    {
-      String nameAndDesc = getMethodNameAndDescription();
-
-      if ("equals(Ljava/lang/Object;)Z".equals(nameAndDesc)) {
-         defaultReturnValue = instance == getArgumentValues()[0];
-      }
-      else if ("hashCode()I".equals(nameAndDesc)) {
-         defaultReturnValue = System.identityHashCode(instance);
-      }
-      else if ("toString()Ljava/lang/String;".equals(nameAndDesc)) {
-         defaultReturnValue = Utilities.objectIdentity(instance);
-      }
-      else {
-         defaultReturnValue = UNDEFINED_DEFAULT_RETURN;
-      }
+      Object rv = Utilities.evaluateObjectOverride(instance, getMethodNameAndDescription(), getArgumentValues());
+      defaultReturnValue = rv == null ? UNDEFINED_DEFAULT_RETURN : rv;
    }
 
    // Simple getters //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -265,15 +253,15 @@ public final class ExpectedInvocation
          String returnTypeDesc = DefaultValues.getReturnTypeDesc(arguments.methodNameAndDesc);
          defaultReturnValue = DefaultValues.computeForType(returnTypeDesc);
 
-         if (defaultReturnValue == null && returnTypeDesc.charAt(0) == 'L') {
-            produceCascadedMockIfApplicable(phase, returnTypeDesc);
+         if (defaultReturnValue == null) {
+            produceCascadedInstanceIfApplicable(phase, returnTypeDesc);
          }
       }
 
       return defaultReturnValue;
    }
 
-   private void produceCascadedMockIfApplicable(TestOnlyPhase phase, String returnTypeDesc)
+   private void produceCascadedInstanceIfApplicable(TestOnlyPhase phase, String returnTypeDesc)
    {
       String mockedTypeDesc = getClassDesc();
       cascadedMock = MockedTypeCascade.getMock(mockedTypeDesc, instance, returnTypeDesc);
