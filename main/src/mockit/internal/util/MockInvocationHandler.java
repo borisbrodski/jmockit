@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.util;
@@ -36,9 +36,7 @@ public final class MockInvocationHandler implements InvocationHandler
             return System.identityHashCode(proxy);
          }
          else if ("toString".equals(methodName)) {
-            return
-               proxy.getClass().getName() + '@' +
-               Integer.toHexString(System.identityHashCode(proxy));
+            return Utilities.objectIdentity(proxy);
          }
       }
       else if (declaringClass == Annotation.class) {
