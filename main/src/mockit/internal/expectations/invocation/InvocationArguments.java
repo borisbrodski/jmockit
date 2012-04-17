@@ -39,6 +39,7 @@ public final class InvocationArguments
 
    String getClassName() { return classDesc.replace('/', '.'); }
    String getGenericSignature() { return genericSignature == null ? methodNameAndDesc : genericSignature; }
+   boolean isForConstructor() { return methodNameAndDesc.charAt(0) == '<'; }
 
    public Object[] getValues() { return invocationArgs; }
    void setValues(Object[] values) { invocationArgs = values; }

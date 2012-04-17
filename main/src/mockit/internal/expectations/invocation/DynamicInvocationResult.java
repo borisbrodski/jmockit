@@ -55,11 +55,12 @@ abstract class DynamicInvocationResult extends InvocationResult
    private Object invokeMethodWithContext(
       Object mockOrRealObject, ExpectedInvocation expectedInvocation, InvocationConstraints constraints, Object[] args)
    {
-      Invocation invocation = new DelegateInvocation(mockOrRealObject, args, expectedInvocation, constraints);
+      DelegateInvocation invocation = new DelegateInvocation(mockOrRealObject, args, expectedInvocation, constraints);
       Object[] delegateArgs = Utilities.argumentsWithExtraFirstValue(args, invocation);
 
       try {
-         return executeMethodToInvoke(delegateArgs);
+         Object result = executeMethodToInvoke(delegateArgs);
+         return invocation.proceedIntoConstructor ? Void.class : result;
       }
       finally {
          constraints.setLimits(invocation.getMinInvocations(), invocation.getMaxInvocations());

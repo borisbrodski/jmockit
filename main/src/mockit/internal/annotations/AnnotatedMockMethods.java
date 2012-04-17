@@ -7,6 +7,7 @@ package mockit.internal.annotations;
 import java.util.*;
 
 import mockit.internal.state.*;
+import mockit.internal.util.*;
 
 /**
  * A container for the mock methods "collected" from a mock class, separated in two sets: one with all the mock methods,
@@ -14,18 +15,12 @@ import mockit.internal.state.*;
  */
 public final class AnnotatedMockMethods
 {
+   private final Class<?> realClass;
+   private final List<MockMethod> methods;
    private String mockClassInternalName;
    private boolean isInnerMockClass;
    private boolean withItField;
-
-   /**
-    * The set of mock methods in a mock class. Each one is identified by the concatenation of its name with the
-    * internal JVM description of its parameters and return type.
-    */
-   private final List<MockMethod> methods;
-
-   final Class<?> realClass;
-   private MockClassState mockStates;
+   private List<MockState> mockStates;
 
    final class MockMethod
    {
@@ -63,21 +58,28 @@ public final class AnnotatedMockMethods
       }
 
       Class<?> getRealClass() { return realClass; }
-      String getMockClassInternalName() { return mockClassInternalName; }
       String getMockNameAndDesc() { return name + desc; }
       boolean isForConstructor() { return "$init".equals(name); }
       int getIndexForMockState() { return indexForMockState; }
 
       boolean isReentrant()
       {
-         return indexForMockState >= 0 && mockStates.getMockState(indexForMockState).isReentrant();
+         return indexForMockState >= 0 && mockStates.get(indexForMockState).isReentrant();
+      }
+
+      String errorMessage(String quantifier, int numExpectedInvocations, int timesInvoked)
+      {
+         String nameAndDesc = getMockNameAndDesc();
+         return
+            "Expected " + quantifier + ' ' + numExpectedInvocations + " invocation(s) of " +
+            new MethodFormatter(mockClassInternalName, nameAndDesc) + ", but was invoked " + timesInvoked + " time(s)";
       }
    }
 
    public AnnotatedMockMethods(Class<?> realClass)
    {
-      methods = new ArrayList<MockMethod>();
       this.realClass = realClass;
+      methods = new ArrayList<MockMethod>();
    }
 
    MockMethod addMethod(boolean fromSuperClass, String name, String desc, boolean isStatic)
@@ -108,17 +110,12 @@ public final class AnnotatedMockMethods
 
    void addMockState(MockState mockState)
    {
-      AnnotatedMockStates annotatedMockStates = TestRun.getMockClasses().getMockStates();
-
       if (mockStates == null) {
-         mockStates = annotatedMockStates.addClassState(mockClassInternalName);
+         mockStates = new ArrayList<MockState>(4);
       }
 
-      mockStates.addMockState(mockState);
-
-      if (mockState.isWithExpectations()) {
-         annotatedMockStates.registerMockStatesWithExpectations(mockState);
-      }
+      mockState.mockMethod.indexForMockState = mockStates.size();
+      mockStates.add(mockState);
    }
 
    MockMethod containsMethod(String name, String desc)
@@ -127,20 +124,16 @@ public final class AnnotatedMockMethods
 
       if (mockFound != null) {
          mockFound.mockedMethodDesc = desc;
-
-         if (mockStates != null) {
-            mockFound.indexForMockState = mockStates.findMockState(mockFound);
-         }
       }
 
       return mockFound;
    }
 
    /**
-    * Verifies if a mock method with the same signature of a given real method was previously
-    * collected from the mock class. This operation can be performed only once for any given mock
-    * method in this container, so that after the last real method is processed there should be no
-    * mock methods left in the container.
+    * Verifies if a mock method with the same signature of a given real method was previously collected from the mock
+    * class.
+    * This operation can be performed only once for any given mock method in this container, so that after the last real
+    * method is processed there should be no mock methods left in the container.
     */
    private MockMethod hasMethod(String name, String desc)
    {
@@ -157,10 +150,7 @@ public final class AnnotatedMockMethods
    }
 
    public String getMockClassInternalName() { return mockClassInternalName; }
-   void setMockClassInternalName(String mockClassInternalName)
-   {
-      this.mockClassInternalName = mockClassInternalName;
-   }
+   void setMockClassInternalName(String mockClassInternalName) { this.mockClassInternalName = mockClassInternalName; }
 
    boolean isInnerMockClass() { return isInnerMockClass; }
    void setInnerMockClass(boolean innerMockClass) { isInnerMockClass = innerMockClass; }
@@ -179,5 +169,13 @@ public final class AnnotatedMockMethods
       }
 
       return signatures;
+   }
+
+   public void registerMockStates()
+   {
+      if (mockStates != null) {
+         AnnotatedMockStates annotatedMockStates = TestRun.getMockClasses().getMockStates();
+         annotatedMockStates.addMockClassAndStates(mockClassInternalName, mockStates);
+      }
    }
 }

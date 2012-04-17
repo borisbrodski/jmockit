@@ -26,10 +26,6 @@ public final class RealMethod
 
    private Method initialize(Class<?> realClass, String methodName, String methodDesc)
    {
-      if (methodName.charAt(0) == '<' || "$init".equals(methodName)) {
-         throw new UnsupportedOperationException("Cannot execute constructor on previously existing instance");
-      }
-
       Class<?>[] parameterTypes = Utilities.getParameterTypes(methodDesc);
 
       try {

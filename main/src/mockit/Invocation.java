@@ -123,10 +123,19 @@ public class Invocation
    protected void onChange() {}
 
    /**
-    * Proceeds to execute the real (mocked) method with the argument values originally received or explicitly given as
-    * replacement.
+    * Allows execution to proceed into the real implementation of the mocked method/constructor.
+    * <p/>
+    * In the case of a mocked method, the real implementation is executed with the argument values originally received
+    * or explicitly given as replacement.
     * Whatever comes out of that call (either a return value or a thrown exception/error, even if it is a
     * <em>checked</em> exception) becomes the result of the current invocation to the mock method.
+    * <p/>
+    * In the case of a mocked constructor, the real constructor implementation code which comes after the necessary call
+    * to "<code>super</code>" is executed, using the original argument values; replacement arguments are not supported.
+    * If the execution of said code throws an exception or error, it is propagated out to the caller of the mocked
+    * constructor (even in the case of a <em>checked</em> exception).
+    * Contrary to proceeding into a mocked method, it's not possible to actually execute test code inside the delegate
+    * method after proceeding into the real constructor, nor to proceed into it more than once.
     *
     * @param replacementArguments the argument values to be passed to the real method, as replacement for the values
     *                             received by the mock method; if those received values should be passed without
@@ -135,14 +144,25 @@ public class Invocation
     *
     * @return the same value returned by the real method, if any
     *
-    * @throws UnsupportedOperationException if attempting to proceed into a mocked constructor
+    * @throws UnsupportedOperationException if attempting to proceed into a mocked constructor with replacement
+    * arguments
     */
    public final <T> T proceed(Object... replacementArguments)
    {
-      Object[] actualArgs = invokedArguments;
+      boolean withArgs = replacementArguments != null && replacementArguments.length > 0;
       Method realMethod = getRealMethod();
 
-      if (replacementArguments != null && replacementArguments.length > 0) {
+      if (realMethod == null) {
+         if (withArgs) {
+            throw new UnsupportedOperationException("Cannot replace arguments when proceeding into constructor");
+         }
+
+         return null;
+      }
+
+      Object[] actualArgs = invokedArguments;
+
+      if (withArgs) {
          actualArgs =
             realMethod.isVarArgs() ? createArgumentsArrayWithVarargs(replacementArguments) : replacementArguments;
       }

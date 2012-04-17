@@ -11,6 +11,7 @@ import mockit.Invocation;
 final class DelegateInvocation extends Invocation
 {
    private final InvocationArguments invocationArguments;
+   boolean proceedIntoConstructor;
 
    DelegateInvocation(
       Object invokedInstance, Object[] invokedArguments,
@@ -23,5 +24,13 @@ final class DelegateInvocation extends Invocation
    }
 
    @Override
-   protected Method getRealMethod() { return invocationArguments.getRealMethod().method; }
+   protected Method getRealMethod()
+   {
+      if (invocationArguments.isForConstructor()) {
+         proceedIntoConstructor = true;
+         return null;
+      }
+
+      return invocationArguments.getRealMethod().method;
+   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.annotations;
@@ -14,10 +14,10 @@ import mockit.*;
 public final class AnnotatedMockStates
 {
    /**
-    * For each mock class containing @Mock annotations with at least one invocation expectation
-    * specified or at least one reentrant mock, a runtime state will be kept here.
+    * For each mock class containing @Mock annotations with at least one invocation expectation specified or at least
+    * one reentrant mock, a runtime state will be kept here.
     */
-   private final Map<String, MockClassState> classStates;
+   private final Map<String, List<MockState>> mockClassToMockStates;
 
    /**
     * For each annotated mock method with at least one invocation expectation, its mock state will
@@ -27,20 +27,19 @@ public final class AnnotatedMockStates
 
    public AnnotatedMockStates()
    {
-      classStates = new HashMap<String, MockClassState>(8);
+      mockClassToMockStates = new HashMap<String, List<MockState>>(8);
       mockStatesWithExpectations = new LinkedHashSet<MockState>(10);
    }
 
-   MockClassState addClassState(String mockClassInternalName)
+   void addMockClassAndStates(String mockClassInternalName, List<MockState> mockStates)
    {
-      MockClassState mockStates = classStates.get(mockClassInternalName);
-
-      if (mockStates == null) {
-         mockStates = new MockClassState();
-         classStates.put(mockClassInternalName, mockStates);
+      for (MockState mockState : mockStates) {
+         if (mockState.isWithExpectations()) {
+            mockStatesWithExpectations.add(mockState);
+         }
       }
 
-      return mockStates;
+      mockClassToMockStates.put(mockClassInternalName, mockStates);
    }
 
    public void removeClassState(Class<?> redefinedClass, String internalNameForOneOrMoreMockClasses)
@@ -63,14 +62,13 @@ public final class AnnotatedMockStates
 
    private void removeMockStates(Class<?> redefinedClass)
    {
-      for (Iterator<Map.Entry<String, MockClassState>> itr = classStates.entrySet().iterator(); itr.hasNext(); ) {
-         Map.Entry<String, MockClassState> mockClassAndItsState = itr.next();
-         MockClassState mockClassState = mockClassAndItsState.getValue();
-         MockState mockState = mockClassState.mockStates.get(0);
+      for (Iterator<List<MockState>> itr = mockClassToMockStates.values().iterator(); itr.hasNext(); ) {
+         List<MockState> mockStates = itr.next();
+         MockState mockState = mockStates.get(0);
 
          if (mockState.getRealClass() == redefinedClass) {
-            mockStatesWithExpectations.removeAll(mockClassState.mockStates);
-            mockClassState.mockStates.clear();
+            mockStatesWithExpectations.removeAll(mockStates);
+            mockStates.clear();
             itr.remove();
          }
       }
@@ -78,16 +76,11 @@ public final class AnnotatedMockStates
 
    private void removeMockStates(String mockClassInternalName)
    {
-      MockClassState mockStates = classStates.remove(mockClassInternalName);
+      List<MockState> mockStates = mockClassToMockStates.remove(mockClassInternalName);
 
       if (mockStates != null) {
-         mockStatesWithExpectations.removeAll(mockStates.mockStates);
+         mockStatesWithExpectations.removeAll(mockStates);
       }
-   }
-
-   void registerMockStatesWithExpectations(MockState mockState)
-   {
-      mockStatesWithExpectations.add(mockState);
    }
 
    public boolean updateMockState(String mockClassName, int mockStateIndex)
@@ -104,12 +97,13 @@ public final class AnnotatedMockStates
 
    MockState getMockState(String mockClassInternalName, int mockStateIndex)
    {
-      return classStates.get(mockClassInternalName).getMockState(mockStateIndex);
+      List<MockState> mockStates = mockClassToMockStates.get(mockClassInternalName);
+      return mockStates.get(mockStateIndex);
    }
 
    public boolean hasStates(String mockClassInternalName)
    {
-      return classStates.containsKey(mockClassInternalName);
+      return mockClassToMockStates.containsKey(mockClassInternalName);
    }
 
    public void exitReentrantMock(String mockClassInternalName, int mockStateIndex)

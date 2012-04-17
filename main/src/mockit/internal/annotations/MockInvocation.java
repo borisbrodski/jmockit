@@ -7,6 +7,7 @@ package mockit.internal.annotations;
 import java.lang.reflect.*;
 
 import mockit.*;
+import mockit.internal.util.*;
 
 /**
  * An invocation to a {@code @Mock} method.
@@ -31,5 +32,9 @@ public final class MockInvocation extends Invocation
    }
 
    @Override
-   protected Method getRealMethod() { return mockState.getRealMethod().method; }
+   protected Method getRealMethod()
+   {
+      RealMethod realMethod = mockState.getRealMethod();
+      return realMethod == null ? null : realMethod.method;
+   }
 }

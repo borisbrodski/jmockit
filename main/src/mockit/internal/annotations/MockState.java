@@ -21,6 +21,7 @@ final class MockState
    // Current mock invocation state:
    private int invocationCount;
    private ThreadLocal<Boolean> onReentrantCall;
+   private boolean proceedIntoConstructor;
 
    // Helper field just for synchronization:
    private final Object invocationCountLock = new Object();
@@ -33,8 +34,7 @@ final class MockState
 
    void makeReentrant()
    {
-      onReentrantCall = new ThreadLocal<Boolean>()
-      {
+      onReentrantCall = new ThreadLocal<Boolean>() {
          @Override
          protected Boolean initialValue() { return false; }
       };
@@ -60,6 +60,11 @@ final class MockState
 
    boolean isOnReentrantCall()
    {
+      if (proceedIntoConstructor) {
+         proceedIntoConstructor = false;
+         return true;
+      }
+
       return onReentrantCall != null && onReentrantCall.get();
    }
 
@@ -73,15 +78,15 @@ final class MockState
       int timesInvoked = getTimesInvoked();
 
       if (expectedInvocations >= 0 && timesInvoked != expectedInvocations) {
-         String message = errorMessage("exactly", expectedInvocations, timesInvoked);
+         String message = mockMethod.errorMessage("exactly", expectedInvocations, timesInvoked);
          throw timesInvoked < expectedInvocations ?
             new MissingInvocation(message) : new UnexpectedInvocation(message);
       }
       else if (timesInvoked < minExpectedInvocations) {
-         throw new MissingInvocation(errorMessage("at least", minExpectedInvocations, timesInvoked));
+         throw new MissingInvocation(mockMethod.errorMessage("at least", minExpectedInvocations, timesInvoked));
       }
       else if (maxExpectedInvocations >= 0 && timesInvoked > maxExpectedInvocations) {
-         throw new UnexpectedInvocation(errorMessage("at most", maxExpectedInvocations, timesInvoked));
+         throw new UnexpectedInvocation(mockMethod.errorMessage("at most", maxExpectedInvocations, timesInvoked));
       }
    }
 
@@ -95,16 +100,6 @@ final class MockState
       }
    }
 
-   private String errorMessage(String quantifier, int numExpectedInvocations, int timesInvoked)
-   {
-      String mockClassDesc = mockMethod.getMockClassInternalName();
-      String mockNameAndDesc = mockMethod.getMockNameAndDesc();
-
-      return
-         "Expected " + quantifier + ' ' + numExpectedInvocations + " invocation(s) of " +
-         new MethodFormatter(mockClassDesc, mockNameAndDesc) + ", but was invoked " + timesInvoked + " time(s)";
-   }
-
    void reset()
    {
       synchronized (invocationCountLock) {
@@ -115,6 +110,11 @@ final class MockState
    RealMethod getRealMethod()
    {
       if (realMethod == null) {
+         if (mockMethod.isForConstructor()) {
+            proceedIntoConstructor = true;
+            return null;
+         }
+
          realMethod = new RealMethod(getRealClass(), mockMethod.name, mockMethod.mockedMethodDesc);
       }
 

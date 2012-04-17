@@ -15,6 +15,11 @@ public final class InvocationProceedTest
 {
    public static class ClassToBeMocked
    {
+      private final String name;
+
+      public ClassToBeMocked() { name = ""; }
+      public ClassToBeMocked(String name) { this.name = name; }
+
       public void methodToBeMocked() { throw new UnsupportedOperationException("From real method"); }
       protected int methodToBeMocked(int i) throws IOException { return i; }
 
@@ -122,8 +127,7 @@ public final class InvocationProceedTest
          final int methodToBeMocked(Invocation invocation, int i) { return invocation.proceed(i + 2); }
       }
 
-      new MockUpWhichModifiesArguments()
-      {
+      new MockUpWhichModifiesArguments() {
          @Mock
          synchronized int methodToBeMocked(Invocation inv, int i, Object... args) { return inv.proceed(1, 2, "3"); }
       };
@@ -145,20 +149,28 @@ public final class InvocationProceedTest
    }
 
    @Test(expected = UnsupportedOperationException.class)
-   public void cannotProceedFromMockMethodIntoConstructor()
+   public void cannotProceedFromMockMethodIntoConstructor() throws Exception
    {
       new MockUp<ClassToBeMocked>() {
-         ClassToBeMocked it;
+//         ClassToBeMocked it;
 
          @Mock void $init(Invocation inv)
          {
-            assertNotNull(it);
-            assertSame(it, inv.getInvokedInstance());
+//            assertNotNull(it);
+//            assertSame(it, inv.getInvokedInstance());
             inv.proceed();
          }
+
+//         @Mock void $init(Invocation inv, String arg)
+//         {
+//            assertNotNull(it);
+//            assertSame(it, inv.getInvokedInstance());
+//            inv.proceed("mock");
+//         }
       };
 
-      new ClassToBeMocked();
+      assertEquals("", new ClassToBeMocked().name);
+//      assertEquals("mock", new ClassToBeMocked("test").name);
    }
 
    /// Tests for "Delegate" methods ///////////////////////////////////////////////////////////////////////////////////
@@ -240,10 +252,10 @@ public final class InvocationProceedTest
       assertEquals(3, mocked.methodToBeMocked(-2, null, "Abc", true, 'a'));
    }
 
-   @Test(expected = UnsupportedOperationException.class)
-   public void cannotProceedFromDelegateMethodIntoConstructor()
+   @Test
+   public void proceedFromDelegateMethodIntoConstructor()
    {
-      new Expectations(ClassToBeMocked.class) {{
+      new NonStrictExpectations(ClassToBeMocked.class) {{
          new ClassToBeMocked();
          result = new Delegate() {
             void init(Invocation inv)
@@ -252,8 +264,35 @@ public final class InvocationProceedTest
                inv.proceed();
             }
          };
+
+         new ClassToBeMocked(anyString);
+         result = new Delegate() {
+            void init(Invocation inv, String name)
+            {
+               assertNotNull(inv.getInvokedInstance());
+
+               if ("proceed".equals(name)) {
+                  inv.proceed();
+               }
+            }
+         };
       }};
 
-      new ClassToBeMocked();
+      assertEquals("", new ClassToBeMocked().name);
+      assertEquals("proceed", new ClassToBeMocked("proceed").name);
+      assertNull(new ClassToBeMocked("do not proceed").name);
+   }
+
+   @Test(expected = UnsupportedOperationException.class)
+   public void cannotProceedFromDelegateMethodIntoConstructorWithNewArguments()
+   {
+      new Expectations(ClassToBeMocked.class) {{
+         new ClassToBeMocked(anyString);
+         result = new Delegate() {
+            void init(Invocation inv, String name) { inv.proceed("mock"); }
+         };
+      }};
+
+      new ClassToBeMocked("will fail");
    }
 }

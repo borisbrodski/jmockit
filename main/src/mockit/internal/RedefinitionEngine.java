@@ -164,6 +164,7 @@ public final class RedefinitionEngine
       if (mockMethods.getMethodCount() > 0 || mockingConfiguration != null) {
          byte[] modifiedClassFile = modifyRealClass(forStartupMock);
          redefineMethods(modifiedClassFile);
+         mockMethods.registerMockStates();
 
          if (forStartupMock) {
             TestRun.mockFixture().addFixedClass(realClass.getName(), modifiedClassFile);
