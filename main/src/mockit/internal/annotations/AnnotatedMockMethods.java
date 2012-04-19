@@ -62,10 +62,8 @@ public final class AnnotatedMockMethods
       boolean isForConstructor() { return "$init".equals(name); }
       int getIndexForMockState() { return indexForMockState; }
 
-      boolean isReentrant()
-      {
-         return indexForMockState >= 0 && mockStates.get(indexForMockState).isReentrant();
-      }
+      boolean isReentrant() { return indexForMockState >= 0 && mockStates.get(indexForMockState).isReentrant(); }
+      boolean isDynamic() { return isReentrant() || hasInvocationParameter && isForConstructor(); }
 
       String errorMessage(String quantifier, int numExpectedInvocations, int timesInvoked)
       {

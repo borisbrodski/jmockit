@@ -30,7 +30,7 @@ final class DelegatedResult extends DynamicInvocationResult
    {
       if (methodToInvoke == null) {
          String methodName = adaptNameAndArgumentsForDelegate(invocation, args);
-         methodToInvoke = Utilities.findCompatibleMethod(targetObject, methodName, args);
+         methodToInvoke = Utilities.findCompatibleMethod(targetObject.getClass(), methodName, args);
          determineWhetherMethodToInvokeHasInvocationParameter();
       }
       else if (numberOfRegularParameters == 0 && args.length > 0) {

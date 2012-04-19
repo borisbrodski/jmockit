@@ -11,6 +11,7 @@ import static mockit.external.asm4.Opcodes.*;
 import mockit.external.asm4.*;
 import mockit.external.asm4.Type;
 import mockit.internal.state.*;
+import mockit.internal.util.*;
 
 @SuppressWarnings("ClassWithTooManyMethods")
 public class BaseClassModifier extends ClassVisitor
@@ -53,7 +54,8 @@ public class BaseClassModifier extends ClassVisitor
 
    protected MethodVisitor mw;
    protected boolean useMockingBridge;
-   private String classDesc;
+   protected String superClassName;
+   protected String classDesc;
    private String methodName;
    private String methodDesc;
 
@@ -84,6 +86,7 @@ public class BaseClassModifier extends ClassVisitor
       }
 
       super.visit(modifiedVersion, access, name, signature, superName, interfaces);
+      superClassName = superName;
       classDesc = name;
    }
 
@@ -106,57 +109,21 @@ public class BaseClassModifier extends ClassVisitor
       }
    }
 
-   private boolean generateCodeToPassThisOrNullIfStaticMethod(int access)
+   protected final void generateCallToSuperConstructor()
    {
-      boolean isStatic = Modifier.isStatic(access);
-      generateCodeToPassThisOrNullIfStaticMethod(isStatic);
-      return isStatic;
-   }
+      mw.visitVarInsn(ALOAD, 0);
 
-   protected final void generateCodeToPassThisOrNullIfStaticMethod(boolean isStatic)
-   {
-      if (isStatic) {
-         mw.visitInsn(ACONST_NULL);
+      String constructorDesc;
+
+      if ("java/lang/Object".equals(superClassName)) {
+         constructorDesc = "()V";
       }
       else {
-         mw.visitVarInsn(ALOAD, 0);
+         constructorDesc = SuperConstructorCollector.INSTANCE.findConstructor(superClassName);
+         pushDefaultValuesForParameterTypes(constructorDesc);
       }
-   }
 
-   protected final void generateCodeToPassMethodArgumentsAsVarargs(boolean isStatic, Type[] argTypes)
-   {
-      generateCodeToCreateArrayOfObject(argTypes.length);
-      generateCodeToPassMethodArgumentsAsVarargs(argTypes, 0, isStatic ? 0 : 1);
-   }
-
-   private void generateCodeToCreateArrayOfObject(int arrayLength)
-   {
-      mw.visitIntInsn(BIPUSH, arrayLength);
-      mw.visitTypeInsn(ANEWARRAY, "java/lang/Object");
-   }
-
-   private void generateCodeToPassMethodArgumentsAsVarargs(
-      Type[] argTypes, int initialArrayIndex, int initialParameterIndex)
-   {
-      int i = initialArrayIndex;
-      int j = initialParameterIndex;
-
-      for (Type argType : argTypes) {
-         mw.visitInsn(DUP);
-         mw.visitIntInsn(BIPUSH, i++);
-         mw.visitVarInsn(argType.getOpcode(ILOAD), j);
-
-         int sort = argType.getSort();
-
-         if (sort < Type.ARRAY) {
-            String wrapperType = PRIMITIVE_WRAPPER_TYPE[sort];
-            mw.visitMethodInsn(INVOKESTATIC, wrapperType, "valueOf", "(" + argType + ")L" + wrapperType + ';');
-         }
-
-         mw.visitInsn(AASTORE);
-
-         j += argType.getSize();
-      }
+      mw.visitMethodInsn(INVOKESPECIAL, superClassName, "<init>", constructorDesc);
    }
 
    protected final void generateReturnWithObjectAtTopOfTheStack(String methodDesc)
@@ -218,6 +185,20 @@ public class BaseClassModifier extends ClassVisitor
          "[Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
+   private boolean generateCodeToPassThisOrNullIfStaticMethod(int access)
+   {
+      boolean isStatic = Modifier.isStatic(access);
+
+      if (isStatic) {
+         mw.visitInsn(ACONST_NULL);
+      }
+      else {
+         mw.visitVarInsn(ALOAD, 0);
+      }
+
+      return isStatic;
+   }
+
    private void generateInstructionToLoadNullableString(String text)
    {
       if (text == null) {
@@ -248,6 +229,42 @@ public class BaseClassModifier extends ClassVisitor
       return buf.toString();
    }
 
+   private void generateCodeToPassMethodArgumentsAsVarargs(boolean isStatic, Type[] argTypes)
+   {
+      generateCodeToCreateArrayOfObject(argTypes.length);
+      generateCodeToPassMethodArgumentsAsVarargs(argTypes, 0, isStatic ? 0 : 1);
+   }
+
+   private void generateCodeToCreateArrayOfObject(int arrayLength)
+   {
+      mw.visitIntInsn(BIPUSH, arrayLength);
+      mw.visitTypeInsn(ANEWARRAY, "java/lang/Object");
+   }
+
+   private void generateCodeToPassMethodArgumentsAsVarargs(
+      Type[] argTypes, int initialArrayIndex, int initialParameterIndex)
+   {
+      int i = initialArrayIndex;
+      int j = initialParameterIndex;
+
+      for (Type argType : argTypes) {
+         mw.visitInsn(DUP);
+         mw.visitIntInsn(BIPUSH, i++);
+         mw.visitVarInsn(argType.getOpcode(ILOAD), j);
+
+         int sort = argType.getSort();
+
+         if (sort < Type.ARRAY) {
+            String wrapperType = PRIMITIVE_WRAPPER_TYPE[sort];
+            mw.visitMethodInsn(INVOKESTATIC, wrapperType, "valueOf", "(" + argType + ")L" + wrapperType + ';');
+         }
+
+         mw.visitInsn(AASTORE);
+
+         j += argType.getSize();
+      }
+   }
+
    protected final void generateCallToMockingBridge(
       int targetId, String mockClassName, int mockAccess, String mockName, String mockDesc, String targetMockDesc,
       String genericSignature, String[] exceptions, int mockStateIndex, int mockInstanceIndex, int executionMode)
@@ -275,10 +292,12 @@ public class BaseClassModifier extends ClassVisitor
       generateCodeToFillArrayElement(i++, executionMode);
 
       generateCodeToPassMethodArgumentsAsVarargs(argTypes, i, isStatic ? 0 : 1);
-      generateCallToMockingBridge();
+      mw.visitMethodInsn(
+         INVOKEINTERFACE, "java/lang/reflect/InvocationHandler", "invoke",
+         "(Ljava/lang/Object;Ljava/lang/reflect/Method;[Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
-   protected final void generateCodeToObtainInstanceOfMockingBridge()
+   private void generateCodeToObtainInstanceOfMockingBridge()
    {
       mw.visitLdcInsn("mockit.internal.MockingBridge");
       mw.visitInsn(ICONST_1);
@@ -310,13 +329,6 @@ public class BaseClassModifier extends ClassVisitor
       mw.visitInsn(AASTORE);
    }
 
-   protected final void generateCallToMockingBridge()
-   {
-      mw.visitMethodInsn(
-         INVOKEINTERFACE, "java/lang/reflect/InvocationHandler", "invoke",
-         "(Ljava/lang/Object;Ljava/lang/reflect/Method;[Ljava/lang/Object;)Ljava/lang/Object;");
-   }
-
    private void pushDefaultValuesForParameterTypes(Type[] paramTypes)
    {
       for (Type paramType : paramTypes) {
@@ -331,7 +343,7 @@ public class BaseClassModifier extends ClassVisitor
       }
    }
 
-   protected final void pushDefaultValueForType(Type type)
+   private void pushDefaultValueForType(Type type)
    {
       switch (type.getSort()) {
          case Type.VOID: break;
@@ -408,5 +420,15 @@ public class BaseClassModifier extends ClassVisitor
          "hashCode".equals(name) && "()I".equals(desc) ||
          "toString".equals(name) && "()Ljava/lang/String;".equals(desc) ||
          "finalize".equals(name) && "()V".equals(desc);
+   }
+
+   protected final void disregardIfInvokingAnotherConstructor(int opcode, String owner, String name, String desc)
+   {
+      if (
+         opcode != INVOKESPECIAL || !"<init>".equals(name) ||
+         !owner.equals(superClassName) && !owner.equals(classDesc)
+      ) {
+         mw.visitMethodInsn(opcode, owner, name, desc);
+      }
    }
 }

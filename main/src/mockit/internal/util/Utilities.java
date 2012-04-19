@@ -114,7 +114,13 @@ public final class Utilities
    private static Constructor<?> findSpecifiedConstructor(Class<?> theClass, Class<?>[] paramTypes)
    {
       for (Constructor<?> declaredConstructor : theClass.getDeclaredConstructors()) {
-         if (matchesParameterTypes(declaredConstructor.getParameterTypes(), paramTypes)) {
+         Class<?>[] declaredParameterTypes = declaredConstructor.getParameterTypes();
+         int firstRealParameter = indexOfFirstRealParameter(declaredParameterTypes, paramTypes);
+
+         if (
+            firstRealParameter >= 0 &&
+            matchesParameterTypes(declaredParameterTypes, paramTypes, firstRealParameter)
+         ) {
             return declaredConstructor;
          }
       }
@@ -151,10 +157,12 @@ public final class Utilities
 
       for (Constructor<?> declaredConstructor : theClass.getDeclaredConstructors()) {
          Class<?>[] declaredParamTypes = declaredConstructor.getParameterTypes();
+         int firstRealParameter = indexOfFirstRealParameter(declaredParamTypes, argTypes);
 
          if (
-            (matchesParameterTypes(declaredParamTypes, argTypes) ||
-             acceptsArgumentTypes(declaredParamTypes, argTypes)) &&
+            firstRealParameter >= 0 &&
+            (matchesParameterTypes(declaredParamTypes, argTypes, firstRealParameter) ||
+             acceptsArgumentTypes(declaredParamTypes, argTypes, firstRealParameter)) &&
             (found == null || hasMoreSpecificTypes(declaredParamTypes, foundParameters))
          ) {
             found = declaredConstructor;
@@ -282,7 +290,7 @@ public final class Utilities
       Class<?>[] argTypes = getArgumentTypesFromArgumentValues(methodArgs);
       Method method = staticMethod ?
          findCompatibleStaticMethod(theClass, methodName, argTypes) :
-         findCompatibleInstanceMethod(theClass, methodName, argTypes);
+         findCompatibleMethod(theClass, methodName, argTypes);
 
       if (staticMethod && !isStatic(method.getModifiers())) {
          throw new IllegalArgumentException(
@@ -305,7 +313,7 @@ public final class Utilities
       throw new IllegalArgumentException("No compatible static method found: " + methodName + argTypesDesc);
    }
 
-   private static Method findCompatibleInstanceMethod(Class<?> theClass, String methodName, Class<?>[] argTypes)
+   public static Method findCompatibleMethod(Class<?> theClass, String methodName, Class<?>[] argTypes)
    {
       Method methodFound = null;
 
@@ -338,10 +346,10 @@ public final class Utilities
       throw new IllegalArgumentException("No compatible method found: " + methodName + argTypesDesc);
    }
 
-   public static Method findCompatibleMethod(Object targetInstance, String methodName, Object[] args)
+   public static Method findCompatibleMethod(Class<?> theClass, String methodName, Object[] args)
    {
       Class<?>[] argTypes = getArgumentTypesFromArgumentValues(args);
-      return findCompatibleInstanceMethod(targetInstance.getClass(), methodName, argTypes);
+      return findCompatibleMethod(theClass, methodName, argTypes);
    }
 
    private static Method findCompatibleMethodInClass(Class<?> theClass, String methodName, Class<?>[] argTypes)
@@ -352,10 +360,12 @@ public final class Utilities
       for (Method declaredMethod : theClass.getDeclaredMethods()) {
          if (declaredMethod.getName().equals(methodName)) {
             Class<?>[] declaredParamTypes = declaredMethod.getParameterTypes();
+            int firstRealParameter = indexOfFirstRealParameter(declaredParamTypes, argTypes);
 
             if (
-               (matchesParameterTypes(declaredParamTypes, argTypes) ||
-                acceptsArgumentTypes(declaredParamTypes, argTypes)) &&
+               firstRealParameter >= 0 &&
+               (matchesParameterTypes(declaredParamTypes, argTypes, firstRealParameter) ||
+                acceptsArgumentTypes(declaredParamTypes, argTypes, firstRealParameter)) &&
                (found == null || hasMoreSpecificTypes(declaredParamTypes, foundParamTypes))
             ) {
                found = declaredMethod;
@@ -386,23 +396,11 @@ public final class Utilities
       return parameterType.isPrimitive() ? PRIMITIVE_TO_WRAPPER.get(parameterType) : parameterType;
    }
 
-   private static boolean acceptsArgumentTypes(Class<?>[] paramTypes, Class<?>[] argTypes)
+   private static boolean acceptsArgumentTypes(Class<?>[] paramTypes, Class<?>[] argTypes, int firstParameter)
    {
-      int i0 = 0;
-
-      if (paramTypes.length != argTypes.length) {
-         //noinspection UnnecessaryFullyQualifiedName
-         if (paramTypes.length > 0 && paramTypes[0] == mockit.Invocation.class) {
-            i0 = 1;
-         }
-         else {
-            return false;
-         }
-      }
-
-      for (int i = i0; i < paramTypes.length; i++) {
+      for (int i = firstParameter; i < paramTypes.length; i++) {
          Class<?> parType = paramTypes[i];
-         Class<?> argType = argTypes[i - i0];
+         Class<?> argType = argTypes[i - firstParameter];
 
          if (isSameTypeIgnoringAutoBoxing(parType, argType) || parType.isAssignableFrom(argType)) {
             // OK, move to next parameter.
@@ -485,11 +483,16 @@ public final class Utilities
    private static Method findSpecifiedMethod(Class<?> theClass, String methodName, Class<?>[] paramTypes)
    {
       for (Method declaredMethod : theClass.getDeclaredMethods()) {
-         if (
-            declaredMethod.getName().equals(methodName) &&
-            matchesParameterTypes(declaredMethod.getParameterTypes(), paramTypes)
-         ) {
-            return declaredMethod;
+         if (declaredMethod.getName().equals(methodName)) {
+            Class<?>[] declaredParameterTypes = declaredMethod.getParameterTypes();
+            int firstRealParameter = indexOfFirstRealParameter(declaredParameterTypes, paramTypes);
+
+            if (
+               firstRealParameter >= 0 &&
+               matchesParameterTypes(declaredMethod.getParameterTypes(), paramTypes, firstRealParameter)
+            ) {
+               return declaredMethod;
+            }
          }
       }
 
@@ -504,23 +507,26 @@ public final class Utilities
       throw new IllegalArgumentException("Specified method not found: " + methodName + paramTypesDesc);
    }
 
-   private static boolean matchesParameterTypes(Class<?>[] declaredTypes, Class<?>[] specifiedTypes)
+   private static int indexOfFirstRealParameter(Class<?>[] mockParameterTypes, Class<?>[] realParameterTypes)
    {
-      int i0 = 0;
+      int extraParameters = mockParameterTypes.length - realParameterTypes.length;
 
-      if (declaredTypes.length != specifiedTypes.length) {
+      if (extraParameters == 1) {
          //noinspection UnnecessaryFullyQualifiedName
-         if (declaredTypes.length > 0 && declaredTypes[0] == mockit.Invocation.class) {
-            i0 = 1;
-         }
-         else {
-            return false;
-         }
+         return mockParameterTypes[0] == mockit.Invocation.class ? 1 : -1;
+      }
+      else if (extraParameters != 0) {
+         return -1;
       }
 
-      for (int i = i0; i < declaredTypes.length; i++) {
+      return 0;
+   }
+
+   private static boolean matchesParameterTypes(Class<?>[] declaredTypes, Class<?>[] specifiedTypes, int firstParameter)
+   {
+      for (int i = firstParameter; i < declaredTypes.length; i++) {
          Class<?> declaredType = declaredTypes[i];
-         Class<?> specifiedType = specifiedTypes[i - i0];
+         Class<?> specifiedType = specifiedTypes[i - firstParameter];
 
          if (isSameTypeIgnoringAutoBoxing(declaredType, specifiedType)) {
             // OK, move to next parameter.

@@ -148,29 +148,43 @@ public final class InvocationProceedTest
       ClassToBeMocked.nativeMethod();
    }
 
-   @Test(expected = UnsupportedOperationException.class)
-   public void cannotProceedFromMockMethodIntoConstructor() throws Exception
+   @Test
+   public void proceedFromMockMethodIntoConstructor() throws Exception
    {
       new MockUp<ClassToBeMocked>() {
-//         ClassToBeMocked it;
+         ClassToBeMocked it;
 
          @Mock void $init(Invocation inv)
          {
-//            assertNotNull(it);
-//            assertSame(it, inv.getInvokedInstance());
+            assertNotNull(it);
+            assertSame(it, inv.getInvokedInstance());
             inv.proceed();
          }
 
-//         @Mock void $init(Invocation inv, String arg)
-//         {
-//            assertNotNull(it);
-//            assertSame(it, inv.getInvokedInstance());
-//            inv.proceed("mock");
-//         }
+         @Mock void $init(Invocation inv, String name)
+         {
+            assertNotNull(it);
+            assertSame(it, inv.getInvokedInstance());
+
+            if ("proceed".equals(name)) {
+               inv.proceed();
+            }
+         }
       };
 
       assertEquals("", new ClassToBeMocked().name);
-//      assertEquals("mock", new ClassToBeMocked("test").name);
+      assertEquals("proceed", new ClassToBeMocked("proceed").name);
+      assertNull(new ClassToBeMocked("do not proceed").name);
+   }
+
+   @Test(expected = UnsupportedOperationException.class)
+   public void cannotProceedFromMockMethodIntoConstructorWithNewArguments()
+   {
+      new MockUp<ClassToBeMocked>() {
+         @Mock void $init(Invocation inv, String name) { inv.proceed("mock"); }
+      };
+
+      new ClassToBeMocked("will fail");
    }
 
    /// Tests for "Delegate" methods ///////////////////////////////////////////////////////////////////////////////////

@@ -4,6 +4,7 @@
  */
 package mockit.internal.annotations;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.*;
@@ -99,6 +100,17 @@ public final class AnnotatedMockStates
    {
       List<MockState> mockStates = mockClassToMockStates.get(mockClassInternalName);
       return mockStates.get(mockStateIndex);
+   }
+
+   public Method getMockMethod(String mockClassDesc, int mockStateIndex, Class<?> mockClass, Class<?>[] paramTypes)
+   {
+      MockState mockState = getMockState(mockClassDesc, mockStateIndex);
+
+      if (mockState != null) {
+         return mockState.getMockMethod(mockClass, paramTypes);
+      }
+
+      return null;
    }
 
    public boolean hasStates(String mockClassInternalName)

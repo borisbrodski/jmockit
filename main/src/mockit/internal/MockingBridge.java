@@ -185,6 +185,9 @@ public final class MockingBridge implements InvocationHandler
       }
 
       Class<?>[] paramClasses = Utilities.getParameterTypes(mockDesc);
+      Method mockMethod = mockStateIndex < 0 ? null :
+         TestRun.getMockClasses().getMockStates().getMockMethod(
+            mockClassInternalName, mockStateIndex, mockClass, paramClasses);
 
       if (paramClasses.length > 0 && paramClasses[0] == Invocation.class) {
          Invocation invocation = TestRun.createMockInvocation(mockClassInternalName, mockStateIndex, mocked, mockArgs);
@@ -192,7 +195,11 @@ public final class MockingBridge implements InvocationHandler
          mockArgs = Utilities.argumentsWithExtraFirstValue(mockArgs, invocation);
       }
 
-      Object result = Utilities.invoke(mockClass, mock, mockName, paramClasses, mockArgs);
+      Object result =
+         mockMethod == null ?
+            Utilities.invoke(mockClass, mock, mockName, paramClasses, mockArgs) :
+            Utilities.invoke(mock, mockMethod, mockArgs);
+
       return result;
    }
 

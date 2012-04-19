@@ -40,7 +40,6 @@ public final class AnnotationsModifier extends BaseClassModifier
    private Type mockClassType;
 
    // Helper fields:
-   private String realSuperClassName;
    private AnnotatedMockMethods.MockMethod mockMethod;
    private int varIndex;
 
@@ -112,13 +111,6 @@ public final class AnnotationsModifier extends BaseClassModifier
    public void useOneMockInstancePerMockedInstance(Class<?> mockClass)
    {
       mockClassType = Type.getType(mockClass);
-   }
-
-   @Override
-   public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
-   {
-      super.visit(version, access, name, signature, superName, interfaces);
-      realSuperClassName = superName;
    }
 
    /**
@@ -195,7 +187,7 @@ public final class AnnotationsModifier extends BaseClassModifier
    private void generateEmptyStubImplementation(String name, String desc)
    {
       if ("<init>".equals(name)) {
-         generateCallToSuper();
+         generateCallToSuperConstructor();
       }
 
       generateEmptyImplementation(desc);
@@ -213,7 +205,7 @@ public final class AnnotationsModifier extends BaseClassModifier
 
    private MethodVisitor getAlternativeMethodWriter(int access, String desc)
    {
-      if (!mockMethod.isReentrant()) {
+      if (!mockMethod.isDynamic()) {
          return null;
       }
 
@@ -222,10 +214,9 @@ public final class AnnotationsModifier extends BaseClassModifier
             "Reentrant mocks for native methods are not supported: \"" + mockMethod.name + '\"');
       }
 
-      generateCallToMock(access, desc);
+      generateCallsForMockExecution(access, desc);
 
-      return new MethodVisitor(mw)
-      {
+      return new MethodVisitor(mw) {
          @Override
          public void visitLocalVariable(String name, String desc2, String signature, Label start, Label end, int index)
          {
@@ -234,26 +225,22 @@ public final class AnnotationsModifier extends BaseClassModifier
                mw.visitLocalVariable(name, desc2, signature, start, end, index);
             }
          }
+
+         @Override
+         public void visitMethodInsn(int opcode, String owner, String name, String methodDesc)
+         {
+            disregardIfInvokingAnotherConstructor(opcode, owner, name, methodDesc);
+         }
       };
    }
 
    private void generateCallsForMockExecution(int access, String desc)
    {
       if (mockMethod.isForConstructor()) {
-         generateCallToSuper();
+         generateCallToSuperConstructor();
       }
 
       generateCallToMock(access, desc);
-   }
-
-   private void generateCallToSuper()
-   {
-      mw.visitVarInsn(ALOAD, 0);
-
-      String constructorDesc = SuperConstructorCollector.INSTANCE.findConstructor(realSuperClassName);
-      pushDefaultValuesForParameterTypes(constructorDesc);
-
-      mw.visitMethodInsn(INVOKESPECIAL, realSuperClassName, "<init>", constructorDesc);
    }
 
    private void generateMockObjectInstantiation()

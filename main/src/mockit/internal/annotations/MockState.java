@@ -4,6 +4,8 @@
  */
 package mockit.internal.annotations;
 
+import java.lang.reflect.*;
+
 import mockit.internal.*;
 import mockit.internal.util.*;
 
@@ -11,6 +13,7 @@ final class MockState
 {
    final AnnotatedMockMethods.MockMethod mockMethod;
    private RealMethod realMethod;
+   private Method actualMockMethod;
 
    // Expectations on the number of invocations of the mock as specified by the @Mock annotation,
    // initialized with the default values as specified in @Mock annotation definition:
@@ -119,5 +122,14 @@ final class MockState
       }
 
       return realMethod;
+   }
+
+   Method getMockMethod(Class<?> mockClass, Class<?>[] paramTypes)
+   {
+      if (actualMockMethod == null) {
+         actualMockMethod = Utilities.findCompatibleMethod(mockClass, mockMethod.name, paramTypes);
+      }
+
+      return actualMockMethod;
    }
 }

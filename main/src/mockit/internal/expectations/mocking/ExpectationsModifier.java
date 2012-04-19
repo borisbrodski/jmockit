@@ -16,7 +16,6 @@ import mockit.external.asm4.*;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
 import mockit.internal.startup.*;
-import mockit.internal.util.*;
 
 @SuppressWarnings("ClassWithTooManyFields")
 final class ExpectationsModifier extends BaseClassModifier
@@ -35,7 +34,6 @@ final class ExpectationsModifier extends BaseClassModifier
    }};
 
    private final MockingConfiguration mockingCfg;
-   private String superClassName;
    private String className;
    private String baseClassNameForCapturedInstanceMethods;
    private boolean stubOutClassInitialization;
@@ -83,7 +81,6 @@ final class ExpectationsModifier extends BaseClassModifier
          throw new IllegalArgumentException("Mocked class " + name.replace('/', '.') + " is not mockable");
       }
 
-      superClassName = superName;
       super.visit(version, access, name, signature, superName, interfaces);
       isProxy = "java/lang/reflect/Proxy".equals(superName);
 
@@ -234,23 +231,6 @@ final class ExpectationsModifier extends BaseClassModifier
       }
    }
 
-   private void generateCallToSuperConstructor()
-   {
-      mw.visitVarInsn(ALOAD, 0);
-
-      String constructorDesc;
-
-      if ("java/lang/Object".equals(superClassName)) {
-         constructorDesc = "()V";
-      }
-      else {
-         constructorDesc = SuperConstructorCollector.INSTANCE.findConstructor(superClassName);
-         pushDefaultValuesForParameterTypes(constructorDesc);
-      }
-
-      mw.visitMethodInsn(INVOKESPECIAL, superClassName, "<init>", constructorDesc);
-   }
-
    private int determineAppropriateExecutionMode(int access, boolean visitingConstructor)
    {
       if (executionMode == 2) {
@@ -327,12 +307,7 @@ final class ExpectationsModifier extends BaseClassModifier
       @Override
       public void visitMethodInsn(int opcode, String owner, String name, String desc)
       {
-         if (
-            opcode != INVOKESPECIAL || !"<init>".equals(name) ||
-            !owner.equals(superClassName) && !owner.equals(className)
-         ) {
-            mw.visitMethodInsn(opcode, owner, name, desc);
-         }
+         disregardIfInvokingAnotherConstructor(opcode, owner, name, desc);
       }
    }
 }
