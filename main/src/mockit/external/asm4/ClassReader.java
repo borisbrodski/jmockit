@@ -31,6 +31,8 @@ package mockit.external.asm4;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * A Java class parser to make a {@link ClassVisitor} visit an existing class.
@@ -41,7 +43,7 @@ import java.io.InputStream;
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
-public class ClassReader {
+public final class ClassReader {
 
     /**
      * True to enable signatures support.
@@ -467,7 +469,6 @@ public class ClassReader {
      * Reads the bytecode of a class.
      *
      * @param is an input stream from which to read the class.
-     * @param close true to close the input stream after reading.
      * @return the bytecode read from the given input stream.
      * @throws IOException if a problem occurs during reading.
      */
