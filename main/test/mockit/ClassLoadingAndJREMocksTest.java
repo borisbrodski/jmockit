@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -53,8 +53,8 @@ public final class ClassLoadingAndJREMocksTest
       Foo foo = new Foo();
 
       new MockUp<File>() {
-         @Mock
-         boolean exists() { return true; }
+         @Mock void $init(String name) {} // not necessary, except to verify non-occurrence of NPE
+         @Mock boolean exists() { return true; }
       };
 
       assertTrue(foo.checkFile("filePath"));
@@ -214,7 +214,7 @@ public final class ClassLoadingAndJREMocksTest
       }
    }
 
-   @Ignore @Test // unstable, at least when running from Ant
+   @Test
    public void mockZipFile() throws Exception
    {
       final ZipFile testZip = new ZipFile(getClass().getResource("test.zip").getPath());
