@@ -132,4 +132,10 @@ final class MockState
 
       return actualMockMethod;
    }
+
+   @Override
+   public boolean equals(Object other) { return mockMethod.equals(((MockState) other).mockMethod); }
+
+   @Override
+   public int hashCode() { return mockMethod.hashCode(); }
 }

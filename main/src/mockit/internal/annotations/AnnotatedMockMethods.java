@@ -72,6 +72,19 @@ public final class AnnotatedMockMethods
             "Expected " + quantifier + ' ' + numExpectedInvocations + " invocation(s) of " +
             new MethodFormatter(mockClassInternalName, nameAndDesc) + ", but was invoked " + timesInvoked + " time(s)";
       }
+
+      @Override
+      public boolean equals(Object obj)
+      {
+         MockMethod other = (MockMethod) obj;
+         return realClass == other.getRealClass() && name.equals(other.name) && desc.equals(other.desc);
+      }
+
+      @Override
+      public int hashCode()
+      {
+         return 31 * (31 * realClass.hashCode() + name.hashCode()) + desc.hashCode();
+      }
    }
 
    public AnnotatedMockMethods(Class<?> realClass)
