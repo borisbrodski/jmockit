@@ -61,6 +61,70 @@ public final class ClassLoadingAndJREMocksTest
    }
 
    @Test
+   public void mockFileSafelyUsingReentrantMockMethod()
+   {
+      new MockUp<File>() {
+         File it;
+         @Mock(reentrant = true) boolean exists() { return "testFile".equals(it.getName()) || it.exists(); }
+      };
+
+      checkForTheExistenceOfSeveralFiles();
+   }
+
+   private void checkForTheExistenceOfSeveralFiles()
+   {
+      assertFalse(new File("someOtherFile").exists());
+      assertTrue(new File("testFile").exists());
+      assertFalse(new File("yet/another/file").exists());
+   }
+
+   @Test
+   public void mockFileSafelyUsingProceed()
+   {
+      new MockUp<File>() {
+         @Mock boolean exists(Invocation inv)
+         {
+            File it = inv.getInvokedInstance();
+            return "testFile".equals(it.getName()) || inv.<Boolean>proceed();
+         }
+      };
+
+      checkForTheExistenceOfSeveralFiles();
+   }
+
+   @Test
+   public void mockFileSafelyUsingDynamicPartialMocking()
+   {
+      final File aFile = new File("");
+
+      new NonStrictExpectations(File.class) {{
+         aFile.exists();
+         result = new Delegate() {
+            boolean exists(Invocation inv)
+            {
+               File it = inv.getInvokedInstance();
+               return "testFile".equals(it.getName()) || it.exists();
+            }
+         };
+      }};
+
+      checkForTheExistenceOfSeveralFiles();
+   }
+
+   @Ignore @Test
+   public void mockFileSafelyUsingCapturingOnMatchingConstructorInvocations()
+   {
+      new NonStrictExpectations() {
+         @Capturing File aFile;
+      {
+         new File("testFile"); result = aFile;
+         aFile.exists(); result = true;
+      }};
+
+      checkForTheExistenceOfSeveralFiles();
+   }
+
+   @Test
    public void mockFileOutputStreamInstantiation() throws Exception
    {
       new Expectations() {
