@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal;
@@ -8,7 +8,6 @@ import static java.lang.reflect.Modifier.*;
 
 import mockit.external.asm4.*;
 import mockit.internal.filtering.*;
-import mockit.internal.util.*;
 import mockit.internal.startup.*;
 
 import static mockit.external.asm4.Opcodes.*;
@@ -16,19 +15,11 @@ import static mockit.external.asm4.Opcodes.*;
 public final class StubOutModifier extends BaseClassModifier
 {
    private final MockingConfiguration stubbingCfg;
-   private String superClassName;
 
    public StubOutModifier(ClassReader cr, MockingConfiguration stubbingConfiguration)
    {
       super(cr);
       stubbingCfg = stubbingConfiguration;
-   }
-
-   @Override
-   public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
-   {
-      superClassName = superName;
-      super.visit(version, access, name, signature, superName, interfaces);
    }
 
    @Override
@@ -44,20 +35,10 @@ public final class StubOutModifier extends BaseClassModifier
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
 
       if ("<init>".equals(name)) {
-         generateCallToSuper();
+         generateCallToSuperConstructor();
       }
 
       generateEmptyImplementation(desc);
       return methodAnnotationsVisitor;
-   }
-
-   private void generateCallToSuper()
-   {
-      mw.visitVarInsn(ALOAD, 0);
-
-      String constructorDesc = SuperConstructorCollector.INSTANCE.findConstructor(superClassName);
-      pushDefaultValuesForParameterTypes(constructorDesc);
-
-      mw.visitMethodInsn(INVOKESPECIAL, superClassName, "<init>", constructorDesc);
    }
 }

@@ -187,6 +187,22 @@ public final class InvocationProceedTest
       new ClassToBeMocked("will fail");
    }
 
+   @Test
+   public void proceedFromMockMethodIntoJREConstructor() throws Exception
+   {
+      new MockUp<File>() {
+         @Mock void $init(Invocation inv, String name)
+         {
+            if ("proceed".equals(name)) {
+               inv.proceed();
+            }
+         }
+      };
+
+      assertEquals("proceed", new File("proceed").getPath());
+      assertNull(new File("do not proceed").getPath());
+   }
+
    /// Tests for "Delegate" methods ///////////////////////////////////////////////////////////////////////////////////
 
    @Test
@@ -300,7 +316,7 @@ public final class InvocationProceedTest
    @Test(expected = UnsupportedOperationException.class)
    public void cannotProceedFromDelegateMethodIntoConstructorWithNewArguments()
    {
-      new Expectations(ClassToBeMocked.class) {{
+      new NonStrictExpectations(ClassToBeMocked.class) {{
          new ClassToBeMocked(anyString);
          result = new Delegate() {
             void init(Invocation inv, String name) { inv.proceed("mock"); }
@@ -308,5 +324,63 @@ public final class InvocationProceedTest
       }};
 
       new ClassToBeMocked("will fail");
+   }
+
+   @Test
+   public void proceedFromDelegateMethodIntoJREConstructor() throws Exception
+   {
+      new NonStrictExpectations(File.class) {{
+         new File(anyString);
+         result = new Delegate() {
+            void init(Invocation inv, String name)
+            {
+               if ("proceed".equals(name)) {
+                  inv.proceed();
+               }
+            }
+         };
+      }};
+
+      assertEquals("proceed", new File("proceed").getPath());
+      assertNull(new File("do not proceed").getPath());
+   }
+
+   @SuppressWarnings("UseOfObsoleteCollectionType")
+   @Test
+   public void proceedFromDelegateMethodIntoJREConstructorWhichCallsAnotherInTheSameClass() throws Exception
+   {
+      new NonStrictExpectations(Vector.class) {{
+         new Vector<String>(anyInt);
+         result = new Delegate() {
+            void init(Invocation inv, int i) { inv.proceed(); }
+         };
+      }};
+
+      assertEquals(1, new Vector<String>(1).capacity());
+      assertEquals(10, new Vector<String>().capacity());
+   }
+
+   static class MyVector
+   {
+      private final int capacity;
+      MyVector() { this(10); }
+      MyVector(int capacity) { this.capacity = capacity; }
+      int capacity() { return capacity; }
+   }
+
+   @Test
+   public void proceedFromDelegateMethodIntoConstructorWhichCallsAnotherInTheSameClass() throws Exception
+   {
+      new NonStrictExpectations(MyVector.class) {{
+         new MyVector(anyInt);
+         result = new Delegate() {
+            void init(Invocation inv, int i) { inv.proceed(); }
+         };
+      }};
+
+      assertEquals(1, new MyVector(1).capacity());
+
+      // This could only be made to pass by requiring use of "-noverify".
+      // assertEquals(10, new MyVector().capacity());
    }
 }

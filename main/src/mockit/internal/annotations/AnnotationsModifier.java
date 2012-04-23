@@ -283,6 +283,9 @@ public final class AnnotationsModifier extends BaseClassModifier
 
          mw.visitLabel(afterCallToMock);
       }
+      else if (mockMethod.isDynamic()) {
+         generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
+      }
    }
 
    private Label generateCallToUpdateMockStateIfAny(int access)
@@ -297,6 +300,7 @@ public final class AnnotationsModifier extends BaseClassModifier
             generateCallToMockingBridge(
                MockingBridge.UPDATE_MOCK_STATE, mockClassDesc, access, null, null, null, null, null,
                mockStateIndex, 0, 0);
+            mw.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
             mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z");
          }
          else {
@@ -328,7 +332,7 @@ public final class AnnotationsModifier extends BaseClassModifier
    {
       String mockClassName = annotatedMocks.getMockClassInternalName();
 
-      if (isToUseMockingBridge()) {
+      if (shouldUseMockingBridge()) {
          generateCallToMockingBridge(
             MockingBridge.CALL_STATIC_MOCK, mockClassName, access, mockMethod.name, desc, mockMethod.desc, null, null,
             mockMethod.getIndexForMockState(), 0, 0);
@@ -339,11 +343,11 @@ public final class AnnotationsModifier extends BaseClassModifier
       }
    }
 
-   private boolean isToUseMockingBridge() { return useMockingBridge || mockMethod.hasInvocationParameter; }
+   private boolean shouldUseMockingBridge() { return useMockingBridge || mockMethod.hasInvocationParameter; }
 
    private void generateInstanceMethodCall(int access, String desc)
    {
-      if (isToUseMockingBridge()) {
+      if (shouldUseMockingBridge()) {
          generateCallToMockingBridge(
             MockingBridge.CALL_INSTANCE_MOCK, annotatedMocks.getMockClassInternalName(), access,
             mockMethod.name, desc, mockMethod.desc, null, null,
@@ -433,7 +437,7 @@ public final class AnnotationsModifier extends BaseClassModifier
 
    private void generateMethodReturn(String desc)
    {
-      if (isToUseMockingBridge()) {
+      if (shouldUseMockingBridge()) {
          generateReturnWithObjectAtTopOfTheStack(desc);
       }
       else {

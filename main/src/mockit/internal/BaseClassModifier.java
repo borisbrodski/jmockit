@@ -25,6 +25,7 @@ public class BaseClassModifier extends ClassVisitor
       null, "booleanValue", "charValue", "byteValue", "shortValue", "intValue", "floatValue", "longValue", "doubleValue"
    };
    private static final Type[] NO_ARGS = new Type[0];
+   private static final Type VOID_TYPE = Type.getType("Ljava/lang/Void;");
 
    protected final MethodVisitor methodAnnotationsVisitor = new MethodVisitor()
    {
@@ -58,6 +59,7 @@ public class BaseClassModifier extends ClassVisitor
    protected String classDesc;
    private String methodName;
    private String methodDesc;
+   protected boolean callToAnotherConstructorAlreadyDisregarded;
 
    protected BaseClassModifier(ClassReader classReader)
    {
@@ -103,6 +105,7 @@ public class BaseClassModifier extends ClassVisitor
 
       methodName = name;
       methodDesc = desc;
+      callToAnotherConstructorAlreadyDisregarded = false;
 
       if (Modifier.isNative(access)) {
          TestRun.mockFixture().addRedefinedClassWithNativeMethods(classDesc);
@@ -120,7 +123,10 @@ public class BaseClassModifier extends ClassVisitor
       }
       else {
          constructorDesc = SuperConstructorCollector.INSTANCE.findConstructor(superClassName);
-         pushDefaultValuesForParameterTypes(constructorDesc);
+
+         for (Type paramType : Type.getArgumentTypes(constructorDesc)) {
+            pushDefaultValueForType(paramType);
+         }
       }
 
       mw.visitMethodInsn(INVOKESPECIAL, superClassName, "<init>", constructorDesc);
@@ -329,20 +335,6 @@ public class BaseClassModifier extends ClassVisitor
       mw.visitInsn(AASTORE);
    }
 
-   private void pushDefaultValuesForParameterTypes(Type[] paramTypes)
-   {
-      for (Type paramType : paramTypes) {
-         pushDefaultValueForType(paramType);
-      }
-   }
-
-   protected final void pushDefaultValuesForParameterTypes(String methodOrConstructorDesc)
-   {
-      if (!"()V".equals(methodOrConstructorDesc)) {
-         pushDefaultValuesForParameterTypes(Type.getArgumentTypes(methodOrConstructorDesc));
-      }
-   }
-
    private void pushDefaultValueForType(Type type)
    {
       switch (type.getSort()) {
@@ -399,6 +391,20 @@ public class BaseClassModifier extends ClassVisitor
       }
    }
 
+   protected final void generateDecisionBetweenReturningOrContinuingToRealImplementation(String desc)
+   {
+      mw.visitInsn(DUP);
+      mw.visitLdcInsn(VOID_TYPE);
+
+      Label startOfRealImplementation = new Label();
+      mw.visitJumpInsn(IF_ACMPEQ, startOfRealImplementation);
+
+      generateReturnWithObjectAtTopOfTheStack(desc);
+
+      mw.visitLabel(startOfRealImplementation);
+      mw.visitInsn(POP);
+   }
+
    protected final void generateEmptyImplementation(String desc)
    {
       Type returnType = Type.getReturnType(desc);
@@ -425,10 +431,15 @@ public class BaseClassModifier extends ClassVisitor
    protected final void disregardIfInvokingAnotherConstructor(int opcode, String owner, String name, String desc)
    {
       if (
+         callToAnotherConstructorAlreadyDisregarded ||
          opcode != INVOKESPECIAL || !"<init>".equals(name) ||
          !owner.equals(superClassName) && !owner.equals(classDesc)
       ) {
          mw.visitMethodInsn(opcode, owner, name, desc);
+      }
+      else {
+         mw.visitInsn(POP);
+         callToAnotherConstructorAlreadyDisregarded = true;
       }
    }
 }

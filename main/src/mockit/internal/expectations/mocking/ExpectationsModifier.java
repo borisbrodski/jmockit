@@ -10,8 +10,6 @@ import static java.lang.reflect.Modifier.*;
 
 import static mockit.external.asm4.Opcodes.*;
 
-import mockit.external.asm4.Type;
-
 import mockit.external.asm4.*;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
@@ -21,7 +19,6 @@ import mockit.internal.startup.*;
 final class ExpectationsModifier extends BaseClassModifier
 {
    private static final int METHOD_ACCESS_MASK = ACC_SYNTHETIC + ACC_ABSTRACT;
-   private static final Type VOID_TYPE = Type.getType("Ljava/lang/Void;");
    private static final Map<String, String> DEFAULT_FILTERS = new HashMap<String, String>()
    {{
       put("java/lang/Object", "<init> getClass hashCode");
@@ -149,7 +146,10 @@ final class ExpectationsModifier extends BaseClassModifier
 
       if (actualExecutionMode > 0) {
          generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
-         return copyOriginalImplementationCode(access, desc, visitingConstructor);
+
+         // Constructors of non-JRE classes can't be modified (unless running with "-noverify") in a way that
+         // "super(...)/this(...)" get called twice, so we disregard such calls when copying the original bytecode.
+         return visitingConstructor ? new DynamicConstructorModifier() : copyOriginalImplementationCode(access, desc);
       }
 
       generateReturnWithObjectAtTopOfTheStack(desc);
@@ -253,31 +253,21 @@ final class ExpectationsModifier extends BaseClassModifier
          MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, desc, genericSignature, exceptions,
          0, 0, executionMode);
       generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
-      return copyOriginalImplementationCode(access, desc, false);
+
+      // Copies the entire original implementation even for a constructor, in which case the complete bytecode inside
+      // the constructor fails the strict verification activated by "-Xfuture". However, this is necessary to allow the
+      // full execution of a JRE constructor when the call was not meant to be mocked.
+      return copyOriginalImplementationCode(access, desc);
    }
 
-   private void generateDecisionBetweenReturningOrContinuingToRealImplementation(String desc)
-   {
-      mw.visitInsn(DUP);
-      mw.visitLdcInsn(VOID_TYPE);
-
-      Label startOfRealImplementation = new Label();
-      mw.visitJumpInsn(IF_ACMPEQ, startOfRealImplementation);
-
-      generateReturnWithObjectAtTopOfTheStack(desc);
-
-      mw.visitLabel(startOfRealImplementation);
-      mw.visitInsn(POP);
-   }
-
-   private MethodVisitor copyOriginalImplementationCode(int access, String desc, boolean specialTreatmentForConstructor)
+   private MethodVisitor copyOriginalImplementationCode(int access, String desc)
    {
       if (isNative(access)) {
          generateEmptyImplementation(desc);
          return methodAnnotationsVisitor;
       }
 
-      return specialTreatmentForConstructor ? new DynamicConstructorModifier() : new DynamicModifier();
+      return new DynamicModifier();
    }
 
    private class DynamicModifier extends MethodVisitor

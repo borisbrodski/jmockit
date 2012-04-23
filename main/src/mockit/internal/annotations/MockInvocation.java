@@ -15,6 +15,7 @@ import mockit.internal.util.*;
 public final class MockInvocation extends Invocation
 {
    private final MockState mockState;
+   private boolean proceedIntoConstructor;
 
    public MockInvocation(Object invokedInstance, Object[] invokedArguments, MockState mockState)
    {
@@ -34,7 +35,13 @@ public final class MockInvocation extends Invocation
    @Override
    protected Method getRealMethod()
    {
-      RealMethod realMethod = mockState.getRealMethod();
-      return realMethod == null ? null : realMethod.method;
+      if (mockState.mockMethod.isForConstructor()) {
+         proceedIntoConstructor = true;
+         return null;
+      }
+
+      return mockState.getRealMethod().method;
    }
+
+   public boolean shouldProceedIntoConstructor() { return proceedIntoConstructor; }
 }

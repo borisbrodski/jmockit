@@ -7,8 +7,6 @@ package mockit.internal.annotations;
 import java.lang.reflect.*;
 import java.util.*;
 
-import mockit.*;
-
 /**
  * Holds state associated with mock class containing {@linkplain mockit.Mock annotated mocks}.
  */
@@ -124,7 +122,7 @@ public final class AnnotatedMockStates
       mockState.exitReentrantCall();
    }
 
-   public Invocation createMockInvocation(
+   public MockInvocation createMockInvocation(
       String mockClassInternalName, int mockStateIndex, Object invokedInstance, Object[] invokedArguments)
    {
       MockState mockState = getMockState(mockClassInternalName, mockStateIndex);

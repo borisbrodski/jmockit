@@ -12,6 +12,7 @@ import java.util.concurrent.locks.*;
 import java.util.jar.*;
 
 import mockit.*;
+import mockit.internal.annotations.*;
 import mockit.internal.expectations.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
@@ -188,9 +189,10 @@ public final class MockingBridge implements InvocationHandler
       Method mockMethod = mockStateIndex < 0 ? null :
          TestRun.getMockClasses().getMockStates().getMockMethod(
             mockClassInternalName, mockStateIndex, mockClass, paramClasses);
+      MockInvocation invocation = null;
 
       if (paramClasses.length > 0 && paramClasses[0] == Invocation.class) {
-         Invocation invocation = TestRun.createMockInvocation(mockClassInternalName, mockStateIndex, mocked, mockArgs);
+         invocation = TestRun.createMockInvocation(mockClassInternalName, mockStateIndex, mocked, mockArgs);
          //noinspection AssignmentToMethodParameter
          mockArgs = Utilities.argumentsWithExtraFirstValue(mockArgs, invocation);
       }
@@ -200,7 +202,7 @@ public final class MockingBridge implements InvocationHandler
             Utilities.invoke(mockClass, mock, mockName, paramClasses, mockArgs) :
             Utilities.invoke(mock, mockMethod, mockArgs);
 
-      return result;
+      return invocation != null && invocation.shouldProceedIntoConstructor() ? Void.class : result;
    }
 
    private static String getMockClassName(String mockClassInternalName)

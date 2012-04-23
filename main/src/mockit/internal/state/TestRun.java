@@ -9,7 +9,6 @@ import java.util.*;
 
 import static java.util.Collections.*;
 
-import mockit.*;
 import mockit.internal.annotations.*;
 import mockit.internal.expectations.*;
 import mockit.internal.expectations.mocking.*;
@@ -218,7 +217,7 @@ public final class TestRun
       mockStates.exitReentrantMock(mockClassDesc, mockStateIndex);
    }
 
-   public static Invocation createMockInvocation(
+   public static MockInvocation createMockInvocation(
       String mockClassDesc, int mockStateIndex, Object mockedInstance, Object[] mockArgs)
    {
       AnnotatedMockStates mockStates = getMockStates(mockClassDesc);

@@ -24,7 +24,6 @@ final class MockState
    // Current mock invocation state:
    private int invocationCount;
    private ThreadLocal<Boolean> onReentrantCall;
-   private boolean proceedIntoConstructor;
 
    // Helper field just for synchronization:
    private final Object invocationCountLock = new Object();
@@ -61,20 +60,8 @@ final class MockState
       }
    }
 
-   boolean isOnReentrantCall()
-   {
-      if (proceedIntoConstructor) {
-         proceedIntoConstructor = false;
-         return true;
-      }
-
-      return onReentrantCall != null && onReentrantCall.get();
-   }
-
-   void exitReentrantCall()
-   {
-      onReentrantCall.set(false);
-   }
+   boolean isOnReentrantCall() { return onReentrantCall != null && onReentrantCall.get(); }
+   void exitReentrantCall() { onReentrantCall.set(false); }
 
    void verifyExpectations()
    {
@@ -113,11 +100,6 @@ final class MockState
    RealMethod getRealMethod()
    {
       if (realMethod == null) {
-         if (mockMethod.isForConstructor()) {
-            proceedIntoConstructor = true;
-            return null;
-         }
-
          realMethod = new RealMethod(getRealClass(), mockMethod.name, mockMethod.mockedMethodDesc);
       }
 
