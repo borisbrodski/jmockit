@@ -7,6 +7,7 @@ package mockit.integration.junit4.internal;
 import java.lang.reflect.*;
 
 import org.junit.runners.*;
+import org.junit.runners.model.*;
 
 import mockit.*;
 import mockit.integration.internal.*;
@@ -20,16 +21,28 @@ import mockit.internal.state.*;
 @MockClass(realClass = BlockJUnit4ClassRunner.class)
 public final class BlockJUnit4ClassRunnerDecorator
 {
-   private static final Method createTestMethod;
+   private static final Method createTest;
+   private static final Method getTestClass;
 
    static
    {
+      Method getTestClassMethod;
+
       try {
-         createTestMethod = BlockJUnit4ClassRunner.class.getDeclaredMethod("createTest");
+         getTestClassMethod = ParentRunner.class.getDeclaredMethod("getTestClass");
+         createTest = BlockJUnit4ClassRunner.class.getDeclaredMethod("createTest");
       }
       catch (NoSuchMethodException e) { throw new RuntimeException(e); }
       
-      createTestMethod.setAccessible(true);
+      createTest.setAccessible(true);
+
+      if (getTestClassMethod.isAccessible()) {
+         getTestClass = null;
+      }
+      else {
+         getTestClassMethod.setAccessible(true);
+         getTestClass = getTestClassMethod;
+      }
    }
 
    @Mock(reentrant = true)
@@ -39,14 +52,15 @@ public final class BlockJUnit4ClassRunnerDecorator
 
       try {
          BlockJUnit4ClassRunner it = invocation.getInvokedInstance();
-         Class<?> newTestClass = it.getTestClass().getJavaClass();
+         TestClass junitTestClass = getTestClass == null ? it.getTestClass() : (TestClass) getTestClass.invoke(it);
+         Class<?> newTestClass = junitTestClass.getJavaClass();
          Class<?> currentTestClass = TestRun.getCurrentTestClass();
 
          if (currentTestClass != null && !currentTestClass.isAssignableFrom(newTestClass)) {
             TestRunnerDecorator.cleanUpMocksFromPreviousTestClass();
          }
 
-         return createTestMethod.invoke(it);
+         return createTest.invoke(it);
       }
       catch (InvocationTargetException e) {
          throw e.getCause();
