@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.paths;
@@ -81,7 +81,7 @@ public class Node implements Serializable
             assert nextConsecutiveNode == null;
             nextNodeAfterGoto.addToPath(path);
          }
-         else {
+         else if (nextConsecutiveNode != null) {
             nextConsecutiveNode.addToPath(path);
          }
       }

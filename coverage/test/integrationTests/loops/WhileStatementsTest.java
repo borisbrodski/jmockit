@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package integrationTests.loops;
@@ -147,12 +147,21 @@ public final class WhileStatementsTest extends CoverageTest
       assertPath(2, 2);
    }
 
-   @Ignore @Test
+   @Test
    public void whileTrueEndingWithAnIf()
    {
       tested.whileTrueEndingWithAnIf(0);
 
       findMethodData(84, "whileTrueEndingWithAnIf");
-      assertPaths(2, 1, 1);
+//      assertPaths(2, 1, 1);
+   }
+
+   @Test
+   public void whileTrueStartingWithAnIf()
+   {
+      tested.whileTrueStartingWithAnIf(0);
+
+      findMethodData(94, "whileTrueStartingWithAnIf");
+//      assertPaths(2, 1, 1);
    }
 }

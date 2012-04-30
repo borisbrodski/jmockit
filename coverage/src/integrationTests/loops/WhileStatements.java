@@ -87,4 +87,15 @@ public class WhileStatements
             return;
       }
    }
+
+   void whileTrueStartingWithAnIf(int i)
+   {
+      while (true) {
+         if (i >= 2) {
+            return;
+         }
+
+         i++;
+      }
+   }
 }
