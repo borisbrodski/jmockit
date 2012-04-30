@@ -138,7 +138,7 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <tr class="rowColor">
 <td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><strong><a href="../mockit/FullVerificationsInOrder.html#any">any</a></strong></code>
-<div class="block">Matches any <code>Object</code> reference for the relevant parameter.</div>
+<div class="block">Matches any <code>Object</code> reference passed as value for the parameter.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -254,7 +254,7 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected </code></td>
-<td class="colLast"><code><strong><a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(int, java.lang.Object...)">FullVerificationsInOrder</a></strong>(int&nbsp;numberOfIterations,
+<td class="colLast"><code><strong><a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(java.lang.Integer, java.lang.Object...)">FullVerificationsInOrder</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;numberOfIterations,
                         <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;mockedTypesAndInstancesToVerify)</code>
 <div class="block">Same as <a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(int)"><code>FullVerificationsInOrder(int)</code></a>, but restricting the verification to the specified mocked types
  and/or mocked instances.</div>
@@ -557,12 +557,16 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <li class="blockList">
 <h4>any</h4>
 <pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> any</pre>
-<div class="block">Matches any <code>Object</code> reference for the relevant parameter.
- Note that the use of this field will usually require a cast to the specific parameter type.
- If there is any other parameter for which an argument matching constraint can be specified, though, the
- <code>null</code> reference can be passed instead, as it will also match any reference during the replay phase.
+<div class="block">Matches any <code>Object</code> reference passed as value for the parameter.
  <p/>
- Note: in invocations to <em>non-accessible</em> methods or constructors (for example, with
+ The use of this field will usually require a cast to the specific parameter type.
+ However, if there is any other parameter for which an argument matching constraint is specified, passing the
+ <code>null</code> reference instead will have the same effect.
+ <p/>
+ When the parameter to be matched is a <em>varargs</em> parameter of element type <code>V</code>, the use of
+ <code>any</code> should be cast to <code>V[]</code>.
+ <p/>
+ In invocations to <em>non-accessible</em> methods or constructors (for example, with
  <a href="../mockit/FullVerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><code>invoke(Object, String, Object...)</code></a>), use <a href="../mockit/FullVerificationsInOrder.html#withAny(T)"><code>withAny(T)</code></a> instead.</div>
 <dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/FullVerificationsInOrder.html#anyInt"><code>anyInt</code></a></dd></dl>
 </li>
@@ -769,7 +773,7 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
  potentially be invoked during the replay phase.</div>
 <dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(int)"><code>FullVerificationsInOrder(int)</code></a>, 
 <a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(java.lang.Object...)"><code>FullVerificationsInOrder(Object...)</code></a>, 
-<a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(int, java.lang.Object...)"><code>FullVerificationsInOrder(int, Object...)</code></a></dd></dl>
+<code>#FullVerificationsInOrder(int, Object...)</code></dd></dl>
 </li>
 </ul>
 <a name="FullVerificationsInOrder(int)">
@@ -787,16 +791,16 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>numberOfIterations</code> - the positive number of iterations for the whole set of invocations verified inside the
  block; when not specified, 1 (one) iteration is assumed</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder()"><code>FullVerificationsInOrder()</code></a>, 
 <a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(java.lang.Object...)"><code>FullVerificationsInOrder(Object...)</code></a>, 
-<a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(int, java.lang.Object...)"><code>FullVerificationsInOrder(int, Object...)</code></a></dd></dl>
+<code>#FullVerificationsInOrder(int, Object...)</code></dd></dl>
 </li>
 </ul>
-<a name="FullVerificationsInOrder(int, java.lang.Object...)">
+<a name="FullVerificationsInOrder(java.lang.Integer, java.lang.Object...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>FullVerificationsInOrder</h4>
-<pre>protected&nbsp;FullVerificationsInOrder(int&nbsp;numberOfIterations,
+<pre>protected&nbsp;FullVerificationsInOrder(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;numberOfIterations,
                         <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;mockedTypesAndInstancesToVerify)</pre>
 <div class="block">Same as <a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(int)"><code>FullVerificationsInOrder(int)</code></a>, but restricting the verification to the specified mocked types
  and/or mocked instances.</div>
@@ -820,7 +824,7 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
  instances that are in scope for the test; for a given mocked <em>instance</em>, all classes up to (but not
  including) <code>java.lang.Object</code> are considered</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder()"><code>FullVerificationsInOrder()</code></a>, 
 <a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(int)"><code>FullVerificationsInOrder(int)</code></a>, 
-<a href="../mockit/FullVerificationsInOrder.html#FullVerificationsInOrder(int, java.lang.Object...)"><code>FullVerificationsInOrder(int, Object...)</code></a></dd></dl>
+<code>#FullVerificationsInOrder(int, Object...)</code></dd></dl>
 </li>
 </ul>
 </li>

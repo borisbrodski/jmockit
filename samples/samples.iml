@@ -9,7 +9,6 @@
       <excludeFolder url="file://$MODULE_DIR$/LoginService" />
       <excludeFolder url="file://$MODULE_DIR$/TimingFramework" />
       <excludeFolder url="file://$MODULE_DIR$/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/coverage-report" />
       <excludeFolder url="file://$MODULE_DIR$/easymock" />
       <excludeFolder url="file://$MODULE_DIR$/fakingXmocking" />
       <excludeFolder url="file://$MODULE_DIR$/jbossaop" />

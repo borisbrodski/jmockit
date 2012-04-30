@@ -161,7 +161,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  <li>
  There are additional constructors which provide other features:
  <a href="../mockit/Expectations.html#Expectations(java.lang.Object...)">dynamic partial mocking</a>, and
- <a href="../mockit/Expectations.html#Expectations(int, java.lang.Object...)">iterated invocations</a>.
+ iterated invocations.
  </li>
  </ul>
  <p/>
@@ -196,7 +196,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <tr class="rowColor">
 <td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#any">any</a></strong></code>
-<div class="block">Matches any <code>Object</code> reference for the relevant parameter.</div>
+<div class="block">Matches any <code>Object</code> reference passed as value for the parameter.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -310,7 +310,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected </code></td>
-<td class="colLast"><code><strong><a href="../mockit/Expectations.html#Expectations(int, java.lang.Object...)">Expectations</a></strong>(int&nbsp;numberOfIterations,
+<td class="colLast"><code><strong><a href="../mockit/Expectations.html#Expectations(java.lang.Integer, java.lang.Object...)">Expectations</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;numberOfIterations,
             <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;classesOrObjectsToBePartiallyMocked)</code>
 <div class="block">Identical to <a href="../mockit/Expectations.html#Expectations(java.lang.Object...)"><code>Expectations(Object...)</code></a>, but considering that the invocations inside the block will occur in
  a given number of iterations.</div>
@@ -668,12 +668,16 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <li class="blockList">
 <h4>any</h4>
 <pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> any</pre>
-<div class="block">Matches any <code>Object</code> reference for the relevant parameter.
- Note that the use of this field will usually require a cast to the specific parameter type.
- If there is any other parameter for which an argument matching constraint can be specified, though, the
- <code>null</code> reference can be passed instead, as it will also match any reference during the replay phase.
+<div class="block">Matches any <code>Object</code> reference passed as value for the parameter.
  <p/>
- Note: in invocations to <em>non-accessible</em> methods or constructors (for example, with
+ The use of this field will usually require a cast to the specific parameter type.
+ However, if there is any other parameter for which an argument matching constraint is specified, passing the
+ <code>null</code> reference instead will have the same effect.
+ <p/>
+ When the parameter to be matched is a <em>varargs</em> parameter of element type <code>V</code>, the use of
+ <code>any</code> should be cast to <code>V[]</code>.
+ <p/>
+ In invocations to <em>non-accessible</em> methods or constructors (for example, with
  <a href="../mockit/Expectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><code>invoke(Object, String, Object...)</code></a>), use <a href="../mockit/Expectations.html#withAny(T)"><code>withAny(T)</code></a> instead.</div>
 <dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Expectations.html#anyInt"><code>anyInt</code></a></dd></dl>
 </li>
@@ -895,16 +899,16 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  After this, test code can start recording invocations on the mocked types and/or mocked instances.
  Each and every such call made from inside the expectation block is recorded.</div>
 <dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Expectations.html#Expectations(java.lang.Object...)"><code>Expectations(Object...)</code></a>, 
-<a href="../mockit/Expectations.html#Expectations(int, java.lang.Object...)"><code>Expectations(int, Object...)</code></a></dd></dl>
+<code>#Expectations(int, Object...)</code></dd></dl>
 </li>
 </ul>
-<a name="Expectations(int, java.lang.Object...)">
+<a name="Expectations(java.lang.Integer, java.lang.Object...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>Expectations</h4>
-<pre>protected&nbsp;Expectations(int&nbsp;numberOfIterations,
+<pre>protected&nbsp;Expectations(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;numberOfIterations,
             <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;classesOrObjectsToBePartiallyMocked)</pre>
 <div class="block">Identical to <a href="../mockit/Expectations.html#Expectations(java.lang.Object...)"><code>Expectations(Object...)</code></a>, but considering that the invocations inside the block will occur in
  a given number of iterations.
@@ -955,7 +959,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if given a class literal for an interface, an annotation, an array, a
  primitive/wrapper type, or a <a href="http://download.oracle.com/javase/6/docs/api/java/lang/reflect/Proxy.html?is-external=true#isProxyClass(java.lang.Class)" title="class or interface in java.lang.reflect">proxy class</a> created for an
  interface, or if given a value/instance of such a type</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Expectations.html#Expectations()"><code>Expectations()</code></a>, 
-<a href="../mockit/Expectations.html#Expectations(int, java.lang.Object...)"><code>Expectations(int, Object...)</code></a></dd></dl>
+<code>#Expectations(int, Object...)</code></dd></dl>
 </li>
 </ul>
 </li>

@@ -142,7 +142,7 @@ extends <a href="../mockit/Expectations.html" title="class in mockit">Expectatio
 <tr class="rowColor">
 <td class="colFirst"><code>protected static <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#any">any</a></strong></code>
-<div class="block">Matches any <code>Object</code> reference for the relevant parameter.</div>
+<div class="block">Matches any <code>Object</code> reference passed as value for the parameter.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -258,9 +258,9 @@ extends <a href="../mockit/Expectations.html" title="class in mockit">Expectatio
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected </code></td>
-<td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#NonStrictExpectations(int, java.lang.Object...)">NonStrictExpectations</a></strong>(int&nbsp;numberOfIterations,
+<td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#NonStrictExpectations(java.lang.Integer, java.lang.Object...)">NonStrictExpectations</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;numberOfIterations,
                      <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;classesOrObjectsToBePartiallyMocked)</code>
-<div class="block">Identical to the corresponding super-constructor <a href="../mockit/Expectations.html#Expectations(int, java.lang.Object...)"><code>Expectations.Expectations(int, Object...)</code></a>, except that
+<div class="block">Identical to the corresponding super-constructor <code>Expectations#Expectations(int, Object...)</code>, except that
  all expectations recorded will be <a href="../mockit/Expectations.html#notStrict()">non-strict</a> by default.</div>
 </td>
 </tr>
@@ -568,12 +568,16 @@ extends <a href="../mockit/Expectations.html" title="class in mockit">Expectatio
 <li class="blockList">
 <h4>any</h4>
 <pre>protected static final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> any</pre>
-<div class="block">Matches any <code>Object</code> reference for the relevant parameter.
- Note that the use of this field will usually require a cast to the specific parameter type.
- If there is any other parameter for which an argument matching constraint can be specified, though, the
- <code>null</code> reference can be passed instead, as it will also match any reference during the replay phase.
+<div class="block">Matches any <code>Object</code> reference passed as value for the parameter.
  <p/>
- Note: in invocations to <em>non-accessible</em> methods or constructors (for example, with
+ The use of this field will usually require a cast to the specific parameter type.
+ However, if there is any other parameter for which an argument matching constraint is specified, passing the
+ <code>null</code> reference instead will have the same effect.
+ <p/>
+ When the parameter to be matched is a <em>varargs</em> parameter of element type <code>V</code>, the use of
+ <code>any</code> should be cast to <code>V[]</code>.
+ <p/>
+ In invocations to <em>non-accessible</em> methods or constructors (for example, with
  <a href="../mockit/NonStrictExpectations.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><code>invoke(Object, String, Object...)</code></a>), use <a href="../mockit/NonStrictExpectations.html#withAny(T)"><code>withAny(T)</code></a> instead.</div>
 <dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/NonStrictExpectations.html#anyInt"><code>anyInt</code></a></dd></dl>
 </li>
@@ -779,18 +783,18 @@ extends <a href="../mockit/Expectations.html" title="class in mockit">Expectatio
 <div class="block">Identical to the corresponding super-constructor <a href="../mockit/Expectations.html#Expectations()"><code>Expectations.Expectations()</code></a>, except that all expectations
  recorded will be <a href="../mockit/Expectations.html#notStrict()">non-strict</a> by default.</div>
 <dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/NonStrictExpectations.html#NonStrictExpectations(java.lang.Object...)"><code>NonStrictExpectations(Object...)</code></a>, 
-<a href="../mockit/NonStrictExpectations.html#NonStrictExpectations(int, java.lang.Object...)"><code>NonStrictExpectations(int, Object...)</code></a></dd></dl>
+<code>#NonStrictExpectations(int, Object...)</code></dd></dl>
 </li>
 </ul>
-<a name="NonStrictExpectations(int, java.lang.Object...)">
+<a name="NonStrictExpectations(java.lang.Integer, java.lang.Object...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>NonStrictExpectations</h4>
-<pre>protected&nbsp;NonStrictExpectations(int&nbsp;numberOfIterations,
+<pre>protected&nbsp;NonStrictExpectations(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;numberOfIterations,
                      <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;classesOrObjectsToBePartiallyMocked)</pre>
-<div class="block">Identical to the corresponding super-constructor <a href="../mockit/Expectations.html#Expectations(int, java.lang.Object...)"><code>Expectations.Expectations(int, Object...)</code></a>, except that
+<div class="block">Identical to the corresponding super-constructor <code>Expectations#Expectations(int, Object...)</code>, except that
  all expectations recorded will be <a href="../mockit/Expectations.html#notStrict()">non-strict</a> by default.
  <p/>
  The effect of specifying a number of iterations larger than 1 (one) is equivalent to multiplying by that number
@@ -819,7 +823,7 @@ extends <a href="../mockit/Expectations.html" title="class in mockit">Expectatio
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#dynamicPartial">In the
  Tutorial</a></div>
 <dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/NonStrictExpectations.html#NonStrictExpectations()"><code>NonStrictExpectations()</code></a>, 
-<a href="../mockit/NonStrictExpectations.html#NonStrictExpectations(int, java.lang.Object...)"><code>NonStrictExpectations(int, Object...)</code></a></dd></dl>
+<code>#NonStrictExpectations(int, Object...)</code></dd></dl>
 </li>
 </ul>
 </li>

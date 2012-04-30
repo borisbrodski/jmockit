@@ -126,7 +126,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected </code></td>
-<td class="colLast"><code><strong><a href="../mockit/Invocation.html#Invocation(java.lang.Object, int, int, int)">Invocation</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;invokedInstance,
+<td class="colLast"><code><strong><a href="../mockit/Invocation.html#Invocation(java.lang.Object, java.lang.Object[], int, int, int)">Invocation</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;invokedInstance,
+          <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>[]&nbsp;invokedArguments,
           int&nbsp;invocationCount,
           int&nbsp;minInvocations,
           int&nbsp;maxInvocations)</code>
@@ -181,9 +182,21 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>protected <a href="http://download.oracle.com/javase/6/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect">Method</a></code></td>
+<td class="colLast"><code><strong><a href="../mockit/Invocation.html#getRealMethod()">getRealMethod</a></strong>()</code>
+<div class="block">For internal use only.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Invocation.html#onChange()">onChange</a></strong>()</code>
 <div class="block">For internal use only.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/Invocation.html#proceed(java.lang.Object...)">proceed</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;replacementArguments)</code>
+<div class="block">Allows execution to proceed into the real implementation of the mocked method/constructor.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -220,13 +233,14 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="Invocation(java.lang.Object, int, int, int)">
+<a name="Invocation(java.lang.Object, java.lang.Object[], int, int, int)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>Invocation</h4>
 <pre>protected&nbsp;Invocation(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;invokedInstance,
+          <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>[]&nbsp;invokedArguments,
           int&nbsp;invocationCount,
           int&nbsp;minInvocations,
           int&nbsp;maxInvocations)</pre>
@@ -306,6 +320,16 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  or <a href="../mockit/Mock.html#minInvocations()">minInvocations</a> attribute, or <code>0</code> if none.</div>
 </li>
 </ul>
+<a name="getRealMethod()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getRealMethod</h4>
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect">Method</a>&nbsp;getRealMethod()</pre>
+<div class="block">For internal use only.</div>
+</li>
+</ul>
 <a name="onChange()">
 <!--   -->
 </a>
@@ -314,6 +338,35 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <h4>onChange</h4>
 <pre>protected&nbsp;void&nbsp;onChange()</pre>
 <div class="block">For internal use only.</div>
+</li>
+</ul>
+<a name="proceed(java.lang.Object...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>proceed</h4>
+<pre>public final&nbsp;&lt;T&gt;&nbsp;T&nbsp;proceed(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;replacementArguments)</pre>
+<div class="block">Allows execution to proceed into the real implementation of the mocked method/constructor.
+ <p/>
+ In the case of a mocked method, the real implementation is executed with the argument values originally received
+ or explicitly given as replacement.
+ Whatever comes out of that call (either a return value or a thrown exception/error, even if it is a
+ <em>checked</em> exception) becomes the result of the current invocation to the mock method.
+ <p/>
+ In the case of a mocked constructor, the real constructor implementation code which comes after the necessary call
+ to "<code>super</code>" is executed, using the original argument values; replacement arguments are not supported.
+ If the execution of said code throws an exception or error, it is propagated out to the caller of the mocked
+ constructor (even in the case of a <em>checked</em> exception).
+ Contrary to proceeding into a mocked method, it's not possible to actually execute test code inside the delegate
+ method after proceeding into the real constructor, nor to proceed into it more than once.</div>
+<dl><dt><span class="strong">Type Parameters:</span></dt><dd><code>T</code> - the return type of the mocked method</dd><dt><span class="strong">Parameters:</span></dt><dd><code>replacementArguments</code> - the argument values to be passed to the real method, as replacement for the values
+                             received by the mock method; if those received values should be passed without
+                             replacement, then this method should be called with no values</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the same value returned by the real method, if any</dd>
+<dt><span class="strong">Throws:</span></dt>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/UnsupportedOperationException.html?is-external=true" title="class or interface in java.lang">UnsupportedOperationException</a></code> - if attempting to proceed into a mocked constructor with replacement
+ arguments</dd></dl>
 </li>
 </ul>
 <a name="setMaxInvocations(int)">
