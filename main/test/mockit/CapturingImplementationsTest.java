@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -18,14 +18,13 @@ public final class CapturingImplementationsTest
 
    static final class ServiceLocator
    {
-      @SuppressWarnings({"UnusedDeclaration"})
+      @SuppressWarnings("UnusedDeclaration")
       static <S> S getInstance(Class<S> serviceInterface)
       {
          ServiceToBeStubbedOut service = new ServiceToBeStubbedOut()
          {
             public int doSomething() { return 10; }
          };
-
          //noinspection unchecked
          return (S) service;
       }
@@ -39,11 +38,7 @@ public final class CapturingImplementationsTest
    }
 
    public interface Service { int doSomething(); }
-
-   static final class ServiceImpl implements Service
-   {
-      public int doSomething() { return 1; }
-   }
+   static final class ServiceImpl implements Service { public int doSomething() { return 1; } }
 
    @Test
    public void captureImplementationUsingMockField()
@@ -78,16 +73,8 @@ public final class CapturingImplementationsTest
    }
 
    public interface AnotherService { int doSomethingElse(); }
-
-   static final class ServiceImpl2 implements AnotherService
-   {
-      public int doSomethingElse() { return 2; }
-   }
-
-   static final class ServiceImpl3 implements AnotherService
-   {
-      public int doSomethingElse() { return 3; }
-   }
+   static final class ServiceImpl2 implements AnotherService { public int doSomethingElse() { return 2; } }
+   static final class ServiceImpl3 implements AnotherService { public int doSomethingElse() { return 3; } }
 
    @Test
    public void captureImplementationByClassName(@Capturing(classNames = ".+ServiceImpl2") AnotherService mock)
@@ -114,10 +101,10 @@ public final class CapturingImplementationsTest
       assertEquals(3, service.doSomethingElse());
    }
 
-   @Test
-   public void captureInstancesForMockFieldWithoutUsingTheCapturingAnnotation()
+   @Ignore @Test
+   public void captureOnlyTheNextTwoInstances()
    {
-      new Expectations() {
+      new NonStrictExpectations() {
          @Capturing(maxInstances = 2) AnotherService mock;
 
          {
@@ -127,12 +114,10 @@ public final class CapturingImplementationsTest
 
       assertEquals(5, new ServiceImpl2().doSomethingElse());
       assertEquals(6, new ServiceImpl3().doSomethingElse());
+      assertEquals(9, new AnotherService() { public int doSomethingElse() { return 9; } }.doSomethingElse());
    }
 
-   public abstract static class AbstractService
-   {
-      protected abstract boolean doSomething();
-   }
+   public abstract static class AbstractService { protected abstract boolean doSomething(); }
 
    static final class DefaultServiceImpl extends AbstractService
    {
