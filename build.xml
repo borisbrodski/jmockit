@@ -329,7 +329,8 @@
             dir="main/test-classes"
             includes="mockit/integration/testng/*Test.class **/MockStateBetweenTestMethodsNGTest.class"
             excludes="mockit/integration/testng/BaseTestNGDecoratorTest.class
-                      mockit/integration/testng/TestNGViolatedExpectationsTest.class"/>
+                      mockit/integration/testng/TestNGViolatedExpectationsTest.class
+                      mockit/integration/testng/OverlappingStubsAndMocksTest.class"/>
       </testng>
    </target>
 
