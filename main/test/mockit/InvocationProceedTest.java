@@ -58,7 +58,7 @@ public final class InvocationProceedTest
    public void proceedFromMockMethodWithParameters() throws Exception
    {
       new MockUp<ClassToBeMocked>() {
-         @Mock int methodToBeMocked(Invocation inv, int i) { int j = inv.proceed(); return j + 1; }
+         @Mock int methodToBeMocked(Invocation inv, int i) { Integer j = inv.proceed(); return j + 1; }
 
          @Mock(reentrant = true)
          String anotherMethodToBeMocked(Invocation inv, String s, boolean b, List<Number> ints)
@@ -75,7 +75,7 @@ public final class InvocationProceedTest
          private int methodToBeMocked(Invocation inv, int i, Object... args)
          {
             args[2] = "mock";
-            return inv.proceed();
+            return inv.<Integer>proceed();
          }
       };
 
@@ -100,7 +100,7 @@ public final class InvocationProceedTest
          boolean staticMethodToBeMocked(Invocation inv) throws Exception
          {
             if (inv.getInvocationIndex() == 0) {
-               return inv.proceed();
+               return inv.<Boolean>proceed();
             }
 
             throw new InterruptedException("fake");
@@ -124,12 +124,15 @@ public final class InvocationProceedTest
       class MockUpWhichModifiesArguments extends MockUp<ClassToBeMocked>
       {
          @Mock
-         final int methodToBeMocked(Invocation invocation, int i) { return invocation.proceed(i + 2); }
+         final int methodToBeMocked(Invocation invocation, int i) { return invocation.<Integer>proceed(i + 2); }
       }
 
       new MockUpWhichModifiesArguments() {
          @Mock
-         synchronized int methodToBeMocked(Invocation inv, int i, Object... args) { return inv.proceed(1, 2, "3"); }
+         synchronized int methodToBeMocked(Invocation inv, int i, Object... args)
+         {
+            return inv.<Integer>proceed(1, 2, "3");
+         }
       };
 
       ClassToBeMocked mocked = new ClassToBeMocked();
@@ -225,7 +228,7 @@ public final class InvocationProceedTest
 
       new NonStrictExpectations(mocked) {{
          mocked.methodToBeMocked(anyInt);
-         result = new Delegate() { int delegate(Invocation inv, int i) { int j = inv.proceed(); return j + 1; } };
+         result = new Delegate() { int delegate(Invocation inv, int i) { Integer j = inv.proceed(); return j + 1; } };
 
          mocked.anotherMethodToBeMocked(anyString, anyBoolean, null);
          result = new Delegate() {
@@ -242,7 +245,7 @@ public final class InvocationProceedTest
 
          mocked.methodToBeMocked(anyInt, (Object[]) any); maxTimes = 1;
          result = new Delegate() {
-            int delegate(Invocation inv, int i, Object... args)
+            Integer delegate(Invocation inv, int i, Object... args)
             {
                args[2] = "mock";
                return inv.proceed();
@@ -269,12 +272,12 @@ public final class InvocationProceedTest
       new Expectations(ClassToBeMocked.class) {{
          mocked.methodToBeMocked(anyInt);
          result = new Delegate() {
-            int delegate1(Invocation invocation, int i) { return invocation.proceed(i + 2); }
+            Integer delegate1(Invocation invocation, int i) { return invocation.proceed(i + 2); }
          };
 
          mocked.methodToBeMocked(anyInt, (Object[]) any);
          result = new Delegate() {
-            int delegate2(Invocation inv, int i, Object... args) { return inv.proceed(1, 2, "3"); }
+            Integer delegate2(Invocation inv, int i, Object... args) { return inv.proceed(1, 2, "3"); }
          };
       }};
 
