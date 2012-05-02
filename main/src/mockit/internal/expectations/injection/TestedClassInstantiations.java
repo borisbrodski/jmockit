@@ -100,7 +100,7 @@ public final class TestedClassInstantiations
       MockedType found = null;
 
       for (MockedType injectable : injectables) {
-         if (injectable.declaredType == typeOfInjectionPoint) {
+         if (injectable.declaredType.equals(typeOfInjectionPoint)) {
             if (found == null) {
                found = injectable;
             }
@@ -160,7 +160,7 @@ public final class TestedClassInstantiations
       MockedType findNextInjectableForVarargsParameter()
       {
          for (MockedType injectable : injectables) {
-            if (injectable.declaredType == typeOfInjectionPoint && !consumedInjectables.contains(injectable)) {
+            if (injectable.declaredType.equals(typeOfInjectionPoint) && !consumedInjectables.contains(injectable)) {
                return injectable;
             }
          }
@@ -235,9 +235,17 @@ public final class TestedClassInstantiations
 
          private MockedType hasInjectedValuesForVarargsParameter(int varargsParameterIndex)
          {
-            typeOfInjectionPoint = ((Class<?>) parameterTypes[varargsParameterIndex]).getComponentType();
+            getTypeOfInjectionPointFromVarargsParameter(varargsParameterIndex);
             return findNextInjectableForVarargsParameter();
          }
+      }
+
+      private void getTypeOfInjectionPointFromVarargsParameter(int varargsParameterIndex)
+      {
+         Type parameterType = parameterTypes[varargsParameterIndex];
+         typeOfInjectionPoint = parameterType instanceof Class<?> ?
+            ((Class<?>) parameterType).getComponentType() :
+            ((GenericArrayType) parameterType).getGenericComponentType();
       }
 
       private final class ConstructorInjection
@@ -265,9 +273,10 @@ public final class TestedClassInstantiations
             return invoke(constructor, arguments);
          }
 
-         private Object obtainInjectedVarargsArray(int varargsIndex)
+         private Object obtainInjectedVarargsArray(int varargsParameterIndex)
          {
-            typeOfInjectionPoint = ((Class<?>) parameterTypes[varargsIndex]).getComponentType();
+            getTypeOfInjectionPointFromVarargsParameter(varargsParameterIndex);
+
             List<Object> varargValues = new ArrayList<Object>();
             MockedType injectable;
 
@@ -279,8 +288,9 @@ public final class TestedClassInstantiations
                }
             }
 
+            Class<?> varargsElementType = getClassType(typeOfInjectionPoint);
             int elementCount = varargValues.size();
-            Object varargArray = Array.newInstance((Class<?>) typeOfInjectionPoint, elementCount);
+            Object varargArray = Array.newInstance(varargsElementType, elementCount);
 
             for (int i = 0; i < elementCount; i++) {
                Array.set(varargArray, i, varargValues.get(i));

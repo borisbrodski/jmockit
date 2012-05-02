@@ -4,6 +4,9 @@
  */
 package mockit;
 
+import java.util.*;
+
+import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
@@ -19,6 +22,7 @@ public final class TestedClassWithFieldDIOnlyTest
       String text;
       String text2;
       String text3;
+      List<String> names;
 
       public TestedClass(int i, String name, Runnable action1)
       {
@@ -36,6 +40,7 @@ public final class TestedClassWithFieldDIOnlyTest
    @Injectable String text = "text";
    @Injectable("8") int intValue2; // won't be used
    @Injectable final int intValue3 = 9; // won't be used
+   @Injectable final List<String> names = asList("Abc", "xyz");
 
    @Before
    public void setUp()
@@ -76,6 +81,9 @@ public final class TestedClassWithFieldDIOnlyTest
       assertSame(action, tested2.action2);
       assertEquals(-67, tested2.i2);
       assertEquals("text", tested2.text);
+
+      assertEquals(asList("Abc", "xyz"), tested1.names);
+      assertSame(tested1.names, tested2.names);
    }
 
    @Test

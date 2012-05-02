@@ -1498,6 +1498,7 @@
         <pattern testClass="mockit.TestedClassWithConstructorDI1Test" />
         <pattern testClass="mockit.TestedClassWithConstructorDI2Test" />
         <pattern testClass="mockit.TestedClassWithConstructorDI3Test" />
+        <pattern testClass="mockit.TestedClassWithConstructorDI4Test" />
         <pattern testClass="mockit.TestedClassWithFieldDITest" />
         <pattern testClass="mockit.TestedClassInjectedFromMockParametersTest" />
         <pattern testClass="mockit.TestedClassWithConstructorAndFieldDITest" />
