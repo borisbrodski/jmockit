@@ -20,10 +20,9 @@ final class TypeRedefinition extends BaseTypeRedefinition
 
    void redefineTypeForFinalField()
    {
-      typeMetadata.buildMockingConfiguration();
       adjustTargetClassIfRealClassNameSpecified();
 
-      if (targetClass == null || targetClass.isInterface()) {
+      if (targetClass == null || !typeMetadata.injectable && targetClass.isInterface()) {
          throw new IllegalArgumentException(
             "Final mock field must be of a class type, or otherwise the real class must be " +
             "specified through the @Mocked annotation:\n" + typeMetadata.mockId);
@@ -32,6 +31,7 @@ final class TypeRedefinition extends BaseTypeRedefinition
       Integer mockedClassId = redefineClassesFromCache();
 
       if (mockedClassId != null) {
+         typeMetadata.buildMockingConfiguration();
          redefineMethodsAndConstructorsInTargetType();
          storeRedefinedClassesInCache(mockedClassId);
       }
@@ -39,8 +39,8 @@ final class TypeRedefinition extends BaseTypeRedefinition
 
    InstanceFactory redefineType()
    {
-      typeMetadata.buildMockingConfiguration();
       adjustTargetClassIfRealClassNameSpecified();
+      typeMetadata.buildMockingConfiguration();
 
       return redefineType(typeMetadata.declaredType);
    }
