@@ -81,11 +81,13 @@ public final class Startup
    public static void verifyInitialization()
    {
       if (instrumentation == null) {
-         new AgentInitialization().initializeAccordingToJDKVersion();
-         initializedOnDemand = true;
-         System.out.println(
-            "WARNING: JMockit was initialized on demand, which may cause certain tests to fail;\n" +
-            "please check the documentation for better ways to get it initialized.");
+         initializedOnDemand = new AgentInitialization().initializeAccordingToJDKVersion();
+
+         if (initializedOnDemand) {
+            System.out.println(
+               "WARNING: JMockit was initialized on demand, which may cause certain tests to fail;\n" +
+               "please check the documentation for better ways to get it initialized.");
+         }
       }
    }
 
@@ -93,8 +95,7 @@ public final class Startup
    {
       if (instrumentation == null) {
          try {
-            new AgentInitialization().initializeAccordingToJDKVersion();
-            return true;
+            return new AgentInitialization().initializeAccordingToJDKVersion();
          }
          catch (RuntimeException e) {
             e.printStackTrace(); // makes sure the exception gets printed at least once

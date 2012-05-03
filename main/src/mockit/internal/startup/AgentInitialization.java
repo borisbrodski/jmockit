@@ -13,12 +13,12 @@ final class AgentInitialization
 {
    private static final Pattern JAR_REGEX = Pattern.compile(".*jmockit[-.\\d]*.jar");
 
-   void initializeAccordingToJDKVersion()
+   boolean initializeAccordingToJDKVersion()
    {
       String jarFilePath = discoverPathToJarFile();
 
       if (Startup.jdk6OrLater) {
-         new JDK6AgentLoader(jarFilePath).loadAgent();
+         return new JDK6AgentLoader(jarFilePath).loadAgent();
       }
       else if ("1.5".equals(Startup.javaSpecVersion)) {
          throw new IllegalStateException(

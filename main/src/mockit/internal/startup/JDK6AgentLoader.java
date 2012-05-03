@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.startup;
@@ -46,7 +46,7 @@ final class JDK6AgentLoader
       return nameOfRunningVM.substring(0, p);
    }
 
-   void loadAgent()
+   boolean loadAgent()
    {
       VirtualMachine vm;
 
@@ -57,17 +57,22 @@ final class JDK6AgentLoader
          vm = attachToThisVM();
       }
 
-      loadAgentAndDetachFromThisVM(vm);
+      if (vm != null) {
+         loadAgentAndDetachFromThisVM(vm);
+         return true;
+      }
+
+      return false;
    }
 
-   @SuppressWarnings({"UseOfSunClasses"})
+   @SuppressWarnings("UseOfSunClasses")
    private VirtualMachine getVirtualMachineImplementationFromEmbeddedOnes()
    {
       try {
          if (File.separatorChar == '\\') {
             return new WindowsVirtualMachine(ATTACH_PROVIDER, pid);
          }
-         else {
+         else if (System.getProperty("os.name").matches("Linux.*|LINUX.*")) {
             return new LinuxVirtualMachine(ATTACH_PROVIDER, pid);
          }
       }
@@ -80,6 +85,8 @@ final class JDK6AgentLoader
       catch (UnsatisfiedLinkError e) {
          throw new IllegalStateException("Native library for Attach API not available in this JRE", e);
       }
+
+      return null;
    }
 
    private VirtualMachine attachToThisVM()
