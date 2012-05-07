@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -7,33 +7,29 @@ package mockit;
 import java.lang.annotation.*;
 
 /**
- * TODO: review, several changes and additions needed
  * Used inside a <em>mock class</em> to indicate a <em>mock method</em> whose implementation will temporarily replace
  * the implementation of a matching "real" method.
- * The targeted real method must have the same signature (name and parameters) <em>and</em> the same return type.
- * Modifiers (including <code>public</code>, <code>final</code>, and even <code>static</code>) <em>don't</em> have to be
- * the same.
+ * <p/>
+ * The mock method must have the same name and the same parameters as the matching real method, except for an optional
+ * first parameter of type {@link Invocation}; if this extra parameter is present, the remaining ones must match the
+ * parameters in the real method.
+ * The mock method must also have the same return type as the matching real method.
+ * <p/>
+ * Method modifiers (including <code>public</code>, <code>final</code>, and even <code>static</code>), however,
+ * <em>don't</em> have to be the same.
  * Checked exceptions in the <code>throws</code> clause (if any) can also differ between the two matching methods.
  * A mock <em>method</em> can also target a <em>constructor</em>, in which case the previous considerations still apply,
- * except for the name of the mock method (see below).
+ * except for the name of the mock method which must be "<code>$init</code>".
  * <p/>
- * A mock method can specify constraints on the number of invocations it should receive while in effect.
- * (A mock will be in effect from the time a real method/constructor is mocked to the time it is restored to its
- * original definition.)
+ * A mock method can specify <em>constraints</em> on the number of invocations it should receive while in effect
+ * (ie, from the time a real method/constructor is mocked to the time it is restored to its original definition).
  * <p/>
  * The special mock methods <strong>{@code void $init(...)}</strong> and <strong>{@code void $clinit()}</strong>
- * correspond to constructors and to class initializers, respectively.
- * In the latter case, this is the only way to mock a static <em>class initialization block</em>.
+ * correspond to constructors and to {@code static} class initializers, respectively.
  * (Notice that it makes no difference if the real class contains more than one static initialization block, because the
- * Java compiler will always merge the sequence of static blocks into a single internal "&lt;clinit>" static method in
- * the class file.)
+ * compiler merges the sequence of static blocks into a single internal "&lt;clinit>" static method in the class file.)
  * Mock methods named {@code $init} will apply to the corresponding constructor in the real class, by matching the
- * declared parameters.
- * <p/>
- * Finally, a note about <em>instance initialization blocks</em>. The Java compiler does not preserve instance
- * initializers as separate elements in the class file, instead inserting any statements in such blocks into each and
- * every constructor, right after the necessary call to the super-class constructor.
- * Therefore, it is not possible to separately mock instance initialization blocks.
+ * declared parameters; just like regular mock methods, they can also have a first parameter of type {@link Invocation}.
  * <p/>
  * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#mocks">In the Tutorial</a>
  *
@@ -87,6 +83,9 @@ public @interface Mock
     * <p/>
     * When allowed to make such calls, the mock method effectively behaves as <em>advice</em> to the corresponding real
     * method.
+    * <p/>
+    * As an alternative, consider adding a first parameter of type {@link Invocation} to the mock method, making it
+    * automatically reentrant.
     */
    boolean reentrant() default false;
 }

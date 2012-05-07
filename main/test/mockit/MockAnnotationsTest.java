@@ -27,13 +27,20 @@ public final class MockAnnotationsTest
    private final CodeUnderTest codeUnderTest = new CodeUnderTest();
    private boolean mockExecuted;
 
+   public interface IDependency { int doSomething(); }
+
    static class CodeUnderTest
    {
       private final Collaborator dependency = new Collaborator();
 
-      void doSomething()
+      void doSomething() { dependency.provideSomeService(); }
+      long doSomethingElse(int i) { return dependency.getThreadSpecificValue(i); }
+
+      int doSomethingWithInnerDependency()
       {
-         dependency.provideSomeService();
+         return new IDependency() {
+            public int doSomething() { return 45; }
+         }.doSomething();
       }
 
       int performComputation(int a, boolean b)
@@ -47,23 +54,24 @@ public final class MockAnnotationsTest
 
          return i;
       }
+
+      private static class AnotherDependency { int getValue() { return 99; } }
+      private final AnotherDependency anotherDependency = new AnotherDependency();
+      int doSomethingWithNestedDependency() { return anotherDependency.getValue(); }
    }
 
    @SuppressWarnings("UnusedDeclaration")
    static class Collaborator
    {
       static Object xyz;
-      private int value;
+      protected int value;
 
       Collaborator() {}
       Collaborator(int value) { this.value = value; }
 
       @Deprecated private static String doInternal() { return "123"; }
 
-      void provideSomeService()
-      {
-         throw new RuntimeException("Real provideSomeService() called");
-      }
+      void provideSomeService() { throw new RuntimeException("Real provideSomeService() called"); }
 
       int getValue() { return value; }
       void setValue(int value) { this.value = value; }
@@ -74,6 +82,8 @@ public final class MockAnnotationsTest
       }
 
       final void simpleOperation(int a, String b, Date c) {}
+
+      long getThreadSpecificValue(int i) { return Thread.currentThread().getId() + i; }
    }
 
    // Mocks without expectations //////////////////////////////////////////////////////////////////////////////////////
@@ -194,6 +204,26 @@ public final class MockAnnotationsTest
       setUpMock(Collaborator.class.getName(), new MockCollaborator2());
 
       codeUnderTest.doSomething();
+   }
+
+   @Test
+   public void mockAnonymousInnerClass()
+   {
+      setUpMock(CodeUnderTest.class.getName() + "$1", new Object() {
+         @Mock int doSomething() { return 123; }
+      });
+
+      assertEquals(123, codeUnderTest.doSomethingWithInnerDependency());
+   }
+
+   @Test
+   public void mockPrivateNestedClass()
+   {
+      setUpMock(CodeUnderTest.class.getName() + "$AnotherDependency", new Object() {
+         @Mock int getValue() { return 123; }
+      });
+
+      assertEquals(123, codeUnderTest.doSomethingWithNestedDependency());
    }
 
    @Test
@@ -413,6 +443,9 @@ public final class MockAnnotationsTest
    static class SubCollaborator extends Collaborator
    {
       SubCollaborator(int i) { throw new RuntimeException("" + i); }
+
+      @Override
+      void provideSomeService() { value = 123; }
    }
 
    @MockClass(realClass = SubCollaborator.class)
@@ -423,6 +456,32 @@ public final class MockAnnotationsTest
 
       @SuppressWarnings("UnusedDeclaration")
       native void doNothing();
+   }
+
+   @Test
+   public void setUpMocksForClassHierarchy()
+   {
+      new MockUp<SubCollaborator>() {
+         SubCollaborator it;
+
+         @Mock void $init(int i) { assertNotNull(it); assertTrue(i > 0); }
+
+         @Mock void provideSomeService() { it.value = 45; }
+
+         @Mock int getValue(Invocation inv)
+         {
+            assertNotNull(inv.getInvokedInstance());
+            // The value of "it" is undefined here; it will be null if this is the first mock invocation reaching this
+            // mock class instance, or the last instance of the mocked subclass if a previous invocation of a mock
+            // method whose mocked method is defined in the subclass occurred on this mock class instance.
+            return 123;
+         }
+      };
+
+      SubCollaborator collaborator = new SubCollaborator(123);
+      collaborator.provideSomeService();
+      assertEquals(45, collaborator.value);
+      assertEquals(123, collaborator.getValue());
    }
 
    @Test // Note: this test only works under JDK 1.6+; JDK 1.5 does not support redefining natives.
@@ -681,10 +740,8 @@ public final class MockAnnotationsTest
    @Test
    public void mockStaticInitializer()
    {
-      new MockUp<ClassWithStaticInitializers>()
-      {
-         @Mock(invocations = 1)
-         void $clinit() {}
+      new MockUp<ClassWithStaticInitializers>() {
+         @Mock(invocations = 1) void $clinit() {}
       };
 
       ClassWithStaticInitializers.doSomething();
@@ -737,8 +794,7 @@ public final class MockAnnotationsTest
    @Test
    public void mockJREInterfaceWithMockUp() throws Exception
    {
-      CallbackHandler callbackHandler = new MockUp<CallbackHandler>()
-      {
+      CallbackHandler callbackHandler = new MockUp<CallbackHandler>() {
          @Mock(invocations = 1)
          void handle(Callback[] callbacks)
          {
@@ -899,5 +955,30 @@ public final class MockAnnotationsTest
    static class MockCollaborator7
    {
       @Mock void provideSomeService() {}
+   }
+
+   @Test
+   public void concurrentMock() throws Exception
+   {
+      new MockUp<Collaborator>() {
+         @Mock long getThreadSpecificValue(int i) { return Thread.currentThread().getId() + 123; }
+      };
+
+      Thread[] threads = new Thread[5];
+
+      for (int i = 0; i < threads.length; i++) {
+         threads[i] = new Thread() {
+            @Override
+            public void run()
+            {
+               long threadSpecificValue = Thread.currentThread().getId() + 123;
+               long actualValue = new CodeUnderTest().doSomethingElse(0);
+               assertEquals(threadSpecificValue, actualValue);
+            }
+         };
+      }
+
+      for (Thread thread : threads) { thread.start(); }
+      for (Thread thread : threads) { thread.join(); }
    }
 }

@@ -166,7 +166,7 @@ public final class AnnotatedMockMethods
    boolean isInnerMockClass() { return isInnerMockClass; }
    void setInnerMockClass(boolean innerMockClass) { isInnerMockClass = innerMockClass; }
 
-   boolean isWithItField() { return withItField; }
+   boolean supportsItField(Class<?> mockedClass) { return withItField && mockedClass == realClass; }
    void setWithItField(boolean withItField) { this.withItField = withItField; }
 
    public int getMethodCount() { return methods.size(); }

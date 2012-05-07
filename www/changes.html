@@ -24,6 +24,12 @@
 <p>Release <strong>0.999.16</strong> (May ?, 2012):</p>
 <ul>
    <li>
+      <strong>Enhancement</strong>: <code>@Mock</code> methods now also apply to the super-classes of the specified
+      class to be mocked, when the latter doesn't define a matching method.
+      This avoids the need to set up two or more separate mock classes when the methods to be method are defined in
+      multiple levels of a class hierarchy.
+   </li>
+   <li>
       Issues fixed:
       <a href="http://code.google.com/p/jmockit/issues/detail?id=224">224</a>.
    </li>

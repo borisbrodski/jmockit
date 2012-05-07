@@ -64,9 +64,14 @@
 
 <p>
    In the JMockit toolkit, the <strong>Mockups API</strong> provides support for the creation of <em>state-based</em>
-   tests.
-   The focus when doing this kind of testing is not on the <em>interactions</em> between objects, but on their
-   <em>state</em> after the code under test is exercised, and on the data items exchanged between objects.
+   tests and for the creation of <em>fake</em> implementations.
+   In this kind of testing, the focus is not on the interactions between a tested class and its dependencies, but
+   on the data received by and returned from those dependencies; rather than writing a test from the perspective of
+   the <em>tested</em> class, we write it from the perspective of the <em>used</em> classes, regardless of who is using
+   them.
+   As for fake implementations, they can be particularly useful in <em>integration</em> tests, where tested classes with
+   dependencies on external entities (the network, the file system, etc.) can be transparently isolated from the
+   implementations of those "problematic" dependencies.
 </p>
 <div style="text-align: center;">
    <map name="figure1">
@@ -81,8 +86,8 @@
 <p>
    Regular state verification, performed <em>after</em> exercising the unit under test, is typically done through
    JUnit/TestNG assertions written at the end of each test method.
-   The Mockups API extends the ability of a test to do state verification, by allowing those same JUnit/TestNG
-   assertions to be executed whenever a dependency is invoked from the tested code.
+   The Mockups API extends the ability of a test to do state verification, by allowing those same assertions to be
+   executed whenever a dependency is invoked from inside the tested code.
    As the tested unit passes data to dependencies through method and constructor invocations, the corresponding mock
    implementations specified for those dependencies get called.
    These implementations (usually defined inside test classes) will then execute the appropriate assertions on the
@@ -101,8 +106,8 @@
    not part of the application code we <em>are</em> trying to test.
    (Of course, in <em>integration tests</em> we just might work with a real JAAS setup.)  
    Therefore, an application class depending on <code class="type">LoginContext</code> will be our "unit under test",
-   while the <code class="type">LoginContext</code> class (the dependency) will need to have at least some of its
-   methods and constructors "mocked" for any given test which involves authentication logic.
+   while the <code class="type">LoginContext</code> class (the dependency) will have at least some of its methods and
+   constructors "mocked" for any given test which involves authentication logic.
 </p>
 
 <h3 id="mocks">
@@ -116,12 +121,14 @@
    </div>
 </h3>
 <p>
-   In the context of the JMockit Mockups API, a <em>mock method</em> is one annotated with the
-   <code class="type">mockit.Mock</code> annotation.
-   The class to which such methods belong is a <em>mock class</em>.
+   In the context of the Mockups API, a <em>mock method</em> is any method in a <em>mock class</em> that gets annotated
+   with the <code class="type">mockit.Mock</code> annotation.
+   A <em>mock class</em> is any class that is annotated with <code class="type">mockit.MockClass</code>, that extends
+   the <code class="type">mockit.MockUp&lt;T></code> generic base class, or that is explicitly passed to one of several
+   <em>mock-setup</em> methods.
    For short, in this chapter we will refer to such annotated mock methods simply as "mocks" (in other contexts, the
    word "mock" may refer to an <em>instance</em> of a mocked class instead).
-   The example below shows several mocks defined in a mock class.
+   The example below shows several mocks defined in a named mock class.
 </p>
 <pre><code>   public static class MockLoginContext
    {
@@ -140,31 +147,39 @@
    }
 </code></pre>
 <p>
-   Mock classes are often defined as nested classes inside a JUnit/TestNG test class.
-   That's why this example mock class is declared to be <code>static</code>; it could also have been
-   an inner (non-static) class.
-   There is nothing preventing mock classes from being top-level, though.
-   That would be useful if the mock class is to be reused in multiple test classes.
-   As we'll see later, though, the most convenient way to implement mock classes is by making them
-   <em>anonymous</em> and <em>local</em> to an individual test method.
+   When a mock class is applied to a real class, the latter gets the implementation of those methods and constructors
+   which have corresponding mocks temporarily replaced/redefined with the implementations of the matching mock methods,
+   as defined in the mock class.
+   In other words, the real class becomes "mocked" for the duration of the test which applied the mock class, and will
+   respond accordingly whenever it receives invocations during test execution.
+   At runtime, what really happens is that the execution of a mocked method/constructor is intercepted and redirected to
+   the corresponding mock method, which then executes and returns (unless an exception/error is thrown) to the original
+   caller, without this one noticing that a different method was actually executed.
+   Normally, the "caller" class is the one under test, while the mocked class is a dependency.
 </p>
 <p>
-   A new mock class is created (as part of the test code) when we have a "real class" defined in
-   production code which needs to be mocked for a given test.
-   By convention, for a real class named <code class="type">Abc</code> we create a corresponding mock class named
-   <code class="type">MockAbc</code> (when using named mock classes, that is).
-   This is just a convention, though. A mock class in fact is completely independent from whichever real class it
-   targets. It should define at least one mock method, and may have any number of additional methods and constructors;
+   Mock classes are often defined as nested classes inside a JUnit/TestNG test class.
+   That's why the example mock class above is declared to be <code>static</code>; it could also have been an inner
+   (non-static) class.
+   There is nothing preventing mock classes from being top-level, though.
+   That would be useful if the mock class is to be reused in multiple test classes.
+   As we'll see later, though, the most convenient way to implement mock classes is by making them <em>anonymous</em>
+   and <em>local</em> to an individual test method.
+</p>
+<p>
+   A new mock class is created when we have a "real class" defined in production code which needs to be mocked for a
+   given test.
+   It should define at least one mock method, with any number of additional methods and constructors;
    it can also define any number of fields.
 </p>
 <p>
-   For each mock method, on the other hand, there must exist a "real method/constructor" with the
-   <em>same signature</em> in the targeted real class. For a mocked <em>method</em>, the signature consists of the
-   method name and parameters; for a mocked <em>constructor</em>, it's just the parameters, with the mock method having
-   the special name "<code>$init</code>".
-   If the real method/constructor corresponding to a given mock method is missing from the real class, an
-   <code class="type">IllegalArgumentException</code> will be thrown when a test attempts to apply the mock class to the
-   corresponding real class (the next section discusses how exactly this is done).
+   Each <code class="annotation">@Mock</code> method must have a corresponding "real method/constructor" with the
+   <em>same signature</em> in the targeted real class.
+   For a mocked <em>method</em>, the signature consists of the method name and parameters; for a mocked
+   <em>constructor</em>, it's just the parameters, with the mock method having the special name "<code>$init</code>".
+   If a matching real method/constructor cannot be found for a given mock method, either in the specified real class or
+   in its super-classes (excluding <code>java.lang.Object</code>), an <code class="type">IllegalArgumentException</code>
+   is thrown when the test attempts to apply the mock class.
    Notice this exception can be caused by a refactoring in the real class (such as renaming the real method), so it's
    important to understand why it happens.
 </p>
@@ -177,31 +192,6 @@
    If two (or more) mock classes happen to be applied to the same real class for the same test, then such mock classes
    should avoid defining the same mock twice.
    In case a mock <em>is</em> duplicated, though, the "last" one to be applied wins.
-</p>
-<p>
-   When a mock class is applied to a real class, the latter gets the implementation of those methods and constructors
-   which have corresponding mocks temporarily replaced/redefined with the implementations of the matching mock methods,
-   as defined in the mock class.
-   In other words, the real class becomes "mocked" for the duration of the test which applied the mock class, and will
-   respond accordingly whenever it receives invocations during test execution.
-   At runtime, what really happens is that the execution of a mocked method/constructor is intercepted and redirected to
-   the corresponding mock method, which then executes and returns (unless an exception/error is thrown) to the original
-   caller, without this one noticing that a different method was actually executed.
-   Normally, the "caller" class is the one under test, while the mocked class is a dependency.
-</p>
-<p>
-   In the example above, we have three mock methods, with one of them (named "<code>$init</code>") targeting a
-   constructor.
-   Since such mocks can be used to verify the "state" passed from the class/unit under test to its dependencies, we
-   commonly see JUnit/TestNG assertions in them.
-   Such assertions will verify that the input arguments are as expected. When one of them fails, the test will fail for
-   the same reason (and with the same <code class="type">AssertionError</code>).
-   Obviously, writing these assertions (if any) is up to the developer.
-   A mock method for a non-<code>void</code> real method will have to return an appropriate value to the caller, based
-   on the requirements of the class under test.
-   When an exceptional situation is being tested, a mock method will typically throw an exception or error to simulate
-   that situation.
-   Later we will see concrete examples for all of these different test cases.
 </p>
 
 <h3 id="setUp">
@@ -224,7 +214,7 @@
    During the time a mock class is in effect, the methods and constructors of the real class which have corresponding
    mocks will stay mocked, with any calls made on them automatically and transparently redirected to the corresponding
    mocks for execution.
-   There are several different ways to set up mock classes, each with a different way to specify the corresponding real
+   There are a few different ways to set up mock classes, each with a different way to specify the corresponding real
    class, as we'll now see.
 </p>
 
@@ -298,28 +288,36 @@
    }
 </code></pre>
 <p>
-   This test will only pass if the <code>LoginContext#login</code> method throws an exception, which
-   it will when the corresponding mock method is executed.
+   This test will only pass if the <code>LoginContext#login</code> method throws an exception, which it will when the
+   corresponding mock method is executed.
    Notice that in this case we passed the class literal for the mock class instead of an instance.
-   This will cause a new instance of the mock class to be created automatically <em>every time</em>
-   a non-<code>static</code> mock method needs to be called (which happens whenever a mocked method
-   on the real class is called).
-   The mock method will be called on this new instance, which will then be discarded
-   (that is, it won't be reused later for new invocations).
-   Naturally, mock methods that are <code>static</code> are never called on any instance, so no new
-   instance is created for them.
+   This will cause a new instance of the mock class to be created automatically <em>every time</em> a
+   non-<code>static</code> mock method needs to be called (which happens whenever a mocked method on the real class is
+   called).
+   The mock method will be called on this new instance, which will then be discarded (that is, it won't be reused later
+   for new invocations).
+   Naturally, mock methods that are <code>static</code> are never called on any instance, so no new instance is created
+   for them.
 </p>
 
 <h4 id="mockableMethods">Which kinds of methods can have mocks?</h4>
 <p>
    So far, we have only mocked public instance methods with public instance mock methods.
-   In reality, any other kind of method in a real class can be mocked: methods with
-   <code>private</code>, <code>protected</code> or "package-private" accessibility,
-   <code>static</code> methods, <code>final</code> methods, and <code>native</code> methods.
-   (Also <code>synchronized</code> and <code>strictfp</code> methods, but these modifiers only
-   affect the method implementation, not its interface.)
+   In reality, any other kind of method in a real class can be mocked: methods with <code>private</code>,
+   <code>protected</code> or "package-private" accessibility, <code>static</code> methods, <code>final</code> methods,
+   and <code>native</code> methods.
+   (Also <code>synchronized</code> and <code>strictfp</code> methods, but these modifiers only affect the method
+   implementation, not its interface.)
    Even more, an <code>static</code> method in the real class can be mocked by an <em>instance</em> mock method, and
-   vice-versa (an instance real method with an static mock); the same applies for the <code>final</code> modifier.
+   vice-versa (an instance real method with an <code>static</code> mock); the same applies for the <code>final</code>
+   modifier.
+</p>
+<p>
+   Methods to be mocked need to have an implementation, though not necessarily in bytecode (in the case of
+   <code>native</code> methods).
+   Therefore, an <code>abstract</code> method cannot be mocked directly, and the same applies to the methods of a Java
+   <code>interface</code>.
+   (That said, as shown later the Mockups API can automatically create a proxy class that implements an interface.)
 </p>
 <p>
    In a named mock class, mocks usually need to be declared as <code>public</code>, otherwise an
@@ -358,28 +356,24 @@
 </code></pre>
 <p>
    The <code>realClass</code> attribute is mandatory for <code class="annotation">@MockClass</code>.
-   A mock class is normally used for the same real class every time. Therefore, nothing more natural
-   than associating said class directly with the mock class, avoiding the need to specify it every
-   time the mocks are set up.
+   A mock class is typically used for the same real class every time.
+   Therefore, nothing more natural than associating said class directly with the mock class, avoiding the need to
+   specify it every time the mocks are set up.
 </p>
 
 <h4 id="inline">In-line mock classes</h4>
 <p>
    Named mock classes, typically defined as nested or inner classes of the test class, definitely have their place.
    Often, however, an specific group of mocks for a given real class will be useful for a single test.
-   In such a situation we can create <em>anonymous mock classes</em> inside individual test methods,
-   as demonstrated by the next example.
+   In such a situation we can create <em>anonymous mock classes</em> inside individual test methods, as demonstrated by
+   the next example.
 </p>
 <pre><code>   @Test
    public void setUpMocksUsingAnonymousMockClass() throws Exception
    {
-      Mockit.setUpMock(LoginContext.class, new Object()
-      {
-         @Mock
-         void $init(String name) { assertEquals("test", name); }
-
-         @Mock
-         void login() {}
+      Mockit.setUpMock(LoginContext.class, new Object() {
+         @Mock void $init(String name) { assertEquals("test", name); }
+         @Mock void login() {}
       });
 
       new LoginContext("test").login();
@@ -397,13 +391,9 @@
 <pre><code>   @Test
    public void setUpMocksUsingLocalMockUpClass() throws Exception
    {
-      new MockUp&lt;LoginContext>()
-      {
-         @Mock
-         void $init(String name) { assertEquals("test", name); }
-
-         @Mock
-         void login() {}
+      new MockUp&lt;LoginContext>() {
+         @Mock void $init(String name) { assertEquals("test", name); }
+         @Mock void login() {}
       };
 
       new LoginContext("test").login();
@@ -419,9 +409,9 @@
 </p>
 <p>
    As the previous example tests have shown, it is perfectly safe to declare mock methods in an anonymous mock class as
-   non-<code>public</code> (always).
+   non-<code>public</code>.
    This is an added bonus over annotated (and named) mock classes, which often (but not always) need to be public with
-   their mocks also public.
+   their mock methods also public.
 </p>
 
 <h3 id="interfaces">

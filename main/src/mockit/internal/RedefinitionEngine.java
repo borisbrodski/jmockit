@@ -161,7 +161,7 @@ public final class RedefinitionEngine
 
    private void redefineMethods(boolean forStartupMock)
    {
-      if (mockMethods.getMethodCount() > 0 || mockingConfiguration != null) {
+      while (realClass != null && (mockMethods.getMethodCount() > 0 || mockingConfiguration != null)) {
          byte[] modifiedClassFile = modifyRealClass(forStartupMock);
          redefineMethods(modifiedClassFile);
          mockMethods.registerMockStates();
@@ -172,7 +172,12 @@ public final class RedefinitionEngine
          else {
             addToMapOfRedefinedClasses(mockMethods.getMockClassInternalName(), modifiedClassFile);
          }
+
+         Class<?> superClass = realClass.getSuperclass();
+         realClass = superClass == Object.class ? null : superClass;
       }
+
+      validateThatAllMockMethodsWereApplied();
    }
 
    private byte[] modifyRealClass(boolean forStartupMock)
@@ -187,7 +192,6 @@ public final class RedefinitionEngine
       }
 
       rcReader.accept(modifier, 0);
-      validateThatAllMockMethodsWereApplied();
       return modifier.toByteArray();
    }
 

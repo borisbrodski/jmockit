@@ -6,6 +6,7 @@ package mockit.internal.annotations;
 
 import java.lang.reflect.*;
 
+import static java.lang.reflect.Modifier.*;
 import static mockit.external.asm4.Opcodes.*;
 
 import mockit.external.asm4.*;
@@ -27,7 +28,7 @@ import mockit.internal.util.*;
  */
 public final class AnnotationsModifier extends BaseClassModifier
 {
-   private static final int IGNORED_ACCESS = Modifier.ABSTRACT + Modifier.NATIVE;
+   private static final int IGNORED_ACCESS = ABSTRACT + NATIVE;
    private static final String CLASS_WITH_STATE = "mockit/internal/state/TestRun";
 
    private final String itFieldDesc;
@@ -67,7 +68,7 @@ public final class AnnotationsModifier extends BaseClassModifier
    {
       super(cr);
 
-      itFieldDesc = getItFieldDescriptor(realClass);
+      itFieldDesc = mockMethods.supportsItField(realClass) ? getItFieldDescriptor(realClass) : null;
       annotatedMocks = mockMethods;
       mockingCfg = mockingConfiguration;
       this.forStartupMock = forStartupMock;
@@ -209,7 +210,7 @@ public final class AnnotationsModifier extends BaseClassModifier
          return null;
       }
 
-      if (Modifier.isNative(access)) {
+      if (isNative(access)) {
          throw new IllegalArgumentException(
             "Reentrant mocks for native methods are not supported: \"" + mockMethod.name + '\"');
       }
@@ -364,7 +365,7 @@ public final class AnnotationsModifier extends BaseClassModifier
          generateGetMockCallWithMockInstanceIndex();
       }
 
-      if ((access & ACC_STATIC) == 0 && annotatedMocks.isWithItField()) {
+      if (!isStatic(access) && itFieldDesc != null) {
          generateItFieldSetting();
       }
 
@@ -373,7 +374,7 @@ public final class AnnotationsModifier extends BaseClassModifier
 
    private void obtainMockInstanceForInvocation(int access)
    {
-      if (mockClassType == null || Modifier.isStatic(access)) {
+      if (mockClassType == null || isStatic(access)) {
          generateMockObjectInstantiation();
       }
       else {
