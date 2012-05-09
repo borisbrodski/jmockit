@@ -37,7 +37,7 @@ public final class MockedType
    public final boolean fieldFromTestClass;
    private final int accessModifiers;
    private final Mocked mocked;
-   public final Capturing capturing;
+   final Capturing capturing;
    final Cascading cascading;
    public final boolean nonStrict;
    public final boolean injectable;

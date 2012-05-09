@@ -22,13 +22,14 @@ final class CaptureTransformer implements ClassFileTransformer
    private final Map<String, byte[]> transformedClasses;
    private boolean inactive;
 
-   CaptureTransformer(CapturedType metadata, CaptureOfImplementations modifierFactory, boolean forTestClass)
+   CaptureTransformer(
+      CapturedType metadata, CaptureOfImplementations modifierFactory, boolean registerTransformedClasses)
    {
       this.metadata = metadata;
       capturedType = Type.getInternalName(metadata.baseType);
       this.modifierFactory = modifierFactory;
       superTypeCollector = new SuperTypeCollector();
-      transformedClasses = forTestClass ? new HashMap<String, byte[]>(2) : null;
+      transformedClasses = registerTransformedClasses ? new HashMap<String, byte[]>(2) : null;
    }
 
    void deactivate()

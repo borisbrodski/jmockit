@@ -80,7 +80,7 @@ class CaptureOfNewInstances extends CaptureOfImplementations
       Class<?> baseType = typeMetadata.getClassType();
 
       if (!typeMetadata.isFinalFieldOrParameter()) {
-         makeSureAllSubtypesAreModified(typeMetadata);
+         makeSureAllSubtypesAreModified(baseType, typeMetadata.fieldFromTestClass);
       }
 
       List<Capture> captures = baseTypeToCaptures.get(baseType);
@@ -91,6 +91,31 @@ class CaptureOfNewInstances extends CaptureOfImplementations
       }
 
       captures.add(new Capture(typeMetadata, mockInstance));
+   }
+
+   @Override
+   protected final ClassSelector createClassSelector()
+   {
+      final String[] classNameFilters = typeMetadata.capturing.classNames();
+      final boolean inverseFilters = typeMetadata.capturing.inverse();
+
+      return new ClassSelector()
+      {
+         public boolean shouldCapture(String className)
+         {
+            if (classNameFilters == null || classNameFilters.length == 0) {
+               return true;
+            }
+
+            for (String classNameRegex : classNameFilters) {
+               if (className.matches(classNameRegex)) {
+                  return !inverseFilters;
+               }
+            }
+
+            return inverseFilters;
+         }
+      };
    }
 
    final boolean captureNewInstance(Object fieldOwner, Object mock)

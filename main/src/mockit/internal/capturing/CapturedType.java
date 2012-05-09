@@ -6,20 +6,17 @@ package mockit.internal.capturing;
 
 import java.lang.reflect.*;
 
-import mockit.*;
-import mockit.internal.util.*;
+import static mockit.internal.util.Utilities.*;
 
 final class CapturedType
 {
    final Class<?> baseType;
-   private final String[] classNameFilters;
-   private final boolean inverseFilters;
+   private final ClassSelector classSelector;
 
-   CapturedType(Class<?> baseType, Capturing capturing)
+   CapturedType(Class<?> baseType, ClassSelector classSelector)
    {
-      classNameFilters = capturing.classNames();
-      inverseFilters = capturing.inverse();
       this.baseType = baseType;
+      this.classSelector = classSelector;
    }
 
    boolean isToBeCaptured(Class<?> aClass)
@@ -28,23 +25,9 @@ final class CapturedType
          aClass != baseType && !Proxy.isProxyClass(aClass) && baseType.isAssignableFrom(aClass) &&
          isToBeCaptured(aClass.getName());
    }
-   
+
    boolean isToBeCaptured(String className)
    {
-      if (Utilities.isGeneratedClass(className)) {
-         return false;
-      }
-
-      if (classNameFilters == null || classNameFilters.length == 0) {
-         return true;
-      }
-
-      for (String classNameRegex : classNameFilters) {
-         if (className.matches(classNameRegex)) {
-            return !inverseFilters;
-         }
-      }
-
-      return inverseFilters;
+      return !isGeneratedClass(className) && (classSelector == null || classSelector.shouldCapture(className));
    }
 }

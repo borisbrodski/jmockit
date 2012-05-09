@@ -8,7 +8,6 @@ import java.util.*;
 
 import mockit.external.asm4.*;
 import mockit.internal.*;
-import mockit.internal.expectations.mocking.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.*;
 
@@ -18,19 +17,19 @@ public abstract class CaptureOfImplementations
 
    protected CaptureOfImplementations() { captureTransformers = new ArrayList<CaptureTransformer>(); }
 
+   protected abstract ClassSelector createClassSelector();
    protected abstract ClassVisitor createModifier(ClassLoader cl, ClassReader cr, String capturedTypeDesc);
 
-   public final void makeSureAllSubtypesAreModified(MockedType typeMetadata)
+   public final void makeSureAllSubtypesAreModified(Class<?> baseType, boolean fieldFromTestClass)
    {
-      Class<?> baseType = typeMetadata.getClassType();
-
       if (baseType == null) {
          throw new IllegalArgumentException("Capturing implementations of multiple base types is not supported");
       }
 
       String baseTypeDesc = Type.getInternalName(baseType);
-      CapturedType captureMetadata = new CapturedType(baseType, typeMetadata.capturing);
-      makeSureAllSubtypesAreModified(captureMetadata, baseTypeDesc, typeMetadata.fieldFromTestClass);
+      ClassSelector classSelector = createClassSelector();
+      CapturedType captureMetadata = new CapturedType(baseType, classSelector);
+      makeSureAllSubtypesAreModified(captureMetadata, baseTypeDesc, fieldFromTestClass);
    }
 
    private void makeSureAllSubtypesAreModified(CapturedType captureMetadata, String baseTypeDesc, boolean forTestClass)
