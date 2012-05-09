@@ -21,6 +21,7 @@ public final class AnnotatedMockMethods
    private boolean isInnerMockClass;
    private boolean withItField;
    private List<MockState> mockStates;
+   boolean withMethodToSelectSubclasses;
 
    final class MockMethod
    {
@@ -44,12 +45,11 @@ public final class AnnotatedMockMethods
       private boolean isMatch(String name, String desc)
       {
          if (this.name.equals(name)) {
-            if (hasInvocationParameter) {
-               if (this.desc.substring(20).equals(desc.substring(1))) {
-                  return true;
-               }
-            }
-            else if (this.desc.equals(desc)) {
+            if (
+               !hasInvocationParameter && this.desc.equals(desc) ||
+               hasInvocationParameter && this.desc.substring(20).equals(desc.substring(1))
+            ) {
+               mockedMethodDesc = desc;
                return true;
             }
          }
@@ -60,6 +60,7 @@ public final class AnnotatedMockMethods
       Class<?> getRealClass() { return realClass; }
       String getMockNameAndDesc() { return name + desc; }
       boolean isForConstructor() { return "$init".equals(name); }
+      boolean hasMatchingRealMethod() { return mockedMethodDesc != null; }
       int getIndexForMockState() { return indexForMockState; }
 
       boolean isReentrant() { return indexForMockState >= 0 && mockStates.get(indexForMockState).isReentrant(); }
@@ -129,30 +130,16 @@ public final class AnnotatedMockMethods
       mockStates.add(mockState);
    }
 
-   MockMethod containsMethod(String name, String desc)
-   {
-      MockMethod mockFound = hasMethod(name, desc);
-
-      if (mockFound != null) {
-         mockFound.mockedMethodDesc = desc;
-      }
-
-      return mockFound;
-   }
-
    /**
     * Verifies if a mock method with the same signature of a given real method was previously collected from the mock
     * class.
     * This operation can be performed only once for any given mock method in this container, so that after the last real
-    * method is processed there should be no mock methods left in the container.
+    * method is processed there should be no mock methods left unused in the container.
     */
-   private MockMethod hasMethod(String name, String desc)
+   MockMethod containsMethod(String name, String desc)
    {
-      for (int i = 0; i < methods.size(); i++) {
-         MockMethod mockMethod = methods.get(i);
-
+      for (MockMethod mockMethod : methods) {
          if (mockMethod.isMatch(name, desc)) {
-            methods.remove(i);
             return mockMethod;
          }
       }
@@ -169,14 +156,25 @@ public final class AnnotatedMockMethods
    boolean supportsItField(Class<?> mockedClass) { return withItField && mockedClass == realClass; }
    void setWithItField(boolean withItField) { this.withItField = withItField; }
 
-   public int getMethodCount() { return methods.size(); }
+   public boolean hasUnusedMocks()
+   {
+      for (MockMethod method : methods) {
+         if (!method.hasMatchingRealMethod()) {
+            return true;
+         }
+      }
 
-   public List<String> getMethods()
+      return false;
+   }
+
+   public List<String> getUnusedMockSignatures()
    {
       List<String> signatures = new ArrayList<String>(methods.size());
 
       for (MockMethod mockMethod : methods) {
-         signatures.add(mockMethod.getMockNameAndDesc());
+         if (!mockMethod.hasMatchingRealMethod()) {
+            signatures.add(mockMethod.getMockNameAndDesc());
+         }
       }
 
       return signatures;
@@ -189,4 +187,6 @@ public final class AnnotatedMockMethods
          annotatedMockStates.addMockClassAndStates(mockClassInternalName, mockStates);
       }
    }
+
+   public boolean isWithMethodToSelectSubclasses() { return withMethodToSelectSubclasses; }
 }

@@ -44,6 +44,9 @@ public final class AnnotationsModifier extends BaseClassModifier
    private AnnotatedMockMethods.MockMethod mockMethod;
    private int varIndex;
 
+   // Output data:
+   private boolean classWasModified;
+
    /**
     * Initializes the modifier for a given real/mock class pair.
     * <p/>
@@ -140,6 +143,8 @@ public final class AnnotationsModifier extends BaseClassModifier
       }
 
       validateMethodModifiers(access, name);
+
+      classWasModified = true;
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
 
       MethodVisitor alternativeWriter = getAlternativeMethodWriter(access, desc);
@@ -464,4 +469,6 @@ public final class AnnotationsModifier extends BaseClassModifier
          mw.visitMethodInsn(INVOKESTATIC, CLASS_WITH_STATE, "exitReentrantMock", "(Ljava/lang/String;I)V");
       }
    }
+
+   public boolean wasModified() { return classWasModified; }
 }

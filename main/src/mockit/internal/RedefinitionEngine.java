@@ -154,23 +154,15 @@ public final class RedefinitionEngine
       redefineMethods(modifiedClassFile);
    }
 
-   public void redefineMethods()
-   {
-      redefineMethods(false);
-   }
+   public void redefineMethods() { redefineMethods(false); }
 
    private void redefineMethods(boolean forStartupMock)
    {
-      while (realClass != null && (mockMethods.getMethodCount() > 0 || mockingConfiguration != null)) {
+      while (realClass != null && (mockMethods.hasUnusedMocks() || mockingConfiguration != null)) {
          byte[] modifiedClassFile = modifyRealClass(forStartupMock);
-         redefineMethods(modifiedClassFile);
-         mockMethods.registerMockStates();
 
-         if (forStartupMock) {
-            TestRun.mockFixture().addFixedClass(realClass.getName(), modifiedClassFile);
-         }
-         else {
-            addToMapOfRedefinedClasses(mockMethods.getMockClassInternalName(), modifiedClassFile);
+         if (modifiedClassFile != null) {
+            applyClassModifications(forStartupMock, modifiedClassFile);
          }
 
          Class<?> superClass = realClass.getSuperclass();
@@ -178,6 +170,10 @@ public final class RedefinitionEngine
       }
 
       validateThatAllMockMethodsWereApplied();
+
+      if (mockMethods.isWithMethodToSelectSubclasses()) {
+
+      }
    }
 
    private byte[] modifyRealClass(boolean forStartupMock)
@@ -192,7 +188,8 @@ public final class RedefinitionEngine
       }
 
       rcReader.accept(modifier, 0);
-      return modifier.toByteArray();
+
+      return modifier.wasModified() ? modifier.toByteArray() : null;
    }
 
    private ClassReader createClassReaderForRealClass()
@@ -204,11 +201,25 @@ public final class RedefinitionEngine
       return new ClassFile(realClass, true).getReader();
    }
 
+   private void applyClassModifications(boolean forStartupMock, byte[] modifiedClassFile)
+   {
+      redefineMethods(modifiedClassFile);
+      mockMethods.registerMockStates();
+
+      if (forStartupMock) {
+         TestRun.mockFixture().addFixedClass(realClass.getName(), modifiedClassFile);
+      }
+      else {
+         addToMapOfRedefinedClasses(mockMethods.getMockClassInternalName(), modifiedClassFile);
+      }
+   }
+
    private void validateThatAllMockMethodsWereApplied()
    {
-      if (mockMethods.getMethodCount() > 0) {
+      List<String> remainingMocks = mockMethods.getUnusedMockSignatures();
+
+      if (!remainingMocks.isEmpty()) {
          String classDesc = mockMethods.getMockClassInternalName();
-         List<String> remainingMocks = mockMethods.getMethods();
          String mockSignatures = new MethodFormatter(classDesc).friendlyMethodSignatures(remainingMocks);
 
          throw new IllegalArgumentException(
