@@ -112,4 +112,23 @@ public final class Startup
          initializeIfNeeded();
       }
    }
+
+   public static void redefineMethods(Class<?> classToRedefine, byte[] modifiedClassfile)
+   {
+      redefineMethods(new ClassDefinition(classToRedefine, modifiedClassfile));
+   }
+
+   public static void redefineMethods(ClassDefinition... classDefs)
+   {
+      try {
+         instrumentation().redefineClasses(classDefs);
+      }
+      catch (ClassNotFoundException e) {
+         // should never happen
+         throw new RuntimeException(e);
+      }
+      catch (UnmodifiableClassException e) {
+         throw new RuntimeException(e);
+      }
+   }
 }

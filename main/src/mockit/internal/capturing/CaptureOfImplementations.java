@@ -20,6 +20,11 @@ public abstract class CaptureOfImplementations
    protected abstract ClassSelector createClassSelector();
    protected abstract ClassVisitor createModifier(ClassLoader cl, ClassReader cr, String capturedTypeDesc);
 
+   public final void makeSureAllSubtypesAreModified(Class<?> baseType)
+   {
+      makeSureAllSubtypesAreModified(baseType, false);
+   }
+
    public final void makeSureAllSubtypesAreModified(Class<?> baseType, boolean fieldFromTestClass)
    {
       if (baseType == null) {
@@ -29,10 +34,12 @@ public abstract class CaptureOfImplementations
       String baseTypeDesc = Type.getInternalName(baseType);
       ClassSelector classSelector = createClassSelector();
       CapturedType captureMetadata = new CapturedType(baseType, classSelector);
-      makeSureAllSubtypesAreModified(captureMetadata, baseTypeDesc, fieldFromTestClass);
+
+      redefineClassesAlreadyLoaded(captureMetadata, baseTypeDesc);
+      createCaptureTransformer(captureMetadata, fieldFromTestClass);
    }
 
-   private void makeSureAllSubtypesAreModified(CapturedType captureMetadata, String baseTypeDesc, boolean forTestClass)
+   private void redefineClassesAlreadyLoaded(CapturedType captureMetadata, String baseTypeDesc)
    {
       Class<?>[] classesLoaded = Startup.instrumentation().getAllLoadedClasses();
 
@@ -41,8 +48,6 @@ public abstract class CaptureOfImplementations
             redefineClass(aClass, baseTypeDesc);
          }
       }
-
-      createCaptureTransformer(captureMetadata, forTestClass);
    }
 
    private void redefineClass(Class<?> realClass, String baseTypeDesc)
@@ -53,7 +58,7 @@ public abstract class CaptureOfImplementations
          classReader.accept(modifier, 0);
          byte[] modifiedClass = modifier.toByteArray();
 
-         new RedefinitionEngine(realClass).redefineMethods(null, modifiedClass);
+         new RedefinitionEngine(realClass).redefineMethodsWhileRegisteringTheClass(modifiedClass);
       }
    }
 

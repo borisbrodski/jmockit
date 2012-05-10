@@ -26,7 +26,7 @@ import mockit.internal.util.*;
  * <p/>
  * Any fields (static or not) in the real class remain untouched.
  */
-public final class AnnotationsModifier extends BaseClassModifier
+final class AnnotationsModifier extends BaseClassModifier
 {
    private static final int IGNORED_ACCESS = ABSTRACT + NATIVE;
    private static final String CLASS_WITH_STATE = "mockit/internal/state/TestRun";
@@ -65,37 +65,61 @@ public final class AnnotationsModifier extends BaseClassModifier
     * @throws IllegalArgumentException if no mock instance is given but the mock class is an inner class, which cannot
     * be instantiated since the enclosing instance is not known
     */
-   public AnnotationsModifier(
-      ClassReader cr, Class<?> realClass, Object mock, AnnotatedMockMethods mockMethods,
-      MockingConfiguration mockingConfiguration, boolean forStartupMock)
+   AnnotationsModifier(
+      ClassReader cr, Class<?> realClass, Object mock,
+      AnnotatedMockMethods mockMethods, MockingConfiguration mockingConfiguration, boolean forStartupMock)
    {
-      super(cr);
-
-      itFieldDesc = mockMethods.supportsItField(realClass) ? getItFieldDescriptor(realClass) : null;
-      annotatedMocks = mockMethods;
-      mockingCfg = mockingConfiguration;
-      this.forStartupMock = forStartupMock;
-      mockInstanceIndex = getMockInstanceIndex(mock);
-
-      setUseMockingBridge(realClass.getClassLoader());
-      useMockingBridgeForUpdatingMockState = useMockingBridge;
-
-      if (
-         !useMockingBridge && mock != null && Utilities.isAnonymousClass(mock.getClass()) &&
-         realClass.getPackage() != mock.getClass().getPackage()
-      ) {
-         useMockingBridge = true;
-      }
+      this(
+         cr, getItFieldDescriptor(realClass, mockMethods), mockMethods, mockingConfiguration, forStartupMock, mock,
+         realClass.getClassLoader() == null);
+      inferUseOfMockingBridge(realClass.getClassLoader(), realClass, mock);
    }
 
-   private String getItFieldDescriptor(Class<?> realClass)
+   private static String getItFieldDescriptor(Class<?> realClass, AnnotatedMockMethods mockMethods)
    {
+      if (!mockMethods.supportsItField(realClass)) {
+         return null;
+      }
+
       if (Proxy.isProxyClass(realClass)) {
          //noinspection AssignmentToMethodParameter
          realClass = realClass.getInterfaces()[0];
       }
 
       return Type.getDescriptor(realClass);
+   }
+
+   private void inferUseOfMockingBridge(ClassLoader classLoaderOfRealClass, Class<?> realClass, Object mock)
+   {
+      setUseMockingBridge(classLoaderOfRealClass);
+
+      if (
+         !useMockingBridge && mock != null && Utilities.isAnonymousClass(mock.getClass()) &&
+         (realClass == null || realClass.getPackage() != mock.getClass().getPackage())
+      ) {
+         useMockingBridge = true;
+      }
+   }
+
+   AnnotationsModifier(
+      ClassLoader classLoaderOfRealClass, ClassReader cr, Object mock,
+      AnnotatedMockMethods mockMethods, MockingConfiguration mockingConfiguration, boolean forStartupMock)
+   {
+      this(cr, null, mockMethods, mockingConfiguration, forStartupMock, mock, classLoaderOfRealClass == null);
+      inferUseOfMockingBridge(classLoaderOfRealClass, null, mock);
+   }
+
+   private AnnotationsModifier(
+      ClassReader cr, String itFieldDesc, AnnotatedMockMethods mockMethods, MockingConfiguration mockingConfiguration,
+      boolean forStartupMock, Object mock, boolean useMockingBridgeForUpdatingMockState)
+   {
+      super(cr);
+      this.itFieldDesc = itFieldDesc;
+      annotatedMocks = mockMethods;
+      mockingCfg = mockingConfiguration;
+      this.forStartupMock = forStartupMock;
+      mockInstanceIndex = getMockInstanceIndex(mock);
+      this.useMockingBridgeForUpdatingMockState = useMockingBridgeForUpdatingMockState;
    }
 
    private int getMockInstanceIndex(Object mock)
@@ -112,7 +136,7 @@ public final class AnnotationsModifier extends BaseClassModifier
          "you must either pass a mock instance, or make the class static");
    }
 
-   public void useOneMockInstancePerMockedInstance(Class<?> mockClass)
+   void useOneMockInstancePerMockedInstance(Class<?> mockClass)
    {
       mockClassType = Type.getType(mockClass);
    }
@@ -470,5 +494,5 @@ public final class AnnotationsModifier extends BaseClassModifier
       }
    }
 
-   public boolean wasModified() { return classWasModified; }
+   boolean wasModified() { return classWasModified; }
 }

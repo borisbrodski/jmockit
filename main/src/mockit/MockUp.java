@@ -6,7 +6,7 @@ package mockit;
 
 import java.lang.reflect.*;
 
-import mockit.internal.*;
+import mockit.internal.annotations.*;
 import mockit.internal.startup.*;
 
 /**
@@ -84,16 +84,22 @@ public abstract class MockUp<T>
 
    private T redefineClass(Class<?> classToMock)
    {
-      //noinspection unchecked
-      T proxy = classToMock.isInterface() ? (T) Mockit.newEmptyProxy(classToMock) : null;
-      Class<?> realClass = proxy == null ? classToMock : proxy.getClass();
+      Class<?> realClass = classToMock;
+      T proxy = null;
+
+      if (classToMock.isInterface()) {
+         //noinspection unchecked
+         proxy = (T) Mockit.newEmptyProxy(classToMock);
+         realClass = proxy.getClass();
+      }
+
       redefineMethods(realClass);
       return proxy;
    }
 
    private void redefineMethods(Class<?> realClass)
    {
-      new RedefinitionEngine(realClass, this, getClass()).redefineMethods();
+      new MockClassSetup(realClass, this, getClass()).redefineMethods();
    }
 
    private T createMockInstanceForMultipleInterfaces(Type typeToMock)
@@ -122,4 +128,14 @@ public abstract class MockUp<T>
     * {@literal null} otherwise (ie, if a class was specified to be mocked).
     */
    public final T getMockInstance() { return mockInstance; }
+
+   /**
+    *
+    * @param cl the class loader of the class to be mocked
+    * @param subclassName the fully qualified name of a class extending/implementing the class/interface specified to be
+    *                     mocked
+    *
+    * @return {@code true} if the class should be mocked as well, {@code false} (the default) otherwise
+    */
+   protected boolean shouldBeMocked(ClassLoader cl, String subclassName) { return false; }
 }

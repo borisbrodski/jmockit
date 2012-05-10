@@ -13,6 +13,7 @@ import static java.lang.reflect.Modifier.*;
 import mockit.*;
 import mockit.external.asm4.*;
 import mockit.internal.*;
+import mockit.internal.startup.*;
 import mockit.internal.util.*;
 
 public final class ExpectationsTransformer implements ClassFileTransformer
@@ -75,7 +76,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
             }
 
             byte[] modifiedClassfile = modifier.toByteArray();
-            RedefinitionEngine.redefineMethods(new ClassDefinition(aClass, modifiedClassfile));
+            Startup.redefineMethods(aClass, modifiedClassfile);
          }
       }
    }

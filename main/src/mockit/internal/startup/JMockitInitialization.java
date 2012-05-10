@@ -10,6 +10,7 @@ import mockit.integration.junit3.internal.*;
 import mockit.integration.junit4.internal.*;
 import mockit.integration.testng.internal.*;
 import mockit.internal.*;
+import mockit.internal.annotations.*;
 import mockit.internal.util.*;
 
 final class JMockitInitialization
@@ -52,7 +53,7 @@ final class JMockitInitialization
    private boolean setUpInternalStartupMock(Class<?> mockClass)
    {
       try {
-         new RedefinitionEngine(null, mockClass).setUpStartupMock();
+         new MockClassSetup(mockClass).setUpStartupMock();
          return true;
       }
       catch (TypeNotPresentException ignore) {
@@ -81,7 +82,7 @@ final class JMockitInitialization
          }
 
          Class<?> realClass = Utilities.loadClass(realClassName.trim());
-         new RedefinitionEngine(realClass, true, filters).stubOutAtStartup();
+         new ClassStubbing(realClass, true, filters).stubOutAtStartup();
       }
    }
 
@@ -89,7 +90,7 @@ final class JMockitInitialization
    {
       for (String mockClassName : config.mockClasses) {
          Class<?> mockClass = Utilities.loadClass(mockClassName);
-         new RedefinitionEngine(null, mockClass).setUpStartupMock();
+         new MockClassSetup(mockClass).setUpStartupMock();
       }
    }
 }

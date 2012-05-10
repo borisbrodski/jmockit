@@ -18,18 +18,20 @@ import mockit.internal.util.*;
  * Responsible for collecting the signatures of all methods defined in a given mock class which are explicitly annotated
  * as {@link mockit.Mock mocks}.
  */
-public final class AnnotatedMockMethodCollector extends ClassVisitor
+final class AnnotatedMockMethodCollector extends ClassVisitor
 {
    private static final int INVALID_FIELD_ACCESSES = ACC_FINAL + ACC_STATIC + ACC_SYNTHETIC;
    private static final int INVALID_METHOD_ACCESSES = ACC_BRIDGE + ACC_SYNTHETIC + ACC_ABSTRACT + ACC_NATIVE;
 
    private final AnnotatedMockMethods mockMethods;
+
+   // Helper fields:
    private boolean collectingFromSuperClass;
    private String enclosingClassDescriptor;
 
-   public AnnotatedMockMethodCollector(AnnotatedMockMethods mockMethods) { this.mockMethods = mockMethods; }
+   AnnotatedMockMethodCollector(AnnotatedMockMethods mockMethods) { this.mockMethods = mockMethods; }
 
-   public void collectMockMethods(Class<?> mockClass)
+   void collectMockMethods(Class<?> mockClass)
    {
       Utilities.registerLoadedClass(mockClass);
 
@@ -97,6 +99,8 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
 
       return new MethodVisitor()
       {
+         private boolean annotatedAsMockMethod;
+
          @Override
          public AnnotationVisitor visitAnnotation(String desc, boolean visible)
          {
@@ -105,6 +109,7 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
                   mockMethods.addMethod(collectingFromSuperClass, methodName, methodDesc, Modifier.isStatic(access));
 
                if (mockMethod != null) {
+                  annotatedAsMockMethod = true;
                   return new MockAnnotationVisitor(mockMethod);
                }
             }
@@ -117,6 +122,17 @@ public final class AnnotatedMockMethodCollector extends ClassVisitor
             String paramName, String paramDesc, String paramSignature, Label start, Label end, int index)
          {
             ParameterNames.registerName(mockMethods.getMockClassInternalName(), methodName, methodDesc, paramName);
+         }
+
+         @Override
+         public void visitEnd()
+         {
+            if (
+               !annotatedAsMockMethod &&
+               "shouldBeMocked".equals(methodName) && "(Ljava/lang/ClassLoader;Ljava/lang/String;)Z".equals(methodDesc)
+            ) {
+               mockMethods.withMethodToSelectSubclasses = true;
+            }
          }
       };
    }

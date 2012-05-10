@@ -13,7 +13,7 @@ import mockit.internal.util.*;
  * A container for the mock methods "collected" from a mock class, separated in two sets: one with all the mock methods,
  * and another with just the subset of static methods.
  */
-public final class AnnotatedMockMethods
+final class AnnotatedMockMethods
 {
    private final Class<?> realClass;
    private final List<MockMethod> methods;
@@ -88,7 +88,7 @@ public final class AnnotatedMockMethods
       }
    }
 
-   public AnnotatedMockMethods(Class<?> realClass)
+   AnnotatedMockMethods(Class<?> realClass)
    {
       this.realClass = realClass;
       methods = new ArrayList<MockMethod>();
@@ -147,7 +147,7 @@ public final class AnnotatedMockMethods
       return null;
    }
 
-   public String getMockClassInternalName() { return mockClassInternalName; }
+   String getMockClassInternalName() { return mockClassInternalName; }
    void setMockClassInternalName(String mockClassInternalName) { this.mockClassInternalName = mockClassInternalName; }
 
    boolean isInnerMockClass() { return isInnerMockClass; }
@@ -156,7 +156,7 @@ public final class AnnotatedMockMethods
    boolean supportsItField(Class<?> mockedClass) { return withItField && mockedClass == realClass; }
    void setWithItField(boolean withItField) { this.withItField = withItField; }
 
-   public boolean hasUnusedMocks()
+   boolean hasUnusedMocks()
    {
       for (MockMethod method : methods) {
          if (!method.hasMatchingRealMethod()) {
@@ -167,7 +167,7 @@ public final class AnnotatedMockMethods
       return false;
    }
 
-   public List<String> getUnusedMockSignatures()
+   List<String> getUnusedMockSignatures()
    {
       List<String> signatures = new ArrayList<String>(methods.size());
 
@@ -180,13 +180,11 @@ public final class AnnotatedMockMethods
       return signatures;
    }
 
-   public void registerMockStates()
+   void registerMockStates()
    {
       if (mockStates != null) {
          AnnotatedMockStates annotatedMockStates = TestRun.getMockClasses().getMockStates();
          annotatedMockStates.addMockClassAndStates(mockClassInternalName, mockStates);
       }
    }
-
-   public boolean isWithMethodToSelectSubclasses() { return withMethodToSelectSubclasses; }
 }

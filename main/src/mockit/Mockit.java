@@ -7,7 +7,7 @@ package mockit;
 import java.lang.reflect.*;
 import java.util.*;
 
-import mockit.internal.*;
+import mockit.internal.annotations.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
@@ -85,7 +85,7 @@ public final class Mockit
    public static void stubOut(Class<?>... realClasses)
    {
       for (Class<?> realClass : realClasses) {
-         new RedefinitionEngine(realClass).stubOut();
+         new ClassStubbing(realClass).stubOut();
       }
    }
 
@@ -119,7 +119,7 @@ public final class Mockit
     */
    public static void stubOutClass(Class<?> realClass, String... filters)
    {
-      new RedefinitionEngine(realClass, true, filters).stubOut();
+      new ClassStubbing(realClass, true, filters).stubOut();
    }
 
    /**
@@ -130,7 +130,7 @@ public final class Mockit
     */
    public static void stubOutClass(Class<?> realClass, boolean inverse, String... filters)
    {
-      new RedefinitionEngine(realClass, !inverse, filters).stubOut();
+      new ClassStubbing(realClass, !inverse, filters).stubOut();
    }
 
    /**
@@ -140,7 +140,7 @@ public final class Mockit
    public static void stubOutClass(String realClassName, String... filters)
    {
       Class<?> realClass = Utilities.loadClass(realClassName);
-      new RedefinitionEngine(realClass, true, filters).stubOut();
+      new ClassStubbing(realClass, true, filters).stubOut();
    }
 
    /**
@@ -150,7 +150,7 @@ public final class Mockit
    public static void stubOutClass(String realClassName, boolean inverse, String... filters)
    {
       Class<?> realClass = Utilities.loadClass(realClassName);
-      new RedefinitionEngine(realClass, !inverse, filters).stubOut();
+      new ClassStubbing(realClass, !inverse, filters).stubOut();
    }
 
    /**
@@ -162,13 +162,13 @@ public final class Mockit
    public static void setUpMocksAndStubs(Class<?>... mockAndRealClasses)
    {
       for (Class<?> mockOrRealClass : mockAndRealClasses) {
-         RedefinitionEngine redefinition = new RedefinitionEngine(mockOrRealClass);
+         MockClass metadata = mockOrRealClass.getAnnotation(MockClass.class);
 
-         if (redefinition.isWithMockClass()) {
-            redefinition.redefineMethods();
+         if (metadata != null) {
+            new MockClassSetup(mockOrRealClass, metadata).redefineMethods();
          }
          else {
-            redefinition.stubOut();
+            new ClassStubbing(mockOrRealClass).stubOut();
          }
       }
    }
@@ -246,7 +246,7 @@ public final class Mockit
             mock = mockClassOrInstance;
          }
 
-         new RedefinitionEngine(mock, mockClass).redefineMethods();
+         new MockClassSetup(mock, mockClass).redefineMethods();
       }
    }
 
@@ -311,7 +311,7 @@ public final class Mockit
             mock = mockClassOrInstance;
          }
 
-         new RedefinitionEngine(mock, mockClass).setUpStartupMock();
+         new MockClassSetup(mock, mockClass).setUpStartupMock();
       }
    }
 
@@ -331,7 +331,7 @@ public final class Mockit
    public static void setUpMock(Class<?> realClass, Object mock)
    {
       Class<?> mockClass = mock.getClass();
-      new RedefinitionEngine(realClass, mock, mockClass).redefineMethods();
+      new MockClassSetup(realClass, mock, mockClass).redefineMethods();
    }
 
    /**
@@ -359,7 +359,7 @@ public final class Mockit
     */
    public static void setUpMock(Class<?> realClass, Class<?> mockClass)
    {
-      new RedefinitionEngine(realClass, null, mockClass).redefineMethods();
+      new MockClassSetup(realClass, null, mockClass).redefineMethods();
    }
 
    /**
@@ -412,17 +412,17 @@ public final class Mockit
          mock = mockClassOrInstance;
       }
 
-      RedefinitionEngine redefinition = new RedefinitionEngine(mock, mockClass);
-      Class<?> realClass = redefinition.getRealClass();
+      MockClassSetup setup = new MockClassSetup(mock, mockClass);
+      Class<?> realClass = setup.getRealClass();
       T proxy = null;
 
       if (realClass.isInterface()) {
          //noinspection unchecked
          proxy = (T) newEmptyProxy(mockClass.getClassLoader(), realClass);
-         redefinition.setRealClass(proxy.getClass());
+         setup.setRealClass(proxy.getClass());
       }
 
-      redefinition.redefineMethods();
+      setup.redefineMethods();
 
       return proxy;
    }

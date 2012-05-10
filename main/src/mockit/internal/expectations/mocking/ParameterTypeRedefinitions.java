@@ -99,7 +99,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
       }
 
       capture.registerCaptureOfNewInstances(typeMetadata, originalInstance);
-      capture.makeSureAllSubtypesAreModified(typeMetadata.getClassType(), false);
+      capture.makeSureAllSubtypesAreModified(typeMetadata.getClassType());
    }
 
    @Override

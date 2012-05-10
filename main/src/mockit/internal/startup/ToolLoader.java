@@ -9,6 +9,7 @@ import java.lang.instrument.*;
 
 import mockit.external.asm4.*;
 import mockit.internal.*;
+import mockit.internal.annotations.*;
 import mockit.internal.util.*;
 
 final class ToolLoader extends ClassVisitor
@@ -87,7 +88,7 @@ final class ToolLoader extends ClassVisitor
       }
 
       try {
-         new RedefinitionEngine(null, mockClass).setUpStartupMock();
+         new MockClassSetup(mockClass).setUpStartupMock();
       }
       catch (TypeNotPresentException e) {
          // OK, ignores the startup mock if the necessary third-party class files are not in the classpath.
