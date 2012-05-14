@@ -4,6 +4,7 @@
  */
 package mockit.internal.annotations;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.*;
@@ -19,61 +20,60 @@ public final class MockClassSetup
 {
    private Class<?> realClass;
    private final Class<?> mockClass;
+   private final AnnotatedMockMethods mockMethods;
    private final Instantiation instantiation;
    private final MockingConfiguration mockingConfiguration;
-   private final AnnotatedMockMethods mockMethods;
+   private final Object mock;
    private boolean forStartupMock;
-   private Object mock;
 
    public MockClassSetup(Class<?> mockClass, MockClass metadata)
    {
-      this.mockClass = mockClass;
-      realClass = metadata.realClass();
-      instantiation = metadata.instantiation();
-      mockingConfiguration = createMockingConfiguration(metadata);
-
-      mockMethods = new AnnotatedMockMethods(realClass);
-      new AnnotatedMockMethodCollector(mockMethods).collectMockMethods(mockClass);
-
-      createMockInstanceAccordingToInstantiation();
+      this(metadata.realClass(), null, mockClass, metadata);
    }
 
-   private static MockingConfiguration createMockingConfiguration(MockClass metadata)
-   {
-      return createMockingConfiguration(metadata.stubs(), !metadata.inverse());
-   }
-
-   private static MockingConfiguration createMockingConfiguration(String[] filters, boolean notInverted)
-   {
-      return filters.length == 0 ? null : new MockingConfiguration(filters, notInverted);
-   }
-
-   private void createMockInstanceAccordingToInstantiation()
-   {
-      if (mock == null && instantiation == Instantiation.PerMockSetup) {
-         mock = Utilities.newInstance(mockClass);
-      }
-   }
-
-   public MockClassSetup(Class<?> realClass, Object mock, Class<?> mockClass)
+   private MockClassSetup(Class<?> realClass, Object mock, Class<?> mockClass, MockClass metadata)
    {
       this.realClass = realClass;
-      this.mockClass = mockClass;
-      mockMethods = new AnnotatedMockMethods(realClass);
-      this.mock = mock;
+      validateRealClass();
 
-      if (mockClass.isAnnotationPresent(MockClass.class)) {
-         MockClass metadata = mockClass.getAnnotation(MockClass.class);
+      mockMethods = new AnnotatedMockMethods(realClass);
+      this.mockClass = mockClass;
+
+      if (metadata != null) {
          instantiation = metadata.instantiation();
-         createMockInstanceAccordingToInstantiation();
          mockingConfiguration = createMockingConfiguration(metadata);
+         this.mock = mock == null ? createMockInstanceAccordingToInstantiation() : mock;
       }
       else {
          instantiation = Instantiation.PerMockInvocation;
          mockingConfiguration = null;
+         this.mock = mock;
       }
 
       new AnnotatedMockMethodCollector(mockMethods).collectMockMethods(mockClass);
+   }
+
+   private void validateRealClass()
+   {
+      if (realClass.isAnnotationPresent(MockClass.class)) {
+         throw new IllegalArgumentException("Invalid use of mock " + realClass + " where real class was expected");
+      }
+   }
+
+   private static MockingConfiguration createMockingConfiguration(MockClass metadata)
+   {
+      String[] filters = metadata.stubs();
+      return filters.length == 0 ? null : new MockingConfiguration(filters, !metadata.inverse());
+   }
+
+   private Object createMockInstanceAccordingToInstantiation()
+   {
+      return instantiation == Instantiation.PerMockSetup ? Utilities.newInstance(mockClass) : null;
+   }
+
+   public MockClassSetup(Class<?> realClass, Object mock, Class<?> mockClass)
+   {
+      this(realClass, mock, mockClass, mockClass.getAnnotation(MockClass.class));
    }
 
    public MockClassSetup(Object mock, Class<?> mockClass)
@@ -115,7 +115,7 @@ public final class MockClassSetup
       redefineMethodsInClassHierarchy();
       validateThatAllMockMethodsWereApplied();
 
-      if (mockMethods.withMethodToSelectSubclasses) {
+      if (mockMethods.classWithMethodToSelectSubclasses != null) {
          new CaptureOfSubclasses().makeSureAllSubtypesAreModified(baseType);
       }
    }
@@ -186,18 +186,26 @@ public final class MockClassSetup
       }
    }
 
-   final class CaptureOfSubclasses extends CaptureOfImplementations
+   private final class CaptureOfSubclasses extends CaptureOfImplementations implements ClassSelector
    {
-      @Override
-      protected ClassSelector createClassSelector()
+      private final Method shouldBeMocked;
+
+      private CaptureOfSubclasses()
       {
-         return new ClassSelector()
-         {
-            public boolean shouldCapture(String className)
-            {
-               return true;
-            }
-         };
+         try {
+            shouldBeMocked = mockMethods.classWithMethodToSelectSubclasses.getDeclaredMethod(
+               "shouldBeMocked", ClassLoader.class, String.class);
+         }
+         catch (NoSuchMethodException e) { throw new RuntimeException(e); }
+      }
+
+      @Override
+      protected ClassSelector createClassSelector() { return this; }
+
+      public boolean shouldCapture(ClassLoader definingClassLoader, String className)
+      {
+         Boolean capture = Utilities.invoke(mock, shouldBeMocked, definingClassLoader, className);
+         return capture;
       }
 
       @Override
