@@ -714,15 +714,14 @@ public final class MockAnnotationsTest
       static void login() {}
    }
 
+   // Stubbing of static class initializers ///////////////////////////////////////////////////////////////////////////
+
    static class ClassWithStaticInitializers
    {
       static String str = "initialized"; // if final it would be a compile-time constant
       static final Object obj = new Object(); // constant, but only at runtime
 
-      static
-      {
-         System.exit(1);
-      }
+      static { System.exit(1); }
 
       static void doSomething() {}
 
@@ -753,7 +752,6 @@ public final class MockAnnotationsTest
    static class AnotherClassWithStaticInitializers
    {
       static { System.exit(1); }
-
       static void doSomething() { throw new RuntimeException(); }
    }
 
@@ -771,6 +769,54 @@ public final class MockAnnotationsTest
       @Mock(minInvocations = 1, maxInvocations = 1)
       void doSomething() {}
    }
+
+   static class YetAnotherClassWithStaticInitializer
+   {
+      static { System.loadLibrary("none.dll"); }
+      static void doSomething() {}
+   }
+
+   @SuppressWarnings("ClassMayBeInterface")
+   @MockClass(realClass = YetAnotherClassWithStaticInitializer.class, stubs = "<clinit>")
+   static class MockForYetAnotherClassWithInitializer {}
+
+   @Test
+   public void stubOutStaticInitializerWithEmptyMockClass() throws Exception
+   {
+      setUpMock(MockForYetAnotherClassWithInitializer.class);
+
+      YetAnotherClassWithStaticInitializer.doSomething();
+   }
+
+   @SuppressWarnings("ClassMayBeInterface")
+   @MockClass(realClass = MockAnotherCollaborator.class)
+   static class MockClassPointingToAnother {}
+
+   @Test
+   public void attemptToUseMockClassWhereRealClassIsExpected()
+   {
+      try {
+         setUpMock(MockForClassWithInitializer.class, MockForClassWithoutRealMethod.class);
+         fail();
+      }
+      catch (IllegalArgumentException e) {
+         assertTrue(e.getMessage().startsWith("Invalid use of mock class"));
+      }
+   }
+
+   @Test
+   public void attemptToUseMockClassWhichPointsToAnotherMockClassInsteadOfRealClass()
+   {
+      try {
+         setUpMocksAndStubs(MockClassPointingToAnother.class);
+         fail();
+      }
+      catch (IllegalArgumentException e) {
+         assertTrue(e.getMessage().startsWith("Invalid use of mock class "));
+      }
+   }
+
+   // Other tests /////////////////////////////////////////////////////////////////////////////////////////////////////
 
    @Test
    public void mockJREInterface() throws Exception

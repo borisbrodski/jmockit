@@ -161,15 +161,17 @@ final class AnnotationsModifier extends BaseClassModifier
       }
 
       if (!hasMock(name, desc)) {
-         return
-            shouldCopyOriginalMethodBytecode(access, name, desc, signature, exceptions) ?
-               super.visitMethod(access, name, desc, signature, exceptions) : methodAnnotationsVisitor;
+         if (shouldCopyOriginalMethodBytecode(access, name, desc, signature, exceptions)) {
+            return super.visitMethod(access, name, desc, signature, exceptions);
+         }
+
+         return methodAnnotationsVisitor;
       }
 
       validateMethodModifiers(access, name);
 
-      classWasModified = true;
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
+      classWasModified = true;
 
       MethodVisitor alternativeWriter = getAlternativeMethodWriter(access, desc);
 
@@ -208,6 +210,7 @@ final class AnnotationsModifier extends BaseClassModifier
       if ((access & IGNORED_ACCESS) == 0 && mockingCfg != null && mockingCfg.matchesFilters(name, desc)) {
          startModifiedMethodVersion(access, name, desc, signature, exceptions);
          generateEmptyStubImplementation(name, desc);
+         classWasModified = true;
          return false;
       }
 
