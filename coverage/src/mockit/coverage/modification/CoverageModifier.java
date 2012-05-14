@@ -354,10 +354,6 @@ final class CoverageModifier extends ClassVisitor
       {
          generateCallToRegisterBranchTargetExecutionIfPending();
          mw.visitVarInsn(opcode, var);
-
-         if (opcode == RET) {
-            System.out.println("RET instruction found!");
-         }
       }
 
       @Override
