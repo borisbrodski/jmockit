@@ -30,6 +30,15 @@
       multiple levels of a class hierarchy.
    </li>
    <li>
+      <strong>JMockit Coverage</strong>: Removed the <code>jmockit-coverage-{htmlbasic|htmlfull|serial|merge}.jar</code>
+      files from the distribution zip file, and dropped support for output selection through the addition of such files
+      to the runtime classpath.
+      This was done because few users relied on this feature, and it wasn't applicable to Maven runs; also, some users
+      add every jar file to the classpath by default.
+      Therefore, the only way now to select the desired coverage output is by setting the
+      <code>jmockit-coverage-output</code> system property.
+   </li>
+   <li>
       Issues fixed:
       <a href="http://code.google.com/p/jmockit/issues/detail?id=224">224</a>.
    </li>

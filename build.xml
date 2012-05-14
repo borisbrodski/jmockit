@@ -184,7 +184,7 @@
 
    <!-- Targets for generating component jars and the distribution zip file -->
 
-   <target name="createjars" depends="createjar-main, createjars-coverage"/>
+   <target name="createjars" depends="createjar-main, createjar-coverage"/>
 
    <target name="createjar-main">
       <jar destfile="jmockit.jar">
@@ -210,47 +210,19 @@
             dir="coverage/classes" includes="jmockit.properties mockit/coverage/**/*.class **/*.css **/*.js **/*.png"/>
          <fileset dir="main/classes" includes="mockit/external/asm4/*.class"/>
          <manifest>
+            <attribute name="Main-Class" value="mockit.coverage.CodeCoverage"/>
             <attribute name="Premain-Class" value="mockit.coverage.standalone.Startup"/>
             <attribute name="Can-Redefine-Classes" value="true"/>
-            <attribute name="Class-Path" value="jmockit.jar"/>
             <attribute name="Implementation-Version" value="${version}"/>
          </manifest>
       </jar>
    </target>
-   <target name="createjar-coverage-htmlbasic">
-      <jar destfile="jmockit-coverage-htmlbasic.jar" basedir="coverage/classes" excludes="**/*">
-         <manifest>
-            <attribute name="Class-Path" value="jmockit-coverage.jar"/>
-            <attribute name="Main-Class" value="mockit.coverage.CodeCoverage"/>
-         </manifest>
-      </jar>
-   </target>
-   <target name="createjar-coverage-htmlfull">
-      <jar destfile="jmockit-coverage-htmlfull.jar" basedir="coverage/classes" excludes="**/*">
-         <manifest>
-            <attribute name="Class-Path" value="jmockit-coverage.jar"/>
-            <attribute name="Main-Class" value="mockit.coverage.CodeCoverage"/>
-         </manifest>
-      </jar>
-   </target>
-   <target name="createjar-coverage-serial">
-      <jar destfile="jmockit-coverage-serial.jar" basedir="coverage/classes" excludes="**/*">
-         <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
-      </jar>
-   </target>
-   <target name="createjar-coverage-merge">
-      <jar destfile="jmockit-coverage-merge.jar" basedir="coverage/classes" excludes="**/*">
-         <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
-      </jar>
-   </target>
+
    <target name="createjar-incremental">
       <jar destfile="incremental/jmockit-incremental.jar" basedir="incremental/classes">
          <manifest><attribute name="Class-Path" value="jmockit-coverage.jar"/></manifest>
       </jar>
    </target>
-   <target name="createjars-coverage"
-           depends="createjar-coverage, createjar-coverage-htmlbasic, createjar-coverage-htmlfull,
-                    createjar-coverage-serial, createjar-coverage-merge"/>
 
    <target name="createjar-hibernate3emul">
       <jar destfile="hibernate3emul/jmockit-hibernate3emul.jar" basedir="hibernate3emul/classes">
@@ -337,7 +309,8 @@
    <target name="sampleTests">
       <junit fork="yes" forkmode="once" dir="samples">
          <classpath path="jmockit.jar"/>
-         <classpath path="jmockit-coverage-serial.jar"/>
+         <classpath path="jmockit-coverage.jar"/>
+         <sysproperty key="jmockit-coverage-output" value="serial"/>
          <classpath refid="common.classpath"/>
          <classpath>
             <fileset dir="samples" includes="lib/*.jar"/>
@@ -404,7 +377,8 @@
       <testng workingdir="${sampleDir}">
          <classpath refid="common.classpath"/>
          <classpath path="jmockit.jar"/>
-         <classpath path="jmockit-coverage-serial.jar"/>
+         <classpath path="jmockit-coverage.jar"/>
+         <sysproperty key="jmockit-coverage-output" value="serial"/>
          <classpath>
             <fileset dir="samples" includes="lib/*.jar"/>
             <pathelement location="${sampleDir}/classes"/>
@@ -413,8 +387,8 @@
          <classfileset dir="${sampleDir}/test-classes" includes="**/*Test.class"/>
       </testng>
 
-      <java fork="yes" dir="samples" jar="jmockit-coverage-htmlfull.jar">
-         <arg line=". LoginService"/>
+      <java fork="yes" dir="samples" jar="jmockit-coverage.jar">
+         <arg line="-Djmockit-coverage-output=htmlfull . LoginService"/>
       </java>
    </target>
 </project>
