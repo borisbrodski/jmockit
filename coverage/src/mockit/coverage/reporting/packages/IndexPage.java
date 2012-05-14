@@ -87,7 +87,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
    private void writeTableFirstRowWithColumnTitles()
    {
       output.println("    <tr>");
-      output.write("      <th style='cursor: col-resize' onclick='showHideAllFiles(this)'>Packages: ");
+      output.write("      <th style='cursor: col-resize' onclick='showHideAllFiles()'>Packages: ");
       output.print(packageToFiles.keySet().size());
       output.println("</th>");
       output.write(
