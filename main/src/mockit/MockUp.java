@@ -130,12 +130,21 @@ public abstract class MockUp<T>
    public final T getMockInstance() { return mockInstance; }
 
    /**
+    * Indicates whether the given class should also be mocked.
+    * <p/>
+    * If this method is overridden, all subclasses which extend the real class specified through this class's type
+    * parameter {@code &lt;T>} will also be considered for mocking.
+    * The same applies to classes implementing an specified real <em>interface</em>, when that's the case.
+    * The overriding method will be called for each such subclass, to decide whether it should actually be mocked or
+    * not.
+    * <p/>
+    * If not overridden, only the class/interface {@code &lt;T>} is actually mocked.
     *
-    * @param cl the class loader of the class to be mocked
-    * @param subclassName the fully qualified name of a class extending/implementing the class/interface specified to be
-    *                     mocked
+    * @param loader the class loader defining the subclass
+    * @param subclassName the fully qualified name of a class extending/implementing the class/interface that was
+    *                     specified to be mocked through the type parameter {@code &lt;T>}
     *
-    * @return {@code true} if the class should be mocked as well, {@code false} (the default) otherwise
+    * @return {@code true} if the subclass should be mocked as well, {@code false} otherwise
     */
-   protected boolean shouldBeMocked(ClassLoader cl, String subclassName) { return false; }
+   protected boolean shouldBeMocked(ClassLoader loader, String subclassName) { return false; }
 }

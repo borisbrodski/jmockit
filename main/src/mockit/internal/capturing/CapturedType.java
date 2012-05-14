@@ -23,11 +23,11 @@ final class CapturedType
    {
       return
          aClass != baseType && !Proxy.isProxyClass(aClass) && baseType.isAssignableFrom(aClass) &&
-         isToBeCaptured(aClass.getName());
+         isToBeCaptured(aClass.getClassLoader(), aClass.getName());
    }
 
-   boolean isToBeCaptured(String className)
+   boolean isToBeCaptured(ClassLoader cl, String className)
    {
-      return !isGeneratedClass(className) && (classSelector == null || classSelector.shouldCapture(className));
+      return !isGeneratedClass(className) && classSelector.shouldCapture(cl, className);
    }
 }

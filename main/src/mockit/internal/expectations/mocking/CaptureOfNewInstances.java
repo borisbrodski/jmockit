@@ -101,7 +101,7 @@ class CaptureOfNewInstances extends CaptureOfImplementations
 
       return new ClassSelector()
       {
-         public boolean shouldCapture(String className)
+         public boolean shouldCapture(ClassLoader definingClassLoader, String className)
          {
             if (classNameFilters == null || classNameFilters.length == 0) {
                return true;

@@ -60,12 +60,6 @@ final class CaptureTransformer implements ClassFileTransformer
          return null;
       }
 
-      String className = internalClassName.replace('/', '.');
-
-      if (!metadata.isToBeCaptured(className)) {
-         return null;
-      }
-
       ClassReader cr = new ClassReader(classfileBuffer);
 
       try {
@@ -73,7 +67,11 @@ final class CaptureTransformer implements ClassFileTransformer
       }
       catch (VisitInterruptedException ignore) {
          if (superTypeCollector.classExtendsCapturedType) {
-            return modifyAndRegisterClass(loader, className, cr);
+            String className = internalClassName.replace('/', '.');
+
+            if (metadata.isToBeCaptured(loader, className)) {
+               return modifyAndRegisterClass(loader, className, cr);
+            }
          }
       }
 

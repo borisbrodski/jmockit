@@ -26,6 +26,7 @@ final class AnnotatedMockMethodCollector extends ClassVisitor
    private final AnnotatedMockMethods mockMethods;
 
    // Helper fields:
+   private Class<?> classToCollectMocksFrom;
    private boolean collectingFromSuperClass;
    private String enclosingClassDescriptor;
 
@@ -35,7 +36,7 @@ final class AnnotatedMockMethodCollector extends ClassVisitor
    {
       Utilities.registerLoadedClass(mockClass);
 
-      Class<?> classToCollectMocksFrom = mockClass;
+      classToCollectMocksFrom = mockClass;
 
       do {
          ClassReader mcReader = ClassFile.createClassFileReader(classToCollectMocksFrom);
@@ -128,10 +129,10 @@ final class AnnotatedMockMethodCollector extends ClassVisitor
          public void visitEnd()
          {
             if (
-               !annotatedAsMockMethod &&
+               !annotatedAsMockMethod && mockMethods.classWithMethodToSelectSubclasses == null &&
                "shouldBeMocked".equals(methodName) && "(Ljava/lang/ClassLoader;Ljava/lang/String;)Z".equals(methodDesc)
             ) {
-               mockMethods.withMethodToSelectSubclasses = true;
+               mockMethods.classWithMethodToSelectSubclasses = classToCollectMocksFrom;
             }
          }
       };

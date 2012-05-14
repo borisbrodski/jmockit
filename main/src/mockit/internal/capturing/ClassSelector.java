@@ -6,5 +6,5 @@ package mockit.internal.capturing;
 
 public interface ClassSelector
 {
-   boolean shouldCapture(String className);
+   boolean shouldCapture(ClassLoader definingClassLoader, String className);
 }

@@ -13,70 +13,40 @@ public final class MockClassesWithCustomMethodsTest
 
    private final CodeUnderTest codeUnderTest = new CodeUnderTest();
 
-   public interface IDependency { int doSomething(); }
-
    static class CodeUnderTest
    {
-      private final Collaborator dependency = new Collaborator();
-
-      void doSomething() { dependency.provideSomeService(); }
-
       int doSomethingWithInnerDependency()
       {
          return new IDependency() {
             public int doSomething() { return 45; }
          }.doSomething();
       }
-
-      int performComputation(int a, boolean b)
-      {
-         int i = dependency.getValue();
-
-         if (b) {
-            dependency.setValue(a);
-         }
-
-         return i;
-      }
-
-      private static class AnotherDependency { int getValue() { return 99; } }
-      private final IDependency anotherDependency = new IDependency() {
-         public int doSomething() { return 123; }
-      };
-      int doSomethingWithNestedDependency() { return anotherDependency.doSomething(); }
    }
+
+   public interface IDependency { int doSomething(); }
 
    static class Collaborator
    {
-      static Object xyz;
       protected int value;
-
-      Collaborator() {}
-      Collaborator(int value) { this.value = value; }
-
-      void provideSomeService() { throw new RuntimeException("Real provideSomeService() called"); }
-
       int getValue() { return value; }
       void setValue(int value) { this.value = value; }
    }
 
    static final class SubCollaborator1 extends Collaborator
    {
-      boolean provideAnotherService(String s) { return s.length() > 0; }
-
       @Override
       int getValue() { return 45; }
    }
 
    static final class SubCollaborator2 extends Collaborator
    {
-      boolean provideAnotherService(String s) { return s.length() > 0; }
-
       @Override
-      int getValue() { return 45; }
+      int getValue() { return 46; }
    }
 
-   // Methods that specify subclasses to be mocked ////////////////////////////////////////////////////////////////////
+   // Special methods that specify subclasses to be mocked ////////////////////////////////////////////////////////////
+
+   int specialMethodInvocationCount;
 
    @Test
    public void mockSubclassAlreadyLoaded()
@@ -87,7 +57,9 @@ public final class MockClassesWithCustomMethodsTest
          @Override
          protected boolean shouldBeMocked(ClassLoader cl, String subclassName)
          {
-            assertEquals(SubCollaborator1.class.getName(), subclassName);
+            assertSame(ClassLoader.getSystemClassLoader(), cl);
+            assertTrue(subclassName.contains("SubCollaborator"));
+            specialMethodInvocationCount++;
             return true;
          }
 
@@ -95,8 +67,10 @@ public final class MockClassesWithCustomMethodsTest
          int getValue() { return 123; }
       };
 
+      assertEquals(1, specialMethodInvocationCount);
       assertEquals(123, new Collaborator().getValue());
       assertEquals(123, subCollaborator.getValue());
+      assertEquals(1, specialMethodInvocationCount);
    }
 
    @Test
@@ -114,6 +88,7 @@ public final class MockClassesWithCustomMethodsTest
             assertSame(ClassLoader.getSystemClassLoader(), cl);
             assertEquals(i == 0 ? SubCollaborator1.class.getName() : SubCollaborator2.class.getName(), subclassName);
             i++;
+            specialMethodInvocationCount++;
             return true;
          }
 
@@ -122,6 +97,36 @@ public final class MockClassesWithCustomMethodsTest
       };
 
       assertEquals(123, new Collaborator().getValue());
+      assertEquals(1, specialMethodInvocationCount);
+
       assertEquals(123, new SubCollaborator2().getValue());
+      assertEquals(2, specialMethodInvocationCount);
+   }
+
+   @Test
+   public void mockClassImplementingInterfaceWhenLoaded()
+   {
+      new MockUp<IDependency>() {
+         @Override
+         protected boolean shouldBeMocked(ClassLoader cl, String subclassName)
+         {
+            assertNotNull(cl);
+            assertEquals("", subclassName);
+            return true;
+         }
+
+         @Mock(invocations = 1) int doSomething() { return 56; }
+      };
+
+      assertEquals(0, specialMethodInvocationCount);
+      assertEquals(56, codeUnderTest.doSomethingWithInnerDependency());
+      assertEquals(1, specialMethodInvocationCount);
+   }
+
+   @After
+   public void verifyThatCapturedClassesAreNoLongerMocked()
+   {
+      assertEquals(45, new SubCollaborator1().getValue());
+      assertEquals(46, new SubCollaborator2().getValue());
    }
 }
