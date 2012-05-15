@@ -30,7 +30,7 @@ public final class ClassModification
 
       for (Class<?> loadedClass : loadedClasses) {
          if (
-            !loadedClass.isAnnotation() && !loadedClass.isSynthetic() &&
+            loadedClass.getClassLoader() != null && !loadedClass.isAnnotation() && !loadedClass.isSynthetic() &&
             isToBeConsideredForCoverage(loadedClass.getName(), loadedClass.getProtectionDomain())
          ) {
             redefineClassForCoverage(loadedClass);
@@ -120,7 +120,9 @@ public final class ClassModification
 
    private boolean isToBeConsideredForCoverage(String className, ProtectionDomain protectionDomain)
    {
-      return !modifiedClasses.contains(className) && classSelection.isSelected(className, protectionDomain);
+      return
+         protectionDomain != null && !modifiedClasses.contains(className) &&
+         classSelection.isSelected(className, protectionDomain);
    }
 
    private void registerClassAsModifiedForCoverage(String className, byte[] modifiedClassfile)

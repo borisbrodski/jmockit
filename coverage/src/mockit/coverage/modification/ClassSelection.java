@@ -32,7 +32,10 @@ final class ClassSelection
    {
       CodeSource codeSource = protectionDomain.getCodeSource();
 
-      if (codeSource == null || className.charAt(0) == '[' || className.startsWith("mockit.")) {
+      if (
+         codeSource == null || className.charAt(0) == '[' || className.startsWith("mockit.") ||
+         className.startsWith("org.junit.") || className.startsWith("junit.") || className.startsWith("org.testng.")
+      ) {
          return false;
       }
 

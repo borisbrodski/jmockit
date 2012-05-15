@@ -79,7 +79,7 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
       ClassLoader loader, String internalClassName, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
       byte[] originalClassfile)
    {
-      if (classBeingRedefined != null || protectionDomain == null) {
+      if (loader == null || classBeingRedefined != null || protectionDomain == null) {
          return null;
       }
 
