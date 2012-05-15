@@ -19,7 +19,6 @@ final class OutputFileGenerator extends Thread
    private final String[] outputFormats;
    private final String outputDir;
    private final String[] sourceDirs;
-   private String[] classPath;
 
    OutputFileGenerator()
    {
@@ -42,58 +41,12 @@ final class OutputFileGenerator extends Thread
    private String[] getOutputFormat()
    {
       String format = getCoverageProperty("output");
-
-      if (format.length() == 0 && !Startup.isStandalone()) {
-         format = outputFormatFromClasspath();
-      }
-
-      if (format.length() == 0) {
-         format = "html-nocp";
-      }
-
-      return format.trim().split("\\s*,\\s*|\\s+");
+      return format.length() == 0 ? new String[] {"html-nocp"} : format.trim().split("\\s*,\\s*|\\s+");
    }
 
    private String getCoverageProperty(String suffix)
    {
       return System.getProperty(COVERAGE_PREFIX + suffix, "");
-   }
-
-   private String outputFormatFromClasspath()
-   {
-      classPath = System.getProperty("java.class.path").split(File.pathSeparator);
-      String result = "";
-
-      if (isAvailableInTheClasspath("htmlbasic")) {
-         result += " html-nocp";
-      }
-      else if (isAvailableInTheClasspath("htmlfull")) {
-         result += " html";
-      }
-
-      if (isAvailableInTheClasspath("serial")) {
-         result += " serial";
-      }
-      else if (isAvailableInTheClasspath("merge")) {
-         result += " merge";
-      }
-
-      return result;
-   }
-
-   private boolean isAvailableInTheClasspath(String jarFileNameSuffix)
-   {
-      for (String cpEntry : classPath) {
-         if (cpEntry.endsWith(".jar")) {
-            int p = cpEntry.indexOf(COVERAGE_PREFIX);
-
-            if (p >= 0 && cpEntry.substring(p).contains(jarFileNameSuffix)) {
-               return true;
-            }
-         }
-      }
-
-      return false;
    }
 
    boolean isOutputToBeGenerated()

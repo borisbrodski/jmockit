@@ -388,7 +388,7 @@
       </testng>
 
       <java fork="yes" dir="samples" jar="jmockit-coverage.jar">
-         <arg line="-Djmockit-coverage-output=htmlfull . LoginService"/>
+         <arg line="-Djmockit-coverage-output=html . LoginService"/>
       </java>
    </target>
 </project>
