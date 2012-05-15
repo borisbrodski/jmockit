@@ -10,23 +10,54 @@ public enum Metrics
 {
    LineCoverage
    {
+      @Override public boolean isActive() { return isActive("line"); }
+      @Override public String toString() { return "Line"; }
+
       @Override
-      public boolean isActive() { return isActive("line"); }
+      public String htmlDescription()
+      {
+         return
+            "Measures how much of the executable production code was exercised by tests.\r\n" +
+            "An executable line of code contains one or more executable segments.\r\n" +
+            "The percentages are calculated as 100*NE/NS, where NS is the number of segments and NE the number of " +
+            "executed segments.";
+      }
    },
 
    PathCoverage
    {
+      @Override public boolean isActive() { return isActive("path"); }
+      @Override public String toString() { return "Path"; }
+
       @Override
-      public boolean isActive() { return isActive("path"); }
+      public String htmlDescription()
+      {
+         return
+            "Measures how many of the possible execution paths through method/constructor bodies were actually " +
+            "executed by tests.\r\n" +
+            "The percentages are calculated as 100*NPE/NP, where NP is the number of possible paths and NPE the " +
+            "number of fully executed paths.";
+      }
    },
 
    DataCoverage
    {
+      @Override public boolean isActive() { return !Startup.isStandalone() && isActive("data"); }
+      @Override public String toString() { return "Data"; }
+
       @Override
-      public boolean isActive() { return !Startup.isStandalone() && isActive("data"); }
+      public String htmlDescription()
+      {
+         return
+            "Measures how many of the instance and static non-final fields were fully exercised by the test run.\r\n" +
+            "To be fully exercised, a field must have the last value assigned to it read by at least one test.\r\n" +
+            "The percentages are calculated as 100*NFE/NF, where NF is the number of non-final fields and NFE the " +
+            "number of fully exercised fields.";
+      }
    };
 
    public abstract boolean isActive();
+   public abstract String htmlDescription();
 
    final boolean isActive(String name)
    {
@@ -39,12 +70,21 @@ public enum Metrics
    {
       int amount = 0;
 
-      for (Metrics metric : Metrics.values()) {
+      for (Metrics metric : values()) {
          if (metric.isActive()) {
             amount++;
          }
       }
 
       return amount;
+   }
+
+   public interface Action { void perform(Metrics metric); }
+
+   public static void performAction(Action action)
+   {
+      for (Metrics metric : values()) {
+         action.perform(metric);
+      }
    }
 }

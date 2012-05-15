@@ -97,38 +97,23 @@ public final class IndexPage extends ListWithFilesAndPercentages
       output.print(totalFileCount);
       output.println("</th>");
 
-      int tableColumnForMetric = 1;
+      Metrics.performAction(new Metrics.Action() {
+         int tableColumn = 1;
 
-      if (Metrics.LineCoverage.isActive()) {
-         output.println(
-            "      <th onclick='sortTables(" + tableColumnForMetric + ")' style='cursor: n-resize' title='" +
-            "Measures how much of the executable production code was exercised by tests.\r\n" +
-            "An executable line of code contains one or more executable segments.\r\n" +
-            "The percentages are calculated as 100*NE/NS, where NS is the number of segments " +
-            "and NE the number of executed segments.'>Line</th>");
-         tableColumnForMetric++;
-      }
-
-      if (Metrics.PathCoverage.isActive()) {
-         output.println(
-            "      <th onclick='sortTables(" + tableColumnForMetric + ")' style='cursor: n-resize' title='" +
-            "Measures how many of the possible execution paths through method/constructor bodies " +
-            "were actually executed by tests.\r\n" +
-            "The percentages are calculated as 100*NPE/NP, where NP is the number of possible " +
-            "paths and NPE the number of fully executed paths.'>Path</th>");
-         tableColumnForMetric++;
-      }
-
-      if (Metrics.DataCoverage.isActive()) {
-         output.println(
-            "      <th onclick='sortTables(" + tableColumnForMetric + ")' style='cursor: n-resize' title='" +
-            "Measures how many of the instance and static non-final fields were fully exercised " +
-            "by the test run.\r\n" +
-            "To be fully exercised, a field must have the last value assigned to it read by at " +
-            "least one test.\r\n" +
-            "The percentages are calculated as 100*NFE/NF, where NF is the number of non-final " +
-            "fields and NFE the number of fully exercised fields.'>Data</th>");
-      }
+         public void perform(Metrics metric)
+         {
+            if (Metrics.LineCoverage.isActive()) {
+               output.write("      <th onclick='sortTables(");
+               output.print(tableColumn);
+               output.write(")' style='cursor: n-resize' title='");
+               output.write(metric.htmlDescription());
+               output.write("'>");
+               output.write(metric.toString());
+               output.println("</th>");
+               tableColumn++;
+            }
+         }
+      });
 
       output.println("    </tr>");
    }
@@ -138,9 +123,10 @@ public final class IndexPage extends ListWithFilesAndPercentages
       output.println("    <tr class='total'>");
       output.println("      <td>Total</td><td>&nbsp;</td>");
 
-      writeLineWithCoverageTotals(Metrics.LineCoverage);
-      writeLineWithCoverageTotals(Metrics.PathCoverage);
-      writeLineWithCoverageTotals(Metrics.DataCoverage);
+      Metrics.performAction(new Metrics.Action()
+      {
+         public void perform(Metrics metric) { writeLineWithCoverageTotals(metric); }
+      });
 
       output.println("    </tr>");
    }
@@ -171,12 +157,15 @@ public final class IndexPage extends ListWithFilesAndPercentages
    protected void writeMetricsForFile(String unused, String packageName)
    {
       this.packageName = packageName;
+
       writeRowStart();
       writeTableCellWithPackageName();
       writeInternalTableForSourceFiles();
-      writeCoveragePercentageForPackage(Metrics.LineCoverage);
-      writeCoveragePercentageForPackage(Metrics.PathCoverage);
-      writeCoveragePercentageForPackage(Metrics.DataCoverage);
+
+      Metrics.performAction(new Metrics.Action() {
+         public void perform(Metrics metric) { writeCoveragePercentageForPackage(metric); }
+      });
+
       writeRowClose();
    }
 
@@ -199,9 +188,10 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
       packageReport.writeMetricsForEachFile(packageName, packageToFiles.get(packageName));
 
-      recordCoverageInformationForPackage(Metrics.LineCoverage);
-      recordCoverageInformationForPackage(Metrics.PathCoverage);
-      recordCoverageInformationForPackage(Metrics.DataCoverage);
+      Metrics.performAction(new Metrics.Action()
+      {
+         public void perform(Metrics metric) { recordCoverageInformationForPackage(metric); }
+      });
 
       printIndent();
       output.println("    </table>");
