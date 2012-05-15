@@ -4,7 +4,6 @@
  */
 package mockit.coverage.modification;
 
-import java.io.*;
 import java.lang.instrument.*;
 import java.security.*;
 import java.util.*;
@@ -75,25 +74,9 @@ public final class ClassModification
          return modifiedBytecode;
       }
 
-      String classFileName = className.replace('.', '/') + ".class";
-      ClassLoader cl = aClass.getClassLoader();
+      ClassReader cr = CoverageModifier.createClassReader(aClass);
 
-      if (cl == null) {
-         cl = ClassModification.class.getClassLoader();
-      }
-
-      InputStream classFile = cl.getResourceAsStream(classFileName);
-      ClassReader cr;
-
-      try {
-         cr = new ClassReader(classFile);
-      }
-      catch (IOException e) {
-         // Ignore the class if the ".class" file wasn't located.
-         return null;
-      }
-
-      return modifyClassForCoverage(cr);
+      return cr == null ? null : modifyClassForCoverage(cr);
    }
 
    private byte[] modifyClassForCoverage(ClassReader cr)

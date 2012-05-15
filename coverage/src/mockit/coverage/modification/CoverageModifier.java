@@ -26,6 +26,23 @@ final class CoverageModifier extends ClassVisitor
       return modifier == null ? null : modifier.toByteArray();
    }
 
+   static ClassReader createClassReader(Class<?> aClass)
+   {
+      return createClassReader(aClass.getClassLoader(), aClass.getName().replace('.', '/'));
+   }
+
+   private static ClassReader createClassReader(ClassLoader cl, String internalClassName)
+   {
+      InputStream classFile = cl.getResourceAsStream(internalClassName + ".class");
+
+      if (classFile == null) {
+         // Ignore the class if the ".class" file wasn't located.
+         return null;
+      }
+
+      try { return new ClassReader(classFile); } catch (IOException ignore) { return null; }
+   }
+
    private String internalClassName;
    private String simpleClassName;
    private String sourceFileName;
@@ -115,14 +132,12 @@ final class CoverageModifier extends ClassVisitor
          return;
       }
 
-      try {
-         ClassReader innerCR = new ClassReader(innerClassName);
+      ClassReader innerCR = createClassReader(CoverageModifier.class.getClassLoader(), internalName);
+
+      if (innerCR != null) {
          CoverageModifier innerClassModifier = new CoverageModifier(innerCR, this, innerName);
          innerCR.accept(innerClassModifier, 0);
          INNER_CLASS_MODIFIERS.put(innerClassName, innerClassModifier);
-      }
-      catch (IOException e) {
-         e.printStackTrace();
       }
    }
 
