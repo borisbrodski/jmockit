@@ -1,6 +1,6 @@
 <project name="jmockit" basedir="." default="fullRebuild">
    <property name="JUNIT_JAR" value="lib/junit-dep-4.10.jar"/>
-   <property name="TESTNG_JAR" value="lib/testng-6.4.jar"/>
+   <property name="TESTNG_JAR" value="lib/testng-6.3.1.jar"/>
    <taskdef resource="testngtasks" classpath="${TESTNG_JAR}"/>
 
    <loadfile property="version" srcFile="version.txt"/>
@@ -59,10 +59,10 @@
    <target name="buildMain">
       <build module="main"/><buildTests module="main"/>
    </target>
-   <target name="buildCoverage">
+   <target name="buildCoverage" depends="buildMain">
       <build module="coverage"/><buildTests module="coverage"/>
    </target>
-   <target name="buildIncremental">
+   <target name="buildIncremental" depends="buildCoverage">
       <build module="incremental" extraclasspathlocation="coverage/classes"/>
    </target>
    <target name="buildHibernateEmulation">
