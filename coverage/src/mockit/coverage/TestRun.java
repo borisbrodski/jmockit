@@ -5,8 +5,6 @@
 package mockit.coverage;
 
 import mockit.coverage.data.*;
-import mockit.coverage.lines.*;
-import mockit.coverage.paths.*;
 
 @SuppressWarnings("UnusedDeclaration")
 public final class TestRun
@@ -35,8 +33,7 @@ public final class TestRun
       CallPoint callPoint = coverageData.isWithCallPoints() ? CallPoint.create(new Throwable()) : null;
 
       FileCoverageData fileData = coverageData.getFileData(file);
-      LineCoverageData lineData = fileData.lineToLineData.get(line);
-      lineData.registerExecution(callPoint);
+      fileData.lineCoverageInfo.registerExecution(line, callPoint);
 
       executingCall.set(false);
    }
@@ -53,8 +50,7 @@ public final class TestRun
       CallPoint callPoint = coverageData.isWithCallPoints() ? CallPoint.create(new Throwable()) : null;
 
       FileCoverageData fileData = coverageData.getFileData(file);
-      LineCoverageData lineData = fileData.lineToLineData.get(line);
-      lineData.registerExecution(segment, true, callPoint);
+      fileData.lineCoverageInfo.registerExecution(line, segment, true, callPoint);
 
       executingCall.set(false);
    }
@@ -71,8 +67,7 @@ public final class TestRun
       CallPoint callPoint = coverageData.isWithCallPoints() ? CallPoint.create(new Throwable()) : null;
 
       FileCoverageData fileData = coverageData.getFileData(file);
-      LineCoverageData lineData = fileData.lineToLineData.get(line);
-      lineData.registerExecution(segment, false, callPoint);
+      fileData.lineCoverageInfo.registerExecution(line, segment, false, callPoint);
 
       executingCall.set(false);
    }
@@ -86,11 +81,7 @@ public final class TestRun
       executingCall.set(true);
 
       FileCoverageData fileData = CoverageData.instance().getFileData(file);
-      MethodCoverageData methodData = fileData.firstLineToMethodData.get(firstLineInMethodBody);
-
-      if (methodData != null) {
-         methodData.markNodeAsReached(node);
-      }
+      fileData.pathCoverageInfo.registerExecution(firstLineInMethodBody, node);
 
       executingCall.set(false);
    }

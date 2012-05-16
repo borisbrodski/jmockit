@@ -49,7 +49,7 @@ public class CoverageTest extends Assert
 
    protected final void assertLines(int startingLine, int endingLine, int expectedLinesExecuted)
    {
-      SortedMap<Integer, LineCoverageData> lineToLineData = fileData.lineToLineData;
+      SortedMap<Integer, LineCoverageData> lineToLineData = fileData.lineCoverageInfo.lineToLineData;
       assertTrue("Starting line not found", lineToLineData.containsKey(startingLine));
       assertTrue("Ending line not found", lineToLineData.containsKey(endingLine));
 
@@ -69,7 +69,7 @@ public class CoverageTest extends Assert
    protected final void assertLine(
       int line, int expectedSegments, int expectedCoveredSegments, int expectedExecutionCount)
    {
-      LineCoverageData lineData = fileData.lineToLineData.get(line);
+      LineCoverageData lineData = fileData.lineCoverageInfo.lineToLineData.get(line);
       assertNotNull("Not an executable line", lineData);
       assertEquals("Segments:", expectedSegments, lineData.getNumberOfSegments());
       assertEquals("Covered segments:", expectedCoveredSegments, lineData.getNumberOfCoveredSegments());
@@ -78,7 +78,7 @@ public class CoverageTest extends Assert
 
    protected final void findMethodData(int firstLineOfMethodBody, String methodName)
    {
-      methodData = fileData.firstLineToMethodData.get(firstLineOfMethodBody);
+      methodData = fileData.pathCoverageInfo.firstLineToMethodData.get(firstLineOfMethodBody);
       assertNotNull("Method not found with first line " + firstLineOfMethodBody, methodData);
       assertEquals(
          "No method with name \"" + methodName + "\" found with first line at " +

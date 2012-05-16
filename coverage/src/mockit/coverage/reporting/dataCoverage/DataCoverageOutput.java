@@ -10,13 +10,13 @@ import mockit.coverage.reporting.parsing.*;
 public final class DataCoverageOutput
 {
    private final StringBuilder openingTag;
-   private final DataCoverageInfo coverageInfo;
+   private final PerFileDataCoverage coverageInfo;
    private int nextField;
    private String classAndFieldNames;
    private String className;
    private String fieldName;
 
-   public DataCoverageOutput(DataCoverageInfo coverageInfo)
+   public DataCoverageOutput(PerFileDataCoverage coverageInfo)
    {
       openingTag = new StringBuilder(50);
       this.coverageInfo = coverageInfo;

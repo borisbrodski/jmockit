@@ -91,9 +91,9 @@ public final class IndexPage extends ListWithFilesAndPercentages
       output.print(packageToFiles.keySet().size());
       output.println("</th>");
       output.write(
-         "      <th onclick='location.reload()' style='cursor: n-resize' " +
-         "title='Click on the title for each metric to sort by size (total number of line " +
-         "segments, paths, or fields).'>Files: ");
+         "      <th onclick='location.reload()' style='cursor: n-resize' title='" +
+         "Click on the title for each metric to sort by size (total number of line segments, paths, or fields)." +
+         "'>Files: ");
       output.print(totalFileCount);
       output.println("</th>");
 
@@ -102,16 +102,19 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
          public void perform(Metrics metric)
          {
-            if (Metrics.LineCoverage.isActive()) {
-               output.write("      <th onclick='sortTables(");
-               output.print(tableColumn);
-               output.write(")' style='cursor: n-resize' title='");
-               output.write(metric.htmlDescription());
-               output.write("'>");
-               output.write(metric.toString());
-               output.println("</th>");
-               tableColumn++;
-            }
+            writeHeaderCellWithMetricNameAndDescription(metric);
+            tableColumn++;
+         }
+
+         private void writeHeaderCellWithMetricNameAndDescription(Metrics metric)
+         {
+            output.write("      <th onclick='sortTables(");
+            output.print(tableColumn);
+            output.write(")' style='cursor: n-resize' title='");
+            output.write(metric.htmlDescription());
+            output.write("'>");
+            output.write(metric.toString());
+            output.println("</th>");
          }
       });
 
@@ -133,13 +136,11 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeLineWithCoverageTotals(Metrics metric)
    {
-      if (metric.isActive()) {
-         int covered = coveredItems[metric.ordinal()];
-         int total = totalItems[metric.ordinal()];
-         int percentage = CoveragePercentage.calculate(covered, total);
+      int covered = coveredItems[metric.ordinal()];
+      int total = totalItems[metric.ordinal()];
+      int percentage = CoveragePercentage.calculate(covered, total);
 
-         printCoveragePercentage(metric, covered, total, percentage);
-      }
+      printCoveragePercentage(metric, covered, total, percentage);
    }
 
    private void writeFooter()
@@ -201,16 +202,14 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void recordCoverageInformationForPackage(Metrics metric)
    {
-      if (metric.isActive()) {
-         int coveredInPackage = packageReport.coveredItems[metric.ordinal()];
-         int totalInPackage = packageReport.totalItems[metric.ordinal()];
-         int packagePercentage = CoveragePercentage.calculate(coveredInPackage, totalInPackage);
+      int coveredInPackage = packageReport.coveredItems[metric.ordinal()];
+      int totalInPackage = packageReport.totalItems[metric.ordinal()];
+      int packagePercentage = CoveragePercentage.calculate(coveredInPackage, totalInPackage);
 
-         setPackageCoveragePercentage(metric, packagePercentage);
+      setPackageCoveragePercentage(metric, packagePercentage);
 
-         totalItems[metric.ordinal()] += totalInPackage;
-         coveredItems[metric.ordinal()] += coveredInPackage;
-      }
+      totalItems[metric.ordinal()] += totalInPackage;
+      coveredItems[metric.ordinal()] += coveredInPackage;
    }
 
    private void setPackageCoveragePercentage(Metrics metric, int percentage)
@@ -218,7 +217,7 @@ public final class IndexPage extends ListWithFilesAndPercentages
       int[] percentages = packageToPackagePercentages.get(packageName);
 
       if (percentages == null) {
-         percentages = new int[3];
+         percentages = new int[Metrics.values().length];
          packageToPackagePercentages.put(packageName, percentages);
       }
 
@@ -227,12 +226,10 @@ public final class IndexPage extends ListWithFilesAndPercentages
 
    private void writeCoveragePercentageForPackage(Metrics metric)
    {
-      if (metric.isActive()) {
-         int coveredInPackage = packageReport.coveredItems[metric.ordinal()];
-         int totalInPackage = packageReport.totalItems[metric.ordinal()];
-         int filePercentage = packageToPackagePercentages.get(packageName)[metric.ordinal()];
+      int coveredInPackage = packageReport.coveredItems[metric.ordinal()];
+      int totalInPackage = packageReport.totalItems[metric.ordinal()];
+      int filePercentage = packageToPackagePercentages.get(packageName)[metric.ordinal()];
 
-         printCoveragePercentage(metric, coveredInPackage, totalInPackage, filePercentage);
-      }
+      printCoveragePercentage(metric, coveredInPackage, totalInPackage, filePercentage);
    }
 }

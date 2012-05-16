@@ -9,8 +9,9 @@ import java.util.*;
 import java.util.Map.*;
 
 import mockit.coverage.*;
+import mockit.coverage.data.*;
 
-public final class DataCoverageInfo implements Serializable
+public final class PerFileDataCoverage implements PerFileCoverage
 {
    private static final long serialVersionUID = -4561686103982673490L;
 
@@ -80,10 +81,7 @@ public final class DataCoverageInfo implements Serializable
       instanceData.registerRead(instance);
    }
 
-   public boolean hasFields()
-   {
-      return !allFields.isEmpty();
-   }
+   public boolean hasFields() { return !allFields.isEmpty(); }
 
    public boolean isCovered(String classAndFieldNames)
    {
@@ -137,7 +135,7 @@ public final class DataCoverageInfo implements Serializable
       return CoveragePercentage.calculate(getCoveredItems(), totalFields);
    }
 
-   public void mergeInformation(DataCoverageInfo previousInfo)
+   public void mergeInformation(PerFileDataCoverage previousInfo)
    {
       addInfoFromPreviousTestRun(staticFieldsData, previousInfo.staticFieldsData);
       addFieldsFromPreviousTestRunIfAbsent(staticFieldsData, previousInfo.staticFieldsData);

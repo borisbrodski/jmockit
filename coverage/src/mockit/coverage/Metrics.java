@@ -12,6 +12,7 @@ public enum Metrics
    {
       @Override public boolean isActive() { return isActive("line"); }
       @Override public String toString() { return "Line"; }
+      @Override public String itemName() { return "Line segments"; }
 
       @Override
       public String htmlDescription()
@@ -28,6 +29,7 @@ public enum Metrics
    {
       @Override public boolean isActive() { return isActive("path"); }
       @Override public String toString() { return "Path"; }
+      @Override public String itemName() { return "Paths"; }
 
       @Override
       public String htmlDescription()
@@ -44,6 +46,7 @@ public enum Metrics
    {
       @Override public boolean isActive() { return !Startup.isStandalone() && isActive("data"); }
       @Override public String toString() { return "Data"; }
+      @Override public String itemName() { return "Fields"; }
 
       @Override
       public String htmlDescription()
@@ -57,6 +60,7 @@ public enum Metrics
    };
 
    public abstract boolean isActive();
+   public abstract String itemName();
    public abstract String htmlDescription();
 
    final boolean isActive(String name)
@@ -84,7 +88,9 @@ public enum Metrics
    public static void performAction(Action action)
    {
       for (Metrics metric : values()) {
-         action.perform(metric);
+         if (metric.isActive()) {
+            action.perform(metric);
+         }
       }
    }
 }

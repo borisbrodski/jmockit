@@ -55,7 +55,7 @@ public final class FileCoverageReport
    private DataCoverageOutput createDataCoverageOutput(FileCoverageData fileData)
    {
       if (Metrics.DataCoverage.isActive()) {
-         DataCoverageInfo dataCoverageInfo = fileData.dataCoverageInfo;
+         PerFileDataCoverage dataCoverageInfo = fileData.dataCoverageInfo;
          return dataCoverageInfo.hasFields() ? new DataCoverageOutput(dataCoverageInfo) : null;
       }
 

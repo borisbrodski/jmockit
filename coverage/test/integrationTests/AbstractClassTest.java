@@ -26,15 +26,15 @@ public final class AbstractClassTest extends CoverageTest
       tested.doSomething("test", true);
       tested.returnValue();
 
-      assertEquals(1, fileData.lineToLineData.size());
+      assertEquals(1, fileData.lineCoverageInfo.lineToLineData.size());
       assertLines(3, 3, 1);
-      assertEquals(100, fileData.getLineCoveragePercentage());
+      assertEquals(100, fileData.lineCoverageInfo.getCoveragePercentage());
 
-      assertEquals(1, fileData.firstLineToMethodData.size());
+      assertEquals(1, fileData.pathCoverageInfo.firstLineToMethodData.size());
       findMethodData(3, AbstractClassWithNoExecutableLines.class.getSimpleName());
       assertMethodLines(3, 3);
       assertPaths(1, 1, 1);
       assertPath(2, 1);
-      assertEquals(100, fileData.getPathCoveragePercentage());
+      assertEquals(100, fileData.pathCoverageInfo.getCoveragePercentage());
    }
 }
