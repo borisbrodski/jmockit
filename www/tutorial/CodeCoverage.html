@@ -277,15 +277,17 @@
    </li>
    <li>
       <code>jmockit-coverage-<strong>classes</strong></code>:
-      a <code>java.util.regex</code>-conformable regular expression which will be used to select the classes from
-      production code which should be considered for coverage.
+      a <a href="http://docs.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html">java.util.regex</a>-conformable
+      regular expression which will be used to select the classes from production code which should be considered for
+      coverage.
       By default, all classes in production code loaded during the test run and which are not inside jar files are
       considered.
    </li>
    <li>
       <code>jmockit-coverage-<strong>excludes</strong></code>:
-      a <code>java.util.regex</code>-conformable regular expression for class names which should be excluded from
-      consideration when instrumenting classes for coverage.
+      a <a href="http://docs.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html">java.util.regex</a>-conformable
+      regular expression for class names which should be excluded from consideration when instrumenting classes for
+      coverage.
       This property can be used together with <code>jmockit-coverage-classes</code> or on its own.
       By default, no classes between those selected for coverage are excluded from consideration.
    </li>
@@ -470,8 +472,8 @@
    </div>
 </h3>
 <p>
-   So far, we discussed the most typical way to use the coverage tool, by enabling it during a JUnit/TestNG test run
-   to measure <em>test</em> coverage.
+   In previous sections we describe the most typical way to use the coverage tool, by enabling it during a JUnit/TestNG
+   test run to measure <em>test</em> coverage.
    The tool can also be used in a more general context, though: the <em>standalone</em> mode, where it can attach to
    <em>any</em> Java 5+ process to measure line and path coverage metrics on specified classes, regardless of which code
    is making calls into said classes.
@@ -498,15 +500,10 @@
 <img src="mbeanUI.png" title="User interface presented by the JConsole tool, after connecting to a Tomcat instance
    started with the JMockit Coverage agent.">
 <p>
-   The configuration properties (shown as "Attributes" of the "CoverageControl" MBean above) are as before, except that
-   some of them have different default values when not specified, as follows.
+   The configuration properties (shown as "Attributes" of the "CoverageControl" MBean above) are as before, except in
+   the case of "SrcDirs" (which corresponds to <code>jmockit-coverage-srcDirs</code>).
+   If this property is not specified, no attempt is made to find source files for the classes considered for coverage.
 </p>
-<ul>
-   <li>
-      "SrcDirs" (<code>jmockit-coverage-srcDirs</code>): if not specified, no attempt is made to find source files for
-      the classes considered for coverage.
-   </li>
-</ul>
 
 <div class="navigation">
    <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
