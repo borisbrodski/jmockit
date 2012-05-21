@@ -9,8 +9,6 @@ import org.junit.*;
 
 public final class MockClassesWithCustomMethodsTest
 {
-   // The "code under test" for the tests in this class ///////////////////////////////////////////////////////////////
-
    private final CodeUnderTest codeUnderTest = new CodeUnderTest();
 
    static class CodeUnderTest
@@ -44,7 +42,29 @@ public final class MockClassesWithCustomMethodsTest
       int getValue() { return 46; }
    }
 
-   // Special methods that specify subclasses to be mocked ////////////////////////////////////////////////////////////
+   @BeforeClass
+   public static void setUpAllTests()
+   {
+      new MockUp<Runnable>() {
+         @Override
+         protected boolean shouldBeMocked(ClassLoader loader, String subclassName)
+         {
+            return loader == ClassLoader.getSystemClassLoader() && subclassName.endsWith("TestAction");
+         }
+
+         @Mock void run() {}
+      };
+   }
+
+   @Before
+   public void useClassesToBeCapturedForAllTests()
+   {
+      class TestAction implements Runnable
+      {
+         public void run() { throw new RuntimeException("Not to happen"); }
+      }
+      new TestAction().run();
+   }
 
    int specialMethodInvocationCount;
 
@@ -86,8 +106,8 @@ public final class MockClassesWithCustomMethodsTest
          {
             assertTrue(i < 2);
             assertSame(ClassLoader.getSystemClassLoader(), cl);
-            assertEquals(i == 0 ? SubCollaborator1.class.getName() : SubCollaborator2.class.getName(), subclassName);
             i++;
+            assertEquals(MockClassesWithCustomMethodsTest.class.getName() + "$SubCollaborator" + i, subclassName);
             specialMethodInvocationCount++;
             return true;
          }
@@ -111,7 +131,8 @@ public final class MockClassesWithCustomMethodsTest
          protected boolean shouldBeMocked(ClassLoader cl, String subclassName)
          {
             assertNotNull(cl);
-            assertEquals("", subclassName);
+            assertEquals(CodeUnderTest.class.getName() + "$1", subclassName);
+            specialMethodInvocationCount++;
             return true;
          }
 
@@ -124,9 +145,8 @@ public final class MockClassesWithCustomMethodsTest
    }
 
    @After
-   public void verifyThatCapturedClassesAreNoLongerMocked()
+   public void verifyThatCapturedClassIsNoLongerMocked()
    {
       assertEquals(45, new SubCollaborator1().getValue());
-      assertEquals(46, new SubCollaborator2().getValue());
    }
 }

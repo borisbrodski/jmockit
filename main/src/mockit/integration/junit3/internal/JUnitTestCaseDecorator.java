@@ -81,7 +81,8 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       Throwable exception = null;
 
       try {
-         executeCurrentTestMethod();
+         Method testMethod = findTestMethod();
+         executeTestMethod(testMethod);
       }
       catch (Throwable running) {
          exception = running;
@@ -94,13 +95,6 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       if (exception != null) {
          throw exception;
       }
-   }
-
-   private void executeCurrentTestMethod() throws Throwable
-   {
-      Method testMethod = findTestMethod();
-      TestRun.setRunningTestMethod(testMethod);
-      executeTestMethod(testMethod);
    }
 
    private Method findTestMethod() throws IllegalAccessException
@@ -119,10 +113,12 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
    private void executeTestMethod(Method testMethod) throws Throwable
    {
       SavePoint savePoint = new SavePoint();
+      TestRun.setSavePointForTestMethod(savePoint);
+
       Throwable testFailure = null;
 
       try {
-         Object[] mockParameters = createInstancesForMockParameters(it, testMethod);
+         Object[] mockParameters = createInstancesForMockParameters(it, testMethod, savePoint);
          createInstancesForTestedFields(it);
 
          if (mockParameters == null) {
