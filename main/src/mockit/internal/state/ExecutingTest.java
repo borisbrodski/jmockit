@@ -203,9 +203,7 @@ public final class ExecutingTest
 
    public boolean isNonStrictInvocation(Object mock, String mockClassDesc, String mockNameAndDesc)
    {
-      boolean instanceMethod = isInstanceMethod(mock, mockNameAndDesc);
-
-      if (instanceMethod && isOverrideOfObjectMethod(mockNameAndDesc)) {
+      if (isInstanceMethodWithStandardBehavior(mock, mockNameAndDesc)) {
          return true;
       }
 
@@ -218,14 +216,12 @@ public final class ExecutingTest
       return false;
    }
 
-   private boolean isInstanceMethod(Object mock, String mockNameAndDesc)
+   private boolean isInstanceMethodWithStandardBehavior(Object mock, String nameAndDesc)
    {
-      return mock != null && mockNameAndDesc.charAt(0) != '<';
-   }
-
-   private boolean isOverrideOfObjectMethod(String mockNameAndDesc)
-   {
-      return "equals(Ljava/lang/Object;)Z hashCode()I toString()Ljava/lang/String;".contains(mockNameAndDesc);
+      return
+         mock != null && nameAndDesc.charAt(0) != '<' &&
+         ("equals(Ljava/lang/Object;)Z hashCode()I toString()Ljava/lang/String;".contains(nameAndDesc) ||
+          mock instanceof Comparable<?> && nameAndDesc.startsWith("compareTo(L") && nameAndDesc.endsWith(";)I"));
    }
 
    public void registerAdditionalMocksFromFinalLocalMockFieldsIfAny()
@@ -262,7 +258,7 @@ public final class ExecutingTest
 
    public boolean isStrictInvocation(Object mock, String mockClassDesc, String mockNameAndDesc)
    {
-      if (isInstanceMethod(mock, mockNameAndDesc) && isOverrideOfObjectMethod(mockNameAndDesc)) {
+      if (isInstanceMethodWithStandardBehavior(mock, mockNameAndDesc)) {
          return false;
       }
 

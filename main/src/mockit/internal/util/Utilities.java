@@ -953,6 +953,18 @@ public final class Utilities
       else if ("toString()Ljava/lang/String;".equals(methodNameAndDesc)) {
          return objectIdentity(obj);
       }
+      else if (
+         obj instanceof Comparable<?> && args.length == 1 &&
+         methodNameAndDesc.startsWith("compareTo(L") && methodNameAndDesc.endsWith(";)I")
+      ) {
+         Object arg = args[0];
+
+         if (obj == arg) {
+            return 0;
+         }
+
+         return System.identityHashCode(obj) > System.identityHashCode(arg) ? 1 : -1;
+      }
 
       return null;
    }
