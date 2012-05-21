@@ -85,16 +85,21 @@ public abstract class MockUp<T>
    private T redefineClass(Class<?> classToMock)
    {
       Class<?> realClass = classToMock;
-      T proxy = null;
 
       if (classToMock.isInterface()) {
          //noinspection unchecked
-         proxy = (T) Mockit.newEmptyProxy(classToMock);
+         T proxy = (T) Mockit.newEmptyProxy(classToMock);
          realClass = proxy.getClass();
+
+         MockClassSetup setup = new MockClassSetup(realClass, this, getClass());
+         setup.setBaseType(classToMock);
+         setup.redefineMethods();
+
+         return proxy;
       }
 
       redefineMethods(realClass);
-      return proxy;
+      return null;
    }
 
    private void redefineMethods(Class<?> realClass)

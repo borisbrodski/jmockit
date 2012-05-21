@@ -4,7 +4,6 @@
  */
 package mockit.internal.state;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 import static java.util.Collections.*;
@@ -74,8 +73,7 @@ public final class TestRun
 
    private Class<?> currentTestClass;
    private Object currentTestInstance;
-   private Method runningTestMethod;
-
+   private SavePoint savePointForTestMethod;
    private SavePoint savePointForTestClass;
    private SharedFieldTypeRedefinitions sharedFieldTypeRedefinitions;
 
@@ -93,8 +91,10 @@ public final class TestRun
 
    public static Object getCurrentTestInstance() { return getInstance().currentTestInstance; }
 
+   @SuppressWarnings("UnusedDeclaration")
    public static int getTestId() { return getInstance().testId; }
 
+   public static SavePoint getSavePointForTestMethod() { return getInstance().savePointForTestMethod; }
    public static SavePoint getSavePointForTestClass() { return getInstance().savePointForTestClass; }
 
    public static SharedFieldTypeRedefinitions getSharedFieldTypeRedefinitions()
@@ -116,7 +116,7 @@ public final class TestRun
          return null;
       }
 
-      return testRun.executingTest.getRecordAndReplay(testRun.runningTestMethod != null && create);
+      return testRun.executingTest.getRecordAndReplay(testRun.savePointForTestMethod != null && create);
    }
 
    public static MockClasses getMockClasses() { return getInstance().mockClasses; }
@@ -145,12 +145,12 @@ public final class TestRun
       testRun.executingTest.setRecordAndReplay(null);
    }
 
-   public static void setRunningTestMethod(Method runningTestMethod)
+   public static void setSavePointForTestMethod(SavePoint savePointForTestMethod)
    {
       TestRun testRun = getInstance();
-      testRun.runningTestMethod = runningTestMethod;
+      testRun.savePointForTestMethod = savePointForTestMethod;
 
-      if (runningTestMethod != null) {
+      if (savePointForTestMethod != null) {
          testRun.executingTest.clearRecordAndReplayForVerifications();
       }
    }
@@ -176,7 +176,7 @@ public final class TestRun
    public static void finishCurrentTestExecution(boolean clearSharedMocks)
    {
       TestRun testRun = getInstance();
-      testRun.runningTestMethod = null;
+      testRun.savePointForTestMethod = null;
       testRun.executingTest.finishExecution(clearSharedMocks);
    }
 

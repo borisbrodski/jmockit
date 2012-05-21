@@ -11,7 +11,7 @@ import mockit.internal.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.*;
 
-public abstract class CaptureOfImplementations
+public abstract class CaptureOfImplementations implements Runnable
 {
    private final List<CaptureTransformer> captureTransformers;
 
@@ -25,7 +25,7 @@ public abstract class CaptureOfImplementations
       makeSureAllSubtypesAreModified(baseType, false);
    }
 
-   public final void makeSureAllSubtypesAreModified(Class<?> baseType, boolean fieldFromTestClass)
+   public final void makeSureAllSubtypesAreModified(Class<?> baseType, boolean registerCapturedClasses)
    {
       if (baseType == null) {
          throw new IllegalArgumentException("Capturing implementations of multiple base types is not supported");
@@ -36,7 +36,7 @@ public abstract class CaptureOfImplementations
       CapturedType captureMetadata = new CapturedType(baseType, classSelector);
 
       redefineClassesAlreadyLoaded(captureMetadata, baseTypeDesc);
-      createCaptureTransformer(captureMetadata, fieldFromTestClass);
+      createCaptureTransformer(captureMetadata, registerCapturedClasses);
    }
 
    private void redefineClassesAlreadyLoaded(CapturedType captureMetadata, String baseTypeDesc)
@@ -62,9 +62,9 @@ public abstract class CaptureOfImplementations
       }
    }
 
-   private void createCaptureTransformer(CapturedType captureMetadata, boolean forTestClass)
+   private void createCaptureTransformer(CapturedType captureMetadata, boolean registerCapturedClasses)
    {
-      CaptureTransformer transformer = new CaptureTransformer(captureMetadata, this, forTestClass);
+      CaptureTransformer transformer = new CaptureTransformer(captureMetadata, this, registerCapturedClasses);
       Startup.instrumentation().addTransformer(transformer);
       captureTransformers.add(transformer);
    }
@@ -78,4 +78,6 @@ public abstract class CaptureOfImplementations
 
       captureTransformers.clear();
    }
+
+   public final void run() { cleanUp(); }
 }

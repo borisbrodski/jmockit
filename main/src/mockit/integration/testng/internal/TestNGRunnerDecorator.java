@@ -77,25 +77,25 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator
 
       TestRun.enterNoMockingZone();
       Object testInstance = testResult.getInstance();
-      Method method;
+      SavePoint testMethodSavePoint;
 
       try {
          Class<?> testClass = testResult.getTestClass().getRealClass();
-
          updateTestClassState(testInstance, testClass);
-         savePoint.set(new SavePoint());
+
+         testMethodSavePoint = new SavePoint();
+         savePoint.set(testMethodSavePoint);
 
          if (shouldPrepareForNextTest) {
             TestRun.prepareForNextTest();
             shouldPrepareForNextTest = false;
          }
 
-         //noinspection deprecation
-         method = testResult.getMethod().getMethod();
+         Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
 
          if (!isMethodWithParametersProvidedByTestNG(method)) {
             Object[] parameters = testResult.getParameters();
-            Object[] mockParameters = createInstancesForMockParameters(testInstance, method);
+            Object[] mockParameters = createInstancesForMockParameters(testInstance, method, testMethodSavePoint);
 
             if (mockParameters != null) {
                System.arraycopy(mockParameters, 0, parameters, 0, parameters.length);
@@ -109,7 +109,7 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator
       }
 
       TestRun.setRunningIndividualTest(testInstance);
-      TestRun.setRunningTestMethod(method);
+      TestRun.setSavePointForTestMethod(testMethodSavePoint);
    }
 
    private void beforeConfigurationMethod(ITestResult testResult)
@@ -136,13 +136,13 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator
             }
 
             TestRun.setRunningIndividualTest(testInstance);
-            TestRun.setRunningTestMethod(null);
+            TestRun.setSavePointForTestMethod(null);
          }
          else if (!method.isAfterMethodConfiguration()) {
             TestRun.getExecutingTest().setRecordAndReplay(null);
             cleanUpMocksFromPreviousTestClass();
             TestRun.setRunningIndividualTest(null);
-            TestRun.setRunningTestMethod(null);
+            TestRun.setSavePointForTestMethod(null);
             TestRun.setCurrentTestClass(null);
          }
       }

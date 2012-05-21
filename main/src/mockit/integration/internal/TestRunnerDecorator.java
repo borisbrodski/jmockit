@@ -139,7 +139,7 @@ public class TestRunnerDecorator
       }
    }
 
-   protected final Object[] createInstancesForMockParameters(Object target, Method testMethod)
+   protected final Object[] createInstancesForMockParameters(Object target, Method testMethod, SavePoint savePoint)
    {
       if (testMethod.getParameterTypes().length == 0) {
          return null;
@@ -150,6 +150,7 @@ public class TestRunnerDecorator
       try {
          ParameterTypeRedefinitions redefinitions = new ParameterTypeRedefinitions(target, testMethod);
          TestRun.getExecutingTest().setParameterTypeRedefinitions(redefinitions);
+         savePoint.addRollbackAction(redefinitions.getCaptureOfNewInstances());
 
          return redefinitions.getParameterValues();
       }

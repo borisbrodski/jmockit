@@ -47,7 +47,7 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
          }
 
          TestRun.setRunningIndividualTest(target);
-         TestRun.setRunningTestMethod(null);
+         TestRun.setSavePointForTestMethod(null);
 
          try {
             return it.invokeExplosively(target, params);
@@ -69,7 +69,6 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
       }
 
       shouldPrepareForNextTest = true;
-      TestRun.setRunningTestMethod(method);
 
       try {
          executeTestMethod(target, params);
@@ -116,12 +115,14 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
    private void executeTestMethod(Object target, Object... parameters) throws Throwable
    {
       SavePoint savePoint = new SavePoint();
+      TestRun.setSavePointForTestMethod(savePoint);
+
       Method testMethod = it.getMethod();
       Throwable testFailure = null;
       boolean testFailureExpected = false;
 
       try {
-         Object[] mockParameters = createInstancesForMockParameters(target, testMethod);
+         Object[] mockParameters = createInstancesForMockParameters(target, testMethod, savePoint);
          createInstancesForTestedFields(target);
 
          TestRun.setRunningIndividualTest(target);
