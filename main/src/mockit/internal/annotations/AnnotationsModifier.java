@@ -327,17 +327,13 @@ final class AnnotationsModifier extends BaseClassModifier
       Label afterCallToMock = null;
 
       if (mockStateIndex >= 0) {
-         String mockClassDesc = annotatedMocks.getMockClassInternalName();
-
          if (useMockingBridgeForUpdatingMockState) {
-            generateCallToMockingBridge(
-               MockingBridge.UPDATE_MOCK_STATE, mockClassDesc, access, null, null, null, null, null,
-               mockStateIndex, 0, 0);
+            generateCallToControlMethodThroughMockingBridge(true, access);
             mw.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
             mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z");
          }
          else {
-            mw.visitLdcInsn(mockClassDesc);
+            mw.visitLdcInsn(annotatedMocks.getMockClassInternalName());
             mw.visitIntInsn(SIPUSH, mockStateIndex);
             mw.visitMethodInsn(INVOKESTATIC, CLASS_WITH_STATE, "updateMockState", "(Ljava/lang/String;I)Z");
          }
@@ -349,6 +345,25 @@ final class AnnotationsModifier extends BaseClassModifier
       }
 
       return afterCallToMock;
+   }
+
+   private void generateCallToControlMethodThroughMockingBridge(boolean enteringMethod, int mockAccess)
+   {
+      generateCodeToObtainInstanceOfMockingBridge(MockupBridge.class.getName());
+
+      // First and second "invoke" arguments:
+      generateCodeToPassThisOrNullIfStaticMethod(mockAccess);
+      mw.visitInsn(ACONST_NULL);
+
+      // Create array for call arguments (third "invoke" argument):
+      generateCodeToCreateArrayOfObject(3);
+
+      int i = 0;
+      generateCodeToFillArrayElement(i++, enteringMethod);
+      generateCodeToFillArrayElement(i++, annotatedMocks.getMockClassInternalName());
+      generateCodeToFillArrayElement(i, mockMethod.getIndexForMockState());
+
+      generateCallToInvocationHandler();
    }
 
    private void generateCallToMockMethod(int access, String desc)
@@ -363,28 +378,46 @@ final class AnnotationsModifier extends BaseClassModifier
 
    private void generateStaticMethodCall(int access, String desc)
    {
-      String mockClassName = annotatedMocks.getMockClassInternalName();
-
       if (shouldUseMockingBridge()) {
-         generateCallToMockingBridge(
-            MockingBridge.CALL_STATIC_MOCK, mockClassName, access, mockMethod.name, desc, mockMethod.desc, null, null,
-            mockMethod.getIndexForMockState(), 0, 0);
+         generateCallToMockMethodThroughMockingBridge(false, access, desc);
       }
       else {
          generateMethodOrConstructorArguments(access);
-         mw.visitMethodInsn(INVOKESTATIC, mockClassName, mockMethod.name, mockMethod.desc);
+         mw.visitMethodInsn(INVOKESTATIC, annotatedMocks.getMockClassInternalName(), mockMethod.name, mockMethod.desc);
       }
    }
 
    private boolean shouldUseMockingBridge() { return useMockingBridge || mockMethod.hasInvocationParameter; }
 
+   private void generateCallToMockMethodThroughMockingBridge(boolean callingInstanceMethod, int access, String desc)
+   {
+      generateCodeToObtainInstanceOfMockingBridge(MockMethodBridge.class.getName());
+
+      // First and second "invoke" arguments:
+      boolean isStatic = generateCodeToPassThisOrNullIfStaticMethod(access);
+      mw.visitInsn(ACONST_NULL);
+
+      // Create array for call arguments (third "invoke" argument):
+      Type[] argTypes = Type.getArgumentTypes(desc);
+      generateCodeToCreateArrayOfObject(7 + argTypes.length);
+
+      int i = 0;
+      generateCodeToFillArrayElement(i++, callingInstanceMethod);
+      generateCodeToFillArrayElement(i++, annotatedMocks.getMockClassInternalName());
+      generateCodeToFillArrayElement(i++, mockMethod.name);
+      generateCodeToFillArrayElement(i++, mockMethod.desc);
+      generateCodeToFillArrayElement(i++, mockMethod.getIndexForMockState());
+      generateCodeToFillArrayElement(i++, mockInstanceIndex);
+      generateCodeToFillArrayElement(i++, forStartupMock);
+
+      generateCodeToPassMethodArgumentsAsVarargs(argTypes, i, isStatic ? 0 : 1);
+      generateCallToInvocationHandler();
+   }
+
    private void generateInstanceMethodCall(int access, String desc)
    {
       if (shouldUseMockingBridge()) {
-         generateCallToMockingBridge(
-            MockingBridge.CALL_INSTANCE_MOCK, annotatedMocks.getMockClassInternalName(), access,
-            mockMethod.name, desc, mockMethod.desc, null, null,
-            mockMethod.getIndexForMockState(), mockInstanceIndex, forStartupMock ? 1 : 0);
+         generateCallToMockMethodThroughMockingBridge(true, access, desc);
          return;
       }
 
@@ -481,18 +514,13 @@ final class AnnotationsModifier extends BaseClassModifier
 
    private void generateCallToExitReentrantMock()
    {
-      String mockClassDesc = annotatedMocks.getMockClassInternalName();
-      int mockStateIndex = mockMethod.getIndexForMockState();
-
       if (useMockingBridgeForUpdatingMockState) {
-         generateCallToMockingBridge(
-            MockingBridge.EXIT_REENTRANT_MOCK, mockClassDesc, ACC_STATIC, null, null, null, null, null,
-            mockStateIndex, 0, 0);
+         generateCallToControlMethodThroughMockingBridge(false, ACC_STATIC);
          mw.visitInsn(POP);
       }
       else {
-         mw.visitLdcInsn(mockClassDesc);
-         mw.visitIntInsn(SIPUSH, mockStateIndex);
+         mw.visitLdcInsn(annotatedMocks.getMockClassInternalName());
+         mw.visitIntInsn(SIPUSH, mockMethod.getIndexForMockState());
          mw.visitMethodInsn(INVOKESTATIC, CLASS_WITH_STATE, "exitReentrantMock", "(Ljava/lang/String;I)V");
       }
    }

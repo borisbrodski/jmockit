@@ -249,9 +249,28 @@ final class ExpectationsModifier extends BaseClassModifier
       int access, String name, String desc, String genericSignature, String[] exceptions, String internalClassName,
       int executionMode)
    {
-      generateCallToMockingBridge(
-         MockingBridge.RECORD_OR_REPLAY, internalClassName, access, name, desc, desc, genericSignature, exceptions,
-         0, 0, executionMode);
+      generateCodeToObtainInstanceOfMockingBridge(MockedBridge.class.getName());
+
+      // First and second "invoke" arguments:
+      boolean isStatic = generateCodeToPassThisOrNullIfStaticMethod(access);
+      mw.visitInsn(ACONST_NULL);
+
+      // Create array for call arguments (third "invoke" argument):
+      Type[] argTypes = Type.getArgumentTypes(desc);
+      generateCodeToCreateArrayOfObject(7 + argTypes.length);
+
+      int i = 0;
+      generateCodeToFillArrayElement(i++, access);
+      generateCodeToFillArrayElement(i++, internalClassName);
+      generateCodeToFillArrayElement(i++, name);
+      generateCodeToFillArrayElement(i++, desc);
+      generateCodeToFillArrayElement(i++, genericSignature);
+      generateCodeToFillArrayElement(i++, getListOfExceptionsAsSingleString(exceptions));
+      generateCodeToFillArrayElement(i++, executionMode);
+
+      generateCodeToPassMethodArgumentsAsVarargs(argTypes, i, isStatic ? 0 : 1);
+      generateCallToInvocationHandler();
+
       generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
 
       // Copies the entire original implementation even for a constructor, in which case the complete bytecode inside

@@ -24,7 +24,6 @@ public class BaseClassModifier extends ClassVisitor
    private static final String[] UNBOXING_METHOD = {
       null, "booleanValue", "charValue", "byteValue", "shortValue", "intValue", "floatValue", "longValue", "doubleValue"
    };
-   private static final Type[] NO_ARGS = new Type[0];
    private static final Type VOID_TYPE = Type.getType("Ljava/lang/Void;");
 
    protected final MethodVisitor methodAnnotationsVisitor = new MethodVisitor()
@@ -191,7 +190,7 @@ public class BaseClassModifier extends ClassVisitor
          "[Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
-   private boolean generateCodeToPassThisOrNullIfStaticMethod(int access)
+   protected final boolean generateCodeToPassThisOrNullIfStaticMethod(int access)
    {
       boolean isStatic = Modifier.isStatic(access);
 
@@ -215,7 +214,7 @@ public class BaseClassModifier extends ClassVisitor
       }
    }
 
-   private String getListOfExceptionsAsSingleString(String[] exceptions)
+   protected final String getListOfExceptionsAsSingleString(String[] exceptions)
    {
       if (exceptions == null) {
          return null;
@@ -241,13 +240,13 @@ public class BaseClassModifier extends ClassVisitor
       generateCodeToPassMethodArgumentsAsVarargs(argTypes, 0, isStatic ? 0 : 1);
    }
 
-   private void generateCodeToCreateArrayOfObject(int arrayLength)
+   protected final void generateCodeToCreateArrayOfObject(int arrayLength)
    {
       mw.visitIntInsn(BIPUSH, arrayLength);
       mw.visitTypeInsn(ANEWARRAY, "java/lang/Object");
    }
 
-   private void generateCodeToPassMethodArgumentsAsVarargs(
+   protected final void generateCodeToPassMethodArgumentsAsVarargs(
       Type[] argTypes, int initialArrayIndex, int initialParameterIndex)
    {
       int i = initialArrayIndex;
@@ -271,41 +270,9 @@ public class BaseClassModifier extends ClassVisitor
       }
    }
 
-   protected final void generateCallToMockingBridge(
-      int targetId, String mockClassName, int mockAccess, String mockName, String mockDesc, String targetMockDesc,
-      String genericSignature, String[] exceptions, int mockStateIndex, int mockInstanceIndex, int executionMode)
+   protected final void generateCodeToObtainInstanceOfMockingBridge(String mockingBridgeSubclassName)
    {
-      generateCodeToObtainInstanceOfMockingBridge();
-
-      // First and second "invoke" arguments:
-      boolean isStatic = generateCodeToPassThisOrNullIfStaticMethod(mockAccess);
-      mw.visitInsn(ACONST_NULL);
-
-      // Create array for call arguments (third "invoke" argument):
-      Type[] argTypes = mockDesc == null ? NO_ARGS : Type.getArgumentTypes(mockDesc);
-      generateCodeToCreateArrayOfObject(10 + argTypes.length);
-
-      int i = 0;
-      generateCodeToFillArrayElement(i++, targetId);
-      generateCodeToFillArrayElement(i++, mockAccess);
-      generateCodeToFillArrayElement(i++, mockClassName);
-      generateCodeToFillArrayElement(i++, mockName);
-      generateCodeToFillArrayElement(i++, targetMockDesc);
-      generateCodeToFillArrayElement(i++, genericSignature);
-      generateCodeToFillArrayElement(i++, getListOfExceptionsAsSingleString(exceptions));
-      generateCodeToFillArrayElement(i++, mockStateIndex);
-      generateCodeToFillArrayElement(i++, mockInstanceIndex);
-      generateCodeToFillArrayElement(i++, executionMode);
-
-      generateCodeToPassMethodArgumentsAsVarargs(argTypes, i, isStatic ? 0 : 1);
-      mw.visitMethodInsn(
-         INVOKEINTERFACE, "java/lang/reflect/InvocationHandler", "invoke",
-         "(Ljava/lang/Object;Ljava/lang/reflect/Method;[Ljava/lang/Object;)Ljava/lang/Object;");
-   }
-
-   private void generateCodeToObtainInstanceOfMockingBridge()
-   {
-      mw.visitLdcInsn("mockit.internal.MockingBridge");
+      mw.visitLdcInsn(mockingBridgeSubclassName);
       mw.visitInsn(ICONST_1);
       mw.visitMethodInsn(INVOKESTATIC, "java/lang/ClassLoader", "getSystemClassLoader", "()Ljava/lang/ClassLoader;");
       mw.visitMethodInsn(
@@ -316,7 +283,7 @@ public class BaseClassModifier extends ClassVisitor
       mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Field", "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
-   private void generateCodeToFillArrayElement(int arrayIndex, Object value)
+   protected final void generateCodeToFillArrayElement(int arrayIndex, Object value)
    {
       mw.visitInsn(DUP);
       mw.visitIntInsn(BIPUSH, arrayIndex);
@@ -327,6 +294,10 @@ public class BaseClassModifier extends ClassVisitor
       else if (value instanceof Integer) {
          mw.visitIntInsn(SIPUSH, (Integer) value);
          mw.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;");
+      }
+      else if (value instanceof Boolean) {
+         mw.visitInsn((Boolean) value ? ICONST_1 : ICONST_0);
+         mw.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;");
       }
       else {
          mw.visitLdcInsn(value);
@@ -389,6 +360,13 @@ public class BaseClassModifier extends ClassVisitor
           case Type.LONG:    return T_LONG;
           default:           return T_DOUBLE;
       }
+   }
+
+   protected final void generateCallToInvocationHandler()
+   {
+      mw.visitMethodInsn(
+         INVOKEINTERFACE, "java/lang/reflect/InvocationHandler", "invoke",
+         "(Ljava/lang/Object;Ljava/lang/reflect/Method;[Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
    protected final void generateDecisionBetweenReturningOrContinuingToRealImplementation(String desc)
