@@ -4,6 +4,8 @@
  */
 package mockit;
 
+import java.util.*;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -42,6 +44,19 @@ public final class ObjectOverridesTest
    private void assertDefaultToStringBehavior(Object a)
    {
       assertEquals(Utilities.objectIdentity(a), a.toString());
+   }
+
+   @Test
+   public void verifyStandardBehaviorOfOverriddenObjectMethodsInMockedJREClass(Date a, Date b)
+   {
+      assertDefaultEqualsBehavior(a, b);
+      assertDefaultEqualsBehavior(b, a);
+
+      assertDefaultHashCodeBehavior(a);
+      assertDefaultHashCodeBehavior(b);
+
+      assertDefaultToStringBehavior(a);
+      assertDefaultToStringBehavior(b);
    }
 
    @Mocked ClassWithObjectOverrides a;

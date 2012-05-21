@@ -268,7 +268,7 @@ public final class RecordAndReplayExecution
       }
    }
 
-   private static Object defaultReturnValue(Object mock, String nameAndDesc, int executionMode, Object[] args)
+   public static Object defaultReturnValue(Object mock, String nameAndDesc, int executionMode, Object[] args)
    {
       if (mock != null) {
          Object rv = Utilities.evaluateObjectOverride(mock, nameAndDesc, args);
