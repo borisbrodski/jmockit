@@ -201,6 +201,38 @@ public final class CascadingFieldTest
          };
       }};
 
-      assertEquals(1, foo.getIntValue());
+      assertEquals(0, foo.getIntValue());
+   }
+
+   // Tests for cascaded instances obtained from generic methods //////////////////////////////////////////////////////
+
+   static class GenericBaseClass1<T> { T getValue() { return null; } }
+
+   @Test
+   public void cascadeGenericMethodFromSpecializedGenericClass(@Cascading GenericBaseClass1<A> mock)
+   {
+      A value = mock.getValue();
+      assertNotNull(value);
+   }
+
+   static class ConcreteSubclass1 extends GenericBaseClass1<A> {}
+
+   @Test
+   public void cascadeGenericMethodOfConcreteSubclassWhichExtendsGenericClass(@Cascading ConcreteSubclass1 mock)
+   {
+      A value = mock.getValue();
+      assertNotNull(value);
+   }
+
+   interface Ab extends A {}
+   static class GenericBaseClass2<T extends A> { T getValue() { return null; } }
+   static class ConcreteSubclass2 extends GenericBaseClass2<Ab> {}
+
+   @Test
+   public void cascadeGenericMethodOfConcreteSubclassWhichExtendsGenericClassWithUpperBound(
+      @Cascading ConcreteSubclass2 mock)
+   {
+      Ab value = mock.getValue();
+      assertNotNull(value);
    }
 }
