@@ -9,7 +9,6 @@ import java.util.concurrent.locks.*;
 
 import mockit.*;
 import mockit.internal.expectations.*;
-import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 abstract class DynamicInvocationResult extends InvocationResult
@@ -75,7 +74,6 @@ abstract class DynamicInvocationResult extends InvocationResult
          return Utilities.invoke(targetObject, methodToInvoke, args);
       }
 
-      TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(true);
       reentrantLock.unlock();
 
       try {
@@ -84,7 +82,6 @@ abstract class DynamicInvocationResult extends InvocationResult
       finally {
          //noinspection LockAcquiredButNotSafelyReleased
          reentrantLock.lock();
-         TestRun.getExecutingTest().setShouldIgnoreMockingCallbacks(false);
       }
    }
 }

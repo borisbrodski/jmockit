@@ -407,11 +407,13 @@ public final class DelegateTest extends TestCase
       new NonStrictExpectations() {{
          mock.getValue();
          result = new Delegate() {
-            int delegate() { return mock.getValue(); }
+            int count;
+            // Would result in a StackOverflowError without a termination condition.
+            int delegate() { return count++ > 1 ? 123 : 1 + mock.getValue(); }
          };
       }};
 
-      assertEquals(0, mock.getValue());
+      assertEquals(125, mock.getValue());
    }
 
    public void testDelegateWhichCallsAnotherMockedMethod_regularMocking(final Collaborator mock)
@@ -422,15 +424,10 @@ public final class DelegateTest extends TestCase
             int delegate() { return mock.finalMethod(); }
          };
 
-         mock.finalMethod(); result = 'A'; // won't be used
+         mock.finalMethod(); result = 'A';
       }};
 
-      // Allowing the call to "mock.finalMethod()" to be handled as a regular mocked invocation would
-      // cause JMockit to re-enter itself, potentially corrupting internal data structures.
-      // Instead, the reentrant call is avoided by returning immediately with the default return value
-      // (in the case of regular mocking only; for dynamic or injectable mocking, the real method gets
-      // executed instead).
-      assertEquals(0, mock.getValue());
+      assertEquals('A', mock.getValue());
    }
 
    public void testDelegateWhichCallsAnotherMockedMethod_dynamicMockingOfClass()
@@ -438,17 +435,17 @@ public final class DelegateTest extends TestCase
       final Collaborator collaborator = new Collaborator();
 
       new NonStrictExpectations(Collaborator.class) {{
-         Collaborator.staticMethod(); result = new RuntimeException(); // won't be used
+         Collaborator.staticMethod(); result = false;
 
          collaborator.getValue();
          result = new Delegate() {
-            int delegate() { return Collaborator.staticMethod() ? collaborator.finalMethod() : 1; }
+            int delegate() { return Collaborator.staticMethod() ? 1 : collaborator.finalMethod(); }
          };
 
-         collaborator.finalMethod(); result = 'A'; // won't be used
+         collaborator.finalMethod(); result = 'A';
       }};
 
-      assertEquals('s', collaborator.getValue());
+      assertEquals('A', collaborator.getValue());
    }
 
    public void testDelegateWhichCallsAnotherMockedMethod_dynamicMockingOfInstance()
@@ -461,10 +458,10 @@ public final class DelegateTest extends TestCase
             int delegate() { return collaborator.finalMethod(); }
          };
 
-         collaborator.finalMethod(); result = 'A'; // won't be used
+         collaborator.finalMethod(); result = 'A';
       }};
 
-      assertEquals('s', collaborator.getValue());
+      assertEquals('A', collaborator.getValue());
    }
 
    public void testDelegateWhichCallsAnotherMockedMethod_injectableMocking(@Injectable final Collaborator mock)
@@ -475,16 +472,15 @@ public final class DelegateTest extends TestCase
             int delegate() { return mock.finalMethod(); }
          };
 
-         mock.finalMethod(); result = 'A'; // won't be used
+         mock.finalMethod(); result = 'A';
       }};
 
-      assertEquals('s', mock.getValue());
+      assertEquals('A', mock.getValue());
    }
 
    public void testDelegateWhichCallsAnotherMockedMethodProducingACascadedInstance(@Cascading final Collaborator mock)
    {
       new NonStrictExpectations() {{
-         // Won't be used from inside a delegate method:
          mock.getFoo().doSomething(); result = 123;
 
          mock.getValue();
@@ -494,6 +490,20 @@ public final class DelegateTest extends TestCase
       }};
 
       assertEquals(123, mock.getFoo().doSomething());
-      assertEquals(1, mock.getValue());
+      assertEquals(123, mock.getValue());
+   }
+
+   public void testDelegateCallingMockedMethodLaterVerified(final Collaborator collaborator, final Runnable action)
+   {
+      new NonStrictExpectations() {{
+         collaborator.getFoo();
+         result = new Delegate() {
+            void delegate() { action.run(); }
+         };
+      }};
+
+      collaborator.getFoo();
+
+      new Verifications() {{ action.run(); }};
    }
 }
