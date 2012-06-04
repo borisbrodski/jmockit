@@ -72,8 +72,17 @@ final class JDK6AgentLoader
          if (File.separatorChar == '\\') {
             return new WindowsVirtualMachine(ATTACH_PROVIDER, pid);
          }
-         else if (System.getProperty("os.name").matches("Linux.*|LINUX.*")) {
+
+         String osName = System.getProperty("os.name");
+
+         if (osName.startsWith("Linux") || osName.startsWith("LINUX")) {
             return new LinuxVirtualMachine(ATTACH_PROVIDER, pid);
+         }
+         else if (osName.startsWith("Mac OS X")) {
+            return new BsdVirtualMachine(ATTACH_PROVIDER, pid);
+         }
+         else if (osName.startsWith("Solaris")) {
+            return new SolarisVirtualMachine(ATTACH_PROVIDER, pid);
          }
       }
       catch (AttachNotSupportedException e) {
