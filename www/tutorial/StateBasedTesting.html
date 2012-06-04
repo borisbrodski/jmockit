@@ -27,29 +27,13 @@
    <li>
       <a href="#setUp">Setting up mocks for a test</a>
       <ol>
-         <li><a href="#setupTime">Setting up mocks for a real class chosen at setup time</a></li>
          <li><a href="#mockableMethods">Which kinds of methods can have mocks?</a></li>
          <li><a href="#inline">In-line mock classes</a></li>
       </ol>
    </li>
    <li><a href="#interfaces">Mocking interfaces</a></li>
-   <li>
-      <a href="#stubs">Stubbing out classes and methods</a>
-      <ol>
-         <li><a href="#stubbingMethods">Using the stubbing methods</a></li>
-         <li><a href="#stubsAttribute">Specifying stubs with a mock class</a></li>
-      </ol>
-   </li>
    <li><a href="#constraints">Invocation count constraints</a></li>
    <li><a href="#initializers">Mocking and stubbing class initializers</a></li>
-   <li>
-      <a href="#instantiation">Controlling the instantiation of mock classes</a>
-      <ol>
-         <li><a href="#PerMockSetup">Instantiation per Mock Setup</a></li>
-         <li><a href="#PerMockInvocation">Instantiation per Mock Invocation</a></li>
-         <li><a href="#PerMockedInstance">Instantiation per Mocked Instance</a></li>
-      </ol>
-   </li>
    <li><a href="#it">Accessing the mocked object: the "it" field</a></li>
    <li><a href="#reentrant">Reentrant mocks</a></li>
    <li>
@@ -122,12 +106,11 @@
 </h3>
 <p>
    In the context of the Mockups API, a <em>mock method</em> is any method in a <em>mock class</em> that gets annotated
-   with the <code class="type">mockit.Mock</code> annotation.
+   with <code class="annotation">@Mock</code>.
+   For short, in this chapter we refer to annotated mock methods simply as "mocks"; in other contexts, the word "mock"
+   may refer to an <em>instance</em> of a mocked class instead.
    A <em>mock class</em> is any class extending the <code class="type">mockit.MockUp&lt;T></code> generic base class,
-   or annotated with <code class="type">mockit.MockClass</code>, or that is explicitly passed to one of several
-   <em>mock-setup</em> methods.
-   For short, in this chapter we will refer to such annotated mock methods simply as "mocks" (in other contexts, the
-   word "mock" may refer to an <em>instance</em> of a mocked class instead).
+   where <code>&lt;T></code> is the type to be mocked.
    The example below shows several mocks defined in a mock class for our example "real" class,
    <code class="type">javax.security.auth.login.LoginContext</code>.
 </p>
@@ -207,23 +190,16 @@
 <p>
    A given mock class must be applied to a corresponding real class to have any effect.
    We call this "setting up" the mock class.
-   This is normally done for a specific test or set of tests.
-   In the first case, it occurs inside individual test methods.
-   In the second one, a <code class="annotation">@BeforeMethod</code> (TestNG), <code>setUp()</code> (in JUnit 3.8-style
-   tests), or <code class="annotation">@Before</code> (JUnit 4) method can be used.
-   During the time a mock class is in effect, the methods and constructors of the real class which have corresponding
-   mocks will stay mocked, with any calls made on them automatically and transparently redirected to the corresponding
-   mocks for execution.
+   This is usually done inside an individual test method or inside a <code class="annotation">@BeforeMethod</code>
+   (TestNG) or <code class="annotation">@Before</code> (JUnit 4) method.
+   Once a mock class is set up, all executions of the mocked methods and constructors of the real class get
+   automatically redirected to the corresponding mock methods.
 </p>
-
-<h4 id="setupTime">Setting up mocks for a real class chosen at setup time</h4>
 <p>
-   To set up the <code class="type">MockLoginContext</code> mock class above, whose corresponding real class is
-   <code class="type">javax.security.auth.login.LoginContext</code> as specified for the type parameter, we simply
-   instantiate it:
+   To set up the <code class="type">MockLoginContext</code> mock class above, we simply instantiate it:
 </p>
 <pre><code>   @Test
-   public void setUpMocksForGivenRealClassWithGivenMockInstance() throws Exception
+   public void settingUpAMockClass() throws Exception
    {
       <strong>new MockLoginContext()</strong>);
 
@@ -243,7 +219,7 @@
    validity of the invocation arguments.
    Similarly, when the <code>LoginContext#login</code> method is called, the corresponding mock method will be executed,
    which in this case will do nothing since the method has no parameters and <code>void</code> return type.
-   The mock instance on which these invocations occur is the one created in the first part of the test.
+   The mock class instance on which these invocations occur is the one created in the first part of the test.
 </p>
 <p>
    The (partial) example test above simply verifies that the <code class="type">LoginContext</code> class is
@@ -271,7 +247,7 @@
    }
 
    @Test(expected = LoginException.class)
-   public void setUpMocksForGivenRealClassWithoutPrecreatedMockInstance() throws Exception
+   public void settingUpAnotherMockClass() throws Exception
    {
       new <strong>MockLoginContextThatFailsAuthentication</strong>();
 
@@ -282,17 +258,9 @@
 <p>
    This test will only pass if the <code>LoginContext#login</code> method throws an exception, which it will when the
    corresponding mock method is executed.
-   Notice that in this case we passed the class literal for the mock class instead of an instance.
-   This will cause a new instance of the mock class to be created automatically <em>every time</em> a
-   non-<code>static</code> mock method needs to be called (which happens whenever a mocked method on the real class is
-   called).
-   The mock method will be called on this new instance, which will then be discarded (that is, it won't be reused later
-   for new invocations).
-   Naturally, mock methods that are <code>static</code> are never called on any instance, so no new instance is created
-   for them.
 </p>
 
-<h4 id="mockableMethods">Which kinds of methods can have mocks?</h4>
+<h4 id="mockableMethods">Kinds of methods which can have mocks</h4>
 <p>
    So far, we have only mocked public instance methods with public instance mock methods.
    In reality, any other kind of method in a real class can be mocked: methods with <code>private</code>,
@@ -319,7 +287,7 @@
    by the next example.
 </p>
 <pre><code>   @Test
-   public void setUpMocksUsingAnonymousMockClass() throws Exception
+   public void setingUpMocksUsingAnAnonymousMockClass() throws Exception
    {
       new MockUp&lt;LoginContext>() {
          @Mock void $init(String name) { assertEquals("test", name); }
@@ -330,8 +298,7 @@
    }
 </code></pre>
 <p>
-   As the previous example test has shown, it is perfectly safe to declare mock methods in an anonymous mock class as
-   non-<code>public</code>.
+   Note that mock methods don't need to be <code>public</code>.
 </p>
 
 <h3 id="interfaces">
@@ -341,19 +308,18 @@
       <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#setUp"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#stubs"><img align="right" src="go-down.png" title="Next section"></a>
+      <a href="#constraints"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
    Most of the time a mock class targets a real class directly.
    But what if we need a mock object that implements a certain interface, to be passed to code under test?
-   The two following example tests show how it is done, one using an annotated mock class, the other a mock-up class.
-   The mocked interface is
+   The following example test shows how it is done for the interface
    <a href="http://download.oracle.com/javase/6/docs/api/javax/security/auth/callback/CallbackHandler.html">
       javax.security.auth.callback.CallbackHandler</a>.
 </p>
 <pre><code>   @Test
-   public void mockAnInterface() throws Exception
+   public void mockingAnInterface() throws Exception
    {
       CallbackHandler callbackHandler = new MockUp&lt;CallbackHandler>() {
          @Mock
@@ -373,125 +339,13 @@
    This method returns <code>null</code> if the mocked type is not an interface.
 </p>
 
-<h3 id="stubs">
-   Stubbing out classes and methods
-   <div class="navigation">
-      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
-      <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
-      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
-      <a href="#interfaces"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#constraints"><img align="right" src="go-down.png" title="Next section"></a>
-   </div>
-</h3>
-<p>
-   Sometimes all we need is to stub out the executable code in an entire class or in selected methods/constructors.
-   When a method is stubbed out, it does nothing when executed.
-   An stubbed out constructor will also do nothing, except for calling the necessary constructor in the super-class.
-   Methods with non-<code>void</code> return type will simply return the default value for that type: zero for numeric
-   primitive types, <code>false</code> for <code>boolean</code>, an empty array or collection, or <code>null</code> for
-   any other reference type (including <code class="type">String</code>).
-</p>
-<p>
-   Special care must be taken when the <em>static initialization</em> code of a class is stubbed out.
-   Note that this includes not only any "<code>static</code>" blocks in the class, but also any assignments to
-   <code>static</code> fields (excluding those resolved at compile time, which do not produce any executable bytecode).
-   Since the JVM only attempts to initialize a class <em>once</em>, restoring the static initialization code of an
-   stubbed out class will not have any effect.
-   So, if you stub out the static initialization of a class that hasn't been initialized by the JVM yet, the original
-   class initialization code will <em>never</em> be executed in the test run.
-   This will cause any static fields (except those assigned with compile-time constants) to retain their initial default
-   values.
-</p>
-
-<h4 id="stubbingMethods">Using the stubbing methods</h4>
-<p>
-   The <code class="type">Mockit</code> class provides a set of "stubbing" methods with names starting in
-   "<code>stubOut</code>".
-   They accept one or more classes to be stubbed out, with some of them also accepting a set of filters for methods
-   and constructors.
-   The static initializer of a class is specified by the special filter value "<code>&lt;clinit></code>".
-   For details and examples, see the relevant <a href="../javadoc/mockit/Mockit.html#stubOut(java.lang.Class...)">API
-   documentation</a>.
-</p>
-
-<h4 id="stubsAttribute">Specifying stubs with a mock class</h4>
-<p>
-   The <code class="annotation">@MockClass</code> annotation also gives us the ability to specify methods and/or
-   constructors in the real class that should be <em>stubbed out</em> so they have no effect when
-   called during a test.
-   Stubbing out a method achieves the same result as mocking it with a mock method that does nothing, except for
-   returning the default value according to the method return type when it's not <code>void</code>.
-</p>
-<p>
-   The following example tests make use of this feature.
-</p>
-<pre><code>   @Test
-   public void mockAndStubOutClassAccordingToSpecifiedStubs() throws Exception
-   {
-      Mockit.setUpMocks(new MockLoginContextWithStubs());
-
-      LoginContext context = new LoginContext("");
-      context.login();
-      context.logout();
-   }
-
-   @MockClass(realClass = LoginContext.class, stubs = {"(String)", "logout"})
-   final class MockLoginContextWithStubs
-   {
-      @Mock
-      void login() {} // this could also have been an stub
-   }
-
-   @Test
-   public void mockAndStubOutClassAccordingToSpecifiedInverseStubs() throws Exception
-   {
-      Mockit.setUpMocks(MockLoginContextWithInverseStubs.class);
-
-      LoginContext context = new LoginContext("", null, null);
-      context.login();
-      context.logout();
-   }
-
-   @MockClass(realClass = LoginContext.class, stubs = "", inverse = true)
-   static class MockLoginContextWithInverseStubs
-   {
-      @Mock
-      static void login() {}
-   }
-</code></pre>
-<p>
-   In the first test above, the constructor of the real class (<code class="type">LoginContext</code>) which has
-   one parameter of type <code class="type">String</code> is stubbed out, as well as all methods in the same
-   class with name <code>logout</code>. Parameters are ignored if not specified in the stub filter,
-   so all overloads (in case there is more than one) with the same method name will be stubbed out.
-</p>
-<p>
-   The second mock class, <code class="type">MockLoginContextWithInverseStubs</code>, uses the
-   <code>inverse</code> attribute (which by default is <code>false</code>) to specify that all
-   methods and constructors <em>not</em> matching the specified stub filters will be stubbed out.
-   In this example, the list of stub filters contains only an empty filter which matches nothing, so everything in the
-   real class is stubbed out. Any mocks defined in the mock class will override the stub, however.
-</p>
-<p>
-   Each stub filter string specified with the <code>stubs</code> attribute can match any number of
-   methods of the real class, since the initial part actually is a <em>regular expression</em> for method names.
-   For constructors, this part is left empty since they have no names.
-   The second part in a stub filter string, which can be empty for methods but never for
-   constructors, is a comma-separated list of parameter type names, between parentheses.
-   Each parameter type name either is the name of a primitive type, or a fully qualified reference type name.
-   For convenience, it can be a <em>unique suffix</em> for such type names instead; this makes it
-   easy to specify reference type names, since in most cases the package name can be omitted.
-   Finally, as seen in the example above, the empty stub filter will match <em>no</em> methods or
-   constructors in the real class, or <em>all</em> methods and constructors if used with <code>inverse = true</code>.
-</p>
-
 <h3 id="constraints">
    Invocation count constraints
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
-      <a href="#stubs"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#interfaces"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#initializers"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
@@ -508,17 +362,16 @@
    given mock, as the following example shows.
 </p>
 <pre><code>   @Test
-   public void specifyInvocationCountConstraints() throws Exception
+   public void specifyingInvocationCountConstraints() throws Exception
    {
-      Mockit.setUpMock(LoginContext.class, new Object()
-      {
-         @Mock(minInvocations = 1)
+      new MockUp&lt;LoginContext>() {
+         @Mock(<strong>minInvocations = 1</strong>)
          void $init(String name) { assertEquals("test", name); }
 
-         @Mock(invocations = 1)
+         @Mock(<strong>invocations = 1</strong>)
          void login() {}
 
-         @Mock(maxInvocations = 1)
+         @Mock(<strong>maxInvocations = 1</strong>)
          void logout() {}
       });
 
@@ -526,8 +379,6 @@
    }
 </code></pre>
 <p>
-   (In the test above we used an anonymous mock class with the <code>setUpMock</code> method,
-   although a nicer solution could be obtained with a local <code class="type">MockUp</code> object.)
    In this test we used all three attributes of the <code class="annotation">@Mock</code> annotation related to
    invocation counts.
    The first mock specifies that the <code>LoginContext(String)</code> constructor must be invoked
@@ -541,32 +392,28 @@
 </p>
 
 <h3 id="initializers">
-   Mocking and stubbing class initializers
+   Mocking class initializers
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#constraints"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#instantiation"><img align="right" src="go-down.png" title="Next section"></a>
+      <a href="#it"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
    When a class in production code performs some work in one or more <em>static initialization blocks</em>, we often
-   need to stub it out so it doesn't interfere with test execution.
-   To do just that for a given real class, we can write something like
-   <code><span class="annotation">@MockClass</span>(realClass = MyRealClass.class, <strong>stubs = "&lt;clinit>"</strong>)</code>.
-   If we instead want some test code to execute when the static initialization of the real class
-   gets executed by the JVM, then we can define an special mock, as shown below.
+   need to mock it out so it doesn't interfere with test execution.
+   We can define an special mock method for that, as shown below.
 </p>
 <pre><code>   @Test
-   public void mockStaticInitializer()
+   public void mockingStaticInitializers()
    {
-      new MockUp&lt;ClassWithStaticInitializers>()
-      {
-         @Mock(invocations = 1)
-         void $clinit()
+      new MockUp&lt;ClassWithStaticInitializers>() {
+         @Mock
+         <strong>void $clinit()</strong>
          {
-            // Do something here.
+            // Do something here, usually nothing.
          }
       };
 
@@ -574,101 +421,15 @@
    }
 </code></pre>
 <p>
-   We can even verify that static initialization occurs, as specified by the invocation count
-   constraint above. Notice however that once loaded by the JVM, a class will be initialized no more
-   than once, so the test would fail if it runs after the class has already been initialized.
-</p>
-
-<h3 id="instantiation">
-   Controlling the instantiation of mock classes
-   <div class="navigation">
-      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
-      <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
-      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
-      <a href="#initializers"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#it"><img align="right" src="go-down.png" title="Next section"></a>
-   </div>
-</h3>
-<p>
-   We have already seen two different situations when mock classes get instantiated:
-</p>
-<ol>
-   <li>
-      The mock class is instantiated directly by test code with the <code>new</code> operator, and passed to JMockit in
-      a call to a <code>Mockit.setUpMock</code> or <code>Mockit.setUpMocks</code> method, or alternatively as a
-      <code>MockUp</code> subclass instance.
-      In this case the same mock instance is used for all calls to instance mock methods, as long as the mock class
-      remains in effect.
-   </li>
-   <li>
-      The mock class is instantiated "behind the covers" by JMockit whenever it needs an instance to invoke an instance
-      mock method on.
-      In this situation a mock instance is created, a mock is executed on it, and then it is discarded (that is, it
-      becomes eligible for garbage collection).
-   </li>
-</ol>
-<p>
-   Sometimes it may be important to have more control on when exactly a mock class is automatically instantiated by
-   JMockit.
-   There is also a situation which is not covered by the previously described instantiation mechanisms, and which may be
-   needed or useful for certain test cases: <em>instantiation per mocked instance</em>.
-   To cover such needs the <code class="annotation">@MockClass</code> annotation has an <code>instantiation</code>
-   attribute, whose values are given by the
-   <a href="../javadoc/mockit/Instantiation.html"><code>Instantiation</code></a> "enum".
-   The default value for this attribute is <code>Instantiation.PerMockInvocation</code>.
-</p>
-<p>
-   The following sub-sections describe each of the possible instantiation modes which can be used
-   to control how and when JMockit creates automatic mock class instances.
-   Notice this is applicable only to situation 2 above.
-</p>
-
-<h4 id="PerMockSetup">Instantiation per Mock Setup</h4>
-<p>
-   For a mock class annotated as
-   <code><span class="annotation">@MockClass</span>(realClass = ..., <strong>instantiation = PerMockSetup</strong>)</code>,
-   a call like <code>Mockit.setUpMock(realClass, MyMockClass.class)</code> or
-   <code>Mockit.setUpMocks(MyMockClass.class)</code> will result in the creation of the mock
-   instance at the time of the call.
-   This single mock instance will then be used for all instance method invocations, for as long as
-   the mock class remains in effect.
-</p>
-<p>
-   Notice this is equivalent to passing an instance created by test code in one of those mock setup calls.
-</p>
-
-<h4 id="PerMockInvocation">Instantiation per Mock Invocation</h4>
-<p>
-   For a mock class annotated as
-   <code><span class="annotation">@MockClass</span>(realClass = ..., <strong>instantiation = PerMockInvocation</strong>)</code>,
-   a call like <code>Mockit.setUpMock(realClass, MyMockClass.class)</code> or
-   <code>Mockit.setUpMocks(MyMockClass.class)</code> will <em>not</em> result in the creation of any
-   mock instance at this time, but will later if and when an instance mock method needs to be invoked.
-   For each such invocation, a new mock instance is created and then discarded as soon as the mock call terminates.
-</p>
-<p>
-   Notice this is the default JMockit behavior when a class literal for the mock class is passed in
-   a mock setup call, and the <code>instantiation</code> attribute isn't specified.
-</p>
-
-<h4 id="PerMockedInstance">Instantiation per Mocked Instance</h4>
-<p>
-   For a mock class annotated as
-   <code><span class="annotation">@MockClass</span>(realClass = ..., <strong>instantiation = PerMockedInstance</strong>)</code>,
-   a call like <code>Mockit.setUpMock(realClass, MyMockClass.class)</code> or
-   <code>Mockit.setUpMocks(MyMockClass.class)</code> will result in the <em>on-demand</em> creation
-   of one new mock instance for each and every new <em>mocked instance</em> (ie, an instance of the real class).
-   In other words, once the mock class is in effect, whenever a mocked instance method of the real
-   class is invoked, a paired instance of the mock class will be created if none yet exists for that
-   particular instance of the real class; this same mock instance will then be used for all
-   invocations to mock instance methods.
-</p>
-<p>
-   The ability to have a mock class instance for each real class instance will normally only be
-   useful if the mock class stores some state that is specific to each instance of the real class.
-</p>
-<p>
-   Notice the mock object lifetime described above can only be achieved by using this particular instantiation mode.
+   Special care must be taken when the static initialization code of a class is mocked out.
+   Note that this includes not only any "<code>static</code>" blocks in the class, but also any assignments to
+   <code>static</code> fields (excluding those resolved at compile time, which do not produce any executable bytecode).
+   Since the JVM only attempts to initialize a class <em>once</em>, restoring the static initialization code of a
+   mocked out class will not have any effect.
+   So, if you mock out the static initialization of a class that hasn't been initialized by the JVM yet, the original
+   class initialization code will <em>never</em> be executed in the test run.
+   This will cause any static fields that are assigned with expressions computed at runtime to instead remain
+   initialized with the <em>default</em> values for their types.
 </p>
 
 <h3 id="it">
@@ -677,33 +438,33 @@
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
-      <a href="#instantiation"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#constraints"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#reentrant"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
-   As we have seen, there is a relationship between <em>mocked instances</em> (that is, instances of
-   real classes which have been mocked) and <em>mock instances</em> (instances of mock classes).
-   Mock instances can be created explicitly in test code, or automatically by JMockit according to
-   the instantiation mode of the mock class.
-   Mocked instances are created inside tested code, or in test code so they can be passed to tested code.
+   As we have seen, there is a relationship between <em>mocked instances</em> (that is, instances of real classes which
+   have been mocked) and <em>mock instances</em> (instances of mock classes).
+   While <em>mock</em> instances get created explicitly in test code, <em>mocked</em> instances are created inside
+   tested code, or in test code so they can be passed to tested code.
 </p>
 <p>
-   For certain use cases, a mock method executing on a mock instance may need access to the
-   corresponding mocked instance.
-   This can be achieved by declaring an instance field of name <strong><code>it</code></strong> in
-   the mock class, with the type of the mocked real class.
-   Every time a mocked instance method is redirected to execute the corresponding mock instance
-   method, the <code>it</code> field on the mock instance will be set to the mocked instance.
-   If a mocked <em>constructor</em> has a corresponding <code>$init</code> mock method, then the
-   field will be set to the newly created (and uninitialized) instance.
+   For certain use cases, a mock method executing on a mock instance may need access to the corresponding mocked
+   instance.
+   This can be achieved by declaring an instance field of name "<strong><code>it</code></strong>" in the mock class,
+   with the type of the mocked real class.
+   Every time a mocked instance method is redirected to execute the corresponding mock instance method, the
+   <code>it</code> field on the mock instance will be set to the mocked instance.
+   If a mocked <em>constructor</em> has a corresponding <code>$init</code> mock method, then the field will be set to
+   the newly created (and uninitialized) instance.
 </p>
 <p>
-   In practice, the use of an <code>it</code> field by itself is uncommon, so the following example
-   test is a contrived (although interesting) one. The next section describes a more likely use for such fields.
+   In practice, the use of an <code>it</code> field by itself is uncommon, so the following example test is a contrived
+   (although interesting) one.
+   The next section describes a more likely use for such fields.
 </p>
 <pre><code>   @Test
-   public void accessMockedInstanceThroughItField() throws Exception
+   public void accessingTheMockedInstanceInMockMethods() throws Exception
    {
       final Subject testSubject = new Subject();
 
@@ -744,13 +505,11 @@
    }
 </code></pre>
 <p>
-   The example above (which is an actual test in JMockit's own test suite) used a mock-up class, but
-   annotated and regular anonymous mock classes can also declare an <code>it</code> field.
    The <code>setField</code> methods used in this test are statically imported from the
    <code class="type">mockit.Deencapsulation</code> utility class, and are only used here to make the test more
    meaningful.
-   The local variable <code>theMockedInstance</code> contains the instance which the <code>it</code>
-   field will be set to on the mock-up instance, for each of the three mock invocations in this particular test.
+   The local variable <code>theMockedInstance</code> contains the instance which the <code>it</code> field will be set
+   to on the mock-up instance, for each of the three mock invocations in this particular test.
 </p>
 
 <h3 id="reentrant">
@@ -766,19 +525,19 @@
 <p>
    Usually, a <em>reentrant method</em> is one which can be re-entered once it is already executing.
    Recursive methods, for example, are typically reentrant.
-   A <em>reentrant mock method</em> is similar, but instead of causing itself to be re-entered, it
-   causes the corresponding <em>mocked</em> method to be re-entered; and when this happens the
-   original code of the real method is executed, without going through the mock again.
+   A <em>reentrant mock method</em> is similar, but instead of causing itself to be re-entered, it causes the
+   corresponding <em>mocked</em> method to be re-entered; and when this happens the original code of the real method is
+   executed, without going through the mock again.
 </p>
 <p>
-   If the mock is an instance method mocking a real instance method, it will need access to the
-   mocked instance in order to call back the mocked instance method.
+   If the mock is an instance method mocking a real instance method, it will need access to the mocked instance in order
+   to call back the mocked instance method.
    For this, the mock class will need to declare an appropriate <code>it</code> field.
 </p>
 <p>
-   A mocked method which has a reentrant mock will have different behavior than if it had a regular
-   mock, so we use the <code><span class="annotation">@Mock</span>(<strong>reentrant = true</strong>)</code> annotation
-   attribute to tell JMockit about our intentions.
+   A mocked method which has a reentrant mock will have different behavior than if it had a regular mock, so we use the
+   <code><span class="annotation">@Mock</span>(<strong>reentrant = true</strong>)</code> annotation attribute to tell
+   JMockit about our intentions.
    The example test below exercises a <code class="type">LoginContext</code> object created normally (without any
    mocking in effect at creation time), using an unspecified <code>configuration</code>.
    (For the complete version of the test, see the
