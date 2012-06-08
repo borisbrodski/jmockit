@@ -427,8 +427,34 @@ public final class JavadocExamples_JMockit_Test
       }};
    }
 
+   @Test // Uses of JMockit API: 2
+   public void capturingArgumentForVerification(final MockedClass mock)
+   {
+      mock.doSomething(new Person("John"));
+
+      new Verifications() {{
+         Person argument;
+         mock.doSomething(argument = withCapture());
+         assertEquals("John", argument.getName());
+      }};
+   }
+
+   @Test // Uses of JMockit API: 2
+   public void capturingArgumentsForVerification(final MockedClass mock)
+   {
+      mock.doSomething(new Person("John"));
+      mock.doSomething(new Person("Jane"));
+
+      new Verifications() {{
+         List<Person> capturedPeople = new ArrayList<Person>();
+         mock.doSomething(withCapture(capturedPeople)); times = 2;
+         assertEquals("John", capturedPeople.get(0).getName());
+         assertEquals("Jane", capturedPeople.get(1).getName());
+      }};
+   }
+
    @Test // Uses of JMockit API: 3
-   public void validatingSingleArgumentWithCustomArgumentMatcher(final MockedClass mock)
+   public void validatingArgumentWithCustomArgumentMatcher(final MockedClass mock)
    {
       mock.doSomething(new Person("John"));
       mock.doSomething(new Person("Jane"));
@@ -443,7 +469,7 @@ public final class JavadocExamples_JMockit_Test
    }
 
    @Test // Uses of JMockit API: 5
-   public void validatingSingleArgumentForEachInvocation(final MockedClass mock)
+   public void validatingArgumentForEachInvocation(final MockedClass mock)
    {
       mock.doSomething(new Person("John"));
       mock.doSomething(new Person("Jane"));
@@ -462,7 +488,7 @@ public final class JavadocExamples_JMockit_Test
    }
 
    @Test // Uses of JMockit API: 4
-   public void validatingMultipleArgumentsForEachInvocation(final MockedClass mock)
+   public void validatingArgumentsForEachInvocation(final MockedClass mock)
    {
       mock.doSomething("test", true);
 

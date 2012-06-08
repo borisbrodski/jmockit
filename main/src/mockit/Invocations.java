@@ -5,6 +5,7 @@
 package mockit;
 
 import java.lang.reflect.*;
+import java.util.*;
 import java.util.regex.*;
 
 import mockit.internal.expectations.argumentMatching.ArgumentMatcher;
@@ -17,6 +18,7 @@ import mockit.internal.util.*;
  * Provides common user API for both the {@linkplain Expectations record} and {@linkplain Verifications verification}
  * phases of a test.
  */
+@SuppressWarnings("unchecked")
 abstract class Invocations
 {
    static { Startup.verifyInitialization(); }
@@ -284,7 +286,6 @@ abstract class Invocations
 
       if (matcher instanceof HamcrestAdapter) {
          Object argValue = ((HamcrestAdapter) matcher).getInnerValue();
-         //noinspection unchecked
          return (T) argValue;
       }
 
@@ -323,7 +324,6 @@ abstract class Invocations
       ParameterizedType type = (ParameterizedType) delegateClass.getGenericInterfaces()[0];
       Type parameterType = type.getActualTypeArguments()[0];
 
-      //noinspection unchecked
       return (T) DefaultValues.computeForWrapperType(parameterType);
    }
 
@@ -353,9 +353,57 @@ abstract class Invocations
    }
 
    /**
-    * When called as argument for a method/constructor invocation in the recording or verification phase of a test,
-    * creates a new matcher that will check if the given value is {@link Object#equals(Object) equal} to the
-    * corresponding invocation argument in the replay phase.
+    * Creates a value object for the associated parameter into which to capture the argument received by the first
+    * matching invocation (if any) at replay time.
+    * 
+    * @return a new instance of type {@code T}, into which the instance field values of the captured argument received
+    * by a matching invocation will be set
+    * 
+    * @see #withCapture(java.util.List)
+    */
+   protected final <T> T withCapture()
+   {
+      addMatcher(new ArgumentMatcher()
+      {
+         public boolean matches(Object argValue)
+         {
+            return true;
+         }
+
+         public void writeMismatchPhrase(ArgumentMismatch argumentMismatch) {}
+      });
+      return null;
+   }
+
+   /**
+    * Creates a new argument matcher for the current expectation which will, for each matching invocation,
+    * <em>capture</em> the received argument values, adding them to the given list.
+    * 
+    * @param valueHolderForMultipleInvocations list (usually empty) of value objects into which the arguments received
+    *                                          by matching invocations will be added
+    *
+    * @return always {@code null}
+    * 
+    * @see #withCapture()
+    */
+   protected final <T> T withCapture(final List<T> valueHolderForMultipleInvocations)
+   {
+      addMatcher(new ArgumentMatcher()
+      {
+         public boolean matches(Object argValue)
+         {
+            valueHolderForMultipleInvocations.add((T) argValue);
+            return true;
+         }
+
+         public void writeMismatchPhrase(ArgumentMismatch argumentMismatch) {}
+      });
+      return null;
+   }
+
+   /**
+    * When passed as argument for an expectation, creates a new matcher that will check if the given value is
+    * {@link Object#equals(Object) equal} to the corresponding argument received by a matching invocation.
     * <p/>
     * The matcher is added to the end of the list of argument matchers for the invocation being recorded/verified.
     * It cannot be reused for a different parameter.
@@ -577,7 +625,6 @@ abstract class Invocations
     */
    protected final <T> T newInstance(String className, Class<?>[] parameterTypes, Object... initArgs)
    {
-      //noinspection unchecked
       return (T) Utilities.newInstance(className, parameterTypes, initArgs);
    }
 
@@ -594,7 +641,6 @@ abstract class Invocations
     */
    protected final <T> T newInstance(String className, Object... nonNullInitArgs)
    {
-      //noinspection unchecked
       return (T) Utilities.newInstance(className, nonNullInitArgs);
    }
 
@@ -611,7 +657,6 @@ abstract class Invocations
    protected final <T> T newInnerInstance(
       String innerClassSimpleName, Object outerClassInstance, Object... nonNullInitArgs)
    {
-      //noinspection unchecked
       return (T) Utilities.newInnerInstance(innerClassSimpleName, outerClassInstance, nonNullInitArgs);
    }
 
@@ -643,7 +688,6 @@ abstract class Invocations
     */
    protected final <T> T invoke(Object objectWithMethod, String methodName, Object... methodArgs)
    {
-      //noinspection unchecked
       return (T) Utilities.invoke(objectWithMethod.getClass(), objectWithMethod, methodName, methodArgs);
    }
 
@@ -668,7 +712,6 @@ abstract class Invocations
     */
    protected final <T> T invoke(Class<?> methodOwner, String methodName, Object... methodArgs)
    {
-      //noinspection unchecked
       return (T) Utilities.invoke(methodOwner, null, methodName, methodArgs);
    }
 
@@ -687,7 +730,6 @@ abstract class Invocations
     */
    protected final <T> T getField(Object fieldOwner, String fieldName)
    {
-      //noinspection unchecked
       return (T) Utilities.getField(fieldOwner.getClass(), fieldName, fieldOwner);
    }
 
@@ -705,7 +747,6 @@ abstract class Invocations
     */
    protected final <T> T getField(Object fieldOwner, Class<T> fieldType)
    {
-      //noinspection unchecked
       return Utilities.getField(fieldOwner.getClass(), fieldType, fieldOwner);
    }
 
@@ -719,7 +760,6 @@ abstract class Invocations
     */
    protected final <T> T getField(Class<?> fieldOwner, String fieldName)
    {
-      //noinspection unchecked
       return (T) Utilities.getField(fieldOwner, fieldName, null);
    }
 
@@ -733,7 +773,6 @@ abstract class Invocations
     */
    protected final <T> T getField(Class<?> fieldOwner, Class<T> fieldType)
    {
-      //noinspection unchecked
       return Utilities.getField(fieldOwner, fieldType, null);
    }
 

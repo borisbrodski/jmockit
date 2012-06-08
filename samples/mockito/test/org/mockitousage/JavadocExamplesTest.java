@@ -318,8 +318,20 @@ public final class JavadocExamplesTest
       verify(spy).doSomething(eq("two"), anyBoolean());
    }
 
+   @Test // Uses of Mockito API: 5
+   public void capturingArgumentForVerification()
+   {
+      MockedClass mock = mock(MockedClass.class);
+
+      mock.doSomething(new Person("John"));
+
+      ArgumentCaptor<Person> argument = ArgumentCaptor.forClass(Person.class);
+      verify(mock).doSomething(argument.capture());
+      assertEquals("John", argument.getValue().getName());
+   }
+
    @Test // Uses of Mockito API: 6
-   public void capturingSingleArgumentForVerification()
+   public void capturingArgumentsForVerification()
    {
       MockedClass mock = mock(MockedClass.class);
 
