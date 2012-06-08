@@ -10,21 +10,21 @@ import mockit.internal.annotations.*;
 import mockit.internal.startup.*;
 
 /**
- * A <em>mock-up</em> for a class or interface, to be used in state-based tests.
+ * A <em>mock-up</em> for a class or interface, to be used in <em>state-based</em> unit tests or to provide a
+ * <em>fake</em> implementation for use in integration tests.
  * <pre>
  *
- * // Setup a mockup before exercising tested code:
+ * // Define and apply a mock-up before exercising the code under test:
  * new MockUp&lt;SomeClass>() {
  *    &#64;Mock int someMethod(int i) { assertTrue(i > 0); return 123; }
  *    &#64;Mock(maxInvocations = 2) void anotherMethod(int i, String s) { &#47;* validate arguments *&#47; }
- * };</pre>
- * One or more <em>mock methods</em>, each one annotated {@linkplain Mock as such} and corresponding to a "real" method
- * or constructor of the mocked class/interface, must be defined in the concrete subclass.
+ * };
+ * </pre>
+ * One or more <em>mock methods</em> annotated {@linkplain Mock as such} must be defined in the concrete subclass.
+ * Each such method should have a matching "real" method or constructor in the mocked class/interface.
+ * At runtime, the execution of a mocked method/constructor will get redirected to the corresponding mock method.
  * <p/>
- * This class is particularly useful for the creation on <em>in-line mock classes</em>, defined inside individual test
- * methods as anonymous inner classes.
- * <p/>
- * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html#inline">In the Tutorial</a>
+ * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html">In the Tutorial</a>
  *
  * @param <T> specifies the type (class, interface, etc.) to be mocked; multiple interfaces can be mocked by defining
  * a <em>type variable</em> in the test class or test method, and using it as the type argument;
