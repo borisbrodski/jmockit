@@ -7,11 +7,12 @@ package jmockit.tutorial.domain;
 import java.util.*;
 
 import org.apache.commons.mail.*;
+
 import org.junit.*;
 
 import mockit.*;
 
-import jmockit.tutorial.infrastructure.*;
+import jmockit.tutorial.persistence.*;
 
 public final class MyBusinessService_ExpectationsAPI_Test
 {

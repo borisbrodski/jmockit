@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package jmockit.tutorial.infrastructure;
+package jmockit.tutorial.persistence;
 
 import java.util.*;
 import javax.persistence.*;
@@ -16,7 +16,10 @@ import javax.persistence.*;
  * {@code javax.persistence.EntityManager} represents a work unit. Typically, each work unit instance exists only long
  * enough to perform a single database transaction. Transaction demarcation is not a responsibility of this class,
  * however, which simply keeps the association between the current thread and a dedicated work unit object (an
- * {@code EntityManager} instance}.
+ * {@code EntityManager} instance).
+ * (In a web app, the persistence context can be tied to the HTTP request/response cycle, which normally runs entirely
+ * in a single thread for each request/response pair; a central action-dispatch servlet can commit or rollback the
+ * current transaction, while a custom {@code javax.servlet.Filter} can close the thread-bound {@code EntityManager}.)
  * <p/>
  * Compared to direct use of an ORM API such as JPA, or to the use of <em>Data Access Objects</em> (the "DAO" pattern),
  * this <em>static persistence facade</em> pattern has several advantages.
@@ -65,6 +68,7 @@ public final class Database
          position++;
       }
 
+      @SuppressWarnings("unchecked")
       List<E> result = query.getResultList();
 
       return result;
@@ -72,9 +76,6 @@ public final class Database
 
    public static void persist(Object data)
    {
-      // Persist the data of a given transient domain entity object, using JPA.
-      // (In a web app, this could be scoped to the HTTP request/response cycle, which normally runs
-      // entirely in a single thread - a custom javax.servlet.Filter could close the thread-bound EntityManager.)
       workUnit().persist(data);
    }
 

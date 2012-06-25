@@ -6,24 +6,24 @@ package jmockit.tutorial.domain;
 
 import java.util.*;
 
-import org.junit.*;
-
-import jmockit.tutorial.domain.MyBusinessService_MockupsAPI_Test.*;
 import org.apache.commons.mail.*;
+
+import org.junit.*;
 import static org.junit.Assert.*;
 
 import mockit.*;
 
-import jmockit.tutorial.infrastructure.*;
+import jmockit.tutorial.persistence.*;
 
-@UsingMocksAndStubs(MockDatabase.class)
 public final class MyBusinessService_MockupsAPI_Test
 {
-   @MockClass(realClass = Database.class, stubs = "<clinit>")
-   public static class MockDatabase
+   public static final class MockDatabase extends MockUp<Database>
    {
+      @Mock
+      public void $clinit() { /* do nothing */ }
+
       @Mock(invocations = 1)
-      public static List<EntityX> find(String ql, Object... args)
+      public List<EntityX> find(String ql, Object... args)
       {
          assertNotNull(ql);
          assertTrue(args.length > 0);
@@ -31,21 +31,28 @@ public final class MyBusinessService_MockupsAPI_Test
       }
 
       @Mock(maxInvocations = 1)
-      public static void persist(Object o) { assertNotNull(o); }
+      public void persist(Object o) { assertNotNull(o); }
+   }
+
+   @BeforeClass
+   public static void mockUpPersistenceFacade()
+   {
+      new MockDatabase();
    }
 
    final EntityX data = new EntityX(5, "abc", "5453-1");
-
-   @Before
-   public void stubOutEmailClass()
-   {
-      Mockit.stubOut(Email.class);
-   }
 
    @Test
    public void doBusinessOperationXyz() throws Exception
    {
       new MockUp<Email>() {
+         @Mock(invocations = 1)
+         Email addTo(Invocation inv, String email)
+         {
+            assertEquals(data.getCustomerEmail(), email);
+            return inv.getInvokedInstance();
+         }
+
          @Mock(invocations = 1)
          String send() { return ""; }
       };
@@ -58,9 +65,9 @@ public final class MyBusinessService_MockupsAPI_Test
    {
       new MockUp<Email>() {
          @Mock
-         Email addTo(String emailAddress) throws EmailException
+         Email addTo(String email) throws EmailException
          {
-            assertNotNull(emailAddress);
+            assertNotNull(email);
             throw new EmailException();
          }
          

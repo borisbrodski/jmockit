@@ -40,10 +40,12 @@
    <a href="http://code.google.com/p/jmockit/source/browse/trunk#trunk/samples/tutorial">online</a> and under
    <code>samples/tutorial</code> in the full distribution zip file.
 </p>
-<pre><code>package domain;
+<pre><code>package jmockit.tutorial.domain;
 
-import static infrastructure.Database.*;
+import java.math.*;
+import java.util.*;
 import org.apache.commons.mail.*;
+import static jmockit.tutorial.persistence.Database.*;
 
 public final class MyBusinessService
 {
@@ -76,26 +78,28 @@ public final class MyBusinessService
 (4)   email.send();
    }
 
-   private String buildNotificationMessage(List&lt;EntityX> items)
-   {
-      // Builds the message with data from the list of items...
-   }
+   private String buildNotificationMessage(List&lt;EntityX> items) { ... }
 }
 </code></pre>
 <p>
-   The <code>Database</code> class contains only static methods and a private constructor; the <code>find</code> and
-   <code>persist</code> methods should be obvious, so we won't list them here (assume they are implemented on top of an
-   ORM API, such as Hibernate or JPA).
+   The <code class="type">Database</code> class contains only static methods and a private constructor; the
+   <code>find</code> and <code>persist</code> methods should be obvious, so we won't list them here (assume they are
+   implemented on top of an ORM API, such as Hibernate or JPA).
 </p>
+<div class="sidebar">
+   Here we show the tests <em>after</em> the tested code, but this is not to say that the JMockit APIs are meant for
+   testing <em>legacy</em> code. Before anything else, they were designed to <em>enable</em> the creation of unit tests
+   for clean and simple production code, without imposing arbitrary constraints on the design of said code.
+</div>
 <p>
    So, how can we unit test the "doBusinessOperationXyz" method without making any changes to the existing application
    code?
-   JMockit actually provides three different APIs that can be used, each capable enough for our needs.
+   JMockit actually provides three different mocking APIs, each capable enough for our needs.
    (In practice, the first two APIs are just subsets of a larger <em>behavior-oriented</em> mocking API; the other one,
    which can be described as an <em>state-oriented</em> mocking API, is truly different and unique.)
    We will see how to use each one of them in the following sections.
    In every situation, a JUnit test case will verify the invocations of interest made from the unit under test to its
-   external dependencies. These invocations are the ones at points <code>(1)</code>-<code>(4)</code>, indicated above.
+   external dependencies. These invocations are the ones at points <code>(1)</code>-<code>(4)</code> indicated above.
 </p>
 
 <h3 id="expectations">
@@ -111,11 +115,11 @@ public final class MyBusinessService
 <p>
    First, lets use the <strong>JMockit Expectations</strong> API.
 </p>
-<pre><code>package domain;
+<pre><code>package jmockit.tutorial.domain;
 
 import java.util.*;
 import org.apache.commons.mail.*;
-import infrastructure.*;
+import jmockit.tutorial.persistence.*;
 
 import org.junit.*;
 import mockit.*;
@@ -133,7 +137,7 @@ public final class MyBusinessService_ExpectationsAPI_Test
       items.add(new EntityX(1, "AX5", "someone@somewhere.com"));
 
       new Expectations() {{
-         // "Database" is mocked strictly, therefore the order of these invocations does matter:
+         // "Database" is mocked strictly here, so the order of these invocations does matter:
 (1)      Database.<em>find</em>(withSubstring("select"), (Object[]) <em>any</em>); <em>result</em> = items;
 (2)      Database.<em>persist</em>(data);
       }};
@@ -162,10 +166,11 @@ public final class MyBusinessService_ExpectationsAPI_Test
 }
 </code></pre>
 <div class="sidebar">
-   Other mocking tools usually require a call to some mock creation method, which always returns a
-   new object which later needs to be passed to the code under test. In JMockit, such instances may
-   be passed to code under test, but don't have to be. In fact, no instance may be used at all, like
-   in the case of <code>final Database unused = null;</code> used in the example tests.
+   Other mocking tools usually require a call to some mock creation method, which always returns a new object which
+   later needs to be passed to the code under test.
+   In JMockit, such instances may be passed to code under test, but don't have to be.
+   In fact, no instance may be used at all, like in the case of <code>final Database unused = null;</code> used in the
+   example tests.
 </div>
 <p>
    First of all, note that <em>what</em> gets mocked is specified through <em>mock fields</em>, which in this case are
@@ -173,10 +178,11 @@ public final class MyBusinessService_ExpectationsAPI_Test
    <code class="annotation">@NonStrict</code>.
    A mock field can be of any reference type: an interface, an abstract class, a final/non-final class, an enum type, an
    annotation type, or even a generic type parameter.
-   We say that such a mock field has a <em>mocked type</em>. In truth, it is the type specified to be mocked that truly
-   matters; the field itself is not essential, although very useful when the test needs a <em>mocked object</em> to
-   record expectations on. Such a mocked instance will be automatically created and assigned to the field, so it
-   will never be left with a <code>null</code> reference.
+   We say that such a mock field has a <em>mocked type</em>.
+   In truth, it is the type specified to be mocked that actually matters; the field itself is not essential, although
+   very useful when the test needs a <em>mocked object</em> to record expectations on.
+   Such a mocked instance will be automatically created and assigned to the field, so it will never be left with a
+   <code>null</code> reference.
    It is possible to "take over" the value assigned to the mock field, though, by simply declaring it as
    <code>final</code>.
 </p>
@@ -187,7 +193,9 @@ public final class MyBusinessService_ExpectationsAPI_Test
    Class initialization code (in <code>static</code> blocks and/or non-compile time assignments to <code>static</code>
    fields) can be <em>stubbed out</em> when needed, as done above for the
    <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/src/jmockit/tutorial/infrastructure/Database.java">Database</a>
-   class. (This isn't done by default because the JVM can only initialize a class <em>once</em>.)
+   class.
+   (This isn't done by default because the JVM can only initialize a class <em>once</em>, potentially resulting in
+   <code>static</code> fields left <code>null</code> when the class is initialized while mocked.)
 </p>
 <p>
    Notice that JMockit Expectations does not create any mock subclasses for concrete mocked classes;
@@ -202,8 +210,8 @@ public final class MyBusinessService_ExpectationsAPI_Test
 </p>
 <p>
    In certain cases, it may be necessary to <em>partially mock</em> a type.
-   Specific methods and constructors can be selected to be mocked or not through filter expressions
-   provided as an attribute of the <code class="annotation">@Mocked</code> annotation.
+   Specific methods and constructors can be selected to be mocked or not through filter expressions provided as an
+   attribute of the <code class="annotation">@Mocked</code> annotation.
    This annotation has a few other attributes and capabilities which we won't discuss at this point.
    Check the <a href="../javadoc/mockit/Mocked.html">API documentation</a> for the complete specification.
 </p>
@@ -212,8 +220,8 @@ public final class MyBusinessService_ExpectationsAPI_Test
    test.
    In EasyMock, a call to <code>replay(mock)</code> is needed for each mock used in the test to make this switch.
    In jMock there is also a phase switching method, which takes the form of a call to the
-   <code>Mockery#checking(...)</code> method with an instance of an
-   <code class="type">org.jmock.Expectations</code> subclass.
+   <code>Mockery#checking(...)</code> method with an instance of an <code class="type">org.jmock.Expectations</code>
+   subclass.
 </div>
 <p>
    As the example tests show, <em>expected</em> or <em>allowed invocations</em> are specified through regular method and
@@ -272,8 +280,8 @@ public final class MyBusinessService_ExpectationsAPI_Test
 <p>
    There is more to the Expectations API, about which you can find in the chapter on
    <a href="BehaviorBasedTesting.html">behavior-based testing</a>, in the
-   <a href="../javadoc/mockit/Expectations.html">API documentation</a>, and also in the many
-   additional sample tests inside the full distribution.
+   <a href="../javadoc/mockit/Expectations.html">API documentation</a>, and also in the many additional sample tests
+   inside the full distribution.
 </p>
 
 <h3 id="verifications">
@@ -288,17 +296,18 @@ public final class MyBusinessService_ExpectationsAPI_Test
 </h3>
 <p>
    Up to this point we focused on expectations that are recorded/specified <em>before</em> exercising the code under
-   test. Such expectations are verified implicitly (when strict or with an specified invocation count constraint) or not
-   at all (when non-strict and without any associated invocation count constraint).
-   Lets now consider the use of the <strong>JMockit Verifications</strong> API, which lets us deal with expectations
-   <em>after</em> having exercised the code under test.
+   test.
+   Such expectations are verified implicitly (when strict or with an specified invocation count constraint) or not at
+   all (when non-strict and without any associated invocation count constraint).
+   Lets now consider the use of the <strong>JMockit Verifications</strong> API, which lets us explicitly verify
+   expectations <em>after</em> having exercised the code under test.
 </p>
-<pre><code>package domain;
+<pre><code>package jmockit.tutorial.domain;
 
 import java.util.*;
 import static java.util.Arrays.*;
 import org.apache.commons.mail.*;
-import infrastructure.*;
+import jmockit.tutorial.persistence.*;
 
 import org.junit.*;
 import mockit.*;
@@ -420,51 +429,60 @@ public final class MyBusinessService_VerificationsAPI_Test
 <p>
    Next, lets see how the <strong>JMockit Mockups</strong> API solves the problem.
 </p>
-<pre><code>package domain;
+<pre><code>package jmockit.tutorial.domain;
 
 import java.util.*;
 import org.apache.commons.mail.*;
-import infrastructure.*;
+import jmockit.tutorial.persistence.*;
 
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.*;
 import mockit.*;
-import domain.MyBusinessService_MockupsAPI_Test.*;
 
-@UsingMocksAndStubs(MockDatabase.class)
 public final class MyBusinessService_MockupsAPI_Test
 {
-   @MockClass(realClass = Database.class, stubs = "&lt;clinit>")
-   public static class MockDatabase
+   public static final class MockDatabase extends MockUp&lt;Database>
    {
+      @Mock
+      public void $clinit() { /* do nothing */ }
+
       @Mock(invocations = 1)
-(1)   public static List&lt;EntityX> find(String ql, Object... args)
+(1)   public List&lt;EntityX> find(String ql, Object... args)
       {
          assertNotNull(ql);
          assertTrue(args.length > 0);
          return Arrays.asList(new EntityX(1, "AX5", "someone@somewhere.com"));
       }
-
+   
       @Mock(maxInvocations = 1)
-(2)   public static void persist(Object o) { assertNotNull(o); }
+(2)   public void persist(Object o) { assertNotNull(o); }
+   }
+
+   @BeforeClass
+   public static void mockUpPersistenceFacade()
+   {
+      // Applies the mock class by invoking its constructor:
+      new MockDatabase();
    }
 
    final EntityX data = new EntityX(5, "abc", "5453-1");
 
-   @Before
-   public void stubOutEmailClass()
-   {
-      Mockit.stubOut(Email.class);
-   }
-
    @Test
    public void doBusinessOperationXyz() throws Exception
    {
+      // Defines and applies a mock class in one operation:
       new MockUp&lt;Email>() {
          @Mock(invocations = 1)
-(4)      String send() { return ""; }
-      });
+         Email addTo(Invocation inv, String email)
+         {
+            assertEquals(data.getCustomerEmail(), email);
+            return inv.getInvokedInstance();
+         }
 
+         @Mock(invocations = 1)
+(4)      String send() { return ""; }
+      };
+   
       new MyBusinessService().doBusinessOperationXyz(data);
    }
 
@@ -473,16 +491,16 @@ public final class MyBusinessService_MockupsAPI_Test
    {
       new MockUp&lt;Email>() {
          @Mock
-(3)      Email addTo(String emailAddress) throws EmailException
+(3)      Email addTo(String email) throws EmailException
          {
-            assertNotNull(emailAddress);
+            assertNotNull(email);
             throw new EmailException();
          }
-
+      
          @Mock(invocations = 0)
          String send() { return null; }
       };
-
+   
       new MyBusinessService().doBusinessOperationXyz(data);
    }
 }
@@ -492,53 +510,30 @@ public final class MyBusinessService_MockupsAPI_Test
    <em>mock implementations</em> for the methods and constructors of interest.
    Such <em>mock methods</em> must have the same signature as the "real" methods and constructors, and be annotated with
    <code class="annotation">@Mock</code>.
-   They are defined in a <em>mock class</em>, which can either be a separate class (nested or not) annotated with
-   <code class="annotation">@MockClass</code> or an anonymous inner class defined inside a test method.
+   They are defined in a <em>mock class</em>, which can either be a separate class (nested or not) or an anonymous inner
+   class defined inside a test method; in either case, it must extend the generic <code class="type">MockUp&lt;T></code>
+   base class, while providing the type to be mocked as the "value" for the type parameter <code>T</code>.
 </p>
 <p>
    The two tests above share a reusable mock class, <code class="type">MockDatabase</code>, which is applied to
-   the test class as a whole through the <code class="annotation">@UsingMocksAndStubs</code> annotation.
-   Notice that we also stub out static initializers in the <code class="type">Database</code> class, by specifying the
-   special method name "<code>&lt;clinit></code>" in another attribute of the <code class="annotation">@MockClass</code>
-   annotation.
+   the test class as a whole in an <code class="annotation">@BeforeClass</code> method.
+   Notice that we also stub out static initializers in the <code class="type">Database</code> class, by defining the
+   special mock method "<code>$clinit()</code>".
    This is necessary in this case because the
    <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/tutorial/src/jmockit/tutorial/infrastructure/Database.java">Database</a>
    class actually creates a JPA <code class="type">EntityManagerFactory</code> instance during its static
    initialization.
 </p>
 <p>
-   For each test, we stub out the entire <code class="type">Email</code> class before mocking some of its methods inside
-   each test method, by calling <code>Mockit.stubOut(Email.class)</code> in a test set-up method.
-   This is done so that those methods/constructors that are not actually relevant for the test (such as
-   <code>Email#setSubject(String)</code>) do nothing if/when called from the tested class.
-   When a class is stubbed out, <em>all</em> of its methods, constructors, and static initializers (if any) are
-   temporarily replaced with empty implementations.
-   However, an individual test method can still specify a particular mock implementation for any of the stubbed out
-   methods/constructors, as we do in these two tests.
+   Each test sets up specific mocks for the <code class="type">Email</code> class by creating an inline (anonymous)
+   <em>mock-up class</em> instance.
+   As seen in some of these mock methods, the <code class="annotation">@Mock</code> annotation can optionally specify
+   exact/min/max constraints on the expected/allowed number of invocations to the corresponding real method.
+   Although not shown here, constructors can be mocked with mock methods named "<strong><code>$init</code></strong>" and
+   having the same parameters as the constructor to be mocked.
 </p>
 <p>
-   Each test sets up specific mocks for the <code class="type">Email</code> class by creating an inline
-   <em>mock-up class</em>, which is a special kind of mock class where the mocked type is specified through a generic
-   type parameter instead of through the <code><span class="annotation">@MockClass</span>(realClass = Xyz.class)</code>
-   annotation.
-</p>
-<p>
-   Constructors can be mocked with mock methods named "<strong><code>$init</code></strong>" and having the same
-   parameters as the constructor to be mocked.
-   A mock method named "<strong><code>$clinit</code></strong>" will provide a mock implementation for the static
-   initialization block of the real class, if any.
-</p>
-<p>
-   The <code class="annotation">@Mock</code> annotation can optionally specify exact/min/max constraints on the
-   expected/allowed number of invocations to the corresponding real method/constructor.
-   <br/>
-   Another attribute of this annotation is <code>reentrant</code> (boolean with default of false), which allows a mock
-   method to call back to the real method, causing its real implementation to be executed.
-   For that, an instance field named <code>it</code> must be defined in the mock class, and have the same type as the
-   real class. (This is a powerful AOP-like feature which should be used sparingly, though.)
-</p>
-<p>
-   Typically, the vast majority of tests can be written with the Expectations & Verifications API.
+   Typically, the majority of tests can be written with the Expectations & Verifications API.
    There are situations, however, where the Mockups API can be an useful complement to that.
 </p>
 
