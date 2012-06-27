@@ -43,10 +43,13 @@ public final class ExpectationsWithValuesToReturnTest
 
       Collection<?> getItems() { return null; }
       List<?> getListItems() { return null; }
+      @SuppressWarnings("CollectionDeclaredAsConcreteClass")
+      ArrayList<?> getArrayList() { return null; }
       Set<?> getSetItems() { return null; }
       SortedSet<?> getSortedSetItems() { return null; }
       Map<?, ?> getMapItems() { return null; }
       SortedMap<?, ?> getSortedMapItems() { return null; }
+      ListIterator<?> getListIterator() { return null; }
       Iterator<?> getIterator() { return null; }
       Iterable<?> getIterable() { return null; }
 
@@ -453,7 +456,7 @@ public final class ExpectationsWithValuesToReturnTest
    public void recordReturnValueForConstructor()
    {
       new NonStrictExpectations() {
-         final Collaborator mock = null;
+         @Mocked final Collaborator mock = null;
 
          {
             new Collaborator();
@@ -480,7 +483,7 @@ public final class ExpectationsWithValuesToReturnTest
    public void recordMultipleReturnValuesForConstructor()
    {
       new Expectations() {
-         Collaborator mock;
+         @Mocked Collaborator mock;
 
          {
             new Collaborator();
@@ -598,5 +601,51 @@ public final class ExpectationsWithValuesToReturnTest
       assertArrayEquals(new float[] {-0.1F, 5.6F, 7}, collaborator.getFloatArray(), 0.0F);
       assertArrayEquals(new double[] {4.0, 15, -7.0001E2}, collaborator.getDoubleArray(), 0.1);
       assertArrayEquals(new String[] {"aX", null, "B2 m"}, collaborator.getStringArray());
+   }
+
+   @Test
+   public void recordMultipleIteratorsToBeReturnedFromMethodThatReturnsIterator(final Collaborator mock)
+   {
+      final Iterator<?> firstResult = new ArrayList<Object>().listIterator();
+      final ListIterator<?> secondResult = new LinkedList<Object>().listIterator();
+      final Iterator<?> thirdResult = new ArrayList<Object>().iterator();
+
+      new NonStrictExpectations() {{
+         mock.getListIterator();
+         returns(firstResult, secondResult);
+
+         mock.getIterator();
+         returns(firstResult, secondResult, thirdResult);
+      }};
+
+      assertSame(firstResult, mock.getListIterator());
+      assertSame(secondResult, mock.getListIterator());
+
+      assertSame(firstResult, mock.getIterator());
+      assertSame(secondResult, mock.getIterator());
+      assertSame(thirdResult, mock.getIterator());
+   }
+
+   @Test
+   public void recordMultipleListsToBeReturnedFromMethodThatReturnsList(final Collaborator mock)
+   {
+      final List<?> firstResult = new ArrayList<Object>();
+      final List<?> secondResult = new ArrayList<Object>();
+      final List<?> thirdResult = new LinkedList<Object>();
+
+      new NonStrictExpectations() {{
+         mock.getArrayList();
+         returns(firstResult, secondResult);
+
+         mock.getListItems();
+         returns(firstResult, secondResult, thirdResult);
+      }};
+
+      assertSame(firstResult, mock.getArrayList());
+      assertSame(secondResult, mock.getArrayList());
+
+      assertSame(firstResult, mock.getListItems());
+      assertSame(secondResult, mock.getListItems());
+      assertSame(thirdResult, mock.getListItems());
    }
 }

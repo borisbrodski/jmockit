@@ -131,41 +131,36 @@ final class Expectation
    private boolean addReturnValueForSequenceOfValues(Object first, Object[] remaining)
    {
       Class<?> rt = getReturnType();
+      boolean added = false;
 
       if (rt != null) {
-         int n = 1 + remaining.length;
-
          if (rt.isArray()) {
-            if (first == null || !first.getClass().isArray()) {
-               addArrayAsReturnValue(rt.getComponentType(), n, first, remaining);
-               return true;
-            }
+            added = addValuesInArrayIfApplicable(first, remaining, rt);
          }
          else if (Iterator.class.isAssignableFrom(rt)) {
-            addIteratorAsReturnValue(first, remaining, n);
-            return true;
+            added = addValuesInIteratorIfApplicable(first, remaining);
          }
          else if (Iterable.class.isAssignableFrom(rt)) {
-            if (rt.isAssignableFrom(List.class)) {
-               addReturnValues(new ArrayList<Object>(n), first, remaining);
-               return true;
-            }
-            else if (rt.isAssignableFrom(Set.class)) {
-               addReturnValues(new LinkedHashSet<Object>(n), first, remaining);
-               return true;
-            }
-            else if (rt.isAssignableFrom(SortedSet.class)) {
-               addReturnValues(new TreeSet<Object>(), first, remaining);
-               return true;
-            }
+            added = addValuesInIterableIfApplicable(first, remaining, rt);
          }
+      }
+
+      return added;
+   }
+
+   private boolean addValuesInArrayIfApplicable(Object first, Object[] remaining, Class<?> returnType)
+   {
+      if (first == null || !first.getClass().isArray()) {
+         addArrayAsReturnValue(returnType.getComponentType(), first, remaining);
+         return true;
       }
 
       return false;
    }
 
-   private void addArrayAsReturnValue(Class<?> elementType, int n, Object first, Object[] remaining)
+   private void addArrayAsReturnValue(Class<?> elementType, Object first, Object[] remaining)
    {
+      int n = 1 + remaining.length;
       Object values = Array.newInstance(elementType, n);
       setArrayElement(elementType, values, 0, first);
 
@@ -189,17 +184,44 @@ final class Expectation
       Array.set(array, index, value);
    }
 
-   private void addIteratorAsReturnValue(Object first, Object[] remaining, int n)
+   private boolean addValuesInIteratorIfApplicable(Object first, Object[] remaining)
    {
-      List<Object> values = new ArrayList<Object>(n);
-      addAllValues(values, first, remaining);
-      results.addReturnValue(values.iterator());
+      if (first == null || !Iterator.class.isAssignableFrom(first.getClass())) {
+         List<Object> values = new ArrayList<Object>(1 + remaining.length);
+         addAllValues(values, first, remaining);
+         results.addReturnValue(values.iterator());
+         return true;
+      }
+
+      return false;
    }
 
    private void addAllValues(Collection<Object> values, Object first, Object[] remaining)
    {
       values.add(first);
       Collections.addAll(values, remaining);
+   }
+
+   private boolean addValuesInIterableIfApplicable(Object first, Object[] remaining, Class<?> returnType)
+   {
+      if (first == null || !Iterable.class.isAssignableFrom(first.getClass())) {
+         if (returnType.isAssignableFrom(List.class)) {
+            List<Object> values = new ArrayList<Object>(1 + remaining.length);
+            addReturnValues(values, first, remaining);
+            return true;
+         }
+         else if (returnType.isAssignableFrom(Set.class)) {
+            Set<Object> values = new LinkedHashSet<Object>(1 + remaining.length);
+            addReturnValues(values, first, remaining);
+            return true;
+         }
+         else if (returnType.isAssignableFrom(SortedSet.class)) {
+            addReturnValues(new TreeSet<Object>(), first, remaining);
+            return true;
+         }
+      }
+
+      return false;
    }
 
    private void addReturnValues(Collection<Object> values, Object first, Object[] remaining)
