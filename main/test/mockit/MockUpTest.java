@@ -317,4 +317,85 @@ public final class MockUpTest
       assertTrue(Collaborator.doSomethingElse());
       assertTrue(Collaborator.class.getDeclaredMethod("doSomethingElse").isAnnotationPresent(Deprecated.class));
    }
+
+   static class A
+   {
+      void method1() { throw new RuntimeException("1"); }
+      void method2() { throw new RuntimeException("2"); }
+   }
+
+   @Test
+   public void mockSameClassTwiceUsingSeparateMockups()
+   {
+      A a = new A();
+
+      class MockUp1 extends MockUp<A> { @Mock void method1() {} }
+      new MockUp1();
+      a.method1();
+
+      new MockUp<A>() { @Mock void method2() {} };
+      a.method1(); // still mocked
+      a.method2();
+   }
+
+   interface B
+   {
+      int method1();
+      int method2();
+   }
+
+   @Test
+   public void mockSameInterfaceTwiceUsingSeparateMockups()
+   {
+      class MockUp1 extends MockUp<B> { @Mock int method1() { return 1; } }
+      B b1 = new MockUp1().getMockInstance();
+      assertEquals(1, b1.method1());
+      assertEquals(0, b1.method2());
+
+      B b2 = new MockUp<B>() { @Mock int method2() { return 2; } }.getMockInstance();
+      assertEquals(1, b1.method1()); // still mocked
+      assertEquals(2, b2.method2());
+
+      // Instances b1 and b2 belong to the same (mocked) class:
+      assertEquals(1, b2.method1());
+      assertEquals(2, b1.method2());
+   }
+
+   @Test
+   public void mockMethodDefinedInGenericTypeInstantiation()
+   {
+      try {
+         new MockUp<Comparable<String>>() { @Mock int compareTo(Integer i) { return 1; } };
+         fail();
+      }
+      catch (IllegalArgumentException ignore) {}
+
+      Comparable<String> cmp1 = new MockUp<Comparable<String>>() {
+         @Mock
+         int compareTo(Object s) { assertEquals("test", s); return 1; }
+      }.getMockInstance();
+
+      Comparable<Integer> cmp2 = new MockUp<Comparable<Integer>>() {
+         @Mock
+         int compareTo(Integer i) { assertEquals(123, i.intValue()); return 2; }
+      }.getMockInstance();
+
+      assertEquals(1, cmp1.compareTo("test"));
+      assertEquals(2, cmp2.compareTo(123));
+   }
+
+   static class GenericBaseClass<T, U> { U find(@SuppressWarnings("UnusedParameters") T id) { return null; } }
+   final class ConcreteSubclass extends GenericBaseClass<Integer, String> {}
+
+   @Test
+   public void mockGenericMethodFromSubclassTypeInstantiation()
+   {
+      new MockUp<ConcreteSubclass>() {
+         @Mock
+         String find(Integer id) { return "mocked" + id; }
+      };
+
+      String s = new ConcreteSubclass().find(1);
+      assertEquals("mocked1", s);
+   }
 }

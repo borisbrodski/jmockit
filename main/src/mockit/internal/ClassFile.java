@@ -123,10 +123,14 @@ public final class ClassFile
    public ClassFile(Class<?> aClass, boolean fromLastRedefinitionIfAny)
    {
       String className = aClass.getName();
-      byte[] classfile = Proxy.isProxyClass(aClass) ? TestRun.proxyClasses().getClassfile(className) : null;
+      byte[] classfile = null;
 
-      if (classfile == null && fromLastRedefinitionIfAny) {
+      if (fromLastRedefinitionIfAny) {
          classfile = TestRun.mockFixture().getRedefinedClassfile(aClass);
+      }
+
+      if (classfile == null && Proxy.isProxyClass(aClass)) {
+         classfile = TestRun.proxyClasses().getClassfile(className);
       }
 
       if (classfile != null) {
