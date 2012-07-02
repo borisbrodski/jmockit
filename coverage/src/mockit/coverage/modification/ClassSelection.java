@@ -52,7 +52,7 @@ final class ClassSelection
       String location = codeSource.getLocation().getPath();
 
       return
-         !location.endsWith(".jar") &&
+         !location.endsWith(".jar") && !location.endsWith("/.cp/") &&
          (testCode == null || !location.endsWith("/test-classes/") && !location.endsWith("/jmockit/main/classes/"));
    }
 }
