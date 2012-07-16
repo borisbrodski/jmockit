@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -43,7 +43,7 @@ public final class MockingOfInternalInstancesTest
       assertTrue("File not written", testOutput.toString().startsWith("File written"));
    }
 
-   @SuppressWarnings({"UnusedParameters"})
+   @SuppressWarnings("UnusedParameters")
    @Test
    public void stubOutFileCreationWithMockUps() throws Exception
    {
@@ -58,8 +58,7 @@ public final class MockingOfInternalInstancesTest
    @Test
    public void stubOutFileCreationWithStaticPartialMocking() throws Exception
    {
-      new Expectations()
-      {
+      new Expectations() {
          @Mocked({"(String)", "(OutputStream, String)"}) FileWriter fileWriter;
          @Mocked("close") BufferedWriter bufferedWriter;
       };

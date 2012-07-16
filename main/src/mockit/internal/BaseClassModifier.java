@@ -11,7 +11,6 @@ import static mockit.external.asm4.Opcodes.*;
 import mockit.external.asm4.*;
 import mockit.external.asm4.Type;
 import mockit.internal.state.*;
-import mockit.internal.util.*;
 
 @SuppressWarnings("ClassWithTooManyMethods")
 public class BaseClassModifier extends ClassVisitor
@@ -121,7 +120,7 @@ public class BaseClassModifier extends ClassVisitor
          constructorDesc = "()V";
       }
       else {
-         constructorDesc = SuperConstructorCollector.INSTANCE.findConstructor(superClassName);
+         constructorDesc = SuperConstructorCollector.INSTANCE.findConstructor(classDesc, superClassName);
 
          for (Type paramType : Type.getArgumentTypes(constructorDesc)) {
             pushDefaultValueForType(paramType);

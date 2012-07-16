@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package integrationTests;
@@ -578,15 +578,9 @@ public final class CTest
 
    public static class CX
    {
-      public int i(String s)
-      {
-         return 1;
-      }
+      public int i(String s) { return 1; }
 
-      public static boolean b(String s)
-      {
-         return true;
-      }
+      public static boolean b(String s) { return true; }
    }
 
    public class CXMock
@@ -594,10 +588,7 @@ public final class CTest
       CXMock() {}
 
       @Mock
-      public boolean b(String s)
-      {
-         return false;
-      }
+      public boolean b(String s) { return false; }
    }
 
    @Test
