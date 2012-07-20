@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jmock.samples.parentChild;
@@ -27,10 +27,9 @@ public final class Child_JMockit_Test
    }
 
    @Test
-   public void removesItselfFromOldParentWhenAssignedNewParent(final Parent newParent)
+   public void removesItselfFromOldParentWhenAssignedNewParent(@Mocked final Parent newParent)
    {
-      new Expectations()
-      {{
+      new Expectations() {{
          parent.removeChild(child);
          newParent.addChild(child);
       }};

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package unitils.wiki;
@@ -12,15 +12,13 @@ import static org.junit.Assert.*;
 
 public final class MockChaining_JMockit_Test
 {
-   @Tested
-   MyService myService;
+   @Tested MyService myService;
 
    @Test
-   public void withoutChaining(final User user)
+   public void withoutChaining(@Mocked final User user)
    {
-      new NonStrictExpectations()
-      {
-         UserService userService;
+      new NonStrictExpectations() {
+         @Mocked UserService userService;
 
          {
             userService.getUser(); result = user; // returns the user mock
@@ -34,8 +32,7 @@ public final class MockChaining_JMockit_Test
    @Test
    public void sameTestButWithChaining()
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          @Cascading UserService userService;
 
          {

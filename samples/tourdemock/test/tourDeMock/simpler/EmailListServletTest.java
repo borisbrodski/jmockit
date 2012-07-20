@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package tourDeMock.simpler;
@@ -7,9 +7,11 @@ package tourDeMock.simpler;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import static java.util.Arrays.*;
+
+import tourDeMock.simpler.service.*;
 
 import org.junit.*;
-import tourDeMock.simpler.service.*;
 
 import mockit.*;
 
@@ -21,12 +23,9 @@ public final class EmailListServletTest
    @Test(expected = ServletException.class)
    public void doGetWithoutList() throws Exception
    {
-      new NonStrictExpectations()
-      {
-         {
-            emailListService.getListByName(null); result = new EmailListNotFound();
-         }
-      };
+      new NonStrictExpectations() {{
+         emailListService.getListByName(null); result = new EmailListNotFound();
+      }};
 
       new EmailListServlet().doGet(request, null);
    }
@@ -35,24 +34,18 @@ public final class EmailListServletTest
    public void doGetWithList(@Cascading final HttpServletResponse response, @Mocked final PrintWriter writer)
       throws Exception
    {
-      new NonStrictExpectations()
-      {
-         {
-            emailListService.getListByName(anyString);
-            returns("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
-         }
-      };
+      new NonStrictExpectations() {{
+         emailListService.getListByName(anyString);
+         result = asList("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
+      }};
 
       new EmailListServlet().doGet(request, response);
 
-      new VerificationsInOrder()
-      {
-         {
-            writer.println("larry@stooge.com");
-            writer.println("moe@stooge.com");
-            writer.println("curley@stooge.com");
-            response.flushBuffer();
-         }
-      };
+      new VerificationsInOrder() {{
+         writer.println("larry@stooge.com");
+         writer.println("moe@stooge.com");
+         writer.println("curley@stooge.com");
+         response.flushBuffer();
+      }};
    }
 }

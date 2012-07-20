@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jmock.samples.cache;
@@ -38,18 +38,14 @@ public final class Cache_JMockit_Test
    {
       final long loadTime = 10;
 
-      new Expectations() // (this is "JMockit Expectations", not the jMock version)
-      {
-         {
-            clock.time(); result = loadTime;
-            loader.load(KEY); result = VALUE;
-         }
-      };
+      new Expectations() {{ // (this is "JMockit Expectations", not the jMock version)
+         clock.time(); result = loadTime;
+         loader.load(KEY); result = VALUE;
+      }};
 
       Object actualValueFromFirstLookup = cache.lookup(KEY);
 
-      new Expectations()
-      {
+      new Expectations() {
          final long fetchTime = 200;
 
          {
@@ -69,16 +65,12 @@ public final class Cache_JMockit_Test
    {
       final long loadTime = 10;
 
-      new Expectations()
-      {
-         {
-            clock.time(); result = loadTime;
-            loader.load(KEY); result = VALUE;
-         }
-      };
+      new Expectations() {{
+         clock.time(); result = loadTime;
+         loader.load(KEY); result = VALUE;
+      }};
 
-      new Expectations()
-      {
+      new Expectations() {
          final long fetchTime = 200;
 
          {
@@ -100,8 +92,7 @@ public final class Cache_JMockit_Test
    {
       final long loadTime = 10;
 
-      new Expectations()
-      {
+      new Expectations() {
          // For first cache lookup:
          {
             clock.time(); result = loadTime;

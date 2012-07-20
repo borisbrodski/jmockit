@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.easymock.samples;
@@ -14,8 +14,7 @@ import static org.junit.Assert.*;
 
 public final class ConstructorCalledMock_JMockit_Test
 {
-   private final TaxCalculator tc = new TaxCalculator(new BigDecimal("5"), new BigDecimal("15"))
-   {
+   private final TaxCalculator tc = new TaxCalculator(new BigDecimal("5"), new BigDecimal("15")) {
       @Override
       protected BigDecimal rate() { return null; }
    };

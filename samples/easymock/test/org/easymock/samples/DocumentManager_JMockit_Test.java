@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.easymock.samples;
@@ -35,12 +35,7 @@ public final class DocumentManager_JMockit_Test
    @Test
    public void addDocument()
    {
-      new Expectations()
-      {
-         {
-            mock.documentAdded("New Document");
-         }
-      };
+      new Expectations() {{ mock.documentAdded("New Document"); }};
 
       classUnderTest.addDocument("New Document", new byte[0]);
    }
@@ -48,13 +43,10 @@ public final class DocumentManager_JMockit_Test
    @Test
    public void addAndChangeDocument()
    {
-      new Expectations()
-      {
-         {
-            mock.documentAdded("Document");
-            mock.documentChanged("Document"); times = 3;
-         }
-      };
+      new Expectations() {{
+         mock.documentAdded("Document");
+         mock.documentChanged("Document"); times = 3;
+      }};
 
       classUnderTest.addDocument("Document", new byte[0]);
       classUnderTest.addDocument("Document", new byte[0]);
@@ -65,17 +57,14 @@ public final class DocumentManager_JMockit_Test
    @Test
    public void voteForRemoval()
    {
-      new Expectations()
-      {
-         {
-            // Expect document addition.
-            mock.documentAdded("Document");
-            // Expect to be asked to vote, and vote for it.
-            mock.voteForRemoval("Document"); result = 42;
-            // Expect document removal.
-            mock.documentRemoved("Document");
-         }
-      };
+      new Expectations() {{
+         // Expect document addition.
+         mock.documentAdded("Document");
+         // Expect to be asked to vote, and vote for it.
+         mock.voteForRemoval("Document"); result = 42;
+         // Expect document removal.
+         mock.documentRemoved("Document");
+      }};
 
       classUnderTest.addDocument("Document", new byte[0]);
       assertTrue(classUnderTest.removeDocument("Document"));
@@ -84,16 +73,13 @@ public final class DocumentManager_JMockit_Test
    @Test
    public void voteAgainstRemoval()
    {
-      new Expectations()
-      {
-         {
-            // Expect document addition.
-            mock.documentAdded("Document");
-            // Expect to be asked to vote, and vote against it.
-            mock.voteForRemoval("Document"); result = -42;
-            // Document removal is *not* expected.
-         }
-      };
+      new Expectations() {{
+         // Expect document addition.
+         mock.documentAdded("Document");
+         // Expect to be asked to vote, and vote against it.
+         mock.voteForRemoval("Document"); result = -42;
+         // Document removal is *not* expected.
+      }};
 
       classUnderTest.addDocument("Document", new byte[0]);
       assertFalse(classUnderTest.removeDocument("Document"));
@@ -102,16 +88,13 @@ public final class DocumentManager_JMockit_Test
    @Test
    public void voteForRemovals()
    {
-      new Expectations()
-      {
-         {
-            mock.documentAdded("Document 1");
-            mock.documentAdded("Document 2");
-            mock.voteForRemovals("Document 1", "Document 2"); result = 42;
-            mock.documentRemoved("Document 1");
-            mock.documentRemoved("Document 2");
-         }
-      };
+      new Expectations() {{
+         mock.documentAdded("Document 1");
+         mock.documentAdded("Document 2");
+         mock.voteForRemovals("Document 1", "Document 2"); result = 42;
+         mock.documentRemoved("Document 1");
+         mock.documentRemoved("Document 2");
+      }};
 
       classUnderTest.addDocument("Document 1", new byte[0]);
       classUnderTest.addDocument("Document 2", new byte[0]);
@@ -121,14 +104,11 @@ public final class DocumentManager_JMockit_Test
    @Test
    public void voteAgainstRemovals()
    {
-      new Expectations()
-      {
-         {
-            mock.documentAdded("Document 1");
-            mock.documentAdded("Document 2");
-            mock.voteForRemovals("Document 1", "Document 2"); result = -42;
-         }
-      };
+      new Expectations() {{
+         mock.documentAdded("Document 1");
+         mock.documentAdded("Document 2");
+         mock.voteForRemovals("Document 1", "Document 2"); result = -42;
+      }};
 
       classUnderTest.addDocument("Document 1", new byte[0]);
       classUnderTest.addDocument("Document 2", new byte[0]);
@@ -136,18 +116,14 @@ public final class DocumentManager_JMockit_Test
    }
 
    @Test
-   public void delegateMethodWhichProducesResultBasedOnCustomLogic(final List<String> l)
+   public void delegateMethodWhichProducesResultBasedOnCustomLogic(@Mocked final List<String> l)
    {
-      new Expectations()
-      {
-         {
-            l.remove(10);
-            result = new Delegate()
-            {
-               String remove(int index) { return String.valueOf(index); }
-            };
-         }
-      };
+      new Expectations() {{
+         l.remove(10);
+         result = new Delegate() {
+            String remove(int index) { return String.valueOf(index); }
+         };
+      }};
 
       assertEquals("10", l.remove(10));
    }

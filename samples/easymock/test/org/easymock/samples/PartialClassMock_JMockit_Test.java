@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.easymock.samples;
@@ -17,13 +17,10 @@ public final class PartialClassMock_JMockit_Test
    {
       final Rect rect = new Rect();
 
-      new Expectations(rect)
-      {
-         {
-            rect.getX(); result = 4;
-            rect.getY(); result = 5;
-         }
-      };
+      new Expectations(rect) {{
+         rect.getX(); result = 4;
+         rect.getY(); result = 5;
+      }};
 
       assertEquals(20, rect.getArea());
    }

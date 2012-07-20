@@ -63,7 +63,7 @@ public final class LoginServiceTest
    }
 
    @Test
-   public void notRevokeSecondAccountAfterTwoFailedAttemptsOnFirstAccount(final UserAccount secondAccount)
+   public void notRevokeSecondAccountAfterTwoFailedAttemptsOnFirstAccount(@Mocked final UserAccount secondAccount)
       throws Exception
    {
       willMatchPassword(false);

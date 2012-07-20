@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.easymock.samples;
@@ -16,12 +16,7 @@ public final class BasicClassMock_JMockit_Test
    @Test
    public void testPrintContent()
    {
-      new Expectations()
-      {
-         {
-            printer.print("Hello world");
-         }
-      };
+      new Expectations() {{ printer.print("Hello world"); }};
 
       document.setContent("Hello world");
       document.print();
@@ -30,12 +25,7 @@ public final class BasicClassMock_JMockit_Test
    @Test
    public void testPrintEmptyContent()
    {
-      new Expectations()
-      {
-         {
-            printer.print("");
-         }
-      };
+      new Expectations() {{ printer.print(""); }};
 
       document.setContent("");
       document.print();

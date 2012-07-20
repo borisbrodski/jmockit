@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jmock.samples.sniper;
@@ -31,10 +31,7 @@ public final class AuctionSniper_JMockit_Test
    {
       final Money expectedBid = beatableBid.add(increment);
 
-      new Expectations()
-      {{
-         auction.bid(expectedBid);
-      }};
+      new Expectations() {{ auction.bid(expectedBid); }};
 
       sniper.bidAccepted(beatableBid);
    }
@@ -42,10 +39,7 @@ public final class AuctionSniper_JMockit_Test
    @Test
    public void willNotBidPriceGreaterThanMaximum() throws Exception
    {
-      new Expectations()
-      {{
-         auction.bid((Money) any); times = 0;
-      }};
+      new Expectations() {{ auction.bid((Money) any); times = 0; }};
 
       sniper.bidAccepted(unbeatableBid);
    }
@@ -53,10 +47,7 @@ public final class AuctionSniper_JMockit_Test
    @Test
    public void willLimitBidToMaximum() throws Exception
    {
-      new Expectations()
-      {{
-         auction.bid(maximumBid);
-      }};
+      new Expectations() {{ auction.bid(maximumBid); }};
 
       sniper.bidAccepted(maximumBid.subtract(new Money(1)));
    }
@@ -64,10 +55,7 @@ public final class AuctionSniper_JMockit_Test
    @Test
    public void willAnnounceItHasFinishedIfPriceGoesAboveMaximum()
    {
-      new Expectations()
-      {{
-         listener.sniperFinished(sniper);
-      }};
+      new Expectations() {{ listener.sniperFinished(sniper); }};
 
       sniper.bidAccepted(unbeatableBid);
    }
@@ -77,8 +65,7 @@ public final class AuctionSniper_JMockit_Test
    {
       final AuctionException exception = new AuctionException("test");
 
-      new Expectations()
-      {{
+      new Expectations() {{
          auction.bid((Money) any); result = exception;
          listener.sniperBidFailed(sniper, exception);
       }};
