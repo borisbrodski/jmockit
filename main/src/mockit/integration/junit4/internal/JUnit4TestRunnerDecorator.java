@@ -122,7 +122,7 @@ public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
       boolean testFailureExpected = false;
 
       try {
-         Object[] mockParameters = createInstancesForMockParameters(target, testMethod, savePoint);
+         Object[] mockParameters = createInstancesForMockParameters(target, testMethod, parameters, savePoint);
          createInstancesForTestedFields(target);
 
          TestRun.setRunningIndividualTest(target);

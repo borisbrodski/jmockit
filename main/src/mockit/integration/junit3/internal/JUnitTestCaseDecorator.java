@@ -118,7 +118,7 @@ public final class JUnitTestCaseDecorator extends TestRunnerDecorator
       Throwable testFailure = null;
 
       try {
-         Object[] mockParameters = createInstancesForMockParameters(it, testMethod, savePoint);
+         Object[] mockParameters = createInstancesForMockParameters(it, testMethod, null, savePoint);
          createInstancesForTestedFields(it);
 
          if (mockParameters == null) {

@@ -17,6 +17,9 @@ import mockit.internal.util.*;
 @SuppressWarnings({"ClassWithTooManyFields", "EqualsAndHashcode"})
 public final class MockedType
 {
+   private static final boolean ANNOTATED_MOCK_PARAMETERS_ONLY =
+      "annotated".equals(System.getProperty("jmockit-mockParameters"));
+
    @SuppressWarnings("UnusedDeclaration")
    @Mocked private static final Object DUMMY = null;
    private static final int DUMMY_HASHCODE;
@@ -145,13 +148,20 @@ public final class MockedType
 
    boolean isMockField()
    {
-      boolean mock = mocked != null || capturing != null || cascading != null || nonStrict || injectable;
+      return (isAnnotated() || !fieldFromTestClass && !isPrivate(accessModifiers)) && isMockableType();
+   }
 
-      return (mock || !fieldFromTestClass && !isPrivate(accessModifiers)) && isMockableType();
+   boolean isAnnotated()
+   {
+      return mocked != null || capturing != null || cascading != null || nonStrict || injectable;
    }
 
    boolean isMockableType()
    {
+      if (ANNOTATED_MOCK_PARAMETERS_ONLY && field == null && !isAnnotated()) {
+         return false;
+      }
+
       if (!(declaredType instanceof Class)) {
          return true;
       }

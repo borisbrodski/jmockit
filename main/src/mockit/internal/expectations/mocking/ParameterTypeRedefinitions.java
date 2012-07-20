@@ -18,7 +18,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
    private final MockedType[] mockParameters;
    private final List<MockedType> injectableParameters;
 
-   public ParameterTypeRedefinitions(Object owner, Method testMethod)
+   public ParameterTypeRedefinitions(Object owner, Method testMethod, Object[] parameterValues)
    {
       super(owner);
 
@@ -28,7 +28,7 @@ public final class ParameterTypeRedefinitions extends TypeRedefinitions
          paramTypes = testMethod.getGenericParameterTypes();
          paramAnnotations = testMethod.getParameterAnnotations();
          int n = paramTypes.length;
-         paramValues = new Object[n];
+         paramValues = parameterValues == null || parameterValues.length != n ? new Object[n] : parameterValues;
          mockParameters = new MockedType[n];
          injectableParameters = new ArrayList<MockedType>(n);
 
