@@ -1,36 +1,42 @@
-package tourDeMock.original;
+/*
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
+ * This file is subject to the terms of the MIT license (see LICENSE.txt).
+ */
+package tourDeMock.extra;
 
 import java.io.*;
 import java.util.*;
+import javax.inject.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
 import static java.util.Arrays.*;
-import org.junit.*;
-import org.junit.runner.*;
+
+import org.jukito.*;
 import org.mockito.*;
-import static org.mockito.Mockito.*;
-import org.mockito.runners.*;
+import tourDeMock.original.*;
 import tourDeMock.original.service.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public final class EmailListServlet_MockitoTest
+import org.junit.*;
+import org.junit.runner.*;
+
+import static org.mockito.Mockito.*;
+
+@RunWith(JukitoRunner.class)
+public final class EmailListServlet_JukitoTest
 {
-   EmailListServlet servlet;
+   @Inject EmailListServlet servlet;
 
-   @Mock HttpServletRequest request;
-   @Mock(answer = Answers.RETURNS_DEEP_STUBS) HttpServletResponse response;
-   @Mock EmailListService service;
-
-   @Mock(answer = Answers.RETURNS_DEEP_STUBS) ServletConfig servletConfig;
+   @Inject HttpServletRequest request;
+   @Inject HttpServletResponse response;
+   @Inject EmailListService service;
 
    @Before
-   public void before() throws Exception
+   public void before(ServletConfig config, ServletContext context) throws Exception
    {
-      when(servletConfig.getServletContext().getAttribute(EmailListService.KEY)).thenReturn(service);
+      when(config.getServletContext()).thenReturn(context);
+      when(context.getAttribute(EmailListService.KEY)).thenReturn(service);
 
-      servlet = new EmailListServlet();
-      servlet.init(servletConfig);
+      servlet.init(config);
    }
 
    @Test(expected = ServletException.class)
@@ -44,10 +50,11 @@ public final class EmailListServlet_MockitoTest
    @Test
    public void doGetWithList() throws Exception
    {
-      PrintWriter writer = response.getWriter();
-
       List<String> emails = asList("larry@stooge.com", "moe@stooge.com", "curley@stooge.com");
       when(service.getListByName(anyString())).thenReturn(emails);
+
+      PrintWriter writer = mock(PrintWriter.class);
+      when(response.getWriter()).thenReturn(writer);
 
       servlet.doGet(request, response);
 
