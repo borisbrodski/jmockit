@@ -56,7 +56,7 @@ public abstract class MockUp<T>
          mockInstance = redefineClass((Class<?>) typeToMock);
       }
       else if (typeToMock instanceof ParameterizedType){
-         mockInstance = redefineClass((Class<?>) ((ParameterizedType) typeToMock).getRawType());
+         mockInstance = redefineClass((ParameterizedType) typeToMock);
       }
       else { // a TypeVariable
          mockInstance = createMockInstanceForMultipleInterfaces(typeToMock);
@@ -105,6 +105,24 @@ public abstract class MockUp<T>
    private void redefineMethods(Class<?> realClass)
    {
       new MockClassSetup(realClass, this, getClass()).redefineMethods();
+   }
+
+   private T redefineClass(ParameterizedType typeToMock)
+   {
+      Class<?> realClass = (Class<?>) typeToMock.getRawType();
+
+      if (realClass.isInterface()) {
+         T proxy = Mockit.newEmptyProxy(typeToMock);
+
+         MockClassSetup setup = new MockClassSetup(proxy.getClass(), this, getClass());
+         setup.setBaseType(realClass);
+         setup.redefineMethods();
+
+         return proxy;
+      }
+
+      redefineMethods(realClass);
+      return null;
    }
 
    private T createMockInstanceForMultipleInterfaces(Type typeToMock)

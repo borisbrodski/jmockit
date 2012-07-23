@@ -86,15 +86,14 @@ final class AnnotatedMockMethodCollector extends ClassVisitor
          return null;
       }
 
-      if (
-         !collectingFromSuperClass && enclosingClassDescriptor != null &&
-         "<init>".equals(methodName) && methodDesc.equals(enclosingClassDescriptor)
-      ) {
-         mockMethods.setInnerMockClass(true);
-         enclosingClassDescriptor = null;
-      }
-
       if ("<init>".equals(methodName)) {
+         if (
+            !collectingFromSuperClass && enclosingClassDescriptor != null && methodDesc.equals(enclosingClassDescriptor)
+         ) {
+            mockMethods.setInnerMockClass(true);
+            enclosingClassDescriptor = null;
+         }
+
          return null;
       }
 

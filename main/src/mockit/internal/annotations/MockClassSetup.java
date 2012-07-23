@@ -19,7 +19,7 @@ import mockit.internal.util.*;
 public final class MockClassSetup
 {
    private Class<?> realClass;
-   private Class<?> baseType;
+   private Class<?> baseTypeForCapturing;
    private final Class<?> mockClass;
    private final AnnotatedMockMethods mockMethods;
    private final Instantiation instantiation;
@@ -61,7 +61,7 @@ public final class MockClassSetup
       }
    }
 
-   private static MockingConfiguration createMockingConfiguration(MockClass metadata)
+   private MockingConfiguration createMockingConfiguration(MockClass metadata)
    {
       String[] filters = metadata.stubs();
       return filters.length == 0 ? null : new MockingConfiguration(filters, !metadata.inverse());
@@ -75,7 +75,7 @@ public final class MockClassSetup
    public MockClassSetup(Class<?> realClass, Object mock, Class<?> mockClass)
    {
       this(realClass, mock, mockClass, mockClass.getAnnotation(MockClass.class));
-      baseType = realClass;
+      baseTypeForCapturing = realClass;
    }
 
    public MockClassSetup(Object mock, Class<?> mockClass)
@@ -102,7 +102,7 @@ public final class MockClassSetup
    public Class<?> getRealClass() { return realClass; }
    public void setRealClass(Class<?> realClass) { this.realClass = realClass; }
 
-   public void setBaseType(Class<?> baseType) { this.baseType = baseType; }
+   public void setBaseType(Class<?> baseClass) { baseTypeForCapturing = baseClass; }
 
    public void setUpStartupMock()
    {
@@ -116,25 +116,7 @@ public final class MockClassSetup
    {
       redefineMethodsInClassHierarchy();
       validateThatAllMockMethodsWereApplied();
-
-      if (mockMethods.classWithMethodToSelectSubclasses != null) {
-         CaptureOfSubclasses captureOfSubclasses = new CaptureOfSubclasses();
-         captureOfSubclasses.makeSureAllSubtypesAreModified(baseType, true);
-
-         if (!addActionToExecuteOnSavePointRollback(TestRun.getSavePointForTestMethod(), captureOfSubclasses)) {
-            addActionToExecuteOnSavePointRollback(TestRun.getSavePointForTestClass(), captureOfSubclasses);
-         }
-      }
-   }
-
-   private boolean addActionToExecuteOnSavePointRollback(SavePoint savePoint, Runnable action)
-   {
-      if (savePoint != null) {
-         savePoint.addRollbackAction(action);
-         return true;
-      }
-
-      return false;
+      activateCapturingForBaseType();
    }
 
    private void redefineMethodsInClassHierarchy()
@@ -201,6 +183,28 @@ public final class MockClassSetup
          throw new IllegalArgumentException(
             "Matching real methods not found for the following mocks:\n" + mockSignatures);
       }
+   }
+
+   private void activateCapturingForBaseType()
+   {
+      if (mockMethods.classWithMethodToSelectSubclasses != null) {
+         CaptureOfSubclasses captureOfSubclasses = new CaptureOfSubclasses();
+         captureOfSubclasses.makeSureAllSubtypesAreModified(baseTypeForCapturing, true);
+
+         if (!addActionToExecuteOnSavePointRollback(TestRun.getSavePointForTestMethod(), captureOfSubclasses)) {
+            addActionToExecuteOnSavePointRollback(TestRun.getSavePointForTestClass(), captureOfSubclasses);
+         }
+      }
+   }
+
+   private boolean addActionToExecuteOnSavePointRollback(SavePoint savePoint, Runnable action)
+   {
+      if (savePoint != null) {
+         savePoint.addRollbackAction(action);
+         return true;
+      }
+
+      return false;
    }
 
    private final class CaptureOfSubclasses extends CaptureOfImplementations implements ClassSelector

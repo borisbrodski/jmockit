@@ -160,7 +160,7 @@ final class AnnotationsModifier extends BaseClassModifier
          return super.visitMethod(access, name, desc, signature, exceptions);
       }
 
-      if (!hasMock(name, desc)) {
+      if (!hasMock(name, desc, signature)) {
          if (shouldCopyOriginalMethodBytecode(access, name, desc, signature, exceptions)) {
             return super.visitMethod(access, name, desc, signature, exceptions);
          }
@@ -185,10 +185,10 @@ final class AnnotationsModifier extends BaseClassModifier
       return methodAnnotationsVisitor;
    }
 
-   private boolean hasMock(String name, String desc)
+   private boolean hasMock(String name, String desc, String signature)
    {
       String mockName = getCorrespondingMockName(name);
-      mockMethod = annotatedMocks.containsMethod(mockName, desc);
+      mockMethod = annotatedMocks.containsMethod(mockName, desc, signature);
       return mockMethod != null;
    }
 
@@ -493,10 +493,16 @@ final class AnnotationsModifier extends BaseClassModifier
       varIndex = hasInvokedInstance ? 1 : 0;
 
       Type[] argTypes = Type.getArgumentTypes(mockMethod.desc);
+      boolean forGenericMethod = mockMethod.isForGenericMethod();
 
       for (Type argType : argTypes) {
          int opcode = argType.getOpcode(ILOAD);
          mw.visitVarInsn(opcode, varIndex);
+
+         if (forGenericMethod && argType.getSort() == Type.OBJECT) {
+            mw.visitTypeInsn(CHECKCAST, argType.getInternalName());
+         }
+
          varIndex += argType.getSize();
       }
    }

@@ -364,38 +364,57 @@ public final class MockUpTest
    @Test
    public void mockMethodDefinedInGenericTypeInstantiation()
    {
-      try {
-         new MockUp<Comparable<String>>() { @Mock int compareTo(Integer i) { return 1; } };
-         fail();
-      }
-      catch (IllegalArgumentException ignore) {}
-
-      Comparable<String> cmp1 = new MockUp<Comparable<String>>() {
-         @Mock
-         int compareTo(Object s) { assertEquals("test", s); return 1; }
-      }.getMockInstance();
+//      try {
+//         new MockUp<Comparable<String>>() { @Mock int compareTo(Integer i) { return 1; } };
+//         fail();
+//      }
+//      catch (IllegalArgumentException ignore) {}
+//
+//      Comparable<String> cmp1 = new MockUp<Comparable<String>>() {
+//         @Mock
+//         int compareTo(Object s) { assertEquals("test", s); return 1; }
+//      }.getMockInstance();
 
       Comparable<Integer> cmp2 = new MockUp<Comparable<Integer>>() {
          @Mock
          int compareTo(Integer i) { assertEquals(123, i.intValue()); return 2; }
       }.getMockInstance();
 
-      assertEquals(1, cmp1.compareTo("test"));
+//      assertEquals(1, cmp1.compareTo("test"));
       assertEquals(2, cmp2.compareTo(123));
    }
 
    static class GenericBaseClass<T, U> { U find(@SuppressWarnings("UnusedParameters") T id) { return null; } }
-   final class ConcreteSubclass extends GenericBaseClass<Integer, String> {}
+
+   @Test
+   public void mockGenericMethodFromGenericClassInstantiation()
+   {
+      new MockUp<GenericBaseClass<String, Integer>>() {
+         @Mock
+         Integer find(String id) { return id.hashCode(); }
+      };
+
+      int i = new GenericBaseClass<String, Integer>().find("test");
+      assertEquals("test".hashCode(), i);
+
+      try {
+         new GenericBaseClass<Integer, String>().find(1);
+         fail();
+      }
+      catch (ClassCastException ignore) {}
+   }
+
+   final class NonGenericSubclass extends GenericBaseClass<Integer, String> {}
 
    @Test
    public void mockGenericMethodFromSubclassTypeInstantiation()
    {
-      new MockUp<ConcreteSubclass>() {
+      new MockUp<NonGenericSubclass>() {
          @Mock
          String find(Integer id) { return "mocked" + id; }
       };
 
-      String s = new ConcreteSubclass().find(1);
+      String s = new NonGenericSubclass().find(1);
       assertEquals("mocked1", s);
    }
 }

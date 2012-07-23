@@ -30,6 +30,8 @@ final class AnnotatedMockMethods
       final boolean isStatic;
       final boolean hasInvocationParameter;
       String mockedMethodDesc;
+      private final String mockDescWithoutInvocationParameter;
+      private GenericSignature mockSignature;
       private int indexForMockState;
 
       private MockMethod(String nameAndDesc, boolean isStatic)
@@ -39,16 +41,14 @@ final class AnnotatedMockMethods
          desc = nameAndDesc.substring(p);
          this.isStatic = isStatic;
          hasInvocationParameter = desc.startsWith("(Lmockit/Invocation;");
+         mockDescWithoutInvocationParameter = hasInvocationParameter ? '(' + desc.substring(20) : desc;
          indexForMockState = -1;
       }
 
-      private boolean isMatch(String name, String desc)
+      boolean isMatch(String name, String desc, String signature)
       {
          if (this.name.equals(name)) {
-            if (
-               !hasInvocationParameter && this.desc.equals(desc) ||
-               hasInvocationParameter && this.desc.substring(20).equals(desc.substring(1))
-            ) {
+            if (hasMatchingParameters(desc, signature)) {
                mockedMethodDesc = desc;
                return true;
             }
@@ -56,6 +56,21 @@ final class AnnotatedMockMethods
 
          return false;
       }
+
+      private boolean hasMatchingParameters(String desc, String signature)
+      {
+         if (signature == null || !signature.contains("TT;")) {
+            return mockDescWithoutInvocationParameter.equals(desc);
+         }
+
+         if (mockSignature == null) {
+            mockSignature = new GenericSignature(mockDescWithoutInvocationParameter);
+         }
+
+         return mockSignature.satisfiesGenericSignature(signature);
+      }
+
+      boolean isForGenericMethod() { return mockSignature != null; }
 
       Class<?> getRealClass() { return realClass; }
       String getMockNameAndDesc() { return name + desc; }
@@ -85,6 +100,73 @@ final class AnnotatedMockMethods
       public int hashCode()
       {
          return 31 * (31 * realClass.hashCode() + name.hashCode()) + desc.hashCode();
+      }
+   }
+
+   private static final class GenericSignature
+   {
+      private final List<String> parameters;
+
+      GenericSignature(String signature)
+      {
+         int p = signature.indexOf('(');
+         int q = signature.indexOf(')');
+         String semicolonSeparatedParameters = signature.substring(p + 1, q);
+         parameters = new ArrayList<String>(4);
+
+         for (int i = 0; i < semicolonSeparatedParameters.length(); i++) {
+            char c = semicolonSeparatedParameters.charAt(i);
+            String parameter;
+
+            if (c == 'L' || c == 'T' || c == '[') {
+               int j = i + 1;
+
+               do {
+                  c = semicolonSeparatedParameters.charAt(j);
+                  j++;
+               } while (c != ';' && c != '<');
+
+               parameter = semicolonSeparatedParameters.substring(i, j - 1);
+
+               if (c == '<') {
+                  int angleBracketDepth = 1;
+
+                  do {
+                     c = semicolonSeparatedParameters.charAt(j);
+                     if (c == '>') angleBracketDepth--; else if (c == '<') angleBracketDepth++;
+                     j++;
+                  } while (angleBracketDepth > 0);
+               }
+
+               i = j;
+            }
+            else {
+               parameter = String.valueOf(c);
+            }
+
+            parameters.add(parameter);
+         }
+      }
+
+      boolean satisfiesGenericSignature(String signature)
+      {
+         GenericSignature genericSignature = new GenericSignature(signature);
+         int n = parameters.size();
+
+         if (n != genericSignature.parameters.size()) {
+            return false;
+         }
+
+         for (int i = 0; i < n; i++) {
+            String p1 = genericSignature.parameters.get(i);
+            String p2 = parameters.get(i);
+
+            if (p1.charAt(0) != 'T' && !p1.equals(p2)) {
+               return false;
+            }
+         }
+
+         return true;
       }
    }
 
@@ -136,10 +218,10 @@ final class AnnotatedMockMethods
     * This operation can be performed only once for any given mock method in this container, so that after the last real
     * method is processed there should be no mock methods left unused in the container.
     */
-   MockMethod containsMethod(String name, String desc)
+   MockMethod containsMethod(String name, String desc, String signature)
    {
       for (MockMethod mockMethod : methods) {
-         if (mockMethod.isMatch(name, desc)) {
+         if (mockMethod.isMatch(name, desc, signature)) {
             return mockMethod;
          }
       }
