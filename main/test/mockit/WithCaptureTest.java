@@ -23,7 +23,7 @@ public final class WithCaptureTest
    public interface DAO<T> { void create(T t); }
    static final class PersonDAO implements DAO<Person> { public void create(Person p) {} }
 
-   @Test
+   @Ignore @Test
    public void captureArgumentFromSingleInvocation(final PersonDAO dao)
    {
       Person p = new Person("John", 10);

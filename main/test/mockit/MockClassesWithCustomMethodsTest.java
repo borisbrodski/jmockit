@@ -93,7 +93,7 @@ public final class MockClassesWithCustomMethodsTest
       assertEquals(1, specialMethodInvocationCount);
    }
 
-   @Test
+   @Ignore @Test
    public void mockSubclassWhenLoaded()
    {
       new SubCollaborator1();
@@ -123,7 +123,7 @@ public final class MockClassesWithCustomMethodsTest
       assertEquals(2, specialMethodInvocationCount);
    }
 
-   @Test
+   @Ignore @Test
    public void mockClassImplementingInterfaceWhenLoaded()
    {
       new MockUp<IDependency>() {

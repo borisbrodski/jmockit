@@ -208,7 +208,7 @@ public final class CascadingFieldTest
 
    static class GenericBaseClass1<T> { T getValue() { return null; } }
 
-   @Test
+   @Ignore @Test
    public void cascadeGenericMethodFromSpecializedGenericClass(@Cascading GenericBaseClass1<A> mock)
    {
       A value = mock.getValue();
@@ -217,7 +217,7 @@ public final class CascadingFieldTest
 
    static class ConcreteSubclass1 extends GenericBaseClass1<A> {}
 
-   @Test
+   @Ignore @Test
    public void cascadeGenericMethodOfConcreteSubclassWhichExtendsGenericClass(@Cascading ConcreteSubclass1 mock)
    {
       A value = mock.getValue();
@@ -228,7 +228,7 @@ public final class CascadingFieldTest
    static class GenericBaseClass2<T extends A> { T getValue() { return null; } }
    static class ConcreteSubclass2 extends GenericBaseClass2<Ab> {}
 
-   @Test
+   @Ignore @Test
    public void cascadeGenericMethodOfConcreteSubclassWhichExtendsGenericClassWithUpperBound(
       @Cascading ConcreteSubclass2 mock)
    {
