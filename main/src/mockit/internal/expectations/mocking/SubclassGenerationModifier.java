@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
@@ -17,14 +17,13 @@ import mockit.internal.*;
 import mockit.internal.filtering.*;
 import mockit.internal.util.*;
 
-final class SubclassGenerationModifier extends BaseClassModifier
+final class SubclassGenerationModifier extends MockedTypeModifier
 {
    private static final int CLASS_ACCESS_MASK = 0xFFFF - ACC_ABSTRACT;
 
    private final MockingConfiguration mockingCfg;
    private final Class<?> abstractClass;
    private final String subclassName;
-   private String superClassName;
    private String superClassOfSuperClass;
    private Set<String> superInterfaces;
    private final List<String> implementedMethods;
@@ -43,7 +42,6 @@ final class SubclassGenerationModifier extends BaseClassModifier
    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       super.visit(version, access & CLASS_ACCESS_MASK, subclassName, signature, name, null);
-      superClassName = name;
       superClassOfSuperClass = superName;
       superInterfaces = new HashSet<String>(asList(interfaces));
    }

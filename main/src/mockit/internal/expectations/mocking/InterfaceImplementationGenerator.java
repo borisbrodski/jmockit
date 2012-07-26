@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.mocking;
@@ -11,7 +11,7 @@ import static mockit.external.asm4.Opcodes.*;
 import mockit.external.asm4.*;
 import mockit.internal.*;
 
-final class InterfaceImplementationGenerator extends BaseClassModifier
+final class InterfaceImplementationGenerator extends MockedTypeModifier
 {
    private final List<String> implementedMethods = new ArrayList<String>();
    private final String implementationClassName;
@@ -35,10 +35,10 @@ final class InterfaceImplementationGenerator extends BaseClassModifier
       super.visit(
          version, ACC_PUBLIC + ACC_FINAL, implementationClassName, signature, superName, implementedInterfaces);
 
-      generateConstructor();
+      generateDefaultConstructor();
    }
 
-   private void generateConstructor()
+   private void generateDefaultConstructor()
    {
       mw = super.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
       mw.visitVarInsn(ALOAD, 0);

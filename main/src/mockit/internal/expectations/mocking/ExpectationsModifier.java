@@ -11,12 +11,10 @@ import static java.lang.reflect.Modifier.*;
 import static mockit.external.asm4.Opcodes.*;
 
 import mockit.external.asm4.*;
-import mockit.internal.*;
 import mockit.internal.filtering.*;
 import mockit.internal.startup.*;
 
-@SuppressWarnings("ClassWithTooManyFields")
-final class ExpectationsModifier extends BaseClassModifier
+final class ExpectationsModifier extends MockedTypeModifier
 {
    private static final int METHOD_ACCESS_MASK = ACC_SYNTHETIC + ACC_ABSTRACT;
    private static final Map<String, String> DEFAULT_FILTERS = new HashMap<String, String>()

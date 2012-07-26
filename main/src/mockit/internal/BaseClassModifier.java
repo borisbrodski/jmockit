@@ -12,7 +12,6 @@ import mockit.external.asm4.*;
 import mockit.external.asm4.Type;
 import mockit.internal.state.*;
 
-@SuppressWarnings("ClassWithTooManyMethods")
 public class BaseClassModifier extends ClassVisitor
 {
    private static final int ACCESS_MASK = 0xFFFF - ACC_ABSTRACT - ACC_NATIVE;
@@ -54,10 +53,10 @@ public class BaseClassModifier extends ClassVisitor
    protected MethodVisitor mw;
    protected boolean useMockingBridge;
    protected String superClassName;
-   protected String classDesc;
+   private String classDesc;
    private String methodName;
    private String methodDesc;
-   protected boolean callToAnotherConstructorAlreadyDisregarded;
+   private boolean callToAnotherConstructorAlreadyDisregarded;
 
    protected BaseClassModifier(ClassReader classReader)
    {
@@ -153,42 +152,6 @@ public class BaseClassModifier extends ClassVisitor
       mw.visitInsn(returnType.getOpcode(IRETURN));
    }
 
-   protected final void generateDirectCallToHandler(
-      String className, int access, String name, String desc, String genericSignature, String[] exceptions,
-      int executionMode)
-   {
-      // First argument: the mock instance, if any.
-      boolean isStatic = generateCodeToPassThisOrNullIfStaticMethod(access);
-
-      // Second argument: method access flags.
-      mw.visitLdcInsn(access);
-
-      // Third argument: class name.
-      mw.visitLdcInsn(className);
-
-      // Fourth argument: method signature.
-      mw.visitLdcInsn(name + desc);
-
-      // Fifth argument: generic signature, or null if none.
-      generateInstructionToLoadNullableString(genericSignature);
-
-      // Sixth argument: checked exceptions thrown, or null if none.
-      String exceptionsStr = getListOfExceptionsAsSingleString(exceptions);
-      generateInstructionToLoadNullableString(exceptionsStr);
-
-      // Seventh argument: indicate regular or special modes of execution.
-      mw.visitLdcInsn(executionMode);
-      
-      // Sixth argument: call arguments.
-      Type[] argTypes = Type.getArgumentTypes(desc);
-      generateCodeToPassMethodArgumentsAsVarargs(isStatic, argTypes);
-
-      mw.visitMethodInsn(
-         INVOKESTATIC, "mockit/internal/expectations/RecordAndReplayExecution", "recordOrReplay",
-         "(Ljava/lang/Object;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I" +
-         "[Ljava/lang/Object;)Ljava/lang/Object;");
-   }
-
    protected final boolean generateCodeToPassThisOrNullIfStaticMethod(int access)
    {
       boolean isStatic = Modifier.isStatic(access);
@@ -201,42 +164,6 @@ public class BaseClassModifier extends ClassVisitor
       }
 
       return isStatic;
-   }
-
-   private void generateInstructionToLoadNullableString(String text)
-   {
-      if (text == null) {
-         mw.visitInsn(ACONST_NULL);
-      }
-      else {
-         mw.visitLdcInsn(text);
-      }
-   }
-
-   protected final String getListOfExceptionsAsSingleString(String[] exceptions)
-   {
-      if (exceptions == null) {
-         return null;
-      }
-      else if (exceptions.length == 1) {
-         return exceptions[0];
-      }
-
-      StringBuilder buf = new StringBuilder(200);
-      String sep = "";
-
-      for (String exception : exceptions) {
-         buf.append(sep).append(exception);
-         sep = " ";
-      }
-
-      return buf.toString();
-   }
-
-   private void generateCodeToPassMethodArgumentsAsVarargs(boolean isStatic, Type[] argTypes)
-   {
-      generateCodeToCreateArrayOfObject(argTypes.length);
-      generateCodeToPassMethodArgumentsAsVarargs(argTypes, 0, isStatic ? 0 : 1);
    }
 
    protected final void generateCodeToCreateArrayOfObject(int arrayLength)
@@ -394,15 +321,6 @@ public class BaseClassModifier extends ClassVisitor
    {
       mw.visitInsn(RETURN);
       mw.visitMaxs(1, 0);
-   }
-
-   protected final boolean isMethodFromObject(String name, String desc)
-   {
-      return
-         "equals".equals(name)   && "(Ljava/lang/Object;)Z".equals(desc) ||
-         "hashCode".equals(name) && "()I".equals(desc) ||
-         "toString".equals(name) && "()Ljava/lang/String;".equals(desc) ||
-         "finalize".equals(name) && "()V".equals(desc);
    }
 
    protected final void disregardIfInvokingAnotherConstructor(int opcode, String owner, String name, String desc)
