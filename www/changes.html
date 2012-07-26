@@ -21,13 +21,18 @@
 
 <h3>Next release</h3>
 
-<p>Release <strong>0.999.16</strong> (Jun ?, 2012):</p>
+<p>Release <strong>0.999.16</strong> (Jul 30, 2012):</p>
 <ul>
    <li>
-      <strong>Enhancement</strong>: <code>@Mock</code> methods now also apply to the super-classes of the specified
-      class to be mocked, when the latter doesn't define a matching method.
+      <strong>Enhancement</strong>: <code class="annotation">@Mock</code> methods now also apply to the super-classes of
+      the specified class to be mocked, when the latter doesn't define a matching method.
       This avoids the need to set up two or more separate mock classes when the methods to be method are defined in
       multiple levels of a class hierarchy.
+   </li>
+   <li>
+      <strong>Enhancement</strong>: Previously, when a <code class="type">Delegate</code> method invoked another mocked
+      method/constructor, it would cause the real implementation of that method/constructor to be executed; now such an
+      invocation gets the mocked behavior, which is what a user would intuitively expect.
    </li>
    <li>
       <strong>JMockit Coverage</strong>: Removed the <code>jmockit-coverage-{htmlbasic|htmlfull|serial|merge}.jar</code>
@@ -39,8 +44,29 @@
       <code>jmockit-coverage-output</code> system property.
    </li>
    <li>
-      Issues fixed:
-      <a href="http://code.google.com/p/jmockit/issues/detail?id=224">224</a>.
+      Automatic JMockit initialization is now supported on <strong>Mac OS X</strong>.
+      (Previously, it was usually necessary to add the "<code>-javaagent</code>" parameter when using JDK 1.6+ on this
+      OS.)
+   </li>
+   <li>
+      Added support for the new "<code>jmockit-mockParameters=annotated</code>" system property, to be set when
+      automatic (non-annotated) mock parameters in test methods would conflict with some other JUnit/TestNG integration.
+      When set, only those test method parameters that are explicitly annotated with
+      <code class="annotation">@Mocked</code>, <code class="annotation">@NonStrict</code>,
+      <code class="annotation">@Cascading</code>, <code class="annotation">@Capturing</code>, and/or
+      <code class="annotation">@Injectable</code> are considered to be <em>mock</em> parameters.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=232">issue 232</a>.
+   </li>
+   <li>
+      Other issues fixed:
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=224">224</a>,
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=227">227</a>,
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=230">230</a>.
+   </li>
+   <li>
+      Several other small fixes and improvements were made.
+      For details, see the <a href="http://code.google.com/p/jmockit/source/list?num=50&start=2069">full list</a> of
+      changes.
    </li>
 </ul>
 

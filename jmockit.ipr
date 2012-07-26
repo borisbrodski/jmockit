@@ -1138,6 +1138,12 @@
         <XML>
           <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
         </XML>
+        <codeStyleSettings language="HTML">
+          <indentOptions>
+            <option name="INDENT_SIZE" value="3" />
+            <option name="TAB_SIZE" value="3" />
+          </indentOptions>
+        </codeStyleSettings>
         <codeStyleSettings language="JAVA">
           <option name="CLASS_BRACE_STYLE" value="2" />
           <option name="METHOD_BRACE_STYLE" value="2" />
