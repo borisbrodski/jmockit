@@ -41,17 +41,13 @@ public final class MockUpTest
    @Test(expected = IllegalArgumentException.class)
    public void attemptToCreateMockUpWithMockMethodLackingCorrespondingRealMethod()
    {
-      new MockUp<Collaborator>()
-      {
-         @Mock void $init(int i) { System.out.println(i); }
-      };
+      new MockUp<Collaborator>() { @Mock void $init(int i) { System.out.println(i); } };
    }
 
    @Test
    public void mockUpClass() throws Exception
    {
-      new MockUp<Collaborator>()
-      {
+      new MockUp<Collaborator>() {
          @Mock(invocations = 1)
          void $init(boolean b)
          {
@@ -72,8 +68,7 @@ public final class MockUpTest
    @Test
    public void mockUpInterface() throws Exception
    {
-      ResultSet mock = new MockUp<ResultSet>()
-      {
+      ResultSet mock = new MockUp<ResultSet>() {
          @Mock
          boolean next() { return true; }
       }.getMockInstance();
@@ -84,8 +79,7 @@ public final class MockUpTest
    @Test
    public <M extends Runnable & ResultSet> void mockUpTwoInterfacesAtOnce() throws Exception
    {
-      M mock = new MockUp<M>()
-      {
+      M mock = new MockUp<M>() {
          @Mock(invocations = 1)
          void run() {}
 
@@ -127,8 +121,7 @@ public final class MockUpTest
       final Main main = new Main();
       AtomicIntegerFieldUpdater<?> atomicCount = Deencapsulation.getField(Main.class, AtomicIntegerFieldUpdater.class);
 
-      new MockUp(atomicCount.getClass())
-      {
+      new MockUp(atomicCount.getClass()) {
          boolean second;
 
          @Mock(invocations = 2)
@@ -153,12 +146,9 @@ public final class MockUpTest
    @Test
    public void mockUpGivenInterface()
    {
-      Runnable r = new MockUp<Runnable>(Runnable.class)
-      {
+      Runnable r = new MockUp<Runnable>(Runnable.class) {
          @Mock(minInvocations = 1)
-         public void run()
-         {
-         }
+         public void run() {}
       }.getMockInstance();
 
       r.run();
@@ -167,8 +157,7 @@ public final class MockUpTest
    @Test
    public void mockGenericMethod()
    {
-      new MockUp<Collaborator>()
-      {
+      new MockUp<Collaborator>() {
          @Mock <T extends Number> T genericMethod(T t) { return t; }
 
          // This also works (same erasure):
@@ -197,8 +186,7 @@ public final class MockUpTest
    @Test
    public void mockGenericClass()
    {
-      new MockUp<GenericClass<?, ?>>()
-      {
+      new MockUp<GenericClass<?, ?>>() {
          @Mock(minInvocations = 1)
          void aMethod(Object o)
          {
@@ -231,10 +219,9 @@ public final class MockUpTest
    public interface GenericInterface<T> { void method(T t); }
 
    @Test
-   public void mockGenericInterface()
+   public void mockGenericInterfaceMethodWithMockMethodHavingParameterOfTypeObject()
    {
-      GenericInterface<Boolean> mock = new MockUp<GenericInterface<Boolean>>()
-      {
+      GenericInterface<Boolean> mock = new MockUp<GenericInterface<Boolean>>() {
          @Mock
          public void method(Object b) { assertTrue((Boolean) b); }
       }.getMockInstance();
@@ -247,8 +234,7 @@ public final class MockUpTest
    @Test
    public void mockMethodOfSubInterfaceWithGenericTypeArgument()
    {
-      ConcreteInterface mock = new MockUp<ConcreteInterface>()
-      {
+      ConcreteInterface mock = new MockUp<ConcreteInterface>() {
          @Mock(invocations = 1)
          public void method(Object l)
          {
@@ -262,8 +248,7 @@ public final class MockUpTest
    @Test
    public void mockUpWithItFieldAndReentrantMockMethod()
    {
-      new MockUp<Collaborator>()
-      {
+      new MockUp<Collaborator>() {
          Collaborator it;
 
          @Mock(invocations = 1, reentrant = false)
@@ -361,33 +346,27 @@ public final class MockUpTest
       assertEquals(2, b1.method2());
    }
 
-   @Test
-   public void mockMethodDefinedInGenericTypeInstantiation()
+   @Test(expected = IllegalArgumentException.class)
+   public void cannotMockGenericMethodWhenParameterTypeInMockMethodDiffersFromTypeArgument()
    {
-//      try {
-//         new MockUp<Comparable<String>>() { @Mock int compareTo(Integer i) { return 1; } };
-//         fail();
-//      }
-//      catch (IllegalArgumentException ignore) {}
-//
-//      Comparable<String> cmp1 = new MockUp<Comparable<String>>() {
-//         @Mock
-//         int compareTo(Object s) { assertEquals("test", s); return 1; }
-//      }.getMockInstance();
+      new MockUp<Comparable<String>>() { @Mock int compareTo(Integer i) { return 1; } };
+   }
 
-      Comparable<Integer> cmp2 = new MockUp<Comparable<Integer>>() {
+   @Ignore @Test
+   public void mockGenericInterfaceMethodWithMockMethodHavingSameTypeAsTypeArgument()
+   {
+      Comparable<Integer> cmp = new MockUp<Comparable<Integer>>() {
          @Mock
          int compareTo(Integer i) { assertEquals(123, i.intValue()); return 2; }
       }.getMockInstance();
 
-//      assertEquals(1, cmp1.compareTo("test"));
-      assertEquals(2, cmp2.compareTo(123));
+      assertEquals(2, cmp.compareTo(123));
    }
 
    static class GenericBaseClass<T, U> { U find(@SuppressWarnings("UnusedParameters") T id) { return null; } }
 
    @Test
-   public void mockGenericMethodFromGenericClassInstantiation()
+   public void mockGenericMethodWithMockMethodHavingParameterTypesMatchingTypeArguments()
    {
       new MockUp<GenericBaseClass<String, Integer>>() {
          @Mock
@@ -396,18 +375,20 @@ public final class MockUpTest
 
       int i = new GenericBaseClass<String, Integer>().find("test");
       assertEquals("test".hashCode(), i);
+   }
 
-      try {
-         new GenericBaseClass<Integer, String>().find(1);
-         fail();
-      }
-      catch (ClassCastException ignore) {}
+   @Test(expected = ClassCastException.class)
+   public void cannotCallGenericMethodWhenSomeMockMethodExpectsDifferentTypes()
+   {
+      new MockUp<GenericBaseClass<String, Integer>>() { @Mock Integer find(String id) { return 1; } };
+
+      new GenericBaseClass<Integer, String>().find(1);
    }
 
    final class NonGenericSubclass extends GenericBaseClass<Integer, String> {}
 
    @Test
-   public void mockGenericMethodFromSubclassTypeInstantiation()
+   public void mockGenericMethodFromInstantiationOfNonGenericSubclass()
    {
       new MockUp<NonGenericSubclass>() {
          @Mock
