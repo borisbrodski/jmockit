@@ -7,6 +7,7 @@ package mockit.internal.expectations.invocation;
 import java.lang.reflect.*;
 
 import mockit.Invocation;
+import mockit.internal.state.*;
 
 final class DelegateInvocation extends Invocation
 {
@@ -31,6 +32,7 @@ final class DelegateInvocation extends Invocation
          return null;
       }
 
+      TestRun.getExecutingTest().markAsProceedingIntoRealImplementation();
       return invocationArguments.getRealMethod().method;
    }
 }

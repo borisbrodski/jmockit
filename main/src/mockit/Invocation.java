@@ -144,8 +144,9 @@ public class Invocation
     *
     * @return the same value returned by the real method, if any
     *
-    * @throws UnsupportedOperationException if attempting to proceed into a mocked constructor with replacement
-    * arguments
+    * @throws UnsupportedOperationException if attempting to proceed into a mocked method which does not belong to an
+    * {@linkplain Injectable injectable mocked type} nor to a {@linkplain Expectations#Expectations(Object...) dynamic
+    * partially mocked type}, or into a mocked constructor with replacement arguments
     */
    public final <T> T proceed(Object... replacementArguments)
    {

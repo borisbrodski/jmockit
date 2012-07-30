@@ -60,17 +60,6 @@ public final class InvocationProceedTest
       new MockUp<ClassToBeMocked>() {
          @Mock int methodToBeMocked(Invocation inv, int i) { Integer j = inv.proceed(); return j + 1; }
 
-         @Mock(reentrant = true)
-         String anotherMethodToBeMocked(Invocation inv, String s, boolean b, List<Number> ints)
-         {
-            if (!b) {
-               return "";
-            }
-
-            ints.add(45);
-            return inv.proceed();
-         }
-
          @Mock(maxInvocations = 1)
          private int methodToBeMocked(Invocation inv, int i, Object... args)
          {
@@ -83,13 +72,36 @@ public final class InvocationProceedTest
 
       assertEquals(124, mocked.methodToBeMocked(123));
       assertEquals(-8, mocked.methodToBeMocked(-9));
+      assertEquals(7, mocked.methodToBeMocked(3, "Test", new Object(), null, 45));
+   }
 
-      assertEquals("", mocked.anotherMethodToBeMocked(null, false, null));
+   @Test
+   public void proceedConditionallyFromMockMethod() throws Exception
+   {
+      new MockUp<ClassToBeMocked>() {
+         @Mock(reentrant = true)
+         String anotherMethodToBeMocked(Invocation inv, String s, boolean b, List<Number> ints)
+         {
+            if (!b) {
+               return s;
+            }
 
+            ints.add(45);
+            return inv.proceed();
+         }
+      };
+
+      ClassToBeMocked mocked = new ClassToBeMocked();
+
+      // Do not proceed:
+      assertNull(mocked.anotherMethodToBeMocked(null, false, null));
+
+      // Do proceed:
       List<Integer> values = new ArrayList<Integer>();
       assertEquals("TEST[45]", mocked.anotherMethodToBeMocked("test", true, values));
 
-      assertEquals(7, mocked.methodToBeMocked(3, "Test", new Object(), null, 45));
+      // Do not proceed again:
+      assertEquals("No proceed", mocked.anotherMethodToBeMocked("No proceed", false, null));
    }
 
    @Test
@@ -152,7 +164,7 @@ public final class InvocationProceedTest
    }
 
    @Test
-   public void proceedFromMockMethodIntoConstructor() throws Exception
+   public void proceedFromMockMethodIntoConstructor()
    {
       new MockUp<ClassToBeMocked>() {
          ClassToBeMocked it;
@@ -163,6 +175,16 @@ public final class InvocationProceedTest
             assertSame(it, inv.getInvokedInstance());
             inv.proceed();
          }
+      };
+
+      assertEquals("", new ClassToBeMocked().name);
+   }
+
+   @Test
+   public void proceedConditionallyFromMockMethodIntoConstructor()
+   {
+      new MockUp<ClassToBeMocked>() {
+         ClassToBeMocked it;
 
          @Mock void $init(Invocation inv, String name)
          {
@@ -175,7 +197,6 @@ public final class InvocationProceedTest
          }
       };
 
-      assertEquals("", new ClassToBeMocked().name);
       assertEquals("proceed", new ClassToBeMocked("proceed").name);
       assertNull(new ClassToBeMocked("do not proceed").name);
    }
@@ -191,7 +212,7 @@ public final class InvocationProceedTest
    }
 
    @Test
-   public void proceedFromMockMethodIntoJREConstructor() throws Exception
+   public void proceedConditionallyFromMockMethodIntoJREConstructor()
    {
       new MockUp<File>() {
          @Mock void $init(Invocation inv, String name)
@@ -207,6 +228,19 @@ public final class InvocationProceedTest
    }
 
    /// Tests for "Delegate" methods ///////////////////////////////////////////////////////////////////////////////////
+
+   @Test(expected = UnsupportedOperationException.class)
+   public void cannotProceedFromDelegateMethodWhenUsingRegularMocking(final ClassToBeMocked mocked)
+   {
+      new NonStrictExpectations() {{
+         mocked.methodToBeMocked();
+         result = new Delegate() {
+            void cannotProceedIntoNonDynamicMockedMethod(Invocation inv) { inv.proceed(); }
+         };
+      }};
+
+      mocked.methodToBeMocked();
+   }
 
    @Test
    public void proceedFromDelegateMethodWithoutParameters(@Injectable final ClassToBeMocked mocked)
@@ -230,19 +264,6 @@ public final class InvocationProceedTest
          mocked.methodToBeMocked(anyInt);
          result = new Delegate() { int delegate(Invocation inv, int i) { Integer j = inv.proceed(); return j + 1; } };
 
-         mocked.anotherMethodToBeMocked(anyString, anyBoolean, null);
-         result = new Delegate() {
-            String delegate(Invocation inv, String s, boolean b, List<Number> ints)
-            {
-               if (!b) {
-                  return "";
-               }
-
-               ints.add(45);
-               return inv.proceed();
-            }
-         };
-
          mocked.methodToBeMocked(anyInt, (Object[]) any); maxTimes = 1;
          result = new Delegate() {
             Integer delegate(Invocation inv, int i, Object... args)
@@ -255,13 +276,38 @@ public final class InvocationProceedTest
 
       assertEquals(124, mocked.methodToBeMocked(123));
       assertEquals(-8, mocked.methodToBeMocked(-9));
+      assertEquals(7, mocked.methodToBeMocked(3, "Test", new Object(), null, 45));
+   }
 
-      assertEquals("", mocked.anotherMethodToBeMocked(null, false, null));
+   @Test
+   public void proceedConditionallyFromDelegateMethod()
+   {
+      final ClassToBeMocked mocked = new ClassToBeMocked();
 
+      new NonStrictExpectations(mocked) {{
+         mocked.anotherMethodToBeMocked(anyString, anyBoolean, null);
+         result = new Delegate() {
+            String delegate(Invocation inv, String s, boolean b, List<Number> ints)
+            {
+               if (!b) {
+                  return s;
+               }
+
+               ints.add(45);
+               return inv.proceed();
+            }
+         };
+      }};
+
+      // Do not proceed:
+      assertNull(mocked.anotherMethodToBeMocked(null, false, null));
+
+      // Do proceed:
       List<Integer> values = new ArrayList<Integer>();
       assertEquals("TEST[45]", mocked.anotherMethodToBeMocked("test", true, values));
 
-      assertEquals(7, mocked.methodToBeMocked(3, "Test", new Object(), null, 45));
+      // Do not proceed again:
+      assertEquals("No proceed", mocked.anotherMethodToBeMocked("No proceed", false, null));
    }
 
    @Test
@@ -297,7 +343,15 @@ public final class InvocationProceedTest
                inv.proceed();
             }
          };
+      }};
 
+      assertEquals("", new ClassToBeMocked().name);
+   }
+
+   @Test
+   public void proceedConditionallyFromDelegateMethodIntoConstructor()
+   {
+      new NonStrictExpectations(ClassToBeMocked.class) {{
          new ClassToBeMocked(anyString);
          result = new Delegate() {
             void init(Invocation inv, String name)
@@ -311,7 +365,6 @@ public final class InvocationProceedTest
          };
       }};
 
-      assertEquals("", new ClassToBeMocked().name);
       assertEquals("proceed", new ClassToBeMocked("proceed").name);
       assertNull(new ClassToBeMocked("do not proceed").name);
    }
@@ -330,7 +383,7 @@ public final class InvocationProceedTest
    }
 
    @Test
-   public void proceedFromDelegateMethodIntoJREConstructor() throws Exception
+   public void proceedConditionallyFromDelegateMethodIntoJREConstructor()
    {
       new NonStrictExpectations(File.class) {{
          new File(anyString);
@@ -350,7 +403,7 @@ public final class InvocationProceedTest
 
    @SuppressWarnings("UseOfObsoleteCollectionType")
    @Test
-   public void proceedFromDelegateMethodIntoJREConstructorWhichCallsAnotherInTheSameClass() throws Exception
+   public void proceedFromDelegateMethodIntoJREConstructorWhichCallsAnotherInTheSameClass()
    {
       new NonStrictExpectations(Vector.class) {{
          new Vector<String>(anyInt);
@@ -372,7 +425,7 @@ public final class InvocationProceedTest
    }
 
    @Test
-   public void proceedFromDelegateMethodIntoConstructorWhichCallsAnotherInTheSameClass() throws Exception
+   public void proceedFromDelegateMethodIntoConstructorWhichCallsAnotherInTheSameClass()
    {
       new NonStrictExpectations(MyVector.class) {{
          new MyVector(anyInt);

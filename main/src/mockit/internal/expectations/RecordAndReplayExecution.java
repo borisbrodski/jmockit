@@ -226,6 +226,14 @@ public final class RecordAndReplayExecution
          // This occurs when called from a reentrant delegate method.
          return defaultReturnValue(mock, classDesc, mockDesc, executionMode, args);
       }
+      else if (executingTest.isProceedingIntoRealImplementation()) {
+         if (executionMode == 0) {
+            throw new UnsupportedOperationException(
+               "Cannot proceed into method unless mocked type is injectable or dynamic");
+         }
+
+         return Void.class;
+      }
 
       executingTest.registerAdditionalMocksFromFinalLocalMockFieldsIfAny();
 

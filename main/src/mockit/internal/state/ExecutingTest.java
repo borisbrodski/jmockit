@@ -20,6 +20,7 @@ public final class ExecutingTest
    private RecordAndReplayExecution currentRecordAndReplay;
    private RecordAndReplayExecution recordAndReplayForLastTestMethod;
    private boolean shouldIgnoreMockingCallbacks;
+   private boolean proceeding;
 
    private ParameterTypeRedefinitions parameterTypeRedefinitions;
 
@@ -57,6 +58,15 @@ public final class ExecutingTest
 
    public boolean isShouldIgnoreMockingCallbacks() { return shouldIgnoreMockingCallbacks; }
    public void setShouldIgnoreMockingCallbacks(boolean flag) { shouldIgnoreMockingCallbacks = flag; }
+
+   public boolean isProceedingIntoRealImplementation()
+   {
+      boolean result = proceeding;
+      proceeding = false;
+      return result;
+   }
+
+   public void markAsProceedingIntoRealImplementation() { proceeding = true; }
 
    public void clearRecordAndReplayForVerifications()
    {
