@@ -3,7 +3,7 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-   <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId><version>0.999.15</version>
+   <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit-coverage</artifactId><version>0.999.16</version>
    <name>JMockit Coverage</name>
 
    <description>
@@ -51,6 +51,10 @@
             <directory>../main/classes</directory>
             <includes>
                <include>mockit/external/asm4/*.class</include>
+               <include>mockit/internal/util/StackTrace.class</include>
+               <include>mockit/internal/state/TestRun.class</include>
+               <include>mockit/internal/state/MockFixture.class</include>
+               <include>mockit/internal/startup/Startup.class</include>
             </includes>
          </resource>
       </resources>

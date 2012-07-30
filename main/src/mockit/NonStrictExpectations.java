@@ -30,7 +30,7 @@ public abstract class NonStrictExpectations extends Expectations
     * recorded will be {@linkplain #notStrict() non-strict} by default.
     *
     * @see #NonStrictExpectations(Object...)
-    * @see #NonStrictExpectations(int, Object...)
+    * @see #NonStrictExpectations(Integer, Object...)
     */
    protected NonStrictExpectations() {}
 
@@ -42,7 +42,7 @@ public abstract class NonStrictExpectations extends Expectations
     * Tutorial</a>
     *
     * @see #NonStrictExpectations()
-    * @see #NonStrictExpectations(int, Object...)
+    * @see #NonStrictExpectations(Integer, Object...)
     */
    protected NonStrictExpectations(Object... classesOrObjectsToBePartiallyMocked)
    {
@@ -50,8 +50,8 @@ public abstract class NonStrictExpectations extends Expectations
    }
 
    /**
-    * Identical to the corresponding super-constructor {@link Expectations#Expectations(int, Object...)}, except that
-    * all expectations recorded will be {@linkplain #notStrict() non-strict} by default.
+    * Identical to the corresponding super-constructor {@link Expectations#Expectations(Integer, Object...)}, except
+    * that all expectations recorded will be {@linkplain #notStrict() non-strict} by default.
     * <p/>
     * The effect of specifying a number of iterations larger than 1 (one) is equivalent to multiplying by that number
     * the lower and upper invocation count limits for each invocation inside the expectation block.

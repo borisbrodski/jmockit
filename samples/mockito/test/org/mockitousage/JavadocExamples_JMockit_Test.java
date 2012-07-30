@@ -427,7 +427,7 @@ public final class JavadocExamples_JMockit_Test
       }};
    }
 
-   @Test // Uses of JMockit API: 2
+   @Ignore @Test // Uses of JMockit API: 2
    public void capturingArgumentForVerification(final MockedClass mock)
    {
       mock.doSomething(new Person("John"));

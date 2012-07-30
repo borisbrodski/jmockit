@@ -62,12 +62,6 @@
          <scope>test</scope>
       </dependency>
 
-      <!-- Jukito (relies on Mockito 1.8.5 for mocking, and on Guice 3.0 for injection) -->
-      <dependency>
-         <groupId>org.jukito</groupId><artifactId>jukito</artifactId><version>1.1</version>
-         <scope>test</scope>
-      </dependency>
-
       <!-- Unitils Mock -->
       <dependency>
          <groupId>org.unitils</groupId><artifactId>unitils-mock</artifactId><version>3.3</version>

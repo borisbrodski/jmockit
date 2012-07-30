@@ -1980,7 +1980,7 @@
       <option name="METHOD_NAME" value="" />
       <option name="GROUP_NAME" value="" />
       <option name="TEST_OBJECT" value="PATTERN" />
-      <option name="VM_PARAMETERS" value="-ea -Djmockit-mockParameters=annotated" />
+      <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="OUTPUT_DIRECTORY" value="" />
@@ -2159,17 +2159,6 @@
         <root url="jar://$PROJECT_DIR$/jmockit.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: aopalliance:aopalliance:1.0">
-      <CLASSES>
-        <root url="jar://E:/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://E:/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://E:/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: cglib:cglib-nodep:2.1_3">
       <CLASSES>
         <root url="jar://E:/.m2/repository/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar!/" />
@@ -2201,28 +2190,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://E:/.m2/repository/com/beust/jcommander/1.12/jcommander-1.12-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.google.inject.extensions:guice-assistedinject:3.0">
-      <CLASSES>
-        <root url="jar://E:/.m2/repository/com/google/inject/extensions/guice-assistedinject/3.0/guice-assistedinject-3.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://E:/.m2/repository/com/google/inject/extensions/guice-assistedinject/3.0/guice-assistedinject-3.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://E:/.m2/repository/com/google/inject/extensions/guice-assistedinject/3.0/guice-assistedinject-3.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.google.inject:guice:3.0">
-      <CLASSES>
-        <root url="jar://E:/.m2/repository/com/google/inject/guice/3.0/guice-3.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://E:/.m2/repository/com/google/inject/guice/3.0/guice-3.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://E:/.m2/repository/com/google/inject/guice/3.0/guice-3.0-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: commons-collections:commons-collections:3.2">
@@ -2267,17 +2234,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://E:/.m2/repository/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: javax.inject:javax.inject:1">
-      <CLASSES>
-        <root url="jar://E:/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://E:/.m2/repository/javax/inject/javax.inject/1/javax.inject-1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://E:/.m2/repository/javax/inject/javax.inject/1/javax.inject-1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: javax.mail:mail:1.4">
@@ -2500,17 +2456,6 @@
         <root url="jar://E:/.m2/repository/org/jmock/jmock/2.5.1/jmock-2.5.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.jukito:jukito:1.1">
-      <CLASSES>
-        <root url="jar://E:/.m2/repository/org/jukito/jukito/1.1/jukito-1.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/jukito/jukito/1.1/jukito-1.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://E:/.m2/repository/org/jukito/jukito/1.1/jukito-1.1-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: org.mockito:mockito-all:1.9.0">
       <CLASSES>
         <root url="jar://E:/.m2/repository/org/mockito/mockito-all/1.9.0/mockito-all-1.9.0.jar!/" />
@@ -2520,17 +2465,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://E:/.m2/repository/org/mockito/mockito-all/1.9.0/mockito-all-1.9.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.mockito:mockito-core:1.8.5">
-      <CLASSES>
-        <root url="jar://E:/.m2/repository/org/mockito/mockito-core/1.8.5/mockito-core-1.8.5.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/mockito/mockito-core/1.8.5/mockito-core-1.8.5-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://E:/.m2/repository/org/mockito/mockito-core/1.8.5/mockito-core-1.8.5-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.objenesis:objenesis:1.0">

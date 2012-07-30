@@ -267,7 +267,7 @@ abstract class Invocations
 
    /**
     * Adds a custom argument matcher for a parameter in the current expectation.
-    * This works just like {@link #with(T, Object)}, but attempting to discover the argument type from the supplied
+    * This works just like {@link #with(Object, Object)}, but attempting to discover the argument type from the supplied
     * <em>Hamcrest</em> argument matcher, when applicable.
     *
     * @param argumentMatcher an instance of a class implementing the {@code org.hamcrest.Matcher} interface, <em>or</em>

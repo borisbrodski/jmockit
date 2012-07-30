@@ -419,6 +419,20 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withCapture()">withCapture</a></strong>()</code>
+<div class="block">Creates a value object for the associated parameter into which to capture the argument received by the first
+ matching invocation (if any) at replay time.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withCapture(java.util.List)">withCapture</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;valueHolderForMultipleInvocations)</code>
+<div class="block">Creates a new argument matcher for the current expectation which will, for each matching invocation,
+ <em>capture</em> the received argument values, adding them to the given list.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>protected double</code></td>
 <td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withEqual(double, double)">withEqual</a></strong>(double&nbsp;value,
          double&nbsp;delta)</code>
@@ -437,9 +451,8 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <tr class="altColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#withEqual(T)">withEqual</a></strong>(T&nbsp;arg)</code>
-<div class="block">When called as argument for a method/constructor invocation in the recording or verification phase of a test,
- creates a new matcher that will check if the given value is <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang"><code>equal</code></a> to the
- corresponding invocation argument in the replay phase.</div>
+<div class="block">When passed as argument for an expectation, creates a new matcher that will check if the given value is
+ <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang"><code>equal</code></a> to the corresponding argument received by a matching invocation.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -1148,7 +1161,7 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <h4>with</h4>
 <pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;with(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;argumentMatcher)</pre>
 <div class="block">Adds a custom argument matcher for a parameter in the current expectation.
- This works just like <code>#with(T, Object)</code>, but attempting to discover the argument type from the supplied
+ This works just like <a href="../mockit/VerificationsInOrder.html#with(T, java.lang.Object)"><code>with(Object, Object)</code></a>, but attempting to discover the argument type from the supplied
  <em>Hamcrest</em> argument matcher, when applicable.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>argumentMatcher</code> - an instance of a class implementing the <code>org.hamcrest.Matcher</code> interface, <em>or</em>
  an instance of an invocation handler class containing an appropriate invocation handler method</dd>
@@ -1211,6 +1224,33 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <dt><span class="strong">Returns:</span></dt><dd>the input argument</dd></dl>
 </li>
 </ul>
+<a name="withCapture()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withCapture</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withCapture()</pre>
+<div class="block">Creates a value object for the associated parameter into which to capture the argument received by the first
+ matching invocation (if any) at replay time.</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>a new instance of type <code>T</code>, into which the instance field values of the captured argument received
+ by a matching invocation will be set</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#withCapture(java.util.List)"><code>withCapture(java.util.List)</code></a></dd></dl>
+</li>
+</ul>
+<a name="withCapture(java.util.List)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withCapture</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withCapture(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;valueHolderForMultipleInvocations)</pre>
+<div class="block">Creates a new argument matcher for the current expectation which will, for each matching invocation,
+ <em>capture</em> the received argument values, adding them to the given list.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>valueHolderForMultipleInvocations</code> - list (usually empty) of value objects into which the arguments received
+                                          by matching invocations will be added</dd>
+<dt><span class="strong">Returns:</span></dt><dd>always <code>null</code></dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#withCapture()"><code>withCapture()</code></a></dd></dl>
+</li>
+</ul>
 <a name="withEqual(double, double)">
 <!--   -->
 </a>
@@ -1248,9 +1288,8 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <li class="blockList">
 <h4>withEqual</h4>
 <pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withEqual(T&nbsp;arg)</pre>
-<div class="block">When called as argument for a method/constructor invocation in the recording or verification phase of a test,
- creates a new matcher that will check if the given value is <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang"><code>equal</code></a> to the
- corresponding invocation argument in the replay phase.
+<div class="block">When passed as argument for an expectation, creates a new matcher that will check if the given value is
+ <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang"><code>equal</code></a> to the corresponding argument received by a matching invocation.
  <p/>
  The matcher is added to the end of the list of argument matchers for the invocation being recorded/verified.
  It cannot be reused for a different parameter.

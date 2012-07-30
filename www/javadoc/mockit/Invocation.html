@@ -365,8 +365,9 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
                              replacement, then this method should be called with no values</dd>
 <dt><span class="strong">Returns:</span></dt><dd>the same value returned by the real method, if any</dd>
 <dt><span class="strong">Throws:</span></dt>
-<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/UnsupportedOperationException.html?is-external=true" title="class or interface in java.lang">UnsupportedOperationException</a></code> - if attempting to proceed into a mocked constructor with replacement
- arguments</dd></dl>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/UnsupportedOperationException.html?is-external=true" title="class or interface in java.lang">UnsupportedOperationException</a></code> - if attempting to proceed into a mocked method which does not belong to an
+ <a href="../mockit/Injectable.html" title="annotation in mockit">injectable mocked type</a> nor to a <a href="../mockit/Expectations.html#Expectations(java.lang.Object...)">dynamic
+ partially mocked type</a>, or into a mocked constructor with replacement arguments</dd></dl>
 </li>
 </ul>
 <a name="setMaxInvocations(int)">

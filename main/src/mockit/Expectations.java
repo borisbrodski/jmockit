@@ -73,7 +73,7 @@ import mockit.internal.expectations.*;
  * <li>
  * There are additional constructors which provide other features:
  * {@linkplain #Expectations(Object...) dynamic partial mocking}, and
- * {@linkplain #Expectations(int, Object...) iterated invocations}.
+ * {@linkplain #Expectations(Integer, Object...) iterated invocations}.
  * </li>
  * </ul>
  * <p/>
@@ -138,7 +138,7 @@ public abstract class Expectations extends Invocations
     * Each and every such call made from inside the expectation block is recorded.
     *
     * @see #Expectations(Object...)
-    * @see #Expectations(int, Object...)
+    * @see #Expectations(Integer, Object...)
     */
    protected Expectations()
    {
@@ -173,7 +173,7 @@ public abstract class Expectations extends Invocations
     * interface, or if given a value/instance of such a type
     * 
     * @see #Expectations()
-    * @see #Expectations(int, Object...)
+    * @see #Expectations(Integer, Object...)
     */
    protected Expectations(Object... classesOrObjectsToBePartiallyMocked)
    {

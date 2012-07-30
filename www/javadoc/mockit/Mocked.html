@@ -85,21 +85,29 @@ public @interface <span class="strong">Mocked</span></pre>
 <div class="block">Indicates an instance <em>field</em> or test method <em>parameter</em> of a <em>mocked type</em> whose value will be
  a <em>mocked instance</em>.
  Such fields or parameters can be of any type, except for primitive and array types.
- The declared type of the <em>mock field</em> or <em>mock parameter</em> is the <em>mocked type</em> (unless
- <a href="../mockit/Mocked.html#realClassName()">specified otherwise</a>).
+ The declared type of the <em>mock field</em> or <em>mock parameter</em> is taken to be the mocked type, unless
+ <a href="../mockit/Mocked.html#realClassName()">specified otherwise</a>.
  <p/>
  For the duration of each test where the mocked type is in scope, all new instances of that type, as well as those
  previously created, will also be mocked.
+ When the mocked type is a class, all super-classes up to but not including <code>java.lang.Object</code> are also mocked.
  <em>Static methods</em> and <em>constructors</em> belonging to a mocked class type are mocked as well, just like
- instance methods.
+ instance methods; such methods can even be <code>final</code>, <code>private</code>, or <code>native</code>.
+ <p/>
+ When a method or constructor is mocked, an invocation does not result in the execution of the original code, but in a
+ (generated) call into JMockit, which then responds with either a default or a <em>recorded</em> result (or with a
+ constraint violation, if the invocation is deemed to be unexpected - which depends on a few factors discussed
+ elsewhere).
+ <p/>
  Static <em>class initializers</em> (including assignments to static fields) of a mocked class are <em>not</em>
- stubbed out by default, but they will be if <a href="../mockit/Mocked.html#stubOutClassInitialization()">specified</a>.
+ stubbed out, unless <a href="../mockit/Mocked.html#stubOutClassInitialization()">specified otherwise</a>.
  <p/>
- In the case of an instance field, it can be declared in a test class, in a super-class of a test class, or in an
+ An instance mock <em>field</em> can be declared in a test class, in a super-class of a test class, or in an
  <a href="../mockit/Expectations.html" title="class in mockit"><code>Expectations</code></a> subclass.
- In the case of a parameter, it can only be declared in a test method.
+ A mock <em>parameter</em>, on the other hand, can only be declared as a test method parameter (in JUnit or TestNG
+ tests).
  <p/>
- Notice that not only a concrete <code>Expectations</code> subclass used in specific tests can declare mock fields, but
+ Note that not only a concrete <code>Expectations</code> subclass used in specific tests can declare mock fields, but
  also any intermediate super-class in the inheritance hierarchy from <code>Expectations</code> to the "final" subclass.
  This can be used to define reusable <code>Expectations</code> subclasses, containing mock fields that are common to a
  whole group of tests.
@@ -110,40 +118,14 @@ public @interface <span class="strong">Mocked</span></pre>
  may define additional mock fields in specific <code>Expectations</code> subclasses.
  The same applies to mock parameters declared for the test method.
  <p/>
- Therefore, there are three possible scopes for mocked types, from larger to smaller: the whole test class, the test
- method, and the expectation block inside the test method. Some tests will use only one or two of these scopes, while
- others can take advantage of all three.
+ Normally, a new mocked instance gets created and assigned to a declared mock field automatically.
+ If needed, the test itself can provide the instance by declaring the mock field as <code>final</code> and explicitly
+ assigning it with the desired instance (even so, it will still be a <em>mocked</em> instance).
+ If no instance is necessary (perhaps because only static methods or constructors will be called), then this final
+ field can receive the <code>null</code> reference.
+ Mock parameters, on the other hand, will always receive a new mocked instance whenever the test method is executed by
+ the test runner.
  <p/>
- Usually, a mocked instance gets created and assigned to a declared mock field automatically, without the test code
- having to do anything.
- It is also possible, however, for the test itself to provide this instance, by declaring the field as <code>final</code>
- and assigning to it the desired instance.
- If no such instance is necessary because only static methods or constructors will be called, then this final field
- can receive the <code>null</code> reference.
- Mock parameters, on the other hand, will always receive a mocked argument whenever the test method is executed by the
- test runner.
- <p/>
- For each mocked type there is at least one <em>target class for mocking</em>, which is derived from the declared type
- of the mock field or parameter, or specified through an annotation attribute.
- By default, all methods (including those which are <code>static</code>, <code>final</code>, <code>private</code>, <code>abstract</code>,
- or <code>native</code>) and constructors in the target classes will be mocked.
- <p/>
- When a method or constructor is mocked, any invocations will not result in the execution of the original code, but
- only in a call back to JMockit; according to the current phase of execution for the test - <em>record</em>,
- <em>replay</em>, or <em>verify</em> - the appropriate action (do nothing, return a recorded value, etc.) will be
- taken.
- <p/>
- The following rules are applied when deriving target classes from the mocked type:
- <ol>
- <li>The type is a concrete or <em>enum</em> class: this class and all its super-classes up to but excluding
- <code>java.lang.Object</code> will be the target classes for mocking.</li>
- <li>The type is an <em>interface</em> or <em>annotation</em>: a
- <a href="http://download.oracle.com/javase/6/docs/api/java/lang/reflect/Proxy.html?is-external=true" title="class or interface in java.lang.reflect">dynamic proxy class</a> is created and used as the only target.
- </li>
- <li>The type is an <em>abstract class</em>: a concrete subclass is generated with mock implementations for the
- abstract methods in that class and in all of its super-classes (again, excluding <code>Object</code>); these super-classes
- are also targeted for mocking of non-abstract methods and constructors.</li>
- </ol>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#declaration">In the
  Tutorial</a></div>
 <dl><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Mocked.html#methods()"><code>methods</code></a>, 

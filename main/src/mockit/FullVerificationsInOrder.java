@@ -26,7 +26,7 @@ public abstract class FullVerificationsInOrder extends Verifications
     *
     * @see #FullVerificationsInOrder(int)
     * @see #FullVerificationsInOrder(Object...)
-    * @see #FullVerificationsInOrder(int, Object...)
+    * @see #FullVerificationsInOrder(Integer, Object...)
     */
    protected FullVerificationsInOrder()
    {
@@ -46,7 +46,7 @@ public abstract class FullVerificationsInOrder extends Verifications
     *
     * @see #FullVerificationsInOrder()
     * @see #FullVerificationsInOrder(Object...)
-    * @see #FullVerificationsInOrder(int, Object...)
+    * @see #FullVerificationsInOrder(Integer, Object...)
     */
    protected FullVerificationsInOrder(int numberOfIterations)
    {
@@ -65,7 +65,7 @@ public abstract class FullVerificationsInOrder extends Verifications
     *
     * @see #FullVerificationsInOrder()
     * @see #FullVerificationsInOrder(int)
-    * @see #FullVerificationsInOrder(int, Object...)
+    * @see #FullVerificationsInOrder(Integer, Object...)
     */
    protected FullVerificationsInOrder(Object... mockedTypesAndInstancesToVerify)
    {

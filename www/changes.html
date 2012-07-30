@@ -19,15 +19,21 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
-<p>Release <a href="http://code.google.com/p/jmockit/source/list?num=50&start=2069">0.999.16</a> (Jul 30, 2012):</p>
+<p>Release <a href="http://code.google.com/p/jmockit/source/list?num=55&start=2074">0.999.16</a> (Jul 30, 2012):</p>
 <ul>
    <li>
       <strong>Enhancement</strong>: <code class="annotation">@Mock</code> methods now also apply to the super-classes of
       the specified class to be mocked, when the latter doesn't define a matching method.
       This avoids the need to set up two or more separate mock classes when the methods to be method are defined in
       multiple levels of a class hierarchy.
+   </li>
+   <li>
+      <strong>Enhancement</strong>: Mock-ups for generic classes now can declare mock methods with parameters types
+      matching the generic argument types specified in the mocked type, instead of using <code>Object</code>.
+      This is still not supported when the mocked type is a generic interface, however.
+      See <a href="http://code.google.com/p/jmockit/issues/detail?id=229">issue 229</a>.
    </li>
    <li>
       <strong>Enhancement</strong>: Previously, when a <code class="type">Delegate</code> method invoked another mocked
@@ -65,7 +71,7 @@
    </li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release <a href="http://code.google.com/p/jmockit/source/list?num=41&start=2019">0.999.15</a> (Apr 30, 2012):</p>
 <ul>
@@ -88,8 +94,6 @@
       Also, applied a temporary workaround to avoid a NPE during path building (JMockit Coverage).
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release <a href="http://code.google.com/p/jmockit/source/list?num=52&start=1978">0.999.14</a> (Mar 30, 2012):</p>
 <ul>
