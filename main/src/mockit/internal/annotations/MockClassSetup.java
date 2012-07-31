@@ -23,7 +23,7 @@ public final class MockClassSetup
    private final Class<?> mockClass;
    private final AnnotatedMockMethods mockMethods;
    private final Instantiation instantiation;
-   private final MockingConfiguration mockingConfiguration;
+   private MockingConfiguration mockingConfiguration;
    private final Object mock;
    private boolean forStartupMock;
 
@@ -130,6 +130,7 @@ public final class MockClassSetup
 
          Class<?> superClass = realClass.getSuperclass();
          realClass = superClass == Object.class ? null : superClass;
+         mockingConfiguration = null;
       }
    }
 

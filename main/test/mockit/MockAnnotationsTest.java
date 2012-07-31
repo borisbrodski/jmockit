@@ -1027,4 +1027,23 @@ public final class MockAnnotationsTest
       for (Thread thread : threads) { thread.start(); }
       for (Thread thread : threads) { thread.join(); }
    }
+
+   @Test
+   public void stubOutMethodsInSpeciedClassButNotInBaseClass()
+   {
+      setUpMocks(MockSubclassWithStubbings.class);
+
+      // Stubbing applies to subclass:
+      assertEquals(123, new SubCollaborator(5).getValue());
+
+      // But not to base class:
+      assertEquals("123", Collaborator.doInternal());
+   }
+
+   @MockClass(realClass = SubCollaborator.class, stubs = {"(int)", "doInternal"})
+   static class MockSubclassWithStubbings
+   {
+      @Mock
+      int getValue() { return 123; }
+   }
 }
