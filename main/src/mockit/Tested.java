@@ -13,12 +13,12 @@ import java.lang.annotation.*;
  * <p/>
  * If the tested field is not {@code final} and its value remains {@code null} at the time a test method is about to be
  * executed, then a suitable instance of the tested class is created and assigned to the field.
- * The instantiation will only be attempted if the tested class has at least one constructor with the same accessibility
- * as the class: i.e. either a <em>public</em> constructor in a public class, or a <em>non-private</em> constructor in a
- * <em>non-public</em> class.
- * Constructor injection will take place, provided all of the constructor parameters (if any) can be satisfied with the
- * values of available {@linkplain Injectable injectable} fields and/or injectable test method parameters.
- * If the tested class has more than one satisfiable constructor, the one with most parameters is chosen.
+ * At this time, <em>constructor injection</em> will take place, provided all of the constructor parameters (if any) can
+ * be satisfied with the values of available {@linkplain Injectable injectable} fields and/or injectable test method
+ * parameters.
+ * If the tested class has multiple satisfiable constructors, the one with the most parameters <em>and</em> the
+ * widest accessibility (ie, first {@code public}, then {@code protected}, then <em>package-private</em>, and finally
+ * {@code private}) is chosen.
  * The matching between <em>injectable</em> fields/parameters and <em>constructor</em> parameters is done by
  * <em>type</em> when there is only one parameter of a given type; otherwise, by type <em>and name</em>.
  * <p/>

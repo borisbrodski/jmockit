@@ -147,7 +147,7 @@ public final class TestedClassInstantiations
       {
          testedClass = testedField.getType();
 
-         new ConstructorSearch().findSingleConstructorAccordingToClassVisibilityAndAvailableInjectables();
+         new ConstructorSearch().findSingleConstructorAccordingToAccessibilityAndAvailableInjectables();
 
          if (constructor == null) {
             throw new IllegalArgumentException(
@@ -178,21 +178,39 @@ public final class TestedClassInstantiations
             injectablesForConstructor = new ArrayList<MockedType>();
          }
 
-         void findSingleConstructorAccordingToClassVisibilityAndAvailableInjectables()
+         void findSingleConstructorAccordingToAccessibilityAndAvailableInjectables()
          {
             constructor = null;
-            boolean publicClass = isPublic(testedClass.getModifiers());
-            Constructor<?>[] constructors =
-               publicClass ? testedClass.getConstructors() : testedClass.getDeclaredConstructors();
+            Constructor<?>[] constructors = testedClass.getDeclaredConstructors();
+
+            Arrays.sort(constructors, new Comparator<Constructor<?>>() {
+               static final int ACCESS = PUBLIC + PROTECTED + PRIVATE;
+
+               public int compare(Constructor<?> c1, Constructor<?> c2)
+               {
+                  int m1 = ACCESS & c1.getModifiers();
+                  int m2 = ACCESS & c2.getModifiers();
+                  if (m1 == m2) return 0;
+                  if (m1 == PUBLIC) return -1;
+                  if (m2 == PUBLIC) return 1;
+                  if (m1 == PROTECTED) return -1;
+                  if (m2 == PROTECTED) return 1;
+                  if (m2 == PRIVATE) return -1;
+                  return 1;
+               }
+            });
 
             for (Constructor<?> c : constructors) {
-               if (publicClass || !isPrivate(c.getModifiers())) {
-                  List<MockedType> injectablesFound = findAvailableInjectablesForConstructor(c);
+               List<MockedType> injectablesFound = findAvailableInjectablesForConstructor(c);
 
-                  if (injectablesFound != null && injectablesFound.size() >= injectablesForConstructor.size()) {
-                     injectablesForConstructor = injectablesFound;
-                     constructor = c;
-                  }
+               if (
+                  injectablesFound != null &&
+                  (constructor == null ||
+                   c.getModifiers() == constructor.getModifiers() &&
+                   injectablesFound.size() >= injectablesForConstructor.size())
+               ) {
+                  injectablesForConstructor = injectablesFound;
+                  constructor = c;
                }
             }
          }

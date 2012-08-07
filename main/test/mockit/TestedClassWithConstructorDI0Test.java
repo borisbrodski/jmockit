@@ -7,7 +7,7 @@ package mockit;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-@SuppressWarnings({"UnusedParameters", "ClassWithTooManyFields"})
+@SuppressWarnings({"UnusedDeclaration", "UnusedParameters", "ClassWithTooManyFields"})
 public final class TestedClassWithConstructorDI0Test
 {
    public static final class TestedClassWithConstructorHavingPrimitiveParameter
@@ -34,6 +34,11 @@ public final class TestedClassWithConstructorDI0Test
       {
          assertEquals(1, l1);
          assertEquals(2, l2);
+      }
+
+      TestedClassWithConstructorHavingMultipleLongParameters(int i, long l1, long l2)
+      {
+         throw new RuntimeException("Must not occur");
       }
    }
 
