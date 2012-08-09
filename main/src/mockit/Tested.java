@@ -30,6 +30,9 @@ import java.lang.annotation.*;
  * Multiple target fields of the same type can be injected from separate injectables, provided each target field has the
  * same name as an available injectable field/parameter of that type.
  * Finally, if there is no matching and available injectable value for a given target field, it is left unassigned.
+ * <p/>
+ * Whenever constructor or field injection is used, the value of each injectable mock field/parameter goes into
+ * <em>at most one</em> matching constructor parameter or instance field of a tested class.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
