@@ -233,7 +233,7 @@ public final class TestedClassInstantiations
                String parameterName = ParameterNames.getName(testedClassDesc, constructorDesc, i);
                MockedType injectable = parameterName == null ? null : findInjectable(parameterName);
 
-               if (injectable == null) {
+               if (injectable == null || injectablesFound.contains(injectable)) {
                   return null;
                }
 
