@@ -192,5 +192,9 @@
             <exclusion><groupId>com.sun.jdmk</groupId><artifactId>jmxtools</artifactId></exclusion>
          </exclusions>
       </dependency>
+      <dependency>
+         <groupId>javax.inject</groupId><artifactId>javax.inject</artifactId><version>1</version>
+         <optional>true</optional>
+      </dependency>
    </dependencies>
 </project>

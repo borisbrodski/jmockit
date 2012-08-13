@@ -10,7 +10,7 @@ import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-public final class TestedClassWithFieldDIOnlyTest
+public final class TestedClassWithConstructorAndFieldDI2Test
 {
    public static final class TestedClass
    {
@@ -32,8 +32,11 @@ public final class TestedClassWithFieldDIOnlyTest
       }
    }
 
+   static final class TestedClass2 { boolean flag; }
+
    @Tested final TestedClass tested1 = new TestedClass(123, "test", null);
    @Tested TestedClass tested2;
+   @Tested TestedClass2 tested3;
 
    @Injectable Runnable action;
    @Injectable("-67") int i2; // must match the target field by name
@@ -102,7 +105,7 @@ public final class TestedClassWithFieldDIOnlyTest
 
    @Test
    public void verifyTestedObjectsInjectedFromParametersByName(
-      @Injectable("two") String text2, @Injectable("three") String text3)
+      @Injectable("two") String text2, @Injectable("three") String text3, @Injectable("true") boolean flag)
    {
       assertFieldsSetByTheConstructor();
 
@@ -111,5 +114,6 @@ public final class TestedClassWithFieldDIOnlyTest
       assertEquals("three", tested1.text3);
       assertEquals("two", tested2.text2);
       assertEquals("three", tested2.text3);
+      assertTrue(tested3.flag);
    }
 }

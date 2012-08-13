@@ -4,29 +4,80 @@
  */
 package mockit.internal.expectations.injection;
 
+import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
 
 import static java.lang.reflect.Modifier.*;
-import static mockit.internal.util.Utilities.*;
 
 import mockit.*;
 import mockit.internal.expectations.mocking.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
+import static mockit.internal.util.Utilities.*;
+
 public final class TestedClassInstantiations
 {
-   private final List<Field> testedFields;
+   private static final Class<? extends Annotation> INJECT_CLASS;
+
+   static
+   {
+      Class<? extends Annotation> injectClass;
+      ClassLoader cl = TestedClassInstantiations.class.getClassLoader();
+
+      try {
+         //noinspection unchecked
+         injectClass = (Class<? extends Annotation>) Class.forName("javax.inject.Inject", false, cl);
+      }
+      catch (ClassNotFoundException ignore) { injectClass = null; }
+
+      INJECT_CLASS = injectClass;
+   }
+
+   private final List<TestedField> testedFields;
    private final List<MockedType> injectableFields;
    private List<MockedType> injectables;
+   private TestedObjectCreation testedObjectCreation;
    private final List<MockedType> consumedInjectables;
    private Object testClassInstance;
    private Type typeOfInjectionPoint;
 
+   private final class TestedField
+   {
+      final Field testedField;
+      private List<Field> targetFields;
+
+      TestedField(Field field) { testedField = field; }
+
+      void instantiateWithInjectableValues()
+      {
+         Object testedObject = getFieldValue(testedField, testClassInstance);
+
+         if (testedObject == null && !isFinal(testedField.getModifiers())) {
+            if (testedObjectCreation == null) {
+               testedObjectCreation = new TestedObjectCreation();
+            }
+
+            testedObject = testedObjectCreation.create(testedField);
+            setFieldValue(testedField, testClassInstance, testedObject);
+         }
+
+         if (testedObject != null) {
+            FieldInjection fieldInjection = new FieldInjection(testedObject);
+
+            if (targetFields == null) {
+               targetFields = fieldInjection.findAllTargetInstanceFieldsInTestedClassHierarchy();
+            }
+
+            fieldInjection.injectIntoEligibleFields(targetFields);
+         }
+      }
+   }
+
    public TestedClassInstantiations()
    {
-      testedFields = new LinkedList<Field>();
+      testedFields = new LinkedList<TestedField>();
       injectableFields = new ArrayList<MockedType>();
       consumedInjectables = new ArrayList<MockedType>();
    }
@@ -39,7 +90,7 @@ public final class TestedClassInstantiations
 
       for (Field field : fieldsInTestClass) {
          if (field.isAnnotationPresent(Tested.class)) {
-            testedFields.add(field);
+            testedFields.add(new TestedField(field));
          }
          else {
             MockedType mockedType = new MockedType(field, true);
@@ -56,27 +107,12 @@ public final class TestedClassInstantiations
    public void assignNewInstancesToTestedFields(Object testClassInstance)
    {
       this.testClassInstance = testClassInstance;
+      testedObjectCreation = null;
 
       buildListsOfInjectables();
 
-      TestedObjectCreation testedObjectCreation = null;
-
-      for (Field testedField : testedFields) {
-         Object testedObject = getFieldValue(testedField, testClassInstance);
-
-         if (testedObject == null && !isFinal(testedField.getModifiers())) {
-            if (testedObjectCreation == null) {
-               testedObjectCreation = new TestedObjectCreation();
-            }
-
-            testedObject = testedObjectCreation.create(testedField);
-            setFieldValue(testedField, testClassInstance, testedObject);
-         }
-
-         if (testedObject != null) {
-            new FieldInjection().injectIntoFieldsThatAreStillNull(testedObject);
-         }
-
+      for (TestedField testedField : testedFields) {
+         testedField.instantiateWithInjectableValues();
          consumedInjectables.clear();
       }
    }
@@ -92,33 +128,6 @@ public final class TestedClassInstantiations
          injectables = new ArrayList<MockedType>(injectableFields);
          injectables.addAll(paramTypeRedefs.getInjectableParameters());
       }
-   }
-
-   private MockedType findInjectable(String nameOfInjectionPoint)
-   {
-      boolean multipleInjectablesFound = false;
-      MockedType found = null;
-
-      for (MockedType injectable : injectables) {
-         if (injectable.declaredType.equals(typeOfInjectionPoint)) {
-            if (found == null) {
-               found = injectable;
-            }
-            else {
-               multipleInjectablesFound = true;
-
-               if (nameOfInjectionPoint.equals(injectable.mockId)) {
-                  return injectable;
-               }
-            }
-         }
-      }
-
-      if (multipleInjectablesFound && !nameOfInjectionPoint.equals(found.mockId)) {
-         return null;
-      }
-
-      return found;
    }
 
    private Object getValueToInject(MockedType injectable)
@@ -147,7 +156,7 @@ public final class TestedClassInstantiations
       {
          testedClass = testedField.getType();
 
-         new ConstructorSearch().findSingleConstructorAccordingToAccessibilityAndAvailableInjectables();
+         new ConstructorSearch().findConstructorAccordingToAccessibilityAndAvailableInjectables();
 
          if (constructor == null) {
             throw new IllegalArgumentException(
@@ -178,10 +187,20 @@ public final class TestedClassInstantiations
             injectablesForConstructor = new ArrayList<MockedType>();
          }
 
-         void findSingleConstructorAccordingToAccessibilityAndAvailableInjectables()
+         void findConstructorAccordingToAccessibilityAndAvailableInjectables()
          {
             constructor = null;
             Constructor<?>[] constructors = testedClass.getDeclaredConstructors();
+
+            if (INJECT_CLASS != null) {
+               for (Constructor<?> c : constructors) {
+                  if (c.isAnnotationPresent(INJECT_CLASS)) {
+                     constructor = c;
+                     injectablesForConstructor = findAvailableInjectablesForConstructor(c);
+                     return;
+                  }
+               }
+            }
 
             Arrays.sort(constructors, new Comparator<Constructor<?>>() {
                static final int ACCESS = PUBLIC + PROTECTED + PRIVATE;
@@ -249,6 +268,33 @@ public final class TestedClassInstantiations
             }
 
             return injectablesFound;
+         }
+
+         private MockedType findInjectable(String nameOfInjectionPoint)
+         {
+            boolean multipleInjectablesFound = false;
+            MockedType found = null;
+
+            for (MockedType injectable : injectables) {
+               if (injectable.declaredType.equals(typeOfInjectionPoint)) {
+                  if (found == null) {
+                     found = injectable;
+                  }
+                  else {
+                     if (nameOfInjectionPoint.equals(injectable.mockId)) {
+                        return injectable;
+                     }
+
+                     multipleInjectablesFound = true;
+                  }
+               }
+            }
+
+            if (multipleInjectablesFound && !nameOfInjectionPoint.equals(found.mockId)) {
+               return null;
+            }
+
+            return found;
          }
 
          private MockedType hasInjectedValuesForVarargsParameter(int varargsParameterIndex)
@@ -344,36 +390,53 @@ public final class TestedClassInstantiations
 
    private final class FieldInjection
    {
-      void injectIntoFieldsThatAreStillNull(Object testedObject)
+      private final Object testedObject;
+
+      private FieldInjection(Object testedObject) { this.testedObject = testedObject; }
+
+      List<Field> findAllTargetInstanceFieldsInTestedClassHierarchy()
       {
-         injectIntoFieldsThatAreStillNull(testedObject.getClass(), testedObject);
+         List<Field> targetFields = new ArrayList<Field>();
+         Class<?> classWithFields = testedObject.getClass();
+
+         do {
+            Field[] fields = classWithFields.getDeclaredFields();
+
+            for (Field field : fields) {
+               if (isEligibleForInjection(field)) {
+                  targetFields.add(field);
+               }
+            }
+
+            classWithFields = classWithFields.getSuperclass();
+         }
+         while (isFromSameModuleOrSystemAsSuperClass(classWithFields));
+
+         return targetFields;
       }
 
-      private void injectIntoFieldsThatAreStillNull(Class<?> testedClass, Object testedObject)
+      void injectIntoEligibleFields(List<Field> targetFields)
       {
-         Class<?> superClass = testedClass.getSuperclass();
+         for (Field field : targetFields) {
+            if (notAssignedByConstructor(field)) {
+               Object injectableValue = getValueForFieldIfAvailable(targetFields, field);
 
-         if (isFromSameModuleOrSystemAsSuperClass(testedClass, superClass)) {
-            injectIntoFieldsThatAreStillNull(superClass, testedObject);
-         }
-
-         for (Field field : testedClass.getDeclaredFields()) {
-            if (isUninitialized(field, testedObject) && !isFinal(field.getModifiers())) {
-               Object value = getValueForFieldIfAvailable(field);
-
-               if (value != null) {
-                  setFieldValue(field, testedObject, value);
+               if (injectableValue != null) {
+                  setFieldValue(field, testedObject, injectableValue);
                }
             }
          }
       }
 
-      private boolean isFromSameModuleOrSystemAsSuperClass(Class<?> testedClass, Class<?> superClass)
+      private boolean isFromSameModuleOrSystemAsSuperClass(Class<?> superClass)
       {
          if (superClass.getClassLoader() == null) {
             return false;
          }
-         else if (superClass.getProtectionDomain() == testedClass.getProtectionDomain()) {
+
+         Class<?> testedClass = testedObject.getClass();
+
+         if (superClass.getProtectionDomain() == testedClass.getProtectionDomain()) {
             return true;
          }
 
@@ -392,9 +455,18 @@ public final class TestedClassInstantiations
          return p1 == p2 && p1 > 0 && className1.substring(0, p1).equals(className2.substring(0, p2));
       }
 
-      private boolean isUninitialized(Field field, Object fieldOwner)
+      private boolean isEligibleForInjection(Field field)
       {
-         Object fieldValue = getFieldValue(field, fieldOwner);
+         return !isFinal(field.getModifiers()) && notAssignedByConstructor(field);
+      }
+
+      private boolean notAssignedByConstructor(Field field)
+      {
+         if (INJECT_CLASS != null && field.isAnnotationPresent(INJECT_CLASS)) {
+            return true;
+         }
+
+         Object fieldValue = getFieldValue(field, testedObject);
 
          if (fieldValue == null) {
             return true;
@@ -411,14 +483,61 @@ public final class TestedClassInstantiations
          return fieldValue.equals(defaultValue);
       }
 
-      private Object getValueForFieldIfAvailable(Field fieldToBeInjected)
+      private Object getValueForFieldIfAvailable(List<Field> targetFields, Field fieldToBeInjected)
       {
          typeOfInjectionPoint = fieldToBeInjected.getGenericType();
-
          String targetFieldName = fieldToBeInjected.getName();
-         MockedType mockedType = findInjectable(targetFieldName);
+         MockedType mockedType;
+
+         if (withMultipleTargetFieldsOfSameType(targetFields, fieldToBeInjected)) {
+            mockedType = findInjectableByTypeAndName(targetFieldName);
+         }
+         else {
+            mockedType = findInjectableByTypeAndOptionallyName(targetFieldName);
+         }
 
          return mockedType == null ? null : getValueToInject(mockedType);
+      }
+
+      private boolean withMultipleTargetFieldsOfSameType(List<Field> targetFields, Field fieldToBeInjected)
+      {
+         for (Field targetField : targetFields) {
+            if (targetField != fieldToBeInjected && targetField.getGenericType().equals(typeOfInjectionPoint)) {
+               return true;
+            }
+         }
+
+         return false;
+      }
+
+      private MockedType findInjectableByTypeAndName(String targetFieldName)
+      {
+         for (MockedType injectable : injectables) {
+            if (injectable.declaredType.equals(typeOfInjectionPoint) && targetFieldName.equals(injectable.mockId)) {
+               return injectable;
+            }
+         }
+
+         return null;
+      }
+
+      private MockedType findInjectableByTypeAndOptionallyName(String targetFieldName)
+      {
+         MockedType found = null;
+
+         for (MockedType injectable : injectables) {
+            if (injectable.declaredType.equals(typeOfInjectionPoint)) {
+               if (targetFieldName.equals(injectable.mockId)) {
+                  return injectable;
+               }
+
+               if (found == null) {
+                  found = injectable;
+               }
+            }
+         }
+
+         return found;
       }
    }
 }
