@@ -256,7 +256,7 @@ final class CoverageModifier extends ClassVisitor
       @Override
       public void visitJumpInsn(int opcode, Label label)
       {
-         if (visitedLabels.contains(label)) {
+         if (lineData == null || visitedLabels.contains(label)) {
             assertFoundInCurrentLine = false;
             mw.visitJumpInsn(opcode, label);
             return;
@@ -483,7 +483,7 @@ final class CoverageModifier extends ClassVisitor
       @Override
       public final void visitJumpInsn(int opcode, Label label)
       {
-         if (visitedLabels.contains(label)) {
+         if (entryPoint == null || visitedLabels.contains(label)) {
             super.visitJumpInsn(opcode, label);
             return;
          }
