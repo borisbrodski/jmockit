@@ -403,7 +403,7 @@ public final class TestedClassInstantiations
             Field[] fields = classWithFields.getDeclaredFields();
 
             for (Field field : fields) {
-               if (isEligibleForInjection(field)) {
+               if (!isFinal(field.getModifiers())) {
                   targetFields.add(field);
                }
             }
@@ -415,17 +415,27 @@ public final class TestedClassInstantiations
          return targetFields;
       }
 
-      void injectIntoEligibleFields(List<Field> targetFields)
+      private boolean notAssignedByConstructor(Field field)
       {
-         for (Field field : targetFields) {
-            if (notAssignedByConstructor(field)) {
-               Object injectableValue = getValueForFieldIfAvailable(targetFields, field);
-
-               if (injectableValue != null) {
-                  setFieldValue(field, testedObject, injectableValue);
-               }
-            }
+         if (INJECT_CLASS != null && field.isAnnotationPresent(INJECT_CLASS)) {
+            return true;
          }
+
+         Object fieldValue = getFieldValue(field, testedObject);
+
+         if (fieldValue == null) {
+            return true;
+         }
+
+         Class<?> fieldType = field.getType();
+
+         if (!fieldType.isPrimitive()) {
+            return false;
+         }
+
+         Object defaultValue = DefaultValues.defaultValueForPrimitiveType(fieldType);
+
+         return fieldValue.equals(defaultValue);
       }
 
       private boolean isFromSameModuleOrSystemAsSuperClass(Class<?> superClass)
@@ -455,32 +465,17 @@ public final class TestedClassInstantiations
          return p1 == p2 && p1 > 0 && className1.substring(0, p1).equals(className2.substring(0, p2));
       }
 
-      private boolean isEligibleForInjection(Field field)
+      void injectIntoEligibleFields(List<Field> targetFields)
       {
-         return !isFinal(field.getModifiers()) && notAssignedByConstructor(field);
-      }
+         for (Field field : targetFields) {
+            if (notAssignedByConstructor(field)) {
+               Object injectableValue = getValueForFieldIfAvailable(targetFields, field);
 
-      private boolean notAssignedByConstructor(Field field)
-      {
-         if (INJECT_CLASS != null && field.isAnnotationPresent(INJECT_CLASS)) {
-            return true;
+               if (injectableValue != null) {
+                  setFieldValue(field, testedObject, injectableValue);
+               }
+            }
          }
-
-         Object fieldValue = getFieldValue(field, testedObject);
-
-         if (fieldValue == null) {
-            return true;
-         }
-
-         Class<?> fieldType = field.getType();
-
-         if (!fieldType.isPrimitive()) {
-            return false;
-         }
-
-         Object defaultValue = DefaultValues.defaultValueForPrimitiveType(fieldType);
-
-         return fieldValue.equals(defaultValue);
       }
 
       private Object getValueForFieldIfAvailable(List<Field> targetFields, Field fieldToBeInjected)
