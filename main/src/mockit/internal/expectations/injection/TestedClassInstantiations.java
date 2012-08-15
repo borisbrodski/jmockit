@@ -38,7 +38,6 @@ public final class TestedClassInstantiations
    private final List<TestedField> testedFields;
    private final List<MockedType> injectableFields;
    private List<MockedType> injectables;
-   private TestedObjectCreation testedObjectCreation;
    private final List<MockedType> consumedInjectables;
    private Object testClassInstance;
    private Type typeOfInjectionPoint;
@@ -53,18 +52,19 @@ public final class TestedClassInstantiations
       void instantiateWithInjectableValues()
       {
          Object testedObject = getFieldValue(testedField, testClassInstance);
+         boolean requiresJavaxInject = false;
 
          if (testedObject == null && !isFinal(testedField.getModifiers())) {
-            if (testedObjectCreation == null) {
-               testedObjectCreation = new TestedObjectCreation();
-            }
+            TestedObjectCreation testedObjectCreation = new TestedObjectCreation();
 
             testedObject = testedObjectCreation.create(testedField);
             setFieldValue(testedField, testClassInstance, testedObject);
+
+            requiresJavaxInject = testedObjectCreation.constructorAnnotatedWithJavaxInject;
          }
 
          if (testedObject != null) {
-            FieldInjection fieldInjection = new FieldInjection(testedObject);
+            FieldInjection fieldInjection = new FieldInjection(testedObject, requiresJavaxInject);
 
             if (targetFields == null) {
                targetFields = fieldInjection.findAllTargetInstanceFieldsInTestedClassHierarchy();
@@ -107,7 +107,6 @@ public final class TestedClassInstantiations
    public void assignNewInstancesToTestedFields(Object testClassInstance)
    {
       this.testClassInstance = testClassInstance;
-      testedObjectCreation = null;
 
       buildListsOfInjectables();
 
@@ -151,6 +150,7 @@ public final class TestedClassInstantiations
       private Constructor<?> constructor;
       private List<MockedType> injectablesForConstructor;
       private Type[] parameterTypes;
+      boolean constructorAnnotatedWithJavaxInject;
 
       Object create(Field testedField)
       {
@@ -190,13 +190,15 @@ public final class TestedClassInstantiations
          void findConstructorAccordingToAccessibilityAndAvailableInjectables()
          {
             constructor = null;
+
             Constructor<?>[] constructors = testedClass.getDeclaredConstructors();
 
             if (INJECT_CLASS != null && findSingleInjectAnnotatedConstructor(constructors)) {
-               return;
+               constructorAnnotatedWithJavaxInject = true;
             }
-
-            findSatisfiedConstructorWithMostParameters(constructors);
+            else {
+               findSatisfiedConstructorWithMostParameters(constructors);
+            }
          }
 
          private boolean findSingleInjectAnnotatedConstructor(Constructor<?>[] constructors)
@@ -409,8 +411,14 @@ public final class TestedClassInstantiations
    private final class FieldInjection
    {
       private final Object testedObject;
+      private final boolean requiresJavaxInject;
+      private boolean foundJavaxInject;
 
-      private FieldInjection(Object testedObject) { this.testedObject = testedObject; }
+      private FieldInjection(Object testedObject, boolean requiresJavaxInject)
+      {
+         this.testedObject = testedObject;
+         this.requiresJavaxInject = requiresJavaxInject;
+      }
 
       List<Field> findAllTargetInstanceFieldsInTestedClassHierarchy()
       {
@@ -430,37 +438,39 @@ public final class TestedClassInstantiations
          }
          while (isFromSameModuleOrSystemAsSuperClass(classWithFields));
 
+         discardFieldsNotAnnotatedWithJavaxInjectIfAtLeastOneIsAnnotated(targetFields);
+
          return targetFields;
       }
 
       private boolean isEligibleForInjection(Field field)
       {
          if (isFinal(field.getModifiers())) return false;
+         if (requiresJavaxInject) return isAnnotatedWithJavaxInject(field);
          boolean notStatic = !isStatic(field.getModifiers());
-         return INJECT_CLASS == null ? notStatic : notStatic || field.isAnnotationPresent(INJECT_CLASS);
+         return INJECT_CLASS == null ? notStatic : isAnnotatedWithJavaxInject(field) || notStatic;
       }
 
-      private boolean notAssignedByConstructor(Field field)
+      private boolean isAnnotatedWithJavaxInject(Field field)
       {
-         if (INJECT_CLASS != null && field.isAnnotationPresent(INJECT_CLASS)) {
-            return true;
+         boolean annotated = field.isAnnotationPresent(INJECT_CLASS);
+         if (annotated) foundJavaxInject = true;
+         return annotated;
+      }
+
+      private void discardFieldsNotAnnotatedWithJavaxInjectIfAtLeastOneIsAnnotated(List<Field> targetFields)
+      {
+         if (!requiresJavaxInject && foundJavaxInject) {
+            ListIterator<Field> itr = targetFields.listIterator();
+
+            while (itr.hasNext()) {
+               Field targetField = itr.next();
+
+               if (!targetField.isAnnotationPresent(INJECT_CLASS)) {
+                  itr.remove();
+               }
+            }
          }
-
-         Object fieldValue = getFieldValue(field, testedObject);
-
-         if (fieldValue == null) {
-            return true;
-         }
-
-         Class<?> fieldType = field.getType();
-
-         if (!fieldType.isPrimitive()) {
-            return false;
-         }
-
-         Object defaultValue = DefaultValues.defaultValueForPrimitiveType(fieldType);
-
-         return fieldValue.equals(defaultValue);
       }
 
       private boolean isFromSameModuleOrSystemAsSuperClass(Class<?> superClass)
@@ -501,6 +511,29 @@ public final class TestedClassInstantiations
                }
             }
          }
+      }
+
+      private boolean notAssignedByConstructor(Field field)
+      {
+         if (INJECT_CLASS != null && field.isAnnotationPresent(INJECT_CLASS)) {
+            return true;
+         }
+
+         Object fieldValue = getFieldValue(field, testedObject);
+
+         if (fieldValue == null) {
+            return true;
+         }
+
+         Class<?> fieldType = field.getType();
+
+         if (!fieldType.isPrimitive()) {
+            return false;
+         }
+
+         Object defaultValue = DefaultValues.defaultValueForPrimitiveType(fieldType);
+
+         return fieldValue.equals(defaultValue);
       }
 
       private Object getValueForFieldIfAvailable(List<Field> targetFields, Field fieldToBeInjected)

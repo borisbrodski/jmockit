@@ -19,7 +19,7 @@ public final class StandardDITest
       @Inject private Collaborator collaborator1;
       Collaborator collaborator2;
       @Inject int someValue = 123; // will get assigned even if not null
-      @SuppressWarnings("UnusedDeclaration") private int anotherValue;
+      @Inject private int anotherValue;
 
       @Inject public TestedClass(Collaborator collaborator) { this.collaborator = collaborator; }
 
@@ -27,17 +27,32 @@ public final class StandardDITest
       public TestedClass(Collaborator collaborator, int anotherValue) { throw new RuntimeException("Must not occur"); }
    }
 
-   static final class TestedClassWithNoAnnotatedConstructor { @Inject int value; }
-
    interface Collaborator {}
 
    @Tested TestedClass tested1;
+   @Injectable Collaborator collaborator; // for constructor injection
+
+   static final class TestedClassWithNoAnnotatedConstructor
+   {
+      @Inject int value;
+      @Inject String aText;
+      String anotherText;
+   }
+
    @Tested TestedClassWithNoAnnotatedConstructor tested2;
 
-   @Test
-   public void invokeInjectAnnotatedConstructorOnly(@Injectable Collaborator mock, @Injectable("45") int someValue)
+   public static class TestedClassWithInjectOnConstructorOnly
    {
-      assertSame(mock, tested1.collaborator);
+      String name;
+      @Inject public TestedClassWithInjectOnConstructorOnly() {}
+   }
+
+   @Tested TestedClassWithInjectOnConstructorOnly tested3;
+
+   @Test
+   public void invokeInjectAnnotatedConstructorOnly(@Injectable("45") int someValue)
+   {
+      assertSame(collaborator, tested1.collaborator);
       assertNull(tested1.collaborator1);
       assertNull(tested1.collaborator2);
       assertEquals(45, tested1.someValue);
@@ -47,14 +62,13 @@ public final class StandardDITest
    }
 
    @Test
-   public void assignInjectAnnotatedFieldsAsWellNonAnnotatedOnes(
-      @Injectable Collaborator collaborator, // for constructor injection
+   public void assignInjectAnnotatedFieldsWhileIgnoringNonAnnotatedOnes(
       @Injectable Collaborator collaborator2, @Injectable Collaborator collaborator1,
       @Injectable("45") int anotherValue, @Injectable("67") int notToBeUsed)
    {
       assertSame(collaborator, tested1.collaborator);
       assertSame(collaborator1, tested1.collaborator1);
-      assertSame(collaborator2, tested1.collaborator2);
+      assertNull(tested1.collaborator2);
       assertEquals(123, tested1.someValue);
       assertEquals(45, tested1.anotherValue);
 
@@ -62,17 +76,23 @@ public final class StandardDITest
    }
 
    @Test
-   public void assignAnnotatedFieldEvenIfTestedClassHasNoAnnotatedConstructor(
-      @Injectable Collaborator collaborator, @Injectable("123") int value)
+   public void assignAnnotatedFieldEvenIfTestedClassHasNoAnnotatedConstructor(@Injectable("123") int value)
    {
       assertEquals(123, tested2.value);
    }
 
    @Test
-   public void assignAnnotatedStaticFieldDuringFieldInjection(
-      @Injectable Collaborator collaborator, @Injectable Runnable action)
+   public void assignAnnotatedStaticFieldDuringFieldInjection(@Injectable Runnable action)
    {
       assertSame(action, TestedClass.globalAction);
       assertEquals(0, tested2.value);
+   }
+
+   @Test
+   public void onlyConsiderAnnotatedFieldsForInjection(@Injectable("Abc") String text1, @Injectable("XY") String text2)
+   {
+      assertEquals(text1, tested2.aText);
+      assertNull(tested2.anotherText);
+      assertNull(tested3.name);
    }
 }
