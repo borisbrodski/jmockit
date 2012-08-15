@@ -13,6 +13,8 @@ public final class StandardDITest
 {
    public static class TestedClass
    {
+      @Inject static Runnable globalAction;
+
       private final Collaborator collaborator;
       @Inject private Collaborator collaborator1;
       Collaborator collaborator2;
@@ -25,18 +27,23 @@ public final class StandardDITest
       public TestedClass(Collaborator collaborator, int anotherValue) { throw new RuntimeException("Must not occur"); }
    }
 
+   static final class TestedClassWithNoAnnotatedConstructor { @Inject int value; }
+
    interface Collaborator {}
 
-   @Tested TestedClass tested;
+   @Tested TestedClass tested1;
+   @Tested TestedClassWithNoAnnotatedConstructor tested2;
 
    @Test
    public void invokeInjectAnnotatedConstructorOnly(@Injectable Collaborator mock, @Injectable("45") int someValue)
    {
-      assertSame(mock, tested.collaborator);
-      assertNull(tested.collaborator1);
-      assertNull(tested.collaborator2);
-      assertEquals(45, tested.someValue);
-      assertEquals(0, tested.anotherValue);
+      assertSame(mock, tested1.collaborator);
+      assertNull(tested1.collaborator1);
+      assertNull(tested1.collaborator2);
+      assertEquals(45, tested1.someValue);
+      assertEquals(0, tested1.anotherValue);
+
+      assertEquals(45, tested2.value);
    }
 
    @Test
@@ -45,10 +52,27 @@ public final class StandardDITest
       @Injectable Collaborator collaborator2, @Injectable Collaborator collaborator1,
       @Injectable("45") int anotherValue, @Injectable("67") int notToBeUsed)
    {
-      assertSame(collaborator, tested.collaborator);
-      assertSame(collaborator1, tested.collaborator1);
-      assertSame(collaborator2, tested.collaborator2);
-      assertEquals(123, tested.someValue);
-      assertEquals(45, tested.anotherValue);
+      assertSame(collaborator, tested1.collaborator);
+      assertSame(collaborator1, tested1.collaborator1);
+      assertSame(collaborator2, tested1.collaborator2);
+      assertEquals(123, tested1.someValue);
+      assertEquals(45, tested1.anotherValue);
+
+      assertEquals(45, tested2.value);
+   }
+
+   @Test
+   public void assignAnnotatedFieldEvenIfTestedClassHasNoAnnotatedConstructor(
+      @Injectable Collaborator collaborator, @Injectable("123") int value)
+   {
+      assertEquals(123, tested2.value);
+   }
+
+   @Test
+   public void assignAnnotatedStaticFieldDuringFieldInjection(
+      @Injectable Collaborator collaborator, @Injectable Runnable action)
+   {
+      assertSame(action, TestedClass.globalAction);
+      assertEquals(0, tested2.value);
    }
 }

@@ -192,16 +192,34 @@ public final class TestedClassInstantiations
             constructor = null;
             Constructor<?>[] constructors = testedClass.getDeclaredConstructors();
 
-            if (INJECT_CLASS != null) {
-               for (Constructor<?> c : constructors) {
-                  if (c.isAnnotationPresent(INJECT_CLASS)) {
+            if (INJECT_CLASS != null && findSingleInjectAnnotatedConstructor(constructors)) {
+               return;
+            }
+
+            findSatisfiedConstructorWithMostParameters(constructors);
+         }
+
+         private boolean findSingleInjectAnnotatedConstructor(Constructor<?>[] constructors)
+         {
+            for (Constructor<?> c : constructors) {
+               if (c.isAnnotationPresent(INJECT_CLASS)) {
+                  List<MockedType> injectablesFound = findAvailableInjectablesForConstructor(c);
+
+                  if (injectablesFound != null) {
+                     injectablesForConstructor = injectablesFound;
                      constructor = c;
-                     injectablesForConstructor = findAvailableInjectablesForConstructor(c);
-                     return;
+                     return true;
                   }
+
+                  break;
                }
             }
 
+            return false;
+         }
+
+         private void findSatisfiedConstructorWithMostParameters(Constructor<?>[] constructors)
+         {
             Arrays.sort(constructors, new Comparator<Constructor<?>>() {
                static final int ACCESS = PUBLIC + PROTECTED + PRIVATE;
 
@@ -403,7 +421,7 @@ public final class TestedClassInstantiations
             Field[] fields = classWithFields.getDeclaredFields();
 
             for (Field field : fields) {
-               if (!isFinal(field.getModifiers())) {
+               if (isEligibleForInjection(field)) {
                   targetFields.add(field);
                }
             }
@@ -413,6 +431,13 @@ public final class TestedClassInstantiations
          while (isFromSameModuleOrSystemAsSuperClass(classWithFields));
 
          return targetFields;
+      }
+
+      private boolean isEligibleForInjection(Field field)
+      {
+         if (isFinal(field.getModifiers())) return false;
+         boolean notStatic = !isStatic(field.getModifiers());
+         return INJECT_CLASS == null ? notStatic : notStatic || field.isAnnotationPresent(INJECT_CLASS);
       }
 
       private boolean notAssignedByConstructor(Field field)

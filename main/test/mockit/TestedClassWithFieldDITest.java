@@ -11,10 +11,10 @@ public final class TestedClassWithFieldDITest
 {
    public static class TestedClass
    {
-      protected final int i;
+      static Runnable globalAction;
 
-      // Suppose this is injected by some DI framework or Java EE container:
-      @SuppressWarnings("UnusedDeclaration") protected Dependency dependency;
+      protected final int i;
+      protected Dependency dependency;
 
       public TestedClass() { i = -1; }
       public TestedClass(int i) { this.i = i; }
@@ -45,5 +45,11 @@ public final class TestedClassWithFieldDITest
    {
       assertEquals(123, tested.i);
       assertSame(dependency, tested.dependency);
+   }
+
+   @Test
+   public void ignoreStaticFieldsWhenDoingFieldInjection(@Injectable Runnable action)
+   {
+      assertNull(TestedClass.globalAction);
    }
 }
