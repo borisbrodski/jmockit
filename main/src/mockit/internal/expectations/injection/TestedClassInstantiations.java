@@ -234,10 +234,9 @@ public final class TestedClassInstantiations
                   if (injectablesFound != null) {
                      injectablesForConstructor = injectablesFound;
                      constructor = c;
-                     return true;
                   }
 
-                  break;
+                  return true;
                }
             }
 
