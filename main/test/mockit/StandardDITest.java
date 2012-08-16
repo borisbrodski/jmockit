@@ -4,6 +4,7 @@
  */
 package mockit;
 
+import java.util.*;
 import javax.inject.*;
 
 import org.junit.*;
@@ -27,7 +28,7 @@ public final class StandardDITest
       public TestedClass(Collaborator collaborator, int anotherValue) { throw new RuntimeException("Must not occur"); }
    }
 
-   interface Collaborator {}
+   class Collaborator { boolean b = true; }
 
    @Tested TestedClass tested1;
    @Injectable Collaborator collaborator; // for constructor injection
@@ -126,21 +127,55 @@ public final class StandardDITest
    {
       final Collaborator collaborator1;
       final Collaborator collaborator2;
+      final List<Collaborator> optionalCollaborators = new ArrayList<Collaborator>();
+      @Inject Provider<String> nameProvider;
 
       @Inject TestedClassWithVarargsParameterForProviders(Provider<Collaborator>... collaborators)
       {
-         assertTrue(collaborators.length > 0);
+         int n = collaborators.length;
+         assertTrue(n > 1);
+
          collaborator1 = collaborators[0].get();
-         collaborator2 = collaborators.length > 1 ? collaborators[1].get() : null;
+         assertSame(collaborator1, collaborators[0].get()); // default (singleton)
+
+         collaborator2 = collaborators[1].get();
+         assertNull(collaborators[1].get()); // recorded
+
+         if (n > 2) {
+            Collaborator col3 = collaborators[2].get();
+            optionalCollaborators.add(col3);
+         }
       }
    }
 
    @Tested TestedClassWithVarargsParameterForProviders tested5;
+   @Injectable Provider<Collaborator> collaboratorProvider;
+
+   @Before
+   public void configureProviderUsedByConstructorOfTestedClass()
+   {
+      new NonStrictExpectations() {
+         @Injectable Collaborator col3;
+
+         {
+            collaboratorProvider.get(); result = col3; result = null;
+         }
+      };
+   }
 
    @Test
-   public void supportVarargsParameterWithProviders(@Injectable Collaborator col2)
+   public void supportVarargsParameterWithProviders(
+      @Injectable Collaborator col3, @Injectable final Provider<String> nameProvider)
    {
+      final String[] names = {"John", "Mary"}; // TODO: add suport for using Provider<T> with "result" field
+      new NonStrictExpectations() {{ nameProvider.get(); result = "John"/*names*/; result = "Mary"; }};
+
       assertSame(collaborator, tested5.collaborator1);
-      assertSame(col2, tested5.collaborator2);
+      assertNotNull(tested5.collaborator2);
+      assertNotSame(tested5.collaborator1, tested5.collaborator2);
+      assertEquals(Arrays.asList(col3), tested5.optionalCollaborators);
+
+      assertEquals(names[0], tested5.nameProvider.get());
+      assertEquals(names[1], tested5.nameProvider.get());
    }
 }

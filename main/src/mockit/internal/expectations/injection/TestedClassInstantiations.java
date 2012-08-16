@@ -130,18 +130,27 @@ public final class TestedClassInstantiations
       }
    }
 
-   private void setTypeOfInjectionPoint(Type parameterOrFieldType)
+   void setTypeOfInjectionPoint(Type parameterOrFieldType) { typeOfInjectionPoint = parameterOrFieldType; }
+
+   boolean hasSameTypeAsInjectionPoint(MockedType injectable)
    {
-      if (INJECT_CLASS != null && parameterOrFieldType instanceof ParameterizedType) {
-         ParameterizedType parameterizedType = (ParameterizedType) parameterOrFieldType;
+      return isSameTypeAsInjectionPoint(injectable.declaredType);
+   }
+
+   boolean isSameTypeAsInjectionPoint(Type injectableType)
+   {
+      if (typeOfInjectionPoint.equals(injectableType)) return true;
+
+      if (INJECT_CLASS != null && typeOfInjectionPoint instanceof ParameterizedType) {
+         ParameterizedType parameterizedType = (ParameterizedType) typeOfInjectionPoint;
 
          if (parameterizedType.getRawType() == Provider.class) {
-            typeOfInjectionPoint = parameterizedType.getActualTypeArguments()[0];
-            return;
+            Type providedType = parameterizedType.getActualTypeArguments()[0];
+            return providedType.equals(injectableType);
          }
       }
 
-      typeOfInjectionPoint = parameterOrFieldType;
+      return false;
    }
 
    private Object getValueToInject(MockedType injectable)
@@ -161,7 +170,10 @@ public final class TestedClassInstantiations
 
    private Object wrapInProviderIfNeeded(Type type, final Object value)
    {
-      if (type instanceof ParameterizedType && ((ParameterizedType) type).getRawType() == Provider.class) {
+      if (
+         INJECT_CLASS != null && type instanceof ParameterizedType && !(value instanceof Provider) &&
+         ((ParameterizedType) type).getRawType() == Provider.class
+      ) {
          return new Provider<Object>() { public Object get() { return value; } };
       }
 
@@ -193,7 +205,7 @@ public final class TestedClassInstantiations
       MockedType findNextInjectableForVarargsParameter()
       {
          for (MockedType injectable : injectables) {
-            if (injectable.declaredType.equals(typeOfInjectionPoint) && !consumedInjectables.contains(injectable)) {
+            if (hasSameTypeAsInjectionPoint(injectable) && !consumedInjectables.contains(injectable)) {
                return injectable;
             }
          }
@@ -320,7 +332,7 @@ public final class TestedClassInstantiations
             MockedType found = null;
 
             for (MockedType injectable : injectables) {
-               if (injectable.declaredType.equals(typeOfInjectionPoint)) {
+               if (hasSameTypeAsInjectionPoint(injectable)) {
                   if (found == null) {
                      found = injectable;
                   }
@@ -589,7 +601,7 @@ public final class TestedClassInstantiations
       private boolean withMultipleTargetFieldsOfSameType(List<Field> targetFields, Field fieldToBeInjected)
       {
          for (Field targetField : targetFields) {
-            if (targetField != fieldToBeInjected && targetField.getGenericType().equals(typeOfInjectionPoint)) {
+            if (targetField != fieldToBeInjected && isSameTypeAsInjectionPoint(targetField.getGenericType())) {
                return true;
             }
          }
@@ -600,7 +612,7 @@ public final class TestedClassInstantiations
       private MockedType findInjectableByTypeAndName(String targetFieldName)
       {
          for (MockedType injectable : injectables) {
-            if (injectable.declaredType.equals(typeOfInjectionPoint) && targetFieldName.equals(injectable.mockId)) {
+            if (hasSameTypeAsInjectionPoint(injectable) && targetFieldName.equals(injectable.mockId)) {
                return injectable;
             }
          }
@@ -613,7 +625,7 @@ public final class TestedClassInstantiations
          MockedType found = null;
 
          for (MockedType injectable : injectables) {
-            if (injectable.declaredType.equals(typeOfInjectionPoint)) {
+            if (hasSameTypeAsInjectionPoint(injectable)) {
                if (targetFieldName.equals(injectable.mockId)) {
                   return injectable;
                }
