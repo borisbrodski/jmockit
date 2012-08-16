@@ -95,4 +95,52 @@ public final class StandardDITest
       assertNull(tested2.anotherText);
       assertNull(tested3.name);
    }
+
+   static final class TestedClassWithProviders
+   {
+      final int port;
+      final Collaborator collaborator;
+      @Inject Provider<String> user;
+      @Inject Provider<String> password;
+
+      @Inject TestedClassWithProviders(Provider<Integer> port, Collaborator collaborator)
+      {
+         this.port = port.get();
+         this.collaborator = collaborator;
+      }
+   }
+
+   @Tested TestedClassWithProviders tested4;
+   @Injectable Integer portNumber = 4567;
+
+   @Test
+   public void supportProviderFieldsAndParameters(@Injectable("John") String user, @Injectable("123") String password)
+   {
+      assertEquals(portNumber.intValue(), tested4.port);
+      assertSame(collaborator, tested4.collaborator);
+      assertEquals(user, tested4.user.get());
+      assertEquals(password, tested4.password.get());
+   }
+
+   static final class TestedClassWithVarargsParameterForProviders
+   {
+      final Collaborator collaborator1;
+      final Collaborator collaborator2;
+
+      @Inject TestedClassWithVarargsParameterForProviders(Provider<Collaborator>... collaborators)
+      {
+         assertTrue(collaborators.length > 0);
+         collaborator1 = collaborators[0].get();
+         collaborator2 = collaborators.length > 1 ? collaborators[1].get() : null;
+      }
+   }
+
+   @Tested TestedClassWithVarargsParameterForProviders tested5;
+
+   @Test
+   public void supportVarargsParameterWithProviders(@Injectable Collaborator col2)
+   {
+      assertSame(collaborator, tested5.collaborator1);
+      assertSame(col2, tested5.collaborator2);
+   }
 }
