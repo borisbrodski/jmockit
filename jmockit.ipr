@@ -125,6 +125,27 @@
       <profile default="true" name="Default" enabled="false">
         <processorPath useClasspath="true" />
       </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <processorPath useClasspath="true" />
+        <module name="AnimatedTransitions" />
+        <module name="EasyMock" />
+        <module name="fakingXmocking" />
+        <module name="Hibernate3emul" />
+        <module name="Incremental" />
+        <module name="Jbossaop" />
+        <module name="jMock2" />
+        <module name="LoginService" />
+        <module name="Main" />
+        <module name="Mockito" />
+        <module name="MultiCore" />
+        <module name="OrderMngmntWebapp" />
+        <module name="Powermock" />
+        <module name="TimingFramework" />
+        <module name="tourdemock" />
+        <module name="Tutorial" />
+        <module name="Unitils" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.5">
       <module name="AnimatedTransitions" target="1.6" />
@@ -133,6 +154,7 @@
       <module name="fakingXmocking" target="1.7" />
       <module name="Hibernate3emul" target="1.5" />
       <module name="Incremental" target="1.5" />
+      <module name="javax.inject-tck" target="1.6" />
       <module name="Jbossaop" target="1.5" />
       <module name="jMock2" target="1.6" />
       <module name="LoginService" target="1.6" />
@@ -173,6 +195,7 @@
     <option name="DEPRECATION" value="false" />
   </component>
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://E:/issues-coverage/issue236" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/coverage" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/hibernate3emul" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/incremental" charset="UTF-8" />
@@ -196,16 +219,17 @@
   </component>
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
-    <list size="9">
-      <item index="0" class="java.lang.String" itemvalue="mockit.Capturing" />
-      <item index="1" class="java.lang.String" itemvalue="mockit.Cascading" />
-      <item index="2" class="java.lang.String" itemvalue="mockit.Injectable" />
-      <item index="3" class="java.lang.String" itemvalue="mockit.Mock" />
-      <item index="4" class="java.lang.String" itemvalue="mockit.MockClass" />
-      <item index="5" class="java.lang.String" itemvalue="mockit.Mocked" />
-      <item index="6" class="java.lang.String" itemvalue="mockit.NonStrict" />
-      <item index="7" class="java.lang.String" itemvalue="mockit.Tested" />
-      <item index="8" class="java.lang.String" itemvalue="org.mockito.Mock" />
+    <list size="10">
+      <item index="0" class="java.lang.String" itemvalue="javax.inject.Inject" />
+      <item index="1" class="java.lang.String" itemvalue="mockit.Capturing" />
+      <item index="2" class="java.lang.String" itemvalue="mockit.Cascading" />
+      <item index="3" class="java.lang.String" itemvalue="mockit.Injectable" />
+      <item index="4" class="java.lang.String" itemvalue="mockit.Mock" />
+      <item index="5" class="java.lang.String" itemvalue="mockit.MockClass" />
+      <item index="6" class="java.lang.String" itemvalue="mockit.Mocked" />
+      <item index="7" class="java.lang.String" itemvalue="mockit.NonStrict" />
+      <item index="8" class="java.lang.String" itemvalue="mockit.Tested" />
+      <item index="9" class="java.lang.String" itemvalue="org.mockito.Mock" />
     </list>
   </component>
   <component name="FacetAutodetectingManager">
@@ -601,6 +625,7 @@
         </inspection_tool>
         <inspection_tool class="NegatedIfElse" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="m_ignoreNegatedNullComparison" value="true" />
+          <option name="m_ignoreNegatedZeroComparison" value="false" />
         </inspection_tool>
         <inspection_tool class="NestedSwitchStatement" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="NestedSynchronizedStatement" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -847,7 +872,9 @@
         </inspection_tool>
         <inspection_tool class="UnnecessaryCallToStringValueOf" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryConstantArrayCreationExpression" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="UnnecessaryConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryConstructor" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreAnnotations" value="true" />
+        </inspection_tool>
         <inspection_tool class="UnnecessaryDefault" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryEnumModifier" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="UnnecessaryFinalOnLocalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -956,12 +983,18 @@
         <option value="$PROJECT_DIR$/samples/pom.xml" />
         <option value="$PROJECT_DIR$/incremental/pom.xml" />
         <option value="$PROJECT_DIR$/multicore/pom.xml" />
+        <option value="E:/issues-coverage/issue236/pom.xml" />
       </list>
     </option>
     <option name="activeProfiles">
       <list>
         <option value="unit-tests" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="E:/issues-coverage/issue236/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="Palette2">
@@ -1469,6 +1502,7 @@
       <module fileurl="file://$PROJECT_DIR$/samples/unitils/Unitils.iml" filepath="$PROJECT_DIR$/samples/unitils/Unitils.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/fakingXmocking/fakingXmocking.iml" filepath="$PROJECT_DIR$/samples/fakingXmocking/fakingXmocking.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/samples/jmock/jMock2.iml" filepath="$PROJECT_DIR$/samples/jmock/jMock2.iml" group="Samples" />
+      <module fileurl="file://$PROJECT_DIR$/samples/javax.inject-tck/javax.inject-tck.iml" filepath="$PROJECT_DIR$/samples/javax.inject-tck/javax.inject-tck.iml" group="Samples" />
       <module fileurl="file://$PROJECT_DIR$/mockit.iml" filepath="$PROJECT_DIR$/mockit.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/samples.iml" filepath="$PROJECT_DIR$/samples/samples.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/tourdemock/tourdemock.iml" filepath="$PROJECT_DIR$/samples/tourdemock/tourdemock.iml" group="Samples" />
@@ -1476,7 +1510,7 @@
     </modules>
   </component>
   <component name="ProjectResources">
-    <default-html-doctype>jar:file:\E:\Java\IDEA11.0\lib\idea.jar!\resources\html5-schema\html5.rnc</default-html-doctype>
+    <default-html-doctype>jar:file:\E:\Java\IDEA-120.305\lib\idea.jar!\resources\html5-schema\html5.rnc</default-html-doctype>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="JDK 1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
@@ -1587,7 +1621,11 @@
         <pattern testClass="mockit.TestedClassInjectedFromMockParametersTest" />
         <pattern testClass="mockit.TestedClassWithConstructorAndFieldDITest" />
         <pattern testClass="mockit.TestedClassWithNoDITest" />
-        <pattern testClass="mockit.TestedClassWithFieldDIOnlyTest" />
+        <pattern testClass="mockit.TestedClassWithConstructorAndFieldDI2Test" />
+        <pattern testClass="mockit.TestedClassWithNoPublicConstructorTest" />
+        <pattern testClass="mockit.TestedClassWithFieldDIByTypeAndNameTest" />
+        <pattern testClass="mockit.StandardDITest" />
+        <pattern testClass="mockit.StandardDI2Test" />
       </patterns>
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="" />
@@ -2234,6 +2272,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://E:/.m2/repository/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.inject:javax.inject:1">
+      <CLASSES>
+        <root url="jar://E:/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://E:/.m2/repository/javax/inject/javax.inject/1/javax.inject-1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://E:/.m2/repository/javax/inject/javax.inject/1/javax.inject-1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: javax.mail:mail:1.4">
