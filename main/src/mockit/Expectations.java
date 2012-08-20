@@ -227,7 +227,7 @@ public abstract class Expectations extends Invocations
     * It's also possible to specify a sequence of values to be returned by consecutive invocations, by simply passing
     * an array, a {@linkplain Collection collection}, an {@linkplain Iterable iterable}, or an
     * {@linkplain Iterator iterator}.
-    * The return type of the recorded method, however, must <em>not</em> be of one of these type non-singular types.
+    * The return type of the recorded method, however, must <em>not</em> be of one of these non-singular types.
     * If it is, the multi-valued argument will be returned by a single invocation at replay time.
     * <p/>
     * If this method is used for a constructor or {@code void} method, the given return value will be ignored,
@@ -264,10 +264,10 @@ public abstract class Expectations extends Invocations
    }
 
    /**
-    * Equivalent to calling {@link #returns(Object)} two or more times in sequence, except when the associated method
-    * can return a collection or iterable, an iterator, or an array.
-    * Specifically, the following situations receive special treatment, according to the declared return type of said
-    * method:
+    * Specifies that the previously recorded method invocation will return a given sequence of values during replay.
+    * <p/>
+    * Using this method is equivalent to calling {@link #returns(Object)} two or more times in sequence, except when the
+    * recorded method can return an iterable (including any {@code Collection} subtype), an iterator, or an array:
     * <ol>
     * <li>If the return type is iterable and can receive a {@link List} value, then the given sequence of values will be
     * converted into an {@code ArrayList}; this list will then be returned by matching invocations at replay time.</li>

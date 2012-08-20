@@ -66,18 +66,22 @@ final class Expectation
       boolean valueIsArray = value != null && value.getClass().isArray();
       boolean valueIsIterable = value instanceof Iterable<?>;
 
-      if ((valueIsArray || valueIsIterable || value instanceof Iterator<?>) && hasReturnOfDifferentType(value)) {
-         if (valueIsArray) {
-            getResults().addReturnValues(value);
-         }
-         else if (valueIsIterable) {
-            getResults().addReturnValues((Iterable<?>) value);
-         }
-         else {
-            getResults().addDeferredReturnValues((Iterator<?>) value);
-         }
+      if (valueIsArray || valueIsIterable || value instanceof Iterator<?>) {
+         Class<?> rt = getReturnType();
 
-         return;
+         if (rt == null || hasReturnOfDifferentType(rt, value)) {
+            if (valueIsArray) {
+               getResults().addReturnValues(value);
+            }
+            else if (valueIsIterable) {
+               getResults().addReturnValues((Iterable<?>) value);
+            }
+            else {
+               getResults().addDeferredReturnValues((Iterator<?>) value);
+            }
+
+            return;
+         }
       }
 
       addSingleReturnValue(value);
@@ -89,12 +93,9 @@ final class Expectation
       getResults().addReturnValue(value);
    }
 
-   private boolean hasReturnOfDifferentType(Object valuesToBeReturned)
+   private boolean hasReturnOfDifferentType(Class<?> returnClass, Object valuesToBeReturned)
    {
-      Class<?> returnClass = getReturnType();
-      
-      return 
-         returnClass == null ||
+      return
          !returnClass.isArray() &&
          !Iterable.class.isAssignableFrom(returnClass) && !Iterator.class.isAssignableFrom(returnClass) &&
          !returnClass.isAssignableFrom(valuesToBeReturned.getClass());
@@ -245,25 +246,26 @@ final class Expectation
       boolean valueIsArray = value != null && value.getClass().isArray();
       boolean valueIsIterable = value instanceof Iterable<?>;
 
-      if ((valueIsArray || valueIsIterable || value instanceof Iterator<?>) && hasReturnOfDifferentType(value)) {
-         if (valueIsArray) {
-            getResults().addResults(value);
-         }
-         else if (valueIsIterable) {
-            getResults().addResults((Iterable<?>) value);
-         }
-         else {
-            getResults().addDeferredResults((Iterator<?>) value);
-         }
+      if (valueIsArray || valueIsIterable || value instanceof Iterator<?>) {
+         Class<?> rt = getReturnType();
 
-         return;
+         if (rt == null || rt == Object.class || hasReturnOfDifferentType(rt, value)) {
+            if (valueIsArray) {
+               getResults().addResults(value);
+            }
+            else if (valueIsIterable) {
+               getResults().addResults((Iterable<?>) value);
+            }
+            else {
+               getResults().addDeferredResults((Iterator<?>) value);
+            }
+
+            return;
+         }
       }
 
       addSingleReturnValue(value);
    }
 
-   void setCustomErrorMessage(CharSequence message)
-   {
-      invocation.customErrorMessage = message;
-   }
+   void setCustomErrorMessage(CharSequence message) { invocation.customErrorMessage = message; }
 }

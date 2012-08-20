@@ -5,10 +5,12 @@
 package mockit;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 import org.junit.*;
 
 import static java.util.Arrays.*;
+
 import static org.junit.Assert.*;
 
 import mockit.internal.*;
@@ -40,6 +42,7 @@ public final class ExpectationsWithValuesToReturnTest
       boolean getBooleanValue() { return true; }
       Boolean getBooleanWrapper() { return true; }
       String getString() { return ""; }
+      Object getObject() { return null; }
 
       Collection<?> getItems() { return null; }
       List<?> getListItems() { return null; }
@@ -242,7 +245,7 @@ public final class ExpectationsWithValuesToReturnTest
 
       assertArrayEquals(charArray, collaborator.getCharArray());
       assertArrayEquals(new char[0], collaborator.getCharArray());
-      assertArrayEquals(new char[] {'x'}, collaborator.getCharArray());
+      assertArrayEquals(new char[]{'x'}, collaborator.getCharArray());
    }
 
    @Test
@@ -335,6 +338,38 @@ public final class ExpectationsWithValuesToReturnTest
       assertEquals("ab", collaborator.getString());
       assertEquals("cde", collaborator.getString());
       assertEquals("Xyz", collaborator.getString());
+   }
+
+   @Test
+   public void returnsMultipleValuesFromMethodWithReturnTypeOfObject(final Collaborator collaborator)
+   {
+      new NonStrictExpectations() {{
+         collaborator.getObject();
+         returns(1, 2);
+         returns(new int[] {1, 2});
+         returns("test", 'X');
+         returns(asList(5L, 67L));
+      }};
+
+      assertEquals(1, collaborator.getObject());
+      assertEquals(2, collaborator.getObject());
+      assertArrayEquals(new int[] {1, 2}, (int[]) collaborator.getObject());
+      assertEquals("test", collaborator.getObject());
+      assertEquals('X', collaborator.getObject());
+      assertEquals(asList(5L, 67L), collaborator.getObject());
+   }
+
+   @Test
+   public void returnsMultipleValuesFromGenericMethod(final Callable<Integer> callable) throws Exception
+   {
+      new NonStrictExpectations() {{
+         callable.call();
+         returns(3, 2, 1);
+      }};
+
+      assertEquals(3, callable.call().intValue());
+      assertEquals(2, callable.call().intValue());
+      assertEquals(1, callable.call().intValue());
    }
 
    @Test

@@ -167,8 +167,8 @@ public final class StandardDITest
    public void supportVarargsParameterWithProviders(
       @Injectable Collaborator col3, @Injectable final Provider<String> nameProvider)
    {
-      final String[] names = {"John", "Mary"}; // TODO: add suport for using Provider<T> with "result" field
-      new NonStrictExpectations() {{ nameProvider.get(); result = "John"/*names*/; result = "Mary"; }};
+      final String[] names = {"John", "Mary"};
+      new NonStrictExpectations() {{ nameProvider.get(); result = names; }};
 
       assertSame(collaborator, tested5.collaborator1);
       assertNotNull(tested5.collaborator2);
