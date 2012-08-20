@@ -983,7 +983,6 @@
         <option value="$PROJECT_DIR$/samples/pom.xml" />
         <option value="$PROJECT_DIR$/incremental/pom.xml" />
         <option value="$PROJECT_DIR$/multicore/pom.xml" />
-        <option value="E:/issues-coverage/issue236/pom.xml" />
       </list>
     </option>
     <option name="activeProfiles">
@@ -1509,9 +1508,6 @@
       <module fileurl="file://$PROJECT_DIR$/www/www.iml" filepath="$PROJECT_DIR$/www/www.iml" />
     </modules>
   </component>
-  <component name="ProjectResources">
-    <default-html-doctype>jar:file:\E:\Java\IDEA-120.305\lib\idea.jar!\resources\html5-schema\html5.rnc</default-html-doctype>
-  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="JDK 1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
@@ -1569,7 +1565,7 @@
     <configuration default="false" name="Main" type="JUnit" factoryName="JUnit">
       <module name="Main" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.6.0_31" />
+      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.6.0_34" />
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
