@@ -118,4 +118,14 @@ public final class ArgumentMismatch
             out.append(c);
       }
    }
+
+   public void appendFormatted(Object[] values)
+   {
+      String separator = "";
+
+      for (Object value : values) {
+         append(separator).appendFormatted(value);
+         separator = ", ";
+      }
+   }
 }

@@ -29,7 +29,7 @@ public final class InvocationArguments
       this.genericSignature = genericSignature;
       this.exceptions = exceptions == null ? null : exceptions.split(" ");
       valuesAndMatchers =
-         (access & Opcodes.ACC_VARARGS) == 0 ? 
+         (access & Opcodes.ACC_VARARGS) == 0 ?
             new ArgumentValuesAndMatchersWithoutVarargs(this, args) :
             new ArgumentValuesAndMatchersWithVarargs(this, args);
    }

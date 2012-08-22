@@ -268,4 +268,10 @@ final class Expectation
    }
 
    void setCustomErrorMessage(CharSequence message) { invocation.customErrorMessage = message; }
+
+   Error verifyConstraints(Expectation verification, int minInvocations, int maxInvocations)
+   {
+      Object[] replayArgs = invocation.getArgumentValues();
+      return constraints.verify(verification.invocation, replayArgs, minInvocations, maxInvocations);
+   }
 }

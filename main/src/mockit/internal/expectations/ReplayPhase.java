@@ -91,7 +91,7 @@ final class ReplayPhase extends Phase
       }
 
       if (nonStrictExpectation.constraints.isInvocationCountMoreThanMaximumExpected()) {
-         recordAndReplay.setErrorThrown(nonStrictExpectation.invocation.errorForUnexpectedInvocations(1));
+         recordAndReplay.setErrorThrown(nonStrictExpectation.invocation.errorForUnexpectedInvocation(args));
          return null;
       }
 
@@ -139,7 +139,7 @@ final class ReplayPhase extends Phase
                moveToNextExpectation();
             }
             else if (expectation.constraints.isInvocationCountMoreThanMaximumExpected()) {
-               recordAndReplay.setErrorThrown(invocation.errorForUnexpectedInvocations(1));
+               recordAndReplay.setErrorThrown(invocation.errorForUnexpectedInvocation(replayArgs));
                return null;
             }
 
@@ -153,7 +153,7 @@ final class ReplayPhase extends Phase
          }
          else {
             recordAndReplay.setErrorThrown(
-               invocation.errorForUnexpectedInvocation(mock, mockClassDesc, mockNameAndDesc));
+               invocation.errorForUnexpectedInvocation(mock, mockClassDesc, mockNameAndDesc, replayArgs));
             return null;
          }
       }

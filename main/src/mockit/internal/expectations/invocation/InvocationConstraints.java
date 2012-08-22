@@ -70,38 +70,38 @@ public final class InvocationConstraints
       return minInvocations <= invocationCount && (invocationCount <= maxInvocations || maxInvocations < 0);
    }
 
-   public Error verify(ExpectedInvocation invocation, int minInvocations, int maxInvocations)
+   public Error verify(ExpectedInvocation invocation, Object[] replayArgs, int minInvocations, int maxInvocations)
    {
       Error error = verifyLowerLimit(invocation, minInvocations);
 
-      return error != null ? error : verifyUpperLimit(invocation, maxInvocations);
+      return error != null ? error : verifyUpperLimit(invocation, replayArgs, maxInvocations);
    }
 
    private Error verifyLowerLimit(ExpectedInvocation invocation, int minInvocations)
    {
-      return invocationCount < minInvocations ? errorForMissingExpectations(invocation, minInvocations) : null;
+      if (invocationCount < minInvocations) {
+         int missingInvocations = minInvocations - invocationCount;
+         return invocation.errorForMissingInvocations(missingInvocations);
+      }
+
+      return null;
    }
 
-   private Error errorForMissingExpectations(ExpectedInvocation invocation, int minInvocations)
+   private Error verifyUpperLimit(ExpectedInvocation invocation, Object[] replayArgs, int maxInvocations)
    {
-      return invocation.errorForMissingInvocations(minInvocations - invocationCount) ;
+      if (maxInvocations >= 0) {
+         int unexpectedInvocations = invocationCount - maxInvocations;
+
+         if (unexpectedInvocations > 0) {
+            return invocation.errorForUnexpectedInvocations(replayArgs, unexpectedInvocations);
+         }
+      }
+
+      return null;
    }
 
    public Error errorForMissingExpectations(ExpectedInvocation invocation)
    {
       return invocation.errorForMissingInvocations(minInvocations - invocationCount) ;
-   }
-
-   private Error verifyUpperLimit(ExpectedInvocation invocation, int maxInvocations)
-   {
-      if (maxInvocations >= 0) {
-         int n = invocationCount - maxInvocations;
-
-         if (n > 0) {
-            return invocation.errorForUnexpectedInvocations(n);
-         }
-      }
-
-      return null;
    }
 }

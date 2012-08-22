@@ -70,8 +70,7 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
 
    private void verifyConstraints(int minInvocations, int maxInvocations)
    {
-      pendingError =
-         currentExpectation.constraints.verify(currentVerification.invocation, minInvocations, maxInvocations);
+      pendingError = currentExpectation.verifyConstraints(currentVerification, minInvocations, maxInvocations);
    }
 
    @Override

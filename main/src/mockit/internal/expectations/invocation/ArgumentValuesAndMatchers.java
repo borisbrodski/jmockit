@@ -156,15 +156,21 @@ abstract class ArgumentValuesAndMatchers
       int parameterCount = values.length;
 
       if (parameterCount > 0) {
-         desc.append('\n').append("with arguments: ");
+         desc.append("\n   with arguments: ");
 
-         List<String> parameterTypes = methodFormatter.getParameterTypes();
-         String sep = "";
+         if (matchers == null) {
+            desc.appendFormatted(values);
+         }
+         else {
+            List<String> parameterTypes = methodFormatter.getParameterTypes();
+            String sep = "";
 
-         for (int i = 0; i < parameterCount; i++) {
-            ArgumentMatcher matcher = getArgumentMatcher(i);
-            desc.append(sep).appendFormatted(parameterTypes.get(i), values[i], matcher);
-            sep = ", ";
+            for (int i = 0; i < parameterCount; i++) {
+               ArgumentMatcher matcher = getArgumentMatcher(i);
+               String parameterType = parameterTypes.get(i);
+               desc.append(sep).appendFormatted(parameterType, values[i], matcher);
+               sep = ", ";
+            }
          }
       }
 

@@ -10,6 +10,7 @@ import mockit.internal.*;
 import mockit.external.asm4.Type;
 
 import mockit.internal.expectations.*;
+import mockit.internal.expectations.argumentMatching.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
@@ -175,32 +176,39 @@ public final class ExpectedInvocation
       return newMissingInvocationWithCause("Missing invocation", "Missing invocation of" + this);
    }
 
-   public MissingInvocation errorForMissingInvocations(int totalMissing)
+   public MissingInvocation errorForMissingInvocations(int missingInvocations)
    {
-      String message = "Missing " + totalMissing + invocationsToThis(totalMissing);
+      String message = "Missing " + missingInvocations + invocationsTo(missingInvocations) + this;
       return newMissingInvocationWithCause("Missing invocations", message);
    }
 
-   private String invocationsToThis(int invocations)
-   {
-      String prefix = invocations == 1 ? " invocation to" : " invocations to";
-      return prefix + this;
-   }
+   private String invocationsTo(int invocations) { return invocations == 1 ? " invocation to" : " invocations to"; }
 
    public UnexpectedInvocation errorForUnexpectedInvocation(
-      Object mock, String invokedClassDesc, String invokedMethod)
+      Object mock, String invokedClassDesc, String invokedMethod, Object[] replayArgs)
    {
-      String instanceDescription = mock == null ? "" : "\non instance: " + Utilities.objectIdentity(mock);
+      ArgumentMismatch argumentsDescription = new ArgumentMismatch();
+      argumentsDescription.appendFormatted(replayArgs);
+      String instanceDescription = mock == null ? "" : "\n   on instance: " + Utilities.objectIdentity(mock);
       String message =
-         "Unexpected invocation of:\n" + new MethodFormatter(invokedClassDesc, invokedMethod) + instanceDescription +
+         "Unexpected invocation of:\n" + new MethodFormatter(invokedClassDesc, invokedMethod) +
+         "\n   with arguments: " + argumentsDescription + instanceDescription +
          "\nwhen was expecting an invocation of" + this;
+
       return newUnexpectedInvocationWithCause("Unexpected invocation", message);
    }
 
-   public UnexpectedInvocation errorForUnexpectedInvocations(int totalUnexpected)
+   public UnexpectedInvocation errorForUnexpectedInvocation(Object[] replayArgs)
    {
-      String message = totalUnexpected + " unexpected" + invocationsToThis(totalUnexpected);
-      return newUnexpectedInvocationWithCause("Unexpected invocations", message);
+      String message = "unexpected invocation to" + toString(replayArgs);
+      return newUnexpectedInvocationWithCause("Unexpected invocation", message);
+   }
+
+   public UnexpectedInvocation errorForUnexpectedInvocations(Object[] replayArgs, int numUnexpected)
+   {
+      String message = numUnexpected + " unexpected" + invocationsTo(numUnexpected) + toString(replayArgs);
+      String titleForCause = numUnexpected == 1 ? "Unexpected invocation" : "Unexpected invocations";
+      return newUnexpectedInvocationWithCause(titleForCause, message);
    }
 
    public UnexpectedInvocation errorForUnexpectedInvocationBeforeAnother(ExpectedInvocation another)
@@ -219,7 +227,7 @@ public final class ExpectedInvocation
       String desc = arguments.toString();
 
       if (instance != null) {
-         desc += "\non mock instance: " + Utilities.objectIdentity(instance);
+         desc += "\n   on mock instance: " + Utilities.objectIdentity(instance);
       }
 
       return desc;
@@ -228,8 +236,11 @@ public final class ExpectedInvocation
    String toString(Object[] actualInvocationArguments)
    {
       Object[] invocationArgs = arguments.getValues();
+      List<ArgumentMatcher> matchers = arguments.getMatchers();
       arguments.setValues(actualInvocationArguments);
+      arguments.setMatchers(null);
       String description = toString();
+      arguments.setMatchers(matchers);
       arguments.setValues(invocationArgs);
       return description;
    }

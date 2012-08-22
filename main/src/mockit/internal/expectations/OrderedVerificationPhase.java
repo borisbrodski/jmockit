@@ -6,7 +6,6 @@ package mockit.internal.expectations;
 
 import java.util.*;
 
-import mockit.internal.UnexpectedInvocation;
 import mockit.internal.expectations.invocation.*;
 
 public final class OrderedVerificationPhase extends BaseVerificationPhase
@@ -150,7 +149,8 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
          n = currentExpectation.constraints.invocationCount - maxInvocations * multiplier;
 
          if (n > 0) {
-            pendingError = invocation.errorForUnexpectedInvocations(n);
+            pendingError =
+               invocation.errorForUnexpectedInvocations(currentExpectation.invocation.getArgumentValues(), n);
             return;
          }
       }
@@ -211,7 +211,8 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
          unverifiedExpectationsFixed && indexIncrement > 0 && currentExpectation != null &&
          replayIndex <= indexOfLastUnverifiedExpectation()
       ) {
-         return new UnexpectedInvocation("Unexpected invocations after" + currentExpectation.invocation);
+         ExpectedInvocation unexpectedInvocation = expectationsInReplayOrder.get(replayIndex).invocation;
+         return unexpectedInvocation.errorForUnexpectedInvocationAfterAnother(currentExpectation.invocation);
       }
 
       if (unverifiedInvocationPrecedingVerifiedOnesLeftBehind != null) {
