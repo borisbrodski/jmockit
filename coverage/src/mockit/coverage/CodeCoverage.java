@@ -11,7 +11,7 @@ import mockit.coverage.data.*;
 import mockit.coverage.modification.*;
 import mockit.coverage.standalone.*;
 
-public final class CodeCoverage implements ClassFileTransformer, Runnable
+public final class CodeCoverage implements ClassFileTransformer
 {
    private static CodeCoverage instance;
 
@@ -32,25 +32,33 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
    }
 
    @SuppressWarnings("UnusedDeclaration")
-   public CodeCoverage() { this(true); }
+   public CodeCoverage() { this(false); }
 
-   private CodeCoverage(boolean generateOutputOnJVMShutdown)
+   private CodeCoverage(final boolean standaloneMode)
    {
       classModification = new ClassModification();
       outputGenerator = createOutputFileGenerator();
 
-      if (outputGenerator.isOutputToBeGenerated()) {
-         outputGenerator.onRun = this;
+      Runtime.getRuntime().addShutdownHook(new Thread() {
+         @Override
+         public void run()
+         {
+            Startup.instrumentation().removeTransformer(CodeCoverage.this);
 
-         if (generateOutputOnJVMShutdown) {
-            Runtime.getRuntime().addShutdownHook(outputGenerator);
+            if (!standaloneMode) {
+               if (outputGenerator.isOutputToBeGenerated()) {
+                  outputGenerator.generate();
+               }
+
+               new CoverageCheck().verifyThresholds();
+            }
          }
-      }
+      });
    }
 
-   public static CodeCoverage create()
+   public static CodeCoverage createInStandaloneMode()
    {
-      instance = new CodeCoverage(false);
+      instance = new CodeCoverage(true);
       return instance;
    }
 
@@ -58,7 +66,7 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
    {
       Startup.instrumentation().removeTransformer(instance);
       CoverageData.instance().clear();
-      Startup.instrumentation().addTransformer(create());
+      Startup.instrumentation().addTransformer(createInStandaloneMode());
    }
 
    public static void generateOutput(boolean resetState)
@@ -68,11 +76,6 @@ public final class CodeCoverage implements ClassFileTransformer, Runnable
       if (resetState) {
          CoverageData.instance().reset();
       }
-   }
-
-   public void run()
-   {
-      Startup.instrumentation().removeTransformer(this);
    }
 
    public byte[] transform(

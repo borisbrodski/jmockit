@@ -16,9 +16,9 @@ public final class PerFilePathCoverage implements PerFileCoverage
    public final Map<Integer, MethodCoverageData> firstLineToMethodData =
       new LinkedHashMap<Integer, MethodCoverageData>();
 
-   // Computed on demand, the first time the coverage percentage is requested:
-   private transient int totalPaths;
-   private transient int coveredPaths;
+   // Computed on demand:
+   private transient int totalPaths = -1;
+   private transient int coveredPaths = -1;
 
    public void addMethod(MethodCoverageData methodData)
    {
@@ -34,24 +34,34 @@ public final class PerFilePathCoverage implements PerFileCoverage
       }
    }
 
-   public int getTotalItems() { return totalPaths; }
-   public int getCoveredItems() { return coveredPaths; }
+   public int getTotalItems()
+   {
+      computeValuesIfNeeded();
+      return totalPaths;
+   }
+
+   public int getCoveredItems()
+   {
+      computeValuesIfNeeded();
+      return coveredPaths;
+   }
 
    public int getCoveragePercentage()
    {
-      if (firstLineToMethodData.isEmpty()) {
-         return -1;
-      }
+      computeValuesIfNeeded();
+      return CoveragePercentage.calculate(coveredPaths, totalPaths);
+   }
 
-      Collection<MethodCoverageData> methods = firstLineToMethodData.values();
+   private void computeValuesIfNeeded()
+   {
+      if (totalPaths >= 0) return;
+
       totalPaths = coveredPaths = 0;
 
-      for (MethodCoverageData method : methods) {
+      for (MethodCoverageData method : firstLineToMethodData.values()) {
          totalPaths += method.getTotalPaths();
          coveredPaths += method.getCoveredPaths();
       }
-
-      return CoveragePercentage.calculate(coveredPaths, totalPaths);
    }
 
    public void reset()
@@ -60,7 +70,7 @@ public final class PerFilePathCoverage implements PerFileCoverage
          methodData.reset();
       }
 
-      totalPaths = coveredPaths = 0;
+      totalPaths = coveredPaths = -1;
    }
 
    public void mergeInformation(PerFilePathCoverage previousCoverage)

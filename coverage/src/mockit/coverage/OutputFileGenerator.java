@@ -10,12 +10,11 @@ import mockit.coverage.data.*;
 import mockit.coverage.reporting.*;
 import mockit.coverage.standalone.*;
 
-final class OutputFileGenerator extends Thread
+final class OutputFileGenerator
 {
    private static final String COVERAGE_PREFIX = "jmockit-coverage-";
    private static final String[] ALL_SOURCE_DIRS = new String[0];
 
-   Runnable onRun;
    private final String[] outputFormats;
    private final String outputDir;
    private final String[] sourceDirs;
@@ -75,13 +74,6 @@ final class OutputFileGenerator extends Thread
       return false;
    }
 
-   @Override
-   public void run()
-   {
-      onRun.run();
-      generate();
-   }
-
    void generate()
    {
       CoverageData coverageData = CoverageData.instance();
@@ -100,9 +92,6 @@ final class OutputFileGenerator extends Thread
          generateHTMLReportIfRequested(coverageData);
       }
       catch (IOException e) {
-         throw new RuntimeException(e);
-      }
-      catch (ClassNotFoundException e) {
          throw new RuntimeException(e);
       }
    }
@@ -135,7 +124,7 @@ final class OutputFileGenerator extends Thread
       }
    }
 
-   private void generateAccretionDataFileIfRequested(CoverageData newData) throws IOException, ClassNotFoundException
+   private void generateAccretionDataFileIfRequested(CoverageData newData) throws IOException
    {
       if (hasOutputFormat("serial")) {
          new AccretionFile(outputDir, newData).generate();

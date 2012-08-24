@@ -19,7 +19,7 @@ public final class Startup
       instrumentation = inst;
 
       CoverageControl.create();
-      inst.addTransformer(CodeCoverage.create());
+      inst.addTransformer(CodeCoverage.createInStandaloneMode());
 
       System.out.println();
       System.out.println("JMockit Coverage tool loaded; connect with a JMX client to control operation");

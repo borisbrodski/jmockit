@@ -325,7 +325,6 @@
           <option name="m_limit" value="15" />
         </inspection_tool>
         <inspection_tool class="ClassEscapesItsScope" enabled="true" level="WARNING" enabled_by_default="true" />
-        <inspection_tool class="ClassMayBeInterface" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ClassNameSameAsAncestorName" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ClassNewInstance" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ClassUnconnectedToPackage" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -1508,6 +1507,9 @@
       <module fileurl="file://$PROJECT_DIR$/www/www.iml" filepath="$PROJECT_DIR$/www/www.iml" />
     </modules>
   </component>
+  <component name="ProjectResources">
+    <default-html-doctype>jar:file:\E:\Java\IDEA-120.305\lib\idea.jar!\resources\html5-schema\html5.rnc</default-html-doctype>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="JDK 1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
@@ -1736,7 +1738,7 @@
     <configuration default="false" name="Samples: Mockito" type="JUnit" factoryName="JUnit">
       <module name="Mockito" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_05" />
+      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_06" />
       <option name="PACKAGE_NAME" value="org.mockitousage" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />

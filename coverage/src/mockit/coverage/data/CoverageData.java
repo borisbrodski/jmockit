@@ -9,6 +9,8 @@ import java.security.*;
 import java.util.*;
 import java.util.concurrent.*;
 
+import mockit.coverage.*;
+
 /**
  * Coverage data captured for all source files exercised during a test run.
  */
@@ -25,6 +27,10 @@ public final class CoverageData implements Serializable
    public boolean isWithCallPoints() { return withCallPoints; }
    public void setWithCallPoints(boolean withCallPoints) { this.withCallPoints = withCallPoints; }
 
+   /**
+    * Returns an immutable map containing all source files with the corresponding coverage data gathered for each
+    * file during a test run.
+    */
    public Map<String, FileCoverageData> getFileToFileDataMap()
    {
       return Collections.unmodifiableMap(fileToFileData);
@@ -46,6 +52,53 @@ public final class CoverageData implements Serializable
    public FileCoverageData getFileData(String file) { return fileToFileData.get(file); }
    public boolean isEmpty() { return fileToFileData.isEmpty(); }
    public void clear() { fileToFileData.clear(); }
+
+   /**
+    * Computes the coverage percentage for a given metric, over a subset of the available source files.
+    *
+    * @param fileNamePrefix a regular expression for matching the names of the source files to be considered, or
+    *                      {@code null} to consider <em>all</em> files
+    *
+    * @return the computed percentage from {@literal 0} to {@literal 100} (inclusive), or {@literal -1} if no
+    * meaningful value could be computed for the metric
+    */
+   public int getPercentage(Metrics metric, String fileNamePrefix)
+   {
+      int coveredItems = 0;
+      int totalItems = 0;
+
+      for (Map.Entry<String, FileCoverageData> fileAndFileData : fileToFileData.entrySet()) {
+         String sourceFile = fileAndFileData.getKey();
+
+         if (fileNamePrefix == null || sourceFile.startsWith(fileNamePrefix)) {
+            FileCoverageData fileData = fileAndFileData.getValue();
+            PerFileCoverage coverageInfo = fileData.coverageInfos[metric.ordinal()];
+            coveredItems += coverageInfo.getCoveredItems();
+            totalItems += coverageInfo.getTotalItems();
+         }
+      }
+
+      return CoveragePercentage.calculate(coveredItems, totalItems);
+   }
+
+   /**
+    * Finds the source file with the smallest coverage percentage for a given metric.
+    *
+    * @return the percentage value for the file found, or {@code Integer.MAX_VALUE} if no file is found with a
+    * meaningful coverage percentage
+    */
+   public int getSmallestPerFilePercentage(Metrics metric)
+   {
+      int minPercentage = Integer.MAX_VALUE;
+
+      for (FileCoverageData fileData : fileToFileData.values()) {
+         PerFileCoverage coverageInfo = fileData.coverageInfos[metric.ordinal()];
+         int percentage = coverageInfo.getCoveragePercentage();
+         if (percentage >= 0 && percentage < minPercentage) minPercentage = percentage;
+      }
+
+      return minPercentage;
+   }
 
    public void reset()
    {
@@ -79,12 +132,24 @@ public final class CoverageData implements Serializable
       return new File(pathToClassFile);
    }
 
-   public static CoverageData readDataFromFile(File dataFile) throws IOException, ClassNotFoundException
+   /**
+    * Reads a serialized {@code CoverageData} object from the given file (normally, a "<code>coverage.ser</code>" file
+    * generated at the end of a previous test run).
+    *
+    * @param dataFile the ".ser" file containing a serialized {@code CoverageData} instance
+    *
+    * @return a new object containing all coverage data resulting from a previous test run
+    */
+   public static CoverageData readDataFromFile(File dataFile) throws IOException
    {
       ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(dataFile)));
 
       try {
          return (CoverageData) input.readObject();
+      }
+      catch (ClassNotFoundException e) {
+         throw new RuntimeException(
+            "Serialized class in coverage data file \"" + dataFile + "\" not found in classpath", e);
       }
       finally {
          input.close();

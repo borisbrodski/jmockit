@@ -15,9 +15,9 @@ public final class PerFileLineCoverage implements PerFileCoverage
 
    public final SortedMap<Integer, LineCoverageData> lineToLineData = new TreeMap<Integer, LineCoverageData>();
 
-   // Computed on demand, the first time the coverage percentage is requested:
-   private transient int totalSegments;
-   private transient int coveredSegments;
+   // Computed on demand:
+   private transient int totalSegments = -1;
+   private transient int coveredSegments = -1;
 
    public LineCoverageData addLine(int line)
    {
@@ -43,24 +43,34 @@ public final class PerFileLineCoverage implements PerFileCoverage
       lineData.registerExecution(segment, jumped, callPoint);
    }
 
-   public int getTotalItems() { return totalSegments; }
-   public int getCoveredItems() { return coveredSegments; }
+   public int getTotalItems()
+   {
+      computeValuesIfNeeded();
+      return totalSegments;
+   }
+
+   public int getCoveredItems()
+   {
+      computeValuesIfNeeded();
+      return coveredSegments;
+   }
 
    public int getCoveragePercentage()
    {
-      if (lineToLineData.isEmpty()) {
-         return -1;
-      }
+      computeValuesIfNeeded();
+      return CoveragePercentage.calculate(coveredSegments, totalSegments);
+   }
 
-      Collection<LineCoverageData> lines = lineToLineData.values();
+   private void computeValuesIfNeeded()
+   {
+      if (totalSegments >= 0) return;
+
       totalSegments = coveredSegments = 0;
 
-      for (LineCoverageData line : lines) {
+      for (LineCoverageData line : lineToLineData.values()) {
          totalSegments += line.getNumberOfSegments();
          coveredSegments += line.getNumberOfCoveredSegments();
       }
-
-      return CoveragePercentage.calculate(coveredSegments, totalSegments);
    }
 
    public void reset()
@@ -69,7 +79,7 @@ public final class PerFileLineCoverage implements PerFileCoverage
          lineData.reset();
       }
 
-      totalSegments = coveredSegments = 0;
+      totalSegments = coveredSegments = -1;
    }
 
    public void mergeInformation(PerFileLineCoverage previousCoverage)
