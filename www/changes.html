@@ -24,13 +24,20 @@
 <p>Release <a href="http://code.google.com/p/jmockit/source/list">0.999.17</a> (Sep ?, 2012):</p>
 <ul>
    <li>
+      <strong>New feature</strong> in JMockit Coverage:
+      A new property "<code>jmockit-coverage-check</code>" is now supported, enabling checks for minimum coverage
+      percentages to be performed.
+      For details, see the <a href="tutorial/CodeCoverage.html#checking">relevant</a> section in the JMockit Tutorial.
+      This solves <a href="http://code.google.com/p/jmockit/issues/detail?id=235">issue 235</a>.
+   </li>
+   <li>
       <strong>Enhancement</strong>: Dropped the requirement for a <code class="annotation">@Tested</code> class to have
       an accessible constructor.
       This helps in the case where a public class is only meant to be instantiated by a DI container, allowing it to
       have non-public constructors only.
    </li>
    <li>
-      Issues fixed:
+      Other issues fixed:
       <a href="http://code.google.com/p/jmockit/issues/detail?id=234">234</a>.
    </li>
 </ul>
