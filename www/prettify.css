@@ -19,7 +19,7 @@ h3 {
 }
 h4 { margin-top: 3ex; margin-bottom: 1ex; font-size: 100%; }
 pre {
-   padding: 2px; border: 1px solid #888; background-color: silver;
+   padding: 2px; border: 1px solid #888; background-color: #efefef;
    box-shadow: 4px 4px 4px #666;
 }
 img { border: none; }
@@ -58,10 +58,6 @@ pre .comment, pre .javadoc {
 
 .annotation, pre .decorator, pre .doctype, pre .pi, pre .chunk {
   color: #808000;
-}
-
-pre .tag, pre .pi {
-  background: #efefef;
 }
 
 pre .tag .title, pre .id, pre .pseudo, pre .literal, pre .keyword, pre .hexcolor,

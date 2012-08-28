@@ -61,19 +61,19 @@
    When using the <code>&lt;junit></code> element in a <code>build.xml</code> script, it's important to use a separate
    JVM instance. For example, something like the following:
 </p>
-<pre class="no-highlight"><code>&lt;junit fork="yes" forkmode="once" dir="directoryContainingJars">
-   <span class="comment">&lt;!-- If needed (eg, when running on JDK 1.5), uncomment the following JVM argument:
-   &lt;jvmarg value="-javaagent:jmockit.jar"/> --></span>
+<pre><code>&lt;junit fork="yes" forkmode="once" dir="directoryContainingJars">
+   &lt;!-- If needed (eg, when running on JDK 1.5), uncomment the following JVM argument:
+   &lt;jvmarg value="-javaagent:jmockit.jar"/> -->
 
    &lt;classpath path="jmockit.jar"/>
 
-   <span class="comment">&lt;!-- To generate (if desired) a code coverage HTML report: --></span>
+   &lt;!-- To generate (if desired) a code coverage HTML report: -->
    &lt;classpath path="jmockit-coverage.jar"/>
 
-   <span class="comment">&lt;!-- additional classpath entries, including one for the appropriate junit.jar --></span>
+   &lt;!-- additional classpath entries, including one for the appropriate junit.jar -->
 
    &lt;batchtest>
-      <span class="comment">&lt;!-- filesets specifying the desired test classes --></span>
+      &lt;!-- filesets specifying the desired test classes -->
    &lt;/batchtest>
 &lt;/junit>
 </code></pre>
@@ -87,7 +87,7 @@
    The JMockit artifacts are located in the central Maven repository.
    To use them in a test suite, add the following to your <code>pom.xml</code> file:
 </p>
-<pre class="no-highlight"><code>&lt;properties>
+<pre><code>&lt;properties>
    &lt;jmockit.version><em>desired version</em>&lt;/jmockit.version>
 &lt;/properties>
 

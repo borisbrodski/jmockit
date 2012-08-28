@@ -487,12 +487,12 @@ An example coverage report showing all metrics can be found <a href="../coverage
    For example, the output directory for generated files can be specified through the
    <code>jmockit-coverage-outputDir</code> property.
 </p>
-<pre class="no-highlight"><code>&lt;plugin>
+<pre><code>&lt;plugin>
    &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
    &lt;configuration>
       &lt;argLine>
          <strong>-Djmockit-coverage-outputDir=target/my-coverage-report</strong>
-         <span class="comment">&lt;!-- other "jmockit-coverage" properties, if needed --></span>
+         &lt;!-- other "jmockit-coverage" properties, if needed -->
       &lt;/argLine>
    &lt;/configuration>
 &lt;/plugin>
@@ -501,11 +501,11 @@ An example coverage report showing all metrics can be found <a href="../coverage
    If the tests are executed in a Java SE 5 JVM, or if for whatever reason JMockit cannot be automatically initialized
    when running on Java SE 6+, then the <code>-javaagent</code> JVM parameter should be used as shown below.
 </p>
-<pre class="no-highlight"><code>&lt;plugin>
+<pre><code>&lt;plugin>
    &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
    &lt;configuration>&lt;argLine>
       <strong>-javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar</strong>
-      <span class="comment">&lt;!-- "jmockit-coverage" properties, if any are needed --></span>
+      &lt;!-- "jmockit-coverage" properties, if any are needed -->
    &lt;/argLine>&lt;/configuration>
    &lt;/plugin>
 </code></pre>
