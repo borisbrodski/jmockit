@@ -219,11 +219,13 @@ public final class RecordAndReplayExecution
 
       if (LOCK.isHeldByCurrentThread()) {
          // This occurs if called from a custom argument matching method, in the instantiation of an @Input value,
-         // or in a call to an overridden Object method (equals, hashCode, toString).
+         // in a call to an overridden Object method (equals, hashCode, toString), or during static initialization of
+         // a mocked class which calls another mocked method.
          return defaultReturnValue(mock, mockDesc, executionMode, args);
       }
       else if (executingTest.isShouldIgnoreMockingCallbacks()) {
-         // This occurs when called from a reentrant delegate method.
+         // This occurs when called from a reentrant delegate method, or during static initialization of a mocked class
+         // being instantiated for a local mock field.
          return defaultReturnValue(mock, classDesc, mockDesc, executionMode, args);
       }
       else if (executingTest.isProceedingIntoRealImplementation()) {
