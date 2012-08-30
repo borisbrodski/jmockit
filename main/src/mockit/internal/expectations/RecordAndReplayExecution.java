@@ -236,6 +236,9 @@ public final class RecordAndReplayExecution
 
          return Void.class;
       }
+      else if (mock != null && executionMode == 3 && !TestRun.mockFixture().isInstanceOfMockedClass(mock)) {
+         return Void.class;
+      }
 
       executingTest.registerAdditionalMocksFromFinalLocalMockFieldsIfAny();
 
@@ -250,7 +253,7 @@ public final class RecordAndReplayExecution
 
          if (mockDesc.startsWith("<init>") && handleCallToConstructor(instance, mock, classDesc)) {
             return
-               executionMode == 0 ||
+               executionMode == 0 || executionMode == 3 ||
                executionMode == 1 && !inReplayPhase(instance) ||
                executingTest.isInjectableMock(mock) ? null : Void.class;
          }

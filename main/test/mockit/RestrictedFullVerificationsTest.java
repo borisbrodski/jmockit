@@ -119,10 +119,10 @@ public final class RestrictedFullVerificationsTest
    @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsToInheritedMethods_whenNotVerified(final SubDependency mock2)
    {
-      mock.prepare();
+      mock2.prepare();
       mock2.getValue();
 
-      new FullVerifications(1, mock) {{ mock2.getValue(); }};
+      new FullVerifications(1, mock2) {{ mock2.getValue(); }};
    }
 
    @Test
@@ -146,11 +146,11 @@ public final class RestrictedFullVerificationsTest
    @Test
    public void verifyAllInvocationsToMethodsOfBaseClassAndOfSubclass(final SubDependency mock2)
    {
-      mock.prepare();
+      mock2.prepare();
       mock2.getValue();
 
       new FullVerifications(mock2) {{
-         mock.prepare();
+         mock2.prepare();
          mock2.getValue();
       }};
    }
@@ -159,7 +159,7 @@ public final class RestrictedFullVerificationsTest
    public void verifyAllInvocationsToMethodsOfBaseClassAndOfSubclass_whenInheritedMethodNotVerified(
       final SubDependency mock2)
    {
-      mock.prepare();
+      mock2.prepare();
       mock2.getValue();
 
       new FullVerificationsInOrder(mock2) {{ mock2.getValue(); }};

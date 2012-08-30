@@ -65,6 +65,7 @@ public final class MockFixture
     */
    private final Map<Class<?>, String> realClassesToMockClasses = new HashMap<Class<?>, String>(8);
 
+   private final List<Class<?>> mockedClasses = new ArrayList<Class<?>>();
    private final Map<Class<?>, InstanceFactory> mockedTypesAndInstances = new HashMap<Class<?>, InstanceFactory>();
 
    // Methods to add/remove transformed/redefined classes /////////////////////////////////////////////////////////////
@@ -97,8 +98,32 @@ public final class MockFixture
       redefinedClasses.put(redefinedClass, modifiedClassfile);
    }
 
+   public void registerMockedClass(Class<?> mockedType)
+   {
+      if (!mockedClasses.contains(mockedType) && !Utilities.isGeneratedImplementationClass(mockedType)) {
+         mockedClasses.add(mockedType);
+      }
+   }
+
+   public boolean isInstanceOfMockedClass(Object mockedInstance)
+   {
+      Class<?> mockedClass = mockedInstance.getClass();
+      int n = mockedClasses.size();
+
+      for (int i = 0; i < n; i++) {
+         Class<?> mockedType = mockedClasses.get(i);
+
+         if (mockedType == mockedClass || mockedType.isAssignableFrom(mockedClass)) {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
    public void registerInstanceFactoryForMockedType(Class<?> mockedType, InstanceFactory mockedInstanceFactory)
    {
+      registerMockedClass(mockedType);
       mockedTypesAndInstances.put(mockedType, mockedInstanceFactory);
    }
 
@@ -145,6 +170,7 @@ public final class MockFixture
       }
 
       mockedTypesAndInstances.remove(redefinedClass);
+      mockedClasses.remove(redefinedClass);
    }
 
    private void discardStateForCorrespondingMockClassIfAny(Class<?> redefinedClass)

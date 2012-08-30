@@ -116,7 +116,6 @@ public final class ExpectationsForConstructorsTest
    @Test
    public void mockClassHierarchyWhereFirstConstructorInBaseClassIsPrivate(@Mocked B mock)
    {
-      new A(null);
       new B("Test1");
    }
 

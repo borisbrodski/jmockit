@@ -52,6 +52,8 @@ public final class DynamicPartialMocking
          redefineClassAndItsSuperClasses(targetClass, true);
          targetInstances.add(classOrInstance);
       }
+
+      TestRun.mockFixture().registerMockedClass(targetClass);
    }
 
    private void validateTargetClassType(Class<?> targetClass)

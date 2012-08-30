@@ -25,20 +25,39 @@ public final class OverlappedMockingWithMockFieldTest
    }
 
    @Mocked("doSomething1") BaseClass base;
+   static int doSomething2MockingCount;
+
+   @After
+   public void resetMockingCount()
+   {
+      doSomething2MockingCount--;
+   }
 
    @Test
    public void overlappedStaticPartialMocking(@Mocked({"doSomething2", "doSomethingElse"}) final DerivedClass derived)
    {
+      doSomething2MockingCount++;
+
       new NonStrictExpectations() {{
          derived.doSomethingElse(); result = true;
       }};
 
       try { base.doSomething1(); fail(); } catch (RuntimeException ignore) {}
-      base.doSomething2();
+      callDoSomething2OnBaseObject();
 
       try { derived.doSomething1(); fail(); } catch (RuntimeException ignore) {}
       derived.doSomething2();
       assertTrue(derived.doSomethingElse());
+   }
+
+   private void callDoSomething2OnBaseObject()
+   {
+      if (doSomething2MockingCount == 1) {
+         base.doSomething2();
+      }
+      else {
+         try { base.doSomething2(); fail(); } catch (RuntimeException ignore) {}
+      }
    }
 
    @Test
@@ -57,11 +76,12 @@ public final class OverlappedMockingWithMockFieldTest
       };
 
       try { base.doSomething1(); fail(); } catch (RuntimeException ignore) {}
-      base.doSomething2();
 
       try { derived.doSomething1(); fail(); } catch (RuntimeException ignore) {}
       derived.doSomething2();
       assertTrue(derived.doSomethingElse());
+
+      doSomething2MockingCount++;
    }
 
    @Test
@@ -73,7 +93,7 @@ public final class OverlappedMockingWithMockFieldTest
    private void assertRegularMockingOfBaseClass()
    {
       base.doSomething1();
-      try { base.doSomething2(); fail(); } catch (RuntimeException ignore) {}
+      callDoSomething2OnBaseObject();
 
       DerivedClass derived = new DerivedClass();
       assertTrue(derived.doSomethingElse());
@@ -105,6 +125,8 @@ public final class OverlappedMockingWithMockFieldTest
          derived.doSomething2(); times = 2;
          derived.doSomethingElse(); times = 1;
       }};
+
+      doSomething2MockingCount++;
    }
 
    @Test
@@ -124,7 +146,7 @@ public final class OverlappedMockingWithMockFieldTest
       }};
 
       try { base.doSomething1(); fail(); } catch (RuntimeException ignore) {}
-      try { base.doSomething2(); fail(); } catch (RuntimeException ignore) {}
+      callDoSomething2OnBaseObject();
 
       try { derived.doSomething1(); fail(); } catch (RuntimeException ignore) {}
       derived.doSomething2();
@@ -137,6 +159,8 @@ public final class OverlappedMockingWithMockFieldTest
          derived.doSomething2(); times = 1;
          derived.doSomethingElse(); times = 1;
       }};
+
+      doSomething2MockingCount++;
    }
 
    @Test

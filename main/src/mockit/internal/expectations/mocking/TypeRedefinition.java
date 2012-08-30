@@ -5,6 +5,7 @@
 package mockit.internal.expectations.mocking;
 
 import mockit.external.asm4.*;
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 final class TypeRedefinition extends BaseTypeRedefinition
@@ -35,6 +36,8 @@ final class TypeRedefinition extends BaseTypeRedefinition
          redefineMethodsAndConstructorsInTargetType();
          storeRedefinedClassesInCache(mockedClassId);
       }
+
+      TestRun.mockFixture().registerMockedClass(targetClass);
    }
 
    InstanceFactory redefineType()

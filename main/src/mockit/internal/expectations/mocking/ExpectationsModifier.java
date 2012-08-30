@@ -69,6 +69,13 @@ final class ExpectationsModifier extends MockedTypeModifier
       executionMode = 2;
    }
 
+   void useDynamicMockingForSuperClass()
+   {
+      if (executionMode == 0) {
+         executionMode = 3;
+      }
+   }
+
    @Override
    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
@@ -128,7 +135,7 @@ final class ExpectationsModifier extends MockedTypeModifier
 
       String internalClassName = className;
 
-      if (baseClassNameForCapturedInstanceMethods != null && !visitingConstructor) {
+      if (!visitingConstructor && baseClassNameForCapturedInstanceMethods != null) {
          internalClassName = baseClassNameForCapturedInstanceMethods;
       }
 
@@ -205,20 +212,9 @@ final class ExpectationsModifier extends MockedTypeModifier
          defaultFilters != null && (defaultFilters.length() == 0 || defaultFilters.contains(name));
    }
 
-   private boolean isConstructorToBeIgnored(String name)
-   {
-      return ignoreConstructors && "<init>".equals(name);
-   }
-
-   private boolean isStaticMethodToBeIgnored(int access)
-   {
-      return executionMode == 2 && isStatic(access);
-   }
-
-   private boolean isNativeMethodForDynamicMocking(int access)
-   {
-      return executionMode > 0 && isNative(access);
-   }
+   private boolean isConstructorToBeIgnored(String name) { return ignoreConstructors && "<init>".equals(name); }
+   private boolean isStaticMethodToBeIgnored(int access) { return executionMode == 2 && isStatic(access); }
+   private boolean isNativeMethodForDynamicMocking(int access) { return executionMode > 0 && isNative(access); }
 
    private void validateModificationOfNativeMethod(int access, String name)
    {

@@ -142,20 +142,24 @@ abstract class BaseTypeRedefinition
 
    final void redefineMethodsAndConstructorsInTargetType()
    {
-      redefineClassAndItsSuperClasses(targetClass);
+      redefineClassAndItsSuperClasses(targetClass, false);
    }
 
-   private void redefineClassAndItsSuperClasses(Class<?> realClass)
+   private void redefineClassAndItsSuperClasses(Class<?> realClass, boolean isSuperClass)
    {
       ClassReader classReader = createClassReader(realClass);
       ExpectationsModifier modifier = createModifier(realClass, classReader);
+
+      if (isSuperClass) {
+         modifier.useDynamicMockingForSuperClass();
+      }
 
       redefineClass(realClass, classReader, modifier);
 
       Class<?> superClass = realClass.getSuperclass();
 
       if (superClass != null && superClass != Object.class && superClass != Proxy.class) {
-         redefineClassAndItsSuperClasses(superClass);
+         redefineClassAndItsSuperClasses(superClass, true);
       }
    }
 
