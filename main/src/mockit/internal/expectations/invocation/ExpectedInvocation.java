@@ -187,15 +187,23 @@ public final class ExpectedInvocation
    public UnexpectedInvocation errorForUnexpectedInvocation(
       Object mock, String invokedClassDesc, String invokedMethod, Object[] replayArgs)
    {
-      ArgumentMismatch argumentsDescription = new ArgumentMismatch();
-      argumentsDescription.appendFormatted(replayArgs);
-      String instanceDescription = mock == null ? "" : "\n   on instance: " + Utilities.objectIdentity(mock);
-      String message =
-         "Unexpected invocation of:\n" + new MethodFormatter(invokedClassDesc, invokedMethod) +
-         "\n   with arguments: " + argumentsDescription + instanceDescription +
-         "\nwhen was expecting an invocation of" + this;
+      StringBuilder message = new StringBuilder(200);
+      message.append("Unexpected invocation of:\n");
+      message.append(new MethodFormatter(invokedClassDesc, invokedMethod));
 
-      return newUnexpectedInvocationWithCause("Unexpected invocation", message);
+      if (replayArgs.length > 0) {
+         ArgumentMismatch argumentMismatch = new ArgumentMismatch();
+         argumentMismatch.appendFormatted(replayArgs);
+         message.append("\n   with arguments: ").append(argumentMismatch);
+      }
+
+      if (mock != null) {
+         message.append("\n   on instance: ").append(Utilities.objectIdentity(mock));
+      }
+
+      message.append("\nwhen was expecting an invocation of").append(this);
+
+      return newUnexpectedInvocationWithCause("Unexpected invocation", message.toString());
    }
 
    public UnexpectedInvocation errorForUnexpectedInvocation(Object[] replayArgs)

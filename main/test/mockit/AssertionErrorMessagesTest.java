@@ -17,6 +17,7 @@ public final class AssertionErrorMessagesTest
    @SuppressWarnings("UnusedParameters")
    static class Collaborator
    {
+      void doSomething() {}
       void doSomething(int i, String s) {}
       void doSomethingElse(String s) {}
    }
@@ -170,6 +171,17 @@ public final class AssertionErrorMessagesTest
          assertTrue(e.toString().contains("with arguments: 1, \"anotherValue\""));
          assertTrue(e.getCause().toString().contains("with arguments: \"test\""));
       }
+   }
+
+   @Test
+   public void unexpectedInvocationOnMethodWithNoParameters()
+   {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("doSomething()\n   on instance");
+
+      new Expectations() {{ mock.doSomethingElse(anyString); }};
+
+      mock.doSomething();
    }
 
    @Test
