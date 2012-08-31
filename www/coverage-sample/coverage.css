@@ -1,6 +1,7 @@
 body {
    line-height: 1.286em; font-family: "Helvetica", "Arial", sans-serif;
 }
+h1 { font-size: 150%; }
 table { border-spacing: 1px; }
 table table { width: 100%; border-spacing: 0; }
 caption {
