@@ -107,9 +107,6 @@ final class OutputFileGenerator
       catch (IOException e) {
          throw new RuntimeException(e);
       }
-      catch (ClassNotFoundException e) {
-         throw new RuntimeException(e);
-      }
    }
 
    private void createOutputDirIfSpecifiedButNotExists()

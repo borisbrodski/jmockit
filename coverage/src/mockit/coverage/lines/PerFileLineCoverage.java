@@ -4,6 +4,7 @@
  */
 package mockit.coverage.lines;
 
+import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
@@ -16,8 +17,17 @@ public final class PerFileLineCoverage implements PerFileCoverage
    public final SortedMap<Integer, LineCoverageData> lineToLineData = new TreeMap<Integer, LineCoverageData>();
 
    // Computed on demand:
-   private transient int totalSegments = -1;
-   private transient int coveredSegments = -1;
+   private transient int totalSegments;
+   private transient int coveredSegments;
+
+   public PerFileLineCoverage() { initializeCache(); }
+   private void initializeCache() { totalSegments = coveredSegments = -1; }
+
+   private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+   {
+      initializeCache();
+      in.defaultReadObject();
+   }
 
    public LineCoverageData addLine(int line)
    {
@@ -79,7 +89,7 @@ public final class PerFileLineCoverage implements PerFileCoverage
          lineData.reset();
       }
 
-      totalSegments = coveredSegments = -1;
+      initializeCache();
    }
 
    public void mergeInformation(PerFileLineCoverage previousCoverage)

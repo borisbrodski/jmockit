@@ -4,6 +4,7 @@
  */
 package mockit.coverage.paths;
 
+import java.io.*;
 import java.util.*;
 
 import mockit.coverage.*;
@@ -17,8 +18,17 @@ public final class PerFilePathCoverage implements PerFileCoverage
       new LinkedHashMap<Integer, MethodCoverageData>();
 
    // Computed on demand:
-   private transient int totalPaths = -1;
-   private transient int coveredPaths = -1;
+   private transient int totalPaths;
+   private transient int coveredPaths;
+
+   public PerFilePathCoverage() { initializeCache(); }
+   private void initializeCache() { totalPaths = coveredPaths = -1; }
+
+   private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+   {
+      initializeCache();
+      in.defaultReadObject();
+   }
 
    public void addMethod(MethodCoverageData methodData)
    {
@@ -70,7 +80,7 @@ public final class PerFilePathCoverage implements PerFileCoverage
          methodData.reset();
       }
 
-      totalPaths = coveredPaths = -1;
+      initializeCache();
    }
 
    public void mergeInformation(PerFilePathCoverage previousCoverage)
