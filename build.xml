@@ -6,13 +6,7 @@
    <loadfile property="version" srcFile="version.txt"/>
 
    <path id="common.classpath">
-      <pathelement location="lib/hamcrest-core-1.2.jar"/>
-      <pathelement location="lib/commons-logging-1.1.1.jar"/>
-      <pathelement location="lib/javaee.jar"/>
-      <pathelement location="lib/log4j-1.2.15.jar"/>
-      <pathelement location="lib/slf4j-api-1.5.8.jar"/>
-      <fileset file="${JUNIT_JAR}"/>
-      <fileset file="${TESTNG_JAR}"/>
+      <fileset dir="lib" includes="*.jar"/>
    </path>
 
    <target name="fullRebuild" depends="buildAll, createjars"/>

@@ -1519,7 +1519,7 @@
     <configuration default="false" name="Coverage: merge samples" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="mockit.coverage.CodeCoverage" />
       <option name="VM_PARAMETERS" value="-Djmockit-coverage-output=html" />
-      <option name="PROGRAM_PARAMETERS" value="." />
+      <option name="PROGRAM_PARAMETERS" value=". LoginService" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/samples" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
@@ -1895,7 +1895,7 @@
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="-Djmockit-coverage-outputDir=../../www/coverage-sample" />
+      <option name="VM_PARAMETERS" value="-Djmockit-coverage-output=html -Djmockit-coverage-outputDir=../../www/coverage-sample" />
       <option name="PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/samples/orderMngmntWebapp" />
       <option name="ENV_VARIABLES" />
