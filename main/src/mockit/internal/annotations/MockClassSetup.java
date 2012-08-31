@@ -91,6 +91,11 @@ public final class MockClassSetup
          throw new IllegalArgumentException("Missing @MockClass for " + specifiedMockClass);
       }
 
+      if (mockClassAnnotation.realClass() == null) {
+         // This happens only with the IBM JDK.
+         throw new TypeNotPresentException("specified in mock " + specifiedMockClass, null);
+      }
+
       return mockClassAnnotation.realClass();
    }
 
