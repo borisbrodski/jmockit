@@ -80,7 +80,7 @@ abstract class ListWithFilesAndPercentages
       output.print(total);
       output.write("'>");
       writePercentageValue(covered, total, percentage);
-      output.println("%");
+      output.print("%");
    }
 
    private void writePercentageValue(int covered, int total, int percentage)
