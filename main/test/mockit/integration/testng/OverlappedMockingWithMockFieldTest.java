@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package mockit;
+package mockit.integration.testng;
 
-import static org.junit.Assert.*;
-import org.junit.*;
+import org.testng.annotations.*;
+import static org.testng.Assert.*;
+
+import mockit.*;
 
 public final class OverlappedMockingWithMockFieldTest
 {
@@ -15,52 +17,43 @@ public final class OverlappedMockingWithMockFieldTest
    }
 
    @BeforeClass @AfterClass
-   public static void verifyNoMockingBeforeAndAfterAllTests()
+   public void verifyNoMockingBeforeAndAfterAllTests()
    {
-      BaseClass base = new BaseClass();
-      try { base.doSomething1(); fail(); } catch (RuntimeException ignore) {}
-      try { base.doSomething1(); fail(); } catch (RuntimeException ignore) {}
+      BaseClass bc = new BaseClass();
+      try { bc.doSomething1(); fail(); } catch (RuntimeException ignore) {}
+      try { bc.doSomething1(); fail(); } catch (RuntimeException ignore) {}
       try { BaseClass.doStatic1(); fail(); } catch (RuntimeException ignore) {}
       try { BaseClass.doStatic2(); fail(); } catch (RuntimeException ignore) {}
    }
 
    @Mocked("doSomething1") BaseClass base;
-   static int doSomething2MockingCount;
-
-   @After
-   public void resetMockingCount()
-   {
-      doSomething2MockingCount--;
-   }
 
    @Test
    public void overlappedStaticPartialMocking(@Mocked({"doSomething2", "doSomethingElse"}) final DerivedClass derived)
    {
-      doSomething2MockingCount++;
-
       new NonStrictExpectations() {{
          derived.doSomethingElse(); result = true;
       }};
 
       try { base.doSomething1(); fail(); } catch (RuntimeException ignore) {}
-      callDoSomething2OnBaseObject();
+      callDoSomething2OnBaseObject(false);
 
       try { derived.doSomething1(); fail(); } catch (RuntimeException ignore) {}
       derived.doSomething2();
       assertTrue(derived.doSomethingElse());
    }
 
-   private void callDoSomething2OnBaseObject()
+   private void callDoSomething2OnBaseObject(boolean expectRealMethodToBeExecuted)
    {
-      if (doSomething2MockingCount == 1) {
-         base.doSomething2();
+      if (expectRealMethodToBeExecuted) {
+         try { base.doSomething2(); fail(); } catch (RuntimeException ignore) {}
       }
       else {
-         try { base.doSomething2(); fail(); } catch (RuntimeException ignore) {}
+         base.doSomething2();
       }
    }
 
-   @Test
+   @Test(dependsOnMethods = "overlappedStaticPartialMocking")
    public void overlappedStaticPartialMockingWithLocalMockFieldInsteadOfMockParameter()
    {
       assertRegularMockingOfBaseClass();
@@ -80,11 +73,9 @@ public final class OverlappedMockingWithMockFieldTest
       try { derived.doSomething1(); fail(); } catch (RuntimeException ignore) {}
       derived.doSomething2();
       assertTrue(derived.doSomethingElse());
-
-      doSomething2MockingCount++;
    }
 
-   @Test
+   @Test(dependsOnMethods = "overlappedStaticPartialMockingWithLocalMockFieldInsteadOfMockParameter")
    public void regularMockingOfBaseClassAfterRegularMockingOfDerivedClassInPreviousTest()
    {
       assertRegularMockingOfBaseClass();
@@ -93,7 +84,7 @@ public final class OverlappedMockingWithMockFieldTest
    private void assertRegularMockingOfBaseClass()
    {
       base.doSomething1();
-      callDoSomething2OnBaseObject();
+      callDoSomething2OnBaseObject(true);
 
       DerivedClass derived = new DerivedClass();
       assertTrue(derived.doSomethingElse());
@@ -101,7 +92,7 @@ public final class OverlappedMockingWithMockFieldTest
       try { derived.doSomething2(); fail(); } catch (RuntimeException ignore) {}
    }
 
-   @Test
+   @Test(dependsOnMethods = "regularMockingOfBaseClassAfterRegularMockingOfDerivedClassInPreviousTest")
    public void overlappedDynamicPartialMockingOfAllInstances()
    {
       final DerivedClass derived = new DerivedClass();
@@ -125,17 +116,15 @@ public final class OverlappedMockingWithMockFieldTest
          derived.doSomething2(); times = 2;
          derived.doSomethingElse(); times = 1;
       }};
-
-      doSomething2MockingCount++;
    }
 
-   @Test
+   @Test(dependsOnMethods = "overlappedDynamicPartialMockingOfAllInstances")
    public void regularMockingOfBaseClassAfterDynamicMockingOfDerivedClassInPreviousTest()
    {
       assertRegularMockingOfBaseClass();
    }
 
-   @Test
+   @Test(dependsOnMethods = "regularMockingOfBaseClassAfterDynamicMockingOfDerivedClassInPreviousTest")
    public void overlappedDynamicPartialMockingOfSingleInstance()
    {
       final DerivedClass derived = new DerivedClass();
@@ -146,7 +135,7 @@ public final class OverlappedMockingWithMockFieldTest
       }};
 
       try { base.doSomething1(); fail(); } catch (RuntimeException ignore) {}
-      callDoSomething2OnBaseObject();
+      callDoSomething2OnBaseObject(true);
 
       try { derived.doSomething1(); fail(); } catch (RuntimeException ignore) {}
       derived.doSomething2();
@@ -159,11 +148,9 @@ public final class OverlappedMockingWithMockFieldTest
          derived.doSomething2(); times = 1;
          derived.doSomethingElse(); times = 1;
       }};
-
-      doSomething2MockingCount++;
    }
 
-   @Test
+   @Test(dependsOnMethods = "overlappedDynamicPartialMockingOfSingleInstance")
    public void regularMockingOfBaseClassAfterDynamicMockingOfDerivedClassInstanceInPreviousTest()
    {
       assertRegularMockingOfBaseClass();

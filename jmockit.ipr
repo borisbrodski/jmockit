@@ -1154,6 +1154,8 @@
             <emptyLine />
             <package name="org.junit" withSubpackages="true" static="false" />
             <package name="org.junit" withSubpackages="true" static="true" />
+            <package name="org.testng.annotations" withSubpackages="true" static="false" />
+            <package name="org.testng" withSubpackages="true" static="true" />
             <emptyLine />
             <package name="mockit" withSubpackages="true" static="false" />
             <emptyLine />
@@ -2041,6 +2043,8 @@
         <pattern testClass="mockit.integration.testng.TestNGParametersTest" />
         <pattern testClass="mockit.integration.testng.TestNGSharedMockFieldTest" />
         <pattern testClass="mockit.integration.testng.OverlappingStubsAndMocksTest" />
+        <pattern testClass="mockit.integration.testng.OverlappedMockingWithMockFieldTest" />
+        <pattern testClass="mockit.internal.annotations.MockStateBetweenTestMethodsNGTest" />
       </patterns>
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="49210" />
