@@ -301,52 +301,20 @@
    </target>
 
    <target name="sampleTests">
-      <junit fork="yes" forkmode="once" dir="samples">
+      <junit fork="yes" forkmode="once" dir="samples" showoutput="true">
          <classpath path="jmockit.jar"/>
          <classpath path="jmockit-coverage.jar"/>
          <sysproperty key="jmockit-coverage-output" value="serial"/>
          <classpath refid="common.classpath"/>
          <classpath>
-            <fileset dir="samples" includes="lib/*.jar"/>
-
-            <pathelement location="samples/jbossaop/classes"/>
-            <pathelement location="samples/jbossaop/test-classes"/>
-
-            <pathelement location="samples/easymock/classes"/>
-            <pathelement location="samples/easymock/test-classes"/>
-
-            <pathelement location="samples/jmock/classes"/>
-            <pathelement location="samples/jmock/test-classes"/>
-
-            <pathelement location="samples/powermock/lib/dom4j-1.6.1.jar"/>
-            <pathelement location="samples/powermock/classes"/>
-            <pathelement location="samples/powermock/test-classes"/>
-
-            <pathelement location="samples/mockito/classes"/>
-            <pathelement location="samples/mockito/test-classes"/>
-
-            <pathelement location="samples/unitils/lib/ognl-2.6.9.jar"/>
-            <pathelement location="samples/unitils/classes"/>
-            <pathelement location="samples/unitils/test-classes"/>
-
+            <fileset dir="samples" includes="**/lib/*.jar"/>
             <pathelement location="hibernate3emul/jmockit-hibernate3emul.jar"/>
-            <pathelement location="samples/orderMngmntWebapp/WEB-INF/classes"/>
-            <pathelement location="samples/orderMngmntWebapp/test-classes"/>
-
-            <pathelement location="samples/tutorial/lib/commons-email-1.2.jar"/>
-            <pathelement location="samples/tutorial/classes"/>
-            <pathelement location="samples/tutorial/test-classes"/>
-
-            <pathelement location="samples/TimingFramework/classes"/>
-            <pathelement location="samples/TimingFramework/test-classes"/>
-
-            <pathelement location="samples/AnimatedTransitions/classes"/>
-            <pathelement location="samples/AnimatedTransitions/test-classes"/>
-
-            <pathelement location="samples/tourdemock/classes"/>
-            <pathelement location="samples/tourdemock/test-classes"/>
+            <dirset dir="samples">
+               <include name="*/classes"/>
+               <include name="*/WEB-INF/classes"/>
+               <include name="*/test-classes"/>
+            </dirset>
          </classpath>
-         <jvmarg value="-Djmockit-stubs=java.awt.EventDispatchThread"/>
          <batchtest>
             <fileset dir="samples/jbossaop/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/easymock/test-classes" includes="**/*Test.class"/>
@@ -354,10 +322,7 @@
             <fileset dir="samples/mockito/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/unitils/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/powermock/test-classes" includes="**/*Test.class"/>
-            <fileset dir="samples/orderMngmntWebapp/test-classes">
-               <include name="**/*Test.class"/>
-               <exclude name="orderMngr/service/domain/DomainTest.class"/>
-            </fileset>
+            <fileset dir="samples/orderMngmntWebapp/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/tutorial/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/TimingFramework/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/AnimatedTransitions/test-classes" includes="**/*Test.class"/>
