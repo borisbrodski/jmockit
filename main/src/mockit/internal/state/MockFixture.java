@@ -220,12 +220,12 @@ public final class MockFixture
          Class<?> redefinedClass = entry.getKey();
          byte[] currentDefinition = entry.getValue();
          byte[] previousDefinition = previousDefinitions.get(redefinedClass);
-         
+
          if (currentDefinition != previousDefinition) {
             redefinitionEngine.restoreDefinition(redefinedClass, previousDefinition);
-            restoreDefinition(redefinedClass);
 
             if (previousDefinition == null) {
+               restoreDefinition(redefinedClass);
                discardStateForCorrespondingMockClassIfAny(redefinedClass);
                itr.remove();
             }

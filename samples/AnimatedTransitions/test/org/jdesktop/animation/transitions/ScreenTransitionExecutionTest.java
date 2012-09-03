@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.transitions;
@@ -25,8 +25,7 @@ public final class ScreenTransitionExecutionTest
    @Mocked AnimationManager manager;
    @Mocked AnimationLayer animationLayer;
    @Mocked("()") @Capturing(maxInstances = 1) TimingTarget timingTarget;
-
-   private ScreenTransition transition;
+   ScreenTransition transition;
 
    @Before
    public void createTransition()
@@ -35,10 +34,31 @@ public final class ScreenTransitionExecutionTest
    }
 
    @Test
+   public void endTransition()
+   {
+      new NonStrictExpectations() {
+         JRootPane rootPane;
+         Component savedGlassPane;
+
+         {
+            container.getRootPane(); returns(rootPane);
+            setField(transition, savedGlassPane);
+         }
+      };
+
+      timingTarget.end();
+
+      new Verifications() {{
+         animationLayer.setVisible(false);
+         container.setVisible(true);
+         manager.reset(animator);
+      }};
+   }
+
+   @Test
    public void beginTransition(final Graphics2D g2D)
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          final int width = 200;
          final int height = 150;
          JRootPane rootPane;
@@ -58,42 +78,13 @@ public final class ScreenTransitionExecutionTest
       timingTarget.begin();
       assertNotNull(transition.getTransitionImage());
 
-      new VerificationsInOrder()
-      {
-         {
-            manager.setupStart();
-            animationLayer.setupBackground(container);
-            target.setupNextScreen();
-            manager.setupEnd();
-            manager.init(animator);
-            manager.paint(g2D);
-         }
-      };
-   }
-
-   @Test
-   public void endTransition()
-   {
-      new NonStrictExpectations()
-      {
-         JRootPane rootPane;
-         Component savedGlassPane;
-
-         {
-            container.getRootPane(); returns(rootPane);
-            setField(transition, savedGlassPane);
-         }
-      };
-
-      timingTarget.end();
-
-      new Verifications()
-      {
-         {
-            animationLayer.setVisible(false);
-            container.setVisible(true);
-            manager.reset(animator);
-         }
-      };
+      new VerificationsInOrder() {{
+         manager.setupStart();
+         animationLayer.setupBackground(container);
+         target.setupNextScreen();
+         manager.setupEnd();
+         manager.init(animator);
+         manager.paint(g2D);
+      }};
    }
 }
