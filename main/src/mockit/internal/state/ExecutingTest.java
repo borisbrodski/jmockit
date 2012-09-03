@@ -86,6 +86,9 @@ public final class ExecutingTest
          }
       }
 
+      //noinspection LockAcquiredButNotSafelyReleased
+      RecordAndReplayExecution.TEST_ONLY_PHASE_LOCK.lock();
+
       return currentRecordAndReplay;
    }
 

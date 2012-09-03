@@ -17,7 +17,8 @@ import mockit.internal.util.*;
 
 public final class RecordAndReplayExecution
 {
-   public static final ReentrantLock LOCK = new ReentrantLock();
+   public static final ReentrantLock RECORD_OR_REPLAY_LOCK = new ReentrantLock();
+   public static final ReentrantLock TEST_ONLY_PHASE_LOCK = new ReentrantLock();
 
    private final FieldTypeRedefinitions redefinitions;
    private final Map<Type, Object> typesAndTargetObjects;
@@ -107,6 +108,9 @@ public final class RecordAndReplayExecution
          validateThereIsAtLeastOneMockedTypeInScope();
          discoverMockedTypesAndInstancesForMatchingOnInstance();
          executingTest.setRecordAndReplay(this);
+
+         //noinspection LockAcquiredButNotSafelyReleased
+         TEST_ONLY_PHASE_LOCK.lock();
       }
       finally {
          executingTest.setShouldIgnoreMockingCallbacks(false);
@@ -215,15 +219,19 @@ public final class RecordAndReplayExecution
       int executionMode, Object... args)
       throws Throwable
    {
-      ExecutingTest executingTest = TestRun.getExecutingTest();
-
-      if (LOCK.isHeldByCurrentThread()) {
+      if (
+         RECORD_OR_REPLAY_LOCK.isHeldByCurrentThread() ||
+         TEST_ONLY_PHASE_LOCK.isLocked() && !TEST_ONLY_PHASE_LOCK.isHeldByCurrentThread()
+      ) {
          // This occurs if called from a custom argument matching method, in the instantiation of an @Input value,
-         // in a call to an overridden Object method (equals, hashCode, toString), or during static initialization of
-         // a mocked class which calls another mocked method.
+         // in a call to an overridden Object method (equals, hashCode, toString), during static initialization of a
+         // mocked class which calls another mocked method, or from a different thread during a recording/verification.
          return defaultReturnValue(mock, mockDesc, executionMode, args);
       }
-      else if (executingTest.isShouldIgnoreMockingCallbacks()) {
+
+      ExecutingTest executingTest = TestRun.getExecutingTest();
+
+      if (executingTest.isShouldIgnoreMockingCallbacks()) {
          // This occurs when called from a reentrant delegate method, or during static initialization of a mocked class
          // being instantiated for a local mock field.
          return defaultReturnValue(mock, classDesc, mockDesc, executionMode, args);
@@ -246,7 +254,7 @@ public final class RecordAndReplayExecution
          return Void.class;
       }
 
-      LOCK.lock();
+      RECORD_OR_REPLAY_LOCK.lock();
 
       try {
          RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(true);
@@ -277,7 +285,7 @@ public final class RecordAndReplayExecution
          return result;
       }
       finally {
-         LOCK.unlock();
+         RECORD_OR_REPLAY_LOCK.unlock();
       }
    }
 
@@ -401,6 +409,10 @@ public final class RecordAndReplayExecution
 
    private Error endExecution()
    {
+      if (TEST_ONLY_PHASE_LOCK.isLocked()) {
+         TEST_ONLY_PHASE_LOCK.unlock();
+      }
+
       switchFromRecordToReplayIfNotYet();
 
       if (redefinitions != null) {
@@ -436,6 +448,8 @@ public final class RecordAndReplayExecution
 
    public void endInvocations()
    {
+      TEST_ONLY_PHASE_LOCK.unlock();
+
       if (verificationPhase == null) {
          switchFromRecordToReplayIfNotYet();
       }

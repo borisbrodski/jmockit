@@ -49,7 +49,10 @@ public final class MockedBridge extends MockingBridge
       String mockNameAndDesc = mockName.concat(mockDesc); // avoid possible use of mocked StringBuilder
       int executionMode = (Integer) args[6];
 
-      if (executionMode == 0 && !"toString".equals(mockName) && RecordAndReplayExecution.LOCK.isHeldByCurrentThread()) {
+      if (
+         executionMode == 0 && !"toString".equals(mockName) &&
+         RecordAndReplayExecution.RECORD_OR_REPLAY_LOCK.isHeldByCurrentThread()
+      ) {
          return RecordAndReplayExecution.defaultReturnValue(mocked, mockNameAndDesc, 1, mockArgs);
       }
 

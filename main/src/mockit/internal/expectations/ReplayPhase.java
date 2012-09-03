@@ -11,11 +11,14 @@ import mockit.internal.state.*;
 
 final class ReplayPhase extends Phase
 {
+   // Fields for the handling of strict invocations:
    private int initialStrictExpectationIndexForCurrentBlock;
    int currentStrictExpectationIndex;
+   private Expectation strictExpectation;
+
+   // Fields for the handling of non-strict invocations:
    final List<Expectation> nonStrictInvocations;
    final List<Object[]> nonStrictInvocationArguments;
-   private Expectation nonStrictExpectation;
 
    ReplayPhase(RecordAndReplayExecution recordAndReplay)
    {
@@ -24,20 +27,20 @@ final class ReplayPhase extends Phase
       nonStrictInvocationArguments = new ArrayList<Object[]>();
       initialStrictExpectationIndexForCurrentBlock =
          Math.max(recordAndReplay.lastExpectationIndexInPreviousReplayPhase, 0);
-      positionOnFirstStrictInvocation();
+      positionOnFirstStrictExpectation();
    }
 
-   private void positionOnFirstStrictInvocation()
+   private void positionOnFirstStrictExpectation()
    {
       List<Expectation> expectations = getExpectations();
 
       if (expectations.isEmpty()) {
          currentStrictExpectationIndex = -1;
-         currentExpectation = null ;
+         strictExpectation = null ;
       }
       else {
          currentStrictExpectationIndex = initialStrictExpectationIndexForCurrentBlock;
-         currentExpectation =
+         strictExpectation =
             currentStrictExpectationIndex < expectations.size() ?
                expectations.get(currentStrictExpectationIndex) : null;
       }
@@ -50,52 +53,58 @@ final class ReplayPhase extends Phase
       Object mock, int mockAccess, String mockClsDesc, String mockDesc, String genericSignature, String exceptions,
       boolean withRealImpl, Object[] args) throws Throwable
    {
-      nonStrictExpectation = recordAndReplay.executionState.findNonStrictExpectation(mock, mockClsDesc, mockDesc, args);
+      Expectation nonStrictExpectation =
+         recordAndReplay.executionState.findNonStrictExpectation(mock, mockClsDesc, mockDesc, args);
 
       if (nonStrictExpectation == null) {
-         createExpectationIfNonStrictInvocation(
+         nonStrictExpectation = createExpectationIfNonStrictInvocation(
             mock, mockAccess, mockClsDesc, mockDesc, genericSignature, exceptions, args);
       }
 
       if (nonStrictExpectation != null) {
          nonStrictInvocations.add(nonStrictExpectation);
          nonStrictInvocationArguments.add(args);
-         return updateConstraintsAndProduceResult(mock, withRealImpl, args);
+         return updateConstraintsAndProduceResult(nonStrictExpectation, mock, withRealImpl, args);
       }
 
       return handleStrictInvocation(mock, mockClsDesc, mockDesc, withRealImpl, args);
    }
 
-   private void createExpectationIfNonStrictInvocation(
+   private Expectation createExpectationIfNonStrictInvocation(
       Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, String genericSignature,
       String exceptions, Object[] args)
    {
+      Expectation expectation = null;
+
       if (!TestRun.getExecutingTest().isStrictInvocation(mock, mockClassDesc, mockNameAndDesc)) {
          ExpectedInvocation invocation =
             new ExpectedInvocation(
                mock, mockAccess, mockClassDesc, mockNameAndDesc, false, genericSignature, exceptions, args);
-         nonStrictExpectation = new Expectation(null, invocation, true);
-         recordAndReplay.executionState.addExpectation(nonStrictExpectation, true);
+         expectation = new Expectation(null, invocation, true);
+         recordAndReplay.executionState.addExpectation(expectation, true);
       }
+
+      return expectation;
    }
 
-   private Object updateConstraintsAndProduceResult(Object mock, boolean withRealImpl, Object[] args) throws Throwable
+   private Object updateConstraintsAndProduceResult(
+      Expectation expectation, Object mock, boolean withRealImpl, Object[] args) throws Throwable
    {
-      boolean executeRealImpl = withRealImpl && nonStrictExpectation.recordPhase == null;
-      nonStrictExpectation.constraints.incrementInvocationCount();
+      boolean executeRealImpl = withRealImpl && expectation.recordPhase == null;
+      expectation.constraints.incrementInvocationCount();
 
       if (executeRealImpl) {
-         nonStrictExpectation.executedRealImplementation = true;
-         Object defaultResult = nonStrictExpectation.invocation.getDefaultResult();
+         expectation.executedRealImplementation = true;
+         Object defaultResult = expectation.invocation.getDefaultResult();
          return defaultResult == null ? Void.class : defaultResult;
       }
 
-      if (nonStrictExpectation.constraints.isInvocationCountMoreThanMaximumExpected()) {
-         recordAndReplay.setErrorThrown(nonStrictExpectation.invocation.errorForUnexpectedInvocation(args));
+      if (expectation.constraints.isInvocationCountMoreThanMaximumExpected()) {
+         recordAndReplay.setErrorThrown(expectation.invocation.errorForUnexpectedInvocation(args));
          return null;
       }
 
-      return nonStrictExpectation.produceResult(mock, args);
+      return expectation.produceResult(mock, args);
    }
 
    @SuppressWarnings("OverlyComplexMethod")
@@ -106,11 +115,11 @@ final class ReplayPhase extends Phase
       Map<Object, Object> instanceMap = getInstanceMap();
 
       while (true) {
-         if (currentExpectation == null) {
+         if (strictExpectation == null) {
             return handleUnexpectedInvocation(mock, mockClassDesc, mockNameAndDesc, withRealImpl, replayArgs);
          }
 
-         ExpectedInvocation invocation = currentExpectation.invocation;
+         ExpectedInvocation invocation = strictExpectation.invocation;
 
          if (invocation.isMatch(mock, mockClassDesc, mockNameAndDesc, instanceMap)) {
             if (mock != invocation.instance) {
@@ -120,7 +129,7 @@ final class ReplayPhase extends Phase
             Error error = invocation.arguments.assertMatch(replayArgs, instanceMap);
 
             if (error != null) {
-               if (currentExpectation.constraints.isInvocationCountInExpectedRange()) {
+               if (strictExpectation.constraints.isInvocationCountInExpectedRange()) {
                   moveToNextExpectation();
                   continue;
                }
@@ -133,7 +142,7 @@ final class ReplayPhase extends Phase
                return null;
             }
 
-            Expectation expectation = currentExpectation;
+            Expectation expectation = strictExpectation;
 
             if (expectation.constraints.incrementInvocationCount()) {
                moveToNextExpectation();
@@ -145,7 +154,7 @@ final class ReplayPhase extends Phase
 
             return expectation.produceResult(mock, replayArgs);
          }
-         else if (currentExpectation.constraints.isInvocationCountInExpectedRange()) {
+         else if (strictExpectation.constraints.isInvocationCountInExpectedRange()) {
             moveToNextExpectation();
          }
          else if (withRealImpl) {
@@ -175,20 +184,20 @@ final class ReplayPhase extends Phase
    private void moveToNextExpectation()
    {
       List<Expectation> expectations = getExpectations();
-      RecordPhase expectationBlock = currentExpectation.recordPhase;
+      RecordPhase expectationBlock = strictExpectation.recordPhase;
       currentStrictExpectationIndex++;
 
-      currentExpectation =
+      strictExpectation =
          currentStrictExpectationIndex < expectations.size() ? expectations.get(currentStrictExpectationIndex) : null;
 
       if (expectationBlock.numberOfIterations <= 1) {
-         if (currentExpectation != null && currentExpectation.recordPhase != expectationBlock) {
+         if (strictExpectation != null && strictExpectation.recordPhase != expectationBlock) {
             initialStrictExpectationIndexForCurrentBlock = currentStrictExpectationIndex;
          }
       }
-      else if (currentExpectation == null || currentExpectation.recordPhase != expectationBlock) {
+      else if (strictExpectation == null || strictExpectation.recordPhase != expectationBlock) {
          expectationBlock.numberOfIterations--;
-         positionOnFirstStrictInvocation();
+         positionOnFirstStrictExpectation();
          resetInvocationCountsForStrictExpectations(expectationBlock);
       }
    }
@@ -204,8 +213,8 @@ final class ReplayPhase extends Phase
 
    Error endExecution()
    {
-      Expectation strict = currentExpectation;
-      currentExpectation = null;
+      Expectation strict = strictExpectation;
+      strictExpectation = null;
 
       if (strict != null && strict.constraints.isInvocationCountLessThanMinimumExpected()) {
          return strict.invocation.errorForMissingInvocation();
