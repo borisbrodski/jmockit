@@ -7,7 +7,6 @@ package mockit;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-@Ignore
 public final class ReentrantMockedMethodsTest
 {
    static class Factory1 { static Factory1 create() { return null; } }
@@ -17,17 +16,18 @@ public final class ReentrantMockedMethodsTest
    public void callMethodOnFirstMockedClassDuringStaticInitializationOfSecondMockedClass(final Factory1 mock1)
    {
       new NonStrictExpectations() {{ Factory1.create(); result = mock1; }};
-      new NonStrictExpectations() { Client1 mock2; };
+      new NonStrictExpectations() { @Mocked Client1 mock2; };
       assertNotNull(Client1.factory);
    }
 
    static class Factory2 { static Factory2 create() { return null; } }
-   static class OtherClient2 { static { assertNotNull(Factory2.create()); } }
    static class Client2 { OtherClient2 getOtherClient() { return null; } }
+   static class OtherClient2 { static final Factory2 F = Factory2.create(); }
 
    @Test
    public void cascadeDuringStaticInitializationOfCascadingClass(@Cascading Factory2 mock1, @Cascading Client2 mock2)
    {
       assertNotNull(mock2.getOtherClient());
+      assertNotNull(OtherClient2.F);
    }
 }

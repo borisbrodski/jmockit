@@ -53,7 +53,7 @@ public final class MockedBridge extends MockingBridge
          executionMode == 0 && !"toString".equals(mockName) &&
          RecordAndReplayExecution.RECORD_OR_REPLAY_LOCK.isHeldByCurrentThread()
       ) {
-         return RecordAndReplayExecution.defaultReturnValue(mocked, mockNameAndDesc, 1, mockArgs);
+         return RecordAndReplayExecution.defaultReturnValue(mocked, mockedClassDesc, mockNameAndDesc, 1, mockArgs);
       }
 
       if (TestRun.isInsideNoMockingZone()) {

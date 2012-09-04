@@ -56,6 +56,8 @@ public final class ExecutingTest
       currentRecordAndReplay = newRecordAndReplay;
    }
 
+   public RecordAndReplayExecution getCurrentRecordAndReplay() { return currentRecordAndReplay; }
+
    public boolean isShouldIgnoreMockingCallbacks() { return shouldIgnoreMockingCallbacks; }
    public void setShouldIgnoreMockingCallbacks(boolean flag) { shouldIgnoreMockingCallbacks = flag; }
 

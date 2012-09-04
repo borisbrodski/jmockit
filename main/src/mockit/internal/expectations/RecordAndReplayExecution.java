@@ -35,12 +35,12 @@ public final class RecordAndReplayExecution
 
    public RecordAndReplayExecution()
    {
+      validateRecordingContext(false);
       executionState = new PhasedExecutionState();
       lastExpectationIndexInPreviousReplayPhase = 0;
       redefinitions = null;
       typesAndTargetObjects = new HashMap<Type, Object>(1);
       dynamicPartialMocking = null;
-      validateRecordingContext(false);
       validateThereIsAtLeastOneMockedTypeInScope();
       discoverMockedTypesAndInstancesForMatchingOnInstance();
       failureState = new FailureState();
@@ -77,6 +77,8 @@ public final class RecordAndReplayExecution
 
    public RecordAndReplayExecution(Expectations targetObject, Object... classesOrInstancesToBePartiallyMocked)
    {
+      validateRecordingContext(targetObject != null);
+
       TestRun.enterNoMockingZone();
       ExecutingTest executingTest = TestRun.getExecutingTest();
       executingTest.setShouldIgnoreMockingCallbacks(true);
@@ -100,17 +102,20 @@ public final class RecordAndReplayExecution
          boolean nonStrict = targetObject instanceof NonStrictExpectations;
          recordPhase = new RecordPhase(this, nonStrict);
 
-         redefinitions = redefineFieldTypes(targetObject);
+         executingTest.setRecordAndReplay(this);
 
+         redefinitions = redefineFieldTypes(targetObject);
          dynamicPartialMocking = applyDynamicPartialMocking(nonStrict, classesOrInstancesToBePartiallyMocked);
 
-         validateRecordingContext(targetObject != null);
          validateThereIsAtLeastOneMockedTypeInScope();
          discoverMockedTypesAndInstancesForMatchingOnInstance();
-         executingTest.setRecordAndReplay(this);
 
          //noinspection LockAcquiredButNotSafelyReleased
          TEST_ONLY_PHASE_LOCK.lock();
+      }
+      catch (RuntimeException e) {
+         executingTest.setRecordAndReplay(null);
+         throw e;
       }
       finally {
          executingTest.setShouldIgnoreMockingCallbacks(false);
@@ -226,7 +231,7 @@ public final class RecordAndReplayExecution
          // This occurs if called from a custom argument matching method, in the instantiation of an @Input value,
          // in a call to an overridden Object method (equals, hashCode, toString), during static initialization of a
          // mocked class which calls another mocked method, or from a different thread during a recording/verification.
-         return defaultReturnValue(mock, mockDesc, executionMode, args);
+         return defaultReturnValue(mock, classDesc, mockDesc, executionMode, args);
       }
 
       ExecutingTest executingTest = TestRun.getExecutingTest();
@@ -234,7 +239,7 @@ public final class RecordAndReplayExecution
       if (executingTest.isShouldIgnoreMockingCallbacks()) {
          // This occurs when called from a reentrant delegate method, or during static initialization of a mocked class
          // being instantiated for a local mock field.
-         return defaultReturnValue(mock, classDesc, mockDesc, executionMode, args);
+         return defaultReturnValue(executingTest, mock, classDesc, mockDesc, executionMode, args);
       }
       else if (executingTest.isProceedingIntoRealImplementation()) {
          if (executionMode == 0) {
@@ -269,7 +274,7 @@ public final class RecordAndReplayExecution
          if (instance == null) {
             // This occurs when a constructor of the mocked class is called in a mock field assignment expression,
             // during initialization of a mocked class, or during the restoration of mocked classes between tests.
-            return defaultReturnValue(mock, classDesc, mockDesc, executionMode, args);
+            return defaultReturnValue(executingTest, mock, classDesc, mockDesc, executionMode, args);
          }
 
          Phase currentPhase = instance.getCurrentPhase();
@@ -289,7 +294,8 @@ public final class RecordAndReplayExecution
       }
    }
 
-   public static Object defaultReturnValue(Object mock, String nameAndDesc, int executionMode, Object[] args)
+   public static Object defaultReturnValue(
+      Object mock, String classDesc, String nameAndDesc, int executionMode, Object[] args)
    {
       if (mock != null) {
          Object rv = Utilities.evaluateObjectOverride(mock, nameAndDesc, args);
@@ -299,15 +305,29 @@ public final class RecordAndReplayExecution
          }
       }
 
+      String returnTypeDesc = DefaultValues.getReturnTypeDesc(nameAndDesc);
+      Object cascadedInstance = MockedTypeCascade.getMock(classDesc, mock, returnTypeDesc);
+      if (cascadedInstance != null) return cascadedInstance;
+
       return executionMode == 0 ? DefaultValues.computeForReturnType(nameAndDesc) : Void.class;
    }
 
    private static Object defaultReturnValue(
-      Object mock, String classDesc, String nameAndDesc, int executionMode, Object[] args)
+      ExecutingTest executingTest, Object mock, String classDesc, String nameAndDesc, int executionMode, Object[] args)
+      throws Throwable
    {
-      String returnTypeDesc = DefaultValues.getReturnTypeDesc(nameAndDesc);
-      Object cascadedInstance = MockedTypeCascade.getMock(classDesc, mock, returnTypeDesc);
-      return cascadedInstance != null ? cascadedInstance : defaultReturnValue(mock, nameAndDesc, executionMode, args);
+      RecordAndReplayExecution execution = executingTest.getCurrentRecordAndReplay();
+
+      if (execution != null) {
+         Expectation recordedExpectation =
+            execution.executionState.findNonStrictExpectation(mock, classDesc, nameAndDesc, args);
+
+         if (recordedExpectation != null) {
+            return recordedExpectation.produceResult(mock, args);
+         }
+      }
+
+      return defaultReturnValue(mock, classDesc, nameAndDesc, executionMode, args);
    }
 
    private static boolean inReplayPhase(RecordAndReplayExecution instance)
