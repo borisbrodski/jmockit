@@ -355,4 +355,20 @@ public final class ExpectationsWithArgMatchersTest
 
       mock.setValue(3);
    }
+
+   class ReusableMatcher implements Delegate<Integer> {
+      final boolean isPositive(int i) { return i > 0; }
+   }
+
+   @Test
+   public void extendingAReusableArgumentMatcher()
+   {
+      mock.setValue(5);
+      mock.setValue(123);
+
+      new Verifications() {{
+         mock.setValue(with(new ReusableMatcher() {}));
+         times = 2;
+      }};
+   }
 }

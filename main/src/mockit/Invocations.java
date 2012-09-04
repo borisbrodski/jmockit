@@ -321,7 +321,14 @@ abstract class Invocations
       addMatcher(new ReflectiveMatcher(delegateObjectWithInvocationHandlerMethod));
 
       Class<?> delegateClass = delegateObjectWithInvocationHandlerMethod.getClass();
-      ParameterizedType type = (ParameterizedType) delegateClass.getGenericInterfaces()[0];
+      Type[] genericInterfaces = delegateClass.getGenericInterfaces();
+
+      while (genericInterfaces.length == 0) {
+         delegateClass = delegateClass.getSuperclass();
+         genericInterfaces = delegateClass.getGenericInterfaces();
+      }
+
+      ParameterizedType type = (ParameterizedType) genericInterfaces[0];
       Type parameterType = type.getActualTypeArguments()[0];
 
       return (T) DefaultValues.computeForWrapperType(parameterType);

@@ -415,24 +415,43 @@ public final class Utilities
 
    public static Method findNonPrivateHandlerMethod(Object handler)
    {
-      Method[] declaredMethods = handler.getClass().getDeclaredMethods();
-      Method nonPrivateMethod = null;
+      Class<?> handlerClass = handler.getClass();
+      Method nonPrivateMethod;
 
-      for (Method declaredMethod : declaredMethods) {
-         if (!isPrivate(declaredMethod.getModifiers())) {
-            if (nonPrivateMethod != null) {
-               throw new IllegalArgumentException("More than one non-private invocation handler method found");
-            }
+      do {
+         nonPrivateMethod = findNonPrivateHandlerMethod(handlerClass);
 
-            nonPrivateMethod = declaredMethod;
+         if (nonPrivateMethod != null) {
+            break;
          }
+
+         handlerClass = handlerClass.getSuperclass();
       }
+      while (handlerClass != null && handlerClass != Object.class);
 
       if (nonPrivateMethod == null) {
          throw new IllegalArgumentException("No non-private invocation handler method found");
       }
 
       return nonPrivateMethod;
+   }
+
+   private static Method findNonPrivateHandlerMethod(Class<?> handlerClass)
+   {
+      Method[] declaredMethods = handlerClass.getDeclaredMethods();
+      Method found = null;
+
+      for (Method declaredMethod : declaredMethods) {
+         if (!isPrivate(declaredMethod.getModifiers())) {
+            if (found != null) {
+               throw new IllegalArgumentException("More than one non-private invocation handler method found");
+            }
+
+            found = declaredMethod;
+         }
+      }
+
+      return found;
    }
 
    public static <T> T invoke(
