@@ -130,7 +130,7 @@ public @interface Mocked
     * Note that this attribute can also be used when the desired concrete class is not accessible to the test (for
     * example, if it's a private inner class inside the code under test).
     *
-    * @see Expectations#newInstance(String, Class[], Object...)
+    * @see Deencapsulation#newInstance(String, Class[], Object...)
     */
    String realClassName() default "";
 }
