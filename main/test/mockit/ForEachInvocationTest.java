@@ -639,4 +639,53 @@ public final class ForEachInvocationTest
          };
       }};
    }
+
+   // Unusual ways to use the forEachInvocation field /////////////////////////////////////////////////////////////////
+
+   @Test
+   public void reusableInvocationCounter(final Collaborator mock)
+   {
+      mock.doSomething(1);
+      mock.doSomething(true, 1);
+      mock.doSomething(2);
+      mock.doSomething(3);
+      mock.doSomething(false, 2);
+
+      class InvocationCounter {
+         int count;
+         void increment() { count++; }
+      }
+
+      final InvocationCounter counter = new InvocationCounter();
+
+      new Verifications() {{
+         mock.doSomething(anyInt); forEachInvocation = counter;
+         mock.doSomething(anyBoolean, anyInt); forEachInvocation = counter;
+      }};
+
+      assertEquals(5, counter.count);
+   }
+
+   class InvocationCountingVerifications extends Verifications {
+      protected int count;
+      void increment() { count++; }
+   }
+
+   @Test
+   public void reusableVerificationsWithInvocationCounter(final Collaborator mock)
+   {
+      mock.doSomething(1);
+      mock.doSomething(true, 1);
+      mock.doSomething(2);
+      mock.doSomething(3);
+      mock.doSomething(false, 2);
+
+      new InvocationCountingVerifications() {{
+         mock.doSomething(anyInt); forEachInvocation = this;
+         assertEquals(3, count);
+
+         mock.doSomething(anyBoolean, anyInt); forEachInvocation = this;
+         assertEquals(5, count);
+      }};
+   }
 }
