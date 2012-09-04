@@ -85,26 +85,39 @@
 <hr>
 <br>
 <pre>public interface <span class="strong">Delegate&lt;T&gt;</span></pre>
-<div class="block">An empty interface to be used with the <a href="../mockit/Expectations.html#result"><code>Expectations.result</code></a> field or the <code>Invocations.with(Delegate)</code>
- method, allowing test code to define invocation results (return values or thrown exceptions) or argument matching
- rules based on test-specific logic.
+<div class="block">An empty interface to be used with the <a href="../mockit/Expectations.html#result"><code>Expectations.result</code></a> field or the
+ <a href="Expectations.html#with(mockit.Delegate)"><code>Invocations#with(Delegate)</code></a> method, allowing test code
+ to define invocation results or argument matching rules based on test-specific logic.
  <p/>
- When used with the <code>result</code> field, the following rules apply to the implementation class:
- <ol>
- <li>A method matching the signature of the recorded method/constructor call must be defined.
- That is, they should have the same name and parameters. In the case of delegating a constructor, a delegate
- <em>method</em> should still be used, with name "$init".</li>
- <li>Alternatively, for the common case where the delegate implementation class defines a <em>single</em> method, the
- name is allowed to be different from the recorded method.
- The parameters should still match, though. Besides giving more flexibility, this ability also prevents the test from
- breaking in case the recorded method is renamed.
- If the delegate class defines two or more methods (including <code>private</code> ones, if any), then exactly one
- of them <em>must</em> match both the name and the parameters of the recorded method.</li>
- <li>The result of a delegate method execution can be any return value compatible with the recorded method's return
- type, or a thrown error/exception.</li>
- </ol>
- When used with the <code>with</code> method, the implementing class must have a single non-<code>private</code> method which
- returns a <code>boolean</code>, being <code>true</code> for a succesfully matched argument or <code>false</code> otherwise.
+ The name and parameters of the delegate method must fit one of the following alternatives:
+ <ul>
+ <li>
+    A method matching the signature of the recorded method/constructor.
+    That is, they should have the same name and parameters. In the case of delegating a constructor, a delegate
+    <em>method</em> should still be used, with name "$init".
+    In this case, the delegate class can have any number of additional methods.
+ </li>
+ <li>
+    A <em>single</em> method with the same or a different name as the recorded method, but having the <em>same</em>
+    parameters.
+ </li>
+ <li>
+    A <em>single</em> method with the same or a different name, but having <em>no</em> parameters even if the recorded
+    method/constructor has one or more of them.
+    In this case, argument values passed during replay are simply ignored as far as the delegate is concerned.
+ </li>
+ </ul>
+ Additionally, in any of the above three alternatives, the delegate method is allowed to declare an additional
+ parameter of type <a href="../mockit/Invocation.html" title="class in mockit"><code>Invocation</code></a>.
+ If said parameter is present, it must be the first one.
+ At replay time, it will always receive a suitable object representing the associated invocation which happened to
+ match the recorded expectation.
+ <p/>
+ When used with the <code>result</code> field, the result of a delegate method execution can be any return value compatible
+ with the recorded method's return type, or a thrown error/exception.
+ <p/>
+ When used with the <code>with</code> method, the delegate method must return a <code>boolean</code>, being <code>true</code> for a
+ successfully matched argument or <code>false</code> otherwise.
  <p/>
  At replay time, when the mocked method/constructor is called the corresponding "delegate" method will be called.
  The arguments passed to the delegate method will be the same as those received by the recorded invocation during
@@ -112,7 +125,7 @@
  Even <code>static</code> methods in the mocked type can have delegates, which in turn can be static or not.
  The same is true for <code>private</code>, <code>final</code>, and <code>native</code> methods.
  <p/>
- <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#delegates">In the Tutorial</a>
+ <a href="../../tutorial/BehaviorBasedTesting.html#delegates">In the Tutorial</a>
  <p/>
  Sample tests:
  <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/easymock/test/org/easymock/samples/DocumentManager_JMockit_Test.java">DocumentManager_JMockit_Test</a></div>
