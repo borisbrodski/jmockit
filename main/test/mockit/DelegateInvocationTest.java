@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -9,7 +9,7 @@ import java.util.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-@SuppressWarnings({"UnusedDeclaration"})
+@SuppressWarnings("UnusedDeclaration")
 public final class DelegateInvocationTest
 {
    static class Collaborator
@@ -54,7 +54,7 @@ public final class DelegateInvocationTest
       assertTrue(Collaborator.staticMethod());
    }
 
-   static class ConstructorDelegate implements Delegate
+   static class ConstructorDelegate implements Delegate<Void>
    {
       int capturedArgument;
 
@@ -191,8 +191,21 @@ public final class DelegateInvocationTest
       assertEquals('a', mock.finalMethod());
    }
 
+   @Test
+   public void delegateMethodWithNoParametersForExpectationWithParameters(final Collaborator mock)
+   {
+      new Expectations() {{
+         mock.nativeMethod(true);
+         result = new Delegate() {
+            long nonMatchingDelegate() { return 123L; }
+         };
+      }};
+
+      assertEquals(123, mock.nativeMethod(true));
+   }
+
    @Test(expected = IllegalArgumentException.class)
-   public void delegateClassWithNoMethodMatchingTheExpectationSignature(final Collaborator mock)
+   public void delegateClassWithTwoMethodsButNoneMatchingTheExpectationSignature(final Collaborator mock)
    {
       new Expectations() {{
          mock.privateMethod();
@@ -202,7 +215,7 @@ public final class DelegateInvocationTest
          };
       }};
 
-      assertEquals(1.0, mock.privateMethod(), 0.0);
+      mock.privateMethod();
    }
 
    @Test
@@ -301,7 +314,7 @@ public final class DelegateInvocationTest
       mock.addElements(null);
    }
 
-   @SuppressWarnings({"deprecation"})
+   @SuppressWarnings("deprecation")
    @Test
    public void useOfContextParametersForJREMethods() throws Exception
    {

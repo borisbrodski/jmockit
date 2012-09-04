@@ -103,6 +103,35 @@ public final class ForEachInvocationTest
    }
 
    @Test
+   public void recordExpectationForMultiParameterMethodWithHandlerHavingNoParameters(final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.doSomething(anyBoolean, anyInt); times = 1;
+         forEachInvocation = new Object() {
+            // Not useful, but allowed for consistency with Delegate methods and with
+            // the use of an "Invocation" parameter.
+            void validate() {}
+         };
+      }};
+
+      mock.doSomething(true, 123);
+   }
+
+   @Test
+   public void recordExpectationForMultiParameterMethodWithHandlerHavingOnlyTheInvocationParameter(
+      final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.doSomething(anyBoolean, 123); times = 1;
+         forEachInvocation = new Object() {
+            void validate(Invocation inv) { assertSame(mock, inv.getInvokedInstance()); }
+         };
+      }};
+
+      mock.doSomething(true, 123);
+   }
+
+   @Test
    public void verifyExpectationsWithHandlersForEachInvocation(final Collaborator mock)
    {
       Collaborator collaborator = new Collaborator();

@@ -115,8 +115,8 @@ abstract class Invocations
     * <p/>
     * Said object can be of any type, provided its class has a single non-private method
     * (additional methods are allowed and ignored, as long as they are {@code private}).
-    * This <em>validation method</em> can have any name, provided its parameters match the ones defined in the mocked
-    * method or constructor associated with the expectation.
+    * This <em>validation method</em> can have any name, and should either have no parameters or a list of parameters
+    * that match the ones defined in the mocked method/constructor associated with the expectation.
     * Corresponding parameters don't need to have the exact same declared type, though, as long as each possible
     * invocation argument can be passed to the corresponding parameter in the validation method.
     * <p/>

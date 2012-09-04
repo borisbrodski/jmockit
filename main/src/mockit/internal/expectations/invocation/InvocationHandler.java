@@ -17,6 +17,11 @@ public final class InvocationHandler extends DynamicInvocationResult
    public Object produceResult(
       Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
    {
+      if (numberOfRegularParameters == 0 && args.length > 0) {
+         //noinspection AssignmentToMethodParameter
+         args = Utilities.NO_ARGS;
+      }
+
       Object result = invokeMethodOnTargetObject(invokedObject, invocation, constraints, args);
 
       if (Boolean.FALSE.equals(result)) {

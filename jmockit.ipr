@@ -724,6 +724,7 @@
         <inspection_tool class="RawUseOfParameterizedType" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreObjectConstruction" value="true" />
           <option name="ignoreTypeCasts" value="false" />
+          <option name="ignoreUncompilable" value="false" />
         </inspection_tool>
         <inspection_tool class="ReadObjectAndWriteObjectPrivate" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ReadObjectInitialization" enabled="true" level="WARNING" enabled_by_default="true" />
