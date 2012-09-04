@@ -55,6 +55,11 @@ public class Invocation
    }
 
    /**
+    * Returns the actual argument values passed in the invocation to the mocked method/constructor.
+    */
+   public final Object[] getInvokedArguments() { return invokedArguments; }
+
+   /**
     * Returns the current invocation count. The first invocation starts at 1 (one).
     */
    public final int getInvocationCount() { return invocationCount; }

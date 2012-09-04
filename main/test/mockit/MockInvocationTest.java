@@ -121,6 +121,7 @@ public final class MockInvocationTest
          capturedArgument = i + context.getInvocationCount();
          assertNull(mockedInstance);
          assertTrue(context.getInvokedInstance() instanceof Collaborator);
+         assertEquals(1, context.getInvokedArguments().length);
       }
 
       @Mock(invocations = 2, reentrant = true)
@@ -130,6 +131,7 @@ public final class MockInvocationTest
          assertEquals(2, context.getMaxInvocations());
          assertEquals(i, context.getInvocationIndex());
          assertSame(mockedInstance, context.getInvokedInstance());
+         assertEquals(1, context.getInvokedArguments().length);
       }
    }
 
@@ -211,6 +213,11 @@ public final class MockInvocationTest
             assertSame(it, ctx.getInvokedInstance());
             ctx.setMinInvocations(1);
             ctx.setMaxInvocations(1);
+            Object[] args = ctx.getInvokedArguments();
+            assertEquals(3, args.length);
+            assertSame(Boolean.FALSE, args[0]);
+            assertSame(array, args[1]);
+            assertSame(s, args[2]);
             return "mock";
          }
       };

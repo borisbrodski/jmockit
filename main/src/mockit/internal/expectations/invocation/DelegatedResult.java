@@ -33,10 +33,6 @@ final class DelegatedResult extends DynamicInvocationResult
          methodToInvoke = Utilities.findCompatibleMethod(targetObject.getClass(), methodName, args);
          determineWhetherMethodToInvokeHasInvocationParameter();
       }
-      else if (numberOfRegularParameters == 0 && args.length > 0) {
-         //noinspection AssignmentToMethodParameter
-         args = Utilities.NO_ARGS;
-      }
 
       return invokeMethodOnTargetObject(invokedObject, invocation, constraints, args);
    }

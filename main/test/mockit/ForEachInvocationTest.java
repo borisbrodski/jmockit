@@ -124,7 +124,14 @@ public final class ForEachInvocationTest
       new NonStrictExpectations() {{
          mock.doSomething(anyBoolean, 123); times = 1;
          forEachInvocation = new Object() {
-            void validate(Invocation inv) { assertSame(mock, inv.getInvokedInstance()); }
+            void validate(Invocation inv)
+            {
+               assertSame(mock, inv.getInvokedInstance());
+               Object[] args = inv.getInvokedArguments();
+               assertEquals(2, args.length);
+               assertTrue((Boolean) args[0]);
+               assertEquals(123, args[1]);
+            }
          };
       }};
 
@@ -214,6 +221,8 @@ public final class ForEachInvocationTest
                assertTrue(i > 0);
                Collaborator collaborator = collaborators[invocation.getInvocationIndex()];
                assertSame(collaborator, invocation.getInvokedInstance());
+               int i2 = (Integer) invocation.getInvokedArguments()[0];
+               assertEquals(i, i2);
             }
          };
       }};

@@ -39,26 +39,29 @@ abstract class DynamicInvocationResult extends InvocationResult
    public final Object invokeMethodOnTargetObject(
       Object mockOrRealObject, ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
    {
+      Object[] delegateArgs = numberOfRegularParameters == 0 ? Utilities.NO_ARGS : args;
       Object result;
 
       if (hasInvocationParameter) {
-         result = invokeMethodWithContext(mockOrRealObject, invocation, constraints, args);
+         result = invokeMethodWithContext(mockOrRealObject, invocation, constraints, args, delegateArgs);
       }
       else {
-         result = executeMethodToInvoke(args);
+         result = executeMethodToInvoke(delegateArgs);
       }
 
       return result;
    }
 
    private Object invokeMethodWithContext(
-      Object mockOrRealObject, ExpectedInvocation expectedInvocation, InvocationConstraints constraints, Object[] args)
+      Object mockOrRealObject, ExpectedInvocation expectedInvocation, InvocationConstraints constraints,
+      Object[] invokedArgs, Object[] delegateArgs)
    {
-      DelegateInvocation invocation = new DelegateInvocation(mockOrRealObject, args, expectedInvocation, constraints);
-      Object[] delegateArgs = Utilities.argumentsWithExtraFirstValue(args, invocation);
+      DelegateInvocation invocation =
+         new DelegateInvocation(mockOrRealObject, invokedArgs, expectedInvocation, constraints);
+      Object[] delegateArgsWithInvocation = Utilities.argumentsWithExtraFirstValue(delegateArgs, invocation);
 
       try {
-         Object result = executeMethodToInvoke(delegateArgs);
+         Object result = executeMethodToInvoke(delegateArgsWithInvocation);
          return invocation.proceedIntoConstructor ? Void.class : result;
       }
       finally {

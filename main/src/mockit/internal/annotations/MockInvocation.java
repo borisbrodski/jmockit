@@ -7,7 +7,6 @@ package mockit.internal.annotations;
 import java.lang.reflect.*;
 
 import mockit.*;
-import mockit.internal.util.*;
 
 /**
  * An invocation to a {@code @Mock} method.

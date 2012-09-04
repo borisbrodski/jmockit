@@ -41,6 +41,7 @@ public final class DelegateInvocationTest
                boolean staticMethod(Invocation context)
                {
                   assertNull(context.getInvokedInstance());
+                  assertEquals(0, context.getInvokedArguments().length);
                   assertEquals(context.getInvocationCount() - 1, context.getInvocationIndex());
                   assertEquals(0, context.getMinInvocations());
                   assertEquals(-1, context.getMaxInvocations());
@@ -102,6 +103,11 @@ public final class DelegateInvocationTest
                   assertTrue(b);
                   assertNull(i);
                   assertNull(s);
+                  Object[] args = invocation.getInvokedArguments();
+                  assertEquals(3, args.length);
+                  assertTrue((Boolean) args[0]);
+                  assertNull(args[1]);
+                  assertNull(args[2]);
                }
             };
          }
@@ -231,6 +237,7 @@ public final class DelegateInvocationTest
                {
                   assertEquals(1, invocation.getInvocationCount());
                   assertTrue(b);
+                  assertSame(Boolean.TRUE, invocation.getInvokedArguments()[0]);
                   return 3L;
                }
             };
