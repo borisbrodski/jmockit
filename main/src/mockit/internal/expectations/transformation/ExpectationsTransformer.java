@@ -96,8 +96,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
             return null;
          }
 
-         int p = className.lastIndexOf('$');
-         boolean isAnonymousClass = p > 0 && Utilities.hasPositiveDigit(className, p);
+         boolean isAnonymousClass = Utilities.isAnonymousClass(className);
 
          try {
             EndOfBlockModifier modifier = new EndOfBlockModifier(cr, isAnonymousClass);

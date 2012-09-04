@@ -78,11 +78,26 @@ public final class ReusableTopLevelInvocationsTest
    }
 
    @Test(expected = MissingInvocation.class)
-   public void useTopLevelAndNonFinalVerificationsSubclass(PrintWriter mock) throws Exception
+   public void useTopLevelAndNonFinalVerificationsSubclassWithNoAdditionalVerifications(PrintWriter mock)
+      throws Exception
    {
       mock.flush();
 
       new NonFinalReusableVerifications(mock) {};
+   }
+
+   @Test
+   public void useTopLevelAndNonFinalVerificationsSubclassWithAdditionalVerifications(final PrintWriter mock)
+      throws Exception
+   {
+      mock.flush();
+      mock.append('G');
+      mock.flush();
+
+      new NonFinalReusableVerifications(mock) {{
+         mock.append(anyChar);
+         times = 1;
+      }};
    }
 }
 

@@ -937,23 +937,31 @@ public final class Utilities
     */
    public static boolean isAnonymousClass(Class<?> aClass)
    {
-      String className = aClass.getName();
-      int p = className.lastIndexOf('$');
-      return hasPositiveDigit(className, p);
+      return isAnonymousClass(aClass.getName());
    }
 
-   public static boolean hasPositiveDigit(String className, int positionJustBefore)
+   public static boolean isAnonymousClass(String className)
    {
-      if (positionJustBefore > 0) {
-         int nextPos = positionJustBefore + 1;
+      int p = className.lastIndexOf('$');
+      return isAllNumeric(className, p);
+   }
 
-         if (nextPos < className.length()) {
-            char c = className.charAt(nextPos);
-            return c >= '1' && c <= '9';
-         }
+   public static boolean isAllNumeric(String className, int positionJustBefore)
+   {
+      if (positionJustBefore <= 0) {
+         return false;
       }
 
-      return false;
+      int nextPos = positionJustBefore + 1;
+      int n = className.length();
+
+      while (nextPos < n) {
+         char c = className.charAt(nextPos);
+         if (c < '0' || c > '9') return false;
+         nextPos++;
+      }
+
+      return true;
    }
 
    public static String objectIdentity(Object obj)
