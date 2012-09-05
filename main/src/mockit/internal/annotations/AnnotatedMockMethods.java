@@ -59,7 +59,7 @@ final class AnnotatedMockMethods
 
       private boolean hasMatchingParameters(String desc, String signature)
       {
-         if (signature == null || !signature.contains("TT;")) {
+         if (signature == null) {
             return mockDescWithoutInvocationParameter.equals(desc);
          }
 
@@ -112,30 +112,33 @@ final class AnnotatedMockMethods
          int p = signature.indexOf('(');
          int q = signature.indexOf(')');
          String semicolonSeparatedParameters = signature.substring(p + 1, q);
+         int n = semicolonSeparatedParameters.length();
          parameters = new ArrayList<String>(4);
 
-         for (int i = 0; i < semicolonSeparatedParameters.length(); i++) {
+         for (int i = 0; i < n; i++) {
             char c = semicolonSeparatedParameters.charAt(i);
             String parameter;
 
             if (c == 'L' || c == 'T' || c == '[') {
-               int j = i + 1;
+               int j = i;
 
                do {
-                  c = semicolonSeparatedParameters.charAt(j);
                   j++;
+                  c = semicolonSeparatedParameters.charAt(j);
                } while (c != ';' && c != '<');
 
-               parameter = semicolonSeparatedParameters.substring(i, j - 1);
+               parameter = semicolonSeparatedParameters.substring(i, j);
 
                if (c == '<') {
                   int angleBracketDepth = 1;
 
                   do {
+                     j++;
                      c = semicolonSeparatedParameters.charAt(j);
                      if (c == '>') angleBracketDepth--; else if (c == '<') angleBracketDepth++;
-                     j++;
                   } while (angleBracketDepth > 0);
+
+                  j++;
                }
 
                i = j;

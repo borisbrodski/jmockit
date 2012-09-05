@@ -398,4 +398,26 @@ public final class MockUpTest
       String s = new NonGenericSubclass().find(1);
       assertEquals("mocked1", s);
    }
+
+   @SuppressWarnings("UnusedParameters")
+   static class NonGenericClassWithGenericMethods
+   {
+      static <T> T staticMethod(Class<T> cls, String s) { throw new RuntimeException(); }
+      <C> void instanceMethod(Class<C> cls, String s) { throw new RuntimeException(); }
+      <N extends Number> void instanceMethod(Class<N> cls) { throw new RuntimeException(); }
+   }
+
+   @Test
+   public void mockGenericMethodsOfNonGenericClass()
+   {
+      new MockUp<NonGenericClassWithGenericMethods>() {
+         @Mock <T> T staticMethod(Class<T> cls, String s) { return null; }
+         @Mock <C> void instanceMethod(Class<C> cls, String s) {}
+         @Mock void instanceMethod(Class<?> cls) {}
+      };
+
+      new NonGenericClassWithGenericMethods().instanceMethod(Integer.class);
+      NonGenericClassWithGenericMethods.staticMethod(Collaborator.class, "test1");
+      new NonGenericClassWithGenericMethods().instanceMethod(Byte.class, "test2");
+   }
 }
