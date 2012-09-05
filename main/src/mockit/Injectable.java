@@ -38,8 +38,13 @@ import java.lang.annotation.*;
 public @interface Injectable
 {
    /**
-    * Specifies a literal value when the injectable mock field/parameter is of a primitive type.
-    * The value provided must be convertible to that primitive type.
+    * Specifies a literal value when the type of the injectable mock field/parameter is {@code String}, a primitive
+    * type, or an enum type.
+    * For a primitive type, the value provided must be convertible to it.
+    * For an enum type, the given textual value must equal the name of one of the possible enum values.
+    * <p/>
+    * When a value is provided for an injectable whose type is {@code String} or an enum type, said type is <em>not</em>
+    * mocked; otherwise, it is.
     */
    String value() default "";
 }

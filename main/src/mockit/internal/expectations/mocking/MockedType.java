@@ -69,21 +69,26 @@ public final class MockedType
    private Object getDefaultInjectableValue(Injectable annotation)
    {
       if (annotation != null) {
-         String defaultValue = annotation.value();
+         String value = annotation.value();
 
-         if (defaultValue.length() > 0) {
+         if (value.length() > 0) {
             Class<?> injectableClass = getClassType();
 
             if (injectableClass == char.class) {
-               return defaultValue.charAt(0);
+               return value.charAt(0);
             }
             else if (injectableClass == String.class) {
-               return defaultValue;
+               return value;
             }
             else if (injectableClass.isPrimitive()) {
                Class<?> wrapperClass = PRIMITIVE_TO_WRAPPER.get(injectableClass);
                Class<?>[] constructorParameters = {String.class};
-               return newInstance(wrapperClass, constructorParameters, defaultValue);
+               return newInstance(wrapperClass, constructorParameters, value);
+            }
+            else if (injectableClass.isEnum()) {
+               @SuppressWarnings({"rawtypes", "unchecked"})
+               Class<? extends Enum> enumType = (Class<? extends Enum>) injectableClass;
+               return Enum.valueOf(enumType, value);
             }
          }
       }
@@ -168,10 +173,16 @@ public final class MockedType
       
       Class<?> classType = (Class<?>) declaredType;
 
-      return !(
-         classType.isPrimitive() || classType.isArray() || classType == Integer.class ||
-         classType == String.class && injectable
-      );
+      if (classType.isPrimitive() || classType.isArray() || classType == Integer.class) {
+         return false;
+      }
+      else if (injectable && providedValue != null) {
+         if (classType == String.class || classType.isEnum()) {
+            return false;
+         }
+      }
+
+      return true;
    }
 
    boolean isFinalFieldOrParameter() { return field == null || isFinal(accessModifiers); }

@@ -9,12 +9,14 @@ import org.junit.*;
 
 public final class TestedClassInjectedFromMockParametersTest
 {
+   enum AnEnum { Abc, Xyz }
    public static final class TestedClass
    {
       private int i;
       private String s;
       private boolean b;
       private char[] chars;
+      AnEnum enumValue;
 
       public TestedClass(boolean b) { this.b = b; }
 
@@ -79,5 +81,12 @@ public final class TestedClassInjectedFromMockParametersTest
       @Injectable("S") char second, @Injectable("T") char third, @Injectable("F") char first)
    {
       assertArrayEquals(new char[] {'F', 'S', 'T'}, tested.chars);
+   }
+
+   @Test
+   public void setEnumFieldInTestedObjectFromValueProvidedInParameter(
+      @Injectable("false") boolean flag, @Injectable("Xyz") AnEnum enumVal)
+   {
+      assertSame(AnEnum.Xyz, tested.enumValue);
    }
 }
