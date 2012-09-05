@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -11,10 +11,15 @@ import org.junit.*;
 
 public final class InjectableFieldTest
 {
-   static class Foo
+   static class Base
+   {
+      protected int getValue() { return 1; }
+   }
+
+   static class Foo extends Base
    {
       void doSomething(String s) { throw new RuntimeException(s); }
-      int getIntValue() { return 1; }
+      int getAnotherValue() { return 2; }
       private Boolean getBooleanValue() { return true; }
       final List<Integer> getList() { return null; }
    }
@@ -24,10 +29,15 @@ public final class InjectableFieldTest
    @Before
    public void recordCommonExpectations()
    {
-      new NonStrictExpectations()
-      {{
-         foo.getIntValue(); result = 123;
+      new NonStrictExpectations() {{
+         foo.getValue(); result = 12;
+         foo.getAnotherValue(); result = 123;
       }};
+
+      assertEquals(123, foo.getAnotherValue());
+      assertEquals(12, foo.getValue());
+      assertEquals(1, new Base().getValue());
+      assertEquals(2, new Foo().getAnotherValue());
    }
 
    @After
@@ -45,12 +55,9 @@ public final class InjectableFieldTest
       }
       catch (RuntimeException ignore) {}
 
-      new NonStrictExpectations()
-      {{
-         foo.doSomething("test"); times = 1;
-      }};
+      new NonStrictExpectations() {{ foo.doSomething("test"); times = 1; }};
 
-      assertEquals(123, foo.getIntValue());
+      assertEquals(123, foo.getAnotherValue());
       assertNull(foo.getBooleanValue());
       assertTrue(foo.getList().isEmpty());
 
@@ -60,12 +67,9 @@ public final class InjectableFieldTest
    @Test
    public void overrideExpectationRecordedInBeforeMethod()
    {
-      new NonStrictExpectations()
-      {{
-         foo.getIntValue(); result = 45;
-      }};
+      new NonStrictExpectations() {{ foo.getAnotherValue(); result = 45; }};
 
-      assertEquals(45, foo.getIntValue());
+      assertEquals(45, foo.getAnotherValue());
       foo.doSomething("sdf");
    }
 }
