@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright (c) 2007, Sun Microsystems, Inc
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  *   * Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  *   * Redistributions in binary form must reproduce the above
@@ -15,7 +15,7 @@
  *   * Neither the name of the TimingFramework project nor the names of its
  *     contributors may be used to endorse or promote products derived 
  *     from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,61 +35,61 @@ package org.jdesktop.animation.timing.triggers;
  * Mouse Enter/Exit/Press/Release/Click events.
  *
  * @author Chet
+ * @author Rogerio
  */
-public final class MouseTriggerEvent extends TriggerEvent {
-    /**
-     * Event fired when mouse enters.
-     */
-    public static final MouseTriggerEvent ENTER = new MouseTriggerEvent();
+public enum MouseTriggerEvent implements TriggerEvent
+{
+   /**
+    * Event fired when mouse enters.
+    */
+   ENTER,
 
-    /**
-     * Event fired when mouse exits.
-     */
-    public static final MouseTriggerEvent EXIT = new MouseTriggerEvent();
+   /**
+    * Event fired when mouse exits.
+    */
+   EXIT,
 
-    /**
-     * Event fired when mouse button is pressed.
-     */
-    public static final MouseTriggerEvent PRESS = new MouseTriggerEvent();
+   /**
+    * Event fired when mouse button is pressed.
+    */
+   PRESS,
 
-    /**
-     * Event fired when mouse button is released.
-     */
-    public static final MouseTriggerEvent RELEASE = new MouseTriggerEvent();
+   /**
+    * Event fired when mouse button is released.
+    */
+   RELEASE,
 
-    /**
-     * Event fired when mouse is clicked.
-     */
-    public static final MouseTriggerEvent CLICK = new MouseTriggerEvent();
+   /**
+    * Event fired when mouse is clicked.
+    */
+   CLICK;
 
-    /**
-     * Protected constructor; this helps ensure type-safe use of pre-defined TriggerEvent objects.
-     */
-    private MouseTriggerEvent() {}
+   /**
+    * Finds the opposite of the current event: <BR/>
+    * ENTER -> EXIT <BR/>
+    * EXIT -> ENTER <BR/>
+    * PRESS -> RELEASE <BR/>
+    * RELEASE -> PRESS <BR/>
+    * Note that CLICK has no obvious opposite so it simply returns CLICK (this method should probably not be called for
+    * that case).
+    */
+   @Override
+   public TriggerEvent getOppositeEvent()
+   {
+      if (this == ENTER) {
+         return EXIT;
+      }
+      else if (this == EXIT) {
+         return ENTER;
+      }
+      else if (this == PRESS) {
+         return RELEASE;
+      }
+      else if (this == RELEASE) {
+         return PRESS;
+      }
 
-    /**
-     * This method finds the opposite of the current event.: <BR/>
-     * ENTER -> EXIT <BR/>
-     * EXIT -> ENTER <BR/>
-     * PRESS -> RELEASE <BR/>
-     * RELEASE -> PRESS <BR/>
-     * Note that CLICK has no obvious opposite so
-     * it simply returns CLICK (this method should probably not be called for that case).
-     */
-    @Override
-    public TriggerEvent getOppositeEvent() {
-        //noinspection IfStatementWithTooManyBranches
-        if (this == ENTER) {
-            return EXIT;
-        } else if (this == EXIT) {
-            return ENTER;
-        } else if (this == PRESS) {
-            return RELEASE;
-        } else if (this == RELEASE) {
-            return PRESS;
-        }
-        // Possible to reach here for REPEAT action (but probably should not
-        // have been called with this event)
-        return this;
-    }
+      // Possible to reach here for REPEAT action (but probably should not have been called with this event).
+      return this;
+   }
 }

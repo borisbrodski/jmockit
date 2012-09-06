@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.timing.triggers;
@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public final class TimingTriggerEventTest
 {
    @Test
-   public void testGetOppositeEvent()
+   public void getOppositeEvent()
    {
       assertSame(TimingTriggerEvent.STOP, TimingTriggerEvent.START.getOppositeEvent());
       assertSame(TimingTriggerEvent.START, TimingTriggerEvent.STOP.getOppositeEvent());

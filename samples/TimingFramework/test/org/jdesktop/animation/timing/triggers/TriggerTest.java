@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.timing.triggers;
@@ -12,147 +12,122 @@ import org.jdesktop.animation.timing.*;
 
 public final class TriggerTest
 {
-   @Mocked Animator animator;
+   @Tested Trigger trigger;
+   @Injectable Animator animator;
 
    @Test
-   public void testFireWithNonRunningAnimator()
+   public void fireTriggerOnNonRunningAnimator()
    {
-      Trigger trigger = new Trigger(animator);
-
-      new Expectations()
-      {
-         {
-            animator.isRunning(); result = false;
-            animator.start();
-         }
-      };
+      new Expectations() {{
+         animator.isRunning(); result = false;
+         animator.start();
+      }};
 
       trigger.fire();
    }
 
    @Test
-   public void testFireWithRunningAnimator()
+   public void fireTriggerOnRunningAnimator()
    {
-      Trigger trigger = new Trigger(animator);
-
-      new Expectations()
-      {
-         {
-            animator.isRunning(); result = true;
-            animator.stop();
-            animator.start();
-         }
-      };
+      new Expectations() {{
+         animator.isRunning(); result = true;
+         animator.stop();
+         animator.start();
+      }};
 
       trigger.fire();
    }
 
    @Test
-   public void testFireAfterDisarmed()
+   public void fireTriggerAfterDisarmingIt()
    {
-      Trigger trigger = new Trigger(animator);
       trigger.disarm();
-
-      // Expect nothing.
-      new Expectations() {};
-
       trigger.fire();
-      trigger.fire(null);
+
+      // Nothing should happen on the animator.
+      new FullVerifications() {};
    }
 
    @Test
-   public void testFireWithTriggerEventAndNonRunningAnimator()
+   public void fireWithTriggerEventAndNonRunningAnimator()
    {
       TriggerEvent event = FocusTriggerEvent.IN;
-      Trigger trigger = new Trigger(animator, event);
+      trigger = new Trigger(animator, event);
 
-      new Expectations()
-      {
-         {
-            animator.isRunning(); result = false;
-            animator.setStartDirection(Animator.Direction.FORWARD);
+      new Expectations() {{
+         animator.isRunning(); result = false;
+         animator.setStartDirection(Animator.Direction.FORWARD);
 
-            // The original Timing Framework "fire(event)" method did an inappropriate call to
-            // "fire()", which would then recheck disarming of the trigger and that the animator was
-            // not running; writing this test revealed this issue, leading to better production
-            // code.
-            animator.start();
-         }
-      };
+         // The original Timing Framework "fire(event)" method did an inappropriate call to
+         // "fire()", which would then recheck disarming of the trigger and that the animator was
+         // not running; writing this test revealed this issue, leading to better production code.
+         animator.start();
+      }};
 
       trigger.fire(event);
    }
 
    @Test
-   public void testFireWithTriggerEventAndRunningAnimatorNotOnAutoReverse()
+   public void fireWithTriggerEventAndRunningAnimatorNotOnAutoReverse()
    {
       TriggerEvent event = FocusTriggerEvent.IN;
-      Trigger trigger = new Trigger(animator, event, false);
+      trigger = new Trigger(animator, event, false);
 
-      new Expectations()
-      {
-         {
-            animator.isRunning(); result = true;
-            animator.stop();
-            animator.setStartDirection(Animator.Direction.FORWARD);
-            animator.start();
-         }
-      };
+      new Expectations() {{
+         animator.isRunning(); result = true;
+         animator.stop();
+         animator.setStartDirection(Animator.Direction.FORWARD);
+         animator.start();
+      }};
 
       trigger.fire(event);
    }
 
    @Test
-   public void testFireWithTriggerEventAndNonRunningAnimatorOnAutoReverse()
+   public void fireWithTriggerEventAndNonRunningAnimatorOnAutoReverse()
    {
       TriggerEvent event = FocusTriggerEvent.IN;
-      Trigger trigger = new Trigger(animator, event, true);
+      trigger = new Trigger(animator, event, true);
 
-      new Expectations()
-      {
-         {
-            animator.isRunning(); result = false;
-            animator.setStartFraction(0.0f);
-            animator.isRunning(); result = false;
-            animator.setStartDirection(Animator.Direction.FORWARD);
-            animator.start();
-         }
-      };
+      new Expectations() {{
+         animator.isRunning(); result = false;
+         animator.setStartFraction(0.0f);
+         animator.isRunning(); result = false;
+         animator.setStartDirection(Animator.Direction.FORWARD);
+         animator.start();
+      }};
 
       trigger.fire(event);
    }
 
    @Test
-   public void testFireWithTriggerEventAndRunningAnimatorOnAutoReverse()
+   public void fireWithTriggerEventAndRunningAnimatorOnAutoReverse()
    {
       TriggerEvent event = FocusTriggerEvent.IN;
-      Trigger trigger = new Trigger(animator, event, true);
+      trigger = new Trigger(animator, event, true);
 
-      new Expectations()
-      {
-         {
-            animator.isRunning(); result = true;
+      new Expectations() {{
+         animator.isRunning(); result = true;
 
-            animator.getTimingFraction();
-            float timingFraction = 0.2f;
-            result = timingFraction;
+         animator.getTimingFraction();
+         float timingFraction = 0.2f;
+         result = timingFraction;
 
-            animator.stop();
-            animator.setStartFraction(timingFraction);
-            animator.isRunning(); result = false;
-            animator.setStartDirection(Animator.Direction.FORWARD);
-            animator.start();
-         }
-      };
+         animator.stop();
+         animator.setStartFraction(timingFraction);
+         animator.isRunning(); result = false;
+         animator.setStartDirection(Animator.Direction.FORWARD);
+         animator.start();
+      }};
 
       trigger.fire(event);
    }
 
    @Test
-   public void testFireWithOppositeTriggerEventAndNonRunningAnimatorNotOnAutoReverse()
+   public void fireWithOppositeTriggerEventAndNonRunningAnimatorNotOnAutoReverse()
    {
       TriggerEvent event = FocusTriggerEvent.IN;
-      Trigger trigger = new Trigger(animator, event, false);
+      trigger = new Trigger(animator, event, false);
 
       new Expectations() {};
 
@@ -160,41 +135,35 @@ public final class TriggerTest
    }
 
    @Test
-   public void testFireWithOppositeTriggerEventAndNonRunningAnimatorOnAutoReverse()
+   public void fireWithOppositeTriggerEventAndNonRunningAnimatorOnAutoReverse()
    {
       TriggerEvent event = FocusTriggerEvent.IN;
-      Trigger trigger = new Trigger(animator, event, true);
+      trigger = new Trigger(animator, event, true);
 
-      new Expectations()
-      {
-         {
-            animator.isRunning(); result = false;
-            animator.setStartFraction(1.0f - animator.getStartFraction());
-            animator.setStartDirection(Animator.Direction.BACKWARD);
-            animator.start();
-         }
-      };
+      new Expectations() {{
+         animator.isRunning(); result = false;
+         animator.setStartFraction(1.0f - animator.getStartFraction());
+         animator.setStartDirection(Animator.Direction.BACKWARD);
+         animator.start();
+      }};
 
       trigger.fire(event.getOppositeEvent());
    }
 
    @Test
-   public void testFireWithOppositeTriggerEventAndRunningAnimatorOnAutoReverse()
+   public void fireWithOppositeTriggerEventAndRunningAnimatorOnAutoReverse()
    {
       TriggerEvent event = FocusTriggerEvent.IN;
-      Trigger trigger = new Trigger(animator, event, true);
+      trigger = new Trigger(animator, event, true);
 
-      new Expectations()
-      {
-         {
-            animator.isRunning(); result = true;
-            animator.getTimingFraction(); float timingFraction = 0.2f; result = timingFraction;
-            animator.stop();
-            animator.setStartFraction(timingFraction);
-            animator.setStartDirection(Animator.Direction.BACKWARD);
-            animator.start();
-         }
-      };
+      new Expectations() {{
+         animator.isRunning(); result = true;
+         animator.getTimingFraction(); float timingFraction = 0.2f; result = timingFraction;
+         animator.stop();
+         animator.setStartFraction(timingFraction);
+         animator.setStartDirection(Animator.Direction.BACKWARD);
+         animator.start();
+      }};
 
       trigger.fire(event.getOppositeEvent());
    }

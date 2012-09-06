@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.timing.triggers;
@@ -17,75 +17,68 @@ import static org.junit.Assert.*;
 public final class MouseTriggerTest
 {
    @Test
-   public void testAddTrigger()
+   public void addTrigger()
    {
       Component button = new JButton("Test");
 
       MouseTrigger trigger = MouseTrigger.addTrigger(button, null, MouseTriggerEvent.ENTER);
 
       MouseListener[] mouseListeners = button.getMouseListeners();
-      assertSame(trigger, mouseListeners[mouseListeners.length - 1]);
+      MouseListener listenerAdded = mouseListeners[mouseListeners.length - 1];
+      assertSame(trigger, listenerAdded);
    }
 
    @Test
-   public void testAddTriggerWithAutoReverse()
+   public void addTriggerWithAutoReverse()
    {
       Component button = new JButton("Test");
 
       MouseTrigger trigger = MouseTrigger.addTrigger(button, null, MouseTriggerEvent.ENTER, true);
 
       MouseListener[] mouseListeners = button.getMouseListeners();
-      assertSame(trigger, mouseListeners[mouseListeners.length - 1]);
+      MouseListener listenerAdded = mouseListeners[mouseListeners.length - 1];
+      assertSame(trigger, listenerAdded);
    }
 
    @Test
-   public void testMouseEntered()
+   public void mouseEntered()
    {
-      MouseListener trigger = createMouseTriggerWithExpectations(MouseTriggerEvent.ENTER);
+      MouseListener trigger = createMouseTriggerWithExpectationOnGivenEvent(MouseTriggerEvent.ENTER);
       trigger.mouseEntered(null);
    }
 
-   private MouseListener createMouseTriggerWithExpectations(final MouseTriggerEvent event)
+   private MouseListener createMouseTriggerWithExpectationOnGivenEvent(final MouseTriggerEvent event)
    {
-      final MouseTrigger mouseTrigger = new MouseTrigger(null, event);
-
-      new Expectations()
-      {
-         final Trigger trigger = null;
-
-         {
-            mouseTrigger.fire(event);
-         }
-      };
-
+      MouseTrigger mouseTrigger = new MouseTrigger(null, event);
+      new Expectations() { @Mocked Trigger base; { base.fire(event); }};
       return mouseTrigger;
    }
 
    @Test
-   public void testMouseExited()
+   public void mouseExited()
    {
-      MouseListener trigger = createMouseTriggerWithExpectations(MouseTriggerEvent.EXIT);
+      MouseListener trigger = createMouseTriggerWithExpectationOnGivenEvent(MouseTriggerEvent.EXIT);
       trigger.mouseExited(null);
    }
 
    @Test
-   public void testMousePressed()
+   public void mousePressed()
    {
-      MouseListener trigger = createMouseTriggerWithExpectations(MouseTriggerEvent.PRESS);
+      MouseListener trigger = createMouseTriggerWithExpectationOnGivenEvent(MouseTriggerEvent.PRESS);
       trigger.mousePressed(null);
    }
 
    @Test
-   public void testMouseReleased()
+   public void mouseReleased()
    {
-      MouseListener trigger = createMouseTriggerWithExpectations(MouseTriggerEvent.RELEASE);
+      MouseListener trigger = createMouseTriggerWithExpectationOnGivenEvent(MouseTriggerEvent.RELEASE);
       trigger.mouseReleased(null);
    }
 
    @Test
-   public void testMouseClicked()
+   public void mouseClicked()
    {
-      MouseListener trigger = createMouseTriggerWithExpectations(MouseTriggerEvent.CLICK);
+      MouseListener trigger = createMouseTriggerWithExpectationOnGivenEvent(MouseTriggerEvent.CLICK);
       trigger.mouseClicked(null);
    }
 }

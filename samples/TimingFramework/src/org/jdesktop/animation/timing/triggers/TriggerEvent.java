@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright (c) 2006, Sun Microsystems, Inc
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  *   * Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  *   * Redistributions in binary form must reproduce the above
@@ -15,7 +15,7 @@
  *   * Neither the name of the TimingFramework project nor the names of its
  *     contributors may be used to endorse or promote products derived 
  *     from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -32,30 +32,20 @@
 package org.jdesktop.animation.timing.triggers;
 
 /**
- * Superclass for all TriggerEvents used in the Trigger classes.  The methods
- * here are mostly protected; it is expected that callers will not use this
- * class directly, but will instead use subclasses with pre-defined event
- * types. The purpose of this superclass is to provide the ability for 
- * {@link Trigger} to treat event types generically, rather than to have
- * all even logic in the subclasses of Trigger.
+ * Supertype for all TriggerEvents used in the Trigger classes.
+ * The purpose of this interface is to provide the ability for {@link Trigger} to treat event types generically,
+ * rather than to have all event logic in the subclasses of {@code Trigger}.
  *
  * @author Chet
+ * @author Rogerio
  */
-public abstract class TriggerEvent
+public interface TriggerEvent
 {
-    /**
-     * Protected constructor; this helps ensure type-safe use of 
-     * pre-defined TriggerEvent objects.
-     */
-    protected TriggerEvent() {}
-
-    /**
-     * This method returns the 'opposite' event from itself. This is used by
-     * {@link Trigger} in running an auto-reversing animation, to determine 
-     * whether an opposite event has occurred (and whether to stop/reverse
-     * the animation).  Note that some events may have no opposite.
-     * Default behavior returns same event; subclasses with multiple/opposite
-     * events must override to do the right thing here.
-     */
-    public abstract TriggerEvent getOppositeEvent();
+   /**
+    * Returns the 'opposite' event from itself.
+    * This is used by {@link Trigger} in running an auto-reversing animation, to determine whether an opposite event
+    * has occurred (and whether to stop/reverse the animation).
+    * Note that some events may have no opposite.
+    */
+   TriggerEvent getOppositeEvent();
 }

@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright (c) 2006, Sun Microsystems, Inc
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  *   * Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  *   * Redistributions in binary form must reproduce the above
@@ -15,7 +15,7 @@
  *   * Neither the name of the TimingFramework project nor the names of its
  *     contributors may be used to endorse or promote products derived 
  *     from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -32,40 +32,44 @@
 package org.jdesktop.animation.timing.triggers;
 
 /**
- * Timing events; TimingTriggers can be set to fire when an animator 
- * starts, stops, or repeats.
+ * Timing events; TimingTriggers can be set to fire when an animator starts, stops, or repeats.
  *
  * @author Chet
+ * @author Rogerio
  */
-public final class TimingTriggerEvent extends TriggerEvent {
-    /** Event fired when Animator starts. */
-    public static final TimingTriggerEvent START = new TimingTriggerEvent();
+public enum TimingTriggerEvent implements TriggerEvent
+{
+   /**
+    * Event fired when Animator starts.
+    */
+   START,
 
-    /** Event fired when Animator stops. */
-    public static final TimingTriggerEvent STOP = new TimingTriggerEvent();
+   /**
+    * Event fired when Animator stops.
+    */
+   STOP,
 
-    /**
-     * Event fired when Animator finishes one cycle and starts another.
-     */
-    public static final TimingTriggerEvent REPEAT = new TimingTriggerEvent();
+   /**
+    * Event fired when Animator finishes one cycle and starts another.
+    */
+   REPEAT;
 
-    private TimingTriggerEvent() {}
+   /**
+    * Finds the opposite of the current event: START -> STOP and STOP -> START.
+    * Note that REPEAT has no obvious opposite so it simply returns REPEAT (this method should probably not be called
+    * for that case).
+    */
+   @Override
+   public TriggerEvent getOppositeEvent()
+   {
+      if (this == START) {
+         return STOP;
+      }
+      else if (this == STOP) {
+         return START;
+      }
 
-    /**
-     * This method finds the opposite of the current event.: START -> STOP
-     * and STOP -> START.  Note that REPEAT has no obvious opposite so
-     * it simply returns REPEAT (this method should probably not be called
-     * for that case).
-     */
-    @Override
-    public TriggerEvent getOppositeEvent() {
-        if (this == START) {
-            return STOP;
-        } else if (this == STOP) {
-            return START;
-        }
-        // Possible to reach here for REPEAT action (but probably should not
-        // have been called with this event)
-        return this;
-    }   
+      // Possible to reach here for REPEAT action (but probably should not have been called with this event).
+      return this;
+   }
 }

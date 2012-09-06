@@ -33,13 +33,12 @@ package org.jdesktop.animation.timing.triggers;
 import org.jdesktop.animation.timing.*;
 
 /**
- * TimingTrigger handles timing events and starts the animator when those events occur. This class
- * can be useful in sequencing different Animators.  For example, one Animator can be set to start
- * when another ends using this Trigger.  For example, to have anim2 start when anim1 ends, one
- * might write the following:
+ * Handles timing events and starts the animator when those events occur.
+ * This class can be useful in sequencing different Animators.
+ * For example, one {@code Animator} can be set to start when another ends using this Trigger.
+ * For example, to have {@code anim2} start when {@code anim1} ends, one might write the following:
  * <pre>
- *     TimingTrigger trigger =
- *         TimingTrigger.addTrigger(anim1, anim2, TimingTriggerEvent.STOP);
+ *     TimingTrigger trigger = TimingTrigger.addTrigger(anim1, anim2, TimingTriggerEvent.STOP);
  * </pre>
  *
  * @author Chet
@@ -55,8 +54,7 @@ public final class TimingTrigger extends Trigger implements TimingTarget
     * @return TimingTrigger the resulting trigger
     * @see org.jdesktop.animation.timing.Animator#addTarget(TimingTarget)
     */
-   public static TimingTrigger addTrigger(
-      Animator source, Animator target, TimingTriggerEvent event)
+   public static TimingTrigger addTrigger(Animator source, Animator target, TimingTriggerEvent event)
    {
       return addTrigger(source, target, event, false);
    }
@@ -64,12 +62,10 @@ public final class TimingTrigger extends Trigger implements TimingTarget
    /**
     * Creates a TimingTrigger and adds it as a target to the source Animator.
     *
-    * @param source      the Animator that will be listened to for events to start the target
-    *                    Animator
+    * @param source      the Animator that will be listened to for events to start the target Animator
     * @param target      the Animator that will start when the event occurs
-    * @param event       the TimingTriggerEvent that will cause targetAnimator to start
-    * @param autoReverse flag to determine whether the animator should stop and reverse based on
-    *                    opposite triggerEvents.
+    * @param event       the TimingTriggerEvent that will cause target Animator to start
+    * @param autoReverse determines whether the animator should stop and reverse based on opposite trigger events
     * @return TimingTrigger the resulting trigger
     * @see org.jdesktop.animation.timing.Animator#addTarget(TimingTarget)
     */
@@ -91,10 +87,8 @@ public final class TimingTrigger extends Trigger implements TimingTarget
    }
 
    /**
-    * Creates a TimingTrigger, which should be added to an Animator which will generate the events
-    * sent to the trigger.
+    * Creates a TimingTrigger, which should be added to an Animator which will generate the events sent to the trigger.
     */
-   @SuppressWarnings({"TypeMayBeWeakened"})
    public TimingTrigger(Animator animator, TimingTriggerEvent event, boolean autoReverse)
    {
       super(animator, event, autoReverse);
@@ -108,12 +102,13 @@ public final class TimingTrigger extends Trigger implements TimingTarget
     * Implementation of TimingTarget method; this method does nothing in this implementation since
     * the events of TimingTrigger are limited to START, STOP, and REPEAT.
     */
-   public void timingEvent(float fraction)
-   {}
+   @Override
+   public void timingEvent(float fraction) {}
 
    /**
     * Called by Animator when starting. Sends the TimingTriggerEvent.START event to the Trigger.
     */
+   @Override
    public void begin()
    {
       fire(TimingTriggerEvent.START);
@@ -122,6 +117,7 @@ public final class TimingTrigger extends Trigger implements TimingTarget
    /**
     * Called by Animator when ending. Sends the TimingTriggerEvent.STOP event to the Trigger.
     */
+   @Override
    public void end()
    {
       fire(TimingTriggerEvent.STOP);
@@ -130,6 +126,7 @@ public final class TimingTrigger extends Trigger implements TimingTarget
    /**
     * Called by Animator when repeating. Sends the TimingTriggerEvent.REPEAT event to the Trigger.
     */
+   @Override
    public void repeat()
    {
       fire(TimingTriggerEvent.REPEAT);

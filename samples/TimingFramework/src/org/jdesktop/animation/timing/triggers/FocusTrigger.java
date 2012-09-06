@@ -31,15 +31,14 @@
 
 package org.jdesktop.animation.timing.triggers;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.*;
+import java.awt.event.*;
 
 import org.jdesktop.animation.timing.*;
 
 /**
- * FocusTrigger handles focus events and triggers an animation based on those events. For example,
- * to have anim start when component receives an IN event, one might write the following:
+ * FocusTrigger handles focus events and triggers an animation based on those events.
+ * For example, to have anim start when component receives an IN event, one might write the following:
  * <pre>
  *    FocusTrigger trigger = FocusTrigger.addTrigger(component, anim, FocusTriggerEvent.IN);
  * </pre>
@@ -56,8 +55,7 @@ public final class FocusTrigger extends Trigger implements FocusListener
     * @param event     the FocusTriggerEvent that will cause the action to fire
     * @return FocusTrigger the resulting trigger
     */
-   public static FocusTrigger addTrigger(
-      Component component, Animator animator, FocusTriggerEvent event)
+   public static FocusTrigger addTrigger(Component component, Animator animator, FocusTriggerEvent event)
    {
       return addTrigger(component, animator, event, false);
    }
@@ -68,8 +66,7 @@ public final class FocusTrigger extends Trigger implements FocusListener
     * @param component   component that will generate FocusEvents for this trigger
     * @param animator    the Animator that will start when the event occurs
     * @param event       the FocusTriggerEvent that will cause the action to fire
-    * @param autoReverse flag to determine whether the animator should stop and reverse based on
-    *                    opposite triggerEvents.
+    * @param autoReverse determines whether the animator should stop and reverse based on opposite triggerEvents
     * @return FocusTrigger the resulting trigger
     */
    public static FocusTrigger addTrigger(
@@ -81,8 +78,8 @@ public final class FocusTrigger extends Trigger implements FocusListener
    }
 
    /**
-    * Creates a non-auto-reversing FocusTrigger, which should be added to a Component that will
-    * generate the focus events of interest.
+    * Creates a non-auto-reversing FocusTrigger, which should be added to a Component that will generate the focus
+    * events of interest.
     *
     * @param animator the Animator that will start when the event occurs
     * @param event    the FocusTriggerEvent that will cause the action to fire
@@ -93,33 +90,32 @@ public final class FocusTrigger extends Trigger implements FocusListener
    }
 
    /**
-    * Creates a FocusTrigger, which should be added to a Component that will generate the focus
-    * events of interest.
+    * Creates a FocusTrigger, which should be added to a Component that will generate the focus events of interest.
     *
     * @param animator    the Animator that will start when the event occurs
     * @param event       the FocusTriggerEvent that will cause the action to fire
-    * @param autoReverse flag to determine whether the animator should stop and reverse based on
-    *                    opposite triggerEvents.
+    * @param autoReverse determines whether the animator should stop and reverse based on opposite triggerEvents
     */
-   @SuppressWarnings({"TypeMayBeWeakened"})
    public FocusTrigger(Animator animator, FocusTriggerEvent event, boolean autoReverse)
    {
       super(animator, event, autoReverse);
    }
 
    /**
-    * Called by the object which added this trigger as a FocusListener. This method starts the
-    * animator if the trigger is waiting for a IN event.
+    * Called by the object which added this trigger as a FocusListener.
+    * This method starts the animator if the trigger is waiting for a IN event.
     */
+   @Override
    public void focusGained(FocusEvent e)
    {
       fire(FocusTriggerEvent.IN);
    }
 
    /**
-    * Called by the object which added this trigger as a FocusListener. This method starts the
-    * animator if the trigger is waiting for a OUT event.
+    * Called by the object which added this trigger as a FocusListener.
+    * This method starts the animator if the trigger is waiting for a OUT event.
     */
+   @Override
    public void focusLost(FocusEvent e)
    {
       fire(FocusTriggerEvent.OUT);

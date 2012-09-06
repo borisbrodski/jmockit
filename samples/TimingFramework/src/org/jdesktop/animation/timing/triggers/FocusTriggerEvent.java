@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright (c) 2006, Sun Microsystems, Inc
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  *   * Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  *   * Redistributions in binary form must reproduce the above
@@ -15,7 +15,7 @@
  *   * Neither the name of the TimingFramework project nor the names of its
  *     contributors may be used to endorse or promote products derived 
  *     from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,31 +35,27 @@ package org.jdesktop.animation.timing.triggers;
  * Focus In/Out events.
  *
  * @author Chet
+ * @author Rogerio
  */
-public final class FocusTriggerEvent extends TriggerEvent {
-    /**
-     * Event fired when Component receives focus.
-     */
-    public static final FocusTriggerEvent IN = new FocusTriggerEvent();
+public enum FocusTriggerEvent implements TriggerEvent
+{
+   /**
+    * Event fired when Component receives focus.
+    */
+   IN,
 
-    /**
-     * Event fired when Component loses focus.
-     */
-    public static final FocusTriggerEvent OUT = new FocusTriggerEvent();
+   /**
+    * Event fired when Component loses focus.
+    */
+   OUT;
 
-    /**
-     * Private constructor; this helps ensure type-safe use of pre-defined TriggerEvent objects.
-     */
-    private FocusTriggerEvent() {}
-
-    /**
-     * This method finds the opposite of the current event.: IN ->
-     * OUT and OUT -> IN.
-     */
-    @Override
-    public TriggerEvent getOppositeEvent() {
-        return this == IN ? OUT : IN;
-    }
-    
+   /**
+    * Finds the opposite of the current event: IN -> OUT and OUT -> IN.
+    */
+   @Override
+   public TriggerEvent getOppositeEvent()
+   {
+      return this == IN ? OUT : IN;
+   }
 }
     

@@ -38,8 +38,8 @@ import java.lang.reflect.Method;
 import org.jdesktop.animation.timing.*;
 
 /**
- * ActionTrigger handles action events and starts the animator when actions occur. For example, to
- * have anim start when a button is clicked, one might write the following:
+ * Handles action events and starts the animator when actions occur.
+ * For example, to have {@code anim} start when a button is clicked, one might write the following:
  * <pre>
  *    ActionTrigger trigger = ActionTrigger.addTrigger(button, anim);
  * </pre>
@@ -62,8 +62,7 @@ public final class ActionTrigger extends Trigger implements ActionListener
       ActionTrigger trigger = new ActionTrigger(animator);
 
       try {
-         Method addListenerMethod =
-            object.getClass().getMethod("addActionListener", ActionListener.class);
+         Method addListenerMethod = object.getClass().getMethod("addActionListener", ActionListener.class);
          addListenerMethod.invoke(object, trigger);
       }
       catch (Exception e) {
@@ -74,8 +73,8 @@ public final class ActionTrigger extends Trigger implements ActionListener
    }
 
    /**
-    * Creates an ActionTrigger that will start the animator upon receiving any ActionEvents. It
-    * should be added to any suitable object with an addActionListener method.
+    * Creates an ActionTrigger that will start the animator upon receiving any ActionEvents.
+    * It should be added to any suitable object with an addActionListener method.
     *
     * @param animator the Animator that start when the event occurs
     */
@@ -85,9 +84,10 @@ public final class ActionTrigger extends Trigger implements ActionListener
    }
 
    /**
-    * Called by an object generating ActionEvents to which this trigger was added as an
-    * ActionListener. This starts the Animator.
+    * Called by an object generating ActionEvents to which this trigger was added as an ActionListener.
+    * This starts the Animator.
     */
+   @Override
    public void actionPerformed(ActionEvent ae)
    {
       fire();
