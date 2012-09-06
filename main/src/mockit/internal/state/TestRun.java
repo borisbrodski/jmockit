@@ -108,6 +108,12 @@ public final class TestRun
 
    public static ExecutingTest getExecutingTest() { return getInstance().executingTest; }
 
+   public static RecordAndReplayExecution getRecordAndReplayForRunningTest()
+   {
+      TestRun testRun = getInstance();
+      return testRun.currentTestInstance == null ? null : testRun.executingTest.getCurrentRecordAndReplay();
+   }
+
    public static RecordAndReplayExecution getRecordAndReplayForRunningTest(boolean create)
    {
       TestRun testRun = getInstance();

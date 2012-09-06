@@ -7,6 +7,7 @@ package mockit;
 import java.lang.reflect.*;
 import java.util.*;
 
+import mockit.internal.expectations.argumentMatching.*;
 import mockit.internal.state.*;
 import mockit.internal.expectations.*;
 import mockit.internal.util.*;
@@ -130,5 +131,45 @@ public abstract class Verifications extends Invocations
    final BaseVerificationPhase getCurrentPhase()
    {
       return verificationPhase;
+   }
+
+   /**
+    * Captures the argument value passed into the associated expectation parameter, when a matching invocation occurs
+    * at replay time.
+    * This method should be used in an assignment expression inside a verification block. For example:
+    * <pre>
+    * new Verifications() {{
+    *    String someText;
+    *    mock.doSomething(123, someText = withCapture());
+    *    assertTrue(someText.length() >= 5);
+    * }}
+    * </pre>
+    * @return the captured argument value
+    * @see #withCapture(java.util.List)
+    */
+   protected final <T> T withCapture()
+   {
+      verificationPhase.addArgMatcher(AlwaysTrueMatcher.INSTANCE);
+      return null;
+   }
+
+   /**
+    * Captures the argument value passed into the associated expectation parameter, when a matching invocation occurs
+    * at replay time.
+    * This method should be used in an assignment expression inside a verification block. For example:
+    * <pre>
+    * new Verifications() {{
+    *    String someText;
+    *    mock.doSomething(123, someText = withCapture());
+    *    assertTrue(someText.length() >= 5);
+    * }}
+    * </pre>
+    * @return the captured argument value
+    * @see #withCapture(java.util.List)
+    */
+   protected final <T> T withCapture(T argValue)
+   {
+      verificationPhase.addArgMatcher(AlwaysTrueMatcher.INSTANCE);
+      return argValue;
    }
 }

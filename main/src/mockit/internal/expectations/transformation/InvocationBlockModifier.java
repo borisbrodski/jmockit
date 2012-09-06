@@ -4,7 +4,10 @@
  */
 package mockit.internal.expectations.transformation;
 
+import java.util.*;
+
 import mockit.external.asm4.*;
+import mockit.internal.util.*;
 
 import static mockit.external.asm4.Opcodes.*;
 
@@ -16,6 +19,16 @@ final class InvocationBlockModifier extends MethodVisitor
    private final String fieldOwner;
    private final boolean callEndInvocations;
    private int matchers;
+
+   private static final class Capture
+   {
+      int opcode;
+      int var;
+      int parameter;
+   }
+
+   private List<Capture> captures;
+   private Capture pendingCapture;
 
    InvocationBlockModifier(MethodVisitor mw, String fieldOwner, boolean callEndInvocations)
    {
@@ -72,10 +85,17 @@ final class InvocationBlockModifier extends MethodVisitor
    {
       if (opcode == INVOKESTATIC && !owner.equals(fieldOwner) && name.startsWith("access$")) {
          // It's a synthetic method for private access, just ignore it.
+         mv.visitMethodInsn(opcode, owner, name, desc);
+         return;
       }
       else if (opcode == INVOKEVIRTUAL && owner.equals(fieldOwner) && name.startsWith("with")) {
          mv.visitMethodInsn(INVOKEVIRTUAL, owner, name, desc);
          matcherStacks[matchers++] = mv.stackSize2;
+
+         if ("withCapture".equals(name) && !desc.contains("List")) {
+            pendingCapture = new Capture();
+         }
+
          return;
       }
       else if (matchers > 0) {
@@ -90,6 +110,11 @@ final class InvocationBlockModifier extends MethodVisitor
       }
 
       mv.visitMethodInsn(opcode, owner, name, desc);
+
+      if (matchers == 0 && captures != null) {
+         generateCallsToCaptureMatchedArguments(desc);
+         captures = null;
+      }
    }
 
    private int sumOfSizes(Type[] argTypes)
@@ -115,6 +140,7 @@ final class InvocationBlockModifier extends MethodVisitor
          if (stack == matcherStack || stack == matcherStack + 1) {
             if (nextMatcher < i) {
                generateCallToMoveArgMatcher(nextMatcher, i);
+               updateCaptureIfAny(nextMatcher, i);
             }
 
             matcherStack = matcherStacks[++nextMatcher];
@@ -129,6 +155,29 @@ final class InvocationBlockModifier extends MethodVisitor
       mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "moveArgMatcher", "(II)V");
    }
 
+   private void updateCaptureIfAny(int originalIndex, int newIndex)
+   {
+      if (captures != null) {
+         Capture capture = captures.get(originalIndex);
+         capture.parameter = newIndex;
+      }
+   }
+
+   private void generateCallsToCaptureMatchedArguments(String expectationDesc)
+   {
+      Type[] argTypes = Type.getArgumentTypes(expectationDesc);
+
+      for (Capture capture : captures) {
+         mv.visitIntInsn(SIPUSH, capture.parameter);
+         mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "matchedArgument", "(I)Ljava/lang/Object;");
+
+         Type argType = argTypes[capture.parameter];
+         TypeConversion.generateCastFromObject(mv, argType);
+
+         mv.visitVarInsn(capture.opcode, capture.var);
+      }
+   }
+
    @Override
    public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index)
    {
@@ -137,6 +186,21 @@ final class InvocationBlockModifier extends MethodVisitor
       if (end.position > 0) {
          super.visitLocalVariable(name, desc, signature, start, end, index);
       }
+   }
+
+   @Override
+   public void visitVarInsn(int opcode, int var)
+   {
+      if (pendingCapture != null && opcode >= ISTORE && opcode <= ASTORE) {
+         if (captures == null) captures = new ArrayList<Capture>();
+         pendingCapture.opcode = opcode;
+         pendingCapture.var = var;
+         pendingCapture.parameter = captures.size();
+         captures.add(pendingCapture);
+         pendingCapture = null;
+      }
+
+      mv.visitVarInsn(opcode, var);
    }
 
    @Override

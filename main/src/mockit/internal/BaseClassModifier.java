@@ -11,17 +11,11 @@ import static mockit.external.asm4.Opcodes.*;
 import mockit.external.asm4.*;
 import mockit.external.asm4.Type;
 import mockit.internal.state.*;
+import mockit.internal.util.*;
 
 public class BaseClassModifier extends ClassVisitor
 {
    private static final int ACCESS_MASK = 0xFFFF - ACC_ABSTRACT - ACC_NATIVE;
-   private static final String[] PRIMITIVE_WRAPPER_TYPE = {
-      null, "java/lang/Boolean", "java/lang/Character", "java/lang/Byte", "java/lang/Short", "java/lang/Integer",
-      "java/lang/Float", "java/lang/Long", "java/lang/Double"
-   };
-   private static final String[] UNBOXING_METHOD = {
-      null, "booleanValue", "charValue", "byteValue", "shortValue", "intValue", "floatValue", "longValue", "doubleValue"
-   };
    private static final Type VOID_TYPE = Type.getType("Ljava/lang/Void;");
 
    protected final MethodVisitor methodAnnotationsVisitor = new MethodVisitor()
@@ -132,23 +126,7 @@ public class BaseClassModifier extends ClassVisitor
    protected final void generateReturnWithObjectAtTopOfTheStack(String methodDesc)
    {
       Type returnType = Type.getReturnType(methodDesc);
-      int sort = returnType.getSort();
-
-      if (sort == Type.VOID) {
-         mw.visitInsn(POP);
-      }
-      else if (sort == Type.ARRAY) {
-         mw.visitTypeInsn(CHECKCAST, returnType.getDescriptor());
-      }
-      else if (sort == Type.OBJECT) {
-         mw.visitTypeInsn(CHECKCAST, returnType.getInternalName());
-      }
-      else {
-         String returnDesc = PRIMITIVE_WRAPPER_TYPE[sort];
-         mw.visitTypeInsn(CHECKCAST, returnDesc);
-         mw.visitMethodInsn(INVOKEVIRTUAL, returnDesc, UNBOXING_METHOD[sort], "()" + returnType);
-      }
-
+      TypeConversion.generateCastFromObject(mw, returnType);
       mw.visitInsn(returnType.getOpcode(IRETURN));
    }
 
@@ -182,16 +160,8 @@ public class BaseClassModifier extends ClassVisitor
          mw.visitInsn(DUP);
          mw.visitIntInsn(BIPUSH, i++);
          mw.visitVarInsn(argType.getOpcode(ILOAD), j);
-
-         int sort = argType.getSort();
-
-         if (sort < Type.ARRAY) {
-            String wrapperType = PRIMITIVE_WRAPPER_TYPE[sort];
-            mw.visitMethodInsn(INVOKESTATIC, wrapperType, "valueOf", "(" + argType + ")L" + wrapperType + ';');
-         }
-
+         TypeConversion.generateCastToObject(mw, argType);
          mw.visitInsn(AASTORE);
-
          j += argType.getSize();
       }
    }

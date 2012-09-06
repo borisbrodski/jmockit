@@ -360,52 +360,46 @@ abstract class Invocations
    }
 
    /**
-    * Creates a value object for the associated parameter into which to capture the argument received by the first
-    * matching invocation (if any) at replay time.
+    * Creates a new argument matcher for the current expectation which will, for each matching invocation,
+    * <em>capture</em> the received argument values, adding them to the given list.
     * 
-    * @return a new instance of type {@code T}, into which the instance field values of the captured argument received
-    * by a matching invocation will be set
+    * @param valueHolderForMultipleInvocations list into which the arguments received by matching invocations will be
+    *                                          added
+    *
+    * @return always {@code null}
+    *         (to capture a primitive type parameter which cannot receive {@code null}, use
+    *         {@link #withCapture(T, List)} instead)
     * 
-    * @see #withCapture(java.util.List)
+    * @see Verifications#withCapture()
     */
-   protected final <T> T withCapture()
+   protected final <T> T withCapture(List<T> valueHolderForMultipleInvocations)
    {
-      addMatcher(new ArgumentMatcher()
-      {
-         public boolean matches(Object argValue)
-         {
-            return true;
-         }
-
-         public void writeMismatchPhrase(ArgumentMismatch argumentMismatch) {}
-      });
-      return null;
+      return withCapture(null, valueHolderForMultipleInvocations);
    }
 
    /**
     * Creates a new argument matcher for the current expectation which will, for each matching invocation,
     * <em>capture</em> the received argument values, adding them to the given list.
-    * 
-    * @param valueHolderForMultipleInvocations list (usually empty) of value objects into which the arguments received
-    *                                          by matching invocations will be added
     *
-    * @return always {@code null}
-    * 
-    * @see #withCapture()
+    * @param valueHolderForMultipleInvocations list into which the arguments received by matching invocations will be
+    *                                          added
+    *
+    * @return the given {@code argValue}
+    *
+    * @see Verifications#withCapture()
     */
-   protected final <T> T withCapture(final List<T> valueHolderForMultipleInvocations)
+   protected final <T> T withCapture(T argValue, final List<T> valueHolderForMultipleInvocations)
    {
-      addMatcher(new ArgumentMatcher()
-      {
-         public boolean matches(Object argValue)
+      addMatcher(new ArgumentMatcher() {
+         public boolean matches(Object replayValue)
          {
-            valueHolderForMultipleInvocations.add((T) argValue);
+            valueHolderForMultipleInvocations.add((T) replayValue);
             return true;
          }
 
          public void writeMismatchPhrase(ArgumentMismatch argumentMismatch) {}
       });
-      return null;
+      return argValue;
    }
 
    /**

@@ -12,6 +12,7 @@ import mockit.*;
 import mockit.internal.*;
 
 import org.hamcrest.beans.*;
+
 import static org.junit.Assert.*;
 
 /**
@@ -427,7 +428,7 @@ public final class JavadocExamples_JMockit_Test
       }};
    }
 
-   @Ignore @Test // Uses of JMockit API: 2
+   @Test // Uses of JMockit API: 2
    public void capturingArgumentForVerification(final MockedClass mock)
    {
       mock.doSomething(new Person("John"));
@@ -450,6 +451,20 @@ public final class JavadocExamples_JMockit_Test
          mock.doSomething(withCapture(capturedPeople)); times = 2;
          assertEquals("John", capturedPeople.get(0).getName());
          assertEquals("Jane", capturedPeople.get(1).getName());
+      }};
+   }
+
+   @Test // Uses of JMockit API: 3
+   public void capturingMultipleArgumentsForVerification(final MockedClass mock)
+   {
+      mock.doSomething("test", true);
+
+      new Verifications() {{
+         String captor1;
+         boolean captor2;
+         mock.doSomething(captor1 = withCapture(), captor2 = withCapture(false));
+         assertEquals("test", captor1);
+         assertTrue(captor2);
       }};
    }
 

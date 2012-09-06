@@ -281,4 +281,11 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
 
       return false;
    }
+
+   public final Object getArgumentValueForCurrentVerification(int parameterIndex)
+   {
+      List<VerifiedExpectation> verifiedExpectations = recordAndReplay.executionState.verifiedExpectations;
+      VerifiedExpectation lastVerified = verifiedExpectations.get(verifiedExpectations.size() - 1);
+      return lastVerified.expectation.invocation.getArgumentValues()[parameterIndex];
+   }
 }

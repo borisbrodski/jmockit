@@ -13,7 +13,7 @@ public final class ActiveInvocations
 {
    public static void addArgMatcher()
    {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
       if (instance != null) {
          TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
@@ -26,7 +26,7 @@ public final class ActiveInvocations
 
    public static void moveArgMatcher(int originalMatcherIndex, int toIndex)
    {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
       if (instance != null) {
          TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
@@ -37,9 +37,24 @@ public final class ActiveInvocations
       }
    }
 
+   public static Object matchedArgument(int parameterIndex)
+   {
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+
+      if (instance != null) {
+         BaseVerificationPhase verificationPhase = (BaseVerificationPhase) instance.getCurrentTestOnlyPhase();
+
+         if (verificationPhase != null) {
+            return verificationPhase.getArgumentValueForCurrentVerification(parameterIndex);
+         }
+      }
+
+      return null;
+   }
+
    public static void addResult(Object result)
    {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
       if (instance != null) {
          instance.getRecordPhase().addResult(result);
@@ -48,7 +63,7 @@ public final class ActiveInvocations
 
    public static void setHandler(Object handler)
    {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
       if (instance != null) {
          TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
@@ -65,7 +80,7 @@ public final class ActiveInvocations
 
    public static void times(int n)
    {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
       if (instance != null) {
          TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
@@ -75,7 +90,7 @@ public final class ActiveInvocations
 
    public static void minTimes(int n)
    {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
       if (instance != null) {
          TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
@@ -85,7 +100,7 @@ public final class ActiveInvocations
 
    public static void maxTimes(int n)
    {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
       if (instance != null) {
          TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
@@ -95,7 +110,7 @@ public final class ActiveInvocations
 
    public static void setErrorMessage(CharSequence customMessage)
    {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest(false);
+      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
       if (instance != null) {
          instance.getCurrentTestOnlyPhase().setCustomErrorMessage(customMessage);
