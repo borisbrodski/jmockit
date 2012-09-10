@@ -4,12 +4,12 @@
  */
 package mockit;
 
+import java.util.ArrayList;
 import java.util.*;
+import static java.util.Arrays.*;
 
-import static java.util.Arrays.asList;
-
-import static org.junit.Assert.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public final class WithCaptureTest
 {
@@ -25,26 +25,115 @@ public final class WithCaptureTest
 
    public interface DAO<T> { void create(T t); }
 
+   @SuppressWarnings("UnusedParameters")
    public static final class PersonDAO implements DAO<Person>
    {
       public void create(Person p) {}
       public Person create(String name, int age) { return new Person(name, age); }
-      @SuppressWarnings("UnusedParameters")
-      public void doSomething(String s1, boolean b, String s2, double d, float f, long l, Object o) {}
+      public void doSomething(Integer i) {}
+      public void doSomething(boolean b) {}
+      public void doSomething(Number n) {}
+      public void doSomething(
+         String s1, boolean b, String s2, double d, float f, long l, Object o, char c, byte bt, short sh) {}
+      void doSomething(String[] names, int[] ages) {}
+      void doSomething(Float f1, float f2, boolean... flags) {}
+      void doSomething(String name, Short age) {}
    }
 
    @Mocked PersonDAO dao;
 
    @Test
-   public void captureArgumentToLocalVariable()
+   public void captureArgumentFromLastMatchingInvocationToLocalVariable()
    {
       dao.create("Mary Jane", 10);
       dao.create("John", 25);
 
       new FullVerifications() {{
          int age;
-         dao.create(null, age = withCapture(0));
+         dao.create(null, age = withCapture());
          assertTrue(age >= 18);
+      }};
+   }
+
+   @Test
+   public void captureArgumentWhenNoInvocationIsMatched()
+   {
+      dao.create("Mary Jane", 10);
+
+      new Verifications() {{
+         int age;
+         dao.create("", age = withCapture()); minTimes = 0;
+         assertEquals(0, age);
+      }};
+   }
+
+   @Test
+   public void captureArgumentOfWrapperTypeToLocalVariableOfPrimitiveType()
+   {
+      dao.doSomething(45);
+
+      new Verifications() {{
+         int i;
+         dao.doSomething(i = withCapture());
+         assertEquals(45, i);
+      }};
+   }
+
+   @Test
+   public void captureArgumentOfReferenceTypeToLocalVariableOfPrimitiveType()
+   {
+      dao.doSomething(123.0F);
+
+      new Verifications() {{
+         float f;
+         dao.doSomething(f = withCapture());
+         assertEquals(123.0F, f, 0);
+      }};
+   }
+
+   @Ignore @Test
+   public void captureArgumentOfReferenceTypeToVariableOfSpecificSubtypeForSeparateInvocations()
+   {
+      dao.doSomething(123.0F);
+      dao.doSomething(123L);
+      dao.doSomething(123.0);
+
+      new Verifications() {{
+         float f;
+         dao.doSomething(f = withCapture());
+         assertEquals(123.0F, f, 0);
+
+         long l;
+         dao.doSomething(l = withCapture());
+         assertEquals(123L, l);
+
+         Double d;
+         dao.doSomething(d = withCapture());
+         assertEquals(123.0, d, 0);
+      }};
+   }
+
+   @Test
+   public void captureArgumentOfPrimitiveTypeToLocalVariableOfPrimitiveType()
+   {
+      dao.doSomething(true);
+
+      new Verifications() {{
+         boolean b;
+         dao.doSomething(b = withCapture());
+         assertTrue(b);
+      }};
+   }
+
+   @Test
+   public void captureArgumentOfPrimitiveTypeToLocalVariableOfReferenceType()
+   {
+      dao.doSomething(true);
+
+      new Verifications() {{
+         Boolean b;
+         dao.doSomething(b = withCapture());
+         assertTrue(b);
       }};
    }
 
@@ -54,7 +143,7 @@ public final class WithCaptureTest
       final Person p = new Person("John", 10);
       dao.create(p);
       dao.create("Mary Jane", 30);
-      dao.doSomething("test", true, "Test", 4.5, -2.3F, 123, p);
+      dao.doSomething("test", true, "Test", 4.5, -2.3F, 123, p, 'g', (byte) 127, (short) -32767);
 
       new Verifications() {{
          Person created;
@@ -64,7 +153,7 @@ public final class WithCaptureTest
 
          String name;
          int age;
-         dao.create(name = withCapture(), age = withCapture(0));
+         dao.create(name = withCapture(), age = withCapture());
          assertEquals("Mary Jane", name);
          assertEquals(30, age);
 
@@ -74,17 +163,193 @@ public final class WithCaptureTest
          float f;
          long l;
          Object o;
+         char c;
+         byte bt;
+         short sh;
          dao.doSomething(
-            s1 = withCapture(), b = withCapture(false), "Test",
-            d = withCapture(0.0), f = withCapture(0.0F), l = withCapture(0L), o = withCapture());
+            s1 = withCapture(), b = withCapture(), "Test", d = withCapture(),
+            f = withCapture(), l = withCapture(), o = withCapture(),
+            c = withCapture(), bt = withCapture(), sh = withCapture());
          assertEquals("test", s1);
          assertTrue(b);
          assertEquals(4.5, d, 0);
          assertEquals(-2.3, f, 0.001);
          assertEquals(123, l);
          assertSame(p, o);
+         assertEquals('g', c);
+         assertEquals(127, bt);
+         assertEquals(-32767, sh);
       }};
    }
+
+   boolean boolCapture;
+   static int intCapture;
+
+   @Test
+   public void captureArgumentsIntoFields()
+   {
+      dao.doSomething(56);
+      dao.doSomething(true);
+      dao.create("", 123);
+      dao.doSomething(123.5);
+
+      new Verifications() {
+         Integer i;
+         final Number n;
+
+         {
+            dao.doSomething(i = withCapture());
+            assertEquals(56, i.intValue());
+
+            dao.doSomething(boolCapture = withCapture());
+            assertTrue(boolCapture);
+
+            dao.doSomething(n = withCapture()); times = 1;
+            assertEquals(123.5, n.doubleValue(), 0);
+
+            dao.create(anyString, intCapture = withCapture());
+            assertEquals(123, intCapture);
+         }
+      };
+   }
+
+   @Ignore @Test
+   public void captureFirstArgumentIntoLocalFieldInTwoParameterMethod()
+   {
+      final String name = "Ted";
+      final Short age = 15;
+      dao.doSomething(name, age);
+
+      new Verifications() {
+         String nameCapture;
+
+         {
+            dao.create(nameCapture = withCapture(), age);
+            assertEquals(name, nameCapture);
+         }
+      };
+   }
+
+   @Test
+   public void captureArgumentsFromConsecutiveMatchingInvocations()
+   {
+      dao.doSomething((byte) 56);
+      dao.doSomething(123.4F);
+      dao.doSomething((short) -78);
+      dao.doSomething(91);
+      dao.doSomething(92);
+
+      final String[] names1 = {"Ted"};
+      final int[] ages1 = {15, 46};
+      dao.doSomething(names1, ages1);
+
+      final String[] names2 = {"Ted"};
+      final int[] ages2 = {15, 46};
+      dao.doSomething(names2, ages2);
+
+      new VerificationsInOrder() {
+         private final short sh;
+         final Number n;
+         byte bt;
+         int i1;
+         Integer i2;
+         String[] namesCapture;
+         int[] agesCapture;
+
+         {
+            dao.doSomething(bt = withCapture());
+            assertEquals(56, bt);
+
+            dao.doSomething(n = withCapture());
+            assertEquals(123.4, n.floatValue(), 0.001);
+
+            dao.doSomething(sh = withCapture());
+            assertEquals(-78, sh);
+
+            dao.doSomething(i1 = withCapture());
+            assertEquals(91, i1);
+
+            dao.doSomething(i2 = withCapture());
+            assertEquals(92, i2.intValue());
+
+//            dao.doSomething(namesCapture = withCapture(), agesCapture = withCapture());
+//            assertSame(names1, namesCapture);
+//            assertSame(ages1, agesCapture);
+
+//            dao.doSomething(namesCapture = withCapture(), agesCapture = withCapture());
+//            assertSame(names2, namesCapture);
+//            assertSame(ages2, agesCapture);
+         }
+      };
+   }
+
+   @Test
+   public void captureArrayArguments()
+   {
+      final String[] names = {"Ted", "Lisa"};
+      final int[] ages = {67, 19};
+      dao.doSomething(names, ages);
+
+      new Verifications() {{
+         String[] capturedNames;
+         int[] capturedAges;
+         dao.doSomething(capturedNames = withCapture(), capturedAges = withCapture());
+
+         assertArrayEquals(names, capturedNames);
+         assertArrayEquals(ages, capturedAges);
+      }};
+   }
+
+   @Test
+   public void captureVarargsParameter()
+   {
+      dao.doSomething(1.2F, 1.0F, true, false, true);
+      dao.doSomething(0.0F, 2.0F, false, true);
+      dao.doSomething(-2.0F, 3.0F);
+
+      new VerificationsInOrder() {{
+         boolean[] flags;
+
+         dao.doSomething(anyFloat, 1.0F, flags = withCapture());
+         assertEquals(3, flags.length);
+         assertTrue(flags[0]);
+         assertFalse(flags[1]);
+         assertTrue(flags[2]);
+
+         dao.doSomething(null, 2.0F, flags = withCapture());
+         assertEquals(2, flags.length);
+         assertFalse(flags[0]);
+         assertTrue(flags[1]);
+
+         dao.doSomething(withAny(0.0F), 3.0F, flags = withCapture());
+         assertEquals(0, flags.length);
+      }};
+   }
+
+   @Test
+   public void captureArgumentsWhileMixingAnyFieldsAndLiteralValuesAndCallsToOtherMethods()
+   {
+      final double d = 4.5;
+      final long l = 123;
+      dao.doSomething("Test", true, "data", d, 12.25F, l, "testing", '9', (byte) 11, (short) 5);
+
+      new Verifications() {{
+         float f;
+         String s;
+         byte b;
+
+         //noinspection ConstantMathCall
+         dao.doSomething(
+            null, anyBoolean, getData(), Math.abs(-d), f = withCapture(), Long.valueOf("" + l),
+            s = withCapture(), Character.forDigit(9, 10), b = withCapture(), anyShort);
+
+         assertEquals(12.25F, f, 0);
+         assertEquals("testing", s);
+         assertEquals(11, b);
+      }};
+   }
+
+   private String getData() { return "data"; }
 
    @Test
    public void captureArgumentsIntoListInExpectationBlock()
@@ -95,7 +360,7 @@ public final class WithCaptureTest
 
       new NonStrictExpectations() {{
          dao.create(withCapture(personsCreated));
-         dao.create(withCapture(personNames), withCapture(0, personAges));
+         dao.create(withCapture(personNames), withCapture(personAges));
       }};
 
       dao.create(new Person("John", 10));
@@ -131,7 +396,7 @@ public final class WithCaptureTest
          final List<Integer> ages = new ArrayList<Integer>();
 
          {
-            dao.create("", withCapture(0, ages));
+            dao.create("", withCapture(ages));
             assertEquals(asList(56), ages);
 
             dao.create(withCapture(created));
@@ -146,7 +411,7 @@ public final class WithCaptureTest
             assertEquals(20, second.getAge());
 
             ages.clear();
-            dao.create(withSubstring(" "), withCapture(0, ages)); times = 2;
+            dao.create(withSubstring(" "), withCapture(ages)); times = 2;
             assertEquals(asList(35, 6), ages);
          }
       };

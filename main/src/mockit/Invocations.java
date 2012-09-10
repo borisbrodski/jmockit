@@ -360,35 +360,18 @@ abstract class Invocations
    }
 
    /**
-    * Creates a new argument matcher for the current expectation which will, for each matching invocation,
-    * <em>capture</em> the received argument values, adding them to the given list.
+    * Captures the argument value passed into the associated expectation parameter, when matching invocations occur at
+    * replay time.
+    * Each captured value is added to the given list.
     * 
     * @param valueHolderForMultipleInvocations list into which the arguments received by matching invocations will be
     *                                          added
     *
-    * @return always {@code null}
-    *         (to capture a primitive type parameter which cannot receive {@code null}, use
-    *         {@link #withCapture(T, List)} instead)
-    * 
-    * @see Verifications#withCapture()
-    */
-   protected final <T> T withCapture(List<T> valueHolderForMultipleInvocations)
-   {
-      return withCapture(null, valueHolderForMultipleInvocations);
-   }
-
-   /**
-    * Creates a new argument matcher for the current expectation which will, for each matching invocation,
-    * <em>capture</em> the received argument values, adding them to the given list.
-    *
-    * @param valueHolderForMultipleInvocations list into which the arguments received by matching invocations will be
-    *                                          added
-    *
-    * @return the given {@code argValue}
+    * @return the default value for type {@code T}
     *
     * @see Verifications#withCapture()
     */
-   protected final <T> T withCapture(T argValue, final List<T> valueHolderForMultipleInvocations)
+   protected final <T> T withCapture(final List<T> valueHolderForMultipleInvocations)
    {
       addMatcher(new ArgumentMatcher() {
          public boolean matches(Object replayValue)
@@ -399,7 +382,7 @@ abstract class Invocations
 
          public void writeMismatchPhrase(ArgumentMismatch argumentMismatch) {}
       });
-      return argValue;
+      return null;
    }
 
    /**
@@ -433,7 +416,6 @@ abstract class Invocations
     *
     * @param value the center value for range comparison
     * @param delta the tolerance around the center value, for a range of [value - delta, value + delta]
-    *
     * @return the given {@code value}
     */
    protected final double withEqual(double value, double delta)

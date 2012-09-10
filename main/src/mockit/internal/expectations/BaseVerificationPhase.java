@@ -285,7 +285,15 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
    public final Object getArgumentValueForCurrentVerification(int parameterIndex)
    {
       List<VerifiedExpectation> verifiedExpectations = recordAndReplay.executionState.verifiedExpectations;
-      VerifiedExpectation lastVerified = verifiedExpectations.get(verifiedExpectations.size() - 1);
-      return lastVerified.expectation.invocation.getArgumentValues()[parameterIndex];
+      Expectation lastMatched;
+
+      if (verifiedExpectations.isEmpty()) {
+         lastMatched = currentVerification;
+      }
+      else {
+         lastMatched = verifiedExpectations.get(verifiedExpectations.size() - 1).expectation;
+      }
+
+      return lastMatched.invocation.getArgumentValues()[parameterIndex];
    }
 }
