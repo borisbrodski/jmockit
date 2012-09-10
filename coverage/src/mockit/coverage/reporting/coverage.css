@@ -7,7 +7,7 @@ table table { width: 100%; border-spacing: 0; }
 caption {
    background-color: #483d8b; color: white;
    font-size: larger;
-   padding: 3px;
+   padding: 4px;
    text-shadow: 2px 2px 2px black;
    border-radius: 4px;
 }
