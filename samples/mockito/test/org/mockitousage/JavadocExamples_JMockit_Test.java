@@ -462,7 +462,7 @@ public final class JavadocExamples_JMockit_Test
       new Verifications() {{
          String captor1;
          boolean captor2;
-         mock.doSomething(captor1 = withCapture(), captor2 = withCapture(false));
+         mock.doSomething(captor1 = withCapture(), captor2 = withCapture());
          assertEquals("test", captor1);
          assertTrue(captor2);
       }};
