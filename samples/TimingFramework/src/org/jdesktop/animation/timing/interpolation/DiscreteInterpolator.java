@@ -67,14 +67,11 @@ public final class DiscreteInterpolator implements Interpolator
     * @param fraction a value between 0 and 1, representing the elapsed fraction of a time interval
     *                 (either an entire animation cycle or an interval between two KeyTimes,
     *                 depending on where this Interpolator has been set)
-    * @return number representing the start of the current interval, usually 0, but if
-    *         <code>fracton == 0</code>, returns 1.
+    * @return number representing the start of the current interval, usually 0, but 1 if <code>fraction == 1</code>
     */
+   @Override
    public float interpolate(float fraction)
    {
-      if (fraction < 1.0f) {
-         return 0;
-      }
-      return 1.0f;
+      return fraction < 1.0f ? 0.0f : 1.0f;
    }
 }

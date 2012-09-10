@@ -33,6 +33,8 @@ package org.jdesktop.animation.timing.triggers;
 
 import org.jdesktop.animation.timing.Animator;
 
+import static org.jdesktop.animation.timing.Animator.Direction;
+
 /**
  * This abstract class should be overridden by any class wanting to implement a new Trigger.
  * The subclass will define the events to trigger off of and any listeners to handle those events.
@@ -119,38 +121,42 @@ public class Trigger
       }
 
       if (currentEvent == triggerEvent) {
-         // event occurred; fire the animation
+         // Event occurred; fire the animation.
          if (autoReverse) {
+            float f;
+
             if (animator.isRunning()) {
-               float f = animator.getTimingFraction();
+               f = animator.getTimingFraction();
                animator.stop();
-               animator.setStartFraction(f);
             }
             else {
-               animator.setStartFraction(0.0f);
+               f = 0.0f;
             }
-         }
 
-         if (animator.isRunning()) {
+            animator.setStartFraction(f);
+         }
+         else if (animator.isRunning()) {
             animator.stop();
          }
 
-         animator.setStartDirection(Animator.Direction.FORWARD);
+         animator.setStartDirection(Direction.FORWARD);
          animator.start();
       }
       else if (triggerEvent != null && currentEvent == triggerEvent.getOppositeEvent()) {
-         // Opposite event occurred - run reverse animation if autoReverse
+         // Opposite event occurred - run reverse animation if autoReverse.
          if (autoReverse) {
+            float f;
+
             if (animator.isRunning()) {
-               float f = animator.getTimingFraction();
+               f = animator.getTimingFraction();
                animator.stop();
-               animator.setStartFraction(f);
             }
             else {
-               animator.setStartFraction(1.0f - animator.getStartFraction());
+               f = 1.0f - animator.getStartFraction();
             }
 
-            animator.setStartDirection(Animator.Direction.BACKWARD);
+            animator.setStartFraction(f);
+            animator.setStartDirection(Direction.BACKWARD);
             animator.start();
          }
       }

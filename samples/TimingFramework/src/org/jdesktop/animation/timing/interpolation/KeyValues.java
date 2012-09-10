@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2006, Sun Microsystems, Inc
  * All rights reserved.
  *
@@ -34,19 +34,18 @@ package org.jdesktop.animation.timing.interpolation;
 import java.util.*;
 
 /**
- * Stores a list of values that correspond to the times in a {@link KeyTimes} object.  These
- * structures are then used to create a {@link KeyFrames} object, which is then used to create a
+ * Stores a list of values that correspond to the times in a {@link KeyTimes} object.
+ * These structures are then used to create a {@link KeyFrames} object, which is then used to create a
  * {@link PropertySetter} for the purposes of modifying an object's property over time.
  * <p/>
- * At each of the times in {@link KeyTimes}, the property will take on the corresponding value in
- * the KeyValues object.  Between these times, the property will take on a value based on the
- * interpolation information stored in the KeyFrames object and the {@link Evaluator} for the type
- * of the values in KeyValues.
+ * At each of the times in {@link KeyTimes}, the property will take on the corresponding value in the KeyValues object.
+ * Between these times, the property will take on a value based on the interpolation information stored in the KeyFrames
+ * object and the {@link Evaluator} for the type of the values in KeyValues.
  * <p/>
  * This class has built-in support for various known types, as defined in {@link Evaluator}.
  * <p/>
- * For a simple example using KeyValues to create a KeyFrames and PropertySetter object, see the
- * class header comments in {@link PropertySetter}.
+ * For a simple example using KeyValues to create a KeyFrames and PropertySetter object, see the class header comments
+ * in {@link PropertySetter}.
  *
  * @author Chet
  */
@@ -112,20 +111,14 @@ public final class KeyValues<T>
    /**
     * Returns the number of values stored in this object.
     */
-   int getSize()
-   {
-      return values.size();
-   }
+   int getSize() { return values.size(); }
 
    /**
     * Returns the data type of the values stored in this object.
     *
     * @return a Class value representing the type of values stored in this object
     */
-   Class<?> getType()
-   {
-      return type;
-   }
+   Class<?> getType() { return type; }
 
    /**
     * Called at start of animation; sets starting value in simple "to" animations.
@@ -138,8 +131,7 @@ public final class KeyValues<T>
    }
 
    /**
-    * Utility method for determining whether this is a "to" animation (true if the first value is
-    * null).
+    * Utility method for determining whether this is a "to" animation (true if the first value is null).
     */
    boolean isToAnimation()
    {

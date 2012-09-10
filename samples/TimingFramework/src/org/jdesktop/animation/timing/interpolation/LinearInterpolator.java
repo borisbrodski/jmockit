@@ -64,6 +64,7 @@ public final class LinearInterpolator implements Interpolator
     *                 depending on where this Interpolator has been set)
     * @return the same value passed in as <code>fraction</code>
     */
+   @Override
    public float interpolate(float fraction)
    {
       return fraction;
