@@ -133,7 +133,8 @@ public abstract class Verifications extends Invocations
    /**
     * Captures the argument value passed into the associated expectation parameter, when a matching invocation occurs
     * at replay time.
-    * This method should be used in an assignment expression inside a verification block. For example:
+    * This method should be used in a local variable assignment expression inside a verification block.
+    * For example:
     * <pre>
     * new Verifications() {{
     *    String someText;

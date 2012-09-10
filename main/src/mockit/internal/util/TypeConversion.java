@@ -97,47 +97,8 @@ public final class TypeConversion
          }
       }
 
-      generateTypeCheckAndUnboxingCall(mv, sort, typeDesc);
-   }
-
-   private static void generateTypeCheckAndUnboxingCall(MethodVisitor mv, int sort, String typeDesc)
-   {
       mv.visitTypeInsn(CHECKCAST, typeDesc);
       mv.visitMethodInsn(INVOKEVIRTUAL, typeDesc, UNBOXING_NAME[sort], UNBOXING_DESC[sort]);
-   }
-
-   public static void generateUnboxing(MethodVisitor mv, Type parameterType, String fieldTypeDesc)
-   {
-      char c = fieldTypeDesc.charAt(0);
-
-      if (c == 'L' || c == '[') {
-         generateTypeCheck(mv, parameterType);
-         return;
-      }
-
-      int sort = parameterType.getSort();
-      String typeDesc;
-
-      if (sort < Type.ARRAY) {
-         typeDesc = PRIMITIVE_WRAPPER_TYPE[sort];
-      }
-      else {
-         typeDesc = parameterType.getInternalName();
-         int i = PRIMITIVE_WRAPPER_TYPES.indexOf(typeDesc);
-
-         if (i >= 0) {
-            sort = i / 20 + 1;
-         }
-         else if ("java/lang/Number".equals(typeDesc)) {
-            sort = Type.INT;
-         }
-         else {
-            sort = Type.INT;
-            typeDesc = Type.getType(fieldTypeDesc).getInternalName();
-         }
-      }
-
-      generateTypeCheckAndUnboxingCall(mv, sort, typeDesc);
    }
 
    public static boolean isBoxing(String owner, String name, String desc)

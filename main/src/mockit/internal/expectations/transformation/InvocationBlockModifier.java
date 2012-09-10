@@ -34,15 +34,17 @@ final class InvocationBlockModifier extends MethodVisitor
    private List<Capture> captures;
    private boolean parameterForCapture;
 
-   private abstract class Capture
+   private final class Capture
    {
       final int opcode;
       private int parameterIndex;
       private boolean parameterIndexFixed;
+      private final int var;
 
-      Capture(int opcode)
+      Capture(int opcode, int var)
       {
          this.opcode = opcode;
+         this.var = var;
          parameterIndex = matchersFound - 1;
       }
 
@@ -50,20 +52,17 @@ final class InvocationBlockModifier extends MethodVisitor
        * Responsible for performing the following steps:
        * 1. Get the argument value (an Object) for the last matched invocation.
        * 2. Typecheck and unbox the Object value to a primitive type, as needed.
-       * 3. Store the converted value in its local variable or field.
+       * 3. Store the converted value in its local variable.
        */
-      abstract void generateCodeToStoreCapturedValue();
-
-      // Performs step 1 above.
-      final void generateCallToObtainMatchedArgumentValue()
+      void generateCodeToStoreCapturedValue()
       {
          mv.visitIntInsn(SIPUSH, parameterIndex);
-         mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "matchedArgument", "(I)Ljava/lang/Object;");
+         generateCallToActiveInvocationsMethod("matchedArgument", "(I)Ljava/lang/Object;");
+         generateUnboxing(mv, argTypes[parameterIndex], opcode);
+         mv.visitVarInsn(opcode, var);
       }
 
-      final Type getParameterType() { return argTypes[parameterIndex]; }
-
-      final boolean fixParameterIndex(int originalIndex, int newIndex)
+      boolean fixParameterIndex(int originalIndex, int newIndex)
       {
          if (!parameterIndexFixed && parameterIndex == originalIndex) {
             parameterIndex = newIndex;
@@ -72,57 +71,6 @@ final class InvocationBlockModifier extends MethodVisitor
          }
 
          return false;
-      }
-   }
-
-   private final class CaptureIntoVariable extends Capture
-   {
-      private final int var;
-
-      private CaptureIntoVariable(int opcode, int var)
-      {
-         super(opcode);
-         this.var = var;
-      }
-
-      @Override
-      void generateCodeToStoreCapturedValue()
-      {
-         generateCallToObtainMatchedArgumentValue();
-         generateUnboxing(mv, getParameterType(), opcode);
-         mv.visitVarInsn(opcode, var);
-      }
-   }
-
-   private final class CaptureIntoField extends Capture
-   {
-      private final String fieldOwner;
-      private final String fieldName;
-      private final String fieldDesc;
-
-      CaptureIntoField(int opcode, String fieldOwner, String fieldName, String fieldDesc)
-      {
-         super(opcode);
-         this.fieldOwner = fieldOwner;
-         this.fieldName = fieldName;
-         this.fieldDesc = fieldDesc;
-      }
-
-      @Override
-      void generateCodeToStoreCapturedValue()
-      {
-         // 0. Pushes the instance field owner to the stack, if that's the case:
-         if (opcode == PUTFIELD) {
-            mv.visitVarInsn(ALOAD, 0);
-
-            if (!owner.equals(fieldOwner)) {
-               mv.visitFieldInsn(GETFIELD, owner, "this$0", 'L' + fieldOwner + ';');
-            }
-         }
-
-         generateCallToObtainMatchedArgumentValue();
-         generateUnboxing(mv, getParameterType(), fieldDesc);
-         mv.visitFieldInsn(opcode, fieldOwner, fieldName, fieldDesc);
       }
    }
 
@@ -143,37 +91,20 @@ final class InvocationBlockModifier extends MethodVisitor
       matcherStacks = new int[20];
    }
 
+   private void generateCallToActiveInvocationsMethod(String name, String desc)
+   {
+      mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, name, desc);
+   }
+
    @Override
    public void visitFieldInsn(int opcode, String owner, String name, String desc)
    {
-      if ((opcode == PUTFIELD || opcode == PUTSTATIC) && parameterForCapture) {
-         addCapture(new CaptureIntoField(opcode, owner, name, desc));
-         parameterForCapture = false;
-      }
-      else if ((opcode == GETSTATIC || opcode == PUTSTATIC) && isFieldDefinedByInvocationBlock(owner)) {
+      if ((opcode == GETSTATIC || opcode == PUTSTATIC) && isFieldDefinedByInvocationBlock(owner)) {
          if (opcode == PUTSTATIC) {
-            if ("result".equals(name)) {
-               mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addResult", "(Ljava/lang/Object;)V");
-               return;
-            }
-            else if ("forEachInvocation".equals(name)) {
-               mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "setHandler", "(Ljava/lang/Object;)V");
-               return;
-            }
-            else if ("times".equals(name) || "minTimes".equals(name) || "maxTimes".equals(name)) {
-               mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, name, "(I)V");
-               return;
-            }
-            else if ("$".equals(name)) {
-               mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "setErrorMessage", "(Ljava/lang/CharSequence;)V");
-               return;
-            }
+            if (generateCodeThatReplacesAssignmentToSpecialField(name)) return;
          }
          else if (name.startsWith("any")) {
-            mv.visitFieldInsn(GETSTATIC, owner, name, desc);
-            mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "addArgMatcher", "()V");
-            matcherStacks[matchersToMove++] = mv.stackSize2;
-            matchersFound++;
+            generateCodeToAddArgumentMatcherForAnyField(owner, name, desc);
             return;
          }
       }
@@ -188,6 +119,36 @@ final class InvocationBlockModifier extends MethodVisitor
          ("mockit/Expectations mockit/NonStrictExpectations " +
           "mockit/Verifications mockit/VerificationsInOrder " +
           "mockit/FullVerifications mockit/FullVerificationsInOrder").contains(owner);
+   }
+
+   private boolean generateCodeThatReplacesAssignmentToSpecialField(String fieldName)
+   {
+      if ("result".equals(fieldName)) {
+         generateCallToActiveInvocationsMethod("addResult", "(Ljava/lang/Object;)V");
+         return true;
+      }
+      else if ("forEachInvocation".equals(fieldName)) {
+         generateCallToActiveInvocationsMethod("setHandler", "(Ljava/lang/Object;)V");
+         return true;
+      }
+      else if ("times".equals(fieldName) || "minTimes".equals(fieldName) || "maxTimes".equals(fieldName)) {
+         generateCallToActiveInvocationsMethod(fieldName, "(I)V");
+         return true;
+      }
+      else if ("$".equals(fieldName)) {
+         generateCallToActiveInvocationsMethod("setErrorMessage", "(Ljava/lang/CharSequence;)V");
+         return true;
+      }
+
+      return false;
+   }
+
+   private void generateCodeToAddArgumentMatcherForAnyField(String owner, String name, String desc)
+   {
+      mv.visitFieldInsn(GETSTATIC, owner, name, desc);
+      generateCallToActiveInvocationsMethod("addArgMatcher", "()V");
+      matcherStacks[matchersToMove++] = mv.stackSize2;
+      matchersFound++;
    }
 
    @Override
@@ -293,7 +254,7 @@ final class InvocationBlockModifier extends MethodVisitor
    {
       mv.visitIntInsn(SIPUSH, originalMatcherIndex);
       mv.visitIntInsn(SIPUSH, toIndex);
-      mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "moveArgMatcher", "(II)V");
+      generateCallToActiveInvocationsMethod("moveArgMatcher", "(II)V");
    }
 
    private void updateCaptureIfAny(int originalIndex, int newIndex)
@@ -338,7 +299,7 @@ final class InvocationBlockModifier extends MethodVisitor
    public void visitVarInsn(int opcode, int var)
    {
       if (opcode >= ISTORE && opcode <= ASTORE && parameterForCapture) {
-         addCapture(new CaptureIntoVariable(opcode, var));
+         addCapture(new Capture(opcode, var));
          parameterForCapture = false;
       }
 
@@ -349,7 +310,7 @@ final class InvocationBlockModifier extends MethodVisitor
    public void visitInsn(int opcode)
    {
       if (opcode == RETURN && callEndInvocations) {
-         mv.visitMethodInsn(INVOKESTATIC, CLASS_DESC, "endInvocations", "()V");
+         generateCallToActiveInvocationsMethod("endInvocations", "()V");
       }
 
       mv.visitInsn(opcode);

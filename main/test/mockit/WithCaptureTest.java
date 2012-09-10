@@ -182,52 +182,40 @@ public final class WithCaptureTest
       }};
    }
 
-   boolean boolCapture;
-   static int intCapture;
-
    @Test
-   public void captureArgumentsIntoFields()
+   public void attemptToCaptureArgumentsIntoFields()
    {
       dao.doSomething(56);
-      dao.doSomething(true);
-      dao.create("", 123);
-      dao.doSomething(123.5);
 
       new Verifications() {
          Integer i;
-         final Number n;
 
          {
             dao.doSomething(i = withCapture());
-            assertEquals(56, i.intValue());
-
-            dao.doSomething(boolCapture = withCapture());
-            assertTrue(boolCapture);
-
-            dao.doSomething(n = withCapture()); times = 1;
-            assertEquals(123.5, n.doubleValue(), 0);
-
-            dao.create(anyString, intCapture = withCapture());
-            assertEquals(123, intCapture);
+            assertNull(i);
          }
       };
    }
 
-   @Ignore @Test
-   public void captureFirstArgumentIntoLocalFieldInTwoParameterMethod()
+   @Test
+   public void captureFirstArgumentInTwoParameterMethod()
    {
-      final String name = "Ted";
+      final String name1 = "Ted";
       final Short age = 15;
-      dao.doSomething(name, age);
+      dao.doSomething(name1, age);
 
-      new Verifications() {
+      final String name2 = "Jane";
+      dao.doSomething(name2, age);
+
+      new VerificationsInOrder() {{
          String nameCapture;
+         dao.doSomething(nameCapture = withCapture(), age);
+         assertEquals(name1, nameCapture);
 
-         {
-            dao.create(nameCapture = withCapture(), age);
-            assertEquals(name, nameCapture);
-         }
-      };
+         String strCapture;
+         dao.doSomething(strCapture = withCapture(), age);
+         assertEquals(name2, strCapture);
+      }};
    }
 
    @Test
@@ -243,42 +231,41 @@ public final class WithCaptureTest
       final int[] ages1 = {15, 46};
       dao.doSomething(names1, ages1);
 
-      final String[] names2 = {"Ted"};
-      final int[] ages2 = {15, 46};
+      final String[] names2 = {"Jane"};
+      final int[] ages2 = {101};
       dao.doSomething(names2, ages2);
 
       new VerificationsInOrder() {
-         private final short sh;
-         final Number n;
-         byte bt;
-         int i1;
-         Integer i2;
-         String[] namesCapture;
-         int[] agesCapture;
-
          {
+            byte bt;
             dao.doSomething(bt = withCapture());
             assertEquals(56, bt);
 
+            Number n;
             dao.doSomething(n = withCapture());
             assertEquals(123.4, n.floatValue(), 0.001);
 
+            short sh;
             dao.doSomething(sh = withCapture());
             assertEquals(-78, sh);
 
+            int i1;
             dao.doSomething(i1 = withCapture());
             assertEquals(91, i1);
 
+            Integer i2;
             dao.doSomething(i2 = withCapture());
             assertEquals(92, i2.intValue());
 
-//            dao.doSomething(namesCapture = withCapture(), agesCapture = withCapture());
-//            assertSame(names1, namesCapture);
-//            assertSame(ages1, agesCapture);
+            String[] namesCapture;
+            int[] agesCapture;
+            dao.doSomething(namesCapture = withCapture(), agesCapture = withCapture());
+            assertSame(names1, namesCapture);
+            assertSame(ages1, agesCapture);
 
-//            dao.doSomething(namesCapture = withCapture(), agesCapture = withCapture());
-//            assertSame(names2, namesCapture);
-//            assertSame(ages2, agesCapture);
+            dao.doSomething(namesCapture = withCapture(), agesCapture = withCapture());
+            assertSame(names2, namesCapture);
+            assertSame(ages2, agesCapture);
          }
       };
    }
