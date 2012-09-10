@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage.reporting.parsing;
@@ -9,7 +9,7 @@ import java.util.*;
 
 public final class LineElement implements Iterable<LineElement>
 {
-   private static final List<String> CONDITIONAL_OPERATORS = asList("||", "&&", ":");
+   private static final List<String> CONDITIONAL_OPERATORS = asList("||", "&&", ":", "else");
    private static final List<String> CONDITIONAL_INSTRUCTIONS = asList("if", "for", "while");
 
    enum ElementType { CODE, COMMENT, SEPARATOR }
@@ -42,15 +42,10 @@ public final class LineElement implements Iterable<LineElement>
       return type == ElementType.SEPARATOR && text.charAt(0) == '.';
    }
 
-   public String getText()
-   {
-      return text;
-   }
+   public String getText() { return text; }
 
-   public LineElement getNext()
-   {
-      return next;
-   }
+   public LineElement getNext() { return next; }
+   void setNext(LineElement next) { this.next = next; }
 
    public LineElement getNextCodeElement()
    {
@@ -59,7 +54,7 @@ public final class LineElement implements Iterable<LineElement>
             return element;
          }
       }
-      
+
       return null;
    }
 
@@ -67,11 +62,6 @@ public final class LineElement implements Iterable<LineElement>
    {
       this.openingTag = openingTag;
       this.closingTag = closingTag;
-   }
-
-   void setNext(LineElement next)
-   {
-      this.next = next;
    }
 
    public LineElement appendUntilNextCodeElement(StringBuilder line)
@@ -139,15 +129,8 @@ public final class LineElement implements Iterable<LineElement>
       return next.findNextBranchingPoint();
    }
 
-   private boolean isConditionalStatement()
-   {
-      return CONDITIONAL_INSTRUCTIONS.contains(text);
-   }
-
-   public boolean isBranchingElement()
-   {
-      return "else".equals(text) || CONDITIONAL_OPERATORS.contains(text);
-   }
+   private boolean isConditionalStatement() { return CONDITIONAL_INSTRUCTIONS.contains(text); }
+   public boolean isBranchingElement() { return CONDITIONAL_OPERATORS.contains(text); }
 
    private int getParenthesisBalance()
    {
