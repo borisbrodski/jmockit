@@ -24,11 +24,41 @@
 <p>Release <a href="http://code.google.com/p/jmockit/source/list">0.999.17</a> (Sep ?, 2012):</p>
 <ul>
    <li>
+      <strong>New feature</strong>: When using <code class="annotation">@Tested</code> and
+      <code class="annotation">@Injectable</code>, use of the
+      <a href="http://docs.oracle.com/javaee/6/api/javax/inject/package-summary.html">standard Java API for dependency
+      injection</a> (JSR-330) in the tested class is now explicitly supported.
+      Any fields and/or constructors annotated with <code class="type">javax.inject.Inject</code> will be the only ones
+      considered when performing injection of <code class="annotation">@Injectable</code>s into the
+      <code class="annotation">@Tested</code> object.
+      Also, the <code class="type">javax.inject.Provider&lt;T></code> interface is properly supported for
+      <code class="annotation">@Injectable</code>s of type "<code>T</code>".
+   </li>
+   <li>
+      <strong>New feature</strong>:
+      Added the <a href="javadoc/mockit/Verifications.html#withCapture()"><code>withCapture()</code></a> and
+      <a href="javadoc/mockit/Verifications.html#withCapture(java.util.List)"><code>withCapture(List)</code></a> methods
+      to the <code class="type">Verifications</code> base class (the second one also available in
+      <code class="type">Expectations</code> blocks).
+      These two new methods allow for the easy and succinct capture of invocation arguments for recorded/verified
+      expectations.
+      For details and an example, see the API documentation.
+   </li>
+   <li>
       <strong>New feature</strong> in JMockit Coverage:
       A new property "<code>jmockit-coverage-check</code>" is now supported, enabling checks for minimum coverage
       percentages to be performed.
       For details, see the <a href="tutorial/CodeCoverage.html#checking">relevant</a> section in the JMockit Tutorial.
       This solves <a href="http://code.google.com/p/jmockit/issues/detail?id=235">issue 235</a>.
+   </li>
+   <li>
+      <strong>Enhancement</strong>:
+      Added the <a href="javadoc/mockit/Invocation.html#getInvokedArguments()"><code>getInvokedArguments()</code></a>
+      method to the <code class="type">Invocation</code> class.
+      Together with a related enhancement which allows "<code>forEachInvocation</code>" handler methods to only have the
+      <code class="type">Invocation</code> parameter, this further enables the creation of reusable delegate and handler
+      objects for use with the <code class="type">Delegate</code> interface and the <code>result</code> and
+      <code>forEachInvocation</code> fields.
    </li>
    <li>
       <strong>Enhancement</strong>: Dropped the requirement for a <code class="annotation">@Tested</code> class to have
@@ -38,7 +68,11 @@
    </li>
    <li>
       Other issues fixed:
-      <a href="http://code.google.com/p/jmockit/issues/detail?id=234">234</a>.
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=234">234</a>,
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=236">236</a>,
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=238">238</a>,
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=241">241</a>,
+      <a href="http://code.google.com/p/jmockit/issues/detail?id=242">242</a>.
    </li>
 </ul>
 

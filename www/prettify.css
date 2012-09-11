@@ -2,6 +2,9 @@ body {
    background-color: white; color: #333;
    font-size: 0.875em; line-height: 1.286em; font-family: "Helvetica", "Arial", sans-serif;
 }
+code {
+   font-size: 1.1em;
+}
 h2 {
    margin-top: 1ex; font-size: 115%; padding: 3px;
    text-shadow: 2px 2px 2px #123152;
