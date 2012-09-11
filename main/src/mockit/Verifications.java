@@ -131,16 +131,20 @@ public abstract class Verifications extends Invocations
    final BaseVerificationPhase getCurrentPhase() { return verificationPhase; }
 
    /**
-    * Captures the argument value passed into the associated expectation parameter, when a matching invocation occurs
-    * at replay time.
+    * Captures the argument value passed into the associated expectation parameter, for a matching invocation that
+    * occurred when the tested code was exercised.
     * This method should be used in a local variable assignment expression inside a verification block.
     * For example:
     * <pre>
-    * new Verifications() {{
-    *    String someText;
-    *    mock.doSomething(123, someText = withCapture());
-    *    assertTrue(someText.length() >= 5);
-    * }}</pre>
+    *    new Verifications() {{
+    *       String name;
+    *       int age;
+    *       personDAOMock.create(age = withCapture(), name = withCapture());
+    *       assertFalse(name.isEmpty());
+    *       assertTrue(age >= 18);
+    *    }};</pre>
+    * <p/>
+    * If there is more than one matching invocation, then only the last one is considered.
     *
     * @return the captured argument value
     *

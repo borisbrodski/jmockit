@@ -360,9 +360,9 @@ abstract class Invocations
    }
 
    /**
-    * Captures the argument value passed into the associated expectation parameter, when matching invocations occur at
-    * replay time.
-    * Each captured value is added to the given list.
+    * Captures the argument value passed into the associated expectation parameter, for each invocation that matches the
+    * expectation when the tested code is exercised.
+    * As each such value is captured, it gets added to the given list so that it can be inspected later.
     * 
     * @param valueHolderForMultipleInvocations list into which the arguments received by matching invocations will be
     *                                          added
