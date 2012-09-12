@@ -134,7 +134,7 @@ public final class MockClassSetup
          }
 
          Class<?> superClass = realClass.getSuperclass();
-         realClass = superClass == Object.class ? null : superClass;
+         realClass = superClass == Object.class || superClass == Proxy.class ? null : superClass;
          mockingConfiguration = null;
       }
    }
