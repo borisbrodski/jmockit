@@ -17,10 +17,12 @@ import mockit.internal.startup.*;
 final class ExpectationsModifier extends MockedTypeModifier
 {
    private static final int METHOD_ACCESS_MASK = ACC_SYNTHETIC + ACC_ABSTRACT;
-   private static final Map<String, String> DEFAULT_FILTERS = new HashMap<String, String>()
-   {{
+   private static final Map<String, String> DEFAULT_FILTERS = new HashMap<String, String>() {{
       put("java/lang/Object", "<init> getClass hashCode");
       put("java/lang/String", "");
+      put("java/lang/AbstractStringBuilder", "");
+      put("java/lang/StringBuilder", "");
+      put("java/lang/StringBuffer", "");
       put("java/lang/System", "arraycopy getProperties getSecurityManager");
       put("java/util/Hashtable", "get");
       put("java/lang/Throwable", "<init> fillInStackTrace");
@@ -80,7 +82,7 @@ final class ExpectationsModifier extends MockedTypeModifier
    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       if ("java/lang/Class".equals(name)) {
-         throw new IllegalArgumentException("Mocked class " + name.replace('/', '.') + " is not mockable");
+         throw new IllegalArgumentException("Class " + name.replace('/', '.') + " is not mockable");
       }
 
       super.visit(version, access, name, signature, superName, interfaces);

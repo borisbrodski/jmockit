@@ -230,23 +230,6 @@ public final class JREMockingTest extends TestCase
       stream.write("Hello world".getBytes());
    }
 
-   public void testStringBuilder()
-   {
-      new NonStrictExpectations() {
-         StringBuilder builder;
-
-         {
-            builder.length(); result = 20;
-            builder.toString(); result = "test";
-         }
-      };
-
-      StringBuilder s = new StringBuilder();
-      s.append("something");
-      assertEquals(20, s.length());
-      assertEquals("test", s.toString());
-   }
-
    // Mocking of java.lang.Object methods /////////////////////////////////////////////////////////////////////////////
 
    final Object lock = new Object();
@@ -310,7 +293,12 @@ public final class JREMockingTest extends TestCase
          {
             Object fieldValue = it.get(null);
             Annotation value = annotationsApplied.get(fieldValue);
-            if (value != null) return (T) value;
+
+            if (value != null) {
+               //noinspection unchecked
+               return (T) value;
+            }
+
             return it.getAnnotation(annotation);
          }
       };
@@ -330,7 +318,7 @@ public final class JREMockingTest extends TestCase
 
    // Un-mockable JRE classes /////////////////////////////////////////////////////////////////////////////////////////
 
-   public void testAttemptToMockJREClassThatIsNotMockable()
+   public void testAttemptToMockJREClassThatIsNeverMockable()
    {
       try {
          new Expectations() { Class<?> mockClass; };
