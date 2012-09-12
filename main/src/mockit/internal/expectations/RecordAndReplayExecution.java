@@ -231,7 +231,7 @@ public final class RecordAndReplayExecution
          // This occurs if called from a custom argument matching method, in the instantiation of an @Input value,
          // in a call to an overridden Object method (equals, hashCode, toString), during static initialization of a
          // mocked class which calls another mocked method, or from a different thread during a recording/verification.
-         return defaultReturnValue(mock, classDesc, mockDesc, executionMode, args);
+         return defaultReturnValue(mock, classDesc, mockDesc, genericSignature, executionMode, args);
       }
 
       ExecutingTest executingTest = TestRun.getExecutingTest();
@@ -239,7 +239,7 @@ public final class RecordAndReplayExecution
       if (executingTest.isShouldIgnoreMockingCallbacks()) {
          // This occurs when called from a reentrant delegate method, or during static initialization of a mocked class
          // being instantiated for a local mock field.
-         return defaultReturnValue(executingTest, mock, classDesc, mockDesc, executionMode, args);
+         return defaultReturnValue(executingTest, mock, classDesc, mockDesc, genericSignature, executionMode, args);
       }
       else if (executingTest.isProceedingIntoRealImplementation()) {
          if (executionMode == 0) {
@@ -274,7 +274,7 @@ public final class RecordAndReplayExecution
          if (instance == null) {
             // This occurs when a constructor of the mocked class is called in a mock field assignment expression,
             // during initialization of a mocked class, or during the restoration of mocked classes between tests.
-            return defaultReturnValue(executingTest, mock, classDesc, mockDesc, executionMode, args);
+            return defaultReturnValue(executingTest, mock, classDesc, mockDesc, genericSignature, executionMode, args);
          }
 
          Phase currentPhase = instance.getCurrentPhase();
@@ -295,7 +295,7 @@ public final class RecordAndReplayExecution
    }
 
    public static Object defaultReturnValue(
-      Object mock, String classDesc, String nameAndDesc, int executionMode, Object[] args)
+      Object mock, String classDesc, String nameAndDesc, String genericSignature, int executionMode, Object[] args)
    {
       if (mock != null) {
          Object rv = Utilities.evaluateObjectOverride(mock, nameAndDesc, args);
@@ -306,15 +306,15 @@ public final class RecordAndReplayExecution
       }
 
       String returnTypeDesc = DefaultValues.getReturnTypeDesc(nameAndDesc);
-      Object cascadedInstance = MockedTypeCascade.getMock(classDesc, mock, returnTypeDesc);
+      Object cascadedInstance = MockedTypeCascade.getMock(classDesc, mock, returnTypeDesc, genericSignature);
       if (cascadedInstance != null) return cascadedInstance;
 
       return executionMode == 0 ? DefaultValues.computeForReturnType(nameAndDesc) : Void.class;
    }
 
    private static Object defaultReturnValue(
-      ExecutingTest executingTest, Object mock, String classDesc, String nameAndDesc, int executionMode, Object[] args)
-      throws Throwable
+      ExecutingTest executingTest, Object mock, String classDesc, String nameAndDesc, String genericSignature,
+      int executionMode, Object[] args) throws Throwable
    {
       RecordAndReplayExecution execution = executingTest.getCurrentRecordAndReplay();
 
@@ -327,7 +327,7 @@ public final class RecordAndReplayExecution
          }
       }
 
-      return defaultReturnValue(mock, classDesc, nameAndDesc, executionMode, args);
+      return defaultReturnValue(mock, classDesc, nameAndDesc, genericSignature, executionMode, args);
    }
 
    private static boolean inReplayPhase(RecordAndReplayExecution instance)

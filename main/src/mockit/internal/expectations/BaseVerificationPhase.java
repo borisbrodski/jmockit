@@ -37,7 +37,7 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
 
    @Override
    final Object handleInvocation(
-      Object mock, int mockAccess, String mockClassDesc, String mockNameAndDesc, String genericSignature,
+      Object mock, int access, String mockClassDesc, String mockNameAndDesc, String genericSignature,
       String exceptions, boolean withRealImpl, Object[] args)
    {
       if (pendingError != null) {
@@ -49,7 +49,7 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
       matchInstance = nextInstanceToMatch != null && mock == nextInstanceToMatch;
 
       ExpectedInvocation currentInvocation =
-         new ExpectedInvocation(mock, mockAccess, mockClassDesc, mockNameAndDesc, matchInstance, args);
+         new ExpectedInvocation(mock, access, mockClassDesc, mockNameAndDesc, matchInstance, genericSignature, args);
       currentInvocation.arguments.setMatchers(argMatchers);
       currentVerification = new Expectation(null, currentInvocation, true);
 

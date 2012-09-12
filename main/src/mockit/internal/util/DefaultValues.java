@@ -63,6 +63,7 @@ public final class DefaultValues
 
    public static String getReturnTypeDesc(String methodNameAndDesc)
    {
+      if (methodNameAndDesc == null) return null;
       int rightParen = methodNameAndDesc.indexOf(')') + 1;
       return methodNameAndDesc.substring(rightParen);
    }

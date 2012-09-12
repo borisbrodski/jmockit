@@ -296,10 +296,10 @@ public final class ExecutingTest
       nonStrictMocks.clear();
    }
 
-   public void addCascadingType(String mockedTypeDesc, boolean mockFieldFromTestClass)
+   public void addCascadingType(String mockedTypeDesc, MockedType mockedType)
    {
       if (!cascadingTypes.containsKey(mockedTypeDesc)) {
-         cascadingTypes.put(mockedTypeDesc, new MockedTypeCascade(mockFieldFromTestClass));
+         cascadingTypes.put(mockedTypeDesc, new MockedTypeCascade(mockedType));
       }
    }
    
@@ -368,7 +368,7 @@ public final class ExecutingTest
       while (itr.hasNext()) {
          MockedTypeCascade cascade = itr.next();
 
-         if (cascade.mockFieldFromTestClass) {
+         if (cascade.isSharedBetweenTests()) {
             cascade.discardCascadedMocks();
          }
          else {

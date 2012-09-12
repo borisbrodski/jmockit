@@ -46,7 +46,7 @@ public final class RecordPhase extends TestOnlyPhase
       //noinspection AssignmentToMethodParameter
       mock = configureMatchingOnMockInstanceIfSpecified(mock);
       ExpectedInvocation invocation =
-         new ExpectedInvocation(mock, access, classDesc, mockNameAndDesc, matchInstance, args);
+         new ExpectedInvocation(mock, access, classDesc, mockNameAndDesc, matchInstance, genericSignature, args);
       ExecutingTest executingTest = TestRun.getExecutingTest();
       boolean nonStrictInvocation = nonStrict || executingTest.isNonStrictInvocation(mock, classDesc, mockNameAndDesc);
 

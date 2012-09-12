@@ -27,9 +27,10 @@ public final class ExpectedInvocation
    private Object cascadedMock;
 
    public ExpectedInvocation(
-      Object mock, int access, String mockedClassDesc, String mockNameAndDesc, boolean matchInstance, Object[] args)
+      Object mock, int access, String mockedClassDesc, String mockNameAndDesc, boolean matchInstance,
+      String genericSignature, Object[] args)
    {
-      this(mock, access, mockedClassDesc, mockNameAndDesc, matchInstance, null, null, args);
+      this(mock, access, mockedClassDesc, mockNameAndDesc, matchInstance, genericSignature, null, args);
    }
 
    public ExpectedInvocation(
@@ -273,17 +274,19 @@ public final class ExpectedInvocation
          defaultReturnValue = DefaultValues.computeForType(returnTypeDesc);
 
          if (defaultReturnValue == null) {
-            produceCascadedInstanceIfApplicable(phase, returnTypeDesc);
+            String genericReturnTypeDesc = DefaultValues.getReturnTypeDesc(arguments.genericSignature);
+            produceCascadedInstanceIfApplicable(phase, returnTypeDesc, genericReturnTypeDesc);
          }
       }
 
       return defaultReturnValue;
    }
 
-   private void produceCascadedInstanceIfApplicable(TestOnlyPhase phase, String returnTypeDesc)
+   private void produceCascadedInstanceIfApplicable(
+      TestOnlyPhase phase, String returnTypeDesc, String genericReturnTypeDesc)
    {
       String mockedTypeDesc = getClassDesc();
-      cascadedMock = MockedTypeCascade.getMock(mockedTypeDesc, instance, returnTypeDesc);
+      cascadedMock = MockedTypeCascade.getMock(mockedTypeDesc, instance, returnTypeDesc, genericReturnTypeDesc);
 
       if (cascadedMock != null) {
          if (phase != null) {

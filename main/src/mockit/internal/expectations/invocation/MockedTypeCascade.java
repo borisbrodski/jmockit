@@ -4,6 +4,7 @@
  */
 package mockit.internal.expectations.invocation;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import mockit.internal.expectations.mocking.*;
@@ -12,41 +13,76 @@ import mockit.internal.util.*;
 
 public final class MockedTypeCascade
 {
-   public final boolean mockFieldFromTestClass;
+   public final MockedType mockedType;
    private final Map<String, Class<?>> cascadedTypesAndMocks;
 
-   public MockedTypeCascade(boolean mockFieldFromTestClass)
+   public MockedTypeCascade(MockedType mockedType)
    {
-      this.mockFieldFromTestClass = mockFieldFromTestClass;
+      this.mockedType = mockedType;
       cascadedTypesAndMocks = new HashMap<String, Class<?>>(4);
    }
 
-   public static Object getMock(String mockedTypeDesc, Object mockInstance, String returnTypeDesc)
+   public boolean isSharedBetweenTests() { return mockedType != null && mockedType.fieldFromTestClass; }
+
+   public static Object getMock(
+      String mockedTypeDesc, Object mockInstance, String returnTypeDesc, String genericReturnTypeDesc)
    {
-      if (returnTypeDesc.charAt(0) != 'L') {
-         return null;
-      }
+      char typeCode = returnTypeDesc.charAt(0);
 
-      String returnTypeInternalName = getReturnTypeIfCascadingSupportedForIt(returnTypeDesc);
-
-      if (returnTypeInternalName == null) {
+      if (typeCode != 'L') {
          return null;
       }
 
       MockedTypeCascade cascade = TestRun.getExecutingTest().getMockedTypeCascade(mockedTypeDesc, mockInstance);
 
-      return cascade == null ? null : cascade.getCascadedMock(returnTypeInternalName);
+      if (cascade == null) {
+         return null;
+      }
+
+      String returnTypeInternalName = null;
+
+      if (genericReturnTypeDesc != null) {
+         String typeName = getInternalTypeName(genericReturnTypeDesc);
+         Type mockedType = cascade.mockedType.declaredType;
+         Type parameterizedMockedType =
+            mockedType instanceof ParameterizedType ? mockedType : ((Class<?>) mockedType).getGenericSuperclass();
+         ParameterizedType mockedGenericType = (ParameterizedType) parameterizedMockedType;
+         TypeVariable<?>[] typeParameters = ((Class<?>) mockedGenericType.getRawType()).getTypeParameters();
+
+         for (int i = 0; i < typeParameters.length; i++) {
+            TypeVariable<?> typeParameter = typeParameters[i];
+
+            if (typeName.equals(typeParameter.getName())) {
+               Class<?> typeArgument = (Class<?>) mockedGenericType.getActualTypeArguments()[i];
+               returnTypeInternalName = getReturnTypeIfCascadingSupportedForIt(typeArgument);
+               break;
+            }
+         }
+      }
+      else {
+         returnTypeInternalName = getReturnTypeIfCascadingSupportedForIt(returnTypeDesc);
+      }
+
+      return returnTypeInternalName == null ? null : cascade.getCascadedMock(returnTypeInternalName);
+   }
+
+   private static String getInternalTypeName(String typeDesc) { return typeDesc.substring(1, typeDesc.length() - 1); }
+
+   private static String getReturnTypeIfCascadingSupportedForIt(Class<?> returnType)
+   {
+      String typeName = returnType.getName().replace('.', '/');
+      return isTypeSupportedForCascading(typeName) ? typeName : null;
+   }
+
+   private static boolean isTypeSupportedForCascading(String typeName)
+   {
+      return !typeName.startsWith("java/lang/") || typeName.contains("/Process") || typeName.endsWith("/Runnable");
    }
 
    private static String getReturnTypeIfCascadingSupportedForIt(String typeDesc)
    {
-      String typeName = typeDesc.substring(1, typeDesc.length() - 1);
-
-      if (typeName.startsWith("java/lang/") && !(typeName.contains("/Process") || typeName.endsWith("/Runnable"))) {
-         return null;
-      }
-      
-      return typeName;
+      String typeName = getInternalTypeName(typeDesc);
+      return isTypeSupportedForCascading(typeName) ? typeName : null;
    }
 
    private Object getCascadedMock(String returnTypeInternalName)
@@ -65,7 +101,7 @@ public final class MockedTypeCascade
       Class<?> returnType = Utilities.loadClassByInternalName(returnTypeInternalName);
 
       cascadedTypesAndMocks.put(returnTypeInternalName, returnType);
-      TestRun.getExecutingTest().addCascadingType(returnTypeInternalName, false);
+      TestRun.getExecutingTest().addCascadingType(returnTypeInternalName, null);
       return returnType;
    }
 

@@ -6,8 +6,8 @@ package mockit;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public final class CascadingFieldTest
 {
@@ -208,31 +208,69 @@ public final class CascadingFieldTest
 
    static class GenericBaseClass1<T> { T getValue() { return null; } }
 
-   @Ignore @Test
-   public void cascadeGenericMethodFromSpecializedGenericClass(@Cascading GenericBaseClass1<A> mock)
+   @Test
+   public void cascadeGenericMethodFromSpecializedGenericClass(@Cascading GenericBaseClass1<C> mock)
    {
-      A value = mock.getValue();
+      C value = mock.getValue();
       assertNotNull(value);
    }
 
    static class ConcreteSubclass1 extends GenericBaseClass1<A> {}
 
-   @Ignore @Test
-   public void cascadeGenericMethodOfConcreteSubclassWhichExtendsGenericClass(@Cascading ConcreteSubclass1 mock)
+   @Test
+   public void cascadeGenericMethodOfConcreteSubclassWhichExtendsGenericClass(@Cascading final ConcreteSubclass1 mock)
    {
+      new NonStrictExpectations() {{
+         mock.getValue().getB().getC();
+         result = new C() {};
+      }};
+
       A value = mock.getValue();
       assertNotNull(value);
+      B b = value.getB();
+      assertNotNull(b);
+      assertNotNull(b.getC());
+
+      new FullVerificationsInOrder() {{ mock.getValue().getB().getC(); }};
    }
 
    interface Ab extends A {}
    static class GenericBaseClass2<T extends A> { T getValue() { return null; } }
    static class ConcreteSubclass2 extends GenericBaseClass2<Ab> {}
 
-   @Ignore @Test
-   public void cascadeGenericMethodOfConcreteSubclassWhichExtendsGenericClassWithUpperBound(
-      @Cascading ConcreteSubclass2 mock)
+   @Test
+   public void cascadeGenericMethodOfSubclassWhichExtendsGenericClassWithUpperBoundUsingInterface(
+      @Cascading final ConcreteSubclass2 mock)
    {
+      new NonStrictExpectations() {{ mock.getValue().getB().getC(); }};
+
       Ab value = mock.getValue();
       assertNotNull(value);
+      value.getB().getC();
+
+      new Verifications() {{ mock.getValue().getB().getC(); times = 1; }};
+   }
+
+   @Test
+   public void cascadeGenericMethodOfSubclassWhichExtendsGenericClassWithUpperBoundOnlyInVerificationBlock(
+      @Cascading final ConcreteSubclass2 mock)
+   {
+      new FullVerifications() {{
+         Ab value = mock.getValue(); times = 0;
+         B b = value.getB(); times = 0;
+         b.getC(); times = 0;
+      }};
+   }
+
+   static final class Action implements A { public B getB() { return null; } }
+   static final class ActionHolder extends GenericBaseClass2<Action> {}
+
+   @Test
+   public void cascadeGenericMethodOfSubclassWhichExtendsGenericClassWithUpperBoundUsingClass(
+      @Cascading final ActionHolder mock)
+   {
+      new Expectations() {{ mock.getValue().getB().getC(); }};
+
+      mock.getValue().getB().getC();
    }
 }

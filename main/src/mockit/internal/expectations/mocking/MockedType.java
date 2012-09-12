@@ -100,7 +100,7 @@ public final class MockedType
    {
       if (cascading != null) {
          String mockedTypeDesc = getClassType().getName().replace('.', '/');
-         TestRun.getExecutingTest().addCascadingType(mockedTypeDesc, fieldFromTestClass);
+         TestRun.getExecutingTest().addCascadingType(mockedTypeDesc, this);
       }
    }
 
