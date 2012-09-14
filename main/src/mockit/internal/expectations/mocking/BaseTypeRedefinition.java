@@ -105,39 +105,22 @@ abstract class BaseTypeRedefinition
       instanceFactory = new InterfaceInstanceFactory(mock);
    }
 
-   private void generateNewMockImplementationClassForInterface(Class<?> mockedInterface)
-   {
-      ClassReader interfaceReader = ClassFile.createClassFileReader(mockedInterface);
-      String mockClassName = Utilities.GENERATED_IMPLCLASS_PREFIX + mockedInterface.getSimpleName();
-      ClassVisitor modifier = new InterfaceImplementationGenerator(interfaceReader, mockClassName);
-      interfaceReader.accept(modifier, ClassReader.SKIP_DEBUG);
-
-      targetClass = newImplementationClass(mockedInterface, modifier, mockClassName);
-   }
-
-   private Class<?> newImplementationClass(Class<?> interfaceOrAbstractClass, ClassVisitor generator, String implName)
-   {
-      final byte[] generatedBytecode = generator.toByteArray();
-      ClassLoader parentLoader = interfaceOrAbstractClass.getClassLoader();
-
-      if (parentLoader == null) {
-         parentLoader = getClass().getClassLoader();
-      }
-
-      return new ClassLoader(parentLoader)
-      {
-         @Override
-         protected Class<?> findClass(String name)
-         {
-            return defineClass(name, generatedBytecode, 0, generatedBytecode.length);
-         }
-      }.findClass(implName);
-   }
-
    private void createNewMockInstanceFactoryForInterface()
    {
       Object mock = Utilities.newInstanceUsingDefaultConstructor(targetClass);
       instanceFactory = new InterfaceInstanceFactory(mock);
+   }
+
+   private void generateNewMockImplementationClassForInterface(Class<?> mockedInterface)
+   {
+      //noinspection unchecked
+      targetClass = new ImplementationClass(mockedInterface) {
+         @Override
+         protected ClassVisitor createMethodBodyGenerator(ClassReader typeReader, String className)
+         {
+            return new InterfaceImplementationGenerator(typeReader, className);
+         }
+      }.generateNewMockImplementationClassForInterface();
    }
 
    final void redefineMethodsAndConstructorsInTargetType()
@@ -240,7 +223,7 @@ abstract class BaseTypeRedefinition
          new SubclassGenerationModifier(typeMetadata.mockingCfg, targetClass, classReader, subclassName);
       classReader.accept(modifier, 0);
 
-      return newImplementationClass(targetClass, modifier, subclassName);
+      return new ImplementationClass().defineNewClass(targetClass.getClassLoader(), modifier, subclassName);
    }
 
    abstract String getNameForConcreteSubclassToCreate();

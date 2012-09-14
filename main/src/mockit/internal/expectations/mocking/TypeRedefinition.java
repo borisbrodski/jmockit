@@ -6,7 +6,8 @@ package mockit.internal.expectations.mocking;
 
 import mockit.external.asm4.*;
 import mockit.internal.state.*;
-import mockit.internal.util.*;
+
+import static mockit.internal.util.Utilities.*;
 
 final class TypeRedefinition extends BaseTypeRedefinition
 {
@@ -53,7 +54,7 @@ final class TypeRedefinition extends BaseTypeRedefinition
       String realClassName = typeMetadata.getRealClassName();
 
       if (realClassName.length() > 0) {
-         targetClass = Utilities.loadClass(realClassName);
+         targetClass = loadClass(realClassName);
       }
    }
 
@@ -72,9 +73,6 @@ final class TypeRedefinition extends BaseTypeRedefinition
    @Override
    String getNameForConcreteSubclassToCreate()
    {
-      Package testPackage = parentObject.getClass().getPackage();
-      String prefix = testPackage == null ? "" : testPackage.getName() + '.';
-
-      return prefix + Utilities.GENERATED_SUBCLASS_PREFIX + typeMetadata.mockId;
+      return getNameForGeneratedClass(parentObject.getClass(), typeMetadata.mockId);
    }
 }

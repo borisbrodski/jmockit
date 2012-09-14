@@ -15,7 +15,6 @@ import mockit.internal.*;
 import mockit.internal.filtering.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.*;
-import mockit.internal.util.*;
 
 /**
  * Responsible for generating all necessary bytecode in the redefined (real) class.
@@ -72,7 +71,7 @@ final class AnnotationsModifier extends BaseClassModifier
       this(
          cr, getItFieldDescriptor(realClass, mockMethods), mockMethods, mockingConfiguration, forStartupMock, mock,
          realClass.getClassLoader() == null);
-      inferUseOfMockingBridge(realClass.getClassLoader(), realClass, mock);
+      inferUseOfMockingBridge(realClass.getClassLoader(), mock);
    }
 
    private static String getItFieldDescriptor(Class<?> realClass, AnnotatedMockMethods mockMethods)
@@ -89,14 +88,11 @@ final class AnnotationsModifier extends BaseClassModifier
       return Type.getDescriptor(realClass);
    }
 
-   private void inferUseOfMockingBridge(ClassLoader classLoaderOfRealClass, Class<?> realClass, Object mock)
+   private void inferUseOfMockingBridge(ClassLoader classLoaderOfRealClass, Object mock)
    {
       setUseMockingBridge(classLoaderOfRealClass);
 
-      if (
-         !useMockingBridge && mock != null && Utilities.isAnonymousClass(mock.getClass()) &&
-         (realClass == null || realClass.getPackage() != mock.getClass().getPackage())
-      ) {
+      if (!useMockingBridge && mock != null && !isPublic(mock.getClass().getModifiers())) {
          useMockingBridge = true;
       }
    }
@@ -106,7 +102,7 @@ final class AnnotationsModifier extends BaseClassModifier
       AnnotatedMockMethods mockMethods, MockingConfiguration mockingConfiguration, boolean forStartupMock)
    {
       this(cr, null, mockMethods, mockingConfiguration, forStartupMock, mock, classLoaderOfRealClass == null);
-      inferUseOfMockingBridge(classLoaderOfRealClass, null, mock);
+      inferUseOfMockingBridge(classLoaderOfRealClass, mock);
    }
 
    private AnnotationsModifier(

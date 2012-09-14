@@ -21,6 +21,7 @@ public final class MockClassSetup
    private Class<?> realClass;
    private Class<?> baseTypeForCapturing;
    private final Class<?> mockClass;
+   private ClassReader rcReader;
    private final AnnotatedMockMethods mockMethods;
    private final Instantiation instantiation;
    private MockingConfiguration mockingConfiguration;
@@ -29,15 +30,15 @@ public final class MockClassSetup
 
    public MockClassSetup(Class<?> mockClass, MockClass metadata)
    {
-      this(metadata.realClass(), null, mockClass, metadata);
+      this(new AnnotatedMockMethods(metadata.realClass(), null), null, mockClass, metadata);
    }
 
-   private MockClassSetup(Class<?> realClass, Object mock, Class<?> mockClass, MockClass metadata)
+   private MockClassSetup(AnnotatedMockMethods mockMethods, Object mock, Class<?> mockClass, MockClass metadata)
    {
-      this.realClass = realClass;
+      realClass = mockMethods.realClass;
       validateRealClass();
 
-      mockMethods = new AnnotatedMockMethods(realClass);
+      this.mockMethods = mockMethods;
       this.mockClass = mockClass;
 
       if (metadata != null) {
@@ -74,8 +75,33 @@ public final class MockClassSetup
 
    public MockClassSetup(Class<?> realClass, Object mock, Class<?> mockClass)
    {
-      this(realClass, mock, mockClass, mockClass.getAnnotation(MockClass.class));
+      this(new AnnotatedMockMethods(realClass, null), mock, mockClass, mockClass.getAnnotation(MockClass.class));
       baseTypeForCapturing = realClass;
+   }
+
+   public MockClassSetup(ParameterizedType mockedType, Object mockUp, byte[] realClassCode)
+   {
+      this(new AnnotatedMockMethods((Class<?>) mockedType.getRawType(), mockedType), mockUp, realClassCode);
+   }
+
+   public MockClassSetup(Class<?> realClass, ParameterizedType mockedType, Object mockUp, byte[] realClassCode)
+   {
+      this(new AnnotatedMockMethods(realClass, mockedType), mockUp, realClassCode);
+   }
+
+   private MockClassSetup(AnnotatedMockMethods mockMethods, Object mockUp, byte[] realClassCode)
+   {
+      realClass = mockMethods.realClass;
+      validateRealClass();
+
+      this.mockMethods = mockMethods;
+      mock = mockUp;
+      mockClass = mockUp.getClass();
+      instantiation = null;
+      mockingConfiguration = null;
+      rcReader = realClassCode == null ? null : new ClassReader(realClassCode);
+
+      new AnnotatedMockMethodCollector(mockMethods).collectMockMethods(mockClass);
    }
 
    public MockClassSetup(Object mock, Class<?> mockClass)
@@ -135,13 +161,17 @@ public final class MockClassSetup
 
          Class<?> superClass = realClass.getSuperclass();
          realClass = superClass == Object.class || superClass == Proxy.class ? null : superClass;
+         rcReader = null;
          mockingConfiguration = null;
       }
    }
 
    private byte[] modifyRealClass()
    {
-      ClassReader rcReader = createClassReaderForRealClass();
+      if (rcReader == null) {
+         rcReader = createClassReaderForRealClass();
+      }
+
       AnnotationsModifier modifier =
          new AnnotationsModifier(rcReader, realClass, mock, mockMethods, mockingConfiguration, forStartupMock);
 

@@ -5,9 +5,14 @@
 package mockit;
 
 import java.lang.reflect.*;
+import java.lang.reflect.Type;
+import static java.lang.reflect.Modifier.*;
 
+import mockit.external.asm4.*;
+import mockit.internal.*;
 import mockit.internal.annotations.*;
 import mockit.internal.startup.*;
+import mockit.internal.util.*;
 
 /**
  * A <em>mock-up</em> for a class or interface, to be used in <em>state-based</em> unit tests or to provide a
@@ -53,7 +58,8 @@ public abstract class MockUp<T>
       Type typeToMock = getTypeToMock();
 
       if (typeToMock instanceof Class<?>) {
-         mockInstance = redefineClass((Class<?>) typeToMock);
+         //noinspection unchecked
+         mockInstance = redefineClass((Class<T>) typeToMock);
       }
       else if (typeToMock instanceof ParameterizedType){
          mockInstance = redefineClass((ParameterizedType) typeToMock);
@@ -82,54 +88,68 @@ public abstract class MockUp<T>
       while (true);
    }
 
-   private T redefineClass(Class<?> classToMock)
+   private T redefineClass(Class<T> classToMock)
    {
-      Class<?> realClass = classToMock;
-
       if (classToMock.isInterface()) {
-         //noinspection unchecked
-         T proxy = (T) Mockit.newEmptyProxy(classToMock);
-         realClass = proxy.getClass();
-
-         MockClassSetup setup = new MockClassSetup(realClass, this, getClass());
-         setup.setBaseType(classToMock);
-         setup.redefineMethods();
-
-         return proxy;
+         return generateMockedImplementationClass(classToMock, null);
       }
 
-      redefineMethods(realClass);
+      redefineMethods(classToMock);
       return null;
    }
 
-   private void redefineMethods(Class<?> realClass)
+   private T generateMockedImplementationClass(Class<T> interfaceToBeMocked, ParameterizedType typeToMock)
+   {
+      if (!isPublic(interfaceToBeMocked.getModifiers())) {
+         T proxy = Mockit.newEmptyProxy(interfaceToBeMocked);
+         //noinspection unchecked
+         redefineMethods((Class<T>) proxy.getClass());
+         return proxy;
+      }
+
+      ImplementationClass<T> implementationClass = new ImplementationClass<T>(interfaceToBeMocked) {
+         @Override
+         protected ClassVisitor createMethodBodyGenerator(ClassReader typeReader, String className)
+         {
+            return new InterfaceImplementationGenerator(typeReader, className);
+         }
+      };
+
+      Class<T> generatedClass = implementationClass.generateNewMockImplementationClassForInterface();
+      byte[] generatedBytecode = implementationClass.getGeneratedBytecode();
+
+      T proxy = Utilities.newInstanceUsingDefaultConstructor(generatedClass);
+
+      MockClassSetup setup = new MockClassSetup(generatedClass, typeToMock, this, generatedBytecode);
+      setup.setBaseType(interfaceToBeMocked);
+      setup.redefineMethods();
+
+      return proxy;
+   }
+
+   private void redefineMethods(Class<T> realClass)
    {
       new MockClassSetup(realClass, this, getClass()).redefineMethods();
    }
 
    private T redefineClass(ParameterizedType typeToMock)
    {
-      Class<?> realClass = (Class<?>) typeToMock.getRawType();
+      @SuppressWarnings("unchecked")
+      Class<T> realClass = (Class<T>) typeToMock.getRawType();
 
       if (realClass.isInterface()) {
-         T proxy = Mockit.newEmptyProxy(typeToMock);
-
-         MockClassSetup setup = new MockClassSetup(proxy.getClass(), this, getClass());
-         setup.setBaseType(realClass);
-         setup.redefineMethods();
-
-         return proxy;
+         return generateMockedImplementationClass(realClass, typeToMock);
       }
 
-      redefineMethods(realClass);
+      new MockClassSetup(typeToMock, this, null).redefineMethods();
       return null;
    }
 
+   @SuppressWarnings("unchecked")
    private T createMockInstanceForMultipleInterfaces(Type typeToMock)
    {
-      //noinspection unchecked
       T proxy = (T) Mockit.newEmptyProxy(typeToMock);
-      redefineMethods(proxy.getClass());
+      redefineMethods((Class<T>) proxy.getClass());
       return proxy;
    }
 
@@ -143,7 +163,8 @@ public abstract class MockUp<T>
     */
    protected MockUp(Class<?> classToMock)
    {
-      mockInstance = redefineClass(classToMock);
+      //noinspection unchecked
+      mockInstance = redefineClass((Class<T>) classToMock);
    }
 
    /**

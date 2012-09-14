@@ -252,6 +252,20 @@ public final class Utilities
       return className.contains(GENERATED_SUBCLASS_PREFIX);
    }
 
+   public static String getNameForGeneratedClass(Class<?> aClass, String suffix)
+   {
+      String prefix = aClass.isInterface() ? GENERATED_IMPLCLASS_PREFIX : GENERATED_SUBCLASS_PREFIX;
+
+      if (isPublic(aClass.getModifiers())) {
+         return prefix + suffix;
+      }
+
+      Package testPackage = aClass.getPackage();
+      String packageName = testPackage == null ? "" : testPackage.getName() + '.';
+
+      return packageName + prefix + suffix;
+   }
+
    private static boolean isGeneratedImplementationClass(String className)
    {
       return className.contains(GENERATED_IMPLCLASS_PREFIX);
@@ -907,7 +921,7 @@ public final class Utilities
       }
    }
 
-   public static Object newInstanceUsingDefaultConstructor(Class<?> aClass)
+   public static <T> T newInstanceUsingDefaultConstructor(Class<T> aClass)
    {
       try {
          //noinspection ClassNewInstance

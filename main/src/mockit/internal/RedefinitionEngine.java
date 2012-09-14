@@ -75,9 +75,11 @@ public final class RedefinitionEngine
 
    public void restoreOriginalDefinition(Class<?> aClass)
    {
-      realClass = aClass;
-      byte[] realClassFile = new ClassFile(aClass, false).getBytecode();
-      redefineMethods(realClassFile);
+      if (!Utilities.isGeneratedImplementationClass(aClass)) {
+         realClass = aClass;
+         byte[] realClassFile = new ClassFile(aClass, false).getBytecode();
+         redefineMethods(realClassFile);
+      }
    }
 
    public void restoreToDefinitionBeforeStartup(Class<?> aClass) throws IOException
