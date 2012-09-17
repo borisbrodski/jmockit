@@ -20,7 +20,7 @@
 </h2>
 <p>
    Available toolkit artifacts include a <a href="http://code.google.com/p/jmockit/downloads/list">full distribution</a>
-   zip file as well as <a href="">binary and source jars</a> in the Maven Central repository.
+   zip file as well as binary and source jars in the Maven Central repository.
    The toolkit is documented through a <a href="tutorial.html">tutorial</a>,
    <a href="javadoc/overview-summary.html">API documentation</a>, and several
    <a href="samples.html">sample test suites</a>.
@@ -63,8 +63,7 @@
             instrumentation.
             You may have to use it even on a newer JDK 1.6+, if its
             <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/attach/index.html">Attach API</a>
-            implementation doesn't work with JMockit for some reason; typically, this happens with the IBM J9 JDK 1.6,
-            or the Mac OS X JDKs.
+            implementation doesn't work with JMockit for some reason; typically, this happens with the IBM JDK 1.6.
          </li>
          <li>
             When using <strong>JUnit</strong> 4.5+ <em>and</em> JDK 1.6+, verify that <code>jmockit.jar</code> appears
@@ -121,7 +120,6 @@ public class MyFirstJMockitTest
    public void myFirstTestMethod()
    {
       // Any mock field can be used here or in any other test method of the class.
-      // They should <strong>not</strong> be reassigned, however.
    }
 
    @Test // a test method parameter is by default a "mock parameter" ("@Mocked" is implied)
@@ -134,7 +132,7 @@ public class MyFirstJMockitTest
 }
 </code></pre>
 <p>
-   The template test class above shows something unusual: the second test method actually declares a parameter!
+   The template test class above shows something unusual: the second test method declares a parameter!
    Normally, JUnit/TestNG test methods are not allowed to have parameters.
    When using JMockit, however, such <em>mock parameters</em> are allowed and quite useful.
    In fact, it's best to use mock fields of the test class only when the mocked types are needed by most or all tests in
@@ -191,7 +189,7 @@ public class MyFirstJMockitTest
 <pre><code>   @Test
    public void aTestMethod()
    {
-      new NonStrictExpectations() {
+      new <strong>NonStrictExpectations</strong>() {
          // A "local" mock field ("@Mocked" is implied when not annotated):
          MyCollaborator mock;
 
@@ -201,7 +199,7 @@ public class MyFirstJMockitTest
          }
       };
 
-      // In the replay phase, the tested method would somehow call the "getData" and "doSomething"
+      // In the replay phase, the tested method would call the "getData" and "doSomething"
       // methods on a "MyCollaborator" instance.
       ...
 
@@ -213,7 +211,7 @@ public class MyFirstJMockitTest
 <p>
    There are two classes that can be used to define "expectation blocks": <code class="type">Expectations</code>
    and <code class="type">NonStrictExpectations</code>.
-   The difference is only in the default behavior for the recorded expectations.
+   The difference is in the default behavior for the recorded expectations.
    In the first case, all expectations associated to mocked types used in the block will be <em>strict</em> by default,
    meaning that the invocations are <em>expected</em> to occur during the replay phase in the same order as they were
    recorded, and that invocations not recorded are expected to <em>not</em> occur.
@@ -236,22 +234,23 @@ public class MyFirstJMockitTest
 
 <h4 id="verify">Verifying expectations</h4>
 <p>
-   The smart reader probably already figured out why and when we would have a non-empty verification phase in a test.
-   It boils down to the existence or not of non-strict expectations in the test.
-   If all mocked types used in the test have only strict expectations, then all invocations will be implicitly and
-   automatically verified at the end of the test. In this case, there will be no explicit <em>verify</em> phase.
-   If there is at least one mocked type with non-strict expectations, then we can use one or more <em>verification
-   blocks</em> to make sure that the invocations we care about actually occurred during the replay phase.
+   When one or more types get mocked non-strictly in a test, we often end up with a non-empty verification phase.
+   (If, on the other hand, all mocked types used in the test have only strict expectations, then all invocations get
+   implicitly and automatically verified at the end of the test, with no explicit <em>verify</em> phase.)
+   To explicitly verify invocations to non-strict mocked types/instances, we can write one or more <em>verification
+   blocks</em> in the test.
+   This allows us to make sure that the invocations we care about actually occurred during the replay phase.
 </p>
 <pre><code>   @Test
    public void aTestMethod(@Injectable final MyCollaborator mock)
    {
       // Non-strict expectations are recorded, or perhaps there are no expectation blocks at all.
-
-      // Code under test is exercised:
       ...
 
-      new Verifications() {{
+      // Code under test is exercised.
+      ...
+
+      new <strong>Verifications</strong>() {{
          // If no new instance of the mocked class should have been created with the
          // no-args constructor, we can verify it:
          new MyCollaborator(); <em>times</em> = 0;
@@ -268,21 +267,21 @@ public class MyFirstJMockitTest
    The <em>Verifications API</em> is quite rich and flexible. Besides the <code class="type">Verifications</code> class
    shown above, which allows some invocations to be verified regardless of their order of execution, we have the
    <code class="type">VerificationsInOrder</code>, <code class="type">FullVerifications</code>, and
-   <code class="type">FullVerificationsInOrder</code> subclasses. The "InOrder" suffix simply means that the relative
-   order of the invocations appearing inside the verification block will have to match the actual order of execution of
-   corresponding invocations during replay.
-   The "Full" prefix implies that all invocations that occurred during replay must be accounted for (verified) inside
+   <code class="type">FullVerificationsInOrder</code> subclasses.
+   The "InOrder" suffix simply means that the relative order of the invocations appearing inside the verification block
+   will have to match the actual order of execution of corresponding invocations during replay.
+   The "Full" prefix means that all invocations that occurred during replay must be accounted for (verified) inside
    the verification block (excluding those which are verified implicitly, if any).
 </p>
 
-<h4 id="stateOriented">State-oriented mocking</h4>
+<h4 id="stateOriented"><em>State</em>-oriented mocking, <em>fake</em> implementations</h4>
 <p>
    Sometimes you are more interested in checking the argument values passed to a mocked collaborator, instead of
    checking that the invocation to the collaborator was made from the client/tested method.
    Of course, you <em>can</em> check argument values through a recorded or verified expectation, but it becomes more
    difficult when those values are complex.
-   In such cases it may be easier to use the <code class="type">mockit.MockUp&lt;T></code> generic class, as the next
-   test shows.
+   In such cases it may be easier to use the <code class="type">MockUp&lt;T></code> generic class, as the next test
+   shows.
 </p>
 <pre><code>   @Test
    public void stateBasedTestMethod()
@@ -312,6 +311,13 @@ public class MyFirstJMockitTest
    meant to provide mock/stub implementations for the corresponding methods (of the same signature) in the mocked class.
    If no invocation count constraint is specified through attributes of the <code class="annotation">@Mock</code>
    annotation, then any number (including zero) of invocations will be allowed.
+</p>
+<p>
+   A <code class="type">MockUp&lt;T></code> subclass can also be used as general-purpose <em>fake implementation</em>
+   for the indicated type "<code>T</code>" (including <code>final</code> classes, classes with <code>static</code>
+   methods, etc.).
+   Such implementations can even be applied globally, by setting the "<code>jmockit-mocks</code>" system property or
+   providing a "<code>jmockit.properties</code>" configuration file.
 </p>
 
 <h4 id="moreInfo">More information</h4>
