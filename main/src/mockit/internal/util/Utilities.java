@@ -771,6 +771,15 @@ public final class Utilities
       return (Class<?>) declaredType;
    }
 
+   public static <E> E newEmptyProxy(ClassLoader loader, Class<E> interfaceToBeProxied)
+   {
+      Class<?>[] interfaces = loader == null ?
+         new Class<?>[] {interfaceToBeProxied} : new Class<?>[] {interfaceToBeProxied, EmptyProxy.class};
+
+      //noinspection unchecked
+      return (E) Proxy.newProxyInstance(loader, interfaces, MockInvocationHandler.INSTANCE);
+   }
+
    public static <E> E newEmptyProxy(ClassLoader loader, Type... interfacesToBeProxied)
    {
       List<Class<?>> interfaces = new ArrayList<Class<?>>();

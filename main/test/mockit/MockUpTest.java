@@ -275,7 +275,8 @@ public final class MockUpTest
       }
    }
 
-   final class NonGenericSubclass extends GenericBaseClass<Integer, String> {}
+   static class NonGenericSuperclass extends GenericBaseClass<Integer, String> {}
+   final class NonGenericSubclass extends NonGenericSuperclass {}
 
    @Test
    public void mockGenericMethodFromInstantiationOfNonGenericSubclass()
@@ -286,6 +287,21 @@ public final class MockUpTest
       };
 
       String s = new NonGenericSubclass().find(1);
+      assertEquals("mocked1", s);
+   }
+
+   static class GenericSuperclass<I> extends GenericBaseClass<I, String> {}
+   final class AnotherNonGenericSubclass extends GenericSuperclass<Integer> {}
+
+   @Test
+   public void mockGenericMethodFromInstantiationOfNonGenericSubclassWhichExtendsAGenericIntermediateSuperclass()
+   {
+      new MockUp<AnotherNonGenericSubclass>() {
+         @Mock
+         String find(Integer id) { return "mocked" + id; }
+      };
+
+      String s = new AnotherNonGenericSubclass().find(1);
       assertEquals("mocked1", s);
    }
 
@@ -320,23 +336,27 @@ public final class MockUpTest
    {
       GenericInterface<Boolean> mock = new MockUp<GenericInterface<Boolean>>() {
          @Mock
-         public void method(Object b) { assertTrue((Boolean) b); }
+         void method(Object b) { assertTrue((Boolean) b); }
       }.getMockInstance();
 
       mock.method(true);
    }
 
-   public interface ConcreteInterface extends GenericInterface<Long> {}
+   public interface NonGenericSubInterface extends GenericInterface<Long> {}
+
+   @MockClass(realClass = NonGenericSubInterface.class)
+   static final class MockForNonGenericSubInterface
+   {
+      @Mock(invocations = 1)
+      void method(Long l) { assertTrue(l > 0); }
+   }
 
    @Test
    public void mockMethodOfSubInterfaceWithGenericTypeArgument()
    {
-      ConcreteInterface mock = new MockUp<ConcreteInterface>() {
+      NonGenericSubInterface mock = new MockUp<NonGenericSubInterface>() {
          @Mock(invocations = 1)
-         public void method(Object l)
-         {
-            assertTrue((Long) l > 0);
-         }
+         void method(Long l) { assertTrue(l > 0); }
       }.getMockInstance();
 
       mock.method(123L);

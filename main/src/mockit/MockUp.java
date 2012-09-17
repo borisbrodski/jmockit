@@ -5,14 +5,9 @@
 package mockit;
 
 import java.lang.reflect.*;
-import java.lang.reflect.Type;
-import static java.lang.reflect.Modifier.*;
 
-import mockit.external.asm4.*;
-import mockit.internal.*;
 import mockit.internal.annotations.*;
 import mockit.internal.startup.*;
-import mockit.internal.util.*;
 
 /**
  * A <em>mock-up</em> for a class or interface, to be used in <em>state-based</em> unit tests or to provide a
@@ -91,45 +86,16 @@ public abstract class MockUp<T>
    private T redefineClass(Class<T> classToMock)
    {
       if (classToMock.isInterface()) {
-         return generateMockedImplementationClass(classToMock, null);
+         return new MockedImplementationClass<T>(this).generate(classToMock, null);
       }
 
       redefineMethods(classToMock);
       return null;
    }
 
-   private T generateMockedImplementationClass(Class<T> interfaceToBeMocked, ParameterizedType typeToMock)
-   {
-      if (!isPublic(interfaceToBeMocked.getModifiers())) {
-         T proxy = Mockit.newEmptyProxy(interfaceToBeMocked);
-         //noinspection unchecked
-         redefineMethods((Class<T>) proxy.getClass());
-         return proxy;
-      }
-
-      ImplementationClass<T> implementationClass = new ImplementationClass<T>(interfaceToBeMocked) {
-         @Override
-         protected ClassVisitor createMethodBodyGenerator(ClassReader typeReader, String className)
-         {
-            return new InterfaceImplementationGenerator(typeReader, className);
-         }
-      };
-
-      Class<T> generatedClass = implementationClass.generateNewMockImplementationClassForInterface();
-      byte[] generatedBytecode = implementationClass.getGeneratedBytecode();
-
-      T proxy = Utilities.newInstanceUsingDefaultConstructor(generatedClass);
-
-      MockClassSetup setup = new MockClassSetup(generatedClass, typeToMock, this, generatedBytecode);
-      setup.setBaseType(interfaceToBeMocked);
-      setup.redefineMethods();
-
-      return proxy;
-   }
-
    private void redefineMethods(Class<T> realClass)
    {
-      new MockClassSetup(realClass, this, getClass()).redefineMethods();
+      new MockClassSetup(realClass, null, this, null).redefineMethods();
    }
 
    private T redefineClass(ParameterizedType typeToMock)
@@ -138,10 +104,10 @@ public abstract class MockUp<T>
       Class<T> realClass = (Class<T>) typeToMock.getRawType();
 
       if (realClass.isInterface()) {
-         return generateMockedImplementationClass(realClass, typeToMock);
+         return new MockedImplementationClass<T>(this).generate(realClass, typeToMock);
       }
 
-      new MockClassSetup(typeToMock, this, null).redefineMethods();
+      new MockClassSetup(realClass, typeToMock, this, null).redefineMethods();
       return null;
    }
 

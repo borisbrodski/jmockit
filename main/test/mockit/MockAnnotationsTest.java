@@ -226,6 +226,15 @@ public final class MockAnnotationsTest
       assertEquals(123, codeUnderTest.doSomethingWithNestedDependency());
    }
 
+   interface BusinessInterface { void provideSomeService(); }
+
+   @MockClass(realClass = BusinessInterface.class)
+   static class MockCollaborator3
+   {
+      @Mock
+      void provideSomeService() {}
+   }
+
    @Test
    public void setUpMockForInterface()
    {
@@ -234,16 +243,22 @@ public final class MockAnnotationsTest
       mock.provideSomeService();
    }
 
-   interface BusinessInterface
+   public interface GenericInterface<T> { void method(T t); }
+   public interface NonGenericSubInterface extends GenericInterface<Long> {}
+
+   @MockClass(realClass = NonGenericSubInterface.class)
+   public static final class MockForNonGenericSubInterface
    {
-      void provideSomeService();
+      @Mock(invocations = 1)
+      public void method(Long l) { assertTrue(l > 0); }
    }
 
-   @MockClass(realClass = BusinessInterface.class)
-   static class MockCollaborator3
+   @Test
+   public void mockMethodOfSubInterfaceWithGenericTypeArgument()
    {
-      @Mock
-      void provideSomeService() {}
+      NonGenericSubInterface mock = setUpMock(MockForNonGenericSubInterface.class);
+
+      mock.method(123L);
    }
 
    @Test(expected = RuntimeException.class)

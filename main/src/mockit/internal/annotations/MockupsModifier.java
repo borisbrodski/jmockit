@@ -25,7 +25,7 @@ import mockit.internal.state.*;
  * <p/>
  * Any fields (static or not) in the real class remain untouched.
  */
-final class AnnotationsModifier extends BaseClassModifier
+final class MockupsModifier extends BaseClassModifier
 {
    private static final int IGNORED_ACCESS = ABSTRACT + NATIVE;
    private static final String CLASS_WITH_STATE = "mockit/internal/state/TestRun";
@@ -64,7 +64,7 @@ final class AnnotationsModifier extends BaseClassModifier
     * @throws IllegalArgumentException if no mock instance is given but the mock class is an inner class, which cannot
     * be instantiated since the enclosing instance is not known
     */
-   AnnotationsModifier(
+   MockupsModifier(
       ClassReader cr, Class<?> realClass, Object mock,
       AnnotatedMockMethods mockMethods, MockingConfiguration mockingConfiguration, boolean forStartupMock)
    {
@@ -97,7 +97,7 @@ final class AnnotationsModifier extends BaseClassModifier
       }
    }
 
-   AnnotationsModifier(
+   MockupsModifier(
       ClassLoader classLoaderOfRealClass, ClassReader cr, Object mock,
       AnnotatedMockMethods mockMethods, MockingConfiguration mockingConfiguration, boolean forStartupMock)
    {
@@ -105,7 +105,7 @@ final class AnnotationsModifier extends BaseClassModifier
       inferUseOfMockingBridge(classLoaderOfRealClass, mock);
    }
 
-   private AnnotationsModifier(
+   private MockupsModifier(
       ClassReader cr, String itFieldDesc, AnnotatedMockMethods mockMethods, MockingConfiguration mockingConfiguration,
       boolean forStartupMock, Object mock, boolean useMockingBridgeForUpdatingMockState)
    {

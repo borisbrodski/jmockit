@@ -119,25 +119,7 @@ final class AnnotatedMockMethods
          parameters = new ArrayList<String>(n);
 
          for (int i = 0; i < n; i++) {
-            char c = semicolonSeparatedParameters.charAt(i);
-            String parameter;
-
-            if (c == 'L' || c == 'T' || c == '[') {
-               int j = i;
-
-               do {
-                  j++;
-                  c = semicolonSeparatedParameters.charAt(j);
-               } while (c != ';' && c != '<');
-
-               parameter = semicolonSeparatedParameters.substring(i, j);
-               i = c == '<' ? advanceToNextParameter(semicolonSeparatedParameters, j) : j;
-            }
-            else {
-               parameter = String.valueOf(c);
-            }
-
-            parameters.add(parameter);
+            i = addNextParameter(semicolonSeparatedParameters, i);
          }
       }
 
@@ -146,6 +128,32 @@ final class AnnotatedMockMethods
          int p = signature.indexOf('(');
          int q = signature.indexOf(')');
          return signature.substring(p + 1, q);
+      }
+
+      private int addNextParameter(String semicolonSeparatedParameters, int i)
+      {
+         char c = semicolonSeparatedParameters.charAt(i);
+         int j = i;
+         String parameter;
+
+         if (c == 'L' || c == 'T' || c == '[') {
+            do {
+               j++;
+               c = semicolonSeparatedParameters.charAt(j);
+            } while (c != ';' && c != '<');
+
+            parameter = semicolonSeparatedParameters.substring(i, j);
+
+            if (c == '<') {
+               j = advanceToNextParameter(semicolonSeparatedParameters, j);
+            }
+         }
+         else {
+            parameter = String.valueOf(c);
+         }
+
+         parameters.add(parameter);
+         return j;
       }
 
       private int advanceToNextParameter(String semicolonSeparatedParameters, int positionOfCurrentParameter)
@@ -199,19 +207,41 @@ final class AnnotatedMockMethods
       typeParametersToTypeArguments = new HashMap<String, String>();
 
       if (mockedType != null) {
-         addTypeParametersToTypeArgumentsMappings(realClass, mockedType);
+         addMappingsFromTypeParametersToTypeArguments(realClass, mockedType);
       }
 
-      Type superclass = realClass.getGenericSuperclass();
+      addGenericTypeMappingsForSupertypes(realClass);
+   }
 
-      if (superclass instanceof ParameterizedType) {
-         ParameterizedType mockedSuperType = (ParameterizedType) superclass;
-         Class<?> mockedClass = (Class<?>) mockedSuperType.getRawType();
-         addTypeParametersToTypeArgumentsMappings(mockedClass, mockedSuperType);
+   private void addGenericTypeMappingsForSupertypes(Class<?> realClass)
+   {
+      Type superType = realClass;
+
+      while (superType instanceof Class<?> && superType != Object.class) {
+         Class<?> superClass = (Class<?>) superType;
+         superType = superClass.getGenericSuperclass();
+
+         superType = addGenericTypeMappingsIfParameterized(superType);
+
+         for (Type implementedInterface : superClass.getGenericInterfaces()) {
+            addGenericTypeMappingsIfParameterized(implementedInterface);
+         }
       }
    }
 
-   private void addTypeParametersToTypeArgumentsMappings(Class<?> mockedClass, ParameterizedType mockedType)
+   private Type addGenericTypeMappingsIfParameterized(Type superType)
+   {
+      if (superType instanceof ParameterizedType) {
+         ParameterizedType mockedSuperType = (ParameterizedType) superType;
+         Type rawType = mockedSuperType.getRawType();
+         addMappingsFromTypeParametersToTypeArguments((Class<?>) rawType, mockedSuperType);
+         return rawType;
+      }
+
+      return superType;
+   }
+
+   private void addMappingsFromTypeParametersToTypeArguments(Class<?> mockedClass, ParameterizedType mockedType)
    {
       TypeVariable<?>[] typeParameters = mockedClass.getTypeParameters();
       Type[] typeArguments = mockedType.getActualTypeArguments();
@@ -219,9 +249,19 @@ final class AnnotatedMockMethods
 
       for (int i = 0; i < n; i++) {
          Type typeArg = typeArguments[i];
+         String typeArgName = null;
          String typeVarName = typeParameters[i].getName();
-         Class<?> typeArgClass = typeArg instanceof Class<?> ? (Class<?>) typeArg : Object.class;
-         typeParametersToTypeArguments.put('T' + typeVarName, 'L' + typeArgClass.getName().replace('.', '/'));
+
+         if (typeArg instanceof Class<?>) {
+            typeArgName = 'L' + ((Class<?>) typeArg).getName().replace('.', '/');
+         }
+         else if (typeArg instanceof TypeVariable<?>) {
+            String intermediateTypeArg = 'T' + ((TypeVariable<?>) typeArg).getName();
+            typeArgName = typeParametersToTypeArguments.get(intermediateTypeArg);
+         }
+
+         String mappedTypeArgName = typeArgName == null ? "Ljava/lang/Object" : typeArgName;
+         typeParametersToTypeArguments.put('T' + typeVarName, mappedTypeArgName);
       }
    }
 

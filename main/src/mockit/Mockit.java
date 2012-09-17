@@ -379,13 +379,13 @@ public final class Mockit
    /**
     * Sets up the mocks defined in the given mock class.
     * <p/>
-    * If the type {@linkplain MockClass#realClass referred to} by the mock class is actually an interface, then a
-    * {@linkplain #newEmptyProxy(ClassLoader, Class) new empty proxy} is created.
+    * If the type {@linkplain MockClass#realClass referred to} by the mock class is actually an interface, then a new
+    * empty implementation class is created.
     *
     * @param mockClassOrInstance the mock class itself (given by its {@code Class} literal), or an instance of the mock
     * class
     *
-    * @return the new proxy instance created for the mocked interface, or {@code null} otherwise
+    * @return a new instance of the implementation class created for the mocked interface, or {@code null} otherwise
     *
     * @throws IllegalArgumentException if a given mock class fails to specify the corresponding real class using the
     * {@code @MockClass(realClass = ...)} annotation; or if a mock class defines a mock method for which no
@@ -412,19 +412,14 @@ public final class Mockit
          mock = mockClassOrInstance;
       }
 
-      MockClassSetup setup = new MockClassSetup(mock, mockClass);
-      Class<?> realClass = setup.getRealClass();
-      T proxy = null;
+      Class<T> realClass = MockClassSetup.getRealClass(mockClass);
 
       if (realClass.isInterface()) {
-         //noinspection unchecked
-         proxy = (T) newEmptyProxy(mockClass.getClassLoader(), realClass);
-         setup.setRealClass(proxy.getClass());
+         return new MockedImplementationClass<T>(mockClass, mock).generate(realClass, null);
       }
 
-      setup.redefineMethods();
-
-      return proxy;
+      new MockClassSetup(realClass, mock, mockClass).redefineMethods();
+      return null;
    }
 
    /**
@@ -524,11 +519,7 @@ public final class Mockit
     */
    public static <E> E newEmptyProxy(ClassLoader loader, Class<E> interfaceToBeProxied)
    {
-      Class<?>[] interfaces = loader == null ?
-         new Class<?>[] {interfaceToBeProxied} : new Class<?>[] {interfaceToBeProxied, EmptyProxy.class};
-
-      //noinspection unchecked
-      return (E) Proxy.newProxyInstance(loader, interfaces, MockInvocationHandler.INSTANCE);
+      return Utilities.newEmptyProxy(loader, interfaceToBeProxied);
    }
 
    /**

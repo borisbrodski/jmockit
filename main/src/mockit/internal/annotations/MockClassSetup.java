@@ -30,15 +30,15 @@ public final class MockClassSetup
 
    public MockClassSetup(Class<?> mockClass, MockClass metadata)
    {
-      this(new AnnotatedMockMethods(metadata.realClass(), null), null, mockClass, metadata);
+      this(metadata.realClass(), null, mockClass, metadata);
    }
 
-   private MockClassSetup(AnnotatedMockMethods mockMethods, Object mock, Class<?> mockClass, MockClass metadata)
+   private MockClassSetup(Class<?> realClass, Object mock, Class<?> mockClass, MockClass metadata)
    {
-      realClass = mockMethods.realClass;
+      this.realClass = realClass;
       validateRealClass();
 
-      this.mockMethods = mockMethods;
+      mockMethods = new AnnotatedMockMethods(realClass, null);
       this.mockClass = mockClass;
 
       if (metadata != null) {
@@ -75,26 +75,47 @@ public final class MockClassSetup
 
    public MockClassSetup(Class<?> realClass, Object mock, Class<?> mockClass)
    {
-      this(new AnnotatedMockMethods(realClass, null), mock, mockClass, mockClass.getAnnotation(MockClass.class));
+      this(realClass, mock, mockClass, mockClass.getAnnotation(MockClass.class));
       baseTypeForCapturing = realClass;
    }
 
-   public MockClassSetup(ParameterizedType mockedType, Object mockUp, byte[] realClassCode)
+   public MockClassSetup(Object mock, Class<?> mockClass)
    {
-      this(new AnnotatedMockMethods((Class<?>) mockedType.getRawType(), mockedType), mockUp, realClassCode);
+      this(getRealClass(mockClass), mock, mockClass);
+   }
+
+   public static <T> Class<T> getRealClass(Class<?> specifiedMockClass)
+   {
+      MockClass mockClassAnnotation = specifiedMockClass.getAnnotation(MockClass.class);
+
+      if (mockClassAnnotation == null) {
+         throw new IllegalArgumentException("Missing @MockClass for " + specifiedMockClass);
+      }
+
+      @SuppressWarnings("unchecked")
+      Class<T> realClass = (Class<T>) mockClassAnnotation.realClass();
+
+      if (realClass == null) {
+         // This happens only with the IBM JDK.
+         throw new TypeNotPresentException("specified in mock " + specifiedMockClass, null);
+      }
+
+      return realClass;
+   }
+
+   public MockClassSetup(Class<?> mockClass)
+   {
+      this(getRealClass(mockClass), null, mockClass);
    }
 
    public MockClassSetup(Class<?> realClass, ParameterizedType mockedType, Object mockUp, byte[] realClassCode)
    {
-      this(new AnnotatedMockMethods(realClass, mockedType), mockUp, realClassCode);
-   }
-
-   private MockClassSetup(AnnotatedMockMethods mockMethods, Object mockUp, byte[] realClassCode)
-   {
-      realClass = mockMethods.realClass;
+      this.realClass = realClass;
       validateRealClass();
 
-      this.mockMethods = mockMethods;
+      baseTypeForCapturing = realClass;
+      mockMethods = new AnnotatedMockMethods(realClass, mockedType);
+
       mock = mockUp;
       mockClass = mockUp.getClass();
       instantiation = null;
@@ -103,35 +124,6 @@ public final class MockClassSetup
 
       new AnnotatedMockMethodCollector(mockMethods).collectMockMethods(mockClass);
    }
-
-   public MockClassSetup(Object mock, Class<?> mockClass)
-   {
-      this(getRealClass(mockClass), mock, mockClass);
-   }
-
-   private static Class<?> getRealClass(Class<?> specifiedMockClass)
-   {
-      MockClass mockClassAnnotation = specifiedMockClass.getAnnotation(MockClass.class);
-
-      if (mockClassAnnotation == null) {
-         throw new IllegalArgumentException("Missing @MockClass for " + specifiedMockClass);
-      }
-
-      if (mockClassAnnotation.realClass() == null) {
-         // This happens only with the IBM JDK.
-         throw new TypeNotPresentException("specified in mock " + specifiedMockClass, null);
-      }
-
-      return mockClassAnnotation.realClass();
-   }
-
-   public MockClassSetup(Class<?> mockClass)
-   {
-      this(getRealClass(mockClass), null, mockClass);
-   }
-
-   public Class<?> getRealClass() { return realClass; }
-   public void setRealClass(Class<?> realClass) { this.realClass = realClass; }
 
    public void setBaseType(Class<?> baseClass) { baseTypeForCapturing = baseClass; }
 
@@ -172,8 +164,8 @@ public final class MockClassSetup
          rcReader = createClassReaderForRealClass();
       }
 
-      AnnotationsModifier modifier =
-         new AnnotationsModifier(rcReader, realClass, mock, mockMethods, mockingConfiguration, forStartupMock);
+      MockupsModifier modifier =
+         new MockupsModifier(rcReader, realClass, mock, mockMethods, mockingConfiguration, forStartupMock);
 
       if (mock == null && instantiation == Instantiation.PerMockedInstance) {
          modifier.useOneMockInstancePerMockedInstance(mockClass);
@@ -268,7 +260,7 @@ public final class MockClassSetup
       @Override
       protected ClassVisitor createModifier(ClassLoader cl, ClassReader cr, String capturedTypeDesc)
       {
-         return new AnnotationsModifier(cl, cr, mock, mockMethods, mockingConfiguration, forStartupMock);
+         return new MockupsModifier(cl, cr, mock, mockMethods, mockingConfiguration, forStartupMock);
       }
    }
 }
