@@ -127,7 +127,8 @@ public @interface <span class="strong">Injectable</span></pre>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><strong><a href="../mockit/Injectable.html#value()">value</a></strong></code>
-<div class="block">Specifies a literal value when the injectable mock field/parameter is of a primitive type.</div>
+<div class="block">Specifies a literal value when the type of the injectable mock field/parameter is <code>String</code>, a primitive
+ type, or an enum type.</div>
 </td>
 </tr>
 </table>
@@ -152,8 +153,13 @@ public @interface <span class="strong">Injectable</span></pre>
 <li class="blockList">
 <h4>value</h4>
 <pre>public abstract&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;value</pre>
-<div class="block">Specifies a literal value when the injectable mock field/parameter is of a primitive type.
- The value provided must be convertible to that primitive type.</div>
+<div class="block">Specifies a literal value when the type of the injectable mock field/parameter is <code>String</code>, a primitive
+ type, or an enum type.
+ For a primitive type, the value provided must be convertible to it.
+ For an enum type, the given textual value must equal the name of one of the possible enum values.
+ <p/>
+ When a value is provided for an injectable whose type is <code>String</code> or an enum type, said type is <em>not</em>
+ mocked; otherwise, it is.</div>
 <dl>
 <dt>Default:</dt>
 <dd>""</dd>

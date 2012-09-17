@@ -423,19 +423,12 @@ extends <a href="../mockit/Expectations.html" title="class in mockit">Expectatio
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
-<td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withCapture()">withCapture</a></strong>()</code>
-<div class="block">Creates a value object for the associated parameter into which to capture the argument received by the first
- matching invocation (if any) at replay time.</div>
+<td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withCapture(java.util.List)">withCapture</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;valueHolderForMultipleInvocations)</code>
+<div class="block">Captures the argument value passed into the associated expectation parameter, for each invocation that matches the
+ expectation when the tested code is exercised.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
-<td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withCapture(java.util.List)">withCapture</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;valueHolderForMultipleInvocations)</code>
-<div class="block">Creates a new argument matcher for the current expectation which will, for each matching invocation,
- <em>capture</em> the received argument values, adding them to the given list.</div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>protected double</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withEqual(double, double)">withEqual</a></strong>(double&nbsp;value,
          double&nbsp;delta)</code>
@@ -443,7 +436,7 @@ extends <a href="../mockit/Expectations.html" title="class in mockit">Expectatio
  sufficiently close to the given value.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected float</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withEqual(float, double)">withEqual</a></strong>(float&nbsp;value,
          double&nbsp;delta)</code>
@@ -451,76 +444,76 @@ extends <a href="../mockit/Expectations.html" title="class in mockit">Expectatio
  sufficiently close to the given value.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withEqual(T)">withEqual</a></strong>(T&nbsp;arg)</code>
 <div class="block">When passed as argument for an expectation, creates a new matcher that will check if the given value is
  <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang"><code>equal</code></a> to the corresponding argument received by a matching invocation.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withInstanceLike(T)">withInstanceLike</a></strong>(T&nbsp;object)</code>
 <div class="block">Same as <a href="../mockit/NonStrictExpectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is an instance of
  the same class as the given object.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withInstanceOf(java.lang.Class)">withInstanceOf</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;argClass)</code>
 <div class="block">Same as <a href="../mockit/NonStrictExpectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is an instance of
  the given class.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected &lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;<br>T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withMatch(T)">withMatch</a></strong>(T&nbsp;regex)</code>
 <div class="block">Same as <a href="../mockit/NonStrictExpectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase matches
  the given <a href="http://download.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex"><code>regular expression</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withNotEqual(T)">withNotEqual</a></strong>(T&nbsp;arg)</code>
 <div class="block">Same as <a href="../mockit/NonStrictExpectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that the invocation argument in the replay phase is different
  from the given value.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withNotNull()">withNotNull</a></strong>()</code>
 <div class="block">Same as <a href="../mockit/NonStrictExpectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is not
  <code>null</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withNull()">withNull</a></strong>()</code>
 <div class="block">Same as <a href="../mockit/NonStrictExpectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is <code>null</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected &lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;<br>T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withPrefix(T)">withPrefix</a></strong>(T&nbsp;text)</code>
 <div class="block">Same as <a href="../mockit/NonStrictExpectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase starts
  with the given text.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withSameInstance(T)">withSameInstance</a></strong>(T&nbsp;object)</code>
 <div class="block">Same as <a href="../mockit/NonStrictExpectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is the exact same
  instance as the one in the recorded/verified invocation.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected &lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;<br>T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withSubstring(T)">withSubstring</a></strong>(T&nbsp;text)</code>
 <div class="block">Same as <a href="../mockit/NonStrictExpectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase contains
  the given text as a substring.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;<br>T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/NonStrictExpectations.html#withSuffix(T)">withSuffix</a></strong>(T&nbsp;text)</code>
 <div class="block">Same as <a href="../mockit/NonStrictExpectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase ends with
@@ -711,8 +704,8 @@ extends <a href="../mockit/Expectations.html" title="class in mockit">Expectatio
  <p/>
  Said object can be of any type, provided its class has a single non-private method
  (additional methods are allowed and ignored, as long as they are <code>private</code>).
- This <em>validation method</em> can have any name, provided its parameters match the ones defined in the mocked
- method or constructor associated with the expectation.
+ This <em>validation method</em> can have any name, and should either have no parameters or a list of parameters
+ that match the ones defined in the mocked method/constructor associated with the expectation.
  Corresponding parameters don't need to have the exact same declared type, though, as long as each possible
  invocation argument can be passed to the corresponding parameter in the validation method.
  <p/>
@@ -1205,19 +1198,6 @@ extends <a href="../mockit/Expectations.html" title="class in mockit">Expectatio
 <dt><span class="strong">Returns:</span></dt><dd>the input argument</dd></dl>
 </li>
 </ul>
-<a name="withCapture()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>withCapture</h4>
-<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withCapture()</pre>
-<div class="block">Creates a value object for the associated parameter into which to capture the argument received by the first
- matching invocation (if any) at replay time.</div>
-<dl><dt><span class="strong">Returns:</span></dt><dd>a new instance of type <code>T</code>, into which the instance field values of the captured argument received
- by a matching invocation will be set</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/NonStrictExpectations.html#withCapture(java.util.List)"><code>withCapture(java.util.List)</code></a></dd></dl>
-</li>
-</ul>
 <a name="withCapture(java.util.List)">
 <!--   -->
 </a>
@@ -1225,11 +1205,12 @@ extends <a href="../mockit/Expectations.html" title="class in mockit">Expectatio
 <li class="blockList">
 <h4>withCapture</h4>
 <pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withCapture(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;valueHolderForMultipleInvocations)</pre>
-<div class="block">Creates a new argument matcher for the current expectation which will, for each matching invocation,
- <em>capture</em> the received argument values, adding them to the given list.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>valueHolderForMultipleInvocations</code> - list (usually empty) of value objects into which the arguments received
-                                          by matching invocations will be added</dd>
-<dt><span class="strong">Returns:</span></dt><dd>always <code>null</code></dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/NonStrictExpectations.html#withCapture()"><code>withCapture()</code></a></dd></dl>
+<div class="block">Captures the argument value passed into the associated expectation parameter, for each invocation that matches the
+ expectation when the tested code is exercised.
+ As each such value is captured, it gets added to the given list so that it can be inspected later.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>valueHolderForMultipleInvocations</code> - list into which the arguments received by matching invocations will be
+                                          added</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the default value for type <code>T</code></dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Verifications.html#withCapture()"><code>Verifications.withCapture()</code></a></dd></dl>
 </li>
 </ul>
 <a name="withEqual(double, double)">

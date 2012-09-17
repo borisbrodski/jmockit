@@ -415,11 +415,11 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <pre>public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;setUpMock(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;mockClassOrInstance)</pre>
 <div class="block">Sets up the mocks defined in the given mock class.
  <p/>
- If the type <a href="../mockit/MockClass.html#realClass()">referred to</a> by the mock class is actually an interface, then a
- <a href="../mockit/Mockit.html#newEmptyProxy(java.lang.ClassLoader, java.lang.Class)">new empty proxy</a> is created.</div>
+ If the type <a href="../mockit/MockClass.html#realClass()">referred to</a> by the mock class is actually an interface, then a new
+ empty implementation class is created.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>mockClassOrInstance</code> - the mock class itself (given by its <code>Class</code> literal), or an instance of the mock
  class</dd>
-<dt><span class="strong">Returns:</span></dt><dd>the new proxy instance created for the mocked interface, or <code>null</code> otherwise</dd>
+<dt><span class="strong">Returns:</span></dt><dd>a new instance of the implementation class created for the mocked interface, or <code>null</code> otherwise</dd>
 <dt><span class="strong">Throws:</span></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if a given mock class fails to specify the corresponding real class using the
  <code>@MockClass(realClass = ...)</code> annotation; or if a mock class defines a mock method for which no

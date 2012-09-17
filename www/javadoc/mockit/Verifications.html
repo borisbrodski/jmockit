@@ -421,15 +421,15 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <tr class="altColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Verifications.html#withCapture()">withCapture</a></strong>()</code>
-<div class="block">Creates a value object for the associated parameter into which to capture the argument received by the first
- matching invocation (if any) at replay time.</div>
+<div class="block">Captures the argument value passed into the associated expectation parameter, for a matching invocation that
+ occurred when the tested code was exercised.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Verifications.html#withCapture(java.util.List)">withCapture</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;valueHolderForMultipleInvocations)</code>
-<div class="block">Creates a new argument matcher for the current expectation which will, for each matching invocation,
- <em>capture</em> the received argument values, adding them to the given list.</div>
+<div class="block">Captures the argument value passed into the associated expectation parameter, for each invocation that matches the
+ expectation when the tested code is exercised.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -701,8 +701,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  <p/>
  Said object can be of any type, provided its class has a single non-private method
  (additional methods are allowed and ignored, as long as they are <code>private</code>).
- This <em>validation method</em> can have any name, provided its parameters match the ones defined in the mocked
- method or constructor associated with the expectation.
+ This <em>validation method</em> can have any name, and should either have no parameters or a list of parameters
+ that match the ones defined in the mocked method/constructor associated with the expectation.
  Corresponding parameters don't need to have the exact same declared type, though, as long as each possible
  invocation argument can be passed to the corresponding parameter in the validation method.
  <p/>
@@ -820,6 +820,30 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="withCapture()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withCapture</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withCapture()</pre>
+<div class="block">Captures the argument value passed into the associated expectation parameter, for a matching invocation that
+ occurred when the tested code was exercised.
+ This method should be used in a local variable assignment expression inside a verification block.
+ For example:
+ <pre>
+    new Verifications() {{
+       String name;
+       int age;
+       personDAOMock.create(age = withCapture(), name = withCapture());
+       assertFalse(name.isEmpty());
+       assertTrue(age >= 18);
+    }};</pre>
+ <p/>
+ If there is more than one matching invocation, then only the last one is considered.</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>the captured argument value</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Verifications.html#withCapture(java.util.List)"><code>withCapture(java.util.List)</code></a></dd></dl>
+</li>
+</ul>
 <a name="getField(java.lang.Class, java.lang.Class)">
 <!--   -->
 </a>
@@ -1178,19 +1202,6 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <dt><span class="strong">Returns:</span></dt><dd>the input argument</dd></dl>
 </li>
 </ul>
-<a name="withCapture()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>withCapture</h4>
-<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withCapture()</pre>
-<div class="block">Creates a value object for the associated parameter into which to capture the argument received by the first
- matching invocation (if any) at replay time.</div>
-<dl><dt><span class="strong">Returns:</span></dt><dd>a new instance of type <code>T</code>, into which the instance field values of the captured argument received
- by a matching invocation will be set</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Verifications.html#withCapture(java.util.List)"><code>withCapture(java.util.List)</code></a></dd></dl>
-</li>
-</ul>
 <a name="withCapture(java.util.List)">
 <!--   -->
 </a>
@@ -1198,11 +1209,12 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <li class="blockList">
 <h4>withCapture</h4>
 <pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withCapture(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;valueHolderForMultipleInvocations)</pre>
-<div class="block">Creates a new argument matcher for the current expectation which will, for each matching invocation,
- <em>capture</em> the received argument values, adding them to the given list.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>valueHolderForMultipleInvocations</code> - list (usually empty) of value objects into which the arguments received
-                                          by matching invocations will be added</dd>
-<dt><span class="strong">Returns:</span></dt><dd>always <code>null</code></dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Verifications.html#withCapture()"><code>withCapture()</code></a></dd></dl>
+<div class="block">Captures the argument value passed into the associated expectation parameter, for each invocation that matches the
+ expectation when the tested code is exercised.
+ As each such value is captured, it gets added to the given list so that it can be inspected later.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>valueHolderForMultipleInvocations</code> - list into which the arguments received by matching invocations will be
+                                          added</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the default value for type <code>T</code></dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Verifications.html#withCapture()"><code>withCapture()</code></a></dd></dl>
 </li>
 </ul>
 <a name="withEqual(double, double)">

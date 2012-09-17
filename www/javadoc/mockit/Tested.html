@@ -88,23 +88,29 @@ public @interface <span class="strong">Tested</span></pre>
  <p/>
  If the tested field is not <code>final</code> and its value remains <code>null</code> at the time a test method is about to be
  executed, then a suitable instance of the tested class is created and assigned to the field.
- The instantiation will only be attempted if the tested class has at least one constructor with the same accessibility
- as the class: i.e. either a <em>public</em> constructor in a public class, or a <em>non-private</em> constructor in a
- <em>non-public</em> class.
- Constructor injection will take place, provided all of the constructor parameters (if any) can be satisfied with the
- values of available <a href="../mockit/Injectable.html" title="annotation in mockit">injectable</a> fields and/or injectable test method parameters.
- If the tested class has more than one satisfiable constructor, the one with most parameters is chosen.
+ At this time, <em>constructor injection</em> will take place, provided all of the constructor parameters (if any) can
+ be satisfied with the values of available <a href="../mockit/Injectable.html" title="annotation in mockit">injectable</a> fields and/or injectable test method
+ parameters.
+ If the tested class has a constructor annotated with the standard Java EE annotation "<code>@Inject</code>", then it
+ is the one to be used;
+ otherwise, if there are multiple satisfiable constructors then the one with the most parameters <em>and</em> the
+ widest accessibility (ie, first <code>public</code>, then <code>protected</code>, then <em>package-private</em>, and finally
+ <code>private</code>) is chosen.
  The matching between <em>injectable</em> fields/parameters and <em>constructor</em> parameters is done by
  <em>type</em> when there is only one parameter of a given type; otherwise, by type <em>and name</em>.
  <p/>
  Whenever the tested object is created automatically, <em>field injection</em> is also performed.
- Only non-<code>final</code> instance fields which remain uninitialized at this time are considered, between those
- declared in the tested class itself or in one of its super-classes.
+ Only non-<code>final</code> instance fields are considered, between those declared in the tested class itself or in
+ one of its super-classes; at this time constructor injection already occurred, so only fields annotated with
+ <code>@Inject</code> or which remain uninitialized are targeted.
  For each such <em>target</em> field, the value of an still unused <a href="../mockit/Injectable.html" title="annotation in mockit">injectable</a> field or test
  method parameter of the <em>same</em> type is assigned.
  Multiple target fields of the same type can be injected from separate injectables, provided each target field has the
  same name as an available injectable field/parameter of that type.
- Finally, if there is no matching and available injectable value for a given target field, it is left unassigned.</div>
+ Finally, if there is no matching and available injectable value for a given target field, it is left unassigned.
+ <p/>
+ Whenever constructor or field injection is used, the value of each injectable mock field/parameter goes into
+ <em>at most one</em> matching constructor parameter or instance field of a tested class.</div>
 </li>
 </ul>
 </div>

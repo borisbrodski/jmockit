@@ -432,8 +432,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#returns(java.lang.Object, java.lang.Object...)">returns</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;firstValue,
        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;remainingValues)</code>
-<div class="block">Equivalent to calling <a href="../mockit/Expectations.html#returns(java.lang.Object)"><code>returns(Object)</code></a> two or more times in sequence, except when the associated method
- can return a collection or iterable, an iterator, or an array.</div>
+<div class="block">Specifies that the previously recorded method invocation will return a given sequence of values during replay.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -495,19 +494,12 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
-<td class="colLast"><code><strong><a href="../mockit/Expectations.html#withCapture()">withCapture</a></strong>()</code>
-<div class="block">Creates a value object for the associated parameter into which to capture the argument received by the first
- matching invocation (if any) at replay time.</div>
+<td class="colLast"><code><strong><a href="../mockit/Expectations.html#withCapture(java.util.List)">withCapture</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;valueHolderForMultipleInvocations)</code>
+<div class="block">Captures the argument value passed into the associated expectation parameter, for each invocation that matches the
+ expectation when the tested code is exercised.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
-<td class="colLast"><code><strong><a href="../mockit/Expectations.html#withCapture(java.util.List)">withCapture</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;valueHolderForMultipleInvocations)</code>
-<div class="block">Creates a new argument matcher for the current expectation which will, for each matching invocation,
- <em>capture</em> the received argument values, adding them to the given list.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code>protected double</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withEqual(double, double)">withEqual</a></strong>(double&nbsp;value,
          double&nbsp;delta)</code>
@@ -515,7 +507,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  sufficiently close to the given value.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected float</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withEqual(float, double)">withEqual</a></strong>(float&nbsp;value,
          double&nbsp;delta)</code>
@@ -523,76 +515,76 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  sufficiently close to the given value.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withEqual(T)">withEqual</a></strong>(T&nbsp;arg)</code>
 <div class="block">When passed as argument for an expectation, creates a new matcher that will check if the given value is
  <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang"><code>equal</code></a> to the corresponding argument received by a matching invocation.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withInstanceLike(T)">withInstanceLike</a></strong>(T&nbsp;object)</code>
 <div class="block">Same as <a href="../mockit/Expectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is an instance of
  the same class as the given object.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withInstanceOf(java.lang.Class)">withInstanceOf</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;argClass)</code>
 <div class="block">Same as <a href="../mockit/Expectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is an instance of
  the given class.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;<br>T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withMatch(T)">withMatch</a></strong>(T&nbsp;regex)</code>
 <div class="block">Same as <a href="../mockit/Expectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase matches
  the given <a href="http://download.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex"><code>regular expression</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withNotEqual(T)">withNotEqual</a></strong>(T&nbsp;arg)</code>
 <div class="block">Same as <a href="../mockit/Expectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that the invocation argument in the replay phase is different
  from the given value.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withNotNull()">withNotNull</a></strong>()</code>
 <div class="block">Same as <a href="../mockit/Expectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is not
  <code>null</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withNull()">withNull</a></strong>()</code>
 <div class="block">Same as <a href="../mockit/Expectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is <code>null</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;<br>T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withPrefix(T)">withPrefix</a></strong>(T&nbsp;text)</code>
 <div class="block">Same as <a href="../mockit/Expectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase starts
  with the given text.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withSameInstance(T)">withSameInstance</a></strong>(T&nbsp;object)</code>
 <div class="block">Same as <a href="../mockit/Expectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that an invocation argument in the replay phase is the exact same
  instance as the one in the recorded/verified invocation.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected &lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;<br>T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withSubstring(T)">withSubstring</a></strong>(T&nbsp;text)</code>
 <div class="block">Same as <a href="../mockit/Expectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase contains
  the given text as a substring.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected &lt;T extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang">CharSequence</a>&gt;&nbsp;<br>T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Expectations.html#withSuffix(T)">withSuffix</a></strong>(T&nbsp;text)</code>
 <div class="block">Same as <a href="../mockit/Expectations.html#withEqual(T)"><code>withEqual(Object)</code></a>, but checking that a textual invocation argument in the replay phase ends with
@@ -811,8 +803,8 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  <p/>
  Said object can be of any type, provided its class has a single non-private method
  (additional methods are allowed and ignored, as long as they are <code>private</code>).
- This <em>validation method</em> can have any name, provided its parameters match the ones defined in the mocked
- method or constructor associated with the expectation.
+ This <em>validation method</em> can have any name, and should either have no parameters or a list of parameters
+ that match the ones defined in the mocked method/constructor associated with the expectation.
  Corresponding parameters don't need to have the exact same declared type, though, as long as each possible
  invocation argument can be passed to the corresponding parameter in the validation method.
  <p/>
@@ -1021,7 +1013,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  It's also possible to specify a sequence of values to be returned by consecutive invocations, by simply passing
  an array, a <a href="http://download.oracle.com/javase/6/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">collection</a>, an <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">iterable</a>, or an
  <a href="http://download.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">iterator</a>.
- The return type of the recorded method, however, must <em>not</em> be of one of these type non-singular types.
+ The return type of the recorded method, however, must <em>not</em> be of one of these non-singular types.
  If it is, the multi-valued argument will be returned by a single invocation at replay time.
  <p/>
  If this method is used for a constructor or <code>void</code> method, the given return value will be ignored,
@@ -1058,10 +1050,10 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <h4>returns</h4>
 <pre>protected final&nbsp;void&nbsp;returns(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;firstValue,
            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;remainingValues)</pre>
-<div class="block">Equivalent to calling <a href="../mockit/Expectations.html#returns(java.lang.Object)"><code>returns(Object)</code></a> two or more times in sequence, except when the associated method
- can return a collection or iterable, an iterator, or an array.
- Specifically, the following situations receive special treatment, according to the declared return type of said
- method:
+<div class="block">Specifies that the previously recorded method invocation will return a given sequence of values during replay.
+ <p/>
+ Using this method is equivalent to calling <a href="../mockit/Expectations.html#returns(java.lang.Object)"><code>returns(Object)</code></a> two or more times in sequence, except when the
+ recorded method can return an iterable (including any <code>Collection</code> subtype), an iterator, or an array:
  <ol>
  <li>If the return type is iterable and can receive a <a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util"><code>List</code></a> value, then the given sequence of values will be
  converted into an <code>ArrayList</code>; this list will then be returned by matching invocations at replay time.</li>
@@ -1442,19 +1434,6 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <dt><span class="strong">Returns:</span></dt><dd>the input argument</dd></dl>
 </li>
 </ul>
-<a name="withCapture()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>withCapture</h4>
-<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withCapture()</pre>
-<div class="block">Creates a value object for the associated parameter into which to capture the argument received by the first
- matching invocation (if any) at replay time.</div>
-<dl><dt><span class="strong">Returns:</span></dt><dd>a new instance of type <code>T</code>, into which the instance field values of the captured argument received
- by a matching invocation will be set</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Expectations.html#withCapture(java.util.List)"><code>withCapture(java.util.List)</code></a></dd></dl>
-</li>
-</ul>
 <a name="withCapture(java.util.List)">
 <!--   -->
 </a>
@@ -1462,11 +1441,12 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <li class="blockList">
 <h4>withCapture</h4>
 <pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;withCapture(<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;valueHolderForMultipleInvocations)</pre>
-<div class="block">Creates a new argument matcher for the current expectation which will, for each matching invocation,
- <em>capture</em> the received argument values, adding them to the given list.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>valueHolderForMultipleInvocations</code> - list (usually empty) of value objects into which the arguments received
-                                          by matching invocations will be added</dd>
-<dt><span class="strong">Returns:</span></dt><dd>always <code>null</code></dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Expectations.html#withCapture()"><code>withCapture()</code></a></dd></dl>
+<div class="block">Captures the argument value passed into the associated expectation parameter, for each invocation that matches the
+ expectation when the tested code is exercised.
+ As each such value is captured, it gets added to the given list so that it can be inspected later.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>valueHolderForMultipleInvocations</code> - list into which the arguments received by matching invocations will be
+                                          added</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the default value for type <code>T</code></dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/Verifications.html#withCapture()"><code>Verifications.withCapture()</code></a></dd></dl>
 </li>
 </ul>
 <a name="withEqual(double, double)">

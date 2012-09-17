@@ -162,50 +162,56 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>[]</code></td>
+<td class="colLast"><code><strong><a href="../mockit/Invocation.html#getInvokedArguments()">getInvokedArguments</a></strong>()</code>
+<div class="block">Returns the actual argument values passed in the invocation to the mocked method/constructor.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Invocation.html#getInvokedInstance()">getInvokedInstance</a></strong>()</code>
 <div class="block">Returns the instance on which the current invocation was made, or <code>null</code> for a <code>static</code> method
  invocation.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Invocation.html#getMaxInvocations()">getMaxInvocations</a></strong>()</code>
 <div class="block">Returns the current value of the maximum invocation count for the matching expectation or mock method (<code>-1</code>
  indicates that it's unlimited).</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Invocation.html#getMinInvocations()">getMinInvocations</a></strong>()</code>
 <div class="block">Returns the current value of the minimum invocation count associated with the matching expectation or mock method.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected <a href="http://download.oracle.com/javase/6/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect">Method</a></code></td>
 <td class="colLast"><code><strong><a href="../mockit/Invocation.html#getRealMethod()">getRealMethod</a></strong>()</code>
 <div class="block">For internal use only.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Invocation.html#onChange()">onChange</a></strong>()</code>
 <div class="block">For internal use only.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Invocation.html#proceed(java.lang.Object...)">proceed</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;replacementArguments)</code>
 <div class="block">Allows execution to proceed into the real implementation of the mocked method/constructor.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Invocation.html#setMaxInvocations(int)">setMaxInvocations</a></strong>(int&nbsp;maxInvocations)</code>
 <div class="block">Sets the current value of the maximum invocation count for the matching expectation or mock method.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Invocation.html#setMinInvocations(int)">setMinInvocations</a></strong>(int&nbsp;minInvocations)</code>
 <div class="block">Sets the current value of the minimum invocation count for the matching expectation or mock method.</div>
@@ -274,6 +280,16 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <pre>public final&nbsp;int&nbsp;getInvocationIndex()</pre>
 <div class="block">Returns the index for the current invocation. The first invocation starts at 0 (zero).
  Note that this is equivalent to <a href="../mockit/Invocation.html#getInvocationCount()"><code>getInvocationCount()</code></a> - 1.</div>
+</li>
+</ul>
+<a name="getInvokedArguments()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getInvokedArguments</h4>
+<pre>public final&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>[]&nbsp;getInvokedArguments()</pre>
+<div class="block">Returns the actual argument values passed in the invocation to the mocked method/constructor.</div>
 </li>
 </ul>
 <a name="getInvokedInstance()">
