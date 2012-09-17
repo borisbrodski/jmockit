@@ -3,7 +3,7 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-   <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit</artifactId><version>0.999.16</version>
+   <groupId>com.googlecode.jmockit</groupId><artifactId>jmockit</artifactId><version>0.999.17</version>
    <packaging>jar</packaging>
    <prerequisites><maven>3.0.1</maven></prerequisites>
 
@@ -165,7 +165,7 @@
          <optional>true</optional>
       </dependency>
       <dependency>
-         <groupId>org.testng</groupId><artifactId>testng</artifactId><version>6.3.1</version>
+         <groupId>org.testng</groupId><artifactId>testng</artifactId><version>6.8</version>
          <optional>true</optional>
          <exclusions>
             <exclusion><groupId>junit</groupId><artifactId>junit</artifactId></exclusion>

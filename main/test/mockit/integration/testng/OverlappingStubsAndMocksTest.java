@@ -7,7 +7,6 @@ package mockit.integration.testng;
 import org.testng.annotations.*;
 
 import mockit.*;
-import mockit.internal.*;
 
 /**
  * Overlapping mocks/stubbing for the same real class is currently not supported by the Mockups API.
@@ -29,13 +28,13 @@ public final class OverlappingStubsAndMocksTest
       RealClass.doSomething();
    }
 
-   @Test(dependsOnMethods = "firstTest", expectedExceptions = MissingInvocation.class)
+   @Test(dependsOnMethods = "firstTest")
    public void secondTest()
    {
       Mockit.setUpMocks(TheMockClass.class);
       RealClass.doSomething();
-      // Fails with an unexpected final invocation count, caused by duplicate internal state for the
-      // "doSomething" mock. The duplication, in turn, is caused by "RealClass" not being restored
+      // With TestNG 6.3.1, this failed with an unexpected final invocation count, caused by duplicate internal state
+      // for the "doSomething" mock. The duplication, in turn, was caused by "RealClass" not being restored
       // after the first test, since it was stubbed out for the whole test class.
    }
 }
