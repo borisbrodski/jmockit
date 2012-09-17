@@ -125,6 +125,27 @@
       <profile default="true" name="Default" enabled="false">
         <processorPath useClasspath="true" />
       </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="false">
+        <processorPath useClasspath="true" />
+        <module name="AnimatedTransitions" />
+        <module name="Coverage" />
+        <module name="EasyMock" />
+        <module name="fakingXmocking" />
+        <module name="Hibernate3emul" />
+        <module name="Incremental" />
+        <module name="jMock2" />
+        <module name="LoginService" />
+        <module name="Main" />
+        <module name="Mockito" />
+        <module name="MultiCore" />
+        <module name="OrderMngmntWebapp" />
+        <module name="Powermock" />
+        <module name="samples" />
+        <module name="TimingFramework" />
+        <module name="tourdemock" />
+        <module name="Tutorial" />
+        <module name="Unitils" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.5">
       <module name="AnimatedTransitions" target="1.6" />
@@ -1958,7 +1979,7 @@
     <configuration default="false" name="Samples: LoginService" type="TestNG" factoryName="TestNG">
       <module name="LoginService" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/ibm_sdk60" />
+      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.7.0_06" />
       <option name="SUITE_NAME" value="" />
       <option name="PACKAGE_NAME" value="jmockit.loginExample" />
       <option name="MAIN_CLASS_NAME" value="" />
@@ -2203,15 +2224,15 @@
         <root url="jar://E:/.m2/repository/cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: com.beust:jcommander:1.12">
+    <library name="Maven: com.beust:jcommander:1.27">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/com/beust/jcommander/1.12/jcommander-1.12.jar!/" />
+        <root url="jar://E:/.m2/repository/com/beust/jcommander/1.27/jcommander-1.27.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/com/beust/jcommander/1.12/jcommander-1.12-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/com/beust/jcommander/1.27/jcommander-1.27-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/com/beust/jcommander/1.12/jcommander-1.12-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/com/beust/jcommander/1.27/jcommander-1.27-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: commons-collections:commons-collections:3.2">
@@ -2333,17 +2354,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://E:/.m2/repository/junit/junit-dep/4.4/junit-dep-4.4-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: junit:junit:3.8.1">
-      <CLASSES>
-        <root url="jar://E:/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://E:/.m2/repository/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://E:/.m2/repository/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: junit:junit:4.10">
@@ -2566,15 +2576,15 @@
         <root url="jar://E:/.m2/repository/org/springframework/spring-test/3.1.0.RELEASE/spring-test-3.1.0.RELEASE-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.testng:testng:6.3.1">
+    <library name="Maven: org.testng:testng:6.8">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/org/testng/testng/6.3.1/testng-6.3.1.jar!/" />
+        <root url="jar://E:/.m2/repository/org/testng/testng/6.8/testng-6.8.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/testng/testng/6.3.1/testng-6.3.1-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/org/testng/testng/6.8/testng-6.8-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/org/testng/testng/6.3.1/testng-6.3.1-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/org/testng/testng/6.8/testng-6.8-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.unitils:unitils-core:3.3">

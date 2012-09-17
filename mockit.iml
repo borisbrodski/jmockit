@@ -5,7 +5,6 @@
     <output-test url="file://$MODULE_DIR$/test-classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/classes" />
       <excludeFolder url="file://$MODULE_DIR$/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/hibernate3emul" />
       <excludeFolder url="file://$MODULE_DIR$/incremental" />
@@ -13,8 +12,6 @@
       <excludeFolder url="file://$MODULE_DIR$/main" />
       <excludeFolder url="file://$MODULE_DIR$/multicore" />
       <excludeFolder url="file://$MODULE_DIR$/samples" />
-      <excludeFolder url="file://$MODULE_DIR$/target" />
-      <excludeFolder url="file://$MODULE_DIR$/test-classes" />
       <excludeFolder url="file://$MODULE_DIR$/www" />
     </content>
     <orderEntry type="inheritedJdk" />
