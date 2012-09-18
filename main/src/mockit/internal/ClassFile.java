@@ -14,6 +14,21 @@ import mockit.internal.state.*;
 
 public final class ClassFile
 {
+   public static final class NotFoundException extends RuntimeException
+   {
+      private NotFoundException(String className)
+      {
+         super("Unable to find class file for " + className.replace('/', '.'));
+      }
+   }
+
+   private static void verifyClassFileFound(InputStream classFile, String className)
+   {
+      if (classFile == null) {
+         throw new NotFoundException(className);
+      }
+   }
+
    public static ClassReader createClassFileReader(Class<?> aClass)
    {
       String className = aClass.getName();
@@ -24,10 +39,7 @@ public final class ClassFile
       }
 
       InputStream classFile = aClass.getResourceAsStream('/' + internalClassName(className) + ".class");
-
-      if (classFile == null) {
-         throw new RuntimeException("Failed to read class file for " + className);
-      }
+      verifyClassFileFound(classFile, className);
 
       try {
          return new ClassReader(classFile);
@@ -58,11 +70,12 @@ public final class ClassFile
    public static ClassReader readClass(String className) throws IOException
    {
       String classDesc = internalClassName(className);
-      InputStream classFile = readClassFromDisk(classDesc);
+      InputStream classFile = readClassFromClasspath(classDesc);
+      verifyClassFileFound(classFile, className);
       return new ClassReader(classFile);
    }
 
-   private static InputStream readClassFromDisk(String internalClassName)
+   private static InputStream readClassFromClasspath(String internalClassName)
    {
       String classFileName = internalClassName + ".class";
       ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
@@ -84,10 +97,6 @@ public final class ClassFile
          }
       }
 
-      if (inputStream == null) {
-         throw new RuntimeException("Failed to read class file for " + internalClassName.replace('/', '.'));
-      }
-
       return inputStream;
    }
 
@@ -106,7 +115,8 @@ public final class ClassFile
 
    public static void visitClass(String internalClassName, ClassVisitor visitor)
    {
-      InputStream classFile = readClassFromDisk(internalClassName);
+      InputStream classFile = readClassFromClasspath(internalClassName);
+      verifyClassFileFound(classFile, internalClassName);
 
       try {
          ClassReader cr = new ClassReader(classFile);
