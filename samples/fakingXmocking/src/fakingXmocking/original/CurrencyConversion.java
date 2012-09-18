@@ -1,8 +1,10 @@
-package fakingXmocking;
+package fakingXmocking.original;
 
 import java.io.*;
 import java.math.*;
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
 
 import org.apache.http.*;
 import org.apache.http.client.*;
@@ -10,26 +12,27 @@ import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.*;
 
 /**
- * From <a href="http://schuchert.wikispaces.com/JMockIt.AStoryAboutTooMuchPower">this</a> article.
+ * From <a href="http://martinfowler.com/articles/modernMockingTools.html">this</a> article, but reformatted and with
+ * minor changes (used Java 7, fixed typos and IDEA warnings).
  */
 public final class CurrencyConversion
 {
    static final int CACHE_DURATION = 5 * 60 * 1000;
-   static List<String> allCurrenciesCache;
+   static Map<String, String> allCurrenciesCache;
    static long lastCacheRead = Long.MAX_VALUE;
 
-   public static List<String> currencySymbols()
+   public static Map<String, String> currencySymbols()
    {
       if (allCurrenciesCache != null && System.currentTimeMillis() - lastCacheRead < CACHE_DURATION) {
          return allCurrenciesCache;
       }
 
-      List<String> result = new LinkedList<String>();
+      Map<String, String> symbolToName = new ConcurrentHashMap<>();
 
       try {
          HttpClient httpClient = new DefaultHttpClient();
-         HttpGet httpget = new HttpGet("http://www.jhall.demon.co.uk/currency/by_currency.html");
-         HttpResponse response = httpClient.execute(httpget);
+         HttpGet httpGet = new HttpGet("http://www.xe.com/iso4217.php");
+         HttpResponse response = httpClient.execute(httpGet);
          HttpEntity entity = response.getEntity();
 
          if (entity != null) {
@@ -41,12 +44,16 @@ public final class CurrencyConversion
 
             while ((l = br.readLine()) != null) {
                if (foundTable) {
-                  if (l.matches("\\s+<td valign=top>[A-Z]{3}</td>")) {
-                     result.add(l.replaceAll(".*top>", "").replaceAll("</td>", ""));
+                  Pattern symbol =
+                     Pattern.compile("href=\"/currency/[^>]+>(...)</a></td><td class=\"[^\"]+\">([A-Za-z ]+)");
+                  Matcher m = symbol.matcher(l);
+
+                  while (m.find()) {
+                     symbolToName.put(m.group(1), m.group(2));
                   }
                }
 
-               if (l.startsWith("<h3>Currency Data"))
+               if (l.contains("currencyTable"))
                   foundTable = true;
             }
          }
@@ -55,20 +62,21 @@ public final class CurrencyConversion
          throw new RuntimeException(e);
       }
 
-      allCurrenciesCache = result;
+      allCurrenciesCache = symbolToName;
       lastCacheRead = System.currentTimeMillis();
-      return result;
+
+      return symbolToName;
    }
 
    public static BigDecimal convertFromTo(String fromCurrency, String toCurrency)
    {
-      List<String> valid = currencySymbols();
+      Map<String, String> symbolToName = currencySymbols();
 
-      if (!valid.contains(fromCurrency)) {
+      if (!symbolToName.containsKey(fromCurrency)) {
          throw new IllegalArgumentException(String.format("Invalid from currency: %s", fromCurrency));
       }
 
-      if (!valid.contains(toCurrency)) {
+      if (!symbolToName.containsKey(toCurrency)) {
          throw new IllegalArgumentException(String.format("Invalid to currency: %s", toCurrency));
       }
 

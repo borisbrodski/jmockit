@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package fakingXmocking;
+package fakingXmocking.original;
 
 import java.math.*;
 import java.util.*;
@@ -23,39 +23,37 @@ public final class CurrencyConversionTest
    @Mocked
    HttpEntity httpEntity; // provides access to the intermediate (cascaded) object
 
+   @After
+   public void resetSUT()
+   {
+      CurrencyConversion_testable.allCurrenciesCache = null;
+   }
+
    @Test
    public void loadCurrencySymbolsFromWebSite() throws Exception
    {
-      new Expectations() {{
-         httpEntity.getContent();
-         result = "<h3>Currency Data\r\n <td valign=top>USD</td>\r\n <td valign=top>EUR</td>";
+      new NonStrictExpectations() {{
+         httpEntity.getContent(); times = 1;
+         result =
+            "<table class='currencyTable'>\r\n" +
+            "<td><a href=\"/currency/x\">USD</a></td><td class=\"x\">Dollar</td>\r\n" +
+            "<td><a href=\"/currency/x\">EUR</a></td><td class=\"x\">Euro</td>";
       }};
 
-      List<String> symbols = CurrencyConversion.currencySymbols();
+      Map<String, String> symbols = CurrencyConversion.currencySymbols();
 
-      assertEquals(Arrays.asList("USD", "EUR"), symbols);
-   }
-
-   // A reusable expectation block, in case we were to need it in multiple tests.
-   final class CurrencySymbolsExpectations extends NonStrictExpectations
-   {
-      CurrencySymbolsExpectations()
-      {
-         super(CurrencyConversion.class); // partial mocking of the class
-
-         CurrencyConversion.currencySymbols();
-         returns("X", "Y");
-      }
+      assertEquals(2, symbols.size());
+      assertTrue(symbols.containsKey("USD"));
+      assertTrue(symbols.containsKey("EUR"));
    }
 
    @Test
    public void convertFromOneCurrencyToAnother() throws Exception
    {
-      new CurrencySymbolsExpectations();
+      CurrencyConversion.allCurrenciesCache = new HashMap<String, String>() {{ put("X", ""); put("Y", ""); }};
 
-      // Why strict expectations? To verify the requirement that a live Web site gets accessed.
-      new Expectations() {{
-         httpEntity.getContent();
+      new NonStrictExpectations() {{
+         httpEntity.getContent(); times = 1;
          result = "<div id=\"converter_results\"><ul><li><b>1 X = 1.3 Y</b>";
       }};
 

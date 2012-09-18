@@ -1,36 +1,26 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package fakingXmocking;
+package fakingXmocking.simplified;
 
 import java.math.*;
 import java.util.*;
-
 import static java.util.Arrays.*;
-import static org.junit.Assert.*;
+
 import org.junit.*;
+import static org.junit.Assert.*;
 
 /**
- * These are acceptance/integration tests which verify the full functionality of the {@code CurrencyConversion}
- * class, with actual Web access. Therefore, they can only be executed successfully in a machine with free access
- * to the Web.
+ * These tests are the same as those in {@link fakingXmocking.original.CurrencyConversionIntegrationTest}, except that
+ * they exercise the refactored and modified version of the tested class, {@link CurrencyConversion}.
  * <p/>
- * That said, the <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/StateBasedTesting.html">JMockit
- * Mockups</a> API provides a convenient way to <em>fake</em> the Internet connection, with simulated Web sites.
- * The code for the fake behavior is implemented in an annotated <em>mock class</em>, which can be set up for a
- * test run through <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/UsingMocksAndStubs.html">external
- * configuration</a>.
- * <p/>
- * To execute these tests with fake Web access, run with
- * "<code>-Djmockit-mocks=fakingXmocking.CurrencyConversionHttpClientFake</code>".
- * <p/>
- * This ability can be used, for example, to execute "real" acceptance tests daily in a dedicated build machine,
- * while allowing developers to quickly and safely run the same tests in their development machines.
+ * To execute these tests without network access, add "<code>fakingXmocking.simplified.CurrencyConversionURLFake</code>"
+ * in the "<code>jmockit-mocks</code>" system property.
  */
 public final class CurrencyConversionIntegrationTest
 {
-   @Before
+   @Before @After
    public void emptiesTheLocalCache()
    {
       CurrencyConversion.allCurrenciesCache = null;
@@ -39,7 +29,7 @@ public final class CurrencyConversionIntegrationTest
    @Test
    public void loadAllCurrencySymbolsFromWebSite()
    {
-      List<String> allSymbols = CurrencyConversion.currencySymbols();
+      List<String> allSymbols = new CurrencyConversion().currencySymbols();
 
       assertTrue(allSymbols.containsAll(asList("USD", "EUR", "BRL", "CNY")));
       assertSame(allSymbols, CurrencyConversion.allCurrenciesCache);
@@ -52,7 +42,7 @@ public final class CurrencyConversionIntegrationTest
       CurrencyConversion.allCurrenciesCache = cachedSymbols;
       CurrencyConversion.lastCacheRead = System.currentTimeMillis();
 
-      List<String> allSymbols = CurrencyConversion.currencySymbols();
+      List<String> allSymbols = new CurrencyConversion().currencySymbols();
 
       assertSame(cachedSymbols, allSymbols);
    }
@@ -63,7 +53,7 @@ public final class CurrencyConversionIntegrationTest
       CurrencyConversion.allCurrenciesCache = Collections.emptyList();
       CurrencyConversion.lastCacheRead = System.currentTimeMillis() - CurrencyConversion.CACHE_DURATION;
 
-      List<String> allSymbols = CurrencyConversion.currencySymbols();
+      List<String> allSymbols = new CurrencyConversion().currencySymbols();
 
       assertFalse(allSymbols.isEmpty());
       assertSame(allSymbols, CurrencyConversion.allCurrenciesCache);
@@ -73,13 +63,13 @@ public final class CurrencyConversionIntegrationTest
    @Test(expected = IllegalArgumentException.class)
    public void convertFromInvalidCurrency()
    {
-      CurrencyConversion.convertFromTo("invalid", "USD");
+      new CurrencyConversion().convertFromTo("invalid", "USD");
    }
 
    @Test(expected = IllegalArgumentException.class)
    public void convertToInvalidCurrency()
    {
-      CurrencyConversion.convertFromTo("EUR", "invalid");
+      new CurrencyConversion().convertFromTo("EUR", "invalid");
    }
 
    @Test
@@ -87,7 +77,7 @@ public final class CurrencyConversionIntegrationTest
    {
       String currency = "USD";
 
-      BigDecimal identityRate = CurrencyConversion.convertFromTo(currency, currency);
+      BigDecimal identityRate = new CurrencyConversion().convertFromTo(currency, currency);
 
       assertEquals(BigDecimal.ONE, identityRate);
    }
@@ -95,7 +85,7 @@ public final class CurrencyConversionIntegrationTest
    @Test
    public void convertFromDollarToCheapCurrency()
    {
-      double rate = CurrencyConversion.convertFromTo("USD", "CNY").doubleValue();
+      double rate = new CurrencyConversion().convertFromTo("USD", "CNY").doubleValue();
 
       assertTrue(rate > 1.0);
    }
@@ -106,10 +96,10 @@ public final class CurrencyConversionIntegrationTest
       String fromCurrency = "USD";
       String toCurrency = "EUR";
 
-      BigDecimal rate = CurrencyConversion.convertFromTo(fromCurrency, toCurrency);
+      BigDecimal rate = new CurrencyConversion().convertFromTo(fromCurrency, toCurrency);
       assertTrue(rate.doubleValue() > 0.0);
 
-      BigDecimal inverseRate = CurrencyConversion.convertFromTo(toCurrency, fromCurrency);
+      BigDecimal inverseRate = new CurrencyConversion().convertFromTo(toCurrency, fromCurrency);
       assertTrue(inverseRate.doubleValue() > 0.0);
 
       assertEquals(1.0, rate.multiply(inverseRate).doubleValue(), 0.005);

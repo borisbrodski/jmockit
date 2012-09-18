@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package fakingXmocking;
+package fakingXmocking.simplified;
 
 import java.io.*;
 import java.math.*;
@@ -13,9 +13,10 @@ import java.util.regex.*;
 /**
  * A cleaned-up version, with a more object-oriented API and internal design, but the same functionality.
  */
-public final class CurrencyConversion2
+public final class CurrencyConversion
 {
-   private static final Pattern LINE_WITH_SYMBOL = Pattern.compile("\\s+<td valign=top>([A-Z]{3})</td>");
+   private static final Pattern LINE_WITH_SYMBOL = Pattern.compile("href=./currency/.+>(...)</a>");
+
    static final int CACHE_DURATION = 5 * 60 * 1000;
    static List<String> allCurrenciesCache;
    static long lastCacheRead = Long.MAX_VALUE;
@@ -26,7 +27,7 @@ public final class CurrencyConversion2
          return allCurrenciesCache;
       }
 
-      InputStream response = readHtmlPageFromWebSite("http://www.jhall.demon.co.uk/currency/by_currency.html");
+      InputStream response = readHtmlPageFromWebSite("http://www.xe.com/iso4217.php");
       List<String> result = extractCurrencySymbolsFromHtml(response);
 
       allCurrenciesCache = result;
@@ -57,12 +58,12 @@ public final class CurrencyConversion2
             if (foundTable) {
                Matcher matcher = LINE_WITH_SYMBOL.matcher(line);
 
-               if (matcher.matches()) {
+               if (matcher.find()) {
                   symbols.add(matcher.group(1));
                }
             }
 
-            if (line.startsWith("<h3>Currency Data")) {
+            if (line.contains("currencyTable")) {
                foundTable = true;
             }
          }
@@ -84,11 +85,7 @@ public final class CurrencyConversion2
          fromCurrency + "&to=" + toCurrency;
       InputStream response = readHtmlPageFromWebSite(url);
 
-      Scanner s = new Scanner(response).skip("(?s).*<div id=\"converter_results\">");
-      String innermostHtml = s.findWithinHorizon("<b>.+</b>", 0);
-
-      String[] parts = innermostHtml.split("\\s*=\\s*");
-      String value = parts[1].split(" ")[0];
+      String value = extractCalculatedConversionRateFromHtmlResult(response);
 
       return new BigDecimal(value);
    }
@@ -98,5 +95,14 @@ public final class CurrencyConversion2
       if (!currencySymbols().contains(currencySymbol)) {
          throw new IllegalArgumentException("Invalid " + whichOne + " currency: " + currencySymbol);
       }
+   }
+
+   private String extractCalculatedConversionRateFromHtmlResult(InputStream htmlFormattedConversionResult)
+   {
+      Scanner s = new Scanner(htmlFormattedConversionResult).skip("(?s).*<div id=\"converter_results\">");
+      String innermostHtml = s.findWithinHorizon("<b>.+</b>", 0);
+
+      String[] parts = innermostHtml.split("\\s*=\\s*");
+      return parts[1].split(" ")[0];
    }
 }

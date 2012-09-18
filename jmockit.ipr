@@ -1931,8 +1931,9 @@
       <envs />
       <dir value="$PROJECT_DIR$/samples/fakingXmocking/unit-test" />
       <patterns>
-        <pattern testClass="fakingXmocking.CurrencyConversionTest" />
-        <pattern testClass="fakingXmocking.CurrencyConversion2Test" />
+        <pattern testClass="fakingXmocking.original.CurrencyConversionTest" />
+        <pattern testClass="fakingXmocking.simplified.CurrencyConversionTest" />
+        <pattern testClass="fakingXmocking.original.CurrencyConversionMockitoTest" />
       </patterns>
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="1264" />
@@ -1952,7 +1953,7 @@
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="pattern" />
-      <option name="VM_PARAMETERS" value="-Djmockit-mocks=fakingXmocking.CurrencyConversionHttpClientFake,fakingXmocking.CurrencyConversionURLFake" />
+      <option name="VM_PARAMETERS" value="-Djmockit-mocks=fakingXmocking.original.CurrencyConversionHttpClientFake,fakingXmocking.simplified.CurrencyConversionURLFake" />
       <option name="PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/samples/fakingXmocking" />
       <option name="ENV_VARIABLES" />
@@ -1963,8 +1964,8 @@
       <envs />
       <dir value="$PROJECT_DIR$/samples/fakingXmocking/integration-test" />
       <patterns>
-        <pattern testClass="fakingXmocking.CurrencyConversionIntegrationTest" />
-        <pattern testClass="fakingXmocking.CurrencyConversion2IntegrationTest" />
+        <pattern testClass="fakingXmocking.original.CurrencyConversionIntegrationTest" />
+        <pattern testClass="fakingXmocking.simplified.CurrencyConversionIntegrationTest" />
       </patterns>
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="1067" />
@@ -2508,6 +2509,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://E:/.m2/repository/org/mockito/mockito-all/1.9.0/mockito-all-1.9.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.mockito:mockito-core:1.9.5-rc1">
+      <CLASSES>
+        <root url="jar://E:/.m2/repository/org/mockito/mockito-core/1.9.5-rc1/mockito-core-1.9.5-rc1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://E:/.m2/repository/org/mockito/mockito-core/1.9.5-rc1/mockito-core-1.9.5-rc1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://E:/.m2/repository/org/mockito/mockito-core/1.9.5-rc1/mockito-core-1.9.5-rc1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.objenesis:objenesis:1.0">

@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package fakingXmocking;
+package fakingXmocking.simplified;
 
 import java.io.*;
 import java.math.*;
@@ -14,39 +14,37 @@ import mockit.*;
 
 /**
  * The URL class is used internally by the JRE itself, and we don't want to interfere.
- * Therefore, mock methods in this mock class are <em>reentrant</em> so that they can invoke the original
- * implementation through the {@code it} field, whenever real, not fake, behavior is desired.
+ * Therefore, mock methods in this class proceed back into the original implementation whenever the real, not fake,
+ * behavior is desired.
  */
-@MockClass(realClass = URL.class, instantiation = Instantiation.PerMockedInstance)
-public final class CurrencyConversionURLFake
+public final class CurrencyConversionURLFake extends MockUp<URL>
 {
    private static final BigDecimal DEFAULT_RATE = new BigDecimal("1.2");
    private static final Map<String, BigDecimal> currenciesAndRates = new ConcurrentHashMap<>();
-   public URL it;
 
-   @Mock(reentrant = true)
-   public InputStream openStream() throws IOException
+   @Mock
+   public InputStream openStream(Invocation inv)
    {
-      String host = it.getHost();
+      URL url = inv.getInvokedInstance();
+      String host = url.getHost();
       String response;
 
       switch (host) {
-         case "www.jhall.demon.co.uk":
+         case "www.xe.com":
             response =
-               "<h3>Currency Data</h3>\r\n" +
-               "<table><tr>\r\n" +
-               "  <td valign=top>USD</td>\r\n" +
-               "  <td valign=top>EUR</td>\r\n" +
-               "  <td valign=top>BRL</td>\r\n" +
-               "  <td valign=top>CNY</td>\r\n" +
+               "<table class='currencyTable'><tr>\r\n" +
+               "  <td><a href='/currency/usd'>USD</a></td><td class='x'>Dollar</td>\r\n" +
+               "  <td><a href='/currency/eur'>EUR</a></td><td class='x'>Euro</td>\r\n" +
+               "  <td><a href='/currency/brl'>BRL</a></td><td class='x'>Real</td>\r\n" +
+               "  <td><a href='/currency/cny'>CNY</a></td><td class='x'>Yen</td>\r\n" +
                "</tr></table>";
             break;
          case "www.gocurrency.com":
-            String[] params = it.getQuery().split("&");
+            String[] params = url.getQuery().split("&");
             response = formatResultContainingCurrencyConversion(params);
             break;
          default:
-            return it.openStream();
+            return inv.proceed();
       }
 
       return new ByteArrayInputStream(response.getBytes());

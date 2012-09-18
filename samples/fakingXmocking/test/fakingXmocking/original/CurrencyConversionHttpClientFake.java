@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package fakingXmocking;
+package fakingXmocking.original;
 
 import java.io.*;
 import java.math.*;
@@ -18,11 +18,20 @@ import org.apache.http.message.*;
 
 import mockit.*;
 
-@MockClass(realClass = AbstractHttpClient.class, instantiation = Instantiation.PerMockSetup)
-public final class CurrencyConversionHttpClientFake
+/**
+ * This mock-up class allows the currency conversion code to be tested with a functional/integration test,
+ * without needing actual access to an external web site.
+ * The integration test does not refer to this class, so by default it tests the real thing, including the
+ * part that hits the external web site.
+ * If this class is activated for the test run, however, it will provide a partial alternate implementation
+ * for the {@code AbstractHttpClient} base class, thereby avoiding actual access to the network.
+ *
+ * @see CurrencyConversionIntegrationTest
+ */
+public final class CurrencyConversionHttpClientFake extends MockUp<AbstractHttpClient>
 {
    private static final BigDecimal DEFAULT_RATE = new BigDecimal("1.2");
-   private final Map<String, BigDecimal> currenciesAndRates = new ConcurrentHashMap<String, BigDecimal>();
+   private final Map<String, BigDecimal> currenciesAndRates = new ConcurrentHashMap<>();
 
    @Mock
    public HttpResponse execute(HttpUriRequest req)
@@ -30,14 +39,13 @@ public final class CurrencyConversionHttpClientFake
       URI uri = req.getURI();
       final String response;
 
-      if ("www.jhall.demon.co.uk".equals(uri.getHost())) {
+      if ("www.xe.com".equals(uri.getHost())) {
          response =
-            "<h3>Currency Data</h3>\r\n" +
-            "<table><tr>\r\n" +
-            "  <td valign=top>USD</td>\r\n" +
-            "  <td valign=top>EUR</td>\r\n" +
-            "  <td valign=top>BRL</td>\r\n" +
-            "  <td valign=top>CNY</td>\r\n" +
+            "<table class='currencyTable'><tr>\r\n" +
+            "  <td><a href=\"/currency/usd\">USD</a></td><td class=\"x\">Dollar</td>\r\n" +
+            "  <td><a href=\"/currency/eur\">EUR</a></td><td class=\"x\">Euro</td>\r\n" +
+            "  <td><a href=\"/currency/brl\">BRL</a></td><td class=\"x\">Real</td>\r\n" +
+            "  <td><a href=\"/currency/cny\">CNY</a></td><td class=\"x\">Yen</td>\r\n" +
             "</tr></table>";
       }
       else {
@@ -45,8 +53,7 @@ public final class CurrencyConversionHttpClientFake
          response = formatResultContainingCurrencyConversion(params);
       }
 
-      return new BasicHttpResponse(req.getProtocolVersion(), 200, "OK")
-      {
+      return new BasicHttpResponse(req.getProtocolVersion(), 200, "OK") {
          @Override
          public HttpEntity getEntity() { return createHttpResponse(response); }
       };
