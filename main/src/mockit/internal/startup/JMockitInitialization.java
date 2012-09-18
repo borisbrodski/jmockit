@@ -90,7 +90,14 @@ final class JMockitInitialization
    {
       for (String mockClassName : config.mockClasses) {
          Class<?> mockClass = Utilities.loadClass(mockClassName);
-         new MockClassSetup(mockClass).setUpStartupMock();
+
+         //noinspection UnnecessaryFullyQualifiedName
+         if (mockit.MockUp.class.isAssignableFrom(mockClass)) {
+            Utilities.newInstanceUsingDefaultConstructor(mockClass);
+         }
+         else {
+            new MockClassSetup(mockClass).setUpStartupMock();
+         }
       }
    }
 }
