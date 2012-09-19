@@ -48,6 +48,8 @@ public final class ExpectationsUsingResultFieldTest
       Map<?, ?> getMapItems() { return null; }
       SortedMap<?, ?> getSortedMapItems() { return null; }
       Iterator<?> getIterator() { return null; }
+      ListIterator<?> getListIterator() { return null; }
+      Iterable<?> getIterable() { return null; }
 
       int[] getIntArray() { return null; }
       int[][] getInt2Array() { return null; }
@@ -423,12 +425,10 @@ public final class ExpectationsUsingResultFieldTest
       new NonStrictExpectations() {{
          mock.getListItems(); result = Collections.emptySet();
          mock.getSetItems(); result = new ArrayList();
-         mock.getItems(); result = new byte[0];
       }};
 
       try { mock.getListItems(); fail(); } catch (ClassCastException ignore) {}
-      try { mock.getSetItems();  fail(); } catch (ClassCastException ignore) {}
-      try { mock.getItems();  fail(); } catch (ClassCastException ignore) {}
+      try { mock.getSetItems(); fail(); } catch (ClassCastException ignore) {}
    }
 
    @Test
@@ -437,12 +437,67 @@ public final class ExpectationsUsingResultFieldTest
       new Expectations() {{
          mock.getIterator(); result = Collections.emptySet();
          mock.getIterator(); result = asList("a", true, 123);
-         mock.getIterator(); result = new char[] {'A', 'b'};
       }};
 
       try { mock.getIterator(); fail(); } catch (ClassCastException ignore) {}
       try { mock.getIterator(); fail(); } catch (ClassCastException ignore) {}
-      try { mock.getIterator(); fail(); } catch (ClassCastException ignore) {}
+   }
+
+   @Test
+   public void returnIterableOrIteratorFromRecordedArray(@Injectable final Collaborator mock)
+   {
+      final String[] items = {"Abc", "test"};
+      final int[] listItems = {1, 2, 3};
+      final boolean[] iterable = {false, true};
+      final Boolean[] iterator = {true, false, true};
+      final Object[] listIterator = {"test", 123, true};
+
+      new NonStrictExpectations() {{
+         mock.getItems(); result = items;
+         mock.getListItems(); result = listItems;
+         mock.getSetItems(); result = new char[] {'A', 'c', 'b', 'A'};
+         mock.getSortedSetItems(); result = new Object[] {"test", "123", "abc"};
+         mock.getIterable(); result = iterable;
+         mock.getIterator(); result = iterator;
+         mock.getListIterator(); result = listIterator;
+      }};
+
+      assertEquals(Arrays.toString(items), mock.getItems().toString());
+      assertEquals(Arrays.toString(listItems), mock.getListItems().toString());
+      assertEquals("[A, c, b]", mock.getSetItems().toString());
+      assertEquals("[123, abc, test]", mock.getSortedSetItems().toString());
+      assertEquals(Arrays.toString(iterable), mock.getIterable().toString());
+      assertEquals(asList(iterator), fromIterator(mock.getIterator()));
+      assertEquals(asList(listIterator), fromIterator(mock.getListIterator()));
+   }
+
+   private List<?> fromIterator(Iterator<?> itr)
+   {
+      List<Object> values = new ArrayList<Object>();
+
+      while (itr.hasNext()) {
+         values.add(itr.next());
+      }
+
+      return values;
+   }
+
+   @Test
+   public void returnMapFromRecordedTwoDimensionalArray(
+      @Injectable final Collaborator mock1, @Injectable final Collaborator mock2)
+   {
+      final int[][] sortedItems1 = {{13, 1}, {2, 2}, {31, 3}, {5, 4}};
+      final Object[][] items2 = {{1, "first"}, {2}, {3, true}};
+
+      new NonStrictExpectations() {{
+         mock1.getMapItems(); result = new String[][] {{"Abc", "first"}, {"test", "Second"}, {"Xyz", null}};
+         mock1.getSortedMapItems(); result = sortedItems1;
+         mock2.getMapItems(); result = items2;
+      }};
+
+      assertEquals("{Abc=first, test=Second, Xyz=null}", mock1.getMapItems().toString());
+      assertEquals("{2=2, 5=4, 13=1, 31=3}", mock1.getSortedMapItems().toString());
+      assertEquals("{1=first, 2=null, 3=true}", mock2.getMapItems().toString());
    }
 
    @Test(expected = IllegalArgumentException.class)

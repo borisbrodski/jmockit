@@ -89,28 +89,32 @@ public abstract class Expectations extends Invocations
    /**
     * A value assigned to this field will be taken as the result for the current expectation.
     * <p/>
-    * If the value is a {@link Throwable} then it will be <em>thrown</em> when a matching invocation occurs in the
-    * replay phase.
-    * Otherwise, it's assumed to be a <em>return value</em> for a non-void method, and will be returned at replay time
+    * If the value is a {@link Throwable} then it will be <em>thrown</em> when a matching invocation later occurs.
+    * Otherwise, it's assumed to be a <em>return value</em> for a non-<code>void</code> method, and will be returned
     * from a matching invocation.
-    * If the current expectation is for a method which actually <em>returns</em> an exception or error (as opposed to
+    * Specifying a return value for a constructor or {@code void} method is allowed, with the value simply getting
+    * discarded.
+    * <p/>
+    * If the recorded expectation is for a method which actually <em>returns</em> an exception or error (as opposed to
     * <em>throwing</em> one), then the {@link #returns(Object)} method should be used instead, as it only applies to
     * return values.
     * <p/>
-    * Attempting to return a value that is incompatible with the method return type will cause a
-    * {@code ClassCastException} to be thrown at replay time.
-    * If, however, the recorded invocation is to a constructor or {@code void} method, then a matching invocation during
-    * replay will be allowed, with the specified return value disregarded.
+    * Attempting to return a value whose type differs from the method return type will cause a
+    * {@code ClassCastException} to be thrown at replay time, unless it can be safely converted to the return type.
+    * One such conversion is from an array to a collection or iterator.
+    * Another is from an array of at least two dimensions to a map, with the first dimension providing the keys and the
+    * second the values.
     * <p/>
-    * If the value assigned to the field is an array or of a type assignable to {@link Iterable} or to {@link Iterator},
-    * then it is taken as a sequence of <em>consecutive results</em> for the current expectation, as long as the method
-    * return type is not itself of an equivalent array/iterable/iterator type.
+    * Additionally, if the value assigned to the field is an array or is of a type assignable to {@link Iterable} or
+    * {@link Iterator}, and the return type is single-valued, then the assigned multi-valued result is taken as a
+    * sequence of <em>consecutive results</em> for the expectation.
     * Another way to specify consecutive results is to simply write multiple consecutive assignments to the field, for
     * the same expectation.
     * <p/>
     * Finally, custom results can be provided through a {@linkplain mockit.Delegate} object assigned to the field.
     * <p/>
-    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#results">In the Tutorial</a>
+    * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#results">In the
+    * Tutorial</a>
     *
     * @see #returns(Object)
     * @see #returns(Object, Object...)

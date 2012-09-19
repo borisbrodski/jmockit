@@ -244,27 +244,98 @@ final class Expectation
       }
 
       boolean valueIsArray = value != null && value.getClass().isArray();
-      boolean valueIsIterable = value instanceof Iterable<?>;
 
-      if (valueIsArray || valueIsIterable || value instanceof Iterator<?>) {
+      if (valueIsArray || value instanceof Iterable<?> || value instanceof Iterator<?>) {
          Class<?> rt = getReturnType();
 
-         if (rt == null || rt == Object.class || hasReturnOfDifferentType(rt, value)) {
-            if (valueIsArray) {
-               getResults().addResults(value);
-            }
-            else if (valueIsIterable) {
-               getResults().addResults((Iterable<?>) value);
-            }
-            else {
-               getResults().addDeferredResults((Iterator<?>) value);
-            }
-
+         if (rt == null || rt == Object.class) {
+            addMultiValuedResult(value, valueIsArray);
+            return;
+         }
+         else if (valueIsArray && addCollectionOrMapWithElementsFromArray(value, rt)) {
+            return;
+         }
+         else if (hasReturnOfDifferentType(rt, value)) {
+            addMultiValuedResult(value, valueIsArray);
             return;
          }
       }
 
       addSingleReturnValue(value);
+   }
+
+   private void addMultiValuedResult(Object value, boolean valueIsArray)
+   {
+      if (valueIsArray) {
+         getResults().addResults(value);
+      }
+      else if (value instanceof Iterable<?>) {
+         getResults().addResults((Iterable<?>) value);
+      }
+      else {
+         getResults().addDeferredResults((Iterator<?>) value);
+      }
+   }
+
+   private boolean addCollectionOrMapWithElementsFromArray(Object array, Class<?> returnType)
+   {
+      int n = Array.getLength(array);
+      Object values = null;
+
+      if (returnType.isAssignableFrom(ListIterator.class)) {
+         List<Object> list = new ArrayList<Object>(n);
+         addArrayElements(list, array, n);
+         values = list.listIterator();
+      }
+      else if (returnType.isAssignableFrom(List.class)) {
+         values = addArrayElements(new ArrayList<Object>(n), array, n);
+      }
+      else if (returnType.isAssignableFrom(Set.class)) {
+         values = addArrayElements(new LinkedHashSet<Object>(n), array, n);
+      }
+      else if (returnType.isAssignableFrom(SortedSet.class)) {
+         values = addArrayElements(new TreeSet<Object>(), array, n);
+      }
+      else if (returnType.isAssignableFrom(Map.class)) {
+         values = addArrayElements(new LinkedHashMap<Object, Object>(n), array, n);
+      }
+      else if (returnType.isAssignableFrom(SortedMap.class)) {
+         values = addArrayElements(new TreeMap<Object, Object>(), array, n);
+      }
+
+      if (values != null) {
+         getResults().addReturnValue(values);
+         return true;
+      }
+
+      return false;
+   }
+
+   private Object addArrayElements(Collection<Object> values, Object array, int elementCount)
+   {
+      for (int i = 0; i < elementCount; i++) {
+         Object value = Array.get(array, i);
+         values.add(value);
+      }
+
+      return values;
+   }
+
+   private Object addArrayElements(Map<Object, Object> values, Object array, int elementPairCount)
+   {
+      for (int i = 0; i < elementPairCount; i++) {
+         Object keyAndValue = Array.get(array, i);
+
+         if (keyAndValue == null || !keyAndValue.getClass().isArray()) {
+            return null;
+         }
+
+         Object key = Array.get(keyAndValue, 0);
+         Object value = Array.getLength(keyAndValue) > 1 ? Array.get(keyAndValue, 1) : null;
+         values.put(key, value);
+      }
+
+      return values;
    }
 
    void setCustomErrorMessage(CharSequence message) { invocation.customErrorMessage = message; }
