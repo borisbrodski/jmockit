@@ -77,8 +77,9 @@
          <li><a href="#iterations">Verifying iterations</a></li>
       </ol>
    </li>
-   <li><a href="#delegates">Delegates: specifying custom results and capturing arguments</a></li>
+   <li><a href="#delegates">Delegates: specifying custom results</a></li>
    <li><a href="#forEachInvocation">Validating invocation arguments</a></li>
+   <li><a href="#withCapture">Capturing invocation arguments for verification</a></li>
    <li><a href="#deencapsulation">Accessing private fields, methods and constructors</a></li>
    <li>
       <a href="#partial">Partial mocking</a>
@@ -1681,7 +1682,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 </p>
 
 <h3 id="delegates">
-   Delegates: specifying custom results and capturing arguments
+   Delegates: specifying custom results
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
@@ -1691,31 +1692,26 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    </div>
 </h3>
 <p>
-   We have seen how to record results for invocations through assignments to the
-   <code><em>result</em></code> field or calls to the <code>returns(...)</code> methods.
-   We have also seen how to match invocation arguments flexibly with the <code>withXyz(...)</code>
-   group of methods and the various <code><em>anyXyz</em></code> fields.
-   But what if a test needs to decide the result of a recorded invocation based on the arguments it
-   will receive at replay time?
+   We have seen how to record results for invocations through assignments to the <code><em>result</em></code> field or
+   calls to the <code>returns(...)</code> method.
+   We have also seen how to match invocation arguments flexibly with the <code>withXyz(...)</code> group of methods and
+   the various <code><em>anyXyz</em></code> fields.
+   But what if a test needs to decide the result of a recorded invocation based on the arguments it will receive at
+   replay time?
    We can do it through a <code class="type">mockit.Delegate</code> instance, as exemplified below.
 </p>
 <pre><code>   @Test
    public void someTestMethod()
    {
-      new Expectations()
-      {
+      new Expectations() {
          @NonStrict DependencyAbc abc;
 
          {
             abc.intReturningMethod(<em>anyInt</em>, null);
-            <em>result</em> = <strong>new Delegate()
-            {
-               // The name of this method can actually be anything.
-               int intReturningMethod(int i, String s)
+            <em>result</em> = <strong>new Delegate() {
+               int aDelegateMethod(int i, String s)
                {
-                  assertTrue(i > 0);
-                  assertEqual(i == 1 ? "one" : "other", s);
-                  return i + 1;
+                  return i == 1 ? i : s.length();
                }
             }</strong>;
          }
@@ -1725,24 +1721,23 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    }
 </code></pre>
 <p>
-   The <code class="type">Delegate</code> interface is empty, being used simply to tell JMockit that actual
-   invocations at replay time should be delegated to the corresponding methods in the delegate object.
+   The <code class="type">Delegate</code> interface is empty, being used simply to tell JMockit that actual invocations
+   at replay time should be delegated to the "delegate" method in the assigned object.
+   This method can have any name, provided it is the only one in the delegate object; otherwise, it must have the same
+   name as the method for which the expectation is recorded.
+   As for the parameters of the delegate method, they should either match the parameters of the recorded method, or
+   there should be none.
+   In any case, the delegate method is allowed to have an additional parameter of type
+   <code class="type">Invocation</code> as its first parameter.
+   (The <code class="type">Invocation</code> object received during replay will provide access to the invoked instance
+   and the actual invocation arguments, along with other abilities.)
+   The return type of a delegate method doesn't have to be the same as the recorded method, although it should be
+   compatible in order to avoid a <code class="type">ClassCastException</code> later.
 </p>
 <p>
-   A corresponding method in the delegate implementation must have parameters matching the method
-   in the mocked type for which an invocation is being recorded.
-   The name of this delegate method can be different though, provided it is the <em>only one</em>
-   defined in the delegate implementation class.
-   If the class has two or more methods (with <em>any</em> modifiers), then one of them will have
-   to match both the name and the parameters of the corresponding recorded method.
-   Note that the return type of a delegate method does not have to be exactly the same, since it's
-   not part of the method signature. It should be compatible, though, otherwise a
-   <code class="type">ClassCastException</code> is likely.
-   Note also that this can de done for non-<code>public</code> methods and even for
-   <code>static</code>, <code>final</code>, and <code>native</code> mocked methods.
-</p>
-<p>
-   The following example test shows a <em>constructor</em> invocation being delegated in a reusable
+   Constructors can also be handled through delegate <em>methods</em>, except that such methods must be named
+   "<code>$init</code>".
+   The following example test shows a constructor invocation being delegated through a reusable
    <code class="type">Delegate</code> class, which saves an argument value for later verification in the test.
 </p>
 <pre><code>   @Test
@@ -1750,8 +1745,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    {
       <strong>final ConstructorDelegate delegate = new ConstructorDelegate();</strong>
 
-      new Expectations()
-      {
+      new Expectations() {
          Collaborator mock;
 
          {
@@ -1767,13 +1761,9 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    <strong>static class ConstructorDelegate implements Delegate
    {
       int capturedArgument;
-
       void $init(int i) { capturedArgument = i; }
    }</strong>
 </code></pre>
-<p>
-   Constructors are also handled by delegate <em>methods</em>, except that such methods must be named "$init".
-</p>
 
 <h3 id="forEachInvocation">
    Validating invocation arguments
@@ -1782,7 +1772,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
       <a href="#delegates"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#deencapsulation"><img align="right" src="go-down.png" title="Next section"></a>
+      <a href="#withCapture"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
@@ -1790,8 +1780,8 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    to expectation blocks.
    Besides, the main point of delegate methods is to specify <em>invocation results</em> (values to return or exceptions
    to throw) at replay time, based on the arguments received.
-   If the actual need is to validate the arguments passed at replay time in each invocation matching
-   an expectation, the <strong><code>forEachInvocation</code></strong> field should be used instead.
+   If the actual need is to validate the arguments passed at replay time in each invocation matching an expectation, the
+   <strong><code>forEachInvocation</code></strong> field can be used instead.
    Such validations can be specified not only in expectation blocks, but also in verification blocks.
    For example, consider the following test:
 </p>
@@ -1799,43 +1789,102 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
    public void verifyExpectationWithArgumentValidatorForEachInvocation(final Collaborator mock)
    {
       // Inside tested code:
-      new Collaborator().doSomething(true, new int[2], "test");
+      new Collaborator().doSomething(0.5, new int[2], "test");
 
       new Verifications() {{
-         mock.doSomething(<em>anyBoolean</em>, null, null);
-         <strong><em>forEachInvocation</em> = new Object()
-         {
-            void validate(Boolean b, int[] i, String s)
+         mock.doSomething(<em>anyDouble</em>, null, null);
+         <strong><em>forEachInvocation</em> = new Object() {
+            void validate(double d, int[] i, String s)
             {
-               assertTrue(b);
+               assertTrue(d > 0.0);
                assertEquals(2, i.length);
-               assertEquals("test", s);
+               assertTrue(s.length() > 1);
             }
          };</strong>
       }};
    }
 </code></pre>
 <p>
-   In this test, all invocations to the <code>Collaborator#doSomething</code> method that occur during the replay phase
-   and that match the verified expectation will be validated by a call to the specified
+   In this test, <em>each</em> and every invocation to the <code>Collaborator#doSomething</code> method that occurs
+   during the replay phase and that matches the verified expectation will be validated by a call to the specified
    <strong><code>validate</code></strong> method.
    Each such call will be made with the same arguments that the verified method/constructor received at replay time.
-   In this particular example, the verified expectation matches invocations with any arguments, but
-   more strict argument matchers could have been used.
+   In this particular example, the verified expectation matches invocations with any arguments, but more strict argument
+   matchers could have been used.
 </p>
 <p>
    Differently from <code class="type">Delegate</code> implementations, the object assigned to the
    <code>forEachInvocation</code> field can be of any type.
-   The implementation class, however, should define exactly one non-<code>private</code> method of any name, with the
-   same number of parameters as the validated method/constructor (any number of additional <code>private</code> methods
-   is allowed).
-   The types of corresponding parameters don't have to be exactly the same, but they must be 
-   compatible in order to avoid the potential for <code class="type">ClassCastException</code>'s.
+   The implementation class should define exactly one non-<code>private</code> method of any name, with the same number
+   of parameters as the validated method/constructor or no parameters at all.
+   Any number of additional <code>private</code> methods is allowed.
+   The types of corresponding parameters don't have to be exactly the same, but they must be compatible in order to
+   avoid the potential for <code class="type">ClassCastException</code>'s.
 </p>
 <p>
-   Optionally, a first parameter of type <code class="type">mockit.Invocation</code> can be declared in the
-   validation method, which should still have the remaining parameters. The semantics in this case
-   are the same as in the case of a <code class="type">Delegate</code> method with that same special parameter.
+   Optionally, a first parameter of type <code class="type">mockit.Invocation</code> can be declared in the validation
+   method.
+   The semantics in this case are the same as in the case of a <code class="type">Delegate</code> method with that same
+   special parameter.
+</p>
+
+<h3 id="withCapture">
+   Capturing invocation arguments for verification
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
+      <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
+      <a href="#forEachInvocation"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#deencapsulation"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
+<p>
+   Although the use of validation methods with the <code>forEachInvocation</code> field provides all the flexibility
+   one may need, it can look somewhat verbose.
+   A more succinct alternative is provided by a pair of special "<code>withCapture</code>" methods, as the following
+   example tests demonstrate.
+</p>
+<pre><code>   @Test
+   public void capturingArgumentsFromSingleInvocation()
+   {
+      // Inside tested code:
+      new Collaborator().doSomething(0.5, new int[2], "test");
+
+      new Verifications() {{
+         double d;
+         String s;
+         mock.doSomething(d = withCapture(), null, s = withCapture());
+         assertTrue(d > 0.0);
+         assertTrue(s.length() > 1);
+      }};
+   }
+</code></pre>
+<p>
+   The <code>withCapture()</code> method can only be used in verification blocks, when a single matching invocation is
+   expected to occur.
+   It is particularly useful with parameters of a complex type, which may contain several items whose values need to be
+   checked.
+   If multiple matching invocations are expected, then the <code>withCapture(List)</code> method should be used instead:
+</p>
+<pre><code>   @Test
+   public void capturingArgumentsFromMultipleInvocations(@Mocked final Collaborator mock)
+   {
+      mock.doSomething(dataObject1);
+      mock.doSomething(dataObject2);
+
+      new Verifications() {{
+         List&lt;DataObject> dataObjects = new ArrayList<>();
+         mock.doSomething(withCapture(dataObjects));
+         assertEquals(2, dataObjects.size());
+         DataObject data1 = dataObjects.get(0);
+         DataObject data2 = dataObjects.get(1);
+         // Perform arbitrary assertions on data1 and data2.
+      }};
+   }
+</code></pre>
+<p>
+   Differently from <code>withCapture()</code>, the <code>withCapture(List)</code> overload can also be used in
+   expectation recording blocks.
 </p>
 
 <h3 id="deencapsulation">
@@ -1844,7 +1893,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocked"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
-      <a href="#forEachInvocation"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#withCapture"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#partial"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
