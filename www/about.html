@@ -218,13 +218,17 @@
    convoluted, lacks cohesion, and so on and so forth.
 </p>
 <p>
-   Therefore, by eliminating the technical limitations traditionally involved in the isolation of an unit from its
+   Therefore, by eliminating the technical limitations traditionally involved in the isolation of a unit from its
    dependencies, we get the benefit that no artificial design restrictions must be imposed on production code for the
    sake of unit testing.
    Additionally, it becomes possible to write unit tests for legacy code, without the need for any prior adaptation or
    refactoring.
-   In short, with a less restrictive mock testing tool the <em>testability</em> of production code becomes much less of
-   an issue, and developers get more freedom in using Java language features, as well as more design choices.
+   The ability to create automated regression tests for existing code before <em>refactoring</em> it is extremely
+   valuable, as implied by the very <a href="http://martinfowler.com/bliki/DefinitionOfRefactoring.html">definition</a>
+   of the term.
+   In short, with a less restrictive mock testing tool the <em>testability</em> of production code becomes less of an
+   issue, giving developers more freedom to use the language and more design choices when creating new code, while
+   facilitating the initial creation of tests for legacy code.
 </p>
 <p>
    Another way of thinking about testability is to differentiate between <em>intrinsic</em> and <em>extrinsic</em>
@@ -249,8 +253,8 @@
 </p>
 <p>
    In the following discussion, five different mocking toolkits (besides JMockit) are considered, all in their latest
-   stable releases as of May 9, 2011: <strong>EasyMock 3.0</strong>, <strong>jMock 2.5.1</strong>,
-   <strong>Mockito 1.8.5</strong>, <strong>PowerMock 1.4.9</strong>, and <strong>Unitils 3.1</strong>.
+   stable releases as of Sep 19, 2012: <strong>EasyMock 3.1</strong>, <strong>jMock 2.5.1</strong>,
+   <strong>Mockito 1.9.0</strong>, <strong>PowerMock 1.4.12</strong>, and <strong>Unitils 3.3</strong>.
    The code snippets below come from the sample JMockit test suites that compare the JMockit approach with those other
    toolkits.
 </p>
@@ -572,22 +576,21 @@
    and becomes the <em>record-replay-verify</em> model for behavior-based testing.
 </p>
 <p>
-   By default, all expectations recorded inside an <code>Expectations</code> block are <em>strict</em>, which means
-   that for each expectation recorded a matching invocation must be executed during the replay phase of the test, and
-   in the same order as recorded.
+   By default, all expectations recorded inside an <code class="type">Expectations</code> block are <em>strict</em>,
+   which means that for each expectation recorded a matching invocation must be executed during the replay phase of the
+   test, and in the same order as recorded.
    Additionally, if during the replay phase an <em>unexpected</em> invocation (ie, one not matching a recorded strict
    expectation) to one of the mocked types/instances is detected, then an assertion error will be thrown.
    (The number of invocations for each strict expectation is flexible, though, since lower/upper limits can be specified
    individually.)
 </p>
 <p>
-   Inside an <code>Expectations</code> block, however, individual expectations can be marked as being
-   <em>non-strict</em>.
-   When all invocations to a given mocked type should be non-strict, the <strong><code>@NonStrict</code></strong>
-   annotation can be used.
+   Inside an expectation block, however, individual expectations can be marked as being <em>non-strict</em>.
+   When all invocations to a given mocked type should be non-strict, the
+   <strong><code class="annotation">@NonStrict</code></strong> annotation can be used.
    Finally, if all expectations to be recorded (on one or more mocked types/instances in scope for the same test) should
-   be non-strict, the <strong><code>NonStrictExpectations</code></strong> class can be used instead of
-   <code>Expectations</code>.
+   be non-strict, the <strong><code class="type">NonStrictExpectations</code></strong> class can be used instead of
+   <code class="type">Expectations</code>.
 </p>
 <p>
    A non-strict expectation, then, is one that by default can be invoked any number of times (including zero) during the
@@ -601,7 +604,8 @@
    All other invocations, on the other hand, can be <em>verified</em> to have occurred (or not) <em>after</em> the
    replay phase, in the same place regular JUnit assertions would be.
    This is done in the <em>verification</em> phase of the test, which is demarcated by a
-   <strong><code>Verifications</code></strong> block (or a variant, such as <code>VerificationsInOrder</code>).
+   <strong><code class="type">Verifications</code></strong> block (or a variant, such as
+   <code class="type">VerificationsInOrder</code>).
    It's also possible to have <em>no</em> expectations recorded for a given test, in which case there will be no
    expectation block in the test method, but only the verification block.
 </p>
@@ -643,9 +647,9 @@
    This is a different kind of mocking API, which can be seen as complementary to the Expectations & Verifications API.
    Instead of specifying expectations on the invocations made from code under test to its collaborators,
    <em>mock classes</em> are defined and applied for the scope of a single test method or a whole test class.
-   Inside these mock classes, <em>mock methods</em> (indicated as such with the <strong><code>@Mock</code></strong>
-   annotation) are directly implemented with code that will be executed instead of the original code for the
-   corresponding <em>mocked method/constructor</em>.
+   Inside these mock classes, <em>mock methods</em> (indicated as such with the
+   <strong><code class="annotation">@Mock</code></strong> annotation) are directly implemented with code that will be
+   executed instead of the original code for the corresponding <em>mocked method/constructor</em>.
    In addition, constraints on the number of expected invocations for each mock method can be specified, and mock
    methods can be made to be <em>re-entrant</em>.
 </p>
@@ -655,8 +659,7 @@
    public void testDoOperationAbc()
    {
       // A "mock-up" class, defined and applied at the same time:
-      new MockUp&lt;DependencyXyz>()
-      {
+      new MockUp&lt;DependencyXyz>() {
          @Mock(invocations = 1)
          int doSomething(String value)
          {
@@ -694,26 +697,29 @@
       Running tests with JMockit Coverage does not require the use of any particular command line script, Ant task, or
       IDE plug-in.
       The tool applies the idea of convention over configuration, trying to make it as easy as possible for the
-      developer to run tests with code coverage: by simply adding one jar file to the classpath, or by specifying
-      certain initialization parameters to the JVM (plus having the main coverage jar file in the classpath).
+      developer to run tests with code coverage: by simply adding one jar file to the classpath, and optionally
+      specifying certain initialization parameters to the JVM (system properties settable with "<code>-D</code>" or its
+      Ant/Maven equivalent).
    </li>
    <li>
       No need to specify which classes should be considered for coverage (it still can be specified if needed, though).
       All code under test will automatically be analyzed for coverage.
       Specifically, the tool will gather coverage data for all production code executed by the test suite, excluding
-      classes defined inside jar files (on the assumption that such code belongs to libraries used by code under test).
+      classes defined inside jar files (on the assumption that such code belongs to libraries used by the code under
+      test).
    </li>
    <li>
-      A serialized output file and/or an HTML report can be generated at the end of each test run with no extra
-      configuration beyond adding the relevant jar files to the classpath (at least one
-      <code>jmockit-coverage-xyz.jar</code> file).
+      An HTML report and/or a serialized output file can be easily generated at the end of each test run.
+      The first requires no extra configuration as it is the default form of coverage output; the second only requires
+      the trivial effort of setting the "<code>jmockit-coverage-output</code>" system property.
       For the generation of the HTML report, Java source files are automatically searched in all "src" directories
       under the working directory.
    </li>
    <li>
       In code coverage reports, each line of production code can be accurately linked to the lines
       in test code which caused their execution, for each individual execution of each line of code.
-      (This feature is optional, however, because of the higher runtime cost and the larger resulting HTML report.)
+      (This feature is inactive by default, however, because of the higher runtime cost and the larger resulting HTML
+      report.)
    </li>
    <li>
       Besides a <em>line coverage</em> metric, a <em>path coverage</em> metric is also made available.
@@ -722,8 +728,8 @@
       report.
    </li>
    <li>
-      <strong>Intra-line</strong> coverage is provided, with the appropriate red/green coloring in the HTML report for
-      each conditionally executed line segment.
+      <em>Intra-line</em> coverage is provided, with the appropriate red/green coloring in the HTML report for each
+      conditionally executed line segment.
    </li>
 </ol>
 <hr/>
