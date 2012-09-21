@@ -103,7 +103,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
       printIndent();
       output.print("  <td colspan='");
       output.print(Metrics.amountActive());
-      output.println("' class='coverage unknown'>?</td>");
+      output.println("' class='unknown'>?</td>");
    }
 
    private void writeTableCellWithFileName(int fileNameLen)
@@ -135,4 +135,7 @@ final class PackageCoverageReport extends ListWithFilesAndPercentages
 
       printCoveragePercentage(metric, covered, total, percentage);
    }
+
+   @Override
+   protected void writeClassAttributeForCoveragePercentageCell() {}
 }

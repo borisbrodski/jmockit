@@ -56,13 +56,13 @@ abstract class ListWithFilesAndPercentages
    final void printCoveragePercentage(Metrics metric, int covered, int total, int percentage)
    {
       printIndent();
-      output.write("  <td class='coverage");
+      output.write("  <td ");
 
       if (total > 0) {
          writeRowCellWithCoveragePercentage(metric, covered, total, percentage);
       }
       else {
-         output.write(" nocode'>N/A");
+         output.write("class='nocode'>N/A");
       }
 
       output.println("</td>");
@@ -70,7 +70,8 @@ abstract class ListWithFilesAndPercentages
 
    private void writeRowCellWithCoveragePercentage(Metrics metric, int covered, int total, int percentage)
    {
-      output.write("' style='background-color:#");
+      writeClassAttributeForCoveragePercentageCell();
+      output.write("style='background-color:#");
       output.write(CoveragePercentage.percentageColor(covered, total));
       output.write("' title='");
       output.write(metric.itemName());
@@ -82,6 +83,8 @@ abstract class ListWithFilesAndPercentages
       writePercentageValue(covered, total, percentage);
       output.print("%");
    }
+
+   protected abstract void writeClassAttributeForCoveragePercentageCell();
 
    private void writePercentageValue(int covered, int total, int percentage)
    {

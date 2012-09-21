@@ -173,9 +173,15 @@ public final class IndexPage extends ListWithFilesAndPercentages
    private void writeTableCellWithPackageName()
    {
       printIndent();
-      output.write(
-         packageToFiles.get(packageName).size() > 1 ?
-            "  <td class='package click' onclick='showHideFiles(this)'>" : "  <td class='package'>");
+      output.write("  <td class='file");
+
+      List<String> filesInPackage = packageToFiles.get(packageName);
+
+      if (filesInPackage.size() > 1) {
+         output.write(" click' onclick='showHideFiles(this)");
+      }
+
+      output.write("'>");
       output.write(packageName.replace('/', '.'));
       output.println("</td>");
    }
@@ -231,5 +237,11 @@ public final class IndexPage extends ListWithFilesAndPercentages
       int filePercentage = packageToPackagePercentages.get(packageName)[metric.ordinal()];
 
       printCoveragePercentage(metric, coveredInPackage, totalInPackage, filePercentage);
+   }
+
+   @Override
+   protected void writeClassAttributeForCoveragePercentageCell()
+   {
+      output.write("class='pt' ");
    }
 }

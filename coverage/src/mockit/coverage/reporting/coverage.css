@@ -54,24 +54,25 @@ td.comment, .imports { cursor: row-resize; }
 .instance { font-weight: bold; }
 .static { font-weight: bold; font-style: italic; }
 
-td.package, td.file {
+td.file {
    background-color: #e0e0e0; padding: 2px; border-bottom: white solid 1px;
 }
 .click { cursor: row-resize; }
-td.file { font-family: monospace; white-space: pre; }
+table#packages table td.file { font-family: monospace; white-space: pre; }
 
-td.coverage {
+td.pt, table#packages table td {
    font-size: 0.95em; width: 2.875em; text-align: right;
    border-bottom: white solid 1px; padding-right: 2px;
 }
 
-.total td {
+tr.total td {
    text-align: right; font-weight: bold; background-color: #e0e0e0;
-   border-bottom: none;
+   padding-right: 2px; border-bottom: none;
 }
 
-td.unknown { background-color: #daa520; text-align: center; }
-td.nocode { background-color: #999999; text-align: center; }
+table#packages table td.unknown { background-color: #daa520; text-align: center; }
+td.nocode { background-color: #999999; text-align: center; border-bottom: white solid 1px; }
+table#packages table td.nocode { text-align: center; }
 
 pre.jmp { background-color: #f8ebb8; }
 pre.jmp span { display: table-cell; }
