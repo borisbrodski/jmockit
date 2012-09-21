@@ -2,11 +2,12 @@
  * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
-package org.jdesktop.animation.timing;
+package end2end;
 
 import java.awt.*;
 import javax.swing.*;
 
+import org.jdesktop.animation.timing.*;
 import org.jdesktop.animation.timing.interpolation.*;
 
 import org.junit.*;
