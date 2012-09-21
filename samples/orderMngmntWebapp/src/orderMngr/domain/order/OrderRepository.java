@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package orderMngr.domain.order;
@@ -8,7 +8,6 @@ import java.math.*;
 import java.sql.*;
 import java.util.*;
 
-import orderMngr.service.*;
 import static orderMngr.service.Database.*;
 
 public final class OrderRepository
@@ -17,10 +16,10 @@ public final class OrderRepository
    {
       String sql = "insert into order (number, customer_id) values (?, ?)";
       int orderNo = order.getNumber();
-      Database.executeInsertUpdateOrDelete(sql, orderNo, order.getCustomerId());
+      executeInsertUpdateOrDelete(sql, orderNo, order.getCustomerId());
 
       for (OrderItem item : order.getItems()) {
-         Database.executeInsertUpdateOrDelete(
+         executeInsertUpdateOrDelete(
             "insert into order_item (order_no, product_id, product_desc, quantity, unit_price) values (?, ?, ?, ?, ?)",
             orderNo, item.getProductId(), item.getProductDescription(), item.getQuantity(),
             item.getUnitPrice());
@@ -30,13 +29,13 @@ public final class OrderRepository
    public void update(Order order)
    {
       String sql = "update order set customer_id=? where number=?";
-      Database.executeInsertUpdateOrDelete(sql, order.getCustomerId(), order.getNumber());
+      executeInsertUpdateOrDelete(sql, order.getCustomerId(), order.getNumber());
    }
 
    public void remove(Order order)
    {
       String sql = "delete from order where number=?";
-      Database.executeInsertUpdateOrDelete(sql, order.getNumber());
+      executeInsertUpdateOrDelete(sql, order.getNumber());
    }
 
    public Order findByNumber(int orderNumber)
@@ -76,8 +75,6 @@ public final class OrderRepository
             order.getNumber());
 
       try {
-         Collection<OrderItem> items = order.getItems();
-
          while (result.next()) {
             String productId = result.getString(1);
             String productDescription = result.getString(2);
@@ -85,7 +82,7 @@ public final class OrderRepository
             BigDecimal unitPrice = result.getBigDecimal(4);
 
             OrderItem item = new OrderItem(order, productId, productDescription, quantity, unitPrice);
-            items.add(item);
+            order.getItems().add(item);
          }
       }
       finally {

@@ -19,6 +19,7 @@ public final class OrderFindersTest
 {
    @NonStrict final Database db = null;
    @Mocked ResultSet rs;
+   @Tested OrderRepository repository;
    Order order;
 
    @Test
@@ -26,52 +27,59 @@ public final class OrderFindersTest
    {
       // Set up state.
       order = new Order(1, "test");
-      OrderItem orderItem = new OrderItem(order, "343443", "Some product", 3, new BigDecimal(5));
+      final OrderItem orderItem = new OrderItem(order, "343443", "Some product", 3, new BigDecimal(5));
       order.getItems().add(orderItem);
 
-      // Record expectations:
+      // Expectations for the first database query, which loads order data:
+      new Expectations() {{
+         Database.executeQuery(withSubstring("where number="), order.getNumber());
+         result = rs;
+
+         rs.next(); result = true;
+         rs.getString(1); result = order.getCustomerId();
+      }};
+
+      // Expectations for the second query, which loads the order items:
       new Expectations() {
-         ResultSet rs2;
+         ResultSet rsItems;
 
          {
-            Database.executeQuery("select customer_id from order where number=?", order.getNumber());
-            result = rs;
-
-            rs.next(); result = true;
-            rs.getString(1); result = order.getCustomerId();
-
             Database.executeQuery(withMatch("select .+ from order_item where .+"), order.getNumber());
-            result = rs2;
+            result = rsItems;
 
-            rs2.next(); result = true;
-            rs2.getString(1);
-            rs2.getString(2);
-            rs2.getInt(3);
-            rs2.getBigDecimal(4);
-            rs2.next(); result = false;
+            rsItems.next(); result = true;
+            rsItems.getString(1); result = orderItem.getProductId();
+            rsItems.getString(2); result = orderItem.getProductDescription();
+            rsItems.getInt(3); result = orderItem.getQuantity();
+            rsItems.getBigDecimal(4); result = orderItem.getUnitPrice();
+
+            rsItems.next(); result = false;
          }
       };
 
       // Exercise code under test:
-      Order found = new OrderRepository().findByNumber(order.getNumber());
+      Order found = repository.findByNumber(order.getNumber());
 
       // Verify results:
       assertEquals(order, found);
+      assertEquals(1, found.getItems().size());
+      assertEquals(orderItem, found.getItems().get(0));
    }
 
    @Test
-   public void findOrderByCustomer(@Mocked("loadOrderItems") final OrderRepository repository) throws Exception
+   public void findOrderByCustomer() throws Exception
    {
       final String customerId = "Cust";
       order = new Order(890, customerId);
 
-      new Expectations() {{
+      new Expectations(repository) {{
          Database.executeQuery(withMatch("select.+from\\s+order.*where.+customer_id\\s*=\\s*\\?"), customerId);
          result = rs;
 
          rs.next(); result = true;
          rs.getInt(1); result = order.getNumber();
          invoke(repository, "loadOrderItems", order);
+
          rs.next(); result = false;
       }};
 

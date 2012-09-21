@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package orderMngr.service;
@@ -7,13 +7,20 @@ package orderMngr.service;
 import java.sql.*;
 
 /**
- * A static facade for database access through JDBC. It assumes the application can use a single
- * global DB connection. (This class is just for the sake of demonstration; in the real world,
- * direct use of JDBC like this is not too practical.)
+ * A static facade for database access through JDBC.
+ * It assumes the application can use a single global DB connection.
+ * <p/>
+ * This class is just for the sake of demonstrating the capabilities of the available mocking APIs.
+ * In the real world, such direct use of JDBC is not a practical approach, leading to long and complicated methods,
+ * with excessive amounts of mocking in the corresponding unit tests.
+ * A better approach is to use a higher-level abstraction for access to persistent state, which allows both production
+ * and test code to be significantly smaller.
  */
 public final class Database
 {
    private static Connection connection;
+
+   private Database() {}
 
    public static synchronized Connection connection()
    {

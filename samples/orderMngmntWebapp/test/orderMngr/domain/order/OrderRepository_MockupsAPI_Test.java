@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package orderMngr.domain.order;
@@ -18,14 +18,15 @@ import static org.junit.Assert.*;
 
 /**
  * State-based unit tests for the OrderRepository class, which depends on the {@linkplain Database} class.
- * The tests use mocks to simulate the interaction between OrderRepository and Database.
+ * The tests use mocks to simulate the interaction between {@code OrderRepository} and {@code Database}.
  */
 public final class OrderRepository_MockupsAPI_Test
 {
-   private static PreparedStatement proxyStmt;
-   private static ResultSet proxyRS;
-   private Order order;
-   private OrderItem orderItem;
+   static PreparedStatement proxyStmt;
+   static ResultSet proxyRS;
+   Order order;
+   OrderItem orderItem;
+   @Tested OrderRepository repository;
 
    @Test
    public void createOrder()
@@ -34,8 +35,7 @@ public final class OrderRepository_MockupsAPI_Test
       orderItem = new OrderItem(order, "Prod", "Some product", 3, new BigDecimal("5.20"));
       order.getItems().add(orderItem);
 
-      new MockUp<Database>()
-      {
+      new MockUp<Database>() {
          boolean orderInserted;
 
          @Mock(invocations = 2)
@@ -59,7 +59,7 @@ public final class OrderRepository_MockupsAPI_Test
          }
       };
 
-      new OrderRepository().create(order);
+      repository.create(order);
    }
 
    @Test
@@ -67,8 +67,7 @@ public final class OrderRepository_MockupsAPI_Test
    {
       order = new Order(1, "test");
 
-      new MockUp<Database>()
-      {
+      new MockUp<Database>() {
          @Mock(invocations = 1)
          void executeInsertUpdateOrDelete(String sql, Object... args)
          {
@@ -80,7 +79,7 @@ public final class OrderRepository_MockupsAPI_Test
          }
       };
 
-      new OrderRepository().update(order);
+      repository.update(order);
    }
 
    @Test
@@ -88,8 +87,7 @@ public final class OrderRepository_MockupsAPI_Test
    {
       order = new Order(35, "remove");
 
-      new MockUp<Database>()
-      {
+      new MockUp<Database>() {
          @Mock(minInvocations = 1, maxInvocations = 1) // equivalent to "invocations = 1"
          void executeInsertUpdateOrDelete(String sql, Object... args)
          {
@@ -98,7 +96,7 @@ public final class OrderRepository_MockupsAPI_Test
          }
       };
 
-      new OrderRepository().remove(order);
+      repository.remove(order);
    }
 
    @Test
@@ -108,20 +106,21 @@ public final class OrderRepository_MockupsAPI_Test
       orderItem = new OrderItem(order, "343443", "Some product", 3, new BigDecimal(5));
       order.getItems().add(orderItem);
 
-      setUpMocks(MockDatabase.class);
-
-      setUpMock(MockDatabase.connection().getClass(), new Object()
-      {
+      final Connection connection = new MockUp<Connection>() {
          @Mock
          PreparedStatement prepareStatement(String sql)
          {
             assertNotNull(sql);
             return proxyStmt;
          }
-      });
+      }.getMockInstance();
 
-      proxyStmt = new MockUp<PreparedStatement>()
-      {
+      new MockUp<Database>() {
+         @Mock
+         Connection connection() { return connection; }
+      };
+
+      proxyStmt = new MockUp<PreparedStatement>() {
          @Mock
          int executeUpdate() { return 1; }
 
@@ -129,8 +128,7 @@ public final class OrderRepository_MockupsAPI_Test
          ResultSet executeQuery() { return proxyRS; }
       }.getMockInstance();
 
-      proxyRS = new MockUp<ResultSet>()
-      {
+      proxyRS = new MockUp<ResultSet>() {
          int callNo;
 
          @Mock
@@ -169,25 +167,9 @@ public final class OrderRepository_MockupsAPI_Test
          Statement getStatement() { return proxyStmt; }
       }.getMockInstance();
 
-      Order found = new OrderRepository().findByNumber(order.getNumber());
+      Order found = repository.findByNumber(order.getNumber());
 
       assertEquals(order, found);
-   }
-
-   @MockClass(realClass = Database.class)
-   public static final class MockDatabase
-   {
-      static Connection connection;
-
-      @Mock
-      public static Connection connection()
-      {
-         if (connection == null) {
-            connection = newEmptyProxy(MockDatabase.class.getClassLoader(), Connection.class);
-         }
-
-         return connection;
-      }
    }
 
    @Test
@@ -196,9 +178,9 @@ public final class OrderRepository_MockupsAPI_Test
       order = new Order(890, "Cust");
 
       new MockDatabaseForFindByCustomer();
-      stubOutClass(OrderRepository.class, "loadOrderItems");
+      new MockUp<OrderRepository>() { @Mock void loadOrderItems(Order o) {} };
 
-      List<Order> found = new OrderRepository().findByCustomer(order.getCustomerId());
+      List<Order> found = repository.findByCustomer(order.getCustomerId());
 
       assertTrue("Order not found by customer id", found.contains(order));
    }
@@ -215,8 +197,7 @@ public final class OrderRepository_MockupsAPI_Test
          assertEquals(1, args.length);
          assertEquals("Cust", args[0]);
 
-         mockRS = new MockUp<ResultSet>()
-         {
+         mockRS = new MockUp<ResultSet>() {
             private int rowIndex;
 
             @Mock(invocations = 2)

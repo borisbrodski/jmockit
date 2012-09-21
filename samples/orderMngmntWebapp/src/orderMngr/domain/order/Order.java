@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package orderMngr.domain.order;
@@ -19,7 +19,7 @@ public class Order
    private String customerId;
 
    @OneToMany
-   private Collection<OrderItem> items;
+   private List<OrderItem> items = new LinkedList<OrderItem>();
 
    public Order() {}
 
@@ -27,23 +27,11 @@ public class Order
    {
       this.number = number;
       this.customerId = customerId;
-      items = new LinkedList<OrderItem>();
    }
 
-   public int getNumber()
-   {
-      return number;
-   }
-
-   public String getCustomerId()
-   {
-      return customerId;
-   }
-
-   public Collection<OrderItem> getItems()
-   {
-      return items;
-   }
+   public int getNumber() { return number; }
+   public String getCustomerId() { return customerId; }
+   public List<OrderItem> getItems() { return items; }
 
    @Override
    public boolean equals(Object o)
