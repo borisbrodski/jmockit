@@ -84,9 +84,13 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
                unverifiedInvocationLeftBehind.errorForUnexpectedInvocationBeforeAnother(currentExpectation.invocation);
       }
 
-      replayIndex = indexOfLastUnverifiedExpectation();
-      indexIncrement = -1;
-      unverifiedExpectationsFixed = true;
+      int indexOfLastUnverified = indexOfLastUnverifiedExpectation();
+
+      if (indexOfLastUnverified >= 0) {
+         replayIndex = indexOfLastUnverified;
+         indexIncrement = -1;
+         unverifiedExpectationsFixed = true;
+      }
    }
 
    private int indexOfLastUnverifiedExpectation()
@@ -295,8 +299,10 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
 
       for (VerifiedExpectation verified : previousVerification.verifiedExpectations) {
          if (verified.replayIndex < replayIndex) {
-            throw
-               verified.expectation.invocation.errorForUnexpectedInvocationBeforeAnother(currentExpectation.invocation);
+            ExpectedInvocation unexpectedInvocation = verified.expectation.invocation;
+            throw currentExpectation == null ?
+               unexpectedInvocation.errorForUnexpectedInvocationFoundBeforeAnother() :
+               unexpectedInvocation.errorForUnexpectedInvocationFoundBeforeAnother(currentExpectation.invocation);
          }
 
          if (verified.replayIndex > maxReplayIndex) {
@@ -319,12 +325,16 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
 
    private void checkBackwardOrderOfVerifiedInvocations(UnorderedVerificationPhase previousVerification)
    {
-      VerifiedExpectation firstVerified = previousVerification.firstExpectationVerified();
       int indexOfLastUnverified = indexOfLastUnverifiedExpectation();
 
-      if (firstVerified.replayIndex != indexOfLastUnverified + 1) {
-         Expectation lastUnverified = expectationsInReplayOrder.get(indexOfLastUnverified);
-         throw lastUnverified.invocation.errorForUnexpectedInvocationAfterAnother(firstVerified.expectation.invocation);
+      if (indexOfLastUnverified >= 0) {
+         VerifiedExpectation firstVerified = previousVerification.firstExpectationVerified();
+
+         if (firstVerified.replayIndex != indexOfLastUnverified + 1) {
+            Expectation lastUnverified = expectationsInReplayOrder.get(indexOfLastUnverified);
+            Expectation after = firstVerified.expectation;
+            throw lastUnverified.invocation.errorForUnexpectedInvocationAfterAnother(after.invocation);
+         }
       }
    }
 }

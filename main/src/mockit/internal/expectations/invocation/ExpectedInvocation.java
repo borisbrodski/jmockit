@@ -225,6 +225,18 @@ public final class ExpectedInvocation
       return newUnexpectedInvocationWithCause("Unexpected invocation" + this, "Unexpected invocation before" + another);
    }
 
+   public UnexpectedInvocation errorForUnexpectedInvocationFoundBeforeAnother()
+   {
+      String initialMessage = "Invocation occurred unexpectedly before another" + this;
+      return newUnexpectedInvocationWithCause("Unexpected invocation", initialMessage);
+   }
+
+   public UnexpectedInvocation errorForUnexpectedInvocationFoundBeforeAnother(ExpectedInvocation another)
+   {
+      String initialMessage = "Another invocation unexpectedly occurred before" + another;
+      return newUnexpectedInvocationWithCause("Unexpected invocation" + this, initialMessage);
+   }
+
    public UnexpectedInvocation errorForUnexpectedInvocationAfterAnother(ExpectedInvocation another)
    {
       return newUnexpectedInvocationWithCause("Unexpected invocation" + this, "Unexpected invocation after" + another);

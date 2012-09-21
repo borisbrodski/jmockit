@@ -21,9 +21,9 @@ public final class VerificationsWithPartialOrderingTest
       public void save() {}
    }
 
-   @Mocked private Dependency mock;
+   @Mocked Dependency mock;
 
-   private void exerciseCodeUnderTest()
+   void exerciseCodeUnderTest()
    {
       mock.prepare();
       mock.setSomething(123);
@@ -38,8 +38,7 @@ public final class VerificationsWithPartialOrderingTest
    {
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations();
       }};
@@ -62,13 +61,12 @@ public final class VerificationsWithPartialOrderingTest
    }
 
    @Test(expected = UnexpectedInvocation.class)
-   public void verifyFirstCallWhenOutOfOrder()
+   public void verifyFirstCall_outOfOrder()
    {
       mock.setSomething(123);
       mock.prepare();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations();
       }};
@@ -79,8 +77,7 @@ public final class VerificationsWithPartialOrderingTest
    {
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          unverifiedInvocations();
          mock.save();
       }};
@@ -91,8 +88,7 @@ public final class VerificationsWithPartialOrderingTest
    {
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          unverifiedInvocations();
          mock.notifyBeforeSave();
          mock.save();
@@ -106,8 +102,7 @@ public final class VerificationsWithPartialOrderingTest
       mock.save();
       mock.editABunchMoreStuff();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          unverifiedInvocations();
          mock.save();
       }};
@@ -120,8 +115,7 @@ public final class VerificationsWithPartialOrderingTest
       mock.save();
       mock.notifyBeforeSave();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          unverifiedInvocations();
          mock.notifyBeforeSave();
          mock.save();
@@ -138,8 +132,7 @@ public final class VerificationsWithPartialOrderingTest
       mock.editABunchMoreStuff();
       mock.save();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations();
          mock.notifyBeforeSave();
@@ -152,33 +145,29 @@ public final class VerificationsWithPartialOrderingTest
    {
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations();
       }};
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.setSomethingElse("anotherValue");
          mock.setSomething(123);
       }};
    }
 
    @Test(expected = UnexpectedInvocation.class)
-   public void verifySomeCallsInAnyOrderThenFirstCallWhenOutOfOrder()
+   public void verifySomeCallsInAnyOrderThenFirstCall_outOfOrder()
    {
       mock.setSomething(123);
       mock.editABunchMoreStuff();
       mock.prepare();
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.setSomething(123);
       }};
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare(); times = 1;
          unverifiedInvocations();
       }};
@@ -189,14 +178,12 @@ public final class VerificationsWithPartialOrderingTest
    {
       exerciseCodeUnderTest();
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.setSomethingElse("anotherValue");
          mock.setSomething(123);
       }};
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          unverifiedInvocations();
          mock.save(); times = 1;
       }};
@@ -209,8 +196,7 @@ public final class VerificationsWithPartialOrderingTest
       mock.editABunchMoreStuff();
       mock.save();
 
-      final Verifications verified = new VerificationsInOrder()
-      {{
+      final Verifications verified = new VerificationsInOrder() {{
          mock.prepare();
          mock.editABunchMoreStuff();
       }};
@@ -477,12 +463,58 @@ public final class VerificationsWithPartialOrderingTest
    }
 
    @Test
+   public void verifyThatOneGroupOfInvocationsOccursBeforeAnother()
+   {
+      mock.prepare();
+      mock.save();
+
+      final Verifications first = new Verifications() {{ mock.prepare(); }};
+      final Verifications last = new Verifications() {{ mock.save(); }};
+
+      new VerificationsInOrder() {{
+         verifiedInvocations(first);
+         unverifiedInvocations();
+         verifiedInvocations(last);
+      }};
+   }
+
+   @Test(expected = UnexpectedInvocation.class)
+   public void verifyThatOneGroupOfInvocationsOccursBeforeAnother_outOfOrder()
+   {
+      mock.save();
+      mock.prepare();
+
+      final Verifications first = new Verifications() {{ mock.prepare(); }};
+      final Verifications last = new Verifications() {{ mock.save(); }};
+
+      new VerificationsInOrder() {{
+         verifiedInvocations(first);
+         verifiedInvocations(last);
+      }};
+   }
+
+   @Test(expected = UnexpectedInvocation.class)
+   public void verifyThatOneGroupOccursBeforeAnotherAllowingUnverifiedInvocationsInBetween_outOfOrder()
+   {
+      mock.save();
+      mock.prepare();
+
+      final Verifications first = new Verifications() {{ mock.prepare(); }};
+      final Verifications last = new Verifications() {{ mock.save(); }};
+
+      new VerificationsInOrder() {{
+         verifiedInvocations(first);
+         unverifiedInvocations();
+         verifiedInvocations(last);
+      }};
+   }
+
+   @Test
    public void verifyFirstAndLastCalls()
    {
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations();
          mock.notifyBeforeSave();
@@ -497,8 +529,7 @@ public final class VerificationsWithPartialOrderingTest
       mock.prepare();
       mock.save();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations();
          mock.save();
@@ -508,19 +539,16 @@ public final class VerificationsWithPartialOrderingTest
    @Test(expected = UnexpectedInvocation.class)
    public void verifyFirstAndLastInvocationsWithSomeInvocationsInBetweenImplicitlyVerified()
    {
-      new NonStrictExpectations()
-      {
-         {
-            mock.setSomething(anyInt); minTimes = 1;
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.setSomething(anyInt); minTimes = 1;
+      }};
 
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
-         // unverifiedInvocations() should be called here, even if verification occurs implicitly.
+         // For the test to pass, a call to unverifiedInvocations() should be
+         // inserted here, even if verification occurred implicitly.
          mock.setSomethingElse(anyString);
          unverifiedInvocations();
          mock.save();
@@ -535,8 +563,7 @@ public final class VerificationsWithPartialOrderingTest
       mock.save();
       mock.notifyBeforeSave();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations();
          mock.save();
@@ -554,8 +581,7 @@ public final class VerificationsWithPartialOrderingTest
 
       new Verifications() {{ mock.setSomething(anyInt); }};
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations();
          mock.save();
@@ -573,8 +599,7 @@ public final class VerificationsWithPartialOrderingTest
 
       new Verifications() {{ mock.setSomething(anyInt); times = 3; }};
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          mock.save();
       }};
@@ -585,16 +610,14 @@ public final class VerificationsWithPartialOrderingTest
    {
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations();
          mock.notifyBeforeSave();
          mock.save();
       }};
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.setSomething(123);
          mock.setSomethingElse("anotherValue");
       }};
@@ -610,14 +633,12 @@ public final class VerificationsWithPartialOrderingTest
       mock.editABunchMoreStuff();
       mock.save();
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.setSomethingElse("anotherValue");
          mock.setSomething(anyInt);
       }};
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations();
          mock.notifyBeforeSave();
@@ -630,8 +651,7 @@ public final class VerificationsWithPartialOrderingTest
    {
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations();
          mock.setSomething(123);
@@ -650,8 +670,7 @@ public final class VerificationsWithPartialOrderingTest
       mock.setSomething(45);
       mock.save();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          unverifiedInvocations();
          mock.setSomething(123);
          mock.setSomething(45);
@@ -664,8 +683,7 @@ public final class VerificationsWithPartialOrderingTest
    {
       exerciseCodeUnderTest();
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations();
          mock.setSomething(123);
@@ -686,15 +704,13 @@ public final class VerificationsWithPartialOrderingTest
       mock.notifyBeforeSave();
       mock.save();
 
-      new Verifications()
-      {{
+      new Verifications() {{
          mock.setSomething(anyInt);
          mock.setSomethingElse(anyString);
          mock.notifyBeforeSave(); maxTimes = 1;
       }};
 
-      new VerificationsInOrder()
-      {{
+      new VerificationsInOrder() {{
          mock.prepare();
          unverifiedInvocations(); // nothing was left unverified
          mock.save();
