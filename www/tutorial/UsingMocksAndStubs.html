@@ -28,9 +28,9 @@
    There are times when we want to mock or stub out classes for the entire scope of a test class (that is, for all of
    its test methods), or even for the entire scope of a test suite (that is, for all of its test classes).
    In test code, the <code class="type">mockit.UsingMocksAndStubs</code> annotation provides an easy way to do just
-   that, by letting us specify which mock classes to apply and/or which real classes to stub out for a given test class,
-   and when JUnit 4 is used, for a given test suite class.
-   It is also possible to specify mock classes and/or classes to be stubbed out for a given test run through external
+   that, by letting us specify which mock classes to apply and/or which real classes to stub out for a given test class
+   or <em>test suite</em> class (when using JUnit 4).
+   It is also possible to specify mock classes and/or classes to be stubbed out for an entire test run through external
    configuration, by defining certain system properties via JVM configuration or in a <code>jmockit.properties</code>
    file.
 </p>
@@ -59,7 +59,7 @@
 </p>
 <p>
    This ability is particularly useful to prevent code under test from executing some other code which is not relevant
-   for the test but could interfere with it, or take too long to execute, or generate some undesirable output.
+   for the test but could interfere with it, take too long to execute, or generate some undesirable output.
    The following example causes two dependency classes to be fully stubbed out, including any static initialization
    blocks they may have.
 </p>
@@ -158,8 +158,8 @@ public final class Log4jMocks
 </p>
 <p>
    The first one may contain a comma-separated list of fully qualified class names.
-   Any such class will be automatically set up as a <em>mock class</em>, provided it is properly annotated with
-   <code class="annotation">@MockClass</code>.
+   Any such class will be automatically set up as a <em>mock class</em>, provided it extends the
+   <code class="type">MockUp&ltT></code> base class or is annotated with <code class="annotation">@MockClass</code>.
    The mocks defined in startup mock classes will remain in effect until the end of the test run, for all test classes.
    Use of this property is equivalent to a call, at the beginning of the test run, to the
    <code>Mockit.setUpStartupMocks(...)</code> method.

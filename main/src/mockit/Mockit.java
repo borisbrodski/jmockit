@@ -256,20 +256,16 @@ public final class Mockit
     * The difference is in the lifetime of the mocks, which will last to the end of the test run.
     * Consequently, this method should only be called once, before the first test begins execution.
     * One way to achieve this is to put the call in the static initializer of a common base class extended by all test
-    * classes in the suite. Another way is by configuring what happens at startup through external means.
-    * <p/>
-    * There are three ways to set up mock classes at startup time:
-    * <ol>
+    * classes in the suite.
+    * Another way is by configuring what happens at startup through one of the two following configuration mechanisms.
+    * <ul>
     * <li>Define a value for the "<code>jmockit-mocks</code>" system property, as a comma-separated list of fully
-    * qualified class names.</li>
+    * qualified mock class names.</li>
     * <li>Add a custom "<code>jmockit.properties</code>" file to the classpath, with an entry for the
     * "<code>jmockit-mocks</code>" (or just "<code>mocks</code>") property.
     * </li>
-    * <li>Specify the "<code>-javaagent:jmockit.jar=&lt;agentArgs></code>" JVM argument, with "<code>agentArgs</code>"
-    * containing one or more mock class names, separated by semicolons if more than one.
-    * </li>
-    * </ol>
-    * Note that option two above makes it possible to package a whole set of reusable mock classes in a jar file,
+    * </ul>
+    * Note that the second option above makes it possible to package a whole set of reusable mock classes in a jar file,
     * provided it contains a suitable <code>jmockit.properties</code> file.
     * By simply adding the jar to the classpath <em>before</em> <code>jmockit.jar</code>, the specified mock classes
     * will be loaded and applied automatically on every test run, as soon as JMockit itself gets initialized.
@@ -283,7 +279,7 @@ public final class Mockit
     * or if the real method matching a mock method is {@code abstract}
     *
     * @see
-    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#465">
+    * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockAnnotationsTest.java#538">
     * Example</a>
     * <p/>
     * In the Tutorial:
