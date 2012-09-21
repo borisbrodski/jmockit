@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.timing.interpolation;
@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public final class EvaluatorTest
 {
    @Test
-   public void testEvaluateByte()
+   public void evaluateByte()
    {
       assertEvaluation(Byte.class, (byte) 0, (byte) 5, (byte) 2);
    }
@@ -27,37 +27,37 @@ public final class EvaluatorTest
    }
 
    @Test
-   public void testEvaluateShort()
+   public void evaluateShort()
    {
       assertEvaluation(Short.class, (short) 0, (short) 5, (short) 2);
    }
 
    @Test
-   public void testEvaluateInteger()
+   public void evaluateInteger()
    {
       assertEvaluation(Integer.class, 0, 5, 2);
    }
 
    @Test
-   public void testEvaluateLong()
+   public void evaluateLong()
    {
       assertEvaluation(Long.class, 0L, 5L, 2L);
    }
 
    @Test
-   public void testEvaluateFloat()
+   public void evaluateFloat()
    {
       assertEvaluation(Float.class, 0.0f, 5.0f, 2.5f);
    }
 
    @Test
-   public void testEvaluateDouble()
+   public void evaluateDouble()
    {
       assertEvaluation(Double.class, 0.0, 5.0, 2.5);
    }
 
    @Test
-   public void testEvaluateColor()
+   public void evaluateColor()
    {
       Evaluator<Color> evaluator = Evaluator.create(Color.class);
       Color evaluatedValue = evaluator.evaluate(Color.red, Color.green, 0.5f);
@@ -65,16 +65,15 @@ public final class EvaluatorTest
    }
 
    @Test
-   public void testEvaluatePoint2D()
+   public void evaluatePoint2D()
    {
       Evaluator<Point2D> evaluator = Evaluator.create(Point2D.class);
-      Point2D evaluatedValue =
-         evaluator.evaluate(new Point2D.Float(1, 3), new Point2D.Float(4.5f, 8), 0.5f);
+      Point2D evaluatedValue = evaluator.evaluate(new Point2D.Float(1, 3), new Point2D.Float(4.5f, 8), 0.5f);
       assertEquals(new Point2D.Float(2.75f, 5.5f), evaluatedValue);
    }
 
    @Test
-   public void testEvaluateLine2D()
+   public void evaluateLine2D()
    {
       Evaluator<Line2D> evaluator = Evaluator.create(Line2D.class);
       Line2D evaluatedValue =
@@ -84,7 +83,7 @@ public final class EvaluatorTest
    }
 
    @Test
-   public void testEvaluateDimension2D()
+   public void evaluateDimension2D()
    {
       Evaluator<Dimension2D> evaluator = Evaluator.create(Dimension2D.class);
       Dimension2D evaluatedValue =
@@ -93,7 +92,7 @@ public final class EvaluatorTest
    }
 
    @Test
-   public void testEvaluateRectangle2D()
+   public void evaluateRectangle2D()
    {
       Evaluator<Rectangle2D> evaluator = Evaluator.create(Rectangle2D.class);
       Rectangle2D evaluatedValue =
@@ -103,7 +102,7 @@ public final class EvaluatorTest
    }
 
    @Test
-   public void testEvaluateRoundRectangle2D()
+   public void evaluateRoundRectangle2D()
    {
       Evaluator<RoundRectangle2D> evaluator = Evaluator.create(RoundRectangle2D.class);
       RoundRectangle2D evaluatedValue =
@@ -114,7 +113,7 @@ public final class EvaluatorTest
    }
 
    @Test
-   public void testEvaluateEllipse2D()
+   public void evaluateEllipse2D()
    {
       Evaluator<Ellipse2D> evaluator = Evaluator.create(Ellipse2D.class);
       Ellipse2D evaluatedValue =
@@ -124,7 +123,7 @@ public final class EvaluatorTest
    }
 
    @Test
-   public void testEvaluateArc2D()
+   public void evaluateArc2D()
    {
       Evaluator<Arc2D> evaluator = Evaluator.create(Arc2D.class);
       Arc2D evaluatedValue =
@@ -140,7 +139,7 @@ public final class EvaluatorTest
    }
 
    @Test
-   public void testEvaluateQuadCurve2D()
+   public void evaluateQuadCurve2D()
    {
       Evaluator<QuadCurve2D> evaluator = Evaluator.create(QuadCurve2D.class);
       QuadCurve2D evaluatedValue =
@@ -156,7 +155,7 @@ public final class EvaluatorTest
    }
 
    @Test
-   public void testEvaluateCubicCurve2D()
+   public void evaluateCubicCurve2D()
    {
       Evaluator<CubicCurve2D> evaluator = Evaluator.create(CubicCurve2D.class);
       CubicCurve2D evaluatedValue =
@@ -174,7 +173,7 @@ public final class EvaluatorTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testEvaluateUnknownType()
+   public void evaluateUnknownType()
    {
       Evaluator.create(Path2D.class);
    }

@@ -28,7 +28,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.jdesktop.animation.timing.interpolation;
 
 import java.util.*;
@@ -72,7 +71,7 @@ public final class KeyValues<T>
    }
 
    /**
-    * Constructs a KeyValues object from a Evaluator and one or more values.
+    * Constructs a KeyValues object from an Evaluator and one or more values.
     *
     * @param params the values to interpolate between.  If there is only one parameter, this is
     *               assumed to be a "to" animation where the first value is dynamically determined

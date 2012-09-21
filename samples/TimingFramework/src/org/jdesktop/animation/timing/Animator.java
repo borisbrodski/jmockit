@@ -159,9 +159,9 @@ public final class Animator
    public static final int INFINITE = -1;
 
    /**
-    * Constructor: this is a utility constructor for a simple timing sequence that will run for
-    * <code>duration</code> length of time.  This variant takes no TimingTarget, and is equivalent
-    * to calling {@link #Animator(int, TimingTarget)} with a TimingTarget of <code>null</code>.
+    * Initializes a simple timing sequence that will run for <code>duration</code> length of time.
+    * This variant takes no TimingTarget, and is equivalent to calling {@link #Animator(int, TimingTarget)} with a
+    * TimingTarget of <code>null</code>.
     *
     * @param duration The length of time that this will run, in milliseconds.
     */
@@ -171,12 +171,11 @@ public final class Animator
    }
 
    /**
-    * This is a utility constructor for a simple timing sequence that will run for
-    * <code>duration</code> length of time.
+    * Initializes a simple timing sequence that will run for <code>duration</code> length of time.
     *
     * @param duration The length of time that this will run, in milliseconds.
-    * @param target   TimingTarget object that will be called with all timing events.  Null is
-    *                 acceptable, but no timingEvents will be sent to any targets without future calls to
+    * @param target   TimingTarget object that will be called with all timing events.
+    *                 Null is acceptable, but no timingEvents will be sent to any targets without future calls to
     *                 {@link #addTarget}.
     */
    public Animator(int duration, TimingTarget target)

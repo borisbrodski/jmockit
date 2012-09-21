@@ -1,17 +1,15 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.timing.interpolation;
 
-import java.awt.*;
+import org.jdesktop.animation.timing.*;
 
 import org.junit.*;
+import static org.junit.Assert.*;
 
 import mockit.*;
-
-import org.jdesktop.animation.timing.*;
-import static org.junit.Assert.*;
 
 public final class PropertySetterTest
 {
@@ -27,13 +25,7 @@ public final class PropertySetterTest
    }
 
    @Test
-   public void testPropertySetterFromValuesOfReferenceType()
-   {
-      new PropertySetter<Point>(new Animated(), "value", new Point(0, 1), new Point(2, 3));
-   }
-
-   @Test
-   public void testCreateAnimatorWithGivenParams()
+   public void createAnimatorWithGivenParams()
    {
       int duration = 500;
 
@@ -43,7 +35,7 @@ public final class PropertySetterTest
    }
 
    @Test
-   public void testCreateAnimatorWithGivenEvaluatorAndParams()
+   public void createAnimatorWithGivenEvaluatorAndParams()
    {
       int duration = 500;
       Evaluator<Double> evaluator = Evaluator.create(Double.class);
@@ -54,7 +46,7 @@ public final class PropertySetterTest
    }
 
    @Test
-   public void testCreateAnimatorWithGivenKeyFrames()
+   public void createAnimatorWithGivenKeyFrames()
    {
       int duration = 500;
       KeyFrames<Integer> keyFrames = new KeyFrames<Integer>(KeyValues.create(0, 2, 4));
@@ -65,72 +57,69 @@ public final class PropertySetterTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void testCreateAnimatorWithNonExistentProperty()
+   public void createAnimatorWithNonExistentProperty()
    {
       PropertySetter.createAnimator(10, new Animated(), "none", 3);
    }
 
    @Test
-   public void testBegin()
+   public void beginAnimationWithoutInitialPropertyValueWhenNotToAnimation()
    {
-      TimingTarget setter = new PropertySetter<Integer>(new Animated(), "value", 1, 3);
+      Animated animated = new Animated();
+      PropertySetter<Integer> setter = new PropertySetter<Integer>(animated, "value", 1, 3);
 
       setter.begin();
+
+      assertEquals(0, animated.value);
    }
 
    @Test
-   public void testBeginOnToAnimation()
+   public void beginToAnimation()
    {
       final KeyValues<Integer> keyValues = KeyValues.create(3);
       final Integer startValue = 2;
       final Animated animated = new Animated(startValue);
       PropertySetter<Integer> setter = new PropertySetter<Integer>(animated, "value", new KeyFrames<Integer>(keyValues));
 
-      new Expectations(KeyValues.class, Animated.class)
-      {
-         {
-            keyValues.isToAnimation(); result = true;
-            animated.getValue(); result = startValue;
-            keyValues.setStartValue(startValue);
-         }
-      };
+      new Expectations(KeyValues.class, Animated.class) {{
+         keyValues.isToAnimation(); result = true;
+         animated.getValue(); result = startValue;
+         keyValues.setStartValue(startValue);
+      }};
 
       setter.begin();
    }
 
    @Test(expected = RuntimeException.class)
-   public void testBeginOnToAnimationWithFailingProperty(final Animated animated)
+   public void beginToAnimationWithFailingProperty(final Animated animated)
    {
-      new Expectations()
-      {
-         {
-            animated.getValue(); result = new IllegalStateException("test");
-         }
-      };
+      new Expectations() {{
+         animated.getValue(); result = new IllegalStateException("test");
+      }};
 
       TimingTarget setter = new PropertySetter<Integer>(animated, "value", 3);
       setter.begin();
    }
 
    @Test
-   public void testTimingEvent()
+   public void signalTimingEventAtHalfTheTimingRange()
    {
-      TimingTarget setter = new PropertySetter<Integer>(new Animated(), "value", 1, 3);
+      Animated animated = new Animated();
+      PropertySetter<Integer> setter = new PropertySetter<Integer>(animated, "value", 1, 3);
 
       setter.timingEvent(0.5f);
+
+      assertEquals(2, animated.value);
    }
 
    @Test(expected = RuntimeException.class)
-   public void testTimingEventWithFailingProperty(final Animated animated)
+   public void signalTimingEventWithFailingProperty(final Animated animated)
    {
-      new Expectations()
-      {
-         {
-            animated.setValue(anyInt); result = new IllegalStateException("test");
-         }
-      };
+      new Expectations() {{
+         animated.setValue(anyInt); result = new IllegalStateException("test");
+      }};
 
-      TimingTarget setter = new PropertySetter<Integer>(animated, "value", 1, 3);
+      PropertySetter<Integer> setter = new PropertySetter<Integer>(animated, "value", 1, 3);
       setter.timingEvent(0.1f);
    }
 }
