@@ -4,6 +4,8 @@
  */
 package mockit;
 
+import java.io.*;
+import java.nio.*;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -64,6 +66,13 @@ public final class ExpectationsUsingResultFieldTest
       boolean[] getBooleanArray() { return null; }
       String[] getStringArray() { return null; }
       String[][] getString2Array() { return null; }
+
+      StringBuilder getStringBuilder() { return null; }
+      CharBuffer getCharBuffer() { return null; }
+      InputStream getInputStream() { return null; }
+      ByteArrayInputStream getByteArrayInputStream() { return null; }
+      Reader getReader() { return null; }
+      StringReader getStringReader() { return null; }
    }
 
    @Test
@@ -599,7 +608,7 @@ public final class ExpectationsUsingResultFieldTest
    {
       new Expectations() {{
          mock.provideSomeService();
-         result = new int[] {123, 45}; // will have no effect
+         result = new int[] {123, 45}; // will have the effect of allowing two invocations
       }};
 
       mock.provideSomeService();
@@ -664,5 +673,37 @@ public final class ExpectationsUsingResultFieldTest
          try { mock.provideSomeService(); fail(); } catch (IllegalArgumentException ignored) {}
          mock.provideSomeService();
       }
+   }
+
+   @Test
+   public void convertRecordedTextualResultForMethodsWithEligibleReturnTypes(final Collaborator mock) throws Exception
+   {
+      final String text = "Some textual value";
+
+      new NonStrictExpectations() {{
+         mock.getStringBuilder(); result = text;
+         mock.getCharBuffer(); result = text;
+         mock.getInputStream(); result = text;
+         mock.getByteArrayInputStream(); result = text;
+         mock.getReader(); result = text;
+         mock.getStringReader(); result = text;
+      }};
+
+      assertEquals(text, mock.getStringBuilder().toString());
+      assertEquals(text, mock.getCharBuffer().toString());
+
+      byte[] buf = new byte[text.getBytes().length];
+      mock.getInputStream().read(buf);
+      assertArrayEquals(text.getBytes(), buf);
+
+      mock.getByteArrayInputStream().read(buf);
+      assertArrayEquals(text.getBytes(), buf);
+
+      char[] cbuf = new char[text.length()];
+      mock.getReader().read(cbuf);
+      assertArrayEquals(text.toCharArray(), cbuf);
+
+      mock.getStringReader().read(cbuf);
+      assertArrayEquals(text.toCharArray(), cbuf);
    }
 }
