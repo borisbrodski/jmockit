@@ -26,7 +26,7 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
    {
       aggregate = null;
 
-      if (recordAndReplay.executionState.isToBeMatchedOnInstance(mock, mockNameAndDesc)) {
+      if (!matchInstance && recordAndReplay.executionState.isToBeMatchedOnInstance(mock, mockNameAndDesc)) {
          matchInstance = true;
       }
 
