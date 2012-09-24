@@ -17,7 +17,11 @@ public final class RealMethod
 
    public RealMethod(String className, String methodNameAndDesc)
    {
-      Class<?> realClass = Utilities.loadClass(className);
+      this(Utilities.loadClass(className), methodNameAndDesc);
+   }
+
+   public RealMethod(Class<?> realClass, String methodNameAndDesc)
+   {
       int p = methodNameAndDesc.indexOf('(');
       String methodName = methodNameAndDesc.substring(0, p);
       String methodDesc = methodNameAndDesc.substring(p);

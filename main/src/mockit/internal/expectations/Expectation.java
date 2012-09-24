@@ -6,6 +6,7 @@ package mockit.internal.expectations;
 
 import java.io.*;
 import java.lang.reflect.*;
+import java.nio.*;
 import java.util.*;
 
 import mockit.internal.expectations.invocation.*;
@@ -39,7 +40,7 @@ final class Expectation
 
    void setHandler(Object handler) { this.handler = new InvocationHandler(handler); }
 
-   InvocationResults getResults()
+   private InvocationResults getResults()
    {
       if (results == null) {
          results = new InvocationResults(invocation, constraints);
@@ -108,11 +109,13 @@ final class Expectation
 
    private void substituteCascadedMockToBeReturnedIfNeeded(Object valueToBeReturned)
    {
-      Object cascadedMock = invocation.getCascadedMock();
+      if (valueToBeReturned != null) {
+         Object cascadedMock = invocation.getCascadedMock();
 
-      if (valueToBeReturned != null && cascadedMock != null) {
-         TestRun.getExecutingTest().discardCascadedMockWhenInjectable(cascadedMock);
-         recordPhase.setNextInstanceToMatch(null);
+         if (cascadedMock != null) {
+            TestRun.getExecutingTest().discardCascadedMockWhenInjectable(cascadedMock);
+            recordPhase.setNextInstanceToMatch(null);
+         }
       }
    }
 
@@ -233,13 +236,18 @@ final class Expectation
 
    void addResult(Object value)
    {
+      if (invocation.isConstructor() && value != null && value.getClass().isInstance(invocation.instance)) {
+         invocation.replacementInstance = value;
+         return;
+      }
+
       if (value instanceof Throwable) {
          getResults().addThrowable((Throwable) value);
          return;
       }
 
-      if (value instanceof CharSequence && invocation.getMethodNameAndDescription().endsWith("Ljava/io/InputStream;")) {
-         addSingleReturnValue(new ByteArrayInputStream(value.toString().getBytes()));
+      if (value instanceof CharSequence) {
+         addCharSequence((CharSequence) value);
          return;
       }
 
@@ -262,6 +270,27 @@ final class Expectation
       }
 
       addSingleReturnValue(value);
+   }
+
+   private void addCharSequence(CharSequence value)
+   {
+      String methodDesc = invocation.getMethodNameAndDescription();
+      Object convertedValue = value;
+
+      if (methodDesc.endsWith("Ljava/io/InputStream;") || methodDesc.endsWith("Ljava/io/ByteArrayInputStream;")) {
+         convertedValue = new ByteArrayInputStream(value.toString().getBytes());
+      }
+      else if (methodDesc.endsWith("Ljava/io/Reader;") || methodDesc.endsWith("Ljava/io/StringReader;")) {
+         convertedValue = new StringReader(value.toString());
+      }
+      else if (!(value instanceof StringBuilder) && methodDesc.endsWith("Ljava/lang/StringBuilder;")) {
+         convertedValue = new StringBuilder(value);
+      }
+      else if (!(value instanceof CharBuffer) && methodDesc.endsWith("Ljava/nio/CharBuffer;")) {
+         convertedValue = CharBuffer.wrap(value);
+      }
+
+      addSingleReturnValue(convertedValue);
    }
 
    private void addMultiValuedResult(Object value, boolean valueIsArray)
@@ -344,5 +373,10 @@ final class Expectation
    {
       Object[] replayArgs = invocation.getArgumentValues();
       return constraints.verify(verification.invocation, replayArgs, minInvocations, maxInvocations);
+   }
+
+   Object executeRealImplementation(Object replacementInstance, Object[] args) throws Throwable
+   {
+      return getResults().executeRealImplementation(replacementInstance, args);
    }
 }

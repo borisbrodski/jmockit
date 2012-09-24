@@ -92,8 +92,6 @@ public abstract class Expectations extends Invocations
     * If the value is a {@link Throwable} then it will be <em>thrown</em> when a matching invocation later occurs.
     * Otherwise, it's assumed to be a <em>return value</em> for a non-<code>void</code> method, and will be returned
     * from a matching invocation.
-    * Specifying a return value for a constructor or {@code void} method is allowed, with the value simply getting
-    * discarded.
     * <p/>
     * If the recorded expectation is for a method which actually <em>returns</em> an exception or error (as opposed to
     * <em>throwing</em> one), then the {@link #returns(Object)} method should be used instead, as it only applies to
@@ -111,7 +109,14 @@ public abstract class Expectations extends Invocations
     * Another way to specify consecutive results is to simply write multiple consecutive assignments to the field, for
     * the same expectation.
     * <p/>
-    * Finally, custom results can be provided through a {@linkplain mockit.Delegate} object assigned to the field.
+    * Custom results can be provided through a {@linkplain mockit.Delegate} object assigned to the field.
+    * This applies to {@code void} and non-<code>void</code> methods, as well as for constructors.
+    * <p/>
+    * Finally, when recording an expectation on a <em>constructor</em> of a mocked class, an arbitrary instance of said
+    * class can be assigned to the field.
+    * In this case, the assigned instance will be used as a "replacement" for all invocations to
+    * <em>instance methods</em> made on <em>other</em> instances, provided they get created sometime later through a
+    * matching constructor invocation.
     * <p/>
     * <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#results">In the
     * Tutorial</a>

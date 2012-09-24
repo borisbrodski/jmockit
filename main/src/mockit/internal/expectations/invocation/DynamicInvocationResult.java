@@ -69,7 +69,7 @@ abstract class DynamicInvocationResult extends InvocationResult
       }
    }
 
-   private Object executeMethodToInvoke(Object[] args)
+   protected final Object executeMethodToInvoke(Object[] args)
    {
       ReentrantLock reentrantLock = RecordAndReplayExecution.RECORD_OR_REPLAY_LOCK;
 

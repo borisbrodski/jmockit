@@ -9,6 +9,7 @@ import java.util.*;
 
 import mockit.*;
 import mockit.internal.expectations.invocation.InvocationResult.*;
+import mockit.internal.state.*;
 import mockit.internal.util.*;
 
 public final class InvocationResults
@@ -128,6 +129,27 @@ public final class InvocationResults
       InvocationResult result = new DeferredResults(values);
       addResult(result);
       constraints.setUnlimitedMaxInvocations();
+   }
+
+   public Object executeRealImplementation(Object instanceToInvoke, Object[] invocationArgs) throws Throwable
+   {
+      if (currentResult == null) {
+         Method methodToInvoke =
+            new RealMethod(instanceToInvoke.getClass(), invocation.getMethodNameAndDescription()).method;
+
+         currentResult = new DynamicInvocationResult(instanceToInvoke, methodToInvoke) {
+            @Override
+            Object produceResult(
+               Object invokedObject, ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
+               throws Throwable
+            {
+               TestRun.getExecutingTest().markAsProceedingIntoRealImplementation();
+               return executeMethodToInvoke(args);
+            }
+         };
+      }
+
+      return currentResult.produceResult(instanceToInvoke, null, null, invocationArgs);
    }
 
    public void addThrowable(Throwable t)

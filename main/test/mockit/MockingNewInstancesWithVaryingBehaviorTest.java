@@ -100,7 +100,7 @@ public final class MockingNewInstancesWithVaryingBehaviorTest
       new NonStrictExpectations(SimpleDateFormat.class) {{
          sdf.format((Date) any);
          result = new Delegate() {
-            String format(Invocation inv)
+            @Mock String format(Invocation inv)
             {
                String pattern = inv.<SimpleDateFormat>getInvokedInstance().toPattern();
                if (DATE_FORMAT.equals(pattern)) return FORMATTED_DATE;
@@ -135,56 +135,138 @@ public final class MockingNewInstancesWithVaryingBehaviorTest
             new SimpleDateFormat(TIME_FORMAT); result = new SDFFormatDelegate(FORMATTED_TIME);
 
             mockSDF.format((Date) any);
-            result = new Delegate() {String format(Invocation inv) { return formats.get(inv.getInvokedInstance()); }};
+            result = new Delegate() {
+               @Mock String format(Invocation inv) { return formats.get(inv.getInvokedInstance()); }
+            };
          }
       };
 
       exerciseAndVerifyTestedCode();
    }
 
-   @Ignore @Test // nice
+   @Test // nice
    public void usingCapturingOnFinalMockFields()
    {
       new NonStrictExpectations() {
-         @Capturing final SimpleDateFormat dateFmt;
-         @Capturing final SimpleDateFormat hourFmt;
+         SimpleDateFormat dateFmt;
+         SimpleDateFormat hourFmt;
 
          {
-            dateFmt = new SimpleDateFormat(DATE_FORMAT);
+            new SimpleDateFormat(DATE_FORMAT); result = dateFmt;
             dateFmt.format((Date) any); result = FORMATTED_DATE;
 
-            hourFmt = new SimpleDateFormat(TIME_FORMAT);
+            new SimpleDateFormat(TIME_FORMAT); result = hourFmt;
             hourFmt.format((Date) any); result = FORMATTED_TIME;
          }
       };
 
-      assertEquals(FORMATTED_TIME, new SimpleDateFormat(DATE_FORMAT).format(new Date()));
       exerciseAndVerifyTestedCode();
    }
 
-   class Collaborator
+   static class Collaborator
    {
       final int value;
       Collaborator() { value = -1; }
       Collaborator(int value) { this.value = value; }
       int getValue() { return value; }
+      boolean isPositive() { return value > 0; }
+      String doSomething(String s) { return s + ": " + value; }
    }
 
-   @Ignore @Test
-   public void matchMethodCallsOnInstancesCreatedWithConstructorMatchingRecordedOne()
+   @Test
+   public void matchMethodCallsOnInstancesCreatedWithConstructorMatchingRecordedOne(@Mocked final Collaborator mock)
    {
-      new NonStrictExpectations() {
-         @Capturing final Collaborator mock = new Collaborator(5);
-
-         {
-            mock.getValue(); result = 123;
-         }
-      };
+      new NonStrictExpectations() {{
+         new Collaborator(5); result = mock;
+         onInstance(mock).getValue(); result = 123;
+      }};
 
       assertEquals(0, new Collaborator().getValue());
-      assertEquals(123, new Collaborator(5).getValue());
-      assertEquals(0, new Collaborator(6).getValue());
-      assertEquals(123, new Collaborator(5).getValue());
-      assertEquals(0, new Collaborator(0).getValue());
+
+      Collaborator newCol1 = new Collaborator(5);
+      assertEquals(123, newCol1.getValue());
+
+      Collaborator newCol2 = new Collaborator(6);
+      assertEquals(0, newCol2.getValue());
+      assertFalse(newCol2.isPositive());
+
+      Collaborator newCol3 = new Collaborator(5);
+      assertEquals(123, newCol3.getValue());
+      assertFalse(newCol3.isPositive());
+
+      new Verifications() {{
+         // Verify invocations to all mocked instances:
+         new Collaborator(); times = 1;
+         new Collaborator(anyInt); times = 3;
+         mock.getValue(); times = 4;
+         mock.isPositive(); times = 2;
+
+         // Verify invocations to mocked instances matching the "mock" instance:
+         onInstance(mock).getValue(); times = 2;
+         onInstance(mock).isPositive(); times = 1;
+      }};
+   }
+
+   @Test
+   public void mockInstancesMatchingRecordedConstructorInvocationsToHaveSameBehaviorAsOtherUnmockedInstances()
+   {
+      final Collaborator col1 = new Collaborator(1);
+      final Collaborator col2 = new Collaborator(-2);
+
+      new NonStrictExpectations(Collaborator.class) {{
+         new Collaborator(3); result = col1;
+         new Collaborator(5); result = col2;
+         onInstance(col1).doSomething("recorded"); result = "mocked";
+      }};
+
+      Collaborator newCol1 = new Collaborator(-10);
+      assertEquals(-10, newCol1.getValue());
+      assertEquals("not mocked: -10", newCol1.doSomething("not mocked"));
+      assertEquals("recorded: -10", newCol1.doSomething("recorded"));
+
+      Collaborator newCol2 = new Collaborator(3);
+      assertEquals(1, newCol2.getValue());
+      assertEquals("mocked", newCol2.doSomething("recorded"));
+      assertEquals("not recorded: 1", newCol2.doSomething("not recorded"));
+
+      Collaborator newCol3 = new Collaborator(5);
+      assertEquals(-2, newCol3.getValue());
+      assertFalse(newCol3.isPositive());
+      assertEquals("null: -2", newCol3.doSomething(null));
+
+      Collaborator newCol4 = new Collaborator(10);
+      assertEquals(10, newCol4.getValue());
+      assertTrue(newCol4.isPositive());
+
+      Collaborator newCol5 = new Collaborator(3);
+      assertEquals(1, newCol5.getValue());
+      assertTrue(newCol5.isPositive());
+      assertEquals("mocked", newCol5.doSomething("recorded"));
+      assertEquals("test: 1", newCol5.doSomething("test"));
+
+      new Verifications() {{
+         onInstance(col1).getValue(); times = 2;
+         onInstance(col1).isPositive(); times = 1;
+
+         onInstance(col2).getValue(); times = 1;
+         onInstance(col2).isPositive(); times = 1;
+
+         col1.doSomething(anyString); times = 7;
+         onInstance(col1).doSomething(anyString); times = 4;
+         onInstance(col2).doSomething(anyString); times = 1;
+      }};
+   }
+
+   @Test
+   public void recordReplacementInstanceOfDifferentTypeThanTheMockedType(@Mocked final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         new Collaborator(123); result = "invalid";
+         onInstance(mock).getValue(); result = 56;
+      }};
+
+      assertEquals(56, mock.getValue());
+      assertEquals(0, new Collaborator().getValue());
+      assertEquals(0, new Collaborator(123).getValue());
    }
 }

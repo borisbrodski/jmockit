@@ -18,6 +18,7 @@ final class PhasedExecutionState
    final List<Expectation> nonStrictExpectations;
    final List<VerifiedExpectation> verifiedExpectations;
    final Map<Object, Object> instanceMap;
+   final Map<Object, Object> replacementMap;
    private List<?> dynamicMockInstancesToMatch;
    private List<Class<?>> mockedTypesToMatchOnInstances;
 
@@ -27,6 +28,7 @@ final class PhasedExecutionState
       nonStrictExpectations = new ArrayList<Expectation>();
       verifiedExpectations = new ArrayList<VerifiedExpectation>();
       instanceMap = new IdentityHashMap<Object, Object>();
+      replacementMap = new IdentityHashMap<Object, Object>();
    }
 
    void setDynamicMockInstancesToMatch(List<?> dynamicMockInstancesToMatch)
@@ -119,10 +121,9 @@ final class PhasedExecutionState
       InvocationArguments arguments = newInvocation.arguments;
       Object[] argValues = arguments.getValues();
 
-      boolean staticOrConstructorInvocation = mock == null || mockNameAndDesc.charAt(0) == '<';
+      boolean staticOrConstructorInvocation = mock == null || newInvocation.isConstructor();
       boolean newInvocationWithMatchers = arguments.getMatchers() != null;
 
-      //noinspection ForLoopReplaceableByForEach
       for (int i = 0, n = nonStrictExpectations.size(); i < n; i++) {
          Expectation previousExpectation = nonStrictExpectations.get(i);
          ExpectedInvocation previousInvocation = previousExpectation.invocation;
@@ -142,10 +143,10 @@ final class PhasedExecutionState
 
    Expectation findNonStrictExpectation(Object mock, String mockClassDesc, String mockNameAndDesc, Object[] args)
    {
-      boolean staticOrConstructorInvocation = mock == null || mockNameAndDesc.charAt(0) == '<';
+      boolean constructorInvocation = mockNameAndDesc.charAt(0) == '<';
+      boolean staticOrConstructorInvocation = mock == null || constructorInvocation;
 
       // Note: new expectations might get added to the list, so a regular loop would cause a CME:
-      //noinspection ForLoopReplaceableByForEach
       for (int i = 0, n = nonStrictExpectations.size(); i < n; i++) {
          Expectation nonStrict = nonStrictExpectations.get(i);
          ExpectedInvocation invocation = nonStrict.invocation;
@@ -155,6 +156,10 @@ final class PhasedExecutionState
             (staticOrConstructorInvocation || isMatchingInstance(mock, nonStrict)) &&
             invocation.arguments.isMatch(args, instanceMap)
          ) {
+            if (constructorInvocation && invocation.replacementInstance != null) {
+               replacementMap.put(mock, invocation.replacementInstance);
+            }
+
             return nonStrict;
          }
       }
@@ -164,7 +169,9 @@ final class PhasedExecutionState
 
    private boolean isMatchingInstance(Object mock, Expectation expectation)
    {
-      if (expectation.invocation.isEquivalentInstance(mock, instanceMap)) {
+      ExpectedInvocation invocation = expectation.invocation;
+
+      if (invocation.instance == replacementMap.get(mock) || invocation.isEquivalentInstance(mock, instanceMap)) {
          return true;
       }
 
@@ -177,7 +184,7 @@ final class PhasedExecutionState
             return false;
          }
 
-         Class<?> invokedClass = expectation.invocation.instance.getClass();
+         Class<?> invokedClass = invocation.instance.getClass();
 
          for (Object dynamicMock : dynamicMockInstancesToMatch) {
             if (dynamicMock.getClass() == invokedClass) {
@@ -186,7 +193,12 @@ final class PhasedExecutionState
          }
       }
 
-      return !expectation.invocation.matchInstance && expectation.recordPhase != null;
+      return !invocation.matchInstance && expectation.recordPhase != null;
+   }
+
+   Object getReplacementInstanceForMethodInvocation(Object invokedInstance, String methodNameAndDesc)
+   {
+      return methodNameAndDesc.charAt(0) == '<' ? null : replacementMap.get(invokedInstance);
    }
 
    void makeNonStrict(Expectation expectation)

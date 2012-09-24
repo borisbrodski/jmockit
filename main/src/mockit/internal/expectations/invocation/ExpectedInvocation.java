@@ -19,6 +19,7 @@ public final class ExpectedInvocation
    private static final Object UNDEFINED_DEFAULT_RETURN = new Object();
 
    public final Object instance;
+   public Object replacementInstance;
    public boolean matchInstance;
    public final InvocationArguments arguments;
    public CharSequence customErrorMessage;
@@ -56,6 +57,7 @@ public final class ExpectedInvocation
    public String getClassName() { return arguments.getClassName(); }
    public String getMethodNameAndDescription() { return arguments.methodNameAndDesc; }
    public Object[] getArgumentValues() { return arguments.getValues(); }
+   public boolean isConstructor() { return arguments.isForConstructor(); }
 
    // Matching based on instance or mocked type ///////////////////////////////////////////////////////////////////////
 
@@ -69,8 +71,7 @@ public final class ExpectedInvocation
    {
       return
          isMatch(invokedClassDesc, invokedMethod) &&
-         (getMethodNameAndDescription().charAt(0) == '<' ||
-          !matchInstance || isEquivalentInstance(replayInstance, instanceMap));
+         (arguments.isForConstructor() || !matchInstance || isEquivalentInstance(replayInstance, instanceMap));
    }
 
    private boolean isMatchingMethod(String invokedMethod)

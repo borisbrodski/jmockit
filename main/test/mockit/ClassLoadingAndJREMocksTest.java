@@ -27,7 +27,7 @@ public final class ClassLoadingAndJREMocksTest
    public void recordExpectationForFileUsingLocalMockField()
    {
       new Expectations() {
-         File file;
+         @Mocked File file;
 
          {
             new File("filePath").exists(); result = true;
@@ -76,6 +76,7 @@ public final class ClassLoadingAndJREMocksTest
       assertFalse(new File("someOtherFile").exists());
       assertTrue(new File("testFile").exists());
       assertFalse(new File("yet/another/file").exists());
+      assertTrue(new File("testFile").exists());
    }
 
    @Test
@@ -100,7 +101,7 @@ public final class ClassLoadingAndJREMocksTest
       new NonStrictExpectations(File.class) {{
          aFile.exists();
          result = new Delegate() {
-            boolean exists(Invocation inv)
+            @Mock boolean exists(Invocation inv)
             {
                File it = inv.getInvokedInstance();
                return "testFile".equals(it.getName()) || it.exists();
@@ -111,15 +112,17 @@ public final class ClassLoadingAndJREMocksTest
       checkForTheExistenceOfSeveralFiles();
    }
 
-   @Ignore @Test
-   public void mockFileSafelyUsingCapturingOnMatchingConstructorInvocations()
+   @Test
+   public void mockFileSafelyUsingReplacementInstanceForMatchingConstructorInvocations()
    {
       new NonStrictExpectations() {
-         @Capturing File aFile;
-      {
-         new File("testFile"); result = aFile;
-         aFile.exists(); result = true;
-      }};
+         File aFile;
+
+         {
+            new File("testFile"); result = aFile;
+            onInstance(aFile).exists(); result = true;
+         }
+      };
 
       checkForTheExistenceOfSeveralFiles();
    }
@@ -129,7 +132,7 @@ public final class ClassLoadingAndJREMocksTest
    {
       new Expectations() {
          @Mocked("helperMethod") TestedUnitUsingIO tested;
-         FileOutputStream mockOS;
+         @Mocked FileOutputStream mockOS;
 
          {
             invoke(tested, "helperMethod", withAny(FileOutputStream.class));
@@ -156,7 +159,7 @@ public final class ClassLoadingAndJREMocksTest
    @Test
    public void mockEntireAbstractListClass()
    {
-      new NonStrictExpectations() { AbstractList<?> c; };
+      new NonStrictExpectations() { @Mocked AbstractList<?> c; };
    }
 
    @Test
@@ -278,30 +281,32 @@ public final class ClassLoadingAndJREMocksTest
       }
    }
 
-   @Ignore @Test // Fails in the Ant run.
-   public void mockZipFile() throws Exception
+   @Test
+   public void mockNonExistentZipFileSoItAppearsToExistWithTheContentsOfAnExistingFile() throws Exception
    {
-      final ZipFile testZip = new ZipFile(getClass().getResource("test.zip").getPath());
+      String existentZipFileName = getClass().getResource("test.zip").getPath();
+      final ZipFile testZip = new ZipFile(existentZipFileName);
 
-      new NonStrictExpectations() {
-         @Capturing @Injectable ZipFile mock;
+      new NonStrictExpectations(ZipFile.class) {{
+         new ZipFile("non-existent"); result = testZip;
+      }};
 
-         {
-            mock.entries();
-            result = testZip.entries();
+      assertEquals("test", readFromZipFile("non-existent"));
 
-            mock.getInputStream((ZipEntry) any);
-            result = new Delegate() {
-               InputStream delegate(ZipEntry e) throws IOException { return testZip.getInputStream(e); }
-            };
-         }
-      };
+      try {
+         new ZipFile("another-non-existent");
+         fail();
+      }
+      catch (FileNotFoundException ignore) {}
 
-      ZipFile zf = new ZipFile("non-existing");
+      assertEquals("test", readFromZipFile(existentZipFileName));
+   }
+
+   private String readFromZipFile(String fileName) throws IOException
+   {
+      ZipFile zf = new ZipFile(fileName);
       ZipEntry firstEntry = zf.entries().nextElement();
       InputStream content = zf.getInputStream(firstEntry);
-      String textContent = new BufferedReader(new InputStreamReader(content)).readLine();
-
-      assertEquals("test", textContent);
+      return new BufferedReader(new InputStreamReader(content)).readLine();
    }
 }
