@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.argumentMatching;
@@ -31,7 +31,7 @@ public final class ReflectiveMatcher implements ArgumentMatcher
    public void writeMismatchPhrase(ArgumentMismatch argumentMismatch)
    {
       argumentMismatch.append(handlerMethod.getName()).append('(').appendFormatted(matchedValue);
-      argumentMismatch.append(") to return true, got false");
+      argumentMismatch.append(") (should return true, was false)");
       argumentMismatch.markAsFinished();
    }
 }
