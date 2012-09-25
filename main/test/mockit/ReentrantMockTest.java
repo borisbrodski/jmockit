@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -194,8 +194,7 @@ public final class ReentrantMockTest
    @Test
    public void reentrantMockForNonJREClassWhichCallsAnotherFromADifferentThread()
    {
-      new MockUp<RealClass2>()
-      {
+      new MockUp<RealClass2>() {
          RealClass2 it;
          int value;
 
@@ -226,8 +225,7 @@ public final class ReentrantMockTest
       System.setProperty("a", "1");
       System.setProperty("b", "2");
 
-      new MockUp<System>()
-      {
+      new MockUp<System>() {
          String property;
 
          @Mock(reentrant = true)
@@ -253,8 +251,7 @@ public final class ReentrantMockTest
    @Test
    public void mockFileAndForceJREToCallReentrantMockedMethod()
    {
-      new MockUp<File>()
-      {
+      new MockUp<File>() {
          File it;
 
          @Mock(reentrant = true)
@@ -265,5 +262,21 @@ public final class ReentrantMockTest
       new Runnable() { public void run() {} };
 
       assertTrue(new File("noFile").exists());
+   }
+
+   static final class RealClass3
+   {
+      RealClass3 newInstance() { return new RealClass3(); }
+   }
+
+   @Test
+   public void reentrantMockForMethodWhichInstantiatesAndReturnsNewInstanceOfTheMockedClass()
+   {
+      new MockUp<RealClass3>() {
+         @Mock(reentrant = true)
+         RealClass3 newInstance() { return null; }
+      };
+
+      assertNull(new RealClass3().newInstance());
    }
 }

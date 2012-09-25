@@ -169,7 +169,7 @@ final class MockupsModifier extends BaseClassModifier
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
       classWasModified = true;
 
-      MethodVisitor alternativeWriter = getAlternativeMethodWriter(access, desc);
+      MethodVisitor alternativeWriter = getAlternativeMethodWriter(access, name, desc);
 
       if (alternativeWriter != null) {
          return alternativeWriter;
@@ -232,33 +232,40 @@ final class MockupsModifier extends BaseClassModifier
       }
    }
 
-   private MethodVisitor getAlternativeMethodWriter(int access, String desc)
+   private MethodVisitor getAlternativeMethodWriter(int mockedAccess, String mockedName, String mockedDesc)
    {
       if (!mockMethod.isDynamic()) {
          return null;
       }
 
-      if (isNative(access)) {
+      if (isNative(mockedAccess)) {
          throw new IllegalArgumentException(
             "Reentrant mocks for native methods are not supported: \"" + mockMethod.name + '\"');
       }
 
-      generateCallsForMockExecution(access, desc);
+      generateCallsForMockExecution(mockedAccess, mockedDesc);
+
+      final boolean forConstructor = mockedName.charAt(0) == '<';
 
       return new MethodVisitor(mw) {
          @Override
-         public void visitLocalVariable(String name, String desc2, String signature, Label start, Label end, int index)
+         public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index)
          {
             // Discards debug info with missing information, to avoid a ClassFormatError (happens with EMMA).
             if (end.position > 0) {
-               mw.visitLocalVariable(name, desc2, signature, start, end, index);
+               mw.visitLocalVariable(name, desc, signature, start, end, index);
             }
          }
 
          @Override
-         public void visitMethodInsn(int opcode, String owner, String name, String methodDesc)
+         public void visitMethodInsn(int opcode, String owner, String name, String desc)
          {
-            disregardIfInvokingAnotherConstructor(opcode, owner, name, methodDesc);
+            if (forConstructor) {
+               disregardIfInvokingAnotherConstructor(opcode, owner, name, desc);
+            }
+            else {
+               mw.visitMethodInsn(opcode, owner, name, desc);
+            }
          }
       };
    }
