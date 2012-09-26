@@ -219,17 +219,18 @@
   </component>
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
-    <list size="10">
+    <list size="11">
       <item index="0" class="java.lang.String" itemvalue="javax.inject.Inject" />
       <item index="1" class="java.lang.String" itemvalue="mockit.Capturing" />
       <item index="2" class="java.lang.String" itemvalue="mockit.Cascading" />
       <item index="3" class="java.lang.String" itemvalue="mockit.Injectable" />
-      <item index="4" class="java.lang.String" itemvalue="mockit.Mock" />
-      <item index="5" class="java.lang.String" itemvalue="mockit.MockClass" />
-      <item index="6" class="java.lang.String" itemvalue="mockit.Mocked" />
-      <item index="7" class="java.lang.String" itemvalue="mockit.NonStrict" />
-      <item index="8" class="java.lang.String" itemvalue="mockit.Tested" />
-      <item index="9" class="java.lang.String" itemvalue="org.mockito.Mock" />
+      <item index="4" class="java.lang.String" itemvalue="mockit.Input" />
+      <item index="5" class="java.lang.String" itemvalue="mockit.Mock" />
+      <item index="6" class="java.lang.String" itemvalue="mockit.MockClass" />
+      <item index="7" class="java.lang.String" itemvalue="mockit.Mocked" />
+      <item index="8" class="java.lang.String" itemvalue="mockit.NonStrict" />
+      <item index="9" class="java.lang.String" itemvalue="mockit.Tested" />
+      <item index="10" class="java.lang.String" itemvalue="org.mockito.Mock" />
     </list>
   </component>
   <component name="FacetAutodetectingManager">

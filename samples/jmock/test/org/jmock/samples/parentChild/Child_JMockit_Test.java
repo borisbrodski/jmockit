@@ -13,21 +13,11 @@ import mockit.*;
  */
 public final class Child_JMockit_Test
 {
-   @Mocked Parent parent;
-   Child child;
-
-   @Before
-   public void createChildOfParent()
-   {
-      // Expectations can be recorded here, in expectation blocks.
-      // If they aren't, all mock invocations during setup will be allowed.
-
-      // Creating the child adds it to the parent.
-      child = new Child(parent);
-   }
+   @Injectable Parent parent;
+   @Tested Child child;
 
    @Test
-   public void removesItselfFromOldParentWhenAssignedNewParent(@Mocked final Parent newParent)
+   public void removesItselfFromOldParentWhenAssignedNewParent(@Injectable final Parent newParent)
    {
       new Expectations() {{
          parent.removeChild(child);

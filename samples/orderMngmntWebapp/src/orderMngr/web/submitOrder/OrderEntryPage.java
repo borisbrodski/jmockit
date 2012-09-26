@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package orderMngr.web.submitOrder;
@@ -34,45 +34,21 @@ public final class OrderEntryPage
       // or from the HTTPSession
    }
 
-   public void setCustomerId(String customerId)
-   {
-      this.customerId = customerId;
-   }
+   public void setCustomerId(String customerId) { this.customerId = customerId; }
 
-   public List<OrderItem> getOrderItems()
-   {
-      return orderItems;
-   }
+   public List<OrderItem> getOrderItems() { return orderItems; }
 
-   public void setProductId(String productId)
-   {
-      this.productId = productId;
-   }
+   public void setProductId(String productId) { this.productId = productId; }
 
-   public void setProductDescription(String productDescription)
-   {
-      this.productDescription = productDescription;
-   }
+   public void setProductDescription(String productDescription) { this.productDescription = productDescription; }
 
-   public void setQuantity(int quantity)
-   {
-      this.quantity = quantity;
-   }
+   public void setQuantity(int quantity) { this.quantity = quantity; }
 
-   public void setUnitPrice(BigDecimal unitPrice)
-   {
-      this.unitPrice = unitPrice;
-   }
+   public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
 
-   public void setItemToRemove(int itemToRemove)
-   {
-      this.itemToRemove = itemToRemove;
-   }
+   public void setItemToRemove(int itemToRemove) { this.itemToRemove = itemToRemove; }
 
-   public int getOrderNo()
-   {
-      return orderNo;
-   }
+   public int getOrderNo() { return orderNo; }
 
    public void addItem()
    {

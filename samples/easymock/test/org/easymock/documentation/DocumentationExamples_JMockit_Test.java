@@ -20,9 +20,7 @@ public final class DocumentationExamples_JMockit_Test
 
       new Expectations() {{
          mock.voteForRemoval(title);
-         returns(42, 42, 42); times = 3;
-         result = new RuntimeException();
-         result = -42;
+         result = new Object[] {42, 42, 42, new RuntimeException(), -42};
       }};
 
       assertEquals(42, mock.voteForRemoval(title));
@@ -31,10 +29,9 @@ public final class DocumentationExamples_JMockit_Test
 
       try {
          mock.voteForRemoval(title);
+         fail();
       }
-      catch (RuntimeException e) {
-         // OK
-      }
+      catch (RuntimeException ignore) {}
 
       assertEquals(-42, mock.voteForRemoval(title));
    }

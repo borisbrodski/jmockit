@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package orderMngr.web.submitOrder;
@@ -25,10 +25,9 @@ public final class OrderEntryPage_MockupsAPI_Test
       customerId = "889000";
       orderNo = 464;
 
-      new MockUp<OrderFactory>()
-      {
+      new MockUp<OrderFactory>() {
          @Mock(invocations = 1)
-         public Order createOrder(String custId, List<OrderItem> items)
+         Order createOrder(String custId, List<OrderItem> items)
          {
             assertEquals(customerId, custId);
             assertEquals(page.getOrderItems(), items);
