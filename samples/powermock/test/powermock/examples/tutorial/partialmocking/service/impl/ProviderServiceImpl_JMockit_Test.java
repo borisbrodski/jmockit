@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package powermock.examples.tutorial.partialmocking.service.impl;
@@ -37,12 +37,9 @@ public final class ProviderServiceImpl_JMockit_Test
 
       final ProviderService tested = new ProviderServiceImpl();
 
-      new Expectations(tested)
-      {
-         {
-            invoke(tested, "getAllServiceProducers"); result = expectedServiceProducers;
-         }
-      };
+      new Expectations(tested) {{
+         invoke(tested, "getAllServiceProducers"); result = expectedServiceProducers;
+      }};
 
       Set<ServiceProducer> actualServiceProviders = tested.getAllServiceProviders();
 
@@ -55,12 +52,7 @@ public final class ProviderServiceImpl_JMockit_Test
       Set<ServiceProducer> expectedServiceProducers = new HashSet<ServiceProducer>();
       final ProviderService tested = new ProviderServiceImpl();
 
-      new Expectations(tested)
-      {
-         {
-            invoke(tested, "getAllServiceProducers"); result = null;
-         }
-      };
+      new Expectations(tested) {{ invoke(tested, "getAllServiceProducers"); result = null; }};
 
       Set<ServiceProducer> actualServiceProviders = tested.getAllServiceProviders();
 
@@ -79,12 +71,7 @@ public final class ProviderServiceImpl_JMockit_Test
 
       final ProviderService tested = new ProviderServiceImpl();
 
-      new Expectations(tested)
-      {
-         {
-            invoke(tested, "getAllServiceProducers"); result = serviceProducers;
-         }
-      };
+      new Expectations(tested) {{ invoke(tested, "getAllServiceProducers"); result = serviceProducers; }};
 
       ServiceProducer actual = tested.getServiceProvider(expectedServiceProducerId);
 
@@ -96,14 +83,11 @@ public final class ProviderServiceImpl_JMockit_Test
    {
       final ProviderService tested = new ProviderServiceImpl();
 
-      new Expectations(tested)
-      {
-         {
-            invoke(tested, "getAllServiceProducers");
-            // An empty collection is the default return value, so we don't have to record it here.
-            // returns(new HashSet<ServiceProducer>());
-         }
-      };
+      new Expectations(tested) {{
+         invoke(tested, "getAllServiceProducers");
+         // An empty collection is the default return value, so we don't have to record it here.
+         // returns(new HashSet<ServiceProducer>());
+      }};
 
       ServiceProducer actual = tested.getServiceProvider(1);
 
@@ -141,13 +125,10 @@ public final class ProviderServiceImpl_JMockit_Test
       final Set<ServiceArtifact> serviceArtifacts = new HashSet<ServiceArtifact>();
       serviceArtifacts.add(new ServiceArtifact(expectedId, expectedName));
 
-      RealProviderServiceExpectations expectations = new RealProviderServiceExpectations()
-      {
-         {
-            providerDao.getAllServiceProducers();
-            result = serviceArtifacts;
-         }
-      };
+      RealProviderServiceExpectations expectations = new RealProviderServiceExpectations() {{
+         providerDao.getAllServiceProducers();
+         result = serviceArtifacts;
+      }};
 
       Set<ServiceProducer> allProducers = expectations.getAllServiceProducers();
 
@@ -158,12 +139,9 @@ public final class ProviderServiceImpl_JMockit_Test
    @Test
    public void getAllServiceProducersOnEmptyProviderService()
    {
-      RealProviderServiceExpectations expectations = new RealProviderServiceExpectations()
-      {
-         {
-            providerDao.getAllServiceProducers(); result = new HashSet<ServiceArtifact>();
-         }
-      };
+      RealProviderServiceExpectations expectations = new RealProviderServiceExpectations() {{
+         providerDao.getAllServiceProducers(); result = new HashSet<ServiceArtifact>();
+      }};
 
       Set<ServiceProducer> allProducers = expectations.getAllServiceProducers();
 

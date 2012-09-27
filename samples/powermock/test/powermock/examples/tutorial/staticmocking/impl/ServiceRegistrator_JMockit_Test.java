@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package powermock.examples.tutorial.staticmocking.impl;
@@ -22,36 +22,22 @@ import powermock.examples.tutorial.staticmocking.osgi.*;
  */
 public final class ServiceRegistrator_JMockit_Test
 {
-   private ServiceRegistrator tested;
+   @Tested ServiceRegistrator tested;
    @Mocked ServiceRegistration serviceRegistrationMock;
    @Mocked final IdGenerator unused = null;
 
-   @Before
-   public void setUp()
-   {
-      tested = new ServiceRegistrator();
-   }
-
    @Test
-   public void testRegisterService(final BundleContext bundleContextMock)
+   public void testRegisterService(@Injectable final BundleContext bundleContextMock)
    {
       // Data for the test:
       final String name = "a name";
       final Object serviceImpl = new Object();
       final long expectedId = 42;
 
-      new Expectations()
-      {
-         {
-            // Inject one of the mocks into the tested object:
-            setField(tested, bundleContextMock);
-
-            bundleContextMock.registerService(name, serviceImpl, null);
-            result = serviceRegistrationMock;
-
-            IdGenerator.generateNewId(); result = expectedId;
-         }
-      };
+      new Expectations() {{
+         bundleContextMock.registerService(name, serviceImpl, null); result = serviceRegistrationMock;
+         IdGenerator.generateNewId(); result = expectedId;
+      }};
 
       // Code under test is exercised (replay phase):
       long actualId = tested.registerService(name, serviceImpl);
@@ -68,19 +54,14 @@ public final class ServiceRegistrator_JMockit_Test
    @Test
    public void testUnregisterService()
    {
-      final Map<Long, ServiceRegistration> serviceRegistrations =
-         new HashMap<Long, ServiceRegistration>();
+      final Map<Long, ServiceRegistration> serviceRegistrations = new HashMap<Long, ServiceRegistration>();
       long id = 1L;
       serviceRegistrations.put(id, serviceRegistrationMock);
 
-      new Expectations()
-      {
-         {
-            setField(tested, serviceRegistrations);
-
-            serviceRegistrationMock.unregister();
-         }
-      };
+      new Expectations() {{
+         setField(tested, serviceRegistrations);
+         serviceRegistrationMock.unregister();
+      }};
 
       tested.unregisterService(id);
 

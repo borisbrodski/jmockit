@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package powermock.examples.suppress.constructorhierarchy;
@@ -20,8 +20,7 @@ public final class ExampleWithEvilChildAndEvilGrandChild_JMockit_Test
       stubOut(EvilChild.class, EvilGrandChild.class);
 
       String message = "myMessage";
-      ExampleWithEvilChildAndEvilGrandChild tested =
-         new ExampleWithEvilChildAndEvilGrandChild(message);
+      ExampleWithEvilChildAndEvilGrandChild tested = new ExampleWithEvilChildAndEvilGrandChild(message);
 
       assertEquals(message, tested.getMessage());
    }

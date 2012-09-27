@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package powermock.examples.simple;
@@ -18,8 +18,7 @@ public final class Logger_JMockit_Test
    @Test(expected = IllegalStateException.class)
    public void testException() throws Exception
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          final FileWriter fileWriter;
 
          {
@@ -33,8 +32,7 @@ public final class Logger_JMockit_Test
    @Test
    public void testLogger() throws Exception
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          FileWriter fileWriter;   // can also be final with value "new FileWriter(withAny(""))"
          PrintWriter printWriter; // can also be final with value "new PrintWriter(fileWriter)"
 
@@ -50,8 +48,7 @@ public final class Logger_JMockit_Test
    @Test
    public void testLogger2(final Logger logger)
    {
-      new Expectations(logger)
-      {
+      new Expectations(logger) {
          PrintWriter printWriter;
 
          {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package powermock.examples.finalmocking;
@@ -16,17 +16,12 @@ import static org.junit.Assert.*;
 public final class StateFormatter_JMockit_Test
 {
    @Test
-   public void testGetFormattedState_actualStateExists(final StateHolder stateHolderMock)
+   public void testGetFormattedState_actualStateExists(@Mocked final StateHolder stateHolderMock)
    {
       final String expectedState = "state";
       StateFormatter tested = new StateFormatter(stateHolderMock);
 
-      new Expectations()
-      {
-         {
-            stateHolderMock.getState(); result = expectedState;
-         }
-      };
+      new Expectations() {{ stateHolderMock.getState(); result = expectedState; }};
 
       String actualState = tested.getFormattedState();
 
@@ -34,16 +29,11 @@ public final class StateFormatter_JMockit_Test
    }
 
    @Test
-   public void testGetFormattedState_noStateExists(final StateHolder stateHolderMock)
+   public void testGetFormattedState_noStateExists(@Mocked final StateHolder stateHolderMock)
    {
       StateFormatter tested = new StateFormatter(stateHolderMock);
 
-      new Expectations()
-      {
-         {
-            stateHolderMock.getState(); result = null;
-         }
-      };
+      new Expectations() {{ stateHolderMock.getState(); result = null; }};
 
       String actualState = tested.getFormattedState();
 

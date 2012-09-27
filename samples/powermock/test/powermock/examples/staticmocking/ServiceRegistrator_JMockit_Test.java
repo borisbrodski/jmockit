@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package powermock.examples.staticmocking;
@@ -21,12 +21,9 @@ public final class ServiceRegistrator_JMockit_Test
       final long expectedId = 42;
       ServiceRegistrator tested = new ServiceRegistrator();
 
-      new Expectations(IdGenerator.class) // could also have declared a mock field or parameter
-      {
-         {
-            IdGenerator.generateNewId(); result = expectedId;
-         }
-      };
+      new Expectations(IdGenerator.class) {{ // could also have declared a mock field or parameter
+         IdGenerator.generateNewId(); result = expectedId;
+      }};
 
       long actualId = tested.registerService(new Object());
 

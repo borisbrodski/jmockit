@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package powermock.examples.annotationbased;
@@ -16,28 +16,15 @@ import powermock.examples.annotationbased.dao.*;
  */
 public final class UsingMockAnnotation_JMockit_Test
 {
-   @Mocked
-   private SomeDao someDaoMock;
-
-   private SomeService someService;
-
-   @Before
-   public void setUp()
-   {
-      someService = new SomeService(someDaoMock);
-   }
+   @Injectable SomeDao someDaoMock;
+   @Tested SomeService someService;
 
    @Test
    public void testGetData()
    {
       final Object data = new Object();
 
-      new Expectations()
-      {
-         {
-            someDaoMock.getSomeData(); result = data;
-         }
-      };
+      new Expectations() {{ someDaoMock.getSomeData(); result = data; }};
 
       assertSame(data, someService.getData());
    }

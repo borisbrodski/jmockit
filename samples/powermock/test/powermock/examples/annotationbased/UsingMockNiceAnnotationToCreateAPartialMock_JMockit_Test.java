@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package powermock.examples.annotationbased;
@@ -19,16 +19,8 @@ import powermock.examples.annotationbased.dao.*;
  */
 public final class UsingMockNiceAnnotationToCreateAPartialMock_JMockit_Test
 {
-   @Mocked("getSomeData")
-   private SomeDao someDaoMock;
-
-   private SomeService someService;
-
-   @Before
-   public void setUp()
-   {
-      someService = new SomeService(someDaoMock);
-   }
+   @Injectable @Mocked("getSomeData") SomeDao someDaoMock;
+   @Tested SomeService someService;
 
    @Test
    public void assertThatNiceMockAnnotationWork()

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package powermock.examples.tutorial.hellopower;
@@ -18,9 +18,8 @@ public final class HelloWorld_JMockit_Test
    @Test
    public void testGreetingUsingExpectationsAPI()
    {
-      new Expectations()
-      {
-         final SimpleConfig mock = null;
+      new Expectations() {
+         @Mocked final SimpleConfig mock = null;
 
          {
             SimpleConfig.getGreeting(); result = "Hello";
@@ -34,13 +33,9 @@ public final class HelloWorld_JMockit_Test
    @Test
    public void testGreetingUsingMockupsAPI()
    {
-      new MockUp<SimpleConfig>()
-      {
-         @Mock
-         public String getGreeting() { return "Hello"; }
-
-         @Mock
-         public String getTarget() { return "world"; }
+      new MockUp<SimpleConfig>() {
+         @Mock String getGreeting() { return "Hello"; }
+         @Mock String getTarget() { return "world"; }
       };
 
       assertEquals("Hello world", new HelloWorld().greet());

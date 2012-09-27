@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package powermock.examples.bypassencapsulation;
@@ -16,22 +16,16 @@ import powermock.examples.bypassencapsulation.nontest.*;
  */
 public final class ReportGenerator_JMockit_Test
 {
+   @Tested ReportGenerator tested;
+
    @Test
-   public void testGenerateReport()
+   public void testGenerateReport(@Injectable final ReportTemplateService reportTemplateServiceMock)
    {
-      final ReportGenerator tested = new ReportGenerator();
       final String reportId = "id";
 
-      new Expectations()
-      {
-         ReportTemplateService reportTemplateServiceMock;
-
-         {
-            setField(tested, reportTemplateServiceMock);
-
-            reportTemplateServiceMock.getTemplateId(reportId); result = "templateId";
-         }
-      };
+      new Expectations() {{
+         reportTemplateServiceMock.getTemplateId(reportId); result = "templateId";
+      }};
 
       Report actualReport = tested.generateReport(reportId);
 

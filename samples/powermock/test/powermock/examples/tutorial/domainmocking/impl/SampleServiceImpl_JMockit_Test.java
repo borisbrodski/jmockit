@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package powermock.examples.tutorial.domainmocking.impl;
@@ -17,15 +17,9 @@ import powermock.examples.tutorial.domainmocking.domain.*;
  */
 public final class SampleServiceImpl_JMockit_Test
 {
-   @Mocked PersonService personService;
-   @Mocked EventService eventService;
-   SampleServiceImpl tested;
-
-   @Before
-   public void setUp()
-   {
-      tested = new SampleServiceImpl(personService, eventService);
-   }
+   @Tested SampleServiceImpl tested;
+   @Injectable PersonService personService;
+   @Injectable EventService eventService;
 
    @Test
    public void testCreatePerson()
@@ -34,8 +28,7 @@ public final class SampleServiceImpl_JMockit_Test
       String lastName = "lastName";
       final Person person = new Person(firstName, lastName);
 
-      new Expectations()
-      {
+      new Expectations() {
          BusinessMessages businessMessages;
 
          {
@@ -56,8 +49,7 @@ public final class SampleServiceImpl_JMockit_Test
       String lastName = "lastName";
       final Person person = new Person(firstName, lastName);
 
-      new Expectations()
-      {
+      new Expectations() {
          // Declared non-strict so that the order of invocation is irrelevant:
          @NonStrict BusinessMessages businessMessages;
 
@@ -79,9 +71,8 @@ public final class SampleServiceImpl_JMockit_Test
       final String firstName = "firstName";
       final String lastName = "lastName";
 
-      new Expectations()
-      {
-         Person person;
+      new Expectations() {
+         @Mocked Person person;
 
          {
             new Person(firstName, lastName); result = new IllegalArgumentException("test");
