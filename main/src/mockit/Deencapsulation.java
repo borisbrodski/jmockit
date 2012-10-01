@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -20,7 +20,7 @@ import mockit.internal.util.*;
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/powermock/test/powermock/examples/bypassencapsulation/ServiceHolder_JMockit_Test.java">ServiceHolder_JMockit_Test</a>,
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/AnimatedTransitions/test/org/jdesktop/animation/transitions/ScreenTransitionContainerResizeTest.java">ScreenTransitionContainerResizeTest</a>
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings("unchecked")
 public final class Deencapsulation
 {
    private Deencapsulation() {}
@@ -238,9 +238,9 @@ public final class Deencapsulation
     * @return a newly created instance of the specified class, initialized through the specified constructor and
     * arguments
     *
-    * @see #newInstance(String, Object...)
+    * @see #newInstance(Class, Object...)
+    * @see #newInnerInstance(Class, Object, Object...)
     * @see #newInstance(String, Class[], Object...)
-    * @see #newInnerInstance(String, Object, Object...)
     */
    public static <T> T newInstance(Class<? extends T> classToInstantiate, Class<?>[] parameterTypes, Object... initArgs)
    {
@@ -255,7 +255,12 @@ public final class Deencapsulation
     * the {@code Class} object for the parameter type must be passed instead
     * @param <T> type to which the returned instance should be assignable
     *
-    * @throws IllegalArgumentException if a null reference was provided for a parameter
+    * @throws IllegalArgumentException if a null reference was provided for a parameter, or if no constructor was found
+    * that matched the given argument types
+    *
+    * @see #newInnerInstance(String, Object, Object...)
+    * @see #newInstance(Class, Object...)
+    * @see #newInstance(String, Class[], Object...)
     */
    public static <T> T newInstance(String className, Object... nonNullArgs)
    {
@@ -270,7 +275,12 @@ public final class Deencapsulation
     * the {@code Class} object for the parameter type must be passed instead
     * @param <T> type to which the returned instance should be assignable
     *
-    * @throws IllegalArgumentException if a null reference was provided for a parameter
+    * @throws IllegalArgumentException if a null reference was provided for a parameter, or if no constructor was found
+    * that matched the given argument types
+    *
+    * @see #newInnerInstance(Class, Object, Object...)
+    * @see #newInstance(String, Object...)
+    * @see #newInstance(String, Class[], Object...)
     */
    public static <T> T newInstance(Class<? extends T> classToInstantiate, Object... nonNullArgs)
    {
@@ -289,6 +299,8 @@ public final class Deencapsulation
     * @param <T> type to which the returned instance should be assignable
     *
     * @throws IllegalArgumentException if a null reference was provided for a parameter
+    *
+    * @see #newInnerInstance(Class, Object, Object...)
     */
    public static <T> T newInnerInstance(String innerClassSimpleName, Object outerClassInstance, Object... nonNullArgs)
    {
@@ -306,6 +318,8 @@ public final class Deencapsulation
     * @param <T> type to which the returned instance should be assignable
     *
     * @throws IllegalArgumentException if a null reference was provided for a parameter
+    *
+    * @see #newInnerInstance(String, Object, Object...)
     */
    public static <T> T newInnerInstance(
       Class<? extends T> innerClassToInstantiate, Object outerClassInstance, Object... nonNullArgs)

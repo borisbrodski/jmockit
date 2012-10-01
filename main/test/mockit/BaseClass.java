@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -11,6 +11,8 @@ public class BaseClass
    protected int baseInt;
    protected String baseString;
    protected Set<Boolean> baseSet;
+
+   @SuppressWarnings({"FieldCanBeLocal", "UnusedDeclaration"})
    private long longField;
 
    public static void doStatic1() { throw new RuntimeException("Real method 1 called"); }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -9,13 +9,70 @@ import java.util.*;
 import static mockit.Deencapsulation.*;
 import static org.junit.Assert.*;
 import org.junit.*;
+import org.junit.rules.*;
 
 import mockit.internal.util.*;
 
-@SuppressWarnings({"UnusedDeclaration", "ClassWithTooManyMethods"})
+@SuppressWarnings("UnusedDeclaration")
 public final class DeencapsulationTest
 {
-   static final Class<?> innerClass = Utilities.loadClass("mockit.Subclass$InnerClass");
+   @Rule public ExpectedException thrown = ExpectedException.none();
+
+   static final class Subclass extends BaseClass
+   {
+      final int INITIAL_VALUE = new Random().nextInt();
+      final int initialValue = -1;
+
+      private static final Integer constantField = 123;
+      private static final String compileTimeConstantField = "test";
+      static final boolean FLAG = false;
+
+      private static StringBuilder buffer;
+      private static char static1;
+      private static char static2;
+
+      static StringBuilder getBuffer() { return buffer; }
+      static void setBuffer(StringBuilder buffer) { Subclass.buffer = buffer; }
+
+      private String stringField;
+      private int intField;
+      private int intField2;
+      private List<String> listField;
+
+      Subclass() { intField = -1; }
+      Subclass(int a, String b) { intField = a; stringField = b; }
+      Subclass(String... args) { listField = Arrays.asList(args); }
+      Subclass(List<String> list) { listField = list; }
+
+      private static Boolean anStaticMethod() { return true; }
+      private static void staticMethod(short s, String str, Boolean b) {}
+      private static String staticMethod(short s, StringBuilder str, boolean b) { return String.valueOf(str); }
+
+      private long aMethod() { return 567L; }
+      private void instanceMethod(short s, String str, Boolean b) {}
+      private String instanceMethod(short s, StringBuilder str, boolean b) { return String.valueOf(str); }
+
+      int getIntField() { return intField; }
+      void setIntField(int intField) { this.intField = intField; }
+
+      int getIntField2() { return intField2; }
+      void setIntField2(int intField2) { this.intField2 = intField2; }
+
+      String getStringField() { return stringField; }
+      void setStringField(String stringField) { this.stringField = stringField; }
+
+      List<String> getListField() { return listField; }
+      void setListField(List<String> listField) { this.listField = listField; }
+
+      private final class InnerClass
+      {
+         private InnerClass() {}
+         private InnerClass(boolean b, Long l, String s) {}
+         private InnerClass(List<String> list) {}
+      }
+   }
+
+   static final Class<?> innerClass = Utilities.loadClass(Subclass.class.getName() + "$InnerClass");
    final Subclass anInstance = new Subclass();
 
    @Test
@@ -56,7 +113,7 @@ public final class DeencapsulationTest
       assertSame(anInstance.baseSet, listValue);
    }
 
-   @SuppressWarnings({"unchecked"})
+   @SuppressWarnings("unchecked")
    @Test
    public void getInstanceFieldByType()
    {
@@ -84,7 +141,7 @@ public final class DeencapsulationTest
       getField(anInstance, int.class);
    }
 
-   @SuppressWarnings({"unchecked"})
+   @SuppressWarnings("unchecked")
    @Test
    public void getInheritedInstanceFieldByType()
    {
@@ -425,6 +482,24 @@ public final class DeencapsulationTest
       Object innerInstance = newInnerInstance("InnerClass", anInstance);
 
       assertTrue(innerClass.isInstance(innerInstance));
+   }
+
+   class InnerClass { InnerClass(int i) {} }
+
+   @Test
+   public void instantiateInnerClassWithOwnerInstance()
+   {
+      InnerClass ic = newInstance(InnerClass.class, this, 123);
+      assertNotNull(ic);
+   }
+
+   @Test
+   public void attemptToInstantiateInnerClassWithoutOwnerInstance()
+   {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("instantiation of inner class");
+
+      newInstance(InnerClass.class, 123);
    }
 
    @Test(expected = IllegalArgumentException.class)
