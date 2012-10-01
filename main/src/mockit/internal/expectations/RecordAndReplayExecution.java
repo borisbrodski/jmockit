@@ -41,7 +41,6 @@ public final class RecordAndReplayExecution
       redefinitions = null;
       typesAndTargetObjects = new HashMap<Type, Object>(1);
       dynamicPartialMocking = null;
-      validateThereIsAtLeastOneMockedTypeInScope();
       discoverMockedTypesAndInstancesForMatchingOnInstance();
       failureState = new FailureState();
       replayPhase = new ReplayPhase(this);
@@ -107,7 +106,6 @@ public final class RecordAndReplayExecution
          redefinitions = redefineFieldTypes(targetObject);
          dynamicPartialMocking = applyDynamicPartialMocking(nonStrict, classesOrInstancesToBePartiallyMocked);
 
-         validateThereIsAtLeastOneMockedTypeInScope();
          discoverMockedTypesAndInstancesForMatchingOnInstance();
 
          //noinspection LockAcquiredButNotSafelyReleased
@@ -141,21 +139,6 @@ public final class RecordAndReplayExecution
          redefs.cleanUp();
          StackTrace.filterStackTrace(e);
          throw e;
-      }
-   }
-
-   private void validateThereIsAtLeastOneMockedTypeInScope()
-   {
-      if (
-         redefinitions == null && dynamicPartialMocking == null &&
-         TestRun.getSharedFieldTypeRedefinitions().getTypesRedefined() == 0
-      ) {
-         ParameterTypeRedefinitions paramTypeRedefinitions = TestRun.getExecutingTest().getParameterTypeRedefinitions();
-
-         if (paramTypeRedefinitions == null || paramTypeRedefinitions.getTypesRedefined() == 0) {
-            throw new IllegalStateException(
-               "No mocked types in scope; please declare mock fields or parameters for the types you need mocked");
-         }
       }
    }
 

@@ -154,8 +154,9 @@ public final class Utilities
    {
       Constructor<?> found = null;
       Class<?>[] foundParameters = null;
+      Constructor<?>[] declaredConstructors = theClass.getDeclaredConstructors();
 
-      for (Constructor<?> declaredConstructor : theClass.getDeclaredConstructors()) {
+      for (Constructor<?> declaredConstructor : declaredConstructors) {
          Class<?>[] declaredParamTypes = declaredConstructor.getParameterTypes();
          int firstRealParameter = indexOfFirstRealParameter(declaredParamTypes, argTypes);
 
@@ -172,6 +173,13 @@ public final class Utilities
 
       if (found != null) {
          return found;
+      }
+
+      Class<?> declaringClass = theClass.getDeclaringClass();
+      Class<?>[] paramTypes = declaredConstructors[0].getParameterTypes();
+
+      if (paramTypes[0] == declaringClass && paramTypes.length > argTypes.length) {
+         throw new IllegalArgumentException("Invalid instantiation of inner class; use newInnerInstance instead");
       }
 
       String argTypesDesc = getParameterTypesDescription(argTypes);
@@ -252,18 +260,25 @@ public final class Utilities
       return className.contains(GENERATED_SUBCLASS_PREFIX);
    }
 
+   public static String getNameForGeneratedClass(Class<?> aClass)
+   {
+      return getNameForGeneratedClass(aClass, aClass.getSimpleName());
+   }
+
    public static String getNameForGeneratedClass(Class<?> aClass, String suffix)
    {
       String prefix = aClass.isInterface() ? GENERATED_IMPLCLASS_PREFIX : GENERATED_SUBCLASS_PREFIX;
+      StringBuilder name = new StringBuilder(60).append(prefix).append(suffix);
 
-      if (isPublic(aClass.getModifiers())) {
-         return prefix + suffix;
+      if (aClass.getClassLoader() != null) {
+         Package targetPackage = aClass.getPackage();
+
+         if (targetPackage != null && !targetPackage.isSealed()) {
+            name.insert(0, '.').insert(0, targetPackage.getName());
+         }
       }
 
-      Package testPackage = aClass.getPackage();
-      String packageName = testPackage == null ? "" : testPackage.getName() + '.';
-
-      return packageName + prefix + suffix;
+      return name.toString();
    }
 
    private static boolean isGeneratedImplementationClass(String className)

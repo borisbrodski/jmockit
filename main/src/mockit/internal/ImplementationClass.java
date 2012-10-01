@@ -22,7 +22,7 @@ public class ImplementationClass<T>
    public final Class<T> generateNewMockImplementationClassForInterface()
    {
       ClassReader interfaceReader = ClassFile.createClassFileReader(mockedType);
-      String mockClassName = getNameForGeneratedClass(mockedType, mockedType.getSimpleName());
+      String mockClassName = getNameForGeneratedClass(mockedType);
       ClassVisitor modifier = createMethodBodyGenerator(interfaceReader, mockClassName);
       interfaceReader.accept(modifier, ClassReader.SKIP_DEBUG);
 

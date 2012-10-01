@@ -63,7 +63,7 @@ public final class ExpectationsTest
    {
       Collaborator collaborator = new Collaborator();
 
-      new Expectations() { Collaborator mock; };
+      new Expectations() { @Mocked Collaborator mock; };
 
       collaborator.provideSomeService();
    }
@@ -100,12 +100,6 @@ public final class ExpectationsTest
       }};
 
       mock.setValue(2);
-   }
-
-   @Test(expected = IllegalStateException.class)
-   public void expectNothingWithNoMockedTypesInScope()
-   {
-      new Expectations() {};
    }
 
    @Test
@@ -179,7 +173,7 @@ public final class ExpectationsTest
    @Test
    public void mockClassWithoutDefaultConstructor()
    {
-      new Expectations() { Dummy mock; };
+      new Expectations() { @Mocked Dummy mock; };
    }
 
    static class Dummy
@@ -252,7 +246,7 @@ public final class ExpectationsTest
    public void attemptToRecordExpectedReturnValueForNoCurrentInvocation()
    {
       new Expectations() {
-         Collaborator mock;
+         @Mocked Collaborator mock;
 
          {
             result = 42;
@@ -264,7 +258,7 @@ public final class ExpectationsTest
    public void attemptToAddArgumentMatcherWhenNotRecording()
    {
       new Expectations() {
-         Collaborator mock;
+         @Mocked Collaborator mock;
       }.withNotEqual(5);
    }
 
@@ -354,7 +348,7 @@ public final class ExpectationsTest
    public void mockNativeMethod()
    {
       new Expectations() {
-         final System system = null;
+         @Mocked final System system = null;
 
          {
             System.nanoTime(); result = 0L;
@@ -368,7 +362,7 @@ public final class ExpectationsTest
    public void mockSystemGetenvMethod()
    {
       new Expectations() {
-         System mockedSystem;
+         @Mocked System mockedSystem;
 
          {
             System.getenv("envVar"); result = ".";
@@ -383,7 +377,7 @@ public final class ExpectationsTest
    {
       new Expectations() {
          final FileWriter fileWriter;
-         PrintWriter printWriter;
+         @Mocked PrintWriter printWriter;
 
          {
             fileWriter = new FileWriter("no.file");

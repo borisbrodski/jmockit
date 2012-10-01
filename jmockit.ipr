@@ -1627,6 +1627,7 @@
         <pattern testClass="mockit.TestedClassWithFieldDIByTypeAndNameTest" />
         <pattern testClass="mockit.StandardDITest" />
         <pattern testClass="mockit.StandardDI2Test" />
+        <pattern testClass="mockit.TestedAbstractClassTest" />
       </patterns>
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="" />

@@ -6,12 +6,15 @@ package mockit.internal.expectations.injection;
 
 import java.lang.annotation.*;
 import java.lang.reflect.*;
+import java.lang.reflect.Type;
 import java.util.*;
 
 import javax.inject.*;
 import static java.lang.reflect.Modifier.*;
 
 import mockit.*;
+import mockit.external.asm4.*;
+import mockit.internal.*;
 import mockit.internal.expectations.mocking.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
@@ -46,6 +49,7 @@ public final class TestedClassInstantiations
    private final class TestedField
    {
       final Field testedField;
+      private TestedObjectCreation testedObjectCreation;
       private List<Field> targetFields;
 
       TestedField(Field field) { testedField = field; }
@@ -54,18 +58,25 @@ public final class TestedClassInstantiations
       {
          Object testedObject = getFieldValue(testedField, testClassInstance);
          boolean requiresJavaxInject = false;
+         Class<?> testedClass;
 
          if (testedObject == null && !isFinal(testedField.getModifiers())) {
-            TestedObjectCreation testedObjectCreation = new TestedObjectCreation();
+            if (testedObjectCreation == null) {
+               testedObjectCreation = new TestedObjectCreation(testedField);
+            }
 
-            testedObject = testedObjectCreation.create(testedField);
+            testedClass = testedObjectCreation.declaredClass;
+            testedObject = testedObjectCreation.create();
             setFieldValue(testedField, testClassInstance, testedObject);
 
             requiresJavaxInject = testedObjectCreation.constructorAnnotatedWithJavaxInject;
          }
+         else {
+            testedClass = testedObject == null ? null : testedObject.getClass();
+         }
 
          if (testedObject != null) {
-            FieldInjection fieldInjection = new FieldInjection(testedObject, requiresJavaxInject);
+            FieldInjection fieldInjection = new FieldInjection(testedClass, testedObject, requiresJavaxInject);
 
             if (targetFields == null) {
                targetFields = fieldInjection.findAllTargetInstanceFieldsInTestedClassHierarchy();
@@ -182,21 +193,35 @@ public final class TestedClassInstantiations
 
    private final class TestedObjectCreation
    {
-      private Class<?> testedClass;
+      private final Class<?> declaredClass;
+      private final Class<?> actualClass;
       private Constructor<?> constructor;
       private List<MockedType> injectablesForConstructor;
       private Type[] parameterTypes;
       boolean constructorAnnotatedWithJavaxInject;
 
-      Object create(Field testedField)
+      TestedObjectCreation(Field testedField)
       {
-         testedClass = testedField.getType();
+         declaredClass = testedField.getType();
+         actualClass = isAbstract(declaredClass.getModifiers()) ? generateSubclass() : declaredClass;
+      }
 
+      private Class<?> generateSubclass()
+      {
+         ClassReader classReader = new ClassFile(declaredClass, false).getReader();
+         String subclassName = getNameForGeneratedClass(declaredClass);
+         ClassVisitor modifier = new SubclassGenerationModifier(declaredClass, classReader, subclassName);
+         classReader.accept(modifier, 0);
+         return new ImplementationClass().defineNewClass(declaredClass.getClassLoader(), modifier, subclassName);
+      }
+
+      Object create()
+      {
          new ConstructorSearch().findConstructorAccordingToAccessibilityAndAvailableInjectables();
 
          if (constructor == null) {
             throw new IllegalArgumentException(
-               "No constructor in " + testedClass + " that can be satisfied by available injectables");
+               "No constructor in " + declaredClass + " that can be satisfied by available injectables");
          }
 
          return new ConstructorInjection().instantiate();
@@ -219,7 +244,7 @@ public final class TestedClassInstantiations
 
          ConstructorSearch()
          {
-            testedClassDesc = new ParameterNameExtractor(false).extractNames(testedClass);
+            testedClassDesc = new ParameterNameExtractor(false).extractNames(declaredClass);
             injectablesForConstructor = new ArrayList<MockedType>();
          }
 
@@ -227,7 +252,7 @@ public final class TestedClassInstantiations
          {
             constructor = null;
 
-            Constructor<?>[] constructors = testedClass.getDeclaredConstructors();
+            Constructor<?>[] constructors = actualClass.getDeclaredConstructors();
 
             if (INJECT_CLASS != null && findSingleInjectAnnotatedConstructor(constructors)) {
                constructorAnnotatedWithJavaxInject = true;
@@ -454,12 +479,14 @@ public final class TestedClassInstantiations
 
    private final class FieldInjection
    {
+      private final Class<?> testedClass;
       private final Object testedObject;
       private final boolean requiresJavaxInject;
       private boolean foundJavaxInject;
 
-      private FieldInjection(Object testedObject, boolean requiresJavaxInject)
+      private FieldInjection(Class<?> testedClass, Object testedObject, boolean requiresJavaxInject)
       {
+         this.testedClass = testedClass;
          this.testedObject = testedObject;
          this.requiresJavaxInject = requiresJavaxInject;
       }
@@ -467,7 +494,7 @@ public final class TestedClassInstantiations
       List<Field> findAllTargetInstanceFieldsInTestedClassHierarchy()
       {
          List<Field> targetFields = new ArrayList<Field>();
-         Class<?> classWithFields = testedObject.getClass();
+         Class<?> classWithFields = testedClass;
 
          do {
             Field[] fields = classWithFields.getDeclaredFields();
@@ -522,8 +549,6 @@ public final class TestedClassInstantiations
          if (superClass.getClassLoader() == null) {
             return false;
          }
-
-         Class<?> testedClass = testedObject.getClass();
 
          if (superClass.getProtectionDomain() == testedClass.getProtectionDomain()) {
             return true;

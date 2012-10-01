@@ -46,7 +46,7 @@ public final class DynamicPartialMocking
          redefineClassAndItsSuperClasses(targetClass, false);
       }
       else {
-         targetClass = classOrInstance.getClass();
+         targetClass = Utilities.getMockedClassType(classOrInstance.getClass());
          validateTargetClassType(targetClass);
          registerAsMocked(classOrInstance);
          redefineClassAndItsSuperClasses(targetClass, true);
