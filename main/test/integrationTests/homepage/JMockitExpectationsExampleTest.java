@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package integrationTests.homepage;
@@ -17,8 +17,7 @@ public final class JMockitExpectationsExampleTest
    @Test
    public void testDoOperationAbc()
    {
-      new Expectations()
-      {
+      new Expectations() {
          // This is a mock field; it can optionally be annotated with @Mocked.
          DependencyXyz mock; // a mocked instance is automatically created and assigned
 

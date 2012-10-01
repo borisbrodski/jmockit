@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package integrationTests.homepage;
@@ -13,8 +13,7 @@ public final class JMockitVerificationsExampleTest
    @Test // notice the "mock parameter", whose argument value will be created automatically
    public void testDoAnotherOperation(final AnotherDependency anotherMock)
    {
-      new NonStrictExpectations()
-      {
+      new NonStrictExpectations() {
          DependencyXyz mock; // mock instance created and assigned automatically
 
          {
@@ -23,14 +22,11 @@ public final class JMockitVerificationsExampleTest
       };
 
       // In ServiceAbc#doAnotherOperationAbc(String s): "new DependencyXyz().doSomething(s);"
-      // and "new AnotherDependency().complexOperation(obj);".
+      // and "new AnotherDependency().complexOperation(1, obj);".
       new ServiceAbc().doAnotherOperation("test");
 
-      new Verifications()
-      {
-         {
-            anotherMock.complexOperation(anyInt, null);
-         }
-      };
+      new Verifications() {{
+         anotherMock.complexOperation(anyInt, null);
+      }};
    }
 }
