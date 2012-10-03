@@ -57,7 +57,9 @@ final class PhasedExecutionState
          mockedTypesToMatchOnInstances = new LinkedList<Class<?>>();
       }
 
-      mockedTypesToMatchOnInstances.add(mockedType);
+      if (!containsReference(mockedTypesToMatchOnInstances, mockedType)) {
+         mockedTypesToMatchOnInstances.add(mockedType);
+      }
    }
 
    void addExpectation(Expectation expectation, boolean nonStrict)
