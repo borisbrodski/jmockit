@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package jbossaop.testing.bank;
@@ -22,15 +22,13 @@ import jbossaop.testing.customer.*;
  */
 public final class BankBusinessTest extends TestCase
 {
-   private BankAccount account1;
-   private BankAccount account2;
-   private Customer customer;
+   BankAccount account1;
+   BankAccount account2;
+   Customer customer;
 
    @Override
    public void setUp() throws Exception
    {
-      super.setUp();
-
       account1 = new BankAccount(10);
       account1.setBalance(100);
 
@@ -44,8 +42,7 @@ public final class BankBusinessTest extends TestCase
 
    public void testSumOfAllAccounts()
    {
-      new Expectations()
-      {
+      new Expectations() {
          // Mock fields (which could also have been annotated with @Mocked):
          @Cascading // causes BankAccountDAOFactory.getBankAccountDAOSerializer() to return a mock
          final BankAccountDAOFactory daoFactory = null; // no instance needed
@@ -62,10 +59,10 @@ public final class BankBusinessTest extends TestCase
       };
 
       double sum = new BankBusiness().getSumOfAllAccounts(customer);
+
       assertEquals(600, sum, 0);
 
       // Note that all expected invocations are verified to have actually occurred at this point.
-      // This happens because JMockit provides automatic and transparent integration with the JUnit
-      // 3.8 test runner.
+      // This happens because JMockit provides automatic and transparent integration with the JUnit test runner.
    }
 }
