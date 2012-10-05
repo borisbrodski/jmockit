@@ -5,11 +5,14 @@
 package mockit;
 
 import org.junit.*;
+import org.junit.rules.*;
 
 import mockit.internal.*;
 
 public final class FullVerificationsInOrderTest
 {
+   @Rule public final ExpectedException thrown = ExpectedException.none();
+
    @SuppressWarnings("UnusedParameters")
    public static class Dependency
    {
@@ -136,9 +139,12 @@ public final class FullVerificationsInOrderTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyAllInvocationsWhenOutOfOrder()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("with arguments: 123");
+
       mock.setSomething(123);
       mock.prepare();
 
@@ -148,9 +154,12 @@ public final class FullVerificationsInOrderTest
       }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyAllInvocationsWithSomeMissing()
    {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("with arguments: 45");
+
       exerciseCodeUnderTest();
 
       new FullVerificationsInOrder() {{
@@ -162,9 +171,12 @@ public final class FullVerificationsInOrderTest
       }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyAllInvocationsWithExpectationRecordedButOneInvocationUnverified()
    {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("with arguments: 45");
+
       new NonStrictExpectations() {{
          mock.setSomething(anyInt);
       }};
@@ -179,12 +191,13 @@ public final class FullVerificationsInOrderTest
       }};
    }
 
-   @Ignore @Test(expected = AssertionError.class)
+   @Test
    public void verifyTwoInvocationsWithIteratingBlockHavingExpectationRecordedAndSecondInvocationUnverified()
    {
-      new NonStrictExpectations() {{
-         mock.setSomething(anyInt);
-      }};
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("with arguments: 123");
+
+      new NonStrictExpectations() {{ mock.setSomething(anyInt); }};
 
       mock.setSomething(123);
       mock.setSomething(45);
@@ -207,9 +220,11 @@ public final class FullVerificationsInOrderTest
       }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyInvocationThatShouldNeverHappenButDoes()
    {
+      thrown.expect(UnexpectedInvocation.class);
+
       mock.setSomething(1);
       mock.notifyBeforeSave();
 
@@ -274,9 +289,11 @@ public final class FullVerificationsInOrderTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyAllInvocationsWithExtraVerification()
    {
+      thrown.expect(MissingInvocation.class);
+
       mock.prepare();
       mock.setSomething(123);
 
@@ -287,9 +304,12 @@ public final class FullVerificationsInOrderTest
       }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyAllInvocationsWithInvocationCountLessThanActual()
    {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("with arguments: 45");
+
       mock.setSomething(123);
       mock.setSomething(45);
 
@@ -298,9 +318,12 @@ public final class FullVerificationsInOrderTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyAllInvocationsWithInvocationCountMoreThanActual()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("with arguments: any int");
+
       mock.setSomething(-67);
 
       new FullVerificationsInOrder() {{
@@ -322,19 +345,25 @@ public final class FullVerificationsInOrderTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifySingleInvocationInBlockWithLargerNumberOfIterations()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("with arguments: any int");
+
       mock.setSomething(123);
 
       new FullVerificationsInOrder(3) {{
-         mock.setSomething(123);
+         mock.setSomething(anyInt);
       }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyMultipleInvocationsInBlockWithSmallerNumberOfIterations()
    {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("with arguments: 45");
+
       mock.setSomething(123);
       mock.setSomething(45);
 

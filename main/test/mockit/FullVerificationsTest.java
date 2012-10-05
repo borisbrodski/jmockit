@@ -4,14 +4,16 @@
  */
 package mockit;
 
-import static org.junit.Assert.*;
 import org.junit.*;
+import org.junit.rules.*;
 
 import mockit.internal.*;
 
-@SuppressWarnings("UnusedDeclaration")
 public final class FullVerificationsTest
 {
+   @Rule public final ExpectedException thrown = ExpectedException.none();
+
+   @SuppressWarnings("UnusedParameters")
    public static class Dependency
    {
       public void setSomething(int value) {}
@@ -24,7 +26,7 @@ public final class FullVerificationsTest
 
    @Mocked Dependency mock;
 
-   private void exerciseCodeUnderTest()
+   void exerciseCodeUnderTest()
    {
       mock.prepare();
       mock.setSomething(123);
@@ -108,9 +110,12 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyAllInvocationsWithOneMissing()
    {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("editABunchMoreStuff()");
+
       exerciseCodeUnderTest();
 
       new FullVerifications() {{
@@ -136,9 +141,12 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyUnrecordedInvocationThatShouldNotHappenButDoes()
    {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("1 unexpected invocation");
+
       mock.setSomething(1);
       mock.notifyBeforeSave();
 
@@ -190,33 +198,34 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyUnrecordedInvocationThatShouldHappenButDoesNot()
    {
+      thrown.expect(MissingInvocation.class);
+
       mock.setSomething(1);
 
-      new FullVerifications() {{
-         mock.notifyBeforeSave();
-      }};
+      new FullVerifications() {{ mock.notifyBeforeSave(); }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyRecordedInvocationThatShouldHappenButDoesNot()
    {
-      new NonStrictExpectations() {{
-         mock.notifyBeforeSave();
-      }};
+      thrown.expect(MissingInvocation.class);
+
+      new NonStrictExpectations() {{ mock.notifyBeforeSave(); }};
 
       mock.setSomething(1);
 
-      new FullVerifications() {{
-         mock.notifyBeforeSave();
-      }};
+      new FullVerifications() {{ mock.notifyBeforeSave(); }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyAllInvocationsWithExpectationRecordedButOneInvocationUnverified()
    {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("with arguments: 123");
+
       new NonStrictExpectations() {{
          mock.setSomething(anyInt);
       }};
@@ -231,9 +240,13 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Ignore @Test
+   @Test
    public void verifyTwoInvocationsWithIteratingBlockHavingExpectationRecordedAndSecondInvocationUnverified()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("Missing 1 invocation");
+      thrown.expectMessage("with arguments: 123");
+
       new NonStrictExpectations() {{
          mock.setSomething(anyInt);
       }};
@@ -241,18 +254,15 @@ public final class FullVerificationsTest
       mock.setSomething(123);
       mock.setSomething(45);
 
-      try {
-         new FullVerifications(2) {{ mock.setSomething(123); }};
-         fail();
-      }
-      catch (AssertionError e) {
-         assertTrue(e.getMessage().contains("Missing 1 invocation"));
-      }
+      new FullVerifications(2) {{ mock.setSomething(123); }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyAllInvocationsWithExtraVerification()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("notifyBeforeSave()");
+
       mock.prepare();
       mock.setSomething(123);
 
@@ -263,9 +273,12 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyAllInvocationsWithInvocationCountOneLessThanActual()
    {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("with arguments: 45");
+
       mock.setSomething(123);
       mock.setSomething(45);
 
@@ -274,21 +287,29 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyAllInvocationsWithInvocationCountTwoLessThanActual()
    {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("2 unexpected invocations");
+      thrown.expectMessage("with arguments: 1");
+
       mock.setSomething(123);
       mock.setSomething(45);
-      mock.setSomething(0);
+      mock.setSomething(1);
 
       new FullVerifications() {{
          mock.setSomething(anyInt); times = 1;
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyAllInvocationsWithInvocationCountMoreThanActual()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("Missing 2 invocations");
+      thrown.expectMessage("with arguments: any char");
+
       mock.setSomethingElse('f');
 
       new FullVerifications() {{
@@ -311,9 +332,13 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifySingleInvocationInBlockWithLargerNumberOfIterations()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("Missing 2 invocations");
+      thrown.expectMessage("with arguments: 123");
+
       mock.setSomething(123);
 
       new FullVerifications(3) {{
@@ -321,9 +346,12 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyMultipleInvocationsInBlockWithSmallerNumberOfIterations()
    {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("with arguments: -14");
+
       mock.setSomething(123);
       mock.setSomething(-14);
 
@@ -349,9 +377,11 @@ public final class FullVerificationsTest
       }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyNoInvocationsOccurredOnMockedDependencyWithOneHavingOccurred()
    {
+      thrown.expect(UnexpectedInvocation.class);
+
       mock.editABunchMoreStuff();
 
       new FullVerifications() {};
@@ -380,6 +410,9 @@ public final class FullVerificationsTest
    @Test
    public void verifyNoInvocationsOnMockedDependencyBeyondThoseRecordedAsExpectedWithOneHavingOccurred()
    {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("editABunchMoreStuff()");
+
       new NonStrictExpectations() {{
          mock.prepare(); times = 1;
          mock.save(); minTimes = 1;
@@ -389,12 +422,6 @@ public final class FullVerificationsTest
       mock.editABunchMoreStuff();
       mock.save();
 
-      try {
-         new FullVerifications() {};
-         fail();
-      }
-      catch (UnexpectedInvocation e) {
-         assertTrue(e.getMessage().contains("editABunchMoreStuff()"));
-      }
+      new FullVerifications() {};
    }
 }

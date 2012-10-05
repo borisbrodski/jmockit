@@ -129,7 +129,7 @@ public final class ObjectOverridesTest
 
       new Verifications() {{
          a.toString();
-         b.toString(); times = 1;
+         b.toString(); times = 0;
       }};
    }
 

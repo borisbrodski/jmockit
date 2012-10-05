@@ -14,7 +14,6 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
    private ExpectedInvocation unverifiedInvocationLeftBehind;
    private ExpectedInvocation unverifiedInvocationPrecedingVerifiedOnesLeftBehind;
    private boolean unverifiedExpectationsFixed;
-   private int replayIndex;
    private int indexIncrement;
 
    OrderedVerificationPhase(
@@ -44,10 +43,12 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
       int i = replayIndex;
 
       while (i >= 0 && i < expectationCount) {
-         Expectation expectation = expectationsInReplayOrder.get(i);
+         Expectation replayExpectation = expectationsInReplayOrder.get(i);
+         Object[] replayArgs = invocationArgumentsInReplayOrder.get(i);
+
          i += indexIncrement;
 
-         if (expectation == null) {
+         if (replayExpectation == null) {
             continue;
          }
 
@@ -55,20 +56,20 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
             matchInstance = true;
          }
 
-         if (matches(mock, mockClassDesc, mockNameAndDesc, args, expectation)) {
-            currentExpectation = expectation;
+         if (matches(mock, mockClassDesc, mockNameAndDesc, args, replayExpectation, replayArgs)) {
+            currentExpectation = replayExpectation;
             i += 1 - indexIncrement;
             indexIncrement = 1;
-
             replayIndex = i;
+            currentVerification.constraints.invocationCount++;
             break;
          }
 
          if (!unverifiedExpectationsFixed) {
-            unverifiedInvocationLeftBehind = expectation.invocation;
+            unverifiedInvocationLeftBehind = replayExpectation.invocation;
          }
          else if (indexIncrement > 0) {
-            recordAndReplay.setErrorThrown(expectation.invocation.errorForUnexpectedInvocation());
+            recordAndReplay.setErrorThrown(replayExpectation.invocation.errorForUnexpectedInvocation());
             replayIndex = i;
             break;
          }
@@ -117,14 +118,15 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
       int invocationCount = 1;
 
       while (replayIndex < expectationCount) {
-         Expectation expectation = expectationsInReplayOrder.get(replayIndex);
+         Expectation replayExpectation = expectationsInReplayOrder.get(replayIndex);
 
-         if (expectation != null && matchesCurrentVerification(expectation)) {
+         if (replayExpectation != null && matchesCurrentVerification(replayExpectation)) {
             invocationCount++;
+            currentVerification.constraints.invocationCount++;
 
             if (invocationCount > maxInvocations) {
                if (maxInvocations >= 0 && numberOfIterations <= 1) {
-                  pendingError = expectation.invocation.errorForUnexpectedInvocation();
+                  pendingError = replayExpectation.invocation.errorForUnexpectedInvocation();
                   return;
                }
 
@@ -147,22 +149,10 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
          return;
       }
 
-      if (maxInvocations >= 0) {
-         int multiplier = numberOfIterations <= 1 ? 1 : numberOfIterations;
-         //noinspection ReuseOfLocalVariable
-         n = currentExpectation.constraints.invocationCount - maxInvocations * multiplier;
-
-         if (n > 0) {
-            pendingError =
-               invocation.errorForUnexpectedInvocations(currentExpectation.invocation.getArgumentValues(), n);
-            return;
-         }
-      }
-
-      pendingError = null;
+      pendingError = verifyMaxInvocations(maxInvocations);
    }
 
-   private boolean matchesCurrentVerification(Expectation expectation)
+   private boolean matchesCurrentVerification(Expectation replayExpectation)
    {
       ExpectedInvocation invocation = currentVerification.invocation;
       Object mock = invocation.instance;
@@ -175,7 +165,24 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
          matchInstance = true;
       }
 
-      return matches(mock, mockClassDesc, mockNameAndDesc, args, expectation);
+      Object[] replayArgs = invocationArgumentsInReplayOrder.get(replayIndex);
+
+      return matches(mock, mockClassDesc, mockNameAndDesc, args, replayExpectation, replayArgs);
+   }
+
+   private Error verifyMaxInvocations(int maxInvocations)
+   {
+      if (maxInvocations >= 0) {
+         int multiplier = numberOfIterations <= 1 ? 1 : numberOfIterations;
+         int n = currentVerification.constraints.invocationCount - maxInvocations * multiplier;
+
+         if (n > 0) {
+            Object[] replayArgs = invocationArgumentsInReplayOrder.get(replayIndex - 1);
+            return currentVerification.invocation.errorForUnexpectedInvocations(replayArgs, n);
+         }
+      }
+
+      return null;
    }
 
    @Override

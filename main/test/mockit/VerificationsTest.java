@@ -4,13 +4,17 @@
  */
 package mockit;
 
-import static org.junit.Assert.*;
 import org.junit.*;
+import org.junit.rules.*;
+
+import static org.junit.Assert.*;
 
 import mockit.internal.*;
 
 public final class VerificationsTest
 {
+   @Rule public final ExpectedException thrown = ExpectedException.none();
+
    @SuppressWarnings("UnusedParameters")
    public static class Dependency
    {
@@ -30,7 +34,7 @@ public final class VerificationsTest
 
    @Mocked Dependency mock;
 
-   private void exerciseCodeUnderTest()
+   void exerciseCodeUnderTest()
    {
       mock.prepare();
       mock.setSomething(123);
@@ -53,30 +57,29 @@ public final class VerificationsTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyUnrecordedInvocationThatNeverHappens()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("with arguments: 45");
+
       mock.setSomething(123);
       mock.prepare();
 
-      new Verifications() {{
-         mock.editABunchMoreStuff();
-      }};
+      new Verifications() {{ mock.setSomething(45); }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyRecordedInvocationThatNeverHappens()
    {
-      new NonStrictExpectations() {{
-         mock.editABunchMoreStuff();
-      }};
+      thrown.expect(MissingInvocation.class);
+
+      new NonStrictExpectations() {{ mock.editABunchMoreStuff(); }};
 
       mock.setSomething(123);
       mock.prepare();
 
-      new Verifications() {{
-         mock.editABunchMoreStuff();
-      }};
+      new Verifications() {{ mock.editABunchMoreStuff(); }};
    }
 
    @Test
@@ -93,7 +96,7 @@ public final class VerificationsTest
    }
 
    @Test
-   public void verifyRecordedInvocationThatIsAllowedToHappenAnyNoOfTimesAndDoesNotHappen()
+   public void verifyRecordedInvocationThatIsAllowedToOccurAnyNumberOfTimesAndDoesNotOccur()
    {
       new NonStrictExpectations() {{ mock.save(); }};
 
@@ -133,9 +136,11 @@ public final class VerificationsTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyUnrecordedInvocationThatShouldHappenButDoesNot()
    {
+      thrown.expect(MissingInvocation.class);
+
       mock.setSomething(1);
 
       new Verifications() {{ mock.notifyBeforeSave(); }};
@@ -154,9 +159,13 @@ public final class VerificationsTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyInvocationsWithInvocationCountLargerThanOccurred()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("Missing 2 invocations");
+      thrown.expectMessage("with arguments: any int");
+
       mock.setSomethingElse("test");
       mock.setSomething(3);
       mock.save();
@@ -164,6 +173,42 @@ public final class VerificationsTest
       new Verifications() {{
          mock.setSomething(anyInt);
          times = 3;
+      }};
+   }
+
+   @Test
+   public void verifyInvocationsWithInvocationCountSmallerThanOccurred()
+   {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("1 unexpected invocation");
+      thrown.expectMessage("with arguments: 5");
+
+      mock.setSomethingElse("test");
+      mock.setSomething(3);
+      mock.save();
+      mock.setSomething(5);
+
+      new Verifications() {{
+         mock.setSomething(anyInt);
+         times = 1;
+      }};
+   }
+
+   @Test
+   public void verifyRecordedInvocationThatShouldNotOccurButDid()
+   {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("2 unexpected invocations");
+      thrown.expectMessage("with arguments: 123");
+
+      new NonStrictExpectations() {{ mock.setSomething(anyInt); }};
+
+      mock.setSomething(5);
+      mock.setSomething(123);
+
+      new Verifications() {{
+         mock.setSomething(anyInt);
+         maxTimes = 0;
       }};
    }
 
@@ -181,24 +226,29 @@ public final class VerificationsTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifySingleInvocationInBlockWithLargerNumberOfIterations()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("Missing 2 invocations");
+      thrown.expectMessage("with arguments: any int");
+
       mock.setSomething(123);
 
       new Verifications(3) {{ mock.setSomething(anyInt); }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyMultipleInvocationsInBlockWithSmallerNumberOfIterations()
    {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("with arguments: -1015");
+
       mock.setSomething(45);
       mock.setSomething(123);
       mock.setSomething(-1015);
 
-      new Verifications(2) {{
-         mock.setSomething(anyInt);
-      }};
+      new Verifications(2) {{ mock.setSomething(anyInt); }};
    }
 
    @Test
@@ -229,30 +279,54 @@ public final class VerificationsTest
 
       new Verifications() {{
          mock.setSomethingElse(with(new Delegate<String>() {
-            boolean isNotEmpty(String s) { return s.length() > 0; }
+            @Mock boolean isNotEmpty(String s) { return s.length() > 0; }
          }));
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test
    public void verifyWithValidationMethod()
    {
+      thrown.expect(AssertionError.class);
+      thrown.expectMessage("not empty");
+
       mock.setSomethingElse("test");
 
       new Verifications() {{
          mock.setSomethingElse(anyString);
-         forEachInvocation = new Object() { void assertEmpty(String s) { assertEquals(0, s.length()); } };
+         forEachInvocation = new Object() {
+            @Mock void assertEmpty(String s) { assertEquals("not empty", 0, s.length()); }
+         };
       }};
    }
 
-   @Test(expected = AssertionError.class)
+   @Test
    public void verifyWithValidationMethodWhichReturnsBoolean()
    {
+      thrown.expect(AssertionError.class);
+      thrown.expectMessage("\"isEmpty\" failed");
+      thrown.expectMessage("with arguments: \"test\"");
+
       mock.setSomethingElse("test");
 
       new Verifications() {{
          mock.setSomethingElse(anyString);
-         forEachInvocation = new Object() { boolean isEmpty(String s) { return s.length() == 0; } };
+         forEachInvocation = new Object() { @Mock boolean isEmpty(String s) { return s.length() == 0; } };
+      }};
+   }
+
+   @Test
+   public void verifyWithCustomArgumentMatcher()
+   {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("with arguments: isEmpty(\"test\")");
+
+      mock.setSomethingElse("test");
+
+      new Verifications() {{
+         mock.setSomethingElse(with(new Delegate<String>() {
+            @Mock boolean isEmpty(String s) { return s.length() == 0; }
+         }));
       }};
    }
 
@@ -284,14 +358,59 @@ public final class VerificationsTest
       }};
    }
 
-   @Ignore @Test(expected = AssertionError.class)
+   @Test
+   public void verifyInvocationThatMatchesExpectationRecordedWithAnyMatcherButWithArgumentValueWhichDidNotOccur()
+   {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("with arguments: 45");
+
+      new NonStrictExpectations() {{ mock.setSomething(anyInt); }};
+
+      mock.setSomething(123);
+
+      new Verifications() {{ mock.setSomething(45); }};
+   }
+
+   @Test
    public void verifyTwoInvocationsWithIteratingBlockHavingExpectationRecordedAndSecondInvocationUnverified()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("with arguments: 123");
+
       new NonStrictExpectations() {{ mock.setSomething(anyInt); }};
 
       mock.setSomething(123);
       mock.setSomething(45);
 
       new Verifications(2) {{ mock.setSomething(123); }};
+   }
+
+   @Test
+   public void verityTwoInvocationsToMethodMatchedOnSpecificInstanceWithNoArgumentMatchers(
+      @Injectable final Dependency dep)
+   {
+      dep.editABunchMoreStuff();
+      dep.editABunchMoreStuff();
+
+      new Verifications() {{
+         dep.editABunchMoreStuff();
+         times = 2;
+      }};
+   }
+
+   @Test
+   public void verifyInvocationWhichWasReplayedBeforeAndAfterBeingRecorded()
+   {
+      // First "replay":
+      mock.prepare();
+      new Verifications() {{ mock.prepare(); times = 1; }};
+
+      // Previous replay state is discarded, with a new empty one being created:
+      new NonStrictExpectations() {{ mock.prepare(); }};
+      new Verifications() {{ mock.prepare(); times = 0; }};
+
+      // Second replay, but counts again as first since the previous one was discarded:
+      mock.prepare();
+      new Verifications() {{ mock.prepare(); times = 1; }};
    }
 }

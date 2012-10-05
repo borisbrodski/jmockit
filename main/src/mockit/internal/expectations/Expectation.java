@@ -30,14 +30,6 @@ final class Expectation
       constraints = new InvocationConstraints(nonStrict);
    }
 
-   Expectation(Expectation other)
-   {
-      recordPhase = other.recordPhase;
-      invocation = other.invocation;
-      constraints = new InvocationConstraints(other.constraints);
-      results = other.results;
-   }
-
    void setHandler(Object handler) { this.handler = new InvocationHandler(handler); }
 
    private InvocationResults getResults()
@@ -369,10 +361,16 @@ final class Expectation
 
    void setCustomErrorMessage(CharSequence message) { invocation.customErrorMessage = message; }
 
-   Error verifyConstraints(Expectation verification, int minInvocations, int maxInvocations)
+   Error verifyConstraints(
+      ExpectedInvocation replayInvocation, Object[] replayArgs, int minInvocations, int maxInvocations)
    {
-      Object[] replayArgs = invocation.getArgumentValues();
-      return constraints.verify(verification.invocation, replayArgs, minInvocations, maxInvocations);
+      Error error = constraints.verifyLowerLimit(invocation, minInvocations);
+
+      if (error != null) {
+         return error;
+      }
+
+      return constraints.verifyUpperLimit(replayInvocation, replayArgs, maxInvocations);
    }
 
    Object executeRealImplementation(Object replacementInstance, Object[] args) throws Throwable

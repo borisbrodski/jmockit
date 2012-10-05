@@ -5,12 +5,15 @@
 package mockit;
 
 import org.junit.*;
+import org.junit.rules.*;
 
 import mockit.internal.*;
 
-@SuppressWarnings("UnusedDeclaration")
 public final class VerificationsInOrderTest
 {
+   @Rule public final ExpectedException thrown = ExpectedException.none();
+
+   @SuppressWarnings("UnusedDeclaration")
    public static class Dependency
    {
       public void setSomething(int value) {}
@@ -33,7 +36,7 @@ public final class VerificationsInOrderTest
 
    @Mocked Dependency mock;
 
-   private void exerciseCodeUnderTest()
+   void exerciseCodeUnderTest()
    {
       mock.prepare();
       mock.setSomething(123);
@@ -56,25 +59,32 @@ public final class VerificationsInOrderTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyUnrecordedInvocationThatShouldHappenButDoesNot()
    {
+      thrown.expect(MissingInvocation.class);
+
       mock.setSomething(1);
 
       new VerificationsInOrder() {{ mock.notifyBeforeSave(); }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyUnrecordedInvocationThatShouldHappenExactlyOnceButDoesNot()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("with arguments: 2");
+
       mock.setSomething(1);
 
       new VerificationsInOrder() {{ mock.setSomething(2); times = 1; }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyRecordedInvocationThatShouldHappenButDoesNot()
    {
+      thrown.expect(MissingInvocation.class);
+
       new NonStrictExpectations() {{
          mock.setSomething(1);
          mock.notifyBeforeSave();
@@ -128,7 +138,7 @@ public final class VerificationsInOrderTest
       }};
    }
 
-   @Ignore @Test
+   @Test
    public void verifyInvocationsWithExactInvocationCountsHavingRecordedMatchingExpectationWithArgumentMatcher()
    {
       new NonStrictExpectations() {{ mock.setSomething(anyInt); }};
@@ -195,9 +205,12 @@ public final class VerificationsInOrderTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifySimpleInvocationsWhenOutOfOrder()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("with arguments: 123");
+
       mock.setSomething(123);
       mock.prepare();
 
@@ -216,9 +229,11 @@ public final class VerificationsInOrderTest
       new VerificationsInOrder() {{ mock.setSomething(123); times = 2; }};
    }
 
-   @Test(expected = UnexpectedInvocation.class)
+   @Test
    public void verifyRepeatingInvocationThatOccursOneTimeMoreThanExpected()
    {
+      thrown.expect(UnexpectedInvocation.class);
+
       mock.setSomething(123);
       mock.setSomething(123);
 
@@ -277,9 +292,11 @@ public final class VerificationsInOrderTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifySingleInvocationInBlockWithLargerNumberOfIterations()
    {
+      thrown.expect(MissingInvocation.class);
+
       mock.setSomething(123);
 
       new VerificationsInOrder(3) {{ mock.setSomething(123); }};
@@ -295,9 +312,42 @@ public final class VerificationsInOrderTest
       new VerificationsInOrder(2) {{ mock.setSomething(anyInt); }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
+   public void verifyInvocationNotExpectedToOccurButWhichDoes()
+   {
+      thrown.expect(UnexpectedInvocation.class);
+      thrown.expectMessage("with arguments: 123");
+
+      mock.prepare();
+      mock.setSomething(123);
+
+      new VerificationsInOrder() {{
+         mock.prepare();
+         mock.setSomething(anyInt); maxTimes = 0;
+      }};
+   }
+
+   @Test
+   public void verifyRepeatingInvocationsInIteratingBlockWithMaxTimes()
+   {
+      for (int i = 1; i <= 5; i++) {
+         mock.setSomething(i);
+         if (i % 2 == 0) mock.setSomething(-i);
+         mock.setSomethingElse("" + i);
+      }
+
+      new VerificationsInOrder(2) {{
+         mock.setSomething(anyInt); maxTimes = 2;
+         mock.setSomethingElse(anyString); maxTimes = 1;
+      }};
+   }
+
+   @Test
    public void verifyMultipleInvocationsInIteratingBlockContainingDuplicateVerificationThatCannotBeSatisfied()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("with arguments: any int");
+
       mock.setSomething(-67);
       mock.setSomething(123);
       mock.setSomething(45);
@@ -342,9 +392,12 @@ public final class VerificationsInOrderTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyWithArgumentMatchersWhenOutOfOrder()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("with arguments: any String");
+
       mock.setSomething(123);
       mock.setSomethingElse("anotherValue");
       mock.setSomething(45);
@@ -356,9 +409,13 @@ public final class VerificationsInOrderTest
       }};
    }
 
-   @Test(expected = MissingInvocation.class)
+   @Test
    public void verifyWithArgumentMatcherAndIndividualInvocationCountWhenOutOfOrder()
    {
+      thrown.expect(MissingInvocation.class);
+      thrown.expectMessage("Missing 1 invocation");
+      thrown.expectMessage("with arguments: any int");
+
       mock.setSomething(123);
       mock.prepare();
       mock.setSomething(45);

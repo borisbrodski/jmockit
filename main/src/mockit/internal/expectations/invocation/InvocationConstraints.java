@@ -15,12 +15,6 @@ public final class InvocationConstraints
       setDefaultLimits(nonStrictInvocation);
    }
 
-   public InvocationConstraints(InvocationConstraints other)
-   {
-      setLimits(other.minInvocations, other.maxInvocations);
-      invocationCount = other.invocationCount;
-   }
-
    public void setDefaultLimits(boolean nonStrictInvocation)
    {
       setLimits(nonStrictInvocation ? 0 : 1, nonStrictInvocation ? -1 : 1);
@@ -50,11 +44,6 @@ public final class InvocationConstraints
       return invocationCount == maxInvocations;
    }
 
-   public void addInvocationCount(InvocationConstraints other)
-   {
-      invocationCount += other.invocationCount;
-   }
-
    public boolean isInvocationCountLessThanMinimumExpected()
    {
       return invocationCount < minInvocations;
@@ -70,14 +59,7 @@ public final class InvocationConstraints
       return minInvocations <= invocationCount && (invocationCount <= maxInvocations || maxInvocations < 0);
    }
 
-   public Error verify(ExpectedInvocation invocation, Object[] replayArgs, int minInvocations, int maxInvocations)
-   {
-      Error error = verifyLowerLimit(invocation, minInvocations);
-
-      return error != null ? error : verifyUpperLimit(invocation, replayArgs, maxInvocations);
-   }
-
-   private Error verifyLowerLimit(ExpectedInvocation invocation, int minInvocations)
+   public Error verifyLowerLimit(ExpectedInvocation invocation, int minInvocations)
    {
       if (invocationCount < minInvocations) {
          int missingInvocations = minInvocations - invocationCount;
@@ -87,7 +69,7 @@ public final class InvocationConstraints
       return null;
    }
 
-   private Error verifyUpperLimit(ExpectedInvocation invocation, Object[] replayArgs, int maxInvocations)
+   public Error verifyUpperLimit(ExpectedInvocation invocation, Object[] replayArgs, int maxInvocations)
    {
       if (maxInvocations >= 0) {
          int unexpectedInvocations = invocationCount - maxInvocations;
