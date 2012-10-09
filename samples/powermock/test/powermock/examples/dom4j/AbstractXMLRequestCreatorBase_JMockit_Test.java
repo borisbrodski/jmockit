@@ -18,16 +18,7 @@ import static org.junit.Assert.*;
 @UsingMocksAndStubs(AbstractNode.class)
 public final class AbstractXMLRequestCreatorBase_JMockit_Test
 {
-   AbstractXMLRequestCreatorBase tested;
-
-   @Before
-   public void setUp()
-   {
-      tested = new AbstractXMLRequestCreatorBase() {
-         @Override
-         protected void createBody(Element body, String... parameters) {}
-      };
-   }
+   @Tested AbstractXMLRequestCreatorBase tested;
 
    @Test
    public void testConvertDocumentToByteArray() throws Exception
@@ -46,6 +37,7 @@ public final class AbstractXMLRequestCreatorBase_JMockit_Test
    @Test // just to demonstrate API; too much mocking for a real test
    public void testCreateRequest() throws Exception
    {
+      final String[] params = {"String1", "String2"};
       final byte[] expected = {42};
 
       new Expectations(tested) {
@@ -58,18 +50,16 @@ public final class AbstractXMLRequestCreatorBase_JMockit_Test
          {
             DocumentHelper.createDocument(); result = documentMock;
             documentMock.addElement(XMLProtocol.ENCODE_ELEMENT); result = rootElementMock;
-
             rootElementMock.addElement(XMLProtocol.HEADER_ELEMENT); result = headerElementMock;
-
             headerElementMock.addAttribute(XMLProtocol.HEADER_MSG_ID_ATTRIBUTE, anyString);
-
             rootElementMock.addElement(XMLProtocol.BODY_ELEMENT); result = bodyElementMock;
 
+            tested.createBody(bodyElementMock, params);
             tested.convertDocumentToByteArray(documentMock); result = expected;
          }
       };
 
-      byte[] actual = tested.createRequest("String1", "String2");
+      byte[] actual = tested.createRequest(params);
 
       assertSame(expected, actual);
    }
