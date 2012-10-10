@@ -20,7 +20,6 @@ import mockit.internal.util.*;
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/powermock/test/powermock/examples/bypassencapsulation/ServiceHolder_JMockit_Test.java">ServiceHolder_JMockit_Test</a>,
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/samples/AnimatedTransitions/test/org/jdesktop/animation/transitions/ScreenTransitionContainerResizeTest.java">ScreenTransitionContainerResizeTest</a>
  */
-@SuppressWarnings("unchecked")
 public final class Deencapsulation
 {
    private Deencapsulation() {}
@@ -39,7 +38,7 @@ public final class Deencapsulation
     */
    public static <T> T getField(Object objectWithField, String fieldName)
    {
-      return (T) Utilities.getField(objectWithField.getClass(), fieldName, objectWithField);
+      return Utilities.getField(objectWithField.getClass(), fieldName, objectWithField);
    }
 
    /**
@@ -71,7 +70,7 @@ public final class Deencapsulation
     */
    public static <T> T getField(Class<?> classWithStaticField, String fieldName)
    {
-      return (T) Utilities.getField(classWithStaticField, fieldName, null);
+      return Utilities.getField(classWithStaticField, fieldName, null);
    }
 
    /**
@@ -146,13 +145,33 @@ public final class Deencapsulation
    }
 
    /**
-    * Invokes a non-accessible (eg {@code private}) method from a given class with the given arguments.
+    * Invokes a non-accessible (eg {@code private}) instance method from a given class with the given arguments.
+    *
+    * @param objectWithMethod the instance on which the invocation is to be done; must not be null
+    * @param methodName the name of the method to invoke
+    * @param parameterTypes the types of the parameters as declared in the desired method
+    * @param methodArgs zero or more parameter values for the invocation
+    * @param <T> type to which the returned value should be assignable
+    *
+    * @return the return value from the invoked method, wrapped if primitive
+    *
+    * @see #invoke(Class, String, Object...)
+    */
+   public static <T> T invoke(
+      Object objectWithMethod, String methodName, Class<?>[] parameterTypes, Object... methodArgs)
+   {
+      Class<?> theClass = objectWithMethod.getClass();
+      return Utilities.invoke(theClass, objectWithMethod, methodName, parameterTypes, methodArgs);
+   }
+
+   /**
+    * Invokes a non-accessible (eg {@code private}) instance method from a given class with the given arguments.
     *
     * @param objectWithMethod the instance on which the invocation is to be done; must not be null
     * @param methodName the name of the method to invoke
     * @param nonNullArgs zero or more non-null parameter values for the invocation; if a null value needs to be passed,
     * the {@code Class} object for the parameter type must be passed instead
-    * @param <T> interface or class type to which the returned instance should be assignable
+    * @param <T> type to which the returned value should be assignable
     *
     * @return the return value from the invoked method, wrapped if primitive
     *
@@ -163,17 +182,34 @@ public final class Deencapsulation
    public static <T> T invoke(Object objectWithMethod, String methodName, Object... nonNullArgs)
    {
       Class<?> theClass = objectWithMethod.getClass();
-      return (T) Utilities.invoke(theClass, objectWithMethod, methodName, nonNullArgs);
+      return Utilities.invoke(theClass, objectWithMethod, methodName, nonNullArgs);
    }
 
    /**
-    * Invokes a non-accessible (eg {@code private} static method with the given arguments.
+    * Invokes a non-accessible (eg {@code private}) {@code static} method with the given arguments.
+    *
+    * @param classWithStaticMethod the class on which the invocation is to be done; must not be null
+    * @param methodName the name of the static method to invoke
+    * @param parameterTypes the types of the parameters as declared in the desired method
+    * @param methodArgs zero or more parameter values for the invocation
+    * @param <T> type to which the returned value should be assignable
+    *
+    * @see #invoke(String, String, Object...)
+    */
+   public static <T> T invoke(
+      Class<?> classWithStaticMethod, String methodName, Class<?>[] parameterTypes, Object... methodArgs)
+   {
+      return Utilities.invoke(classWithStaticMethod, null, methodName, parameterTypes, methodArgs);
+   }
+
+   /**
+    * Invokes a non-accessible (eg {@code private}) {@code static} method with the given arguments.
     *
     * @param classWithStaticMethod the class on which the invocation is to be done; must not be null
     * @param methodName the name of the static method to invoke
     * @param nonNullArgs zero or more non-null parameter values for the invocation; if a null value needs to be passed,
     * the {@code Class} object for the parameter type must be passed instead
-    * @param <T> interface or class type to which the returned instance should be assignable
+    * @param <T> type to which the returned value should be assignable
     *
     * @throws IllegalArgumentException if a null reference was provided for a parameter
     *
@@ -181,18 +217,18 @@ public final class Deencapsulation
     */
    public static <T> T invoke(Class<?> classWithStaticMethod, String methodName, Object... nonNullArgs)
    {
-      return (T) Utilities.invoke(classWithStaticMethod, null, methodName, nonNullArgs);
+      return Utilities.invoke(classWithStaticMethod, null, methodName, nonNullArgs);
    }
 
    /**
-    * Invokes a non-accessible (eg {@code private} static method with the given arguments.
+    * Invokes a non-accessible (eg {@code private}) {@code static} method with the given arguments.
     *
     * @param classWithStaticMethod the (fully qualified) name of the class on which the invocation is to be done;
     * must not be null
     * @param methodName the name of the static method to invoke
     * @param nonNullArgs zero or more non-null parameter values for the invocation; if a null value needs to be passed,
     * the {@code Class} object for the parameter type must be passed instead
-    * @param <T> interface or class type to which the returned instance should be assignable
+    * @param <T> type to which the returned value should be assignable
     *
     * @throws IllegalArgumentException if a null reference was provided for a parameter
     *
@@ -201,7 +237,7 @@ public final class Deencapsulation
    public static <T> T invoke(String classWithStaticMethod, String methodName, Object... nonNullArgs)
    {
       Class<Object> theClass = Utilities.loadClass(classWithStaticMethod);
-      return (T) Utilities.invoke(theClass, null, methodName, nonNullArgs);
+      return Utilities.invoke(theClass, null, methodName, nonNullArgs);
    }
 
    /**
@@ -223,7 +259,7 @@ public final class Deencapsulation
     */
    public static <T> T newInstance(String className, Class<?>[] parameterTypes, Object... initArgs)
    {
-      return (T) Utilities.newInstance(className, parameterTypes, initArgs);
+      return Utilities.newInstance(className, parameterTypes, initArgs);
    }
 
    /**
@@ -264,7 +300,7 @@ public final class Deencapsulation
     */
    public static <T> T newInstance(String className, Object... nonNullArgs)
    {
-      return (T) Utilities.newInstance(className, nonNullArgs);
+      return Utilities.newInstance(className, nonNullArgs);
    }
 
    /**
@@ -304,7 +340,7 @@ public final class Deencapsulation
     */
    public static <T> T newInnerInstance(String innerClassSimpleName, Object outerClassInstance, Object... nonNullArgs)
    {
-      return (T) Utilities.newInnerInstance(innerClassSimpleName, outerClassInstance, nonNullArgs);
+      return Utilities.newInnerInstance(innerClassSimpleName, outerClassInstance, nonNullArgs);
    }
 
    /**

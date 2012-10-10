@@ -91,9 +91,12 @@ public final class DeencapsulationTest
       assertSame(anInstance.getListField(), listValue);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void attemptToGetInstanceFieldByNameWithWrongName()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("No instance field of name \"noField\" found");
+
       getField(anInstance, "noField");
    }
 
@@ -129,15 +132,23 @@ public final class DeencapsulationTest
       assertSame(listValue, listValue2);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void attemptToGetInstanceFieldByTypeWithWrongType()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Instance field of type byte or Byte not found");
+
       getField(anInstance, Byte.class);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void attemptToGetInstanceFieldByTypeForClassWithMultipleFieldsOfThatType()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("More than one instance field");
+      thrown.expectMessage("of type int ");
+      thrown.expectMessage("INITIAL_VALUE, initialValue");
+
       getField(anInstance, int.class);
    }
 
@@ -175,9 +186,12 @@ public final class DeencapsulationTest
       assertSame(Subclass.getBuffer(), b);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void attemptToGetStaticFieldByNameFromWrongClass()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("No static field of name \"buffer\" found in class mockit.BaseClass");
+
       getField(BaseClass.class, "buffer");
    }
 
@@ -201,9 +215,12 @@ public final class DeencapsulationTest
       assertEquals(901, anInstance.getIntField2());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void attemptToSetInstanceFieldByNameWithWrongName()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("No instance field of name \"noField\" found");
+
       setField(anInstance, "noField", 901);
    }
 
@@ -217,15 +234,21 @@ public final class DeencapsulationTest
       assertEquals("Test", anInstance.getStringField());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void attemptToSetInstanceFieldByTypeWithWrongType()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Instance field of type byte or Byte not found");
+
       setField(anInstance, (byte) 123);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void attemptToSetInstanceFieldByTypeForClassWithMultipleFieldsOfThatType()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("More than one instance field ");
+
       setField(anInstance, 901);
    }
 
@@ -239,9 +262,12 @@ public final class DeencapsulationTest
       assertNotNull(Subclass.getBuffer());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void attemptToSetStaticFieldByNameWithWrongName()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("No static field of name \"noField\" found ");
+
       setField(Subclass.class, "noField", null);
    }
 
@@ -255,15 +281,21 @@ public final class DeencapsulationTest
       assertNotNull(Subclass.getBuffer());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void attemptToSetStaticFieldByTypeWithWrongType()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Static field of type StringBuffer not found");
+
       setField(Subclass.class, new StringBuffer());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void attemptToSetStaticFieldByTypeForClassWithMultipleFieldsOfThatType()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("More than one static field ");
+
       setField(Subclass.class, 'A');
    }
 
@@ -304,6 +336,18 @@ public final class DeencapsulationTest
    }
 
    @Test
+   public void invokeInstanceMethodWithSpecifiedParameterTypes()
+   {
+      String result =
+         invoke(
+            anInstance, "instanceMethod",
+            new Class<?>[] {short.class, StringBuilder.class, boolean.class},
+            (short) 7, new StringBuilder("abc"), true);
+
+      assertEquals("abc", result);
+   }
+
+   @Test
    public void invokeInstanceMethodWithMultipleParameters()
    {
       assertNull(invoke(anInstance, "instanceMethod", (short) 7, "abc", true));
@@ -321,9 +365,13 @@ public final class DeencapsulationTest
       assertEquals("null", result);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void invokeInstanceMethodWithInvalidNullArgument()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Invalid null ");
+      thrown.expectMessage(" argument 1");
+
       invoke(anInstance, "instanceMethod", (short) 7, null, true);
    }
 
@@ -350,6 +398,18 @@ public final class DeencapsulationTest
    }
 
    @Test
+   public void invokeStaticMethodWithSpecifiedParameterTypes()
+   {
+      String result =
+         invoke(
+            Subclass.class, "staticMethod",
+            new Class<?>[] {short.class, StringBuilder.class, boolean.class},
+            (short) 7, new StringBuilder("abc"), true);
+
+      assertEquals("abc", result);
+   }
+
+   @Test
    public void invokeStaticMethodWithMultipleParameters()
    {
       assertNull(invoke(Subclass.class, "staticMethod", (short) 7, "abc", true));
@@ -366,9 +426,12 @@ public final class DeencapsulationTest
       assertNull(result);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void invokeMethodByClassNameOnUnavailableClass()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("No class with name \"abc.xyz.NoClass\" found");
+
       invoke("abc.xyz.NoClass", "aMethod");
    }
 
@@ -381,21 +444,31 @@ public final class DeencapsulationTest
       assertEquals("null", result);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void invokeStaticMethodWithInvalidNullArgument()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Invalid null value ");
+      thrown.expectMessage(" argument 1");
+
       invoke(anInstance, "staticMethod", (short) 7, null, true);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void invokeInstanceMethodAsAnStaticMethod()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Attempted to invoke non-static method without an instance");
+
       invoke(anInstance.getClass(), "instanceMethod", (short) 7, "test", true);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void invokeInstanceMethodAsAnStaticMethodUsingClassName()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Attempted to invoke non-static method without an instance");
+
       invoke(anInstance.getClass().getName(), "instanceMethod", (short) 7, "test", true);
    }
 
@@ -435,9 +508,12 @@ public final class DeencapsulationTest
       assertNotNull(instance);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void attemptNewInstanceWithNoMatchingConstructor()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Specified constructor not found: Subclass(char)");
+
       newInstance(Subclass.class.getName(), new Class<?>[] {char.class}, 'z');
    }
 
@@ -451,9 +527,13 @@ public final class DeencapsulationTest
       assertEquals("", instance.getStringField());
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void newInstanceByNameUsingMultipleArgsConstructorWithInvalidNullArgument()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Invalid null value");
+      thrown.expectMessage(" argument 1");
+
       newInstance(Subclass.class.getName(), 590, null);
    }
 
@@ -502,9 +582,13 @@ public final class DeencapsulationTest
       newInstance(InnerClass.class, 123);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void newInnerInstanceWithWrongInnerClassName()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("No class with name ");
+      thrown.expectMessage("$NoClass\" found");
+
       newInnerInstance("NoClass", anInstance);
    }
 
@@ -516,9 +600,12 @@ public final class DeencapsulationTest
       assertTrue(innerClass.isInstance(innerInstance));
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void newInnerInstanceByNameUsingMultipleArgsConstructorWithInvalidNullArguments()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Invalid null value");
+
       newInnerInstance("InnerClass", anInstance, false, null, null);
    }
 

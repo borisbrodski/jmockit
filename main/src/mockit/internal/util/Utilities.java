@@ -664,13 +664,13 @@ public final class Utilities
       }
    }
 
-   public static Object getField(Class<?> theClass, String fieldName, Object targetObject)
+   public static <T> T getField(Class<?> theClass, String fieldName, Object targetObject)
    {
-      Field field = getDeclaredField(theClass, fieldName);
+      Field field = getDeclaredField(theClass, fieldName, targetObject != null);
       return getFieldValue(field, targetObject);
    }
 
-   public static Field getDeclaredField(Class<?> theClass, String fieldName)
+   private static Field getDeclaredField(Class<?> theClass, String fieldName, boolean instanceField)
    {
       try {
          return theClass.getDeclaredField(fieldName);
@@ -678,12 +678,12 @@ public final class Utilities
       catch (NoSuchFieldException ignore) {
          Class<?> superClass = theClass.getSuperclass();
 
-         if (superClass != null) {
-            return getDeclaredField(superClass, fieldName);
+         if (superClass != null && superClass != Object.class) {
+            return getDeclaredField(superClass, fieldName, instanceField);
          }
 
-         //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
-         throw new IllegalArgumentException("No instance field of name \"" + fieldName + "\" found in " + theClass);
+         String kind = instanceField ? "instance" : "static";
+         throw new IllegalArgumentException("No " + kind + " field of name \"" + fieldName + "\" found in " + theClass);
       }
    }
 
@@ -710,12 +710,27 @@ public final class Utilities
          if (superClass != null && superClass != Object.class) {
             return getDeclaredField(superClass, desiredType, instanceField, forAssignment);
          }
-         
-         throw new IllegalArgumentException(
-            (instanceField ? "Instance" : "Static") + " field of " + desiredType + " not found in " + theClass);
+
+         StringBuilder errorMsg = new StringBuilder(instanceField ? "Instance" : "Static");
+         String typeName = getTypeName(desiredType);
+         errorMsg.append(" field of type ").append(typeName).append(" not found in ").append(theClass);
+         throw new IllegalArgumentException(errorMsg.toString());
       }
 
       return found;
+   }
+
+   private static String getTypeName(Type type)
+   {
+      Class<?> classType = getClassType(type);
+      Class<?> primitiveType = WRAPPER_TO_PRIMITIVE.get(classType);
+
+      if (primitiveType != null) {
+         return primitiveType + " or " + classType.getSimpleName();
+      }
+
+      String name = classType.getName();
+      return name.startsWith("java.lang.") ? name.substring(10) : name;
    }
 
    private static Field getDeclaredFieldInSingleClass(
@@ -752,8 +767,9 @@ public final class Utilities
       StringBuilder message = new StringBuilder("More than one ");
       message.append(instanceField ? "instance" : "static").append(" field ");
 
-      message.append(forAssignment ? "to which a value of " : "from which a value of ");
-      message.append(desiredFieldType);
+      message.append(forAssignment ? "to" : "from");
+      message.append(" which a value of type ");
+      message.append(getTypeName(desiredFieldType));
       message.append(forAssignment ? " can be assigned" : " can be read");
 
       message.append(" exists in ").append(secondField.getDeclaringClass()).append(": ");
@@ -840,12 +856,12 @@ public final class Utilities
       }
    }
 
-   public static Object getFieldValue(Field field, Object targetObject)
+   public static <T> T getFieldValue(Field field, Object targetObject)
    {
       ensureThatMemberIsAccessible(field);
 
       try {
-         return field.get(targetObject);
+         return (T) field.get(targetObject);
       }
       catch (IllegalAccessException e) {
          throw new RuntimeException(e);
@@ -854,11 +870,12 @@ public final class Utilities
 
    public static Field setField(Class<?> theClass, Object targetObject, String fieldName, Object fieldValue)
    {
+      boolean instanceField = targetObject != null;
       Field field =
          fieldName == null ?
-            getDeclaredField(theClass, fieldValue.getClass(), targetObject != null, true) :
-            getDeclaredField(theClass, fieldName);
-      
+            getDeclaredField(theClass, fieldValue.getClass(), instanceField, true) :
+            getDeclaredField(theClass, fieldName, instanceField);
+
       setFieldValue(field, targetObject, fieldValue);
       return field;
    }

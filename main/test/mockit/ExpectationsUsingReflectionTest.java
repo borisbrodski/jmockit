@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -7,19 +7,19 @@ package mockit;
 import java.util.*;
 
 import org.junit.*;
+import org.junit.rules.*;
 
 import static org.junit.Assert.*;
 
 public final class ExpectationsUsingReflectionTest
 {
-   public interface BusinessInterface
-   {
-      void doOperation();
-   }
+   @Rule public final ExpectedException thrown = ExpectedException.none();
+
+   public interface BusinessInterface { void doOperation(); }
 
    static class BaseCollaborator
    {
-      @SuppressWarnings({"UnusedParameters"})
+      @SuppressWarnings("UnusedParameters")
       void setValue(short value) {}
    }
 
@@ -57,6 +57,9 @@ public final class ExpectationsUsingReflectionTest
       void setValue(Object value) { value3 = String.valueOf(value); }
 
       void doBusinessOperation(BusinessInterface operation) { operation.doOperation(); }
+      private int doSomething(int i, Class<?> aClass) { return i; }
+      private int doSomething(int i, String s) { return -i; }
+      static int doSomething(Class<?> cls) { return -1; }
 
       private final class Inner
       {
@@ -67,7 +70,7 @@ public final class ExpectationsUsingReflectionTest
       }
    }
 
-   @SuppressWarnings({"UnusedParameters"})
+   @SuppressWarnings("UnusedParameters")
    static final class Collaborator2
    {
       static void staticMethod(int i, String s, char c) {}
@@ -123,7 +126,7 @@ public final class ExpectationsUsingReflectionTest
    public void expectStaticMethodInvocations()
    {
       new Expectations() {
-         final Collaborator mock = null;
+         @Mocked final Collaborator mock = null;
 
          {
             invoke(Collaborator.class, "doInternal"); result = "test";
@@ -141,7 +144,7 @@ public final class ExpectationsUsingReflectionTest
    public void expectStaticMethodInvocationsWithMethodsInReverseOrderInTheMockedClass()
    {
       new Expectations() {
-         final Collaborator2 mock = null;
+         @Mocked final Collaborator2 mock = null;
 
          {
             invoke(Collaborator2.class, "staticMethod", anyInt, withAny(Object.class), anyChar);
@@ -156,19 +159,19 @@ public final class ExpectationsUsingReflectionTest
    @Test
    public void expectMethodInvocationWithProxyArgument(final Collaborator mock, final BusinessInterface proxyArg)
    {
-      new Expectations()
-      {
-         {
-            invoke(mock, "doBusinessOperation", proxyArg);
-         }
-      };
+      new Expectations() {{
+         invoke(mock, "doBusinessOperation", proxyArg);
+      }};
 
       mock.doBusinessOperation(proxyArg);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void recordMethodInvocationWithNullArgument()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("as argument 0");
+
       new NonStrictExpectations() {
          Collaborator mock;
 
@@ -179,16 +182,51 @@ public final class ExpectationsUsingReflectionTest
    }
 
    @Test
+   public void expectInvocationToStaticMethodWithParameterOfTypeClass()
+   {
+      new Expectations() {
+         @NonStrict final Collaborator mock = null;
+
+         {
+            invoke(Collaborator.class, "doSomething", new Class<?>[] {Class.class}, String.class); result = 123;
+            invoke(Collaborator.class, "doSomething", new Class<?>[] {Class.class}, withNull()); result = 45;
+         }
+      };
+
+      assertEquals(123, Collaborator.doSomething(String.class));
+      assertEquals(0, Collaborator.doSomething(Integer.class));
+      assertEquals(45, Collaborator.doSomething(null));
+   }
+
+   @Test
+   public void expectInvocationToInstanceMethodWithParameterOfTypeClass(@NonStrict final Collaborator mock)
+   {
+      new Expectations() {{
+         Class<?>[] parameterTypes = {int.class, Class.class};
+         invoke(mock, "doSomething", parameterTypes, 123, String.class); result = 1;
+         invoke(mock, "doSomething", parameterTypes, 45, null); result = 2;
+         invoke(mock, "doSomething", parameterTypes, withEqual(-1), withAny(Class.class)); result = 3;
+      }};
+
+      assertEquals(1, mock.doSomething(123, String.class));
+      assertEquals(0, mock.doSomething(123, Integer.class));
+      assertEquals(0, mock.doSomething(123, (Class<?>) null));
+
+      assertEquals(0, mock.doSomething(45, Integer.class));
+      assertEquals(2, mock.doSomething(45, (Class<?>) null));
+
+      assertEquals(3, mock.doSomething(-1, Integer.class));
+      assertEquals(3, mock.doSomething(-1, (Class<?>) null));
+   }
+
+   @Test
    public void setInstanceFieldByName()
    {
       final Collaborator collaborator = new Collaborator();
 
-      new Expectations()
-      {
-         {
-            setField(collaborator, "value", 123);
-         }
-      };
+      new Expectations() {{
+         setField(collaborator, "value", 123);
+      }};
 
       assertEquals(123, collaborator.value);
    }
@@ -199,51 +237,42 @@ public final class ExpectationsUsingReflectionTest
       final Collaborator collaborator = new Collaborator();
       collaborator.value3 = "";
 
-      new Expectations()
-      {
-         {
-            setField(collaborator, "test");
-         }
-      };
+      new Expectations() {{ setField(collaborator, "test"); }};
 
       assertEquals("test", collaborator.value3);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void setInstanceFieldByTypeWhenNoCompatibleFieldExists()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Instance field of type ");
+      thrown.expectMessage("Character not found in class ");
+
       final Collaborator collaborator = new Collaborator();
 
-      new Expectations()
-      {
-         {
-            setField(collaborator, 'X');
-         }
-      };
+      new Expectations() {{ setField(collaborator, 'X'); }};
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void setInstanceFieldByTypeWhenMultipleCompatibleFieldsExist()
    {
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("More than one instance field");
+      thrown.expectMessage("Integer");
+      thrown.expectMessage("value, value2");
+
       final Collaborator collaborator = new Collaborator();
 
-      new Expectations()
-      {
-         {
-            setField(collaborator, 56);
-         }
-      };
+      new Expectations() {{ setField(collaborator, 56); }};
    }
 
    @Test
    public void setStaticFieldByName()
    {
-      new Expectations()
-      {
-         {
-            setField(Collaborator.class, "xyz", "test");
-         }
-      };
+      new Expectations() {{
+         setField(Collaborator.class, "xyz", "test");
+      }};
 
       assertEquals("test", Collaborator.xyz);
    }
@@ -251,36 +280,35 @@ public final class ExpectationsUsingReflectionTest
    @Test
    public void setStaticFieldByType()
    {
-      new Expectations()
-      {
-         {
-            setField(Collaborator.class, "static");
-         }
-      };
+      new Expectations() {{
+         setField(Collaborator.class, "static");
+      }};
 
       assertEquals("static", Collaborator.xyz);
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void setStaticFieldByTypeWhenNoCompatibleFieldExists()
    {
-      new Expectations()
-      {
-         {
-            setField(Collaborator.class, 123);
-         }
-      };
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Static field");
+      thrown.expectMessage("Integer not found");
+
+      new Expectations() {{
+         setField(Collaborator.class, 123);
+      }};
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void setStaticFieldByTypeWhenMultipleCompatibleFieldsExist()
    {
-      new Expectations()
-      {
-         {
-            setField(Collaborator.class, Collections.<Object>emptyList());
-         }
-      };
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Static field");
+      thrown.expectMessage("not found");
+
+      new Expectations() {{
+         setField(Collaborator.class, Collections.<Object>emptyList());
+      }};
    }
 
    @Test
@@ -288,12 +316,9 @@ public final class ExpectationsUsingReflectionTest
    {
       mock.value = 123;
 
-      new Expectations()
-      {
-         {
-            assertEquals(123, getField(mock, "value"));
-         }
-      };
+      new Expectations() {{
+         assertEquals(123, getField(mock, "value"));
+      }};
    }
 
    @Test
@@ -301,35 +326,31 @@ public final class ExpectationsUsingReflectionTest
    {
       mock.value3 = "test";
 
-      new Expectations()
-      {
-         {
-            assertEquals("test", getField(mock, String.class));
-         }
-      };
+      new Expectations() {{
+         assertEquals("test", getField(mock, String.class));
+      }};
    }
 
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void getInstanceFieldByTypeWhenNoCompatibleFieldExists(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            getField(mock, char.class);
-         }
-      };
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Instance field");
+      thrown.expectMessage("type char");
+
+      new Expectations() {{ getField(mock, char.class); }};
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void getInstanceFieldByTypeWhenMultipleCompatibleFieldsExist(final Collaborator mock)
    {
-      new Expectations()
-      {
-         {
-            getField(mock, int.class);
-         }
-      };
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("More than one instance field");
+      thrown.expectMessage("of type int");
+      thrown.expectMessage("value, value2");
+
+      new Expectations() {{ getField(mock, int.class); }};
    }
 
    @Test
@@ -337,12 +358,9 @@ public final class ExpectationsUsingReflectionTest
    {
       Collaborator.xyz = "test";
 
-      new Expectations()
-      {
-         {
-            assertEquals("test", getField(Collaborator.class, "xyz"));
-         }
-      };
+      new Expectations() {{
+         assertEquals("test", getField(Collaborator.class, "xyz"));
+      }};
    }
 
    @Test
@@ -350,41 +368,37 @@ public final class ExpectationsUsingReflectionTest
    {
       Collaborator.xyz = "static";
 
-      new Expectations()
-      {
-         {
-            assertEquals("static", getField(Collaborator.class, String.class));
-         }
-      };
+      new Expectations() {{
+         assertEquals("static", getField(Collaborator.class, String.class));
+      }};
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void getStaticFieldByTypeWhenNoCompatibleFieldExists()
    {
-      new Expectations()
-      {
-         {
-            getField(Collaborator.class, Integer.class);
-         }
-      };
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Static field of type int or Integer not found");
+
+      new Expectations() {{
+         getField(Collaborator.class, Integer.class);
+      }};
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void getStaticFieldByTypeWhenMultipleCompatibleFieldsExist()
    {
-      new Expectations()
-      {
-         {
-            getField(Collaborator.class, Collection.class);
-         }
-      };
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Static field of type java.util.Collection not found");
+
+      new Expectations() {{
+         getField(Collaborator.class, Collection.class);
+      }};
    }
 
    @Test
    public void createNewInstanceWithExplicitParameterTypes()
    {
-      new Expectations()
-      {
+      new Expectations() {
          private final String className = Collaborator.class.getName();
 
          {
@@ -409,8 +423,7 @@ public final class ExpectationsUsingReflectionTest
    @Test
    public void createNewInstanceWithNonNullArguments()
    {
-      new Expectations()
-      {
+      new Expectations() {
          private final String className = Collaborator.class.getName();
 
          {
@@ -436,15 +449,16 @@ public final class ExpectationsUsingReflectionTest
       };
    }
 
-   @Test(expected = IllegalArgumentException.class)
+   @Test
    public void createNewInstanceWithNonNullArgumentsButActuallyPassingNulls()
    {
-      new Expectations()
-      {
-         {
-            newInstance(Collaborator.class.getName(), 0, null, null);
-         }
-      };
+      thrown.expect(IllegalArgumentException.class);
+      thrown.expectMessage("Invalid null value");
+      thrown.expectMessage("argument 1");
+
+      new Expectations() {{
+         newInstance(Collaborator.class.getName(), 0, null, null);
+      }};
    }
 
    @Test
@@ -452,8 +466,7 @@ public final class ExpectationsUsingReflectionTest
    {
       final Collaborator collaborator = new Collaborator();
 
-      new Expectations()
-      {
+      new Expectations() {
          private final String className = Collaborator.Inner.class.getSimpleName();
 
          {
