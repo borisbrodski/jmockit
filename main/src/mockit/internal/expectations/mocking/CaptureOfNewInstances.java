@@ -35,7 +35,7 @@ class CaptureOfNewInstances extends CaptureOfImplementations
       {
          if (instancesCaptured.size() < typeMetadata.getMaxInstancesToCapture()) {
             if (fieldOwner != null && originalMockInstance == null) {
-               originalMockInstance = Utilities.getFieldValue(typeMetadata.field, fieldOwner);
+               originalMockInstance = FieldReflection.getFieldValue(typeMetadata.field, fieldOwner);
             }
 
             instancesCaptured.add(instance);

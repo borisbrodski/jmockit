@@ -122,8 +122,8 @@ public abstract class Verifications extends Invocations
       Object owner = localMocks.get(mockedType);
 
       if (owner != null) {
-         Object mock = Utilities.getField(owner.getClass(), mockedType, owner);
-         Utilities.setFieldValue(field, this, mock);
+         Object mock = FieldReflection.getField(owner.getClass(), mockedType, owner);
+         FieldReflection.setFieldValue(field, this, mock);
       }
    }
 

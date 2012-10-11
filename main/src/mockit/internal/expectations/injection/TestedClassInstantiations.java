@@ -56,7 +56,7 @@ public final class TestedClassInstantiations
 
       void instantiateWithInjectableValues()
       {
-         Object testedObject = getFieldValue(testedField, testClassInstance);
+         Object testedObject = FieldReflection.getFieldValue(testedField, testClassInstance);
          boolean requiresJavaxInject = false;
          Class<?> testedClass;
 
@@ -67,7 +67,7 @@ public final class TestedClassInstantiations
 
             testedClass = testedObjectCreation.declaredClass;
             testedObject = testedObjectCreation.create();
-            setFieldValue(testedField, testClassInstance, testedObject);
+            FieldReflection.setFieldValue(testedField, testClassInstance, testedObject);
 
             requiresJavaxInject = testedObjectCreation.constructorAnnotatedWithJavaxInject;
          }
@@ -423,7 +423,7 @@ public final class TestedClassInstantiations
                arguments[n] = obtainInjectedVarargsArray(n);
             }
 
-            return invoke(constructor, arguments);
+            return ConstructorReflection.invoke(constructor, arguments);
          }
 
          private Object obtainInjectedVarargsArray(int varargsParameterIndex)
@@ -577,7 +577,7 @@ public final class TestedClassInstantiations
 
                if (injectableValue != null) {
                   injectableValue = wrapInProviderIfNeeded(field.getGenericType(), injectableValue);
-                  setFieldValue(field, testedObject, injectableValue);
+                  FieldReflection.setFieldValue(field, testedObject, injectableValue);
                }
             }
          }
@@ -589,7 +589,7 @@ public final class TestedClassInstantiations
             return true;
          }
 
-         Object fieldValue = getFieldValue(field, testedObject);
+         Object fieldValue = FieldReflection.getFieldValue(field, testedObject);
 
          if (fieldValue == null) {
             return true;

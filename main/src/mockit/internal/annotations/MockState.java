@@ -109,7 +109,7 @@ final class MockState
    Method getMockMethod(Class<?> mockClass, Class<?>[] paramTypes)
    {
       if (actualMockMethod == null) {
-         actualMockMethod = Utilities.findCompatibleMethod(mockClass, mockMethod.name, paramTypes);
+         actualMockMethod = MethodReflection.findCompatibleMethod(mockClass, mockMethod.name, paramTypes);
       }
 
       return actualMockMethod;

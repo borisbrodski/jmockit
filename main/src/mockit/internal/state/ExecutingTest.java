@@ -248,7 +248,7 @@ public final class ExecutingTest
          ) {
             Map.Entry<MockedType, Object> fieldAndOwner = itr.next();
             MockedType typeMetadata = fieldAndOwner.getKey();
-            Object mock = Utilities.getFieldValue(typeMetadata.field, fieldAndOwner.getValue());
+            Object mock = FieldReflection.getFieldValue(typeMetadata.field, fieldAndOwner.getValue());
 
             // A null field value will occur for invocations executed during initialization of the owner instance.
             if (mock != null) {

@@ -23,7 +23,7 @@ public final class ReflectiveMatcher implements ArgumentMatcher
       }
 
       matchedValue = argValue;
-      Boolean result = Utilities.invoke(handlerObject, handlerMethod, argValue);
+      Boolean result = MethodReflection.invoke(handlerObject, handlerMethod, argValue);
 
       return result == null || result;
    }

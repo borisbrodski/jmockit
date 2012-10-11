@@ -107,7 +107,7 @@ abstract class BaseTypeRedefinition
 
    private void createNewMockInstanceFactoryForInterface()
    {
-      Object mock = Utilities.newInstanceUsingDefaultConstructor(targetClass);
+      Object mock = ConstructorReflection.newInstanceUsingDefaultConstructor(targetClass);
       instanceFactory = new InterfaceInstanceFactory(mock);
    }
 

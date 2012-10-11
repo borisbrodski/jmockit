@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.integration.testng.internal;
@@ -17,7 +17,7 @@ public final class MockTestNG
    @Mock(reentrant = true)
    public void init(boolean useDefaultListeners)
    {
-      Utilities.invoke(TestNG.class, it, "init", useDefaultListeners);
+      MethodReflection.invoke(TestNG.class, it, "init", useDefaultListeners);
       TestNGRunnerDecorator.registerWithTestNG(it);
    }
 }

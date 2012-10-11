@@ -86,7 +86,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
    private void obtainAndRegisterInstancesOfFinalFields(Object target)
    {
       for (MockedType metadata : finalMockFields) {
-         Object mock = Utilities.getFieldValue(metadata.field, target);
+         Object mock = FieldReflection.getFieldValue(metadata.field, target);
          typeMetadata = metadata;
 
          if (mock == null) {
@@ -101,7 +101,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
    private Object assignNewInstanceToMockField(Object target, InstanceFactory instanceFactory)
    {
       Field mockField = typeMetadata.field;
-      Object mock = Utilities.getFieldValue(mockField, target);
+      Object mock = FieldReflection.getFieldValue(mockField, target);
 
       if (mock == null) {
          try {
@@ -118,7 +118,7 @@ public final class SharedFieldTypeRedefinitions extends FieldTypeRedefinitions
             throw e;
          }
 
-         Utilities.setFieldValue(mockField, target, mock);
+         FieldReflection.setFieldValue(mockField, target, mock);
 
          if (typeMetadata.getMaxInstancesToCapture() > 0) {
             getCaptureOfNewInstances().resetCaptureCount(mockField);

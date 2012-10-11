@@ -613,7 +613,7 @@ abstract class Invocations
     */
    protected final <T> T newInstance(String className, Class<?>[] parameterTypes, Object... initArgs)
    {
-      return Utilities.newInstance(className, parameterTypes, initArgs);
+      return ConstructorReflection.newInstance(className, parameterTypes, initArgs);
    }
 
    /**
@@ -631,7 +631,7 @@ abstract class Invocations
     */
    protected final <T> T newInstance(String className, Object... nonNullInitArgs)
    {
-      return Utilities.newInstance(className, nonNullInitArgs);
+      return ConstructorReflection.newInstance(className, nonNullInitArgs);
    }
 
    /**
@@ -647,7 +647,7 @@ abstract class Invocations
    protected final <T> T newInnerInstance(
       String innerClassSimpleName, Object outerClassInstance, Object... nonNullInitArgs)
    {
-      return Utilities.newInnerInstance(innerClassSimpleName, outerClassInstance, nonNullInitArgs);
+      return ConstructorReflection.newInnerInstance(innerClassSimpleName, outerClassInstance, nonNullInitArgs);
    }
 
    // Methods for invoking non-accessible methods on instances or classes /////////////////////////////////////////////
@@ -678,7 +678,8 @@ abstract class Invocations
    protected final <T> T invoke(
       Object objectWithMethod, String methodName, Class<?>[] parameterTypes, Object... methodArgs)
    {
-      return Utilities.invoke(objectWithMethod.getClass(), objectWithMethod, methodName, parameterTypes, methodArgs);
+      return
+         MethodReflection.invoke(objectWithMethod.getClass(), objectWithMethod, methodName, parameterTypes, methodArgs);
    }
 
    /**
@@ -707,7 +708,7 @@ abstract class Invocations
     */
    protected final <T> T invoke(Object objectWithMethod, String methodName, Object... methodArgs)
    {
-      return Utilities.invoke(objectWithMethod.getClass(), objectWithMethod, methodName, methodArgs);
+      return MethodReflection.invoke(objectWithMethod.getClass(), objectWithMethod, methodName, methodArgs);
    }
 
    /**
@@ -733,7 +734,7 @@ abstract class Invocations
    protected final <T> T invoke(
       Class<?> methodOwner, String methodName, Class<?>[] parameterTypes, Object... methodArgs)
    {
-      return Utilities.invoke(methodOwner, null, methodName, parameterTypes, methodArgs);
+      return MethodReflection.invoke(methodOwner, null, methodName, parameterTypes, methodArgs);
    }
 
    /**
@@ -759,7 +760,7 @@ abstract class Invocations
     */
    protected final <T> T invoke(Class<?> methodOwner, String methodName, Object... methodArgs)
    {
-      return Utilities.invoke(methodOwner, null, methodName, methodArgs);
+      return MethodReflection.invoke(methodOwner, null, methodName, methodArgs);
    }
 
    // Methods for getting/setting non-accessible fields on instances or classes ///////////////////////////////////////
@@ -777,7 +778,7 @@ abstract class Invocations
     */
    protected final <T> T getField(Object fieldOwner, String fieldName)
    {
-      return Utilities.getField(fieldOwner.getClass(), fieldName, fieldOwner);
+      return FieldReflection.getField(fieldOwner.getClass(), fieldName, fieldOwner);
    }
 
    /**
@@ -794,7 +795,7 @@ abstract class Invocations
     */
    protected final <T> T getField(Object fieldOwner, Class<T> fieldType)
    {
-      return Utilities.getField(fieldOwner.getClass(), fieldType, fieldOwner);
+      return FieldReflection.getField(fieldOwner.getClass(), fieldType, fieldOwner);
    }
 
    /**
@@ -807,7 +808,7 @@ abstract class Invocations
     */
    protected final <T> T getField(Class<?> fieldOwner, String fieldName)
    {
-      return Utilities.getField(fieldOwner, fieldName, null);
+      return FieldReflection.getField(fieldOwner, fieldName, null);
    }
 
    /**
@@ -820,7 +821,7 @@ abstract class Invocations
     */
    protected final <T> T getField(Class<?> fieldOwner, Class<T> fieldType)
    {
-      return Utilities.getField(fieldOwner, fieldType, null);
+      return FieldReflection.getField(fieldOwner, fieldType, null);
    }
 
    /**
@@ -837,7 +838,7 @@ abstract class Invocations
     */
    protected final void setField(Object fieldOwner, String fieldName, Object fieldValue)
    {
-      Utilities.setField(fieldOwner.getClass(), fieldOwner, fieldName, fieldValue);
+      FieldReflection.setField(fieldOwner.getClass(), fieldOwner, fieldName, fieldValue);
    }
 
    /**
@@ -849,7 +850,7 @@ abstract class Invocations
     */
    protected final void setField(Object fieldOwner, Object fieldValue)
    {
-      Utilities.setField(fieldOwner.getClass(), fieldOwner, null, fieldValue);
+      FieldReflection.setField(fieldOwner.getClass(), fieldOwner, null, fieldValue);
    }
 
    /**
@@ -861,7 +862,7 @@ abstract class Invocations
     */
    protected final void setField(Class<?> fieldOwner, String fieldName, Object fieldValue)
    {
-      Utilities.setField(fieldOwner, null, fieldName, fieldValue);
+      FieldReflection.setField(fieldOwner, null, fieldName, fieldValue);
    }
 
    /**
@@ -873,6 +874,6 @@ abstract class Invocations
     */
    protected final void setField(Class<?> fieldOwner, Object fieldValue)
    {
-      Utilities.setField(fieldOwner, null, null, fieldValue);
+      FieldReflection.setField(fieldOwner, null, null, fieldValue);
    }
 }

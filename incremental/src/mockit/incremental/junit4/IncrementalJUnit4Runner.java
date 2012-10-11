@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.incremental.junit4;
@@ -8,6 +8,8 @@ import java.lang.reflect.*;
 import java.lang.annotation.*;
 import java.util.*;
 import java.io.*;
+
+import static java.lang.reflect.Modifier.*;
 
 import org.junit.internal.runners.*;
 import org.junit.runner.Description;
@@ -93,7 +95,7 @@ public final class IncrementalJUnit4Runner
          }
       }
 
-      Boolean shouldRun = Utilities.invoke(it, shouldRunMethod, filter, m);
+      Boolean shouldRun = MethodReflection.invoke(it, shouldRunMethod, filter, m);
 
       if (testMethod != null) {
          testMethods.put(testMethod, shouldRun);
@@ -111,7 +113,7 @@ public final class IncrementalJUnit4Runner
       while (itr.hasNext()) {
          Description testDescription = itr.next();
          String testMethodName = testDescription.getMethodName();
-         testMethod = Utilities.findPublicVoidMethod(testClass, testMethodName);
+         testMethod = findPublicVoidMethod(testClass, testMethodName);
 
          Boolean shouldRun = shouldRunTestInCurrentTestRun(null, testMethod);
 
@@ -121,6 +123,20 @@ public final class IncrementalJUnit4Runner
       }
 
       return testClassDescription.getChildren().isEmpty();
+   }
+
+   private Method findPublicVoidMethod(Class<?> aClass, String methodName)
+   {
+      for (Method method : aClass.getDeclaredMethods()) {
+         if (
+            isPublic(method.getModifiers()) && method.getReturnType() == void.class &&
+            methodName.equals(method.getName())
+         ) {
+            return method;
+         }
+      }
+
+      return null;
    }
 
    private Boolean shouldRunTestInCurrentTestRun(Class<? extends Annotation> testAnnotation, Method testMethod)

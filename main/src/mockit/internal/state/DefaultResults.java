@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.state;
@@ -147,10 +147,10 @@ public final class DefaultResults
             return valueFromCache;
          }
 
-         Object fieldValue = Utilities.getFieldValue(inputField, fieldOwner);
+         Object fieldValue = FieldReflection.getFieldValue(inputField, fieldOwner);
 
          if (fieldValue == null) {
-            fieldValue = Utilities.newInstanceUsingDefaultConstructor(inputField.getType());
+            fieldValue = ConstructorReflection.newInstanceUsingDefaultConstructor(inputField.getType());
          }
 
          valueCache = fieldValue;
@@ -175,7 +175,7 @@ public final class DefaultResults
 
    private String getReturnTypeDescriptor(Field inputField, Class<?> fieldType)
    {
-      String returnTypeDesc = Utilities.invoke(Field.class, inputField, "getGenericSignature");
+      String returnTypeDesc = MethodReflection.invoke(Field.class, inputField, "getGenericSignature");
 
       if (returnTypeDesc == null) {
          returnTypeDesc = Type.getDescriptor(fieldType);

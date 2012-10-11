@@ -30,7 +30,7 @@ final class DelegatedResult extends DynamicInvocationResult
    {
       if (methodToInvoke == null) {
          String methodName = adaptNameAndArgumentsForDelegate(invocation, args);
-         methodToInvoke = Utilities.findCompatibleMethod(targetObject.getClass(), methodName, args);
+         methodToInvoke = findCompatibleMethod(targetObject.getClass(), methodName, args);
          determineWhetherMethodToInvokeHasInvocationParameter();
       }
 
@@ -67,5 +67,11 @@ final class DelegatedResult extends DynamicInvocationResult
             args[i] = Utilities.getClassForType(argTypes[i]);
          }
       }
+   }
+
+   private Method findCompatibleMethod(Class<?> theClass, String methodName, Object[] args)
+   {
+      Class<?>[] argTypes = ParameterReflection.getArgumentTypesFromArgumentValues(args);
+      return MethodReflection.findCompatibleMethod(theClass, methodName, argTypes);
    }
 }

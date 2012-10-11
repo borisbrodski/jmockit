@@ -9,6 +9,7 @@ import static java.lang.reflect.Modifier.*;
 
 import mockit.external.asm4.*;
 import mockit.internal.*;
+import mockit.internal.util.*;
 
 import static mockit.internal.util.Utilities.*;
 
@@ -20,7 +21,7 @@ public final class MockedImplementationClass<T>
 
    public MockedImplementationClass(Class<?> mockClass, Object mockInstance)
    {
-      this(mockInstance == null ? newInstance(mockClass) : mockInstance);
+      this(mockInstance == null ? ConstructorReflection.newInstance(mockClass) : mockInstance);
    }
 
    public T generate(Class<T> interfaceToBeMocked, ParameterizedType typeToMock)
@@ -42,7 +43,7 @@ public final class MockedImplementationClass<T>
       Class<T> generatedClass = implementationClass.generateNewMockImplementationClassForInterface();
       byte[] generatedBytecode = implementationClass.getGeneratedBytecode();
 
-      T proxy = newInstanceUsingDefaultConstructor(generatedClass);
+      T proxy = ConstructorReflection.newInstanceUsingDefaultConstructor(generatedClass);
 
       MockClassSetup setup = new MockClassSetup(generatedClass, typeToMock, mockInstance, generatedBytecode);
       setup.setBaseType(interfaceToBeMocked);

@@ -173,7 +173,7 @@ public class Invocation
             realMethod.isVarArgs() ? createArgumentsArrayWithVarargs(replacementArguments) : replacementArguments;
       }
 
-      return Utilities.invoke(invokedInstance, realMethod, actualArgs);
+      return MethodReflection.invoke(invokedInstance, realMethod, actualArgs);
    }
 
    private Object[] createArgumentsArrayWithVarargs(Object[] replacementArguments)

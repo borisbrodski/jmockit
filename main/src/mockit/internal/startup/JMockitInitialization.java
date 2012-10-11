@@ -93,7 +93,7 @@ final class JMockitInitialization
 
          //noinspection UnnecessaryFullyQualifiedName
          if (mockit.MockUp.class.isAssignableFrom(mockClass)) {
-            Utilities.newInstanceUsingDefaultConstructor(mockClass);
+            ConstructorReflection.newInstanceUsingDefaultConstructor(mockClass);
          }
          else {
             new MockClassSetup(mockClass).setUpStartupMock();

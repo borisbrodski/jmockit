@@ -83,7 +83,7 @@ public final class MockedType
             else if (injectableClass.isPrimitive()) {
                Class<?> wrapperClass = PRIMITIVE_TO_WRAPPER.get(injectableClass);
                Class<?>[] constructorParameters = {String.class};
-               return newInstance(wrapperClass, constructorParameters, value);
+               return ConstructorReflection.newInstance(wrapperClass, constructorParameters, value);
             }
             else if (injectableClass.isEnum()) {
                @SuppressWarnings({"rawtypes", "unchecked"})
@@ -228,7 +228,7 @@ public final class MockedType
          return providedValue;
       }
 
-      Object value = getFieldValue(field, objectWithFields);
+      Object value = FieldReflection.getFieldValue(field, objectWithFields);
 
       if (!injectable) {
          return value;

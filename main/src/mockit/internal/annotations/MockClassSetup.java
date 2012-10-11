@@ -70,7 +70,7 @@ public final class MockClassSetup
 
    private Object createMockInstanceAccordingToInstantiation()
    {
-      return instantiation == Instantiation.PerMockSetup ? Utilities.newInstance(mockClass) : null;
+      return instantiation == Instantiation.PerMockSetup ? ConstructorReflection.newInstance(mockClass) : null;
    }
 
    public MockClassSetup(Class<?> realClass, Object mock, Class<?> mockClass)
@@ -253,7 +253,7 @@ public final class MockClassSetup
 
       public boolean shouldCapture(ClassLoader definingClassLoader, String className)
       {
-         Boolean capture = Utilities.invoke(mock, shouldBeMocked, definingClassLoader, className);
+         Boolean capture = MethodReflection.invoke(mock, shouldBeMocked, definingClassLoader, className);
          return capture;
       }
 

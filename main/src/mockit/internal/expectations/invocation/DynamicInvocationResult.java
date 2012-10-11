@@ -13,6 +13,8 @@ import mockit.internal.util.*;
 
 abstract class DynamicInvocationResult extends InvocationResult
 {
+   private static final Object[] NO_ARGS = {};
+
    final Object targetObject;
    Method methodToInvoke;
    int numberOfRegularParameters;
@@ -39,7 +41,7 @@ abstract class DynamicInvocationResult extends InvocationResult
    public final Object invokeMethodOnTargetObject(
       Object mockOrRealObject, ExpectedInvocation invocation, InvocationConstraints constraints, Object[] args)
    {
-      Object[] delegateArgs = numberOfRegularParameters == 0 ? Utilities.NO_ARGS : args;
+      Object[] delegateArgs = numberOfRegularParameters == 0 ? NO_ARGS : args;
       Object result;
 
       if (hasInvocationParameter) {
@@ -58,7 +60,7 @@ abstract class DynamicInvocationResult extends InvocationResult
    {
       DelegateInvocation invocation =
          new DelegateInvocation(mockOrRealObject, invokedArgs, expectedInvocation, constraints);
-      Object[] delegateArgsWithInvocation = Utilities.argumentsWithExtraFirstValue(delegateArgs, invocation);
+      Object[] delegateArgsWithInvocation = ParameterReflection.argumentsWithExtraFirstValue(delegateArgs, invocation);
 
       try {
          Object result = executeMethodToInvoke(delegateArgsWithInvocation);
@@ -74,13 +76,13 @@ abstract class DynamicInvocationResult extends InvocationResult
       ReentrantLock reentrantLock = RecordAndReplayExecution.RECORD_OR_REPLAY_LOCK;
 
       if (!reentrantLock.isHeldByCurrentThread()) {
-         return Utilities.invoke(targetObject, methodToInvoke, args);
+         return MethodReflection.invoke(targetObject, methodToInvoke, args);
       }
 
       reentrantLock.unlock();
 
       try {
-         return Utilities.invoke(targetObject, methodToInvoke, args);
+         return MethodReflection.invoke(targetObject, methodToInvoke, args);
       }
       finally {
          //noinspection LockAcquiredButNotSafelyReleased

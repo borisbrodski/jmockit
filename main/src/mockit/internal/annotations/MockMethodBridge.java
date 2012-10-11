@@ -69,13 +69,13 @@ public final class MockMethodBridge extends MockingBridge
       if (paramClasses.length > 0 && paramClasses[0] == Invocation.class) {
          invocation = TestRun.createMockInvocation(mockClassInternalName, mockStateIndex, mocked, mockArgs);
          //noinspection AssignmentToMethodParameter
-         mockArgs = Utilities.argumentsWithExtraFirstValue(mockArgs, invocation);
+         mockArgs = ParameterReflection.argumentsWithExtraFirstValue(mockArgs, invocation);
       }
 
       Object result =
          mockMethod == null ?
-            Utilities.invoke(mockClass, mock, mockName, paramClasses, mockArgs) :
-            Utilities.invoke(mock, mockMethod, mockArgs);
+            MethodReflection.invoke(mockClass, mock, mockName, paramClasses, mockArgs) :
+            MethodReflection.invoke(mock, mockMethod, mockArgs);
 
       return invocation != null && invocation.shouldProceedIntoConstructor() ? Void.class : result;
    }
@@ -85,7 +85,7 @@ public final class MockMethodBridge extends MockingBridge
    {
       if (mockInstanceIndex < 0) { // call to instance mock method on mock class not yet instantiated
          String mockClassName = getMockClassName(mockClassInternalName);
-         return Utilities.newInstance(mockClassName);
+         return ConstructorReflection.newInstance(mockClassName);
       }
       else if (startupMock) {
          return TestRun.getStartupMock(mockInstanceIndex);
@@ -104,7 +104,7 @@ public final class MockMethodBridge extends MockingBridge
    {
       try {
          Field itField = mockClass.getDeclaredField("it");
-         Utilities.setFieldValue(itField, mock, mocked);
+         FieldReflection.setFieldValue(itField, mock, mocked);
       }
       catch (NoSuchFieldException ignore) {}
    }

@@ -38,7 +38,7 @@ public final class Deencapsulation
     */
    public static <T> T getField(Object objectWithField, String fieldName)
    {
-      return Utilities.getField(objectWithField.getClass(), fieldName, objectWithField);
+      return FieldReflection.getField(objectWithField.getClass(), fieldName, objectWithField);
    }
 
    /**
@@ -54,7 +54,7 @@ public final class Deencapsulation
     */
    public static <T> T getField(Object objectWithField, Class<T> fieldType)
    {
-      return Utilities.getField(objectWithField.getClass(), fieldType, objectWithField);
+      return FieldReflection.getField(objectWithField.getClass(), fieldType, objectWithField);
    }
 
    /**
@@ -70,7 +70,7 @@ public final class Deencapsulation
     */
    public static <T> T getField(Class<?> classWithStaticField, String fieldName)
    {
-      return Utilities.getField(classWithStaticField, fieldName, null);
+      return FieldReflection.getField(classWithStaticField, fieldName, null);
    }
 
    /**
@@ -86,7 +86,7 @@ public final class Deencapsulation
     */
    public static <T> T getField(Class<?> classWithStaticField, Class<T> fieldType)
    {
-      return Utilities.getField(classWithStaticField, fieldType, null);
+      return FieldReflection.getField(classWithStaticField, fieldType, null);
    }
 
    /**
@@ -102,7 +102,7 @@ public final class Deencapsulation
     */
    public static void setField(Object objectWithField, String fieldName, Object fieldValue)
    {
-      Utilities.setField(objectWithField.getClass(), objectWithField, fieldName, fieldValue);
+      FieldReflection.setField(objectWithField.getClass(), objectWithField, fieldName, fieldValue);
    }
 
    /**
@@ -113,7 +113,7 @@ public final class Deencapsulation
     */
    public static void setField(Object objectWithField, Object fieldValue)
    {
-      Utilities.setField(objectWithField.getClass(), objectWithField, null, fieldValue);
+      FieldReflection.setField(objectWithField.getClass(), objectWithField, null, fieldValue);
    }
 
    /**
@@ -127,7 +127,7 @@ public final class Deencapsulation
     */
    public static void setField(Class<?> classWithStaticField, String fieldName, Object fieldValue)
    {
-      Utilities.setField(classWithStaticField, null, fieldName, fieldValue);
+      FieldReflection.setField(classWithStaticField, null, fieldName, fieldValue);
    }
 
    /**
@@ -141,7 +141,7 @@ public final class Deencapsulation
     */
    public static void setField(Class<?> classWithStaticField, Object fieldValue)
    {
-      Utilities.setField(classWithStaticField, null, null, fieldValue);
+      FieldReflection.setField(classWithStaticField, null, null, fieldValue);
    }
 
    /**
@@ -161,7 +161,7 @@ public final class Deencapsulation
       Object objectWithMethod, String methodName, Class<?>[] parameterTypes, Object... methodArgs)
    {
       Class<?> theClass = objectWithMethod.getClass();
-      return Utilities.invoke(theClass, objectWithMethod, methodName, parameterTypes, methodArgs);
+      return MethodReflection.invoke(theClass, objectWithMethod, methodName, parameterTypes, methodArgs);
    }
 
    /**
@@ -182,7 +182,7 @@ public final class Deencapsulation
    public static <T> T invoke(Object objectWithMethod, String methodName, Object... nonNullArgs)
    {
       Class<?> theClass = objectWithMethod.getClass();
-      return Utilities.invoke(theClass, objectWithMethod, methodName, nonNullArgs);
+      return MethodReflection.invoke(theClass, objectWithMethod, methodName, nonNullArgs);
    }
 
    /**
@@ -199,7 +199,7 @@ public final class Deencapsulation
    public static <T> T invoke(
       Class<?> classWithStaticMethod, String methodName, Class<?>[] parameterTypes, Object... methodArgs)
    {
-      return Utilities.invoke(classWithStaticMethod, null, methodName, parameterTypes, methodArgs);
+      return MethodReflection.invoke(classWithStaticMethod, null, methodName, parameterTypes, methodArgs);
    }
 
    /**
@@ -217,7 +217,7 @@ public final class Deencapsulation
     */
    public static <T> T invoke(Class<?> classWithStaticMethod, String methodName, Object... nonNullArgs)
    {
-      return Utilities.invoke(classWithStaticMethod, null, methodName, nonNullArgs);
+      return MethodReflection.invoke(classWithStaticMethod, null, methodName, nonNullArgs);
    }
 
    /**
@@ -237,7 +237,7 @@ public final class Deencapsulation
    public static <T> T invoke(String classWithStaticMethod, String methodName, Object... nonNullArgs)
    {
       Class<Object> theClass = Utilities.loadClass(classWithStaticMethod);
-      return Utilities.invoke(theClass, null, methodName, nonNullArgs);
+      return MethodReflection.invoke(theClass, null, methodName, nonNullArgs);
    }
 
    /**
@@ -259,7 +259,7 @@ public final class Deencapsulation
     */
    public static <T> T newInstance(String className, Class<?>[] parameterTypes, Object... initArgs)
    {
-      return Utilities.newInstance(className, parameterTypes, initArgs);
+      return ConstructorReflection.newInstance(className, parameterTypes, initArgs);
    }
 
    /**
@@ -280,7 +280,7 @@ public final class Deencapsulation
     */
    public static <T> T newInstance(Class<? extends T> classToInstantiate, Class<?>[] parameterTypes, Object... initArgs)
    {
-      return Utilities.newInstance(classToInstantiate, parameterTypes, initArgs);
+      return ConstructorReflection.newInstance(classToInstantiate, parameterTypes, initArgs);
    }
 
    /**
@@ -300,7 +300,7 @@ public final class Deencapsulation
     */
    public static <T> T newInstance(String className, Object... nonNullArgs)
    {
-      return Utilities.newInstance(className, nonNullArgs);
+      return ConstructorReflection.newInstance(className, nonNullArgs);
    }
 
    /**
@@ -320,7 +320,7 @@ public final class Deencapsulation
     */
    public static <T> T newInstance(Class<? extends T> classToInstantiate, Object... nonNullArgs)
    {
-      return Utilities.newInstance(classToInstantiate, nonNullArgs);
+      return ConstructorReflection.newInstance(classToInstantiate, nonNullArgs);
    }
 
    /**
@@ -340,7 +340,7 @@ public final class Deencapsulation
     */
    public static <T> T newInnerInstance(String innerClassSimpleName, Object outerClassInstance, Object... nonNullArgs)
    {
-      return Utilities.newInnerInstance(innerClassSimpleName, outerClassInstance, nonNullArgs);
+      return ConstructorReflection.newInnerInstance(innerClassSimpleName, outerClassInstance, nonNullArgs);
    }
 
    /**
@@ -360,6 +360,6 @@ public final class Deencapsulation
    public static <T> T newInnerInstance(
       Class<? extends T> innerClassToInstantiate, Object outerClassInstance, Object... nonNullArgs)
    {
-      return Utilities.newInnerInstance(innerClassToInstantiate, outerClassInstance, nonNullArgs);
+      return ConstructorReflection.newInnerInstance(innerClassToInstantiate, outerClassInstance, nonNullArgs);
    }
 }
