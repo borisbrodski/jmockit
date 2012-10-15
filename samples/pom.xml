@@ -27,7 +27,7 @@
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <jmockit.version>0.999.17</jmockit.version>
+      <jmockit.version>0.999.18</jmockit.version>
       <junit.version>4.10</junit.version>
    </properties>
 
@@ -37,10 +37,13 @@
          <build>
             <plugins>
                <plugin>
-                  <artifactId>maven-surefire-plugin</artifactId><version>2.6</version>
+                  <artifactId>maven-surefire-plugin</artifactId><version>2.12</version>
                   <configuration>
                      <includes><include>**/*Test.java</include></includes>
-                     <excludes><exclude>**/*IntegrationTest.java</exclude></excludes>
+                     <excludes>
+                        <exclude>**/*IntegrationTest.java</exclude>
+                        <exclude>**/end2end/**/*Test.java</exclude>
+                     </excludes>
                   </configuration>
                </plugin>
             </plugins>
@@ -51,9 +54,12 @@
          <build>
             <plugins>
                <plugin>
-                  <artifactId>maven-surefire-plugin</artifactId><version>2.6</version>
+                  <artifactId>maven-surefire-plugin</artifactId><version>2.12</version>
                   <configuration>
-                     <includes><include>**/*IntegrationTest.java</include></includes>
+                     <includes>
+                        <include>**/*IntegrationTest.java</include>
+                        <include>**/end2end/**/*Test.java</include>
+                     </includes>
                   </configuration>
                </plugin>
             </plugins>
@@ -68,11 +74,11 @@
       <testOutputDirectory>test-classes</testOutputDirectory>
       <plugins>
          <plugin>
-            <artifactId>maven-compiler-plugin</artifactId><version>2.0.2</version>
+            <artifactId>maven-compiler-plugin</artifactId><version>2.4</version>
             <configuration><source>1.6</source><target>1.6</target></configuration>
          </plugin>
          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId><version>2.6</version>
+            <artifactId>maven-surefire-plugin</artifactId><version>2.12</version>
             <configuration><disableXmlReport>true</disableXmlReport></configuration>
          </plugin>
       </plugins>

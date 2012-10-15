@@ -2240,6 +2240,19 @@
         <root url="jar://E:/.m2/repository/com/beust/jcommander/1.27/jcommander-1.27-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: com.googlecode.jmockit:jmockit:0.999.17">
+      <CLASSES>
+        <root url="jar://E:/.m2/repository/com/googlecode/jmockit/jmockit/0.999.17/jmockit-0.999.17.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/main/pom-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/com/googlecode/jmockit/jmockit/0.999.17/jmockit-0.999.17-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/main/pom-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/com/googlecode/jmockit/jmockit/0.999.17/jmockit-0.999.17-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: commons-collections:commons-collections:3.2">
       <CLASSES>
         <root url="jar://E:/.m2/repository/commons-collections/commons-collections/3.2/commons-collections-3.2.jar!/" />
@@ -2405,26 +2418,26 @@
         <root url="jar://E:/.m2/repository/org/apache/commons/commons-email/1.2/commons-email-1.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.apache.httpcomponents:httpclient:4.0.1">
+    <library name="Maven: org.apache.httpcomponents:httpclient:4.2.1">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/org/apache/httpcomponents/httpclient/4.0.1/httpclient-4.0.1.jar!/" />
+        <root url="jar://E:/.m2/repository/org/apache/httpcomponents/httpclient/4.2.1/httpclient-4.2.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/apache/httpcomponents/httpclient/4.0.1/httpclient-4.0.1-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/org/apache/httpcomponents/httpclient/4.2.1/httpclient-4.2.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/org/apache/httpcomponents/httpclient/4.0.1/httpclient-4.0.1-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/org/apache/httpcomponents/httpclient/4.2.1/httpclient-4.2.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.apache.httpcomponents:httpcore:4.0.1">
+    <library name="Maven: org.apache.httpcomponents:httpcore:4.2.1">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/org/apache/httpcomponents/httpcore/4.0.1/httpcore-4.0.1.jar!/" />
+        <root url="jar://E:/.m2/repository/org/apache/httpcomponents/httpcore/4.2.1/httpcore-4.2.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/apache/httpcomponents/httpcore/4.0.1/httpcore-4.0.1-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/org/apache/httpcomponents/httpcore/4.2.1/httpcore-4.2.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/org/apache/httpcomponents/httpcore/4.0.1/httpcore-4.0.1-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/org/apache/httpcomponents/httpcore/4.2.1/httpcore-4.2.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.beanshell:bsh:2.0b4">
@@ -2515,15 +2528,26 @@
         <root url="jar://E:/.m2/repository/org/mockito/mockito-all/1.9.0/mockito-all-1.9.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.mockito:mockito-core:1.9.5-rc1">
+    <library name="Maven: org.mockito:mockito-all:1.9.5">
       <CLASSES>
-        <root url="jar://E:/.m2/repository/org/mockito/mockito-core/1.9.5-rc1/mockito-core-1.9.5-rc1.jar!/" />
+        <root url="jar://E:/.m2/repository/org/mockito/mockito-all/1.9.5/mockito-all-1.9.5.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://E:/.m2/repository/org/mockito/mockito-core/1.9.5-rc1/mockito-core-1.9.5-rc1-javadoc.jar!/" />
+        <root url="jar://E:/.m2/repository/org/mockito/mockito-all/1.9.5/mockito-all-1.9.5-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://E:/.m2/repository/org/mockito/mockito-core/1.9.5-rc1/mockito-core-1.9.5-rc1-sources.jar!/" />
+        <root url="jar://E:/.m2/repository/org/mockito/mockito-all/1.9.5/mockito-all-1.9.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.mockito:mockito-core:1.9.5">
+      <CLASSES>
+        <root url="jar://E:/.m2/repository/org/mockito/mockito-core/1.9.5/mockito-core-1.9.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://E:/.m2/repository/org/mockito/mockito-core/1.9.5/mockito-core-1.9.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://E:/.m2/repository/org/mockito/mockito-core/1.9.5/mockito-core-1.9.5-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.objenesis:objenesis:1.0">

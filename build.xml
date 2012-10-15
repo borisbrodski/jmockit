@@ -119,13 +119,11 @@
    <target name="buildPowerMock">
       <buildSample module="powermock" extraclasspath="lib/*.jar samples/lib/dom4j-*.jar"/>
    </target>
-   <target name="buildJBossAOP"><buildSample module="jbossaop"/></target>
+   <target name="buildJBossAOP"><buildSample module="jbossaop" jdkVersion="1.5"/></target>
    <target name="buildLoginService">
       <buildSample module="LoginService" testlibrary="${TESTNG_JAR}"/>
    </target>
-   <target name="buildTutorial">
-      <buildSample module="tutorial" extraclasspath=""/>
-   </target>
+   <target name="buildTutorial"><buildSample module="tutorial"/></target>
    <target name="buildOrderManagement">
       <buildSample
          module="orderMngmntWebapp" outdir="WEB-INF/classes"
@@ -143,12 +141,15 @@
          extraclasspath="samples/lib/easymock*.jar samples/lib/jmock*.jar samples/lib/mockito*.jar
                          samples/lib/unitils*.jar samples/lib/org.springframework.*.jar"/>
    </target>
+   <target name="buildFakingXMocking">
+      <buildSample module="fakingXmocking" jdkVersion="1.7" extraclasspath="samples/lib/mockito*.jar"/>
+   </target>
 
    <target
       name="buildSamples"
-      depends="buildEasyMock, buildJMock, buildMockito, buildUnitils, buildPowerMock,
-               buildLoginService, buildJBossAOP, buildTutorial, buildOrderManagement,
-               buildTimingFramework, buildAnimatedTransitions, buildTourDeMock"/>
+      depends="buildEasyMock, buildJMock, buildMockito, buildUnitils, buildPowerMock, buildLoginService,
+               buildJBossAOP, buildTutorial, buildOrderManagement, buildTimingFramework,
+               buildAnimatedTransitions, buildTourDeMock, buildFakingXMocking"/>
    <target name="buildAll" depends="buildMain, buildCoverage, buildSamples"/>
 
    <!-- Target for generating the Javadoc HTML documentation -->
@@ -324,9 +325,11 @@
             <fileset dir="samples/powermock/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/orderMngmntWebapp/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/tutorial/test-classes" includes="**/*Test.class"/>
-            <fileset dir="samples/TimingFramework/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/TimingFramework/test-classes" includes="**/*Test.class" excludes="end2end/*"/>
             <fileset dir="samples/AnimatedTransitions/test-classes" includes="**/*Test.class"/>
             <fileset dir="samples/tourdemock/test-classes" includes="**/*Test.class"/>
+            <fileset dir="samples/fakingXmocking/test-classes"
+                     includes="**/*Test.class" excludes="**/*IntegrationTest.class"/>
          </batchtest>
          <formatter type="xml"/>
       </junit>
