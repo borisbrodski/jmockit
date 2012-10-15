@@ -6,6 +6,7 @@ package mockit;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 import org.junit.*;
 
@@ -184,16 +185,8 @@ public final class ExpectationsTest
 
    static final class SubCollaborator extends Collaborator
    {
-      @Override
-      int getValue()
-      {
-         return 1 + super.getValue();
-      }
-
-      int getValue(int i)
-      {
-         return i + super.getValue();
-      }
+      @Override int getValue() { return 1 + super.getValue(); }
+      int getValue(int i) { return i + super.getValue(); }
    }
 
    @Test
@@ -280,6 +273,7 @@ public final class ExpectationsTest
             mock.getFloat();
             mock.getDouble();
             mock.getObject();
+            mock.getElements();
          }
       };
 
@@ -292,6 +286,7 @@ public final class ExpectationsTest
       assertEquals(0.0, realObject.getFloat(), 0.0);
       assertEquals(0.0, realObject.getDouble(), 0.0);
       assertNull(realObject.getObject());
+      assertFalse(realObject.getElements().hasMoreElements());
    }
 
    static class ClassWithMethodsOfEveryReturnType
@@ -305,6 +300,7 @@ public final class ExpectationsTest
       float getFloat() { return 1.0F; }
       double getDouble() { return 1.0; }
       Object getObject() { return new Object(); }
+      Enumeration<?> getElements() { return null; }
    }
 
    @Test(expected = UnexpectedInvocation.class)

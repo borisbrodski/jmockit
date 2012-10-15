@@ -39,6 +39,7 @@ public final class DefaultValues
       TYPE_DESC_TO_VALUE_MAP.put("F", ZERO_FLOAT);
       TYPE_DESC_TO_VALUE_MAP.put("J", ZERO_LONG);
       TYPE_DESC_TO_VALUE_MAP.put("D", ZERO_DOUBLE);
+      TYPE_DESC_TO_VALUE_MAP.put("Ljava/util/Enumeration;", enumeration(emptyList()));
       TYPE_DESC_TO_VALUE_MAP.put("Ljava/util/Collection;", emptyList());
       TYPE_DESC_TO_VALUE_MAP.put("Ljava/util/List;", emptyList());
       TYPE_DESC_TO_VALUE_MAP.put("Ljava/util/Set;", emptySet());
