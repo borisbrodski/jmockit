@@ -195,7 +195,6 @@
     <option name="DEPRECATION" value="false" />
   </component>
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
-    <file url="file://E:/issues-coverage/issue236" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/coverage" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/hibernate3emul" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/incremental" charset="UTF-8" />
@@ -989,11 +988,6 @@
         <option value="$PROJECT_DIR$/incremental/pom.xml" />
         <option value="$PROJECT_DIR$/multicore/pom.xml" />
       </list>
-    </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="E:/issues-coverage/issue236/pom.xml" />
-      </set>
     </option>
   </component>
   <component name="Palette2">

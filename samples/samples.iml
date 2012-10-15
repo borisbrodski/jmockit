@@ -15,6 +15,7 @@
       <excludeFolder url="file://$MODULE_DIR$/mockito" />
       <excludeFolder url="file://$MODULE_DIR$/orderMngmntWebapp" />
       <excludeFolder url="file://$MODULE_DIR$/powermock" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/tourdemock" />
       <excludeFolder url="file://$MODULE_DIR$/tutorial" />
       <excludeFolder url="file://$MODULE_DIR$/unitils" />
