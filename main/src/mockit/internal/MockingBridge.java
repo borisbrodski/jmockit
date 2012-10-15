@@ -30,7 +30,8 @@ public abstract class MockingBridge implements InvocationHandler
       Class<?> mockedClass = mocked.getClass();
       return
          mockedClass == File.class || mockedClass == URL.class || mockedClass == FileInputStream.class ||
-         mockedClass == JarFile.class || Vector.class.isInstance(mocked) || Hashtable.class.isInstance(mocked);
+         JarFile.class.isInstance(mocked) || JarEntry.class.isInstance(mocked) || mockedClass == Manifest.class ||
+         Vector.class.isInstance(mocked) || Hashtable.class.isInstance(mocked);
    }
 
    protected static boolean wasCalledDuringClassLoading()

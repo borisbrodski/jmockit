@@ -7,7 +7,9 @@ package mockit;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.jar.*;
 import java.util.zip.*;
+import static java.util.Arrays.*;
 
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -214,25 +216,22 @@ public final class ClassLoadingAndJREMocksTest
       assertEquals("mock", props.getProperty("test"));
    }
 
-   @Mocked URLConnection mockConnection;
-
    @Test
-   public void mockURLAndURLConnectionUsingMockParameterAndMockField(final URL url) throws Exception
+   public void mockURLAndURLConnection(final URL mockUrl, final URLConnection mockConnection) throws Exception
    {
-      new Expectations() {{ url.openConnection(); result = mockConnection; }};
+      new Expectations() {{ mockUrl.openConnection(); result = mockConnection; }};
 
-      URLConnection conn = url.openConnection();
+      URLConnection conn = mockUrl.openConnection();
       assertSame(mockConnection, conn);
    }
 
    @Test
-   public void mockURLAndHttpURLConnectionUsingMockParameters(
-      final URL mockUrl, final HttpURLConnection mockHttpConnection) throws Exception
+   public void mockURLAndHttpURLConnection(final URL mockUrl, final HttpURLConnection mockConnection) throws Exception
    {
-      new NonStrictExpectations() {{ mockUrl.openConnection(); result = mockHttpConnection; }};
+      new NonStrictExpectations() {{ mockUrl.openConnection(); result = mockConnection; }};
 
       HttpURLConnection conn = (HttpURLConnection) mockUrl.openConnection();
-      assertSame(mockHttpConnection, conn);
+      assertSame(mockConnection, conn);
    }
 
    @Test
@@ -308,5 +307,72 @@ public final class ClassLoadingAndJREMocksTest
       ZipEntry firstEntry = zf.entries().nextElement();
       InputStream content = zf.getInputStream(firstEntry);
       return new BufferedReader(new InputStreamReader(content)).readLine();
+   }
+
+   @Test
+   public void mockJarEntry(@Mocked final JarEntry mockEntry)
+   {
+      new NonStrictExpectations() {{
+         mockEntry.getName(); result = "Test";
+      }};
+
+      assertEquals("Test", mockEntry.getName());
+   }
+
+   String readMainClassAndFileNamesFromJar(File file, List<String> containedFileNames) throws IOException
+   {
+      JarFile jarFile = new JarFile(file);
+
+      Manifest manifest = jarFile.getManifest();
+      Attributes mainAttributes = manifest.getMainAttributes();
+      String mainClassName = mainAttributes.getValue(Attributes.Name.MAIN_CLASS);
+
+      Enumeration<JarEntry> jarEntries = jarFile.entries();
+
+      while (jarEntries.hasMoreElements()) {
+         JarEntry jarEntry = jarEntries.nextElement();
+         containedFileNames.add(jarEntry.getName());
+      }
+
+      return mainClassName;
+   }
+
+   @Test
+   public void mockJavaUtilJarClasses() throws Exception
+   {
+      final File testFile = new File("test.jar");
+      final String mainClassName = "test.Main";
+
+      new Expectations() {
+         @Mocked JarFile mockFile;
+         @Mocked Manifest mockManifest;
+         @Mocked Attributes mockAttributes;
+         @Mocked Enumeration<JarEntry> mockEntries;
+         @Mocked JarEntry mockEntry;
+
+         {
+            new JarFile(testFile);
+            mockFile.getManifest(); result = mockManifest;
+            mockManifest.getMainAttributes(); result = mockAttributes;
+            mockAttributes.getValue(Attributes.Name.MAIN_CLASS); result = mainClassName;
+            mockFile.entries(); result = mockEntries;
+
+            mockEntries.hasMoreElements(); result = true;
+            mockEntries.nextElement(); result = mockEntry;
+            mockEntry.getName(); result = "test/Main$Inner.class";
+
+            mockEntries.hasMoreElements(); result = true;
+            mockEntries.nextElement(); result = mockEntry;
+            mockEntry.getName(); result = "test/Main.class";
+
+            mockEntries.hasMoreElements(); result = false;
+         }
+      };
+
+      List<String> fileNames = new ArrayList<String>();
+      String mainClassFromJar = readMainClassAndFileNamesFromJar(testFile, fileNames);
+
+      assertEquals(mainClassName, mainClassFromJar);
+      assertEquals(fileNames, asList("test/Main$Inner.class", "test/Main.class"));
    }
 }

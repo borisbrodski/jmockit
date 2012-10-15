@@ -17,18 +17,21 @@ import mockit.internal.startup.*;
 final class ExpectationsModifier extends MockedTypeModifier
 {
    private static final int METHOD_ACCESS_MASK = ACC_SYNTHETIC + ACC_ABSTRACT;
-   private static final Map<String, String> DEFAULT_FILTERS = new HashMap<String, String>() {{
-      put("java/lang/Object", "<init> getClass hashCode");
-      put("java/lang/String", "");
-      put("java/lang/AbstractStringBuilder", "");
-      put("java/lang/StringBuilder", "");
-      put("java/lang/StringBuffer", "");
-      put("java/lang/System", "arraycopy getProperties getSecurityManager");
-      put("java/util/Hashtable", "get");
-      put("java/lang/Throwable", "<init> fillInStackTrace");
-      put("java/lang/Exception", "<init>");
-      put("java/lang/Thread", "currentThread isInterrupted");
-   }};
+
+   private static final Map<String, String> DEFAULT_FILTERS = new HashMap<String, String>();
+   static {
+      DEFAULT_FILTERS.put("java/lang/Object", "<init> getClass hashCode");
+      DEFAULT_FILTERS.put("java/lang/String", "");
+      DEFAULT_FILTERS.put("java/lang/AbstractStringBuilder", "");
+      DEFAULT_FILTERS.put("java/lang/StringBuilder", "");
+      DEFAULT_FILTERS.put("java/lang/StringBuffer", "");
+      DEFAULT_FILTERS.put("java/lang/System", "arraycopy getProperties getSecurityManager");
+      DEFAULT_FILTERS.put("java/lang/Throwable", "<init> fillInStackTrace");
+      DEFAULT_FILTERS.put("java/lang/Exception", "<init>");
+      DEFAULT_FILTERS.put("java/lang/Thread", "currentThread isInterrupted");
+      DEFAULT_FILTERS.put("java/util/Hashtable", "get");
+      DEFAULT_FILTERS.put("java/util/jar/JarEntry", "<init>");
+   }
 
    private final MockingConfiguration mockingCfg;
    private String className;
