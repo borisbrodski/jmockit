@@ -8,6 +8,8 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
+import mockit.internal.*;
+
 public final class ExpectationsForConstructorsTest
 {
    public static class BaseCollaborator
@@ -127,5 +129,40 @@ public final class ExpectationsForConstructorsTest
    {
       assertNotNull(mock);
       new D("Test1");
+   }
+
+   static class Base {}
+   static class Derived extends Base {}
+
+   @Test
+   public void recordAndReplayBaseConstructorInvocation(@Mocked Base mocked)
+   {
+      new Expectations() {{ new Base(); }};
+
+      new Base();
+   }
+
+   @Test(expected = MissingInvocation.class)
+   public void recordStrictExpectationOnBaseConstructorAndReplayWithCallToSuper(@Mocked Base mocked)
+   {
+      new Expectations() {{ new Base(); }};
+
+      new Derived();
+   }
+
+   @Test(expected = MissingInvocation.class)
+   public void recordNonStrictExpectationOnBaseConstructorAndReplayWithCallToSuper(@NonStrict Base mocked)
+   {
+      new Expectations() {{ new Base(); times = 1; }};
+
+      new Derived();
+   }
+
+   @Test(expected = MissingInvocation.class)
+   public void verifyExpectationOnBaseConstructorReplayedWithCallToSuper(@Mocked Base mocked)
+   {
+      new Derived();
+
+      new Verifications() {{ new Base(); }};
    }
 }
