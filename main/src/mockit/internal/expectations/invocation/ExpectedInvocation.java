@@ -120,7 +120,7 @@ public final class ExpectedInvocation
       Type rt1 = Type.getType(nameAndDesc.substring(i));
       Type rt2 = Type.getType(invokedMethod.substring(i));
 
-      return Utilities.getClassForType(rt2).isAssignableFrom(Utilities.getClassForType(rt1));
+      return TypeDescriptor.getClassForType(rt2).isAssignableFrom(TypeDescriptor.getClassForType(rt1));
    }
 
    public boolean isEquivalentInstance(Object mockedInstance, Map<Object, Object> instanceMap)

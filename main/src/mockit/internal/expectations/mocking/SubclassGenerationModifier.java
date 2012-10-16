@@ -262,7 +262,7 @@ public final class SubclassGenerationModifier extends MockedTypeModifier
 
       private boolean hasMethodImplementation(String name, String desc)
       {
-         Class<?>[] paramTypes = Utilities.getParameterTypes(desc);
+         Class<?>[] paramTypes = TypeDescriptor.getParameterTypes(desc);
 
          try {
             Method method = abstractClass.getMethod(name, paramTypes);

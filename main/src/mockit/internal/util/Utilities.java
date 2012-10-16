@@ -9,22 +9,15 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-import static java.lang.reflect.Modifier.*;
-
 import mockit.internal.state.*;
 
 /**
  * Miscellaneous utility methods.
  */
-@SuppressWarnings({"unchecked", "ClassWithTooManyMethods", "OverlyComplexClass"})
 public final class Utilities
 {
    public static final String GENERATED_SUBCLASS_PREFIX = "$Subclass_";
    public static final String GENERATED_IMPLCLASS_PREFIX = "$Impl_";
-
-   private static final Class<?>[] PRIMITIVE_TYPES = {
-      null, boolean.class, char.class, byte.class, short.class, int.class, float.class, long.class, double.class
-   };
 
    static final Map<Class<?>, Class<?>> WRAPPER_TO_PRIMITIVE = new HashMap<Class<?>, Class<?>>();
    public static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER = new HashMap<Class<?>, Class<?>>();
@@ -87,6 +80,7 @@ public final class Utilities
          throw e;
       }
 
+      //noinspection unchecked
       return (Class<T>) loadedClass;
    }
 
@@ -156,47 +150,6 @@ public final class Utilities
       return isGeneratedSubclass(className) || isGeneratedImplementationClass(className);
    }
 
-   public static Method findNonPrivateHandlerMethod(Object handler)
-   {
-      Class<?> handlerClass = handler.getClass();
-      Method nonPrivateMethod;
-
-      do {
-         nonPrivateMethod = findNonPrivateHandlerMethod(handlerClass);
-
-         if (nonPrivateMethod != null) {
-            break;
-         }
-
-         handlerClass = handlerClass.getSuperclass();
-      }
-      while (handlerClass != null && handlerClass != Object.class);
-
-      if (nonPrivateMethod == null) {
-         throw new IllegalArgumentException("No non-private invocation handler method found");
-      }
-
-      return nonPrivateMethod;
-   }
-
-   private static Method findNonPrivateHandlerMethod(Class<?> handlerClass)
-   {
-      Method[] declaredMethods = handlerClass.getDeclaredMethods();
-      Method found = null;
-
-      for (Method declaredMethod : declaredMethods) {
-         if (!isPrivate(declaredMethod.getModifiers())) {
-            if (found != null) {
-               throw new IllegalArgumentException("More than one non-private invocation handler method found");
-            }
-
-            found = declaredMethod;
-         }
-      }
-
-      return found;
-   }
-
    static void ensureThatMemberIsAccessible(AccessibleObject classMember)
    {
       if (!classMember.isAccessible()) {
@@ -216,111 +169,6 @@ public final class Utilities
       }
 
       return (Class<?>) declaredType;
-   }
-
-   public static <E> E newEmptyProxy(ClassLoader loader, Class<E> interfaceToBeProxied)
-   {
-      Class<?>[] interfaces = loader == null ?
-         new Class<?>[] {interfaceToBeProxied} : new Class<?>[] {interfaceToBeProxied, EmptyProxy.class};
-
-      //noinspection unchecked
-      return (E) Proxy.newProxyInstance(loader, interfaces, MockInvocationHandler.INSTANCE);
-   }
-
-   public static <E> E newEmptyProxy(ClassLoader loader, Type... interfacesToBeProxied)
-   {
-      List<Class<?>> interfaces = new ArrayList<Class<?>>();
-
-      for (Type type : interfacesToBeProxied) {
-         addInterface(interfaces, type);
-      }
-
-      if (loader == null) {
-         //noinspection AssignmentToMethodParameter
-         loader = interfaces.get(0).getClassLoader();
-      }
-
-      if (loader == EmptyProxy.class.getClassLoader()) {
-         interfaces.add(EmptyProxy.class);
-      }
-
-      Class<?>[] interfacesArray = interfaces.toArray(new Class<?>[interfaces.size()]);
-
-      //noinspection unchecked
-      return (E) Proxy.newProxyInstance(loader, interfacesArray, MockInvocationHandler.INSTANCE);
-   }
-
-   private static void addInterface(List<Class<?>> interfaces, Type type)
-   {
-      if (type instanceof Class<?>) {
-         interfaces.add((Class<?>) type);
-      }
-      else if (type instanceof ParameterizedType) {
-         ParameterizedType paramType = (ParameterizedType) type;
-         interfaces.add((Class<?>) paramType.getRawType());
-      }
-      else if (type instanceof TypeVariable) {
-         TypeVariable<?> typeVar = (TypeVariable<?>) type;
-         addBoundInterfaces(interfaces, typeVar.getBounds());
-      }
-   }
-
-   private static void addBoundInterfaces(List<Class<?>> interfaces, Type[] bounds)
-   {
-      for (Type bound : bounds) {
-         addInterface(interfaces, bound);
-      }
-   }
-
-   public static Class<?>[] getParameterTypes(String mockDesc)
-   {
-      mockit.external.asm4.Type[] paramTypes = mockit.external.asm4.Type.getArgumentTypes(mockDesc);
-
-      if (paramTypes.length == 0) {
-         return ParameterReflection.NO_PARAMETERS;
-      }
-
-      Class<?>[] paramClasses = new Class<?>[paramTypes.length];
-
-      for (int i = 0; i < paramTypes.length; i++) {
-         paramClasses[i] = getClassForType(paramTypes[i]);
-      }
-
-      return paramClasses;
-   }
-
-   public static Class<?> getReturnType(String mockDesc)
-   {
-      mockit.external.asm4.Type returnType = mockit.external.asm4.Type.getReturnType(mockDesc);
-      return getClassForType(returnType);
-   }
-
-   public static Class<?> getClassForType(mockit.external.asm4.Type type)
-   {
-      int elementSort = type.getSort();
-
-      if (elementSort < PRIMITIVE_TYPES.length) {
-         return PRIMITIVE_TYPES[elementSort];
-      }
-
-      String className =
-         elementSort == mockit.external.asm4.Type.ARRAY ? type.getDescriptor().replace('/', '.') : type.getClassName();
-
-      return loadClass(className);
-   }
-
-   public static void throwCheckedException(Exception exceptionToThrow)
-   {
-      synchronized (ThrowOfCheckedException.class) {
-         ThrowOfCheckedException.exceptionToThrow = exceptionToThrow;
-         ConstructorReflection.newInstanceUsingDefaultConstructor(ThrowOfCheckedException.class);
-      }
-   }
-
-   private static final class ThrowOfCheckedException
-   {
-      static Exception exceptionToThrow;
-      ThrowOfCheckedException() throws Exception { throw exceptionToThrow; }
    }
 
    /**

@@ -57,7 +57,7 @@ public final class InvocationResults
 
    private void reportInvalidReturnValue()
    {
-      Class<?> returnType = Utilities.getReturnType(invocation.getMethodNameAndDescription());
+      Class<?> returnType = TypeDescriptor.getReturnType(invocation.getMethodNameAndDescription());
       throw new IllegalArgumentException("Invalid return value for method returning " + returnType);
    }
 

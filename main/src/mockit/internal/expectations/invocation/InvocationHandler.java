@@ -10,7 +10,7 @@ public final class InvocationHandler extends DynamicInvocationResult
 {
    public InvocationHandler(Object handler)
    {
-      super(handler, Utilities.findNonPrivateHandlerMethod(handler));
+      super(handler, MethodReflection.findNonPrivateHandlerMethod(handler));
    }
 
    @Override

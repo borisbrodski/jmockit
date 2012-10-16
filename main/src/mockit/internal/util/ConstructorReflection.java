@@ -6,6 +6,8 @@ package mockit.internal.util;
 
 import java.lang.reflect.*;
 
+import static mockit.internal.util.ParameterReflection.*;
+
 public final class ConstructorReflection
 {
    public static <T> T newInstance(Class<T> aClass, Class<?>[] parameterTypes, Object... initArgs)
@@ -18,18 +20,18 @@ public final class ConstructorReflection
    {
       for (Constructor<?> declaredConstructor : theClass.getDeclaredConstructors()) {
          Class<?>[] declaredParameterTypes = declaredConstructor.getParameterTypes();
-         int firstRealParameter = ParameterReflection.indexOfFirstRealParameter(declaredParameterTypes, paramTypes);
+         int firstRealParameter = indexOfFirstRealParameter(declaredParameterTypes, paramTypes);
 
          if (
             firstRealParameter >= 0 &&
-            ParameterReflection.matchesParameterTypes(declaredParameterTypes, paramTypes, firstRealParameter)
+            matchesParameterTypes(declaredParameterTypes, paramTypes, firstRealParameter)
          ) {
             //noinspection unchecked
             return (Constructor<T>) declaredConstructor;
          }
       }
 
-      String paramTypesDesc = ParameterReflection.getParameterTypesDescription(paramTypes);
+      String paramTypesDesc = getParameterTypesDescription(paramTypes);
 
       throw new IllegalArgumentException(
          "Specified constructor not found: " + theClass.getSimpleName() + paramTypesDesc);
@@ -60,7 +62,7 @@ public final class ConstructorReflection
             throw (RuntimeException) cause;
          }
          else {
-            Utilities.throwCheckedException((Exception) cause);
+            ThrowOfCheckedException.doThrow((Exception) cause);
             return null;
          }
       }
@@ -88,7 +90,7 @@ public final class ConstructorReflection
 
    public static <T> T newInstance(String className, Object... nonNullArgs)
    {
-      Class<?>[] argTypes = ParameterReflection.getArgumentTypesFromArgumentValues(nonNullArgs);
+      Class<?>[] argTypes = getArgumentTypesFromArgumentValues(nonNullArgs);
       Class<T> theClass = Utilities.loadClass(className);
       Constructor<T> constructor = findCompatibleConstructor(theClass, argTypes);
       return invoke(constructor, nonNullArgs);
@@ -102,13 +104,13 @@ public final class ConstructorReflection
 
       for (Constructor<?> declaredConstructor : declaredConstructors) {
          Class<?>[] declaredParamTypes = declaredConstructor.getParameterTypes();
-         int firstRealParameter = ParameterReflection.indexOfFirstRealParameter(declaredParamTypes, argTypes);
+         int firstRealParameter = indexOfFirstRealParameter(declaredParamTypes, argTypes);
 
          if (
             firstRealParameter >= 0 &&
-            (ParameterReflection.matchesParameterTypes(declaredParamTypes, argTypes, firstRealParameter) ||
-             ParameterReflection.acceptsArgumentTypes(declaredParamTypes, argTypes, firstRealParameter)) &&
-            (found == null || ParameterReflection.hasMoreSpecificTypes(declaredParamTypes, foundParameters))
+            (matchesParameterTypes(declaredParamTypes, argTypes, firstRealParameter) ||
+             acceptsArgumentTypes(declaredParamTypes, argTypes, firstRealParameter)) &&
+            (found == null || hasMoreSpecificTypes(declaredParamTypes, foundParameters))
          ) {
             //noinspection unchecked
             found = (Constructor<T>) declaredConstructor;
@@ -127,20 +129,20 @@ public final class ConstructorReflection
          throw new IllegalArgumentException("Invalid instantiation of inner class; use newInnerInstance instead");
       }
 
-      String argTypesDesc = ParameterReflection.getParameterTypesDescription(argTypes);
+      String argTypesDesc = getParameterTypesDescription(argTypes);
       throw new IllegalArgumentException("No compatible constructor found: " + theClass.getSimpleName() + argTypesDesc);
    }
 
    public static <T> T newInstance(Class<? extends T> aClass, Object... nonNullArgs)
    {
-      Class<?>[] argTypes = ParameterReflection.getArgumentTypesFromArgumentValues(nonNullArgs);
+      Class<?>[] argTypes = getArgumentTypesFromArgumentValues(nonNullArgs);
       Constructor<T> constructor = findCompatibleConstructor(aClass, argTypes);
       return invoke(constructor, nonNullArgs);
    }
 
    public static <T> T newInstance(Class<T> aClass)
    {
-      return newInstance(aClass, ParameterReflection.NO_PARAMETERS);
+      return newInstance(aClass, NO_PARAMETERS);
    }
 
    public static <T> T newInstanceUsingDefaultConstructor(Class<T> aClass)
@@ -159,7 +161,7 @@ public final class ConstructorReflection
 
    public static <T> T newInnerInstance(Class<? extends T> innerClass, Object outerInstance, Object... nonNullArgs)
    {
-      Object[] initArgs = ParameterReflection.argumentsWithExtraFirstValue(nonNullArgs, outerInstance);
+      Object[] initArgs = argumentsWithExtraFirstValue(nonNullArgs, outerInstance);
       return newInstance(innerClass, initArgs);
    }
 

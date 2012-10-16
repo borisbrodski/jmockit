@@ -103,7 +103,7 @@ public final class DefaultValues
    private static Object newEmptyArray(String typeDesc)
    {
       Type type = Type.getType(typeDesc);
-      Class<?> elementType = Utilities.getClassForType(type.getElementType());
+      Class<?> elementType = TypeDescriptor.getClassForType(type.getElementType());
 
       return Array.newInstance(elementType, new int[type.getDimensions()]);
    }

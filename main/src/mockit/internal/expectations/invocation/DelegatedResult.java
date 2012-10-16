@@ -64,7 +64,7 @@ final class DelegatedResult extends DynamicInvocationResult
                argTypes = Type.getArgumentTypes(methodDesc);
             }
 
-            args[i] = Utilities.getClassForType(argTypes[i]);
+            args[i] = TypeDescriptor.getClassForType(argTypes[i]);
          }
       }
    }

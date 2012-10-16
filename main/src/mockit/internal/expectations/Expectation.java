@@ -96,7 +96,7 @@ final class Expectation
 
    private Class<?> getReturnType()
    {
-      return Utilities.getReturnType(invocation.getMethodNameAndDescription());
+      return TypeDescriptor.getReturnType(invocation.getMethodNameAndDescription());
    }
 
    private void substituteCascadedMockToBeReturnedIfNeeded(Object valueToBeReturned)

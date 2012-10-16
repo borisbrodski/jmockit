@@ -131,7 +131,7 @@ public final class DefaultResults
       void extractException()
       {
          Object exception = getInputFieldValue();
-         Utilities.throwCheckedException((Exception) exception);
+         ThrowOfCheckedException.doThrow((Exception) exception);
       }
 
       Object getInputFieldValue()

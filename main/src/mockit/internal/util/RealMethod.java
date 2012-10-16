@@ -30,7 +30,7 @@ public final class RealMethod
 
    private Method initialize(Class<?> realClass, String methodName, String methodDesc)
    {
-      Class<?>[] parameterTypes = Utilities.getParameterTypes(methodDesc);
+      Class<?>[] parameterTypes = TypeDescriptor.getParameterTypes(methodDesc);
 
       try {
          return realClass.getDeclaredMethod(methodName, parameterTypes);

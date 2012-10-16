@@ -11,8 +11,6 @@ import mockit.external.asm4.*;
 import mockit.internal.*;
 import mockit.internal.util.*;
 
-import static mockit.internal.util.Utilities.*;
-
 public final class MockedImplementationClass<T>
 {
    private final Object mockInstance;
@@ -27,7 +25,7 @@ public final class MockedImplementationClass<T>
    public T generate(Class<T> interfaceToBeMocked, ParameterizedType typeToMock)
    {
       if (!isPublic(interfaceToBeMocked.getModifiers())) {
-         T proxy = newEmptyProxy(interfaceToBeMocked.getClassLoader(), interfaceToBeMocked);
+         T proxy = EmptyProxy.Impl.newEmptyProxy(interfaceToBeMocked.getClassLoader(), interfaceToBeMocked);
          new MockClassSetup(proxy.getClass(), null, mockInstance, null).redefineMethods();
          return proxy;
       }

@@ -60,7 +60,7 @@ public final class MockMethodBridge extends MockingBridge
          mockClass = Utilities.loadClass(mockClassName);
       }
 
-      Class<?>[] paramClasses = Utilities.getParameterTypes(mockDesc);
+      Class<?>[] paramClasses = TypeDescriptor.getParameterTypes(mockDesc);
       Method mockMethod = mockStateIndex < 0 ? null :
          TestRun.getMockClasses().getMockStates().getMockMethod(
             mockClassInternalName, mockStateIndex, mockClass, paramClasses);

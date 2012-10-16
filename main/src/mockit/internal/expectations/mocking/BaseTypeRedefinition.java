@@ -97,7 +97,7 @@ abstract class BaseTypeRedefinition
 
    private void createMockInterfaceImplementationUsingStandardProxy(Type typeToMock)
    {
-      Object mock = Utilities.newEmptyProxy(getClass().getClassLoader(), typeToMock);
+      Object mock = EmptyProxy.Impl.newEmptyProxy(getClass().getClassLoader(), typeToMock);
       targetClass = mock.getClass();
 
       redefineMethodsAndConstructorsInTargetType();

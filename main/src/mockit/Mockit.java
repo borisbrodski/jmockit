@@ -515,7 +515,7 @@ public final class Mockit
     */
    public static <E> E newEmptyProxy(ClassLoader loader, Class<E> interfaceToBeProxied)
    {
-      return Utilities.newEmptyProxy(loader, interfaceToBeProxied);
+      return EmptyProxy.Impl.newEmptyProxy(loader, interfaceToBeProxied);
    }
 
    /**
@@ -541,6 +541,6 @@ public final class Mockit
     */
    public static <E> E newEmptyProxy(Type... interfacesToBeProxied)
    {
-      return Utilities.newEmptyProxy(null, interfacesToBeProxied);
+      return EmptyProxy.Impl.newEmptyProxy(null, interfacesToBeProxied);
    }
 }

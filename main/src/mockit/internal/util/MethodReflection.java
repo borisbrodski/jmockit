@@ -7,6 +7,8 @@ package mockit.internal.util;
 import java.lang.reflect.*;
 import static java.lang.reflect.Modifier.*;
 
+import static mockit.internal.util.ParameterReflection.*;
+
 public final class MethodReflection
 {
    public static <T> T invoke(
@@ -22,11 +24,11 @@ public final class MethodReflection
       for (Method declaredMethod : theClass.getDeclaredMethods()) {
          if (declaredMethod.getName().equals(methodName)) {
             Class<?>[] declaredParameterTypes = declaredMethod.getParameterTypes();
-            int firstRealParameter = ParameterReflection.indexOfFirstRealParameter(declaredParameterTypes, paramTypes);
+            int firstRealParameter = indexOfFirstRealParameter(declaredParameterTypes, paramTypes);
 
             if (
                firstRealParameter >= 0 &&
-               ParameterReflection.matchesParameterTypes(declaredMethod.getParameterTypes(), paramTypes, firstRealParameter)
+               matchesParameterTypes(declaredMethod.getParameterTypes(), paramTypes, firstRealParameter)
             ) {
                return declaredMethod;
             }
@@ -39,7 +41,7 @@ public final class MethodReflection
          return findSpecifiedMethod(superClass, methodName, paramTypes);
       }
 
-      String paramTypesDesc = ParameterReflection.getParameterTypesDescription(paramTypes);
+      String paramTypesDesc = getParameterTypesDescription(paramTypes);
       throw new IllegalArgumentException("Specified method not found: " + methodName + paramTypesDesc);
    }
 
@@ -68,7 +70,7 @@ public final class MethodReflection
             throw (RuntimeException) cause;
          }
          else {
-            Utilities.throwCheckedException((Exception) cause);
+            ThrowOfCheckedException.doThrow((Exception) cause);
             return null;
          }
       }
@@ -77,7 +79,7 @@ public final class MethodReflection
    public static <T> T invoke(Class<?> theClass, Object targetInstance, String methodName, Object... methodArgs)
    {
       boolean staticMethod = targetInstance == null;
-      Class<?>[] argTypes = ParameterReflection.getArgumentTypesFromArgumentValues(methodArgs);
+      Class<?>[] argTypes = getArgumentTypesFromArgumentValues(methodArgs);
       Method method = staticMethod ?
          findCompatibleStaticMethod(theClass, methodName, argTypes) :
          findCompatibleMethod(theClass, methodName, argTypes);
@@ -99,7 +101,7 @@ public final class MethodReflection
          return methodFound;
       }
 
-      String argTypesDesc = ParameterReflection.getParameterTypesDescription(argTypes);
+      String argTypesDesc = getParameterTypesDescription(argTypes);
       throw new IllegalArgumentException("No compatible static method found: " + methodName + argTypesDesc);
    }
 
@@ -113,7 +115,7 @@ public final class MethodReflection
          if (
             compatibleMethod != null &&
             (methodFound == null ||
-             ParameterReflection.hasMoreSpecificTypes(compatibleMethod.getParameterTypes(), methodFound.getParameterTypes()))
+             hasMoreSpecificTypes(compatibleMethod.getParameterTypes(), methodFound.getParameterTypes()))
          ) {
             methodFound = compatibleMethod;
          }
@@ -132,7 +134,7 @@ public final class MethodReflection
          return methodFound;
       }
 
-      String argTypesDesc = ParameterReflection.getParameterTypesDescription(argTypes);
+      String argTypesDesc = getParameterTypesDescription(argTypes);
       throw new IllegalArgumentException("No compatible method found: " + methodName + argTypesDesc);
    }
 
@@ -144,17 +146,58 @@ public final class MethodReflection
       for (Method declaredMethod : theClass.getDeclaredMethods()) {
          if (declaredMethod.getName().equals(methodName)) {
             Class<?>[] declaredParamTypes = declaredMethod.getParameterTypes();
-            int firstRealParameter = ParameterReflection.indexOfFirstRealParameter(declaredParamTypes, argTypes);
+            int firstRealParameter = indexOfFirstRealParameter(declaredParamTypes, argTypes);
 
             if (
                firstRealParameter >= 0 &&
-               (ParameterReflection.matchesParameterTypes(declaredParamTypes, argTypes, firstRealParameter) ||
-                ParameterReflection.acceptsArgumentTypes(declaredParamTypes, argTypes, firstRealParameter)) &&
-               (found == null || ParameterReflection.hasMoreSpecificTypes(declaredParamTypes, foundParamTypes))
+               (matchesParameterTypes(declaredParamTypes, argTypes, firstRealParameter) ||
+                acceptsArgumentTypes(declaredParamTypes, argTypes, firstRealParameter)) &&
+               (found == null || hasMoreSpecificTypes(declaredParamTypes, foundParamTypes))
             ) {
                found = declaredMethod;
                foundParamTypes = declaredParamTypes;
             }
+         }
+      }
+
+      return found;
+   }
+
+   public static Method findNonPrivateHandlerMethod(Object handler)
+   {
+      Class<?> handlerClass = handler.getClass();
+      Method nonPrivateMethod;
+
+      do {
+         nonPrivateMethod = findNonPrivateHandlerMethod(handlerClass);
+
+         if (nonPrivateMethod != null) {
+            break;
+         }
+
+         handlerClass = handlerClass.getSuperclass();
+      }
+      while (handlerClass != null && handlerClass != Object.class);
+
+      if (nonPrivateMethod == null) {
+         throw new IllegalArgumentException("No non-private invocation handler method found");
+      }
+
+      return nonPrivateMethod;
+   }
+
+   private static Method findNonPrivateHandlerMethod(Class<?> handlerClass)
+   {
+      Method[] declaredMethods = handlerClass.getDeclaredMethods();
+      Method found = null;
+
+      for (Method declaredMethod : declaredMethods) {
+         if (!isPrivate(declaredMethod.getModifiers())) {
+            if (found != null) {
+               throw new IllegalArgumentException("More than one non-private invocation handler method found");
+            }
+
+            found = declaredMethod;
          }
       }
 

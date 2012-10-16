@@ -19,7 +19,7 @@ public final class ReflectiveMatcher implements ArgumentMatcher
    public boolean matches(Object argValue)
    {
       if (handlerMethod == null) {
-         handlerMethod = Utilities.findNonPrivateHandlerMethod(handlerObject);
+         handlerMethod = MethodReflection.findNonPrivateHandlerMethod(handlerObject);
       }
 
       matchedValue = argValue;
