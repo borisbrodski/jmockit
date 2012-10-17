@@ -17,7 +17,7 @@ public final class RealMethod
 
    public RealMethod(String className, String methodNameAndDesc)
    {
-      this(Utilities.loadClass(className), methodNameAndDesc);
+      this(ClassLoad.loadClass(className), methodNameAndDesc);
    }
 
    public RealMethod(Class<?> realClass, String methodNameAndDesc)

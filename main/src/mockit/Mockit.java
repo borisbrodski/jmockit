@@ -139,7 +139,7 @@ public final class Mockit
     */
    public static void stubOutClass(String realClassName, String... filters)
    {
-      Class<?> realClass = Utilities.loadClass(realClassName);
+      Class<?> realClass = ClassLoad.loadClass(realClassName);
       new ClassStubbing(realClass, true, filters).stubOut();
    }
 
@@ -149,7 +149,7 @@ public final class Mockit
     */
    public static void stubOutClass(String realClassName, boolean inverse, String... filters)
    {
-      Class<?> realClass = Utilities.loadClass(realClassName);
+      Class<?> realClass = ClassLoad.loadClass(realClassName);
       new ClassStubbing(realClass, !inverse, filters).stubOut();
    }
 
@@ -299,7 +299,7 @@ public final class Mockit
          else if (mockClassOrInstance instanceof String) {
             String className = ((String) mockClassOrInstance).trim();
             if (className.length() == 0) continue;
-            mockClass = Utilities.loadClass(className);
+            mockClass = ClassLoad.loadClass(className);
             mock = null;
          }
          else {
@@ -336,7 +336,7 @@ public final class Mockit
     */
    public static void setUpMock(String realClassName, Object mock)
    {
-      Class<?> realClass = Utilities.loadClass(realClassName);
+      Class<?> realClass = ClassLoad.loadClass(realClassName);
       setUpMock(realClass, mock);
    }
 
@@ -368,7 +368,7 @@ public final class Mockit
     */
    public static void setUpMock(String realClassName, Class<?> mockClass)
    {
-      Class<?> realClass = Utilities.loadClass(realClassName);
+      Class<?> realClass = ClassLoad.loadClass(realClassName);
       setUpMock(realClass, mockClass);
    }
 

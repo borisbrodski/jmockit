@@ -81,7 +81,7 @@ final class JMockitInitialization
             filters = stubbing.substring(p + 1).split("\\|");
          }
 
-         Class<?> realClass = Utilities.loadClass(realClassName.trim());
+         Class<?> realClass = ClassLoad.loadClass(realClassName.trim());
          new ClassStubbing(realClass, true, filters).stubOutAtStartup();
       }
    }
@@ -89,7 +89,7 @@ final class JMockitInitialization
    private void setUpStartupMocksIfAny()
    {
       for (String mockClassName : config.mockClasses) {
-         Class<?> mockClass = Utilities.loadClass(mockClassName);
+         Class<?> mockClass = ClassLoad.loadClass(mockClassName);
 
          //noinspection UnnecessaryFullyQualifiedName
          if (mockit.MockUp.class.isAssignableFrom(mockClass)) {

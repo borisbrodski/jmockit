@@ -57,7 +57,7 @@ public final class MockMethodBridge extends MockingBridge
       else {
          mock = mocked;
          String mockClassName = getMockClassName(mockClassInternalName);
-         mockClass = Utilities.loadClass(mockClassName);
+         mockClass = ClassLoad.loadClass(mockClassName);
       }
 
       Class<?>[] paramClasses = TypeDescriptor.getParameterTypes(mockDesc);

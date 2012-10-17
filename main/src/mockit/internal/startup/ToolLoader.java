@@ -70,7 +70,7 @@ final class ToolLoader extends ClassVisitor
 
    private void createAndInstallSpecifiedClassFileTransformer()
    {
-      Class<ClassFileTransformer> transformerClass = Utilities.loadClass(toolClassName);
+      Class<ClassFileTransformer> transformerClass = ClassLoad.loadClass(toolClassName);
       ClassFileTransformer transformer = ConstructorReflection.newInstance(transformerClass);
 
       Startup.instrumentation().addTransformer(transformer);

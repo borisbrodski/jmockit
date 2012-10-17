@@ -97,7 +97,7 @@ public final class RedefinitionEngine
 
    public void restoreToDefinition(String className, byte[] definitionToRestore)
    {
-      Class<?> aClass = Utilities.loadClass(className);
+      Class<?> aClass = ClassLoad.loadClass(className);
       restoreToDefinition(aClass, definitionToRestore);
    }
 }

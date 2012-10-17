@@ -44,6 +44,6 @@ public final class TypeDescriptor
       }
 
       String className = sort == Type.ARRAY ? type.getDescriptor().replace('/', '.') : type.getClassName();
-      return Utilities.loadClass(className);
+      return ClassLoad.loadClass(className);
    }
 }

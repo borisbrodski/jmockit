@@ -72,7 +72,7 @@ public final class DeencapsulationTest
       }
    }
 
-   static final Class<?> innerClass = Utilities.loadClass(Subclass.class.getName() + "$InnerClass");
+   static final Class<?> innerClass = ClassLoad.loadClass(Subclass.class.getName() + "$InnerClass");
    final Subclass anInstance = new Subclass();
 
    @Test

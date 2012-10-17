@@ -236,7 +236,7 @@ public final class Deencapsulation
     */
    public static <T> T invoke(String classWithStaticMethod, String methodName, Object... nonNullArgs)
    {
-      Class<Object> theClass = Utilities.loadClass(classWithStaticMethod);
+      Class<Object> theClass = ClassLoad.loadClass(classWithStaticMethod);
       return MethodReflection.invoke(theClass, null, methodName, nonNullArgs);
    }
 

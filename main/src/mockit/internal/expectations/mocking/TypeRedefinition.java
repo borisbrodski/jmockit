@@ -6,6 +6,7 @@ package mockit.internal.expectations.mocking;
 
 import mockit.external.asm4.*;
 import mockit.internal.state.*;
+import mockit.internal.util.*;
 
 import static mockit.internal.util.Utilities.*;
 
@@ -54,7 +55,7 @@ final class TypeRedefinition extends BaseTypeRedefinition
       String realClassName = typeMetadata.getRealClassName();
 
       if (realClassName.length() > 0) {
-         targetClass = loadClass(realClassName);
+         targetClass = ClassLoad.loadClass(realClassName);
       }
    }
 

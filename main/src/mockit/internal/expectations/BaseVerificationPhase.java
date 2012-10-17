@@ -282,7 +282,7 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
             }
          }
          else if (invokedInstance == null) {
-            Class<?> invokedClass = Utilities.loadClass(invokedClassName);
+            Class<?> invokedClass = ClassLoad.loadClass(invokedClassName);
 
             if (invokedClass.isInstance(mockedTypeOrInstance)) {
                return true;

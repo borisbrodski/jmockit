@@ -34,7 +34,7 @@ final class AnnotatedMockMethodCollector extends ClassVisitor
 
    void collectMockMethods(Class<?> mockClass)
    {
-      Utilities.registerLoadedClass(mockClass);
+      ClassLoad.registerLoadedClass(mockClass);
 
       classToCollectMocksFrom = mockClass;
 

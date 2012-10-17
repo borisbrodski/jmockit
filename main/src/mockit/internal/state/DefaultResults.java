@@ -45,7 +45,7 @@ public final class DefaultResults
             String typeVariable = typeMapping.substring(0, p);
             if (typeMapping.charAt(p + 1) == ':') p++;
             String typeName = typeMapping.substring(p + 2);
-            typeVariables.put(typeVariable, Utilities.loadClassByInternalName(typeName));
+            typeVariables.put(typeVariable, ClassLoad.loadByInternalName(typeName));
          }
       }
 
@@ -91,7 +91,7 @@ public final class DefaultResults
                Class<?> type1 = typeVariables.get(c1.substring(1));
 
                if (type1 != null) {
-                  Class<?> type2 = Utilities.loadClassByInternalName(c2.substring(1));
+                  Class<?> type2 = ClassLoad.loadByInternalName(c2.substring(1));
 
                   if (!type1.isAssignableFrom(type2)) {
                      return false;

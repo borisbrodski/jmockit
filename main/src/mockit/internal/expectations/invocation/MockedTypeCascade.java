@@ -98,7 +98,7 @@ public final class MockedTypeCascade
 
    private Class<?> registerIntermediateCascadingType(String returnTypeInternalName)
    {
-      Class<?> returnType = Utilities.loadClassByInternalName(returnTypeInternalName);
+      Class<?> returnType = ClassLoad.loadByInternalName(returnTypeInternalName);
 
       cascadedTypesAndMocks.put(returnTypeInternalName, returnType);
       TestRun.getExecutingTest().addCascadingType(returnTypeInternalName, null);

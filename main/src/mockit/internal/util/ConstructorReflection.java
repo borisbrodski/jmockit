@@ -84,14 +84,14 @@ public final class ConstructorReflection
 
    public static <T> T newInstance(String className, Class<?>[] parameterTypes, Object... initArgs)
    {
-      Class<T> theClass = Utilities.loadClass(className);
+      Class<T> theClass = ClassLoad.loadClass(className);
       return newInstance(theClass, parameterTypes, initArgs);
    }
 
    public static <T> T newInstance(String className, Object... nonNullArgs)
    {
       Class<?>[] argTypes = getArgumentTypesFromArgumentValues(nonNullArgs);
-      Class<T> theClass = Utilities.loadClass(className);
+      Class<T> theClass = ClassLoad.loadClass(className);
       Constructor<T> constructor = findCompatibleConstructor(theClass, argTypes);
       return invoke(constructor, nonNullArgs);
    }
@@ -168,7 +168,7 @@ public final class ConstructorReflection
    public static <T> T newInnerInstance(String innerClassName, Object outerInstance, Object... nonNullArgs)
    {
       String className = outerInstance.getClass().getName() + '$' + innerClassName;
-      Class<T> innerClass = Utilities.loadClass(className);
+      Class<T> innerClass = ClassLoad.loadClass(className);
 
       return newInnerInstance(innerClass, outerInstance, nonNullArgs);
    }
