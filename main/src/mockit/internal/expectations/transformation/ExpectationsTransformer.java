@@ -48,7 +48,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 
    private boolean isFinalClass(Class<?> aClass)
    {
-      return isFinal(aClass.getModifiers()) || Utilities.isAnonymousClass(aClass);
+      return isFinal(aClass.getModifiers()) || ClassNaming.isAnonymousClass(aClass);
    }
 
    private boolean isExpectationsOrVerificationsSubclassFromUserCode(Class<?> aClass)
@@ -96,7 +96,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
             return null;
          }
 
-         boolean isAnonymousClass = Utilities.isAnonymousClass(className);
+         boolean isAnonymousClass = ClassNaming.isAnonymousClass(className);
 
          try {
             EndOfBlockModifier modifier = new EndOfBlockModifier(cr, isAnonymousClass);

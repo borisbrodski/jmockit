@@ -7,7 +7,6 @@ package mockit.internal.expectations.mocking;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import static java.lang.reflect.Modifier.*;
-import static mockit.internal.util.Utilities.*;
 
 import mockit.*;
 import mockit.internal.filtering.*;
@@ -81,7 +80,7 @@ public final class MockedType
                return value;
             }
             else if (injectableClass.isPrimitive()) {
-               Class<?> wrapperClass = PRIMITIVE_TO_WRAPPER.get(injectableClass);
+               Class<?> wrapperClass = AutoBoxing.getWrapperType(injectableClass);
                Class<?>[] constructorParameters = {String.class};
                return ConstructorReflection.newInstance(wrapperClass, constructorParameters, value);
             }
@@ -121,6 +120,18 @@ public final class MockedType
       mockId = ParameterNames.getName(testClassDesc, testMethodDesc, paramIndex);
       providedValue = getDefaultInjectableValue(injectableAnnotation);
       registerCascadingIfSpecified();
+   }
+
+   private <A extends Annotation> A getAnnotation(Annotation[] annotations, Class<A> annotation)
+   {
+      for (Annotation paramAnnotation : annotations) {
+         if (paramAnnotation.annotationType() == annotation) {
+            //noinspection unchecked
+            return (A) paramAnnotation;
+         }
+      }
+
+      return null;
    }
 
    MockedType(Class<?> cascadedType)

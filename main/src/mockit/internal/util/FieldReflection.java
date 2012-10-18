@@ -153,7 +153,7 @@ public final class FieldReflection
    private static String getTypeName(Type type)
    {
       Class<?> classType = Utilities.getClassType(type);
-      Class<?> primitiveType = Utilities.WRAPPER_TO_PRIMITIVE.get(classType);
+      Class<?> primitiveType = AutoBoxing.getPrimitiveType(classType);
 
       if (primitiveType != null) {
          return primitiveType + " or " + classType.getSimpleName();

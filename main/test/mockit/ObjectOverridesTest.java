@@ -43,7 +43,7 @@ public final class ObjectOverridesTest
 
    private void assertDefaultToStringBehavior(Object a)
    {
-      assertEquals(Utilities.objectIdentity(a), a.toString());
+      assertEquals(ObjectMethods.objectIdentity(a), a.toString());
    }
 
    @Test

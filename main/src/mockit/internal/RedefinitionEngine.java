@@ -75,7 +75,7 @@ public final class RedefinitionEngine
 
    public void restoreOriginalDefinition(Class<?> aClass)
    {
-      if (!Utilities.isGeneratedImplementationClass(aClass)) {
+      if (!GeneratedClasses.isGeneratedImplementationClass(aClass)) {
          realClass = aClass;
          byte[] realClassFile = new ClassFile(aClass, false).getBytecode();
          redefineMethods(realClassFile);

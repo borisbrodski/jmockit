@@ -46,7 +46,7 @@ public final class DynamicPartialMocking
          redefineClassAndItsSuperClasses(targetClass, false);
       }
       else {
-         targetClass = Utilities.getMockedClassType(classOrInstance.getClass());
+         targetClass = GeneratedClasses.getMockedClassType(classOrInstance.getClass());
          validateTargetClassType(targetClass);
          registerAsMocked(classOrInstance);
          redefineClassAndItsSuperClasses(targetClass, true);
@@ -60,8 +60,8 @@ public final class DynamicPartialMocking
    {
       if (
          targetClass.isInterface() || targetClass.isAnnotation() || targetClass.isArray() ||
-         targetClass.isPrimitive() || Utilities.isWrapperOfPrimitiveType(targetClass) ||
-         Utilities.isGeneratedImplementationClass(targetClass)
+         targetClass.isPrimitive() || AutoBoxing.isWrapperOfPrimitiveType(targetClass) ||
+         GeneratedClasses.isGeneratedImplementationClass(targetClass)
       ) {
          throw new IllegalArgumentException("Invalid type for dynamic mocking: " + targetClass);
       }

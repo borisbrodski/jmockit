@@ -28,7 +28,7 @@ final class ProxyClassfileSavingTransformer implements ClassFileTransformer
       String proxyClassName = null;
       int p = className.indexOf("$Proxy");
 
-      if (p >= 0 && Utilities.isAllNumeric(className, p + 5)) {
+      if (p >= 0 && ClassNaming.isAllNumeric(className, p + 5)) {
          if (p == 0) {
             proxyClassName = className;
          }

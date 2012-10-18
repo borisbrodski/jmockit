@@ -47,7 +47,7 @@ public final class ExpectedInvocation
 
    private void determineDefaultReturnValueFromMethodSignature()
    {
-      Object rv = Utilities.evaluateObjectOverride(instance, getMethodNameAndDescription(), getArgumentValues());
+      Object rv = ObjectMethods.evaluateOverride(instance, getMethodNameAndDescription(), getArgumentValues());
       defaultReturnValue = rv == null ? UNDEFINED_DEFAULT_RETURN : rv;
    }
 
@@ -200,7 +200,7 @@ public final class ExpectedInvocation
       }
 
       if (mock != null) {
-         message.append("\n   on instance: ").append(Utilities.objectIdentity(mock));
+         message.append("\n   on instance: ").append(ObjectMethods.objectIdentity(mock));
       }
 
       message.append("\nwhen was expecting an invocation of").append(this);
@@ -249,7 +249,7 @@ public final class ExpectedInvocation
       String desc = arguments.toString();
 
       if (instance != null) {
-         desc += "\n   on mock instance: " + Utilities.objectIdentity(instance);
+         desc += "\n   on mock instance: " + ObjectMethods.objectIdentity(instance);
       }
 
       return desc;

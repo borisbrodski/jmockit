@@ -52,7 +52,7 @@ public final class MockedBridge extends MockingBridge
       boolean lockHeldByCurrentThread = RecordAndReplayExecution.RECORD_OR_REPLAY_LOCK.isHeldByCurrentThread();
 
       if (lockHeldByCurrentThread && mocked != null && executionMode == 0) {
-         Object rv = Utilities.evaluateObjectOverride(mocked, mockNameAndDesc, args);
+         Object rv = ObjectMethods.evaluateOverride(mocked, mockNameAndDesc, args);
 
          if (rv != null) {
             return rv;

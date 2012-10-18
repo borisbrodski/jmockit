@@ -47,7 +47,7 @@ public final class ParameterReflection
          args[i] = null;
       }
       else {
-         argType = Utilities.getMockedClass(arg);
+         argType = GeneratedClasses.getMockedClass(arg);
       }
 
       return argType;
@@ -77,7 +77,7 @@ public final class ParameterReflection
 
    private static Class<?> wrappedIfPrimitive(Class<?> parameterType)
    {
-      return parameterType.isPrimitive() ? Utilities.PRIMITIVE_TO_WRAPPER.get(parameterType) : parameterType;
+      return parameterType.isPrimitive() ? AutoBoxing.getWrapperType(parameterType) : parameterType;
    }
 
    static boolean acceptsArgumentTypes(Class<?>[] paramTypes, Class<?>[] argTypes, int firstParameter)
@@ -107,7 +107,7 @@ public final class ParameterReflection
 
    private static boolean isWrapperOfPrimitiveType(Class<?> primitiveType, Class<?> otherType)
    {
-      return primitiveType == Utilities.WRAPPER_TO_PRIMITIVE.get(otherType);
+      return primitiveType == AutoBoxing.getPrimitiveType(otherType);
    }
 
    static int indexOfFirstRealParameter(Class<?>[] mockParameterTypes, Class<?>[] realParameterTypes)

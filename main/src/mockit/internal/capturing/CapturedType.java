@@ -6,7 +6,7 @@ package mockit.internal.capturing;
 
 import java.lang.reflect.*;
 
-import static mockit.internal.util.Utilities.*;
+import mockit.internal.util.*;
 
 final class CapturedType
 {
@@ -28,6 +28,6 @@ final class CapturedType
 
    boolean isToBeCaptured(ClassLoader cl, String className)
    {
-      return !isGeneratedClass(className) && classSelector.shouldCapture(cl, className);
+      return !GeneratedClasses.isGeneratedClass(className) && classSelector.shouldCapture(cl, className);
    }
 }

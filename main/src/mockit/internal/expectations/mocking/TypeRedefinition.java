@@ -8,8 +8,6 @@ import mockit.external.asm4.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
-import static mockit.internal.util.Utilities.*;
-
 final class TypeRedefinition extends BaseTypeRedefinition
 {
    private final Object parentObject;
@@ -74,6 +72,6 @@ final class TypeRedefinition extends BaseTypeRedefinition
    @Override
    String getNameForConcreteSubclassToCreate()
    {
-      return getNameForGeneratedClass(parentObject.getClass(), typeMetadata.mockId);
+      return GeneratedClasses.getNameForGeneratedClass(parentObject.getClass(), typeMetadata.mockId);
    }
 }

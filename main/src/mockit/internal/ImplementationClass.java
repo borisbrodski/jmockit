@@ -5,8 +5,7 @@
 package mockit.internal;
 
 import mockit.external.asm4.*;
-
-import static mockit.internal.util.Utilities.*;
+import mockit.internal.util.*;
 
 /**
  * Allows the creation of new implementation classes for interfaces and abstract classes.
@@ -22,7 +21,7 @@ public class ImplementationClass<T>
    public final Class<T> generateNewMockImplementationClassForInterface()
    {
       ClassReader interfaceReader = ClassFile.createClassFileReader(mockedType);
-      String mockClassName = getNameForGeneratedClass(mockedType);
+      String mockClassName = GeneratedClasses.getNameForGeneratedClass(mockedType);
       ClassVisitor modifier = createMethodBodyGenerator(interfaceReader, mockClassName);
       interfaceReader.accept(modifier, ClassReader.SKIP_DEBUG);
 

@@ -281,7 +281,7 @@ public final class RecordAndReplayExecution
       Object mock, String classDesc, String nameAndDesc, String genericSignature, int executionMode, Object[] args)
    {
       if (mock != null) {
-         Object rv = Utilities.evaluateObjectOverride(mock, nameAndDesc, args);
+         Object rv = ObjectMethods.evaluateOverride(mock, nameAndDesc, args);
 
          if (rv != null) {
             return rv;
@@ -351,7 +351,7 @@ public final class RecordAndReplayExecution
    {
       Class<?> mockedClass = mock.getClass();
 
-      if (Utilities.isAnonymousClass(mockedClass)) {
+      if (ClassNaming.isAnonymousClass(mockedClass)) {
          // An anonymous class instantiation always invokes the constructor on the super-class,
          // so that is the class we need to consider, not the anonymous one.
          mockedClass = mockedClass.getSuperclass();

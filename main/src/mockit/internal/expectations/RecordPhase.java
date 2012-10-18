@@ -6,7 +6,7 @@ package mockit.internal.expectations;
 
 import mockit.internal.expectations.invocation.*;
 import mockit.internal.state.*;
-import static mockit.internal.util.Utilities.*;
+import mockit.internal.util.*;
 
 public final class RecordPhase extends TestOnlyPhase
 {
@@ -78,7 +78,7 @@ public final class RecordPhase extends TestOnlyPhase
       Object specified = nextInstanceToMatch;
 
       if (mock != specified) {
-         Class<?> mockedClass = getMockedClass(mock);
+         Class<?> mockedClass = GeneratedClasses.getMockedClass(mock);
 
          if (!mockedClass.isInstance(specified)) {
             return mock;

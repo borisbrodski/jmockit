@@ -100,7 +100,7 @@ public final class MockFixture
 
    public void registerMockedClass(Class<?> mockedType)
    {
-      if (!mockedClasses.contains(mockedType) && !Utilities.isGeneratedImplementationClass(mockedType)) {
+      if (!mockedClasses.contains(mockedType) && !GeneratedClasses.isGeneratedImplementationClass(mockedType)) {
          mockedClasses.add(mockedType);
       }
    }
@@ -131,7 +131,7 @@ public final class MockFixture
    {
       if (mockedType.isInterface() || Modifier.isAbstract(mockedType.getModifiers())) {
          for (Entry<Class<?>, InstanceFactory> entry : mockedTypesAndInstances.entrySet()) {
-            Class<?> baseType = Utilities.getMockedClassOrInterfaceType(entry.getKey());
+            Class<?> baseType = GeneratedClasses.getMockedClassOrInterfaceType(entry.getKey());
 
             if (baseType == mockedType) {
                return entry.getValue();
