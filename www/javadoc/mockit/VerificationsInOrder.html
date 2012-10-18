@@ -301,10 +301,30 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Class, java.lang.String, java.lang.Class[], java.lang.Object...)">invoke</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;methodOwner,
+      <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName,
+      <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;[]&nbsp;parameterTypes,
+      <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;methodArgs)</code>
+<div class="block">Specifies an expectation for a mocked <code>static</code> method having the given name and parameter types, with a
+ given list of arguments.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)">invoke</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;methodOwner,
       <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName,
       <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;methodArgs)</code>
-<div class="block">Specifies an expectation for a <code>static</code> method, with a given list of arguments.</div>
+<div class="block">Specifies an expectation for a mocked <code>static</code> method, with a given list of arguments.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Class[], java.lang.Object...)">invoke</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;objectWithMethod,
+      <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName,
+      <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;[]&nbsp;parameterTypes,
+      <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;methodArgs)</code>
+<div class="block">Specifies an expectation on a mocked instance method having the given name and parameter types, with the given
+ argument values.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -312,7 +332,7 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)">invoke</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;objectWithMethod,
       <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName,
       <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;methodArgs)</code>
-<div class="block">Specifies an expectation for an instance method, with a given list of arguments.</div>
+<div class="block">Specifies an expectation for a mocked instance method, with a given list of arguments.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -329,7 +349,7 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <td class="colLast"><code><strong><a href="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Class[], java.lang.Object...)">newInstance</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;[]&nbsp;parameterTypes,
            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;initArgs)</code>
-<div class="block">Specifies an expectation for a constructor of a given class.</div>
+<div class="block">Specifies an expectation for a mocked constructor of a given class.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -921,6 +941,29 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>fieldOwner</code> - the instance from which to get the field value</dd><dd><code>fieldName</code> - the name of the field to get</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#setField(java.lang.Object, java.lang.String, java.lang.Object)"><code>setField(Object, String, Object)</code></a></dd></dl>
 </li>
 </ul>
+<a name="invoke(java.lang.Class, java.lang.String, java.lang.Class[], java.lang.Object...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>invoke</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;invoke(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;methodOwner,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;[]&nbsp;parameterTypes,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;methodArgs)</pre>
+<div class="block">Specifies an expectation for a mocked <code>static</code> method having the given name and parameter types, with a
+ given list of arguments.
+ <p/>
+ This is only meant for methods that are not accessible from the test (<code>private</code> methods, usually), and
+ therefore cannot be called normally.
+ <p/>
+ Note that, in general, it's not recommended to mock and/or call <code>private</code> methods from a test, since such
+ methods are merely implementation details of the tested code, and as such should not appear in test code.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>methodOwner</code> - the class on which the invocation is to be done; must not be null</dd><dd><code>methodName</code> - the name of the expected static method</dd><dd><code>parameterTypes</code> - the formal parameter types for the desired method</dd><dd><code>methodArgs</code> - zero or more expected parameter values for the expectation</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the return value from the invoked method, wrapped if primitive</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><code>invoke(Class, String, Object...)</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Class[], java.lang.Object...)"><code>invoke(Object, String, Class[], Object...)</code></a></dd></dl>
+</li>
+</ul>
 <a name="invoke(java.lang.Class, java.lang.String, java.lang.Object...)">
 <!--   -->
 </a>
@@ -930,19 +973,45 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;invoke(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;methodOwner,
            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName,
            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;methodArgs)</pre>
-<div class="block">Specifies an expectation for a <code>static</code> method, with a given list of arguments.
+<div class="block">Specifies an expectation for a mocked <code>static</code> method, with a given list of arguments.
  <p/>
- This is useful when a method is not accessible from the test (it's <code>private</code>, for example), and therefore
- cannot be called normally. It should not be used to call accessible methods.
+ This is only meant for methods that are not accessible from the test (<code>private</code> methods, usually), and
+ therefore cannot be called normally.
  <p/>
- Additionally, this can also be used to directly test private methods, when there is no other way to do so, or it
- would be too difficult by indirect means.
- Note that in such a case the target class would not be mocked.</div>
+ Note that, in general, it's not recommended to mock and/or call <code>private</code> methods from a test, since such
+ methods are merely implementation details of the tested code, and as such should not appear in test code.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>methodOwner</code> - the class on which the invocation is to be done; must not be null</dd><dd><code>methodName</code> - the name of the expected static method</dd><dd><code>methodArgs</code> - zero or more non-null expected parameter values for the expectation;
  if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead</dd>
 <dt><span class="strong">Returns:</span></dt><dd>the return value from the invoked method, wrapped if primitive</dd>
 <dt><span class="strong">Throws:</span></dt>
-<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if a null reference was provided for a parameter</dd></dl>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if a null reference was provided for a parameter</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Class, java.lang.String, java.lang.Class[], java.lang.Object...)"><code>invoke(Class, String, Class[], Object...)</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><code>invoke(Object, String, Object...)</code></a></dd></dl>
+</li>
+</ul>
+<a name="invoke(java.lang.Object, java.lang.String, java.lang.Class[], java.lang.Object...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>invoke</h4>
+<pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;invoke(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;objectWithMethod,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;[]&nbsp;parameterTypes,
+           <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;methodArgs)</pre>
+<div class="block">Specifies an expectation on a mocked instance method having the given name and parameter types, with the given
+ argument values.
+ <p/>
+ This is only meant for methods that are not accessible from the test (<code>private</code> methods, usually), and
+ therefore cannot be called normally.
+ <p/>
+ Note that, in general, it's not recommended to mock and/or call <code>private</code> methods from a test, since such
+ methods are merely implementation details of the tested code, and as such should not appear in test code.
+ <p/>
+ <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
+ Tutorial</a></div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>objectWithMethod</code> - the instance on which the invocation is to be done; must not be null</dd><dd><code>methodName</code> - the name of the expected method</dd><dd><code>parameterTypes</code> - the formal parameter types for the desired method</dd><dd><code>methodArgs</code> - zero or more expected parameter values for the expectation</dd>
+<dt><span class="strong">Returns:</span></dt><dd>the return value from the invoked method, wrapped if primitive</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Object...)"><code>invoke(Object, String, Object...)</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Class, java.lang.String, java.lang.Class[], java.lang.Object...)"><code>invoke(Class, String, Class[], Object...)</code></a></dd></dl>
 </li>
 </ul>
 <a name="invoke(java.lang.Object, java.lang.String, java.lang.Object...)">
@@ -954,14 +1023,13 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;invoke(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;objectWithMethod,
            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;methodName,
            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;methodArgs)</pre>
-<div class="block">Specifies an expectation for an instance method, with a given list of arguments.
+<div class="block">Specifies an expectation for a mocked instance method, with a given list of arguments.
  <p/>
- This is useful when a method is not accessible from the test (it's <code>private</code>, for example), and therefore
- cannot be called normally. It should not be used to call accessible methods.
+ This is only meant for methods that are not accessible from the test (<code>private</code> methods, usually), and
+ therefore cannot be called normally.
  <p/>
- Additionally, this can also be used to directly test private methods, when there is no other way to do so, or it
- would be too difficult by indirect means.
- Note that in such a case the target instance will actually be a "real" (non-mocked) object.
+ Note that, in general, it's not recommended to mock and/or call <code>private</code> methods from a test, since such
+ methods are merely implementation details of the tested code, and as such should not appear in test code.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
  Tutorial</a></div>
@@ -969,7 +1037,8 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
  if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead</dd>
 <dt><span class="strong">Returns:</span></dt><dd>the return value from the invoked method, wrapped if primitive</dd>
 <dt><span class="strong">Throws:</span></dt>
-<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if a null reference was provided for a parameter</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><code>invoke(Class, String, Object...)</code></a></dd></dl>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if a null reference was provided for a parameter</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Class, java.lang.String, java.lang.Object...)"><code>invoke(Class, String, Object...)</code></a>, 
+<a href="../mockit/VerificationsInOrder.html#invoke(java.lang.Object, java.lang.String, java.lang.Class[], java.lang.Object...)"><code>invoke(Object, String, Class[], Object...)</code></a></dd></dl>
 </li>
 </ul>
 <a name="newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)">
@@ -997,14 +1066,18 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <pre>protected final&nbsp;&lt;T&gt;&nbsp;T&nbsp;newInstance(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
                 <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;[]&nbsp;parameterTypes,
                 <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;initArgs)</pre>
-<div class="block">Specifies an expectation for a constructor of a given class.
+<div class="block">Specifies an expectation for a mocked constructor of a given class.
  <p/>
- This is useful for invoking non-accessible constructors (<code>private</code> ones, for example) from the test, which
- otherwise could not be called normally. It should not be used for accessible constructors.
+ This is only meant for constructors that are not accessible from the test (<code>private</code> constructors,
+ usually), and therefore cannot be invoked normally.
+ <p/>
+ Note that, in general, it's not recommended to mock and/or invoke <code>private</code> constructors from a test, since
+ such constructors are merely implementation details of the tested code, and as such should not appear in test
+ code.
  <p/>
  <a href="http://jmockit.googlecode.com/svn/trunk/www/tutorial/BehaviorBasedTesting.html#deencapsulation">In the
  Tutorial</a></div>
-<dl><dt><span class="strong">Type Parameters:</span></dt><dd><code>T</code> - interface or super-class type to which the returned instance should be assignable</dd><dt><span class="strong">Parameters:</span></dt><dd><code>className</code> - the fully qualified name of the desired class</dd><dd><code>parameterTypes</code> - the formal parameter types for the desired constructor, possibly empty</dd><dd><code>initArgs</code> - the invocation arguments for the constructor, which must be consistent with the specified
+<dl><dt><span class="strong">Type Parameters:</span></dt><dd><code>T</code> - interface or super-class type to which the returned instance should be assignable</dd><dt><span class="strong">Parameters:</span></dt><dd><code>className</code> - the fully qualified name of the desired class</dd><dd><code>parameterTypes</code> - the formal parameter types for the desired constructor</dd><dd><code>initArgs</code> - the invocation arguments for the constructor, which must be consistent with the specified
  parameter types</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a newly created instance of the specified class, initialized with the specified constructor and arguments</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#newInstance(java.lang.String, java.lang.Object...)"><code>newInstance(String, Object...)</code></a>, 
 <a href="../mockit/VerificationsInOrder.html#newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)"><code>newInnerInstance(String, Object, Object...)</code></a></dd></dl>
@@ -1025,7 +1098,7 @@ extends <a href="../mockit/Verifications.html" title="class in mockit">Verificat
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>nonNullInitArgs</code> - zero or more non-null expected parameter values for the expectation;
  if a null value needs to be passed, the <code>Class</code> object for the parameter type must be passed instead</dd>
 <dt><span class="strong">Throws:</span></dt>
-<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if one of the given arguments is <code>null</code></dd></dl>
+<dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if one of the given arguments is <code>null</code></dd><dt><span class="strong">See Also:</span></dt><dd><a href="../mockit/VerificationsInOrder.html#newInnerInstance(java.lang.String, java.lang.Object, java.lang.Object...)"><code>newInnerInstance(String, Object, Object...)</code></a></dd></dl>
 </li>
 </ul>
 <a name="onInstance(java.lang.Object)">
