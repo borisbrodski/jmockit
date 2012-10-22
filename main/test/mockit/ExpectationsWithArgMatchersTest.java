@@ -215,21 +215,29 @@ public final class ExpectationsWithArgMatchersTest
    @Test(expected = MissingInvocation.class)
    public void expectNonStrictInvocationWithMatcherWhichInvokesMockedMethod()
    {
-      new NonStrictExpectations() {
-         {
-            mock.setValue(with(0, new Object() {
-               boolean validateAsPositive(int value)
-               {
-                  // Invoking mocked method caused ConcurrentModificationException (bug fixed):
-                  mock.simpleOperation(1, "b", null);
-                  return value > 0;
-               }
-            }));
-            minTimes = 1;
-         }
-      };
+      new NonStrictExpectations() {{
+         mock.setValue(with(0, new Object() {
+            @Mock boolean validateAsPositive(int value)
+            {
+               // Invoking mocked method caused ConcurrentModificationException (bug fixed):
+               mock.simpleOperation(1, "b", null);
+               return value > 0;
+            }
+         }));
+         minTimes = 1;
+      }};
 
       mock.setValue(-3);
+   }
+
+   @Test(expected = MissingInvocation.class)
+   public void expectStrictInvocationWithCustomMatcherButNeverReplay()
+   {
+      new Expectations() {{
+         mock.doSomething(with(new Delegate<Integer>() {
+            @Mock boolean test(Integer i) { return true; }
+         }));
+      }};
    }
 
    @Test
@@ -310,14 +318,14 @@ public final class ExpectationsWithArgMatchersTest
    {
       new Expectations() {{
          mock.setValue(with(0, new Object() {
-            boolean matches(int value)
+            @Mock boolean matches(int value)
             {
                return value >= 10 && value <= 100;
             }
          }));
 
          mock.setValue(with(0.0, new Object() {
-            void validate(double value)
+            @Mock void validate(double value)
             {
                assertTrue("value outside of 20-80 range", value >= 20.0 && value <= 80.0);
             }
@@ -333,14 +341,14 @@ public final class ExpectationsWithArgMatchersTest
    {
       new Expectations() {{
          mock.setValue(with(new Delegate<String>() {
-            boolean validLength(String value)
+            @Mock boolean validLength(String value)
             {
                return value.length() >= 10 && value.length() <= 100;
             }
          }));
 
          mock.setValue(with(new Delegate<Float>() {
-            boolean positive(float value) { return value > 0.0F; }
+            @Mock boolean positive(float value) { return value > 0.0F; }
          }));
       }};
 
@@ -357,7 +365,7 @@ public final class ExpectationsWithArgMatchersTest
    }
 
    class ReusableMatcher implements Delegate<Integer> {
-      final boolean isPositive(int i) { return i > 0; }
+      @Mock final boolean isPositive(int i) { return i > 0; }
    }
 
    @Test

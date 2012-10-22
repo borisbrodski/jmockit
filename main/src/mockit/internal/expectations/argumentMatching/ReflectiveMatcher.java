@@ -30,8 +30,15 @@ public final class ReflectiveMatcher implements ArgumentMatcher
 
    public void writeMismatchPhrase(ArgumentMismatch argumentMismatch)
    {
-      argumentMismatch.append(handlerMethod.getName()).append('(').appendFormatted(matchedValue);
-      argumentMismatch.append(") (should return true, was false)");
+      if (handlerMethod != null) {
+         argumentMismatch.append(handlerMethod.getName()).append('(');
+         argumentMismatch.appendFormatted(matchedValue);
+         argumentMismatch.append(") (should return true, was false)");
+      }
+      else {
+         argumentMismatch.append('?');
+      }
+
       argumentMismatch.markAsFinished();
    }
 }
