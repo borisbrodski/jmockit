@@ -13,14 +13,23 @@ import org.junit.*;
 @SuppressWarnings("UnusedDeclaration")
 public final class InvocationProceedTest
 {
-   public static class ClassToBeMocked
+   public static class BaseClassToBeMocked
    {
-      private final String name;
+      protected String name;
 
+      public final String getName() { return name; }
+      public final int baseMethod(int i) { return i + 1; }
+      protected int methodToBeMocked(int i) throws IOException { return i; }
+   }
+
+   public static class ClassToBeMocked extends BaseClassToBeMocked
+   {
       public ClassToBeMocked() { name = ""; }
       public ClassToBeMocked(String name) { this.name = name; }
 
       public void methodToBeMocked() { throw new UnsupportedOperationException("From real method"); }
+
+      @Override
       protected int methodToBeMocked(int i) throws IOException { return i; }
 
       private int methodToBeMocked(int i, Object... args)
@@ -225,6 +234,16 @@ public final class InvocationProceedTest
 
       assertEquals("proceed", new File("proceed").getPath());
       assertNull(new File("do not proceed").getPath());
+   }
+
+   @Test
+   public void proceedFromMockMethodIntoMethodInheritedFromBaseClass()
+   {
+      new MockUp<ClassToBeMocked>() {
+         @Mock int baseMethod(Invocation inv, int i) { return inv.proceed(i + 1); }
+      };
+
+      assertEquals(3, new ClassToBeMocked().baseMethod(1));
    }
 
    /// Tests for "Delegate" methods ///////////////////////////////////////////////////////////////////////////////////
@@ -438,5 +457,32 @@ public final class InvocationProceedTest
 
       // This could only be made to pass by requiring use of "-noverify".
       // assertEquals(10, new MyVector().capacity());
+   }
+
+   @Test
+   public void proceedFromDelegateMethodIntoMethodInheritedFromBaseClass()
+   {
+      final ClassToBeMocked obj = new ClassToBeMocked();
+
+      new NonStrictExpectations(obj) {{
+         obj.baseMethod(anyInt);
+         result = new Delegate() {
+            int baseMethod(Invocation inv, int i) { return inv.proceed(i + 1); }
+         };
+      }};
+
+      assertEquals(3, obj.baseMethod(1));
+   }
+
+   @Test
+   public void replaceMockedInstanceWithRealOne()
+   {
+      final ClassToBeMocked notMocked = new ClassToBeMocked("not mocked");
+
+      new NonStrictExpectations(ClassToBeMocked.class) {{
+         new ClassToBeMocked(anyString); result = notMocked;
+      }};
+
+      assertEquals("not mocked", new ClassToBeMocked("test").getName());
    }
 }

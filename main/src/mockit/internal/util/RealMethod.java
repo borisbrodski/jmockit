@@ -31,12 +31,19 @@ public final class RealMethod
    private Method initialize(Class<?> realClass, String methodName, String methodDesc)
    {
       Class<?>[] parameterTypes = TypeDescriptor.getParameterTypes(methodDesc);
+      Class<?> ownerClass = realClass;
 
-      try {
-         return realClass.getDeclaredMethod(methodName, parameterTypes);
-      }
-      catch (NoSuchMethodException e) {
-         throw new RuntimeException(e);
+      while (true) {
+         try {
+            return ownerClass.getDeclaredMethod(methodName, parameterTypes);
+         }
+         catch (NoSuchMethodException e) {
+            ownerClass = ownerClass.getSuperclass();
+
+            if (ownerClass == Object.class) {
+               throw new RuntimeException(e);
+            }
+         }
       }
    }
 }
