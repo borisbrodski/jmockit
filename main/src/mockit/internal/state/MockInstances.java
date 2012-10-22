@@ -20,20 +20,9 @@ public final class MockInstances
    private final List<Object> mocks = new ArrayList<Object>();
    private final Map<Object, Object> mockedInstancesToMocks = new HashMap<Object, Object>();
 
-   public boolean containsInstance(Object mock)
-   {
-      return mocks.contains(mock);
-   }
-
-   public int getInstanceCount()
-   {
-      return mocks.size();
-   }
-
-   public Object getMock(int index)
-   {
-      return mocks.get(index);
-   }
+   public boolean containsInstance(Object mock) { return mocks.contains(mock); }
+   public int getInstanceCount() { return mocks.size(); }
+   public Object getMock(int index) { return mocks.get(index); }
 
    public Object getMock(Class<?> mockClass, Object mockedInstance)
    {
@@ -49,8 +38,14 @@ public final class MockInstances
 
    public int addMock(Object mock)
    {
-      mocks.add(mock);
-      return mocks.size() - 1;
+      int i = Utilities.indexOfReference(mocks, mock);
+
+      if (i < 0) {
+         i = mocks.size();
+         mocks.add(mock);
+      }
+
+      return i;
    }
 
    void removeInstances(int fromIndex)

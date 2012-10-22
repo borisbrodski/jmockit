@@ -30,12 +30,17 @@ public final class Utilities
 
    public static boolean containsReference(List<?> references, Object toBeFound)
    {
-      for (Object reference : references) {
-         if (reference == toBeFound) {
-            return true;
+      return indexOfReference(references, toBeFound) >= 0;
+   }
+
+   public static int indexOfReference(List<?> references, Object toBeFound)
+   {
+      for (int i = 0, n = references.size(); i < n; i++) {
+         if (references.get(i) == toBeFound) {
+            return i;
          }
       }
 
-      return false;
+      return -1;
    }
 }
