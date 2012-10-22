@@ -25,6 +25,7 @@ import mockit.internal.state.*;
  * <p/>
  * Any fields (static or not) in the real class remain untouched.
  */
+@SuppressWarnings("ClassWithTooManyFields")
 final class MockupsModifier extends BaseClassModifier
 {
    private static final int IGNORED_ACCESS = ABSTRACT + NATIVE;
@@ -37,6 +38,7 @@ final class MockupsModifier extends BaseClassModifier
    private final MockingConfiguration mockingCfg;
 
    private final boolean useMockingBridgeForUpdatingMockState;
+   private Class<?> mockedClass;
    private Type mockClassType;
 
    // Helper fields:
@@ -72,6 +74,7 @@ final class MockupsModifier extends BaseClassModifier
          cr, getItFieldDescriptor(realClass, mockMethods), mockMethods, mockingConfiguration, forStartupMock, mock,
          realClass.getClassLoader() == null);
       inferUseOfMockingBridge(realClass.getClassLoader(), mock);
+      mockedClass = realClass;
    }
 
    private static String getItFieldDescriptor(Class<?> realClass, AnnotatedMockMethods mockMethods)
@@ -169,13 +172,16 @@ final class MockupsModifier extends BaseClassModifier
       startModifiedMethodVersion(access, name, desc, signature, exceptions);
       classWasModified = true;
 
-      MethodVisitor alternativeWriter = getAlternativeMethodWriter(access, name, desc);
-
-      if (alternativeWriter != null) {
-         return alternativeWriter;
+      if (mockMethod.isForConstructor()) {
+         generateCallToSuperConstructor();
       }
 
-      generateCallsForMockExecution(access, desc);
+      if (isToPreserveRealImplementation(access)) {
+         return getAlternativeMethodWriter(access, name, desc);
+      }
+
+      generateCallToUpdateMockStateIfAny(access);
+      generateCallToMockMethod(access, desc);
       generateMethodReturn(desc);
       mw.visitMaxs(1, 0); // dummy values, real ones are calculated by ASM
       return methodAnnotationsVisitor;
@@ -224,26 +230,24 @@ final class MockupsModifier extends BaseClassModifier
 
    private void validateMethodModifiers(int access, String name)
    {
-      if ((access & ACC_ABSTRACT) != 0) {
+      if (isAbstract(access)) {
          throw new IllegalArgumentException("Attempted to mock abstract method \"" + name + '\"');
       }
-      else if ((access & ACC_NATIVE) != 0 && !Startup.isJava6OrLater()) {
-         throw new IllegalArgumentException("Mocking of native methods not supported under JDK 1.5: \"" + name + '\"');
+      else if (isNative(access)) {
+         if (!Startup.isJava6OrLater()) {
+            throw new IllegalArgumentException(
+               "Mocking of native methods not supported under JDK 1.5: \"" + name + '\"');
+         }
+         else if (mockMethod.isReentrant()) {
+            throw new IllegalArgumentException(
+               "Reentrant mocks for native methods are not supported: \"" + name + '\"');
+         }
       }
    }
 
    private MethodVisitor getAlternativeMethodWriter(int mockedAccess, String mockedName, String mockedDesc)
    {
-      if (!mockMethod.isDynamic()) {
-         return null;
-      }
-
-      if (isNative(mockedAccess)) {
-         throw new IllegalArgumentException(
-            "Reentrant mocks for native methods are not supported: \"" + mockMethod.name + '\"');
-      }
-
-      generateCallsForMockExecution(mockedAccess, mockedDesc);
+      generateDynamicCallToMock(mockedAccess, mockedDesc);
 
       final boolean forConstructor = mockedName.charAt(0) == '<';
 
@@ -270,68 +274,50 @@ final class MockupsModifier extends BaseClassModifier
       };
    }
 
-   private void generateCallsForMockExecution(int access, String desc)
+   private boolean isToPreserveRealImplementation(int mockedAccess)
    {
-      if (mockMethod.isForConstructor()) {
-         generateCallToSuperConstructor();
-      }
-
-      generateCallToMock(access, desc);
+      return !isNative(mockedAccess) && (isMockedSuperclass() || mockMethod.isDynamic());
    }
 
-   private void generateMockObjectInstantiation()
+   private boolean isMockedSuperclass()
    {
-      String classInternalName = annotatedMocks.getMockClassInternalName();
-      mw.visitTypeInsn(NEW, classInternalName);
-      mw.visitInsn(DUP);
-      mw.visitMethodInsn(INVOKESPECIAL, classInternalName, "<init>", "()V");
+      return mockedClass != null && mockedClass != mockMethod.getRealClass();
    }
 
-   private void generateCallToMock(int access, String desc)
+   private void generateDynamicCallToMock(int mockedAccess, String mockedDesc)
    {
-      Label afterCallToMock = generateCallToUpdateMockStateIfAny(access);
-      Label l1 = null;
-      Label l2 = null;
-      Label l3 = null;
-
-      if (afterCallToMock != null) {
-         Label l0 = new Label();
-         l1 = new Label();
-         l2 = new Label();
-         mw.visitTryCatchBlock(l0, l1, l2, null);
-         l3 = new Label();
-         mw.visitTryCatchBlock(l2, l3, l2, null);
-         mw.visitLabel(l0);
+      if (!isStatic(mockedAccess) && !mockMethod.isForConstructor() && isMockedSuperclass()) {
+         startOfRealImplementation = new Label();
+         mw.visitVarInsn(ALOAD, 0);
+         mw.visitTypeInsn(INSTANCEOF, Type.getInternalName(mockMethod.getRealClass()));
+         mw.visitJumpInsn(IFEQ, startOfRealImplementation);
       }
 
-      generateCallToMockMethod(access, desc);
+      generateCallToUpdateMockStateIfAny(mockedAccess);
 
-      if (afterCallToMock != null) {
-         mw.visitLabel(l1);
-         generateCallToExitReentrantMock();
-         generateMethodReturn(desc);
-         mw.visitLabel(l2);
-         mw.visitVarInsn(ASTORE, varIndex);
-         mw.visitLabel(l3);
-         generateCallToExitReentrantMock();
-         mw.visitVarInsn(ALOAD, varIndex);
-         mw.visitInsn(ATHROW);
-
-         mw.visitLabel(afterCallToMock);
+      if (mockMethod.isReentrant()) {
+         generateCallToReentrantMockMethod(mockedAccess, mockedDesc);
       }
       else if (mockMethod.isDynamic()) {
-         generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
+         generateCallToMockMethod(mockedAccess, mockedDesc);
+         generateDecisionBetweenReturningOrContinuingToRealImplementation(mockedDesc);
       }
+      else if (startOfRealImplementation != null) {
+         generateCallToMockMethod(mockedAccess, mockedDesc);
+         generateMethodReturn(mockedDesc);
+         mw.visitLabel(startOfRealImplementation);
+      }
+
+      startOfRealImplementation = null;
    }
 
-   private Label generateCallToUpdateMockStateIfAny(int access)
+   private void generateCallToUpdateMockStateIfAny(int mockedAccess)
    {
       int mockStateIndex = mockMethod.getIndexForMockState();
-      Label afterCallToMock = null;
 
       if (mockStateIndex >= 0) {
          if (useMockingBridgeForUpdatingMockState) {
-            generateCallToControlMethodThroughMockingBridge(true, access);
+            generateCallToControlMethodThroughMockingBridge(true, mockedAccess);
             mw.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
             mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z");
          }
@@ -340,14 +326,40 @@ final class MockupsModifier extends BaseClassModifier
             mw.visitIntInsn(SIPUSH, mockStateIndex);
             mw.visitMethodInsn(INVOKESTATIC, CLASS_WITH_STATE, "updateMockState", "(Ljava/lang/String;I)Z");
          }
+      }
+   }
 
-         if (mockMethod.isReentrant()) {
-            afterCallToMock = new Label();
-            mw.visitJumpInsn(IFEQ, afterCallToMock);
-         }
+   private void generateCallToReentrantMockMethod(int mockedAccess, String mockedDesc)
+   {
+      if (startOfRealImplementation == null) {
+         startOfRealImplementation = new Label();
       }
 
-      return afterCallToMock;
+      mw.visitJumpInsn(IFEQ, startOfRealImplementation);
+
+      Label l0 = new Label();
+      Label l1 = new Label();
+      Label l2 = new Label();
+      mw.visitTryCatchBlock(l0, l1, l2, null);
+
+      Label l3 = new Label();
+      mw.visitTryCatchBlock(l2, l3, l2, null);
+
+      mw.visitLabel(l0);
+
+      generateCallToMockMethod(mockedAccess, mockedDesc);
+
+      mw.visitLabel(l1);
+      generateCallToExitReentrantMock();
+      generateMethodReturn(mockedDesc);
+      mw.visitLabel(l2);
+      mw.visitVarInsn(ASTORE, varIndex);
+      mw.visitLabel(l3);
+      generateCallToExitReentrantMock();
+      mw.visitVarInsn(ALOAD, varIndex);
+      mw.visitInsn(ATHROW);
+
+      mw.visitLabel(startOfRealImplementation);
    }
 
    private void generateCallToControlMethodThroughMockingBridge(boolean enteringMethod, int mockAccess)
@@ -448,6 +460,14 @@ final class MockupsModifier extends BaseClassModifier
       else {
          generateGetMockCallWithMockClassAndMockedInstance();
       }
+   }
+
+   private void generateMockObjectInstantiation()
+   {
+      String classInternalName = annotatedMocks.getMockClassInternalName();
+      mw.visitTypeInsn(NEW, classInternalName);
+      mw.visitInsn(DUP);
+      mw.visitMethodInsn(INVOKESPECIAL, classInternalName, "<init>", "()V");
    }
 
    private void generateGetMockCallWithMockClassAndMockedInstance()

@@ -11,12 +11,17 @@ import static org.junit.Assert.*;
 
 public final class MockedClassWithSuperClassTest
 {
-   static final class SubclassOfJREClass extends Writer
+   static class SubclassOfJREClass extends Writer
    {
       @Override public void write(char[] cbuf, int off, int len) {}
       @Override public void flush() {}
       @Override public void close() { throw new UnsupportedOperationException(); }
    }
+
+   static class BaseClass { int doSomething() { return 123; }}
+   static class Subclass extends BaseClass {}
+
+   // With Expectations & Verifications API ///////////////////////////////////////////////////////////////////////////
 
    @Test
    public void mockedClassExtendingJREClass(final SubclassOfJREClass mock) throws Exception
@@ -38,10 +43,9 @@ public final class MockedClassWithSuperClassTest
       };
       assertSame(w, w.append("Test1"));
       assertSame(w, w.append('b'));
-   }
 
-   static class BaseClass { int doSomething() { return 123; }}
-   static final class Subclass extends BaseClass {}
+      new SubclassOfJREClass() {}.close();
+   }
 
    @Test
    public void mockedClassExtendingNonJREClass(@Mocked final Subclass mock)
@@ -51,6 +55,7 @@ public final class MockedClassWithSuperClassTest
       // Mocked:
       assertEquals(45, mock.doSomething());
       assertEquals(45, new Subclass().doSomething());
+      assertEquals(45, new Subclass() {}.doSomething());
 
       // Not mocked:
       BaseClass b1 = new BaseClass();
@@ -58,6 +63,44 @@ public final class MockedClassWithSuperClassTest
       assertEquals(123, b1.doSomething());
       assertEquals(100, b2.doSomething());
 
-      new Verifications() {{ mock.doSomething(); times = 2; }};
+      new Verifications() {{ mock.doSomething(); times = 3; }};
+   }
+
+   /// With Mockups API ///////////////////////////////////////////////////////////////////////////////////////////////
+
+   public static final class MockUpForSubclass extends MockUp<Subclass> {
+      @Mock public int doSomething() { return 1; }
+   }
+
+   @Test
+   public void mockOnlyInstancesOfTheClassSpecifiedToBeMocked()
+   {
+      BaseClass d = new Subclass();
+      assertEquals(123, d.doSomething());
+
+      new MockUpForSubclass();
+
+      assertEquals(1, d.doSomething());
+      assertEquals(123, new BaseClass().doSomething());
+      assertEquals(1, new Subclass().doSomething());
+      assertEquals(123, new BaseClass() {}.doSomething());
+      assertEquals(1, new Subclass() {}.doSomething());
+   }
+
+   @Test
+   public void mockOnlyInstancesOfTheClassSpecifiedToBeMocked_usingMockingBridge()
+   {
+      BaseClass d = new Subclass();
+      assertEquals(123, d.doSomething());
+
+      new MockUp<Subclass>() {
+         @Mock int doSomething() { return 2; }
+      };
+
+      assertEquals(123, new BaseClass().doSomething());
+      assertEquals(2, d.doSomething());
+      assertEquals(2, new Subclass().doSomething());
+      assertEquals(123, new BaseClass() {}.doSomething());
+      assertEquals(2, new Subclass() {}.doSomething());
    }
 }

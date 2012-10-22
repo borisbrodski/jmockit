@@ -47,6 +47,7 @@ public class BaseClassModifier extends ClassVisitor
    protected MethodVisitor mw;
    protected boolean useMockingBridge;
    protected String superClassName;
+   protected Label startOfRealImplementation;
    private String classDesc;
    private String methodName;
    private String methodDesc;
@@ -270,13 +271,17 @@ public class BaseClassModifier extends ClassVisitor
       mw.visitInsn(DUP);
       mw.visitLdcInsn(VOID_TYPE);
 
-      Label startOfRealImplementation = new Label();
+      if (startOfRealImplementation == null) {
+         startOfRealImplementation = new Label();
+      }
+
       mw.visitJumpInsn(IF_ACMPEQ, startOfRealImplementation);
 
       generateReturnWithObjectAtTopOfTheStack(desc);
 
       mw.visitLabel(startOfRealImplementation);
       mw.visitInsn(POP);
+      startOfRealImplementation = null;
    }
 
    protected final void generateEmptyImplementation(String desc)
