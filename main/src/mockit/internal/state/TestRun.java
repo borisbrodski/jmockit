@@ -77,7 +77,6 @@ public final class TestRun
    private SavePoint savePointForTestClass;
    private SharedFieldTypeRedefinitions sharedFieldTypeRedefinitions;
 
-   private final ProxyClasses proxyClasses = new ProxyClasses();
    private final MockFixture mockFixture = new MockFixture();
 
    private final ExecutingTest executingTest = new ExecutingTest();
@@ -101,8 +100,6 @@ public final class TestRun
    {
       return getInstance().sharedFieldTypeRedefinitions;
    }
-
-   public static ProxyClasses proxyClasses() { return getInstance().proxyClasses; }
 
    public static MockFixture mockFixture() { return getInstance().mockFixture; }
 

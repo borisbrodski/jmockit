@@ -278,7 +278,7 @@ public final class MockFixture
 
    // Getter methods for the maps of transformed/redefined classes ////////////////////////////////////////////////////
 
-   public byte[] getFixedClassfile(String className) { return fixedClassDefinitions.get(className); }
+   public byte[] getFixedClassfile(String className) { return null/*fixedClassDefinitions.get(className)*/; }
 
    public Set<String> getTransformedClasses() { return new HashSet<String>(transformedClasses.keySet()); }
    public Map<Class<?>, byte[]> getRedefinedClasses() { return new HashMap<Class<?>, byte[]>(redefinedClasses); }

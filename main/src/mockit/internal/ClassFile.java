@@ -5,7 +5,6 @@
 package mockit.internal;
 
 import java.io.*;
-import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -36,6 +35,12 @@ public final class ClassFile
 
       if (fixedClassfile != null) {
          return new ClassReader(fixedClassfile);
+      }
+
+      byte[] cachedClassfile = CachedClassfiles.getClassfile(aClass);
+
+      if (cachedClassfile != null) {
+         return new ClassReader(cachedClassfile);
       }
 
       InputStream classFile = aClass.getResourceAsStream('/' + internalClassName(className) + ".class");
@@ -132,15 +137,14 @@ public final class ClassFile
 
    public ClassFile(Class<?> aClass, boolean fromLastRedefinitionIfAny)
    {
-      String className = aClass.getName();
       byte[] classfile = null;
 
       if (fromLastRedefinitionIfAny) {
          classfile = TestRun.mockFixture().getRedefinedClassfile(aClass);
       }
 
-      if (classfile == null && Proxy.isProxyClass(aClass)) {
-         classfile = TestRun.proxyClasses().getClassfile(className);
+      if (classfile == null) {
+         classfile = CachedClassfiles.getClassfile(aClass);
       }
 
       if (classfile != null) {
@@ -148,6 +152,7 @@ public final class ClassFile
          return;
       }
 
+      String className = aClass.getName();
       String classDesc = internalClassName(className);
 
       if (!fromLastRedefinitionIfAny) {

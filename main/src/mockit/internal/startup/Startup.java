@@ -8,6 +8,7 @@ import java.io.*;
 import java.lang.instrument.*;
 
 import mockit.internal.expectations.transformation.*;
+import mockit.internal.state.*;
 
 /**
  * This is the "agent class" that initializes the JMockit "Java agent". It is not intended for use in client code.
@@ -66,7 +67,7 @@ public final class Startup
    {
       instrumentation = inst;
       new JMockitInitialization().initialize(initializeTestNG);
-      inst.addTransformer(new ProxyClassfileSavingTransformer());
+      inst.addTransformer(CachedClassfiles.INSTANCE);
       inst.addTransformer(new ExpectationsTransformer(inst));
    }
 

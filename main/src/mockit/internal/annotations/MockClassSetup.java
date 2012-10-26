@@ -190,13 +190,11 @@ public final class MockClassSetup
       Startup.redefineMethods(realClass, modifiedClassFile);
       mockMethods.registerMockStates();
 
-      MockFixture fixture = TestRun.mockFixture();
-
       if (forStartupMock) {
-         fixture.addFixedClass(realClass.getName(), modifiedClassFile);
+         CachedClassfiles.addClassfile(realClass, modifiedClassFile);
       }
       else {
-         fixture.addRedefinedClass(mockMethods.getMockClassInternalName(), realClass, modifiedClassFile);
+         TestRun.mockFixture().addRedefinedClass(mockMethods.getMockClassInternalName(), realClass, modifiedClassFile);
       }
    }
 
