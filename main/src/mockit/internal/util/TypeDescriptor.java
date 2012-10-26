@@ -9,7 +9,7 @@ import mockit.external.asm4.Type;
 public final class TypeDescriptor
 {
    private static final Class<?>[] PRIMITIVE_TYPES = {
-      null, boolean.class, char.class, byte.class, short.class, int.class, float.class, long.class, double.class
+      void.class, boolean.class, char.class, byte.class, short.class, int.class, float.class, long.class, double.class
    };
 
    public static Class<?>[] getParameterTypes(String mockDesc)

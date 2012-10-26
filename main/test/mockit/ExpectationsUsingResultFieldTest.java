@@ -357,24 +357,36 @@ public final class ExpectationsUsingResultFieldTest
          result = null;
       }};
 
-      assertEquals(1, collaborator.getObject());
-      assertEquals(2, collaborator.getObject());
-      assertEquals("test", collaborator.getObject());
-      assertEquals('X', collaborator.getObject());
-      assertEquals(5L, collaborator.getObject());
-      assertEquals(67L, collaborator.getObject());
+      assertArrayEquals(new int[] {1, 2}, (int[]) collaborator.getObject());
+      assertArrayEquals(new Object[] {"test", 'X'}, (Object[]) collaborator.getObject());
+      assertEquals(asList(5L, 67L), collaborator.getObject());
       assertNull(collaborator.getObject());
       assertNull(collaborator.getObject());
+   }
+
+   @Test
+   public void returnsEmptyArrayForMethodWithReturnTypeOfObject(@Mocked final Collaborator mock)
+   {
+      final String[] emptyArray = {};
+
+      new NonStrictExpectations() {{
+         mock.getObject();
+         result = emptyArray;
+      }};
+
+      assertSame(emptyArray, mock.getObject());
    }
 
    @Test
    public void returnsMultipleValuesFromGenericMethod(final Callable<Integer> callable) throws Exception
    {
       new NonStrictExpectations() {{
-         callable.call(); result = new int[] {3, 2, 1};
+         callable.call();
+         result = new int[] {3, 2, 1};
       }};
 
-      assertEquals(3, callable.call().intValue());
+      Integer firstCall = callable.call();
+      assertEquals(3, firstCall.intValue());
       assertEquals(2, callable.call().intValue());
       assertEquals(1, callable.call().intValue());
    }

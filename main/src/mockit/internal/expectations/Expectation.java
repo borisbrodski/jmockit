@@ -62,7 +62,7 @@ final class Expectation
       if (valueIsArray || valueIsIterable || value instanceof Iterator<?>) {
          Class<?> rt = getReturnType();
 
-         if (rt == null || hasReturnOfDifferentType(rt, value)) {
+         if (rt == void.class || hasReturnOfDifferentType(rt, value)) {
             if (valueIsArray) {
                getResults().addReturnValues(value);
             }
@@ -129,7 +129,7 @@ final class Expectation
       Class<?> rt = getReturnType();
       boolean added = false;
 
-      if (rt != null) {
+      if (rt != void.class) {
          if (rt.isArray()) {
             added = addValuesInArrayIfApplicable(first, remaining, rt);
          }
@@ -248,8 +248,12 @@ final class Expectation
       if (valueIsArray || value instanceof Iterable<?> || value instanceof Iterator<?>) {
          Class<?> rt = getReturnType();
 
-         if (rt == null || rt == Object.class) {
+         if (rt == void.class) {
             addMultiValuedResult(value, valueIsArray);
+            return;
+         }
+         else if (rt == Object.class) {
+            addSingleReturnValue(value);
             return;
          }
          else if (valueIsArray && addCollectionOrMapWithElementsFromArray(value, rt)) {

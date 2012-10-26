@@ -91,6 +91,9 @@ abstract class BaseTypeRedefinition
             return theInterface;
          }
       }
+      else if (typeToMock instanceof ParameterizedType) {
+         return interfaceToMock(((ParameterizedType) typeToMock).getRawType());
+      }
 
       return null;
    }
