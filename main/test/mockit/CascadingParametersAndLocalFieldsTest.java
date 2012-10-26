@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.channels.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -26,6 +27,8 @@ public final class CascadingParametersAndLocalFieldsTest
       int getIntValue() { return 1; }
       private Boolean getBooleanValue() { return true; }
       final List<Integer> getList() { return null; }
+      Callable<?> returnTypeWithWildcard() { return null; }
+      <RT extends Baz> RT returnTypeWithBoundedTypeVariable() { return null; }
    }
 
    static class Bar
@@ -56,6 +59,8 @@ public final class CascadingParametersAndLocalFieldsTest
       assertEquals(0, foo.getIntValue());
       assertNull(foo.getBooleanValue());
       assertTrue(foo.getList().isEmpty());
+      assertNotNull(foo.returnTypeWithWildcard());
+      assertNotNull(foo.returnTypeWithBoundedTypeVariable());
    }
 
    @Test
@@ -89,7 +94,7 @@ public final class CascadingParametersAndLocalFieldsTest
    }
 
    @Test
-   public void cascadeOneLevelDuringRecord()
+   public void cascadeOneLevelDuringRecord(final Callable<String> action)
    {
       final List<Integer> list = Arrays.asList(1, 2, 3);
 
@@ -103,6 +108,7 @@ public final class CascadingParametersAndLocalFieldsTest
             foo.getBooleanValue(); result = true;
             foo.getIntValue(); result = -1;
             foo.getList(); result = list;
+            foo.returnTypeWithWildcard(); result = action;
          }
       };
 
@@ -114,6 +120,7 @@ public final class CascadingParametersAndLocalFieldsTest
       assertTrue(foo.getBooleanValue());
       assertEquals(-1, foo.getIntValue());
       assertSame(list, foo.getList());
+      assertSame(action, foo.returnTypeWithWildcard());
    }
 
    @Test
@@ -150,6 +157,8 @@ public final class CascadingParametersAndLocalFieldsTest
    @Test
    public void cascadeTwoLevelsDuringRecord()
    {
+      final Date now = new Date();
+
       new Expectations() {
          @Cascading @Mocked final Foo foo = new Foo();
 
@@ -158,6 +167,8 @@ public final class CascadingParametersAndLocalFieldsTest
             Foo.globalBar().doSomething(); result = 2;
 
             foo.getBar().getBaz().runIt(); times = 2;
+
+            foo.returnTypeWithBoundedTypeVariable().getDate(); result = now;
          }
       };
 
@@ -168,6 +179,25 @@ public final class CascadingParametersAndLocalFieldsTest
       Baz baz = foo.getBar().getBaz();
       baz.runIt();
       baz.runIt();
+
+      assertSame(now, foo.returnTypeWithBoundedTypeVariable().getDate());
+   }
+
+   static class GenericFoo<T, U extends Bar>
+   {
+      T returnTypeWithUnboundedTypeVariable() { return null; }
+      U returnTypeWithBoundedTypeVariable() { return null; }
+   }
+   static final class SubBar extends Bar {}
+
+   @Test
+   public void cascadeGenericMethods(@Cascading GenericFoo<Baz, SubBar> foo)
+   {
+      Baz t = foo.returnTypeWithUnboundedTypeVariable();
+      assertNotNull(t);
+
+      SubBar u = foo.returnTypeWithBoundedTypeVariable();
+      assertNotNull(u);
    }
 
    @Test
@@ -246,7 +276,7 @@ public final class CascadingParametersAndLocalFieldsTest
    {
       new NonStrictExpectations() {
          // This caused a NPE in later tests which cascade-mocked the Socket class:
-         final Socket s = null;
+         @Mocked final Socket s = null;
       };
    }
 

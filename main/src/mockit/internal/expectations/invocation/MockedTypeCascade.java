@@ -42,28 +42,53 @@ public final class MockedTypeCascade
       String returnTypeInternalName = null;
 
       if (genericReturnTypeDesc != null) {
-         String typeName = getInternalTypeName(genericReturnTypeDesc);
-         Type mockedType = cascade.mockedType.declaredType;
-         Type parameterizedMockedType =
-            mockedType instanceof ParameterizedType ? mockedType : ((Class<?>) mockedType).getGenericSuperclass();
-         ParameterizedType mockedGenericType = (ParameterizedType) parameterizedMockedType;
+         returnTypeInternalName = getGenericReturnType(genericReturnTypeDesc, cascade);
+      }
+
+      if (returnTypeInternalName == null) {
+         returnTypeInternalName = getReturnTypeIfCascadingSupportedForIt(returnTypeDesc);
+      }
+
+      return returnTypeInternalName == null ? null : cascade.getCascadedMock(returnTypeInternalName);
+   }
+
+   private static String getGenericReturnType(String genericReturnTypeDesc, MockedTypeCascade cascade)
+   {
+      String typeName = getInternalTypeName(genericReturnTypeDesc);
+      Type mockedType = cascade.mockedType.declaredType;
+
+      if (!(mockedType instanceof ParameterizedType)) {
+         mockedType = ((Class<?>) mockedType).getGenericSuperclass();
+      }
+
+      if (mockedType instanceof ParameterizedType) {
+         ParameterizedType mockedGenericType = (ParameterizedType) mockedType;
          TypeVariable<?>[] typeParameters = ((Class<?>) mockedGenericType.getRawType()).getTypeParameters();
+         Type[] actualTypeArguments = mockedGenericType.getActualTypeArguments();
 
          for (int i = 0; i < typeParameters.length; i++) {
             TypeVariable<?> typeParameter = typeParameters[i];
 
             if (typeName.equals(typeParameter.getName())) {
-               Class<?> typeArgument = (Class<?>) mockedGenericType.getActualTypeArguments()[i];
-               returnTypeInternalName = getReturnTypeIfCascadingSupportedForIt(typeArgument);
-               break;
+               Type actualType = actualTypeArguments[i];
+               Class<?> actualClass;
+
+               if (actualType instanceof Class<?>) {
+                  actualClass = (Class<?>) actualType;
+               }
+               else if (actualType instanceof WildcardType) {
+                  actualClass = (Class<?>) ((WildcardType) actualType).getUpperBounds()[0];
+               }
+               else {
+                  return null;
+               }
+
+               return getReturnTypeIfCascadingSupportedForIt(actualClass);
             }
          }
       }
-      else {
-         returnTypeInternalName = getReturnTypeIfCascadingSupportedForIt(returnTypeDesc);
-      }
 
-      return returnTypeInternalName == null ? null : cascade.getCascadedMock(returnTypeInternalName);
+      return null;
    }
 
    private static String getInternalTypeName(String typeDesc) { return typeDesc.substring(1, typeDesc.length() - 1); }
