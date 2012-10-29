@@ -19,10 +19,12 @@ import mockit.internal.expectations.mocking.*;
 @SuppressWarnings("ClassWithTooManyFields")
 public final class TestRun
 {
-   private static final TestRun STARTUP_INSTANCE = new TestRun();
-   private static final Map<ClassLoader, TestRun> INSTANCES = synchronizedMap(new HashMap<ClassLoader, TestRun>());
+   private static final TestRun STARTUP_INSTANCE;
+   private static final Map<ClassLoader, TestRun> INSTANCES;
    static
    {
+      STARTUP_INSTANCE = new TestRun();
+      INSTANCES = synchronizedMap(new IdentityHashMap<ClassLoader, TestRun>());
       INSTANCES.put(ClassLoader.getSystemClassLoader(), STARTUP_INSTANCE);
    }
 
