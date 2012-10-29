@@ -13,6 +13,8 @@ import mockit.internal.state.*;
 
 public final class ClassFile
 {
+   private static final Map<String, ClassReader> CLASS_FILES = new ConcurrentHashMap<String, ClassReader>();
+
    public static final class NotFoundException extends RuntimeException
    {
       private NotFoundException(String className)
@@ -30,19 +32,13 @@ public final class ClassFile
 
    public static ClassReader createClassFileReader(Class<?> aClass)
    {
-      String className = aClass.getName();
-      byte[] fixedClassfile = TestRun.mockFixture().getFixedClassfile(className);
-
-      if (fixedClassfile != null) {
-         return new ClassReader(fixedClassfile);
-      }
-
       byte[] cachedClassfile = CachedClassfiles.getClassfile(aClass);
 
       if (cachedClassfile != null) {
          return new ClassReader(cachedClassfile);
       }
 
+      String className = aClass.getName();
       InputStream classFile = aClass.getResourceAsStream('/' + internalClassName(className) + ".class");
       verifyClassFileFound(classFile, className);
 
@@ -56,27 +52,59 @@ public final class ClassFile
 
    private static String internalClassName(String className) { return className.replace('.', '/'); }
 
-   public static ClassReader createClassFileReader(String className)
+   public static ClassReader createClassFileReaderOrGetFromCache(Class<?> aClass)
    {
-      byte[] fixedClassfile = TestRun.mockFixture().getFixedClassfile(className);
+      byte[] cachedClassfile = CachedClassfiles.getClassfile(aClass);
 
-      if (fixedClassfile != null) {
-         return new ClassReader(fixedClassfile);
+      if (cachedClassfile != null) {
+         return new ClassReader(cachedClassfile);
+      }
+
+      String className = aClass.getName();
+      String classDesc = internalClassName(className);
+      ClassReader reader = CLASS_FILES.get(classDesc);
+
+      if (reader == null) {
+         InputStream classFile = readClassFromClasspath(classDesc);
+         verifyClassFileFound(classFile, className);
+
+         try {
+            reader = new ClassReader(classFile);
+         }
+         catch (IOException e) {
+            throw new RuntimeException("Failed to read class file for " + className, e);
+         }
+
+         CLASS_FILES.put(classDesc, reader);
+      }
+
+      return reader;
+   }
+
+   public static ClassReader createClassFileReader(ClassLoader loader, String internalClassName)
+   {
+      byte[] cachedClassfile = CachedClassfiles.getClassfile(loader, internalClassName);
+
+      if (cachedClassfile != null) {
+         return new ClassReader(cachedClassfile);
       }
 
       try {
-         return readClass(className);
+         return readClass(internalClassName);
       }
       catch (IOException e) {
-         throw new RuntimeException("Failed to read class file for " + className, e);
+         throw new RuntimeException("Failed to read class file for " + internalClassName.replace('/', '.'), e);
       }
    }
 
-   public static ClassReader readClass(String className) throws IOException
+   public static ClassReader readClass(String classDesc) throws IOException
    {
-      String classDesc = internalClassName(className);
       InputStream classFile = readClassFromClasspath(classDesc);
-      verifyClassFileFound(classFile, className);
+
+      if (classFile == null) {
+         throw new NotFoundException(classDesc.replace('/', '.'));
+      }
+
       return new ClassReader(classFile);
    }
 
@@ -105,17 +133,23 @@ public final class ClassFile
       return inputStream;
    }
 
-   public static ClassReader readClass(Class<?> aClass) throws IOException
+   public static byte[] readClassfile(Class<?> aClass) throws IOException
    {
-      String classDesc = internalClassName(aClass.getName());
       ClassLoader classLoader = aClass.getClassLoader();
 
       if (classLoader == null) {
          classLoader = ClassFile.class.getClassLoader();
       }
 
+      String className = aClass.getName();
+      String classDesc = internalClassName(className);
       InputStream classFile = classLoader.getResourceAsStream(classDesc + ".class");
-      return new ClassReader(classFile);
+
+      if (classFile == null) {
+         throw new IOException("Class not found: " + className);
+      }
+
+      return new ClassReader(classFile).b;
    }
 
    public static void visitClass(String internalClassName, ClassVisitor visitor)
@@ -132,7 +166,6 @@ public final class ClassFile
       }
    }
 
-   private static final Map<String, ClassReader> CLASS_FILES = new ConcurrentHashMap<String, ClassReader>();
    private final ClassReader reader;
 
    public ClassFile(Class<?> aClass, boolean fromLastRedefinitionIfAny)
@@ -164,7 +197,12 @@ public final class ClassFile
          }
       }
 
-      reader = createClassFileReader(className);
+      try {
+         reader = readClass(classDesc);
+      }
+      catch (IOException e) {
+         throw new RuntimeException("Failed to read class file for " + className, e);
+      }
 
       if (fromLastRedefinitionIfAny) {
          CLASS_FILES.put(classDesc, reader);

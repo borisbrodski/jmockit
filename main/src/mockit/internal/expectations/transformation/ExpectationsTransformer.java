@@ -18,7 +18,6 @@ import mockit.internal.util.*;
 
 public final class ExpectationsTransformer implements ClassFileTransformer
 {
-   private final SuperClassAnalyser superClassAnalyser = new SuperClassAnalyser();
    private final List<String> baseSubclasses;
 
    public ExpectationsTransformer(Instrumentation instrumentation)
@@ -66,7 +65,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       for (Class<?> aClass : alreadyLoaded) {
          if (isFinalClass(aClass) && isExpectationsOrVerificationsSubclassFromUserCode(aClass)) {
             ClassReader cr = ClassFile.createClassFileReader(aClass);
-            EndOfBlockModifier modifier = new EndOfBlockModifier(cr, true);
+            EndOfBlockModifier modifier = new EndOfBlockModifier(cr, aClass.getClassLoader(), true);
 
             try {
                cr.accept(modifier, 0);
@@ -99,7 +98,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
          boolean isAnonymousClass = ClassNaming.isAnonymousClass(className);
 
          try {
-            EndOfBlockModifier modifier = new EndOfBlockModifier(cr, isAnonymousClass);
+            EndOfBlockModifier modifier = new EndOfBlockModifier(cr, loader, isAnonymousClass);
             cr.accept(modifier, 0);
             return modifier.toByteArray();
          }
@@ -112,14 +111,16 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 
    private final class EndOfBlockModifier extends ClassVisitor
    {
-      final boolean isAnonymousClass;
-      boolean isFinalClass;
-      MethodVisitor mw;
-      String classDesc;
+      private final ClassLoader loader;
+      private final boolean isAnonymousClass;
+      private boolean isFinalClass;
+      private MethodVisitor mw;
+      private String classDesc;
 
-      EndOfBlockModifier(ClassReader cr, boolean isAnonymousClass)
+      EndOfBlockModifier(ClassReader cr, ClassLoader loader, boolean isAnonymousClass)
       {
          super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS));
+         this.loader = loader;
          this.isAnonymousClass = isAnonymousClass;
       }
 
@@ -131,6 +132,8 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 
          if (isFinal(access) || isAnonymousClass) {
             isFinalClass = true;
+
+            SuperClassAnalyser superClassAnalyser = new SuperClassAnalyser(loader);
 
             if (superClassIsKnownInvocationsSubclass || superClassAnalyser.classExtendsInvocationsClass(superName)) {
                modifyTheClass = true;
@@ -164,7 +167,10 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 
    private final class SuperClassAnalyser extends ClassVisitor
    {
+      private final ClassLoader loader;
       private boolean classExtendsBaseSubclass;
+
+      private SuperClassAnalyser(ClassLoader loader) { this.loader = loader; }
 
       boolean classExtendsInvocationsClass(String classOfInterest)
       {
@@ -172,8 +178,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
             return false;
          }
 
-         String className = classOfInterest.replace('/', '.');
-         ClassReader cr = ClassFile.createClassFileReader(className);
+         ClassReader cr = ClassFile.createClassFileReader(loader, classOfInterest);
 
          try { cr.accept(this, ClassReader.SKIP_DEBUG); } catch (VisitInterruptedException ignore) {}
 

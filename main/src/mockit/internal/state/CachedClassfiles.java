@@ -26,16 +26,16 @@ public final class CachedClassfiles implements ClassFileTransformer
    public static final CachedClassfiles INSTANCE = new CachedClassfiles();
 
    private final Map<ClassLoader, Map<String, byte[]>> classLoadersAndClassfiles =
-      new HashMap<ClassLoader, Map<String, byte[]>>(2);
+      new IdentityHashMap<ClassLoader, Map<String, byte[]>>(2);
 
    private CachedClassfiles() {}
 
    public byte[] transform(
-      ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
+      ClassLoader loader, String classDesc, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
       byte[] classfileBuffer)
    {
-      if (classBeingRedefined == null && !isExcluded(className)) {
-         add(loader, className, classfileBuffer);
+      if (classBeingRedefined == null && !isExcluded(classDesc)) {
+         addClassfile(loader, classDesc, classfileBuffer);
       }
 
       return null;
@@ -51,11 +51,10 @@ public final class CachedClassfiles implements ClassFileTransformer
          classDesc.startsWith("mockit/") && classDesc.indexOf('$') < 0;
    }
 
-   private synchronized void add(ClassLoader loader, String classDesc, byte[] classfile)
+   private synchronized void addClassfile(ClassLoader loader, String classDesc, byte[] classfile)
    {
       Map<String, byte[]> classfiles = getClassfiles(loader);
-      String className = classDesc.replace('/', '.');
-      classfiles.put(className, classfile);
+      classfiles.put(classDesc, classfile);
    }
 
    private Map<String, byte[]> getClassfiles(ClassLoader loader)
@@ -70,16 +69,27 @@ public final class CachedClassfiles implements ClassFileTransformer
       return classfiles;
    }
 
-   private synchronized byte[] get(Class<?> aClass)
+   private synchronized byte[] findClassfile(Class<?> aClass)
    {
       Map<String, byte[]> classfiles = getClassfiles(aClass.getClassLoader());
-      return classfiles.get(aClass.getName());
+      return classfiles.get(aClass.getName().replace('.', '/'));
    }
 
-   public static byte[] getClassfile(Class<?> aClass) { return INSTANCE.get(aClass); }
+   private synchronized byte[] findClassfile(ClassLoader loader, String classDesc)
+   {
+      Map<String, byte[]> classfiles = getClassfiles(loader);
+      return classfiles.get(classDesc);
+   }
+
+   public static byte[] getClassfile(Class<?> aClass) { return INSTANCE.findClassfile(aClass); }
+
+   public static byte[] getClassfile(ClassLoader loader, String internalClassName)
+   {
+      return INSTANCE.findClassfile(loader, internalClassName);
+   }
 
    public static void addClassfile(Class<?> aClass, byte[] classfile)
    {
-      INSTANCE.add(aClass.getClassLoader(), aClass.getName(), classfile);
+      INSTANCE.addClassfile(aClass.getClassLoader(), aClass.getName().replace('.', '.'), classfile);
    }
 }

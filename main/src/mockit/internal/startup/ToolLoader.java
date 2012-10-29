@@ -24,7 +24,7 @@ final class ToolLoader extends ClassVisitor
       ClassReader cr;
 
       try {
-         cr = ClassFile.readClass(toolClassName);
+         cr = ClassFile.readClass(toolClassName.replace('.', '/'));
       }
       catch (IOException ignore) {
          System.out.println("JMockit: external tool class \"" + toolClassName + "\" not available in classpath");
