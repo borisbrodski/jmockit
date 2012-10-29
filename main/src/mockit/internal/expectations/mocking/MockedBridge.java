@@ -23,6 +23,8 @@ public final class MockedBridge extends MockingBridge
       try {
          Class.forName("mockit.Capturing");
          Class.forName("mockit.Delegate");
+         Class.forName("mockit.internal.util.ObjectMethods");
+         Class.forName("mockit.internal.expectations.RecordAndReplayExecution");
          Class.forName("mockit.internal.expectations.invocation.InvocationResults");
          Class.forName("mockit.internal.expectations.invocation.MockedTypeCascade");
          Class.forName("mockit.internal.expectations.mocking.BaseTypeRedefinition$MockedClass");

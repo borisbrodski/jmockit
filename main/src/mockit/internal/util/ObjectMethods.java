@@ -23,8 +23,8 @@ public final class ObjectMethods
          return objectIdentity(obj);
       }
       else if (
-         obj instanceof Comparable<?> && args.length == 1 &&
-         methodNameAndDesc.startsWith("compareTo(L") && methodNameAndDesc.endsWith(";)I")
+         args.length == 1 && methodNameAndDesc.startsWith("compareTo(L") && methodNameAndDesc.endsWith(";)I") &&
+         obj instanceof Comparable<?>
       ) {
          Object arg = args[0];
 

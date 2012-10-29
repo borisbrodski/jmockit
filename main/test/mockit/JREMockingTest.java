@@ -271,10 +271,7 @@ public final class JREMockingTest extends TestCase
 
    public void testMockingOfGetAnnotation() throws Exception
    {
-      new MockUp<Field>()
-      {
-         Field it;
-
+      new MockUp<Field>() {
          final Map<Object, Annotation> annotationsApplied = new HashMap<Object, Annotation>() {{
             put(AnEnum.First, anAnnotation("1"));
             put(AnEnum.Second, anAnnotation("2"));
@@ -288,9 +285,10 @@ public final class JREMockingTest extends TestCase
             };
          }
 
-         @Mock(reentrant = true)
-         <T extends Annotation> T getAnnotation(Class<T> annotation) throws IllegalAccessException
+         @Mock
+         <T extends Annotation> T getAnnotation(Invocation inv, Class<T> annotation) throws IllegalAccessException
          {
+            Field it = inv.getInvokedInstance();
             Object fieldValue = it.get(null);
             Annotation value = annotationsApplied.get(fieldValue);
 
@@ -327,5 +325,44 @@ public final class JREMockingTest extends TestCase
       catch (IllegalArgumentException e) {
          assertTrue(e.getMessage().contains("java.lang.Class"));
       }
+   }
+
+   // Mocking critical collection classes /////////////////////////////////////////////////////////////////////////////
+
+   @SuppressWarnings("CollectionDeclaredAsConcreteClass")
+   @Mocked final ArrayList<String> mockedArrayList = new ArrayList<String>();
+
+   public void testUseMockedArrayList()
+   {
+      assertTrue(mockedArrayList.add("test"));
+      assertEquals("test", mockedArrayList.get(0));
+
+      List<Object> l2 = new ArrayList<Object>();
+      assertTrue(l2.add("test"));
+      assertNotNull(l2.get(0));
+   }
+
+   public void testUseMockedHashMap()
+   {
+      new NonStrictExpectations() {
+         HashMap<String, Object> mockedHashMap;
+      };
+
+      Map<String, Object> m = new HashMap<String, Object>();
+      m.put("test", 123);
+      assertEquals(123, m.get("test"));
+      assertEquals(1, m.size());
+   }
+
+   public void testUseMockedHashSet()
+   {
+      new NonStrictExpectations() {
+         HashSet<String> mockedHashSet;
+      };
+
+      Set<String> s = new HashSet<String>();
+      assertFalse(s.add("test"));
+      assertFalse(s.contains("test"));
+      assertEquals(0, s.size());
    }
 }

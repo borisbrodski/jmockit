@@ -25,11 +25,13 @@ final class ExpectationsModifier extends MockedTypeModifier
       DEFAULT_FILTERS.put("java/lang/AbstractStringBuilder", "");
       DEFAULT_FILTERS.put("java/lang/StringBuilder", "");
       DEFAULT_FILTERS.put("java/lang/StringBuffer", "");
-      DEFAULT_FILTERS.put("java/lang/System", "arraycopy getProperties getSecurityManager");
+      DEFAULT_FILTERS.put("java/lang/System", "arraycopy getProperties getSecurityManager identityHashCode");
       DEFAULT_FILTERS.put("java/lang/Throwable", "<init> fillInStackTrace");
       DEFAULT_FILTERS.put("java/lang/Exception", "<init>");
       DEFAULT_FILTERS.put("java/lang/Thread", "currentThread isInterrupted");
       DEFAULT_FILTERS.put("java/util/Hashtable", "get");
+      DEFAULT_FILTERS.put("java/util/ArrayList", "");
+      DEFAULT_FILTERS.put("java/util/HashMap", "");
       DEFAULT_FILTERS.put("java/util/jar/JarEntry", "<init>");
    }
 
@@ -44,7 +46,7 @@ final class ExpectationsModifier extends MockedTypeModifier
 
    ExpectationsModifier(ClassLoader classLoader, ClassReader classReader, MockedType typeMetadata)
    {
-      super(classReader);
+      super(classReader, null);
 
       if (typeMetadata == null) {
          mockingCfg = null;
