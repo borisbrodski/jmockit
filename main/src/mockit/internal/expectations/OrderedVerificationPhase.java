@@ -193,7 +193,7 @@ public final class OrderedVerificationPhase extends BaseVerificationPhase
       }
 
       getCurrentExpectation();
-      InvocationHandler handler = new InvocationHandler(invocationHandler);
+      InvocationHandlerResult handler = new InvocationHandlerResult(invocationHandler);
       int i = expectationsInReplayOrder.indexOf(currentExpectation);
 
       while (i < expectationCount) {

@@ -85,7 +85,7 @@ final class UnorderedVerificationPhase extends BaseVerificationPhase
 
       validatePresenceOfExpectation(currentVerification);
 
-      InvocationHandler handler = new InvocationHandler(invocationHandler);
+      InvocationHandlerResult handler = new InvocationHandlerResult(invocationHandler);
       int matchedExpectations = 0;
 
       for (int i = 0, n = expectationsInReplayOrder.size(); i < n; i++) {

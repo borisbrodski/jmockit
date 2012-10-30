@@ -6,9 +6,9 @@ package mockit.internal.expectations.invocation;
 
 import mockit.internal.util.*;
 
-public final class InvocationHandler extends DynamicInvocationResult
+public final class InvocationHandlerResult extends DynamicInvocationResult
 {
-   public InvocationHandler(Object handler)
+   public InvocationHandlerResult(Object handler)
    {
       super(handler, MethodReflection.findNonPrivateHandlerMethod(handler));
    }

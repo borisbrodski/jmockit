@@ -138,7 +138,7 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
    }
 
    final boolean evaluateInvocationHandlerIfExpectationMatchesCurrent(
-      Expectation replayExpectation, Object[] replayArgs, InvocationHandler handler, int matchedInvocations)
+      Expectation replayExpectation, Object[] replayArgs, InvocationHandlerResult handler, int matchedInvocations)
    {
       if (matchesCurrentVerification(replayExpectation, replayArgs)) {
          InvocationConstraints constraints = currentVerification.constraints;
