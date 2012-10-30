@@ -10,7 +10,6 @@ import java.nio.*;
 import java.util.*;
 
 import mockit.internal.expectations.invocation.*;
-import mockit.internal.expectations.invocation.InvocationHandler;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
@@ -19,7 +18,7 @@ final class Expectation
    final RecordPhase recordPhase;
    final ExpectedInvocation invocation;
    final InvocationConstraints constraints;
-   private InvocationHandler handler;
+   private InvocationHandlerResult handler;
    private InvocationResults results;
    boolean executedRealImplementation;
 
@@ -30,7 +29,7 @@ final class Expectation
       constraints = new InvocationConstraints(nonStrict);
    }
 
-   void setHandler(Object handler) { this.handler = new InvocationHandler(handler); }
+   void setHandler(Object handler) { this.handler = new InvocationHandlerResult(handler); }
 
    private InvocationResults getResults()
    {
@@ -96,7 +95,7 @@ final class Expectation
 
    private Class<?> getReturnType()
    {
-      return TypeDescriptor.getReturnType(invocation.getMethodNameAndDescription());
+      return TypeDescriptor.getReturnType(invocation.getGenericSignature());
    }
 
    private void substituteCascadedMockToBeReturnedIfNeeded(Object valueToBeReturned)

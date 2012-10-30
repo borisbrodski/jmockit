@@ -56,6 +56,7 @@ public final class ExpectedInvocation
    public String getClassDesc() { return arguments.classDesc; }
    public String getClassName() { return arguments.getClassName(); }
    public String getMethodNameAndDescription() { return arguments.methodNameAndDesc; }
+   public String getGenericSignature() { return arguments.getGenericSignature(); }
    public Object[] getArgumentValues() { return arguments.getValues(); }
    public boolean isConstructor() { return arguments.isForConstructor(); }
 

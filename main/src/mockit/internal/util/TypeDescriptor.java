@@ -31,6 +31,13 @@ public final class TypeDescriptor
 
    public static Class<?> getReturnType(String mockDesc)
    {
+      int p = mockDesc.indexOf('<');
+
+      if (p > 0) {
+         //noinspection AssignmentToMethodParameter
+         mockDesc = mockDesc.substring(0, p) + ';';
+      }
+
       Type returnType = Type.getReturnType(mockDesc);
       return getClassForType(returnType);
    }
