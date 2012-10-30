@@ -5,14 +5,13 @@
 package mockit.internal.expectations.mocking;
 
 import java.lang.reflect.*;
-import java.util.ArrayList;
+import java.lang.reflect.Type;
 import java.util.*;
 
 import static java.util.Arrays.*;
 import static mockit.external.asm4.Opcodes.*;
 
 import mockit.external.asm4.*;
-import mockit.external.asm4.Type;
 import mockit.internal.*;
 import mockit.internal.filtering.*;
 import mockit.internal.util.*;
@@ -33,27 +32,28 @@ public final class SubclassGenerationModifier extends MockedTypeModifier
    private Set<String> superInterfaces;
    private final List<String> implementedMethods;
 
-   public SubclassGenerationModifier(Class<?> abstractClass, ClassReader classReader, String subclassName)
+   public SubclassGenerationModifier(Type mockedType, ClassReader classReader, String subclassName)
    {
-      this(null, abstractClass, classReader, subclassName);
+      this(null, mockedType, classReader, subclassName);
       copyConstructors = true;
    }
 
    SubclassGenerationModifier(
-      MockingConfiguration mockingConfiguration, Class<?> abstractClass, ClassReader classReader, String subclassName)
+      MockingConfiguration mockingConfiguration, Type mockedType, ClassReader classReader, String subclassName)
    {
-      super(classReader);
+      super(classReader, mockedType);
       mockingCfg = mockingConfiguration;
-      this.abstractClass = abstractClass;
+      abstractClass = Utilities.getClassType(mockedType);
       this.subclassName = subclassName.replace('.', '/');
       implementedMethods = new ArrayList<String>();
+      implementationSignature = 'L' + abstractClass.getName().replace('.', '/') + implementationSignature;
    }
 
    @Override
    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
       int subclassAccess = access & CLASS_ACCESS_MASK | ACC_FINAL;
-      super.visit(version, subclassAccess, subclassName, signature, name, null);
+      super.visit(version, subclassAccess, subclassName, implementationSignature, name, null);
       superClassOfSuperClass = superName;
       superInterfaces = new HashSet<String>(asList(interfaces));
    }
@@ -96,7 +96,7 @@ public final class SubclassGenerationModifier extends MockedTypeModifier
       mw.visitVarInsn(ALOAD, 0);
       int var = 1;
 
-      for (Type paramType : Type.getArgumentTypes(desc)) {
+      for (mockit.external.asm4.Type paramType : mockit.external.asm4.Type.getArgumentTypes(desc)) {
          int loadOpcode = getLoadOpcodeForParameterType(paramType.getSort());
          mw.visitVarInsn(loadOpcode, var);
          var++;
@@ -108,14 +108,14 @@ public final class SubclassGenerationModifier extends MockedTypeModifier
 
    private int getLoadOpcodeForParameterType(int paramType)
    {
-      if (paramType <= Type.INT) {
+      if (paramType <= mockit.external.asm4.Type.INT) {
          return ILOAD;
       }
 
       switch (paramType) {
-         case Type.FLOAT:  return FLOAD;
-         case Type.LONG:   return LLOAD;
-         case Type.DOUBLE: return DLOAD;
+         case mockit.external.asm4.Type.FLOAT:  return FLOAD;
+         case mockit.external.asm4.Type.LONG:   return LLOAD;
+         case mockit.external.asm4.Type.DOUBLE: return DLOAD;
          default: return ALOAD;
       }
    }
@@ -136,9 +136,14 @@ public final class SubclassGenerationModifier extends MockedTypeModifier
       }
    }
 
+   @SuppressWarnings("AssignmentToMethodParameter")
    private void generateMethodImplementation(
       String className, int access, String name, String desc, String signature, String[] exceptions)
    {
+      if (signature != null) {
+         signature = genericTypeMap.resolveReturnType(signature);
+      }
+
       mw = super.visitMethod(ACC_PUBLIC, name, desc, signature, exceptions);
 
       boolean noFiltersToMatch = mockingCfg == null;

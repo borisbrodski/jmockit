@@ -203,14 +203,15 @@ public final class TestedClassInstantiations
       TestedObjectCreation(Field testedField)
       {
          declaredClass = testedField.getType();
-         actualClass = isAbstract(declaredClass.getModifiers()) ? generateSubclass() : declaredClass;
+         actualClass =
+            isAbstract(declaredClass.getModifiers()) ? generateSubclass(testedField.getGenericType()) : declaredClass;
       }
 
-      private Class<?> generateSubclass()
+      private Class<?> generateSubclass(Type testedType)
       {
          ClassReader classReader = new ClassFile(declaredClass, false).getReader();
          String subclassName = GeneratedClasses.getNameForGeneratedClass(declaredClass);
-         ClassVisitor modifier = new SubclassGenerationModifier(declaredClass, classReader, subclassName);
+         ClassVisitor modifier = new SubclassGenerationModifier(testedType, classReader, subclassName);
          classReader.accept(modifier, 0);
          return new ImplementationClass().defineNewClass(declaredClass.getClassLoader(), modifier, subclassName);
       }

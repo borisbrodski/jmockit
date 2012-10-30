@@ -4,6 +4,8 @@
  */
 package mockit.internal;
 
+import java.lang.reflect.Type;
+
 import mockit.external.asm4.*;
 import mockit.internal.util.*;
 
@@ -12,20 +14,21 @@ import mockit.internal.util.*;
  */
 public class ImplementationClass<T>
 {
-   private final Class<T> mockedType;
+   private final Type mockedType;
    private byte[] generatedBytecode;
 
    public ImplementationClass() { mockedType = null; }
-   protected ImplementationClass(Class<T> mockedType) { this.mockedType = mockedType; }
+   protected ImplementationClass(Type mockedType) { this.mockedType = mockedType; }
 
    public final Class<T> generateNewMockImplementationClassForInterface()
    {
-      ClassReader interfaceReader = ClassFile.createClassFileReader(mockedType);
-      String mockClassName = GeneratedClasses.getNameForGeneratedClass(mockedType);
+      Class<?> mockedClass = Utilities.getClassType(mockedType);
+      ClassReader interfaceReader = ClassFile.createClassFileReader(mockedClass);
+      String mockClassName = GeneratedClasses.getNameForGeneratedClass(mockedClass);
       ClassVisitor modifier = createMethodBodyGenerator(interfaceReader, mockClassName);
       interfaceReader.accept(modifier, ClassReader.SKIP_DEBUG);
 
-      return defineNewClass(mockedType.getClassLoader(), modifier, mockClassName);
+      return defineNewClass(mockedClass.getClassLoader(), modifier, mockClassName);
    }
 
    protected ClassVisitor createMethodBodyGenerator(ClassReader typeReader, String className) { return null; }

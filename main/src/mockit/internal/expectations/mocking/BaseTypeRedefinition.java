@@ -37,7 +37,7 @@ abstract class BaseTypeRedefinition
    }
 
    private static final Map<Integer, MockedClass> mockedClasses = new HashMap<Integer, MockedClass>();
-   private static final Map<Class<?>, Class<?>> mockInterfaces = new HashMap<Class<?>, Class<?>>();
+   private static final Map<Type, Class<?>> mockInterfaces = new HashMap<Type, Class<?>>();
 
    Class<?> targetClass;
    MockedType typeMetadata;
@@ -52,23 +52,23 @@ abstract class BaseTypeRedefinition
          createMockedInterfaceImplementationAndInstanceFactory(typeToMock);
       }
       else {
-         redefineTargetClassAndCreateInstanceFactory();
+         redefineTargetClassAndCreateInstanceFactory(typeToMock);
       }
 
       TestRun.mockFixture().registerInstanceFactoryForMockedType(targetClass, instanceFactory);
       return instanceFactory;
    }
 
-   private void createMockedInterfaceImplementationAndInstanceFactory(Type typeToMock)
+   private void createMockedInterfaceImplementationAndInstanceFactory(Type interfaceToMock)
    {
-      Class<?> mockedInterface = interfaceToMock(typeToMock);
+      Class<?> mockedInterface = interfaceToMock(interfaceToMock);
 
       if (mockedInterface == null) {
-         createMockInterfaceImplementationUsingStandardProxy(typeToMock);
+         createMockInterfaceImplementationUsingStandardProxy(interfaceToMock);
          return;
       }
 
-      Class<?> mockClass = mockInterfaces.get(mockedInterface);
+      Class<?> mockClass = mockInterfaces.get(interfaceToMock);
 
       if (mockClass != null) {
          targetClass = mockClass;
@@ -76,10 +76,10 @@ abstract class BaseTypeRedefinition
          return;
       }
 
-      generateNewMockImplementationClassForInterface(mockedInterface);
+      generateNewMockImplementationClassForInterface(interfaceToMock);
       createNewMockInstanceFactoryForInterface();
 
-      mockInterfaces.put(mockedInterface, targetClass);
+      mockInterfaces.put(interfaceToMock, targetClass);
    }
 
    private Class<?> interfaceToMock(Type typeToMock)
@@ -114,14 +114,13 @@ abstract class BaseTypeRedefinition
       instanceFactory = new InterfaceInstanceFactory(mock);
    }
 
-   private void generateNewMockImplementationClassForInterface(Class<?> mockedInterface)
+   private void generateNewMockImplementationClassForInterface(final Type interfaceToMock)
    {
-      //noinspection unchecked
-      targetClass = new ImplementationClass(mockedInterface) {
+      targetClass = new ImplementationClass(interfaceToMock) {
          @Override
          protected ClassVisitor createMethodBodyGenerator(ClassReader typeReader, String className)
          {
-            return new InterfaceImplementationGenerator(typeReader, className);
+            return new InterfaceImplementationGenerator(typeReader, interfaceToMock, className);
          }
       }.generateNewMockImplementationClassForInterface();
    }
@@ -166,10 +165,10 @@ abstract class BaseTypeRedefinition
 
    private ClassReader createClassReader(Class<?> realClass)
    {
-      return new ClassFile(realClass, false).getReader();
+      return ClassFile.createClassFileReaderOrGetFromCache(realClass);
    }
 
-   private void redefineTargetClassAndCreateInstanceFactory()
+   private void redefineTargetClassAndCreateInstanceFactory(Type typeToMock)
    {
       Integer mockedClassId = redefineClassesFromCache();
 
@@ -183,7 +182,7 @@ abstract class BaseTypeRedefinition
       }
       else if (isAbstract(targetClass.getModifiers())) {
          redefineMethodsAndConstructorsInTargetType();
-         Class<?> subclass = generateConcreteSubclassForAbstractType();
+         Class<?> subclass = generateConcreteSubclassForAbstractType(typeToMock);
          instanceFactory = new ClassInstanceFactory(subclass);
       }
       else {
@@ -217,13 +216,13 @@ abstract class BaseTypeRedefinition
       mockedClasses.put(mockedClassId, mockedClass);
    }
 
-   private Class<?> generateConcreteSubclassForAbstractType()
+   private Class<?> generateConcreteSubclassForAbstractType(Type typeToMock)
    {
       String subclassName = getNameForConcreteSubclassToCreate();
 
       ClassReader classReader = createClassReader(targetClass);
       SubclassGenerationModifier modifier =
-         new SubclassGenerationModifier(typeMetadata.mockingCfg, targetClass, classReader, subclassName);
+         new SubclassGenerationModifier(typeMetadata.mockingCfg, typeToMock, classReader, subclassName);
       classReader.accept(modifier, 0);
 
       return new ImplementationClass().defineNewClass(targetClass.getClassLoader(), modifier, subclassName);

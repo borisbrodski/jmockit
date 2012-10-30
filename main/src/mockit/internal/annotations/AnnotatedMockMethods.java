@@ -9,6 +9,7 @@ import java.util.*;
 
 import mockit.internal.state.*;
 import mockit.internal.util.*;
+import mockit.internal.util.GenericTypeReflection.*;
 
 /**
  * A container for the mock methods "collected" from a mock class, separated in two sets: one with all the mock methods,
@@ -18,7 +19,7 @@ final class AnnotatedMockMethods
 {
    final Class<?> realClass;
    private final List<MockMethod> methods;
-   private final Map<String, String> typeParametersToTypeArguments;
+   private final GenericTypeReflection typeParametersToTypeArguments;
    private String mockClassInternalName;
    private boolean isInnerMockClass;
    private boolean withItField;
@@ -68,11 +69,10 @@ final class AnnotatedMockMethods
          }
 
          if (mockSignature == null) {
-            mockSignature = new GenericSignature(mockDescWithoutInvocationParameter);
+            mockSignature = typeParametersToTypeArguments.parseSignature(mockDescWithoutInvocationParameter);
          }
 
-         GenericSignature mockedSignature = new GenericSignature(signature);
-         return mockSignature.satisfiesGenericSignature(mockedSignature);
+         return mockSignature.satisfiesGenericSignature(signature);
       }
 
       boolean isForGenericMethod() { return mockSignature != null; }
@@ -108,161 +108,11 @@ final class AnnotatedMockMethods
       }
    }
 
-   private final class GenericSignature
-   {
-      private final List<String> parameters;
-
-      GenericSignature(String signature)
-      {
-         String semicolonSeparatedParameters = getSemiColonSeparatedParameters(signature);
-         int n = semicolonSeparatedParameters.length();
-         parameters = new ArrayList<String>(n);
-
-         for (int i = 0; i < n; i++) {
-            i = addNextParameter(semicolonSeparatedParameters, i);
-         }
-      }
-
-      private String getSemiColonSeparatedParameters(String signature)
-      {
-         int p = signature.indexOf('(');
-         int q = signature.indexOf(')');
-         return signature.substring(p + 1, q);
-      }
-
-      private int addNextParameter(String semicolonSeparatedParameters, int i)
-      {
-         char c = semicolonSeparatedParameters.charAt(i);
-         int j = i;
-         String parameter;
-
-         if (c == 'L' || c == 'T' || c == '[') {
-            do {
-               j++;
-               c = semicolonSeparatedParameters.charAt(j);
-            } while (c != ';' && c != '<');
-
-            parameter = semicolonSeparatedParameters.substring(i, j);
-
-            if (c == '<') {
-               j = advanceToNextParameter(semicolonSeparatedParameters, j);
-            }
-         }
-         else {
-            parameter = String.valueOf(c);
-         }
-
-         parameters.add(parameter);
-         return j;
-      }
-
-      private int advanceToNextParameter(String semicolonSeparatedParameters, int positionOfCurrentParameter)
-      {
-         int currentPos = positionOfCurrentParameter;
-         int angleBracketDepth = 1;
-
-         do {
-            currentPos++;
-            char c = semicolonSeparatedParameters.charAt(currentPos);
-            if (c == '>') angleBracketDepth--; else if (c == '<') angleBracketDepth++;
-         } while (angleBracketDepth > 0);
-
-         return currentPos + 1;
-      }
-
-      boolean satisfiesGenericSignature(GenericSignature otherSignature)
-      {
-         int n = parameters.size();
-
-         if (n != otherSignature.parameters.size()) {
-            return false;
-         }
-
-         for (int i = 0; i < n; i++) {
-            String p1 = otherSignature.parameters.get(i);
-            String p2 = parameters.get(i);
-
-            if (!areParametersOfSameType(p1, p2)) {
-               return false;
-            }
-         }
-
-         return true;
-      }
-
-      private boolean areParametersOfSameType(String param1, String param2)
-      {
-         if (param1.equals(param2)) return true;
-         if (param1.charAt(0) != 'T') return false;
-         if (typeParametersToTypeArguments == null) return true;
-         String typeArg1 = typeParametersToTypeArguments.get(param1);
-         return param2.equals(typeArg1);
-      }
-   }
-
    AnnotatedMockMethods(Class<?> realClass, ParameterizedType mockedType)
    {
       this.realClass = realClass;
       methods = new ArrayList<MockMethod>();
-      typeParametersToTypeArguments = new HashMap<String, String>();
-
-      if (mockedType != null) {
-         addMappingsFromTypeParametersToTypeArguments(realClass, mockedType);
-      }
-
-      addGenericTypeMappingsForSupertypes(realClass);
-   }
-
-   private void addGenericTypeMappingsForSupertypes(Class<?> realClass)
-   {
-      Type superType = realClass;
-
-      while (superType instanceof Class<?> && superType != Object.class) {
-         Class<?> superClass = (Class<?>) superType;
-         superType = superClass.getGenericSuperclass();
-
-         superType = addGenericTypeMappingsIfParameterized(superType);
-
-         for (Type implementedInterface : superClass.getGenericInterfaces()) {
-            addGenericTypeMappingsIfParameterized(implementedInterface);
-         }
-      }
-   }
-
-   private Type addGenericTypeMappingsIfParameterized(Type superType)
-   {
-      if (superType instanceof ParameterizedType) {
-         ParameterizedType mockedSuperType = (ParameterizedType) superType;
-         Type rawType = mockedSuperType.getRawType();
-         addMappingsFromTypeParametersToTypeArguments((Class<?>) rawType, mockedSuperType);
-         return rawType;
-      }
-
-      return superType;
-   }
-
-   private void addMappingsFromTypeParametersToTypeArguments(Class<?> mockedClass, ParameterizedType mockedType)
-   {
-      TypeVariable<?>[] typeParameters = mockedClass.getTypeParameters();
-      Type[] typeArguments = mockedType.getActualTypeArguments();
-      int n = typeParameters.length;
-
-      for (int i = 0; i < n; i++) {
-         Type typeArg = typeArguments[i];
-         String typeArgName = null;
-         String typeVarName = typeParameters[i].getName();
-
-         if (typeArg instanceof Class<?>) {
-            typeArgName = 'L' + ((Class<?>) typeArg).getName().replace('.', '/');
-         }
-         else if (typeArg instanceof TypeVariable<?>) {
-            String intermediateTypeArg = 'T' + ((TypeVariable<?>) typeArg).getName();
-            typeArgName = typeParametersToTypeArguments.get(intermediateTypeArg);
-         }
-
-         String mappedTypeArgName = typeArgName == null ? "Ljava/lang/Object" : typeArgName;
-         typeParametersToTypeArguments.put('T' + typeVarName, mappedTypeArgName);
-      }
+      typeParametersToTypeArguments = new GenericTypeReflection(realClass, mockedType);
    }
 
    MockMethod addMethod(boolean fromSuperClass, String name, String desc, boolean isStatic)
