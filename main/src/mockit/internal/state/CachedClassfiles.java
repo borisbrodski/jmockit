@@ -90,6 +90,6 @@ public final class CachedClassfiles implements ClassFileTransformer
 
    public static void addClassfile(Class<?> aClass, byte[] classfile)
    {
-      INSTANCE.addClassfile(aClass.getClassLoader(), aClass.getName().replace('.', '.'), classfile);
+      INSTANCE.addClassfile(aClass.getClassLoader(), aClass.getName().replace('.', '/'), classfile);
    }
 }
