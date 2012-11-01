@@ -16,18 +16,18 @@ import mockit.internal.state.*;
  * <p/>
  * This class is not supposed to be accessed from user code. JMockit will automatically load it at startup.
  */
-@MockClass(realClass = RunNotifier.class)
+@MockClass(realClass = RunNotifier.class, instantiation = Instantiation.PerMockSetup)
 public final class RunNotifierDecorator
 {
+   public RunNotifier it;
+
    @Mock(reentrant = true)
-   public static void fireTestRunFinished(Invocation invocation, Result result)
+   public void fireTestRunFinished(Result result)
    {
       TestRun.enterNoMockingZone();
 
       try {
          TestRunnerDecorator.cleanUpMocksFromPreviousTestClass();
-
-         RunNotifier it = invocation.getInvokedInstance();
          it.fireTestRunFinished(result);
       }
       finally {

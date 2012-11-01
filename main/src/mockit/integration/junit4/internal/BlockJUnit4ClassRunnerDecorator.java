@@ -18,7 +18,7 @@ import mockit.internal.state.*;
  * <p/>
  * This class is not supposed to be accessed from user code. JMockit will automatically load it at startup.
  */
-@MockClass(realClass = BlockJUnit4ClassRunner.class)
+@MockClass(realClass = BlockJUnit4ClassRunner.class, instantiation = Instantiation.PerMockSetup)
 public final class BlockJUnit4ClassRunnerDecorator
 {
    private static final Method createTest;
@@ -45,13 +45,14 @@ public final class BlockJUnit4ClassRunnerDecorator
       }
    }
 
+   public BlockJUnit4ClassRunner it;
+
    @Mock(reentrant = true)
-   public static Object createTest(Invocation invocation) throws Throwable
+   public Object createTest() throws Throwable
    {
       TestRun.enterNoMockingZone();
 
       try {
-         BlockJUnit4ClassRunner it = invocation.getInvokedInstance();
          TestClass junitTestClass = getTestClass == null ? it.getTestClass() : (TestClass) getTestClass.invoke(it);
          Class<?> newTestClass = junitTestClass.getJavaClass();
          Class<?> currentTestClass = TestRun.getCurrentTestClass();
