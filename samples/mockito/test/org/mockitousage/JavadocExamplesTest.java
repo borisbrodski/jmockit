@@ -15,7 +15,7 @@ import org.hamcrest.beans.*;
 
 /**
  * File created from code snippets in the official
- * <a href="http://mockito.googlecode.com/svn/tags/latest/javadoc/org/mockito/Mockito.html">Mockito documentation</a>,
+ * <a href="http://docs.mockito.googlecode.com/hg/latest/org/mockito/Mockito.html">Mockito documentation</a>,
  * with some minor changes.
  */
 @SuppressWarnings("unchecked")
@@ -256,6 +256,19 @@ public final class JavadocExamplesTest
       assertEquals("foo", mock.next());
    }
 
+   @Test // Uses of Mockito API: 3
+   public void stubbingConsecutiveCallsToReturnASequenceOfValues()
+   {
+      MockedClass mock = mock(MockedClass.class);
+
+      when(mock.someMethod("some arg")).thenReturn("one", "two", "three");
+
+      assertEquals("one", mock.someMethod("some arg"));
+      assertEquals("two", mock.someMethod("some arg"));
+      assertEquals("three", mock.someMethod("some arg"));
+      assertEquals("three", mock.someMethod("some arg"));
+   }
+
    @Test // Uses of Mockito API: 7
    public void stubbingWithCallbacks()
    {
@@ -289,6 +302,19 @@ public final class JavadocExamplesTest
       });
 
       assertEquals("Res=3", mock.someMethod("3"));
+   }
+
+   @Test // Uses of Mockito API: 2
+   public void stubbingVoidMethods()
+   {
+      doThrow(new RuntimeException()).when(mockedList).clear();
+
+      try {
+         // Following throws RuntimeException:
+         mockedList.clear();
+         fail();
+      }
+      catch (RuntimeException ignore) {}
    }
 
    @Test // Uses of Mockito API: 9
@@ -389,5 +415,67 @@ public final class JavadocExamplesTest
       ((Runnable) mock).run();
 
       ((Runnable) verify(mock)).run();
+   }
+
+   @Test
+   public void verificationIgnoringStubs()
+   {
+      MockedClass mock = mock(MockedClass.class);
+      MockedClass mockTwo = mock(MockedClass.class);
+
+      // Stubbings:
+      when(mock.getItem(1)).thenReturn("ignored");
+
+      // In tested code:
+      mock.doSomething("a", true);
+      mockTwo.someMethod("b");
+      mock.getItem(1);
+
+      // Verify invocations that were not stubbed:
+      verify(mock).doSomething("a", true);
+      verify(mockTwo).someMethod("b");
+
+      // Ignores all stubbed methods:
+      // This would fail: verifyNoMoreInteractions(mock, mockTwo);
+      verifyNoMoreInteractions(ignoreStubs(mock, mockTwo));
+   }
+
+   @Test
+   public void verificationInOrderIgnoringStubs()
+   {
+      MockedClass mock = mock(MockedClass.class);
+      MockedClass mockTwo = mock(MockedClass.class);
+
+      // Stubbings:
+      when(mock.getItem(1)).thenReturn("ignored");
+
+      // In tested code:
+      mock.doSomething("a", true);
+      mockTwo.someMethod("b");
+      mock.getItem(1);
+
+      // Creates InOrder that will ignore stubbed:
+      InOrder inOrder = inOrder(ignoreStubs(mock, mockTwo));
+      inOrder.verify(mock).doSomething("a", true);
+      inOrder.verify(mockTwo).someMethod("b");
+      inOrder.verifyNoMoreInteractions();
+   }
+
+   @Test // Uses of Mockito API: 5
+   public void nonGreedyVerificationInOrder()
+   {
+      MockedClass mock = mock(MockedClass.class);
+
+      mock.someMethod("some arg");
+      mock.someMethod("some arg");
+      mock.someMethod("some arg");
+      mock.doSomething("testing", true);
+      mock.someMethod("some arg");
+
+      InOrder inOrder = inOrder(mock);
+      // "times(2)" would require exactly two invocations, while
+      // "atLeast(2)" would also count the fourth invocation:
+      inOrder.verify(mock, calls(2)).someMethod("some arg");
+      inOrder.verify(mock).doSomething("testing", true);
    }
 }
