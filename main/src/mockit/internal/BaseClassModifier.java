@@ -45,6 +45,7 @@ public class BaseClassModifier extends ClassVisitor
    }
 
    protected MethodVisitor mw;
+   private ClassLoader classLoader;
    protected boolean useMockingBridge;
    protected String superClassName;
    protected Label startOfRealImplementation;
@@ -60,6 +61,7 @@ public class BaseClassModifier extends ClassVisitor
 
    protected final void setUseMockingBridge(ClassLoader classLoader)
    {
+      this.classLoader = classLoader;
       useMockingBridge = classLoader == null;
    }
 
@@ -170,10 +172,18 @@ public class BaseClassModifier extends ClassVisitor
    protected final void generateCodeToObtainInstanceOfMockingBridge(String mockingBridgeSubclassName)
    {
       mw.visitLdcInsn(mockingBridgeSubclassName);
-      mw.visitInsn(ICONST_1);
-      mw.visitMethodInsn(INVOKESTATIC, "java/lang/ClassLoader", "getSystemClassLoader", "()Ljava/lang/ClassLoader;");
-      mw.visitMethodInsn(
-         INVOKESTATIC, "java/lang/Class", "forName", "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
+
+      if (classLoader == null) {
+         mw.visitInsn(ICONST_1);
+         mw.visitMethodInsn(INVOKESTATIC, "java/lang/ClassLoader", "getSystemClassLoader", "()Ljava/lang/ClassLoader;");
+         mw.visitMethodInsn(
+            INVOKESTATIC, "java/lang/Class", "forName",
+            "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
+      }
+      else {
+         mw.visitMethodInsn(INVOKESTATIC, "java/lang/Class", "forName", "(Ljava/lang/String;)Ljava/lang/Class;");
+      }
+
       mw.visitLdcInsn("MB");
       mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getField", "(Ljava/lang/String;)Ljava/lang/reflect/Field;");
       mw.visitInsn(ACONST_NULL);
