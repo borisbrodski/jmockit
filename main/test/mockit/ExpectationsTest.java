@@ -445,4 +445,22 @@ public final class ExpectationsTest
          assertTrue(e.getMessage().contains(anotherURL.toString()));
       }
    }
+
+   @Test
+   public void recordExpectationInMethodOfExpectationBlockInsteadOfConstructor(@Mocked final Collaborator mock)
+   {
+      new Expectations() {
+         {
+            recordExpectation();
+         }
+
+         private void recordExpectation()
+         {
+            mock.getValue();
+            result = 123;
+         }
+      };
+
+      assertEquals(123, mock.getValue());
+   }
 }

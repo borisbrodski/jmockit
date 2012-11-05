@@ -156,12 +156,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
       {
          mw = super.visitMethod(access, name, desc, signature, exceptions);
-
-         if ("<init>".equals(name)) {
-            return new InvocationBlockModifier(mw, classDesc, isFinalClass);
-         }
-
-         return mw;
+         return new InvocationBlockModifier(mw, classDesc, isFinalClass && "<init>".equals(name));
       }
    }
 
