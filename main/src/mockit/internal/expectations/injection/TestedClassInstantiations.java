@@ -209,7 +209,7 @@ public final class TestedClassInstantiations
 
       private Class<?> generateSubclass(Type testedType)
       {
-         ClassReader classReader = new ClassFile(declaredClass, false).getReader();
+         ClassReader classReader = ClassFile.createClassFileReaderOrGetFromCache(declaredClass);
          String subclassName = GeneratedClasses.getNameForGeneratedClass(declaredClass);
          ClassVisitor modifier = new SubclassGenerationModifier(testedType, classReader, subclassName);
          classReader.accept(modifier, 0);
@@ -284,12 +284,10 @@ public final class TestedClassInstantiations
          private void findSatisfiedConstructorWithMostParameters(Constructor<?>[] constructors)
          {
             Arrays.sort(constructors, new Comparator<Constructor<?>>() {
-               static final int ACCESS = PUBLIC + PROTECTED + PRIVATE;
-
                public int compare(Constructor<?> c1, Constructor<?> c2)
                {
-                  int m1 = ACCESS & c1.getModifiers();
-                  int m2 = ACCESS & c2.getModifiers();
+                  int m1 = constructorModifiers(c1);
+                  int m2 = constructorModifiers(c2);
                   if (m1 == m2) return 0;
                   if (m1 == PUBLIC) return -1;
                   if (m2 == PUBLIC) return 1;
@@ -306,7 +304,7 @@ public final class TestedClassInstantiations
                if (
                   injectablesFound != null &&
                   (constructor == null ||
-                   c.getModifiers() == constructor.getModifiers() &&
+                   constructorModifiers(c) == constructorModifiers(constructor) &&
                    injectablesFound.size() >= injectablesForConstructor.size())
                ) {
                   injectablesForConstructor = injectablesFound;
@@ -314,6 +312,9 @@ public final class TestedClassInstantiations
                }
             }
          }
+
+         private static final int CONSTRUCTOR_ACCESS = PUBLIC + PROTECTED + PRIVATE;
+         private int constructorModifiers(Constructor<?> c) { return CONSTRUCTOR_ACCESS & c.getModifiers(); }
 
          private List<MockedType> findAvailableInjectablesForConstructor(Constructor<?> candidate)
          {
