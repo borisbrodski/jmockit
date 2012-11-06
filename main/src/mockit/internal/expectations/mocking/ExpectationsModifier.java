@@ -29,7 +29,7 @@ final class ExpectationsModifier extends MockedTypeModifier
       DEFAULT_FILTERS.put("java/lang/Throwable", "<init> fillInStackTrace");
       DEFAULT_FILTERS.put("java/lang/Exception", "<init>");
       DEFAULT_FILTERS.put("java/lang/Thread", "currentThread isInterrupted");
-      DEFAULT_FILTERS.put("java/util/Hashtable", "get");
+      DEFAULT_FILTERS.put("java/util/Hashtable", "get hash");
       DEFAULT_FILTERS.put("java/util/ArrayList", "");
       DEFAULT_FILTERS.put("java/util/HashMap", "");
       DEFAULT_FILTERS.put("java/util/jar/JarEntry", "<init>");
@@ -250,7 +250,7 @@ final class ExpectationsModifier extends MockedTypeModifier
       int access, String name, String desc, String genericSignature, String[] exceptions, String internalClassName,
       int executionMode)
    {
-      generateCodeToObtainInstanceOfMockingBridge(MockedBridge.class.getName());
+      generateCodeToObtainInstanceOfMockingBridge(MockedBridge.MB);
 
       // First and second "invoke" arguments:
       boolean isStatic = generateCodeToPassThisOrNullIfStaticMethod(access);

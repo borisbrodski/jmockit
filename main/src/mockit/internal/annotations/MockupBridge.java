@@ -11,8 +11,7 @@ import mockit.internal.state.*;
 
 public final class MockupBridge extends MockingBridge
 {
-   @SuppressWarnings("UnusedDeclaration")
-   public static final InvocationHandler MB = new MockupBridge();
+   public static final MockingBridge MB = new MockupBridge();
 
    public Object invoke(Object mocked, Method method, Object[] args) throws Throwable
    {

@@ -364,7 +364,7 @@ final class MockupsModifier extends BaseClassModifier
 
    private void generateCallToControlMethodThroughMockingBridge(boolean enteringMethod, int mockAccess)
    {
-      generateCodeToObtainInstanceOfMockingBridge(MockupBridge.class.getName());
+      generateCodeToObtainInstanceOfMockingBridge(MockupBridge.MB);
 
       // First and second "invoke" arguments:
       generateCodeToPassThisOrNullIfStaticMethod(mockAccess);
@@ -406,7 +406,7 @@ final class MockupsModifier extends BaseClassModifier
 
    private void generateCallToMockMethodThroughMockingBridge(boolean callingInstanceMethod, int access, String desc)
    {
-      generateCodeToObtainInstanceOfMockingBridge(MockMethodBridge.class.getName());
+      generateCodeToObtainInstanceOfMockingBridge(MockMethodBridge.MB);
 
       // First and second "invoke" arguments:
       boolean isStatic = generateCodeToPassThisOrNullIfStaticMethod(access);

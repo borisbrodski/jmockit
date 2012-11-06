@@ -45,7 +45,6 @@ public class BaseClassModifier extends ClassVisitor
    }
 
    protected MethodVisitor mw;
-   private ClassLoader classLoader;
    protected boolean useMockingBridge;
    protected String superClassName;
    protected Label startOfRealImplementation;
@@ -61,7 +60,6 @@ public class BaseClassModifier extends ClassVisitor
 
    protected final void setUseMockingBridge(ClassLoader classLoader)
    {
-      this.classLoader = classLoader;
       useMockingBridge = classLoader == null;
    }
 
@@ -169,25 +167,16 @@ public class BaseClassModifier extends ClassVisitor
       }
    }
 
-   protected final void generateCodeToObtainInstanceOfMockingBridge(String mockingBridgeSubclassName)
+   protected final void generateCodeToObtainInstanceOfMockingBridge(MockingBridge mockingBridge)
    {
-      mw.visitLdcInsn(mockingBridgeSubclassName);
+      String loggerName = "" + mockingBridge.hashCode();
 
-      if (classLoader == null) {
-         mw.visitInsn(ICONST_1);
-         mw.visitMethodInsn(INVOKESTATIC, "java/lang/ClassLoader", "getSystemClassLoader", "()Ljava/lang/ClassLoader;");
-         mw.visitMethodInsn(
-            INVOKESTATIC, "java/lang/Class", "forName",
-            "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
-      }
-      else {
-         mw.visitMethodInsn(INVOKESTATIC, "java/lang/Class", "forName", "(Ljava/lang/String;)Ljava/lang/Class;");
-      }
-
-      mw.visitLdcInsn("MB");
-      mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getField", "(Ljava/lang/String;)Ljava/lang/reflect/Field;");
-      mw.visitInsn(ACONST_NULL);
-      mw.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Field", "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
+      mw.visitMethodInsn(
+         INVOKESTATIC, "java/util/logging/LogManager", "getLogManager", "()Ljava/util/logging/LogManager;");
+      mw.visitLdcInsn(loggerName);
+      mw.visitMethodInsn(
+         INVOKEVIRTUAL, "java/util/logging/LogManager", "getLogger", "(Ljava/lang/String;)Ljava/util/logging/Logger;");
+      mw.visitMethodInsn(INVOKEVIRTUAL, "java/util/logging/Logger", "getFilter", "()Ljava/util/logging/Filter;");
    }
 
    protected final void generateCodeToFillArrayElement(int arrayIndex, Object value)

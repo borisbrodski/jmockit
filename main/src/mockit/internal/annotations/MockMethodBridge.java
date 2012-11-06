@@ -13,8 +13,7 @@ import mockit.internal.util.*;
 
 public final class MockMethodBridge extends MockingBridge
 {
-   @SuppressWarnings("UnusedDeclaration")
-   public static final InvocationHandler MB = new MockMethodBridge();
+   public static final MockingBridge MB = new MockMethodBridge();
 
    public Object invoke(Object mocked, Method method, Object[] args) throws Throwable
    {

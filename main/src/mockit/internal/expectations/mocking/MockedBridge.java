@@ -13,8 +13,7 @@ import mockit.internal.util.*;
 
 public final class MockedBridge extends MockingBridge
 {
-   @SuppressWarnings("UnusedDeclaration")
-   public static final InvocationHandler MB = new MockedBridge();
+   public static final MockingBridge MB = new MockedBridge();
 
    public static void preventEventualClassLoadingConflicts()
    {
