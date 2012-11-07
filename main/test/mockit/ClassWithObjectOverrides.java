@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -22,7 +22,7 @@ public final class ClassWithObjectOverrides implements Cloneable
    @Override
    public String toString() { return text.toString(); }
 
-   @SuppressWarnings({"FinalizeDeclaration"})
+   @SuppressWarnings("FinalizeDeclaration")
    @Override
    protected void finalize()
    {
@@ -39,4 +39,5 @@ public final class ClassWithObjectOverrides implements Cloneable
 
    int getIntValue() { return -1; }
    void doSomething() { throw new RuntimeException(); }
+   int doSomething(Object arg) { return arg.hashCode(); }
 }

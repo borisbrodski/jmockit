@@ -280,6 +280,8 @@ public final class RecordAndReplayExecution
    public static Object defaultReturnValue(
       Object mock, String classDesc, String nameAndDesc, String genericSignature, int executionMode, Object[] args)
    {
+      if (executionMode == 1) return Void.class;
+
       if (mock != null) {
          Object rv = ObjectMethods.evaluateOverride(mock, nameAndDesc, args);
 

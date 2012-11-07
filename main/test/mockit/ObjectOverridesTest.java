@@ -186,4 +186,33 @@ public final class ObjectOverridesTest
 
       a.doSomething();
    }
+
+   static class ClassWithEqualsOverride
+   {
+      private final int value;
+      ClassWithEqualsOverride(int value) { this.value = value; }
+      @Override public boolean equals(Object other) { return ((ClassWithEqualsOverride) other).value == value; }
+   }
+
+   @Test
+   public void mockClassWithEqualsOverrideWhoseInstanceGetsPassedInRecordedStrictExpectation()
+   {
+      final Object o1 = new ClassWithEqualsOverride(123);
+      Object o2 = new ClassWithEqualsOverride(123);
+
+      new Expectations(ClassWithEqualsOverride.class) {{ a.doSomething(o1); }};
+
+      a.doSomething(o2);
+   }
+
+   @Test
+   public void mockJREClassWithEqualsOverrideWhoseInstanceGetsPassedInRecordedStrictExpectation()
+   {
+      final Object o1 = new Date(123);
+      Object o2 = new Date(123);
+
+      new Expectations(Date.class) {{ a.doSomething(o1); }};
+
+      a.doSomething(o2);
+   }
 }

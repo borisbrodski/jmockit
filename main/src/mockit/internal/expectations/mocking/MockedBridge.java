@@ -15,28 +15,6 @@ public final class MockedBridge extends MockingBridge
 {
    public static final MockingBridge MB = new MockedBridge();
 
-   public static void preventEventualClassLoadingConflicts()
-   {
-      // Pre-load certain JMockit classes to avoid NoClassDefFoundError's or re-entrancy loops during class loading
-      // when certain JRE classes are mocked, such as ArrayList or Thread.
-      try {
-         Class.forName("mockit.Capturing");
-         Class.forName("mockit.Delegate");
-         Class.forName("mockit.internal.util.ObjectMethods");
-         Class.forName("mockit.internal.expectations.RecordAndReplayExecution");
-         Class.forName("mockit.internal.expectations.invocation.InvocationResults");
-         Class.forName("mockit.internal.expectations.invocation.MockedTypeCascade");
-         Class.forName("mockit.internal.expectations.mocking.BaseTypeRedefinition$MockedClass");
-         Class.forName("mockit.internal.expectations.mocking.SharedFieldTypeRedefinitions");
-         Class.forName("mockit.internal.expectations.mocking.TestedClasses");
-         Class.forName("mockit.internal.expectations.argumentMatching.EqualityMatcher");
-      }
-      catch (ClassNotFoundException ignore) {}
-
-      wasCalledDuringClassLoading();
-      DefaultValues.computeForReturnType("()J");
-   }
-
    public Object invoke(Object mocked, Method method, Object[] args) throws Throwable
    {
       String mockedClassDesc = (String) args[1];
@@ -67,24 +45,14 @@ public final class MockedBridge extends MockingBridge
       String genericSignature = (String) args[4];
 
       if (lockHeldByCurrentThread && executionMode == 0) {
-         return
-            RecordAndReplayExecution.defaultReturnValue(
-               mocked, mockedClassDesc, mockNameAndDesc, genericSignature, 1, mockArgs);
+         return RecordAndReplayExecution.defaultReturnValue(
+            mocked, mockedClassDesc, mockNameAndDesc, genericSignature, 1, mockArgs);
       }
 
-      TestRun.enterNoMockingZone();
+      int mockAccess = (Integer) args[0];
+      String exceptions = (String) args[5];
 
-      try {
-         int mockAccess = (Integer) args[0];
-         String exceptions = (String) args[5];
-
-         return
-            RecordAndReplayExecution.recordOrReplay(
-               mocked, mockAccess, mockedClassDesc, mockNameAndDesc, genericSignature, exceptions,
-               executionMode, mockArgs);
-      }
-      finally {
-         TestRun.exitNoMockingZone();
-      }
+      return RecordAndReplayExecution.recordOrReplay(
+         mocked, mockAccess, mockedClassDesc, mockNameAndDesc, genericSignature, exceptions, executionMode, mockArgs);
    }
 }
