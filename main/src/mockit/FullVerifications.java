@@ -110,7 +110,7 @@ public abstract class FullVerifications extends Verifications
     * If one or more mocked types/instances were specified in the constructor call for this verification block, then
     * only the associated invocations (if any) are removed.
     */
-   public final void unverifiedInvocations()
+   protected final void unverifiedInvocations()
    {
       verificationPhase.discardReplayedInvocations();
    }
