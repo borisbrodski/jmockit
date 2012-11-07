@@ -9,8 +9,8 @@ import java.io.*;
 import mockit.integration.junit3.internal.*;
 import mockit.integration.junit4.internal.*;
 import mockit.integration.testng.internal.*;
+import mockit.internal.*;
 import mockit.internal.annotations.*;
-import mockit.internal.expectations.mocking.*;
 import mockit.internal.util.*;
 
 final class JMockitInitialization
@@ -22,7 +22,7 @@ final class JMockitInitialization
 
    void initialize(boolean initializeTestNG)
    {
-      MockedBridge.preventEventualClassLoadingConflicts();
+      MockingBridge.preventEventualClassLoadingConflicts();
       loadInternalStartupMocksForJUnitIntegration();
 
       if (initializeTestNG) {
