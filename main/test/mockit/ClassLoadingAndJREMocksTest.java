@@ -106,7 +106,7 @@ public final class ClassLoadingAndJREMocksTest
             @Mock boolean exists(Invocation inv)
             {
                File it = inv.getInvokedInstance();
-               return "testFile".equals(it.getName()) || it.exists();
+               return "testFile".equals(it.getName());
             }
          };
       }};
