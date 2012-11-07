@@ -184,7 +184,7 @@
    <target name="createjar-main">
       <jar destfile="jmockit.jar">
          <fileset file="LICENSE.txt"/>
-         <fileset dir="main/src" includes="mockit/**/*.java **/attach/**/*.java"/>
+         <fileset dir="main/src" includes="mockit/**/*.java **/attach/**/*.java org/junit/**/*.java junit/*/*.java"/>
          <fileset
             dir="main/classes" includes="mockit/**/*.class **/attach/**/*.class org/junit/**/*.class junit/*/*.class"/>
          <manifest>
