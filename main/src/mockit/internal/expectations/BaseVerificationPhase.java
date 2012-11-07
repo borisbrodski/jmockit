@@ -315,4 +315,22 @@ public abstract class BaseVerificationPhase extends TestOnlyPhase
 
       return lastMatched.invocation.getArgumentValues()[parameterIndex];
    }
+
+   public final void discardReplayedInvocations()
+   {
+      if (mockedTypesAndInstancesToFullyVerify == null) {
+         expectationsInReplayOrder.clear();
+         invocationArgumentsInReplayOrder.clear();
+      }
+      else {
+         for (int i = expectationsInReplayOrder.size() - 1; i >= 0; i--) {
+            Expectation expectation = expectationsInReplayOrder.get(i);
+
+            if (isInvocationToBeVerified(expectation.invocation)) {
+               expectationsInReplayOrder.remove(i);
+               invocationArgumentsInReplayOrder.remove(i);
+            }
+         }
+      }
+   }
 }

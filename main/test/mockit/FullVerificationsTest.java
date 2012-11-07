@@ -7,6 +7,8 @@ package mockit;
 import org.junit.*;
 import org.junit.rules.*;
 
+import static org.junit.Assert.*;
+
 import mockit.internal.*;
 
 public final class FullVerificationsTest
@@ -423,5 +425,85 @@ public final class FullVerificationsTest
       mock.save();
 
       new FullVerifications() {};
+   }
+
+   @Test
+   public void replayThenDiscardAllUnverifiedInvocationsThenReplaySomeMore()
+   {
+      // First replay:
+      mock.prepare();
+      mock.setSomething(1);
+      mock.save();
+
+      // Now discard everything without any verification:
+      new FullVerifications() {{ unverifiedInvocations(); }};
+
+      // Replay some more:
+      mock.setSomething(2);
+      mock.save();
+
+      // Finally, verify the invocations in the second replay, with exact
+      // invocation counts relative to the second replay:
+      new FullVerifications() {{
+         mock.save(); times = 1;
+         mock.setSomething(anyInt); times = 1;
+      }};
+   }
+
+   @Test
+   public void replayThenDiscardSomeOfTheUnverifiedInvocationsThenReplaySomeMore()
+   {
+      // First replay:
+      mock.prepare();
+      mock.setSomething(1);
+      mock.save();
+
+      // Now verify some invocations while discarding the remaining ones:
+      new FullVerifications() {{
+         mock.prepare();
+         unverifiedInvocations();
+      }};
+
+      // Replay some more:
+      mock.editABunchMoreStuff();
+      mock.save();
+
+      // Finally, verify the invocations in the second replay, with exact
+      // invocation counts relative to the second replay:
+      try {
+         new FullVerifications() {{
+            mock.prepare(); times = 0;
+            mock.save(); maxTimes = 1;
+         }};
+         fail();
+      }
+      catch (UnexpectedInvocation e) {
+         assertTrue(e.getMessage().contains("editABunchMoreStuff()"));
+      }
+   }
+
+   @Test
+   public void replayThenDiscardAllUnverifiedInvocationsThenReplaySomeMoreForSpecificInstance(final Dependency mock2)
+   {
+      // First replay:
+      mock2.prepare();
+      mock.setSomething(1);
+      mock2.setSomething(2);
+      mock.save();
+
+      // Now discard all invocations on one of two mocked instances:
+      new FullVerifications(mock) {{ unverifiedInvocations(); }};
+
+      // Replay some more:
+      mock.setSomething(3);
+      mock2.setSomething(4);
+
+      // Finally, verify the invocations in the second replay, with exact
+      // invocation counts relative to the second replay:
+      new FullVerifications() {{
+         mock.setSomething(3); times = 1;
+         mock2.prepare();
+         mock2.setSomething(anyInt); times = 2;
+      }};
    }
 }
