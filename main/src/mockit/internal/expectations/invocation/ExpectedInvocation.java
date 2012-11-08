@@ -56,9 +56,19 @@ public final class ExpectedInvocation
    public String getClassDesc() { return arguments.classDesc; }
    public String getClassName() { return arguments.getClassName(); }
    public String getMethodNameAndDescription() { return arguments.methodNameAndDesc; }
-   public String getGenericSignature() { return arguments.getGenericSignature(); }
    public Object[] getArgumentValues() { return arguments.getValues(); }
    public boolean isConstructor() { return arguments.isForConstructor(); }
+
+   public String getSignatureWithResolvedReturnType()
+   {
+      String signature = arguments.genericSignature;
+
+      if (signature != null && signature.charAt(signature.indexOf(')') + 1) != 'T') {
+         return signature;
+      }
+
+      return arguments.methodNameAndDesc;
+   }
 
    // Matching based on instance or mocked type ///////////////////////////////////////////////////////////////////////
 

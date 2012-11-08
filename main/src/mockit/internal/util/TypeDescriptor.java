@@ -31,13 +31,6 @@ public final class TypeDescriptor
 
    public static Class<?> getReturnType(String methodDesc)
    {
-      int p = methodDesc.indexOf('<');
-
-      if (p > 0) {
-         //noinspection AssignmentToMethodParameter
-         methodDesc = methodDesc.substring(0, p) + ';';
-      }
-
       Type returnType = Type.getReturnType(methodDesc);
       return getClassForType(returnType);
    }
@@ -50,7 +43,21 @@ public final class TypeDescriptor
          return PRIMITIVE_TYPES[sort];
       }
 
-      String className = sort == Type.ARRAY ? type.getDescriptor().replace('/', '.') : type.getClassName();
+      String className;
+
+      if (sort == Type.ARRAY) {
+         className = type.getDescriptor().replace('/', '.');
+      }
+      else {
+         className = type.getClassName();
+
+         int p = className.indexOf('<');
+
+         if (p > 0) {
+            className = className.substring(0, p);
+         }
+      }
+
       return ClassLoad.loadClass(className);
    }
 }
