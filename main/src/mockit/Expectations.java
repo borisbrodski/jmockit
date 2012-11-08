@@ -102,6 +102,7 @@ public abstract class Expectations extends Invocations
     * One such conversion is from an array to a collection or iterator.
     * Another is from an array of at least two dimensions to a map, with the first dimension providing the keys and the
     * second the values.
+    * Yet another conversion is from a single value to a container type holding that value.
     * <p/>
     * Additionally, if the value assigned to the field is an array or is of a type assignable to {@link Iterable} or
     * {@link Iterator}, and the return type is single-valued, then the assigned multi-valued result is taken as a

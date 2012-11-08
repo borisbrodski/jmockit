@@ -4,6 +4,7 @@
  */
 package mockit;
 
+import java.math.*;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -55,6 +56,15 @@ public final class ExpectationsWithValuesToReturnTest
       ListIterator<?> getListIterator() { return null; }
       Iterator<?> getIterator() { return null; }
       Iterable<?> getIterable() { return null; }
+
+      Collection<Number> getNumbers() { return null; }
+      List<Number> getNumberList() { return null; }
+      Set<String> getStringSet() { return null; }
+      SortedSet<Number> getSortedNumberSet() { return null; }
+      Iterator<String> getStringIterator() { return null; }
+      ListIterator<Float> getFloatIterator() { return null; }
+      Iterable<Number> getNumberIterable() { return null; }
+      Queue<Number> getNumberQueue() { return null; }
 
       int[] getIntArray() { return null; }
       int[][] getInt2Array() { return null; }
@@ -682,5 +692,57 @@ public final class ExpectationsWithValuesToReturnTest
       assertSame(firstResult, mock.getListItems());
       assertSame(secondResult, mock.getListItems());
       assertSame(thirdResult, mock.getListItems());
+   }
+
+   @Test
+   public void createAppropriateContainerFromSingleRecordedValueOfTheElementType(final Collaborator mock)
+   {
+      final Double d = 1.2;
+      final Float f = 3.45F;
+      final BigDecimal price = new BigDecimal("123.45");
+
+      new NonStrictExpectations() {{
+         mock.getNumbers(); result = 123;
+         mock.getNumberList(); result = 45L;
+         mock.getStringSet(); result = "test";
+         mock.getSortedNumberSet(); result = d;
+         mock.getNumberIterable(); result = price;
+         mock.getNumberQueue(); result = d;
+         mock.getStringIterator(); result = "Abc";
+         mock.getFloatIterator(); result = f;
+      }};
+
+      assertContainerWithSingleElement(mock.getNumbers(), 123);
+      assertContainerWithSingleElement(mock.getNumberList(), 45L);
+      assertContainerWithSingleElement(mock.getStringSet(), "test");
+      assertContainerWithSingleElement(mock.getSortedNumberSet(), d);
+      assertContainerWithSingleElement(mock.getNumberIterable(), price);
+      assertContainerWithSingleElement(mock.getNumberQueue(), d);
+      assertContainerWithSingleElement(mock.getStringIterator(), "Abc");
+      assertContainerWithSingleElement(mock.getFloatIterator(), f);
+   }
+
+   void assertContainerWithSingleElement(Iterable<?> container, Object expectedElement)
+   {
+      assertContainerWithSingleElement(container.iterator(), expectedElement);
+   }
+
+   void assertContainerWithSingleElement(Iterator<?> container, Object expectedElement)
+   {
+      assertTrue(container.hasNext());
+      assertSame(expectedElement, container.next());
+      assertFalse(container.hasNext());
+   }
+
+   @Test
+   public void createArrayFromSingleRecordedValueOfTheElementType(final Collaborator mock)
+   {
+      new NonStrictExpectations() {{
+         mock.getIntArray(); result = 123;
+         mock.getStringArray(); result = "test";
+      }};
+
+      assertArrayEquals(new int[] {123}, mock.getIntArray());
+      assertArrayEquals(new String[] {"test"}, mock.getStringArray());
    }
 }

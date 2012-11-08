@@ -28,9 +28,23 @@ public final class InvocationResults
 
    public void addReturnValue(Object value)
    {
-      InvocationResult result =
-         value instanceof Delegate ? new DelegatedResult((Delegate<?>) value) : new ReturnValueResult(value);
+      if (value instanceof Delegate) {
+         addDelegatedResult((Delegate<?>) value);
+      }
+      else {
+         addReturnValueResult(value);
+      }
+   }
 
+   public void addDelegatedResult(Delegate<?> delegate)
+   {
+      InvocationResult result = new DelegatedResult(delegate);
+      addResult(result);
+   }
+
+   public void addReturnValueResult(Object value)
+   {
+      InvocationResult result = new ReturnValueResult(value);
       addResult(result);
    }
 

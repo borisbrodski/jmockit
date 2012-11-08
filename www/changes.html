@@ -24,6 +24,11 @@
 <p>Release <a href="http://code.google.com/p/jmockit/source/list">0.999.19</a> (Nov 19, 2012):</p>
 <ul>
    <li>
+      <strong>Enhancement</strong>: Added support for automatic conversions when a single value is assigned to the
+      <code>result</code> field, but the return type of the recorded method is an array, collection, or iterator.
+      In these cases, a suitable container object is created with that single value.
+   </li>
+   <li>
       <strong>Enhancement</strong>: Added an <strong><code>unverifiedInvocations()</code></strong> method to
       <code class="type">FullVerifications</code>, to allow a test to discard unverified invocations occuring in an
       early preparation phase, while allowing later invocations to be verified as needed.
