@@ -12,9 +12,9 @@ public final class TypeDescriptor
       void.class, boolean.class, char.class, byte.class, short.class, int.class, float.class, long.class, double.class
    };
 
-   public static Class<?>[] getParameterTypes(String mockDesc)
+   public static Class<?>[] getParameterTypes(String methodDesc)
    {
-      Type[] paramTypes = Type.getArgumentTypes(mockDesc);
+      Type[] paramTypes = Type.getArgumentTypes(methodDesc);
 
       if (paramTypes.length == 0) {
          return ParameterReflection.NO_PARAMETERS;
@@ -29,16 +29,16 @@ public final class TypeDescriptor
       return paramClasses;
    }
 
-   public static Class<?> getReturnType(String mockDesc)
+   public static Class<?> getReturnType(String methodDesc)
    {
-      int p = mockDesc.indexOf('<');
+      int p = methodDesc.indexOf('<');
 
       if (p > 0) {
          //noinspection AssignmentToMethodParameter
-         mockDesc = mockDesc.substring(0, p) + ';';
+         methodDesc = methodDesc.substring(0, p) + ';';
       }
 
-      Type returnType = Type.getReturnType(mockDesc);
+      Type returnType = Type.getReturnType(methodDesc);
       return getClassForType(returnType);
    }
 
