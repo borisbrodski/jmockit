@@ -31,16 +31,17 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       baseSubclasses.add("mockit/FullVerificationsInOrder");
 
       Class<?>[] alreadyLoaded = instrumentation.getInitiatedClasses(getClass().getClassLoader());
-      findOtherBaseSubclasses(alreadyLoaded);
+      findAndModifyOtherBaseSubclasses(alreadyLoaded);
       modifyFinalSubclasses(alreadyLoaded);
    }
 
-   private void findOtherBaseSubclasses(Class<?>[] alreadyLoaded)
+   private void findAndModifyOtherBaseSubclasses(Class<?>[] alreadyLoaded)
    {
       for (Class<?> aClass : alreadyLoaded) {
          if (!isFinalClass(aClass) && isExpectationsOrVerificationsSubclassFromUserCode(aClass)) {
             String classInternalName = Type.getInternalName(aClass);
             baseSubclasses.add(classInternalName);
+            modifyInvocationsSubclass(aClass, false);
          }
       }
    }
@@ -64,20 +65,25 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    {
       for (Class<?> aClass : alreadyLoaded) {
          if (isFinalClass(aClass) && isExpectationsOrVerificationsSubclassFromUserCode(aClass)) {
-            ClassReader cr = ClassFile.createClassFileReader(aClass);
-            EndOfBlockModifier modifier = new EndOfBlockModifier(cr, aClass.getClassLoader(), true);
-
-            try {
-               cr.accept(modifier, 0);
-            }
-            catch (VisitInterruptedException ignore) {
-               continue;
-            }
-
-            byte[] modifiedClassfile = modifier.toByteArray();
-            Startup.redefineMethods(aClass, modifiedClassfile);
+            modifyInvocationsSubclass(aClass, true);
          }
       }
+   }
+
+   private void modifyInvocationsSubclass(Class<?> aClass, boolean isFinalClass)
+   {
+      ClassReader cr = ClassFile.createClassFileReader(aClass);
+      EndOfBlockModifier modifier = new EndOfBlockModifier(cr, aClass.getClassLoader(), isFinalClass);
+
+      try {
+         cr.accept(modifier, 0);
+      }
+      catch (VisitInterruptedException ignore) {
+         return;
+      }
+
+      byte[] modifiedClassfile = modifier.toByteArray();
+      Startup.redefineMethods(aClass, modifiedClassfile);
    }
 
    public byte[] transform(
@@ -112,31 +118,37 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    private final class EndOfBlockModifier extends ClassVisitor
    {
       private final ClassLoader loader;
-      private final boolean isAnonymousClass;
       private boolean isFinalClass;
       private MethodVisitor mw;
       private String classDesc;
 
-      EndOfBlockModifier(ClassReader cr, ClassLoader loader, boolean isAnonymousClass)
+      EndOfBlockModifier(ClassReader cr, ClassLoader loader, boolean isFinalClass)
       {
          super(new ClassWriter(cr, ClassWriter.COMPUTE_MAXS));
          this.loader = loader;
-         this.isAnonymousClass = isAnonymousClass;
+         this.isFinalClass = isFinalClass;
       }
 
       @Override
       public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
       {
+         if (isFinal(access)) {
+            isFinalClass = true;
+         }
+
          boolean superClassIsKnownInvocationsSubclass = baseSubclasses.contains(superName);
          boolean modifyTheClass = false;
 
-         if (isFinal(access) || isAnonymousClass) {
-            isFinalClass = true;
-
-            SuperClassAnalyser superClassAnalyser = new SuperClassAnalyser(loader);
-
-            if (superClassIsKnownInvocationsSubclass || superClassAnalyser.classExtendsInvocationsClass(superName)) {
+         if (isFinalClass) {
+            if (superClassIsKnownInvocationsSubclass) {
                modifyTheClass = true;
+            }
+            else {
+               SuperClassAnalyser superClassAnalyser = new SuperClassAnalyser(loader);
+
+               if (superClassAnalyser.classExtendsInvocationsClass(superName)) {
+                  modifyTheClass = true;
+               }
             }
          }
          else if (superClassIsKnownInvocationsSubclass) {
