@@ -2099,7 +2099,7 @@ public final class MultiMocksTest<strong>&lt;MultiMock extends Dependency & Runn
 
       // Mocked:
       assertFalse(collaborator.simpleOperation(1, "", null));
-      Collaborator.doSomething(true, null);
+      Collaborator.doSomething(true, "test");
 
       // Not mocked:
       assertEquals(2, collaborator.getValue());
