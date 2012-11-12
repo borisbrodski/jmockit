@@ -140,14 +140,13 @@
         <module name="MultiCore" />
         <module name="OrderMngmntWebapp" />
         <module name="Powermock" />
-        <module name="samples" />
         <module name="TimingFramework" />
         <module name="tourdemock" />
         <module name="Tutorial" />
         <module name="Unitils" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.5">
+    <bytecodeTargetLevel>
       <module name="AnimatedTransitions" target="1.6" />
       <module name="Coverage" target="1.5" />
       <module name="EasyMock" target="1.6" />
@@ -195,6 +194,7 @@
     <option name="DEPRECATION" value="false" />
   </component>
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://E:/issues-others/issue248" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/coverage" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/hibernate3emul" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/incremental" charset="UTF-8" />
@@ -943,6 +943,16 @@
     <option name="USE_PROJECT_PROFILE" value="true" />
     <version value="1.0" />
   </component>
+  <component name="IssueNavigationConfiguration">
+    <option name="links">
+      <list>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\(fixes issue (\d+)\)" />
+          <option name="linkRegexp" value="http://code.google.com/p/jmockit/issues/detail?id=$1" />
+        </IssueNavigationLink>
+      </list>
+    </option>
+  </component>
   <component name="JavacSettings">
     <option name="GENERATE_NO_WARNINGS" value="true" />
     <option name="DEPRECATION" value="false" />
@@ -1129,6 +1139,7 @@
           </value>
         </option>
         <option name="USE_SINGLE_CLASS_IMPORTS" value="false" />
+        <option name="INSERT_INNER_CLASS_IMPORTS" value="true" />
         <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="1" />
         <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="1" />
         <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
@@ -1190,6 +1201,206 @@
             <option name="CONTINUATION_INDENT_SIZE" value="3" />
             <option name="TAB_SIZE" value="6" />
           </indentOptions>
+          <arrangement>
+            <groups>
+              <group>
+                <type>GETTERS_AND_SETTERS</type>
+                <order>KEEP</order>
+              </group>
+            </groups>
+            <rules>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PUBLIC</MODIFIER>
+                    <MODIFIER>STATIC</MODIFIER>
+                    <MODIFIER>FINAL</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PROTECTED</MODIFIER>
+                    <MODIFIER>STATIC</MODIFIER>
+                    <MODIFIER>FINAL</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PACKAGE_PRIVATE</MODIFIER>
+                    <MODIFIER>STATIC</MODIFIER>
+                    <MODIFIER>FINAL</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PRIVATE</MODIFIER>
+                    <MODIFIER>STATIC</MODIFIER>
+                    <MODIFIER>FINAL</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PUBLIC</MODIFIER>
+                    <MODIFIER>STATIC</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PROTECTED</MODIFIER>
+                    <MODIFIER>STATIC</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PACKAGE_PRIVATE</MODIFIER>
+                    <MODIFIER>STATIC</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PRIVATE</MODIFIER>
+                    <MODIFIER>STATIC</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PUBLIC</MODIFIER>
+                    <MODIFIER>FINAL</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PROTECTED</MODIFIER>
+                    <MODIFIER>FINAL</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PACKAGE_PRIVATE</MODIFIER>
+                    <MODIFIER>FINAL</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PRIVATE</MODIFIER>
+                    <MODIFIER>FINAL</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PUBLIC</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PROTECTED</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PACKAGE_PRIVATE</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>FIELD</TYPE>
+                    <MODIFIER>PRIVATE</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <TYPE>FIELD</TYPE>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <TYPE>CONSTRUCTOR</TYPE>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>METHOD</TYPE>
+                    <MODIFIER>STATIC</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <TYPE>METHOD</TYPE>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <TYPE>ENUM</TYPE>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <TYPE>INTERFACE</TYPE>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <AND>
+                    <TYPE>CLASS</TYPE>
+                    <MODIFIER>STATIC</MODIFIER>
+                  </AND>
+                </match>
+              </rule>
+              <rule>
+                <match>
+                  <TYPE>CLASS</TYPE>
+                </match>
+              </rule>
+            </rules>
+          </arrangement>
         </codeStyleSettings>
         <codeStyleSettings language="XML">
           <indentOptions>
@@ -1479,6 +1690,7 @@
         <w>varargs</w>
       </words>
     </dictionary>
+    <dictionary name="Rogerio_Liesenfeld" />
   </component>
   <component name="ProjectModuleManager">
     <modules>
@@ -1591,7 +1803,7 @@
     <configuration default="false" name="@Tested" type="JUnit" factoryName="JUnit">
       <module name="Main" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.6.0_34" />
       <option name="PACKAGE_NAME" />
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
@@ -1912,7 +2124,13 @@
       </option>
       <envs />
       <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
@@ -2190,7 +2408,6 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
-    <mapping directory="$PROJECT_DIR$/samples" vcs="svn" />
   </component>
   <component name="com.sixrr.metrics.MetricsReloaded">
     <option name="selectedProfile" value="Lines of code metrics" />
@@ -2238,19 +2455,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://E:/.m2/repository/com/beust/jcommander/1.27/jcommander-1.27-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.googlecode.jmockit:jmockit:0.999.17">
-      <CLASSES>
-        <root url="jar://E:/.m2/repository/com/googlecode/jmockit/jmockit/0.999.17/jmockit-0.999.17.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/main/pom-javadoc.jar!/" />
-        <root url="jar://E:/.m2/repository/com/googlecode/jmockit/jmockit/0.999.17/jmockit-0.999.17-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/main/pom-sources.jar!/" />
-        <root url="jar://E:/.m2/repository/com/googlecode/jmockit/jmockit/0.999.17/jmockit-0.999.17-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: commons-collections:commons-collections:3.2">
