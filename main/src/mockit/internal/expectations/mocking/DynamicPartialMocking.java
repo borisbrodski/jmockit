@@ -101,7 +101,7 @@ public final class DynamicPartialMocking
 
    private void redefineClass(Class<?> realClass, boolean methodsOnly)
    {
-      ClassReader classReader = new ClassFile(realClass, false).getReader();
+      ClassReader classReader = ClassFile.createReaderOrGetFromCache(realClass);
 
       ExpectationsModifier modifier = new ExpectationsModifier(realClass.getClassLoader(), classReader, null);
       modifier.useDynamicMocking(methodsOnly);

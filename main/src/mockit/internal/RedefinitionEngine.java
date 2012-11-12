@@ -77,7 +77,7 @@ public final class RedefinitionEngine
    {
       if (!GeneratedClasses.isGeneratedImplementationClass(aClass)) {
          realClass = aClass;
-         byte[] realClassFile = new ClassFile(aClass, false).getBytecode();
+         byte[] realClassFile = ClassFile.createReaderOrGetFromCache(aClass).b;
          redefineMethods(realClassFile);
       }
    }

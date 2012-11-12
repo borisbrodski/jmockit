@@ -53,16 +53,15 @@ public abstract class CaptureOfImplementations implements Runnable
    private void redefineClass(Class<?> realClass, String baseTypeDesc)
    {
       if (!TestRun.mockFixture().containsRedefinedClass(realClass)) {
-         ClassFile classFile;
+         ClassReader classReader;
 
          try {
-            classFile = new ClassFile(realClass, false);
+            classReader = ClassFile.createReaderOrGetFromCache(realClass);
          }
          catch (ClassFile.NotFoundException ignore) {
             return;
          }
 
-         ClassReader classReader = classFile.getReader();
          ClassVisitor modifier = createModifier(realClass.getClassLoader(), classReader, baseTypeDesc);
          classReader.accept(modifier, 0);
          byte[] modifiedClass = modifier.toByteArray();

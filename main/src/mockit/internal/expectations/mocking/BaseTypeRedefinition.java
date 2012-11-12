@@ -165,7 +165,7 @@ abstract class BaseTypeRedefinition
 
    private ClassReader createClassReader(Class<?> realClass)
    {
-      return ClassFile.createClassFileReaderOrGetFromCache(realClass);
+      return ClassFile.createReaderOrGetFromCache(realClass);
    }
 
    private void redefineTargetClassAndCreateInstanceFactory(Type typeToMock)

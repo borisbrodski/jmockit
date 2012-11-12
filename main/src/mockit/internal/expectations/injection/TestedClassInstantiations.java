@@ -209,7 +209,7 @@ public final class TestedClassInstantiations
 
       private Class<?> generateSubclass(Type testedType)
       {
-         ClassReader classReader = ClassFile.createClassFileReaderOrGetFromCache(declaredClass);
+         ClassReader classReader = ClassFile.createReaderOrGetFromCache(declaredClass);
          String subclassName = GeneratedClasses.getNameForGeneratedClass(declaredClass);
          ClassVisitor modifier = new SubclassGenerationModifier(testedType, classReader, subclassName);
          classReader.accept(modifier, 0);

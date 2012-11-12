@@ -182,7 +182,7 @@ public final class MockClassSetup
          throw new IllegalArgumentException("Not a modifiable class: " + realClass.getName());
       }
 
-      return new ClassFile(realClass, true).getReader();
+      return ClassFile.createReaderFromLastRedefinitionIfAny(realClass);
    }
 
    private void applyClassModifications(byte[] modifiedClassFile)

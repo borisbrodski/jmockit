@@ -41,7 +41,7 @@ public final class ClassStubbing
          throw new IllegalArgumentException("Not a modifiable class: " + realClass.getName());
       }
 
-      ClassReader rcReader = new ClassFile(realClass, true).getReader();
+      ClassReader rcReader = ClassFile.createReaderFromLastRedefinitionIfAny(realClass);
       ClassVisitor rcWriter = new StubOutModifier(rcReader, stubbingConfiguration);
       rcReader.accept(rcWriter, 0);
       byte[] modifiedClassFile = rcWriter.toByteArray();
