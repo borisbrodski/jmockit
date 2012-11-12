@@ -9,6 +9,7 @@ import java.lang.instrument.*;
 
 import mockit.internal.expectations.transformation.*;
 import mockit.internal.state.*;
+import mockit.internal.util.*;
 
 /**
  * This is the "agent class" that initializes the JMockit "Java agent". It is not intended for use in client code.
@@ -22,6 +23,7 @@ public final class Startup
    static final String javaSpecVersion = System.getProperty("java.specification.version");
    static final boolean jdk6OrLater =
       "1.6".equals(javaSpecVersion) || "1.7".equals(javaSpecVersion) || "1.8".equals(javaSpecVersion);
+   private static final String CUSTOM_CLASS_LOADER_PROPERTY = "jmockit-customCL";
 
    private static Instrumentation instrumentation;
    private static boolean initializedOnDemand;
@@ -57,18 +59,53 @@ public final class Startup
       initialize(true, inst);
    }
 
+   private static void initialize(boolean initializeTestNG, Instrumentation inst) throws IOException
+   {
+      if (instrumentation == null) {
+         instrumentation = inst;
+         new JMockitInitialization().initialize(initializeTestNG);
+         inst.addTransformer(CachedClassfiles.INSTANCE);
+         inst.addTransformer(new ExpectationsTransformer(inst));
+      }
+   }
+
    @SuppressWarnings("UnusedDeclaration")
    public static void agentmain(String agentArgs, Instrumentation inst) throws Exception
    {
       initialize(false, inst);
+
+      ClassLoader customCL = (ClassLoader) System.getProperties().remove(CUSTOM_CLASS_LOADER_PROPERTY);
+
+      if (customCL != null) {
+         reinitializeJMockitUnderCustomClassLoader(customCL);
+      }
    }
 
-   private static void initialize(boolean initializeTestNG, Instrumentation inst) throws IOException
+   private static void reinitializeJMockitUnderCustomClassLoader(ClassLoader customLoader)
    {
-      instrumentation = inst;
-      new JMockitInitialization().initialize(initializeTestNG);
-      inst.addTransformer(CachedClassfiles.INSTANCE);
-      inst.addTransformer(new ExpectationsTransformer(inst));
+      Class<?> initializationClass;
+
+      try {
+         initializationClass = customLoader.loadClass(Startup.class.getName());
+      }
+      catch (ClassNotFoundException ignore) {
+         return;
+      }
+
+      System.out.println("JMockit: Reinitializing under custom class loader " + customLoader);
+      FieldReflection.setField(initializationClass, null, "instrumentation", instrumentation);
+      MethodReflection.invoke(initializationClass, (Object) null, "reinitialize");
+   }
+
+   @SuppressWarnings("UnusedDeclaration")
+   private static void reinitialize()
+   {
+      try {
+         new JMockitInitialization().initialize(false);
+      }
+      catch (IOException e) {
+         throw new RuntimeException(e);
+      }
    }
 
    public static Instrumentation instrumentation()
@@ -109,8 +146,28 @@ public final class Startup
 
    public static void initializeIfPossible()
    {
-      if (jdk6OrLater) {
-         initializeIfNeeded();
+      if (instrumentation == null) {
+         ClassLoader currentCL = Startup.class.getClassLoader();
+         ClassLoader systemCL = ClassLoader.getSystemClassLoader();
+
+         if (currentCL != systemCL) { // custom CL detected
+            try {
+               Class<?> initializedClass = systemCL.loadClass(Startup.class.getName());
+               instrumentation = FieldReflection.getField(initializedClass, "instrumentation", null);
+            }
+            catch (ClassNotFoundException ignore) {}
+
+            if (instrumentation != null) {
+               reinitialize();
+               return;
+            }
+
+            System.getProperties().put(CUSTOM_CLASS_LOADER_PROPERTY, currentCL);
+         }
+
+         if (jdk6OrLater) {
+            initializeIfNeeded();
+         }
       }
    }
 
@@ -121,6 +178,8 @@ public final class Startup
 
    public static void redefineMethods(ClassDefinition... classDefs)
    {
+      CachedClassfiles.INSTANCE.setEnabled(false);
+
       try {
          instrumentation().redefineClasses(classDefs);
       }
@@ -130,6 +189,9 @@ public final class Startup
       }
       catch (UnmodifiableClassException e) {
          throw new RuntimeException(e);
+      }
+      finally {
+         CachedClassfiles.INSTANCE.setEnabled(true);
       }
    }
 }

@@ -10,7 +10,6 @@ import java.util.*;
 
 import static java.lang.reflect.Modifier.*;
 
-import mockit.*;
 import mockit.external.asm4.*;
 import mockit.internal.*;
 import mockit.internal.startup.*;
@@ -30,7 +29,7 @@ public final class ExpectationsTransformer implements ClassFileTransformer
       baseSubclasses.add("mockit/VerificationsInOrder");
       baseSubclasses.add("mockit/FullVerificationsInOrder");
 
-      Class<?>[] alreadyLoaded = instrumentation.getInitiatedClasses(getClass().getClassLoader());
+      Class<?>[] alreadyLoaded = instrumentation.getAllLoadedClasses();
       findAndModifyOtherBaseSubclasses(alreadyLoaded);
       modifyFinalSubclasses(alreadyLoaded);
    }
@@ -38,7 +37,10 @@ public final class ExpectationsTransformer implements ClassFileTransformer
    private void findAndModifyOtherBaseSubclasses(Class<?>[] alreadyLoaded)
    {
       for (Class<?> aClass : alreadyLoaded) {
-         if (!isFinalClass(aClass) && isExpectationsOrVerificationsSubclassFromUserCode(aClass)) {
+         if (
+            aClass.getClassLoader() != null && !isFinalClass(aClass) &&
+            isExpectationsOrVerificationsSubclassFromUserCode(aClass)
+         ) {
             String classInternalName = Type.getInternalName(aClass);
             baseSubclasses.add(classInternalName);
             modifyInvocationsSubclass(aClass, false);
@@ -53,18 +55,38 @@ public final class ExpectationsTransformer implements ClassFileTransformer
 
    private boolean isExpectationsOrVerificationsSubclassFromUserCode(Class<?> aClass)
    {
+      if (isExpectationsOrVerificationsAPIClass(aClass)) {
+         return false;
+      }
+
+      Class<?> superclass = aClass.getSuperclass();
+
+      while (superclass != null && superclass != Object.class && superclass.getClassLoader() != null) {
+         if (isExpectationsOrVerificationsAPIClass(superclass)) {
+            return true;
+         }
+
+         superclass = superclass.getSuperclass();
+      }
+
+      return false;
+   }
+
+   private boolean isExpectationsOrVerificationsAPIClass(Class<?> aClass)
+   {
       return
-         aClass != Expectations.class && aClass != NonStrictExpectations.class &&
-         Expectations.class.isAssignableFrom(aClass) ||
-         aClass != Verifications.class && aClass != FullVerifications.class &&
-         aClass != VerificationsInOrder.class && aClass != FullVerificationsInOrder.class &&
-         Verifications.class.isAssignableFrom(aClass);
+         ("mockit.Expectations mockit.NonStrictExpectations " +
+          "mockit.Verifications mockit.FullVerifications " +
+          "mockit.VerificationsInOrder mockit.FullVerificationsInOrder").contains(aClass.getName());
    }
 
    private void modifyFinalSubclasses(Class<?>[] alreadyLoaded)
    {
       for (Class<?> aClass : alreadyLoaded) {
-         if (isFinalClass(aClass) && isExpectationsOrVerificationsSubclassFromUserCode(aClass)) {
+         if (
+            aClass.getClassLoader() != null && isFinalClass(aClass) &&
+            isExpectationsOrVerificationsSubclassFromUserCode(aClass)
+         ) {
             modifyInvocationsSubclass(aClass, true);
          }
       }

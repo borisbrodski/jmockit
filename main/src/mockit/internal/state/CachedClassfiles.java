@@ -28,14 +28,22 @@ public final class CachedClassfiles implements ClassFileTransformer
    private final Map<ClassLoader, Map<String, byte[]>> classLoadersAndClassfiles =
       new IdentityHashMap<ClassLoader, Map<String, byte[]>>(2);
 
+   private boolean enabled = true;
+   public void setEnabled(boolean enabled) { this.enabled = enabled; }
+
    private CachedClassfiles() {}
 
    public byte[] transform(
       ClassLoader loader, String classDesc, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
       byte[] classfileBuffer)
    {
-      if (classBeingRedefined == null && !isExcluded(classDesc)) {
-         addClassfile(loader, classDesc, classfileBuffer);
+      if (enabled && !isExcluded(classDesc)) {
+         if (classBeingRedefined == null) { // class definition
+            addClassfile(loader, classDesc, classfileBuffer);
+         }
+         else { // class redefinition
+            addClassfileIfNotYetPresent(loader, classDesc, classfileBuffer);
+         }
       }
 
       return null;
@@ -67,6 +75,15 @@ public final class CachedClassfiles implements ClassFileTransformer
       }
 
       return classfiles;
+   }
+
+   private synchronized void addClassfileIfNotYetPresent(ClassLoader loader, String classDesc, byte[] classfile)
+   {
+      Map<String, byte[]> classfiles = getClassfiles(loader);
+
+      if (!classfiles.containsKey(classDesc)) {
+         classfiles.put(classDesc, classfile);
+      }
    }
 
    private synchronized byte[] findClassfile(Class<?> aClass)

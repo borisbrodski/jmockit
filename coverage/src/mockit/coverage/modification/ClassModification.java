@@ -43,7 +43,7 @@ public final class ClassModification
 
       if (modifiedClassfile != null) {
          redefineClassForCoverage(loadedClass, modifiedClassfile);
-         registerClassAsModifiedForCoverage(loadedClass.getName(), modifiedClassfile);
+         modifiedClasses.add(loadedClass.getName());
       }
    }
 
@@ -108,16 +108,6 @@ public final class ClassModification
          classSelection.isSelected(className, protectionDomain);
    }
 
-   private void registerClassAsModifiedForCoverage(String className, byte[] modifiedClassfile)
-   {
-      modifiedClasses.add(className);
-
-      if (!Startup.isStandalone()) {
-         //noinspection UnnecessaryFullyQualifiedName
-         mockit.internal.state.TestRun.mockFixture().addFixedClass(className, modifiedClassfile);
-      }
-   }
-
    public byte[] modifyClass(String className, ProtectionDomain protectionDomain, byte[] originalClassfile)
    {
       boolean modifyClassForCoverage = isToBeConsideredForCoverage(className, protectionDomain);
@@ -125,7 +115,7 @@ public final class ClassModification
       if (modifyClassForCoverage) {
          try {
             byte[] modifiedClassfile = modifyClassForCoverage(className, originalClassfile);
-            registerClassAsModifiedForCoverage(className, modifiedClassfile);
+            modifiedClasses.add(className);
             return modifiedClassfile;
          }
          catch (VisitInterruptedException ignore) {
