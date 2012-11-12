@@ -187,7 +187,6 @@ public final class JREMockingTest extends TestCase
       }};
    }
 
-   // TODO: this test sometimes hangs the test runner
    public void testDynamicMockingOfThread()
    {
       final Thread d = new Thread((Runnable) null);

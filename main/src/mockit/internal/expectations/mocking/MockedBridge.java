@@ -52,7 +52,15 @@ public final class MockedBridge extends MockingBridge
       int mockAccess = (Integer) args[0];
       String exceptions = (String) args[5];
 
-      return RecordAndReplayExecution.recordOrReplay(
-         mocked, mockAccess, mockedClassDesc, mockNameAndDesc, genericSignature, exceptions, executionMode, mockArgs);
+      TestRun.enterNoMockingZone();
+
+      try {
+         return RecordAndReplayExecution.recordOrReplay(
+            mocked, mockAccess, mockedClassDesc, mockNameAndDesc, genericSignature, exceptions,
+            executionMode, mockArgs);
+      }
+      finally {
+         TestRun.exitNoMockingZone();
+      }
    }
 }
