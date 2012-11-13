@@ -24,6 +24,12 @@
 <p>Release <a href="http://code.google.com/p/jmockit/source/list">0.999.19</a> (Nov 19, 2012):</p>
 <ul>
    <li>
+      <strong>Enhancement</strong>: Added support for test execution in the presence of custom class loaders, such
+      as Maven's <code class="type">IsolatedClassLoader</code> (which gets used when certain Surefire configuration
+      parameters such as "<code>&lt;useSystemClassLoader>false&lt;/useSystemClassLoader></code>" are specified).
+      Fixes issue <a href="http://code.google.com/p/jmockit/issues/detail?id=247">247</a>.
+   </li>
+   <li>
       <strong>Enhancement</strong>: Added support for automatic conversions when a single value is assigned to the
       <code>result</code> field, but the return type of the recorded method is an array, collection, or iterator.
       In these cases, a suitable container object is created with that single value.
