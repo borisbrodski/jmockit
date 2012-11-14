@@ -26,7 +26,7 @@ public final class CurrencyConversionTest
    @After
    public void resetSUT()
    {
-      CurrencyConversion_testable.allCurrenciesCache = null;
+      CurrencyConversion.allCurrenciesCache = null;
    }
 
    @Test

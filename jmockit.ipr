@@ -194,8 +194,6 @@
     <option name="DEPRECATION" value="false" />
   </component>
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
-    <file url="file://E:/issues-others/issue237-user" charset="UTF-8" />
-    <file url="file://E:/issues-others/issue248" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/coverage" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/hibernate3emul" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/incremental" charset="UTF-8" />
