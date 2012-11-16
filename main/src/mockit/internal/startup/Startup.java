@@ -178,7 +178,7 @@ public final class Startup
 
    public static void redefineMethods(ClassDefinition... classDefs)
    {
-      CachedClassfiles.INSTANCE.setEnabled(false);
+      CachedClassfiles.INSTANCE.setClassesBeingMocked(classDefs);
 
       try {
          instrumentation().redefineClasses(classDefs);
@@ -191,7 +191,7 @@ public final class Startup
          throw new RuntimeException(e);
       }
       finally {
-         CachedClassfiles.INSTANCE.setEnabled(true);
+         CachedClassfiles.INSTANCE.setClassesBeingMocked(null);
       }
    }
 }

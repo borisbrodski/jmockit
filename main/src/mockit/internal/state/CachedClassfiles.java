@@ -28,8 +28,8 @@ public final class CachedClassfiles implements ClassFileTransformer
    private final Map<ClassLoader, Map<String, byte[]>> classLoadersAndClassfiles =
       new IdentityHashMap<ClassLoader, Map<String, byte[]>>(2);
 
-   private boolean enabled = true;
-   public void setEnabled(boolean enabled) { this.enabled = enabled; }
+   private ClassDefinition[] classesBeingMocked;
+   public void setClassesBeingMocked(ClassDefinition[] classDefs) { classesBeingMocked = classDefs; }
 
    private CachedClassfiles() {}
 
@@ -37,13 +37,13 @@ public final class CachedClassfiles implements ClassFileTransformer
       ClassLoader loader, String classDesc, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
       byte[] classfileBuffer)
    {
-      if (enabled && !isExcluded(classDesc)) {
-         if (classBeingRedefined == null) { // class definition
+      if (classBeingRedefined == null) { // class definition
+         if (!isExcluded(classDesc)) {
             addClassfile(loader, classDesc, classfileBuffer);
          }
-         else { // class redefinition
-            addClassfileIfNotYetPresent(loader, classDesc, classfileBuffer);
-         }
+      }
+      else if (!isBeingMocked(classBeingRedefined) && !isExcluded(classDesc)) { // class redefinition
+         addClassfileIfNotYetPresent(loader, classDesc, classfileBuffer);
       }
 
       return null;
@@ -57,6 +57,19 @@ public final class CachedClassfiles implements ClassFileTransformer
          classDesc.startsWith("mockit/internal/") || classDesc.startsWith("mockit/integration/") ||
          classDesc.startsWith("mockit/coverage/") ||
          classDesc.startsWith("mockit/") && classDesc.indexOf('$') < 0;
+   }
+
+   private boolean isBeingMocked(Class<?> classBeingRedefined)
+   {
+      if (classesBeingMocked != null) {
+         for (ClassDefinition classDef : classesBeingMocked) {
+            if (classDef.getDefinitionClass() == classBeingRedefined) {
+               return true;
+            }
+         }
+      }
+
+      return false;
    }
 
    private synchronized void addClassfile(ClassLoader loader, String classDesc, byte[] classfile)
