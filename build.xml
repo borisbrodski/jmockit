@@ -1,5 +1,5 @@
 <project name="jmockit" basedir="." default="fullRebuild">
-   <property name="JUNIT_JAR" value="lib/junit-dep-4.10.jar"/>
+   <property name="JUNIT_JAR" value="lib/junit-dep-4.11.jar"/>
    <property name="TESTNG_JAR" value="lib/testng-6.8.jar"/>
    <taskdef resource="testngtasks" classpath="${TESTNG_JAR}"/>
 

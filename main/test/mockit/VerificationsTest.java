@@ -287,6 +287,7 @@ public final class VerificationsTest
    @Test
    public void verifyWithValidationMethod()
    {
+      thrown.handleAssertionErrors();
       thrown.expect(AssertionError.class);
       thrown.expectMessage("not empty");
 
@@ -303,6 +304,7 @@ public final class VerificationsTest
    @Test
    public void verifyWithValidationMethodWhichReturnsBoolean()
    {
+      thrown.handleAssertionErrors();
       thrown.expect(AssertionError.class);
       thrown.expectMessage("\"isEmpty\" failed");
       thrown.expectMessage("with arguments: \"test\"");

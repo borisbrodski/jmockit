@@ -5,7 +5,9 @@
 package integrationTests;
 
 import org.junit.*;
+import org.junit.runners.*;
 
+@FixMethodOrder(MethodSorters.JVM)
 public final class BooleanExpressionsTest extends CoverageTest
 {
    BooleanExpressions tested;
