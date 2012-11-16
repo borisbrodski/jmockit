@@ -2085,7 +2085,7 @@
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="-ea -Djmockit-coverage-output=html -Djmockit-coverage-metrics=data" />
+      <option name="VM_PARAMETERS" value="-ea -Djmockit-coverage-output=html -Djmockit-coverage-metrics=line" />
       <option name="PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
       <option name="ENV_VARIABLES" />
@@ -2566,17 +2566,6 @@
         <root url="jar://E:/.m2/repository/junit/junit-dep/4.10/junit-dep-4.10-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: junit:junit-dep:4.4">
-      <CLASSES>
-        <root url="jar://E:/.m2/repository/junit/junit-dep/4.4/junit-dep-4.4.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://E:/.m2/repository/junit/junit-dep/4.4/junit-dep-4.4-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://E:/.m2/repository/junit/junit-dep/4.4/junit-dep-4.4-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: junit:junit:4.10">
       <CLASSES>
         <root url="jar://E:/.m2/repository/junit/junit/4.10/junit-4.10.jar!/" />
@@ -2718,17 +2707,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://E:/.m2/repository/org/jmock/jmock/2.5.1/jmock-2.5.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.mockito:mockito-all:1.9.0">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.9.0/mockito-all-1.9.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.9.0/mockito-all-1.9.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-all/1.9.0/mockito-all-1.9.0-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.mockito:mockito-all:1.9.5">
