@@ -1,47 +1,51 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.transitions.effects;
 
+import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.transitions.*;
+
 import org.junit.*;
+import static org.junit.Assert.*;
 
 import mockit.*;
 
-import org.jdesktop.animation.timing.*;
-import org.jdesktop.animation.timing.interpolation.*;
-import org.jdesktop.animation.transitions.*;
-
 public final class FadeInTest
 {
+   @Tested FadeIn fadeIn;
+   @Injectable ComponentState endState;
    @Mocked Animator animator;
 
    @Test
-   public void testInit(ComponentState end, @Mocked("init") final Effect effect)
+   public void createsWithGivenEndState()
    {
-      final FadeIn fadeIn = new FadeIn(end);
-
-      new Expectations(PropertySetter.class)
-      {
-         {
-            animator.addTarget(new PropertySetter(fadeIn, "opacity", 0.0f, 1.0f));
-            effect.init(animator, null);
-         }
-      };
-
-      fadeIn.init(animator, null);
+      assertSame(endState, fadeIn.getEnd());
    }
 
    @Test
-   public void testCleanup()
+   public void addsTransparentAnimationTargetOnInit(@Mocked final Effect mockedBase)
    {
-      new Expectations()
-      {
-         {
-            animator.removeTarget(null);
-         }
-      };
+      Deencapsulation.setField(fadeIn, 1.0f);
 
-      new FadeIn().cleanup(animator);
+      fadeIn.init(animator, null);
+
+      new Verifications() {{
+         animator.addTarget((TimingTarget) withNotNull());
+         mockedBase.init(animator, null);
+      }};
+
+      float initialOpacity = Deencapsulation.getField(fadeIn, float.class);
+      assertEquals(0.0f, initialOpacity, 0);
+   }
+
+   @Test
+   public void removesAnimationTargetOnCleanup(@Mocked Effect mockedBase)
+   {
+      fadeIn.init(animator, null);
+      fadeIn.cleanup(animator);
+
+      new Verifications() {{ animator.removeTarget((TimingTarget) withNotNull()); }};
    }
 }

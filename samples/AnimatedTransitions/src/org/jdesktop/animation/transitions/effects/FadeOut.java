@@ -40,17 +40,14 @@ import org.jdesktop.animation.transitions.*;
  *
  * @author Chet Haase
  */
-public class FadeOut extends Fade
+public final class FadeOut extends Fade
 {
    private PropertySetter<Float> ps;
-
-   public FadeOut() {}
 
    /**
     * Creates a new instance of FadeOut with the given start state.
     *
-    * @param start The <code>ComponentState</code> at the beginning of the transition; this is what
-    *              we are fading from.
+    * @param start The <code>ComponentState</code> at the beginning of the transition; this is what we are fading from.
     */
    public FadeOut(ComponentState start)
    {
@@ -64,9 +61,9 @@ public class FadeOut extends Fade
    @Override
    public void init(Animator animator, Effect parentEffect)
    {
-      ps = new PropertySetter(this, "opacity", 1f, 0f);
+      ps = new PropertySetter<Float>(this, "opacity", 1.0f, 0.0f);
       animator.addTarget(ps);
-      setOpacity(1f);
+      setOpacity(1.0f);
       super.init(animator, null);
    }
 

@@ -102,6 +102,42 @@
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
     <addNotNullAssertions enabled="false" />
+    <excludeFromCompile>
+      <directory url="file://$PROJECT_DIR$/samples/unitils/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/unitils/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/fakingXmocking/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/fakingXmocking/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/coverage/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/coverage/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/AnimatedTransitions/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/AnimatedTransitions/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/easymock/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/easymock/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/hibernate3emul/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/hibernate3emul/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/LoginService/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/LoginService/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/orderMngmntWebapp/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/orderMngmntWebapp/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/multicore/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/multicore/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/tutorial/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/tutorial/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/mockito/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/mockito/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/tourdemock/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/tourdemock/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/TimingFramework/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/TimingFramework/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/incremental/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/incremental/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/main/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/main/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/powermock/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/powermock/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/jmock/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/samples/jmock/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
+    </excludeFromCompile>
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />

@@ -44,7 +44,7 @@ import org.jdesktop.animation.transitions.Effect;
  *
  * @author Chet Haase
  */
-public class Rotate extends Effect
+public final class Rotate extends Effect
 {
    // The x coordinate of the center location of the component.
    private final int xCenter;
@@ -114,7 +114,7 @@ public class Rotate extends Effect
    @Override
    public void init(Animator animator, Effect parentEffect)
    {
-      ps = new PropertySetter(this, "radians", 0.0, endRadians);
+      ps = new PropertySetter<Double>(this, "radians", 0.0, endRadians);
       animator.addTarget(ps);
       super.init(animator, null);
    }
@@ -139,9 +139,8 @@ public class Rotate extends Effect
    }
 
    /**
-    * Called during the painting process of each frame of the transition animation. This method
-    * alters the transform property of <code>g2d</code> to reflect the current animated rotation
-    * value.
+    * Called during the painting process of each frame of the transition animation.
+    * This method alters the transform property of <code>g2d</code> to reflect the current animated rotation value.
     *
     * @param g2d The graphics object that will have its transform property altered to rotate
     *            rendering according to the current rotation property of this effect.

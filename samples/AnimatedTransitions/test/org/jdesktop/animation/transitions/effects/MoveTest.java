@@ -1,76 +1,60 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.transitions.effects;
 
-import java.awt.*;
+import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.transitions.*;
 
 import org.junit.*;
 
 import mockit.*;
 
-import org.jdesktop.animation.timing.*;
-import org.jdesktop.animation.timing.interpolation.*;
-import org.jdesktop.animation.transitions.*;
-
 public final class MoveTest
 {
+   @Tested Move move;
+   @Injectable ComponentState start;
+   @Injectable ComponentState end;
    @Mocked Animator animator;
 
    @Test
-   public void testInit(
-      final ComponentState start, final ComponentState end,
-      @Mocked("init") final Effect effectSuperClass)
+   public void callsSuperOnInit()
    {
-      final Move effect = new Move(start, end);
+      final Effect base = new Effect() {};
+      new Expectations(Effect.class) {{ base.init(animator, null); }};
 
-      new Expectations(PropertySetter.class)
-      {
-         {
-            Point startPoint = new Point(start.getX(), start.getY());
-            Point endPoint = new Point(end.getX(), end.getY());
-            new PropertySetter<Point>(effect, "location", startPoint, endPoint);
-            animator.addTarget(withInstanceOf(PropertySetter.class));
-            effectSuperClass.init(animator, null);
-         }
-      };
-
-      effect.init(animator, null);
+      move.init(animator, null);
    }
 
    @Test
-   public void testInitWithParentEffect(
-      final ComponentState start, final ComponentState end,
-      @Mocked("init") final Effect effectSuperClass)
+   public void addsAnimationTargetOnInitWithoutParentEffect()
    {
-      Move effect = new Move(start, end);
-      final Unchanging parentEffect = new Unchanging();
+      move.init(animator, null);
 
-      new Expectations(PropertySetter.class)
-      {
-         {
-            Point startPoint = new Point(start.getX(), start.getY());
-            Point endPoint = new Point(end.getX(), end.getY());
-            new PropertySetter<Point>(parentEffect, "location", startPoint, endPoint);
-            animator.addTarget(withInstanceOf(PropertySetter.class));
-            effectSuperClass.init(animator, null);
-         }
-      };
-
-      effect.init(animator, parentEffect);
+      new Verifications() {{
+         animator.addTarget((TimingTarget) withNotNull());
+      }};
    }
 
    @Test
-   public void testCleanup()
+   public void addsAnimationTargetOnInitWithParentEffect()
    {
-      new Expectations()
-      {
-         {
-            animator.removeTarget(null);
-         }
-      };
+      Effect parentEffect = new Unchanging();
 
-      new Move().cleanup(animator);
+      move.init(animator, parentEffect);
+
+      new Verifications() {{
+         animator.addTarget((TimingTarget) withNotNull());
+      }};
+   }
+
+   @Test
+   public void removesAnimationTargetFromAnimatorOnCleanup()
+   {
+      move.init(animator, null);
+      move.cleanup(animator);
+
+      new Verifications() {{ animator.removeTarget((TimingTarget) withNotNull()); }};
    }
 }

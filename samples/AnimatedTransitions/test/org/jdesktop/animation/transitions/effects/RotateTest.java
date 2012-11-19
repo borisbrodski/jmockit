@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.transitions.effects;
@@ -7,66 +7,58 @@ package org.jdesktop.animation.transitions.effects;
 import java.awt.*;
 import javax.swing.*;
 
+import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.transitions.*;
+
 import org.junit.*;
+import static org.junit.Assert.*;
 
 import mockit.*;
-
-import org.jdesktop.animation.timing.*;
-import org.jdesktop.animation.timing.interpolation.*;
-import org.jdesktop.animation.transitions.*;
 
 public final class RotateTest
 {
    @Mocked Animator animator;
-   @Mocked({"init", "setup"}) Effect effect;
 
    @Test
-   public void testInit(ComponentState start, ComponentState end)
+   public void callsSuperOnInit(@Injectable JComponent component)
    {
-      final Rotate rotate = new Rotate(start, end, 45, 100, 60);
+      final Effect base = new Effect() {};
+      new Expectations(Effect.class) {{ base.init(animator, null); }};
 
-      new Expectations(PropertySetter.class)
-      {
-         {
-            animator.addTarget(new PropertySetter(rotate, "radians", 0.0, Math.PI / 4));
-            effect.init(animator, null);
-         }
-      };
+      new Rotate(30, component).init(animator, null);
+   }
+
+   @Test
+   public void addsAnimationTargetOnInit(@Injectable ComponentState start, @Injectable ComponentState end)
+   {
+      Rotate rotate = new Rotate(start, end, 45, 100, 60);
 
       rotate.init(animator, null);
+
+      new Verifications() {{ animator.addTarget((TimingTarget) withNotNull()); }};
    }
 
    @Test
-   public void testCleanup()
+   public void removesAnimationTargetOnCleanup(@Mocked Effect mockedBase)
    {
-      new Expectations()
-      {
-         {
-            animator.removeTarget(null);
-         }
-      };
+      Rotate rotate = new Rotate(10, 200, 100);
 
-      new Rotate(0, 0, 0).cleanup(animator);
+      rotate.init(animator, null);
+      rotate.cleanup(animator);
+
+      new Verifications() {{ animator.removeTarget((TimingTarget) withNotNull()); }};
    }
 
    @Test
-   public void testSetup(@Mocked({"translate", "rotate"}) final Graphics2D g2D)
+   public void rotatesComponentByCurrentAngleOnSetup(@Injectable final Graphics2D g2D, @Mocked final Effect base)
    {
-      JComponent component = new JButton();
-      component.setSize(80, 60);
-      Rotate rotate = new Rotate(90, component);
+      new NonStrictExpectations(Effect.class) {{ base.setup(g2D); times = 1; }};
+
+      Rotate rotate = new Rotate(90, new JButton());
       rotate.setRadians(0.2);
 
-      new Expectations()
-      {
-         {
-            g2D.translate(40, 30);
-            g2D.rotate(0.2);
-            g2D.translate(-40, -30);
-            effect.setup(g2D);
-         }
-      };
-
       rotate.setup(g2D);
+
+      new Verifications() {{ g2D.rotate(0.2); }};
    }
 }

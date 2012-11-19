@@ -40,16 +40,13 @@ import org.jdesktop.animation.transitions.Effect;
 
 /**
  * Effect that moves a component from its position in the start state to its position in the end
- * state, based on linear interpolation between the two endpoints over the duration of the
- * transition.
+ * state, based on linear interpolation between the two endpoints over the duration of the transition.
  *
  * @author Chet Haase
  */
-public class Move extends Effect
+public final class Move extends Effect
 {
    private PropertySetter<Point> ps;
-
-   public Move() {}
 
    /**
     * Constructor that takes both start and end states, from which the endpoints of the Move effect
@@ -70,7 +67,7 @@ public class Move extends Effect
       Effect targetEffect = parentEffect == null ? this : parentEffect;
       Point startPoint = new Point(getStart().getX(), getStart().getY());
       Point endPoint = new Point(getEnd().getX(), getEnd().getY());
-      ps = new PropertySetter(targetEffect, "location", startPoint, endPoint);
+      ps = new PropertySetter<Point>(targetEffect, "location", startPoint, endPoint);
       animator.addTarget(ps);
       super.init(animator, null);
    }

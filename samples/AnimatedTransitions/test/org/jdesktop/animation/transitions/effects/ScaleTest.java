@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.transitions.effects;
@@ -13,62 +13,42 @@ import mockit.*;
 
 public final class ScaleTest
 {
-   @Mocked ComponentState start;
-   @Mocked ComponentState end;
-   @Mocked final PropertySetter<Integer> propertySetter = null;
+   @Tested Scale scale;
+   @Injectable ComponentState start;
+   @Injectable ComponentState end;
    @Mocked Animator animator;
-   @Mocked("init") Effect effect;
+   @Cascading @Mocked Effect base;
 
    @Test
-   public void testInit()
+   public void addsAnimationTargetsOnInit()
    {
-      final Scale scale = new Scale(start, end);
-
-      new Expectations()
-      {
-         {
-            animator.addTarget(
-               new PropertySetter(scale, "width", start.getWidth(), end.getWidth()));
-            animator.addTarget(
-               new PropertySetter(scale, "height", start.getHeight(), end.getHeight()));
-            effect.init(animator, null);
-         }
-      };
-
       scale.init(animator, null);
+
+      new Verifications() {{
+         animator.addTarget((TimingTarget) withNotNull()); times = 2;
+         base.init(animator, null);
+      }};
    }
 
    @Test
-   public void testInitWithParentEffect()
+   public void addsAnimationTargetsOnInitWithParentEffect()
    {
-      final Unchanging parentEffect = new Unchanging();
-      Scale scale = new Scale(start, end);
-
-      new Expectations()
-      {
-         {
-            animator.addTarget(
-               new PropertySetter(parentEffect, "width", start.getWidth(), end.getWidth()));
-            animator.addTarget(
-               new PropertySetter(parentEffect, "height", start.getHeight(), end.getHeight()));
-            effect.init(animator, null);
-         }
-      };
+      Effect parentEffect = new Unchanging();
 
       scale.init(animator, parentEffect);
+
+      new Verifications() {{
+         animator.addTarget((TimingTarget) withNotNull()); times = 2;
+         base.init(animator, null);
+      }};
    }
 
    @Test
-   public void testCleanup()
+   public void removesAnimationTargetsOnCleanup()
    {
-      new Expectations()
-      {
-         {
-            animator.removeTarget(null);
-            animator.removeTarget(null);
-         }
-      };
+      scale.init(animator, null);
+      scale.cleanup(animator);
 
-      new Scale().cleanup(animator);
+      new Verifications() {{ animator.removeTarget((TimingTarget) withNotNull()); times = 2; }};
    }
 }

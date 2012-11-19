@@ -1,47 +1,52 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.transitions.effects;
 
+import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.transitions.*;
+
 import org.junit.*;
+import static org.junit.Assert.*;
 
 import mockit.*;
 
-import org.jdesktop.animation.timing.*;
-import org.jdesktop.animation.timing.interpolation.*;
-import org.jdesktop.animation.transitions.*;
-
 public final class FadeOutTest
 {
+   @Tested FadeOut fadeOut;
+   @Injectable ComponentState startState;
    @Mocked Animator animator;
 
    @Test
-   public void testInit(ComponentState start, @Mocked("init") final Effect effect)
+   public void createsWithGivenStartState()
    {
-      final FadeOut fadeOut = new FadeOut(start);
-
-      new Expectations(PropertySetter.class)
-      {
-         {
-            animator.addTarget(new PropertySetter(fadeOut, "opacity", 1.0f, 0.0f));
-            effect.init(animator, null);
-         }
-      };
-
-      fadeOut.init(animator, null);
+      assertSame(startState, fadeOut.getStart());
    }
 
    @Test
-   public void testCleanup()
+   public void addsTransparentAnimationTargetOnInit(@Mocked final Effect mockedBase)
    {
-      new Expectations()
-      {
-         {
-            animator.removeTarget(null);
-         }
-      };
+      float initialOpacity = Deencapsulation.getField(fadeOut, float.class);
+      assertEquals(0.0f, initialOpacity, 0);
 
-      new FadeOut().cleanup(animator);
+      fadeOut.init(animator, null);
+
+      new Verifications() {{
+         animator.addTarget((TimingTarget) withNotNull());
+         mockedBase.init(animator, null);
+      }};
+
+      float opacityAfterInit = Deencapsulation.getField(fadeOut, float.class);
+      assertEquals(1.0f, opacityAfterInit, 0);
+   }
+
+   @Test
+   public void removesAnimationTargetOnCleanup(@Mocked Effect mockedBase)
+   {
+      fadeOut.init(animator, null);
+      fadeOut.cleanup(animator);
+
+      new Verifications() {{ animator.removeTarget((TimingTarget) withNotNull()); }};
    }
 }

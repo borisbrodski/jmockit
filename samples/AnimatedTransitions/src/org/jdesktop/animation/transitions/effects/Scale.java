@@ -41,7 +41,7 @@ import org.jdesktop.animation.transitions.Effect;
  *
  * @author Chet Haase
  */
-public class Scale extends Effect
+public final class Scale extends Effect
 {
    // Two property setters to animate both the width and height of the component. Note that the
    // actual width/height properties are in Effect itself; we are merely setting up an animation
@@ -73,11 +73,9 @@ public class Scale extends Effect
    public void init(Animator animator, Effect parentEffect)
    {
       Effect targetEffect = parentEffect == null ? this : parentEffect;
-      psWidth =
-         new PropertySetter(targetEffect, "width", getStart().getWidth(), getEnd().getWidth());
+      psWidth = new PropertySetter<Integer>(targetEffect, "width", getStart().getWidth(), getEnd().getWidth());
       animator.addTarget(psWidth);
-      psHeight =
-         new PropertySetter(targetEffect, "height", getStart().getHeight(), getEnd().getHeight());
+      psHeight = new PropertySetter<Integer>(targetEffect, "height", getStart().getHeight(), getEnd().getHeight());
       animator.addTarget(psHeight);
       super.init(animator, null);
    }

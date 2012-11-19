@@ -43,9 +43,8 @@ import org.jdesktop.animation.timing.Animator;
 /**
  * This is the base class for all effects that are used during screen transitions.
  * <p/>
- * Subclasses of this base class may override the {@link #init(Animator, Effect) init()}, {@link
- * #setup(Graphics2D) setup()}, and {@link #paint(Graphics2D) paint()} methods to achieve the
- * desired effect.
+ * Subclasses of this base class may override the {@link #init(Animator, Effect) init()},
+ * {@link #setup(Graphics2D) setup()}, and {@link #paint(Graphics2D) paint()} methods to achieve the desired effect.
  *
  * @author Chet Haase
  */
@@ -91,7 +90,7 @@ public abstract class Effect
    /**
     * Set the location and size of the component state being animated by this effect.
     */
-   public void setBounds(int x, int y, int width, int height)
+   public final void setBounds(int x, int y, int width, int height)
    {
       bounds.x = location.x = x;
       bounds.y = location.y = y;
@@ -102,7 +101,7 @@ public abstract class Effect
    /**
     * Set the location and size of the component state being animated by this effect.
     */
-   public void setBounds(Rectangle bounds)
+   public final void setBounds(Rectangle bounds)
    {
       setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
    }
@@ -110,7 +109,7 @@ public abstract class Effect
    /**
     * Set the location of the component state being animated by this effect.
     */
-   public void setLocation(Point location)
+   public final void setLocation(Point location)
    {
       setX(location.x);
       setY(location.y);
@@ -119,39 +118,27 @@ public abstract class Effect
    /**
     * Set the x location of the component state being animated by this effect.
     */
-   public void setX(int x)
-   {
-      location.x = bounds.x = x;
-   }
+   public final void setX(int x) { location.x = bounds.x = x; }
 
    /**
     * Set the y location of the component state being animated by this effect.
     */
-   public void setY(int y)
-   {
-      location.y = bounds.y = y;
-   }
+   public final void setY(int y) { location.y = bounds.y = y; }
 
    /**
     * Set the width of the component state being animated by this effect.
     */
-   public void setWidth(int width)
-   {
-      bounds.width = this.width = width;
-   }
+   public final void setWidth(int width) { bounds.width = this.width = width; }
 
    /**
     * Set the height of the component state being animated by this effect.
     */
-   public void setHeight(int height)
-   {
-      bounds.height = this.height = height;
-   }
+   public final void setHeight(int height) { bounds.height = this.height = height; }
 
    /**
     * Get the component being animated by this effect.
     */
-   protected JComponent getComponent()
+   protected final JComponent getComponent()
    {
       if (start != null) {
          return start.getComponent();
@@ -185,10 +172,10 @@ public abstract class Effect
 
       // If this effect already has a snapshot image of the component, but it's not the size that we
       // need, flush it now and it will be created later during the first setup() call.
-      if (componentImage != null &&
-         ((start != null &&
-          (start.getWidth() != componentImage.getWidth(null))) ||
-          (end != null && end.getWidth() != componentImage.getWidth(null)))
+      if (
+         componentImage != null &&
+         (start != null && start.getWidth() != componentImage.getWidth(null) ||
+          end != null && end.getWidth() != componentImage.getWidth(null))
       ) {
          componentImage.flush();
          componentImage = null;
@@ -202,9 +189,8 @@ public abstract class Effect
     * transition should be removed afterwards to avoid leaking resources that may otherwise be
     * retained by those objects.
     */
-   @SuppressWarnings({"NoopMethodInAbstractClass"})
-   public void cleanup(Animator animator)
-   {}
+   @SuppressWarnings("NoopMethodInAbstractClass")
+   public void cleanup(Animator animator) {}
 
    /**
     * Tells the Effect to re-render the component during the transition instead of using an image
@@ -219,10 +205,7 @@ public abstract class Effect
     *                        animation. If <code>false</code>, the system may choose to render an
     *                        image representation of the component instead.
     */
-   public void setRenderComponent(boolean renderComponent)
-   {
-      this.renderComponent = renderComponent;
-   }
+   public final void setRenderComponent(boolean renderComponent) { this.renderComponent = renderComponent; }
 
    /**
     * Returns whether the effect will re-render its component during transitions, as opposed to
@@ -230,15 +213,12 @@ public abstract class Effect
     *
     * @return whether the effect will re-render the component during the transition
     */
-   public boolean getRenderComponent()
-   {
-      return renderComponent;
-   }
+   public final boolean getRenderComponent() { return renderComponent; }
 
    /**
     * Sets both the start and end states of this Effect.
     */
-   public void setComponentStates(ComponentState start, ComponentState end)
+   public final void setComponentStates(ComponentState start, ComponentState end)
    {
       this.start = start;
       this.end = end;
@@ -247,56 +227,38 @@ public abstract class Effect
    /**
     * Sets the start state of this Effect.
     */
-   public void setStart(ComponentState start)
-   {
-      this.start = start;
-   }
+   public void setStart(ComponentState start) { this.start = start; }
 
    /**
     * Gets the start state of this Effect.
     */
-   public ComponentState getStart()
-   {
-      return start;
-   }
+   public final ComponentState getStart() { return start; }
 
    /**
     * Sets the end state of this Effect.
     */
-   public void setEnd(ComponentState end)
-   {
-      this.end = end;
-   }
+   public void setEnd(ComponentState end) { this.end = end; }
 
    /**
     * Gets the end state of this Effect.
     */
-   public ComponentState getEnd()
-   {
-      return end;
-   }
+   public final ComponentState getEnd() { return end; }
 
    /**
     * Gets the image representation of this Effect. This is not intended to be called by
     * application code, but rather by custom effects or other parts of the system.
     */
-   public Image getComponentImage()
-   {
-      return componentImage;
-   }
+   public final Image getComponentImage() { return componentImage; }
 
    /**
     * Sets the image representation of this Effect.
     */
-   protected void setComponentImage(Image componentImage)
-   {
-      this.componentImage = componentImage;
-   }
+   protected final void setComponentImage(Image componentImage) { this.componentImage = componentImage; }
 
    /**
     * Creates and renders an image representation of the component.
     */
-   @SuppressWarnings({"ConstantConditions"})
+   @SuppressWarnings("ConstantConditions")
    private void createComponentImage()
    {
       if (start != null && end == null) {
@@ -306,8 +268,7 @@ public abstract class Effect
          componentImage = end.getSnapshot();
       }
       else if (start.getWidth() != end.getWidth() || start.getHeight() != end.getHeight()) {
-         // This block grabs the targetImage that best represents the component; the larger the
-         // better.
+         // This block grabs the targetImage that best represents the component; the larger the better.
          float widthFraction = (float) end.getWidth() / start.getWidth();
          float heightFraction = (float) end.getHeight() / start.getHeight();
 
@@ -378,8 +339,7 @@ public abstract class Effect
    public void paint(Graphics2D g2d)
    {
       if (!renderComponent && componentImage != null) {
-         g2d.setRenderingHint(
-            RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
          g2d.drawImage(componentImage, 0, 0, width, height, null);
       }
       else {
@@ -393,7 +353,7 @@ public abstract class Effect
     * Called by EffectsManager on each effect during every frame of the transition, this method
     * calls setup() and paint().
     */
-   void render(Graphics2D g2d)
+   final void render(Graphics2D g2d)
    {
       // First, translate to where we need to render.
       g2d.translate(location.x, location.y);

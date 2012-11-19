@@ -41,7 +41,7 @@ import org.jdesktop.animation.transitions.Effect;
  *
  * @author Chet Haase
  */
-public class Unchanging extends Effect
+public final class Unchanging extends Effect
 {
    public Unchanging() {}
 

@@ -41,17 +41,14 @@ import org.jdesktop.animation.transitions.Effect;
  *
  * @author Chet Haase
  */
-public class FadeIn extends Fade
+public final class FadeIn extends Fade
 {
    private PropertySetter<Float> ps;
-
-   public FadeIn() {}
 
    /**
     * Creates a new instance with the given end state.
     *
-    * @param end The <code>ComponentState</code> at the end of the transition; this is what we are
-    *            fading to.
+    * @param end The <code>ComponentState</code> at the end of the transition; this is what we are fading to.
     */
    public FadeIn(ComponentState end)
    {
@@ -65,9 +62,9 @@ public class FadeIn extends Fade
    @Override
    public void init(Animator animator, Effect parentEffect)
    {
-      ps = new PropertySetter(this, "opacity", 0f, 1f);
+      ps = new PropertySetter<Float>(this, "opacity", 0.0f, 1.0f);
       animator.addTarget(ps);
-      setOpacity(0f);
+      setOpacity(0.0f);
       super.init(animator, null);
    }
 

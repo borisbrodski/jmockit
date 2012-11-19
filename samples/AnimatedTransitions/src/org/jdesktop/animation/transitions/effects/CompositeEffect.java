@@ -40,15 +40,15 @@ import org.jdesktop.animation.transitions.ComponentState;
 import org.jdesktop.animation.transitions.Effect;
 
 /**
- * This Effect combines one or more sub-effects to create a more complex and interesting effect. For
- * example, you could create an effect that both moves and scales by creating a CompositeEffect with
+ * This Effect combines one or more sub-effects to create a more complex and interesting effect.
+ * For example, you could create an effect that both moves and scales by creating a CompositeEffect with
  * the Move and Scale effects.
  * <p/>
  * Composite effects are created by simply adding effects in the order that you want them combined.
  *
  * @author Chet Haase
  */
-public class CompositeEffect extends Effect
+public final class CompositeEffect extends Effect
 {
    /**
     * The list of effects in the CompositeEffect.
