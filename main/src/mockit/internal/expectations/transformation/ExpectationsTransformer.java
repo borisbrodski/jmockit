@@ -158,32 +158,37 @@ public final class ExpectationsTransformer implements ClassFileTransformer
             isFinalClass = true;
          }
 
+         if (isClassWhichShouldBeModified(name, superName)) {
+            super.visit(version, access, name, signature, superName, interfaces);
+            classDesc = name;
+         }
+         else {
+            throw VisitInterruptedException.INSTANCE;
+         }
+      }
+
+      private boolean isClassWhichShouldBeModified(String name, String superName)
+      {
          boolean superClassIsKnownInvocationsSubclass = baseSubclasses.contains(superName);
-         boolean modifyTheClass = false;
 
          if (isFinalClass) {
             if (superClassIsKnownInvocationsSubclass) {
-               modifyTheClass = true;
+               return true;
             }
             else {
                SuperClassAnalyser superClassAnalyser = new SuperClassAnalyser(loader);
 
                if (superClassAnalyser.classExtendsInvocationsClass(superName)) {
-                  modifyTheClass = true;
+                  return true;
                }
             }
          }
          else if (superClassIsKnownInvocationsSubclass) {
             baseSubclasses.add(name);
-            modifyTheClass = true;
+            return true;
          }
 
-         if (!modifyTheClass) {
-            throw VisitInterruptedException.INSTANCE;
-         }
-
-         super.visit(version, access, name, signature, superName, interfaces);
-         classDesc = name;
+         return false;
       }
 
       @Override
