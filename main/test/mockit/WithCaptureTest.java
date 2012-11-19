@@ -4,7 +4,7 @@
  */
 package mockit;
 
-import java.util.ArrayList;
+import java.math.*;
 import java.util.*;
 import static java.util.Arrays.*;
 
@@ -33,6 +33,7 @@ public final class WithCaptureTest
       public void doSomething(Integer i) {}
       public void doSomething(boolean b) {}
       public void doSomething(Number n) {}
+      public void doSomething(Number[] nums) {}
       public void doSomething(
          String s1, boolean b, String s2, double d, float f, long l, Object o, char c, byte bt, short sh) {}
       void doSomething(String[] names, int[] ages) {}
@@ -91,25 +92,62 @@ public final class WithCaptureTest
       }};
    }
 
-   @Ignore @Test
-   public void captureArgumentOfReferenceTypeToVariableOfSpecificSubtypeForSeparateInvocations()
+   @Test
+   public void captureArgumentToVariableOfSpecificSubtypeForSeparateInvocations()
    {
+      dao.doSomething(new BigInteger("9999"));
+      dao.doSomething((byte) -123);
       dao.doSomething(123.0F);
-      dao.doSomething(123L);
-      dao.doSomething(123.0);
+      dao.doSomething(1234L);
+      dao.doSomething(1234.5);
 
       new Verifications() {{
-         float f;
+         BigInteger bi;
+         dao.doSomething(bi = withCapture());
+         assertEquals(9999, bi.intValue());
+
+         Float f;
          dao.doSomething(f = withCapture());
          assertEquals(123.0F, f, 0);
 
          long l;
          dao.doSomething(l = withCapture());
-         assertEquals(123L, l);
+         assertEquals(1234L, l);
 
          Double d;
          dao.doSomething(d = withCapture());
-         assertEquals(123.0, d, 0);
+         assertEquals(1234.5, d, 0);
+
+         byte b;
+         dao.doSomething(b = withCapture());
+         assertEquals(-123, b);
+      }};
+   }
+
+   @Test
+   public void captureArrayArgumentsToVariablesWithSpecificElementSubtypes()
+   {
+      final Integer[] ints = {1, 2, 3};
+      dao.doSomething(ints);
+
+      final Double[] doubles = {1.0, 2.5, -3.2};
+      dao.doSomething(doubles);
+
+      final BigInteger[] bigInts = {new BigInteger("12"), new BigInteger("45")};
+      dao.doSomething(bigInts);
+
+      new FullVerificationsInOrder() {{
+         Integer[] capturedInts;
+         dao.doSomething(capturedInts = withCapture());
+         assertSame(ints, capturedInts);
+
+         Double[] capturedDoubles;
+         dao.doSomething(capturedDoubles = withCapture());
+         assertSame(doubles, capturedDoubles);
+
+         BigInteger[] capturedBigInts;
+         dao.doSomething(capturedBigInts = withCapture());
+         assertSame(bigInts, capturedBigInts);
       }};
    }
 
@@ -235,39 +273,37 @@ public final class WithCaptureTest
       final int[] ages2 = {101};
       dao.doSomething(names2, ages2);
 
-      new VerificationsInOrder() {
-         {
-            byte bt;
-            dao.doSomething(bt = withCapture());
-            assertEquals(56, bt);
+      new VerificationsInOrder() {{
+         byte bt;
+         dao.doSomething(bt = withCapture());
+         assertEquals(56, bt);
 
-            Number n;
-            dao.doSomething(n = withCapture());
-            assertEquals(123.4, n.floatValue(), 0.001);
+         Number n;
+         dao.doSomething(n = withCapture());
+         assertEquals(123.4, n.floatValue(), 0.001);
 
-            short sh;
-            dao.doSomething(sh = withCapture());
-            assertEquals(-78, sh);
+         short sh;
+         dao.doSomething(sh = withCapture());
+         assertEquals(-78, sh);
 
-            int i1;
-            dao.doSomething(i1 = withCapture());
-            assertEquals(91, i1);
+         int i1;
+         dao.doSomething(i1 = withCapture());
+         assertEquals(91, i1);
 
-            Integer i2;
-            dao.doSomething(i2 = withCapture());
-            assertEquals(92, i2.intValue());
+         Integer i2;
+         dao.doSomething(i2 = withCapture());
+         assertEquals(92, i2.intValue());
 
-            String[] namesCapture;
-            int[] agesCapture;
-            dao.doSomething(namesCapture = withCapture(), agesCapture = withCapture());
-            assertSame(names1, namesCapture);
-            assertSame(ages1, agesCapture);
+         String[] namesCapture;
+         int[] agesCapture;
+         dao.doSomething(namesCapture = withCapture(), agesCapture = withCapture());
+         assertSame(names1, namesCapture);
+         assertSame(ages1, agesCapture);
 
-            dao.doSomething(namesCapture = withCapture(), agesCapture = withCapture());
-            assertSame(names2, namesCapture);
-            assertSame(ages2, agesCapture);
-         }
-      };
+         dao.doSomething(namesCapture = withCapture(), agesCapture = withCapture());
+         assertSame(names2, namesCapture);
+         assertSame(ages2, agesCapture);
+      }};
    }
 
    @Test
