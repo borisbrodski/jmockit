@@ -19,9 +19,9 @@
    <a href="http://code.google.com/p/jmockit"><img align="right" src="tutorial/go-home.png" title="JMockit Home"></a>
 </h2>
 
-<h3>Next release</h3>
+<h3>Current release</h3>
 
-<p>Release <a href="http://code.google.com/p/jmockit/source/list">0.999.19</a> (Nov 19, 2012):</p>
+<p>Release <a href="http://code.google.com/p/jmockit/source/list?num=51&start=2251">0.999.19</a> (Nov 19, 2012):</p>
 <ul>
    <li>
       <strong>Enhancement</strong>: Added support for test execution in the presence of custom class loaders, such
@@ -33,6 +33,12 @@
       <strong>Enhancement</strong>: Added support for automatic conversions when a single value is assigned to the
       <code>result</code> field, but the return type of the recorded method is an array, collection, or iterator.
       In these cases, a suitable container object is created with that single value.
+   </li>
+   <li>
+      <strong>Enhancement</strong>: When verifying expectations, "<code>aLocalVar = withCapture()</code>" expressions
+      will now consider the type of the local variable into which the argument is captured when looking for matching
+      invocations. This is useful for parameters of reference types, when the actual arguments received during replay
+      are of a subtype; such arguments can be captured by using a capturing variable of that subtype.
    </li>
    <li>
       <strong>Enhancement</strong>: Added an <strong><code>unverifiedInvocations()</code></strong> method to
@@ -52,7 +58,7 @@
    </li>
 </ul>
 
-<h3>Current release</h3>
+<h3>Previous releases</h3>
 
 <p>Release <a href="http://code.google.com/p/jmockit/source/list?num=57&start=2200">0.999.18</a> (Oct 18, 2012):</p>
 <ul>
@@ -87,8 +93,6 @@
       <a href="http://code.google.com/p/jmockit/issues/detail?id=245">245</a>.
    </li>
 </ul>
-
-<h3>Previous releases</h3>
 
 <p>Release <a href="http://code.google.com/p/jmockit/source/list?num=69&start=2143">0.999.17</a> (Sep 17, 2012):</p>
 <ul>
