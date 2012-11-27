@@ -106,7 +106,7 @@ public final class PropertySetter<T> extends TimingTargetAdapter
    }
 
    /**
-    * Createsa {@code PropertySetter} and an {@code Animator} using it.
+    * Creates a {@code PropertySetter} and an {@code Animator} using it.
     *
     * @param duration     the duration, in milliseconds, of the animation
     * @param object       the object whose property will be animated

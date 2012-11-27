@@ -30,12 +30,10 @@
  */
 package org.jdesktop.animation.timing;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 /**
- * This class provides a generic wrapper for arbitrary Timers that may be used with the Timing
- * Framework.
+ * Provides a generic wrapper for arbitrary Timers that may be used with the Timing Framework.
  * Animator creates its own internal TimingSource by default, but an Animator can be directed to use
  * a different TimingSource by calling {@link Animator#setTimer(TimingSource)}.
  * <p/>
@@ -48,89 +46,82 @@ import java.util.Collection;
  * {@link Animator#setTimer(TimingSource)}, which adds the Animator as a listener to the
  * TimingSource object, and then send in any later timing events from the object to the protected
  * method {@link #timingEvent()}, which will send these timing events to all listeners.
- * 
+ *
  * @author Chet
  */
 public abstract class TimingSource
 {
-    // Listeners that will receive timing events.
-    private final Collection<TimingEventListener> listeners = new ArrayList<TimingEventListener>();
-    
-    /**
-     * Starts the TimingSource.
-     */
-    public abstract void start();
-    
-    /**
-     * Stops the TimingSource.
-     */
-    public abstract void stop();
-        
-    /**
-     * Sets the delay between callback events. This will be called by Animator if its
-     * {@link Animator#setResolution(int) setResolution(int)} method is called. Note that the actual
-     * resolution may vary, according to the resolution of the timer used by the framework as well
-     * as system load and configuration; this value should be seen more as a minimum resolution than
-     * a guaranteed resolution.
-     *
-     * @param resolution delay, in milliseconds, between each timing event callback.
-     *
-     * @throws IllegalArgumentException resolution must be >= 0
-     *
-     * @see Animator#setResolution(int)
-     */
-    public abstract void setResolution(int resolution);
-    
-    /**
-     * Sets delay which should be observed by the TimingSource after a call to {@link #start()}.
-     * Some timers may not be able to adhere to specific resolution requests.
-     *
-     * @param delay delay, in milliseconds, to pause before starting timing events.
-     *
-     * @throws IllegalArgumentException resolution must be >= 0
-     *
-     * @see Animator#setStartDelay(int)
-     */
-    public abstract void setStartDelay(int delay);
-    
-    /**
-     * Adds a TimingEventListener to the set of listeners that receive timing events from this
-     * TimingSource.
-     *
-     * @param listener the listener to be added.
-     */
-    public final void addEventListener(TimingEventListener listener)
-    {
-        synchronized(listeners) {
-            if (!listeners.contains(listener)) {
-                listeners.add(listener);
-            }
-        }
-    }
-    
-    /**
-     * Removes a TimingEventListener from the set of listeners that receive timing events from this
-     * TimingSource.
-     *
-     * @param listener the listener to be removed.
-     */
-    public final void removeEventListener(TimingEventListener listener)
-    {
-        synchronized(listeners) {
-            listeners.remove(listener);
-        }
-    }
+   // Listeners that will receive timing events.
+   private final List<TimingEventListener> listeners = new ArrayList<TimingEventListener>();
 
-    /**
-     * Subclasses call this method to post timing events to this object's
-     * {@link TimingEventListener} objects.
-     */
-    protected final void timingEvent()
-    {
-         synchronized(listeners) {
-             for (TimingEventListener listener : listeners) {
-                 listener.timingSourceEvent(this);
-             }
+   /**
+    * Starts the TimingSource.
+    */
+   public abstract void start();
+
+   /**
+    * Stops the TimingSource.
+    */
+   public abstract void stop();
+
+   /**
+    * Sets the delay between callback events. This will be called by Animator if its
+    * {@link Animator#setResolution(int) setResolution(int)} method is called. Note that the actual
+    * resolution may vary, according to the resolution of the timer used by the framework as well
+    * as system load and configuration; this value should be seen more as a minimum resolution than
+    * a guaranteed resolution.
+    *
+    * @param resolution delay, in milliseconds, between each timing event callback.
+    * @throws IllegalArgumentException resolution must be >= 0
+    * @see Animator#setResolution(int)
+    */
+   public abstract void setResolution(int resolution);
+
+   /**
+    * Sets delay which should be observed by the TimingSource after a call to {@link #start()}.
+    * Some timers may not be able to adhere to specific resolution requests.
+    *
+    * @param delay delay, in milliseconds, to pause before starting timing events.
+    * @throws IllegalArgumentException resolution must be >= 0
+    * @see Animator#setStartDelay(int)
+    */
+   public abstract void setStartDelay(int delay);
+
+   /**
+    * Adds a TimingEventListener to the set of listeners that receive timing events from this TimingSource.
+    *
+    * @param listener the listener to be added
+    */
+   public final void addEventListener(TimingEventListener listener)
+   {
+      synchronized (listeners) {
+         if (!listeners.contains(listener)) {
+            listeners.add(listener);
          }
-    }
+      }
+   }
+
+   /**
+    * Removes a TimingEventListener from the set of listeners that receive timing events from this TimingSource.
+    *
+    * @param listener the listener to be removed
+    */
+   public final void removeEventListener(TimingEventListener listener)
+   {
+      synchronized (listeners) {
+         listeners.remove(listener);
+      }
+   }
+
+   /**
+    * Subclasses call this method to post timing events to this object's {@link TimingEventListener} objects.
+    */
+   protected final void timingEvent()
+   {
+      synchronized (listeners) {
+         for (TimingEventListener listener : listeners) {
+            listener.timingSourceEvent(this);
+         }
+      }
+   }
 }

@@ -8,6 +8,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.timing.Animator.*;
 import org.jdesktop.animation.timing.interpolation.*;
 
 import org.junit.*;
@@ -15,36 +16,75 @@ import static org.junit.Assert.*;
 
 public final class EndToEndTest
 {
-   static JButton animated;
+   static final int DURATION = Integer.parseInt(System.getProperty("duration", "5000"));
+   static Component animatedComponent;
+   static Dimension initialSize;
+   static Point initialLocation;
+
+   Animator animator;
 
    @BeforeClass
    public static void createUI() throws Exception
    {
       ImageIcon icon = new ImageIcon("../../www/javadoc/resources/logo.png");
-      animated = new JButton("JMockit", icon);
-      animated.setSize(icon.getIconWidth() + 90, icon.getIconHeight() + 10);
+      animatedComponent = new JButton("JMockit", icon);
+
+      initialSize = new Dimension(icon.getIconWidth() + 90, icon.getIconHeight() + 10);
+      initialLocation = new Point(150, 200);
 
       JFrame mainWindow = new JFrame("Timing Framework");
       mainWindow.setLayout(null);
-      mainWindow.add(animated);
-      mainWindow.setBounds(300, 200, 600, 400);
+      mainWindow.add(animatedComponent);
+      mainWindow.setBounds(300, 200, 650, 500);
       mainWindow.setVisible(true);
    }
 
-   @Test
-   public void animateButtonPositionInWindowThroughPropertySetter() throws Exception
+   @Before
+   public void initializeSizeAndLocationOfAnimatedComponent()
    {
-      Animator animator = new Animator(5000);
+      animatedComponent.setSize(initialSize);
+      animatedComponent.setLocation(initialLocation);
+   }
+
+   @Test
+   public void defaultAnimationThatsMovesAComponentAlongSeveralPoints() throws Exception
+   {
+      animator = new Animator(DURATION);
       Point finalLocation = new Point(200, 320);
       animator.addTarget(
          new PropertySetter<Point>(
-            animated, "location",
+            animatedComponent, "location",
             new Point(10, 10), new Point(100, 60), new Point(450, 200), finalLocation));
 
+      runAnimationUntilCompletion();
+
+      assertEquals(finalLocation, animatedComponent.getLocation());
+   }
+
+   void runAnimationUntilCompletion()
+   {
       animator.start();
-      Thread.sleep(animator.getDuration() + 100);
+
+      int totalDuration = (int) (animator.getRepeatCount() * animator.getDuration());
+      try { Thread.sleep(totalDuration + 70); } catch (InterruptedException ignore) {}
 
       assertFalse(animator.isRunning());
-      assertEquals(finalLocation, animated.getLocation());
+   }
+
+   @Test
+   public void reversingAnimationThatPulsesAComponentSeveralTimes()
+   {
+      animator =
+         PropertySetter.createAnimator(
+            DURATION / 3, animatedComponent, "size",
+            new Dimension(100, 80), new Dimension(150, 120), new Dimension(250, 200));
+
+      animator.setEndBehavior(EndBehavior.RESET);
+      animator.setInterpolator(new SplineInterpolator(0.2f, 0.3f, 0.8f, 0.6f));
+      animator.setRepeatCount(3);
+
+      runAnimationUntilCompletion();
+
+      assertEquals(new Dimension(100, 80), animatedComponent.getSize());
    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package org.jdesktop.animation.timing;
@@ -10,55 +10,22 @@ import org.junit.*;
 
 public final class TimingSourceTest
 {
-   @Mocked private TimingEventListener timingEventListener;
-   private TimingSource source;
-
-   @Before
-   public void setUp()
-   {
-      source = new TestTimingSource();
-   }
-
-   private static final class TestTimingSource extends TimingSource
-   {
-      @Override
-      public void start()
-      {}
-
-      @Override
-      public void stop()
-      {}
-
-      @Override
-      public void setResolution(int resolution)
-      {}
-
-      @Override
-      public void setStartDelay(int delay)
-      {}
-   }
+   @Tested TimingSource source;
+   @Mocked TimingEventListener timingEventListener;
 
    @Test
-   public void testAddEventListener()
+   public void addedEventListenerReceivesTimingEvents()
    {
-      new Expectations()
-      {
-         {
-            timingEventListener.timingSourceEvent(source);
-         }
-      };
-
       source.addEventListener(timingEventListener);
       source.timingEvent();
+
+      new Verifications() {{ timingEventListener.timingSourceEvent(source); }};
    }
 
    @Test
-   public void testRemoveEventListener()
+   public void removedEventListenerNoLongerReceivesTimingEvents()
    {
       source.addEventListener(timingEventListener);
-
-      // Expects nothing.
-
       source.removeEventListener(timingEventListener);
       source.timingEvent();
 
