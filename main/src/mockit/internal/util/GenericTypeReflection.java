@@ -20,10 +20,10 @@ public final class GenericTypeReflection
          addMappingsFromTypeParametersToTypeArguments(realClass, (ParameterizedType) mockedType);
       }
 
-      addGenericTypeMappingsForSupertypes(realClass);
+      addGenericTypeMappingsForSuperTypes(realClass);
    }
 
-   private void addGenericTypeMappingsForSupertypes(Class<?> realClass)
+   private void addGenericTypeMappingsForSuperTypes(Class<?> realClass)
    {
       Type superType = realClass;
 
@@ -190,7 +190,8 @@ public final class GenericTypeReflection
       {
          if (typeDesc.charAt(0) == 'T') {
             String typeParameter = typeDesc.substring(0, typeDesc.length() - 1);
-            return typeParametersToTypeArguments.get(typeParameter) + ';';
+            String typeArg = typeParametersToTypeArguments.get(typeParameter);
+            return typeArg == null ? typeDesc : typeArg + ';';
          }
 
          int p = typeDesc.indexOf('<');

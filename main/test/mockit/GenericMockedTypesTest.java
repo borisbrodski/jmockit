@@ -64,4 +64,16 @@ public final class GenericMockedTypesTest
 
       assertEquals("mocked", mock.put(123, "test"));
    }
+
+   @Test
+   public void mockRawMapInterface(@SuppressWarnings("rawtypes") @Mocked final Map rawMap)
+   {
+      new NonStrictExpectations() {{
+         rawMap.get("test");
+         result = new Object();
+      }};
+
+      Object value = rawMap.get("test");
+      assertNotNull(value);
+   }
 }
