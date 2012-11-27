@@ -14,7 +14,7 @@ import java.util.logging.*;
 
 import mockit.internal.util.*;
 
-public abstract class MockingBridge implements InvocationHandler, Filter
+public abstract class MockingBridge extends Logger implements InvocationHandler
 {
    private static final Object[] EMPTY_ARGS = {};
    private static final ReentrantLock LOCK = new ReentrantLock();
@@ -46,22 +46,15 @@ public abstract class MockingBridge implements InvocationHandler, Filter
       DefaultValues.computeForReturnType("()J");
    }
 
-   // Keeps a strong reference to the logger so that it never gets GC-ed.
-   @SuppressWarnings({"FieldCanBeLocal", "NonConstantLogger"})
-   private final Logger logger;
-
    /**
     * The instance is stored in a place directly accessible through the Java SE API, so that it can
     * be recovered from any class loader.
     */
-   protected MockingBridge()
+   protected MockingBridge(Class<? extends MockingBridge> subclass)
    {
-      String loggerName = "" + hashCode();
-      logger = Logger.getLogger(loggerName);
-      logger.setFilter(this);
+      super("mockit." + subclass.hashCode(), null);
+      LogManager.getLogManager().addLogger(this);
    }
-
-   public final boolean isLoggable(LogRecord record) { return false; }
 
    protected static boolean notToBeMocked(Object mocked, String mockedClassDesc)
    {

@@ -33,6 +33,7 @@ final class ExpectationsModifier extends MockedTypeModifier
       DEFAULT_FILTERS.put("java/util/ArrayList", "");
       DEFAULT_FILTERS.put("java/util/HashMap", "");
       DEFAULT_FILTERS.put("java/util/jar/JarEntry", "<init>");
+      DEFAULT_FILTERS.put("java/util/logging/LogManager", "getLogger getLogManager readPrimordialConfiguration");
    }
 
    private final MockingConfiguration mockingCfg;
@@ -151,20 +152,20 @@ final class ExpectationsModifier extends MockedTypeModifier
       if (useMockingBridge) {
          return
             generateCallToHandlerThroughMockingBridge(
-               access, name, desc, signature, exceptions, internalClassName, actualExecutionMode);
+               access, signature, exceptions, internalClassName, actualExecutionMode);
       }
 
       generateDirectCallToHandler(internalClassName, access, name, desc, signature, exceptions, actualExecutionMode);
 
       if (actualExecutionMode > 0) {
-         generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
+         generateDecisionBetweenReturningOrContinuingToRealImplementation();
 
          // Constructors of non-JRE classes can't be modified (unless running with "-noverify") in a way that
          // "super(...)/this(...)" get called twice, so we disregard such calls when copying the original bytecode.
-         return visitingConstructor ? new DynamicConstructorModifier() : copyOriginalImplementationCode(access, desc);
+         return visitingConstructor ? new DynamicConstructorModifier() : copyOriginalImplementationCode(access);
       }
 
-      generateReturnWithObjectAtTopOfTheStack(desc);
+      generateReturnWithObjectAtTopOfTheStack(methodDesc);
       mw.visitMaxs(1, 0);
       return methodAnnotationsVisitor;
    }
@@ -247,8 +248,7 @@ final class ExpectationsModifier extends MockedTypeModifier
    }
 
    private MethodVisitor generateCallToHandlerThroughMockingBridge(
-      int access, String name, String desc, String genericSignature, String[] exceptions, String internalClassName,
-      int executionMode)
+      int access, String genericSignature, String[] exceptions, String internalClassName, int executionMode)
    {
       generateCodeToObtainInstanceOfMockingBridge(MockedBridge.MB);
 
@@ -257,14 +257,14 @@ final class ExpectationsModifier extends MockedTypeModifier
       mw.visitInsn(ACONST_NULL);
 
       // Create array for call arguments (third "invoke" argument):
-      Type[] argTypes = Type.getArgumentTypes(desc);
+      Type[] argTypes = Type.getArgumentTypes(methodDesc);
       generateCodeToCreateArrayOfObject(7 + argTypes.length);
 
       int i = 0;
       generateCodeToFillArrayElement(i++, access);
       generateCodeToFillArrayElement(i++, internalClassName);
-      generateCodeToFillArrayElement(i++, name);
-      generateCodeToFillArrayElement(i++, desc);
+      generateCodeToFillArrayElement(i++, methodName);
+      generateCodeToFillArrayElement(i++, methodDesc);
       generateCodeToFillArrayElement(i++, genericSignature);
       generateCodeToFillArrayElement(i++, getListOfExceptionsAsSingleString(exceptions));
       generateCodeToFillArrayElement(i++, executionMode);
@@ -272,18 +272,18 @@ final class ExpectationsModifier extends MockedTypeModifier
       generateCodeToPassMethodArgumentsAsVarargs(argTypes, i, isStatic ? 0 : 1);
       generateCallToInvocationHandler();
 
-      generateDecisionBetweenReturningOrContinuingToRealImplementation(desc);
+      generateDecisionBetweenReturningOrContinuingToRealImplementation();
 
       // Copies the entire original implementation even for a constructor, in which case the complete bytecode inside
       // the constructor fails the strict verification activated by "-Xfuture". However, this is necessary to allow the
       // full execution of a JRE constructor when the call was not meant to be mocked.
-      return copyOriginalImplementationCode(access, desc);
+      return copyOriginalImplementationCode(access);
    }
 
-   private MethodVisitor copyOriginalImplementationCode(int access, String desc)
+   private MethodVisitor copyOriginalImplementationCode(int access)
    {
       if (isNative(access)) {
-         generateEmptyImplementation(desc);
+         generateEmptyImplementation(methodDesc);
          return methodAnnotationsVisitor;
       }
 

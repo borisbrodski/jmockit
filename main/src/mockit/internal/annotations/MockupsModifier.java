@@ -177,12 +177,12 @@ final class MockupsModifier extends BaseClassModifier
       }
 
       if (isToPreserveRealImplementation(access)) {
-         return getAlternativeMethodWriter(access, name, desc);
+         return getAlternativeMethodWriter(access);
       }
 
       generateCallToUpdateMockStateIfAny(access);
-      generateCallToMockMethod(access, desc);
-      generateMethodReturn(desc);
+      generateCallToMockMethod(access);
+      generateMethodReturn();
       mw.visitMaxs(1, 0); // dummy values, real ones are calculated by ASM
       return methodAnnotationsVisitor;
    }
@@ -245,11 +245,11 @@ final class MockupsModifier extends BaseClassModifier
       }
    }
 
-   private MethodVisitor getAlternativeMethodWriter(int mockedAccess, String mockedName, String mockedDesc)
+   private MethodVisitor getAlternativeMethodWriter(int mockedAccess)
    {
-      generateDynamicCallToMock(mockedAccess, mockedDesc);
+      generateDynamicCallToMock(mockedAccess);
 
-      final boolean forConstructor = mockedName.charAt(0) == '<';
+      final boolean forConstructor = methodName.charAt(0) == '<';
 
       return new MethodVisitor(mw) {
          @Override
@@ -284,7 +284,7 @@ final class MockupsModifier extends BaseClassModifier
       return mockedClass != null && mockedClass != mockMethod.getRealClass();
    }
 
-   private void generateDynamicCallToMock(int mockedAccess, String mockedDesc)
+   private void generateDynamicCallToMock(int mockedAccess)
    {
       if (!isStatic(mockedAccess) && !mockMethod.isForConstructor() && isMockedSuperclass()) {
          startOfRealImplementation = new Label();
@@ -296,15 +296,15 @@ final class MockupsModifier extends BaseClassModifier
       generateCallToUpdateMockStateIfAny(mockedAccess);
 
       if (mockMethod.isReentrant()) {
-         generateCallToReentrantMockMethod(mockedAccess, mockedDesc);
+         generateCallToReentrantMockMethod(mockedAccess);
       }
       else if (mockMethod.isDynamic()) {
-         generateCallToMockMethod(mockedAccess, mockedDesc);
-         generateDecisionBetweenReturningOrContinuingToRealImplementation(mockedDesc);
+         generateCallToMockMethod(mockedAccess);
+         generateDecisionBetweenReturningOrContinuingToRealImplementation();
       }
       else if (startOfRealImplementation != null) {
-         generateCallToMockMethod(mockedAccess, mockedDesc);
-         generateMethodReturn(mockedDesc);
+         generateCallToMockMethod(mockedAccess);
+         generateMethodReturn();
          mw.visitLabel(startOfRealImplementation);
       }
 
@@ -329,7 +329,7 @@ final class MockupsModifier extends BaseClassModifier
       }
    }
 
-   private void generateCallToReentrantMockMethod(int mockedAccess, String mockedDesc)
+   private void generateCallToReentrantMockMethod(int mockedAccess)
    {
       if (startOfRealImplementation == null) {
          startOfRealImplementation = new Label();
@@ -347,11 +347,11 @@ final class MockupsModifier extends BaseClassModifier
 
       mw.visitLabel(l0);
 
-      generateCallToMockMethod(mockedAccess, mockedDesc);
+      generateCallToMockMethod(mockedAccess);
 
       mw.visitLabel(l1);
       generateCallToExitReentrantMock();
-      generateMethodReturn(mockedDesc);
+      generateMethodReturn();
       mw.visitLabel(l2);
       mw.visitVarInsn(ASTORE, varIndex);
       mw.visitLabel(l3);
@@ -381,20 +381,20 @@ final class MockupsModifier extends BaseClassModifier
       generateCallToInvocationHandler();
    }
 
-   private void generateCallToMockMethod(int access, String desc)
+   private void generateCallToMockMethod(int access)
    {
       if (mockMethod.isStatic) {
-         generateStaticMethodCall(access, desc);
+         generateStaticMethodCall(access);
       }
       else {
-         generateInstanceMethodCall(access, desc);
+         generateInstanceMethodCall(access);
       }
    }
 
-   private void generateStaticMethodCall(int access, String desc)
+   private void generateStaticMethodCall(int access)
    {
       if (shouldUseMockingBridge()) {
-         generateCallToMockMethodThroughMockingBridge(false, access, desc);
+         generateCallToMockMethodThroughMockingBridge(false, access);
       }
       else {
          generateMethodOrConstructorArguments(access);
@@ -404,7 +404,7 @@ final class MockupsModifier extends BaseClassModifier
 
    private boolean shouldUseMockingBridge() { return useMockingBridge || mockMethod.hasInvocationParameter; }
 
-   private void generateCallToMockMethodThroughMockingBridge(boolean callingInstanceMethod, int access, String desc)
+   private void generateCallToMockMethodThroughMockingBridge(boolean callingInstanceMethod, int access)
    {
       generateCodeToObtainInstanceOfMockingBridge(MockMethodBridge.MB);
 
@@ -413,7 +413,7 @@ final class MockupsModifier extends BaseClassModifier
       mw.visitInsn(ACONST_NULL);
 
       // Create array for call arguments (third "invoke" argument):
-      Type[] argTypes = Type.getArgumentTypes(desc);
+      Type[] argTypes = Type.getArgumentTypes(methodDesc);
       generateCodeToCreateArrayOfObject(7 + argTypes.length);
 
       int i = 0;
@@ -429,10 +429,10 @@ final class MockupsModifier extends BaseClassModifier
       generateCallToInvocationHandler();
    }
 
-   private void generateInstanceMethodCall(int access, String desc)
+   private void generateInstanceMethodCall(int access)
    {
       if (shouldUseMockingBridge()) {
-         generateCallToMockMethodThroughMockingBridge(true, access, desc);
+         generateCallToMockMethodThroughMockingBridge(true, access);
          return;
       }
 
@@ -483,8 +483,8 @@ final class MockupsModifier extends BaseClassModifier
    private void generateGetMockCallWithMockInstanceIndex()
    {
       mw.visitIntInsn(SIPUSH, mockInstanceIndex);
-      String methodName = forStartupMock ? "getStartupMock" : "getMock";
-      mw.visitMethodInsn(INVOKESTATIC, "mockit/internal/state/TestRun", methodName, "(I)Ljava/lang/Object;");
+      String getterName = forStartupMock ? "getStartupMock" : "getMock";
+      mw.visitMethodInsn(INVOKESTATIC, "mockit/internal/state/TestRun", getterName, "(I)Ljava/lang/Object;");
       mw.visitTypeInsn(CHECKCAST, annotatedMocks.getMockClassInternalName());
    }
 
@@ -530,13 +530,13 @@ final class MockupsModifier extends BaseClassModifier
       }
    }
 
-   private void generateMethodReturn(String desc)
+   private void generateMethodReturn()
    {
       if (shouldUseMockingBridge()) {
-         generateReturnWithObjectAtTopOfTheStack(desc);
+         generateReturnWithObjectAtTopOfTheStack(methodDesc);
       }
       else {
-         Type returnType = Type.getReturnType(desc);
+         Type returnType = Type.getReturnType(methodDesc);
          mw.visitInsn(returnType.getOpcode(IRETURN));
       }
    }

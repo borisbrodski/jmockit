@@ -13,6 +13,8 @@ public final class MockupBridge extends MockingBridge
 {
    public static final MockingBridge MB = new MockupBridge();
 
+   private MockupBridge() { super(MockupBridge.class); }
+
    public Object invoke(Object mocked, Method method, Object[] args) throws Throwable
    {
       boolean enteringMethod = (Boolean) args[0];

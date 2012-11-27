@@ -15,6 +15,8 @@ public final class MockedBridge extends MockingBridge
 {
    public static final MockingBridge MB = new MockedBridge();
 
+   private MockedBridge() { super(MockedBridge.class); }
+
    public Object invoke(Object mocked, Method method, Object[] args) throws Throwable
    {
       String mockedClassDesc = (String) args[1];

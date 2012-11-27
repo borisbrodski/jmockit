@@ -18,8 +18,7 @@ public class BaseClassModifier extends ClassVisitor
    private static final int ACCESS_MASK = 0xFFFF - ACC_ABSTRACT - ACC_NATIVE;
    private static final Type VOID_TYPE = Type.getType("Ljava/lang/Void;");
 
-   protected final MethodVisitor methodAnnotationsVisitor = new MethodVisitor()
-   {
+   protected final MethodVisitor methodAnnotationsVisitor = new MethodVisitor() {
       @Override
       public AnnotationVisitor visitAnnotation(String annotationDesc, boolean visible)
       {
@@ -49,8 +48,8 @@ public class BaseClassModifier extends ClassVisitor
    protected String superClassName;
    protected Label startOfRealImplementation;
    private String classDesc;
-   private String methodName;
-   private String methodDesc;
+   protected String methodName;
+   protected String methodDesc;
    private boolean callToAnotherConstructorAlreadyDisregarded;
 
    protected BaseClassModifier(ClassReader classReader)
@@ -169,14 +168,13 @@ public class BaseClassModifier extends ClassVisitor
 
    protected final void generateCodeToObtainInstanceOfMockingBridge(MockingBridge mockingBridge)
    {
-      String loggerName = "" + mockingBridge.hashCode();
+      String loggerName = "mockit." + mockingBridge.getClass().hashCode();
 
       mw.visitMethodInsn(
          INVOKESTATIC, "java/util/logging/LogManager", "getLogManager", "()Ljava/util/logging/LogManager;");
       mw.visitLdcInsn(loggerName);
       mw.visitMethodInsn(
          INVOKEVIRTUAL, "java/util/logging/LogManager", "getLogger", "(Ljava/lang/String;)Ljava/util/logging/Logger;");
-      mw.visitMethodInsn(INVOKEVIRTUAL, "java/util/logging/Logger", "getFilter", "()Ljava/util/logging/Filter;");
    }
 
    protected final void generateCodeToFillArrayElement(int arrayIndex, Object value)
@@ -265,7 +263,7 @@ public class BaseClassModifier extends ClassVisitor
          "(Ljava/lang/Object;Ljava/lang/reflect/Method;[Ljava/lang/Object;)Ljava/lang/Object;");
    }
 
-   protected final void generateDecisionBetweenReturningOrContinuingToRealImplementation(String desc)
+   protected final void generateDecisionBetweenReturningOrContinuingToRealImplementation()
    {
       mw.visitInsn(DUP);
       mw.visitLdcInsn(VOID_TYPE);
@@ -276,7 +274,7 @@ public class BaseClassModifier extends ClassVisitor
 
       mw.visitJumpInsn(IF_ACMPEQ, startOfRealImplementation);
 
-      generateReturnWithObjectAtTopOfTheStack(desc);
+      generateReturnWithObjectAtTopOfTheStack(methodDesc);
 
       mw.visitLabel(startOfRealImplementation);
       mw.visitInsn(POP);

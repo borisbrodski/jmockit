@@ -8,6 +8,7 @@ import java.io.*;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.logging.*;
 
 import junit.framework.*;
 
@@ -325,6 +326,24 @@ public final class JREMockingTest extends TestCase
       catch (IllegalArgumentException e) {
          assertTrue(e.getMessage().contains("java.lang.Class"));
       }
+   }
+
+   // Mocking JRE classes used internally by JMockit //////////////////////////////////////////////////////////////////
+
+   public void testMockLogManager()
+   {
+      new NonStrictExpectations() { @Mocked LogManager mock; };
+
+      LogManager logManager = LogManager.getLogManager();
+      assertNotNull(logManager);
+
+      Logger logger = logManager.getLogger("test");
+      assertNull(logger);
+   }
+
+   public void testMockLogger(@Mocked Logger mock)
+   {
+      assertNull(Logger.getLogger("test"));
    }
 
    // Mocking critical collection classes /////////////////////////////////////////////////////////////////////////////
