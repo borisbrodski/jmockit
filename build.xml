@@ -1,4 +1,4 @@
-<project name="jmockit" basedir="." default="fullRebuild">
+<project name="jmockit" basedir="." default="minimalRebuild">
    <property name="JUNIT_JAR" value="lib/junit-dep-4.11.jar"/>
    <property name="TESTNG_JAR" value="lib/testng-6.8.jar"/>
    <taskdef resource="testngtasks" classpath="${TESTNG_JAR}"/>
@@ -9,7 +9,8 @@
       <fileset dir="lib" includes="*.jar"/>
    </path>
 
-   <target name="fullRebuild" depends="buildAll, createjars"/>
+   <target name="minimalRebuild" depends="buildMain, buildCoverage, createjars"/>
+   <target name="fullRebuild"    depends="buildMain, buildCoverage, createjars, createjavadocs, buildSamples"/>
 
    <!-- Targets for building/compiling the several JMockit components (modules) -->
 
@@ -124,7 +125,7 @@
       <buildSample module="LoginService" testlibrary="${TESTNG_JAR}"/>
    </target>
    <target name="buildTutorial"><buildSample module="tutorial"/></target>
-   <target name="buildOrderManagement">
+   <target name="buildOrderManagement" depends="buildHibernateEmulation, createjar-hibernate3emul">
       <buildSample
          module="orderMngmntWebapp" outdir="WEB-INF/classes"
          extraclasspathlocation="hibernate3emul/jmockit-hibernate3emul.jar"/>
@@ -150,7 +151,6 @@
       depends="buildEasyMock, buildJMock, buildMockito, buildUnitils, buildPowerMock, buildLoginService,
                buildJBossAOP, buildTutorial, buildOrderManagement, buildTimingFramework,
                buildAnimatedTransitions, buildTourDeMock, buildFakingXMocking"/>
-   <target name="buildAll" depends="buildMain, buildCoverage, buildSamples"/>
 
    <!-- Target for generating the Javadoc HTML documentation -->
 
@@ -237,7 +237,7 @@
    <target name="createzip">
       <zip
          destfile="jmockit-${version}.zip" basedir=".." includes="jmockit/**"
-         excludes="**/*.i*, **/*.zip, **/*.ser, **/Temp.java, jmockit/**/lib/**,
+         excludes="**/*.i*, jmockit/*.zip, **/*.ser, **/Temp.java, jmockit/**/lib/**,
                    **/target/**, **/classes/**, **/test-classes/**, **/test-output/**,
                    jmockit/hibernate3emul/**, jmockit/incremental/**, jmockit/multicore/**,
                    jmockit/www/tutorial/Incremental*.*,
