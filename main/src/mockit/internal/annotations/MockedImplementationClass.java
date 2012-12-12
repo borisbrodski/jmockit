@@ -44,7 +44,6 @@ public final class MockedImplementationClass<T>
       T proxy = ConstructorReflection.newInstanceUsingDefaultConstructor(generatedClass);
 
       MockClassSetup setup = new MockClassSetup(generatedClass, typeToMock, mockInstance, generatedBytecode);
-      setup.setBaseType(interfaceToBeMocked);
       setup.redefineMethods();
 
       return proxy;

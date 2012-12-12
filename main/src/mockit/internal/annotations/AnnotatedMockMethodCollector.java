@@ -25,8 +25,6 @@ final class AnnotatedMockMethodCollector extends ClassVisitor
 
    private final AnnotatedMockMethods mockMethods;
 
-   // Helper fields:
-   private Class<?> classToCollectMocksFrom;
    private boolean collectingFromSuperClass;
    private String enclosingClassDescriptor;
 
@@ -36,7 +34,7 @@ final class AnnotatedMockMethodCollector extends ClassVisitor
    {
       ClassLoad.registerLoadedClass(mockClass);
 
-      classToCollectMocksFrom = mockClass;
+      Class<?> classToCollectMocksFrom = mockClass;
 
       do {
          ClassReader mcReader = ClassFile.createClassFileReader(classToCollectMocksFrom);
@@ -99,8 +97,6 @@ final class AnnotatedMockMethodCollector extends ClassVisitor
 
       return new MethodVisitor()
       {
-         private boolean annotatedAsMockMethod;
-
          @Override
          public AnnotationVisitor visitAnnotation(String desc, boolean visible)
          {
@@ -109,7 +105,6 @@ final class AnnotatedMockMethodCollector extends ClassVisitor
                   mockMethods.addMethod(collectingFromSuperClass, methodName, methodDesc, Modifier.isStatic(access));
 
                if (mockMethod != null) {
-                  annotatedAsMockMethod = true;
                   return new MockAnnotationVisitor(mockMethod);
                }
             }
@@ -122,17 +117,6 @@ final class AnnotatedMockMethodCollector extends ClassVisitor
             String paramName, String paramDesc, String paramSignature, Label start, Label end, int index)
          {
             ParameterNames.registerName(mockMethods.getMockClassInternalName(), methodName, methodDesc, paramName);
-         }
-
-         @Override
-         public void visitEnd()
-         {
-            if (
-               !annotatedAsMockMethod && mockMethods.classWithMethodToSelectSubclasses == null &&
-               "shouldBeMocked".equals(methodName) && "(Ljava/lang/ClassLoader;Ljava/lang/String;)Z".equals(methodDesc)
-            ) {
-               mockMethods.classWithMethodToSelectSubclasses = classToCollectMocksFrom;
-            }
          }
       };
    }

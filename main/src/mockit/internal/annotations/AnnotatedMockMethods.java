@@ -24,7 +24,6 @@ final class AnnotatedMockMethods
    private boolean isInnerMockClass;
    private boolean withItField;
    private List<MockState> mockStates;
-   Class<?> classWithMethodToSelectSubclasses;
 
    final class MockMethod
    {

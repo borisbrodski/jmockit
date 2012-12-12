@@ -10,7 +10,6 @@ import java.util.*;
 import mockit.*;
 import mockit.external.asm4.*;
 import mockit.internal.*;
-import mockit.internal.capturing.*;
 import mockit.internal.filtering.*;
 import mockit.internal.startup.*;
 import mockit.internal.state.*;
@@ -19,7 +18,6 @@ import mockit.internal.util.*;
 public final class MockClassSetup
 {
    private Class<?> realClass;
-   private Class<?> baseTypeForCapturing;
    private final Class<?> mockClass;
    private ClassReader rcReader;
    private final AnnotatedMockMethods mockMethods;
@@ -76,7 +74,6 @@ public final class MockClassSetup
    public MockClassSetup(Class<?> realClass, Object mock, Class<?> mockClass)
    {
       this(realClass, mock, mockClass, mockClass.getAnnotation(MockClass.class));
-      baseTypeForCapturing = realClass;
    }
 
    public MockClassSetup(Object mock, Class<?> mockClass)
@@ -113,7 +110,6 @@ public final class MockClassSetup
       this.realClass = realClass;
       validateRealClass();
 
-      baseTypeForCapturing = realClass;
       mockMethods = new AnnotatedMockMethods(realClass, mockedType);
 
       mock = mockUp;
@@ -124,8 +120,6 @@ public final class MockClassSetup
 
       new AnnotatedMockMethodCollector(mockMethods).collectMockMethods(mockClass);
    }
-
-   public void setBaseType(Class<?> baseClass) { baseTypeForCapturing = baseClass; }
 
    public void setUpStartupMock()
    {
@@ -139,7 +133,6 @@ public final class MockClassSetup
    {
       redefineMethodsInClassHierarchy();
       validateThatAllMockMethodsWereApplied();
-      activateCapturingForBaseType();
    }
 
    private void redefineMethodsInClassHierarchy()
@@ -208,57 +201,6 @@ public final class MockClassSetup
 
          throw new IllegalArgumentException(
             "Matching real methods not found for the following mocks:\n" + mockSignatures);
-      }
-   }
-
-   private void activateCapturingForBaseType()
-   {
-      if (mockMethods.classWithMethodToSelectSubclasses != null) {
-         CaptureOfSubclasses captureOfSubclasses = new CaptureOfSubclasses();
-         captureOfSubclasses.makeSureAllSubtypesAreModified(baseTypeForCapturing, true);
-
-         if (!addActionToExecuteOnSavePointRollback(TestRun.getSavePointForTestMethod(), captureOfSubclasses)) {
-            addActionToExecuteOnSavePointRollback(TestRun.getSavePointForTestClass(), captureOfSubclasses);
-         }
-      }
-   }
-
-   private boolean addActionToExecuteOnSavePointRollback(SavePoint savePoint, Runnable action)
-   {
-      if (savePoint != null) {
-         savePoint.addRollbackAction(action);
-         return true;
-      }
-
-      return false;
-   }
-
-   private final class CaptureOfSubclasses extends CaptureOfImplementations implements ClassSelector
-   {
-      private final Method shouldBeMocked;
-
-      private CaptureOfSubclasses()
-      {
-         try {
-            shouldBeMocked = mockMethods.classWithMethodToSelectSubclasses.getDeclaredMethod(
-               "shouldBeMocked", ClassLoader.class, String.class);
-         }
-         catch (NoSuchMethodException e) { throw new RuntimeException(e); }
-      }
-
-      @Override
-      protected ClassSelector createClassSelector() { return this; }
-
-      public boolean shouldCapture(ClassLoader definingClassLoader, String className)
-      {
-         Boolean capture = MethodReflection.invoke(mock, shouldBeMocked, definingClassLoader, className);
-         return capture;
-      }
-
-      @Override
-      protected ClassVisitor createModifier(ClassLoader cl, ClassReader cr, String capturedTypeDesc)
-      {
-         return new MockupsModifier(cl, cr, mock, mockMethods, mockingConfiguration, forStartupMock);
       }
    }
 }
