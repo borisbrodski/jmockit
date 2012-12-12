@@ -337,7 +337,7 @@ public final class ClassLoadingAndJREMocksTest
       return mainClassName;
    }
 
-   @Ignore("failing only in the Maven run") @Test
+   @Test
    public void mockJavaUtilJarClasses() throws Exception
    {
       final File testFile = new File("test.jar");
