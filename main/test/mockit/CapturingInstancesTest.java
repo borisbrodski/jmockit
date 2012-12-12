@@ -72,7 +72,7 @@ public final class CapturingInstancesTest
       assertEquals(22, new ServiceImpl().doSomething());
    }
 
-   @Ignore @Test
+   @Test
    public void captureAllInternallyCreatedInstances(@Capturing final Callable<?> callable) throws Exception
    {
       new NonStrictExpectations() {
@@ -85,7 +85,7 @@ public final class CapturingInstancesTest
 
       TestedUnit unit = new TestedUnit();
       int result = unit.businessOperation(true);
-      assertEquals(3, unit.service1.doSomething());
+      assertEquals(4, unit.service1.doSomething());
       assertEquals(4, unit.service2.doSomething());
 
       assertNotNull(unit.observable);
