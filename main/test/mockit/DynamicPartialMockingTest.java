@@ -682,7 +682,7 @@ public final class DynamicPartialMockingTest
       new Expectations(System.in) {{
          System.in.read();
          result = new Delegate() {
-            void takeTooLong() throws InterruptedException { Thread.sleep(5000); }
+            @Mock void takeTooLong() throws InterruptedException { Thread.sleep(5000); }
          };
       }};
 
@@ -802,13 +802,13 @@ public final class DynamicPartialMockingTest
       new NonStrictExpectations(TestedClass.class) {};
 
       assertTrue(new TestedClass(true).value);
-   }
 
-   @Ignore @Test
-   public void mockClassWithConstructorWhichCallsAnother()
-   {
-      new NonStrictExpectations(TestedClass.class) {};
+      final TestedClass t = new TestedClass(false);
+      assertFalse(t.value);
 
-      assertTrue(new TestedClass().value);
+      new Verifications() {{
+         new TestedClass(anyBoolean); times = 2;
+         t.initialize(anyBoolean); times = 2;
+      }};
    }
 }

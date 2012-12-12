@@ -101,22 +101,6 @@ public final class CapturingImplementationsTest
       assertEquals(3, service.doSomethingElse());
    }
 
-   @Ignore @Test
-   public void captureOnlyTheNextTwoInstances()
-   {
-      new NonStrictExpectations() {
-         @Capturing(maxInstances = 2) AnotherService mock;
-
-         {
-            mock.doSomethingElse(); returns(5, 6);
-         }
-      };
-
-      assertEquals(5, new ServiceImpl2().doSomethingElse());
-      assertEquals(6, new ServiceImpl3().doSomethingElse());
-      assertEquals(9, new AnotherService() { public int doSomethingElse() { return 9; } }.doSomethingElse());
-   }
-
    public abstract static class AbstractService { protected abstract boolean doSomething(); }
 
    static final class DefaultServiceImpl extends AbstractService
