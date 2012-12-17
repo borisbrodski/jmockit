@@ -386,9 +386,9 @@ An example coverage report showing all metrics can be found <a href="../coverage
    To facilitate this, the <code>jmockit-coverage.jar</code> file is <em>executable</em>.
    Using Ant, the following task could be used:
 </p>
-<pre><code>   &lt;java fork="yes" dir="myBaseDir" jar="jmockit-coverage.jar">
-      &lt;arg line="-Djmockit-coverage-output=html module1-outDir anotherOutDir"/>
-   &lt;/java>
+<pre><code>&lt;java fork="yes" dir="myBaseDir" jar="jmockit-coverage.jar">
+   &lt;arg line="-Djmockit-coverage-output=html module1-outDir anotherOutDir"/>
+&lt;/java>
 </code></pre>
 <p>
    The example above uses "<code>myBaseDir</code>" as the base directory where a separate JVM instance will run.
@@ -455,9 +455,9 @@ An example coverage report showing all metrics can be found <a href="../coverage
    accordingly, typically by failing the build when the file is present.
    For example, we can do the following in an Ant build script:
 </p>
-<pre><code>      &lt;fail message="Coverage check failed">
-         &lt;condition>&lt;available file="<strong>coverage.check.failed</strong>"/>&lt;/condition>
-      &lt;/fail>
+<pre><code>&lt;fail message="Coverage check failed">
+   &lt;condition>&lt;available file="<strong>coverage.check.failed</strong>"/>&lt;/condition>
+&lt;/fail>
 </code></pre>
 
 <h3 id="maven">
@@ -472,13 +472,13 @@ An example coverage report showing all metrics can be found <a href="../coverage
 </h3>
 <p>
    If you run tests with Maven's "test" goal, you will need the following dependency in the <code>pom.xml</code> file
-   (assuming the "<code>jmockit.version</code>" property has been properly defined):
+   (assuming the "<code>jmockit.coverage.version</code>" property has been properly defined):
 </p>
-<pre><code>      &lt;dependency>
-         &lt;groupId><strong>com.googlecode.jmockit</strong>&lt;/groupId>&lt;artifactId><strong>jmockit-coverage</strong>&lt;/artifactId>
-         &lt;version><strong>${jmockit.version}</strong>&lt;/version>
-         &lt;scope>runtime&lt;/scope> 
-      &lt;/dependency>
+<pre><code>&lt;dependency>
+   &lt;groupId><strong>com.googlecode.jmockit</strong>&lt;/groupId>&lt;artifactId><strong>jmockit-coverage</strong>&lt;/artifactId>
+   &lt;version><strong>${jmockit.coverage.version}</strong>&lt;/version>
+   &lt;scope>runtime&lt;/scope>
+&lt;/dependency>
 </code></pre>
 <p>
    In Maven 2/3, the <code>surefire</code> plugin is the one usually responsible for actually running tests.
@@ -489,25 +489,24 @@ An example coverage report showing all metrics can be found <a href="../coverage
 </p>
 <pre><code>&lt;plugin>
    &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
-   &lt;configuration>
-      &lt;argLine>
-         <strong>-Djmockit-coverage-outputDir=target/my-coverage-report</strong>
-         &lt;!-- other "jmockit-coverage" properties, if needed -->
-      &lt;/argLine>
-   &lt;/configuration>
+   &lt;configuration>&lt;argLine>
+      <strong>-Djmockit-coverage-outputDir=target/my-coverage-report</strong>
+      &lt;!-- other "jmockit-coverage" properties, if needed -->
+   &lt;/argLine>&lt;/configuration>
 &lt;/plugin>
 </code></pre>
 <p>
-   If the tests are executed in a Java SE 5 JVM, or if for whatever reason JMockit cannot be automatically initialized
-   when running on Java SE 6+, then the <code>-javaagent</code> JVM parameter should be used as shown below.
+   If the tests are executed on a Java SE 5 JVM, the "<code>-javaagent</code>" JVM parameter should be used as shown
+   below.
+   When running on Java 6 or newer, this parameter is not necessary.
 </p>
 <pre><code>&lt;plugin>
    &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
    &lt;configuration>&lt;argLine>
-      <strong>-javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar</strong>
+<strong>-javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar</strong>
       &lt;!-- "jmockit-coverage" properties, if any are needed -->
    &lt;/argLine>&lt;/configuration>
-   &lt;/plugin>
+&lt;/plugin>
 </code></pre>
 
 <h3 id="switching">
@@ -556,7 +555,7 @@ An example coverage report showing all metrics can be found <a href="../coverage
    </div>
 </h3>
 <p>
-   In previous sections we describe the most typical way to use the coverage tool, by enabling it during a JUnit/TestNG
+   In previous sections we described the most typical way to use the coverage tool, by enabling it during a JUnit/TestNG
    test run to measure <em>test</em> coverage.
    The tool can also be used in a more general context, though: the <em>standalone</em> mode, where it can attach to
    <em>any</em> Java 5+ process to measure line and path coverage metrics on specified classes, regardless of which code

@@ -33,9 +33,10 @@
    </li>
    <li><a href="#interfaces">Mocking interfaces</a></li>
    <li><a href="#constraints">Invocation count constraints</a></li>
-   <li><a href="#initializers">Mocking and stubbing class initializers</a></li>
+   <li><a href="#initializers">Mocking class initializers</a></li>
    <li><a href="#it">Accessing the mocked object: the "it" field</a></li>
    <li><a href="#reentrant">Reentrant mocks</a></li>
+   <li><a href="#invocation">Accessing the invocation context</a></li>
    <li>
       <a href="#reuse">Reusing mocks between tests</a>
       <ol>
@@ -49,13 +50,14 @@
    In the JMockit toolkit, the <strong>Mockups API</strong> provides support for the creation of <em>state-based</em>
    tests and for the creation of <em>fake</em> implementations.
 </p>
-<div style="text-align: center;">
+<div style="text-align: center;" title="Click on types to open API documentation">
    <map name="figure1">
       <area shape="rect" coords="1,1,86,34" href="../javadoc/mockit/Mockit.html">
       <area shape="rect" coords="93,1,223,34" href="../javadoc/mockit/MockUp.html">
       <area shape="rect" coords="232,1,307,34" href="../javadoc/mockit/Mock.html">
       <area shape="rect" coords="315,1,430,34" href="../javadoc/mockit/MockClass.html">
       <area shape="rect" coords="439,1,574,34" href="../javadoc/mockit/Instantiation.html">
+      <area shape="rect" coords="583,1,702,34" href="../javadoc/mockit/Invocation.html">
    </map>
    <img src="StateBasedAPI.png" usemap="#figure1">
 </div>
@@ -438,7 +440,7 @@
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
       <a href="#reuse"><img align="right" src="go-bottom.png" title="Last section"></a>
-      <a href="#constraints"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#initializers"><img align="right" src="go-up.png" title="Previous section"></a>
       <a href="#reentrant"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
@@ -519,7 +521,7 @@
       <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
       <img align="right" src="blank.gif" width="22">
       <a href="#it"><img align="right" src="go-up.png" title="Previous section"></a>
-      <a href="#reuse"><img align="right" src="go-down.png" title="Next section"></a>
+      <a href="#invocation"><img align="right" src="go-down.png" title="Next section"></a>
    </div>
 </h3>
 <p>
@@ -614,13 +616,66 @@
    runners.
 </p>
 
+<h3 id="invocation">
+   Accessing the invocation context
+   <div class="navigation">
+      <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
+      <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
+      <img align="right" src="blank.gif" width="22">
+      <a href="#reentrant"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#reuse"><img align="right" src="go-down.png" title="Next section"></a>
+   </div>
+</h3>
+<p>
+   Every mock method can optionally declare an extra parameter of type <code class="type">mockit.Invocation</code>, as
+   long as it is declared as the <em>first</em> parameter.
+   For each actual invocation to the corresponding mocked method/constructor, a new instance of this type will be
+   created and passed in each call to the mock method.
+</p>
+<p>
+   A mock method having this parameter is automatically considered to be reentrant.
+   Also, one of the "getters" available in the <code class="type">Invocation</code> object returns a reference to the
+   <em>mocked</em> instance.
+   So, adding an <code class="type">Invocation</code> parameter is an alternative way to have a reentrant mock method
+   which calls back to the mocked method.
+   The following example is similar to the previous example test, but using an <code class="type">Invocation</code>
+   parameter.
+</p>
+<pre><code>   @Test
+   public void proceedingIntoTheMockedMethod() throws Exception
+   {
+      LoginContext loginContext = new LoginContext("test", null, null, configuration);
+
+      new MockUp&lt;LoginContext>() {
+         @Mock
+         void login(Invocation inv) throws LoginException
+         {
+            LoginContext lc = inv.getInvokedInstance(); // obtains the mocked instance
+            System.out.println("Login attempted for " + lc.getSubject());
+            <strong>inv.proceed();</strong> // re-enters the mocked method, executing the real code
+         }
+      }
+
+      <strong>loginContext.login();</strong>
+      assertNotNull(loginContext.getSubject());
+   }
+</code></pre>
+<p>
+   The test above uses the "<strong><code>proceed(...)</code></strong>" method to re-enter the mocked method, causing
+   its real implementation to be executed.
+   This can be also be done inside a "<code><strong>$init</strong>(Invocation inv, ...)</code>" mock method, to execute
+   the real implementation of a mocked constructor.
+   For more details on all the methods available in the <code class="type">mockit.Invocation</code> class, see its
+   <a href="../javadoc/mockit/Invocation.html">API documentation</a>.
+</p>
+
 <h3 id="reuse">
    Reusing mocks between tests
    <div class="navigation">
       <a href="../tutorial.html"><img align="right" src="go-home.png" title="Contents"></a>
       <a href="#mocks"><img align="right" src="go-top.png" title="First section"></a>
       <img align="right" src="blank.gif" width="22">
-      <a href="#reentrant"><img align="right" src="go-up.png" title="Previous section"></a>
+      <a href="#invocation"><img align="right" src="go-up.png" title="Previous section"></a>
       <img align="right" src="blank.gif" width="22">
    </div>
 </h3>
