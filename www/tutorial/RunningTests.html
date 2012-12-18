@@ -31,7 +31,7 @@
 </p>
 <ol>
 <li>
-   When using an Oracle JDK of version 1.6 or newer, on Windows or Linux:
+   When using an Oracle JDK of version 1.6 or newer, on Windows, Mac OS X, or Linux:
    <ul>
       <li>
          For <strong>JUnit</strong> 4.5+ test suites, make sure that <code>jmockit.jar</code> appears <em>before</em>
@@ -39,8 +39,8 @@
          <br/>
          (Note for <strong>Eclipse</strong> users: when specifying the order of jars in the classpath, make sure to use
          the "Order and Export" tab of the "Java Build Path" window.
-         Also, make sure the Eclipse project uses the JRE from a JDK installation instead of a "plain" JRE, since they
-         lack the "<code>attach</code>" native library.)
+         Also, make sure the Eclipse project uses the JRE from a JDK installation instead of a "plain" JRE, since the
+         latter lack the "<code>attach</code>" native library.)
       </li>
       <li>
          For <strong>TestNG</strong> 6.2+ test suites, simply add <code>jmockit.jar</code> to the classpath.
@@ -48,9 +48,8 @@
    </ul>
 </li>
 <li>
-   In other situations (if running on JDK 1.5 or in other JDK implementations, or if using an older version of
-   TestNG or of JMockit itself), pass <code>-javaagent:<em>&lt;proper path></em>/jmockit.jar</code> as a JVM
-   initialization parameter.
+   In other situations (if running on JDK 1.5 or other JDK implementations, or if using an older version of TestNG),
+   pass <code>-javaagent:<em>&lt;proper path></em>/jmockit.jar</code> as a JVM initialization parameter.
    This can easily be done in the "Run/Debug Configuration" for both Eclipse and IntelliJ IDEA, or with build tools such
    as Ant and Maven.
 </li>
@@ -70,7 +69,7 @@
    &lt;!-- To generate (if desired) a code coverage HTML report: -->
    &lt;classpath path="jmockit-coverage.jar"/>
 
-   &lt;!-- additional classpath entries, including one for the appropriate junit.jar -->
+   &lt;!-- Additional classpath entries, including the appropriate junit.jar -->
 
    &lt;batchtest>
       &lt;!-- filesets specifying the desired test classes -->
@@ -110,13 +109,13 @@
 <pre><code>&lt;plugin>
    &lt;artifactId>maven-surefire-plugin&lt;/artifactId>
    &lt;configuration>&lt;argLine>
-      -javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
+-javaagent:"${settings.localRepository}"/com/googlecode/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
    &lt;/argLine>&lt;/configuration>
 &lt;/plugin>
 </code></pre>
 <p>
    The above JVM parameter is <em>not</em> required when running tests on a JDK 1.6+ environment, provided it contains a
-   supported implementation of the Attach API (ie, an Oracle JDK for Windows or Linux).
+   supported implementation of the Attach API (ie, an Oracle JDK for Windows, Mac OS X, or Linux).
    Even if you have to deploy production code in a JDK 1.5 environment, consider using JDK 1.6 in your local development
    environment; with the proper build/IDE configuration, a JDK 1.6 Java compiler (either "javac" or the Eclipse
    compiler) can safely be used to compile Java 1.5 code while generating Java 1.5-compliant class files.
