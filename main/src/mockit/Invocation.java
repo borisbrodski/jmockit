@@ -5,6 +5,7 @@
 package mockit;
 
 import java.lang.reflect.*;
+import java.util.concurrent.*;
 
 import mockit.internal.util.*;
 
@@ -15,7 +16,7 @@ import mockit.internal.util.*;
  * With the <em>Expectations & Verifications</em> API, this parameter can appear in mock methods implemented in
  * {@link Delegate} classes or in validation objects assigned to the
  * {@link Invocations#forEachInvocation forEachInvocation} field.
- * With the <em>Mockups</em> API, it can appear in {@link Mock} methods.
+ * With the <em>Mockups</em> API, it can appear in {@link Mock @Mock} methods.
  * <p/>
  * Sample tests:
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/DelegateInvocationTest.java"
@@ -122,10 +123,14 @@ public class Invocation
       onChange();
    }
 
-   /**
-    * For internal use only.
-    */
-   protected void onChange() {}
+   private void onChange()
+   {
+      // Ugly, but prevents this method from appearing in API documentation, which would occur if it was *protected*.
+      //noinspection InstanceofThis
+      if (this instanceof Runnable) {
+         ((Runnable) this).run();
+      }
+   }
 
    /**
     * Allows execution to proceed into the real implementation of the mocked method/constructor.
@@ -190,8 +195,13 @@ public class Invocation
       return actualArgs;
    }
 
-   /**
-    * For internal use only.
-    */
-   protected Method getRealMethod() { return null; }
+   private Method getRealMethod()
+   {
+      // Ugly, but prevents this method from appearing in API documentation, which would occur if it was *protected*.
+      try {
+         //noinspection unchecked
+         return ((Callable<Method>) this).call();
+      }
+      catch (Exception ignore) { return null; }
+   }
 }

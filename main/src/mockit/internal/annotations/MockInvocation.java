@@ -5,13 +5,14 @@
 package mockit.internal.annotations;
 
 import java.lang.reflect.*;
+import java.util.concurrent.*;
 
 import mockit.*;
 
 /**
  * An invocation to a {@code @Mock} method.
  */
-public final class MockInvocation extends Invocation
+public final class MockInvocation extends Invocation implements Runnable, Callable<Method>
 {
    private final MockState mockState;
    private boolean proceedIntoConstructor;
@@ -24,15 +25,20 @@ public final class MockInvocation extends Invocation
       this.mockState = mockState;
    }
 
-   @Override
-   protected void onChange()
+   /**
+    * To be called if and when the min/max number of invocations is set by user code.
+    */
+   public void run()
    {
       mockState.minExpectedInvocations = getMinInvocations();
       mockState.maxExpectedInvocations = getMaxInvocations();
    }
 
-   @Override
-   protected Method getRealMethod()
+   /**
+    * Returns the {@code Method} object corresponding to the mocked method, or {@code null} if it's a mocked
+    * constructor.
+    */
+   public Method call()
    {
       if (mockState.mockMethod.isForConstructor()) {
          proceedIntoConstructor = true;
