@@ -157,7 +157,8 @@
    <target name="createjavadocs">
       <delete dir="www/javadoc" includes="**/*.html" excludes="overview.html" quiet="true"/>
       <javadoc
-         destdir="www/javadoc" classpathref="common.classpath" overview="www/javadoc/overview.html"
+         destdir="www/javadoc" overview="www/javadoc/overview.html"
+         classpathref="common.classpath" classpath="main/classes"
          nodeprecated="true" noindex="true" notree="true" nohelp="true" breakiterator="yes"
          windowtitle="JMockit Toolkit API" doctitle="JMockit Toolkit API Documentation"
          encoding="UTF-8" charset="UTF-8" locale="en">
@@ -168,8 +169,7 @@
             <include name="mockit/integration/testng/*.java"/>
             <include name="mockit/integration/logging/*.java"/>
          </fileset>
-         <link
-            href="http://download.oracle.com/javase/6/docs/api" offline="true" packagelistloc="www/javadoc/external"/>
+         <link href="http://download.oracle.com/javase/6/docs/api" offline="true" packagelistloc="www/javadoc/external"/>
          <header><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top"><img src="resources/logo.png">JMockit Home</a>]]></header>
          <footer><![CDATA[<a href="http://code.google.com/p/jmockit" target="_top"><img src="resources/logo.png">JMockit Home</a>]]></footer>
          <bottom><![CDATA[<font size=-1>© 2006-2012 Rogério Liesenfeld</font>]]></bottom>
