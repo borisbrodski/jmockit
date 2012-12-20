@@ -164,13 +164,6 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  null otherwise (ie, if a class was specified to be mocked).</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected boolean</code></td>
-<td class="colLast"><code><strong><a href="../mockit/MockUp.html#shouldBeMocked(java.lang.ClassLoader, java.lang.String)">shouldBeMocked</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang">ClassLoader</a>&nbsp;loader,
-              <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;subclassName)</code>
-<div class="block">Indicates whether the given class should also be mocked.</div>
-</td>
-</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
@@ -236,34 +229,12 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <a name="getMockInstance()">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>getMockInstance</h4>
 <pre>public final&nbsp;<a href="../mockit/MockUp.html" title="type parameter in MockUp">T</a>&nbsp;getMockInstance()</pre>
 <div class="block">Returns the mock instance created for the interface(s) to be mocked specified by the type parameter <code>T</code>, or
  null otherwise (ie, if a class was specified to be mocked).</div>
-</li>
-</ul>
-<a name="shouldBeMocked(java.lang.ClassLoader, java.lang.String)">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>shouldBeMocked</h4>
-<pre>protected&nbsp;boolean&nbsp;shouldBeMocked(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang">ClassLoader</a>&nbsp;loader,
-                     <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;subclassName)</pre>
-<div class="block">Indicates whether the given class should also be mocked.
- <p/>
- If this method is overridden, all subclasses which extend the real class specified through this class's type
- parameter <code>&amp;lt;T&gt;</code> will also be considered for mocking.
- The same applies to classes implementing an specified real <em>interface</em>, when that's the case.
- The overriding method will be called for each such subclass, to decide whether it should actually be mocked or
- not.
- <p/>
- If not overridden, only the class/interface <code>&amp;lt;T&gt;</code> is actually mocked.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>loader</code> - the class loader defining the subclass</dd><dd><code>subclassName</code> - the fully qualified name of a class extending/implementing the class/interface that was
-                     specified to be mocked through the type parameter <code>&amp;lt;T&gt;</code></dd>
-<dt><span class="strong">Returns:</span></dt><dd><code>true</code> if the subclass should be mocked as well, <code>false</code> otherwise</dd></dl>
 </li>
 </ul>
 </li>
