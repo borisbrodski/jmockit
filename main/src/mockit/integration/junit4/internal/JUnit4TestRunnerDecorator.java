@@ -29,7 +29,7 @@ import mockit.internal.util.*;
 public final class JUnit4TestRunnerDecorator extends TestRunnerDecorator
 {
    public FrameworkMethod it;
-   private static volatile boolean shouldPrepareForNextTest = true;
+   static volatile boolean shouldPrepareForNextTest = true;
 
    @Mock(reentrant = true)
    public Object invokeExplosively(Object target, Object... params) throws Throwable

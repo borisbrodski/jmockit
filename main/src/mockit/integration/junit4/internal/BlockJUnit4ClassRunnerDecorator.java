@@ -24,6 +24,7 @@ public final class BlockJUnit4ClassRunnerDecorator
    private static final Method createTest;
    private static final Method getTestClass;
 
+   static ThreadLocal<Object> currentTestThreadLocal = new ThreadLocal<Object>();
    static
    {
       Method getTestClassMethod;
@@ -61,7 +62,9 @@ public final class BlockJUnit4ClassRunnerDecorator
             TestRunnerDecorator.cleanUpMocksFromPreviousTestClass();
          }
 
-         return createTest.invoke(it);
+         Object test = createTest.invoke(it);
+         currentTestThreadLocal.set(test);
+         return test;
       }
       catch (InvocationTargetException e) {
          throw e.getCause();
@@ -69,5 +72,9 @@ public final class BlockJUnit4ClassRunnerDecorator
       finally {
          TestRun.exitNoMockingZone();
       }
+   }
+   
+   static Object getCurrentTest() {
+      return currentTestThreadLocal.get();
    }
 }
