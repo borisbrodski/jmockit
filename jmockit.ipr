@@ -2584,17 +2584,6 @@
         <root url="jar://E:/.m2/repository/javax/transaction/jta/1.1/jta-1.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: junit:junit:4.10">
-      <CLASSES>
-        <root url="jar://E:/.m2/repository/junit/junit/4.10/junit-4.10.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://E:/.m2/repository/junit/junit/4.10/junit-4.10-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://E:/.m2/repository/junit/junit/4.10/junit-4.10-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: junit:junit:4.11">
       <CLASSES>
         <root url="jar://E:/.m2/repository/junit/junit/4.11/junit-4.11.jar!/" />
