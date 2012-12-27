@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011 Rogério Liesenfeld
+ * Copyright (c) 2006-2012 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -13,8 +13,6 @@ import org.junit.*;
 import static mockit.Instantiation.*;
 import static mockit.Mockit.*;
 import static org.junit.Assert.*;
-
-import mockit.internal.*;
 
 @UsingMocksAndStubs(MockClassInstantiationPerSetupTest.MockClass1.class)
 public final class MockClassInstantiationPerSetupTest
@@ -208,7 +206,7 @@ public final class MockClassInstantiationPerSetupTest
       assertMockClass4();
    }
 
-   @MockClass(realClass = URL.class, instantiation = Instantiation.PerMockSetup)
+   @MockClass(realClass = URL.class, instantiation = PerMockSetup)
    public static final class MockURL
    {
       public URL it;
@@ -227,12 +225,10 @@ public final class MockClassInstantiationPerSetupTest
    @Test
    public void reentrantMockForJREClass() throws Exception
    {
-      setUpStartupMocks(MockURL.class);
+      setUpMocks(MockURL.class);
 
       InputStream response = new URL("http://test").openStream();
 
       assertEquals("response", new Scanner(response).nextLine());
-
-      new RedefinitionEngine().restoreToDefinitionBeforeStartup(URL.class);
    }
 }
