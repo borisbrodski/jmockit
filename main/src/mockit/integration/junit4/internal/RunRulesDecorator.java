@@ -1,6 +1,7 @@
 package mockit.integration.junit4.internal;
 
 import mockit.Instantiation;
+import mockit.Invocation;
 import mockit.Mock;
 import mockit.MockClass;
 import mockit.integration.internal.TestRunnerDecorator;
@@ -20,13 +21,11 @@ import org.junit.rules.RunRules;
  */
 @MockClass(realClass = RunRules.class, instantiation = Instantiation.PerMockSetup)
 public class RunRulesDecorator extends TestRunnerDecorator {
-   public RunRules it;
-
-   @Mock(reentrant = true)
-   public void evaluate() throws Throwable {
+   @Mock
+   public void evaluate(Invocation inv) throws Throwable {
       Object instance = BlockJUnit4ClassRunnerDecorator.getCurrentTest();
       if (instance == null) {
-         it.evaluate();
+         inv.proceed();
          return;
       }
       
@@ -40,7 +39,7 @@ public class RunRulesDecorator extends TestRunnerDecorator {
       TestRun.setSavePointForTestMethod(null);
 
       try {
-         it.evaluate();
+         inv.proceed();
       }
       catch (Throwable t) {
          RecordAndReplayExecution.endCurrentReplayIfAny();
