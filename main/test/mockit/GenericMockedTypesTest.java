@@ -76,4 +76,18 @@ public final class GenericMockedTypesTest
       Object value = rawMap.get("test");
       assertNotNull(value);
    }
+
+   public interface InterfaceWithMethodParametersMixingGenericTypesAndArrays
+   {
+      <T> void doSomething(int[] i, T b);
+      void doSomething(Callable<int[]> pc, int[] ii);
+      void doSomething(Callable<String> pc, int[] i, boolean[] currencies, int[] ii);
+   }
+
+   @Test
+   public void mockMethodsHavingGenericsAndArrays(@Mocked InterfaceWithMethodParametersMixingGenericTypesAndArrays mock)
+   {
+      mock.doSomething((Callable<int[]>) null, new int[] {1, 2});
+      mock.doSomething(null, new int[] {1, 2}, null, new int[] {3, 4, 5});
+   }
 }

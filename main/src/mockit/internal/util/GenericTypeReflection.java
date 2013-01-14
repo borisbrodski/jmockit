@@ -86,59 +86,61 @@ public final class GenericTypeReflection
 
          int p = signature.indexOf('(');
          int q = signature.lastIndexOf(')');
-         String semicolonSeparatedParameters = signature.substring(p + 1, q);
+         String parameterTypeDescs = signature.substring(p + 1, q);
 
          parameters = new ArrayList<String>();
-         addTypeDescsToList(parameters, semicolonSeparatedParameters);
+         addTypeDescsToList(parameterTypeDescs);
       }
 
-      private void addTypeDescsToList(List<String> typeList, String typeDescs)
+      private void addTypeDescsToList(String typeDescs)
       {
          int n = typeDescs.length();
 
          for (int i = 0; i < n; i++) {
-            i = addNextParameter(typeList, typeDescs, i);
+            i = addNextParameter(typeDescs, i);
          }
       }
 
-      private int addNextParameter(List<String> typeList, String semicolonSeparatedParameters, int i)
+      private int addNextParameter(String parameterTypeDescs, int i)
       {
-         char c = semicolonSeparatedParameters.charAt(i);
+         int n = parameterTypeDescs.length();
+         char c = parameterTypeDescs.charAt(i);
          int j = i;
          String parameter;
 
          if (c == 'T') {
-            j = semicolonSeparatedParameters.indexOf(';', i);
-            parameter = semicolonSeparatedParameters.substring(i, j);
+            j = parameterTypeDescs.indexOf(';', i);
+            parameter = parameterTypeDescs.substring(i, j);
          }
          else if (c == 'L' || c == '[') {
             do {
                j++;
-               c = semicolonSeparatedParameters.charAt(j);
+               if (j == n) break;
+               c = parameterTypeDescs.charAt(j);
             } while (c != ';' && c != '<');
 
-            parameter = semicolonSeparatedParameters.substring(i, j);
+            parameter = parameterTypeDescs.substring(i, j);
 
             if (c == '<') {
-               j = advanceToNextParameter(semicolonSeparatedParameters, j);
+               j = advanceToNextParameter(parameterTypeDescs, j);
             }
          }
          else {
             parameter = String.valueOf(c);
          }
 
-         typeList.add(parameter);
+         parameters.add(parameter);
          return j;
       }
 
-      private int advanceToNextParameter(String semicolonSeparatedParameters, int positionOfCurrentParameter)
+      private int advanceToNextParameter(String parameterTypeDescs, int positionOfCurrentParameter)
       {
          int currentPos = positionOfCurrentParameter;
          int angleBracketDepth = 1;
 
          do {
             currentPos++;
-            char c = semicolonSeparatedParameters.charAt(currentPos);
+            char c = parameterTypeDescs.charAt(currentPos);
             if (c == '>') angleBracketDepth--; else if (c == '<') angleBracketDepth++;
          } while (angleBracketDepth > 0);
 
