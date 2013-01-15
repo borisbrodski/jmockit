@@ -77,13 +77,10 @@ public final class GenericTypeReflection
 
    public final class GenericSignature
    {
-      private final String signature;
       private final List<String> parameters;
 
       GenericSignature(String signature)
       {
-         this.signature = signature;
-
          int p = signature.indexOf('(');
          int q = signature.lastIndexOf(')');
          String parameterTypeDescs = signature.substring(p + 1, q);
@@ -175,43 +172,6 @@ public final class GenericTypeReflection
          String typeArg1 = typeParametersToTypeArguments.get(param1);
          return param2.equals(typeArg1);
       }
-
-      String resolvedReturnType()
-      {
-         int p = signature.lastIndexOf(')') + 1;
-         int q = signature.length();
-         String returnType = signature.substring(p, q);
-         String resolvedReturnType = replaceParametersWithActualTypes(returnType);
-
-         StringBuilder finalSignature = new StringBuilder(signature);
-         finalSignature.replace(p, q, resolvedReturnType);
-         return finalSignature.toString();
-      }
-
-      private String replaceParametersWithActualTypes(String typeDesc)
-      {
-         if (typeDesc.charAt(0) == 'T') {
-            String typeParameter = typeDesc.substring(0, typeDesc.length() - 1);
-            String typeArg = typeParametersToTypeArguments.get(typeParameter);
-            return typeArg == null ? typeDesc : typeArg + ';';
-         }
-
-         int p = typeDesc.indexOf('<');
-
-         if (p < 0) {
-            return typeDesc;
-         }
-
-         String resolvedTypeDesc = typeDesc;
-
-         for (Entry<String, String> paramAndArg : typeParametersToTypeArguments.entrySet()) {
-            String typeParam = paramAndArg.getKey() + ';';
-            String typeArg = paramAndArg.getValue() + ';';
-            resolvedTypeDesc = resolvedTypeDesc.replace(typeParam, typeArg);
-         }
-
-         return resolvedTypeDesc;
-      }
    }
 
    public GenericSignature parseSignature(String signature)
@@ -221,7 +181,38 @@ public final class GenericTypeReflection
 
    public String resolveReturnType(String signature)
    {
-      GenericSignature genericSignature = new GenericSignature(signature);
-      return genericSignature.resolvedReturnType();
+      int p = signature.lastIndexOf(')') + 1;
+      int q = signature.length();
+      String returnType = signature.substring(p, q);
+      String resolvedReturnType = replaceTypeParametersWithActualTypes(returnType);
+
+      StringBuilder finalSignature = new StringBuilder(signature);
+      finalSignature.replace(p, q, resolvedReturnType);
+      return finalSignature.toString();
+   }
+
+   private String replaceTypeParametersWithActualTypes(String typeDesc)
+   {
+      if (typeDesc.charAt(0) == 'T') {
+         String typeParameter = typeDesc.substring(0, typeDesc.length() - 1);
+         String typeArg = typeParametersToTypeArguments.get(typeParameter);
+         return typeArg == null ? typeDesc : typeArg + ';';
+      }
+
+      int p = typeDesc.indexOf('<');
+
+      if (p < 0) {
+         return typeDesc;
+      }
+
+      String resolvedTypeDesc = typeDesc;
+
+      for (Entry<String, String> paramAndArg : typeParametersToTypeArguments.entrySet()) {
+         String typeParam = paramAndArg.getKey() + ';';
+         String typeArg = paramAndArg.getValue() + ';';
+         resolvedTypeDesc = resolvedTypeDesc.replace(typeParam, typeArg);
+      }
+
+      return resolvedTypeDesc;
    }
 }
