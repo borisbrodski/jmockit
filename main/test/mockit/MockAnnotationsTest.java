@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2012 Rogério Liesenfeld
+ * Copyright (c) 2006-2013 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -243,7 +243,11 @@ public final class MockAnnotationsTest
       mock.provideSomeService();
    }
 
-   public interface GenericInterface<T> { void method(T t); }
+   public interface GenericInterface<T>
+   {
+      void method(T t);
+      String method(int[] ii, T l, String[][] ss, T[] ll);
+   }
    public interface NonGenericSubInterface extends GenericInterface<Long> {}
 
    @MockClass(realClass = NonGenericSubInterface.class)
@@ -251,6 +255,13 @@ public final class MockAnnotationsTest
    {
       @Mock(invocations = 1)
       public void method(Long l) { assertTrue(l > 0); }
+
+      @Mock
+      public String method(int[] ii, Long l, String[][] ss, Long[] ll)
+      {
+         assertTrue(ii.length > 0 && l > 0);
+         return "mocked";
+      }
    }
 
    @Test
@@ -259,6 +270,22 @@ public final class MockAnnotationsTest
       NonGenericSubInterface mock = setUpMock(MockForNonGenericSubInterface.class);
 
       mock.method(123L);
+      assertEquals("mocked", mock.method(new int[] {1}, 45L, null, null));
+   }
+
+   @Test
+   public void mockMethodOfGenericInterfaceWithArrayAndGenericTypeArgument()
+   {
+      GenericInterface<Long> mock = new MockUp<GenericInterface<Long>>() {
+         @Mock
+         String method(int[] ii, Long l, String[][] ss, Long[] tt)
+         {
+            assertTrue(ii.length > 0 && l > 0);
+            return "mocked";
+         }
+      }.getMockInstance();
+
+      assertEquals("mocked", mock.method(new int[] {1}, 45L, null, null));
    }
 
    @Test(expected = RuntimeException.class)
@@ -546,8 +573,7 @@ public final class MockAnnotationsTest
       assertFalse(AnotherCollaborator.doSomething());
 
       // A different, but local, mocking of the same real class must be restored to the definition of the startup mock.
-      new MockUp<AnotherCollaborator>()
-      {
+      new MockUp<AnotherCollaborator>() {
          @Mock boolean doSomething() { return true; }
       };
       assertTrue(AnotherCollaborator.doSomething());
@@ -663,8 +689,7 @@ public final class MockAnnotationsTest
    @Test(expected = LoginException.class)
    public void mockJREMethodAndConstructorWithMockUpClass() throws Exception
    {
-      new MockUp<LoginContext>()
-      {
+      new MockUp<LoginContext>() {
          @Mock
          void $init(String name) { assertEquals("test", name); }
 
@@ -989,8 +1014,7 @@ public final class MockAnnotationsTest
    @Test
    public void mockFileConstructor()
    {
-      new MockUp<File>()
-      {
+      new MockUp<File>() {
          File it;
 
          @Mock

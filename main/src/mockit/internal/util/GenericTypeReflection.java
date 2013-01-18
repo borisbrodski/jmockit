@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2012 Rogério Liesenfeld
+ * Copyright (c) 2006-2013 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.util;
@@ -78,61 +78,96 @@ public final class GenericTypeReflection
    public final class GenericSignature
    {
       private final List<String> parameters;
+      private final String parameterTypeDescs;
+      private final int lengthOfParameterTypeDescs;
+      private int currentPos;
 
       GenericSignature(String signature)
       {
          int p = signature.indexOf('(');
          int q = signature.lastIndexOf(')');
-         String parameterTypeDescs = signature.substring(p + 1, q);
-
+         parameterTypeDescs = signature.substring(p + 1, q);
+         lengthOfParameterTypeDescs = parameterTypeDescs.length();
          parameters = new ArrayList<String>();
-         addTypeDescsToList(parameterTypeDescs);
+         addTypeDescsToList();
       }
 
-      private void addTypeDescsToList(String typeDescs)
+      private void addTypeDescsToList()
       {
-         int n = typeDescs.length();
-
-         for (int i = 0; i < n; i++) {
-            i = addNextParameter(typeDescs, i);
+         while (currentPos < lengthOfParameterTypeDescs) {
+            addNextParameter();
          }
       }
 
-      private int addNextParameter(String parameterTypeDescs, int i)
+      private void addNextParameter()
       {
-         int n = parameterTypeDescs.length();
-         char c = parameterTypeDescs.charAt(i);
-         int j = i;
-         String parameter;
+         int startPos = currentPos;
+         int endPos;
+         char c = parameterTypeDescs.charAt(startPos);
 
          if (c == 'T') {
-            j = parameterTypeDescs.indexOf(';', i);
-            parameter = parameterTypeDescs.substring(i, j);
+            endPos = parameterTypeDescs.indexOf(';', startPos);
+            currentPos = endPos;
          }
-         else if (c == 'L' || c == '[') {
-            do {
-               j++;
-               if (j == n) break;
-               c = parameterTypeDescs.charAt(j);
-            } while (c != ';' && c != '<');
+         else if (c == 'L') {
+            endPos = advanceToEndOfTypeDesc();
+         }
+         else if (c == '[') {
+            char elemTypeStart = firstCharacterOfArrayElementType();
 
-            parameter = parameterTypeDescs.substring(i, j);
-
-            if (c == '<') {
-               j = advanceToNextParameter(parameterTypeDescs, j);
+            if (elemTypeStart == 'T') {
+               endPos = parameterTypeDescs.indexOf(';', startPos);
+               currentPos = endPos;
+            }
+            else if (elemTypeStart == 'L') {
+               endPos = advanceToEndOfTypeDesc();
+            }
+            else {
+               endPos = currentPos + 1;
             }
          }
          else {
-            parameter = String.valueOf(c);
+            endPos = currentPos + 1;
          }
 
+         currentPos++;
+         String parameter = parameterTypeDescs.substring(startPos, endPos);
          parameters.add(parameter);
-         return j;
       }
 
-      private int advanceToNextParameter(String parameterTypeDescs, int positionOfCurrentParameter)
+      private int advanceToEndOfTypeDesc()
       {
-         int currentPos = positionOfCurrentParameter;
+         char c = '\0';
+
+         do {
+            currentPos++;
+            if (currentPos == lengthOfParameterTypeDescs) break;
+            c = parameterTypeDescs.charAt(currentPos);
+         } while (c != ';' && c != '<');
+
+         int endPos = currentPos;
+
+         if (c == '<') {
+            advancePastTypeArguments();
+         }
+
+         return endPos;
+      }
+
+      private char firstCharacterOfArrayElementType()
+      {
+         char c;
+
+         do {
+            currentPos++;
+            c = parameterTypeDescs.charAt(currentPos);
+         } while (c == '[');
+
+         return c;
+      }
+
+      private void advancePastTypeArguments()
+      {
          int angleBracketDepth = 1;
 
          do {
@@ -140,8 +175,6 @@ public final class GenericTypeReflection
             char c = parameterTypeDescs.charAt(currentPos);
             if (c == '>') angleBracketDepth--; else if (c == '<') angleBracketDepth++;
          } while (angleBracketDepth > 0);
-
-         return currentPos + 1;
       }
 
       public boolean satisfiesGenericSignature(String otherSignature)
@@ -168,9 +201,14 @@ public final class GenericTypeReflection
       private boolean areParametersOfSameType(String param1, String param2)
       {
          if (param1.equals(param2)) return true;
-         if (param1.charAt(0) != 'T') return false;
-         String typeArg1 = typeParametersToTypeArguments.get(param1);
-         return param2.equals(typeArg1);
+
+         int i = -1;
+         char c;
+         do { i++; c = param1.charAt(i); } while (c == '[');
+         if (c != 'T') return false;
+
+         String typeArg1 = typeParametersToTypeArguments.get(param1.substring(i));
+         return param2.substring(i).equals(typeArg1);
       }
    }
 
