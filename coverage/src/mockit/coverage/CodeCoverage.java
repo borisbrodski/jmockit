@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2012 Rogério Liesenfeld
+ * Copyright (c) 2006-2013 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.coverage;
@@ -36,6 +36,10 @@ public final class CodeCoverage implements ClassFileTransformer
 
    private CodeCoverage(final boolean standaloneMode)
    {
+      if (!standaloneMode && "none".equals(System.getProperty("jmockit-coverage-output"))) {
+         throw new IllegalStateException("JMockit: coverage tool disabled");
+      }
+
       classModification = new ClassModification();
       outputGenerator = createOutputFileGenerator();
 
