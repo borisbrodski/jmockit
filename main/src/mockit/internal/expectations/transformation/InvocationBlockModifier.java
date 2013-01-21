@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2012 Rogério Liesenfeld
+ * Copyright (c) 2006-2013 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.expectations.transformation;
@@ -116,7 +116,7 @@ final class InvocationBlockModifier extends MethodVisitor
       super(mw);
       this.owner = owner;
       this.callEndInvocations = callEndInvocations;
-      matcherStacks = new int[20];
+      matcherStacks = new int[40];
       argumentCapturing = new ArgumentCapturing();
    }
 

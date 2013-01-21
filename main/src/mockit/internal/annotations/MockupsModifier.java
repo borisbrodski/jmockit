@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2012 Rogério Liesenfeld
+ * Copyright (c) 2006-2013 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.annotations;
@@ -98,14 +98,6 @@ final class MockupsModifier extends BaseClassModifier
       if (!useMockingBridge && mock != null && !isPublic(mock.getClass().getModifiers())) {
          useMockingBridge = true;
       }
-   }
-
-   MockupsModifier(
-      ClassLoader classLoaderOfRealClass, ClassReader cr, Object mock,
-      AnnotatedMockMethods mockMethods, MockingConfiguration mockingConfiguration, boolean forStartupMock)
-   {
-      this(cr, null, mockMethods, mockingConfiguration, forStartupMock, mock, classLoaderOfRealClass == null);
-      inferUseOfMockingBridge(classLoaderOfRealClass, mock);
    }
 
    private MockupsModifier(
@@ -522,7 +514,7 @@ final class MockupsModifier extends BaseClassModifier
          int opcode = argType.getOpcode(ILOAD);
          mw.visitVarInsn(opcode, varIndex);
 
-         if (forGenericMethod && argType.getSort() == Type.OBJECT) {
+         if (forGenericMethod && argType.getSort() >= Type.ARRAY) {
             mw.visitTypeInsn(CHECKCAST, argType.getInternalName());
          }
 

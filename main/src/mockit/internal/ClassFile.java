@@ -162,25 +162,6 @@ public final class ClassFile
       return new ClassReader(classFile);
    }
 
-   public static byte[] readClassfile(Class<?> aClass) throws IOException
-   {
-      ClassLoader classLoader = aClass.getClassLoader();
-
-      if (classLoader == null) {
-         classLoader = ClassFile.class.getClassLoader();
-      }
-
-      String className = aClass.getName();
-      String classDesc = internalClassName(className);
-      InputStream classFile = classLoader.getResourceAsStream(classDesc + ".class");
-
-      if (classFile == null) {
-         throw new IOException("Class not found: " + className);
-      }
-
-      return new ClassReader(classFile).b;
-   }
-
    public static void visitClass(String internalClassName, ClassVisitor visitor)
    {
       InputStream classFile = readClassFromClasspath(internalClassName);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2012 Rogério Liesenfeld
+ * Copyright (c) 2006-2013 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.annotations;
@@ -87,6 +87,7 @@ public final class AnnotatedMockStates
       MockState mockState = getMockState(mockClassName, mockStateIndex);
 
       if (mockState.isOnReentrantCall()) {
+         mockState.exitReentrantCall();
          return false;
       }
 

@@ -99,7 +99,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  With the <em>Expectations & Verifications</em> API, this parameter can appear in mock methods implemented in
  <a href="../mockit/Delegate.html" title="interface in mockit"><code>Delegate</code></a> classes or in validation objects assigned to the
  <code>forEachInvocation</code> field.
- With the <em>Mockups</em> API, it can appear in <a href="../mockit/Mock.html" title="annotation in mockit"><code>Mock</code></a> methods.
+ With the <em>Mockups</em> API, it can appear in <a href="../mockit/Mock.html" title="annotation in mockit"><code>@Mock</code></a> methods.
  <p/>
  Sample tests:
  <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/DelegateInvocationTest.java"
@@ -185,18 +185,6 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><strong><a href="../mockit/Invocation.html#getMinInvocations()">getMinInvocations</a></strong>()</code>
 <div class="block">Returns the current value of the minimum invocation count associated with the matching expectation or mock method.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>protected <a href="http://download.oracle.com/javase/6/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect">Method</a></code></td>
-<td class="colLast"><code><strong><a href="../mockit/Invocation.html#getRealMethod()">getRealMethod</a></strong>()</code>
-<div class="block">For internal use only.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><strong><a href="../mockit/Invocation.html#onChange()">onChange</a></strong>()</code>
-<div class="block">For internal use only.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -334,26 +322,6 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
  if not, the value will be <code>0</code> for a non-strict expectation and <code>1</code> for a strict expectation.
  For a <code>@Mock</code> method, it will return the value specified for the <a href="../mockit/Mock.html#invocations()">invocations</a>
  or <a href="../mockit/Mock.html#minInvocations()">minInvocations</a> attribute, or <code>0</code> if none.</div>
-</li>
-</ul>
-<a name="getRealMethod()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getRealMethod</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect">Method</a>&nbsp;getRealMethod()</pre>
-<div class="block">For internal use only.</div>
-</li>
-</ul>
-<a name="onChange()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>onChange</h4>
-<pre>protected&nbsp;void&nbsp;onChange()</pre>
-<div class="block">For internal use only.</div>
 </li>
 </ul>
 <a name="proceed(java.lang.Object...)">

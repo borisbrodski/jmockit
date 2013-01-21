@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2012 Rogério Liesenfeld
+ * Copyright (c) 2006-2013 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit.internal.util;
@@ -77,72 +77,104 @@ public final class GenericTypeReflection
 
    public final class GenericSignature
    {
-      private final String signature;
       private final List<String> parameters;
+      private final String parameterTypeDescs;
+      private final int lengthOfParameterTypeDescs;
+      private int currentPos;
 
       GenericSignature(String signature)
       {
-         this.signature = signature;
-
          int p = signature.indexOf('(');
          int q = signature.lastIndexOf(')');
-         String semicolonSeparatedParameters = signature.substring(p + 1, q);
-
+         parameterTypeDescs = signature.substring(p + 1, q);
+         lengthOfParameterTypeDescs = parameterTypeDescs.length();
          parameters = new ArrayList<String>();
-         addTypeDescsToList(parameters, semicolonSeparatedParameters);
+         addTypeDescsToList();
       }
 
-      private void addTypeDescsToList(List<String> typeList, String typeDescs)
+      private void addTypeDescsToList()
       {
-         int n = typeDescs.length();
-
-         for (int i = 0; i < n; i++) {
-            i = addNextParameter(typeList, typeDescs, i);
+         while (currentPos < lengthOfParameterTypeDescs) {
+            addNextParameter();
          }
       }
 
-      private int addNextParameter(List<String> typeList, String semicolonSeparatedParameters, int i)
+      private void addNextParameter()
       {
-         char c = semicolonSeparatedParameters.charAt(i);
-         int j = i;
-         String parameter;
+         int startPos = currentPos;
+         int endPos;
+         char c = parameterTypeDescs.charAt(startPos);
 
          if (c == 'T') {
-            j = semicolonSeparatedParameters.indexOf(';', i);
-            parameter = semicolonSeparatedParameters.substring(i, j);
+            endPos = parameterTypeDescs.indexOf(';', startPos);
+            currentPos = endPos;
          }
-         else if (c == 'L' || c == '[') {
-            do {
-               j++;
-               c = semicolonSeparatedParameters.charAt(j);
-            } while (c != ';' && c != '<');
+         else if (c == 'L') {
+            endPos = advanceToEndOfTypeDesc();
+         }
+         else if (c == '[') {
+            char elemTypeStart = firstCharacterOfArrayElementType();
 
-            parameter = semicolonSeparatedParameters.substring(i, j);
-
-            if (c == '<') {
-               j = advanceToNextParameter(semicolonSeparatedParameters, j);
+            if (elemTypeStart == 'T') {
+               endPos = parameterTypeDescs.indexOf(';', startPos);
+               currentPos = endPos;
+            }
+            else if (elemTypeStart == 'L') {
+               endPos = advanceToEndOfTypeDesc();
+            }
+            else {
+               endPos = currentPos + 1;
             }
          }
          else {
-            parameter = String.valueOf(c);
+            endPos = currentPos + 1;
          }
 
-         typeList.add(parameter);
-         return j;
+         currentPos++;
+         String parameter = parameterTypeDescs.substring(startPos, endPos);
+         parameters.add(parameter);
       }
 
-      private int advanceToNextParameter(String semicolonSeparatedParameters, int positionOfCurrentParameter)
+      private int advanceToEndOfTypeDesc()
       {
-         int currentPos = positionOfCurrentParameter;
+         char c = '\0';
+
+         do {
+            currentPos++;
+            if (currentPos == lengthOfParameterTypeDescs) break;
+            c = parameterTypeDescs.charAt(currentPos);
+         } while (c != ';' && c != '<');
+
+         int endPos = currentPos;
+
+         if (c == '<') {
+            advancePastTypeArguments();
+         }
+
+         return endPos;
+      }
+
+      private char firstCharacterOfArrayElementType()
+      {
+         char c;
+
+         do {
+            currentPos++;
+            c = parameterTypeDescs.charAt(currentPos);
+         } while (c == '[');
+
+         return c;
+      }
+
+      private void advancePastTypeArguments()
+      {
          int angleBracketDepth = 1;
 
          do {
             currentPos++;
-            char c = semicolonSeparatedParameters.charAt(currentPos);
+            char c = parameterTypeDescs.charAt(currentPos);
             if (c == '>') angleBracketDepth--; else if (c == '<') angleBracketDepth++;
          } while (angleBracketDepth > 0);
-
-         return currentPos + 1;
       }
 
       public boolean satisfiesGenericSignature(String otherSignature)
@@ -169,46 +201,14 @@ public final class GenericTypeReflection
       private boolean areParametersOfSameType(String param1, String param2)
       {
          if (param1.equals(param2)) return true;
-         if (param1.charAt(0) != 'T') return false;
-         String typeArg1 = typeParametersToTypeArguments.get(param1);
-         return param2.equals(typeArg1);
-      }
 
-      String resolvedReturnType()
-      {
-         int p = signature.lastIndexOf(')') + 1;
-         int q = signature.length();
-         String returnType = signature.substring(p, q);
-         String resolvedReturnType = replaceParametersWithActualTypes(returnType);
+         int i = -1;
+         char c;
+         do { i++; c = param1.charAt(i); } while (c == '[');
+         if (c != 'T') return false;
 
-         StringBuilder finalSignature = new StringBuilder(signature);
-         finalSignature.replace(p, q, resolvedReturnType);
-         return finalSignature.toString();
-      }
-
-      private String replaceParametersWithActualTypes(String typeDesc)
-      {
-         if (typeDesc.charAt(0) == 'T') {
-            String typeParameter = typeDesc.substring(0, typeDesc.length() - 1);
-            String typeArg = typeParametersToTypeArguments.get(typeParameter);
-            return typeArg == null ? typeDesc : typeArg + ';';
-         }
-
-         int p = typeDesc.indexOf('<');
-
-         if (p < 0) {
-            return typeDesc;
-         }
-
-         String resolvedTypeDesc = typeDesc;
-
-         for (Entry<String, String> paramAndArg : typeParametersToTypeArguments.entrySet()) {
-            String typeParam = paramAndArg.getKey() + ';';
-            String typeArg = paramAndArg.getValue() + ';';
-            resolvedTypeDesc = resolvedTypeDesc.replace(typeParam, typeArg);
-         }
-
-         return resolvedTypeDesc;
+         String typeArg1 = typeParametersToTypeArguments.get(param1.substring(i));
+         return param2.substring(i).equals(typeArg1);
       }
    }
 
@@ -219,7 +219,38 @@ public final class GenericTypeReflection
 
    public String resolveReturnType(String signature)
    {
-      GenericSignature genericSignature = new GenericSignature(signature);
-      return genericSignature.resolvedReturnType();
+      int p = signature.lastIndexOf(')') + 1;
+      int q = signature.length();
+      String returnType = signature.substring(p, q);
+      String resolvedReturnType = replaceTypeParametersWithActualTypes(returnType);
+
+      StringBuilder finalSignature = new StringBuilder(signature);
+      finalSignature.replace(p, q, resolvedReturnType);
+      return finalSignature.toString();
+   }
+
+   private String replaceTypeParametersWithActualTypes(String typeDesc)
+   {
+      if (typeDesc.charAt(0) == 'T') {
+         String typeParameter = typeDesc.substring(0, typeDesc.length() - 1);
+         String typeArg = typeParametersToTypeArguments.get(typeParameter);
+         return typeArg == null ? typeDesc : typeArg + ';';
+      }
+
+      int p = typeDesc.indexOf('<');
+
+      if (p < 0) {
+         return typeDesc;
+      }
+
+      String resolvedTypeDesc = typeDesc;
+
+      for (Entry<String, String> paramAndArg : typeParametersToTypeArguments.entrySet()) {
+         String typeParam = paramAndArg.getKey() + ';';
+         String typeArg = paramAndArg.getValue() + ';';
+         resolvedTypeDesc = resolvedTypeDesc.replace(typeParam, typeArg);
+      }
+
+      return resolvedTypeDesc;
    }
 }

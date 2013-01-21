@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2012 Rogério Liesenfeld
+ * Copyright (c) 2006-2013 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -7,14 +7,17 @@ package mockit;
 import java.io.*;
 
 import static mockit.Mockit.*;
-import static org.junit.Assert.*;
+
 import org.junit.*;
+import static org.junit.Assert.*;
 
 public final class ReentrantMockTest
 {
    public static class RealClass
    {
       String foo() { return "real value"; }
+      static int staticRecursiveMethod(int i) { return i <= 0 ? 0 : 2 + staticRecursiveMethod(i - 1); }
+      int recursiveMethod(int i) { return i <= 0 ? 0 : 2 + recursiveMethod(i - 1); }
    }
 
    @MockClass(realClass = RealClass.class)
@@ -278,5 +281,55 @@ public final class ReentrantMockTest
       };
 
       assertNull(new RealClass3().newInstance());
+   }
+
+   @MockClass(realClass = RealClass.class)
+   public static final class MockClassWithReentrantMockForRecursiveMethod
+   {
+      RealClass it;
+
+      @Mock(reentrant = true)
+      int recursiveMethod(int i) { return 1 + it.recursiveMethod(i); }
+
+      @Mock(reentrant = true)
+      static int staticRecursiveMethod(int i) { return 1 + RealClass.staticRecursiveMethod(i); }
+   }
+
+   @Test
+   public void reentrantMockMethodForRecursiveMethods()
+   {
+      assertEquals(0, RealClass.staticRecursiveMethod(0));
+      assertEquals(2, RealClass.staticRecursiveMethod(1));
+
+      RealClass r = new RealClass();
+      assertEquals(0, r.recursiveMethod(0));
+      assertEquals(2, r.recursiveMethod(1));
+
+      setUpMocks(MockClassWithReentrantMockForRecursiveMethod.class);
+
+      assertEquals(1, RealClass.staticRecursiveMethod(0));
+      assertEquals(1 + 2 + 1, RealClass.staticRecursiveMethod(1));
+      assertEquals(1, r.recursiveMethod(0));
+      assertEquals(4, r.recursiveMethod(1));
+   }
+
+   @Test
+   public void mockUpThatProceedsIntoRecursiveMethod()
+   {
+      RealClass r = new RealClass();
+      assertEquals(0, r.recursiveMethod(0));
+      assertEquals(2, r.recursiveMethod(1));
+
+      new MockUp<RealClass>() {
+         @Mock
+         int recursiveMethod(Invocation inv, int i)
+         {
+            int ret = inv.proceed();
+            return 1 + ret;
+         }
+      };
+
+      assertEquals(1, r.recursiveMethod(0));
+      assertEquals(4, r.recursiveMethod(1));
    }
 }
