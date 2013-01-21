@@ -23,6 +23,16 @@ import mockit.internal.util.*;
  * >DelegateInvocationTest</a>,
  * <a href="http://code.google.com/p/jmockit/source/browse/trunk/main/test/mockit/MockInvocationTest.java"
  * >MockInvocationTest</a>
+ *
+ * @see #getInvokedInstance()
+ * @see #getInvokedArguments()
+ * @see #getInvocationCount()
+ * @see #getInvocationIndex()
+ * @see #getMinInvocations()
+ * @see #getMaxInvocations()
+ * @see #setMinInvocations(int)
+ * @see #setMaxInvocations(int)
+ * @see #proceed(Object...)
  */
 public class Invocation
 {
