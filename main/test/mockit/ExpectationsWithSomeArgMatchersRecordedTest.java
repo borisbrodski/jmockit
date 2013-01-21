@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2012 Rogério Liesenfeld
+ * Copyright (c) 2006-2013 Rogério Liesenfeld
  * This file is subject to the terms of the MIT license (see LICENSE.txt).
  */
 package mockit;
@@ -40,6 +40,11 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       static void staticVoidMethod(long l, char c, double d) {}
       static boolean staticBooleanMethod(boolean b, String s, int[] array) { return false; }
       void methodWithArrayParameters(char[][] c, String[] s, Object[][][] matrix) {}
+
+      void methodWithManyParameters(
+         byte b1, short s1, int i1, long l1, String str1, boolean bo1, float f1, double d1, int[] ii1, String[] ss1,
+         byte b2, short s2, int i2, long l2, String str2, boolean bo2, float f2, double d2, int[] ii2, String[] ss2,
+         char c) {}
    }
 
    @Mocked Collaborator mock;
@@ -162,6 +167,11 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
          mock.simpleOperation(1, anyString, now);
 
          Collaborator.staticSetValues(2L, anyByte, 0.0, anyShort);
+
+         mock.methodWithManyParameters(
+            anyByte, anyShort, anyInt, anyLong, anyString, anyBoolean, anyFloat, anyDouble, (int[]) any, (String[]) any,
+            anyByte, anyShort, anyInt, anyLong, anyString, anyBoolean, anyFloat, anyDouble, (int[]) any, (String[]) any,
+            anyChar);
       }};
 
       mock.simpleOperation(2, "abc", now);
@@ -171,6 +181,10 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       mock.simpleOperation(1, "", now);
 
       Collaborator.staticSetValues(2, (byte) 1, 0, (short) 2);
+
+      mock.methodWithManyParameters(
+         (byte) 1, (short) 2, 3, 4L, "5", false, 7.0F, 8.0, null, null,
+         (byte) 10, (short) 20, 30, 40L, "50", true, 70.0F, 80.0, null, null, 'x');
    }
 
    @Test
